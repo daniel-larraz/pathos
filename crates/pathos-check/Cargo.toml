@@ -1,6 +1,6 @@
 [package]
 name = "pathos-check"
-description = "Checking: typing, matching, program evaluation and proof steps"
+description = "Checking: term construction, typing, matching, program evaluation and proof steps"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,4 +12,3 @@ workspace = true
 
 [dependencies]
 pathos-term = { path = "../pathos-term" }
-pathos-elab = { path = "../pathos-elab" }

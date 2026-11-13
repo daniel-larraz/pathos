@@ -1,0 +1,22 @@
+# pathos holds input bytes as the chars with the same numbers (Latin-1; see
+# crates/pathos-syntax/src/latin1.rs and docs/reviews/m1-term-store.md).
+# Ethos works on bytes, so the methods below, which follow Unicode, would
+# treat bytes 0x80 to 0xFF differently from Ethos. Use the is_ascii_* and
+# *_matches forms. If one of these is really needed, allow it at that line
+# and say why.
+disallowed-methods = [
+    { path = "char::is_whitespace", reason = "Unicode-aware: true for 0x85 and 0xA0; use is_ascii_whitespace" },
+    { path = "char::is_alphabetic", reason = "Unicode-aware; use is_ascii_alphabetic" },
+    { path = "char::is_alphanumeric", reason = "Unicode-aware; use is_ascii_alphanumeric" },
+    { path = "char::is_numeric", reason = "Unicode-aware; use is_ascii_digit" },
+    { path = "char::is_lowercase", reason = "Unicode-aware; use is_ascii_lowercase" },
+    { path = "char::is_uppercase", reason = "Unicode-aware; use is_ascii_uppercase" },
+    { path = "char::to_lowercase", reason = "Unicode-aware; use to_ascii_lowercase" },
+    { path = "char::to_uppercase", reason = "Unicode-aware; use to_ascii_uppercase" },
+    { path = "str::trim", reason = "trims Unicode whitespace; use trim_matches" },
+    { path = "str::trim_start", reason = "trims Unicode whitespace; use trim_start_matches" },
+    { path = "str::trim_end", reason = "trims Unicode whitespace; use trim_end_matches" },
+    { path = "str::split_whitespace", reason = "splits on Unicode whitespace; use split_ascii_whitespace" },
+    { path = "str::to_lowercase", reason = "Unicode-aware; use to_ascii_lowercase" },
+    { path = "str::to_uppercase", reason = "Unicode-aware; use to_ascii_uppercase" },
+]

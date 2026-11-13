@@ -1,6 +1,6 @@
 [package]
 name = "pathos-elab"
-description = "Elaboration: scopes, overloading and attributes, from parsed syntax to terms"
+description = "Elaboration: the parser, scopes, overloading and commands, from tokens to checked terms"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -13,3 +13,4 @@ workspace = true
 [dependencies]
 pathos-term = { path = "../pathos-term" }
 pathos-syntax = { path = "../pathos-syntax" }
+pathos-check = { path = "../pathos-check" }

@@ -1,7 +1,8 @@
 # pathos
 
 A reimplementation of the [Ethos](https://github.com/cvc5/ethos) proof checker
-in Rust. Work in progress: it does not check proofs yet.
+in Rust. Work in progress: milestone 1 of [docs/brief.md](docs/brief.md) is
+done and awaits review.
 
 pathos aims to behave exactly like Ethos (same verdicts and error messages on
 the same inputs) while being memory safe: no `unsafe` code in pathos, no C or

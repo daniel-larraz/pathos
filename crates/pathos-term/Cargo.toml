@@ -11,3 +11,6 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
+malachite-base = "0.14"
+malachite-nz = "0.14"
+malachite-q = "0.14"
