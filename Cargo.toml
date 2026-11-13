@@ -12,3 +12,8 @@ repository = "https://github.com/daniel-larraz/pathos"
 [workspace.lints.rust]
 # pathos is meant to be memory safe: no unsafe code in its own crates.
 unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+# The methods listed in clippy.toml treat bytes 0x80 to 0xFF by Unicode
+# rules, unlike Ethos; using one is an error, not a warning.
+disallowed_methods = "deny"

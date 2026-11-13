@@ -38,6 +38,9 @@ mod tests {
         assert_eq!(decode(b"abc"), "abc");
     }
 
+    // The check is a debug_assert!, so it exists only with debug assertions;
+    // in a release build encode() writes such a char as `?`.
+    #[cfg(debug_assertions)]
     #[test]
     #[should_panic(expected = "is not a byte")]
     fn chars_above_255_are_bugs() {
