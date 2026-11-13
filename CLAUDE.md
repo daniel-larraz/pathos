@@ -4,6 +4,8 @@ pathos reimplements the Ethos proof checker (C++) in Rust. It must behave
 exactly like Ethos and, unlike Ethos, be memory safe. Read `docs/brief.md`
 first: it has the goals, the reference, the design decisions, the
 memory-safety requirements, and the milestones with their gates.
+Reviews of finished milestones are in `docs/reviews/`; fix their findings
+before new work unless the review says otherwise.
 
 This codebase is yours: how it's built is your call within the design
 decisions in the brief, and you'll keep building on it. Restructure when the
