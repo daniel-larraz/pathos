@@ -95,7 +95,6 @@ dependencies = [
 name = "pathos-check"
 version = "0.1.0"
 dependencies = [
- "pathos-elab",
  "pathos-term",
 ]
 
@@ -103,6 +102,7 @@ dependencies = [
 name = "pathos-elab"
 version = "0.1.0"
 dependencies = [
+ "pathos-check",
  "pathos-syntax",
  "pathos-term",
 ]
@@ -110,9 +110,6 @@ dependencies = [
 [[package]]
 name = "pathos-syntax"
 version = "0.1.0"
-dependencies = [
- "pathos-term",
-]
 
 [[package]]
 name = "pathos-term"

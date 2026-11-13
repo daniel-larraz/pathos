@@ -1,6 +1,6 @@
 [package]
 name = "pathos-syntax"
-description = "Lexer and parser for Eunoia, with source spans"
+description = "Lexer for Eunoia, with source locations and the error type"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,4 +11,3 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-pathos-term = { path = "../pathos-term" }
