@@ -73,10 +73,10 @@ impl Parser<'_> {
 
     fn next_command_token(&mut self) -> Result<Token> {
         let tok = self.lex.next_token()?;
-        if tok == Token::Symbol {
-            if let Some(cmd) = self.command_token(self.lex.token_str()) {
-                return Ok(cmd);
-            }
+        if tok == Token::Symbol
+            && let Some(cmd) = self.command_token(self.lex.token_str())
+        {
+            return Ok(cmd);
         }
         Ok(tok)
     }
@@ -210,7 +210,11 @@ impl Parser<'_> {
                 self.parse_symbolic_expr()?;
             }
             Token::Eof => return Err(self.lex.parse_error("Expected Eunoia command")),
-            _ => return Err(self.lex.unexpected_token_error(tok, "Expected Eunoia command")),
+            _ => {
+                return Err(self
+                    .lex
+                    .unexpected_token_error(tok, "Expected Eunoia command"));
+            }
         }
         self.lex.eat_token(Token::Rparen)?;
         Ok(true)
@@ -275,14 +279,16 @@ impl Parser<'_> {
             } else {
                 pt
             };
-            if let Some((_, attrs)) = pattr_map.iter_mut().find(|(v, _)| *v == p) {
-                if attrs.remove(&Attr::Opaque).is_some() {
-                    opaque_args.insert(0, qt);
-                    continue;
-                }
+            if let Some((_, attrs)) = pattr_map.iter_mut().find(|(v, _)| *v == p)
+                && attrs.remove(&Attr::Opaque).is_some()
+            {
+                opaque_args.insert(0, qt);
+                continue;
             }
             if !opaque_args.is_empty() {
-                return Err(self.lex.parse_error("Opaque arguments must be a prefix of arguments."));
+                return Err(self
+                    .lex
+                    .parse_error("Opaque arguments must be a prefix of arguments."));
             }
             t = self.st.ck.mk_function_type(&[qt], t);
         }
@@ -295,7 +301,9 @@ impl Parser<'_> {
             let pargs = self.st.ck.get_variables(&arg_types);
             if self.find_free_var(ret_type, &pargs).is_some() {
                 if ck != Attr::None {
-                    return Err(self.lex.parse_error("Ambiguous functions cannot have attributes"));
+                    return Err(self
+                        .lex
+                        .parse_error("Ambiguous functions cannot have attributes"));
                 } else if !opaque_args.is_empty() {
                     return Err(self
                         .lex
@@ -355,13 +363,17 @@ impl Parser<'_> {
         }
         let mut defs = DatatypeDefs::default();
         if !self.parse_datatypes_def(&dnames, &arities, &mut defs)? {
-            return Err(self.lex.parse_error("Failed to bind symbols for datatype definition"));
+            return Err(self
+                .lex
+                .parse_error("Failed to bind symbols for datatype definition"));
         }
         // Ethos marks these in the order of the terms' addresses; the order
         // does not show.
         for (dt, conses) in &defs.dts {
             let ctuple = self.st.ck.mk_list(conses);
-            self.st.ck.mark_constructor_kind(*dt, Attr::Datatype, Some(ctuple));
+            self.st
+                .ck
+                .mark_constructor_kind(*dt, Attr::Datatype, Some(ctuple));
         }
         for (cons, sels) in &defs.dtcons {
             let ac = if defs.amb_cons.contains(cons) {
@@ -402,7 +414,9 @@ impl Parser<'_> {
         while tok == Token::Lparen {
             let mut params = Vec::new();
             if i >= dnames.len() {
-                return Err(self.lex.parse_error("Too many datatypes defined in this block."));
+                return Err(self
+                    .lex
+                    .parse_error("Too many datatypes defined in this block."));
             }
             tok = self.lex.next_token()?;
             let mut pushed_scope = false;
@@ -438,7 +452,9 @@ impl Parser<'_> {
                 dtlist.push(t);
                 rebind_dt = pushed_scope;
             } else if params.len() != arities[i] {
-                return Err(self.lex.parse_error("Wrong number of parameters for datatype."));
+                return Err(self
+                    .lex
+                    .parse_error("Wrong number of parameters for datatype."));
             }
             let dt = dtlist[i];
             let mut dti = dt;
@@ -451,7 +467,8 @@ impl Parser<'_> {
             if rebind_dt {
                 to_bind.push((dnames[i].clone(), dt));
             }
-            let conslist = self.parse_constructor_definition_list(dti, defs, &mut to_bind, &params)?;
+            let conslist =
+                self.parse_constructor_definition_list(dti, defs, &mut to_bind, &params)?;
             match defs.dts.iter_mut().find(|(d, _)| *d == dt) {
                 Some((_, cs)) => cs.extend(conslist),
                 None => defs.dts.push((dt, conslist)),
@@ -542,7 +559,9 @@ impl Parser<'_> {
     /// ```
     fn cmd_declare_rule(&mut self) -> Result<()> {
         if self.st.assumption_level() > 0 {
-            return Err(self.lex.parse_error("Rules must be declared at assumption level zero"));
+            return Err(self
+                .lex
+                .parse_error("Rules must be declared at assumption level zero"));
         }
         self.st.push_scope();
         let name = self.parse_symbol()?;
@@ -617,13 +636,18 @@ impl Parser<'_> {
                 } else {
                     // Arguments may contain parameters and need not type
                     // check, so their types are left open.
-                    let et = self.st.ck.mk_symbol(SymbolKind::Param, &format!("$eo_arg_{i}"), ty);
+                    let et = self
+                        .st
+                        .ck
+                        .mk_symbol(SymbolKind::Param, &format!("$eo_arg_{i}"), ty);
                     prog_types.push(et);
                 }
             }
             pt = self.st.ck.mk_program_type(&prog_types, pt);
             rule_prog =
-                self.st.ck.mk_symbol(SymbolKind::ProgramConst, &format!("$eo_prog_{name}"), pt);
+                self.st
+                    .ck
+                    .mk_symbol(SymbolKind::ProgramConst, &format!("$eo_prog_{name}"), pt);
             prog_args.insert(0, rule_prog);
             let ppat = self.st.ck.mk_expr(Kind::APPLY, &prog_args);
             self.type_check_program_pair(ppat, ret)?;
@@ -641,7 +665,9 @@ impl Parser<'_> {
             rule_prog,
         ];
         let attr_val = self.st.ck.mk_expr(Kind::TUPLE, &tuple);
-        self.st.ck.mark_constructor_kind(rule, Attr::ProofRule, Some(attr_val));
+        self.st
+            .ck
+            .mark_constructor_kind(rule, Attr::ProofRule, Some(attr_val));
         let mut attrs = AttrMap::new();
         self.parse_attribute_list(AttrCtx::ProofRule, Some(rule), &mut attrs, None)
     }
@@ -655,15 +681,17 @@ impl Parser<'_> {
         let mut pattr_map: Vec<(Term, AttrMap)> = Vec::new();
         // In a reference file, a definition is an assertion that the symbol
         // equals its body, unless the option says to read it as a macro.
-        let define_as_reference_assert = tok != Token::Define
-            && self.is_reference
-            && !self.st.ck.opts.reference_define_fun;
+        let define_as_reference_assert =
+            tok != Token::Define && self.is_reference && !self.st.ck.opts.reference_define_fun;
         let mut vars = Vec::new();
         if tok != Token::DefineConst {
             // Assertions range over variables of the object language;
             // macros need fresh parameters.
-            let k =
-                if define_as_reference_assert { ParamList::Binder } else { ParamList::Define };
+            let k = if define_as_reference_assert {
+                ParamList::Binder
+            } else {
+                ParamList::Define
+            };
             vars = self.parse_and_bind_sorted_var_list_attrs(k, &mut pattr_map)?;
         }
         if vars.len() < pattr_map.len() {
@@ -673,12 +701,22 @@ impl Parser<'_> {
             self.st.pop_scope()?;
             self.st.push_scope();
             for &e in &vars {
-                let sym = self.st.ck.store.symbol_name(e).unwrap_or_default().to_string();
+                let sym = self
+                    .st
+                    .ck
+                    .store
+                    .symbol_name(e)
+                    .unwrap_or_default()
+                    .to_string();
                 self.st.bind(&sym, e);
             }
         }
         self.process_attribute_maps(&pattr_map)?;
-        let ret = if tok != Token::Define { Some(self.parse_type(false, true)?) } else { None };
+        let ret = if tok != Token::Define {
+            Some(self.parse_type(false, true)?)
+        } else {
+            None
+        };
         let mut expr = self.parse_expr()?;
         if let Some(ret) = ret {
             self.type_check_expected(expr, ret)?;
@@ -686,7 +724,11 @@ impl Parser<'_> {
         if define_as_reference_assert {
             // `=` and `lambda` are not builtin: the signature defines them.
             let Some(eq) = self.st.get_var("=") else {
-                let cmd = if tok == Token::DefineConst { "define-const." } else { "define-fun." };
+                let cmd = if tok == Token::DefineConst {
+                    "define-const."
+                } else {
+                    "define-fun."
+                };
                 return Err(self.lex.parse_error(format!(
                     "Expected symbol '=' to be defined when parsing {cmd}"
                 )));
@@ -733,7 +775,9 @@ impl Parser<'_> {
             return Err(self.lex.parse_error("Cannot use more than one reference"));
         }
         if self.st.assumption_level() > 0 {
-            return Err(self.lex.parse_error("Includes must be done at assumption level zero"));
+            return Err(self
+                .lex
+                .parse_error("Includes must be done at assumption level zero"));
         }
         if self.lex.peek_token()? != Token::StringLiteral {
             return Err(self.lex.parse_error("Expected string literal for include"));
@@ -765,7 +809,9 @@ impl Parser<'_> {
         let arg_types = self.parse_type_list(true)?;
         let ret_type = self.parse_type(false, true)?;
         if arg_types.is_empty() {
-            return Err(self.lex.parse_error("Programs must have at least one argument"));
+            return Err(self
+                .lex
+                .parse_error("Programs must have at least one argument"));
         }
         let prog_type = self.st.ck.mk_program_type(&arg_types, ret_type);
         // the program may have been declared before
@@ -784,7 +830,10 @@ impl Parser<'_> {
                 prev
             }
             None => {
-                let pvar = self.st.ck.mk_symbol(SymbolKind::ProgramConst, &name, prog_type);
+                let pvar = self
+                    .st
+                    .ck
+                    .mk_symbol(SymbolKind::ProgramConst, &name, prog_type);
                 // bound inside the scope, for the cases
                 self.bind(&name, pvar)?;
                 pvar
@@ -798,7 +847,9 @@ impl Parser<'_> {
                 // each case is the program applied to patterns
                 if self.st.ck.store.kind(pc) != Kind::APPLY || self.st.ck.store.child(pc, 0) != pvar
                 {
-                    return Err(self.lex.parse_error("Expected application of program as case"));
+                    return Err(self
+                        .lex
+                        .parse_error("Expected application of program as case"));
                 }
                 if self.st.ck.store.num_children(pc) != arg_types.len() + 1 {
                     return Err(self.lex.parse_error("Wrong arity for pattern"));
@@ -874,15 +925,15 @@ impl Parser<'_> {
                 self.st.ck.show(conc_type)
             )));
         }
-        if let Some(proven) = proven {
-            if conc_term != proven {
-                return Err(self.lex.parse_error(format!(
-                    "Unexpected conclusion for rule {}:\n    Proves: {}\n  Expected: {}",
-                    rule_name,
-                    self.st.ck.show(conc_term),
-                    self.st.ck.show(proven)
-                )));
-            }
+        if let Some(proven) = proven
+            && conc_term != proven
+        {
+            return Err(self.lex.parse_error(format!(
+                "Unexpected conclusion for rule {}:\n    Proves: {}\n  Expected: {}",
+                rule_name,
+                self.st.ck.show(conc_term),
+                self.st.ck.show(proven)
+            )));
         }
         // the conclusion is bound outside the assumption scope
         if is_pop {

@@ -168,8 +168,14 @@ mod tests {
     #[test]
     fn escapes() {
         assert_eq!(EoString::parse("\\u{41}", true).code_points(), &[0x41]);
-        assert_eq!(EoString::parse("\\u0041b", true).code_points(), &[0x41, 0x62]);
-        assert_eq!(EoString::parse("\\u{2ffff}", true).code_points(), &[0x2ffff]);
+        assert_eq!(
+            EoString::parse("\\u0041b", true).code_points(),
+            &[0x41, 0x62]
+        );
+        assert_eq!(
+            EoString::parse("\\u{2ffff}", true).code_points(),
+            &[0x2ffff]
+        );
         // out of range: kept verbatim
         assert_eq!(roundtrip("\\u{30000}"), "\\u{5c}u{30000}");
         // malformed

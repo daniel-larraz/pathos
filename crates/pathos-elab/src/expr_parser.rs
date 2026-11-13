@@ -283,18 +283,22 @@ impl Parser<'_> {
             // symbol of that name was declared.
             if self.lex.peek_token()? == Token::Symbol {
                 let sym = self.lex.token_str().to_string();
-                if let Some(digits) = bit_vector_constant_symbol(&sym) {
-                    if self.st.get_var(&sym).is_none() {
-                        self.lex.next_token()?;
-                        let w = self.parse_integer_numeral()?;
-                        self.lex.eat_token(Token::Rparen)?;
-                        let value = Integer::parse(digits, 10).unwrap_or_else(Integer::zero);
-                        let bv = BitVec::new(w, &value);
-                        return Ok(Some(self.st.ck.store.mk_lit(Lit::Binary(bv))));
-                    }
+                if let Some(digits) = bit_vector_constant_symbol(&sym)
+                    && self.st.get_var(&sym).is_none()
+                {
+                    self.lex.next_token()?;
+                    let w = self.parse_integer_numeral()?;
+                    self.lex.eat_token(Token::Rparen)?;
+                    let value = Integer::parse(digits, 10).unwrap_or_else(Integer::zero);
+                    let bv = BitVec::new(w, &value);
+                    return Ok(Some(self.st.ck.store.mk_lit(Lit::Binary(bv))));
                 }
             }
-            pstack.push(StackFrame { ctx: ParseCtx::NextArg, nscopes: 0, args: Vec::new() });
+            pstack.push(StackFrame {
+                ctx: ParseCtx::NextArg,
+                nscopes: 0,
+                args: Vec::new(),
+            });
             return Ok(None);
         }
         let v = self.get_var(&name)?;
@@ -335,7 +339,11 @@ impl Parser<'_> {
                 self.lex.reinsert_token(tok);
             }
         }
-        pstack.push(StackFrame { ctx: ParseCtx::NextArg, nscopes, args });
+        pstack.push(StackFrame {
+            ctx: ParseCtx::NextArg,
+            nscopes,
+            args,
+        });
         Ok(None)
     }
 
@@ -361,10 +369,10 @@ impl Parser<'_> {
                 }
             }
             Token::RationalLiteral => {
-                if let Some(pos) = text.find('/') {
-                    if text[pos + 1..].bytes().all(|b| b == b'0') {
-                        return Err(self.lex.parse_error("Expected non-zero denominator"));
-                    }
+                if let Some(pos) = text.find('/')
+                    && text[pos + 1..].bytes().all(|b| b == b'0')
+                {
+                    return Err(self.lex.parse_error("Expected non-zero denominator"));
                 }
                 Rational::parse(&text).map(Lit::Rational)
             }
@@ -387,7 +395,11 @@ impl Parser<'_> {
             Token::UnterminatedQuotedSymbol => {
                 return Err(self.lex.parse_error("Expected SMT-LIBv2 term"));
             }
-            _ => return Err(self.lex.unexpected_token_error(tok, "Expected SMT-LIBv2 term")),
+            _ => {
+                return Err(self
+                    .lex
+                    .unexpected_token_error(tok, "Expected SMT-LIBv2 term"));
+            }
         };
         match lit {
             Some(lit) => Ok(self.st.ck.store.mk_lit(lit)),
@@ -623,7 +635,9 @@ impl Parser<'_> {
         self.lex.eat_token(Token::IntegerLiteral)?;
         let token = self.lex.token_str();
         if token.len() > 1 && token.starts_with('0') {
-            return Err(self.lex.parse_error("Numeral with leading zeroes are forbidden"));
+            return Err(self
+                .lex
+                .parse_error("Numeral with leading zeroes are forbidden"));
         }
         let reason = if token.is_empty() || !token.bytes().all(|b| b.is_ascii_digit()) {
             // negative numerals are integer literals too
@@ -634,7 +648,9 @@ impl Parser<'_> {
                 _ => "Numerals must fit into 32-bit unsigned integers.",
             }
         };
-        Err(self.lex.parse_error(format!("Failed to parse numeral. {reason}")))
+        Err(self
+            .lex
+            .parse_error(format!("Failed to parse numeral. {reason}")))
     }
 
     /// The name of the symbol token just read.
@@ -649,7 +665,9 @@ impl Parser<'_> {
             Token::UnterminatedQuotedSymbol => {
                 Err(self.lex.parse_error("Expected SMT-LIBv2 symbol"))
             }
-            _ => Err(self.lex.unexpected_token_error(tok, "Expected SMT-LIBv2 symbol")),
+            _ => Err(self
+                .lex
+                .unexpected_token_error(tok, "Expected SMT-LIBv2 symbol")),
         }
     }
 
@@ -658,7 +676,11 @@ impl Parser<'_> {
     pub(crate) fn parse_str(&mut self, unescape: bool) -> Result<String> {
         self.lex.eat_token(Token::StringLiteral)?;
         let s = self.lex.token_str().to_string();
-        if unescape { self.unescape_string(&s) } else { Ok(s) }
+        if unescape {
+            self.unescape_string(&s)
+        } else {
+            Ok(s)
+        }
     }
 
     /// Removes the quotes around a string literal and replaces `""` by `"`.
@@ -809,16 +831,22 @@ impl Parser<'_> {
     pub(crate) fn get_var(&mut self, name: &str) -> Result<Term> {
         match self.st.get_var(name) {
             Some(t) => Ok(t),
-            None => Err(self.lex.parse_error(format!("Could not find symbol {name}"))),
+            None => Err(self
+                .lex
+                .parse_error(format!("Could not find symbol {name}"))),
         }
     }
 
     pub(crate) fn get_proof_rule(&mut self, name: &str) -> Result<Term> {
         let Some(v) = self.st.get_proof_rule(name) else {
-            return Err(self.lex.parse_error(format!("Could not find proof rule {name}")));
+            return Err(self
+                .lex
+                .parse_error(format!("Could not find proof rule {name}")));
         };
         if self.st.ck.store.kind(v) != Kind::PROOF_RULE {
-            return Err(self.lex.parse_error(format!("Expected proof rule for {name}")));
+            return Err(self
+                .lex
+                .parse_error(format!("Expected proof rule for {name}")));
         }
         Ok(v)
     }
@@ -909,7 +937,11 @@ impl Parser<'_> {
     /// A parameter of `e` that is not in `bvs`, other than `eo::self`.
     pub(crate) fn find_free_var(&self, e: Term, bvs: &[Term]) -> Option<Term> {
         let self_param = self.st.ck.mk_self();
-        self.st.ck.get_variables(&[e]).into_iter().find(|v| !bvs.contains(v) && *v != self_param)
+        self.st
+            .ck
+            .get_variables(&[e])
+            .into_iter()
+            .find(|v| !bvs.contains(v) && *v != self_param)
     }
 
     fn ensure_bound(&self, e: Term, bvs: &[Term]) -> Result<()> {

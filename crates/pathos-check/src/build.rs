@@ -189,10 +189,10 @@ impl Checker {
                 // term built below does not type check
             }
             Kind::Node(NodeKind::As) => {
-                if children.len() == 2 {
-                    if let Some(t) = self.mk_as_expr(children) {
-                        return t;
-                    }
+                if children.len() == 2
+                    && let Some(t) = self.mk_as_expr(children)
+                {
+                    return t;
                 }
             }
             _ => {}
@@ -252,7 +252,9 @@ impl Checker {
             // Programs without a definition yet stay unevaluated: this is the
             // case for the patterns of the program's own cases.
             if self.attribute_kind(hd) != Attr::None {
-                let nparams = self.get_type(hd, None).map_or(0, |t| self.store.num_children(t));
+                let nparams = self
+                    .get_type(hd, None)
+                    .map_or(0, |t| self.store.num_children(t));
                 if nparams == children.len() {
                     let mut ctx = Ctx::new();
                     if let Some(e) = self.evaluate_program_internal(children, &mut ctx) {
@@ -287,9 +289,11 @@ impl Checker {
             dummy.push(self.mk_symbol(SymbolKind::Const, "tmp", t));
         }
         let overloads = match self.app_info(children[0]) {
-            Some(ai) if ai.overloaded => {
-                self.overloads.get(&ai.overload_name).cloned().unwrap_or_default()
-            }
+            Some(ai) if ai.overloaded => self
+                .overloads
+                .get(&ai.overload_name)
+                .cloned()
+                .unwrap_or_default(),
             _ => vec![children[0]],
         };
         self.get_overload_internal(&overloads, &dummy, Some(ret_type), false)
@@ -319,8 +323,10 @@ impl Checker {
                     // operator has one argument: (distinct t) is true.
                     return cons_term;
                 }
-                let is_left =
-                    matches!(attr, Attr::LeftAssoc | Attr::LeftAssocNil | Attr::LeftAssocNsNil);
+                let is_left = matches!(
+                    attr,
+                    Attr::LeftAssoc | Attr::LeftAssocNil | Attr::LeftAssocNsNil
+                );
                 let is_ns_nil = matches!(attr, Attr::RightAssocNsNil | Attr::LeftAssocNsNil);
                 let is_nil = attr.is_list_nil();
                 let at = |i: usize| vchildren[if is_left { i } else { nchild - i }];
@@ -340,7 +346,8 @@ impl Checker {
                             let typ = self
                                 .store
                                 .mk(Kind::Eval(pathos_term::EvalOp::TypeOf), &[vchildren[1]]);
-                            self.store.mk(Kind::Eval(pathos_term::EvalOp::Nil), &[hd, typ])
+                            self.store
+                                .mk(Kind::Eval(pathos_term::EvalOp::Nil), &[hd, typ])
                         }
                     };
                     i -= 1;
@@ -348,10 +355,16 @@ impl Checker {
                 i += 1;
                 while i < nchild {
                     let next = at(i);
-                    let cc = if is_left { [hd, curr, next] } else { [hd, next, curr] };
+                    let cc = if is_left {
+                        [hd, curr, next]
+                    } else {
+                        [hd, next, curr]
+                    };
                     // a list variable is concatenated, not consed
                     if is_nil && self.attribute_kind(next) == Attr::List {
-                        curr = self.store.mk(Kind::Eval(pathos_term::EvalOp::ListConcat), &cc);
+                        curr = self
+                            .store
+                            .mk(Kind::Eval(pathos_term::EvalOp::ListConcat), &cc);
                     } else {
                         nlist_terms += 1;
                         curr = self.mk_apply_curried(&cc);
@@ -473,10 +486,11 @@ impl Checker {
             // well typed, and of the required type if there is one
             if t.is_some() && (ret_type.is_none() || ret_type == t) {
                 // an overloaded macro is reduced, as in mk_expr
-                if ret_apply && self.store.kind(hd) == Kind::LAMBDA {
-                    if let Some(ret) = self.mk_beta_reduce(&vchildren) {
-                        return Some(ret);
-                    }
+                if ret_apply
+                    && self.store.kind(hd) == Kind::LAMBDA
+                    && let Some(ret) = self.mk_beta_reduce(&vchildren)
+                {
+                    return Some(ret);
                 }
                 return Some(if ret_apply { x } else { hd });
             }

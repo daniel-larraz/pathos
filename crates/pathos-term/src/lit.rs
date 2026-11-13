@@ -36,19 +36,35 @@ impl Lit {
     }
 
     fn rational(kind: LitKind, r: Rational) -> Lit {
-        if kind == LitKind::Decimal { Lit::Decimal(r) } else { Lit::Rational(r) }
+        if kind == LitKind::Decimal {
+            Lit::Decimal(r)
+        } else {
+            Lit::Rational(r)
+        }
     }
 
     fn bitvec(kind: LitKind, b: BitVec) -> Lit {
-        if kind == LitKind::Hexadecimal { Lit::Hex(b) } else { Lit::Binary(b) }
+        if kind == LitKind::Hexadecimal {
+            Lit::Hex(b)
+        } else {
+            Lit::Binary(b)
+        }
     }
 
     fn as_bool(&self) -> Option<bool> {
-        if let Lit::Bool(b) = self { Some(*b) } else { None }
+        if let Lit::Bool(b) = self {
+            Some(*b)
+        } else {
+            None
+        }
     }
 
     fn as_int(&self) -> Option<&Integer> {
-        if let Lit::Numeral(i) = self { Some(i) } else { None }
+        if let Lit::Numeral(i) = self {
+            Some(i)
+        } else {
+            None
+        }
     }
 
     fn as_rat(&self) -> Option<&Rational> {
@@ -66,7 +82,11 @@ impl Lit {
     }
 
     fn as_str(&self) -> Option<&EoString> {
-        if let Lit::String(s) = self { Some(s) } else { None }
+        if let Lit::String(s) = self {
+            Some(s)
+        } else {
+            None
+        }
     }
 
     /// Applies `op` to literal arguments. Returns `None` when the operator
@@ -75,7 +95,10 @@ impl Lit {
     pub fn evaluate(op: EvalOp, args: &[&Lit]) -> Option<Lit> {
         let first = *args.first()?;
         // Most operators need all arguments to be of one kind.
-        let mixed = matches!(op, EvalOp::Extract | EvalOp::ToBin | EvalOp::Pow | EvalOp::Log);
+        let mixed = matches!(
+            op,
+            EvalOp::Extract | EvalOp::ToBin | EvalOp::Pow | EvalOp::Log
+        );
         let ka = first.kind();
         if !mixed && args.iter().any(|a| a.kind() != ka) {
             return None;
@@ -130,7 +153,11 @@ impl Lit {
                         }
                         Some(Lit::bitvec(
                             ka,
-                            if is_div { a.unsigned_div_total(b) } else { a.unsigned_rem_total(b) },
+                            if is_div {
+                                a.unsigned_div_total(b)
+                            } else {
+                                a.unsigned_rem_total(b)
+                            },
                         ))
                     }
                 }
@@ -263,7 +290,9 @@ impl Lit {
             }
             Lit::Hex(b) | Lit::Binary(b) => {
                 if op != EvalOp::Concat
-                    && rest.iter().any(|a| a.as_bv().map(BitVec::size) != Some(b.size()))
+                    && rest
+                        .iter()
+                        .any(|a| a.as_bv().map(BitVec::size) != Some(b.size()))
                 {
                     return None;
                 }
@@ -321,9 +350,15 @@ impl Lit {
                 }
                 let v1 = i1.to_u32() as usize;
                 let vs = st.len();
-                let v2 = if *i2 >= dsize { vs - 1 } else { i2.to_u32() as usize };
+                let v2 = if *i2 >= dsize {
+                    vs - 1
+                } else {
+                    i2.to_u32() as usize
+                };
                 let esize = if v2 >= v1 { v2 + 1 - v1 } else { 0 };
-                Some(Lit::String(st.substr(v1.min(vs), esize.min(vs - v1.min(vs)))))
+                Some(Lit::String(
+                    st.substr(v1.min(vs), esize.min(vs - v1.min(vs))),
+                ))
             }
             _ => None,
         }
@@ -379,18 +414,41 @@ mod tests {
 
     #[test]
     fn arithmetic() {
-        assert_eq!(Lit::evaluate(EvalOp::Add, &[&num("1"), &num("2")]), Some(num("3")));
-        assert_eq!(Lit::evaluate(EvalOp::IntDiv, &[&num("-7"), &num("2")]), Some(num("-4")));
-        assert_eq!(Lit::evaluate(EvalOp::IntMod, &[&num("-7"), &num("2")]), Some(num("1")));
-        assert_eq!(Lit::evaluate(EvalOp::IntDiv, &[&num("7"), &num("0")]), None);
-        assert_eq!(Lit::evaluate(EvalOp::IsNeg, &[&num("-1")]), Some(Lit::Bool(true)));
-        assert_eq!(Lit::evaluate(EvalOp::Add, &[&num("1"), &Lit::Bool(true)]), None);
         assert_eq!(
-            Lit::evaluate(EvalOp::RatDiv, &[&num("6"), &num("4")]).unwrap().to_string(),
+            Lit::evaluate(EvalOp::Add, &[&num("1"), &num("2")]),
+            Some(num("3"))
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::IntDiv, &[&num("-7"), &num("2")]),
+            Some(num("-4"))
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::IntMod, &[&num("-7"), &num("2")]),
+            Some(num("1"))
+        );
+        assert_eq!(Lit::evaluate(EvalOp::IntDiv, &[&num("7"), &num("0")]), None);
+        assert_eq!(
+            Lit::evaluate(EvalOp::IsNeg, &[&num("-1")]),
+            Some(Lit::Bool(true))
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::Add, &[&num("1"), &Lit::Bool(true)]),
+            None
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::RatDiv, &[&num("6"), &num("4")])
+                .unwrap()
+                .to_string(),
             "3/2"
         );
-        assert_eq!(Lit::evaluate(EvalOp::Log, &[&num("2"), &num("9")]), Some(num("3")));
-        assert_eq!(Lit::evaluate(EvalOp::Pow, &[&num("2"), &num("10")]), Some(num("1024")));
+        assert_eq!(
+            Lit::evaluate(EvalOp::Log, &[&num("2"), &num("9")]),
+            Some(num("3"))
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::Pow, &[&num("2"), &num("10")]),
+            Some(num("1024"))
+        );
     }
 
     #[test]
@@ -411,9 +469,18 @@ mod tests {
             Lit::evaluate(EvalOp::Extract, &[&string("hello"), &num("5"), &num("9")]),
             Some(string(""))
         );
-        assert_eq!(Lit::evaluate(EvalOp::Find, &[&string("abc"), &string("z")]), Some(num("-1")));
-        assert_eq!(Lit::evaluate(EvalOp::ToInt, &[&string("A")]), Some(num("65")));
-        assert_eq!(Lit::evaluate(EvalOp::ToString, &[&num("65")]), Some(string("A")));
+        assert_eq!(
+            Lit::evaluate(EvalOp::Find, &[&string("abc"), &string("z")]),
+            Some(num("-1"))
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::ToInt, &[&string("A")]),
+            Some(num("65"))
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::ToString, &[&num("65")]),
+            Some(string("A"))
+        );
     }
 
     #[test]
@@ -422,8 +489,14 @@ mod tests {
             Lit::evaluate(EvalOp::Extract, &[&bin("10110"), &num("1"), &num("3")]),
             Some(bin("011"))
         );
-        assert_eq!(Lit::evaluate(EvalOp::ToBin, &[&num("4"), &num("-1")]), Some(bin("1111")));
-        assert_eq!(Lit::evaluate(EvalOp::Length, &[&bin("0000")]), Some(num("4")));
+        assert_eq!(
+            Lit::evaluate(EvalOp::ToBin, &[&num("4"), &num("-1")]),
+            Some(bin("1111"))
+        );
+        assert_eq!(
+            Lit::evaluate(EvalOp::Length, &[&bin("0000")]),
+            Some(num("4"))
+        );
         assert_eq!(Lit::evaluate(EvalOp::Add, &[&bin("01"), &bin("001")]), None);
     }
 }

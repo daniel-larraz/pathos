@@ -23,7 +23,13 @@ struct EvFrame {
 
 impl EvFrame {
     fn new(init: Term, ctx: Ctx, result_key: Option<Vec<Term>>) -> EvFrame {
-        EvFrame { init, ctx, visited: HashMap::new(), visit: vec![init], result_key }
+        EvFrame {
+            init,
+            ctx,
+            visited: HashMap::new(),
+            visit: vec![init],
+            result_key,
+        }
     }
 }
 
@@ -193,15 +199,20 @@ impl Checker {
             }
             // this level is done: hand its result to the level below
             let Some(evf) = estack.pop() else { break };
-            let result = evf.visited.get(&evf.init).copied().flatten().unwrap_or(evf.init);
+            let result = evf
+                .visited
+                .get(&evf.init)
+                .copied()
+                .flatten()
+                .unwrap_or(evf.init);
             evaluated = Some(result);
             if let Some(key) = evf.result_key {
                 eval_cache.insert(key, result);
             }
-            if let Some(parent) = estack.last_mut() {
-                if let Some(app) = parent.visit.pop() {
-                    parent.visited.insert(app, Some(result));
-                }
+            if let Some(parent) = estack.last_mut()
+                && let Some(app) = parent.visit.pop()
+            {
+                parent.visited.insert(app, Some(result));
             }
         }
         evaluated.unwrap_or(e)
@@ -256,11 +267,11 @@ impl Checker {
                 return None;
             }
             let mut matched = true;
-            for j in 1..nargs {
+            for (j, &arg) in children.iter().enumerate().skip(1) {
                 // each argument is matched with its own set of visited pairs
                 let mut visited = HashSet::new();
                 let pj = self.store.child(pat, j);
-                if !self.match_terms(pj, children[j], new_ctx, &mut visited) {
+                if !self.match_terms(pj, arg, new_ctx, &mut visited) {
                     matched = false;
                     break;
                 }
@@ -307,8 +318,11 @@ impl Checker {
         if self.store.kind(rest) != Kind::FUNCTION_TYPE {
             return None;
         }
-        let src =
-            if is_left == tinst_list_arg { self.store.child(top, 0) } else { self.store.child(rest, 0) };
+        let src = if is_left == tinst_list_arg {
+            self.store.child(top, 0)
+        } else {
+            self.store.child(rest, 0)
+        };
         let mut ctx = Ctx::new();
         let mut visited = HashSet::new();
         if !self.match_terms(src, tinst, &mut ctx, &mut visited) {
@@ -334,16 +348,16 @@ impl Checker {
             children.push(head);
             e = tail;
         }
-        if let Some(nil) = check_nil {
-            if e != nil {
-                let msg = format!(
-                    "...expected associative application to end in {}, got {}",
-                    self.show(nil),
-                    self.show(orig)
-                );
-                self.warn(&msg);
-                return None;
-            }
+        if let Some(nil) = check_nil
+            && e != nil
+        {
+            let msg = format!(
+                "...expected associative application to end in {}, got {}",
+                self.show(nil),
+                self.show(orig)
+            );
+            self.warn(&msg);
+            return None;
         }
         Some(e)
     }
@@ -509,12 +523,11 @@ impl Checker {
                 return Some(self.mk_bool(self.store.kind(first) == kk));
             }
             EvalOp::TypeOf => {
-                if !is_eval(self, first) {
-                    if let Some(et) = self.get_type(first, None) {
-                        if ground(self, et) {
-                            return Some(et);
-                        }
-                    }
+                if !is_eval(self, first)
+                    && let Some(et) = self.get_type(first, None)
+                    && ground(self, et)
+                {
+                    return Some(et);
                 }
             }
             EvalOp::NameOf => {
@@ -572,8 +585,7 @@ impl Checker {
         // A parametric datatype is applied to its parameters; it is fully
         // applied when its type is Type.
         let mut is_param = false;
-        if self.store.kind(sym) == Kind::APPLY && self.get_type(sym, None) == Some(self.mk_type())
-        {
+        if self.store.kind(sym) == Kind::APPLY && self.get_type(sym, None) == Some(self.mk_type()) {
             is_param = true;
             while self.store.kind(sym) == Kind::APPLY && self.store.num_children(sym) > 0 {
                 sym = self.store.child(sym, 0);
@@ -636,7 +648,10 @@ impl Checker {
         };
         // As above for operators with too few arguments.
         let needed = match k {
-            EvalOp::ListLength | EvalOp::ListRev | EvalOp::ListSetof | EvalOp::ListSingletonElim => 2,
+            EvalOp::ListLength
+            | EvalOp::ListRev
+            | EvalOp::ListSetof
+            | EvalOp::ListSingletonElim => 2,
             _ => 3,
         };
         if args.len() < needed {
@@ -845,10 +860,10 @@ impl Checker {
         let arg = *args.get(1)?;
         self.get_type(arg, None);
         let arg_type = self.store.ty(arg);
-        if let Some(n) = self.evaluate_nil(op, nil, is_left, arg_type, true) {
-            if self.is_nary_list(arg, op, n, is_left) {
-                return Some(arg);
-            }
+        if let Some(n) = self.evaluate_nil(op, nil, is_left, arg_type, true)
+            && self.is_nary_list(arg, op, n, is_left)
+        {
+            return Some(arg);
         }
         let n = self.evaluate_nil(op, nil, is_left, arg_type, false)?;
         if self.is_nary_list(arg, op, n, is_left) {
@@ -871,13 +886,18 @@ impl Checker {
             return Some(ct);
         }
         if children.len() == 1 {
-            let msg = format!("Failed to determine parameters for {}", self.show(children[0]));
+            let msg = format!(
+                "Failed to determine parameters for {}",
+                self.show(children[0])
+            );
             self.warn(&msg);
             return None;
         }
         if !attr.is_list_nil() {
-            let msg =
-                format!("Unknown category for parameterized operator {}", self.show(children[0]));
+            let msg = format!(
+                "Unknown category for parameterized operator {}",
+                self.show(children[0])
+            );
             self.warn(&msg);
             return None;
         }

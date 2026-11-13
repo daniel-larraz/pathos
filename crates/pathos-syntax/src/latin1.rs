@@ -18,7 +18,9 @@ pub fn decode(bytes: &[u8]) -> String {
 /// built from it and ASCII, has no `char` above 255; one that does is
 /// written as `?`.
 pub fn encode(s: &str) -> Vec<u8> {
-    s.chars().map(|c| u8::try_from(u32::from(c)).unwrap_or(b'?')).collect()
+    s.chars()
+        .map(|c| u8::try_from(u32::from(c)).unwrap_or(b'?'))
+        .collect()
 }
 
 #[cfg(test)]

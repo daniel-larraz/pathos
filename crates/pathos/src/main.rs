@@ -53,10 +53,10 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
             if opts.set_option(key, false) {
                 continue;
             }
-        } else if let Some(key) = arg.strip_prefix("--") {
-            if opts.set_option(key, true) {
-                continue;
-            }
+        } else if let Some(key) = arg.strip_prefix("--")
+            && opts.set_option(key, true)
+        {
+            continue;
         }
         // included once the options are final
         if let Some(f) = arg.strip_prefix("--include=") {
@@ -96,7 +96,11 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
             file = Some(arg.clone());
         }
     }
-    Ok(Parsed::Run(Invocation { opts, includes, file }))
+    Ok(Parsed::Run(Invocation {
+        opts,
+        includes,
+        file,
+    }))
 }
 
 /// Writes a line of text held as described in `pathos_syntax::latin1`.
@@ -140,12 +144,18 @@ fn run(inv: Invocation) -> Result<&'static str> {
             "the last proof step did not prove false at assumption level zero.",
         ));
     }
-    Ok(if st.ck.used_sorry_rule() { "incomplete" } else { "correct" })
+    Ok(if st.ck.used_sorry_rule() {
+        "incomplete"
+    } else {
+        "correct"
+    })
 }
 
 fn main() -> ExitCode {
-    let args: Vec<String> =
-        std::env::args_os().skip(1).map(|a| latin1::decode(&a.into_vec())).collect();
+    let args: Vec<String> = std::env::args_os()
+        .skip(1)
+        .map(|a| latin1::decode(&a.into_vec()))
+        .collect();
     let result = parse_args(&args).and_then(|parsed| match parsed {
         Parsed::Print(text) => Ok(text),
         Parsed::Run(inv) => run(inv).map(|verdict| format!("{verdict}\n")),

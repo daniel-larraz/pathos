@@ -12,12 +12,18 @@ pub struct BitVec {
 impl BitVec {
     /// The bit-vector of the given width holding `value` modulo `2^size`.
     pub fn new(size: u32, value: &Integer) -> BitVec {
-        BitVec { size, value: value.mod_by_pow2(size) }
+        BitVec {
+            size,
+            value: value.mod_by_pow2(size),
+        }
     }
 
     /// The zero bit-vector of the given width.
     pub fn zero(size: u32) -> BitVec {
-        BitVec { size, value: Integer::zero() }
+        BitVec {
+            size,
+            value: Integer::zero(),
+        }
     }
 
     /// Parses a string of binary (base 2) or hexadecimal (base 16) digits;
@@ -25,7 +31,11 @@ impl BitVec {
     pub fn parse(num: &str, base: u8) -> Option<BitVec> {
         let value = Integer::parse(num, base)?;
         let digits = u32::try_from(num.len()).ok()?;
-        let size = if base == 16 { digits.checked_mul(4)? } else { digits };
+        let size = if base == 16 {
+            digits.checked_mul(4)?
+        } else {
+            digits
+        };
         Some(BitVec { size, value })
     }
 
@@ -128,7 +138,10 @@ mod tests {
     #[test]
     fn printing() {
         assert_eq!(bv("0011").to_string_base(2), "0011");
-        assert_eq!(BitVec::parse("0f", 16).unwrap().to_string_base(2), "00001111");
+        assert_eq!(
+            BitVec::parse("0f", 16).unwrap().to_string_base(2),
+            "00001111"
+        );
         // hexadecimal output is not padded
         assert_eq!(BitVec::parse("0f", 16).unwrap().to_string_base(16), "f");
         assert_eq!(BitVec::zero(0).to_string_base(2), "");

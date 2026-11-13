@@ -156,7 +156,10 @@ impl Lexer {
     /// The text of a warning at the current position, which Ethos prints on
     /// stdout.
     pub fn warning(&self, msg: &str) -> String {
-        format!("{}:{}.{}: {}", self.input_name, self.start_line, self.start_column, msg)
+        format!(
+            "{}:{}.{}: {}",
+            self.input_name, self.start_line, self.start_column, msg
+        )
     }
 
     /// An error at the start of the last token read.
@@ -185,7 +188,10 @@ impl Lexer {
         match self.input.get(self.pos) {
             Some(&b) => {
                 self.pos += 1;
-                i32::from(b)
+                // Ethos reads into a signed char, so the byte 0xFF is -1,
+                // which is also its end-of-input marker. A token ends there,
+                // but reading goes on after it.
+                if b == 0xff { EOF } else { i32::from(b) }
             }
             None => EOF,
         }
@@ -470,7 +476,9 @@ mod tests {
         );
         assert_eq!(toks("\"a\"\"b\"")[0].1, "\"a\"\"b\"");
         assert_eq!(kinds("- -a -5. !x ! eo::define par let Bool Type"), {
-            vec![Symbol, Symbol, Symbol, Symbol, Attribute, EvalDefine, Par, Let, BoolType, Type]
+            vec![
+                Symbol, Symbol, Symbol, Symbol, Attribute, EvalDefine, Par, Let, BoolType, Type,
+            ]
         });
         assert_eq!(tokens_of("let Type", false, false).unwrap(), {
             vec![(Symbol, "let".into()), (Symbol, "Type".into())]
@@ -487,12 +495,39 @@ mod tests {
     }
 
     #[test]
+    fn byte_ff_reads_as_end_of_input() {
+        // as in Ethos
+        let mut lexer = Lexer::new(b"(a |x\xffy| b)".to_vec(), "f.eo", true, true);
+        let mut seen = Vec::new();
+        for _ in 0..6 {
+            seen.push(lexer.next_token().unwrap());
+        }
+        use Token::*;
+        // `|x` ends at the 0xFF byte; `y` is a symbol; `| b)` runs to the
+        // real end of the input.
+        assert_eq!(
+            seen,
+            vec![
+                Lparen,
+                Symbol,
+                UnterminatedQuotedSymbol,
+                Symbol,
+                UnterminatedQuotedSymbol,
+                Eof
+            ]
+        );
+    }
+
+    #[test]
     fn error_positions() {
         let mut lexer = Lexer::new(b"(a\n  #z".to_vec(), "f.eo", true, true);
         assert_eq!(lexer.next_token(), Ok(Token::Lparen));
         assert_eq!(lexer.next_token(), Ok(Token::Symbol));
         let err = lexer.next_token().unwrap_err();
-        assert_eq!(err.to_string(), "Error: f.eo:2.3: Error finding token following #\n");
+        assert_eq!(
+            err.to_string(),
+            "Error: f.eo:2.3: Error finding token following #\n"
+        );
     }
 
     #[test]

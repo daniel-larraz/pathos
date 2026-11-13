@@ -89,7 +89,11 @@ struct ConsTable {
 
 impl ConsTable {
     fn with_bits(bits: u32) -> ConsTable {
-        ConsTable { slots: vec![0; 1 << bits], len: 0, shift: 64 - bits }
+        ConsTable {
+            slots: vec![0; 1 << bits],
+            len: 0,
+            shift: 64 - bits,
+        }
     }
 
     #[inline]

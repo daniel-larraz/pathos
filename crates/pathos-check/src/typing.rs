@@ -37,21 +37,21 @@ impl Checker {
             );
             return false;
         }
-        if let Some(&prev) = self.literal_type_rules.get(&k) {
-            if prev != t {
-                if out.is_some() {
-                    let (st, sprev) = (self.show(t), self.show(prev));
-                    out!(
-                        out,
-                        "Cannot set type rule for kind {} to {}, since its type was already \
+        if let Some(&prev) = self.literal_type_rules.get(&k)
+            && prev != t
+        {
+            if out.is_some() {
+                let (st, sprev) = (self.show(t), self.show(prev));
+                out!(
+                    out,
+                    "Cannot set type rule for kind {} to {}, since its type was already \
                          set to {}",
-                        Kind::Lit(k),
-                        st,
-                        sprev
-                    );
-                }
-                return false;
+                    Kind::Lit(k),
+                    st,
+                    sprev
+                );
             }
+            return false;
         }
         self.literal_type_rules.insert(k, t);
         true
@@ -282,7 +282,10 @@ impl Checker {
         if hk != Kind::FUNCTION_TYPE && hk != Kind::PROGRAM_TYPE {
             if out.is_some() {
                 let (shd, sty) = (self.show(hd), self.show(hd_type));
-                out!(out, "Non-function {shd} as head of APPLY\nIts type is {sty}");
+                out!(
+                    out,
+                    "Non-function {shd} as head of APPLY\nIts type is {sty}"
+                );
             }
             return None;
         }
@@ -483,6 +486,7 @@ impl Checker {
     /// The term for a string literal given as Ethos's `mkLiteral` takes it:
     /// text in which `\u{...}` escapes denote code points.
     pub fn mk_string_literal(&mut self, s: &str) -> Term {
-        self.store.mk_lit(Lit::String(pathos_term::EoString::parse(s, true)))
+        self.store
+            .mk_lit(Lit::String(pathos_term::EoString::parse(s, true)))
     }
 }

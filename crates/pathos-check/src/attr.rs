@@ -62,10 +62,7 @@ impl Attr {
     pub fn is_list_nil(self) -> bool {
         matches!(
             self,
-            Attr::LeftAssocNil
-                | Attr::RightAssocNil
-                | Attr::RightAssocNsNil
-                | Attr::LeftAssocNsNil
+            Attr::LeftAssocNil | Attr::RightAssocNil | Attr::RightAssocNsNil | Attr::LeftAssocNsNil
         )
     }
 

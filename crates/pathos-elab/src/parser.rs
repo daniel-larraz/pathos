@@ -30,7 +30,13 @@ impl<'a> Parser<'a> {
         // `let` is only lexed outside signatures, `Type` only inside
         let lex_let = !is_signature && st.ck.opts.parse_let;
         let lex = Lexer::new(input, input_name, lex_let, is_signature);
-        Parser { lex, st, is_signature, is_reference, finished: false }
+        Parser {
+            lex,
+            st,
+            is_signature,
+            is_reference,
+            finished: false,
+        }
     }
 
     /// Runs the commands of the input to its end.
@@ -62,7 +68,10 @@ pub fn include_file(
     p.st.input_file = current_path;
     if p.st.assumption_level() != 0 {
         // reported through the lexer, like any other error in the file
-        let open = p.st.innermost_scope_symbol().unwrap_or_default().to_string();
+        let open =
+            p.st.innermost_scope_symbol()
+                .unwrap_or_default()
+                .to_string();
         return Err(p.lex.parse_error(format!(
             "This file did not preserve assumption scope. The most recent open assumption was \
              {open}."

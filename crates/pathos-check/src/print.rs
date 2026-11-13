@@ -28,7 +28,10 @@ fn quote_symbol(s: &str) -> String {
         s
     };
     // a quoted symbol cannot contain | or \
-    let cleaned: String = inner.chars().map(|c| if c == '\\' || c == '|' { '_' } else { c }).collect();
+    let cleaned: String = inner
+        .chars()
+        .map(|c| if c == '\\' || c == '|' { '_' } else { c })
+        .collect();
     format!("|{cleaned}|")
 }
 

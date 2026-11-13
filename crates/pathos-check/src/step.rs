@@ -116,15 +116,17 @@ impl Checker {
                 if let Some(pattern) = pattern {
                     // the program did not apply: show what it expects
                     let eargs = self.store.children(pattern)[1..].to_vec();
-                    let (se, sp) =
-                        (self.show_list(&eargs, ", "), self.show_list(&children[1..], ", "));
+                    let (se, sp) = (
+                        self.show_list(&eargs, ", "),
+                        self.show_list(&children[1..], ", "),
+                    );
                     if let Some(e) = err.as_deref_mut() {
                         let _ = writeln!(e, "Expected args: {se}");
                         let _ = writeln!(e, "Provided args: {sp}");
                     }
                 } else {
                     let s = self.show(result);
-                    if let Some(e) = err.as_deref_mut() {
+                    if let Some(e) = err {
                         let _ = writeln!(e, "Evaluation failed: {s}");
                     }
                 }

@@ -31,17 +31,29 @@ impl Error {
     pub fn at(location: Location, message: impl Into<String>) -> Error {
         let mut message = message.into();
         message.push('\n');
-        Error { location: Some(location), labelled: true, message }
+        Error {
+            location: Some(location),
+            labelled: true,
+            message,
+        }
     }
 
     /// An error without a position, printed as `Error: <message>`.
     pub fn plain(message: impl Into<String>) -> Error {
-        Error { location: None, labelled: true, message: message.into() }
+        Error {
+            location: None,
+            labelled: true,
+            message: message.into(),
+        }
     }
 
     /// A failure printed as the bare message.
     pub fn fatal(message: impl Into<String>) -> Error {
-        Error { location: None, labelled: false, message: message.into() }
+        Error {
+            location: None,
+            labelled: false,
+            message: message.into(),
+        }
     }
 }
 

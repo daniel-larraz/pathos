@@ -41,11 +41,7 @@ pub struct State {
 impl State {
     /// `warnings` receives the lines Ethos writes to stderr without
     /// stopping, `out` those it writes to stdout.
-    pub fn new(
-        opts: Options,
-        warnings: Box<dyn FnMut(&str)>,
-        out: Box<dyn FnMut(&str)>,
-    ) -> State {
+    pub fn new(opts: Options, warnings: Box<dyn FnMut(&str)>, out: Box<dyn FnMut(&str)>) -> State {
         let mut st = State {
             ck: Checker::new(opts, warnings),
             sym_table: HashMap::new(),
@@ -235,9 +231,8 @@ impl State {
     /// `step-pop` conclusion is bound after its scope is closed, so it is at
     /// level zero when the level is still one.
     pub(crate) fn notify_step_result(&mut self, is_pop: bool, result: Term) {
-        self.last_step_proves_false_at_level_zero = self.assumption_level()
-            == usize::from(is_pop)
-            && result == self.ck.mk_false();
+        self.last_step_proves_false_at_level_zero =
+            self.assumption_level() == usize::from(is_pop) && result == self.ck.mk_false();
     }
 
     pub fn last_step_proves_false_at_level_zero(&self) -> bool {
