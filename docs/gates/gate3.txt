@@ -1,0 +1,13 @@
+# Gate 3: the 10 smallest proofs in the cvc5 corpus. Each includes the full
+# CPC signature (Cpc.eo and expert/CpcExpert.eo), so this gate is mostly
+# about loading the signature.
+regress0__cores__issue5902.cpc
+regress0__parser__dd.define-named.cpc
+regress0__proofs__assume-false-final-step-check.cpc
+regress0__preprocess__proj-issue683.cpc
+regress0__preprocess__proj-issue684.cpc
+regress0__parser__legacy-datatype-tester.cpc
+regress1__sets__choose2.cpc
+regress0__push-pop__issue7479-global-decls.cpc
+regress0__bv__bvcomp.cvc.cpc
+regress0__sets__error2.cpc

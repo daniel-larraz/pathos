@@ -1,0 +1,15 @@
+[package]
+name = "pathos-elab"
+description = "Elaboration: scopes, overloading and attributes, from parsed syntax to terms"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+pathos-term = { path = "../pathos-term" }
+pathos-syntax = { path = "../pathos-syntax" }

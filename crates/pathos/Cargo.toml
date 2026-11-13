@@ -1,0 +1,17 @@
+[package]
+name = "pathos"
+description = "The pathos command-line checker"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+pathos-term = { path = "../pathos-term" }
+pathos-syntax = { path = "../pathos-syntax" }
+pathos-elab = { path = "../pathos-elab" }
+pathos-check = { path = "../pathos-check" }

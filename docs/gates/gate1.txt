@@ -1,0 +1,32 @@
+# Gate 1 (spike): the 30 smallest .eo regressions in Ethos's tests/
+# directory, 187 bytes or less. The reference accepts 19 and rejects 11.
+singular-datatype.eo
+parser-overflow-declare-sort.eo
+is_eq.eo
+require-proof-of-false-no-step.eo
+bang-lex.eo
+curry-nary.eo
+simple.eo
+code-point-oob.eo
+apply-no-operator.eo
+nullary-arrow-type.eo
+Bools.eo
+assume-push-unclosed.eo
+self-requires.eo
+define-scope-attr.eo
+implicit-then-var.eo
+reference-define-const-equation-fail.eo
+double-list.eo
+declare-consts-boolean.eo
+define-fun-dep-type.eo
+declare-consts-missing-numeral.eo
+declare-consts-missing-string.eo
+declare-consts-twice.eo
+reference-define-const-macro.eo
+sorry.eo
+pf-simple-sig-2.eo
+check-sat-assuming-non-bool.eo
+require-proof-of-false.eo
+nat-type.eo
+define-const-simple.eo
+set-empty-amb.eo

@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# Compares pathos with the reference Ethos checker using the pinned harness.
+#
+#   scripts/difftest <gate> [difftest.py run options...]
+#
+# Gates (docs/brief.md, "Milestones"):
+#   gate1   the 30 smallest regressions (docs/gates/gate1.txt)
+#   tests   all of Ethos's regressions                       (gate 2)
+#   gate3   the 10 smallest cvc5 proofs (docs/gates/gate3.txt)
+#   proofs  all cvc5 proofs in the corpus                    (gate 4)
+#   all     regressions and proofs
+#   perf    all, one job at a time, reference rerun          (gate 5)
+#
+# Extra options go to `difftest.py run`, e.g. --filter, --show-all, --report.
+# Exits 0 when pathos and the reference agree on every case, 1 otherwise,
+# 2 when the setup is wrong.
+#
+# Needs ETHOS_HARNESS: a checkout of HARNESS_REPO at HARNESS_COMMIT (see
+# difftest.env). Set it in the environment or in .difftest.local:
+#   ETHOS_HARNESS=/path/to/ethos
+
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../difftest.env
+source "$root/difftest.env"
+if [[ -f "$root/.difftest.local" ]]; then
+  # shellcheck disable=SC1091
+  source "$root/.difftest.local"
+fi
+
+fail() { echo "scripts/difftest: $*" >&2; exit 2; }
+
+[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|all|perf [options]"
+gate="$1"; shift
+
+[[ -n "${ETHOS_HARNESS:-}" ]] ||
+  fail "set ETHOS_HARNESS to a checkout of $HARNESS_REPO at $HARNESS_COMMIT"
+head="$(git -C "$ETHOS_HARNESS" rev-parse HEAD)"
+[[ "$head" == "$HARNESS_COMMIT" ]] ||
+  fail "$ETHOS_HARNESS is at $head, expected $HARNESS_COMMIT"
+git -C "$ETHOS_HARNESS" diff --quiet HEAD -- tools/difftest tests ||
+  fail "$ETHOS_HARNESS has local changes in tools/difftest or tests"
+
+dt="$ETHOS_HARNESS/tools/difftest"
+ref="$dt/work/ref/${REFERENCE_REV:0:12}/build/src/ethos"
+[[ -x "$ref" ]] ||
+  fail "no reference binary; run: $dt/difftest.py build-ref $REFERENCE_REV"
+
+corpus="$dt/work/corpus"
+needs_corpus=0
+case "$gate" in gate3|proofs|all|perf) needs_corpus=1 ;; esac
+if [[ $needs_corpus == 1 ]]; then
+  [[ -f "$corpus/MANIFEST.json" ]] ||
+    fail "no proof corpus; see $dt/README.md, \"The proof corpus\""
+  rev="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["cvc5_revision"])' "$corpus/MANIFEST.json")"
+  [[ "$rev" == "$CVC5_REV" ]] ||
+    fail "the corpus was made with cvc5 $rev, expected $CVC5_REV"
+fi
+
+# Builds the regex for --filter from a list of file names.
+filter_from() {
+  local prefix="$1" file="$2"
+  python3 - "$prefix" "$file" <<'EOF'
+import re, sys
+prefix, path = sys.argv[1], sys.argv[2]
+names = [l.strip() for l in open(path) if l.strip() and not l.startswith("#")]
+print("^(" + "|".join(re.escape(prefix + n) for n in names) + ")$")
+EOF
+}
+
+args=()
+case "$gate" in
+  gate1)  args=(--tests "$ETHOS_HARNESS/tests"
+                --filter "$(filter_from tests/ "$root/docs/gates/gate1.txt")") ;;
+  tests)  args=(--tests "$ETHOS_HARNESS/tests") ;;
+  gate3)  args=(--corpus "$corpus"
+                --filter "$(filter_from proofs/ "$root/docs/gates/gate3.txt")") ;;
+  proofs) args=(--corpus "$corpus") ;;
+  all)    args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus") ;;
+  perf)   args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
+                --jobs 1 --no-cache) ;;
+  *) fail "unknown gate: $gate" ;;
+esac
+
+cargo build --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos
+exec python3 "$dt/difftest.py" run --ref "$ref" --cand "$root/target/release/pathos" \
+  "${args[@]}" "$@"
