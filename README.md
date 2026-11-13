@@ -4,9 +4,10 @@ A reimplementation of the [Ethos](https://github.com/cvc5/ethos) proof checker
 in Rust. Work in progress: it does not check proofs yet.
 
 pathos aims to behave exactly like Ethos (same verdicts and error messages on
-the same inputs) while being memory safe. A differential testing harness
-compares the two; see [docs/brief.md](docs/brief.md) for the goal, the design
-and the milestones.
+the same inputs) while being memory safe: no `unsafe` code in pathos, no C or
+C++ dependencies, and every dependency's `unsafe` code accounted for. A
+differential testing harness compares the two; see
+[docs/brief.md](docs/brief.md) for the goals, the design and the milestones.
 
 ## Building
 

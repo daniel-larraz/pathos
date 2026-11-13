@@ -1,10 +1,16 @@
 # pathos: brief
 
 pathos is a reimplementation of the [Ethos](https://github.com/cvc5/ethos)
-proof checker in Rust. It must behave exactly like Ethos: same verdicts and
-same error messages, on the same inputs. A differential testing harness
-decides what "the same" means. pathos is done when the harness reports no
-differences and pathos is about as fast as Ethos and uses no more memory.
+proof checker in Rust. It has three goals:
+
+1. **Behave exactly like Ethos:** same verdicts and same error messages, on
+   the same inputs. A differential testing harness decides what "the same"
+   means.
+2. **Be memory safe**, unlike the C++ (see "Memory safety" below).
+3. **Be about as fast as Ethos and use no more memory.**
+
+pathos is done when the harness reports no differences, the memory-safety
+requirements hold, and the performance gate passes.
 
 Background, with measurements behind the design choices below:
 [Ethos: current architecture and a Rust reimplementation](https://claude.ai/artifact/BXXqKmQ3n9p853PbNi8U6z)
@@ -90,7 +96,7 @@ These were made deliberately; change one only with the user's agreement.
    C code and abort on allocation failure. Division, modulo and rounding must
    match GMP's results in the C++ exactly.
 10. **No `unsafe` in pathos.** `unsafe_code = "forbid"` is set for the
-    workspace.
+    workspace. See "Memory safety" below for dependencies.
 11. **Crates.** `pathos-term` (term store, literals, numbers),
     `pathos-syntax` (lexer, parser, spans), `pathos-elab` (scopes,
     overloading, attributes: from syntax to terms), `pathos-check` (typing,
@@ -99,6 +105,30 @@ These were made deliberately; change one only with the user's agreement.
     overload resolution change how later input is parsed. The crates separate
     responsibilities, not phases. Adjust the boundaries if the code shows a
     better split, and say why.
+
+## Memory safety
+
+Ethos manages its term graph by hand and has had memory bugs as a result
+(PRs #223 and #256 fixed two). pathos must not have that class of bug:
+
+- **No `unsafe` code in pathos's crates.** The workspace forbids it; never
+  relax the lint.
+- **Every dependency's `unsafe` code is accounted for.** Keep
+  `docs/dependencies.md` listing each dependency, direct and indirect, whether
+  it contains `unsafe` code and where, and why it is acceptable. Prefer
+  crates without `unsafe`. Adding a dependency that contains `unsafe`, or
+  that binds C code, needs the user's agreement. Known case: `malachite-nz`
+  denies `unsafe` except in its AVX2 FFT, which calls CPU intrinsics after
+  checking CPU support and is used only for very large multiplications.
+- **No C or C++ code**, so no GMP. That is why numbers use `malachite`, not
+  `rug`.
+- **Bad input never causes undefined behaviour.** It produces an error, as
+  in Ethos. Panics on bad input are bugs too, even though they are memory
+  safe: they lose the error message the harness compares. Stack exhaustion is
+  avoided by iterative traversals (decision 8).
+
+At every gate, check that `docs/dependencies.md` matches `Cargo.lock`, and
+report any change.
 
 ## Milestones
 

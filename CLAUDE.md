@@ -1,8 +1,9 @@
 # pathos
 
-pathos reimplements the Ethos proof checker (C++) in Rust and must behave
-exactly like it. Read `docs/brief.md` first: it has the goal, the reference,
-the design decisions, and the milestones with their gates.
+pathos reimplements the Ethos proof checker (C++) in Rust. It must behave
+exactly like Ethos and, unlike Ethos, be memory safe. Read `docs/brief.md`
+first: it has the goals, the reference, the design decisions, the
+memory-safety requirements, and the milestones with their gates.
 
 This codebase is yours: how it's built is your call within the design
 decisions in the brief, and you'll keep building on it. Restructure when the
@@ -27,6 +28,10 @@ code calls for it.
 - **Match the C++ binary, not your reading of it.** Error messages must be
   identical, including their position and wording. When unsure what Ethos
   does, run the reference binary on a small input.
+- **Memory safety is a requirement, not a preference.** Never relax the
+  `unsafe_code = "forbid"` lint. Keep `docs/dependencies.md` up to date, and
+  ask the user before adding a dependency that contains `unsafe` code or
+  binds C code.
 - **No special cases for particular tests or proofs.** Every fix must follow
   from Ethos's behaviour in general.
 - **Keep the design decisions in the brief** unless the user agrees to change
