@@ -87,7 +87,7 @@ fn request_terms(store: &mut TermStore, sig: &Signature, leaves: &[Term], until:
 fn peak_rss_bytes() -> Option<u64> {
     let status = std::fs::read_to_string("/proc/self/status").ok()?;
     let line = status.lines().find(|l| l.starts_with("VmHWM:"))?;
-    let kb: u64 = line.split_whitespace().nth(1)?.parse().ok()?;
+    let kb: u64 = line.split_ascii_whitespace().nth(1)?.parse().ok()?;
     Some(kb * 1024)
 }
 

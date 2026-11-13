@@ -1,7 +1,7 @@
 //! Parsing and running commands (`cmd_parser.cpp` in Ethos).
 
 use pathos_check::{Attr, Step};
-use pathos_syntax::{Result, Token};
+use pathos_syntax::{Error, Result, Token};
 use pathos_term::{Integer, Kind, SymbolKind, Term};
 
 use crate::expr_parser::{AttrCtx, AttrMap, ParamList};
@@ -215,6 +215,11 @@ impl Parser<'_> {
                     .lex
                     .unexpected_token_error(tok, "Expected Eunoia command"));
             }
+        }
+        // Terms made after the store filled up are placeholders, so
+        // nothing the command computed can be trusted.
+        if let Some(limit) = self.st.ck.store.limit_exceeded() {
+            return Err(Error::fatal(format!("Term store limit exceeded: {limit}")));
         }
         self.lex.eat_token(Token::Rparen)?;
         Ok(true)

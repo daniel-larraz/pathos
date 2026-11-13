@@ -15,11 +15,15 @@ pub fn decode(bytes: &[u8]) -> String {
 }
 
 /// Maps each `char` back to its byte. Text made by [`decode`], and anything
-/// built from it and ASCII, has no `char` above 255; one that does is
-/// written as `?`.
+/// built from it and ASCII, has no `char` above 255. One that does is a bug
+/// in pathos: debug builds and tests stop on it, release builds write `?`.
 pub fn encode(s: &str) -> Vec<u8> {
     s.chars()
-        .map(|c| u8::try_from(u32::from(c)).unwrap_or(b'?'))
+        .map(|c| {
+            let byte = u8::try_from(u32::from(c));
+            debug_assert!(byte.is_ok(), "char {c:?} is not a byte: {s:?}");
+            byte.unwrap_or(b'?')
+        })
         .collect()
 }
 
@@ -32,5 +36,11 @@ mod tests {
         let bytes: Vec<u8> = (0..=255).collect();
         assert_eq!(encode(&decode(&bytes)), bytes);
         assert_eq!(decode(b"abc"), "abc");
+    }
+
+    #[test]
+    #[should_panic(expected = "is not a byte")]
+    fn chars_above_255_are_bugs() {
+        encode("a\u{100}");
     }
 }

@@ -46,6 +46,14 @@ meaningfully. None is in the corpus.
 | A `:chainable`, `:pairwise` or `:arg-list` operator whose constructor term cannot be inferred | Builds a term with a null child | Builds the plain application |
 | `step-pop` when the assumption scope holds no assumption | Reads past the end of a vector | The step fails to check |
 
+### Size limits
+
+pathos's terms are 32-bit handles. An input that needs more than 2^32 - 1
+terms, or more than 2^32 - 1 children of non-binary terms in total, ends with
+`Term store limit exceeded: <which>` after the command that hit the limit.
+That takes tens of gigabytes of memory. Ethos has no such limit and no such
+message; it runs until memory is exhausted.
+
 ### Not observed, but possible
 
 - **`eo::hash` and `eo::cmp`.** Ethos numbers terms as `eo::hash` first sees
