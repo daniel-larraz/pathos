@@ -75,11 +75,12 @@ of milestone 2. None of them affects any harness case.
   With one store per run this cannot happen. Revisit if pathos becomes a
   library that holds several stores.
 
-## Still open for the user (not part of this review)
+## Decisions outside this review
 
-- **The number library.** `malachite` brings nine crates that contain
-  `unsafe` code (see `docs/dependencies.md`). Accept them, or compare
-  `num-bigint` on dependencies and speed before gate 5.
+- **The number library: decided 2026-11-13, keep `malachite` for now.** The
+  user accepts the nine crates with `unsafe` code that it brings (see
+  `docs/dependencies.md`). Keep numbers behind `num.rs` so that the library
+  can still be swapped, and keep `docs/dependencies.md` current.
 - **The changed crate boundaries** and **Latin-1 strings** from the gate-1
   report. The reviewer would accept both.
 
