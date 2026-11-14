@@ -4,9 +4,8 @@
 
 use std::collections::HashSet;
 use std::ffi::OsString;
-use std::os::unix::ffi::OsStringExt;
 
-use pathos_syntax::{Error, Result, latin1};
+use pathos_syntax::{Error, Result, latin1, textmode};
 use pathos_term::{Kind, LitKind, SymbolKind, Term};
 
 use pathos_check::Checker;
@@ -14,19 +13,19 @@ use pathos_check::Checker;
 /// The file-system path for a path held as text (see
 /// `pathos_syntax::latin1`).
 pub fn os_path(path: &str) -> OsString {
-    OsString::from_vec(latin1::encode(path))
+    latin1::to_os(path)
 }
 
 /// The content of a file as text, one character per byte.
 pub fn read_text(path: &str) -> Option<String> {
     std::fs::read(os_path(path))
         .ok()
-        .map(|b| latin1::decode(&b))
+        .map(|b| latin1::decode(&textmode::input(b)))
 }
 
 /// Writes text to a file, one byte per character. False if that fails.
 pub fn write_text(path: &str, text: &str) -> bool {
-    std::fs::write(os_path(path), latin1::encode(text)).is_ok()
+    std::fs::write(os_path(path), textmode::output(latin1::encode(text))).is_ok()
 }
 
 fn normalize_directory(mut path: String) -> String {
@@ -122,7 +121,7 @@ impl StdPlugin {
     pub fn new() -> Result<StdPlugin> {
         let dir = |var: &str, compiled_in: Option<&str>| {
             let value = std::env::var_os(var).unwrap_or_default();
-            let value = latin1::decode(&value.into_vec());
+            let value = latin1::from_os(&value);
             normalize_directory(if value.is_empty() {
                 compiled_in.unwrap_or_default().to_string()
             } else {

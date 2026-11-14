@@ -5,7 +5,7 @@ use pathos_syntax::{Error, Result, Token};
 use pathos_term::{Integer, Kind, SymbolKind, Term};
 
 use crate::expr_parser::{AttrCtx, AttrMap, ParamList};
-use crate::parser::{Parser, include_file};
+use crate::parser::{Parser, try_include_file};
 
 /// The constructors and selectors read by a datatype declaration.
 #[derive(Default)]
@@ -812,7 +812,11 @@ impl Parser<'_> {
             reference_nf = Some(self.parse_expr()?);
         }
         // a file that is not a reference is a signature
-        include_file(self.st, &file, !is_reference, is_reference, reference_nf)
+        if try_include_file(self.st, &file, !is_reference, is_reference, reference_nf)? {
+            Ok(())
+        } else {
+            Err(self.lex.parse_error(format!("Cannot include file {file}")))
+        }
     }
 
     /// `(program <symbol> (<param>*) :signature (<type>+) <type>

@@ -8,6 +8,7 @@
 mod error;
 pub mod latin1;
 mod lexer;
+pub mod textmode;
 mod token;
 
 pub use error::{Error, Location, Result};

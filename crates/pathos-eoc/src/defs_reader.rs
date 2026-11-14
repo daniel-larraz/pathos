@@ -14,7 +14,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::Read;
 
-use pathos_syntax::{Error, Result, latin1};
+use pathos_syntax::{Error, Result, latin1, textmode};
 
 use crate::std_plugin::{os_path, replace_all};
 
@@ -27,7 +27,7 @@ pub fn read_stream(path: &str) -> Option<String> {
     let mut bytes = Vec::new();
     // what was read before a failure is kept
     let _ = file.read_to_end(&mut bytes);
-    Some(latin1::decode(&bytes))
+    Some(latin1::decode(&textmode::input(bytes)))
 }
 
 /// One aggregate of the deep embedding, as the head declares it:

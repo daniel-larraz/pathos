@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Puts what a release of pathos consists of into a directory, as Ethos's
+# .github/actions/upload-artifact does for ethos: the release binary, the
+# licence, and the licences of the code linked into it.
+#
+#   scripts/package <directory>
+#
+# Expects `cargo build --locked --release` to have run. licenses/ gets the
+# licence files each dependency ships and DEPENDENCIES.txt, the name,
+# version and licence of each. Needs cargo and Python 3.
+
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+[[ $# -eq 1 ]] || { echo "usage: scripts/package <directory>" >&2; exit 2; }
+out="$1"
+exe=""
+case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) exe=".exe"; root="$(cygpath -m "$root")" ;; esac
+python="$(command -v python3 || command -v python)"
+
+mkdir -p "$out/licenses"
+cp "$root/target/release/pathos$exe" "$root/LICENSE" "$out/"
+cargo metadata --locked --format-version 1 --manifest-path "$root/Cargo.toml" |
+  "$python" -c '
+import json, shutil, sys
+from pathlib import Path
+out = Path(sys.argv[1])
+rows = []
+for p in sorted(json.load(sys.stdin)["packages"], key=lambda p: p["name"]):
+    if not p["source"]:
+        continue  # a crate of pathos itself
+    name = p["name"] + "-" + p["version"]
+    rows.append(name + ": " + str(p["license"]) + "\n")
+    src = Path(p["manifest_path"]).parent
+    for f in sorted(src.iterdir()):
+        if f.name.upper().startswith(("LICENSE", "LICENCE", "COPYING")):
+            dest = out / name
+            dest.mkdir(exist_ok=True)
+            shutil.copy(f, dest / f.name)
+(out / "DEPENDENCIES.txt").write_text("".join(rows))
+' "$out/licenses"
+ls -R "$out"

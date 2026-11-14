@@ -283,7 +283,7 @@ fn try_use(
     }
     // The signature itself: the same length, then the same content.
     let &(root_len, root_hash) = entries.first()?.content.as_ref()?;
-    if file_len(path) != Some(root_len) {
+    if !may_hold(path, root_len) {
         return Some(Outcome::NotThisFile);
     }
     let same_content = |path: &str, len: u64, hash: u64| {
@@ -303,7 +303,7 @@ fn try_use(
     paths.push(path.to_string());
     for e in &entries[1..] {
         let includer = paths.get(e.parent? as usize)?;
-        paths.push(resolve_include_from(includer, &e.name));
+        paths.push(resolve_include_from(includer, &e.name)?);
     }
     for (e, p) in entries.iter().zip(&paths).skip(1) {
         // only a file that was read can include another
@@ -342,10 +342,12 @@ fn try_use(
     Some(Outcome::Used)
 }
 
-/// The length of the file, if it is a regular file.
-fn file_len(path: &str) -> Option<u64> {
-    use std::os::unix::ffi::OsStringExt;
-    let os_path = std::ffi::OsString::from_vec(pathos_syntax::latin1::encode(path));
-    let meta = std::fs::metadata(os_path).ok()?;
-    meta.is_file().then_some(meta.len())
+/// Whether the file can have a content of `len` bytes, going by its size
+/// alone: a regular file of that size. On Windows the content is what a
+/// text-mode read gives (`pathos_syntax::textmode`), which can be shorter
+/// than the file, so there any regular file may.
+fn may_hold(path: &str, len: u64) -> bool {
+    let os_path = pathos_syntax::latin1::to_os(path);
+    std::fs::metadata(os_path)
+        .is_ok_and(|meta| meta.is_file() && (cfg!(windows) || meta.len() == len))
 }

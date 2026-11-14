@@ -9,8 +9,11 @@ whether pathos can reach that code, and why it is acceptable. Adding a
 dependency that contains `unsafe` code or binds C code needs the user's
 agreement.
 
-**Status (2026-11-14, milestone 14): option 0 chosen, pinned; awaiting
-Daniel's signature on this text.** The list matches `Cargo.lock`, which has
+**Status (2026-11-14, milestone 15): option 0 chosen, pinned; awaiting
+Daniel's signature on this text.** Milestone 15 added the trace on the other
+five platforms ("[On the other platforms](#on-the-other-platforms)"): the
+decision is the one of milestone 14, and the text under it now covers arm64,
+where the `unsafe` lines in the binaries are different ones. The list matches `Cargo.lock`, which has
 not changed since milestone 1: twelve crates from the registry, all brought
 in by `malachite`. The brief agreed to `malachite` knowing of one `unsafe`
 use, the AVX2 FFT in `malachite-nz`. `malachite` also brings nine crates of
@@ -29,8 +32,11 @@ lines with instructions of their own (`malachite-nz` 4, `bytemuck` 4,
 instruction but on which soundness depends (a second call site of the AVX2
 kernels, two marker-trait impls, and one zero-initialisation in `wide`).
 An input can open that door (a decimal literal of 17,602 digits does); no
-case of any gate does. What can go wrong in that code is a wrong product,
-not a memory error; the large-number cases compare the products with Ethos.
+case of any gate but `bignum`, which is there for it, does. What can go
+wrong in that code is a wrong product, not a memory error; the large-number
+cases compare the products with Ethos. These counts are for x86-64 Linux
+and Windows. On arm64 the door is the same and behind it are 10 or 11 lines
+of `wide` alone; on x86-64 macOS there are 19.
 
 ## Direct dependencies
 
@@ -146,9 +152,9 @@ Three kinds of evidence, each rerunnable.
 | `hashbrown`, `foldhash`, `either`, `libm`, `ryu` | **Not reached**: no code of theirs is in the binaries | 1 |
 
 Nothing is left as "not known". The limits of the method: it describes the
-binaries of one build (x86-64 Linux, release profile, rustc 1.99.1); another
-target or profile needs `scripts/unsafe-reach` rerun, and on a non-x86
-target `wide` uses that target's intrinsics instead of `safe_arch`.
+binaries of one build (release profile, rustc 1.99.1). The text above is
+for x86-64 Linux; the next section has the other five platforms pathos is
+built for.
 
 What the reached `unsafe` code is: arithmetic on vectors of four doubles.
 The AVX2 kernels call the AVX2 and FMA intrinsics, which are sound exactly
@@ -158,6 +164,72 @@ of the same size without invalid bit patterns. `safe_arch`'s six lines are
 SSE2 arithmetic, sound on every x86-64 CPU. None of it handles pointers or
 lengths that come from the input: the kernels index their buffers with
 ordinary bounds-checked slices.
+
+### On the other platforms
+
+CI runs `scripts/unsafe-reach` on each of the six platforms Ethos is built
+for (job `platforms`, step "List the dependency code in the binaries"),
+on the statically linked release build of that platform. Evidence 1 is
+therefore from each platform. Evidence 2 and 3 (which function, and the
+instrumented run) were done on x86-64 Linux only; elsewhere, that the
+lines sit behind the FFT follows from the source, and that the FFT runs
+and multiplies correctly is what the `bignum` gate shows on each platform
+(7 cases, all the same as Ethos, on all six). The numbers are from run
+43634777751 (commit `3579f6b`); `pathos` and `pathos-eoc` give the same
+lines everywhere.
+
+`unsafe` lines with code, by platform:
+
+| Platform (Rust target) | `malachite-nz` | `bytemuck` | `safe_arch` | `wide` | Total |
+| --- | --- | --- | --- | --- | --- |
+| Linux x86-64 (`x86_64-unknown-linux-gnu`) | 4 | 4 | 6 | 3 | 17 |
+| Windows x86-64 (`x86_64-pc-windows-msvc`) | 4 | 4 | 6 | 3 | 17 |
+| macOS x86-64 (`x86_64-apple-darwin`) | 4 | 4 | 7 | 4 | 19 |
+| Linux arm64 (`aarch64-unknown-linux-gnu`) | 0 | none in the binary | not built | 10 | 10 |
+| Windows arm64 (`aarch64-pc-windows-msvc`) | 0 | none in the binary | not built | 10 | 10 |
+| macOS arm64 (`aarch64-apple-darwin`) | 0 | none in the binary | not built | 11 | 11 |
+
+`hashbrown`, `foldhash`, `either`, `libm` and `ryu` contribute no code on
+any of the six, and `itertools` no `unsafe` line.
+
+**x86-64.** Windows has exactly the lines of Linux. macOS has two more,
+because Apple's x86-64 target assumes SSE4.1 where the other two assume
+only SSE2: `safe_arch` `sse4_1.rs:72` (`blend_varying_m128d`, the SSE4.1
+select that `wide` uses in place of an and/or sequence) and `wide`
+`simd.rs:393` (`splat`). Which kernels run is decided at run time as on
+Linux: the AVX2 ones on a CPU with AVX2 and FMA, the baseline ones
+otherwise. GitHub's x86-64 runners have AVX2, so there, as on the
+development machine, `bignum` runs the AVX2 kernels and the baseline
+kernels are read, not run.
+
+**arm64.** `malachite-nz` compiles its AVX2 kernels only for x86
+(`build.rs` sets `fft_avx2` for `x86` and `x86_64` alone), so on arm64
+there is one set of kernels, the baseline ones, with no run-time choice,
+and `malachite-nz` has no `unsafe` line in the binary. `bytemuck` is used
+by the AVX2 kernels only and drops out with them. `safe_arch` is an x86
+crate; `wide` depends on it for x86 targets only, so it is not compiled.
+What is left is `wide`, which on arm64 calls the NEON intrinsics itself:
+its vector of four doubles is two NEON vectors of two. So on arm64 the
+baseline kernels are the ones that run, and `bignum` runs them on all
+three arm64 platforms.
+
+| Where (`wide` 1.7.1) | What it does | Why it is sound |
+| --- | --- | --- |
+| `f64x2_.rs:110`, `:146`, `:164`, `:182`, `:1007` | Negate, add, subtract, multiply and fused multiply-add of two doubles: `vnegq_f64`, `vaddq_f64`, `vsubq_f64`, `vmulq_f64`, `vfmaq_f64` | Each is one NEON intrinsic on values, with no pointer. An intrinsic is `unsafe` to call only because it needs the CPU feature; these lines are compiled under `cfg(all(target_feature = "neon", target_arch = "aarch64"))`, and NEON is part of every arm64 CPU and of the baseline of all three targets, so there is nothing to check at run time. |
+| `f64x2_.rs:316`, `:336` | Compare less-than and greater-than: `vcltq_f64`, `vcgtq_f64`, the mask reinterpreted as doubles | As above; the reinterpretation is between two 128-bit vector types, every bit pattern valid in both. |
+| `f64x2_.rs:433` | Select by mask: `vbslq_f64` | As above. |
+| `simd.rs:386`, and `:393` on macOS | `new` and `splat`: transmute from `[f64; N]` to the vector | Same size, every bit pattern valid; `transmute` refuses to compile otherwise. The same code as on x86-64. |
+| `simd.rs:101` (no code), `:110` | `From<&[f64]>`: a zeroed vector, then `copy_nonoverlapping` of the slice into it | As on x86-64: `assert!(value.len() <= N)` at `simd.rs:91` comes first. |
+
+As on x86-64, none of it computes an index or a length from the input: the
+kernels reach their buffers through bounds-checked slices, and what could
+go wrong is a wrong product.
+
+**The standard library when linked statically.** On Linux the release
+binaries are linked with `-C target-feature=+crt-static`, as Ethos's are
+with `-static`. The linker then warns that `getpwuid_r` and `getaddrinfo`,
+which the standard library refers to (the home directory, host names),
+need the shared C library at run time. pathos calls neither.
 
 ## Decision
 
@@ -186,6 +258,12 @@ instructions for it in the binaries.
 | `wide` `simd.rs:386`, `:402` (lines with code) | `new` and `to_array`: transmute between `[f64; N]` and the vector | Same size, every bit pattern valid; `transmute` refuses to compile otherwise. |
 | `wide` `simd.rs:101` (no code), `:110` (line with code) | `From<&[f64]>`: a zeroed vector, then `copy_nonoverlapping` of the slice into it | `assert!(value.len() <= N)` at `simd.rs:91` comes first, so the copy fits; source and destination are a shared and a fresh local value, so they do not overlap; all zeros is a valid vector. |
 | `safe_arch` `sse2.rs:77`, `:584`, `:703`, `:1825`, `:2808`, `:3048` (lines with code) | Add, compare (two), multiply, subtract and xor of two doubles: one SSE2 intrinsic each | SSE2 is part of every x86-64 CPU, and the crate compiles these wrappers only for targets that have it. Values in, values out. |
+| `safe_arch` `sse4_1.rs:72` (line with code on macOS only) | Select by mask: `_mm_blendv_pd` | The wrapper exists only when the target has SSE4.1, which Apple's x86-64 target does: every Intel Mac has it. Values in, values out. |
+| `wide` `simd.rs:393` (line with code on macOS only) | `splat`: transmute from `[f64; N]` to the vector | As `new`. |
+
+This table is for x86-64. The `unsafe` lines of `wide` that are in the
+arm64 binaries, where it uses NEON, are in the table under
+"[On the other platforms](#on-the-other-platforms)".
 
 None of this code computes an index or a length from the input and uses it
 unchecked: the kernels reach their buffers through ordinary slices, which

@@ -16,13 +16,12 @@ mod smt_meta;
 mod std_plugin;
 mod trim_defs;
 
-use std::io::Write;
-use std::os::unix::ffi::OsStringExt;
+use std::io::{IsTerminal, Write};
 use std::process::ExitCode;
 
 use pathos_check::Options;
 use pathos_elab::{Plugin, State, include_file};
-use pathos_syntax::{Error, Result, latin1};
+use pathos_syntax::{Error, Result, latin1, textmode};
 
 /// The stages `ethos-eoc` has, and whether pathos has them yet.
 const PLUGINS: &[(&str, bool)] = &[
@@ -182,11 +181,10 @@ fn create_plugin(inv: &Invocation) -> Result<Box<dyn Plugin>> {
 }
 
 /// Writes a line of text held as described in `pathos_syntax::latin1`.
-fn write_line(mut w: impl Write, line: &str) {
-    let mut bytes = latin1::encode(line);
-    bytes.push(b'\n');
+fn write_line(mut w: impl Write + IsTerminal, line: &str) {
+    let utf8_only = textmode::wants_utf8(&w);
     // Nothing useful can be done if stdout or stderr is closed.
-    let _ = w.write_all(&bytes);
+    let _ = textmode::write(&mut w, &format!("{line}\n"), utf8_only);
 }
 
 /// Reads the inputs with the plugin attached. Returns what to print at the
@@ -215,14 +213,20 @@ fn run(mut inv: Invocation) -> Result<String> {
 }
 
 fn main() -> ExitCode {
+    pathos_elab::on_checker_thread(check)
+}
+
+/// The whole run: reads the command line, checks, and prints the result.
+fn check() -> ExitCode {
     let args: Vec<String> = std::env::args_os()
         .skip(1)
-        .map(|a| latin1::decode(&a.into_vec()))
+        .map(|a| latin1::from_os(&a))
         .collect();
     match parse_args(&args).and_then(run) {
         Ok(text) => {
             let mut out = std::io::stdout().lock();
-            let _ = out.write_all(&latin1::encode(&text));
+            let utf8_only = textmode::wants_utf8(&out);
+            let _ = textmode::write(&mut out, &text, utf8_only);
             let _ = out.flush();
             ExitCode::SUCCESS
         }

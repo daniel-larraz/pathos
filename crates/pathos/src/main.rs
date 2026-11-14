@@ -1,15 +1,13 @@
 //! The pathos command-line checker (`main.cpp` in Ethos).
 
 use std::cell::RefCell;
-use std::ffi::OsString;
 use std::io::{IsTerminal, Read, Write};
-use std::os::unix::ffi::OsStringExt;
 use std::process::ExitCode;
 use std::rc::Rc;
 
 use pathos_check::Options;
 use pathos_elab::{Parser, State, include_file};
-use pathos_syntax::{Error, Result, latin1};
+use pathos_syntax::{Error, Result, latin1, textmode};
 
 const HELP: &str = "        --include=X: includes the file specified by X.
              --help: displays this message.
@@ -128,11 +126,10 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
 }
 
 /// Writes a line of text held as described in `pathos_syntax::latin1`.
-fn write_line(mut w: impl Write, line: &str) {
-    let mut bytes = latin1::encode(line);
-    bytes.push(b'\n');
+fn write_line(mut w: impl Write + IsTerminal, line: &str) {
+    let utf8_only = textmode::wants_utf8(&w);
     // Nothing useful can be done if stdout or stderr is closed.
-    let _ = w.write_all(&bytes);
+    let _ = textmode::write(&mut w, &format!("{line}\n"), utf8_only);
 }
 
 /// Reads the inputs and returns what to print: the verdict and, if asked
@@ -162,14 +159,15 @@ fn run(inv: Invocation) -> Result<String> {
         }
         None => {
             // a proof on stdin
-            if std::io::stdin().is_terminal() {
+            if stdin_is_a_terminal() {
                 return Err(Error::plain("no input specified."));
             }
             let mut input = Vec::new();
             if std::io::stdin().lock().read_to_end(&mut input).is_err() {
                 return Err(Error::fatal("Couldn't read the input"));
             }
-            Parser::new(&mut st, input, "stream", false, false).parse_all()?;
+            let input = textmode::input(input);
+            Parser::for_standard_input(&mut st, input).parse_all()?;
         }
     }
     if st.ck.opts.require_proof_of_false && !st.last_step_proves_false_at_level_zero() {
@@ -189,9 +187,40 @@ fn run(inv: Invocation) -> Result<String> {
     Ok(text)
 }
 
+/// C's `isatty` on standard input, which decides whether Ethos waits for a
+/// proof there. On Unix that is a terminal. On Windows it is any character
+/// device: a console, and also the null device, which is what a process
+/// started without input is given.
+#[cfg(not(windows))]
+fn stdin_is_a_terminal() -> bool {
+    std::io::stdin().is_terminal()
+}
+
+/// See the other version. The standard library has no call for the kind of
+/// a handle. What it has, measured on both Windows platforms (run
+/// 43636416291): asking for a handle's metadata succeeds for a file and
+/// for a pipe, fails with `ERROR_INVALID_HANDLE` when there is no standard
+/// input, and fails with `ERROR_INVALID_FUNCTION` for the null device.
+#[cfg(windows)]
+fn stdin_is_a_terminal() -> bool {
+    use std::os::windows::io::AsHandle;
+    const ERROR_INVALID_FUNCTION: i32 = 1;
+    let stdin = std::io::stdin();
+    if stdin.is_terminal() {
+        return true;
+    }
+    let Ok(handle) = stdin.as_handle().try_clone_to_owned() else {
+        return false;
+    };
+    match std::fs::File::from(handle).metadata() {
+        Ok(_) => false,
+        Err(e) => e.raw_os_error() == Some(ERROR_INVALID_FUNCTION),
+    }
+}
+
 /// The bytes of the file, if it can be read.
 fn read_bytes(file: &str) -> Option<Vec<u8>> {
-    std::fs::read(OsString::from_vec(latin1::encode(file))).ok()
+    std::fs::read(latin1::to_os(file)).ok()
 }
 
 /// Loads the signature and writes its snapshot to `target`. Prints nothing:
@@ -216,16 +245,21 @@ fn write_snapshot(inv: &Invocation, target: &str) -> Result<String> {
     st.record_for_snapshot();
     include_file(&mut st, file, file.ends_with(".eo"), false, None)?;
     let bytes = st.write_snapshot(&output.borrow())?;
-    if std::fs::write(OsString::from_vec(latin1::encode(target)), bytes).is_err() {
+    if std::fs::write(latin1::to_os(target), bytes).is_err() {
         return Err(Error::plain(format!("cannot write the snapshot {target}")));
     }
     Ok(String::new())
 }
 
 fn main() -> ExitCode {
+    pathos_elab::on_checker_thread(check)
+}
+
+/// The whole run: reads the command line, checks, and prints the result.
+fn check() -> ExitCode {
     let args: Vec<String> = std::env::args_os()
         .skip(1)
-        .map(|a| latin1::decode(&a.into_vec()))
+        .map(|a| latin1::from_os(&a))
         .collect();
     let result = parse_args(&args).and_then(|parsed| match parsed {
         Parsed::Print(text) => Ok(text),
@@ -234,7 +268,8 @@ fn main() -> ExitCode {
     match result {
         Ok(text) => {
             let mut out = std::io::stdout().lock();
-            let _ = out.write_all(&latin1::encode(&text));
+            let utf8_only = textmode::wants_utf8(&out);
+            let _ = textmode::write(&mut out, &text, utf8_only);
             let _ = out.flush();
             ExitCode::SUCCESS
         }

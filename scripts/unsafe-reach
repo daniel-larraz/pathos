@@ -17,25 +17,68 @@
 # code in the binary, and then every such line that lies inside an `unsafe`
 # block, function or impl.
 #
-# Needs objdump and addr2line (binutils) and python3. Extra options go to
-# cargo build, e.g. --config or --offline; RUSTFLAGS is honoured as usual.
+# Needs a disassembler and an address-to-line tool, and Python 3. On Linux
+# these are objdump and addr2line (binutils). Elsewhere, or when those are
+# missing, llvm-objdump and llvm-addr2line (LLVM), which read ELF, Mach-O
+# with a .dSYM bundle, and PE with a .pdb file. OBJDUMP and ADDR2LINE name
+# other ones. Extra options go to cargo build, e.g. --config or --offline;
+# RUSTFLAGS is honoured as usual.
 
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exe=""
+section=(-j .text)        # ELF: leave out the linker's stubs
+case "$(uname -s)" in
+  Linux) ;;
+  Darwin)
+    section=()
+    # the line tables in a .dSYM bundle next to the binary
+    export CARGO_PROFILE_RELEASE_SPLIT_DEBUGINFO=packed ;;
+  MINGW*|MSYS*|CYGWIN*)
+    section=()
+    exe=".exe"
+    root="$(cygpath -m "$root")" ;;
+esac
 target="$root/target/unsafe-reach"
+
+find_tool() {
+  local tool
+  for tool in "$@"; do
+    if command -v "$tool" > /dev/null 2>&1; then echo "$tool"; return; fi
+  done
+  echo "scripts/unsafe-reach: none of these is in PATH: $*" >&2
+  exit 2
+}
+if [[ "$(uname -s)" == Linux ]]; then
+  objdump="${OBJDUMP:-$(find_tool objdump llvm-objdump)}"
+  addr2line="${ADDR2LINE:-$(find_tool addr2line llvm-addr2line)}"
+else
+  objdump="${OBJDUMP:-$(find_tool llvm-objdump)}"
+  addr2line="${ADDR2LINE:-$(find_tool llvm-addr2line)}"
+fi
+python="$(find_tool python3 python)"
+echo "target: $(rustc -vV | sed -n 's/^host: //p'); tools: $objdump, $addr2line"
 
 CARGO_TARGET_DIR="$target" CARGO_PROFILE_RELEASE_DEBUG=2 \
   cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" "$@"
 
 for bin in pathos pathos-eoc; do
-  exe="$target/release/$bin"
-  objdump -d --no-show-raw-insn -j .text "$exe" |
-    grep -oE '^ +[0-9a-f]+:' | tr -d ' :' > "$target/$bin.addrs"
-  addr2line -i -e "$exe" < "$target/$bin.addrs" |
-    sed 's/ (discriminator.*//' | sort -u > "$target/$bin.lines"
-  echo "== $bin: $(wc -l < "$target/$bin.addrs") instructions"
-  python3 - "$target/$bin.lines" <<'EOF'
+  exe_path="$target/release/$bin$exe"
+  # macOS: the tools look in <binary>.dSYM for a file with the binary's
+  # name, and the one cargo leaves there for pathos-eoc is named after the
+  # crate (pathos_eoc-<hash>)
+  dwarf="$exe_path.dSYM/Contents/Resources/DWARF"
+  if [[ -d "$dwarf" && ! -e "$dwarf/$bin" ]]; then
+    ls "$dwarf"
+    ln -s "$(ls "$dwarf" | head -1)" "$dwarf/$bin"
+  fi
+  "$objdump" -d --no-show-raw-insn ${section[@]+"${section[@]}"} "$exe_path" |
+    grep -oE '^ *[0-9a-f]+:' | tr -d ' :' | sed 's/^/0x/' > "$target/$bin.addrs"
+  "$addr2line" -i -e "$exe_path" < "$target/$bin.addrs" |
+    tr -d '\r' | tr '\\' / | sed 's/ (discriminator.*//' | sort -u > "$target/$bin.lines"
+  echo "== $bin: $(wc -l < "$target/$bin.addrs" | tr -d ' ') instructions"
+  "$python" - "$target/$bin.lines" <<'EOF'
 import collections, re, sys
 
 def unsafe_lines(path):

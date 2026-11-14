@@ -298,6 +298,52 @@ intended; everything between gates is not.
     eoc` pass, and the two documents are complete. The reviewer runs a
     long fuzzing campaign alongside; its result goes into
     `docs/evidence.md` after the review.
+15. **Every platform Ethos supports.** Ethos's CI (`.github/workflows/main.yml`
+    at `REFERENCE_REV`, job `build`) builds and runs its regressions on six
+    platforms, release and debug: `linux-x86_64` (`ubuntu-22.04`),
+    `linux-arm64` (`ubuntu-22.04-arm`), `macOS-x86_64` (`macos-15-intel`),
+    `macOS-arm64` (`macos-15`), `windows-x86_64` (`windows-latest`, MSYS2
+    MINGW64) and `windows-arm64` (`windows-11-arm`, MSYS2 CLANGARM64). pathos
+    has to work, and behave like Ethos, on all six. The repository is public,
+    so these runners cost nothing.
+    - **Build and test matrix.** A CI job over the same six runners:
+      `cargo build --locked --release`, `cargo test --locked` (debug and
+      release), and `scripts/unsafe-reach` where binutils are available.
+      Release binaries statically linked where Ethos's are (`--static`:
+      every release build), and uploaded as artifacts on pushes to `main`,
+      as Ethos does. Use the native Rust toolchain per platform (MSVC or
+      GNU on Windows: say which and why).
+    - **Agreement with Ethos on each platform.** On each of the six, build
+      the reference Ethos the way Ethos's CI does (GMP from apt, the
+      Homebrew bottles it pins, or MSYS2) and run `scripts/difftest`'s
+      `tests`, `cli`, `bignum` and `fuzz` gates there. The cvc5 corpora,
+      `options`, `perf` and `eoc` stay on `linux-x86_64`. Where Ethos's own
+      output differs by platform (how an abort is reported, path
+      separators, line endings), pathos must match Ethos *on that
+      platform*; record each such difference in `docs/ethos-differences.md`.
+      The harness is not yours to change: it does not yet run on Windows
+      (it uses `resource`, `os.wait4`, `killpg`, process sessions,
+      `prlimit` and GNU time); the reviewer is porting it. Report what it
+      needs, with the failing output, and work on the other platforms
+      meanwhile.
+    - **`unsafe` on arm64.** `docs/dependencies.md` traces x86-64 only. On
+      aarch64, `malachite-nz` has no AVX2 kernels, `safe_arch` drops out and
+      `wide` uses NEON intrinsics itself. Run `scripts/unsafe-reach` on both
+      arm64 runners (and macOS x86-64, whose linker differs), and give
+      `docs/dependencies.md` a reachability and soundness table per
+      architecture, as for x86-64. `bignum` on arm64 exercises the FFT
+      there. The status line goes back to awaiting Daniel's signature.
+    - **Stack.** The main thread has a 1 MB stack on Windows and 8 MB on
+      Linux and macOS. pathos's three remaining recursions stop at
+      platform-dependent depths. Either show that on each platform they
+      fail no differently from Ethos there, or run the checker on a thread
+      with an explicit, large stack on every platform; say which, and
+      measure the depths (the nested-include case of `docs/panics.md`).
+    The gate: the matrix is green on all six platforms, the four gates agree
+    with Ethos on each, `docs/dependencies.md` covers every architecture,
+    and `docs/evidence.md` says which platforms are checked and how.
+    The reviewer pushes branch `m15` to GitHub so that CI can run there;
+    commit on `m15` and say when a run is wanted.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.

@@ -21,11 +21,13 @@ Ethos `9217112f` (cvc5/ethos `main` with PR #223), built in release mode.
 - **Dependencies.** The twelve crates pathos depends on are all `malachite`
   and what it needs. Nine contain `unsafe` code. Five of those contribute
   no instruction to the binaries. The `unsafe` code that is in the binaries
-  (17 lines of vector arithmetic in four crates) lies behind `malachite`'s
+  (17 lines of vector arithmetic in four crates on x86-64, 19 on macOS; 10
+  or 11 lines of one crate on arm64) lies behind `malachite`'s
   FFT multiplication, which runs only for numbers of about 25,000 bits or
-  more: an input can reach it, and no case of any gate below does.
+  more: an input can reach it, and of the gates below only `bignum`, which
+  is there for it, does.
   What could go wrong there is a wrong product, not a memory error, and
-  the `bignum` cases below check the products. The versions are pinned.
+  the `bignum` cases check the products on every platform. The versions are pinned.
   [dependencies.md](dependencies.md) has the trace, how to rerun it
   (`scripts/unsafe-reach`), why each reachable `unsafe` line is sound, and
   the build options that were considered.
@@ -33,15 +35,17 @@ Ethos `9217112f` (cvc5/ethos `main` with PR #223), built in release mode.
   past the end of a vector or crashes (the first group of differences
   below), pathos reports an error. Indexing is bounds-checked: the worst a
   mistake in pathos can do is stop the program with a message (a "panic").
-  [panics.md](panics.md) goes through all 364 places that could panic and
+  [panics.md](panics.md) goes through all 366 places that could panic and
   says why input does not reach each; the ones a signature or proof did
   reach were found by that review and fixed.
 - **Iteration instead of recursion.** Parsing, typing a term, evaluating
   programs, matching and printing use explicit stacks, so a term a million
   levels deep, or a program a million calls deep, does not overflow the
   stack. Three recursions that Ethos also has remain, over chains of
-  declarations and nested includes; there pathos gets deeper than Ethos
-  before it stops (9,700 nested includes against 236, for one).
+  declarations and nested includes. pathos runs the checker on a thread
+  with a 64 MiB stack on every platform, and gets 4 to 50 times deeper
+  than Ethos before it stops (on Windows, where Ethos's stack is smallest,
+  about 40,000 chained declarations against about 1,000).
 - **Terms are never freed.** A term is a 32-bit index into a table that
   only grows, so there is no reference counting and no freed term to use
   by mistake, the class of bug PRs #223 and #256 fixed in Ethos. On the
@@ -53,10 +57,12 @@ Ethos `9217112f` (cvc5/ethos `main` with PR #223), built in release mode.
 Every gate runs both binaries on the same inputs and compares what they do:
 the outcome (correct, incomplete, error), the error text with its position
 (without Ethos's `Fatal failure within` line), and standard output. The
-harness is `tools/difftest` in `daniel-larraz/ethos` at `663289e`; its
+harness is `tools/difftest` in `daniel-larraz/ethos` at `500f12f`; its
 README says exactly what is compared. `scripts/difftest <gate>` builds
 pathos and runs it; `scripts/full-check` runs all of them. The counts are
-from runs on 2026-11-14 on the source of commit `0bac6d7`. All cases agree in every gate.
+from runs on 2026-11-14 on Linux x86-64, on the source of commit `69f7ece`.
+All cases agree in every gate.
+"[Platforms](#platforms)" has the gates that also run on the other five.
 
 | Gate | What both binaries are run on | Cases | Result | Rerun |
 | --- | --- | --- | --- | --- |
@@ -64,7 +70,7 @@ from runs on 2026-11-14 on the source of commit `0bac6d7`. All cases agree in ev
 | `proofs` | cvc5 proofs from 29 areas of cvc5's regressions (cvc5 `2107a003`), each with the full CPC signature | 400 (394 correct, 6 incomplete) | all agree | `scripts/difftest proofs` |
 | `large` | The cvc5 proofs of 1 MB or more from `regress1` to `regress4`, up to 453 MB | 43 (37 correct, 4 incomplete, 2 errors) | all agree | `scripts/difftest large` |
 | `options` | Regressions and proofs under each of Ethos's eight non-default options, all of them together, and none | 6,300 | all agree | `scripts/difftest options` |
-| `cli` | 38 command-line cases (`--help`, `-t`, `-v`, unknown options, standard input, `--include=`, `--reference=`), and regressions and proofs under `--stats`, `--stats-all`, `--stats-compact` | 3,188 | all agree (times and term-store counters masked) | `scripts/difftest cli` |
+| `cli` | 42 command-line cases (`--help`, `-t`, `-v`, unknown options, standard input, `--include=`, `--reference=`, the byte `0xFF` and bytes above 127 in a file and on standard input), and regressions and proofs under `--stats`, `--stats-all`, `--stats-compact` | 3,192 | all agree (times and term-store counters masked) | `scripts/difftest cli` |
 | `bignum` | Generated files of `eo::add`, `mul`, `pow`, division, conversions and the bit-vector operations on operands from 64 bits to a million bits, with each expected value computed independently (Python's integers and fractions). Each file ends with one wrong expectation on purpose, so both checkers print a value of up to 600,000 digits in full | 7 (each stops at its deliberate last line, in both) | all agree, byte for byte; Ethos agrees with every computed value | `scripts/difftest bignum` |
 | `fuzz` | The 41 groups of inputs on which a fuzzing run of mutated regressions and proofs found the two to differ | 41 | 36 fixed, 4 accepted differences, 1 Ethos crash; none still differs | `scripts/difftest fuzz` |
 | `snapshot` | Regressions and proofs under every option set, pathos starting from a snapshot of CPC; and the proofs with a truncated, a corrupted and an empty snapshot | 6,300 + 3 × 400 | all agree | `scripts/difftest snapshot` |
@@ -72,22 +78,23 @@ from runs on 2026-11-14 on the source of commit `0bac6d7`. All cases agree in ev
 | logos's acceptance check | `install/install-cpc.sh --all --cached --check` in logos, with `pathos-eoc` in place of `ethos-eoc` | Cpc, CpcMini | "Up to date with the cached signature", exit 0 | commands in [reviews/m13-eoc-lean.md](reviews/m13-eoc-lean.md) |
 | `perf` | Regressions, proofs and large proofs, one job at a time, Ethos rerun | 673 | all agree; see below | `scripts/difftest perf` |
 
-Also green: 91 unit and end-to-end tests (`cargo test`, debug and release),
+Also green: 98 unit and end-to-end tests (`cargo test`, debug and release),
 and CI on every push, which runs the gates that need neither the cvc5
 corpus nor much time (`tests`, `fuzz`, the `--stats` part of `cli`, and
 1,055 of the `eoc` cases).
 
-**Performance** (`perf`, 2026-11-14). Over the 629 cases both accept,
-Ethos takes 1,271 s and pathos 533 s (42%): the 41 large proofs 1,237 s and
-513 s, the 400 proofs 33.3 s and 19.1 s, the regressions 0.63 s and 0.47 s.
-Of the 441 cases that take Ethos over 50 ms, none is slower in pathos; the
-least favourable takes 73% of Ethos's time. pathos uses less memory than
-Ethos on every case; the peaks are 3.8 GB and 24.9 GB. A snapshot of CPC
-(pathos only) brings the 400 proofs from 19.1 s to 11.1 s. A fuzzing
-campaign was running at low priority on the same machine, and both
-checkers took about twice the time they take on an idle one (Ethos 658 s,
-pathos 269 s in an earlier run); a second run under the same load gave the
-same 42%.
+**Performance** (`perf`, 2026-11-14, Linux x86-64, commit `69f7ece`). Over
+the 629 cases both accept, Ethos takes 1,438 s and pathos 587 s (41%): the
+41 large proofs 1,402 s and 566 s, the 400 proofs 34.4 s and 20.3 s, the
+regressions 0.73 s and 0.62 s. Of the 439 cases that take Ethos over 50 ms,
+none is slower in pathos; the least favourable takes 75% of Ethos's time.
+pathos uses less memory than Ethos on every case; the peaks are 3.8 GB and
+24.9 GB. A snapshot of CPC (pathos only) brings the 400 proofs from 19.1 s
+to 11.1 s (measured at milestone 14). The machine was busy with other work
+during this run (load average about 10 on 20 cores), so both checkers'
+times are about twice those of an idle machine (Ethos 658 s, pathos 269 s
+in an earlier run); the ratio has been 41% or 42% in every run. The
+checker's own thread, new in milestone 15, costs 0.17 ms a run.
 
 **A fuzzing campaign** of mutated inputs (seed 3, 24 hours, each run
 limited to 10 s and 4 GiB) is running alongside this review; its final
@@ -95,6 +102,51 @@ count will be added here. In its first two hours it found one difference
 in pathos, in how a type error is reported after a `:let-binder` whose
 list constructor is malformed (being fixed), and six inputs of the first
 kind below, where Ethos reads past the end of an operator's arguments.
+
+## Platforms
+
+Ethos's CI builds and tests on Linux, macOS and Windows, each on x86-64 and
+arm64. pathos's CI (job `platforms`) uses the same six runners and the same
+GMP packages, builds the reference Ethos on each, and runs there:
+
+- `cargo build --release` and `cargo test`, debug and release. On Windows
+  with Rust's MSVC toolchain; the release binaries are linked statically
+  on Linux and Windows, as Ethos's are, and uploaded on pushes to `main`;
+- the `tests`, `cli` (its command-line cases and the regressions under the
+  `--stats` options), `bignum` and `fuzz` gates, and on Windows `tests`
+  once more on a checkout with CR LF line ends, which is what Ethos's own
+  CI tests there;
+- `scripts/platform-probe`: both binaries on line endings, Ctrl-Z, bytes
+  above 127, how files are named, found and printed, and the depth of the
+  three recursions;
+- `scripts/unsafe-reach`, for the per-platform tables of
+  [dependencies.md](dependencies.md).
+
+Results of CI run 43637950215 (commit `69f7ece`, 2026-11-14); every step
+of every job passed:
+
+| Platform (runner) | `tests` | `cli` | `bignum` | `fuzz` | Probe |
+| --- | --- | --- | --- | --- | --- |
+| Linux x86-64 (`ubuntu-22.04`) | 230 agree | 1,192 agree | 7 agree | none still differs | no differences |
+| Linux arm64 (`ubuntu-22.04-arm`) | 230 agree | 1,192 agree | 7 agree | none still differs | no differences |
+| macOS x86-64 (`macos-15-intel`) | 230 agree | 1,192 agree | 7 agree | none still differs | no differences |
+| macOS arm64 (`macos-15`) | 230 agree | 1,192 agree | 7 agree | none still differs | no differences |
+| Windows x86-64 (`windows-latest`, Ethos built with MSYS2 MINGW64) | 230 agree; 230 on the CR LF checkout | 1,192 agree, 4 of them accepted Ethos crashes | 7 agree | none still differs | no differences; 5 Ethos crashes |
+| Windows arm64 (`windows-11-arm`, MSYS2 CLANGARM64) | 230 agree; 230 on the CR LF checkout | 1,192 agree, 3 of them accepted Ethos crashes | 7 agree | none still differs | no differences; 5 Ethos crashes |
+
+`fuzz` replays 39 of the 41 saved findings there; two need the cvc5
+corpus. The Ethos crashes are all the missing file described below.
+
+The cvc5 proof gates, `options`, `perf` and `eoc` run on Linux x86-64
+only. Ethos does not behave the same on the six: on Windows it reads and
+writes text with CR LF and Ctrl-Z handling, resolves file names through
+the file system and prints them in full, and takes the null device for a
+terminal; on Linux arm64 the byte `0xFF` is an ordinary character. pathos
+does on each platform what Ethos does there
+([ethos-differences.md](ethos-differences.md), "By platform"). What it
+cannot match is a crash: on Windows Ethos ends on an uncaught C++
+exception when a file does not exist, and pathos reports `Couldn't open
+file`; the harness accepts those four cases by name.
 
 ## Where pathos differs from Ethos
 
@@ -123,6 +175,8 @@ is in the corpus; the fuzzing runs found most of them.
   segmentation fault in Ethos.
 - Recursion deeper than the stack: a segmentation fault in Ethos, a
   controlled abort in pathos, on fewer inputs.
+- On Windows, a file that does not exist: an uncaught C++ exception in
+  Ethos, `Couldn't open file: <name>` in pathos.
 
 **2. Output that differs by design.**
 

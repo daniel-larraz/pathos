@@ -15,6 +15,16 @@
 #                  (2,452) are left to scripts/difftest eoc, run locally:
 #                  the whole gate is about four times the work.
 #
+#   - platforms:   on each of the six platforms Ethos's own CI builds on
+#                  (the same runners, GMP installed the same way): build
+#                  and test pathos, build the reference Ethos there, and
+#                  compare the two on the regressions, the command line,
+#                  large-number arithmetic and the fuzzing findings; then
+#                  scripts/platform-probe (line endings, file names, stack
+#                  depths) and scripts/unsafe-reach. Release binaries are
+#                  linked statically where Ethos's are (not on macOS) and
+#                  uploaded on pushes to main.
+#
 # The cvc5 proof gates (proofs, large, options, perf) need a cvc5 build and
 # up to 24 GB of memory, so they run locally with scripts/full-check.
 
@@ -206,3 +216,257 @@ jobs:
           name: difftest-eoc-report
           path: difftest-eoc-report.json
           if-no-files-found: ignore
+
+  platforms:
+    strategy:
+      fail-fast: false
+      matrix:
+        name: [linux-x86_64, linux-arm64, macOS-x86_64, macOS-arm64, windows-x86_64, windows-arm64]
+        include:
+          # The runners, the shells and the GMP bottles are those of the
+          # `build` job of Ethos's .github/workflows/main.yml at
+          # REFERENCE_REV. crt-static is Ethos's --static: not on macOS.
+          - name: linux-x86_64
+            os: ubuntu-22.04
+            shell: bash
+            rustflags: -C target-feature=+crt-static
+          - name: linux-arm64
+            os: ubuntu-22.04-arm
+            shell: bash
+            rustflags: -C target-feature=+crt-static
+          - name: macOS-x86_64
+            os: macos-15-intel
+            bottle-suffix: monterey
+            gmp-sha256: b04023f65b8c79c45798a4bfd97fdbeb10f1bf9e8416e22e8eeedbd9b2a8c102
+            shell: bash
+            rustflags: ""
+          - name: macOS-arm64
+            os: macos-15
+            bottle-suffix: arm64_monterey
+            gmp-sha256: 2115b33b8b4052f91ffb85e476c7fc0388cf4e614af1ce6453b35e6d25473911
+            shell: bash
+            rustflags: ""
+          - name: windows-x86_64
+            os: windows-latest
+            shell: 'msys2 {0}'
+            rustflags: -C target-feature=+crt-static
+          - name: windows-arm64
+            os: windows-11-arm
+            shell: 'msys2 {0}'
+            rustflags: -C target-feature=+crt-static
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    env:
+      RUSTFLAGS: ${{ matrix.rustflags }}
+      ETHOS_HARNESS: ${{ github.workspace }}/ethos
+    steps:
+      # The cases are the bytes that are committed: no CRLF conversion on
+      # Windows. scripts/platform-probe covers CRLF input.
+      - name: Keep line endings as committed
+        shell: bash
+        run: git config --global core.autocrlf false
+
+      - uses: actions/checkout@v7
+
+      - name: Read the pins in difftest.env
+        id: pins
+        shell: bash
+        run: |
+          source difftest.env
+          echo "harness_repo=${HARNESS_REPO#https://github.com/}" >> "$GITHUB_OUTPUT"
+          echo "harness_commit=$HARNESS_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "reference_rev=$REFERENCE_REV" >> "$GITHUB_OUTPUT"
+          echo "ref_dir=ethos/tools/difftest/work/ref/${REFERENCE_REV:0:12}" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ steps.pins.outputs.harness_repo }}
+          ref: ${{ steps.pins.outputs.harness_commit }}
+          path: ethos
+          # build-ref needs the reference revision, an ancestor of the harness
+          fetch-depth: 0
+
+      # The next five steps are Ethos's own, from its `build` job.
+      - name: Set MACOSX_DEPLOYMENT_TARGET
+        if: runner.os == 'macOS'
+        run: echo "MACOSX_DEPLOYMENT_TARGET=12.0" >> $GITHUB_ENV
+
+      - name: Install Packages (macOS)
+        if: runner.os == 'macOS'
+        env:
+          HOMEBREW_DEVELOPER: 1
+        run: |
+          GMP_BOTTLE=gmp-6.3.0.${{ matrix.bottle-suffix }}.bottle.tar.gz
+          curl -L -H "Authorization: Bearer QQ==" -o $GMP_BOTTLE \
+            https://ghcr.io/v2/homebrew/core/gmp/blobs/sha256:${{ matrix.gmp-sha256 }}
+          brew reinstall -f $GMP_BOTTLE
+          rm $GMP_BOTTLE
+
+      - name: Install Packages (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgmp-dev
+
+      - name: Install Packages (Windows x86_64)
+        uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows' && runner.arch == 'X64'
+        with:
+          msystem: MINGW64
+          path-type: inherit
+          install: |
+            make
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-gmp
+
+      - name: Install Packages (Windows arm64)
+        uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows' && runner.arch == 'ARM64'
+        with:
+          msystem: CLANGARM64
+          path-type: inherit
+          install: |
+            make
+            mingw-w64-clang-aarch64-cmake
+            mingw-w64-clang-aarch64-clang
+            mingw-w64-clang-aarch64-gmp
+
+      # The platform's own toolchain: on Windows that is MSVC, the target
+      # Rust supports best on both architectures (see README.md).
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustc -vV
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.name }}
+
+      - name: Build (release)
+        run: cargo build --locked --release
+
+      - name: Tests (debug)
+        run: cargo test --locked --no-fail-fast
+
+      - name: Tests (release)
+        if: ${{ !cancelled() }}
+        run: cargo test --locked --release --no-fail-fast
+
+      - name: Cache the reference Ethos build
+        if: ${{ !cancelled() }}
+        uses: actions/cache@v6
+        with:
+          path: ethos/tools/difftest/work/ref
+          key: ethos-ref-${{ steps.pins.outputs.reference_rev }}-${{ steps.pins.outputs.harness_commit }}-${{ matrix.name }}
+
+      - name: Build the reference Ethos
+        if: ${{ !cancelled() }}
+        run: |
+          python="$(command -v python3 || command -v python)"
+          "$python" --version
+          "$python" ethos/tools/difftest/difftest.py build-ref ${{ steps.pins.outputs.reference_rev }}
+
+      - name: Compare pathos with Ethos on the regressions
+        if: ${{ !cancelled() }}
+        run: scripts/difftest tests --show-all --report difftest-report.json
+
+      - name: Compare the command line and the statistics
+        if: ${{ !cancelled() }}
+        run: scripts/difftest tests --cli --stats-option-sets --show-all --report difftest-cli-report.json
+
+      # Ethos's own CI checks out with the runner's settings, so on Windows
+      # its regressions have CRLF line ends there. The same gate on such a
+      # checkout of the harness, with the reference built above.
+      - name: Check out the harness with CRLF line ends (Windows)
+        if: ${{ !cancelled() && runner.os == 'Windows' }}
+        run: |
+          git -c core.autocrlf=true clone --quiet ethos ethos-crlf
+          git -C ethos-crlf -c core.autocrlf=true checkout --quiet ${{ steps.pins.outputs.harness_commit }}
+          git -C ethos-crlf config core.autocrlf true
+          mkdir -p ethos-crlf/tools/difftest/work
+          cp -r ethos/tools/difftest/work/ref ethos-crlf/tools/difftest/work/ref
+          file ethos-crlf/tests/simple.eo || true
+
+      - name: Compare pathos with Ethos on the regressions with CRLF line ends (Windows)
+        if: ${{ !cancelled() && runner.os == 'Windows' }}
+        env:
+          ETHOS_HARNESS: ${{ github.workspace }}/ethos-crlf
+        run: scripts/difftest tests --show-all --report difftest-crlf-report.json
+
+      - name: Compare arithmetic on large numbers
+        if: ${{ !cancelled() }}
+        run: scripts/difftest bignum --show-all --report difftest-bignum-report.json
+
+      - name: Replay the fuzzing findings
+        if: ${{ !cancelled() }}
+        run: scripts/difftest fuzz
+
+      - name: Compare what depends on the platform
+        if: ${{ !cancelled() }}
+        run: |
+          python="$(command -v python3 || command -v python)"
+          exe=""; [[ "$RUNNER_OS" == Windows ]] && exe=".exe"
+          "$python" scripts/platform-probe \
+            --ref "${{ steps.pins.outputs.ref_dir }}/build/src/ethos$exe" \
+            --cand "target/release/pathos$exe" --work target/platform-probe
+
+      # LLVM's tools where binutils cannot read the binaries: Homebrew's on
+      # macOS, and on Windows those of MSYS2 or of the runner's LLVM.
+      - name: Find a disassembler (macOS)
+        if: ${{ !cancelled() && runner.os == 'macOS' }}
+        run: |
+          dir="$(ls -d /opt/homebrew/opt/llvm*/bin /usr/local/opt/llvm*/bin 2>/dev/null | sort | tail -1 || true)"
+          if [[ -z "$dir" || ! -x "$dir/llvm-addr2line" ]]; then
+            brew install llvm
+            dir="$(brew --prefix llvm)/bin"
+          fi
+          echo "OBJDUMP=$dir/llvm-objdump" >> $GITHUB_ENV
+          echo "ADDR2LINE=$dir/llvm-addr2line" >> $GITHUB_ENV
+
+      - name: Find a disassembler (Windows)
+        if: ${{ !cancelled() && runner.os == 'Windows' }}
+        run: |
+          pacman -S --needed --noconfirm "${MINGW_PACKAGE_PREFIX}-llvm-tools" ||
+            pacman -S --needed --noconfirm "${MINGW_PACKAGE_PREFIX}-llvm" || true
+          for dir in "$MINGW_PREFIX/bin" "/c/Program Files/LLVM/bin"; do
+            if [[ -x "$dir/llvm-objdump.exe" && -x "$dir/llvm-addr2line.exe" ]]; then
+              echo "OBJDUMP=$(cygpath -m "$dir")/llvm-objdump.exe" >> $GITHUB_ENV
+              echo "ADDR2LINE=$(cygpath -m "$dir")/llvm-addr2line.exe" >> $GITHUB_ENV
+              break
+            fi
+          done
+
+      - name: List the dependency code in the binaries
+        if: ${{ !cancelled() }}
+        run: scripts/unsafe-reach
+
+      - name: Keep the comparison reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: difftest-report-${{ matrix.name }}
+          path: |
+            difftest-report.json
+            difftest-cli-report.json
+            difftest-bignum-report.json
+            difftest-crlf-report.json
+          if-no-files-found: ignore
+
+      # As Ethos does: the release binary of each platform, with the licences.
+      - name: Prepare the binary
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: scripts/package artifact
+
+      - name: Upload the binary
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: pathos-${{ matrix.name }}
+          path: artifact/*

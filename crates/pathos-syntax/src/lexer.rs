@@ -9,6 +9,11 @@ use crate::token::Token;
 
 const EOF: i32 = -1;
 
+/// Whether C's `char` is signed on the platform pathos is built for, as it
+/// is everywhere Ethos is built but on Linux on arm64. Ethos's behaviour on
+/// the byte 0xFF follows it (see `read_next_char`), so pathos's does too.
+pub const CHAR_IS_SIGNED: bool = std::ffi::c_char::MIN != 0;
+
 const WHITESPACE: u8 = 1 << 0;
 const DECIMAL_DIGIT: u8 = 1 << 1;
 const HEXADECIMAL_DIGIT: u8 = 1 << 2;
@@ -85,6 +90,9 @@ pub struct Lexer {
     peeked_char: Option<i32>,
     lex_let: bool,
     lex_type: bool,
+    /// The input is standard input, which Ethos reads one character at a
+    /// time with `std::istream::get`. See `read_next_char`.
+    is_stream: bool,
 }
 
 impl Lexer {
@@ -104,7 +112,14 @@ impl Lexer {
             peeked_char: None,
             lex_let,
             lex_type,
+            is_stream: false,
         }
+    }
+
+    /// Says that the input is standard input and not a file. The byte 0xFF
+    /// is then a character everywhere, and never the end of the input.
+    pub fn set_stream(&mut self) {
+        self.is_stream = true;
     }
 
     /// The text of the last token read from the input. After a peek this is
@@ -194,10 +209,16 @@ impl Lexer {
         match self.input.get(self.pos) {
             Some(&b) => {
                 self.pos += 1;
-                // Ethos reads into a signed char, so the byte 0xFF is -1,
-                // which is also its end-of-input marker. A token ends there,
-                // but reading goes on after it.
-                if b == 0xff { EOF } else { i32::from(b) }
+                // Ethos reads a file into a `char` buffer. Where `char` is
+                // signed, the byte 0xFF is -1, which is also its
+                // end-of-input marker: a token ends there, but reading goes
+                // on after it. Standard input it reads with `get`, which
+                // gives 255.
+                if b == 0xff && CHAR_IS_SIGNED && !self.is_stream {
+                    EOF
+                } else {
+                    i32::from(b)
+                }
             }
             None => EOF,
         }
@@ -501,7 +522,7 @@ mod tests {
     }
 
     #[test]
-    fn byte_ff_reads_as_end_of_input() {
+    fn byte_ff_reads_as_end_of_input_where_char_is_signed() {
         // as in Ethos
         let mut lexer = Lexer::new(b"(a |x\xffy| b)".to_vec(), "f.eo", true, true);
         let mut seen = Vec::new();
@@ -509,18 +530,36 @@ mod tests {
             seen.push(lexer.next_token().unwrap());
         }
         use Token::*;
-        // `|x` ends at the 0xFF byte; `y` is a symbol; `| b)` runs to the
-        // real end of the input.
-        assert_eq!(
-            seen,
+        let expected = if CHAR_IS_SIGNED {
+            // `|x` ends at the 0xFF byte; `y` is a symbol; `| b)` runs to
+            // the real end of the input.
             vec![
                 Lparen,
                 Symbol,
                 UnterminatedQuotedSymbol,
                 Symbol,
                 UnterminatedQuotedSymbol,
-                Eof
+                Eof,
             ]
+        } else {
+            // Linux on arm64: 0xFF is a byte like any other
+            vec![Lparen, Symbol, QuotedSymbol, Symbol, Rparen, Eof]
+        };
+        assert_eq!(seen, expected);
+    }
+
+    #[test]
+    fn byte_ff_is_a_character_on_standard_input() {
+        let mut lexer = Lexer::new(b"(a |x\xffy| b)".to_vec(), "stream", true, true);
+        lexer.set_stream();
+        let mut seen = Vec::new();
+        for _ in 0..6 {
+            seen.push(lexer.next_token().unwrap());
+        }
+        use Token::*;
+        assert_eq!(
+            seen,
+            vec![Lparen, Symbol, QuotedSymbol, Symbol, Rparen, Eof]
         );
     }
 

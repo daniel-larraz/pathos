@@ -36,9 +36,13 @@
 # a checker inside the scope, not the desktop. The script reports that and
 # exits 2, since the results are then wrong: rerun with a lower --jobs.
 #
+# The cap needs Linux with systemd; elsewhere (macOS, Windows under MSYS2)
+# the gates run without one, which is fine for those that need no corpus.
+#
 # Needs ETHOS_HARNESS: a checkout of HARNESS_REPO at HARNESS_COMMIT (see
 # difftest.env). Set it in the environment or in .difftest.local:
 #   ETHOS_HARNESS=/path/to/ethos
+# and bash (3.2 or later), git, cargo and Python 3.
 
 set -euo pipefail
 
@@ -53,20 +57,33 @@ if [[ -f "$root/.difftest.local" ]]; then
 fi
 [[ -n "$env_harness" ]] && ETHOS_HARNESS="$env_harness"
 
+# Windows (MSYS2): binaries end in .exe, and paths are written D:/dir so
+# that both bash and native programs (Python, the checkers) read them.
+exe=""
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    exe=".exe"
+    root="$(cygpath -m "$root")"
+    [[ -n "${ETHOS_HARNESS:-}" ]] && ETHOS_HARNESS="$(cygpath -m "$ETHOS_HARNESS")"
+    ;;
+esac
+python="$(command -v python3 || command -v python || true)"
+
 fail() { echo "scripts/difftest: $*" >&2; exit 2; }
 
 # Re-run this script under the memory cap (see the header).
 if [[ -z "${DIFFTEST_CAPPED:-}" ]]; then
   cap="${DIFFTEST_MEMORY_MAX:-}"
-  [[ -n "$cap" ]] ||
+  [[ -n "$cap" || ! -r /proc/meminfo ]] ||
     cap="$(awk '/^MemTotal:/ { printf "%dM", $2 * 0.6 / 1024 }' /proc/meminfo)"
-  if [[ "$cap" == none ]]; then
+  if [[ "$cap" == none || ! -r /proc/meminfo ]]; then
     :
-  elif systemd-run --user --scope -q -p MemoryMax=1G true 2>/dev/null; then
+  elif systemd-run --user --scope -q -p MemoryMax=1G -p MemorySwapMax=0 \
+      -p OOMPolicy=continue true 2>/dev/null; then
     DIFFTEST_CAPPED="$cap" exec systemd-run --user --scope -q \
       -p MemoryMax="$cap" -p MemorySwapMax=0 -p OOMPolicy=continue "$0" "$@"
   else
-    echo "scripts/difftest: warning: no systemd user scope here," \
+    echo "scripts/difftest: warning: no systemd user scope with a memory cap here," \
       "running without a memory cap" >&2
   fi
 fi
@@ -86,7 +103,8 @@ finish() {
   exit "$rc"
 }
 
-[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz|cli|snapshot|eoc [options]"
+[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz|cli|snapshot|eoc|bignum [options]"
+[[ -n "$python" ]] || fail "no python3 or python in PATH"
 gate="$1"; shift
 
 [[ -n "${ETHOS_HARNESS:-}" ]] ||
@@ -98,7 +116,7 @@ git -C "$ETHOS_HARNESS" diff --quiet HEAD -- tools/difftest tests ||
   fail "$ETHOS_HARNESS has local changes in tools/difftest or tests"
 
 dt="$ETHOS_HARNESS/tools/difftest"
-ref="$dt/work/ref/${REFERENCE_REV:0:12}/build/src/ethos"
+ref="$dt/work/ref/${REFERENCE_REV:0:12}/build/src/ethos$exe"
 [[ -x "$ref" ]] ||
   fail "no reference binary; run: $dt/difftest.py build-ref $REFERENCE_REV"
 
@@ -109,7 +127,7 @@ check_corpus() {
   [[ -f "$dir/MANIFEST.json" ]] ||
     fail "no corpus in $dir; see $dt/README.md, \"$how\""
   local rev
-  rev="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["cvc5_revision"])' "$dir/MANIFEST.json")"
+  rev="$("$python" -c 'import json,sys; print(json.load(open(sys.argv[1]))["cvc5_revision"])' "$dir/MANIFEST.json")"
   [[ "$rev" == "$CVC5_REV" ]] ||
     fail "$dir was made with cvc5 $rev, expected $CVC5_REV"
 }
@@ -119,7 +137,7 @@ case "$gate" in large|all|perf) check_corpus "$large" "A corpus of large proofs"
 # Builds the regex for --filter from a list of file names.
 filter_from() {
   local prefix="$1" file="$2"
-  python3 - "$prefix" "$file" <<'EOF'
+  "$python" - "$prefix" "$file" <<'EOF'
 import re, sys
 prefix, path = sys.argv[1], sys.argv[2]
 names = [l.strip() for l in open(path) if l.strip() and not l.startswith("#")]
@@ -151,11 +169,11 @@ case "$gate" in
 esac
 
 cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos
-cand="$root/target/release/pathos"
+cand="$root/target/release/pathos$exe"
 
 if [[ "$gate" == eoc ]]; then
   refsrc="$dt/work/ref/${REFERENCE_REV:0:12}/src"
-  refeoc="$dt/work/ref/${REFERENCE_REV:0:12}/build-eoc/ethos-eoc"
+  refeoc="$dt/work/ref/${REFERENCE_REV:0:12}/build-eoc/ethos-eoc$exe"
   [[ -x "$refeoc" ]] ||
     fail "no reference ethos-eoc; run: $dt/difftest.py build-ref $REFERENCE_REV --eoc"
   logos="$dt/work/logos"
@@ -166,7 +184,7 @@ if [[ "$gate" == eoc ]]; then
   git -C "$logos" diff --quiet HEAD || fail "$logos has local changes"
   cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos-eoc
   rc=0
-  python3 "$dt/difftest.py" eoc --ref "$refeoc" --cand "$root/target/release/pathos-eoc" \
+  "$python" "$dt/difftest.py" eoc --ref "$refeoc" --cand "$root/target/release/pathos-eoc$exe" \
     --src "$refsrc" --logos "$logos" "$@" || rc=$?
   finish $rc
 fi
@@ -179,7 +197,7 @@ if [[ "$gate" == snapshot ]]; then
   # Broken snapshots, which pathos must ignore: the first half, every 97th
   # byte flipped, and an empty file.
   head -c "$(( $(stat -c %s "$snap/cpc.snap") / 2 ))" "$snap/cpc.snap" > "$snap/truncated.snap"
-  python3 -c '
+  "$python" -c '
 import sys
 data = bytearray(open(sys.argv[1], "rb").read())
 for i in range(0, len(data), 97):
@@ -189,19 +207,19 @@ open(sys.argv[2], "wb").write(data)
   : > "$snap/empty.snap"
   rc=0
   echo "== with the snapshot: regressions and proofs, every option set"
-  python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand" \
+  "$python" "$dt/difftest.py" run --ref "$ref" --cand "$cand" \
     --tests "$ETHOS_HARNESS/tests" --corpus "$corpus" --all-option-sets \
     --timeout "$OPTIONS_TIMEOUT" --cand-options="--snapshot=$snap/cpc.snap" \
     "$@" || rc=1
   for broken in truncated corrupt empty; do
     echo "== with the $broken snapshot: proofs"
-    python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand" --corpus "$corpus" \
+    "$python" "$dt/difftest.py" run --ref "$ref" --cand "$cand" --corpus "$corpus" \
       --cand-options="--snapshot=$snap/$broken.snap" "$@" || rc=1
   done
   echo "== the candidate's time on the proofs, one job at a time:" \
     "without, then with the snapshot"
   for with in "" "--snapshot=$snap/cpc.snap"; do
-    python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand" --corpus "$corpus" \
+    "$python" "$dt/difftest.py" run --ref "$ref" --cand "$cand" --corpus "$corpus" \
       --jobs 1 --quiet --show 0 ${with:+--cand-options="$with"} |
       grep "^time over" || rc=1
   done
@@ -215,13 +233,13 @@ if [[ "$gate" == fuzz ]]; then
   rc=0
   for findings in "$dt"/fuzz-findings/*/; do
     echo "== ${findings%/}"
-    python3 "$dt/difftest.py" fuzz-replay --ref "$ref" --cand "$cand" \
+    "$python" "$dt/difftest.py" fuzz-replay --ref "$ref" --cand "$cand" \
       --findings "$findings" "${replay[@]}" "$@" || rc=1
   done
   finish $rc
 fi
 
 rc=0
-python3 "$dt/difftest.py" run --ref "$ref" --cand "$root/target/release/pathos" \
+"$python" "$dt/difftest.py" run --ref "$ref" --cand "$cand" \
   "${args[@]}" "$@" || rc=$?
 finish $rc

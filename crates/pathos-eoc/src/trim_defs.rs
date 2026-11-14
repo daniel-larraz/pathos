@@ -817,7 +817,7 @@ mod tests {
             ]
         );
         assert_eq!(
-            std::fs::read_to_string(out_path).unwrap(),
+            crate::std_plugin::read_text(&out_path).unwrap(),
             "; trim-defs: symm
 ; #trim-defs: 8
 (declare-const Int Type)

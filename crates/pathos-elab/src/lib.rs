@@ -12,7 +12,9 @@ mod path;
 mod plugin;
 mod snapshot;
 mod state;
+mod thread;
 
 pub use parser::{Parser, include_file};
 pub use plugin::{Plugin, StepResult};
 pub use state::State;
+pub use thread::{STACK_BYTES, on_checker_thread};
