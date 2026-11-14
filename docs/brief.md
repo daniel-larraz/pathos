@@ -235,11 +235,24 @@ intended; everything between gates is not.
     `scripts/difftest eoc --filter '/(trim-defs|desugar|desugar-eo)(/|$)'`
     agrees. Logos's own check, `install/install-cpc.sh --all --cached
     --check`, is the acceptance test at the end of the eoc milestones.
-12. to 15. **The other eoc stages**, one milestone each, each adding its
-    driver runs to the gate's filter: `model-smt`, `smt-meta` (with
-    `smt-meta-sygus`; the `vc` and `vc --sygus` runs), `lean-meta` (the
-    `lean` runs and logos's `lean --all`), and `linear_patterns`. At the end
-    the whole `scripts/difftest eoc` gate agrees, and it joins CI.
+12. **eoc: `model-smt` and `smt-meta`.** The stages that write the
+    verification conditions: `model-smt`, and `smt-meta` with
+    `smt-meta-sygus`. A `vc` run needs both, so they come together.
+    `scripts/difftest eoc --filter
+    '/(trim-defs|desugar|desugar-eo|vc|sygus)(/|$)'` agrees. Also give
+    `pathos-eoc` the fallback `ethos-eoc` has for `ETHOS_PLUGIN_ROOT` and
+    `ETHOS_PLUGIN_OUTPUT_DIR` (directories compiled in), with the
+    environment variables still taking precedence: eoc's driver sets
+    neither, and logos runs the driver as it is (see
+    `docs/reviews/m11-eoc-plugins.md`).
+13. **eoc: `lean-meta`**, with the `linear_patterns` utility it uses. The
+    whole `scripts/difftest eoc` gate agrees (the `lean` runs and logos's
+    `lean --all` included). Then the acceptance test: logos's
+    `install/install-cpc.sh --all --cached --check`, run with `pathos-eoc`
+    in place of `ethos-eoc` and nothing else changed, reports both packages
+    up to date. Add the eoc gate to CI (it needs no cvc5 corpus; it needs
+    the reference `ethos-eoc` built, as the regressions job builds the
+    reference `ethos`, and a logos checkout at `LOGOS_REV`).
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
@@ -250,4 +263,4 @@ report their results.
   Note them in `docs/ethos-differences.md` instead.
 - Speed-ups that could change behaviour, such as compiling program cases
   into decision trees or caching evaluations across calls.
-- Plugins and the eoc compiler, except as milestones 10 to 15 describe.
+- Plugins and the eoc compiler, except as milestones 10 to 13 describe.
