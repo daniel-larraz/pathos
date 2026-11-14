@@ -1,6 +1,7 @@
 //! Terms: the hash-consed term store, literals and numbers
 
 mod bitvec;
+pub mod codec;
 mod eostring;
 mod kind;
 mod lit;

@@ -22,6 +22,7 @@
 use std::hash::{BuildHasher, RandomState};
 use std::num::NonZeroU32;
 
+use crate::codec::{Reader, Writer};
 use crate::kind::{EvalOp, Kind, LitKind, NodeKind, SymbolKind};
 use crate::lit::Lit;
 
@@ -611,6 +612,238 @@ impl TermStore {
     }
 }
 
+/// The codes of [`TermData`] in a snapshot.
+mod tag {
+    pub const TYPE: u8 = 0;
+    pub const BOOL_TYPE: u8 = 1;
+    pub const ANY: u8 = 2;
+    pub const NULL: u8 = 3;
+    pub const SYMBOL: u8 = 4;
+    pub const LIT: u8 = 5;
+    pub const APPLY: u8 = 6;
+    pub const NODE: u8 = 7;
+    pub const EVAL: u8 = 8;
+}
+
+impl TermStore {
+    /// Writes the store, for a snapshot: the terms in order, their cached
+    /// types, the names and the literal values. The flags and the interning
+    /// tables are not written; reading computes them again.
+    pub fn write_to(&self, w: &mut Writer) {
+        w.len(self.len());
+        for i in 1..self.nodes.len() {
+            let (tag, sub, a, b) = match self.nodes[i] {
+                TermData::Type => (tag::TYPE, 0, 0, 0),
+                TermData::BoolType => (tag::BOOL_TYPE, 0, 0, 0),
+                TermData::Any => (tag::ANY, 0, 0, 0),
+                TermData::Null => (tag::NULL, 0, 0, 0),
+                TermData::Symbol(k, name) => (tag::SYMBOL, k as u8, name, 0),
+                TermData::Lit(k, lit) => (tag::LIT, k as u8, lit, 0),
+                TermData::Apply([f, x]) => (tag::APPLY, 0, f.id(), x.id()),
+                TermData::Node(k, args) => (tag::NODE, k as u8, args.start, args.len),
+                TermData::Eval(op, args) => (tag::EVAL, op as u8, args.start, args.len),
+            };
+            w.u8(tag);
+            w.u8(sub);
+            w.u32(a);
+            w.u32(b);
+            w.u32(self.types[i].map_or(0, Term::id));
+        }
+        w.len(self.child_pool.len());
+        for c in &self.child_pool {
+            w.u32(c.id());
+        }
+        w.len(self.names.len());
+        for name in &self.names {
+            w.str(name);
+        }
+        w.len(self.lits.len());
+        for lit in &self.lits {
+            lit.write_to(w);
+        }
+        w.u64(self.mk_count);
+    }
+
+    /// Reads a store written by [`TermStore::write_to`]. Returns `None`
+    /// unless the input describes a store that the functions of this module
+    /// could have built:
+    ///
+    /// - the first terms are `Type`, `Bool`, `eo::?` and the null term, and
+    ///   there is no other term of those kinds;
+    /// - every child and every cached type is a term of the store, and a
+    ///   child comes before its parent;
+    /// - the symbols use the names in order, and the literals the values;
+    /// - no compound term and no literal value is there twice.
+    ///
+    /// Whether the terms make sense to the checker (say, that a function
+    /// type has an argument) is not checked here.
+    pub fn read_from(r: &mut Reader) -> Option<TermStore> {
+        // a term takes 14 bytes
+        let n = r.len(14)?;
+        let mut s = TermStore::new();
+        if n < s.len() {
+            return None;
+        }
+        let fixed = s.len();
+        let mut raw = Vec::with_capacity(n);
+        for _ in 0..n {
+            raw.push((r.u8()?, r.u8()?, r.u32()?, r.u32()?, r.u32()?));
+        }
+        let pool_len = r.len(4)?;
+        let mut pool = Vec::with_capacity(pool_len);
+        for _ in 0..pool_len {
+            pool.push(r.u32()?);
+        }
+        let names_len = r.len(4)?;
+        let mut names: Vec<Box<str>> = Vec::with_capacity(names_len);
+        for _ in 0..names_len {
+            names.push(r.str()?.into());
+        }
+        let lits_len = r.len(2)?;
+        let mut lits = Vec::with_capacity(lits_len);
+        for _ in 0..lits_len {
+            lits.push(Lit::read_from(r)?);
+        }
+        let mk_count = r.u64()?;
+
+        // Size the tables for what is coming, so that they do not grow.
+        let bits = |items: usize| (items * 2).next_power_of_two().trailing_zeros().max(6);
+        s.table = ConsTable::with_bits(bits(n));
+        s.lit_table = ConsTable::with_bits(bits(lits_len));
+        s.nodes.reserve(n - fixed);
+        s.types.reserve(n - fixed);
+        s.flags.reserve(n - fixed);
+        s.child_pool.reserve(pool_len);
+        s.lits = lits;
+
+        let (mut next_name, mut next_lit, mut next_child) = (0usize, 0usize, 0usize);
+        for (i, &(tag, sub, a, b, _)) in raw.iter().enumerate() {
+            // this term's handle, and the test for an earlier term
+            let index = i + 1;
+            let earlier = |id: u32| (id != 0 && (id as usize) < index).then(|| Term::from_slot(id));
+            if index <= fixed {
+                // the terms every store starts with, in their places
+                let expected = match s.nodes[index] {
+                    TermData::Type => tag::TYPE,
+                    TermData::BoolType => tag::BOOL_TYPE,
+                    TermData::Any => tag::ANY,
+                    _ => tag::NULL,
+                };
+                if tag != expected {
+                    return None;
+                }
+                continue;
+            }
+            let sub_index = usize::from(sub);
+            let (data, flags) = match tag {
+                tag::SYMBOL => {
+                    let kind = *SymbolKind::ALL.get(sub_index)?;
+                    if a as usize != next_name || next_name >= names.len() {
+                        return None;
+                    }
+                    next_name += 1;
+                    let flags = match kind {
+                        SymbolKind::ProgramConst => FLAG_EVAL,
+                        SymbolKind::Param => FLAG_NON_GROUND,
+                        _ => 0,
+                    };
+                    (TermData::Symbol(kind, a), flags)
+                }
+                tag::LIT => {
+                    let kind = *LitKind::ALL.get(sub_index)?;
+                    if a as usize != next_lit || s.lits.get(next_lit)?.kind() != kind {
+                        return None;
+                    }
+                    let lit = &s.lits[next_lit];
+                    next_lit += 1;
+                    let hash = s.lit_hasher.hash_one(lit);
+                    let slot = (s.lit_table)
+                        .find(hash, |c| s.lit_at(c) == Some(lit))
+                        .err()?;
+                    s.lit_table.slots[slot] = u32::try_from(index).ok()?;
+                    s.lit_table.len += 1;
+                    (TermData::Lit(kind, a), 0)
+                }
+                tag::APPLY | tag::NODE | tag::EVAL => {
+                    let (kind, data) = match tag {
+                        tag::APPLY => {
+                            let pair = [earlier(a)?, earlier(b)?];
+                            (Kind::APPLY, TermData::Apply(pair))
+                        }
+                        _ => {
+                            // the children follow those of the term before
+                            let end = (a as usize).checked_add(b as usize)?;
+                            if a as usize != next_child || end > pool.len() {
+                                return None;
+                            }
+                            for &c in &pool[next_child..end] {
+                                s.child_pool.push(earlier(c)?);
+                            }
+                            next_child = end;
+                            let args = Args { start: a, len: b };
+                            if tag == tag::EVAL {
+                                let op = EvalOp::ALL.get(sub_index)?.0;
+                                (Kind::Eval(op), TermData::Eval(op, args))
+                            } else {
+                                let k = *NodeKind::ALL.get(sub_index)?;
+                                // binary applications have their own form
+                                if k == NodeKind::Apply && b == 2 {
+                                    return None;
+                                }
+                                (Kind::Node(k), TermData::Node(k, args))
+                            }
+                        }
+                    };
+                    let children: &[Term] = match &data {
+                        TermData::Apply(pair) => pair,
+                        _ => &s.child_pool[a as usize..],
+                    };
+                    let mut flags = 0;
+                    for c in children {
+                        flags |= s.flags[c.index()];
+                    }
+                    if matches!(kind, Kind::Eval(_)) && !children.is_empty() {
+                        flags |= FLAG_EVAL;
+                    }
+                    let ktag = tag_of(kind);
+                    let hash = hash_node(&s.keys, ktag, children);
+                    let slot = (s.table)
+                        .find(hash, |c| {
+                            tag_of(s.kind_at(c)) == ktag && s.children_at(c) == children
+                        })
+                        .err()?;
+                    s.table.slots[slot] = u32::try_from(index).ok()?;
+                    s.table.len += 1;
+                    (data, flags)
+                }
+                _ => return None,
+            };
+            s.push(data, flags)?;
+        }
+        if next_name != names.len() || next_lit != s.lits.len() || next_child != pool.len() {
+            return None;
+        }
+        s.names = names;
+        // the cached types: any term of the store
+        for (i, &(_, _, _, _, ty)) in raw.iter().enumerate() {
+            if ty != 0 {
+                if ty as usize > n {
+                    return None;
+                }
+                s.types[i + 1] = Some(Term::from_slot(ty));
+            }
+        }
+        s.mk_count = mk_count;
+        Some(s)
+    }
+
+    /// The term with the given id, if the store has it. For reading
+    /// snapshots.
+    pub fn term_with_id(&self, id: u32) -> Option<Term> {
+        (id != 0 && (id as usize) <= self.len()).then(|| Term::from_slot(id))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -696,5 +929,101 @@ mod tests {
             assert_eq!(s.mk_apply(f, terms[i]), terms[i + 1]);
         }
         assert_eq!(s.len(), before);
+    }
+
+    /// A store with terms of every form.
+    fn sample() -> TermStore {
+        let mut s = TermStore::new();
+        let ty = s.mk_type();
+        let int = s.mk_symbol(SymbolKind::Const, "Int", ty);
+        let x = s.mk_symbol(SymbolKind::Param, "x", int);
+        let f = s.mk_symbol(SymbolKind::Const, "f", ty);
+        let one = s.mk_lit(Lit::Numeral(Integer::from(1u32)));
+        let half = s.mk_lit(Lit::Rational(crate::Rational::parse("-1/2").unwrap()));
+        let bits = s.mk_lit(Lit::Binary(crate::BitVec::parse("0101", 2).unwrap()));
+        let text = s.mk_lit(Lit::String(crate::EoString::parse("a\\u{e9}", true)));
+        let fx = s.mk_apply(f, x);
+        let add = s.mk(Kind::Eval(EvalOp::Add), &[one, fx, half]);
+        let tuple = s.mk(Kind::TUPLE, &[]);
+        let fun = s.mk(Kind::FUNCTION_TYPE, &[int, int, ty]);
+        s.mk(Kind::APPLY, &[f, bits, text, add, tuple, fun]);
+        s.set_ty(fx, int);
+        s
+    }
+
+    fn written(s: &TermStore) -> Vec<u8> {
+        let mut w = Writer::new();
+        s.write_to(&mut w);
+        w.bytes
+    }
+
+    #[test]
+    fn a_store_read_back_is_the_same_store() {
+        let s = sample();
+        let bytes = written(&s);
+        let mut r = Reader::new(&bytes);
+        let mut back = TermStore::read_from(&mut r).unwrap();
+        assert!(r.is_at_end());
+        assert_eq!(written(&back), bytes);
+        // flags are computed again, and terms are found again
+        for i in 1..=s.len() {
+            let t = Term::from_index(i).unwrap();
+            assert_eq!(back.is_ground(t), s.is_ground(t));
+            assert_eq!(back.is_evaluatable(t), s.is_evaluatable(t));
+        }
+        let len = back.len();
+        let one = back.mk_lit(Lit::Numeral(Integer::from(1u32)));
+        let f = back.term_with_id(7).unwrap();
+        let x = back.term_with_id(6).unwrap();
+        assert_eq!(back.symbol_name(f), Some("f"));
+        let fx = back.mk_apply(f, x);
+        assert_eq!(back.len(), len);
+        assert_eq!(back.kind(one), Kind::NUMERAL);
+        assert!(back.ty(fx).is_some());
+        // and new terms can be made
+        let ff = back.mk_apply(f, f);
+        assert_eq!(ff.index(), len + 1);
+    }
+
+    #[test]
+    fn a_damaged_store_is_rejected_or_well_formed() {
+        let bytes = written(&sample());
+        for len in 0..bytes.len() {
+            assert!(TermStore::read_from(&mut Reader::new(&bytes[..len])).is_none());
+        }
+        for i in 0..bytes.len() {
+            for flip in [1u8, 0x80, 0xff] {
+                let mut damaged = bytes.clone();
+                damaged[i] ^= flip;
+                // Whatever is accepted obeys the store's invariants: it can
+                // be walked and written without a panic.
+                if let Some(s) = TermStore::read_from(&mut Reader::new(&damaged)) {
+                    for t in 1..=s.len() {
+                        let t = Term::from_index(t).unwrap();
+                        for &c in s.children(t) {
+                            assert!(c < t);
+                        }
+                        let _ = (s.kind(t), s.lit(t), s.symbol_name(t), s.ty(t));
+                    }
+                    written(&s);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn a_store_with_a_term_twice_is_rejected() {
+        let mut s = TermStore::new();
+        let ty = s.mk_type();
+        let f = s.mk_symbol(SymbolKind::Const, "f", ty);
+        s.mk_apply(f, f);
+        s.mk_apply(f, ty);
+        let mut bytes = written(&s);
+        // make the second application the same as the first: its second
+        // child is 4 bytes before its type, at the end of the terms
+        let terms_end = 4 + 14 * s.len();
+        let child = terms_end - 8;
+        bytes[child..child + 4].copy_from_slice(&f.id().to_le_bytes());
+        assert!(TermStore::read_from(&mut Reader::new(&bytes)).is_none());
     }
 }

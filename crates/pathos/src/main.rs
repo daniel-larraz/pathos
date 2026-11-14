@@ -1,8 +1,11 @@
 //! The pathos command-line checker (`main.cpp` in Ethos).
 
+use std::cell::RefCell;
+use std::ffi::OsString;
 use std::io::{IsTerminal, Read, Write};
 use std::os::unix::ffi::OsStringExt;
 use std::process::ExitCode;
+use std::rc::Rc;
 
 use pathos_check::Options;
 use pathos_elab::{Parser, State, include_file};
@@ -27,12 +30,22 @@ const HELP: &str = "        --include=X: includes the file specified by X.
                  -v: verbose mode, enable all standard trace messages (requires debug build).
 ";
 
+/// The options for signature snapshots. Ethos has no such options, so
+/// `--help`, which prints Ethos's text, does not list them. The names are a
+/// proposal; they are only here.
+const WRITE_SNAPSHOT: &str = "--write-snapshot=";
+const SNAPSHOT: &str = "--snapshot=";
+
 /// What the command line asks for.
 struct Invocation {
     opts: Options,
     /// The files to include first, and whether each is a reference.
     includes: Vec<(String, bool)>,
     file: Option<String>,
+    /// Where to write a snapshot of the signature `file`.
+    write_snapshot: Option<String>,
+    /// A snapshot to use in place of parsing its signature.
+    snapshot: Option<String>,
 }
 
 enum Parsed {
@@ -45,6 +58,7 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
     let mut opts = Options::default();
     let mut includes = Vec::new();
     let mut file: Option<String> = None;
+    let (mut write_snapshot, mut snapshot) = (None, None);
     let mut i = 0;
     while i < args.len() {
         let arg = &args[i];
@@ -65,6 +79,14 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
         }
         if let Some(f) = arg.strip_prefix("--reference=") {
             includes.push((f.to_string(), true));
+            continue;
+        }
+        if let Some(f) = arg.strip_prefix(WRITE_SNAPSHOT) {
+            write_snapshot = Some(f.to_string());
+            continue;
+        }
+        if let Some(f) = arg.strip_prefix(SNAPSHOT) {
+            snapshot = Some(f.to_string());
             continue;
         }
         if arg == "--help" {
@@ -100,6 +122,8 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
         opts,
         includes,
         file,
+        write_snapshot,
+        snapshot,
     }))
 }
 
@@ -114,11 +138,19 @@ fn write_line(mut w: impl Write, line: &str) {
 /// Reads the inputs and returns what to print: the verdict and, if asked
 /// for, the statistics.
 fn run(inv: Invocation) -> Result<String> {
+    if let Some(target) = &inv.write_snapshot {
+        return write_snapshot(&inv, target);
+    }
     let mut st = State::new(
         inv.opts,
         Box::new(|line| write_line(std::io::stderr().lock(), line)),
         Box::new(|line| write_line(std::io::stdout().lock(), line)),
     );
+    // A snapshot that cannot be read, like one that cannot be used, is
+    // ignored: the run goes on as if the option were not there.
+    if let Some(bytes) = inv.snapshot.as_deref().and_then(read_bytes) {
+        st.offer_snapshot(bytes);
+    }
     for (file, is_reference) in &inv.includes {
         include_file(&mut st, file, !is_reference, *is_reference, None)?;
     }
@@ -155,6 +187,39 @@ fn run(inv: Invocation) -> Result<String> {
         text.push_str(&st.ck.stats_string());
     }
     Ok(text)
+}
+
+/// The bytes of the file, if it can be read.
+fn read_bytes(file: &str) -> Option<Vec<u8>> {
+    std::fs::read(OsString::from_vec(latin1::encode(file))).ok()
+}
+
+/// Loads the signature and writes its snapshot to `target`. Prints nothing:
+/// what the signature prints goes into the snapshot, to be printed by the
+/// runs that use it.
+fn write_snapshot(inv: &Invocation, target: &str) -> Result<String> {
+    let Some(file) = &inv.file else {
+        return Err(Error::plain("no signature to write a snapshot of."));
+    };
+    if !inv.includes.is_empty() {
+        return Err(Error::plain(
+            "a snapshot holds one signature: give no other file to include.",
+        ));
+    }
+    let output = Rc::new(RefCell::new(Vec::new()));
+    let (warnings, out) = (output.clone(), output.clone());
+    let mut st = State::new(
+        inv.opts.clone(),
+        Box::new(move |line| warnings.borrow_mut().push((true, line.to_string()))),
+        Box::new(move |line| out.borrow_mut().push((false, line.to_string()))),
+    );
+    st.record_for_snapshot();
+    include_file(&mut st, file, file.ends_with(".eo"), false, None)?;
+    let bytes = st.write_snapshot(&output.borrow())?;
+    if std::fs::write(OsString::from_vec(latin1::encode(target)), bytes).is_err() {
+        return Err(Error::plain(format!("cannot write the snapshot {target}")));
+    }
+    Ok(String::new())
 }
 
 fn main() -> ExitCode {

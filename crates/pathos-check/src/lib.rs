@@ -10,7 +10,8 @@
 //! - `eval`: `evaluate`, programs and the `eo::` operators;
 //! - `step`: what a proof step proves;
 //! - `print`: terms as they appear in messages;
-//! - `stats`: what `--stats` prints.
+//! - `stats`: what `--stats` prints;
+//! - `snapshot`: saving and restoring all of the above.
 //!
 //! These cannot be separate crates: building an application evaluates and
 //! types terms, and evaluating reads attributes and builds terms.
@@ -20,6 +21,7 @@ mod build;
 mod checker;
 mod eval;
 mod print;
+pub mod snapshot;
 mod stats;
 mod step;
 mod typing;

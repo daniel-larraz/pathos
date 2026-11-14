@@ -9,6 +9,7 @@ mod cmd_parser;
 mod expr_parser;
 mod parser;
 mod path;
+mod snapshot;
 mod state;
 
 pub use parser::{Parser, include_file};

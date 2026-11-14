@@ -33,16 +33,52 @@ pub(crate) struct Stats {
     programs: HashMap<Term, u64>,
     /// When the step being checked began, and the store's count then.
     step_start: Option<(Instant, u64)>,
+    /// Whether to count the programs: with `--stats`, and when the counts
+    /// go into a snapshot, which a run with `--stats` may load.
+    count_programs: bool,
 }
 
 impl Stats {
-    pub(crate) fn new() -> Stats {
+    pub(crate) fn new(count_programs: bool) -> Stats {
         Stats {
+            count_programs,
             start: Instant::now(),
             rules: HashMap::new(),
             programs: HashMap::new(),
             step_start: None,
         }
+    }
+}
+
+impl Stats {
+    /// How many steps used each rule, in the order of the rules.
+    pub(crate) fn rule_counts(&self) -> Vec<(Term, u64)> {
+        let mut counts: Vec<(Term, u64)> =
+            (self.rules.iter()).map(|(&t, s)| (t, s.count)).collect();
+        counts.sort();
+        counts
+    }
+
+    /// How often each program was applied, in the order of the programs.
+    pub(crate) fn program_counts(&self) -> Vec<(Term, u64)> {
+        let mut counts: Vec<(Term, u64)> = (self.programs.iter()).map(|(&t, &n)| (t, n)).collect();
+        counts.sort();
+        counts
+    }
+
+    /// Replaces the counts with those of a snapshot. The steps of a
+    /// snapshot took no time in this run.
+    pub(crate) fn set_counts(&mut self, rules: Vec<(Term, u64)>, programs: Vec<(Term, u64)>) {
+        self.rules = (rules.into_iter())
+            .map(|(t, count)| {
+                let stat = RuleStat {
+                    count,
+                    ..RuleStat::default()
+                };
+                (t, stat)
+            })
+            .collect();
+        self.programs = programs.into_iter().collect();
     }
 }
 
@@ -75,9 +111,15 @@ impl Checker {
     /// Records an application of the program `hd`.
     #[inline]
     pub(crate) fn count_program(&mut self, hd: Term) {
-        if self.opts.stats {
+        if self.stats.count_programs {
             *self.stats.programs.entry(hd).or_default() += 1;
         }
+    }
+
+    /// Counts the programs applied from now on even without `--stats`, for
+    /// a snapshot.
+    pub fn count_programs(&mut self) {
+        self.stats.count_programs = true;
     }
 
     /// Whether any rule named by a step is marked `:sorry`.

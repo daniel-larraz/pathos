@@ -99,7 +99,7 @@ pub struct Checker {
     /// The numbers given out by `eo::hash`.
     pub(crate) hashes: HashMap<Term, u64>,
     pub(crate) hash_counter: u64,
-    sorry_rules: HashSet<Term>,
+    pub(crate) sorry_rules: HashSet<Term>,
     /// The rules and programs used, for the verdict and `--stats`.
     pub(crate) stats: Stats,
     /// Called with each warning; the binary writes them to stderr.
@@ -134,6 +134,7 @@ impl Checker {
         let list_cons = store.mk_symbol(SymbolKind::Const, "eo::List::cons", cons_type);
         let t_self = store.mk_symbol(SymbolKind::Param, "eo::self", any);
         let proof_type = store.mk_symbol(SymbolKind::Const, "eo::Proof", ty);
+        let stats = Stats::new(opts.stats);
         let mut ck = Checker {
             store,
             opts,
@@ -143,7 +144,7 @@ impl Checker {
             hashes: HashMap::new(),
             hash_counter: 0,
             sorry_rules: HashSet::new(),
-            stats: Stats::new(),
+            stats,
             warnings,
             fatal: None,
             t_true,

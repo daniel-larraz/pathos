@@ -3,6 +3,7 @@
 use pathos_syntax::{Error, Lexer, Result, latin1};
 use pathos_term::Term;
 
+use crate::snapshot;
 use crate::state::State;
 
 /// A parser over one input. It builds terms and runs commands on the state
@@ -57,14 +58,23 @@ pub fn include_file(
 ) -> Result<()> {
     let input_path = st.resolve_include(file);
     if !st.mark_included(&input_path) {
+        st.record_include(file, is_signature, None);
         return Ok(());
     }
     st.has_reference = is_reference;
     st.reference_nf = reference_nf;
+    // a snapshot of this file, if the run has one, stands in for reading it
+    if reference_nf.is_none()
+        && snapshot::use_for_include(st, &input_path, is_signature, is_reference)
+    {
+        return Ok(());
+    }
     let current_path = std::mem::replace(&mut st.input_file, input_path.clone());
     let input = read_file(&input_path)?;
+    st.record_include(file, is_signature, Some(&input));
     let mut p = Parser::new(st, input, &input_path, is_signature, is_reference);
     p.parse_all()?;
+    p.st.record_include_end();
     p.st.input_file = current_path;
     if p.st.assumption_level() != 0 {
         // reported through the lexer, like any other error in the file
@@ -82,7 +92,7 @@ pub fn include_file(
 
 /// The bytes of a file. Paths are byte strings held as described in
 /// `pathos_syntax::latin1`.
-fn read_file(path: &str) -> Result<Vec<u8>> {
+pub(crate) fn read_file(path: &str) -> Result<Vec<u8>> {
     use std::os::unix::ffi::OsStringExt;
     let os_path = std::ffi::OsString::from_vec(latin1::encode(path));
     match std::fs::read(&os_path) {

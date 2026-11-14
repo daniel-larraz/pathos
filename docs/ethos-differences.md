@@ -140,6 +140,21 @@ message; it runs until memory is exhausted.
   harness drops the spaces between masked numbers and masks a count that
   ran into the time, so such rows compare equal; this was checked on rows
   of that shape, not rerun on those two proofs.
+- `--write-snapshot=FILE` and `--snapshot=FILE` are pathos's own (signature
+  snapshots, milestone 10); Ethos rejects them as unknown options. They are
+  not in `--help`, which prints Ethos's text. A run with `--snapshot` prints
+  what it would print without it, with these exceptions, all in the numbers
+  that are pathos's own under `--stats`: the time of the steps a signature
+  itself contains is not counted, and `mkExprCount` continues from the
+  count of the run that wrote the snapshot. How a snapshot is used, and
+  when it is ignored, is described at the top of
+  `crates/pathos-elab/src/snapshot.rs`.
+- A snapshot is trusted as the signature is. Its checksum finds damage, not
+  forgery: a file made on purpose, with a checksum that fits, can hold
+  rules or terms that no signature gives, and so make pathos accept a wrong
+  proof, or fail on a term of a shape the parser never builds. Reading such
+  a file does not panic and allocates no more than a small multiple of its
+  size.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
