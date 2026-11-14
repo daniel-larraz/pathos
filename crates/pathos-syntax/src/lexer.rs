@@ -209,7 +209,7 @@ impl Lexer {
         }
         let ch = self.read_next_char();
         if ch == i32::from(b'\n') {
-            self.end_line += 1;
+            self.end_line = self.end_line.wrapping_add(1);
             self.end_column = 0;
         } else {
             // the end of the input counts as a column too
