@@ -10,6 +10,7 @@ use pathos_term::codec::{Reader, Writer};
 use pathos_term::{EvalOp, Kind, Term};
 
 use crate::path;
+use crate::plugin::Plugin;
 use crate::snapshot::{Recording, Snapshot};
 
 /// What a run of the checker knows besides the terms themselves.
@@ -44,6 +45,8 @@ pub struct State {
     /// What a snapshot of this run needs besides the final state.
     pub(crate) recording: Option<Recording>,
     pub(crate) used_snapshot: bool,
+    pub(crate) plugin: Option<Box<dyn Plugin>>,
+    pub(crate) plugin_error: Option<Error>,
 }
 
 impl State {
@@ -69,6 +72,8 @@ impl State {
             snapshot: None,
             recording: None,
             used_snapshot: false,
+            plugin: None,
+            plugin_error: None,
         };
         st.bind_builtin("->", Kind::FUNCTION_TYPE);
         st.bind_builtin("_", Kind::APPLY);
@@ -110,14 +115,17 @@ impl State {
         self.decls.clear();
         self.decls_size_ctx.clear();
         self.last_step_proves_false_at_level_zero = false;
+        self.with_plugin(|p, st| p.reset(st));
     }
 
     pub fn push_scope(&mut self) {
         self.decls_size_ctx.push(self.decls.len());
+        self.with_plugin(|p, st| p.push_scope(st));
     }
 
     /// Unbinds the symbols bound since the matching `push_scope`.
     pub fn pop_scope(&mut self) -> Result<()> {
+        self.with_plugin(|p, st| p.pop_scope(st));
         let Some(last_size) = self.decls_size_ctx.pop() else {
             return Err(Error::fatal("State::popScope: empty context"));
         };
@@ -208,6 +216,8 @@ impl State {
     /// new term shadows the old one, and applications pick the one that
     /// type checks. Returns false only for a proof rule whose name is taken.
     pub fn bind(&mut self, name: &str, e: Term) -> bool {
+        // the plugin is told whichever table the name goes to
+        self.with_plugin(|p, st| p.bind(st, name, e));
         if self.ck.opts.rule_sym_table && self.ck.store.kind(e) == Kind::PROOF_RULE {
             if self.rule_sym_table.contains_key(name) {
                 return false;

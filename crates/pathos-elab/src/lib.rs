@@ -9,8 +9,10 @@ mod cmd_parser;
 mod expr_parser;
 mod parser;
 mod path;
+mod plugin;
 mod snapshot;
 mod state;
 
 pub use parser::{Parser, include_file};
+pub use plugin::{Plugin, StepResult};
 pub use state::State;

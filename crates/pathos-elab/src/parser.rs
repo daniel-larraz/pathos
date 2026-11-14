@@ -70,6 +70,13 @@ pub fn include_file(
         return Ok(());
     }
     let current_path = std::mem::replace(&mut st.input_file, input_path.clone());
+    let handled = st.with_plugin(|p, st| {
+        p.include_file(st, &input_path, is_signature, is_reference, reference_nf)
+    });
+    if handled == Some(true) {
+        st.input_file = current_path;
+        return Ok(());
+    }
     let input = read_file(&input_path)?;
     st.record_include(file, is_signature, Some(&input));
     let mut p = Parser::new(st, input, &input_path, is_signature, is_reference);
@@ -87,7 +94,10 @@ pub fn include_file(
              {open}."
         )));
     }
-    Ok(())
+    st.with_plugin(|p, st| {
+        p.finalize_include_file(st, &input_path, is_signature, is_reference, reference_nf)
+    });
+    st.take_plugin_error().map_or(Ok(()), Err)
 }
 
 /// The bytes of a file. Paths are byte strings held as described in

@@ -85,6 +85,10 @@ impl Parser<'_> {
     /// input.
     pub fn parse_next_command(&mut self) -> Result<bool> {
         let ret = self.run_next_command();
+        self.st.flush_plugin_events();
+        if let Some(e) = self.st.take_plugin_error() {
+            return Err(e);
+        }
         // An error that stopped the checker inside the command comes before
         // whatever the command made of the unfinished result.
         if let Some(msg) = self.st.ck.take_fatal() {
@@ -113,7 +117,7 @@ impl Parser<'_> {
                 let k = self.parse_literal_kind()?;
                 let t = self.parse_type(false, true)?;
                 let mut msg = String::new();
-                if !self.st.ck.set_literal_type_rule(k, t, Some(&mut msg)) {
+                if !self.st.set_literal_type_rule(k, t, Some(&mut msg)) {
                     return Err(self.lex.parse_error(msg));
                 }
                 self.st.pop_scope()?;
@@ -151,9 +155,9 @@ impl Parser<'_> {
                 // the message is optional
                 if self.lex.peek_token()? == Token::StringLiteral {
                     let msg = self.parse_str(true)?;
-                    self.st.print_line(&msg);
+                    self.st.echo(&msg);
                 } else {
-                    self.st.print_line("");
+                    self.st.echo("");
                 }
             }
             Token::Exit => self.finished = true,
@@ -238,7 +242,9 @@ impl Parser<'_> {
     /// `(assume <symbol> <formula>)` and `(assume-push <symbol> <formula>)`.
     fn cmd_assume(&mut self, is_push: bool) -> Result<()> {
         let name = self.parse_symbol()?;
-        let proven = self.parse_formula()?;
+        let mut proven = self.parse_formula()?;
+        self.st
+            .with_plugin(|p, st| p.notify_assume(st, &name, &mut proven, is_push));
         if is_push {
             self.st.push_assumption_scope();
         }
@@ -781,7 +787,9 @@ impl Parser<'_> {
             }
         }
         self.st.pop_scope()?;
-        self.bind(&name, expr)
+        self.bind(&name, expr)?;
+        self.st.define(&name, expr);
+        Ok(())
     }
 
     /// `(include <string>)` and `(reference <string> <term>?)`.
@@ -926,10 +934,25 @@ impl Parser<'_> {
             is_pop,
             assumption: self.st.first_current_assumption(),
         };
-        let Some(conc_term) = self.st.ck.check_step(&step, None) else {
+        // A plugin may check the step itself. What it gives must be fully
+        // evaluated, or the step fails.
+        let by_plugin = |st: &mut crate::State, err: Option<&mut String>| {
+            st.with_plugin(|p, st| {
+                p.notify_step(st, &name, rule, proven, &premises, &args, is_pop, err)
+            })
+            .flatten()
+            .map(|r| r.result.filter(|&t| !st.ck.store.is_evaluatable(t)))
+        };
+        let checked = match by_plugin(self.st, None) {
+            Some(result) => result,
+            None => self.st.ck.check_step(&step, None),
+        };
+        let Some(conc_term) = checked else {
             // Check again, this time for the reason.
             let mut err = format!("A step of rule {rule_name} failed to check.\n");
-            self.st.ck.check_step(&step, Some(&mut err));
+            if by_plugin(self.st, Some(&mut err)).is_none() {
+                self.st.ck.check_step(&step, Some(&mut err));
+            }
             return Err(self.lex.parse_error(err));
         };
         self.st.notify_step_result(is_pop, conc_term);

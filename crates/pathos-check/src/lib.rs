@@ -27,5 +27,5 @@ mod step;
 mod typing;
 
 pub use attr::{AppInfo, Attr};
-pub use checker::{Checker, Ctx, Options};
+pub use checker::{Checker, Ctx, EvalPlugin, Options, PluginEvent};
 pub use step::Step;
