@@ -182,7 +182,7 @@ Two runs show both outcomes (2026-11-14, pathos `m16`, logos `b3f0b24b`):
 
 | Ethos | Result |
 | --- | --- |
-| `main`, which is `9217112f`, the pinned revision | green: `tests` 230, `cli` 1,192, `bignum` 7 and `eoc` 1,055 agree, `fuzz` has none still differing. Ethos has not moved since the pin, so this run repeats CI's comparison; it does show that logos's `main` (`b3f0b24b`, newer than the pinned `a3232131`) still compiles the same. Local run of `scripts/drift`. |
+| `main`, which is `9217112f`, the pinned revision | green: `tests` 230, `cli` 1,192, `bignum` 7 and `eoc` 1,055 agree, `fuzz` has none still differing. Ethos has not moved since the pin, so this run repeats CI's comparison; it does show that logos's `main` (`b3f0b24b`, newer than the pinned `a3232131`) still compiles the same. CI run 43646931219 (started by the push of `dc3f546`), and the same locally. |
 | `6cfb7ba7`, three commits before the pin (on demand, input `ethos_rev`) | red: the four checker comparisons agree, `eoc` differs on 156 of 1,055 cases, the `lean` runs, whose output Ethos PR #255 changed after that commit. This is what a night looks like after Ethos changes the Lean output. Local run of `scripts/drift --rev 6cfb7ba7`. |
 
 When it is red:
