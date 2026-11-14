@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+# Lists the dependency code that is in the release binaries, and which of it
+# is `unsafe`: the evidence for "What pathos reaches" in docs/dependencies.md.
+#
+#   scripts/unsafe-reach [cargo build options...]
+#
+# Builds pathos and pathos-eoc in release mode with debug information (into
+# target/unsafe-reach, so the normal build is left alone), disassembles each
+# binary, and maps every instruction to its source lines with addr2line -i,
+# which also gives the lines of the functions inlined at that instruction.
+# The linker drops functions nothing refers to, so a dependency's source
+# line with no instruction in the binary cannot run, whatever the input. A
+# line that has instructions may or may not run: that needs reading, or the
+# instrumented build docs/dependencies.md describes.
+#
+# For each crate from the registry it prints the number of source lines with
+# code in the binary, and then every such line that lies inside an `unsafe`
+# block, function or impl.
+#
+# Needs objdump and addr2line (binutils) and python3. Extra options go to
+# cargo build, e.g. --config or --offline; RUSTFLAGS is honoured as usual.
+
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+target="$root/target/unsafe-reach"
+
+CARGO_TARGET_DIR="$target" CARGO_PROFILE_RELEASE_DEBUG=2 \
+  cargo build --release --quiet --manifest-path "$root/Cargo.toml" "$@"
+
+for bin in pathos pathos-eoc; do
+  exe="$target/release/$bin"
+  objdump -d --no-show-raw-insn -j .text "$exe" |
+    grep -oE '^ +[0-9a-f]+:' | tr -d ' :' > "$target/$bin.addrs"
+  addr2line -i -e "$exe" < "$target/$bin.addrs" |
+    sed 's/ (discriminator.*//' | sort -u > "$target/$bin.lines"
+  echo "== $bin: $(wc -l < "$target/$bin.addrs") instructions"
+  python3 - "$target/$bin.lines" <<'EOF'
+import collections, re, sys
+
+def unsafe_lines(path):
+    """The lines of a file inside an `unsafe` block, function or impl."""
+    try:
+        src = [re.sub(r"//.*", "", l) for l in open(path, errors="replace")]
+    except OSError:
+        return set()
+    found = set()
+    for n, line in enumerate(src):
+        for m in re.finditer(r"\bunsafe\b", line):
+            if re.search(r"(forbid|deny|allow|warn)\(.*unsafe", line):
+                continue
+            depth, started, ln, col = 0, False, n, m.end()
+            while ln < len(src):
+                done = False
+                for ch in src[ln][col:]:
+                    if ch == "{":
+                        depth, started = depth + 1, True
+                    elif ch == "}":
+                        depth -= 1
+                        if started and depth == 0:
+                            done = True
+                            break
+                    elif ch == ";" and not started:
+                        done = True
+                        break
+                found.add(ln + 1)
+                if done:
+                    break
+                ln, col = ln + 1, 0
+    return found
+
+lines = collections.defaultdict(set)      # crate -> {(file, line)}
+paths = {}
+for l in open(sys.argv[1]):
+    m = re.search(r"^(.*/registry/src/[^/]+/([^/]+)/)(.*?):(\d+)", l)
+    if m:
+        lines[m.group(2)].add((m.group(3), int(m.group(4))))
+        paths[m.group(2)] = m.group(1)
+if not lines:
+    print("  no code from registry crates")
+cache = {}
+for crate in sorted(lines):
+    unsafe = collections.defaultdict(list)
+    for f, n in sorted(lines[crate]):
+        if n in cache.setdefault((crate, f), unsafe_lines(paths[crate] + f)):
+            unsafe[f].append(n)
+    count = sum(len(v) for v in unsafe.values())
+    print(f"  {crate}: {len(lines[crate])} lines with code, {count} of them unsafe")
+    for f, ns in unsafe.items():
+        print(f"      {f}: {' '.join(map(str, ns))}")
+EOF
+done
