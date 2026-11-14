@@ -380,7 +380,7 @@ mod tests {
         include_file(&mut st, &format!("{dir}/sig.eo"), true, false, None).unwrap();
         st.finalize_plugin().map_err(|e| e.to_string())?;
         let out_path = format!("{dir}/out/plugins/model_smt/model_smt_gen.eo");
-        Ok(std::fs::read_to_string(out_path).unwrap())
+        Ok(crate::std_plugin::read_text(&out_path).unwrap())
     }
 
     /// The output is what `ethos-eoc --plugin.model-smt` writes for the same

@@ -10,7 +10,9 @@ Both binaries run on the same small inputs, written to a scratch directory
 (--work, default: a temporary one), with that directory as the working
 directory. For each input the exit status (zero or not), standard output
 and standard error must be the same, byte for byte, apart from Ethos's
-`Fatal failure within` line. Each difference is printed in full.
+`Fatal failure within` line. Each difference is printed in full. Where
+Ethos ends on an uncaught C++ exception and pathos reports an error, the
+case is shown as an Ethos crash and not counted: there is nothing to match.
 
 The depth part measures, for the three recursions of
 docs/ethos-differences.md ("Recursion deeper than the stack"), the longest
@@ -34,9 +36,11 @@ TIMEOUT = 300
 
 
 def run(binary, args, cwd, stdin=b""):
+    # stdin None: the null device, as the harness gives a run without input
+    how = {"stdin": subprocess.DEVNULL} if stdin is None else {"input": stdin}
     try:
-        p = subprocess.run([str(binary), *args], cwd=cwd, input=stdin,
-                           capture_output=True, timeout=TIMEOUT)
+        p = subprocess.run([str(binary), *args], cwd=cwd, capture_output=True,
+                           timeout=TIMEOUT, **how)
     except subprocess.TimeoutExpired:
         return ("timeout", b"", b"")
     err = b"\n".join(l for l in p.stderr.split(b"\n")
@@ -58,6 +62,9 @@ def show(label, result):
 # ---------------------------------------------------------------------------
 # Behaviour
 # ---------------------------------------------------------------------------
+
+# How libstdc++ and libc++ report an exception nothing catches.
+UNCAUGHT = b"terminat"
 
 OK = b"(declare-const a Bool)\n"
 BAD = b"(declare-const a Bool)\n(declare-const b Bool)\n  (foo)\n"
@@ -111,6 +118,7 @@ def behaviour_cases(work):
         ("a file that is not there", ["nothing.eo"], b""),
         ("a directory as the file", ["sub"], b""),
         ("no file, empty standard input", [], b""),
+        ("no file, standard input from the null device", [], None),
         ("an error on standard input", [], BAD),
         ("CRLF on standard input", [], BAD.replace(b"\n", b"\r\n")),
         ("Ctrl-Z on standard input", [], b"(declare-const a Bool)\n\x1a\n(foo)\n"),
@@ -157,9 +165,12 @@ def probe_behaviour(ref, cand, work):
         c = run(cand, args, work, stdin)
         same = (status_class(r[0]) == status_class(c[0])
                 and r[1] == c[1] and r[2] == c[2])
-        print(f"  {'same     ' if same else 'DIFFERENT'} {name}: {' '.join(args)}")
+        crash = (not same and UNCAUGHT in r[2] and r[1] == b""
+                 and status_class(c[0]) == "error" and c[1] == b"")
+        verdict = "same       " if same else "ETHOS CRASH" if crash else "DIFFERENT  "
+        print(f"  {verdict} {name}: {' '.join(args)}")
         if not same:
-            differing += 1
+            differing += not crash
             show("ethos ", r)
             show("pathos", c)
         elif args != ["--help"]:
