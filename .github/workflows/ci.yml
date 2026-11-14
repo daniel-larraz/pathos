@@ -32,7 +32,7 @@ jobs:
     name: Format, lint, test
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Rust
         run: |
@@ -57,7 +57,7 @@ jobs:
     name: Agreement with Ethos on its regressions and the fuzzing findings
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Read the pins in difftest.env
         id: pins
@@ -68,7 +68,7 @@ jobs:
           echo "reference_rev=$REFERENCE_REV" >> "$GITHUB_OUTPUT"
 
       - name: Check out the harness
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{ steps.pins.outputs.harness_repo }}
           ref: ${{ steps.pins.outputs.harness_commit }}
@@ -82,7 +82,7 @@ jobs:
           sudo apt-get install -y cmake libgmp-dev time
 
       - name: Cache the reference Ethos build
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ethos/tools/difftest/work/ref
           key: ethos-ref-${{ steps.pins.outputs.reference_rev }}-ubuntu-24.04
@@ -109,7 +109,7 @@ jobs:
 
       - name: Keep the comparison report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: difftest-report
           path: difftest-report.json
