@@ -5,8 +5,10 @@
 //! It takes a file, never standard input, and prints no verdict: a run
 //! succeeded if it exits with 0.
 
+mod defs_reader;
 mod desugar;
 mod meta_reduce;
+mod model_smt;
 mod native_layer;
 mod smt_meta;
 mod std_plugin;
@@ -28,7 +30,7 @@ const PLUGINS: &[(&str, bool)] = &[
     ("smt-meta-sygus", true),
     ("lean-meta", false),
     ("trim-defs", true),
-    ("model-smt", false),
+    ("model-smt", true),
 ];
 
 /// What the command line asks for.
@@ -38,6 +40,10 @@ struct Invocation {
     /// The files to include first, and whether each is a reference.
     includes: Vec<(String, bool)>,
     file: String,
+    /// `--semantics=` and `--smt-semantics=`, for the `model-smt` stage;
+    /// empty if not given.
+    defs_file: String,
+    smt_defs_file: String,
 }
 
 fn parse_args(args: &[String]) -> Result<Invocation> {
@@ -134,16 +140,24 @@ fn parse_args(args: &[String]) -> Result<Invocation> {
         plugin,
         includes,
         file,
+        defs_file,
+        smt_defs_file,
     })
 }
 
-fn create_plugin(name: &str) -> Result<Box<dyn Plugin>> {
+fn create_plugin(name: &str, defs_file: &str, smt_defs_file: &str) -> Result<Box<dyn Plugin>> {
     match name {
         "desugar" => Ok(Box::new(desugar::Desugar::new(false)?)),
         "desugar-vc" => Ok(Box::new(desugar::Desugar::new(true)?)),
         "smt-meta" => Ok(Box::new(smt_meta::SmtMeta::new(false)?)),
         "smt-meta-sygus" => Ok(Box::new(smt_meta::SmtMeta::new(true)?)),
         "trim-defs" => Ok(Box::new(trim_defs::TrimDefs::new()?)),
+        // Naming neither file leaves the stage the SMT-LIB semantics of the
+        // source tree and no semantics of an input, as an empty name does.
+        "model-smt" => Ok(Box::new(model_smt::ModelSmt::new(
+            defs_file,
+            smt_defs_file,
+        )?)),
         _ if PLUGINS.contains(&(name, false)) => Err(Error::fatal(format!(
             "pathos-eoc: the plugin \"{name}\" is not ported yet"
         ))),
@@ -172,7 +186,11 @@ fn run(inv: Invocation) -> Result<String> {
     );
     // the plugin must be there before any file is read
     if !inv.plugin.is_empty() {
-        st.set_plugin(create_plugin(&inv.plugin)?)?;
+        st.set_plugin(create_plugin(
+            &inv.plugin,
+            &inv.defs_file,
+            &inv.smt_defs_file,
+        )?)?;
     }
     for (file, is_reference) in &inv.includes {
         include_file(&mut st, file, !is_reference, *is_reference, None)?;
