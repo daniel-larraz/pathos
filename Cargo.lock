@@ -108,6 +108,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "pathos-eoc"
+version = "0.1.0"
+dependencies = [
+ "pathos-check",
+ "pathos-elab",
+ "pathos-syntax",
+ "pathos-term",
+]
+
+[[package]]
 name = "pathos-syntax"
 version = "0.1.0"
 

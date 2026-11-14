@@ -2,7 +2,8 @@
 # Runs every check, including the cvc5 proof gates that CI cannot run:
 #
 #   cargo fmt, clippy and tests (debug and release), then the gates
-#   tests, proofs, large, fuzz, cli, options and perf of scripts/difftest.
+#   tests, proofs, large, fuzz, cli, snapshot, options and perf of
+#   scripts/difftest.
 #
 #   scripts/full-check [--quick]
 #
@@ -44,7 +45,7 @@ step "cargo clippy" cargo clippy --quiet --all-targets -- -D warnings
 step "cargo test (debug)" cargo test --quiet
 step "cargo test (release)" cargo test --quiet --release
 
-gates=(tests proofs large fuzz cli)
+gates=(tests proofs large fuzz cli snapshot)
 [[ $quick == 0 ]] && gates+=(options perf)
 for gate in "${gates[@]}"; do
   if [[ $gate == fuzz ]]; then

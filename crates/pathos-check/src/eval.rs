@@ -70,6 +70,17 @@ impl Checker {
                 }
                 match evf.visited.get(&cur).copied() {
                     None => {
+                        // a plugin may evaluate the term itself
+                        if self.eval_plugin.is_some() {
+                            let ctx = estack[top].ctx.clone();
+                            if let Some(r) = self.plugin_evaluate(cur, &ctx) {
+                                let evf = &mut estack[top];
+                                evf.visited.insert(cur, Some(r));
+                                evf.visit.pop();
+                                continue;
+                            }
+                        }
+                        let evf = &mut estack[top];
                         // first visit: evaluate the children
                         evf.visited.insert(cur, None);
                         let children = self.store.children(cur);
@@ -226,6 +237,18 @@ impl Checker {
         evaluated.unwrap_or(e)
     }
 
+    /// The plugin's value of `e`, if a plugin evaluates it.
+    fn plugin_evaluate(&mut self, e: Term, ctx: &Ctx) -> Option<Term> {
+        let mut plugin = self.eval_plugin.take()?;
+        let ret = if plugin.has_evaluation(self, e) {
+            plugin.evaluate(self, e, ctx)
+        } else {
+            None
+        };
+        self.eval_plugin = Some(plugin);
+        ret
+    }
+
     /// Applies the program `args[0]` to the other arguments and evaluates
     /// the result. Returns the unevaluated application if no case matches.
     pub fn evaluate_program_app(&mut self, args: &[Term]) -> Term {
@@ -254,6 +277,14 @@ impl Checker {
             return None;
         }
         let hd = children[0];
+        if let Some(mut plugin) = self.eval_plugin.take() {
+            let handles = plugin.has_evaluation(self, hd);
+            let ret = handles.then(|| plugin.evaluate_program(self, children, new_ctx));
+            self.eval_plugin = Some(plugin);
+            if let Some(ret) = ret {
+                return ret;
+            }
+        }
         self.count_program(hd);
         let Some(prog) = self.get_program(hd) else {
             let msg = format!("No program defined for {}", self.show(hd));

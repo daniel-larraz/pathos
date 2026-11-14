@@ -81,6 +81,34 @@ impl Options {
 /// when a context is printed in an error message.
 pub type Ctx = BTreeMap<Term, Term>;
 
+/// A plugin hook raised inside the checker, kept for whoever drives the
+/// checker to deliver (see `pathos_elab::Plugin`).
+#[derive(Copy, Clone, Debug)]
+pub enum PluginEvent {
+    MarkConstructorKind(Term, Attr, Option<Term>),
+    DefineProgram(Term, Option<Term>),
+}
+
+/// A plugin's evaluation hooks (`hasEvaluation`, `evaluate` and
+/// `evaluateProgram` in Ethos's `plugin.h`). While one of them runs, the
+/// checker has no evaluation plugin: an evaluation the hook starts is the
+/// checker's own.
+pub trait EvalPlugin {
+    /// Whether the plugin evaluates the term or program `e`.
+    fn has_evaluation(&self, ck: &Checker, e: Term) -> bool;
+    /// The value of `e` under the substitution `ctx`.
+    fn evaluate(&mut self, ck: &mut Checker, e: Term, ctx: &Ctx) -> Option<Term>;
+    /// The result of applying the program `args[0]` to the other arguments,
+    /// with `new_ctx` filled as the checker's own matching would fill it;
+    /// `None` if the plugin does not evaluate this application.
+    fn evaluate_program(
+        &mut self,
+        ck: &mut Checker,
+        args: &[Term],
+        new_ctx: &mut Ctx,
+    ) -> Option<Term>;
+}
+
 /// The term store together with everything the checker knows about the
 /// terms in it: attributes, overloads, literal type rules. Its methods build
 /// terms ([`Checker::mk_expr`]), type them ([`Checker::get_type`]) and
@@ -99,7 +127,7 @@ pub struct Checker {
     /// The numbers given out by `eo::hash`.
     pub(crate) hashes: HashMap<Term, u64>,
     pub(crate) hash_counter: u64,
-    sorry_rules: HashSet<Term>,
+    pub(crate) sorry_rules: HashSet<Term>,
     /// The rules and programs used, for the verdict and `--stats`.
     pub(crate) stats: Stats,
     /// Called with each warning; the binary writes them to stderr.
@@ -108,6 +136,10 @@ pub struct Checker {
     /// of the error that must end the run. Evaluation stops once it is set,
     /// and the parser reports it at the end of the command.
     pub(crate) fatal: Option<String>,
+    /// The hooks raised since they were last delivered; `None` without a
+    /// plugin.
+    pub plugin_events: Option<Vec<PluginEvent>>,
+    pub eval_plugin: Option<Box<dyn EvalPlugin>>,
 
     pub(crate) t_true: Term,
     pub(crate) t_false: Term,
@@ -134,6 +166,7 @@ impl Checker {
         let list_cons = store.mk_symbol(SymbolKind::Const, "eo::List::cons", cons_type);
         let t_self = store.mk_symbol(SymbolKind::Param, "eo::self", any);
         let proof_type = store.mk_symbol(SymbolKind::Const, "eo::Proof", ty);
+        let stats = Stats::new(opts.stats);
         let mut ck = Checker {
             store,
             opts,
@@ -143,9 +176,11 @@ impl Checker {
             hashes: HashMap::new(),
             hash_counter: 0,
             sorry_rules: HashSet::new(),
-            stats: Stats::new(),
+            stats,
             warnings,
             fatal: None,
+            plugin_events: None,
+            eval_plugin: None,
             t_true,
             t_false,
             t_self,
@@ -267,6 +302,9 @@ impl Checker {
         }
         ai.attr = a;
         ai.cons = cons;
+        if let Some(events) = &mut self.plugin_events {
+            events.push(PluginEvent::MarkConstructorKind(v, a, cons));
+        }
         true
     }
 
@@ -307,13 +345,17 @@ impl Checker {
         if prog.is_some() {
             self.mark_constructor_kind(v, Attr::Program, prog);
         }
+        // the plugin is told of forward declarations too
+        if let Some(events) = &mut self.plugin_events {
+            events.push(PluginEvent::DefineProgram(v, prog));
+        }
     }
 
     pub fn mark_proof_rule_sorry(&mut self, rule: Term) {
         self.sorry_rules.insert(rule);
     }
 
-    pub(crate) fn is_proof_rule_sorry(&self, rule: Term) -> bool {
+    pub fn is_proof_rule_sorry(&self, rule: Term) -> bool {
         self.sorry_rules.contains(&rule)
     }
 

@@ -7,6 +7,14 @@
 #                  command-line cases and the regressions under the --stats
 #                  options, using the harness pinned in difftest.env
 #
+#   - eoc:         pathos-eoc against the reference ethos-eoc, through eoc's
+#                  driver: every case of the Ethos test signatures (all the
+#                  stages), and of logos's CPC the whole-signature cases
+#                  (lean --all and the two desugar runs): 1,055 cases, two
+#                  minutes on four local cores. The per-rule cases of CPC
+#                  (2,452) are left to scripts/difftest eoc, run locally:
+#                  the whole gate is about four times the work.
+#
 # The cvc5 proof gates (proofs, large, options, perf) need a cvc5 build and
 # up to 24 GB of memory, so they run locally with scripts/full-check.
 
@@ -121,4 +129,74 @@ jobs:
           path: |
             difftest-report.json
             difftest-cli-report.json
+          if-no-files-found: ignore
+
+  eoc:
+    name: Agreement with ethos-eoc on the compiler stages
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Read the pins in difftest.env
+        id: pins
+        run: |
+          source difftest.env
+          echo "harness_repo=${HARNESS_REPO#https://github.com/}" >> "$GITHUB_OUTPUT"
+          echo "harness_commit=$HARNESS_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "reference_rev=$REFERENCE_REV" >> "$GITHUB_OUTPUT"
+          echo "logos_repo=$LOGOS_REPO" >> "$GITHUB_OUTPUT"
+          echo "logos_rev=$LOGOS_REV" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ steps.pins.outputs.harness_repo }}
+          ref: ${{ steps.pins.outputs.harness_commit }}
+          path: ethos
+          # build-ref needs the reference revision, an ancestor of the harness
+          fetch-depth: 0
+
+      - name: Check out logos where the harness looks for it
+        run: |
+          git clone --quiet "${{ steps.pins.outputs.logos_repo }}" ethos/tools/difftest/work/logos
+          git -C ethos/tools/difftest/work/logos checkout --quiet "${{ steps.pins.outputs.logos_rev }}"
+
+      - name: Install the reference's build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libgmp-dev
+
+      # The same directory as in the regressions job, here with ethos-eoc
+      # built in it as well, so under a key of its own.
+      - name: Cache the reference Ethos and ethos-eoc builds
+        uses: actions/cache@v6
+        with:
+          path: ethos/tools/difftest/work/ref
+          key: ethos-ref-eoc-${{ steps.pins.outputs.reference_rev }}-ubuntu-24.04
+
+      - name: Build the reference Ethos and ethos-eoc
+        run: python3 ethos/tools/difftest/difftest.py build-ref ${{ steps.pins.outputs.reference_rev }} --eoc
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      # Every case but the per-rule ones of logos's CPC.
+      - name: Compare pathos-eoc with ethos-eoc
+        env:
+          ETHOS_HARNESS: ${{ github.workspace }}/ethos
+        run: >-
+          scripts/difftest eoc
+          --filter '^eoc/(?!logos/)|^eoc/logos/(lean-all|desugar|desugar-eo)$'
+          --show-all --report difftest-eoc-report.json
+
+      - name: Keep the comparison report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: difftest-eoc-report
+          path: difftest-eoc-report.json
           if-no-files-found: ignore

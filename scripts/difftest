@@ -17,6 +17,11 @@
 #            tools/difftest/fuzz-findings/                   (gate 8)
 #   cli      the harness's command-line cases, and the
 #            regressions and proofs under the --stats options (gate 9)
+#   snapshot regressions and proofs, pathos with a snapshot of the
+#            CPC signature, under every option set; proofs with
+#            broken snapshots; timings with and without     (gate 10)
+#   eoc      eoc's driver with ethos-eoc and pathos-eoc, on the
+#            test signatures and on logos's CPC     (gates 11 to 13)
 #
 # Extra options go to `difftest.py run`, e.g. --filter, --show-all, --report.
 # Exits 0 when pathos and the reference agree on every case, 1 otherwise,
@@ -79,7 +84,7 @@ finish() {
   exit "$rc"
 }
 
-[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz|cli [options]"
+[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz|cli|snapshot|eoc [options]"
 gate="$1"; shift
 
 [[ -n "${ETHOS_HARNESS:-}" ]] ||
@@ -106,7 +111,7 @@ check_corpus() {
   [[ "$rev" == "$CVC5_REV" ]] ||
     fail "$dir was made with cvc5 $rev, expected $CVC5_REV"
 }
-case "$gate" in gate3|proofs|options|all|perf|cli) check_corpus "$corpus" "The proof corpus" ;; esac
+case "$gate" in gate3|proofs|options|all|perf|cli|snapshot) check_corpus "$corpus" "The proof corpus" ;; esac
 case "$gate" in large|all|perf) check_corpus "$large" "A corpus of large proofs" ;; esac
 
 # Builds the regex for --filter from a list of file names.
@@ -138,12 +143,67 @@ case "$gate" in
                 --jobs 1 --no-cache) ;;
   cli)    args=(--cli --tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
                 --stats-option-sets) ;;
-  fuzz)   ;;
+  fuzz|snapshot|eoc) ;;
   *) fail "unknown gate: $gate" ;;
 esac
 
 cargo build --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos
 cand="$root/target/release/pathos"
+
+if [[ "$gate" == eoc ]]; then
+  refsrc="$dt/work/ref/${REFERENCE_REV:0:12}/src"
+  refeoc="$dt/work/ref/${REFERENCE_REV:0:12}/build-eoc/ethos-eoc"
+  [[ -x "$refeoc" ]] ||
+    fail "no reference ethos-eoc; run: $dt/difftest.py build-ref $REFERENCE_REV --eoc"
+  logos="$dt/work/logos"
+  [[ -d "$logos/.git" ]] ||
+    fail "no logos checkout; run: git clone $LOGOS_REPO $logos && git -C $logos checkout $LOGOS_REV"
+  lhead="$(git -C "$logos" rev-parse HEAD)"
+  [[ "$lhead" == "$LOGOS_REV" ]] || fail "$logos is at $lhead, expected $LOGOS_REV"
+  git -C "$logos" diff --quiet HEAD || fail "$logos has local changes"
+  cargo build --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos-eoc
+  rc=0
+  python3 "$dt/difftest.py" eoc --ref "$refeoc" --cand "$root/target/release/pathos-eoc" \
+    --src "$refsrc" --logos "$logos" "$@" || rc=$?
+  finish $rc
+fi
+
+if [[ "$gate" == snapshot ]]; then
+  snap="$root/target/difftest/snapshot"
+  mkdir -p "$snap"
+  "$cand" --write-snapshot="$snap/cpc.snap" "$corpus/cpc/Cpc.eo" ||
+    fail "pathos --write-snapshot failed"
+  # Broken snapshots, which pathos must ignore: the first half, every 97th
+  # byte flipped, and an empty file.
+  head -c "$(( $(stat -c %s "$snap/cpc.snap") / 2 ))" "$snap/cpc.snap" > "$snap/truncated.snap"
+  python3 -c '
+import sys
+data = bytearray(open(sys.argv[1], "rb").read())
+for i in range(0, len(data), 97):
+    data[i] ^= 0x5a
+open(sys.argv[2], "wb").write(data)
+' "$snap/cpc.snap" "$snap/corrupt.snap"
+  : > "$snap/empty.snap"
+  rc=0
+  echo "== with the snapshot: regressions and proofs, every option set"
+  python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand" \
+    --tests "$ETHOS_HARNESS/tests" --corpus "$corpus" --all-option-sets \
+    --timeout "$OPTIONS_TIMEOUT" --cand-options="--snapshot=$snap/cpc.snap" \
+    "$@" || rc=1
+  for broken in truncated corrupt empty; do
+    echo "== with the $broken snapshot: proofs"
+    python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand" --corpus "$corpus" \
+      --cand-options="--snapshot=$snap/$broken.snap" "$@" || rc=1
+  done
+  echo "== the candidate's time on the proofs, one job at a time:" \
+    "without, then with the snapshot"
+  for with in "" "--snapshot=$snap/cpc.snap"; do
+    python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand" --corpus "$corpus" \
+      --jobs 1 --quiet --show 0 ${with:+--cand-options="$with"} |
+      grep "^time over" || rc=1
+  done
+  finish $rc
+fi
 
 if [[ "$gate" == fuzz ]]; then
   # Findings from proof seeds need the corpus; without it they are skipped.

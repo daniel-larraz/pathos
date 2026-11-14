@@ -140,6 +140,73 @@ message; it runs until memory is exhausted.
   harness drops the spaces between masked numbers and masks a count that
   ran into the time, so such rows compare equal; this was checked on rows
   of that shape, not rerun on those two proofs.
+- `--write-snapshot=FILE` and `--snapshot=FILE` are pathos's own (signature
+  snapshots, milestone 10); Ethos rejects them as unknown options. They are
+  not in `--help`, which prints Ethos's text. A run with `--snapshot` prints
+  what it would print without it, with these exceptions, all in the numbers
+  that are pathos's own under `--stats`: the time of the steps a signature
+  itself contains is not counted, and `mkExprCount` continues from the
+  count of the run that wrote the snapshot. How a snapshot is used, and
+  when it is ignored, is described at the top of
+  `crates/pathos-elab/src/snapshot.rs`.
+- A snapshot is trusted as the signature is. Its checksum finds damage, not
+  forgery: a file made on purpose, with a checksum that fits, can hold
+  rules or terms that no signature gives, and so make pathos accept a wrong
+  proof, or fail on a term of a shape the parser never builds. Reading such
+  a file does not panic and allocates no more than a small multiple of its
+  size.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
+
+### pathos-eoc (the compiler stages)
+
+`pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with all its stages:
+`desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta`,
+`smt-meta-sygus` and `lean-meta`. What differs from the C++:
+
+- `ethos-eoc` falls back on the source and build directories CMake
+  compiled into it when `ETHOS_PLUGIN_ROOT` or `ETHOS_PLUGIN_OUTPUT_DIR` is
+  not set. `pathos-eoc` has the same fallback, from the environment of its
+  own build: build it with `ETHOS_PLUGIN_SOURCE_DIR` (the Ethos source
+  tree) and `ETHOS_PLUGIN_OUTPUT_DIR` (`<build directory>/out`) set, as
+  `crates/pathos-eoc/src/std_plugin.rs` shows. The environment variables at
+  run time take precedence, as in Ethos. A `pathos-eoc` built without them
+  has no fallback and fails with Ethos's message (`StdPlugin: unable to
+  determine the plugin resource root`, or `... output root`). eoc's driver
+  sets neither variable, so a binary the driver runs outside the harness
+  must be built with the fallback.
+- Where a C++ stage aborts inside a hook, the stage here returns an error,
+  which is reported when the command being read ends. Anything the rest of
+  that command prints comes before the error, where in Ethos it would not
+  be printed at all. Not seen in the eoc gate.
+- Hooks raised inside the checker (a constructor kind, a program) reach
+  the stage when the parser raises its next hook or the command ends, not
+  at once, and what a stage does to the state raises no hooks for the stage
+  itself. No eoc stage of the reference changes the state from a hook
+  (they make terms and read the symbol table), and `smt-meta`, which prints
+  each program when it is told of it, gives the same output. See
+  `crates/pathos-elab/src/plugin.rs`.
+- Where the C++ indexes a term's children on the strength of an assertion
+  (which a release build does not check), the stage stops with `Desugar:
+  unexpected term: ...`. Ethos would read outside the term.
+- The same for `smt-meta`: `SmtMetaReduce: unexpected term: ...`. Its one
+  checked assertion in the C++ (`AlwaysAssert`, on a symbol that is still
+  ambiguous after desugaring) is an error here with pathos's own wording.
+  Not reached in the gate.
+- `model-smt`: the C++'s `failed to read resource` and `failed to write
+  output` errors could not be provoked in the reference, so pathos has no
+  case for them; a write that fails says `failed to open output`.
+- `smt-meta-sygus` orders one map by the addresses of terms
+  (`d_grefs` in `smt_meta_sygus.cpp`). The order does not reach the output:
+  each entry writes to a grammar of its own, and the grammars they name
+  exist by then. pathos visits the entries in the order of their terms.
+- `lean-meta`: where the C++ would read outside a term or through a null
+  expression (a case head shorter than its program's type, a constant
+  without a type, a case without a body), the stage stops with
+  `LeanMetaReduce: unexpected term: ...` or `LinearPattern: unexpected
+  term: ...`. Its checked assertions (`AlwaysAssert`) print Ethos's text.
+  Several of its containers are ordered by address in the C++; none is
+  iterated in a way that reaches the output.
+- `smt-meta`: on `(echo "smt-meta <name>")` with a name that is not bound,
+  Ethos crashes (a segmentation fault); pathos reports an error.

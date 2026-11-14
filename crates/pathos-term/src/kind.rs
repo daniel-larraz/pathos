@@ -19,6 +19,16 @@ pub enum SymbolKind {
     ProofRule,
 }
 
+impl SymbolKind {
+    pub const ALL: &'static [SymbolKind] = &[
+        SymbolKind::Param,
+        SymbolKind::Const,
+        SymbolKind::BuiltinConst,
+        SymbolKind::ProgramConst,
+        SymbolKind::ProofRule,
+    ];
+}
+
 /// The kinds of literals.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub enum LitKind {
@@ -29,6 +39,18 @@ pub enum LitKind {
     Hexadecimal,
     Binary,
     String,
+}
+
+impl LitKind {
+    pub const ALL: &'static [LitKind] = &[
+        LitKind::Boolean,
+        LitKind::Numeral,
+        LitKind::Decimal,
+        LitKind::Rational,
+        LitKind::Hexadecimal,
+        LitKind::Binary,
+        LitKind::String,
+    ];
 }
 
 /// The kinds of compound terms other than `eo::` operator applications.
@@ -51,6 +73,24 @@ pub enum NodeKind {
     Proof,
     /// `(eo::var "name" T)`.
     Variable,
+}
+
+impl NodeKind {
+    pub const ALL: &'static [NodeKind] = &[
+        NodeKind::FunctionType,
+        NodeKind::ProgramType,
+        NodeKind::QuoteType,
+        NodeKind::Apply,
+        NodeKind::Lambda,
+        NodeKind::Tuple,
+        NodeKind::Program,
+        NodeKind::As,
+        NodeKind::AsReturn,
+        NodeKind::Parameterized,
+        NodeKind::ApplyOpaque,
+        NodeKind::Proof,
+        NodeKind::Variable,
+    ];
 }
 
 /// The builtin `eo::` operators.
@@ -417,6 +457,40 @@ impl fmt::Display for Kind {
     }
 }
 
+impl Kind {
+    /// The kind as two bytes, for snapshots: the group and the kind within
+    /// it, which is its position in the group's `ALL`.
+    pub fn code(self) -> (u8, u8) {
+        match self {
+            Kind::Type => (0, 0),
+            Kind::BoolType => (1, 0),
+            Kind::Any => (2, 0),
+            Kind::Null => (3, 0),
+            Kind::Symbol(k) => (4, k as u8),
+            Kind::Lit(k) => (5, k as u8),
+            Kind::Node(k) => (6, k as u8),
+            Kind::Eval(op) => (7, op as u8),
+        }
+    }
+
+    /// The kind with the given code, if there is one.
+    pub fn from_code(group: u8, sub: u8) -> Option<Kind> {
+        let i = usize::from(sub);
+        Some(match group {
+            0..=3 if sub != 0 => return None,
+            0 => Kind::Type,
+            1 => Kind::BoolType,
+            2 => Kind::Any,
+            3 => Kind::Null,
+            4 => Kind::Symbol(*SymbolKind::ALL.get(i)?),
+            5 => Kind::Lit(*LitKind::ALL.get(i)?),
+            6 => Kind::Node(*NodeKind::ALL.get(i)?),
+            7 => Kind::Eval(EvalOp::ALL.get(i)?.0),
+            _ => return None,
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -429,5 +503,37 @@ mod tests {
         assert_eq!(EvalOp::DtSelectors.name(), "dt_selectors");
         assert_eq!(Kind::Eval(EvalOp::IntDiv).to_term_string(), "eo::zdiv");
         assert_eq!(Kind::Eval(EvalOp::IntDiv).to_string(), "EVAL_INT_DIV");
+    }
+}
+
+#[cfg(test)]
+mod code_tests {
+    use super::*;
+
+    #[test]
+    fn codes_round_trip() {
+        // the position in ALL is the discriminant
+        for (i, k) in SymbolKind::ALL.iter().enumerate() {
+            assert_eq!(*k as usize, i);
+        }
+        for (i, k) in LitKind::ALL.iter().enumerate() {
+            assert_eq!(*k as usize, i);
+        }
+        for (i, k) in NodeKind::ALL.iter().enumerate() {
+            assert_eq!(*k as usize, i);
+        }
+        for (i, (op, _)) in EvalOp::ALL.iter().enumerate() {
+            assert_eq!(*op as usize, i);
+        }
+        for group in 0..=8u8 {
+            for sub in 0..=255u8 {
+                if let Some(k) = Kind::from_code(group, sub) {
+                    assert_eq!(k.code(), (group, sub));
+                }
+            }
+        }
+        assert_eq!(Kind::from_code(6, 13), None);
+        assert_eq!(Kind::from_code(0, 1), None);
+        assert_eq!(Kind::from_code(8, 0), None);
     }
 }
