@@ -903,7 +903,7 @@ impl Parser<'_> {
         let rule = self.get_proof_rule(&rule_name)?;
         // A rule counts as used from here on, which decides whether the
         // verdict is "incomplete".
-        self.st.ck.mark_rule_used(rule);
+        self.st.ck.step_begins(rule);
         if self.lex.peek_token()? == Token::Keyword {
             keyword = self.parse_keyword()?;
         }
@@ -955,6 +955,8 @@ impl Parser<'_> {
             self.st.pop_assumption_scope()?;
         }
         let pf_term = self.st.ck.mk_proof(conc_term);
-        self.bind(&name, pf_term)
+        self.bind(&name, pf_term)?;
+        self.st.ck.step_ends(rule);
+        Ok(())
     }
 }

@@ -155,8 +155,8 @@ intended; everything between gates is not.
    margin.
 7. **Options:** `scripts/difftest options` agrees: every regression and
    default-corpus proof under each of Ethos's eight non-default options and
-   under all of them together (6,300 runs). Not covered: the `--stats`
-   options, `--help`, `--show-config`, `--include=` and `--reference=`.
+   under all of them together (6,300 runs). The `--stats` options and the
+   command line are gate 9.
 8. **Fuzzing findings:** `scripts/difftest fuzz` reports no finding that
    still differs. The findings are mutated inputs on which pathos and Ethos
    behaved differently, kept in the harness under
@@ -165,6 +165,21 @@ intended; everything between gates is not.
    abort on errors), pathos cannot match it; it must still terminate with an
    error, without a panic or a hang. Once the gate passes, add it to CI
    (it runs without the cvc5 corpus and skips the findings that need it).
+9. **Command line and statistics:** `scripts/difftest cli` agrees: the
+   harness's 38 command-line cases (`CLI_CASES` in `difftest.py`, inputs in
+   `tools/difftest/cli/`: `--help`, `-t`, `-v`, unknown options, standard
+   input, `--include=`, `--reference=`), and every regression and
+   default-corpus proof under `--stats`, `--stats-all`, `--stats-compact`
+   and the last two together. The statistics are compared with times and
+   Ethos's term-store counters (`mkExprCount`, `newExprCount`,
+   `deleteExprCount`, `symCount`, `litCount`) masked: pathos prints those
+   lines with its own numbers, and must match the rest, including which
+   rules and programs are listed (with Ethos's names for the programs it
+   generates, such as `$eo_prog_<rule>`) and how often each ran. Rows are
+   compared sorted by name. Once the gate passes, add to CI
+   `scripts/difftest tests --cli --stats-option-sets`, which needs no
+   corpus. Not covered: `--show-config`, which prints pathos's own name and
+   version.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
@@ -176,4 +191,3 @@ report their results.
 - Speed-ups that could change behaviour, such as compiling program cases
   into decision trees or caching evaluations across calls.
 - Plugins and the eoc compiler.
-- The `--stats` options, whose output contains timings.

@@ -254,6 +254,8 @@ pub struct TermStore {
     lit_hasher: RandomState,
     /// Set when the store ran out of 32-bit ids or positions.
     limit: Option<Limit>,
+    /// How many terms were asked for, new or not.
+    mk_count: u64,
     ty_type: Term,
     ty_bool: Term,
     any: Term,
@@ -281,6 +283,7 @@ impl TermStore {
             keys: HashKeys::random(&RandomState::new()),
             lit_hasher: RandomState::new(),
             limit: None,
+            mk_count: 0,
             ty_type: Term(NonZeroU32::MIN),
             ty_bool: Term(NonZeroU32::MIN),
             any: Term(NonZeroU32::MIN),
@@ -302,6 +305,22 @@ impl TermStore {
 
     pub fn is_empty(&self) -> bool {
         self.len() == 0
+    }
+
+    /// How many times a symbol, literal or compound term was asked for,
+    /// whether or not it existed already. For `--stats`.
+    pub fn mk_count(&self) -> u64 {
+        self.mk_count
+    }
+
+    /// The number of symbols made so far.
+    pub fn symbol_count(&self) -> usize {
+        self.names.len()
+    }
+
+    /// The number of distinct literals made so far.
+    pub fn lit_count(&self) -> usize {
+        self.lits.len()
     }
 
     /// Adds a term. Returns `None`, and records the limit, when the store
@@ -353,6 +372,7 @@ impl TermStore {
     /// term.
     pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
         // there are no more names than terms, so this fits when the term does
+        self.mk_count += 1;
         let name_id = self.names.len() as u32;
         let flags = match kind {
             SymbolKind::ProgramConst => FLAG_EVAL,
@@ -376,6 +396,7 @@ impl TermStore {
 
     /// The term for a literal value; equal values give the same term.
     pub fn mk_lit(&mut self, lit: Lit) -> Term {
+        self.mk_count += 1;
         let hash = self.lit_hasher.hash_one(&lit);
         let slot = match self.lit_table.find(hash, |i| self.lit_at(i) == Some(&lit)) {
             Ok(found) => return Term::from_slot(found as u32),
@@ -422,6 +443,7 @@ impl TermStore {
             }
             Kind::Node(_) | Kind::Eval(_) => {}
         }
+        self.mk_count += 1;
         let tag = tag_of(kind);
         let hash = hash_node(&self.keys, tag, children);
         let found = self.table.find(hash, |cand| {

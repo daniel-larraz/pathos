@@ -364,3 +364,128 @@ fn a_failed_program_application_is_tried_once_per_evaluation() {
     );
     assert!(r.result.is_err());
 }
+
+/// The statistics for the input under the given `--stats` options, with
+/// the numbers that are pathos's own (times, term-store counters) masked
+/// and the rows in name order, as the harness compares them.
+fn stats(input: &str, options: &[&str]) -> Vec<String> {
+    let mut opts = Options::default();
+    for o in options {
+        assert!(opts.set_option(o, true));
+    }
+    let mut st = State::new(opts, Box::new(|_| ()), Box::new(|_| ()));
+    Parser::new(&mut st, input.as_bytes().to_vec(), "t.eo", true, false)
+        .parse_all()
+        .unwrap();
+    let text = st.ck.stats_string();
+    let mut lines: Vec<String> = Vec::new();
+    for line in text.lines() {
+        let masked = match line.split_once(" = ") {
+            Some((name, value)) if !value.starts_with('{') => {
+                let unit = if value.ends_with("us") { "us" } else { "" };
+                format!("{name} = N{unit}")
+            }
+            Some((name @ ("checkTime" | "mkExpr"), _)) => format!("{name} = {{}}"),
+            _ => match line.split_once(": ") {
+                // a rule's row: keep the name and the count
+                Some((name, rest)) if rest.contains('%') => {
+                    let count = rest.split(' ').next().unwrap();
+                    format!("{name}: {count} ...")
+                }
+                _ => line.to_string(),
+            },
+        };
+        lines.push(masked);
+    }
+    // The rules come in the order of the time they took: put them in name
+    // order instead.
+    if let Some(first) = lines
+        .iter()
+        .position(|l| l.ends_with(" ...") && l.contains(": "))
+    {
+        let n = lines[first..]
+            .iter()
+            .take_while(|l| l.ends_with(" ..."))
+            .count();
+        lines[first..first + n]
+            .sort_by(|a, b| a.trim_start_matches(' ').cmp(b.trim_start_matches(' ')));
+    }
+    for line in &mut lines {
+        if let Some(items) = line.strip_prefix("ruleCount = { ") {
+            let mut items: Vec<&str> = items.trim_end_matches(" }").split(", ").collect();
+            items.sort();
+            *line = format!("ruleCount = {{ {} }}", items.join(", "));
+        }
+    }
+    lines
+}
+
+const STATS_INPUT: &str = "(declare-const Int Type)
+(declare-parameterized-const = ((T Type :implicit)) (-> T T Bool))
+(declare-const a Int)
+(declare-const b Int)
+(program $flip ((T Type) (x T) (y T)) :signature (Bool) Bool
+  ((($flip (= x y)) (= y x))))
+(declare-rule symm ((F Bool)) :premises (F) :conclusion ($flip F))
+(declare-rule |odd name| ((F Bool)) :args (F) :conclusion ($flip F))
+(assume p (= a b))
+(step q (= b a) :rule symm :premises (p))
+(step r (= a b) :rule symm :premises (q))
+(step t (= b a) :rule |odd name| :args ((= a b)))
+";
+
+#[test]
+fn stats_list_the_rules_used() {
+    let rule = "=".repeat(84);
+    assert_eq!(
+        stats(STATS_INPUT, &["stats"]),
+        [
+            rule.as_str(),
+            "mkExprCount = N",
+            "newExprCount = N",
+            "deleteExprCount = N",
+            "symCount = N",
+            "litCount = N",
+            "time = Nus",
+            rule.as_str(),
+            "                                  Rule  #      t(us)            t/#(us)   #mkExpr   ",
+            rule.as_str(),
+            "                                  symm: 2 ...",
+            "                            |odd name|: 1 ...",
+        ]
+    );
+}
+
+#[test]
+fn stats_all_lists_the_programs_with_the_generated_ones() {
+    let rule = "=".repeat(84);
+    let lines = stats(STATS_INPUT, &["stats-all"]);
+    assert_eq!(
+        lines[12..],
+        [
+            rule.as_str(),
+            "                               Program  #      ",
+            rule.as_str(),
+            "                                 $flip: 3",
+            "                         $eo_prog_symm: 2",
+            "                   |$eo_prog_odd name|: 1",
+        ]
+    );
+}
+
+#[test]
+fn stats_compact_prints_one_line_per_table() {
+    let lines = stats(STATS_INPUT, &["stats-all", "stats-compact"]);
+    assert_eq!(
+        lines[6..],
+        [
+            "ruleCount = { symm: 2, |odd name|: 1 }",
+            "checkTime = {}",
+            "mkExpr = {}",
+            "progCount = { $flip: 3, $eo_prog_symm: 2, |$eo_prog_odd name|: 1 }",
+        ]
+    );
+    // without steps there is no rule table
+    let lines = stats("(declare-const Int Type)\n", &["stats-compact"]);
+    assert_eq!(lines.len(), 6);
+}

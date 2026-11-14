@@ -5,6 +5,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 use pathos_term::{Integer, Kind, Lit, LitKind, SymbolKind, Term, TermStore};
 
 use crate::attr::{AppInfo, Attr};
+use crate::stats::Stats;
 
 /// The options of Ethos that the checker reads.
 #[derive(Clone, Debug)]
@@ -99,8 +100,8 @@ pub struct Checker {
     pub(crate) hashes: HashMap<Term, u64>,
     pub(crate) hash_counter: u64,
     sorry_rules: HashSet<Term>,
-    /// The proof rules that steps have used.
-    used_rules: HashSet<Term>,
+    /// The rules and programs used, for the verdict and `--stats`.
+    pub(crate) stats: Stats,
     /// Called with each warning; the binary writes them to stderr.
     warnings: Box<dyn FnMut(&str)>,
     /// Set when the checker met something it cannot go on from: the message
@@ -142,7 +143,7 @@ impl Checker {
             hashes: HashMap::new(),
             hash_counter: 0,
             sorry_rules: HashSet::new(),
-            used_rules: HashSet::new(),
+            stats: Stats::new(),
             warnings,
             fatal: None,
             t_true,
@@ -312,14 +313,8 @@ impl Checker {
         self.sorry_rules.insert(rule);
     }
 
-    /// Records that a step used the rule.
-    pub fn mark_rule_used(&mut self, rule: Term) {
-        self.used_rules.insert(rule);
-    }
-
-    /// Whether any rule used by a step is marked `:sorry`.
-    pub fn used_sorry_rule(&self) -> bool {
-        self.used_rules.iter().any(|r| self.sorry_rules.contains(r))
+    pub(crate) fn is_proof_rule_sorry(&self, rule: Term) -> bool {
+        self.sorry_rules.contains(&rule)
     }
 
     /// The number `eo::hash` gives a term: terms are numbered from 1 in the
