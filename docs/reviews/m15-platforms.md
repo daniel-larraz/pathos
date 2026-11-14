@@ -84,3 +84,12 @@ pathos answered `correct`; fixed.
 - For Daniel: the release binaries link `malachite` (LGPL-3.0-only)
   statically, and the crates ship no licence text. Ethos, which links GMP
   statically, ships `licenses/lgpl-3.0.txt` and says so in `COPYING`.
+
+## The console fix
+
+Fixed in dc26d99: on a Windows console (`textmode::wants_utf8`), text that
+is not valid UTF-8 is written with each byte as the character of the same
+number, decided before writing (a retry after the error would print the
+valid start of the buffer twice). Pipes and files are unchanged. Tested
+with a stand-in writer, not on a real console; CI run 43644441697 green on
+all six platforms.
