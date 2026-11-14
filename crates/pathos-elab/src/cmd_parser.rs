@@ -84,6 +84,16 @@ impl Parser<'_> {
     /// Reads and runs the next command. Returns false at the end of the
     /// input.
     pub fn parse_next_command(&mut self) -> Result<bool> {
+        let ret = self.run_next_command();
+        // An error that stopped the checker inside the command comes before
+        // whatever the command made of the unfinished result.
+        if let Some(msg) = self.st.ck.take_fatal() {
+            return Err(self.lex.parse_error(msg));
+        }
+        ret
+    }
+
+    fn run_next_command(&mut self) -> Result<bool> {
         if self.finished || self.lex.eat_token_choice(Token::Eof, Token::Lparen)? {
             return Ok(false);
         }

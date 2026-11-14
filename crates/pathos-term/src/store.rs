@@ -72,6 +72,8 @@ pub enum TermData {
     Type,
     BoolType,
     Any,
+    /// Ethos's null expression; see [`Kind::Null`].
+    Null,
     /// A named symbol; the name is [`TermStore::symbol_name`].
     Symbol(SymbolKind, u32),
     /// A literal; the value is [`TermStore::lit`].
@@ -212,7 +214,9 @@ fn tag_of(kind: Kind) -> u32 {
     match kind {
         Kind::Node(n) => n as u32,
         Kind::Eval(op) => 64 + op as u32,
-        Kind::Type | Kind::BoolType | Kind::Any | Kind::Symbol(_) | Kind::Lit(_) => u32::MAX,
+        Kind::Type | Kind::BoolType | Kind::Any | Kind::Null | Kind::Symbol(_) | Kind::Lit(_) => {
+            u32::MAX
+        }
     }
 }
 
@@ -253,6 +257,7 @@ pub struct TermStore {
     ty_type: Term,
     ty_bool: Term,
     any: Term,
+    null: Term,
 }
 
 impl Default for TermStore {
@@ -279,12 +284,14 @@ impl TermStore {
             ty_type: Term(NonZeroU32::MIN),
             ty_bool: Term(NonZeroU32::MIN),
             any: Term(NonZeroU32::MIN),
+            null: Term(NonZeroU32::MIN),
         };
         s.ty_type = s.push(TermData::Type, 0).unwrap_or(s.ty_type);
         s.ty_bool = s.push(TermData::BoolType, 0).unwrap_or(s.ty_bool);
         s.any = s
             .push(TermData::Any, FLAG_EVAL | FLAG_NON_GROUND)
             .unwrap_or(s.any);
+        s.null = s.push(TermData::Null, 0).unwrap_or(s.null);
         s
     }
 
@@ -335,6 +342,11 @@ impl TermStore {
     /// The term `eo::?`.
     pub fn mk_any(&self) -> Term {
         self.any
+    }
+
+    /// Ethos's null expression: ground, not evaluatable, never typed.
+    pub fn mk_null(&self) -> Term {
+        self.null
     }
 
     /// Makes a new symbol with the given type. Never returns an existing
@@ -404,6 +416,7 @@ impl TermStore {
             Kind::Type => return self.ty_type,
             Kind::BoolType => return self.ty_bool,
             Kind::Any => return self.any,
+            Kind::Null => return self.null,
             Kind::Symbol(_) | Kind::Lit(_) => {
                 panic!("TermStore::mk called with the atomic kind {kind}")
             }
@@ -471,6 +484,7 @@ impl TermStore {
             TermData::Type => Kind::Type,
             TermData::BoolType => Kind::BoolType,
             TermData::Any => Kind::Any,
+            TermData::Null => Kind::Null,
             TermData::Symbol(k, _) => Kind::Symbol(k),
             TermData::Lit(k, _) => Kind::Lit(k),
             TermData::Apply(_) => Kind::APPLY,

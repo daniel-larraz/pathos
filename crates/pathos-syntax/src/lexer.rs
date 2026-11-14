@@ -181,7 +181,13 @@ impl Lexer {
 
     fn next_token_internal(&mut self) -> Result<Token> {
         self.token.clear();
-        self.compute_next_token()
+        let ret = self.compute_next_token();
+        // Ethos hands the token's text out as a C string, so everyone who
+        // reads it sees it end at its first NUL character.
+        if let Some(nul) = self.token.find('\0') {
+            self.token.truncate(nul);
+        }
+        ret
     }
 
     fn read_next_char(&mut self) -> i32 {

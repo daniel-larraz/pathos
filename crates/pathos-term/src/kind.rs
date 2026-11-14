@@ -292,6 +292,10 @@ pub enum Kind {
     BoolType,
     /// An unknown, standing for any term; non-ground and evaluatable.
     Any,
+    /// Ethos's null expression, of kind `NONE`. Ethos puts it into a term
+    /// where it failed to compute a part, such as the constructor term of a
+    /// `:chainable` operator; such terms do not type check.
+    Null,
     Symbol(SymbolKind),
     Lit(LitKind),
     Node(NodeKind),
@@ -348,6 +352,7 @@ impl Kind {
             Kind::Type => "Type".into(),
             Kind::BoolType => "Bool".into(),
             Kind::Any => "eo::?".into(),
+            Kind::Null => "[NONE]".into(),
             Kind::Node(n) => match n {
                 NodeKind::FunctionType => "->".into(),
                 NodeKind::ProgramType => "eo::arrow".into(),
@@ -375,6 +380,7 @@ impl fmt::Display for Kind {
             Kind::Type => "TYPE",
             Kind::BoolType => "BOOL_TYPE",
             Kind::Any => "ANY",
+            Kind::Null => "NONE",
             Kind::Symbol(s) => match s {
                 SymbolKind::Param => "PARAM",
                 SymbolKind::Const => "CONST",

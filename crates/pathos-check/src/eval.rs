@@ -39,8 +39,10 @@ impl Checker {
     /// the result.
     pub fn evaluate(&mut self, e: Term, ctx: &Ctx) -> Term {
         // Results of program applications in this call, so that programs
-        // recursing over a term visit shared subterms once.
-        let mut eval_cache: HashMap<Vec<Term>, Term> = HashMap::new();
+        // recursing over a term visit shared subterms once. `None` is an
+        // application that failed: it is not tried again, as in Ethos, so
+        // its warnings appear once.
+        let mut eval_cache: HashMap<Vec<Term>, Option<Term>> = HashMap::new();
         let mut estack = vec![EvFrame::new(e, ctx.clone(), None)];
         let mut evaluated: Option<Term> = None;
         let mut new_context = false;
@@ -112,22 +114,24 @@ impl Checker {
                         };
                         if self.store.kind(args[0]) == Kind::PROGRAM_CONST {
                             if let Some(&r) = eval_cache.get(&args) {
-                                evaluated = Some(r);
+                                evaluated = r;
                             } else {
                                 let mut new_ctx = Ctx::new();
                                 evaluated = self.evaluate_program_internal(&args, &mut new_ctx);
                                 match evaluated {
-                                    // A body that needs no substitution is
-                                    // the result. A failed application is
-                                    // not cached.
-                                    Some(ev) if self.store.is_ground(ev) || new_ctx.is_empty() => {
-                                        eval_cache.insert(args, ev);
-                                    }
-                                    Some(ev) => {
+                                    // a body that needs substitution is
+                                    // evaluated at a new level
+                                    Some(ev)
+                                        if !self.store.is_ground(ev) && !new_ctx.is_empty() =>
+                                    {
                                         new_context = true;
                                         estack.push(EvFrame::new(ev, new_ctx, Some(args)));
                                     }
-                                    None => {}
+                                    // otherwise the result, or the failure,
+                                    // is final
+                                    _ => {
+                                        eval_cache.insert(args, evaluated);
+                                    }
                                 }
                             }
                         }
@@ -165,6 +169,10 @@ impl Checker {
                             unreachable!("children of an operator are evaluated first")
                         };
                         evaluated = self.evaluate_literal_op_internal(op, &args);
+                        if self.fatal.is_some() {
+                            // the run is over; see `Checker::take_fatal`
+                            return e;
+                        }
                     }
                     _ => {}
                 }
@@ -207,7 +215,7 @@ impl Checker {
                 .unwrap_or(evf.init);
             evaluated = Some(result);
             if let Some(key) = evf.result_key {
-                eval_cache.insert(key, result);
+                eval_cache.insert(key, Some(result));
             }
             if let Some(parent) = estack.last_mut()
                 && let Some(app) = parent.visit.pop()
@@ -311,17 +319,15 @@ impl Checker {
         // For a right associative operator of type (-> T L L), the element
         // type is the first argument type and the list type the second; for
         // a left associative one, of type (-> L T L), the other way round.
-        if self.store.kind(top) != Kind::FUNCTION_TYPE {
-            return None;
-        }
-        let rest = self.store.child(top, 1);
-        if self.store.kind(rest) != Kind::FUNCTION_TYPE {
-            return None;
-        }
+        // Ethos takes these children whatever the type looks like: for
+        // (-> T L) the "second argument type" is the first child of L. Where
+        // there is no such child Ethos reads past the end; here the
+        // terminator is then not found.
         let src = if is_left == tinst_list_arg {
-            self.store.child(top, 0)
+            *self.store.children(top).first()?
         } else {
-            self.store.child(rest, 0)
+            let rest = *self.store.children(top).get(1)?;
+            *self.store.children(rest).first()?
         };
         let mut ctx = Ctx::new();
         let mut visited = HashSet::new();
@@ -425,6 +431,21 @@ impl Checker {
         self.mk_numeral(Integer::from(n))
     }
 
+    /// Stops the run: evaluating `k` needs an argument that `args` lacks.
+    /// Ethos reads past the end of its argument vector here, which is
+    /// undefined behaviour and usually ends in a segmentation fault.
+    fn missing_argument(&mut self, k: EvalOp, args: &[Term]) -> Option<Term> {
+        if self.fatal.is_none() {
+            self.fatal = Some(format!(
+                "Too few arguments when evaluating literal op {}, {} arguments {}",
+                Kind::Eval(k),
+                args.len(),
+                self.show_list(args, " ")
+            ));
+        }
+        None
+    }
+
     /// Applies the `eo::` operator to evaluated arguments. Returns `None`
     /// if it does not evaluate on them.
     pub(crate) fn evaluate_literal_op_internal(
@@ -433,16 +454,6 @@ impl Checker {
         args: &[Term],
     ) -> Option<Term> {
         let first = *args.first()?;
-        // Ethos reads the arguments an operator needs without checking that
-        // they are there. An application with too few does not evaluate here.
-        let needed = match k {
-            EvalOp::IfThenElse | EvalOp::Requires => 3,
-            EvalOp::IsEq | EvalOp::Eq | EvalOp::Compare => 2,
-            _ => 1,
-        };
-        if args.len() < needed {
-            return None;
-        }
         let ground = |ck: &Checker, t: Term| ck.store.is_ground(t);
         let is_eval = |ck: &Checker, t: Term| ck.store.is_evaluatable(t);
         // These two may evaluate on non-ground arguments.
@@ -458,13 +469,16 @@ impl Checker {
             EvalOp::Requires => {
                 // (eo::requires t s r) is r when t and s are the same value,
                 // whether or not r is ground.
-                if ground(self, args[0])
-                    && !is_eval(self, args[0])
-                    && ground(self, args[1])
-                    && !is_eval(self, args[1])
-                    && args[0] == args[1]
-                {
-                    return Some(args[2]);
+                if ground(self, args[0]) && !is_eval(self, args[0]) {
+                    let Some(&second) = args.get(1) else {
+                        return self.missing_argument(k, args);
+                    };
+                    if ground(self, second) && !is_eval(self, second) && first == second {
+                        return match args.get(2) {
+                            Some(&r) => Some(r),
+                            None => self.missing_argument(k, args),
+                        };
+                    }
                 }
                 return None;
             }
@@ -473,6 +487,14 @@ impl Checker {
         if args.iter().any(|&a| !ground(self, a)) {
             return None;
         }
+        // These three look at their second argument unless the first is
+        // stuck.
+        if matches!(k, EvalOp::IsEq | EvalOp::Eq | EvalOp::Compare)
+            && args.len() < 2
+            && !is_eval(self, first)
+        {
+            return self.missing_argument(k, args);
+        }
         match k {
             // false exactly when the argument is stuck
             EvalOp::IsOk => return Some(self.mk_bool(!is_eval(self, first))),
@@ -480,13 +502,13 @@ impl Checker {
             // one of them is stuck
             EvalOp::IsEq => {
                 return Some(self.mk_bool(
-                    !is_eval(self, args[0]) && !is_eval(self, args[1]) && args[0] == args[1],
+                    !is_eval(self, first) && !is_eval(self, args[1]) && first == args[1],
                 ));
             }
             EvalOp::Eq => {
                 // only compares values
-                if !is_eval(self, args[0]) && !is_eval(self, args[1]) {
-                    return Some(self.mk_bool(args[0] == args[1]));
+                if !is_eval(self, first) && !is_eval(self, args[1]) {
+                    return Some(self.mk_bool(first == args[1]));
                 }
                 return None;
             }
@@ -499,7 +521,7 @@ impl Checker {
                 return Some(self.mk_numeral(Integer::from(h as u32)));
             }
             EvalOp::Compare => {
-                if is_eval(self, args[0]) || is_eval(self, args[1]) {
+                if is_eval(self, first) || is_eval(self, args[1]) {
                     return None;
                 }
                 let h1 = self.get_hash(args[0]);
@@ -633,6 +655,9 @@ impl Checker {
         // the nil terminator, which may depend on the type of args[1]
         let nil = if k == EvalOp::Nil {
             // eo::nil takes the type itself
+            if args.len() < 2 && self.store.kind(cons) == Kind::PARAMETERIZED {
+                return self.missing_argument(k, args);
+            }
             return self.evaluate_nil(args[0], cons, is_left, args.get(1).copied(), false);
         } else if self.store.kind(cons) != Kind::PARAMETERIZED {
             cons
@@ -646,16 +671,15 @@ impl Checker {
         } else {
             return None;
         };
-        // As above for operators with too few arguments.
-        let needed = match k {
-            EvalOp::ListLength
-            | EvalOp::ListRev
-            | EvalOp::ListSetof
-            | EvalOp::ListSingletonElim => 2,
-            _ => 3,
-        };
-        if args.len() < needed {
-            return None;
+        // The `i`-th argument, read where Ethos reads it. A missing one
+        // stops the run.
+        macro_rules! arg {
+            ($i:expr) => {
+                match args.get($i) {
+                    Some(&a) => a,
+                    None => return self.missing_argument(k, args),
+                }
+            };
         }
         let mut hargs = Vec::new();
         match k {
@@ -663,48 +687,49 @@ impl Checker {
                 let is_concat = k == EvalOp::ListConcat;
                 let tail_index = if is_left { 1 } else { 2 };
                 let head_index = if is_left { 2 } else { 1 };
-                let ret = args[if is_concat { tail_index } else { 2 }];
+                let ret = arg!(if is_concat { tail_index } else { 2 });
                 if !self.is_nary_list(ret, op, nil, is_left) {
                     return None;
                 }
                 if k == EvalOp::Cons {
-                    hargs.push(args[1]);
+                    hargs.push(arg!(1));
                 } else {
-                    self.get_nary_children(args[head_index], op, Some(nil), &mut hargs, is_left)?;
+                    self.get_nary_children(arg!(head_index), op, Some(nil), &mut hargs, is_left)?;
                     // nothing to rebuild when the tail is empty
                     if ret == nil {
-                        return Some(args[head_index]);
+                        return Some(arg!(head_index));
                     }
                 }
                 Some(self.prepend_nary_children(op, ret, &hargs, is_left))
             }
             EvalOp::ListRepeat => {
-                let count = match self.store.lit(args[2]) {
+                let count = match self.store.lit(arg!(2)) {
                     Some(Lit::Numeral(i)) if i.fits_u32() => i.to_u32(),
                     _ => return None,
                 };
                 let mut ret = nil;
                 for _ in 0..count {
-                    ret = self.prepend_nary_children(op, ret, &[args[1]], is_left);
+                    ret = self.prepend_nary_children(op, ret, &[arg!(1)], is_left);
                 }
                 Some(ret)
             }
             EvalOp::ListLength => {
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
                 Some(self.mk_usize(hargs.len()))
             }
             EvalOp::ListNth => {
-                let i = match self.store.lit(args[2]) {
+                let i = match self.store.lit(arg!(2)) {
                     Some(Lit::Numeral(i)) if i.fits_u32() => i.to_u32() as usize,
                     _ => return None,
                 };
                 // all the elements are read, to check that this is a list
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
                 hargs.get(i).copied()
             }
             EvalOp::ListFind => {
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
-                match hargs.iter().position(|&h| h == args[2]) {
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
+                let elem = arg!(2);
+                match hargs.iter().position(|&h| h == elem) {
                     Some(i) => Some(self.mk_usize(i)),
                     None => {
                         let neg_one = match self.neg_one {
@@ -717,13 +742,13 @@ impl Checker {
                 }
             }
             EvalOp::ListErase | EvalOp::ListEraseAll => {
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
                 let is_all = k == EvalOp::ListEraseAll;
                 let mut result = Vec::new();
                 let mut change_index = 0;
                 let mut change_size = 0;
                 for (i, &h) in hargs.iter().enumerate() {
-                    if h == args[2] {
+                    if h == arg!(2) {
                         change_index = i + 1;
                         if !is_all {
                             break;
@@ -734,23 +759,23 @@ impl Checker {
                     result.push(h);
                 }
                 if change_index == 0 {
-                    return Some(args[1]);
+                    return Some(arg!(1));
                 }
                 // Keep the list after the last change as it is, and rebuild
                 // only what comes before.
                 if is_all {
                     result.truncate(change_size);
                 }
-                let ret = self.get_nary_nth_tail(args[1], op, is_left, change_index);
+                let ret = self.get_nary_nth_tail(arg!(1), op, is_left, change_index);
                 Some(self.prepend_nary_children(op, ret, &result, is_left))
             }
             EvalOp::ListRev => {
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
                 hargs.reverse();
                 Some(self.prepend_nary_children(op, nil, &hargs, is_left))
             }
             EvalOp::ListSetof => {
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
                 let mut seen = HashSet::new();
                 let mut result = Vec::new();
                 let mut change_index = 0;
@@ -764,17 +789,17 @@ impl Checker {
                     }
                 }
                 if change_index == 0 {
-                    return Some(args[1]);
+                    return Some(arg!(1));
                 }
                 result.truncate(change_size);
-                let ret = self.get_nary_nth_tail(args[1], op, is_left, change_index);
+                let ret = self.get_nary_nth_tail(arg!(1), op, is_left, change_index);
                 Some(self.prepend_nary_children(op, ret, &result, is_left))
             }
             EvalOp::ListMinclude | EvalOp::ListMeq => {
                 let mut hargs2 = Vec::new();
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
-                self.get_nary_children(args[2], op, Some(nil), &mut hargs2, is_left)?;
-                if args[1] == args[2] {
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(2), op, Some(nil), &mut hargs2, is_left)?;
+                if arg!(1) == arg!(2) {
                     return Some(self.mk_true());
                 }
                 let mut count1: HashMap<Term, u32> = HashMap::new();
@@ -801,11 +826,11 @@ impl Checker {
             }
             EvalOp::ListDiff | EvalOp::ListInter => {
                 let mut hargs2 = Vec::new();
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
-                self.get_nary_children(args[2], op, Some(nil), &mut hargs2, is_left)?;
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(2), op, Some(nil), &mut hargs2, is_left)?;
                 let is_diff = k == EvalOp::ListDiff;
-                if args[1] == args[2] {
-                    return Some(if is_diff { nil } else { args[1] });
+                if arg!(1) == arg!(2) {
+                    return Some(if is_diff { nil } else { arg!(1) });
                 }
                 let mut count2: HashMap<Term, u32> = HashMap::new();
                 for &elem in &hargs2 {
@@ -833,16 +858,16 @@ impl Checker {
                     result.push(h);
                 }
                 if change_index == 0 {
-                    return Some(args[1]);
+                    return Some(arg!(1));
                 }
                 result.truncate(change_size);
-                let ret = self.get_nary_nth_tail(args[1], op, is_left, change_index);
+                let ret = self.get_nary_nth_tail(arg!(1), op, is_left, change_index);
                 Some(self.prepend_nary_children(op, ret, &result, is_left))
             }
             EvalOp::ListSingletonElim => {
-                self.get_nary_children(args[1], op, Some(nil), &mut hargs, is_left)?;
+                self.get_nary_children(arg!(1), op, Some(nil), &mut hargs, is_left)?;
                 // a list of one element is that element
-                Some(if hargs.len() == 1 { hargs[0] } else { args[1] })
+                Some(if hargs.len() == 1 { hargs[0] } else { arg!(1) })
             }
             _ => None,
         }
@@ -857,7 +882,9 @@ impl Checker {
         is_left: bool,
         args: &[Term],
     ) -> Option<Term> {
-        let arg = *args.get(1)?;
+        let Some(&arg) = args.get(1) else {
+            return self.missing_argument(EvalOp::ListSingletonIntro, args);
+        };
         self.get_type(arg, None);
         let arg_type = self.store.ty(arg);
         if let Some(n) = self.evaluate_nil(op, nil, is_left, arg_type, true)
