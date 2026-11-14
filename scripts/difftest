@@ -22,6 +22,13 @@
 # Exits 0 when pathos and the reference agree on every case, 1 otherwise,
 # 2 when the setup is wrong.
 #
+# Memory: everything runs in a systemd scope capped at DIFFTEST_MEMORY_MAX
+# (default: 60% of the machine's memory; e.g. 30G; "none" for no cap) and
+# without swap. Ethos needs up to 24 GB on one large proof, and many jobs at
+# once can need more than the machine has; with the cap the kernel then kills
+# a checker inside the scope, not the desktop. The script reports that and
+# exits 2, since the results are then wrong: rerun with a lower --jobs.
+#
 # Needs ETHOS_HARNESS: a checkout of HARNESS_REPO at HARNESS_COMMIT (see
 # difftest.env). Set it in the environment or in .difftest.local:
 #   ETHOS_HARNESS=/path/to/ethos
@@ -40,6 +47,37 @@ fi
 [[ -n "$env_harness" ]] && ETHOS_HARNESS="$env_harness"
 
 fail() { echo "scripts/difftest: $*" >&2; exit 2; }
+
+# Re-run this script under the memory cap (see the header).
+if [[ -z "${DIFFTEST_CAPPED:-}" ]]; then
+  cap="${DIFFTEST_MEMORY_MAX:-}"
+  [[ -n "$cap" ]] ||
+    cap="$(awk '/^MemTotal:/ { printf "%dM", $2 * 0.6 / 1024 }' /proc/meminfo)"
+  if [[ "$cap" == none ]]; then
+    :
+  elif systemd-run --user --scope -q -p MemoryMax=1G true 2>/dev/null; then
+    DIFFTEST_CAPPED="$cap" exec systemd-run --user --scope -q \
+      -p MemoryMax="$cap" -p MemorySwapMax=0 -p OOMPolicy=continue "$0" "$@"
+  else
+    echo "scripts/difftest: warning: no systemd user scope here," \
+      "running without a memory cap" >&2
+  fi
+fi
+
+# Exits with the given status, or with 2 if the kernel killed a process of
+# this run at the memory cap.
+finish() {
+  local rc="$1" events kills=0
+  if [[ -n "${DIFFTEST_CAPPED:-}" ]]; then
+    events="/sys/fs/cgroup$(cut -d: -f3 /proc/self/cgroup | head -1)/memory.events"
+    [[ -r "$events" ]] && kills="$(awk '$1 == "oom_kill" { print $2 }' "$events")"
+    [[ "${kills:-0}" -gt 0 ]] &&
+      fail "the kernel killed $kills process(es) at the memory cap of" \
+        "$DIFFTEST_CAPPED, so the results above are wrong; rerun with a" \
+        "lower --jobs (or set DIFFTEST_MEMORY_MAX)"
+  fi
+  exit "$rc"
+}
 
 [[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz|cli [options]"
 gate="$1"; shift
@@ -117,8 +155,10 @@ if [[ "$gate" == fuzz ]]; then
     python3 "$dt/difftest.py" fuzz-replay --ref "$ref" --cand "$cand" \
       --findings "$findings" "${replay[@]}" "$@" || rc=1
   done
-  exit $rc
+  finish $rc
 fi
 
-exec python3 "$dt/difftest.py" run --ref "$ref" --cand "$root/target/release/pathos" \
-  "${args[@]}" "$@"
+rc=0
+python3 "$dt/difftest.py" run --ref "$ref" --cand "$root/target/release/pathos" \
+  "${args[@]}" "$@" || rc=$?
+finish $rc
