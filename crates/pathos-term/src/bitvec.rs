@@ -70,9 +70,10 @@ impl BitVec {
         )
     }
 
-    /// Bits `low ..= high`. Requires `low <= high < size`.
+    /// Bits `low ..= high`. Requires `low <= high`. The number of bits is
+    /// taken modulo 2^32, as in Ethos: bits `0 ..= 2^32 - 1` are no bits.
     pub fn extract(&self, high: u32, low: u32) -> BitVec {
-        let count = high - low + 1;
+        let count = (high - low).wrapping_add(1);
         BitVec::new(count, &self.value.extract_bit_range(count, low))
     }
 
@@ -154,6 +155,8 @@ mod tests {
         assert_eq!(bv("0101").not(), bv("1010"));
         assert_eq!(bv("10").concat(&bv("011")), bv("10011"));
         assert_eq!(bv("10110").extract(3, 1), bv("011"));
+        // the number of bits wraps around at 2^32
+        assert_eq!(bv("10110").extract(u32::MAX, 0), BitVec::zero(0));
         assert_eq!(bv("0111").unsigned_div_total(&bv("0000")), bv("1111"));
         assert_eq!(bv("0111").unsigned_rem_total(&bv("0000")), bv("0111"));
         assert_eq!(bv("0111").unsigned_div_total(&bv("0010")), bv("0011"));

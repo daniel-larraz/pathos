@@ -241,6 +241,74 @@ fn evaluating_an_operator_without_an_argument_it_reads_ends_the_run() {
     );
 }
 
+/// A quoted token's text stops at its first NUL character, so it may lack
+/// its closing quote. Ethos removes the first and the last character all the
+/// same: of `|ab` that leaves `a`, and of `|` alone nothing to remove the
+/// last from, where Ethos ends with an uncaught exception.
+#[test]
+fn a_quoted_token_cut_short_by_a_nul_character() {
+    let r = run("(declare-const a Type)
+(declare-const |ab\0cd| Type)
+(define x () a :type |a|)");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:3.22: Expression of unexpected type:\n\
+             Expression: a\n      Type: Type\n  Expected: a\n\n"
+            .to_string())
+    );
+    // a character above 127 before the NUL is not cut in two
+    let r = run("(declare-const |\u{e9}\0| Type)");
+    assert_eq!(r.result, Ok(false));
+    let r = run("(declare-const |\0| Type)");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:1.16: Malformed quoted symbol\n".to_string())
+    );
+    let r = run("(echo \"\0\")");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:1.7: Malformed string literal\n".to_string())
+    );
+}
+
+/// `(eo::var)` has no children; Ethos reads the name from past their end
+/// and crashes.
+#[test]
+fn the_name_of_a_variable_without_a_name_ends_the_run() {
+    let r = run("(define a () (eo::nameof (eo::var)))");
+    assert_eq!(
+        r.result,
+        Err(
+            "Error: t.eo:1.36: Too few arguments when evaluating literal op EVAL_NAME_OF, 1 \
+             arguments [eo::var]\n"
+                .to_string()
+        )
+    );
+}
+
+/// Ethos counts the bits to extract in 32 bits: bits 0 to 2^32 - 1 of a
+/// bit-vector of that width are no bits at all.
+#[test]
+fn extracting_two_to_the_32_bits_gives_the_empty_bit_vector() {
+    let r = run(
+        "(define a () (eo::extract (eo::to_bin 4294967295 0) 0 4294967295))
+(define b () (eo::len a))",
+    );
+    assert_eq!(r.result, Ok(false));
+}
+
+/// Ethos counts parentheses in an unsigned integer while it skips an
+/// s-expression, here the value of an option: after `)` the count wraps
+/// around, and the `(` that follows brings it back to zero.
+#[test]
+fn skipping_an_s_expression_counts_parentheses_modulo() {
+    let r = run("(set-option :x )(");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:1.17: Expected a RPAREN, got `` (EOF).\n\n".to_string())
+    );
+}
+
 /// The list is looked at before the missing third argument, so a term that
 /// is not a list makes the operator stuck, with Ethos's warnings.
 #[test]

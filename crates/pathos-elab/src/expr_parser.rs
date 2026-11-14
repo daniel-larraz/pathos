@@ -516,9 +516,10 @@ impl Parser<'_> {
         let mut nparen: usize = 0;
         loop {
             match self.lex.next_token()? {
-                Token::Lparen => nparen += 1,
                 // An unmatched `)` makes the count wrap around in Ethos,
-                // which then reads on to the end of the input.
+                // which then reads on to the end of the input; a `(` after
+                // it wraps the count back.
+                Token::Lparen => nparen = nparen.wrapping_add(1),
                 Token::Rparen => nparen = nparen.wrapping_sub(1),
                 Token::Eof => return Err(self.lex.parse_error("Expected s-expression")),
                 _ => {}
@@ -659,8 +660,10 @@ impl Parser<'_> {
             Token::Symbol => Ok(self.lex.token_str().to_string()),
             Token::QuotedSymbol => {
                 // without the bars
-                let s = self.lex.token_str();
-                Ok(s[1..s.len() - 1].to_string())
+                match strip_ends(self.lex.token_str()) {
+                    Some(name) => Ok(name.to_string()),
+                    None => Err(self.lex.parse_error("Malformed quoted symbol")),
+                }
             }
             Token::UnterminatedQuotedSymbol => {
                 Err(self.lex.parse_error("Expected SMT-LIBv2 symbol"))
@@ -685,7 +688,9 @@ impl Parser<'_> {
 
     /// Removes the quotes around a string literal and replaces `""` by `"`.
     fn unescape_string(&self, s: &str) -> Result<String> {
-        let inner = &s[1..s.len() - 1];
+        let Some(inner) = strip_ends(s) else {
+            return Err(self.lex.parse_error("Malformed string literal"));
+        };
         if inner.chars().any(|c| u32::from(c) > 127) {
             return Err(self.lex.parse_error(
                 "Extended/unprintable characters are not part of SMT-LIB, and they must be \
@@ -1004,4 +1009,16 @@ impl Parser<'_> {
         }
         (ck, cons)
     }
+}
+
+/// The text of a quoted token without its first and last character, as
+/// Ethos takes it (`erase(0, 1)`, then `erase(size() - 1, 1)`). The text
+/// need not end in its closing quote: it stops at the token's first NUL
+/// character (see `Lexer::token_str`). `None` if nothing is left to take
+/// the last character from, where Ethos ends with an uncaught exception.
+fn strip_ends(s: &str) -> Option<&str> {
+    let mut chars = s.chars();
+    chars.next();
+    chars.next_back()?;
+    Some(chars.as_str())
 }
