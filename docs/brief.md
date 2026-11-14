@@ -180,6 +180,66 @@ intended; everything between gates is not.
    `scripts/difftest tests --cli --stats-option-sets`, which needs no
    corpus. Not covered: `--show-config`, which prints pathos's own name and
    version.
+10. **Signature snapshots** (in place of Ethos's `plugins/cpp_compiler`,
+    which builds a custom Ethos with a signature compiled in so that it is
+    not parsed again; only the loading speed is wanted, not that build). A
+    snapshot is the term store and symbol tables after loading a
+    signature, saved to a file:
+    - `pathos --write-snapshot=FILE SIG.eo` loads the signature and writes
+      the snapshot, printing nothing else.
+    - `pathos --snapshot=FILE [options] INPUT` loads the snapshot before
+      reading the input. An include of a file the snapshot holds (same
+      canonical path and content) is then skipped, as Ethos skips a file
+      included twice. The snapshot records a content hash of every file it
+      holds, the options that affect parsing, and pathos's version; if
+      anything differs, or the file is not a valid snapshot (truncated,
+      corrupt, empty, another version), pathos ignores it and parses as
+      usual. Ignoring it is silent: the output must be what it would be
+      without the option. Reading a snapshot is input like any other: no
+      panic, no `unsafe`, no allocation sized by the file without a bound.
+    - Behaviour with a snapshot is identical to parsing, including the order
+      of terms, which shows in the order of some warnings and contexts:
+      writing out the store and reading it back as it is keeps that order.
+
+    The gate, `scripts/difftest snapshot`, writes a snapshot of the corpus's
+    CPC signature, then compares pathos with `--snapshot` against Ethos
+    without it on the regressions and the proofs under every option set
+    (6,300 runs; the regressions do not include CPC, so they exercise the
+    fallback), and on the proofs with a truncated, a corrupted and an empty
+    snapshot. It prints the candidate's time on the proofs with and without
+    the snapshot, one job at a time: the target is to save most of the
+    10 ms pathos spends loading CPC, on proofs whose median is 25 ms in
+    Ethos. The option names are a proposal: the Ethos developers may want
+    others, so keep them in one place.
+11. **eoc: the plugin interface and the first stages.** Ethos's compiler
+    plugins (`plugins/`) run in `ethos-eoc`, which eoc's Python driver
+    (`tools/eoc/driver.py`) calls once per stage. Add:
+    - a `Plugin` trait with Ethos's hooks (`src/plugin.h`: include, bind,
+      define, define a program, mark a constructor kind, set a literal type
+      rule, evaluate, notify of assumptions and steps, echo, finalize),
+      called from the same places in pathos as in Ethos;
+    - a `pathos-eoc` binary with `ethos-eoc`'s command line
+      (`plugins/main_eoc.cpp`: `--plugin.<name>`, `--semantics=`,
+      `--smt-semantics=`, `--lean-config=`, `--no-parser`, the Ethos
+      options it accepts, and its errors), reading the same environment
+      variables (`ETHOS_PLUGIN_ROOT`, `ETHOS_PLUGIN_OUTPUT_DIR`) and the same
+      templates from the reference source tree;
+    - the stages `trim-defs` and `desugar`.
+
+    The gate, `scripts/difftest eoc`, runs eoc's driver with `ethos-eoc` and
+    with `pathos-eoc` and compares the outcome, the messages and every file
+    each run leaves, byte for byte (the harness's `eoc.py`): every rule of
+    the Ethos test signatures under the test semantics, and logos's CPC
+    under logos's semantics (https://github.com/cvc5/logos, pinned in
+    `difftest.env`; logos is what uses eoc). For this milestone,
+    `scripts/difftest eoc --filter '/(trim-defs|desugar|desugar-eo)(/|$)'`
+    agrees. Logos's own check, `install/install-cpc.sh --all --cached
+    --check`, is the acceptance test at the end of the eoc milestones.
+12. to 15. **The other eoc stages**, one milestone each, each adding its
+    driver runs to the gate's filter: `model-smt`, `smt-meta` (with
+    `smt-meta-sygus`; the `vc` and `vc --sygus` runs), `lean-meta` (the
+    `lean` runs and logos's `lean --all`), and `linear_patterns`. At the end
+    the whole `scripts/difftest eoc` gate agrees, and it joins CI.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
@@ -190,4 +250,4 @@ report their results.
   Note them in `docs/ethos-differences.md` instead.
 - Speed-ups that could change behaviour, such as compiling program cases
   into decision trees or caching evaluations across calls.
-- Plugins and the eoc compiler.
+- Plugins and the eoc compiler, except as milestones 10 to 15 describe.
