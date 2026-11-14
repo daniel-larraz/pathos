@@ -24,6 +24,10 @@ the C++.
 | `(f a)` for a `:right-assoc` or `:left-assoc` (without nil) `f` is just `a`. | `State::mkApplyAttr` with two children. | Read |
 | Including a signature after a `reference` command turns reference checking of assumptions off again. | `State::includeFile` assigns `d_hasReference` on every include. | Read |
 | An unmatched `)` while skipping an s-expression makes Ethos read to the end of the input. | `ExprParser::parseSymbolicExpr` counts parentheses in an unsigned integer. | Read |
+| A token's text ends at its first NUL character: an unterminated string `"ab\0cd` is shown as `` `"ab` `` in `Expected ..., got`. | `Lexer::tokenStr` returns a C string. | Probed |
+| A `:chainable`, `:pairwise` or `:arg-list` operator whose constructor term cannot be computed is applied to Ethos's null expression, printed `[NONE]`: `(= d)` becomes `([NONE])`. Such a term fails to type check with `Unknown kind NONE`. | `State::mkApplyAttr` uses the null `Expr` without checking it. pathos has the same term (`Kind::Null`). | Probed |
+| A failed program application is not tried again in the same evaluation, so `*** Bad number of arguments ...` and `No program defined for ...` appear once per evaluation, not once per occurrence. | `TypeChecker::evaluate` stores the null result in its cache of program applications. | Probed |
+| The nil terminator of an operator with a parameterized terminator is found through the operator's type even if that type does not have two arguments: for `(-> T L)` the "second argument type" is the first child of `L`. | `TypeChecker::evaluateNil` asserts the shape only in debug builds. | Probed |
 
 ## Where pathos differs
 
@@ -41,10 +45,43 @@ meaningfully. None is in the corpus.
 | Input | Ethos | pathos |
 | --- | --- | --- |
 | A literal such as `-/5`, which the lexer takes for a rational | Uncaught C++ exception from GMP | `Malformed literal` error |
-| An `eo::` operator applied to too few arguments and then evaluated, e.g. `(eo::requires a)` inside a program body | Reads past the end of the argument vector | The application does not evaluate |
+| An `eo::` operator evaluated without an argument that it reads, e.g. `(eo::is_eq a)` or `(eo::cons f a)` inside a program body. See below. | Reads past the end of the argument vector | Error `Too few arguments when evaluating literal op <kind>, <n> arguments [<arguments>]` |
+| `(eo::var t)`, with one argument | The type rule reads the second child past the end | Type error: `Expected a type for second argument of eo::var`, unless the check of the first argument fails first |
+| The nil terminator of an operator whose type is not a function type, or has too few children for the rule above | Reads past the end of the type's children | The terminator is not found |
 | `(_ bv<n> 0)` in a reference file | Uncaught exception (empty bit string) | The bit-vector of width 0 |
-| A `:chainable`, `:pairwise` or `:arg-list` operator whose constructor term cannot be inferred | Builds a term with a null child | Builds the plain application |
 | `step-pop` when the assumption scope holds no assumption | Reads past the end of a vector | The step fails to check |
+
+#### Operators without an argument they read
+
+An application of an `eo::` operator to the wrong number of arguments is
+built with a warning and is rejected if it is type checked. But it can be
+evaluated without being type checked, for instance in the body of a program.
+Ethos's evaluator reads the arguments an operator needs without looking at
+how many there are. What it finds past the end is whatever the memory held
+before. In the first fuzzing run, on three inputs of this kind, Ethos crashed
+with a segmentation fault, took the missing third argument of `eo::requires`
+to be the unrelated term `BitVec`, and took the missing tail of `eo::cons` to
+be `@nil`; the same input gave a crash from one working directory and an
+error message from another.
+
+pathos ends the run with the error above at the point where Ethos would do
+the read, and not before: `(eo::list_find f t)` first checks that `t` is a
+list, with Ethos's warnings, and is stuck if it is not. The error is reported
+at the end of the command, in place of whatever the command made of the
+unfinished evaluation. The reads are those of
+`TypeChecker::evaluateLiteralOpInternal`:
+
+- `eo::requires`: the second argument if the first is a value, the third if
+  the first two are the same value;
+- `eo::is_eq`, `eo::eq`, `eo::cmp`: the second argument if the first is a
+  value;
+- `eo::nil`: the second argument if the terminator is parameterized;
+- the list operators: each argument where the operator's code first uses it.
+
+The alternative, to leave such an application unevaluated, was pathos's
+behaviour before. It can run for ever where Ethos crashes: a recursive
+program whose `eo::ite` condition is `(eo::is_eq x)` never stops. It can also
+accept a proof on which Ethos crashes.
 
 ### Size limits
 
