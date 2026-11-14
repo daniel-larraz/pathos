@@ -173,3 +173,80 @@ impl NativeLayer {
         out
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn layer(name: &str, text: &str) -> Result<NativeLayer> {
+        let dir = format!(
+            "{}/../../target/tmp/native-layer",
+            env!("CARGO_MANIFEST_DIR")
+        );
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = format!("{dir}/{name}");
+        std::fs::write(&path, text).unwrap();
+        NativeLayer::new(&path, ";", "Vc")
+    }
+
+    const LAYER: &str = "; a header, part of no block
+; $native-keep Kept
+; $native Kept Vc
+(define-sort Kept () Int)
+
+; $native Nat Vc
+; the naturals
+(declare-datatype Nat ((nat.zero) (nat.succ (pred Nat))))
+
+; $native len Embed Nat helper
+(define-fun len () Nat nat.zero)
+
+; $native helper Vc
+(define-fun helper () Int 0)
+
+; $native unused Vc
+(define-fun unused () Int 1)
+";
+
+    #[test]
+    fn blocks_come_out_where_they_are_needed() {
+        let mut l = layer("ok.smt2", LAYER).unwrap();
+        // only what is kept, without the blank line after the last block
+        assert_eq!(l.defs("Vc"), "(define-sort Kept () Int)");
+        assert_eq!(l.defs("Embed"), "");
+        // `len` can only come out in Embed; what it calls follows it there
+        l.use_in("len", "Embed").unwrap();
+        assert_eq!(
+            l.defs("Embed"),
+            "; the naturals\n(declare-datatype Nat ((nat.zero) (nat.succ (pred Nat))))\n\n(define-fun len () Nat nat.zero)\n\n(define-fun helper () Int 0)"
+        );
+        // reached from the top scope too: it moves there, in the layer's order
+        l.use_top("Nat").unwrap();
+        assert_eq!(
+            l.defs("Vc"),
+            "(define-sort Kept () Int)\n\n; the naturals\n(declare-datatype Nat ((nat.zero) (nat.succ (pred Nat))))"
+        );
+        assert_eq!(
+            l.defs("Embed"),
+            "(define-fun len () Nat nat.zero)\n\n(define-fun helper () Int 0)"
+        );
+        // a name the layer does not define is nothing to place
+        l.use_in("nothing", "Embed").unwrap();
+    }
+
+    #[test]
+    fn errors() {
+        let err = |r: Result<NativeLayer>| r.err().map(|e| e.to_string()).unwrap_or_default();
+        assert!(err(layer("empty.smt2", "; nothing\n")).ends_with("holds no block"));
+        assert!(err(layer("glued.smt2", "; $nativex y Vc\n")).contains("is not a line"));
+        assert!(err(layer("short2.smt2", "; $native x \n")).contains("a block says its name"));
+        assert!(err(NativeLayer::new("/nonexistent/layer", ";", "Vc")).contains("could not read"));
+        // a block of one scope named from another that cannot see it
+        let mut l = layer("scopes.smt2", "; $native a Embed\nA\n").unwrap();
+        let e = l.use_in("a", "Other").unwrap_err().to_string();
+        assert_eq!(
+            e,
+            "NativeLayer: `a` comes out in Embed, which the Other scope that names it cannot see"
+        );
+    }
+}
