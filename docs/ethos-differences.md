@@ -129,7 +129,15 @@ message; it runs until memory is exhausted.
   the entry reads freed memory, and a later program at the same address
   adds to its count. pathos never reuses a term, so it could not match
   that. Read from `stats.cpp`, not observed: the regressions, the default
-  corpus and the large proofs all agree.
+  corpus and the large proofs give the same rules, programs and counts.
+- The columns of the rule table have fixed widths that a long number
+  overflows, in Ethos and in pathos alike: a count of seven digits runs
+  into the time after it, and a time of nine digits (100 s or more) into
+  the next column. Since the times differ, the two outputs then differ in
+  where the digits join, and the harness, which masks numbers between
+  spaces, reports a difference. This happens on the two largest proofs
+  (`regress3__hole10.cvc`, `regress4__bug143.smtv1`) under `--stats` and
+  `--stats-all`; they are not part of gate 9.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
