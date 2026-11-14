@@ -35,6 +35,18 @@ echo "ETHOS_HARNESS=/path/to/ethos" > .difftest.local
 scripts/difftest gate1      # or: tests, gate3, proofs, all, perf
 ```
 
+## Checks
+
+CI runs formatting, Clippy, the tests in debug and release builds, and the
+comparison with Ethos on its 230 regressions, on every push to `main` and every
+pull request. The comparisons on cvc5 proofs need a cvc5 build and up to 24 GB
+of memory, so they run locally:
+
+```sh
+scripts/full-check            # everything, about 25 minutes
+scripts/full-check --quick    # without the option and performance gates
+```
+
 ## License
 
 Modified BSD license, as Ethos; see [LICENSE](LICENSE).

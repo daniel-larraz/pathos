@@ -14,6 +14,12 @@ code calls for it.
 ## Commands
 
 - `cargo build`, `cargo test`, `cargo clippy --all-targets`
+- CI (`.github/workflows/ci.yml`) runs on every push to `main` and every pull
+  request: `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`,
+  `cargo test` in debug and release builds, and `scripts/difftest tests`.
+  Keep it green: format with `cargo fmt`, and treat Clippy warnings as errors.
+- `scripts/full-check` runs all of that plus the cvc5 proof gates, which CI
+  cannot run; `--quick` skips the slow `options` and `perf` gates.
 - `scripts/difftest <gate> [options]` compares pathos with Ethos (see the
   script's header). Options pass through to the harness, e.g.
   `--filter 'tests/simple'`, `--show-all`, `--report /tmp/r.json`.

@@ -1,0 +1,109 @@
+# Checks on every push to main and every pull request:
+#   - rust:        formatting, Clippy (warnings are errors), tests in debug
+#                  and release builds
+#   - regressions: pathos against the reference Ethos on Ethos's 230
+#                  regressions, using the harness pinned in difftest.env
+#
+# The cvc5 proof gates (proofs, large, options, perf) need a cvc5 build and
+# up to 24 GB of memory, so they run locally with scripts/full-check.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    name: Format, lint, test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal --component clippy,rustfmt
+          rustup default stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Formatting
+        run: cargo fmt --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Tests (debug)
+        run: cargo test
+
+      - name: Tests (release)
+        run: cargo test --release
+
+  regressions:
+    name: Agreement with Ethos on its regressions
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the pins in difftest.env
+        id: pins
+        run: |
+          source difftest.env
+          echo "harness_repo=${HARNESS_REPO#https://github.com/}" >> "$GITHUB_OUTPUT"
+          echo "harness_commit=$HARNESS_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "reference_rev=$REFERENCE_REV" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the harness
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.pins.outputs.harness_repo }}
+          ref: ${{ steps.pins.outputs.harness_commit }}
+          path: ethos
+          # build-ref needs the reference revision, an ancestor of the harness
+          fetch-depth: 0
+
+      - name: Install the reference's build dependencies and GNU time
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libgmp-dev time
+
+      - name: Cache the reference Ethos build
+        uses: actions/cache@v4
+        with:
+          path: ethos/tools/difftest/work/ref
+          key: ethos-ref-${{ steps.pins.outputs.reference_rev }}-ubuntu-24.04
+
+      - name: Build the reference Ethos
+        run: python3 ethos/tools/difftest/difftest.py build-ref ${{ steps.pins.outputs.reference_rev }}
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Compare pathos with Ethos
+        env:
+          ETHOS_HARNESS: ${{ github.workspace }}/ethos
+        run: scripts/difftest tests --show-all --report difftest-report.json
+
+      - name: Keep the comparison report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: difftest-report
+          path: difftest-report.json
+          if-no-files-found: ignore

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Runs every check, including the cvc5 proof gates that CI cannot run:
+#
+#   cargo fmt, clippy and tests (debug and release), then the gates
+#   tests, proofs, large, options and perf of scripts/difftest.
+#
+#   scripts/full-check [--quick]
+#
+# --quick skips the two slow gates, options and perf, and takes about 4
+# minutes. A full run takes about 25 minutes, most of it perf rerunning Ethos
+# on the large proofs, and longer the first time after the reference changes. Needs the setup of scripts/difftest (ETHOS_HARNESS, a
+# built reference, both proof corpora). Writes a log per step and a JSON
+# report per gate to target/full-check/, and exits 1 if anything failed.
+
+set -uo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root"
+
+quick=0
+[[ "${1:-}" == "--quick" ]] && quick=1
+
+out="$root/target/full-check"
+mkdir -p "$out"
+failed=()
+
+# Runs a step with its output in target/full-check/<name>.log, shown only
+# when the step fails.
+step() {
+  local name="$1"; shift
+  local log="$out/${name//[^a-z0-9]/-}.log"
+  printf '%-24s' "$name"
+  if "$@" > "$log" 2>&1; then
+    echo "ok"
+  else
+    echo "FAILED (log: $log)"
+    tail -n 40 "$log" | sed 's/^/    /'
+    failed+=("$name")
+  fi
+}
+
+step "cargo fmt" cargo fmt --check
+step "cargo clippy" cargo clippy --quiet --all-targets -- -D warnings
+step "cargo test (debug)" cargo test --quiet
+step "cargo test (release)" cargo test --quiet --release
+
+gates=(tests proofs large)
+[[ $quick == 0 ]] && gates+=(options perf)
+for gate in "${gates[@]}"; do
+  step "gate $gate" scripts/difftest "$gate" --quiet --show 10 \
+    --report "$out/$gate.json"
+done
+
+echo
+if [[ ${#failed[@]} -eq 0 ]]; then
+  echo "all checks passed; reports in $out"
+else
+  echo "failed: ${failed[*]}; reports in $out"
+  exit 1
+fi

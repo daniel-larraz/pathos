@@ -27,10 +27,13 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=../difftest.env
 source "$root/difftest.env"
+# .difftest.local holds local settings; one set in the environment wins.
+env_harness="${ETHOS_HARNESS:-}"
 if [[ -f "$root/.difftest.local" ]]; then
   # shellcheck disable=SC1091
   source "$root/.difftest.local"
 fi
+[[ -n "$env_harness" ]] && ETHOS_HARNESS="$env_harness"
 
 fail() { echo "scripts/difftest: $*" >&2; exit 2; }
 
