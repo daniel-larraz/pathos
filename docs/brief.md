@@ -146,6 +146,17 @@ intended; everything between gates is not.
 4. **All proofs:** `scripts/difftest proofs`.
 5. **Performance:** `scripts/difftest perf` reports time and peak memory
    within a margin the user sets at this gate. Profile before optimizing.
+   The margin set at gate 5: total time no more than Ethos's; no case taking
+   over 50 ms in Ethos more than 10% slower; peak memory no more than
+   Ethos's on any case.
+6. **Large proofs:** `scripts/difftest large`, the 43 proofs of 1 MB or more
+   from cvc5's `regress1` to `regress4` (up to 453 MB), agree, and
+   `scripts/difftest perf`, which includes them, stays within the gate-5
+   margin.
+7. **Options:** `scripts/difftest options` agrees: every regression and
+   default-corpus proof under each of Ethos's eight non-default options and
+   under all of them together (6,300 runs). Not covered: the `--stats`
+   options, `--help`, `--show-config`, `--include=` and `--reference=`.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
@@ -157,4 +168,4 @@ report their results.
 - Speed-ups that could change behaviour, such as compiling program cases
   into decision trees or caching evaluations across calls.
 - Plugins and the eoc compiler.
-- Options other than the defaults. The harness doesn't exercise them yet.
+- The `--stats` options, whose output contains timings.

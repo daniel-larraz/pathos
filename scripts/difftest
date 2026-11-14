@@ -4,12 +4,15 @@
 #   scripts/difftest <gate> [difftest.py run options...]
 #
 # Gates (docs/brief.md, "Milestones"):
-#   gate1   the 30 smallest regressions (docs/gates/gate1.txt)
-#   tests   all of Ethos's regressions                       (gate 2)
-#   gate3   the 10 smallest cvc5 proofs (docs/gates/gate3.txt)
-#   proofs  all cvc5 proofs in the corpus                    (gate 4)
-#   all     regressions and proofs
-#   perf    all, one job at a time, reference rerun          (gate 5)
+#   gate1    the 30 smallest regressions (docs/gates/gate1.txt)
+#   tests    all of Ethos's regressions                      (gate 2)
+#   gate3    the 10 smallest cvc5 proofs (docs/gates/gate3.txt)
+#   proofs   all cvc5 proofs in the default corpus           (gate 4)
+#   large    the corpus of large cvc5 proofs (1 MB or more)  (gate 6)
+#   options  regressions and proofs, under each non-default
+#            option and all of them together                 (gate 7)
+#   all      regressions, proofs and large proofs, default options
+#   perf     all, one job at a time, reference rerun         (gates 5, 6)
 #
 # Extra options go to `difftest.py run`, e.g. --filter, --show-all, --report.
 # Exits 0 when pathos and the reference agree on every case, 1 otherwise,
@@ -31,7 +34,7 @@ fi
 
 fail() { echo "scripts/difftest: $*" >&2; exit 2; }
 
-[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|all|perf [options]"
+[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf [options]"
 gate="$1"; shift
 
 [[ -n "${ETHOS_HARNESS:-}" ]] ||
@@ -48,15 +51,18 @@ ref="$dt/work/ref/${REFERENCE_REV:0:12}/build/src/ethos"
   fail "no reference binary; run: $dt/difftest.py build-ref $REFERENCE_REV"
 
 corpus="$dt/work/corpus"
-needs_corpus=0
-case "$gate" in gate3|proofs|all|perf) needs_corpus=1 ;; esac
-if [[ $needs_corpus == 1 ]]; then
-  [[ -f "$corpus/MANIFEST.json" ]] ||
-    fail "no proof corpus; see $dt/README.md, \"The proof corpus\""
-  rev="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["cvc5_revision"])' "$corpus/MANIFEST.json")"
+large="$dt/work/corpus-large"
+check_corpus() {
+  local dir="$1" how="$2"
+  [[ -f "$dir/MANIFEST.json" ]] ||
+    fail "no corpus in $dir; see $dt/README.md, \"$how\""
+  local rev
+  rev="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["cvc5_revision"])' "$dir/MANIFEST.json")"
   [[ "$rev" == "$CVC5_REV" ]] ||
-    fail "the corpus was made with cvc5 $rev, expected $CVC5_REV"
-fi
+    fail "$dir was made with cvc5 $rev, expected $CVC5_REV"
+}
+case "$gate" in gate3|proofs|options|all|perf) check_corpus "$corpus" "The proof corpus" ;; esac
+case "$gate" in large|all|perf) check_corpus "$large" "A corpus of large proofs" ;; esac
 
 # Builds the regex for --filter from a list of file names.
 filter_from() {
@@ -75,10 +81,15 @@ case "$gate" in
                 --filter "$(filter_from tests/ "$root/docs/gates/gate1.txt")") ;;
   tests)  args=(--tests "$ETHOS_HARNESS/tests") ;;
   gate3)  args=(--corpus "$corpus"
-                --filter "$(filter_from proofs/ "$root/docs/gates/gate3.txt")") ;;
+                --filter "$(filter_from corpus/ "$root/docs/gates/gate3.txt")") ;;
   proofs) args=(--corpus "$corpus") ;;
-  all)    args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus") ;;
+  large)  args=(--corpus "$large" --timeout "$LARGE_TIMEOUT") ;;
+  options) args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
+                --all-option-sets --timeout "$OPTIONS_TIMEOUT") ;;
+  all)    args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
+                --corpus "$large" --timeout "$LARGE_TIMEOUT") ;;
   perf)   args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
+                --corpus "$large" --timeout "$LARGE_TIMEOUT"
                 --jobs 1 --no-cache) ;;
   *) fail "unknown gate: $gate" ;;
 esac
