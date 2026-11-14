@@ -16,7 +16,7 @@ mod smt_meta;
 mod std_plugin;
 mod trim_defs;
 
-use std::io::Write;
+use std::io::{IsTerminal, Write};
 use std::process::ExitCode;
 
 use pathos_check::Options;
@@ -181,11 +181,10 @@ fn create_plugin(inv: &Invocation) -> Result<Box<dyn Plugin>> {
 }
 
 /// Writes a line of text held as described in `pathos_syntax::latin1`.
-fn write_line(mut w: impl Write, line: &str) {
-    let mut bytes = latin1::encode(line);
-    bytes.push(b'\n');
+fn write_line(mut w: impl Write + IsTerminal, line: &str) {
+    let utf8_only = textmode::wants_utf8(&w);
     // Nothing useful can be done if stdout or stderr is closed.
-    let _ = w.write_all(&textmode::output(bytes));
+    let _ = textmode::write(&mut w, &format!("{line}\n"), utf8_only);
 }
 
 /// Reads the inputs with the plugin attached. Returns what to print at the
@@ -226,7 +225,8 @@ fn check() -> ExitCode {
     match parse_args(&args).and_then(run) {
         Ok(text) => {
             let mut out = std::io::stdout().lock();
-            let _ = out.write_all(&textmode::output(latin1::encode(&text)));
+            let utf8_only = textmode::wants_utf8(&out);
+            let _ = textmode::write(&mut out, &text, utf8_only);
             let _ = out.flush();
             ExitCode::SUCCESS
         }

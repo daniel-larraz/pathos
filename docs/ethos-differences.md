@@ -173,6 +173,17 @@ Where Ethos crashes on one platform and pathos reports an error there:
 
 Where pathos does not follow, or cannot tell:
 
+- **Bytes above 127 written to a Windows console.** Ethos writes the
+  bytes, and the console shows them in its code page. Rust's standard
+  library writes to a console as Unicode and refuses bytes that are not
+  UTF-8, so pathos writes such text there with each byte as the Unicode
+  character of the same number (`textmode::write`): the same picture as
+  Ethos's under a Latin-1 code page, another one under, say, code page 437.
+  Bytes that happen to be valid UTF-8 are shown as the characters they
+  encode. Matching the code page needs the console API, which pathos
+  cannot call without `unsafe` code. Only a console is concerned: to a pipe
+  or a file pathos writes the bytes, as Ethos does, and that is what every
+  gate compares. Tested with a stand-in for the console, not on one.
 - **File names outside Latin-1 on Windows.** Ethos gets its arguments in
   the process's code page and passes them on as bytes. pathos gets them as
   UTF-16 and keeps each unit below 256 as one character
