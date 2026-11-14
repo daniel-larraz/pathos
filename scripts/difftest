@@ -15,6 +15,8 @@
 #   perf     all, one job at a time, reference rerun         (gates 5, 6)
 #   fuzz     replay the saved fuzzing findings in the harness's
 #            tools/difftest/fuzz-findings/                   (gate 8)
+#   cli      the harness's command-line cases, and the
+#            regressions and proofs under the --stats options (gate 9)
 #
 # Extra options go to `difftest.py run`, e.g. --filter, --show-all, --report.
 # Exits 0 when pathos and the reference agree on every case, 1 otherwise,
@@ -39,7 +41,7 @@ fi
 
 fail() { echo "scripts/difftest: $*" >&2; exit 2; }
 
-[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz [options]"
+[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz|cli [options]"
 gate="$1"; shift
 
 [[ -n "${ETHOS_HARNESS:-}" ]] ||
@@ -66,7 +68,7 @@ check_corpus() {
   [[ "$rev" == "$CVC5_REV" ]] ||
     fail "$dir was made with cvc5 $rev, expected $CVC5_REV"
 }
-case "$gate" in gate3|proofs|options|all|perf) check_corpus "$corpus" "The proof corpus" ;; esac
+case "$gate" in gate3|proofs|options|all|perf|cli) check_corpus "$corpus" "The proof corpus" ;; esac
 case "$gate" in large|all|perf) check_corpus "$large" "A corpus of large proofs" ;; esac
 
 # Builds the regex for --filter from a list of file names.
@@ -96,6 +98,8 @@ case "$gate" in
   perf)   args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
                 --corpus "$large" --timeout "$LARGE_TIMEOUT"
                 --jobs 1 --no-cache) ;;
+  cli)    args=(--cli --tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
+                --stats-option-sets) ;;
   fuzz)   ;;
   *) fail "unknown gate: $gate" ;;
 esac
