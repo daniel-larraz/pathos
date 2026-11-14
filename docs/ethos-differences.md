@@ -164,12 +164,17 @@ message; it runs until memory is exhausted.
 `pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with the stages ported
 so far: `desugar`, `desugar-vc` and `trim-defs`. What differs from the C++:
 
-- `ethos-eoc` falls back on the source and build directories it was
-  compiled in when `ETHOS_PLUGIN_ROOT` or `ETHOS_PLUGIN_OUTPUT_DIR` is not
-  set. `pathos-eoc` has no such directories: without the variable a stage
-  fails with Ethos's message (`StdPlugin: unable to determine the plugin
-  resource root`, or `... output root`). eoc's driver sets neither, so to
-  use `pathos-eoc` with the driver outside the harness, set both.
+- `ethos-eoc` falls back on the source and build directories CMake
+  compiled into it when `ETHOS_PLUGIN_ROOT` or `ETHOS_PLUGIN_OUTPUT_DIR` is
+  not set. `pathos-eoc` has the same fallback, from the environment of its
+  own build: build it with `ETHOS_PLUGIN_SOURCE_DIR` (the Ethos source
+  tree) and `ETHOS_PLUGIN_OUTPUT_DIR` (`<build directory>/out`) set, as
+  `crates/pathos-eoc/src/std_plugin.rs` shows. The environment variables at
+  run time take precedence, as in Ethos. A `pathos-eoc` built without them
+  has no fallback and fails with Ethos's message (`StdPlugin: unable to
+  determine the plugin resource root`, or `... output root`). eoc's driver
+  sets neither variable, so a binary the driver runs outside the harness
+  must be built with the fallback.
 - The stages not ported yet (`model-smt`, `smt-meta`, `smt-meta-sygus`,
   `lean-meta`) fail with `pathos-eoc: the plugin "<name>" is not ported
   yet`.

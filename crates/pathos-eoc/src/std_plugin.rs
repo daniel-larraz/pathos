@@ -100,16 +100,40 @@ pub struct StdPlugin {
 }
 
 impl StdPlugin {
-    /// Reads the two directories from the environment. `ethos-eoc` falls
-    /// back on the directories it was built in; `pathos-eoc` has no such
-    /// directories, so both variables must be set.
+    /// Finds the two directories: from the environment variables
+    /// `ETHOS_PLUGIN_ROOT` and `ETHOS_PLUGIN_OUTPUT_DIR` if they are set and
+    /// not empty, else from the directories compiled in.
+    ///
+    /// `ethos-eoc` gets its compiled-in directories from CMake: the source
+    /// tree and `<build directory>/out`. `pathos-eoc` gets them from the
+    /// environment of its own build: `ETHOS_PLUGIN_SOURCE_DIR` and
+    /// `ETHOS_PLUGIN_OUTPUT_DIR`, as in
+    ///
+    /// ```text
+    /// ETHOS_PLUGIN_SOURCE_DIR=/path/to/ethos \
+    /// ETHOS_PLUGIN_OUTPUT_DIR=/path/to/ethos/build-eoc/out \
+    ///   cargo build --release --bin pathos-eoc
+    /// ```
+    ///
+    /// eoc's driver sets neither variable when it runs a stage, so a
+    /// `pathos-eoc` that the driver is to run on its own must be built
+    /// this way. Built without them it has no fallback, and a stage fails
+    /// with Ethos's message when a variable is missing.
     pub fn new() -> Result<StdPlugin> {
-        let dir = |var: &str| {
+        let dir = |var: &str, compiled_in: Option<&str>| {
             let value = std::env::var_os(var).unwrap_or_default();
-            normalize_directory(latin1::decode(&value.into_vec()))
+            let value = latin1::decode(&value.into_vec());
+            normalize_directory(if value.is_empty() {
+                compiled_in.unwrap_or_default().to_string()
+            } else {
+                value
+            })
         };
-        let plugin_path = dir("ETHOS_PLUGIN_ROOT");
-        let output_path = dir("ETHOS_PLUGIN_OUTPUT_DIR");
+        let plugin_path = dir("ETHOS_PLUGIN_ROOT", option_env!("ETHOS_PLUGIN_SOURCE_DIR"));
+        let output_path = dir(
+            "ETHOS_PLUGIN_OUTPUT_DIR",
+            option_env!("ETHOS_PLUGIN_OUTPUT_DIR"),
+        );
         if plugin_path.is_empty() {
             return Err(Error::fatal(
                 "StdPlugin: unable to determine the plugin resource root",
