@@ -417,22 +417,6 @@ jobs:
             --ref "${{ steps.pins.outputs.ref_dir }}/build/src/ethos$exe" \
             --cand "target/release/pathos$exe" --work target/platform-probe
 
-      # Temporary: what Rust's standard library says about standard input.
-      - name: Probe standard input (Windows)
-        if: ${{ !cancelled() && runner.os == 'Windows' }}
-        run: |
-          cargo build --locked --release --quiet --example stdin_kind
-          probe=target/release/examples/stdin_kind.exe
-          python="$(command -v python3 || command -v python)"
-          : > empty.txt; echo hello > some.txt
-          echo "== /dev/null"; $probe < /dev/null
-          echo "== NUL through Python"; "$python" -c "import subprocess, sys; subprocess.run([sys.argv[1]], stdin=subprocess.DEVNULL)" $probe
-          echo "== an empty file"; $probe < empty.txt
-          echo "== a file"; $probe < some.txt
-          echo "== a pipe"; echo hello | $probe
-          echo "== an empty pipe through Python"; "$python" -c "import subprocess, sys; subprocess.run([sys.argv[1]], input=b'')" $probe
-          echo "== a closed standard input"; $probe <&- || true
-
       # LLVM's tools where binutils cannot read the binaries: Homebrew's on
       # macOS, and on Windows those of MSYS2 or of the runner's LLVM.
       - name: Find a disassembler (macOS)

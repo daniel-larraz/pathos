@@ -49,6 +49,12 @@ pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, Unresolved> 
     let mut joined = PathBuf::from(latin1::to_os(includer));
     joined.pop();
     joined.push(latin1::to_os(file));
+    // The empty path, as from `--include=`: the C++ library of Ethos's
+    // arm64 build (libc++) gives the empty path for it, which is no file's;
+    // the one of its x86-64 build (libstdc++) throws, as for a missing file.
+    if cfg!(target_arch = "aarch64") && joined.as_os_str().is_empty() {
+        return Err(Unresolved::NotAFile);
+    }
     let Ok(found) = std::fs::canonicalize(&joined) else {
         return Err(Unresolved::Missing(latin1::from_os(joined.as_os_str())));
     };

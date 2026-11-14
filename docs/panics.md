@@ -10,7 +10,10 @@ error message Ethos would print (see "Memory safety" in
 This file lists every place in pathos's non-test code that can panic and
 says, for each, why input cannot reach it, or what reaches it. It is the
 appendix of [evidence.md](evidence.md). Line numbers are those of commit
-`cd5face` on branch `m14`.
+`cd5face` on branch `m14`. Milestone 15 added `src/thread.rs` to
+`pathos-elab` (two rows, with that milestone's line numbers) and moved
+lines in the two `main.rs`, `parser.rs`, `path.rs` and `lexer.rs` by a few;
+it added no other construct that can panic.
 
 ## What was looked for
 
@@ -53,18 +56,18 @@ Reading was backed by runs, on release and debug builds:
 
 ## Result
 
-364 rows.
+366 rows.
 
 | Verdict | Rows | Meaning |
 | --- | --- | --- |
-| Safe | 256 | No input reaches it; the row says why. |
+| Safe | 257 | No input reaches it; the row says why. |
 | Safe (fixed in this milestone) | 9 | Input reached it; now an error or a defined result. See below. |
 | Ethos's fatal error | 51 | `pathos-eoc` only: the place where the C++ stage calls `EO_FATAL` or fails an `AlwaysAssert`. It returns an error with Ethos's text, not a panic. |
 | Error where Ethos reads out of bounds | 5 | `pathos-eoc` only: an error with pathos's own text where the C++ would index past a term's children. |
 | Crafted snapshot | 16 | Safe for every signature and proof. Reached only through a snapshot file made on purpose, with a checksum that fits, holding a state no signature gives. Panics in release and debug builds. |
 | Crafted snapshot, debug build only | 7 | The same, where only a debug build panics (a counter read from the snapshot overflows, or a character above 255 reaches the output). A release build wraps or prints `?`. |
 | Stack | 8 | Recursion whose depth the input controls; the process aborts with `has overflowed its stack`. Ethos crashes on the same inputs. |
-| Resource | 12 | Memory or time the input can make arbitrarily large; the process aborts when an allocation fails, or is killed. Ethos behaves alike. |
+| Resource | 13 | Memory or time the input can make arbitrarily large; the process aborts when an allocation fails, or is killed. Ethos behaves alike. |
 
 ### Fixed in this milestone
 
@@ -465,6 +468,13 @@ such panic.
 | Line | Construct | Verdict | Why |
 | --- | --- | --- | --- |
 | 17 | `&p[..=last]` | Safe | `last` is the position of a one-byte `/`. |
+
+### src/thread.rs
+
+| Line | Construct | Verdict | Why |
+| --- | --- | --- | --- |
+| 26 | `thread.spawn(run)` failing | Resource | Not a panic: if the system cannot give the checker's thread its 64 MiB of address space, the run ends with `Error: cannot start the checker's thread` and status 1. No input decides it. |
+| 30 | `std::panic::resume_unwind(panic)` | Safe | Runs only after the checker's thread has panicked, which the other rows of this file are about; it passes that panic on so that the process ends with status 101 as it did when the checker ran on the main thread. It does not print a second message. |
 
 ### src/plugin.rs
 

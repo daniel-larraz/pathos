@@ -14,7 +14,7 @@ the C++.
 | Behaviour | Where in Ethos | Checked |
 | --- | --- | --- |
 | After a one-letter keyword such as `:a`, the next character is lost. `(declare-const f T :a)` loses its closing parenthesis. | `Lexer::parseNonEmptyCharList` does not put back the character that ends the list; only keywords ignore its result. | Probed |
-| The byte `0xFF` ends the current token as if the input ended there; reading then continues after it. | The lexer reads into a signed `char`, so `0xFF` is `-1`, which is `EOF`. | Probed |
+| In a file, the byte `0xFF` ends the current token as if the input ended there; reading then continues after it. Not on Linux on arm64, and not on standard input, where `0xFF` is a character like any other (see "By platform"). | The lexer reads a file into a `char` buffer; where `char` is signed, `0xFF` is `-1`, which is `EOF`. Standard input is read with `istream::get`, which gives 255. | Probed, on each platform |
 | A file that does not exist gives `Couldn't open file: <path>`, without `Error:`, never `Cannot include file`. | `Filepath::exists` always returns true in the non-Windows build. | Probed |
 | Hexadecimal literals print without leading zeros: `#x0f` prints as `#xf`. Only reachable with `--no-normalize-hex` or in signatures. | `BitVector::toString` pads only base 2. | Read |
 | Characters below 32 or above 127 in a string literal are dropped silently, e.g. a newline or a tab. | `String::addCharToInternal` builds an error message and discards it. | Read |
@@ -103,22 +103,88 @@ where Ethos has the same one:
 
 Their depth is the length of a chain of declarations or files, or the
 number of steps of a program in a type that asks for the type of a term
-whose type runs the program again; it is not the size of a term. Measured with the default 8 MiB stack, in release builds:
+whose type runs the program again; it is not the size of a term.
 
-| Input | Ethos crashes from | pathos aborts from |
+How deep they can go depends on the stack. Ethos runs on the main thread,
+whose stack is 8 MiB on Linux and macOS (or what `ulimit -s` says) and is
+fixed in the executable on Windows (2 MiB as MinGW links it). pathos runs
+the checker on a thread of its own with a 64 MiB stack on every platform
+(`pathos_elab::on_checker_thread`), so its depths are about the same
+everywhere and do not follow `ulimit -s`. The longest chain each gets
+through, in release builds, measured by `scripts/platform-probe` in CI
+(run 43634777751), to within 2%:
+
+| Platform | `f<i>` of type `(eo::typeof (f<i-1> x))` | `f<i>` declared `:pairwise f<i-1>` | `f<i>.eo` holding `(include "f<i+1>.eo")` |
+| --- | --- | --- | --- |
+| Linux x86-64 | Ethos 4,800; pathos 47,100 | 12,500; 159,700 | 232; over 20,000 |
+| Linux arm64 | 10,240; 45,600 | 23,600; 159,700 | 464; over 20,000 |
+| macOS x86-64 | 6,300; 48,600 | 15,600; 153,600 | 236; over 20,000 |
+| macOS arm64 | 6,300; 44,000 | 15,600; 159,700 | 236; over 20,000 |
+| Windows x86-64 | 1,100; 38,400 | 2,900; 112,600 | 56; over 20,000 |
+| Windows arm64 | 780; 41,500 | 1,900; 143,400 | 56; over 20,000 |
+
+(Linux x86-64 is the development machine; the include chain was tried up
+to 20,000 files.) Past its depth Ethos dies of a segmentation fault (on
+Windows, exception `0xC00000FD`) and prints nothing; pathos prints
+`thread 'main' has overflowed its stack` and aborts. Two more shapes have
+no depth to measure:
+
+| Input | Ethos | pathos |
 | --- | --- | --- |
-| `f<i>` declared with the type `(eo::typeof (f<i-1> x))` | about 4,900 declarations | about 5,900 |
-| `f<i>` declared `:pairwise f<i-1>` | about 12,800 | about 20,000 |
-| `f<i>.eo` holding `(include "f<i+1>.eo")` | about 236 files | about 9,700 |
-| `(declare-consts <numeral> (eo::typeof eo::self))`, then a numeral | always (the recursion has no end) | always |
+| `(declare-consts <numeral> (eo::typeof eo::self))`, then a numeral | crashes always (the recursion has no end) | aborts always |
 | A constant `g` of type `(P n)`, where `(P n)` is `(eo::typeof (g (eo::add n -1)))`, applied to 1000000 | crashes | aborts |
 
-So on these shapes every input that stops pathos also crashes Ethos, and
-pathos accepts some on which Ethos crashes. A Rust stack overflow is a
+So on these shapes, on every platform, every input that stops pathos also
+crashes Ethos, and pathos accepts many on which Ethos crashes. A Rust stack overflow is a
 controlled abort (the stack has a guard page), not undefined behaviour, but
 the run ends without an error message. Making these three iterative is
 possible and has not been done; nothing in the corpus nests declarations
 more than a few levels.
+
+### By platform
+
+Ethos is built for Linux, macOS and Windows, each on x86-64 and arm64, and
+it does not behave the same on all six. Where its behaviour is defined,
+pathos does on each platform what Ethos does there. CI compares the two on
+every one of them (the `tests`, `cli`, `bignum` and `fuzz` gates and
+`scripts/platform-probe`; see [evidence.md](evidence.md)).
+
+Ethos behaviour that depends on the platform, and that pathos follows:
+
+| Behaviour | Where | Why, in Ethos | In pathos |
+| --- | --- | --- | --- |
+| The byte `0xFF` in a file is a character, not the end of the token | Linux arm64 only | C's `char` is unsigned there, so the byte is 255 and not `-1` (`EOF`) | `Lexer::read_next_char` follows `std::ffi::c_char`, which is C's `char` on each target |
+| A CR before a LF is not part of the input: positions, string literals and `echo` are as if the file had LF line ends. A CR before anything else stays | Windows | Every stream is opened in text mode, and the C runtime translates | `pathos_syntax::textmode` |
+| A Ctrl-Z byte (`0x1A`) ends a file or standard input; what follows is not read | Windows | Text mode again | the same |
+| Every line written ends in CR LF: standard output, standard error, and the files the eoc stages write | Windows | Text mode again | the same |
+| The file named on the command line or in an `include` is looked up in the file system first and is known from then on by its full name: `Error: D:\dir\sub\f.eo:3.4: ...` where the other platforms print the name as given | Windows | `Filepath` is a `std::filesystem::path` there (`USE_CPP_FILESYSTEM`), and `makeCanonical` is `std::filesystem::canonical` | `path::resolve` |
+| Spaces around an include's name are part of the name | Windows | Only the string implementation of `Filepath` trims | the same |
+| Both `/` and `\` separate directories, and the same file under two spellings, or in another case, is included once | Windows | `canonical` gives one name per file | the same |
+| A directory, or anything else that is not a regular file, gives `Error: cannot include file <name>` on the command line and `Cannot include file <name>` in an `include` command. Elsewhere a directory reads as an empty file | Windows | `Filepath::exists` asks `is_regular_file` there and always answers true elsewhere | the same |
+| Without a file argument and with standard input from the null device (a process started without input), the run ends with `Error: no input specified.`; elsewhere it reads an empty proof and answers `correct` | Windows | `isatty` is true for every character device there, not only for a console | `stdin_is_a_terminal` in `crates/pathos/src/main.rs`. Without `unsafe` code pathos cannot ask for the kind of a handle; it takes a handle whose metadata call fails with `ERROR_INVALID_FUNCTION` for a character device, which is what the null device gives on both Windows platforms. A serial port or a printer as standard input was not tried |
+| `--include=` with nothing after it gives `Error: cannot include file ` | Windows arm64 only | The C++ library of that build (libc++) makes the empty path canonical without complaint; the one of the x86-64 build (libstdc++) throws (next table) | `path::resolve`, by architecture |
+
+Where Ethos crashes on one platform and pathos reports an error there:
+
+| Input | Where | Ethos | pathos |
+| --- | --- | --- | --- |
+| A file that does not exist, on the command line, in `--include=`, `--reference=` or an `include` command; also an option Ethos does not know, such as `--nope`, which it takes for a file name | Windows | `std::filesystem::canonical` throws and nothing catches it: `terminate called after throwing an instance of 'std::filesystem::__cxx11::filesystem_error'` (x86-64), `libc++abi: terminating due to uncaught exception ...` (arm64) | `Couldn't open file: <name>`, the message of the other platforms, with the name as it was looked up, and exit status 1. The harness accepts these cases by name (`accepted-run.json`) |
+| `--include=` with nothing after it | Windows x86-64 | The same exception (`Invalid argument []`) | `Couldn't open file: ` |
+
+Where pathos does not follow, or cannot tell:
+
+- **File names outside Latin-1 on Windows.** Ethos gets its arguments in
+  the process's code page and passes them on as bytes. pathos gets them as
+  UTF-16 and keeps each unit below 256 as one character
+  (`latin1::from_os`), which is the same thing for ASCII and for 0xA0 to
+  0xFF under code page 1252; any other character becomes `?`, as Windows
+  itself substitutes one that the code page lacks. A file whose name has
+  such a character cannot be opened by either. Not probed.
+- **`C:name` in an include on Windows** (a drive with a relative path):
+  C++'s `/=` keeps the includer's directory when the drive is the same,
+  Rust's `PathBuf::push` does not. Not probed.
+- **`ulimit -s`.** Ethos gets deeper with a larger stack limit; pathos's
+  stack is fixed at 64 MiB (see "Recursion deeper than the stack").
 
 ### Size limits
 

@@ -160,7 +160,7 @@ fn run(inv: Invocation) -> Result<String> {
         }
         None => {
             // a proof on stdin
-            if std::io::stdin().is_terminal() {
+            if stdin_is_a_terminal() {
                 return Err(Error::plain("no input specified."));
             }
             let mut input = Vec::new();
@@ -186,6 +186,37 @@ fn run(inv: Invocation) -> Result<String> {
         text.push_str(&st.ck.stats_string());
     }
     Ok(text)
+}
+
+/// C's `isatty` on standard input, which decides whether Ethos waits for a
+/// proof there. On Unix that is a terminal. On Windows it is any character
+/// device: a console, and also the null device, which is what a process
+/// started without input is given.
+#[cfg(not(windows))]
+fn stdin_is_a_terminal() -> bool {
+    std::io::stdin().is_terminal()
+}
+
+/// See the other version. The standard library has no call for the kind of
+/// a handle. What it has, measured on both Windows platforms (run
+/// 43636416291): asking for a handle's metadata succeeds for a file and
+/// for a pipe, fails with `ERROR_INVALID_HANDLE` when there is no standard
+/// input, and fails with `ERROR_INVALID_FUNCTION` for the null device.
+#[cfg(windows)]
+fn stdin_is_a_terminal() -> bool {
+    use std::os::windows::io::AsHandle;
+    const ERROR_INVALID_FUNCTION: i32 = 1;
+    let stdin = std::io::stdin();
+    if stdin.is_terminal() {
+        return true;
+    }
+    let Ok(handle) = stdin.as_handle().try_clone_to_owned() else {
+        return false;
+    };
+    match std::fs::File::from(handle).metadata() {
+        Ok(_) => false,
+        Err(e) => e.raw_os_error() == Some(ERROR_INVALID_FUNCTION),
+    }
 }
 
 /// The bytes of the file, if it can be read.
