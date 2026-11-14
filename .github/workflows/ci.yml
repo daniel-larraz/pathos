@@ -353,18 +353,21 @@ jobs:
         run: cargo build --locked --release
 
       - name: Tests (debug)
-        run: cargo test --locked
+        run: cargo test --locked --no-fail-fast
 
       - name: Tests (release)
-        run: cargo test --locked --release
+        if: ${{ !cancelled() }}
+        run: cargo test --locked --release --no-fail-fast
 
       - name: Cache the reference Ethos build
+        if: ${{ !cancelled() }}
         uses: actions/cache@v6
         with:
           path: ethos/tools/difftest/work/ref
           key: ethos-ref-${{ steps.pins.outputs.reference_rev }}-${{ steps.pins.outputs.harness_commit }}-${{ matrix.name }}
 
       - name: Build the reference Ethos
+        if: ${{ !cancelled() }}
         run: |
           python="$(command -v python3 || command -v python)"
           "$python" --version
@@ -377,6 +380,25 @@ jobs:
       - name: Compare the command line and the statistics
         if: ${{ !cancelled() }}
         run: scripts/difftest tests --cli --stats-option-sets --show-all --report difftest-cli-report.json
+
+      # Ethos's own CI checks out with the runner's settings, so on Windows
+      # its regressions have CRLF line ends there. The same gate on such a
+      # checkout of the harness, with the reference built above.
+      - name: Check out the harness with CRLF line ends (Windows)
+        if: ${{ !cancelled() && runner.os == 'Windows' }}
+        run: |
+          git -c core.autocrlf=true clone --quiet ethos ethos-crlf
+          git -C ethos-crlf -c core.autocrlf=true checkout --quiet ${{ steps.pins.outputs.harness_commit }}
+          git -C ethos-crlf config core.autocrlf true
+          mkdir -p ethos-crlf/tools/difftest/work
+          cp -r ethos/tools/difftest/work/ref ethos-crlf/tools/difftest/work/ref
+          file ethos-crlf/tests/simple.eo || true
+
+      - name: Compare pathos with Ethos on the regressions with CRLF line ends (Windows)
+        if: ${{ !cancelled() && runner.os == 'Windows' }}
+        env:
+          ETHOS_HARNESS: ${{ github.workspace }}/ethos-crlf
+        run: scripts/difftest tests --show-all --report difftest-crlf-report.json
 
       - name: Compare arithmetic on large numbers
         if: ${{ !cancelled() }}
@@ -434,6 +456,7 @@ jobs:
             difftest-report.json
             difftest-cli-report.json
             difftest-bignum-report.json
+            difftest-crlf-report.json
           if-no-files-found: ignore
 
       # As Ethos does: the release binary of each platform, with the licences.

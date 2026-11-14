@@ -267,8 +267,11 @@ impl State {
 
     /// The path a file name in an `include` refers to: relative names are
     /// relative to the directory of the file being read.
-    pub(crate) fn resolve_include(&self, file: &str) -> String {
-        resolve_include_from(&self.input_file, file)
+    pub(crate) fn resolve_include(
+        &self,
+        file: &str,
+    ) -> std::result::Result<String, path::Unresolved> {
+        path::resolve(&self.input_file, file)
     }
 
     /// Writes the symbol tables, the assumptions and the reference state,
@@ -403,17 +406,9 @@ impl State {
 }
 
 /// The path that `file`, named in an include in the file `includer`,
-/// refers to.
-pub(crate) fn resolve_include_from(includer: &str, file: &str) -> String {
-    let file = path::trim(file);
-    let joined = if path::is_absolute(file) {
-        file.to_string()
-    } else {
-        let mut p = path::parent(includer);
-        p.push_str(file);
-        p
-    };
-    path::canonical(&joined)
+/// refers to, if it names a file.
+pub(crate) fn resolve_include_from(includer: &str, file: &str) -> Option<String> {
+    path::resolve(includer, file).ok()
 }
 
 /// The state as read from a snapshot.

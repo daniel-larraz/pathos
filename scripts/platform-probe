@@ -80,6 +80,15 @@ def behaviour_cases(work):
     put("ctrlz-in-string.eo", b'(echo "x\x1ay")\n(foo)\n')
     put("ctrlz-last.eo", b"(declare-const a Bool)\n\x1a")
     put("latin1.eo", b'(echo "caf\xe9 \xff")\n(declare-const \xe9 Bool)\n(\xe9\xe9)\n')
+    # C's char is signed on some platforms and unsigned on others
+    put("ff-symbol.eo", b"(declare-const a\xffb Bool)\n(foo)\n")
+    put("ff-quoted.eo", b"(declare-const |x\xffy| Bool)\n(foo)\n")
+    put("ff-comment.eo", b"; a \xff comment\n(declare-const a Bool)\n(foo)\n")
+    put("ff-between.eo", b"(declare-const a Bool)\n\xff\n(foo)\n")
+    put("ff-string.eo", b'(echo "x\xffy")\n(foo)\n')
+    put("high-symbol.eo", b"(declare-const \xe9\x80 Bool)\n(\xe9\x80)\n")
+    put("high-string.eo", b'(echo "caf\xe9")\n(foo)\n')
+    put("high-quoted.eo", b"(declare-const |caf\xe9| Bool)\n(echo \"ok\")\n(|caf\xe9| 1)\n")
     put("sub/inc.eo", b"(declare-const a Bool)\n")
     put("sub/badinc.eo", BAD)
     put("sub/up.eo", b'(include "../ok.eo")\n(foo)\n')
@@ -113,6 +122,15 @@ def behaviour_cases(work):
         ("Ctrl-Z inside a string", ["ctrlz-in-string.eo"], b""),
         ("Ctrl-Z as the last byte", ["ctrlz-last.eo"], b""),
         ("bytes above 127", ["latin1.eo"], b""),
+        ("0xFF in a symbol", ["ff-symbol.eo"], b""),
+        ("0xFF in a quoted symbol", ["ff-quoted.eo"], b""),
+        ("0xFF in a comment", ["ff-comment.eo"], b""),
+        ("0xFF between commands", ["ff-between.eo"], b""),
+        ("0xFF in a string", ["ff-string.eo"], b""),
+        ("0xFF on standard input", [], b"(declare-const a Bool)\n\xff\n(foo)\n"),
+        ("bytes above 127 in a symbol", ["high-symbol.eo"], b""),
+        ("a byte above 127 in a string", ["high-string.eo"], b""),
+        ("a byte above 127 in a quoted symbol", ["high-quoted.eo"], b""),
         ("an include with /", ["inc-slash.eo"], b""),
         ("an include with \\", ["inc-backslash.eo"], b""),
         ("an include with . and ..", ["inc-dots.eo"], b""),

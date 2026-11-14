@@ -21,7 +21,7 @@ use std::process::ExitCode;
 
 use pathos_check::Options;
 use pathos_elab::{Plugin, State, include_file};
-use pathos_syntax::{Error, Result, latin1};
+use pathos_syntax::{Error, Result, latin1, textmode};
 
 /// The stages `ethos-eoc` has, and whether pathos has them yet.
 const PLUGINS: &[(&str, bool)] = &[
@@ -185,7 +185,7 @@ fn write_line(mut w: impl Write, line: &str) {
     let mut bytes = latin1::encode(line);
     bytes.push(b'\n');
     // Nothing useful can be done if stdout or stderr is closed.
-    let _ = w.write_all(&bytes);
+    let _ = w.write_all(&textmode::output(bytes));
 }
 
 /// Reads the inputs with the plugin attached. Returns what to print at the
@@ -226,7 +226,7 @@ fn check() -> ExitCode {
     match parse_args(&args).and_then(run) {
         Ok(text) => {
             let mut out = std::io::stdout().lock();
-            let _ = out.write_all(&latin1::encode(&text));
+            let _ = out.write_all(&textmode::output(latin1::encode(&text)));
             let _ = out.flush();
             ExitCode::SUCCESS
         }

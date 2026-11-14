@@ -7,7 +7,7 @@ use std::rc::Rc;
 
 use pathos_check::Options;
 use pathos_elab::{Parser, State, include_file};
-use pathos_syntax::{Error, Result, latin1};
+use pathos_syntax::{Error, Result, latin1, textmode};
 
 const HELP: &str = "        --include=X: includes the file specified by X.
              --help: displays this message.
@@ -130,7 +130,7 @@ fn write_line(mut w: impl Write, line: &str) {
     let mut bytes = latin1::encode(line);
     bytes.push(b'\n');
     // Nothing useful can be done if stdout or stderr is closed.
-    let _ = w.write_all(&bytes);
+    let _ = w.write_all(&textmode::output(bytes));
 }
 
 /// Reads the inputs and returns what to print: the verdict and, if asked
@@ -167,7 +167,8 @@ fn run(inv: Invocation) -> Result<String> {
             if std::io::stdin().lock().read_to_end(&mut input).is_err() {
                 return Err(Error::fatal("Couldn't read the input"));
             }
-            Parser::new(&mut st, input, "stream", false, false).parse_all()?;
+            let input = textmode::input(input);
+            Parser::for_standard_input(&mut st, input).parse_all()?;
         }
     }
     if st.ck.opts.require_proof_of_false && !st.last_step_proves_false_at_level_zero() {
@@ -237,7 +238,7 @@ fn check() -> ExitCode {
     match result {
         Ok(text) => {
             let mut out = std::io::stdout().lock();
-            let _ = out.write_all(&latin1::encode(&text));
+            let _ = out.write_all(&textmode::output(latin1::encode(&text)));
             let _ = out.flush();
             ExitCode::SUCCESS
         }

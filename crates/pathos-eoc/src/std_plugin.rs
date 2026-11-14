@@ -5,7 +5,7 @@
 use std::collections::HashSet;
 use std::ffi::OsString;
 
-use pathos_syntax::{Error, Result, latin1};
+use pathos_syntax::{Error, Result, latin1, textmode};
 use pathos_term::{Kind, LitKind, SymbolKind, Term};
 
 use pathos_check::Checker;
@@ -20,12 +20,12 @@ pub fn os_path(path: &str) -> OsString {
 pub fn read_text(path: &str) -> Option<String> {
     std::fs::read(os_path(path))
         .ok()
-        .map(|b| latin1::decode(&b))
+        .map(|b| latin1::decode(&textmode::input(b)))
 }
 
 /// Writes text to a file, one byte per character. False if that fails.
 pub fn write_text(path: &str, text: &str) -> bool {
-    std::fs::write(os_path(path), latin1::encode(text)).is_ok()
+    std::fs::write(os_path(path), textmode::output(latin1::encode(text))).is_ok()
 }
 
 fn normalize_directory(mut path: String) -> String {

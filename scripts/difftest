@@ -78,11 +78,12 @@ if [[ -z "${DIFFTEST_CAPPED:-}" ]]; then
     cap="$(awk '/^MemTotal:/ { printf "%dM", $2 * 0.6 / 1024 }' /proc/meminfo)"
   if [[ "$cap" == none || ! -r /proc/meminfo ]]; then
     :
-  elif systemd-run --user --scope -q -p MemoryMax=1G true 2>/dev/null; then
+  elif systemd-run --user --scope -q -p MemoryMax=1G -p MemorySwapMax=0 \
+      -p OOMPolicy=continue true 2>/dev/null; then
     DIFFTEST_CAPPED="$cap" exec systemd-run --user --scope -q \
       -p MemoryMax="$cap" -p MemorySwapMax=0 -p OOMPolicy=continue "$0" "$@"
   else
-    echo "scripts/difftest: warning: no systemd user scope here," \
+    echo "scripts/difftest: warning: no systemd user scope with a memory cap here," \
       "running without a memory cap" >&2
   fi
 fi

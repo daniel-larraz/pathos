@@ -1,17 +1,91 @@
-//! File paths as Ethos handles them (`util/filesystem.cpp`): as strings,
-//! without looking at the file system.
+//! File paths as Ethos handles them (`util/filesystem.cpp`).
+//!
+//! Ethos has two implementations. Everywhere but on Windows a path is a
+//! string, handled without looking at the file system: [`trim`],
+//! [`is_absolute`], [`parent`] and [`canonical`]. On Windows it is a
+//! `std::filesystem::path`, and the canonical path is the one the file
+//! system gives: absolute, with backslashes, and only for a file that
+//! exists. [`resolve`] is the one that applies on the platform pathos is
+//! built for.
+
+/// Why an include names no file to read. Only Windows has these cases:
+/// elsewhere Ethos takes any name and fails when it opens the file.
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum Unresolved {
+    /// Nothing has the name. Ethos ends with an uncaught C++ exception
+    /// (`std::filesystem::canonical` throws). The name is the one looked up.
+    #[cfg_attr(not(windows), allow(dead_code))]
+    Missing(String),
+    /// The name is not a regular file's: Ethos's `includeFile` returns
+    /// false, and its caller reports that the file cannot be included.
+    #[cfg_attr(not(windows), allow(dead_code))]
+    NotAFile,
+}
+
+/// The path that `file`, named in an include in the file `includer` (or on
+/// the command line, with `includer` empty), refers to: the name the file is
+/// opened by, shown in error messages by, and remembered as included by.
+#[cfg(not(windows))]
+pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, Unresolved> {
+    let file = trim(file);
+    let joined = if is_absolute(file) {
+        file.to_string()
+    } else {
+        let mut p = parent(includer);
+        p.push_str(file);
+        p
+    };
+    Ok(canonical(&joined))
+}
+
+/// See the other version. Here as `State::includeFile` does it with
+/// `std::filesystem`: the includer's `parent_path()`, `/=` the name as it
+/// is written (no trimming), then `canonical()`, then `exists()`, which
+/// also asks for a regular file.
+#[cfg(windows)]
+pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, Unresolved> {
+    use pathos_syntax::latin1;
+    use std::path::PathBuf;
+    let mut joined = PathBuf::from(latin1::to_os(includer));
+    joined.pop();
+    joined.push(latin1::to_os(file));
+    let Ok(found) = std::fs::canonicalize(&joined) else {
+        return Err(Unresolved::Missing(latin1::from_os(joined.as_os_str())));
+    };
+    if !found.is_file() {
+        return Err(Unresolved::NotAFile);
+    }
+    Ok(without_verbatim_prefix(&latin1::from_os(found.as_os_str())))
+}
+
+/// Rust's canonical paths on Windows are in the `\\?\` form, which C++'s
+/// are not: `\\?\C:\dir` is `C:\dir` and `\\?\UNC\server\share` is
+/// `\\server\share`.
+#[cfg_attr(not(windows), allow(dead_code))]
+fn without_verbatim_prefix(path: &str) -> String {
+    if let Some(rest) = path.strip_prefix(r"\\?\UNC\") {
+        format!(r"\\{rest}")
+    } else if let Some(rest) = path.strip_prefix(r"\\?\") {
+        rest.to_string()
+    } else {
+        path.to_string()
+    }
+}
 
 /// Removes leading and trailing spaces. A string of spaces only is kept.
+#[cfg_attr(windows, allow(dead_code))]
 pub(crate) fn trim(raw: &str) -> &str {
     let t = raw.trim_matches(' ');
     if t.is_empty() { raw } else { t }
 }
 
+#[cfg_attr(windows, allow(dead_code))]
 pub(crate) fn is_absolute(p: &str) -> bool {
     p.starts_with('/')
 }
 
 /// The path up to and including the last `/`; empty if there is none.
+#[cfg_attr(windows, allow(dead_code))]
 pub(crate) fn parent(p: &str) -> String {
     match p.rfind('/') {
         Some(last) => trim(&p[..=last]).to_string(),
@@ -22,6 +96,7 @@ pub(crate) fn parent(p: &str) -> String {
 /// Removes empty and `.` segments and resolves `..` against the segments
 /// before it. The last segment is kept as it is, even if it is empty, `.`
 /// or `..`.
+#[cfg_attr(windows, allow(dead_code))]
 pub(crate) fn canonical(p: &str) -> String {
     if p.is_empty() {
         return String::new();
@@ -71,6 +146,21 @@ mod tests {
         assert_eq!(canonical("x.eo"), "x.eo");
         assert_eq!(canonical("/x.eo"), "/x.eo");
         assert_eq!(canonical("a/"), "a/");
+    }
+
+    #[test]
+    fn verbatim_prefixes() {
+        assert_eq!(without_verbatim_prefix(r"\\?\C:\a\b.eo"), r"C:\a\b.eo");
+        assert_eq!(without_verbatim_prefix(r"\\?\UNC\s\d\b.eo"), r"\\s\d\b.eo");
+        assert_eq!(without_verbatim_prefix(r"C:\a"), r"C:\a");
+    }
+
+    #[cfg(not(windows))]
+    #[test]
+    fn resolving() {
+        assert_eq!(resolve("", " a/../b.eo ").unwrap(), "b.eo");
+        assert_eq!(resolve("d/main.eo", "sub/x.eo").unwrap(), "d/sub/x.eo");
+        assert_eq!(resolve("d/main.eo", "/x.eo").unwrap(), "/x.eo");
     }
 
     #[test]

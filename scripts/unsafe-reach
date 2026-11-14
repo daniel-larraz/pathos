@@ -65,6 +65,14 @@ CARGO_TARGET_DIR="$target" CARGO_PROFILE_RELEASE_DEBUG=2 \
 
 for bin in pathos pathos-eoc; do
   exe_path="$target/release/$bin$exe"
+  # macOS: the tools look in <binary>.dSYM for a file with the binary's
+  # name, and the one cargo leaves there for pathos-eoc is named after the
+  # crate (pathos_eoc-<hash>)
+  dwarf="$exe_path.dSYM/Contents/Resources/DWARF"
+  if [[ -d "$dwarf" && ! -e "$dwarf/$bin" ]]; then
+    ls "$dwarf"
+    ln -s "$(ls "$dwarf" | head -1)" "$dwarf/$bin"
+  fi
   "$objdump" -d --no-show-raw-insn ${section[@]+"${section[@]}"} "$exe_path" |
     grep -oE '^ *[0-9a-f]+:' | tr -d ' :' | sed 's/^/0x/' > "$target/$bin.addrs"
   "$addr2line" -i -e "$exe_path" < "$target/$bin.addrs" |

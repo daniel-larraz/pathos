@@ -1,8 +1,9 @@
 //! The parser of one input, and reading files.
 
-use pathos_syntax::{Error, Lexer, Result, latin1};
+use pathos_syntax::{Error, Lexer, Result, latin1, textmode};
 use pathos_term::Term;
 
+use crate::path::Unresolved;
 use crate::snapshot;
 use crate::state::State;
 
@@ -40,6 +41,13 @@ impl<'a> Parser<'a> {
         }
     }
 
+    /// A parser for a proof on standard input, which Ethos names `stream`.
+    pub fn for_standard_input(st: &'a mut State, input: Vec<u8>) -> Parser<'a> {
+        let mut p = Parser::new(st, input, "stream", false, false);
+        p.lex.set_stream();
+        p
+    }
+
     /// Runs the commands of the input to its end.
     pub fn parse_all(&mut self) -> Result<()> {
         while self.parse_next_command()? {}
@@ -48,7 +56,9 @@ impl<'a> Parser<'a> {
 }
 
 /// Reads a file as a signature, a proof or a reference, unless it has been
-/// read before. `file` is relative to the file being read.
+/// read before. `file` is relative to the file being read. This is the
+/// include of a file named on the command line: a name that cannot be
+/// included is the error `main.cpp` reports.
 pub fn include_file(
     st: &mut State,
     file: &str,
@@ -56,10 +66,34 @@ pub fn include_file(
     is_reference: bool,
     reference_nf: Option<Term>,
 ) -> Result<()> {
-    let input_path = st.resolve_include(file);
+    if try_include_file(st, file, is_signature, is_reference, reference_nf)? {
+        Ok(())
+    } else {
+        Err(Error::plain(format!("cannot include file {file}")))
+    }
+}
+
+/// `State::includeFile`: as [`include_file`], but false, for the caller to
+/// report, if the name is not a file's. That happens on Windows only (see
+/// `path::resolve`).
+pub(crate) fn try_include_file(
+    st: &mut State,
+    file: &str,
+    is_signature: bool,
+    is_reference: bool,
+    reference_nf: Option<Term>,
+) -> Result<bool> {
+    let input_path = match st.resolve_include(file) {
+        Ok(path) => path,
+        Err(Unresolved::NotAFile) => return Ok(false),
+        // Ethos stops on an uncaught exception here
+        Err(Unresolved::Missing(name)) => {
+            return Err(Error::fatal(format!("Couldn't open file: {name}")));
+        }
+    };
     if !st.mark_included(&input_path) {
         st.record_include(file, is_signature, None);
-        return Ok(());
+        return Ok(true);
     }
     st.has_reference = is_reference;
     st.reference_nf = reference_nf;
@@ -67,7 +101,7 @@ pub fn include_file(
     if reference_nf.is_none()
         && snapshot::use_for_include(st, &input_path, is_signature, is_reference)
     {
-        return Ok(());
+        return Ok(true);
     }
     let current_path = std::mem::replace(&mut st.input_file, input_path.clone());
     let handled = st.with_plugin(|p, st| {
@@ -75,7 +109,7 @@ pub fn include_file(
     });
     if handled == Some(true) {
         st.input_file = current_path;
-        return Ok(());
+        return Ok(true);
     }
     let input = read_file(&input_path)?;
     st.record_include(file, is_signature, Some(&input));
@@ -97,7 +131,7 @@ pub fn include_file(
     st.with_plugin(|p, st| {
         p.finalize_include_file(st, &input_path, is_signature, is_reference, reference_nf)
     });
-    st.take_plugin_error().map_or(Ok(()), Err)
+    st.take_plugin_error().map_or(Ok(true), Err)
 }
 
 /// The bytes of a file. Paths are byte strings held as described in
@@ -105,7 +139,7 @@ pub fn include_file(
 pub(crate) fn read_file(path: &str) -> Result<Vec<u8>> {
     let os_path = latin1::to_os(path);
     match std::fs::read(&os_path) {
-        Ok(bytes) => Ok(bytes),
+        Ok(bytes) => Ok(textmode::input(bytes)),
         // Ethos opens a directory without error and reads nothing from it.
         Err(_) if std::path::Path::new(&os_path).is_dir() => Ok(Vec::new()),
         Err(_) => Err(Error::fatal(format!("Couldn't open file: {path}"))),
