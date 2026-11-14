@@ -26,7 +26,7 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 target="$root/target/unsafe-reach"
 
 CARGO_TARGET_DIR="$target" CARGO_PROFILE_RELEASE_DEBUG=2 \
-  cargo build --release --quiet --manifest-path "$root/Cargo.toml" "$@"
+  cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" "$@"
 
 for bin in pathos pathos-eoc; do
   exe="$target/release/$bin"

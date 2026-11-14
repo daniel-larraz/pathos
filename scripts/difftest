@@ -147,7 +147,7 @@ case "$gate" in
   *) fail "unknown gate: $gate" ;;
 esac
 
-cargo build --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos
+cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos
 cand="$root/target/release/pathos"
 
 if [[ "$gate" == eoc ]]; then
@@ -161,7 +161,7 @@ if [[ "$gate" == eoc ]]; then
   lhead="$(git -C "$logos" rev-parse HEAD)"
   [[ "$lhead" == "$LOGOS_REV" ]] || fail "$logos is at $lhead, expected $LOGOS_REV"
   git -C "$logos" diff --quiet HEAD || fail "$logos has local changes"
-  cargo build --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos-eoc
+  cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos-eoc
   rc=0
   python3 "$dt/difftest.py" eoc --ref "$refeoc" --cand "$root/target/release/pathos-eoc" \
     --src "$refsrc" --logos "$logos" "$@" || rc=$?

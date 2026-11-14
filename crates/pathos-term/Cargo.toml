@@ -10,7 +10,10 @@ repository.workspace = true
 [lints]
 workspace = true
 
+# Exact versions, on purpose: docs/dependencies.md accounts for the unsafe
+# code of these crates and of what they depend on, as pinned in Cargo.lock.
+# Changing a version here or in Cargo.lock follows "Changing the pin" there.
 [dependencies]
-malachite-base = "0.14"
-malachite-nz = "0.14"
-malachite-q = "0.14"
+malachite-base = "=0.14.0"
+malachite-nz = "=0.14.0"
+malachite-q = "=0.14.0"

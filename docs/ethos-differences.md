@@ -90,8 +90,8 @@ accept a proof on which Ethos crashes.
 
 pathos walks terms, evaluates programs, matches and prints without
 recursion (design decision 8), so the depth of a term or of a program's
-calls is not limited by the stack; Ethos overflows its stack on a term a
-few hundred thousand levels deep. Three recursions remain in pathos, each
+calls is not limited by the stack (nor is it in Ethos: both read a term
+1,000,000 applications deep). Three recursions remain in pathos, each
 where Ethos has the same one:
 
 - typing a term evaluates its type, and evaluating `eo::typeof` types a
