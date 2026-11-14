@@ -253,6 +253,51 @@ intended; everything between gates is not.
     up to date. Add the eoc gate to CI (it needs no cvc5 corpus; it needs
     the reference `ethos-eoc` built, as the regressions job builds the
     reference `ethos`, and a logos checkout at `LOGOS_REV`).
+14. **The evidence for replacing Ethos.** No change to what pathos does;
+    this milestone writes down why the Ethos developers can trust it. The
+    developers will replace Ethos with pathos if it is memory safe and does
+    what Ethos does, so the documents answer exactly those two questions,
+    for a reader who knows Ethos and C++ but not Rust or pathos.
+    - **`docs/dependencies.md` up to date and traced.** Bring it in line
+      with the current `Cargo.lock`. Then close its open question: which of
+      the dependencies' `unsafe` code can pathos's calls reach? Trace it
+      (by reading the call paths from the `malachite` functions pathos
+      calls, helped by a tool such as `cargo geiger` if it works offline,
+      or by building with the `unsafe` paths instrumented), and say for
+      each crate: reached, not reached, or not known, with the evidence.
+      Check whether a `malachite` feature, or a `[profile]`/`cfg` setting,
+      can keep the AVX2 FFT (and so `wide`, `safe_arch`, `bytemuck`) out
+      of the build, and what it costs on the `perf` gate. Do not change
+      the dependencies: write the options down for the user, who signs the
+      file off (its status line still says it awaits that).
+    - **`docs/evidence.md`**, one page: what pathos is; the memory-safety
+      statement (no `unsafe` in pathos, the workspace lint that enforces
+      it, the dependencies in one paragraph with a link, no C or C++, bad
+      input gives an error and never undefined behaviour, iterative
+      traversals instead of recursion); and a table of every gate, with
+      what it compares, the number of cases, the reference revision and
+      the command that reruns it: `tests`, `proofs`, `large`, `options`,
+      `cli`, `fuzz`, `snapshot`, `eoc`, logos's acceptance check, and
+      `perf` with its numbers. Take the counts from runs you make for this
+      milestone, not from the reviews. Then the differences from Ethos,
+      summarised from `docs/ethos-differences.md` in three groups (Ethos
+      crashes or reads out of bounds where pathos reports an error; output
+      that differs by design; anything else), with a link for the details.
+      Last, the questions for the developers: whether a snapshot is
+      trusted like the signature it was made from (a crafted snapshot can
+      make pathos panic after its checksum passes;
+      `docs/reviews/m10-snapshots.md`), and whether to keep the
+      evaluation hooks (`EvalPlugin`), which no eoc stage uses.
+    - **Panics.** List every `panic!`, `unreachable!`, `expect`, `unwrap`
+      and indexing that could fail on input in the non-test code, grouped
+      by crate, and for each say why input cannot reach it or turn it into
+      an error. Put the list in `docs/evidence.md`'s appendix or a file it
+      links. Fix any that input can reach, with a test, only if the fix
+      does not change output; otherwise list it.
+    The gate: `scripts/full-check` (without `--quick`) and `scripts/difftest
+    eoc` pass, and the two documents are complete. The reviewer runs a
+    long fuzzing campaign alongside; its result goes into
+    `docs/evidence.md` after the review.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
