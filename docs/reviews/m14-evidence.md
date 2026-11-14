@@ -83,8 +83,13 @@ input that reaches panics, and the fixes are small:
 - **A difference found by the running fuzzing campaign** (seed 3, finding
   `bf776a04c4f0`): after "Unknown category for parameterized operator" for
   a `:let-binder` whose list constructor is not a list, the type error
-  names a different term in pathos than in Ethos. Sent to Fable to fix or,
-  if Ethos is at fault, to record.
+  names a different term in pathos than in Ethos. **Fixed** in 8d1e51c:
+  Ethos's `mkLetBinderList` takes the first two children of the
+  constructor term whatever its kind (the shape is only asserted), which is
+  defined behaviour for a parameterized binder; pathos now does the same,
+  and builds no list where Ethos would read past the end. Checked by the
+  reviewer against `state.cpp:1344`; on 8d1e51c, `scripts/full-check
+  --quick` passes and `scripts/difftest eoc` agrees on all 3,507 cases.
 - The campaign's other findings so far: six inputs where Ethos reads past
   the end of an `eo::` operator's arguments (a known class, to be accepted
   when the campaign ends), and one both-out-of-memory pair the harness did
