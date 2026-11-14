@@ -103,6 +103,10 @@ pub struct Checker {
     used_rules: HashSet<Term>,
     /// Called with each warning; the binary writes them to stderr.
     warnings: Box<dyn FnMut(&str)>,
+    /// Set when the checker met something it cannot go on from: the message
+    /// of the error that must end the run. Evaluation stops once it is set,
+    /// and the parser reports it at the end of the command.
+    pub(crate) fatal: Option<String>,
 
     pub(crate) t_true: Term,
     pub(crate) t_false: Term,
@@ -140,6 +144,7 @@ impl Checker {
             sorry_rules: HashSet::new(),
             used_rules: HashSet::new(),
             warnings,
+            fatal: None,
             t_true,
             t_false,
             t_self,
@@ -151,6 +156,12 @@ impl Checker {
         };
         ck.mark_constructor_kind(list_cons, Attr::RightAssocNil, Some(list_nil));
         ck
+    }
+
+    /// The message of the error that must end the run, if the checker met
+    /// one. Whatever the command computed after it cannot be trusted.
+    pub fn take_fatal(&mut self) -> Option<String> {
+        self.fatal.take()
     }
 
     /// Reports a warning: a line Ethos writes to stderr without stopping.

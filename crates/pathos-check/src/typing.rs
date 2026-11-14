@@ -239,20 +239,26 @@ impl Checker {
             }
             Kind::Node(NodeKind::Parameterized) => self.store.ty(self.store.child(e, 1)),
             Kind::Node(NodeKind::Variable) => {
-                let (c0, c1) = (self.store.child(e, 0), self.store.child(e, 1));
-                let ctype1 = self.store.ty(c0);
-                let ctype2 = self.store.ty(c1)?;
+                // `eo::var` can be applied to any number of arguments. Ethos
+                // reads the first two without checking that they are there;
+                // here a missing one fails the check that needs it.
+                let children = self.store.children(e);
+                let (c0, c1) = (children.first().copied(), children.get(1).copied());
+                let ctype1 = c0.and_then(|c| self.store.ty(c));
+                let ctype2 = c1.and_then(|c| self.store.ty(c));
                 let string_type =
-                    self.get_literal_type_rule(LitKind::String, Some(c0), out.as_deref_mut())?;
+                    self.get_literal_type_rule(LitKind::String, c0, out.as_deref_mut())?;
                 if ctype1 != Some(string_type) {
                     out!(out, "Expected a string for first argument of eo::var");
                     return None;
                 }
-                if self.store.kind(ctype2) != Kind::Type {
-                    out!(out, "Expected a type for second argument of eo::var");
-                    return None;
+                match (c1, ctype2) {
+                    (Some(c1), Some(t)) if self.store.kind(t) == Kind::Type => Some(c1),
+                    _ => {
+                        out!(out, "Expected a type for second argument of eo::var");
+                        None
+                    }
                 }
-                Some(c1)
             }
             Kind::Eval(op) => {
                 let children = self.store.children(e).to_vec();
@@ -260,8 +266,9 @@ impl Checker {
                     children.iter().map(|&c| self.store.ty(c)).collect();
                 self.get_literal_op_type(op, &children, &ctypes, out)
             }
-            Kind::Symbol(_) | Kind::Node(NodeKind::Program) => {
-                // symbols always have a type; programs are never typed
+            Kind::Symbol(_) | Kind::Node(NodeKind::Program) | Kind::Null => {
+                // symbols always have a type; programs and the null
+                // expression are never typed
                 out!(out, "Unknown kind {k}");
                 None
             }

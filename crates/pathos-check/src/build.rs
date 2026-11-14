@@ -382,7 +382,9 @@ impl Checker {
                 Some(curr)
             }
             Attr::Chainable | Attr::Pairwise => {
-                let mut cchildren = vec![cons_term?];
+                // Without a constructor term (the conjunction to chain
+                // with), Ethos goes on with its null expression.
+                let mut cchildren = vec![cons_term.unwrap_or(self.store.mk_null())];
                 if attr == Attr::Chainable {
                     for i in 1..nchild.saturating_sub(1) {
                         let app = self.mk_apply_curried(&[hd, vchildren[i], vchildren[i + 1]]);
@@ -407,7 +409,7 @@ impl Checker {
                 let arg_list = if nchild == 2 && self.attribute_kind(vchildren[1]) == Attr::List {
                     vchildren[1]
                 } else {
-                    let mut cchildren = vec![cons_term?];
+                    let mut cchildren = vec![cons_term.unwrap_or(self.store.mk_null())];
                     cchildren.extend_from_slice(&vchildren[1..]);
                     self.mk_expr(Kind::APPLY, &cchildren)
                 };

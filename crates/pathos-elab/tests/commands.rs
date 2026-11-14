@@ -199,3 +199,168 @@ fn deep_terms_do_not_overflow_the_stack() {
     assert!(err.contains("Expression of unexpected type:"));
     assert!(err.ends_with("      Type: Int\n  Expected: Bool\n\n"));
 }
+
+// The tests below come from the first fuzzing run (docs/reviews/fuzz-1.md).
+
+#[test]
+fn eo_var_with_one_argument_is_a_type_error() {
+    let r = run("(declare-const Int Type)
+(define y () (eo::var Int) :type Int)");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:2.34: Type checking failed:
+Expression: (eo::var Int)
+Message: No type rule declared for literal kind STRING; use declare-consts to declare its \
+             type before use
+
+"
+        .to_string())
+    );
+}
+
+/// Ethos reads the missing argument from past the end of a vector, and here
+/// crashes. Without the error, the program below would recurse for ever,
+/// since the condition of its `eo::ite` never becomes a value.
+#[test]
+fn evaluating_an_operator_without_an_argument_it_reads_ends_the_run() {
+    let r = run("(declare-const Int Type)
+(declare-consts <numeral> Int)
+(program f ((x Int)) :signature (Int) Int (((f x) (eo::ite (eo::is_eq x) 1 (f x)))))
+(define y () (f 4))");
+    assert_eq!(
+        r.result,
+        Err(
+            "Error: t.eo:4.19: Too few arguments when evaluating literal op EVAL_IS_EQ, 1 \
+             arguments [4]\n"
+                .to_string()
+        )
+    );
+    assert_eq!(
+        r.warnings,
+        ["Wrong number of arguments when applying literal op EVAL_IS_EQ, 1 arguments"]
+    );
+}
+
+/// The list is looked at before the missing third argument, so a term that
+/// is not a list makes the operator stuck, with Ethos's warnings.
+#[test]
+fn a_missing_argument_matters_only_once_it_is_read() {
+    let r = run(
+        "(declare-const or (-> Bool Bool Bool) :right-assoc-nil false)
+(declare-const a Bool)
+(declare-const and (-> Bool Bool Bool))
+(program f ((x Bool)) :signature (Bool) Bool (((f x) (eo::list_find or x))))
+(declare-rule r ((x Bool)) :args (x) :conclusion (f x))
+(step p :rule r :args ((and a a)))",
+    );
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:6.33: A step of rule r failed to check.
+Evaluation failed: (eo::list_find or (_ (and a) a))
+
+"
+        .to_string())
+    );
+    assert_eq!(
+        r.warnings,
+        [
+            "Wrong number of arguments when applying literal op EVAL_LIST_FIND, 2 arguments",
+            "...expected associative application to end in false, got (_ (and a) a)",
+            "...expected associative application to end in false, got (_ (and a) a)",
+        ]
+    );
+}
+
+#[test]
+fn a_token_is_shown_up_to_its_first_nul_character() {
+    let r = run("(declare-const a Bool)\n(define b () \"ab\0cd)\n");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:2.14: Expected SMT-LIBv2 term, got `\"ab` \
+             (UNTERMINATED_STRING_LITERAL).\n\n"
+            .to_string())
+    );
+}
+
+/// The operator's type has one argument where two are expected. Ethos finds
+/// the element type in it all the same.
+#[test]
+fn the_nil_terminator_is_found_through_a_malformed_operator_type() {
+    let r = run("(declare-parameterized-const L ((T Type)) Type)
+(declare-parameterized-const L.nil ((T Type)) (L T))
+(declare-parameterized-const L.cons ((T Type :implicit)) (-> T (L T)) :right-assoc-nil (L.nil T))
+(declare-const b Bool)
+(declare-const c Bool)
+(define t () (eo::list_concat L.cons) :is_eq (L.cons b c))");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:6.57: Terms are not equal:
+Expression: (eo::list_concat L.cons)
+Target expression: (_ (_ L.cons b) (_ (_ L.cons c) (L.nil Bool)))
+
+"
+        .to_string())
+    );
+}
+
+#[test]
+fn a_chain_without_a_constructor_term_holds_the_null_expression() {
+    let decl = "(declare-parameterized-const = ((T Type)) (-> Bool Bool Bool) :chainable T)
+(declare-const d Bool)
+(declare-const e Bool)
+(declare-const f Bool)
+";
+    let r = run(&format!("{decl}(assume a1 (= d))"));
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:5.16: Type checking failed:
+Expression: ([NONE])
+Message: Unknown kind NONE
+
+"
+        .to_string())
+    );
+    assert_eq!(
+        r.warnings,
+        ["Unknown category for parameterized operator ="]
+    );
+    let r = run(&format!("{decl}(assume a1 (= d e f))"));
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:5.20: Type checking failed:
+Expression: (_ ([NONE] (_ (_ = d) e)) (_ (_ = e) f))
+Message: Checking application of =
+Unexpected type of child #1
+  Term: e
+  Has type: Bool
+  Expected type: Type
+  Context []
+
+
+"
+        .to_string())
+    );
+}
+
+/// `(s c b)` has too few arguments and is met three times in one
+/// evaluation. Ethos remembers that it failed, so it warns once.
+#[test]
+fn a_failed_program_application_is_tried_once_per_evaluation() {
+    let r = run(
+        "(declare-const or (-> Bool Bool Bool) :right-assoc-nil false)
+(program s ((x Bool) (y Bool) (l Bool :list) (z Bool)) :signature (Bool Bool Bool) Bool
+  (((s x y (or z l)) (_ or (s x y) (s x y l)))))
+(declare-const a Bool)
+(declare-const b Bool)
+(declare-const c Bool)
+(declare-const t (eo::requires (s c b (or a b c)) true Bool))",
+    );
+    assert_eq!(
+        r.warnings,
+        [
+            "*** Bad number of arguments provided in function call to (s x y (_ (_ or z) l))",
+            "  Arguments: [s c b]",
+        ]
+    );
+    assert!(r.result.is_err());
+}
