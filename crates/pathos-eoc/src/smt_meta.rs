@@ -481,7 +481,10 @@ impl SmtMeta {
             MetaKind::EoEmbed | MetaKind::SmtEmbed => {
                 get_embed_type_name(ck, get_embed_type_app(ck, t))?
             }
-            MetaKind::None => return Ok(None),
+            // the kinds of the proof checker are the Lean backend's
+            MetaKind::None | MetaKind::Proof | MetaKind::CheckerRule | MetaKind::CheckerCmd => {
+                return Ok(None);
+            }
         }))
     }
 

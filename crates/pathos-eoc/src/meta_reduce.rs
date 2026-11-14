@@ -22,6 +22,12 @@ pub enum MetaKind {
     SmtSeq,
     /// A builtin SMT-LIB term.
     SmtBuiltin,
+    /// A proof.
+    Proof,
+    /// A rule of the proof checker.
+    CheckerRule,
+    /// A command of the proof checker.
+    CheckerCmd,
     /// A datatype declared by a `$native_embed_eo` type.
     EoEmbed,
     /// A datatype declared by a `$native_embed_smt` type.
@@ -37,6 +43,9 @@ impl MetaKind {
             MetaKind::Eunoia => "EUNOIA",
             MetaKind::Smt => "SMT",
             MetaKind::SmtBuiltin => "SMT_BUILTIN",
+            MetaKind::Proof => "PROOF",
+            MetaKind::CheckerRule => "CHECKER_RULE",
+            MetaKind::CheckerCmd => "CHECKER_CMD",
             MetaKind::SmtType => "SMT_TYPE",
             MetaKind::SmtValue => "SMT_VALUE",
             MetaKind::SmtMap => "SMT_MAP",
@@ -57,6 +66,8 @@ impl MetaKind {
             MetaKind::SmtValue => "vsm.",
             MetaKind::SmtMap => "msm.",
             MetaKind::SmtSeq => "ssm.",
+            MetaKind::CheckerRule => "r.",
+            MetaKind::CheckerCmd => "cmd.",
             // builtin symbols have no prefix; this marks one that reaches
             // the output
             MetaKind::SmtBuiltin => "?",
@@ -67,6 +78,37 @@ impl MetaKind {
                 )));
             }
         })
+    }
+
+    /// Whether the kind is one of the SMT-LIB model semantics.
+    pub fn is_smt(self) -> bool {
+        matches!(
+            self,
+            MetaKind::SmtBuiltin
+                | MetaKind::Smt
+                | MetaKind::SmtType
+                | MetaKind::SmtValue
+                | MetaKind::SmtMap
+                | MetaKind::SmtSeq
+                | MetaKind::SmtEmbed
+        )
+    }
+
+    /// Whether the kind is one of the proof checker.
+    pub fn is_checker(self) -> bool {
+        matches!(
+            self,
+            MetaKind::CheckerRule | MetaKind::CheckerCmd | MetaKind::CheckerEmbed
+        )
+    }
+
+    /// Whether the kind is of a datatype declared by a `$native_embed_*`
+    /// type.
+    pub fn is_embed(self) -> bool {
+        matches!(
+            self,
+            MetaKind::EoEmbed | MetaKind::SmtEmbed | MetaKind::CheckerEmbed
+        )
     }
 }
 
@@ -173,7 +215,7 @@ pub struct MetaReduce {
     /// The meta-kind of each `$emb_` constructor prefix, e.g. `vsm`.
     pub prefix_to_meta_kind: BTreeMap<String, MetaKind>,
     /// The meta-kind of each type of the embedding, by name.
-    type_to_meta_kind: BTreeMap<String, MetaKind>,
+    pub type_to_meta_kind: BTreeMap<String, MetaKind>,
     /// The declarations seen so far.
     decl_seen: HashSet<Term>,
 }

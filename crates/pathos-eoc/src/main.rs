@@ -7,6 +7,8 @@
 
 mod defs_reader;
 mod desugar;
+mod lean_meta;
+mod linear_patterns;
 mod meta_reduce;
 mod model_smt;
 mod native_layer;
@@ -28,7 +30,7 @@ const PLUGINS: &[(&str, bool)] = &[
     ("desugar-vc", true),
     ("smt-meta", true),
     ("smt-meta-sygus", true),
-    ("lean-meta", false),
+    ("lean-meta", true),
     ("trim-defs", true),
     ("model-smt", true),
 ];
@@ -44,6 +46,10 @@ struct Invocation {
     /// empty if not given.
     defs_file: String,
     smt_defs_file: String,
+    /// `--no-parser` (negated) and `--lean-config=`, for the `lean-meta`
+    /// stage.
+    generate_parser: bool,
+    lean_config_file: String,
 }
 
 fn parse_args(args: &[String]) -> Result<Invocation> {
@@ -142,21 +148,28 @@ fn parse_args(args: &[String]) -> Result<Invocation> {
         file,
         defs_file,
         smt_defs_file,
+        generate_parser,
+        lean_config_file,
     })
 }
 
-fn create_plugin(name: &str, defs_file: &str, smt_defs_file: &str) -> Result<Box<dyn Plugin>> {
+fn create_plugin(inv: &Invocation) -> Result<Box<dyn Plugin>> {
+    let name = inv.plugin.as_str();
     match name {
         "desugar" => Ok(Box::new(desugar::Desugar::new(false)?)),
         "desugar-vc" => Ok(Box::new(desugar::Desugar::new(true)?)),
         "smt-meta" => Ok(Box::new(smt_meta::SmtMeta::new(false)?)),
         "smt-meta-sygus" => Ok(Box::new(smt_meta::SmtMeta::new(true)?)),
+        "lean-meta" => Ok(Box::new(lean_meta::LeanMeta::new(
+            inv.generate_parser,
+            &inv.lean_config_file,
+        )?)),
         "trim-defs" => Ok(Box::new(trim_defs::TrimDefs::new()?)),
         // Naming neither file leaves the stage the SMT-LIB semantics of the
         // source tree and no semantics of an input, as an empty name does.
         "model-smt" => Ok(Box::new(model_smt::ModelSmt::new(
-            defs_file,
-            smt_defs_file,
+            &inv.defs_file,
+            &inv.smt_defs_file,
         )?)),
         _ if PLUGINS.contains(&(name, false)) => Err(Error::fatal(format!(
             "pathos-eoc: the plugin \"{name}\" is not ported yet"
@@ -178,19 +191,15 @@ fn write_line(mut w: impl Write, line: &str) {
 
 /// Reads the inputs with the plugin attached. Returns what to print at the
 /// end.
-fn run(inv: Invocation) -> Result<String> {
+fn run(mut inv: Invocation) -> Result<String> {
     let mut st = State::new(
-        inv.opts,
+        std::mem::take(&mut inv.opts),
         Box::new(|line| write_line(std::io::stderr().lock(), line)),
         Box::new(|line| write_line(std::io::stdout().lock(), line)),
     );
     // the plugin must be there before any file is read
     if !inv.plugin.is_empty() {
-        st.set_plugin(create_plugin(
-            &inv.plugin,
-            &inv.defs_file,
-            &inv.smt_defs_file,
-        )?)?;
+        st.set_plugin(create_plugin(&inv)?)?;
     }
     for (file, is_reference) in &inv.includes {
         include_file(&mut st, file, !is_reference, *is_reference, None)?;

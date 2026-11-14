@@ -47,7 +47,7 @@ fn is_desugaring_attr(a: Attr) -> bool {
 impl Checker {
     /// The subterms of `e` that occur more than once, each after its own
     /// subterms, numbered in that order.
-    fn compute_let_binding(&self, e: Term) -> (Vec<Term>, HashMap<Term, usize>) {
+    pub fn compute_let_binding(&self, e: Term) -> (Vec<Term>, HashMap<Term, usize>) {
         let mut count: HashMap<Term, usize> = HashMap::new();
         let mut visited: HashSet<Term> = HashSet::new();
         let mut order = Vec::new();

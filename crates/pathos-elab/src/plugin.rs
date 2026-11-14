@@ -219,9 +219,12 @@ impl State {
         self.take_plugin_error().map_or(Ok(()), Err)
     }
 
-    /// An `echo` command: the plugin may take the message for itself.
+    /// An `echo` command: the plugin may take the message for itself. A
+    /// plugin that fails on the message has stopped the run in Ethos, so
+    /// nothing is printed then.
     pub fn echo(&mut self, msg: &str) {
-        if self.with_plugin(|p, st| p.echo(st, msg)) != Some(false) {
+        let print = self.with_plugin(|p, st| p.echo(st, msg)) != Some(false);
+        if print && self.plugin_error.is_none() {
             self.print_line(msg);
         }
     }
