@@ -116,6 +116,11 @@ jobs:
           ETHOS_HARNESS: ${{ github.workspace }}/ethos
         run: scripts/difftest fuzz
 
+      - name: Compare arithmetic on large numbers
+        env:
+          ETHOS_HARNESS: ${{ github.workspace }}/ethos
+        run: scripts/difftest bignum --show-all --report difftest-bignum-report.json
+
       - name: Compare the command line and the statistics
         env:
           ETHOS_HARNESS: ${{ github.workspace }}/ethos
@@ -129,6 +134,7 @@ jobs:
           path: |
             difftest-report.json
             difftest-cli-report.json
+            difftest-bignum-report.json
           if-no-files-found: ignore
 
   eoc:

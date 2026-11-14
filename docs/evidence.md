@@ -53,7 +53,7 @@ Ethos `9217112f` (cvc5/ethos `main` with PR #223), built in release mode.
 Every gate runs both binaries on the same inputs and compares what they do:
 the outcome (correct, incomplete, error), the error text with its position
 (without Ethos's `Fatal failure within` line), and standard output. The
-harness is `tools/difftest` in `daniel-larraz/ethos` at `6a4fa74`; its
+harness is `tools/difftest` in `daniel-larraz/ethos` at `663289e`; its
 README says exactly what is compared. `scripts/difftest <gate>` builds
 pathos and runs it; `scripts/full-check` runs all of them. The counts are
 from runs on 2026-11-14 on the source of commit `0bac6d7`. All cases agree in every gate.
@@ -65,7 +65,7 @@ from runs on 2026-11-14 on the source of commit `0bac6d7`. All cases agree in ev
 | `large` | The cvc5 proofs of 1 MB or more from `regress1` to `regress4`, up to 453 MB | 43 (37 correct, 4 incomplete, 2 errors) | all agree | `scripts/difftest large` |
 | `options` | Regressions and proofs under each of Ethos's eight non-default options, all of them together, and none | 6,300 | all agree | `scripts/difftest options` |
 | `cli` | 38 command-line cases (`--help`, `-t`, `-v`, unknown options, standard input, `--include=`, `--reference=`), and regressions and proofs under `--stats`, `--stats-all`, `--stats-compact` | 3,188 | all agree (times and term-store counters masked) | `scripts/difftest cli` |
-| `bignum` | Generated files of `eo::add`, `mul`, `pow`, division, conversions and the bit-vector operations on operands from 64 bits to a million bits, with each expected value computed independently | BIGNUM | BIGNUM | BIGNUM |
+| `bignum` | Generated files of `eo::add`, `mul`, `pow`, division, conversions and the bit-vector operations on operands from 64 bits to a million bits, with each expected value computed independently (Python's integers and fractions). Each file ends with one wrong expectation on purpose, so both checkers print a value of up to 600,000 digits in full | 7 (each stops at its deliberate last line, in both) | all agree, byte for byte; Ethos agrees with every computed value | `scripts/difftest bignum` |
 | `fuzz` | The 41 groups of inputs on which a fuzzing run of mutated regressions and proofs found the two to differ | 41 | 36 fixed, 4 accepted differences, 1 Ethos crash; none still differs | `scripts/difftest fuzz` |
 | `snapshot` | Regressions and proofs under every option set, pathos starting from a snapshot of CPC; and the proofs with a truncated, a corrupted and an empty snapshot | 6,300 + 3 × 400 | all agree | `scripts/difftest snapshot` |
 | `eoc` | eoc's driver with `ethos-eoc` and with `pathos-eoc`: every stage on every rule of the test signatures and of logos's CPC (logos `a3232131`), and logos's `lean --all`; every file written is compared | 3,507 (3,322 ok, 185 errors) | all agree | `scripts/difftest eoc` |
@@ -89,8 +89,12 @@ checkers took about twice the time they take on an idle one (Ethos 658 s,
 pathos 269 s in an earlier run); a second run under the same load gave the
 same 42%.
 
-**A fuzzing campaign** of mutated inputs runs alongside this review; its
-result will be added here.
+**A fuzzing campaign** of mutated inputs (seed 3, 24 hours, each run
+limited to 10 s and 4 GiB) is running alongside this review; its final
+count will be added here. In its first two hours it found one difference
+in pathos, in how a type error is reported after a `:let-binder` whose
+list constructor is malformed (being fixed), and six inputs of the first
+kind below, where Ethos reads past the end of an operator's arguments.
 
 ## Where pathos differs from Ethos
 

@@ -22,6 +22,8 @@
 #            broken snapshots; timings with and without     (gate 10)
 #   eoc      eoc's driver with ethos-eoc and pathos-eoc, on the
 #            test signatures and on logos's CPC     (gates 11 to 13)
+#   bignum   arithmetic on numbers of 64 bits to a million bits, past
+#            malachite's FFT threshold (docs/dependencies.md)
 #
 # Extra options go to `difftest.py run`, e.g. --filter, --show-all, --report.
 # Exits 0 when pathos and the reference agree on every case, 1 otherwise,
@@ -143,6 +145,7 @@ case "$gate" in
                 --jobs 1 --no-cache) ;;
   cli)    args=(--cli --tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
                 --stats-option-sets) ;;
+  bignum) args=(--bignum) ;;
   fuzz|snapshot|eoc) ;;
   *) fail "unknown gate: $gate" ;;
 esac

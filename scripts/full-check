@@ -45,7 +45,7 @@ step "cargo clippy" cargo clippy --locked --quiet --all-targets -- -D warnings
 step "cargo test (debug)" cargo test --locked --quiet
 step "cargo test (release)" cargo test --locked --quiet --release
 
-gates=(tests proofs large fuzz cli snapshot)
+gates=(tests proofs large fuzz cli snapshot bignum)
 [[ $quick == 0 ]] && gates+=(options perf)
 for gate in "${gates[@]}"; do
   if [[ $gate == fuzz ]]; then
