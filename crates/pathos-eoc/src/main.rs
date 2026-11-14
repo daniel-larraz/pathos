@@ -6,6 +6,9 @@
 //! succeeded if it exits with 0.
 
 mod desugar;
+mod meta_reduce;
+mod native_layer;
+mod smt_meta;
 mod std_plugin;
 mod trim_defs;
 
@@ -21,8 +24,8 @@ use pathos_syntax::{Error, Result, latin1};
 const PLUGINS: &[(&str, bool)] = &[
     ("desugar", true),
     ("desugar-vc", true),
-    ("smt-meta", false),
-    ("smt-meta-sygus", false),
+    ("smt-meta", true),
+    ("smt-meta-sygus", true),
     ("lean-meta", false),
     ("trim-defs", true),
     ("model-smt", false),
@@ -138,6 +141,8 @@ fn create_plugin(name: &str) -> Result<Box<dyn Plugin>> {
     match name {
         "desugar" => Ok(Box::new(desugar::Desugar::new(false)?)),
         "desugar-vc" => Ok(Box::new(desugar::Desugar::new(true)?)),
+        "smt-meta" => Ok(Box::new(smt_meta::SmtMeta::new(false)?)),
+        "smt-meta-sygus" => Ok(Box::new(smt_meta::SmtMeta::new(true)?)),
         "trim-defs" => Ok(Box::new(trim_defs::TrimDefs::new()?)),
         _ if PLUGINS.contains(&(name, false)) => Err(Error::fatal(format!(
             "pathos-eoc: the plugin \"{name}\" is not ported yet"

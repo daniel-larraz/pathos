@@ -17,11 +17,11 @@ use std::fmt::Write;
 use pathos_check::{Attr, Checker};
 use pathos_elab::{Plugin, State};
 use pathos_syntax::{Error, Result};
-use pathos_term::{BitVec, EoString, Integer, Kind, Lit, LitKind, Rational, SymbolKind, Term};
+use pathos_term::{Kind, Lit, LitKind, SymbolKind, Term};
 
 use crate::std_plugin::{
-    StdPlugin, literal_kind_to_string, mk_parse_def_name, read_text, replace_all, rtrim_lines,
-    subterms_of_kind, write_text,
+    StdPlugin, ground_term_for_literal_kind, literal_kind_to_string, mk_parse_def_name, read_text,
+    replace_all, rtrim_lines, subterms_of_kind, write_text,
 };
 
 /// What the parser reported, in the order it did.
@@ -1023,19 +1023,6 @@ impl Desugar {
         cases
     }
 
-    /// The ground term the type rule of a kind is instantiated with when it
-    /// uses `eo::self`.
-    fn ground_term_for_literal_kind(ck: &mut Checker, k: LitKind) -> Option<Term> {
-        let lit = match k {
-            LitKind::Numeral => Lit::Numeral(Integer::zero()),
-            LitKind::Rational => Lit::Rational(Rational::parse("0/1")?),
-            LitKind::Binary => Lit::Binary(BitVec::parse("0", 2)?),
-            LitKind::String => Lit::String(EoString::default()),
-            _ => return None,
-        };
-        Some(ck.store.mk_lit(lit))
-    }
-
     fn literal_type_rule(&mut self, ck: &mut Checker, k: LitKind, t: Term) -> Result<()> {
         self.lt_kind_processed.insert(k);
         let eoss = match k {
@@ -1075,7 +1062,7 @@ impl Desugar {
         } else {
             let any = ck.mk_any();
             let ty = ck.mk_symbol(SymbolKind::Const, "t", any);
-            let gt = Self::ground_term_for_literal_kind(ck, k);
+            let gt = ground_term_for_literal_kind(ck, k);
             let rule = |ck: &mut Checker, self_term| {
                 ck.get_literal_type_rule(k, self_term, None)
                     .ok_or_else(|| malformed("a literal kind without its type rule"))

@@ -268,6 +268,36 @@ pub fn subterms_of_kind(ck: &Checker, k: Kind, t: Term) -> Vec<Term> {
     ret
 }
 
+/// Whether `s` is `t` or occurs in it.
+pub fn has_subterm(ck: &Checker, t: Term, s: Term) -> bool {
+    let mut visited = HashSet::new();
+    let mut to_visit = vec![t];
+    while let Some(cur) = to_visit.pop() {
+        if !visited.insert(cur) {
+            continue;
+        }
+        if cur == s {
+            return true;
+        }
+        to_visit.extend_from_slice(ck.store.children(cur));
+    }
+    false
+}
+
+/// The ground literal a type rule that uses `eo::self` is instantiated
+/// with (`StdPlugin::getGroundTermForLiteralKind`).
+pub fn ground_term_for_literal_kind(ck: &mut Checker, k: LitKind) -> Option<Term> {
+    use pathos_term::{BitVec, EoString, Integer, Lit, Rational};
+    let lit = match k {
+        LitKind::Numeral => Lit::Numeral(Integer::zero()),
+        LitKind::Rational => Lit::Rational(Rational::parse("0/1")?),
+        LitKind::Binary => Lit::Binary(BitVec::parse("0", 2)?),
+        LitKind::String => Lit::String(EoString::default()),
+        _ => return None,
+    };
+    Some(ck.store.mk_lit(lit))
+}
+
 /// The name of a literal kind in `declare-consts`, e.g. `<numeral>`.
 pub fn literal_kind_to_string(k: LitKind) -> Result<&'static str> {
     Ok(match k {
