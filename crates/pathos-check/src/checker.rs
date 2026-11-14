@@ -355,7 +355,7 @@ impl Checker {
         self.sorry_rules.insert(rule);
     }
 
-    pub(crate) fn is_proof_rule_sorry(&self, rule: Term) -> bool {
+    pub fn is_proof_rule_sorry(&self, rule: Term) -> bool {
         self.sorry_rules.contains(&rule)
     }
 

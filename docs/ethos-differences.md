@@ -158,3 +158,30 @@ message; it runs until memory is exhausted.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
+
+### pathos-eoc (the compiler stages)
+
+`pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with the stages ported
+so far: `desugar`, `desugar-vc` and `trim-defs`. What differs from the C++:
+
+- `ethos-eoc` falls back on the source and build directories it was
+  compiled in when `ETHOS_PLUGIN_ROOT` or `ETHOS_PLUGIN_OUTPUT_DIR` is not
+  set. `pathos-eoc` has no such directories: without the variable a stage
+  fails with Ethos's message (`StdPlugin: unable to determine the plugin
+  resource root`, or `... output root`). eoc's driver sets neither, so to
+  use `pathos-eoc` with the driver outside the harness, set both.
+- The stages not ported yet (`model-smt`, `smt-meta`, `smt-meta-sygus`,
+  `lean-meta`) fail with `pathos-eoc: the plugin "<name>" is not ported
+  yet`.
+- Where a C++ stage aborts inside a hook, the stage here returns an error,
+  which is reported when the command being read ends. Anything the rest of
+  that command prints comes before the error, where in Ethos it would not
+  be printed at all. Not seen in the eoc gate.
+- Hooks raised inside the checker (a constructor kind, a program) reach
+  the stage when the parser raises its next hook or the command ends, not
+  at once, and what a stage does to the state raises no hooks for the stage
+  itself. The stages ported so far only record what these hooks say. See
+  `crates/pathos-elab/src/plugin.rs`.
+- Where the C++ indexes a term's children on the strength of an assertion
+  (which a release build does not check), the stage stops with `Desugar:
+  unexpected term: ...`. Ethos would read outside the term.
