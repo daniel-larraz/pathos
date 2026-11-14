@@ -161,9 +161,9 @@ message; it runs until memory is exhausted.
 
 ### pathos-eoc (the compiler stages)
 
-`pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with the stages ported
-so far: `desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta` and
-`smt-meta-sygus`. What differs from the C++:
+`pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with all its stages:
+`desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta`,
+`smt-meta-sygus` and `lean-meta`. What differs from the C++:
 
 - `ethos-eoc` falls back on the source and build directories CMake
   compiled into it when `ETHOS_PLUGIN_ROOT` or `ETHOS_PLUGIN_OUTPUT_DIR` is
@@ -176,8 +176,6 @@ so far: `desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta` and
   determine the plugin resource root`, or `... output root`). eoc's driver
   sets neither variable, so a binary the driver runs outside the harness
   must be built with the fallback.
-- The stage not ported yet, `lean-meta`, fails with `pathos-eoc: the
-  plugin "lean-meta" is not ported yet`.
 - Where a C++ stage aborts inside a hook, the stage here returns an error,
   which is reported when the command being read ends. Anything the rest of
   that command prints comes before the error, where in Ethos it would not
@@ -203,3 +201,12 @@ so far: `desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta` and
   (`d_grefs` in `smt_meta_sygus.cpp`). The order does not reach the output:
   each entry writes to a grammar of its own, and the grammars they name
   exist by then. pathos visits the entries in the order of their terms.
+- `lean-meta`: where the C++ would read outside a term or through a null
+  expression (a case head shorter than its program's type, a constant
+  without a type, a case without a body), the stage stops with
+  `LeanMetaReduce: unexpected term: ...` or `LinearPattern: unexpected
+  term: ...`. Its checked assertions (`AlwaysAssert`) print Ethos's text.
+  Several of its containers are ordered by address in the C++; none is
+  iterated in a way that reaches the output.
+- `smt-meta`: on `(echo "smt-meta <name>")` with a name that is not bound,
+  Ethos crashes (a segmentation fault); pathos reports an error.

@@ -17,8 +17,9 @@ code calls for it.
 - CI (`.github/workflows/ci.yml`) runs on every push to `main` and every pull
   request: `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`,
   `cargo test` in debug and release builds, `scripts/difftest tests`,
-  `scripts/difftest fuzz` and `scripts/difftest tests --cli
-  --stats-option-sets`.
+  `scripts/difftest fuzz`, `scripts/difftest tests --cli
+  --stats-option-sets`, and `scripts/difftest eoc` without the per-rule
+  cases of logos's CPC (the filter is in the workflow).
   Keep it green: format with `cargo fmt`, and treat Clippy warnings as errors.
 - `scripts/full-check` runs all of that plus the cvc5 proof gates, which CI
   cannot run; `--quick` skips the slow `options` and `perf` gates.
