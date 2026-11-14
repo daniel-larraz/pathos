@@ -134,10 +134,12 @@ message; it runs until memory is exhausted.
   overflows, in Ethos and in pathos alike: a count of seven digits runs
   into the time after it, and a time of nine digits (100 s or more) into
   the next column. Since the times differ, the two outputs then differ in
-  where the digits join, and the harness, which masks numbers between
-  spaces, reports a difference. This happens on the two largest proofs
+  where the digits join. This happens on the two largest proofs
   (`regress3__hole10.cvc`, `regress4__bug143.smtv1`) under `--stats` and
-  `--stats-all`; they are not part of gate 9.
+  `--stats-all`; they are not part of gate 9. Since harness a2c80fd the
+  harness drops the spaces between masked numbers and masks a count that
+  ran into the time, so such rows compare equal; this was checked on rows
+  of that shape, not rerun on those two proofs.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
