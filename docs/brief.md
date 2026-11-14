@@ -344,6 +344,36 @@ intended; everything between gates is not.
     and `docs/evidence.md` says which platforms are checked and how.
     The reviewer pushes branch `m15` to GitHub so that CI can run there;
     commit on `m15` and say when a run is wanted.
+16. **The licence notice, and keeping up with Ethos.**
+    - **LGPL.** The release binaries link `malachite` (LGPL-3.0-only)
+      statically, and its crates ship no licence text. Do what Ethos does
+      for GMP: add `licenses/lgpl-3.0.txt` (the FSF text; Ethos's copy is
+      the same file), a paragraph in the licence notice saying that pathos
+      links against `malachite`, which is under LGPL v3, and that pathos's
+      source and the combined binary stay under the BSD licence (compare
+      Ethos's `COPYING`), and include both in what `scripts/package` puts
+      into the artifact.
+    - **The drift job.** pathos matches `REFERENCE_REV`, but Ethos keeps
+      changing. Add a scheduled workflow, separate from `ci.yml` and never
+      blocking it, that each night builds Ethos at the current `main` of
+      https://github.com/cvc5/ethos and compares pathos (at its `main`) with
+      it on Linux x86-64: Ethos `main`'s own regressions (its `tests/`, not
+      the harness's), the command-line cases, `bignum`, the fuzz replay, and
+      the eoc gate on the test signatures with logos at its current `main`.
+      Use the pinned harness, run its `difftest.py` directly where
+      `scripts/difftest` insists on the pins, and change nothing pinned.
+      The job's summary says which Ethos commit was compared, whether
+      anything differs, and the differences (the JSON reports as
+      artifacts); when Ethos `main` equals `REFERENCE_REV` it says so. It
+      fails only when something differs, so a red nightly run means "Ethos
+      has changed in a way pathos does not follow yet". It must also run on
+      demand (`workflow_dispatch`). Document it in `README.md` and in
+      `docs/evidence.md` ("Keeping up with Ethos"), including what to do
+      when it is red: port the change, then move `REFERENCE_REV` (and the
+      harness, if the change needs it) in a milestone of its own.
+    The gate: the package contains the notices, and one on-demand run of the
+    drift job is green against today's Ethos `main`. The reviewer pushes and
+    starts the runs, as in milestone 15.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
