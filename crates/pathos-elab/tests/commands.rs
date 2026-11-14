@@ -271,6 +271,33 @@ fn a_quoted_token_cut_short_by_a_nul_character() {
     );
 }
 
+/// The constructor term of a parameterized `:let-binder` is not the tuple
+/// (pair constructor, list constructor) itself but the term that pairs the
+/// parameters with it. Ethos takes its first two children all the same, so
+/// the binding list is built from the parameter tuple and the tuple.
+#[test]
+fn a_parameterized_let_binder_builds_its_list_from_the_parameterized_term() {
+    let r = run("(declare-const @List Type)
+(declare-const @nil @List)
+(declare-parameterized-const @cons () (-> @List) :right-assoc-nil @nil)
+(declare-parameterized-const @pair ((U Type :implicit) (T Type :implicit)) (-> U T ))
+(declare-parameterized-const myLet ((T Type :implicit)) (-> @List T @pair) :let-binder (T @cons))
+(assume @p0 (myLet ((y true)) y))");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:6.32: Type checking failed:\n\
+             Expression: (eo::define ((_v0 (eo::var \"y\" Bool))) (_ (_ myLet (_ (eo::tuple T \
+             @cons) (_ (_ (eo::tuple T) _v0) true))) _v0))\n\
+             Message: No type rule declared for literal kind STRING; use declare-consts to \
+             declare its type before use\n\n"
+            .to_string())
+    );
+    assert_eq!(
+        r.warnings,
+        ["Unknown category for parameterized operator myLet"]
+    );
+}
+
 /// `(eo::var)` has no children; Ethos reads the name from past their end
 /// and crashes.
 #[test]

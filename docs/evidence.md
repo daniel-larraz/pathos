@@ -99,7 +99,7 @@ kind below, where Ethos reads past the end of an operator's arguments.
 ## Where pathos differs from Ethos
 
 The full list, with the Ethos source location of each item, is
-[ethos-differences.md](ethos-differences.md). It also lists 15 behaviours
+[ethos-differences.md](ethos-differences.md). It also lists 16 behaviours
 of Ethos that look like bugs and that pathos reproduces on purpose (for
 example, the character after a one-letter keyword is lost).
 
