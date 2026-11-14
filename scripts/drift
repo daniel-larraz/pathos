@@ -1,0 +1,236 @@
+#!/usr/bin/env bash
+# Compares pathos with Ethos at another revision than the pinned one: by
+# default the current main of https://github.com/cvc5/ethos. This is what
+# the nightly workflow .github/workflows/drift.yml runs. pathos matches
+# REFERENCE_REV (difftest.env); this says whether Ethos has since changed
+# in a way pathos does not follow.
+#
+#   scripts/drift [--rev REV] [--ethos REPO] [--logos-rev REV] [--logos REPO]
+#                 [--work DIR] [--summary FILE]
+#
+#   --rev        the Ethos revision to compare with (default: main)
+#   --ethos      the Ethos repository, a URL or a local clone
+#                (default: https://github.com/cvc5/ethos)
+#   --logos-rev  the logos revision for the eoc comparison (default: main)
+#   --logos      the logos repository (default: LOGOS_REPO of difftest.env)
+#   --work       where to clone, build and write reports (default:
+#                target/drift; kept between runs, so a revision is built once)
+#   --summary    also append the summary, in Markdown, to this file
+#
+# It builds Ethos and ethos-eoc at that revision with the pinned harness's
+# build-ref, builds pathos from this tree, and runs the harness's
+# difftest.py directly (scripts/difftest insists on the pins):
+#
+#   tests   that revision's own tests/ (not the harness's)
+#   cli     the command-line cases, and those tests under the --stats options
+#   bignum  arithmetic on large numbers
+#   fuzz    the saved fuzzing findings, replayed on that revision's tests
+#   eoc     ethos-eoc against pathos-eoc on that revision's test signatures,
+#           and on logos's CPC (lean --all and the two desugar runs)
+#
+# Nothing pinned is changed, and nothing is written into the harness
+# checkout. Exits 0 if every comparison agrees, 1 if one differs or could
+# not be made, 2 if the setup is wrong. The summary names the Ethos commit,
+# says whether it is REFERENCE_REV, and lists the cases that differ; the
+# JSON reports and logs are in <work>/reports.
+#
+# Needs ETHOS_HARNESS as scripts/difftest does, and git, cmake, GMP, cargo
+# and Python 3. Linux and macOS.
+
+set -uo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../difftest.env
+source "$root/difftest.env"
+env_harness="${ETHOS_HARNESS:-}"
+if [[ -f "$root/.difftest.local" ]]; then
+  # shellcheck disable=SC1091
+  source "$root/.difftest.local"
+fi
+[[ -n "$env_harness" ]] && ETHOS_HARNESS="$env_harness"
+
+fail() { echo "scripts/drift: $*" >&2; exit 2; }
+
+rev=main
+ethos_repo=https://github.com/cvc5/ethos
+logos_rev=main
+logos_repo="$LOGOS_REPO"
+work="$root/target/drift"
+summary_file=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --rev) rev="$2"; shift 2 ;;
+    --ethos) ethos_repo="$2"; shift 2 ;;
+    --logos-rev) logos_rev="$2"; shift 2 ;;
+    --logos) logos_repo="$2"; shift 2 ;;
+    --work) work="$2"; shift 2 ;;
+    --summary) summary_file="$2"; shift 2 ;;
+    *) fail "unknown argument: $1 (see the header of this script)" ;;
+  esac
+done
+
+[[ -n "${ETHOS_HARNESS:-}" ]] ||
+  fail "set ETHOS_HARNESS to a checkout of $HARNESS_REPO at $HARNESS_COMMIT"
+head="$(git -C "$ETHOS_HARNESS" rev-parse HEAD)" || fail "$ETHOS_HARNESS is not a git checkout"
+[[ "$head" == "$HARNESS_COMMIT" ]] ||
+  fail "$ETHOS_HARNESS is at $head, expected $HARNESS_COMMIT"
+dt="$ETHOS_HARNESS/tools/difftest"
+
+mkdir -p "$work"
+work="$(cd "$work" && pwd)"
+reports="$work/reports"
+rm -rf "$reports"
+mkdir -p "$reports"
+
+# A clone of `repo` in `dir` at `rev` (a branch, a tag or a commit); prints
+# the commit.
+checkout() {
+  local repo="$1" dir="$2" rev="$3"
+  if [[ ! -d "$dir/.git" ]]; then
+    git clone --quiet "$repo" "$dir" || return 1
+  fi
+  git -C "$dir" remote set-url origin "$repo" || return 1
+  git -C "$dir" fetch --quiet --tags origin '+refs/heads/*:refs/remotes/origin/*' || return 1
+  local commit
+  commit="$(git -C "$dir" rev-parse --verify --quiet "origin/$rev^{commit}" ||
+    git -C "$dir" rev-parse --verify --quiet "$rev^{commit}")" || return 1
+  git -C "$dir" checkout --quiet --detach "$commit" || return 1
+  echo "$commit"
+}
+
+ethos_commit="$(checkout "$ethos_repo" "$work/ethos" "$rev")" ||
+  fail "cannot get revision $rev of $ethos_repo"
+logos_commit="$(checkout "$logos_repo" "$work/logos" "$logos_rev")" ||
+  fail "cannot get revision $logos_rev of $logos_repo"
+ethos_date="$(git -C "$work/ethos" show -s --format=%cs "$ethos_commit")"
+ethos_subject="$(git -C "$work/ethos" show -s --format=%s "$ethos_commit")"
+
+ref_dir="$work/ref/${ethos_commit:0:12}"
+ref="$ref_dir/build/src/ethos"
+refeoc="$ref_dir/build-eoc/ethos-eoc"
+src="$ref_dir/src"
+
+# name|what it compares, in the order they run and are reported
+steps=(
+  "build|Ethos and ethos-eoc at that commit, and pathos, build"
+  "tests|that commit's own tests/"
+  "cli|the command-line cases, and those tests under the --stats options"
+  "bignum|arithmetic on large numbers"
+  "fuzz|the saved fuzzing findings"
+  "eoc|ethos-eoc and pathos-eoc on the test signatures and logos's CPC"
+)
+status_of() { cat "$reports/$1.status" 2>/dev/null || echo "not run"; }
+
+# Runs a comparison with its output in reports/<name>.log (and on the
+# terminal), and records agree / differ / failed.
+compare() {
+  local name="$1"; shift
+  echo "== $name"
+  "$@" 2>&1 | tee "$reports/$name.log"
+  case "${PIPESTATUS[0]}" in
+    0) echo agree > "$reports/$name.status" ;;
+    1) echo differ > "$reports/$name.status" ;;
+    *) echo failed > "$reports/$name.status" ;;
+  esac
+}
+
+build() {
+  python3 "$dt/difftest.py" build-ref "$ethos_commit" --repo "$work/ethos" \
+    --out "$work/ref" --eoc || return 2
+  cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" \
+    --bin pathos --bin pathos-eoc || return 2
+}
+
+fuzz() {
+  local rc=0 findings
+  for findings in "$dt"/fuzz-findings/*/; do
+    echo "-- ${findings%/}"
+    python3 "$dt/difftest.py" fuzz-replay --ref "$ref" --cand "$cand" \
+      --findings "$findings" --tests "$src/tests" --work "$work/fuzz" || rc=1
+  done
+  return $rc
+}
+
+cand="$root/target/release/pathos"
+run=(python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand"
+     --cache "$work/ref-cache.json" --show-all)
+
+compare build build
+if [[ "$(status_of build)" == agree ]]; then
+  compare tests "${run[@]}" --tests "$src/tests" --report "$reports/tests.json"
+  compare cli "${run[@]}" --cli --tests "$src/tests" --stats-option-sets \
+    --report "$reports/cli.json"
+  compare bignum "${run[@]}" --bignum --report "$reports/bignum.json"
+  compare fuzz fuzz
+  compare eoc python3 "$dt/difftest.py" eoc --ref "$refeoc" \
+    --cand "$root/target/release/pathos-eoc" --src "$src" --logos "$work/logos" \
+    --filter '^eoc/(?!logos/)|^eoc/logos/(lean-all|desugar|desugar-eo)$' \
+    --show-all --report "$reports/eoc.json"
+fi
+
+# The summary.
+bad=0
+{
+  echo "## pathos against Ethos \`${ethos_commit:0:12}\`"
+  echo
+  echo "Ethos: [\`$ethos_commit\`](https://github.com/cvc5/ethos/commit/$ethos_commit)" \
+    "($ethos_date, \"$ethos_subject\"), asked for as \`$rev\`."
+  if [[ "$ethos_commit" == "$REFERENCE_REV" ]]; then
+    echo "**This is \`REFERENCE_REV\`, the revision pathos is checked against in CI:" \
+      "Ethos has not moved, and this run repeats CI's comparison.**"
+  else
+    echo "pathos is pinned to \`${REFERENCE_REV:0:12}\`, which this is not:" \
+      "$(git -C "$work/ethos" rev-list --count "$REFERENCE_REV..$ethos_commit" 2>/dev/null || echo "?")" \
+      "commit(s) ahead of it, $(git -C "$work/ethos" rev-list --count "$ethos_commit..$REFERENCE_REV" 2>/dev/null || echo "?") behind."
+  fi
+  echo "pathos: \`$(git -C "$root" rev-parse HEAD)\`; logos: \`$logos_commit\`;" \
+    "harness: \`$HARNESS_COMMIT\`."
+  echo
+  echo "| Comparison | On | Result |"
+  echo "| --- | --- | --- |"
+  for step in "${steps[@]}"; do
+    name="${step%%|*}"
+    what="${step#*|}"
+    status="$(status_of "$name")"
+    [[ "$status" == agree ]] || bad=1
+    counts="$(grep -E '^cases:|^findings:' "$reports/$name.log" 2>/dev/null |
+      sed -E 's/ +\([0-9.]+ s\)//' | paste -sd ';' - | sed 's/;/; /g')"
+    case "$name:$status" in
+      build:agree) result="built" ;;
+      *:agree) result="agrees" ;;
+      *:differ) result="**differs**" ;;
+      *:failed) result="**could not be run**" ;;
+      *) result="not run" ;;
+    esac
+    echo "| \`$name\` | $what | $result${counts:+: $counts} |"
+  done
+  echo
+  if [[ $bad == 0 ]]; then
+    echo "Nothing differs."
+  else
+    echo "Something differs: Ethos at this commit does something pathos does not" \
+      "follow. See \"Keeping up with Ethos\" in docs/evidence.md for what to do."
+    for step in "${steps[@]}"; do
+      name="${step%%|*}"
+      [[ "$(status_of "$name")" == agree || ! -f "$reports/$name.log" ]] && continue
+      echo
+      echo "### \`$name\`"
+      echo
+      echo '```'
+      if [[ "$(status_of "$name")" == differ ]]; then
+        # the differing cases by name, and the first of the differences
+        grep -E '^--- ' "$reports/$name.log" | head -100
+        echo "..."
+        grep -vE '^same ' "$reports/$name.log" | head -60
+      else
+        tail -40 "$reports/$name.log"
+      fi
+      echo '```'
+    done
+  fi
+} > "$reports/summary.md"
+
+echo
+cat "$reports/summary.md"
+[[ -n "$summary_file" ]] && cat "$reports/summary.md" >> "$summary_file"
+exit $bad

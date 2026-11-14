@@ -32,6 +32,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  Third-Party Software
 -------------------------------------------------------------------------------
 
-pathos uses the malachite arithmetic library, which is licensed under the GNU
-LGPL v3. According to the terms of the LGPL, pathos's source may remain under
-the modified BSD license above.
+pathos links against the malachite arbitrary-precision arithmetic library
+(the crates malachite-base, malachite-nz and malachite-q), which is licensed
+under GNU LGPL v3.  See the file licenses/lgpl-3.0.txt for a copy of that
+license.  Note that according to the terms of the LGPL, both pathos's source,
+and the combined work (pathos linked with malachite) may (and do) remain under
+the more permissive modified BSD license.
+
+The other libraries linked into the binary come with malachite and are under
+permissive licenses.  A binary release lists them, with their license files,
+in licenses/ (see scripts/package).

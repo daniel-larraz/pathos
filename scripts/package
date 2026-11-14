@@ -5,9 +5,11 @@
 #
 #   scripts/package <directory>
 #
-# Expects `cargo build --locked --release` to have run. licenses/ gets the
-# licence files each dependency ships and DEPENDENCIES.txt, the name,
-# version and licence of each. Needs cargo and Python 3.
+# Expects `cargo build --locked --release` to have run. licenses/ gets
+# lgpl-3.0.txt from this repository (the licence of malachite, which
+# LICENSE refers to), the licence files each dependency ships, and
+# DEPENDENCIES.txt, the name, version and licence of each. Needs cargo and
+# Python 3.
 
 set -euo pipefail
 
@@ -20,6 +22,8 @@ python="$(command -v python3 || command -v python)"
 
 mkdir -p "$out/licenses"
 cp "$root/target/release/pathos$exe" "$root/LICENSE" "$out/"
+# the licence of malachite, whose crates do not ship its text (see LICENSE)
+cp "$root/licenses/lgpl-3.0.txt" "$out/licenses/"
 cargo metadata --locked --format-version 1 --manifest-path "$root/Cargo.toml" |
   "$python" -c '
 import json, shutil, sys

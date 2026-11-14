@@ -1,0 +1,113 @@
+# Keeping up with Ethos: every night, and on demand, compares pathos's main
+# with the current main of https://github.com/cvc5/ethos (not with the
+# pinned REFERENCE_REV, which is ci.yml's job) on Linux x86-64, with
+# scripts/drift: that Ethos's own tests/, the command-line cases, bignum,
+# the fuzzing findings, and ethos-eoc on the test signatures and on the CPC
+# of logos's main.
+#
+# The job is red when something differs, which means: Ethos has changed in
+# a way pathos does not follow yet. It is not part of CI and blocks nothing.
+# The job summary names the Ethos commit and lists what differs; the JSON
+# reports are artifacts. What to do then is in docs/evidence.md, "Keeping
+# up with Ethos".
+#
+# On demand, `ethos_rev` compares with another revision, e.g. an older one
+# to see what a red run looks like. A push that changes this file or
+# scripts/drift also runs the job (against main), so that a change to the
+# job is tried before it is merged; GitHub starts a workflow on demand or
+# on a schedule only once its file is on the default branch.
+
+name: Drift from Ethos main
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  push:
+    paths:
+      - .github/workflows/drift.yml
+      - scripts/drift
+  workflow_dispatch:
+    inputs:
+      ethos_rev:
+        description: The revision of cvc5/ethos to compare with (branch, tag or commit)
+        default: main
+      logos_rev:
+        description: The revision of logos for the eoc comparison
+        default: main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drift-${{ github.ref }}-${{ inputs.ethos_rev || 'main' }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  drift:
+    name: pathos against Ethos ${{ inputs.ethos_rev || 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      # A scheduled run checks out the default branch, main.
+      - uses: actions/checkout@v7
+
+      - name: Read the pins in difftest.env
+        id: pins
+        run: |
+          source difftest.env
+          echo "harness_repo=${HARNESS_REPO#https://github.com/}" >> "$GITHUB_OUTPUT"
+          echo "harness_commit=$HARNESS_COMMIT" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ steps.pins.outputs.harness_repo }}
+          ref: ${{ steps.pins.outputs.harness_commit }}
+          path: ethos
+
+      - name: Install Ethos's build dependencies and GNU time
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libgmp-dev time
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      # Ethos is built once per commit: the key is completed by the commit
+      # scripts/drift resolves, so a night on which main has not moved
+      # reuses the build.
+      - name: Find the Ethos commit
+        id: ethos
+        env:
+          ETHOS_REV: ${{ inputs.ethos_rev || 'main' }}
+        run: |
+          commit="$(git ls-remote https://github.com/cvc5/ethos "$ETHOS_REV" | head -1 | cut -f1)"
+          echo "commit=${commit:-$ETHOS_REV}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Ethos build
+        uses: actions/cache@v6
+        with:
+          path: target/drift/ref
+          key: drift-ref-${{ steps.ethos.outputs.commit }}-${{ steps.pins.outputs.harness_commit }}
+
+      - name: Compare pathos with Ethos
+        env:
+          ETHOS_HARNESS: ${{ github.workspace }}/ethos
+          ETHOS_REV: ${{ inputs.ethos_rev || 'main' }}
+          LOGOS_REV: ${{ inputs.logos_rev || 'main' }}
+        run: scripts/drift --rev "$ETHOS_REV" --logos-rev "$LOGOS_REV" --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: drift-reports
+          path: target/drift/reports
+          if-no-files-found: ignore

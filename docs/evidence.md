@@ -111,7 +111,10 @@ GMP packages, builds the reference Ethos on each, and runs there:
 
 - `cargo build --release` and `cargo test`, debug and release. On Windows
   with Rust's MSVC toolchain; the release binaries are linked statically
-  on Linux and Windows, as Ethos's are, and uploaded on pushes to `main`;
+  on Linux and Windows, as Ethos's are, and uploaded on pushes to `main`
+  with `LICENSE` and `licenses/` (`scripts/package`): the LGPL v3 text for
+  `malachite`, as Ethos ships it for GMP, and the other dependencies'
+  licence files;
 - the `tests`, `cli` (its command-line cases and the regressions under the
   `--stats` options), `bignum` and `fuzz` gates, and on Windows `tests`
   once more on a checkout with CR LF line ends, which is what Ethos's own
@@ -147,6 +150,62 @@ does on each platform what Ethos does there
 cannot match is a crash: on Windows Ethos ends on an uncaught C++
 exception when a file does not exist, and pathos reports `Couldn't open
 file`; the harness accepts those four cases by name.
+
+## Keeping up with Ethos
+
+Everything above is about one Ethos revision, `REFERENCE_REV` in
+`difftest.env` (`9217112f`). Ethos keeps changing. A workflow of its own,
+`.github/workflows/drift.yml` ("Drift from Ethos main"), runs every night
+and on demand, apart from CI and blocking nothing. On Linux x86-64 it
+builds Ethos and `ethos-eoc` at the current `main` of cvc5/ethos and
+compares pathos's `main` with them, using the pinned harness
+(`scripts/drift`, which also runs locally):
+
+| Comparison | On |
+| --- | --- |
+| `tests` | Ethos `main`'s own `tests/`, so new regressions are included the night they land |
+| `cli` | the harness's command-line cases, and those regressions under the `--stats` options |
+| `bignum` | the large-number cases |
+| `fuzz` | the saved fuzzing findings |
+| `eoc` | `ethos-eoc` against `pathos-eoc` on the test signatures and on the CPC of logos's `main` (`lean --all` and the two desugar runs) |
+
+The cvc5 proofs are not part of it: they need a cvc5 build and the corpus.
+
+The job's summary names the Ethos commit, says whether it is still
+`REFERENCE_REV`, and gives the counts and the cases that differ; the JSON
+reports are kept as an artifact. The job is green when everything agrees
+and red otherwise, so **a red night means: Ethos has changed in a way
+pathos does not follow yet**. It says nothing against pathos at
+`REFERENCE_REV`, which CI keeps checking.
+
+Two runs show both outcomes (2026-11-14, pathos `m16`, logos `b3f0b24b`):
+
+| Ethos | Result |
+| --- | --- |
+| `main`, which is `9217112f`, the pinned revision | green: `tests` 230, `cli` 1,192, `bignum` 7 and `eoc` 1,055 agree, `fuzz` has none still differing. Ethos has not moved since the pin, so this run repeats CI's comparison; it does show that logos's `main` (`b3f0b24b`, newer than the pinned `a3232131`) still compiles the same. Local run of `scripts/drift`. |
+| `6cfb7ba7`, three commits before the pin (on demand, input `ethos_rev`) | red: the four checker comparisons agree, `eoc` differs on 156 of 1,055 cases, the `lean` runs, whose output Ethos PR #255 changed after that commit. This is what a night looks like after Ethos changes the Lean output. Local run of `scripts/drift --rev 6cfb7ba7`. |
+
+When it is red:
+
+1. Read the summary: which Ethos commit, which comparison, which cases.
+   `scripts/drift --rev <commit>` reproduces it; going back commit by
+   commit from Ethos `main` finds the change that did it.
+2. Port the change to pathos, in a milestone of its own, as any other
+   behaviour of Ethos: read the C++ of the commit, match the binary, add
+   tests. If the red is in `build` (Ethos needs something new to build) or
+   the harness cannot handle the new Ethos, the harness needs the change
+   first; that is the harness's owner's.
+3. Move `REFERENCE_REV` (and `HARNESS_COMMIT`, and `LOGOS_REV` if logos
+   moved with it) in `difftest.env` to the new revision in that same
+   milestone, and rerun `scripts/full-check` and `scripts/difftest eoc`.
+   CI and the nightly job are then green again against the same commit.
+4. Until then the job stays red every night, on purpose; it can be
+   switched off in GitHub's Actions page if the port will take long.
+
+Two limits: GitHub stops scheduled workflows in a repository without
+activity for 60 days (starting one by hand turns them on again), and the
+job compares `main` with `main`, so a change on an Ethos branch shows
+only once it is merged.
 
 ## Where pathos differs from Ethos
 

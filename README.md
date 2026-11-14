@@ -58,6 +58,27 @@ scripts/full-check            # everything, about 25 minutes
 scripts/full-check --quick    # without the option and performance gates
 ```
 
+## Keeping up with Ethos
+
+pathos is checked against one Ethos revision, `REFERENCE_REV` in
+[difftest.env](difftest.env). Ethos keeps changing, so a separate workflow,
+[drift.yml](.github/workflows/drift.yml), compares pathos's `main` with the
+current `main` of cvc5/ethos every night (and on demand, also with any
+other revision), on Linux x86-64: Ethos's own regressions at that commit,
+the command-line cases, large-number arithmetic, the fuzzing findings, and
+`ethos-eoc` on the test signatures and on the CPC of logos's `main`. The
+same comparison runs locally:
+
+```sh
+scripts/drift                 # against cvc5/ethos main
+scripts/drift --rev 6cfb7ba7  # against another revision
+```
+
+The job is not part of CI and blocks nothing. A red run means that Ethos
+now does something pathos does not; its summary names the Ethos commit and
+the cases. What to do then is in
+[docs/evidence.md](docs/evidence.md#keeping-up-with-ethos).
+
 ## License
 
 Modified BSD license, as Ethos; see [LICENSE](LICENSE).
