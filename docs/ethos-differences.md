@@ -162,7 +162,8 @@ message; it runs until memory is exhausted.
 ### pathos-eoc (the compiler stages)
 
 `pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with the stages ported
-so far: `desugar`, `desugar-vc` and `trim-defs`. What differs from the C++:
+so far: `desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta` and
+`smt-meta-sygus`. What differs from the C++:
 
 - `ethos-eoc` falls back on the source and build directories CMake
   compiled into it when `ETHOS_PLUGIN_ROOT` or `ETHOS_PLUGIN_OUTPUT_DIR` is
@@ -175,9 +176,8 @@ so far: `desugar`, `desugar-vc` and `trim-defs`. What differs from the C++:
   determine the plugin resource root`, or `... output root`). eoc's driver
   sets neither variable, so a binary the driver runs outside the harness
   must be built with the fallback.
-- The stages not ported yet (`model-smt`, `smt-meta`, `smt-meta-sygus`,
-  `lean-meta`) fail with `pathos-eoc: the plugin "<name>" is not ported
-  yet`.
+- The stage not ported yet, `lean-meta`, fails with `pathos-eoc: the
+  plugin "lean-meta" is not ported yet`.
 - Where a C++ stage aborts inside a hook, the stage here returns an error,
   which is reported when the command being read ends. Anything the rest of
   that command prints comes before the error, where in Ethos it would not
@@ -185,8 +185,21 @@ so far: `desugar`, `desugar-vc` and `trim-defs`. What differs from the C++:
 - Hooks raised inside the checker (a constructor kind, a program) reach
   the stage when the parser raises its next hook or the command ends, not
   at once, and what a stage does to the state raises no hooks for the stage
-  itself. The stages ported so far only record what these hooks say. See
+  itself. No eoc stage of the reference changes the state from a hook
+  (they make terms and read the symbol table), and `smt-meta`, which prints
+  each program when it is told of it, gives the same output. See
   `crates/pathos-elab/src/plugin.rs`.
 - Where the C++ indexes a term's children on the strength of an assertion
   (which a release build does not check), the stage stops with `Desugar:
   unexpected term: ...`. Ethos would read outside the term.
+- The same for `smt-meta`: `SmtMetaReduce: unexpected term: ...`. Its one
+  checked assertion in the C++ (`AlwaysAssert`, on a symbol that is still
+  ambiguous after desugaring) is an error here with pathos's own wording.
+  Not reached in the gate.
+- `model-smt`: the C++'s `failed to read resource` and `failed to write
+  output` errors could not be provoked in the reference, so pathos has no
+  case for them; a write that fails says `failed to open output`.
+- `smt-meta-sygus` orders one map by the addresses of terms
+  (`d_grefs` in `smt_meta_sygus.cpp`). The order does not reach the output:
+  each entry writes to a grammar of its own, and the grammars they name
+  exist by then. pathos visits the entries in the order of their terms.
