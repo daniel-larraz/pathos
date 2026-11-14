@@ -9,7 +9,8 @@
 //! - `typing`: `get_type` and matching;
 //! - `eval`: `evaluate`, programs and the `eo::` operators;
 //! - `step`: what a proof step proves;
-//! - `print`: terms as they appear in messages.
+//! - `print`: terms as they appear in messages;
+//! - `stats`: what `--stats` prints.
 //!
 //! These cannot be separate crates: building an application evaluates and
 //! types terms, and evaluating reads attributes and builds terms.
@@ -19,6 +20,7 @@ mod build;
 mod checker;
 mod eval;
 mod print;
+mod stats;
 mod step;
 mod typing;
 

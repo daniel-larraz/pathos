@@ -107,10 +107,29 @@ message; it runs until memory is exhausted.
   increasing addresses, which it need not do. Nothing in the harness depends
   on it.
 
-### Options (out of scope for now)
+### Options
 
-- `--stats`, `--stats-all` and `--stats-compact` are accepted and print
-  nothing.
+- `--stats`, `--stats-all` and `--stats-compact` print Ethos's statistics
+  with these numbers pathos's own (the harness masks them):
+  - the times;
+  - `mkExprCount` and the `#mkExpr` of each rule: how many times the term
+    store was asked for a symbol, literal or compound term. pathos builds
+    terms in the same places as Ethos but not call for call, so the numbers
+    are close to Ethos's and not equal;
+  - `newExprCount`, `symCount`, `litCount`: the terms, symbols and distinct
+    literals in the store, with the ones pathos makes at start-up (`true`
+    and `false` among them, which Ethos does not count);
+  - `deleteExprCount`: always 0, since the store never deletes a term.
+
+  Rows are ordered by time and then count, as in Ethos, so their order
+  differs from run to run in both. Rows equal in both come in the order
+  their symbols were made; in Ethos, in the order of their addresses.
+- Ethos keys the statistics by the address of the rule or program and holds
+  no reference to it. If Ethos frees a program that has an entry, printing
+  the entry reads freed memory, and a later program at the same address
+  adds to its count. pathos never reuses a term, so it could not match
+  that. Read from `stats.cpp`, not observed: the regressions, the default
+  corpus and the large proofs all agree.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.

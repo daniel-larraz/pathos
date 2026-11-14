@@ -2,9 +2,10 @@
 #   - rust:        formatting, Clippy (warnings are errors), tests in debug
 #                  and release builds
 #   - regressions: pathos against the reference Ethos on Ethos's 230
-#                  regressions, and on the saved fuzzing findings (those from
-#                  proofs are skipped: there is no corpus here), using the
-#                  harness pinned in difftest.env
+#                  regressions, on the saved fuzzing findings (those from
+#                  proofs are skipped: there is no corpus here), and on the
+#                  command-line cases and the regressions under the --stats
+#                  options, using the harness pinned in difftest.env
 #
 # The cvc5 proof gates (proofs, large, options, perf) need a cvc5 build and
 # up to 24 GB of memory, so they run locally with scripts/full-check.
@@ -54,7 +55,7 @@ jobs:
         run: cargo test --release
 
   regressions:
-    name: Agreement with Ethos on its regressions and the fuzzing findings
+    name: Agreement with Ethos on its regressions, the fuzzing findings and the command line
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -107,10 +108,17 @@ jobs:
           ETHOS_HARNESS: ${{ github.workspace }}/ethos
         run: scripts/difftest fuzz
 
+      - name: Compare the command line and the statistics
+        env:
+          ETHOS_HARNESS: ${{ github.workspace }}/ethos
+        run: scripts/difftest tests --cli --stats-option-sets --show-all --report difftest-cli-report.json
+
       - name: Keep the comparison report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: difftest-report
-          path: difftest-report.json
+          path: |
+            difftest-report.json
+            difftest-cli-report.json
           if-no-files-found: ignore

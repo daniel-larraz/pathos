@@ -254,6 +254,7 @@ impl Checker {
             return None;
         }
         let hd = children[0];
+        self.count_program(hd);
         let Some(prog) = self.get_program(hd) else {
             let msg = format!("No program defined for {}", self.show(hd));
             self.warn(&msg);

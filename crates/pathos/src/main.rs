@@ -111,8 +111,9 @@ fn write_line(mut w: impl Write, line: &str) {
     let _ = w.write_all(&bytes);
 }
 
-/// Reads the inputs and returns the verdict.
-fn run(inv: Invocation) -> Result<&'static str> {
+/// Reads the inputs and returns what to print: the verdict and, if asked
+/// for, the statistics.
+fn run(inv: Invocation) -> Result<String> {
     let mut st = State::new(
         inv.opts,
         Box::new(|line| write_line(std::io::stderr().lock(), line)),
@@ -144,11 +145,16 @@ fn run(inv: Invocation) -> Result<&'static str> {
             "the last proof step did not prove false at assumption level zero.",
         ));
     }
-    Ok(if st.ck.used_sorry_rule() {
+    let verdict = if st.ck.used_sorry_rule() {
         "incomplete"
     } else {
         "correct"
-    })
+    };
+    let mut text = format!("{verdict}\n");
+    if st.ck.opts.stats {
+        text.push_str(&st.ck.stats_string());
+    }
+    Ok(text)
 }
 
 fn main() -> ExitCode {
@@ -158,7 +164,7 @@ fn main() -> ExitCode {
         .collect();
     let result = parse_args(&args).and_then(|parsed| match parsed {
         Parsed::Print(text) => Ok(text),
-        Parsed::Run(inv) => run(inv).map(|verdict| format!("{verdict}\n")),
+        Parsed::Run(inv) => run(inv),
     });
     match result {
         Ok(text) => {
