@@ -1,0 +1,292 @@
+#!/usr/bin/env python3
+"""Compares pathos with the reference Ethos on what depends on the platform
+and that the harness's gates do not cover: line endings, end-of-file
+characters, how file names are resolved and printed, and how deep the
+remaining recursions go before the stack ends.
+
+    scripts/platform-probe --ref ETHOS --cand PATHOS [--work DIR] [--no-depths]
+
+Both binaries run on the same small inputs, written to a scratch directory
+(--work, default: a temporary one), with that directory as the working
+directory. For each input the exit status (zero or not), standard output
+and standard error must be the same, byte for byte, apart from Ethos's
+`Fatal failure within` line. Each difference is printed in full.
+
+The depth part measures, for the three recursions of
+docs/ethos-differences.md ("Recursion deeper than the stack"), the longest
+chain each binary gets through, and requires pathos to get at least as far
+as Ethos.
+
+Exits 0 if nothing differs and pathos is never shallower, 1 otherwise.
+Needs only Python 3; runs on Linux, macOS and Windows.
+"""
+
+import argparse
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+TIMEOUT = 300
+
+
+def run(binary, args, cwd, stdin=b""):
+    try:
+        p = subprocess.run([str(binary), *args], cwd=cwd, input=stdin,
+                           capture_output=True, timeout=TIMEOUT)
+    except subprocess.TimeoutExpired:
+        return ("timeout", b"", b"")
+    err = b"\n".join(l for l in p.stderr.split(b"\n")
+                     if not l.startswith(b"Fatal failure within"))
+    return (p.returncode, p.stdout, err)
+
+
+def status_class(code):
+    return "ok" if code == 0 else "timeout" if code == "timeout" else "error"
+
+
+def show(label, result):
+    code, out, err = result
+    print(f"    {label}: exit {code}")
+    print(f"      stdout: {out!r}")
+    print(f"      stderr: {err!r}")
+
+
+# ---------------------------------------------------------------------------
+# Behaviour
+# ---------------------------------------------------------------------------
+
+OK = b"(declare-const a Bool)\n"
+BAD = b"(declare-const a Bool)\n(declare-const b Bool)\n  (foo)\n"
+
+
+def behaviour_cases(work):
+    """Writes the inputs and returns (name, args, stdin) for each case."""
+    def put(name, data):
+        path = work / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+
+    put("ok.eo", OK)
+    put("bad.eo", BAD)
+    put("crlf.eo", BAD.replace(b"\n", b"\r\n"))
+    put("cr.eo", BAD.replace(b"\n", b"\r"))
+    put("crcrlf.eo", BAD.replace(b"\n", b"\r\r\n"))
+    put("echo-crlf.eo", b'(echo "one\r\ntwo\rthree\nfour")\r\n(foo)\r\n')
+    put("ctrlz.eo", b"(declare-const a Bool)\n\x1a\n(foo)\n")
+    put("ctrlz-in-string.eo", b'(echo "x\x1ay")\n(foo)\n')
+    put("ctrlz-last.eo", b"(declare-const a Bool)\n\x1a")
+    put("latin1.eo", b'(echo "caf\xe9 \xff")\n(declare-const \xe9 Bool)\n(\xe9\xe9)\n')
+    put("sub/inc.eo", b"(declare-const a Bool)\n")
+    put("sub/badinc.eo", BAD)
+    put("sub/up.eo", b'(include "../ok.eo")\n(foo)\n')
+    put("inc-slash.eo", b'(include "sub/badinc.eo")\n')
+    put("inc-backslash.eo", b'(include "sub\\badinc.eo")\n')
+    put("inc-dots.eo", b'(include "./sub/../sub/./badinc.eo")\n')
+    put("inc-spaces.eo", b'(include " sub/badinc.eo ")\n')
+    put("inc-missing.eo", b'(include "sub/nothing.eo")\n(foo)\n')
+    put("inc-dir.eo", b'(include "sub")\n(foo)\n')
+    put("inc-twice.eo", b'(include "sub/inc.eo")\n(include "./sub/inc.eo")\n(foo)\n')
+    put("inc-case.eo", b'(include "sub/inc.eo")\n(include "SUB/INC.eo")\n(foo)\n')
+    put("inc-up.eo", b'(include "sub/up.eo")\n')
+    put("proof.smt2", b"(foo)\n")
+    absolute = str((work / "bad.eo").resolve())
+    cases = [
+        ("an error in a file", ["bad.eo"], b""),
+        ("the file named with ./ and ..", ["./sub/../bad.eo"], b""),
+        ("the file named by its absolute path", [absolute], b""),
+        ("the file named with a backslash", ["sub\\badinc.eo"], b""),
+        ("a file that is not there", ["nothing.eo"], b""),
+        ("a directory as the file", ["sub"], b""),
+        ("no file, empty standard input", [], b""),
+        ("an error on standard input", [], BAD),
+        ("CRLF on standard input", [], BAD.replace(b"\n", b"\r\n")),
+        ("Ctrl-Z on standard input", [], b"(declare-const a Bool)\n\x1a\n(foo)\n"),
+        ("CRLF line ends", ["crlf.eo"], b""),
+        ("CR line ends", ["cr.eo"], b""),
+        ("CR CR LF line ends", ["crcrlf.eo"], b""),
+        ("line ends inside a string", ["echo-crlf.eo"], b""),
+        ("Ctrl-Z between commands", ["ctrlz.eo"], b""),
+        ("Ctrl-Z inside a string", ["ctrlz-in-string.eo"], b""),
+        ("Ctrl-Z as the last byte", ["ctrlz-last.eo"], b""),
+        ("bytes above 127", ["latin1.eo"], b""),
+        ("an include with /", ["inc-slash.eo"], b""),
+        ("an include with \\", ["inc-backslash.eo"], b""),
+        ("an include with . and ..", ["inc-dots.eo"], b""),
+        ("an include with spaces around the name", ["inc-spaces.eo"], b""),
+        ("an include that is not there", ["inc-missing.eo"], b""),
+        ("an include of a directory", ["inc-dir.eo"], b""),
+        ("the same include spelled twice", ["inc-twice.eo"], b""),
+        ("the same include in another case", ["inc-case.eo"], b""),
+        ("an include that includes from its parent", ["inc-up.eo"], b""),
+        ("--include of a file with an error", ["--include=sub/badinc.eo", "ok.eo"], b""),
+        ("--include that is not there", ["--include=nothing.eo", "ok.eo"], b""),
+        ("--reference with a proof", ["--reference=ok.eo", "proof.smt2"], b""),
+        ("a correct file", ["ok.eo"], b""),
+        ("--help", ["--help"], b""),
+        ("an unknown option", ["--nope"], b""),
+    ]
+    return cases
+
+
+def probe_behaviour(ref, cand, work):
+    differing = 0
+    for name, args, stdin in behaviour_cases(work):
+        r = run(ref, args, work, stdin)
+        c = run(cand, args, work, stdin)
+        same = (status_class(r[0]) == status_class(c[0])
+                and r[1] == c[1] and r[2] == c[2])
+        print(f"  {'same     ' if same else 'DIFFERENT'} {name}: {' '.join(args)}")
+        if not same:
+            differing += 1
+            show("ethos ", r)
+            show("pathos", c)
+        elif args != ["--help"]:
+            show("both  ", r)
+    return differing
+
+
+# ---------------------------------------------------------------------------
+# Depths
+# ---------------------------------------------------------------------------
+
+def typeof_chain(n):
+    lines = ["(declare-const Int Type)", "(declare-consts <numeral> Int)",
+             "(declare-const f0 (-> Int Int))"]
+    lines += [f"(declare-parameterized-const f{i} ((x Int)) (eo::typeof (f{i - 1} x)))"
+              for i in range(1, n + 1)]
+    lines.append(f"(define y () (f{n} 1) :type Int)")
+    return "\n".join(lines) + "\n"
+
+
+def pairwise_chain(n):
+    lines = ["(declare-const a Bool)", "(declare-const b Bool)",
+             "(declare-const c Bool)", "(declare-const f0 (-> Bool Bool Bool))"]
+    lines += [f"(declare-const f{i} (-> Bool Bool Bool) :pairwise f{i - 1})"
+              for i in range(1, n + 1)]
+    lines.append(f"(define x () (f{n} a b c))")
+    return "\n".join(lines) + "\n"
+
+
+class FileChain:
+    """One generated file per depth tried."""
+
+    def __init__(self, work, name, make):
+        self.dir = work / name
+        self.dir.mkdir(parents=True, exist_ok=True)
+        self.make = make
+
+    def args(self, n):
+        path = self.dir / "chain.eo"
+        path.write_text(self.make(n))
+        return ["chain.eo"]
+
+
+class IncludeChain:
+    """Files i<k>.eo, each including the next; starting at i<limit-n>.eo
+    nests n includes."""
+
+    def __init__(self, work, limit):
+        self.dir = work / "includes"
+        self.dir.mkdir(parents=True, exist_ok=True)
+        self.limit = limit
+        for k in range(limit):
+            (self.dir / f"i{k}.eo").write_text(f'(include "i{k + 1}.eo")\n')
+        (self.dir / f"i{limit}.eo").write_text("(declare-const a Bool)\n")
+
+    def args(self, n):
+        return [f"i{self.limit - n}.eo"]
+
+
+def deepest(binary, chain, limit):
+    """The largest n up to `limit` on which the binary answers `correct`,
+    to within 2%, and what it did just past that."""
+    def result(n):
+        return run(binary, chain.args(n), chain.dir)
+
+    def ok(r):
+        return r[0] == 0 and r[1].split() == [b"correct"]
+
+    low, n, failure = 0, 64, None
+    while n <= limit:
+        r = result(n)
+        if not ok(r):
+            failure = r
+            break
+        low, n = n, n * 2
+    else:
+        r = result(limit)
+        if ok(r):
+            return limit, None
+        failure, n = r, limit
+    high = n
+    while high - low > max(1, low // 50):
+        mid = (low + high) // 2
+        r = result(mid)
+        if ok(r):
+            low = mid
+        else:
+            high, failure = mid, r
+    return low, failure
+
+
+def describe(failure):
+    if failure is None:
+        return "no failure up to the limit tried"
+    code, out, err = failure
+    text = err.decode("latin-1").strip().splitlines()
+    return f"then exit {code}" + (f", {text[-1][:100]!r}" if text else ", nothing printed")
+
+
+def probe_depths(ref, cand, work):
+    shallower = 0
+    chains = [
+        ("f<i> of type (eo::typeof (f<i-1> x))", FileChain(work, "typeof", typeof_chain), 400_000),
+        ("f<i> declared :pairwise f<i-1>", FileChain(work, "pairwise", pairwise_chain), 400_000),
+        ("includes nested", IncludeChain(work, 20_000), 20_000),
+    ]
+    for name, chain, limit in chains:
+        r, r_fail = deepest(ref, chain, limit)
+        c, c_fail = deepest(cand, chain, limit)
+        verdict = "ok       " if c >= r else "SHALLOWER"
+        shallower += c < r
+        print(f"  {verdict} {name} (limit tried {limit})")
+        print(f"    ethos:  {r}; {describe(r_fail)}")
+        print(f"    pathos: {c}; {describe(c_fail)}")
+    return shallower
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--ref", required=True, help="the reference ethos binary")
+    ap.add_argument("--cand", required=True, help="the pathos binary")
+    ap.add_argument("--work", help="scratch directory (emptied first)")
+    ap.add_argument("--no-depths", action="store_true")
+    args = ap.parse_args()
+    ref, cand = Path(args.ref).resolve(), Path(args.cand).resolve()
+    for b in (ref, cand):
+        if not b.is_file():
+            sys.exit(f"platform-probe: no binary at {b}")
+    if args.work:
+        work = Path(args.work).resolve()
+        shutil.rmtree(work, ignore_errors=True)
+        work.mkdir(parents=True)
+    else:
+        work = Path(tempfile.mkdtemp(prefix="platform-probe-")).resolve()
+    print(f"platform: {platform.system()} {platform.machine()}; work: {work}")
+    print("== behaviour")
+    bad = probe_behaviour(ref, cand, work / "behaviour")
+    if not args.no_depths:
+        print("== depths")
+        bad += probe_depths(ref, cand, work / "depths")
+    if not args.work:
+        shutil.rmtree(work, ignore_errors=True)
+    print(f"{bad} problem(s)" if bad else "no differences")
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

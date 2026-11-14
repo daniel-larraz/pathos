@@ -1,9 +1,7 @@
 //! The pathos command-line checker (`main.cpp` in Ethos).
 
 use std::cell::RefCell;
-use std::ffi::OsString;
 use std::io::{IsTerminal, Read, Write};
-use std::os::unix::ffi::OsStringExt;
 use std::process::ExitCode;
 use std::rc::Rc;
 
@@ -191,7 +189,7 @@ fn run(inv: Invocation) -> Result<String> {
 
 /// The bytes of the file, if it can be read.
 fn read_bytes(file: &str) -> Option<Vec<u8>> {
-    std::fs::read(OsString::from_vec(latin1::encode(file))).ok()
+    std::fs::read(latin1::to_os(file)).ok()
 }
 
 /// Loads the signature and writes its snapshot to `target`. Prints nothing:
@@ -216,16 +214,21 @@ fn write_snapshot(inv: &Invocation, target: &str) -> Result<String> {
     st.record_for_snapshot();
     include_file(&mut st, file, file.ends_with(".eo"), false, None)?;
     let bytes = st.write_snapshot(&output.borrow())?;
-    if std::fs::write(OsString::from_vec(latin1::encode(target)), bytes).is_err() {
+    if std::fs::write(latin1::to_os(target), bytes).is_err() {
         return Err(Error::plain(format!("cannot write the snapshot {target}")));
     }
     Ok(String::new())
 }
 
 fn main() -> ExitCode {
+    pathos_elab::on_checker_thread(check)
+}
+
+/// The whole run: reads the command line, checks, and prints the result.
+fn check() -> ExitCode {
     let args: Vec<String> = std::env::args_os()
         .skip(1)
-        .map(|a| latin1::decode(&a.into_vec()))
+        .map(|a| latin1::from_os(&a))
         .collect();
     let result = parse_args(&args).and_then(|parsed| match parsed {
         Parsed::Print(text) => Ok(text),

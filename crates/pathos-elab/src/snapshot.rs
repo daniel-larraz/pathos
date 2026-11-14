@@ -344,8 +344,7 @@ fn try_use(
 
 /// The length of the file, if it is a regular file.
 fn file_len(path: &str) -> Option<u64> {
-    use std::os::unix::ffi::OsStringExt;
-    let os_path = std::ffi::OsString::from_vec(pathos_syntax::latin1::encode(path));
+    let os_path = pathos_syntax::latin1::to_os(path);
     let meta = std::fs::metadata(os_path).ok()?;
     meta.is_file().then_some(meta.len())
 }

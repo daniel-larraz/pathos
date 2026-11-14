@@ -17,7 +17,6 @@ mod std_plugin;
 mod trim_defs;
 
 use std::io::Write;
-use std::os::unix::ffi::OsStringExt;
 use std::process::ExitCode;
 
 use pathos_check::Options;
@@ -215,9 +214,14 @@ fn run(mut inv: Invocation) -> Result<String> {
 }
 
 fn main() -> ExitCode {
+    pathos_elab::on_checker_thread(check)
+}
+
+/// The whole run: reads the command line, checks, and prints the result.
+fn check() -> ExitCode {
     let args: Vec<String> = std::env::args_os()
         .skip(1)
-        .map(|a| latin1::decode(&a.into_vec()))
+        .map(|a| latin1::from_os(&a))
         .collect();
     match parse_args(&args).and_then(run) {
         Ok(text) => {

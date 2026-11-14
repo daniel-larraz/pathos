@@ -103,8 +103,7 @@ pub fn include_file(
 /// The bytes of a file. Paths are byte strings held as described in
 /// `pathos_syntax::latin1`.
 pub(crate) fn read_file(path: &str) -> Result<Vec<u8>> {
-    use std::os::unix::ffi::OsStringExt;
-    let os_path = std::ffi::OsString::from_vec(latin1::encode(path));
+    let os_path = latin1::to_os(path);
     match std::fs::read(&os_path) {
         Ok(bytes) => Ok(bytes),
         // Ethos opens a directory without error and reads nothing from it.
