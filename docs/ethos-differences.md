@@ -28,6 +28,7 @@ the C++.
 | A `:chainable`, `:pairwise` or `:arg-list` operator whose constructor term cannot be computed is applied to Ethos's null expression, printed `[NONE]`: `(= d)` becomes `([NONE])`. Such a term fails to type check with `Unknown kind NONE`. | `State::mkApplyAttr` uses the null `Expr` without checking it. pathos has the same term (`Kind::Null`). | Probed |
 | A failed program application is not tried again in the same evaluation, so `*** Bad number of arguments ...` and `No program defined for ...` appear once per evaluation, not once per occurrence. | `TypeChecker::evaluate` stores the null result in its cache of program applications. | Probed |
 | The nil terminator of an operator with a parameterized terminator is found through the operator's type even if that type does not have two arguments: for `(-> T L)` the "second argument type" is the first child of `L`. | `TypeChecker::evaluateNil` asserts the shape only in debug builds. | Probed |
+| The binding list of a parameterized `:let-binder` operator is built from the wrong terms: `(myLet ((y true)) y)` with `:let-binder (T @cons)` gives `(_ (eo::tuple T @cons) (_ (_ (eo::tuple T) y) true))`, the parameter tuple taken for the pair constructor and the whole tuple for the list constructor. | `State::mkLetBinderList` asserts only in debug builds that the constructor term is a tuple of two, and takes its first two children; for a parameterized operator it is the term pairing the parameters with the tuple. With fewer than two children Ethos reads past their end; pathos then builds no list. | Probed |
 
 ## Where pathos differs
 
@@ -50,6 +51,9 @@ meaningfully. None is in the corpus.
 | The nil terminator of an operator whose type is not a function type, or has too few children for the rule above | Reads past the end of the type's children | The terminator is not found |
 | `(_ bv<n> 0)` in a reference file | Uncaught exception (empty bit string) | The bit-vector of width 0 |
 | `step-pop` when the assumption scope holds no assumption | Reads past the end of a vector | The step fails to check |
+| `(eo::nameof (eo::var))`: `eo::var` without arguments makes a variable with no children | Reads the name past the end of the children; a segmentation fault when probed | Error `Too few arguments when evaluating literal op EVAL_NAME_OF, 1 arguments [eo::var]` |
+| A quoted symbol or string literal whose text, cut at its first NUL character, is the opening quote alone: `\|\0\|`, `"\0"` | Uncaught C++ exception (`basic_string::erase`) | Error `Malformed quoted symbol` or `Malformed string literal` |
+| Recursion deeper than the stack: a literal type rule that asks for the type of its own literal (`(declare-consts <numeral> (eo::typeof eo::self))`), a chain of several thousand declarations whose types or constructor terms each use the one before, or includes nested several thousand deep. See below. | Segmentation fault | `thread 'main' has overflowed its stack`, and the process aborts |
 
 #### Operators without an argument they read
 
@@ -83,7 +87,48 @@ behaviour before. It can run for ever where Ethos crashes: a recursive
 program whose `eo::ite` condition is `(eo::is_eq x)` never stops. It can also
 accept a proof on which Ethos crashes.
 
+#### Recursion deeper than the stack
+
+pathos walks terms, evaluates programs, matches and prints without
+recursion (design decision 8), so the depth of a term or of a program's
+calls is not limited by the stack (nor is it in Ethos: both read a term
+1,000,000 applications deep). Three recursions remain in pathos, each
+where Ethos has the same one:
+
+- typing a term evaluates its type, and evaluating `eo::typeof` types a
+  term (`typing.rs` and `eval.rs`);
+- building an application of an operator with a constructor term builds the
+  constructor term's own application first (`build.rs`);
+- an `include` reads the included file inside the command that names it.
+
+Their depth is the length of a chain of declarations or files, or the
+number of steps of a program in a type that asks for the type of a term
+whose type runs the program again; it is not the size of a term. Measured with the default 8 MiB stack, in release builds:
+
+| Input | Ethos crashes from | pathos aborts from |
+| --- | --- | --- |
+| `f<i>` declared with the type `(eo::typeof (f<i-1> x))` | about 4,900 declarations | about 5,900 |
+| `f<i>` declared `:pairwise f<i-1>` | about 12,800 | about 20,000 |
+| `f<i>.eo` holding `(include "f<i+1>.eo")` | about 236 files | about 9,700 |
+| `(declare-consts <numeral> (eo::typeof eo::self))`, then a numeral | always (the recursion has no end) | always |
+| A constant `g` of type `(P n)`, where `(P n)` is `(eo::typeof (g (eo::add n -1)))`, applied to 1000000 | crashes | aborts |
+
+So on these shapes every input that stops pathos also crashes Ethos, and
+pathos accepts some on which Ethos crashes. A Rust stack overflow is a
+controlled abort (the stack has a guard page), not undefined behaviour, but
+the run ends without an error message. Making these three iterative is
+possible and has not been done; nothing in the corpus nests declarations
+more than a few levels.
+
 ### Size limits
+
+An input can ask for more memory than there is, in both checkers:
+`(declare-sort S 4294967295)` (a type constant of that arity), printing a
+bit-vector literal of width 2^32 - 1, `(eo::pow 3 4294967295)`, or
+`eo::list_repeat` with such a count. pathos then aborts with Rust's `memory
+allocation of <n> bytes failed`, or the system kills it; Ethos throws
+`std::bad_alloc` or is killed.
+
 
 pathos's terms are 32-bit handles. An input that needs more than 2^32 - 1
 terms, or more than 2^32 - 1 children of non-binary terms in total, ends with
@@ -153,8 +198,13 @@ message; it runs until memory is exhausted.
   forgery: a file made on purpose, with a checksum that fits, can hold
   rules or terms that no signature gives, and so make pathos accept a wrong
   proof, or fail on a term of a shape the parser never builds. Reading such
-  a file does not panic and allocates no more than a small multiple of its
-  size.
+  a file does not panic and allocates no more than about 40 times its size.
+  Checking with it can: the checker indexes the children its own terms
+  always have, and a forged snapshot can hold an application without a
+  head, or a builtin whose kind is not a compound one. Such a panic is
+  memory safe (an index check that failed) and loses only the error
+  message. [panics.md](panics.md) lists the places, and
+  [evidence.md](evidence.md) puts the question to the developers.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
@@ -208,5 +258,7 @@ message; it runs until memory is exhausted.
   term: ...`. Its checked assertions (`AlwaysAssert`) print Ethos's text.
   Several of its containers are ordered by address in the C++; none is
   iterated in a way that reaches the output.
+- `trim-defs`: `ethos-eoc` overflows its stack on a command nested about
+  120,000 parentheses deep; `pathos-eoc` reads it.
 - `smt-meta`: on `(echo "smt-meta <name>")` with a name that is not bound,
   Ethos crashes (a segmentation fault); pathos reports an error.

@@ -586,7 +586,12 @@ impl Checker {
             }
             EvalOp::NameOf => {
                 if self.store.kind(first) == Kind::VARIABLE {
-                    return Some(self.store.child(first, 0));
+                    // `(eo::var)` is a variable without children. Ethos
+                    // reads its first child all the same, past the end.
+                    return match self.store.children(first).first() {
+                        Some(&name) => Some(name),
+                        None => self.missing_argument(k, args),
+                    };
                 }
             }
             EvalOp::DtSelectors => {

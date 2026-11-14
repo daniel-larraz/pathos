@@ -100,10 +100,14 @@ impl Checker {
     /// The list of bindings of a let-binder application.
     pub fn mk_let_binder_list(&mut self, binder: Term, lls: &[(Term, Term)]) -> Option<Term> {
         let cons = self.attribute_term(binder)?;
-        if self.store.kind(cons) != Kind::TUPLE || self.store.num_children(cons) != 2 {
+        // The constructor term is the tuple (pair constructor, list
+        // constructor). Ethos asserts that only in debug builds and takes
+        // the first two children of whatever term it is: for a
+        // parameterized binder, of the term that pairs the parameters with
+        // the tuple. With fewer than two children it reads past their end.
+        let &[pair_cons, list_cons, ..] = self.store.children(cons) else {
             return None;
-        }
-        let (pair_cons, list_cons) = (self.store.child(cons, 0), self.store.child(cons, 1));
+        };
         let mut vlist = vec![list_cons];
         for &(v, t) in lls {
             vlist.push(self.mk_expr(Kind::APPLY, &[pair_cons, v, t]));

@@ -189,7 +189,6 @@ fn read_full_command(input: &mut Chars) -> Result<String> {
     Ok(result)
 }
 
-#[derive(Default)]
 struct SExpr {
     is_list: bool,
     is_string: bool,
@@ -197,64 +196,61 @@ struct SExpr {
     children: Vec<SExpr>,
 }
 
-/// The list at the end of `path` in the tree under `root`.
-fn list_at<'a>(root: &'a mut SExpr, path: &[usize]) -> &'a mut SExpr {
-    let mut cur = root;
-    for &i in path {
-        cur = &mut cur.children[i];
+impl SExpr {
+    fn list() -> SExpr {
+        SExpr {
+            is_list: true,
+            is_string: false,
+            value: String::new(),
+            children: Vec::new(),
+        }
     }
-    cur
+}
+
+/// Frees the tree without recursion: a command may nest lists as deep as
+/// its text is long.
+impl Drop for SExpr {
+    fn drop(&mut self) {
+        let mut pending = std::mem::take(&mut self.children);
+        while let Some(mut e) = pending.pop() {
+            pending.append(&mut e.children);
+        }
+    }
 }
 
 fn parse_sexpr(text: &str) -> Result<SExpr> {
     let mut input = Chars::new(text);
-    let mut root = SExpr::default();
-    // The open lists: the root, then the index of each inner one in its
-    // parent. `None` until the root is open.
-    let mut open: Option<Vec<usize>> = None;
-    let mut started = false;
+    // The open lists, the root first. Each is added to its parent when it
+    // closes.
+    let mut open: Vec<SExpr> = Vec::new();
     loop {
         let tok = next_token(&mut input, Some(text))?;
         if tok.is_empty() {
             return Err(malformed("unexpected end of command", Some(text)));
         }
         if tok == "(" {
-            match &mut open {
-                None if !started => {
-                    started = true;
-                    root.is_list = true;
-                    open = Some(Vec::new());
-                }
-                None => return Err(malformed("unexpected `(` after the command", Some(text))),
-                Some(path) => {
-                    let parent = list_at(&mut root, path);
-                    parent.children.push(SExpr {
-                        is_list: true,
-                        ..SExpr::default()
-                    });
-                    path.push(parent.children.len() - 1);
-                }
-            }
+            open.push(SExpr::list());
             continue;
         }
         if tok == ")" {
-            let Some(path) = &mut open else {
+            let Some(closed) = open.pop() else {
                 return Err(malformed("unexpected `)`", Some(text)));
             };
-            if path.pop().is_none() {
+            let Some(parent) = open.last_mut() else {
                 // the root is closed
                 let trailing = next_token(&mut input, Some(text))?;
                 if !trailing.is_empty() {
                     return Err(malformed("trailing text after the command", Some(text)));
                 }
-                return Ok(root);
-            }
+                return Ok(closed);
+            };
+            parent.children.push(closed);
             continue;
         }
-        let Some(path) = &open else {
+        let Some(parent) = open.last_mut() else {
             return Err(malformed("expected `(` at the start", Some(text)));
         };
-        list_at(&mut root, path).children.push(SExpr {
+        parent.children.push(SExpr {
             is_list: false,
             is_string: tok.starts_with('"'),
             value: tok,
@@ -709,6 +705,19 @@ mod tests {
     use pathos_elab::include_file;
 
     use super::*;
+
+    /// Lists nested deeper than the stack could follow are parsed, walked
+    /// and freed without recursion, in time linear in the text.
+    #[test]
+    fn deeply_nested_lists() {
+        let depth = 1_000_000;
+        let text = format!("{}x{}", "(".repeat(depth), ")".repeat(depth));
+        let root = parse_sexpr(&text).unwrap_or_else(|_| panic!("the command is well formed"));
+        let mut symbols = HashSet::new();
+        collect_symbols(&root, &mut symbols);
+        assert!(symbols.contains("x"));
+        assert!(parse_sexpr(&text[1..]).is_err());
+    }
 
     #[test]
     fn tokens() {
