@@ -157,6 +157,14 @@ intended; everything between gates is not.
    default-corpus proof under each of Ethos's eight non-default options and
    under all of them together (6,300 runs). Not covered: the `--stats`
    options, `--help`, `--show-config`, `--include=` and `--reference=`.
+8. **Fuzzing findings:** `scripts/difftest fuzz` reports no finding that
+   still differs. The findings are mutated inputs on which pathos and Ethos
+   behaved differently, kept in the harness under
+   `tools/difftest/fuzz-findings/`; `docs/reviews/fuzz-1.md` sorts the first
+   set by cause. Where Ethos crashes (a segmentation fault, not its normal
+   abort on errors), pathos cannot match it; it must still terminate with an
+   error, without a panic or a hang. Once the gate passes, add it to CI
+   (it runs without the cvc5 corpus and skips the findings that need it).
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.

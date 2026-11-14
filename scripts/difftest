@@ -13,6 +13,8 @@
 #            option and all of them together                 (gate 7)
 #   all      regressions, proofs and large proofs, default options
 #   perf     all, one job at a time, reference rerun         (gates 5, 6)
+#   fuzz     replay the saved fuzzing findings in the harness's
+#            tools/difftest/fuzz-findings/                   (gate 8)
 #
 # Extra options go to `difftest.py run`, e.g. --filter, --show-all, --report.
 # Exits 0 when pathos and the reference agree on every case, 1 otherwise,
@@ -37,7 +39,7 @@ fi
 
 fail() { echo "scripts/difftest: $*" >&2; exit 2; }
 
-[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf [options]"
+[[ $# -ge 1 ]] || fail "usage: scripts/difftest gate1|tests|gate3|proofs|large|options|all|perf|fuzz [options]"
 gate="$1"; shift
 
 [[ -n "${ETHOS_HARNESS:-}" ]] ||
@@ -94,9 +96,25 @@ case "$gate" in
   perf)   args=(--tests "$ETHOS_HARNESS/tests" --corpus "$corpus"
                 --corpus "$large" --timeout "$LARGE_TIMEOUT"
                 --jobs 1 --no-cache) ;;
+  fuzz)   ;;
   *) fail "unknown gate: $gate" ;;
 esac
 
 cargo build --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos
+cand="$root/target/release/pathos"
+
+if [[ "$gate" == fuzz ]]; then
+  # Findings from proof seeds need the corpus; without it they are skipped.
+  replay=(--tests "$ETHOS_HARNESS/tests")
+  [[ -f "$corpus/MANIFEST.json" ]] && replay+=(--corpus "$corpus")
+  rc=0
+  for findings in "$dt"/fuzz-findings/*/; do
+    echo "== ${findings%/}"
+    python3 "$dt/difftest.py" fuzz-replay --ref "$ref" --cand "$cand" \
+      --findings "$findings" "${replay[@]}" "$@" || rc=1
+  done
+  exit $rc
+fi
+
 exec python3 "$dt/difftest.py" run --ref "$ref" --cand "$root/target/release/pathos" \
   "${args[@]}" "$@"

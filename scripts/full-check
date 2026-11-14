@@ -44,11 +44,15 @@ step "cargo clippy" cargo clippy --quiet --all-targets -- -D warnings
 step "cargo test (debug)" cargo test --quiet
 step "cargo test (release)" cargo test --quiet --release
 
-gates=(tests proofs large)
+gates=(tests proofs large fuzz)
 [[ $quick == 0 ]] && gates+=(options perf)
 for gate in "${gates[@]}"; do
-  step "gate $gate" scripts/difftest "$gate" --quiet --show 10 \
-    --report "$out/$gate.json"
+  if [[ $gate == fuzz ]]; then
+    step "gate fuzz" scripts/difftest fuzz --quiet
+  else
+    step "gate $gate" scripts/difftest "$gate" --quiet --show 10 \
+      --report "$out/$gate.json"
+  fi
 done
 
 echo
