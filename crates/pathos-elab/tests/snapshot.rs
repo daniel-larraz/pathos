@@ -93,8 +93,9 @@ fn check(proof: &Path, opts: Options, snapshot: Option<&[u8]>) -> Run {
     let parsed = include_file(&mut st, &path_str(proof), false, false, None);
     // the counts of the statistics; the other lines hold times
     let text = st.ck.stats_string();
-    let stats: Vec<&str> = (text.lines())
+    let stats: Vec<String> = (text.lines())
         .filter(|l| l.starts_with("ruleCount") || l.starts_with("progCount"))
+        .map(sorted_entries)
         .collect();
     Run {
         result: match parsed {
@@ -105,6 +106,34 @@ fn check(proof: &Path, opts: Options, snapshot: Option<&[u8]>) -> Run {
         stats: stats.join("\n"),
         used_snapshot: st.used_snapshot(),
     }
+}
+
+/// A compact statistics line, `name = { a: 1, b: 2 }`, with its entries in
+/// the order of their text. The statistics order them by time taken, which
+/// differs from run to run; what the tests compare is the counts.
+fn sorted_entries(line: &str) -> String {
+    let (Some(open), Some(close)) = (line.find("{ "), line.rfind(" }")) else {
+        return line.to_string();
+    };
+    if close < open + 2 {
+        return line.to_string();
+    }
+    let mut entries: Vec<&str> = line[open + 2..close].split(", ").collect();
+    entries.sort_unstable();
+    format!("{}{} }}", &line[..open + 2], entries.join(", "))
+}
+
+#[test]
+fn statistics_are_compared_without_their_order() {
+    assert_eq!(
+        sorted_entries("ruleCount = { symm: 2, trust: 1 }"),
+        sorted_entries("ruleCount = { trust: 1, symm: 2 }")
+    );
+    assert_ne!(
+        sorted_entries("ruleCount = { symm: 2, trust: 1 }"),
+        sorted_entries("ruleCount = { symm: 1, trust: 2 }")
+    );
+    assert_eq!(sorted_entries("ruleCount = { }"), "ruleCount = { }");
 }
 
 /// The snapshot of the signature file.
@@ -152,7 +181,7 @@ fn a_run_with_a_snapshot_behaves_as_one_without() {
     // `k` is the second term hashed: `three` was, in the signature
     assert!(err.contains("Proves: (_ (= 2) 2)"), "{err}");
     assert!(
-        without.stats.contains("progCount = { $flip: 3"),
+        without.stats.contains("$flip: 3"),
         "{}",
         without.stats
     );
