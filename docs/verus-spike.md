@@ -654,7 +654,15 @@ column, agreement with a semantics, is unchanged.
 
 - `scripts/verify`: `pathos_term` 165 verified, 0 errors; `pathos_check` 2
   verified, 0 errors.
-- `scripts/full-check --quick`: see the milestone's report to the reviewer.
-- `Cargo.lock` is unchanged; no dependency was added.
+- `scripts/full-check --quick`: every step passes, with the numbers of
+  milestone 17: `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43,
+  `cli` 3,192 of 3,192, `snapshot` 6,300 of 6,300, `bignum` 7 of 7, and
+  `fuzz` has no finding that still differs.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass.
+- Speed: the `large` gate, which matches more than anything else, took
+  350.6 s against 350.1 s before the change.
+- `Cargo.lock` is unchanged; no dependency was added. `scripts/unsafe-reach`
+  gives the line counts of milestone 17.
 - `.github/workflows/ci.yml` now also runs on pushes to `verus`.
 
