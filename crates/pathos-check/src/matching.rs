@@ -35,21 +35,23 @@ use crate::checker::Ctx;
         s.has(a),
         s.has(b),
         ctx_ok(s, old(ctx)@),
-        // the pairs seen before were matched, under this context
-        closed(s, old(ctx)@, old(visited)@, Seq::empty()),
     ensures
         ctx_ok(s, final(ctx)@),
         ctx_kept(old(ctx)@, final(ctx)@),
-        // a match found is a match: the context instantiates the pattern
-        // to the term
-        r ==> inst(s, final(ctx)@, a) == s.tree(b.idx()),
-        r ==> is_match(s, final(ctx)@, a, b),
-        r ==> closed(s, final(ctx)@, final(visited)@, Seq::empty()),
         // a ground pattern matches exactly itself
         tree_is_ground(s.tree(a.idx())) ==> r == (a == b),
+        // The rest is said when the pairs seen before were matched, under
+        // this context. (Typing does not always call it so: see
+        // `Checker::get_type_app_internal`.)
+        // A match found is a match: the context instantiates the pattern
+        // to the term.
+        was_closed(s, old(ctx)@, old(visited)@) && r ==> inst(s, final(ctx)@, a) == s.tree(b.idx()),
+        was_closed(s, old(ctx)@, old(visited)@) && r ==> is_match(s, final(ctx)@, a, b),
+        was_closed(s, old(ctx)@, old(visited)@) && r ==> closed(s, final(ctx)@, final(visited)@, Seq::empty()),
         // a pattern without children that is not ground and not a
         // parameter does not match
-        !tree_is_ground(s.tree(a.idx())) && s.kids(a.idx()).len() == 0 && !is_param(s, a) ==> !r,
+        was_closed(s, old(ctx)@, old(visited)@)
+            && !tree_is_ground(s.tree(a.idx())) && s.kids(a.idx()).len() == 0 && !is_param(s, a) ==> !r,
 ))]
 pub(crate) fn match_terms(
     s: &TermStore,
@@ -58,13 +60,16 @@ pub(crate) fn match_terms(
     ctx: &mut Ctx,
     visited: &mut HashSet<(Term, Term)>,
 ) -> bool {
+    // whether the pairs seen before were matched: what is proved of the
+    // match is proved under this
+    proof_decl! { let ghost sound = was_closed(s, ctx@, visited@); }
     proof! {
         axiom_terms_are_ordered();
         axiom_term_pairs_are_keys();
         broadcast use vstd::std_specs::hash::group_hash_axioms;
         broadcast use vstd::std_specs::btree::group_btree_axioms;
         lemma_weight_push(s, Seq::empty(), (a, b));
-        if !tree_is_ground(s.tree(a.idx())) && s.kids(a.idx()).len() == 0 && !is_param(s, a) {
+        if sound && !tree_is_ground(s.tree(a.idx())) && s.kids(a.idx()).len() == 0 && !is_param(s, a) {
             // such a pair cannot have been matched before
             assert(!good(s, old(ctx)@, old(visited)@, Seq::empty(), a, b));
         }
@@ -82,11 +87,11 @@ pub(crate) fn match_terms(
             forall|i: int| 0 <= i < stack@.len() ==> s.has((#[trigger] stack@[i]).0) && s.has(stack@[i].1),
             ctx_ok(s, ctx@),
             ctx_kept(old(ctx)@, ctx@),
-            closed(s, ctx@, visited@, stack@),
-            stack@.contains((a, b)) || resolved(s, visited@, a, b),
+            sound ==> closed(s, ctx@, visited@, stack@),
+            sound ==> stack@.contains((a, b)) || resolved(s, visited@, a, b),
             tree_is_ground(s.tree(a.idx())) ==>
                 stack@ =~= seq![(a, b)] || (stack@.len() == 0 && a == b),
-            !tree_is_ground(s.tree(a.idx())) && s.kids(a.idx()).len() == 0 && !is_param(s, a) ==>
+            sound && !tree_is_ground(s.tree(a.idx())) && s.kids(a.idx()).len() == 0 && !is_param(s, a) ==>
                 stack@ =~= seq![(a, b)] && !visited@.contains((a, b)),
         decreases stack_weight(s, stack@),
     ))]
@@ -97,7 +102,7 @@ pub(crate) fn match_terms(
             let ghost bound = ctx@;
             assert(before =~= head);
             assert(before[before.len() - 1] == (x, y));
-            assert(closed(s, bound, seen, before));
+            assert(sound ==> closed(s, bound, seen, before));
             lemma_weight_push(s, stack@, (x, y));
             lemma_size_positive(s, x);
             assert forall|p: (Term, Term)| #[trigger] before.contains(p) implies stack@.contains(p) || p == (x, y) by {
@@ -110,7 +115,9 @@ pub(crate) fn match_terms(
         if s.is_ground(x) {
             if x == y {
                 proof! {
-                    lemma_closed_step(s, bound, bound, seen, seen, before, stack@);
+                    if sound {
+                        lemma_closed_step(s, bound, bound, seen, seen, before, stack@);
+                    }
                     head = stack@;
                 }
                 continue;
@@ -122,7 +129,9 @@ pub(crate) fn match_terms(
         if !visited.insert((x, y)) {
             proof! {
                 assert(visited@ =~= seen);
-                lemma_closed_step(s, bound, bound, seen, seen, before, stack@);
+                if sound {
+                    lemma_closed_step(s, bound, bound, seen, seen, before, stack@);
+                }
                 head = stack@;
             }
             continue;
@@ -143,8 +152,10 @@ pub(crate) fn match_terms(
                 }
             }
             proof! {
-                assert(good(s, ctx@, visited@, stack@, x, y));
-                lemma_closed_step(s, bound, ctx@, seen, visited@, before, stack@);
+                if sound {
+                    assert(good(s, ctx@, visited@, stack@, x, y));
+                    lemma_closed_step(s, bound, ctx@, seen, visited@, before, stack@);
+                }
                 head = stack@;
             }
         } else {
@@ -177,15 +188,19 @@ pub(crate) fn match_terms(
                     let i = choose|i: int| 0 <= i < rest.len() && rest[i] == p;
                     assert(stack@[i] == p);
                 }
-                assert(good(s, ctx@, visited@, stack@, x, y));
-                lemma_closed_step(s, bound, ctx@, seen, visited@, before, stack@);
+                if sound {
+                    assert(good(s, ctx@, visited@, stack@, x, y));
+                    lemma_closed_step(s, bound, ctx@, seen, visited@, before, stack@);
+                }
                 head = stack@;
             }
         }
     }
     proof! {
         assert(stack@ =~= Seq::empty());
-        lemma_inst(s, ctx@, visited@, a, b);
+        if sound {
+            lemma_inst(s, ctx@, visited@, a, b);
+        }
     }
     true
 }
@@ -425,6 +440,12 @@ pub open spec fn good(s: &TermStore, ctx: Map<Term, Term>, vis: Set<(Term, Term)
 /// Every pair seen is good.
 pub open spec fn closed(s: &TermStore, ctx: Map<Term, Term>, vis: Set<(Term, Term)>, stack: Seq<(Term, Term)>) -> bool {
     forall|p: (Term, Term)| #[trigger] vis.contains(p) ==> good(s, ctx, vis, stack, p.0, p.1)
+}
+
+/// Every pair seen before a call was matched, under the context it is
+/// called with.
+pub open spec fn was_closed(s: &TermStore, ctx: Map<Term, Term>, vis: Set<(Term, Term)>) -> bool {
+    closed(s, ctx, vis, Seq::empty())
 }
 
 /// `x` was matched against `y`: with nothing left to look at, the pair
