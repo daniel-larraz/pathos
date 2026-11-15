@@ -365,7 +365,9 @@ impl Checker {
         if let Some(&h) = self.hashes.get(&t) {
             return h;
         }
-        self.hash_counter += 1;
+        // the counter of a snapshot can be anything: wrap, as a release
+        // build always did
+        self.hash_counter = self.hash_counter.wrapping_add(1);
         self.hashes.insert(t, self.hash_counter);
         self.hash_counter
     }

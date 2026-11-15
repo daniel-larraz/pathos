@@ -8,8 +8,12 @@ use std::collections::{HashMap, HashSet};
 use pathos_term::codec::{Reader, Writer};
 use pathos_term::{Kind, LitKind, Term, TermStore};
 
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
+
 use crate::attr::{AppInfo, Attr};
 use crate::checker::{Checker, Options};
+use crate::matching;
 
 impl Options {
     /// The options that decide what a signature loads as, one byte each. A
@@ -37,16 +41,25 @@ pub fn write_opt_term(w: &mut Writer, t: Option<Term>) {
 }
 
 /// Reads a term of the store.
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(res =>
+    requires store.wf(),
+    ensures res matches Some(t) ==> store.has(t),
+))]
 pub fn read_term(r: &mut Reader, store: &TermStore) -> Option<Term> {
     store.term_with_id(r.u32()?)
 }
 
 /// Reads a term of the store, or none.
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(res =>
+    requires store.wf(),
+    ensures res matches Some(Some(t)) ==> store.has(t),
+))]
 pub fn read_opt_term(r: &mut Reader, store: &TermStore) -> Option<Option<Term>> {
-    match r.u32()? {
-        0 => Some(None),
-        id => store.term_with_id(id).map(Some),
+    let id = r.u32()?;
+    if id == 0 {
+        return Some(None);
     }
+    Some(Some(store.term_with_id(id)?))
 }
 
 /// The entries of a map in the order of their keys, so that the same state
@@ -204,7 +217,8 @@ impl Checker {
             self.proof_type,
         ];
         for t in fixed {
-            if r.u32()? != t.id() {
+            // the same terms as this checker's, and terms of the store read
+            if r.u32()? != t.id() || store.term_with_id(t.id()).is_none() {
                 return None;
             }
         }
@@ -221,6 +235,16 @@ impl Checker {
                 (0, _) => return None,
                 (group, sub) => Some(Kind::from_code(group - 1, sub)?),
             };
+            // a builtin stands for a compound kind: one that `mk_expr` can
+            // build a term of
+            if kind.is_some_and(|k| !matches!(k, Kind::Node(_) | Kind::Eval(_))) {
+                return None;
+            }
+            // a program is a list of cases, as the parser builds them
+            if attr == Attr::Program && cons.is_some_and(|p| !matching::is_program_term(&store, p))
+            {
+                return None;
+            }
             let overloaded = r.bool()?;
             let overload_name = r.str()?.to_string();
             let ai = AppInfo {
