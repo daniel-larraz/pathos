@@ -449,6 +449,18 @@ will decide on later. The rules of the branch:
     The gate: `scripts/verify` and `scripts/full-check --quick` pass, CI is
     green on the `m18-verus-matching` branch, and the report section is
     written. The reviewer pushes and starts CI runs.
+19. **Matching is correct.** Prove the statement milestone 18 wrote down:
+    when `match_terms` succeeds, the context it returns, applied to the
+    pattern as a substitution (on the store's tree view), gives the term;
+    and when `match_cases` returns `Body`, that holds for every argument of
+    the chosen case. Add to the store what this needs, starting with what
+    milestone 18 found missing: that `is_ground` holds exactly for terms
+    whose tree has no parameter. Where Ethos's matching has a quirk that
+    the statement must allow (the types of a parameter and of its binding
+    are not compared; a ground pattern matches only itself), state it as
+    such in the specification rather than leaving it out. Also prove, or
+    list as assumed with the reason, that `match_terms` terminates.
+    The gate: as for milestone 18, on the branch `m19-verus-matching-correct`.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
