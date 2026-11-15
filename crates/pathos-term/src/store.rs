@@ -1996,6 +1996,7 @@ impl TermStore {
             forall|m: int| 0 <= m < self.kids(t.idx()).len() ==>
                 self.has(#[trigger] self.kids(t.idx())[m]) && 0 < self.kids(t.idx())[m].idx() < t.idx(),
             self.kids(t.idx()).len() > 0 ==> self.is_compound(t.idx()),
+            self.kids(t.idx()).len() > 0 ==> self.kind_of(t.idx()) is Node || self.kind_of(t.idx()) is Eval,
     {
         vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
         self.lemma_kids(t.idx());
