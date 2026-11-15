@@ -41,6 +41,7 @@ impl Term {
     /// The handle for a position in the store; `None` for position 0 and
     /// past the 32-bit range.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures match r { Some(t) => t.idx() == i && 1 <= i <= u32::MAX, None => i == 0 || i > u32::MAX },))]
     fn from_index(i: usize) -> Option<Term> {
         let n = NonZeroU32::new(u32::try_from(i).ok()?)?;
         Some(Term(n))
@@ -49,6 +50,7 @@ impl Term {
     /// The handle read back from an interning table, which holds only
     /// non-zero positions.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures slot != 0 ==> r.idx() == slot,))]
     fn from_slot(slot: u32) -> Term {
         match NonZeroU32::new(slot) {
             Some(n) => Term(n),
@@ -57,18 +59,20 @@ impl Term {
     }
 
     /// The first handle.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r.idx() == 1,))]
     fn first() -> Term {
         Term(NonZeroU32::MIN)
     }
 
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.idx(), 1 <= r <= u32::MAX,))]
     fn index(self) -> usize {
         self.0.get() as usize
     }
 
     /// The position of the term in creation order, starting at 1.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.idx(),))]
     pub fn id(self) -> u32 {
         self.0.get()
     }
@@ -350,7 +354,7 @@ fn folded_mul(a: u64, b: u64) -> u64 {
     (full as u64) ^ ((full >> 64) as u64)
 }
 
-#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == spec_hash_node(*keys, tag, children@),))]
 #[inline]
 fn hash_node(keys: &HashKeys, tag: u32, children: &[Term]) -> u64 {
     let mut h = keys.k0 ^ (u64::from(tag) << 32) ^ children.len() as u64;
@@ -370,13 +374,13 @@ fn hash_node(keys: &HashKeys, tag: u32, children: &[Term]) -> u64 {
 
 /// The tag hashed and compared for a compound kind.
 /// The hash of a literal's value.
-#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == spec_hash_lit(*hasher, *lit),))]
 #[inline]
 fn hash_lit(hasher: &RandomState, lit: &Lit) -> u64 {
     hasher.hash_one(lit)
 }
 
-#[cfg_attr(verus_keep_ghost, verus_verify)]
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == spec_tag(kind),))]
 #[inline]
 fn tag_of(kind: Kind) -> u32 {
     match kind {
@@ -440,6 +444,7 @@ impl Default for TermStore {
 
 #[cfg_attr(verus_keep_ghost, verus_verify)]
 impl TermStore {
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r.wf(),))]
     pub fn new() -> TermStore {
         let mut s = TermStore {
             // index 0 is unused, so that handles are non-zero
@@ -470,10 +475,12 @@ impl TermStore {
     }
 
     /// The number of terms made so far.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures r == self.spec_len(),))]
     pub fn len(&self) -> usize {
         self.nodes.len() - 1
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ))]
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
@@ -496,6 +503,26 @@ impl TermStore {
 
     /// Adds a term. Returns `None`, and records the limit, when the store
     /// is full.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => 
+        requires old(self).nodes@.len() == old(self).types@.len() == old(self).flags@.len(),
+        ensures match r {
+            Some(t) => {
+                &&& t.idx() == old(self).nodes@.len()
+                &&& final(self).nodes@ == old(self).nodes@.push(data)
+                &&& final(self).types@ == old(self).types@.push(None)
+                &&& final(self).flags@ == old(self).flags@.push(flags)
+                &&& final(self).limit == old(self).limit
+                &&& final(self).same_but_terms(old(self))
+            },
+            None => {
+                &&& old(self).nodes@.len() == 0 || old(self).nodes@.len() > u32::MAX
+                &&& final(self).nodes@ == old(self).nodes@
+                &&& final(self).types@ == old(self).types@
+                &&& final(self).flags@ == old(self).flags@
+                &&& final(self).same_but_terms(old(self))
+            },
+        },
+    ))]
     fn push(&mut self, data: TermData, flags: u8) -> Option<Term> {
         let Some(t) = Term::from_index(self.nodes.len()) else {
             self.limit = Some(Limit::Terms);
@@ -520,27 +547,35 @@ impl TermStore {
     }
 
     /// The term `Type`.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
     pub fn mk_type(&self) -> Term {
         self.ty_type
     }
 
     /// The term `Bool`.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
     pub fn mk_bool_type(&self) -> Term {
         self.ty_bool
     }
 
     /// The term `eo::?`.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
     pub fn mk_any(&self) -> Term {
         self.any
     }
 
     /// Ethos's null expression: ground, not evaluatable, never typed.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
     pub fn mk_null(&self) -> Term {
         self.null
     }
 
     /// Makes a new symbol with the given type. Never returns an existing
     /// term.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => 
+        requires old(self).wf(), old(self).has(ty),
+        ensures final(self).wf(), final(self).has(r), final(self).extends(old(self)),
+    ))]
     pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
         // there are no more names than terms, so this fits when the term does
         self.mk_count = self.mk_count.wrapping_add(1);
@@ -551,14 +586,29 @@ impl TermStore {
             _ => 0,
         };
         let Some(t) = self.push(TermData::Symbol(kind, name_id), flags) else {
+            proof! { self.lemma_same_terms(old(self)); }
             return self.any;
         };
         self.names.push(name.into());
         self.types[t.index()] = Some(ty);
+        proof! {
+            let n = old(self).nodes@.len() as int;
+            assert forall|i: int| 1 <= i < self.nodes@.len() implies #[trigger] self.node_ok(i) by {
+                if i < n {
+                    old(self).lemma_node(i);
+                }
+            }
+            assert forall|i: int| 1 <= i < n implies #[trigger] self.kids(i) == old(self).kids(i) by {}
+        }
         t
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => 
+        requires self.wf(), 1 <= i < self.nodes@.len(),
+        ensures r == (match self.nodes@[i as int] { TermData::Lit(_, id) => Some(&self.lits@[id as int]), _ => None }),
+    ))]
     fn lit_at(&self, i: usize) -> Option<&Lit> {
+        proof! { self.lemma_node(i as int); }
         match self.nodes[i] {
             TermData::Lit(_, id) => Some(&self.lits[id as usize]),
             _ => None,
@@ -566,6 +616,10 @@ impl TermStore {
     }
 
     /// The term for a literal value; equal values give the same term.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => 
+        requires old(self).wf(),
+        ensures final(self).wf(), final(self).has(r), final(self).extends(old(self)),
+    ))]
     pub fn mk_lit(&mut self, lit: Lit) -> Term {
         self.mk_count = self.mk_count.wrapping_add(1);
         let hash = hash_lit(&self.lit_hasher, &lit);
@@ -593,6 +647,10 @@ impl TermStore {
 
     /// The binary application `(f a)`.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => 
+        requires old(self).wf(), old(self).has(f), old(self).has(a),
+        ensures final(self).wf(), final(self).has(r), final(self).extends(old(self)),
+    ))]
     pub fn mk_apply(&mut self, f: Term, a: Term) -> Term {
         self.mk(Kind::APPLY, &[f, a])
     }
@@ -603,6 +661,13 @@ impl TermStore {
     /// `Type`, `Bool` and `eo::?` are also accepted, without children.
     /// Symbols and literals are made with [`TermStore::mk_symbol`] and
     /// [`TermStore::mk_lit`]; asking for one here is a bug in the caller.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => 
+        requires
+            old(self).wf(),
+            forall|i: int| 0 <= i < children@.len() ==> old(self).has(#[trigger] children@[i]),
+            !(kind is Symbol) && !(kind is Lit),
+        ensures final(self).wf(), final(self).has(r), final(self).extends(old(self)),
+    ))]
     pub fn mk(&mut self, kind: Kind, children: &[Term]) -> Term {
         match kind {
             Kind::Type => return self.ty_type,
@@ -675,6 +740,7 @@ impl TermStore {
     }
 
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), i < self.nodes@.len(), ensures r == self.kind_of(i as int),))]
     fn kind_at(&self, i: usize) -> Kind {
         match self.nodes[i] {
             TermData::Type => Kind::Type,
@@ -690,7 +756,9 @@ impl TermStore {
     }
 
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), 1 <= i < self.nodes@.len(), ensures r@ == self.kids(i as int),))]
     fn children_at(&self, i: usize) -> &[Term] {
+        proof! { self.lemma_node(i as int); }
         match &self.nodes[i] {
             TermData::Apply(c) => c,
             TermData::Node(_, a) | TermData::Eval(_, a) => {
@@ -702,23 +770,29 @@ impl TermStore {
 
     /// What the term is.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ensures r == self.data_of(t.idx()),))]
     pub fn data(&self, t: Term) -> TermData {
         self.nodes[t.index()]
     }
 
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ensures r == self.kind_of(t.idx()),))]
     pub fn kind(&self, t: Term) -> Kind {
         self.kind_at(t.index())
     }
 
     /// The children of a compound term; empty for atoms.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ensures r@ == self.kids(t.idx()), forall|i: int| 0 <= i < r@.len() ==> self.has(#[trigger] r@[i]) && r@[i].idx() < t.idx(),))]
     pub fn children(&self, t: Term) -> &[Term] {
+        proof! { self.lemma_kids(t.idx()); }
         self.children_at(t.index())
     }
 
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ensures r == self.kids(t.idx()).len(),))]
     pub fn num_children(&self, t: Term) -> usize {
+        proof! { self.lemma_kids(t.idx()); }
         match &self.nodes[t.index()] {
             TermData::Apply(_) => 2,
             TermData::Node(_, a) | TermData::Eval(_, a) => a.len as usize,
@@ -729,12 +803,16 @@ impl TermStore {
     /// The `i`-th child. Panics if there is none: callers check the shape of
     /// a term before taking it apart.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), i < self.kids(t.idx()).len(), ensures r == self.kids(t.idx())[i as int], self.has(r),))]
     pub fn child(&self, t: Term, i: usize) -> Term {
+        proof! { self.lemma_kids(t.idx()); }
         self.children_at(t.index())[i]
     }
 
     /// The value of a literal term.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ))]
     pub fn lit(&self, t: Term) -> Option<&Lit> {
+        proof! { self.lemma_node(t.idx()); }
         match self.nodes[t.index()] {
             TermData::Lit(_, id) => Some(&self.lits[id as usize]),
             _ => None,
@@ -742,7 +820,9 @@ impl TermStore {
     }
 
     /// The name of a symbol.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ))]
     pub fn symbol_name(&self, t: Term) -> Option<&str> {
+        proof! { self.lemma_node(t.idx()); }
         match self.nodes[t.index()] {
             TermData::Symbol(_, id) => Some(&self.names[id as usize]),
             _ => None,
@@ -751,25 +831,30 @@ impl TermStore {
 
     /// The cached type of the term, if one has been set.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ensures r matches Some(ty) ==> self.has(ty),))]
     pub fn ty(&self, t: Term) -> Option<Term> {
         self.types[t.index()]
     }
 
     /// Caches the type of the term.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(requires old(self).wf(), old(self).has(t), old(self).has(ty), ensures final(self).wf(), final(self).extends(old(self)),))]
     pub fn set_ty(&mut self, t: Term, ty: Term) {
         self.types[t.index()] = Some(ty);
+        proof! { self.lemma_same_terms(old(self)); }
     }
 
     /// Whether the term contains an `eo::` operator application, a program
     /// symbol or `eo::?`.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ))]
     pub fn is_evaluatable(&self, t: Term) -> bool {
         self.flags[t.index()] & FLAG_EVAL != 0
     }
 
     /// Whether the term contains no parameter and no `eo::?`.
     #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ))]
     pub fn is_ground(&self, t: Term) -> bool {
         self.flags[t.index()] & FLAG_NON_GROUND == 0
     }
@@ -1182,6 +1267,203 @@ impl ConsTable {
         &&& self.len == count_nz(self.slots@)
     }
 }
+
+// ---- the store ----
+
+/// Assumed: the hash of a compound term is a function of the keys, the tag
+/// and the children (`hash_node` is not verified).
+uninterp spec fn spec_hash_node(keys: HashKeys, tag: u32, children: Seq<Term>) -> u64;
+
+/// Assumed: the hash of a literal is a function of the hasher and the value.
+uninterp spec fn spec_hash_lit(hasher: RandomState, lit: Lit) -> u64;
+
+/// The tag hashed and compared for a kind (`tag_of` is not verified).
+uninterp spec fn spec_tag(kind: Kind) -> u32;
+
+/// Assumed: compound kinds have different tags. The test
+/// `compound_kinds_have_different_tags` checks this for every kind.
+#[verifier::external_body]
+proof fn axiom_tags_differ(a: Kind, b: Kind)
+    requires a is Node || a is Eval, b is Node || b is Eval, spec_tag(a) == spec_tag(b),
+    ensures a == b,
+{
+}
+
+pub assume_specification[ <Term as Clone>::clone ](t: &Term) -> (r: Term)
+    ensures r == *t;
+
+impl Term {
+    /// The position of the term in its store.
+    pub closed spec fn idx(self) -> int {
+        self.0@ as int
+    }
+
+    /// Handles at the same position are the same handle.
+    proof fn lemma_eq(a: Term, b: Term)
+        requires a.idx() == b.idx(),
+        ensures a == b,
+    {
+        vstd::std_specs::nonzero::axiom_view_nonzero_from_primitive_eq(a.0);
+        vstd::std_specs::nonzero::axiom_view_nonzero_from_primitive_eq(b.0);
+    }
+}
+
+impl TermStore {
+    /// The store has the term: `t` is a handle this store has given out.
+    pub closed spec fn has(&self, t: Term) -> bool {
+        t.idx() < self.nodes@.len()
+    }
+
+    /// The number of terms.
+    pub closed spec fn spec_len(&self) -> int {
+        self.nodes@.len() - 1
+    }
+
+    /// What the term at a position is.
+    pub closed spec fn data_of(&self, i: int) -> TermData {
+        self.nodes@[i]
+    }
+
+    /// The kind of the term at a position.
+    pub closed spec fn kind_of(&self, i: int) -> Kind {
+        match self.nodes@[i] {
+            TermData::Type => Kind::Type,
+            TermData::BoolType => Kind::BoolType,
+            TermData::Any => Kind::Any,
+            TermData::Null => Kind::Null,
+            TermData::Symbol(k, _) => Kind::Symbol(k),
+            TermData::Lit(k, _) => Kind::Lit(k),
+            TermData::Apply(_) => Kind::Node(NodeKind::Apply),
+            TermData::Node(k, _) => Kind::Node(k),
+            TermData::Eval(op, _) => Kind::Eval(op),
+        }
+    }
+
+    /// The children of the term at a position.
+    pub closed spec fn kids(&self, i: int) -> Seq<Term> {
+        match self.nodes@[i] {
+            TermData::Apply(c) => c@,
+            TermData::Node(_, a) | TermData::Eval(_, a) =>
+                self.child_pool@.subrange(a.start as int, a.start + a.len),
+            _ => Seq::empty(),
+        }
+    }
+
+    spec fn compound(&self, i: int) -> bool {
+        self.nodes@[i] is Apply || self.nodes@[i] is Node || self.nodes@[i] is Eval
+    }
+
+    spec fn args_ok(&self, i: int, a: Args) -> bool {
+        &&& a.start + a.len <= self.child_pool@.len()
+        &&& forall|j: int| a.start <= j < a.start + a.len ==> (#[trigger] self.child_pool@[j]).idx() < i
+    }
+
+    /// The term at position `i` refers only to what the store holds, and
+    /// its children come before it.
+    spec fn node_ok(&self, i: int) -> bool {
+        match self.nodes@[i] {
+            TermData::Apply(c) => c@[0].idx() < i && c@[1].idx() < i,
+            TermData::Node(k, a) => self.args_ok(i, a) && !(k == NodeKind::Apply && a.len == 2),
+            TermData::Eval(_, a) => self.args_ok(i, a),
+            TermData::Symbol(_, id) => id < self.names@.len(),
+            TermData::Lit(_, id) => id < self.lits@.len(),
+            _ => i <= 4,
+        }
+    }
+
+    spec fn node_hash(&self, i: int) -> u64 {
+        spec_hash_node(self.keys, spec_tag(self.kind_of(i)), self.kids(i))
+    }
+
+    spec fn lit_of(&self, i: int) -> Lit {
+        match self.nodes@[i] {
+            TermData::Lit(_, id) => self.lits@[id as int],
+            _ => arbitrary(),
+        }
+    }
+
+    spec fn lit_hash(&self, i: int) -> u64 {
+        spec_hash_lit(self.lit_hasher, self.lit_of(i))
+    }
+
+    /// Everything but the terms and the limit is as in `old`.
+    spec fn same_but_terms(&self, old: &TermStore) -> bool {
+        &&& self.child_pool == old.child_pool
+        &&& self.table == old.table
+        &&& self.names == old.names
+        &&& self.lits == old.lits
+        &&& self.lit_table == old.lit_table
+        &&& self.keys == old.keys
+        &&& self.lit_hasher == old.lit_hasher
+        &&& self.ty_type == old.ty_type
+        &&& self.ty_bool == old.ty_bool
+        &&& self.any == old.any
+        &&& self.null == old.null
+    }
+
+    /// The store after making terms: the terms of `old` are still there,
+    /// and they are the same terms.
+    pub closed spec fn extends(&self, old: &TermStore) -> bool {
+        &&& old.nodes@.len() <= self.nodes@.len()
+        &&& forall|i: int| 0 <= i < old.nodes@.len() ==> #[trigger] self.nodes@[i] == old.nodes@[i]
+        &&& forall|i: int| 1 <= i < old.nodes@.len() ==> #[trigger] self.kids(i) == old.kids(i)
+        &&& forall|i: int| 1 <= i < old.nodes@.len() && old.nodes@[i] is Lit ==> #[trigger] self.lit_of(i) == old.lit_of(i)
+    }
+
+    /// What the invariant says of one term.
+    proof fn lemma_node(&self, i: int)
+        requires self.wf(), 1 <= i < self.nodes@.len(),
+        ensures self.node_ok(i),
+    {
+    }
+
+    /// The children of a term are terms of the store, made before it.
+    proof fn lemma_kids(&self, i: int)
+        requires self.wf(), 1 <= i < self.nodes@.len(),
+        ensures
+            forall|j: int| 0 <= j < self.kids(i).len() ==> (#[trigger] self.kids(i)[j]).idx() < i,
+            self.nodes@[i] is Apply ==> self.kids(i).len() == 2,
+            self.nodes@[i] matches TermData::Node(_, a) ==> self.kids(i).len() == a.len,
+            self.nodes@[i] matches TermData::Eval(_, a) ==> self.kids(i).len() == a.len,
+            !self.compound(i) ==> self.kids(i).len() == 0,
+    {
+        self.lemma_node(i);
+    }
+
+    /// A store with the same terms, names, literals and child pool is well
+    /// formed if the cached types are terms of the store.
+    proof fn lemma_same_terms(&self, old: &TermStore)
+        requires
+            old.wf(),
+            self.nodes@ == old.nodes@,
+            self.flags@ == old.flags@,
+            self.types@.len() == old.types@.len(),
+            forall|i: int| 0 <= i < self.types@.len() ==>
+                (#[trigger] self.types@[i] matches Some(t) ==> t.idx() < self.nodes@.len()),
+            self.same_but_terms(old),
+        ensures self.wf(), self.extends(old),
+    {
+        assert forall|i: int| 1 <= i < self.nodes@.len() implies #[trigger] self.node_ok(i) by {
+            old.lemma_node(i);
+        }
+    }
+
+    /// The invariant of the store.
+    pub closed spec fn wf(&self) -> bool {
+        &&& self.nodes@.len() == self.types@.len() == self.flags@.len()
+        &&& 5 <= self.nodes@.len() <= 0x1_0000_0000
+        &&& self.nodes@[1] is Type && self.nodes@[2] is BoolType && self.nodes@[3] is Any && self.nodes@[4] is Null
+        &&& self.ty_type.idx() == 1 && self.ty_bool.idx() == 2 && self.any.idx() == 3 && self.null.idx() == 4
+        // every handle in the store is a handle of the store
+        &&& forall|i: int| 1 <= i < self.nodes@.len() ==> #[trigger] self.node_ok(i)
+        &&& forall|i: int| 0 <= i < self.types@.len() ==>
+                (#[trigger] self.types@[i] matches Some(t) ==> t.idx() < self.nodes@.len())
+        &&& self.child_pool@.len() <= u32::MAX
+        &&& self.names@.len() < self.nodes@.len()
+        &&& self.lits@.len() < self.nodes@.len()
+    }
+}
+
 
 } // verus!
 
