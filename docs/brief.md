@@ -525,6 +525,37 @@ will decide on later. The rules of the branch:
     green on `m21-verus-eval`, and the report section is written. The
     reviewer pushes and starts CI runs.
 
+22. **Panic freedom of `evaluate`** (agreed after milestone 21's design
+    review, done): the frame stack and its invariant, the two
+    `unreachable!` sites included, on `m22-verus-eval-stack`. Report in
+    `docs/verus-spike.md`, "Milestone 22".
+
+23. **Panic freedom of typing.** `typing.rs` (about 460 lines):
+    `get_type`, `get_type_internal` with its stack, `get_type_app_internal`,
+    `check_arity`, `get_literal_op_type` and the literal type rules. Prove
+    that none of it can panic and that every type it returns is a term of
+    the store, building on milestones 17 to 22. Not its correctness.
+    - **The cycle.** Typing evaluates (`evaluate` is now verified), and the
+      evaluator types (`type_of`, trusted since milestone 21). This
+      milestone replaces that trusted contract with a proof. Say how the
+      two are proved together, for instance one contract that both meet
+      and both rely on, and what remains assumed. The circularity paragraph
+      of the report is then rewritten, or removed if nothing is left of it.
+    - **The callers' preconditions.** Milestone 21 left two preconditions
+      to unverified callers in `build.rs` and `step.rs`: an argument list
+      has a head, and an `eo::ite` has three arguments. State which of them
+      typing discharges. The rest stays for milestone 24 (term building and
+      step checking: `build.rs`, `step.rs`), with an estimate.
+    - **Design first,** as in milestone 21. If typing's traversal needs
+      more than moving code to be visible to Verus, write the design down
+      and stop for review before proving.
+    - **Assumptions** stay listed; termination as for `evaluate`.
+    - **Behaviour** unchanged: every gate agrees with Ethos, the order and
+      text of type-error messages included.
+    The gate: `scripts/verify` and `scripts/full-check --quick` pass, CI is
+    green on `m23-verus-typing`, and the report section is written. The
+    reviewer pushes and starts CI runs.
+
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
 
