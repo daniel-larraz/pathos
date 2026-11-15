@@ -36,6 +36,7 @@ The spike was milestone 17. The work continues on the branch `verus`
 milestone adds a section at the end of this file:
 
 - [Milestone 18: matching cannot panic](#milestone-18-matching-cannot-panic)
+- [Milestone 19: matching is correct](#milestone-19-matching-is-correct)
 
 ## The setup
 
@@ -665,4 +666,213 @@ column, agreement with a semantics, is unchanged.
 - `Cargo.lock` is unchanged; no dependency was added. `scripts/unsafe-reach`
   gives the line counts of milestone 17.
 - `.github/workflows/ci.yml` now also runs on pushes to `verus`.
+
+## Milestone 19: matching is correct
+
+### Summary
+
+- **A match found is a match.** When `match_terms` returns true, the
+  context it leaves, applied to the pattern as a substitution, gives the
+  tree of the term. When `match_cases` returns a body, that holds for every
+  argument of the case it chose. Verus checks 15 items in `pathos-check`
+  and 178 in `pathos-term`, with no errors.
+- **`match_terms` is proved to end.** Milestone 18 listed that as not
+  proved; it is no longer on the list.
+- **The store now says what `is_ground` means:** it holds exactly for terms
+  whose tree has no parameter and no `eo::?`.
+- **Ethos's quirks are in the specification**, as postconditions: types are
+  not compared, a ground pattern matches only itself, and `eo::?` as a
+  pattern matches nothing.
+- **Cost:** about 140 lines of specification and 360 of proof, with no
+  change to the code that runs. My estimate was 100 to 150 and 300 to 500.
+- **Two new assumptions**, both about derived traits of `Term`.
+- **Writing the precondition down found a quirk of Ethos's type checking**
+  that pathos reproduces: a quoted argument rebinds a parameter that an
+  earlier argument bound. See "What the callers must do".
+- **Completeness is not proved:** that when matching fails, no match
+  exists.
+
+### The statement
+
+All of this is in [matching.rs](../crates/pathos-check/src/matching.rs).
+
+**Instantiation.** `inst(s, ctx, x)` is the tree of the pattern `x` with
+the substitution `ctx` applied: a parameter that `ctx` binds becomes the
+tree of the term it is bound to; a term with children is rebuilt, with its
+own kind, from its instantiated children; anything else is its own tree.
+
+**For `match_terms(s, a, b, ctx, visited)`**, with `ctx'` the context
+afterwards:
+
+| Postcondition | In words |
+| --- | --- |
+| `r ==> inst(s, ctx', a) == s.tree(b)` | A match found is a match. |
+| `tree_is_ground(s.tree(a)) ==> r == (a == b)` | A ground pattern matches exactly itself. Because the store's view is injective, that is the same as: exactly the term with the same tree. |
+| `!ground(a) && a has no children && a is not a parameter ==> !r` | `eo::?`, the only such term, matches nothing. |
+| `ctx_kept(ctx, ctx')` | Bindings are only added. |
+
+Types do not appear: `inst` is about trees, and the documentation of
+`inst` and of `match_terms` says that the type of a parameter and the type
+of what it is bound to are not compared, as in Ethos.
+
+**For `match_cases`:** if it returns `Body(t)`, there is a case `i` of the
+program such that `t` is its body, its pattern has as many children as
+there are arguments, and for every argument `m` from 1 on,
+`inst(s, new_ctx, pattern_child[m]) == s.tree(children[m])`.
+
+### How it is proved
+
+- **What the loop keeps true.** Every pair `(x, y)` in `visited` is *good*:
+  `x` is not ground, and either `x` is a parameter bound to `y`, or `x` and
+  `y` have the same kind and number of children and each pair of their
+  children is on the stack, or in `visited`, or ground and equal. Each of
+  the five ways through the loop body keeps this (`lemma_closed_step`).
+- **When the stack is empty**, a good pair is a match, by induction on the
+  pattern (`lemma_inst`). This is where the store's lemmas are used: the
+  tree of a compound term is its kind and its children's trees, a ground
+  pattern instantiates to itself, and a parameter has no children.
+- **Sharing `visited` between calls** is the precondition `closed`: the
+  pairs already in `visited` are good under the context passed in. After a
+  successful call they still are, so the next call may share it.
+- **Across the arguments of a case**, each argument has its own `visited`,
+  and a pair that was matched stays matched when later arguments add
+  bindings (`lemma_matched_kept`).
+
+### Termination
+
+The measure is the sum, over the stack, of the size of each pattern's
+tree, counting a shared subterm each time it occurs. A turn of the loop
+takes one pattern off and puts at most its children on, whose sizes add up
+to one less. The measure is a mathematical natural number, so it does not
+matter that it can be astronomically large for a term with much sharing;
+`visited` only makes the loop end sooner.
+
+A variant that pushes a pair back is rejected with "decreases not
+satisfied".
+
+### What was added to the store
+
+In [store.rs](../crates/pathos-term/src/store.rs):
+
+- **The flag invariant.** `wf` now includes, for every term: a parameter
+  and `eo::?` are flagged not ground, other atoms ground, and a compound
+  term is flagged not ground exactly when one of its children is. `mk`,
+  `mk_symbol`, `mk_lit` and `new` are proved to keep it; in `mk` this is an
+  invariant of the loop that ors the children's flags, proved in the
+  solver's bit-vector mode.
+- **`tree_is_ground`**, a predicate on trees, and the lemma that the flag
+  agrees with it. `TermStore::is_ground` now ensures
+  `r == tree_is_ground(self.tree(t))`.
+- **Three public lemmas** for other crates, since `tree` is closed:
+  children are terms made earlier and a term with children is compound
+  (`lemma_children`); the tree of a compound term (`lemma_tree_compound`);
+  the tree of a parameter (`lemma_tree_param`).
+
+The snapshot reader is still not verified. It computes the flags as `mk`
+does, and is assumed to give a store for which the invariant, now with the
+flags, holds.
+
+### What the callers must do
+
+The callers are not verified. Besides milestone 18's preconditions,
+`match_terms` now requires `closed`: the pairs in `visited` were matched
+under the context passed in. Three callers:
+
+- `match_cases` passes a new `visited` for each argument. Verified.
+- `evaluate_nil` passes a new `visited` and a new context. Holds trivially.
+- `get_type_app` shares `visited` and the context over the arguments of an
+  application, and stops at the first failure. That is the intended use.
+  **But for an argument whose type is `(eo::quote x)` it binds `x` with
+  `ctx.insert`, which replaces a binding `x` already had.** If an earlier
+  argument's type mentioned `x` and matching bound it, the pairs in
+  `visited` were matched under the old binding, and the precondition does
+  not hold for the arguments after.
+
+  I probed it. With `:signature ((BitVec n) (eo::quote n)) (BitVec n)`,
+  the single case `((p x 0) x)` and `a` of type `(BitVec 5)`, the
+  application `(p a 7)` matches no case, so it stays as it is, and it
+  type-checks with type `(BitVec 7)`, in Ethos and in pathos alike: the
+  second argument rebinds `n` and nothing notices that the first
+  disagreed. It shows only on an application that does not evaluate; one
+  that does is replaced by its value before it is typed. pathos
+  reproduces Ethos here, so no gate differs; it is recorded in
+  [ethos-differences.md](ethos-differences.md) and reported as
+  [cvc5/ethos#269](https://github.com/cvc5/ethos/issues/269).
+  Whether it lets a wrong proof through depends on the signature. In the
+  four program signatures with a quoted argument that a search of cvc5's
+  signature files finds, the quoted parameter is in no other argument's
+  type, so it does not arise there; I did not look further than that
+  search. `get_type_app` is in scope for the evaluator's milestone, whose
+  specification will have to state this.
+
+### What is assumed
+
+New in this milestone:
+
+- The derived `==` of `Term` is equality (as milestone 17 assumed for the
+  kinds and for `Lit`).
+- The derived `Hash` and `Eq` of a pair of terms agree, which Verus's model
+  of `HashSet` asks for (`axiom_term_pairs_are_keys`).
+
+No longer assumed: termination of `match_terms`.
+
+### What had to be rewritten
+
+Nothing in the code that runs. Two things about Verus cost time:
+
+- **A recursive predicate over a sequence of subtrees** (`tree_is_ground`)
+  unfolds only when the solver sees the sequence as a field of the tree.
+  One lemma, `lemma_ground_node`, spells that out, and everything else uses
+  the lemma.
+- **A local variable named like a specification function** hides it; the
+  predicate is `is_match` because `match_cases` has a variable `matched`.
+
+### Lines and time
+
+| File | Code | Specification | Proof |
+| --- | --- | --- | --- |
+| `matching.rs` | 84 (was 83) | 151 (was 49) | 208 (was 5) |
+| `store.rs` | 687 (unchanged) | 484 (was 443) | 901 (was 743) |
+
+Verus takes 22 to 38 seconds for `pathos-term`, depending on the run, and 3
+seconds for `pathos-check`.
+
+Ten deliberate faults are each caught: `assert(false)` after the loop;
+dropping the comparison of kinds; dropping the check of an existing
+binding; accepting a ground pattern that is not the term; pushing the
+children swapped; dropping the test for a parameter; returning a body
+without a match; returning the pattern as the body; inverting the ground
+test; and the non-terminating variant above.
+
+### Not proved
+
+- **Completeness:** that when `match_terms` returns false no extension of
+  the context matches, and that `match_cases` returns the first case that
+  matches. It needs the converse direction of the invariant.
+- **That `visited` is only an optimization**, that is, that the result is
+  the same without it.
+
+### The estimate, updated
+
+This milestone came in on its estimate, and the proof is of the kind the
+evaluator will need: an explicit stack, a set of visited pairs, and an
+invariant that says what is still owed. For `match_terms`, 40 lines of
+loop took about 350 lines of specification and proof. `evaluate` has five
+times the loop and builds terms as it goes, so on this evidence its
+agreement with a written semantics is in the range milestone 17 gave
+(8,000 to 12,000 lines), not below it.
+
+### Gates
+
+- `scripts/verify`: `pathos_term` 178 verified, 0 errors; `pathos_check` 15
+  verified, 0 errors.
+- `scripts/full-check --quick`: every step passes, with the numbers of
+  milestone 18: `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43
+  (344 s, against 351 s), `cli` 3,192 of 3,192, `snapshot` 6,300 of 6,300,
+  `bignum` 7 of 7, and `fuzz` has no finding that still differs.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass.
+- `Cargo.lock` is unchanged; no dependency was added. The code that runs
+  did not change (every added line is behind `cfg(verus_keep_ghost)` or
+  inside a proof block), so the dependency trace was not rerun.
 

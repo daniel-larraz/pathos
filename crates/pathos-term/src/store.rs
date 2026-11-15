@@ -494,6 +494,7 @@ impl TermStore {
             .push(TermData::Any, FLAG_EVAL | FLAG_NON_GROUND)
             .unwrap_or(s.any);
         s.null = s.push(TermData::Null, 0).unwrap_or(s.null);
+        proof! { assert((1u8 | 2u8) & 2u8 != 0 && 0u8 & 2u8 == 0) by (bit_vector); }
         s
     }
 
@@ -618,6 +619,8 @@ impl TermStore {
         self.types[t.index()] = Some(ty);
         proof! {
             assert(self.nodes@.take(old(self).nodes@.len() as int) =~= old(self).nodes@);
+            assert(self.flags@.take(old(self).flags@.len() as int) =~= old(self).flags@);
+            assert(1u8 & 2u8 == 0 && 2u8 & 2u8 != 0 && 0u8 & 2u8 == 0) by (bit_vector);
             self.lemma_after_atom(old(self));
         }
         t
@@ -703,6 +706,8 @@ impl TermStore {
         self.lit_table.len += 1;
         proof_decl! {
             assert(self.nodes@.take(start.nodes@.len() as int) =~= start.nodes@);
+            assert(self.flags@.take(start.flags@.len() as int) =~= start.flags@);
+            assert(0u8 & 2u8 == 0) by (bit_vector);
             self.lemma_after_lit(&start, lit, hash, k);
             let ghost added = *self;
         }
@@ -809,18 +814,29 @@ impl TermStore {
         }
         // not found: make it
         let mut flags = 0;
+        proof! { assert(0u8 & 2u8 == 0) by (bit_vector); }
         #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
             iter.seq().unref() == children@,
             *self == before,
             self.wf(),
             forall|i: int| 0 <= i < children@.len() ==> self.has(#[trigger] children@[i]),
+            (flags & 2u8 != 0) == exists|m: int| 0 <= m < iter.index() && self.nonground((#[trigger] children@[m]).idx()),
         ))]
         for c in children {
-            proof! { assert(*c == children@[iter.index() as int]); }
+            proof_decl! {
+                assert(*c == children@[iter.index() as int]);
+                let ghost seen = flags;
+                let ghost its = self.flags@[c.idx()];
+                assert(((seen | its) & 2u8 != 0) == ((seen & 2u8 != 0) || (its & 2u8 != 0))) by (bit_vector);
+            }
             flags |= self.flags[c.index()];
         }
         // An operator applied to nothing counts as a leaf, as in Ethos.
         if matches!(kind, Kind::Eval(_)) && !children.is_empty() {
+            proof_decl! {
+                let ghost seen = flags;
+                assert(((seen | 1u8) & 2u8 != 0) == (seen & 2u8 != 0)) by (bit_vector);
+            }
             flags |= FLAG_EVAL;
         }
         let data = match (kind, children) {
@@ -867,6 +883,11 @@ impl TermStore {
             assert(self.nodes@.take(before.nodes@.len() as int) =~= before.nodes@);
             assert(self.child_pool@.take(before.child_pool@.len() as int) =~= before.child_pool@);
             assert(self.kids(before.nodes@.len() as int) =~= children@);
+            assert(self.flags@.take(before.flags@.len() as int) =~= before.flags@);
+            assert forall|m: int| 0 <= m < children@.len() implies
+                self.nonground((#[trigger] children@[m]).idx()) == before.nonground(children@[m].idx()) by {
+                assert(self.flags@.take(before.flags@.len() as int)[children@[m].idx()] == before.flags@[children@[m].idx()]);
+            }
             self.lemma_after_node(&before, kind, children@, hash, k);
             let ghost added = *self;
         }
@@ -1007,8 +1028,12 @@ impl TermStore {
 
     /// Whether the term contains no parameter and no `eo::?`.
     #[inline]
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires self.wf(), self.has(t),
+        ensures r == tree_is_ground(self.tree(t.idx())),
+    ))]
     pub fn is_ground(&self, t: Term) -> bool {
+        proof! { self.lemma_ground(t.idx()); }
         self.flags[t.index()] & FLAG_NON_GROUND == 0
     }
 
@@ -1463,6 +1488,17 @@ proof fn axiom_tags_differ(a: Kind, b: Kind)
 pub assume_specification[ <Term as Clone>::clone ](t: &Term) -> (r: Term)
     ensures r == *t;
 
+/// Assumed: the derived `==` of term handles is equality.
+impl vstd::std_specs::cmp::PartialEqSpecImpl for Term {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &Term) -> bool {
+        *self == *other
+    }
+}
+
 impl Term {
     /// The position of the term in its store.
     pub closed spec fn idx(self) -> int {
@@ -1493,6 +1529,32 @@ pub enum Tree {
     Lit(Lit),
     /// A compound term is its kind and the trees of its children.
     Node(Kind, Seq<Tree>),
+}
+
+/// No parameter and no `eo::?` occurs in the tree.
+pub open spec fn tree_is_ground(t: Tree) -> bool
+    decreases t,
+{
+    match t {
+        Tree::Symbol(k, _) => k != SymbolKind::Param,
+        Tree::Any => false,
+        Tree::Node(_, cs) => forall|m: int| 0 <= m < cs.len() ==> tree_is_ground(#[trigger] cs[m]),
+        _ => true,
+    }
+}
+
+/// A compound tree is ground exactly when its children are.
+pub proof fn lemma_ground_node(k: Kind, cs: Seq<Tree>)
+    ensures
+        tree_is_ground(Tree::Node(k, cs)) == (forall|m: int| 0 <= m < cs.len() ==> tree_is_ground(#[trigger] cs[m])),
+{
+    let t = Tree::Node(k, cs);
+    assert(t->Node_1 == cs);
+    if tree_is_ground(t) {
+        assert forall|m: int| 0 <= m < cs.len() implies tree_is_ground(#[trigger] cs[m]) by {
+            assert(t->Node_1[m] == cs[m]);
+        }
+    }
 }
 
 impl TermStore {
@@ -1647,6 +1709,8 @@ impl TermStore {
         }
         self.lemma_keep_compound(old);
         self.lemma_keep_symbols(old);
+        assert(self.flags@.take(old.flags@.len() as int) =~= old.flags@);
+        self.lemma_keep_flags(old);
     }
 
     /// The invariant of the store.
@@ -1667,6 +1731,154 @@ impl TermStore {
         &&& self.table_ok()
         &&& self.nodes_differ()
         &&& self.symbols_differ()
+        &&& self.flags_ok()
+    }
+
+    /// The flag of the term at position `i` says that it is not ground.
+    spec fn nonground(&self, i: int) -> bool {
+        self.flags@[i] & 2u8 != 0
+    }
+
+    /// The flag of the term at `i` is right, given those of its children: a
+    /// parameter and `eo::?` are not ground, and a compound term is not
+    /// ground exactly when one of its children is not.
+    spec fn flag_ok(&self, i: int) -> bool {
+        match self.nodes@[i] {
+            TermData::Symbol(k, _) => self.nonground(i) == (k == SymbolKind::Param),
+            TermData::Any => self.nonground(i),
+            TermData::Type | TermData::BoolType | TermData::Null | TermData::Lit(_, _) => !self.nonground(i),
+            _ => self.nonground(i) == exists|m: int|
+                0 <= m < self.kids(i).len() && self.nonground((#[trigger] self.kids(i)[m]).idx()),
+        }
+    }
+
+    spec fn flags_ok(&self) -> bool {
+        forall|i: int| 1 <= i < self.nodes@.len() ==> #[trigger] self.flag_ok(i)
+    }
+
+    /// The flags of `old`'s terms are right in this store too.
+    proof fn lemma_keep_flags(&self, old: &TermStore)
+        requires
+            old.wf(),
+            old.nodes@.len() <= self.nodes@.len(),
+            old.flags@.len() <= self.flags@.len(),
+            forall|i: int| 0 <= i < old.nodes@.len() ==> self.nodes@[i] == old.nodes@[i],
+            self.flags@.take(old.flags@.len() as int) == old.flags@,
+            forall|i: int| 1 <= i < old.nodes@.len() ==> #[trigger] self.kids(i) == old.kids(i),
+            forall|i: int| old.nodes@.len() <= i < self.nodes@.len() ==> #[trigger] self.flag_ok(i),
+        ensures self.flags_ok(),
+    {
+        assert forall|i: int| 0 <= i < old.flags@.len() implies self.flags@[i] == old.flags@[i] by {
+            assert(self.flags@.take(old.flags@.len() as int)[i] == old.flags@[i]);
+        }
+        assert forall|i: int| 1 <= i < self.nodes@.len() implies #[trigger] self.flag_ok(i) by {
+            if i < old.nodes@.len() {
+                assert(old.flag_ok(i));
+                old.lemma_kids(i);
+                assert(self.kids(i) == old.kids(i));
+                assert forall|m: int| 0 <= m < old.kids(i).len() implies
+                    self.nonground((#[trigger] old.kids(i)[m]).idx()) == old.nonground(old.kids(i)[m].idx()) by {
+                    vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(old.kids(i)[m].0);
+                }
+            }
+        }
+    }
+
+    /// The flag agrees with the tree: a term is flagged ground exactly when
+    /// no parameter and no `eo::?` occurs in its tree.
+    proof fn lemma_ground(&self, i: int)
+        requires self.wf(), 1 <= i < self.nodes@.len(),
+        ensures !self.nonground(i) == tree_is_ground(self.tree(i)),
+        decreases i,
+    {
+        self.lemma_node(i);
+        self.lemma_kids(i);
+        assert(self.flag_ok(i));
+        if self.compound(i) {
+            let ks = self.kids(i);
+            let cs = self.child_trees(i);
+            assert forall|m: int| 0 <= m < ks.len() implies
+                !self.nonground((#[trigger] ks[m]).idx()) == tree_is_ground(cs[m]) by {
+                vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(ks[m].0);
+                self.lemma_ground(ks[m].idx());
+            }
+            assert(self.tree(i) == Tree::Node(self.kind_of(i), cs));
+            lemma_ground_node(self.kind_of(i), cs);
+            if self.nonground(i) {
+                let m = choose|m: int| 0 <= m < ks.len() && self.nonground((#[trigger] ks[m]).idx());
+                assert(!tree_is_ground(cs[m]));
+                assert(0 <= m < cs.len());
+                assert(!tree_is_ground(self.tree(i)));
+            } else {
+                assert forall|m: int| 0 <= m < cs.len() implies tree_is_ground(#[trigger] cs[m]) by {
+                    assert(!self.nonground(ks[m].idx()));
+                }
+                assert(tree_is_ground(self.tree(i)));
+            }
+        } else {
+            match self.nodes@[i] {
+                TermData::Symbol(k, id) => {
+                    assert(self.tree(i) == Tree::Symbol(k, id));
+                },
+                TermData::Lit(_, id) => {
+                    assert(self.tree(i) == Tree::Lit(self.lits@[id as int]));
+                },
+                TermData::Any => {
+                    assert(self.tree(i) == Tree::Any);
+                },
+                _ => {
+                    assert(tree_is_ground(self.tree(i)));
+                },
+            }
+        }
+    }
+
+    /// Whether the term at a position is a compound term.
+    pub closed spec fn is_compound(&self, i: int) -> bool {
+        self.compound(i)
+    }
+
+    /// The children of a term are terms of the store, made before it, and a
+    /// term with children is compound.
+    pub proof fn lemma_children(&self, t: Term)
+        requires self.wf(), self.has(t),
+        ensures
+            0 < t.idx(),
+            forall|m: int| 0 <= m < self.kids(t.idx()).len() ==>
+                self.has(#[trigger] self.kids(t.idx())[m]) && 0 < self.kids(t.idx())[m].idx() < t.idx(),
+            self.kids(t.idx()).len() > 0 ==> self.is_compound(t.idx()),
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+        self.lemma_kids(t.idx());
+        assert forall|m: int| 0 <= m < self.kids(t.idx()).len() implies
+            0 < (#[trigger] self.kids(t.idx())[m]).idx() by {
+            vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(self.kids(t.idx())[m].0);
+        }
+    }
+
+    /// The tree of a compound term is its kind and the trees of its
+    /// children.
+    pub proof fn lemma_tree_compound(&self, t: Term)
+        requires self.wf(), self.has(t), self.is_compound(t.idx()),
+        ensures
+            self.tree(t.idx()) matches Tree::Node(k, cs) && k == self.kind_of(t.idx())
+                && cs.len() == self.kids(t.idx()).len()
+                && forall|m: int| 0 <= m < cs.len() ==> cs[m] == self.tree((#[trigger] self.kids(t.idx())[m]).idx()),
+    {
+        self.lemma_children(t);
+        let i = t.idx();
+        assert(self.tree(i) == Tree::Node(self.kind_of(i), self.child_trees(i)));
+    }
+
+    /// The tree of a parameter is a parameter symbol, which is not ground.
+    pub proof fn lemma_tree_param(&self, t: Term)
+        requires self.wf(), self.has(t), self.kind_of(t.idx()) == Kind::Symbol(SymbolKind::Param),
+        ensures
+            self.tree(t.idx()) matches Tree::Symbol(k, _) && k == SymbolKind::Param,
+            !self.is_compound(t.idx()),
+            self.kids(t.idx()).len() == 0,
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
     }
 
     /// The table of compound terms holds exactly those terms, each where a
@@ -1798,6 +2010,8 @@ impl TermStore {
             !(self.nodes@.last() is Apply) ==> self.child_pool@.len() == old.child_pool@.len() + children.len(),
             self.types@ == old.types@.push(None),
             self.flags@.len() == self.nodes@.len(),
+            self.flags@.take(old.flags@.len() as int) == old.flags@,
+            self.flag_ok(old.nodes@.len() as int),
             old.nodes@.len() <= u32::MAX,
             self.lits == old.lits,
             self.names == old.names,
@@ -1850,6 +2064,8 @@ impl TermStore {
         assert forall|i: int| 1 <= i < n && old.nodes@[i] is Lit implies #[trigger] self.lit_of(i) == old.lit_of(i) by {}
         self.lemma_keep_lits(old);
         self.lemma_keep_symbols(old);
+        assert(self.flags@.take(old.flags@.len() as int) =~= old.flags@);
+        self.lemma_keep_flags(old);
         assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.compound(i) implies
             reach(self.table.slots@, self.table.shift, self.node_hash(i), i as u32) by {
             if i < n {
@@ -2028,6 +2244,8 @@ impl TermStore {
         }
         self.lemma_keep_lits(old);
         self.lemma_keep_symbols(old);
+        assert(self.flags@.take(old.flags@.len() as int) =~= old.flags@);
+        self.lemma_keep_flags(old);
         assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.compound(i) implies
             reach(self.table.slots@, self.table.shift, self.node_hash(i), i as u32) by {
             assert(old.compound(i));
@@ -2091,6 +2309,8 @@ impl TermStore {
             forall|i: int| 0 <= i < self.types@.len() ==>
                 (#[trigger] self.types@[i] matches Some(t) ==> t.idx() < self.nodes@.len()),
             self.flags@.len() == self.nodes@.len(),
+            self.flags@.take(old.flags@.len() as int) == old.flags@,
+            self.flag_ok(old.nodes@.len() as int),
             old.nodes@.len() <= u32::MAX,
             self.names@.len() == old.names@.len() + 1,
             self.lits == old.lits,
@@ -2113,6 +2333,8 @@ impl TermStore {
         assert forall|i: int| 1 <= i < n implies #[trigger] self.kids(i) == old.kids(i) by {}
         self.lemma_keep_lits(old);
         self.lemma_keep_compound(old);
+        assert(self.flags@.take(old.flags@.len() as int) =~= old.flags@);
+        self.lemma_keep_flags(old);
         assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.is_symbol_at(i) && #[trigger] self.is_symbol_at(j)
             implies self.name_of(i) != self.name_of(j) by {
             old.lemma_node(i);
@@ -2132,6 +2354,8 @@ impl TermStore {
             self.nodes@.last() matches TermData::Lit(_, id) && id == old.lits@.len(),
             self.types@ == old.types@.push(None),
             self.flags@.len() == self.nodes@.len(),
+            self.flags@.take(old.flags@.len() as int) == old.flags@,
+            self.flag_ok(old.nodes@.len() as int),
             old.nodes@.len() <= u32::MAX,
             self.lits@ == old.lits@.push(lit),
             self.child_pool == old.child_pool,
@@ -2199,6 +2423,8 @@ impl TermStore {
         }
         self.lemma_keep_compound(old);
         self.lemma_keep_symbols(old);
+        assert(self.flags@.take(old.flags@.len() as int) =~= old.flags@);
+        self.lemma_keep_flags(old);
     }
 
     /// The store after its table of literals was replaced by a grown one.
@@ -2244,6 +2470,8 @@ impl TermStore {
         }
         self.lemma_keep_compound(old);
         self.lemma_keep_symbols(old);
+        assert(self.flags@.take(old.flags@.len() as int) =~= old.flags@);
+        self.lemma_keep_flags(old);
     }
 }
 

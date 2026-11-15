@@ -40,3 +40,5 @@ pub use kind::{EvalOp, Kind, LitKind, NodeKind, SymbolKind};
 pub use lit::Lit;
 pub use num::{Integer, Rational};
 pub use store::{Args, Limit, Term, TermData, TermStore};
+#[cfg(verus_keep_ghost)]
+pub use store::{Tree, lemma_ground_node, tree_is_ground};
