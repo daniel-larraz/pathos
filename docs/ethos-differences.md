@@ -12,7 +12,7 @@ the C++.
 ## Reported to Ethos
 
 What below looks like a bug in Ethos was reported upstream on 2026-11-14,
-with a reproducer and the cause in the source: [#257](https://github.com/cvc5/ethos/issues/257), [#258](https://github.com/cvc5/ethos/issues/258), [#259](https://github.com/cvc5/ethos/issues/259), [#260](https://github.com/cvc5/ethos/issues/260), [#261](https://github.com/cvc5/ethos/issues/261), [#262](https://github.com/cvc5/ethos/issues/262), [#263](https://github.com/cvc5/ethos/issues/263), [#264](https://github.com/cvc5/ethos/issues/264), [#265](https://github.com/cvc5/ethos/issues/265), [#266](https://github.com/cvc5/ethos/issues/266), [#267](https://github.com/cvc5/ethos/issues/267), [#268](https://github.com/cvc5/ethos/issues/268). Each row says which. When Ethos fixes one, the drift job
+with a reproducer and the cause in the source: [#257](https://github.com/cvc5/ethos/issues/257), [#258](https://github.com/cvc5/ethos/issues/258), [#259](https://github.com/cvc5/ethos/issues/259), [#260](https://github.com/cvc5/ethos/issues/260), [#261](https://github.com/cvc5/ethos/issues/261), [#262](https://github.com/cvc5/ethos/issues/262), [#263](https://github.com/cvc5/ethos/issues/263), [#264](https://github.com/cvc5/ethos/issues/264), [#265](https://github.com/cvc5/ethos/issues/265), [#266](https://github.com/cvc5/ethos/issues/266), [#267](https://github.com/cvc5/ethos/issues/267), [#268](https://github.com/cvc5/ethos/issues/268). Each row says which. The trie removal ("Terms that Ethos forgets", below) was reported on 2026-11-15: [#271](https://github.com/cvc5/ethos/issues/271). When Ethos fixes one, the drift job
 (`docs/evidence.md`, "Keeping up with Ethos") goes red, and pathos follows
 the fix in a milestone of its own.
 
@@ -246,7 +246,8 @@ step concluding `(P b)` from it, Ethos reports `Unexpected conclusion ...
 Proves: (P (BitVec n)) Expected: (P (BitVec n))` and pathos accepts the
 step.
 
-pathos does not reproduce this. It never deletes a term (design decision 2),
+pathos does not reproduce this; it is reported as
+[#271](https://github.com/cvc5/ethos/issues/271). pathos never deletes a term (design decision 2),
 and reproducing it would take Ethos's reference counts for every temporary
 term, to know when each is deleted, and its trie. The other kinds with a
 varying number of children (tuples, some `eo::` operators) can be affected
