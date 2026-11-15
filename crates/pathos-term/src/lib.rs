@@ -16,6 +16,12 @@
 macro_rules! proof {
     ($($t:tt)*) => {};
 }
+/// Declarations of ghost variables, for Verus only.
+#[cfg(not(verus_keep_ghost))]
+#[allow(unused_macros)]
+macro_rules! proof_decl {
+    ($($t:tt)*) => {};
+}
 #[cfg(verus_keep_ghost)]
 #[allow(unused_imports)]
 use vstd::prelude::*;

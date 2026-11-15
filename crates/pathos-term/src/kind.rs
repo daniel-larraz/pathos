@@ -407,6 +407,7 @@ impl vstd::std_specs::cmp::PartialEqSpecImpl for Kind {
 
 } // verus!
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl Kind {
     pub const PARAM: Kind = Kind::Symbol(SymbolKind::Param);
     pub const CONST: Kind = Kind::Symbol(SymbolKind::Const);
@@ -438,20 +439,24 @@ impl Kind {
 
     /// Whether terms of this kind are user-visible named symbols. Builtin
     /// constants are not, as in Ethos's `isSymbol`.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub fn is_symbol(self) -> bool {
         matches!(self, Kind::Symbol(k) if k != SymbolKind::BuiltinConst)
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub fn is_literal(self) -> bool {
         matches!(self, Kind::Lit(_))
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub fn is_literal_op(self) -> bool {
         matches!(self, Kind::Eval(_))
     }
 
     /// How a term of this kind is written as the head of an s-expression in
     /// printed terms, e.g. `->` or `eo::add`.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub fn to_term_string(self) -> String {
         match self {
             Kind::Type => "Type".into(),

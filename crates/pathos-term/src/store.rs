@@ -25,27 +25,41 @@ use std::num::NonZeroU32;
 use crate::codec::{Reader, Writer};
 use crate::kind::{EvalOp, Kind, LitKind, NodeKind, SymbolKind};
 use crate::lit::Lit;
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
 
 /// A handle to a term in a [`TermStore`].
 ///
 /// Handles are ordered by creation: a term's children always have smaller
 /// handles than the term itself.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub struct Term(NonZeroU32);
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl Term {
     /// The handle for a position in the store; `None` for position 0 and
     /// past the 32-bit range.
     #[inline]
     fn from_index(i: usize) -> Option<Term> {
-        u32::try_from(i).ok().and_then(NonZeroU32::new).map(Term)
+        let n = NonZeroU32::new(u32::try_from(i).ok()?)?;
+        Some(Term(n))
     }
 
     /// The handle read back from an interning table, which holds only
     /// non-zero positions.
     #[inline]
     fn from_slot(slot: u32) -> Term {
-        Term(NonZeroU32::new(slot).unwrap_or(NonZeroU32::MIN))
+        match NonZeroU32::new(slot) {
+            Some(n) => Term(n),
+            None => Term::first(),
+        }
+    }
+
+    /// The first handle.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    fn first() -> Term {
+        Term(NonZeroU32::MIN)
     }
 
     #[inline]
@@ -62,6 +76,7 @@ impl Term {
 
 /// A range of the store's child pool.
 #[derive(Copy, Clone, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub struct Args {
     start: u32,
     len: u32,
@@ -69,6 +84,7 @@ pub struct Args {
 
 /// What a term is.
 #[derive(Copy, Clone, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub enum TermData {
     Type,
     BoolType,
@@ -88,12 +104,15 @@ pub enum TermData {
     Eval(EvalOp, Args),
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 const FLAG_EVAL: u8 = 1;
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 const FLAG_NON_GROUND: u8 = 2;
 
 /// An open-addressing table of term handles. The table does not hold keys:
 /// the caller hashes a key, and compares it with the term behind each handle
 /// the probe meets. Nothing is ever removed.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 struct ConsTable {
     /// Term indices; 0 marks an empty slot.
     slots: Vec<u32>,
@@ -101,8 +120,18 @@ struct ConsTable {
     shift: u32,
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl ConsTable {
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires 6 <= bits <= 63,
+        ensures
+            r.wf(),
+            r.shift == 64 - bits,
+            r.len == 0,
+            forall|i: int| 0 <= i < r.slots@.len() ==> r.slots@[i] == 0,
+    ))]
     fn with_bits(bits: u32) -> ConsTable {
+        proof! { lemma_count_nz_zeros(); }
         ConsTable {
             slots: vec![0; 1 << bits],
             len: 0,
@@ -110,23 +139,54 @@ impl ConsTable {
         }
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires self.wf(),
+        ensures r == path(self.shift, hash, 0), r < self.slots@.len(),
+    ))]
     #[inline]
     fn start(&self, hash: u64) -> usize {
+        proof! { lemma_path_in_range(self.shift, hash, 0); }
         (hash >> self.shift) as usize
     }
 
     #[inline]
     fn needs_growth(&self) -> bool {
-        // keep the table at most 70% full
-        self.len * 10 >= self.slots.len() * 7
+        // keep the table at most 70% full (in 128 bits, where the products
+        // cannot overflow)
+        (self.len as u128) * 10 >= (self.slots.len() as u128) * 7
     }
 
     /// Looks for a handle whose term `is_match`. Returns it, or the empty
     /// slot where it belongs.
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause, verus_spec(r =>
+        requires
+            self.wf(),
+            forall|p: int| 0 <= p < self.slots@.len() && self.slots@[p] != 0 ==>
+                is_match.requires((#[trigger] self.slots@[p] as usize,)),
+        ensures
+            match r {
+                Ok(c) => c != 0 && c <= u32::MAX && is_match.ensures((c,), true)
+                    && exists|p: int| 0 <= p < self.slots@.len() && #[trigger] self.slots@[p] == c,
+                Err(e) => e < self.slots@.len() && self.slots@[e as int] == 0
+                    && exists|k: nat| #[trigger] no_match_before(self.slots@, self.shift, hash, k, is_match)
+                        && e == path(self.shift, hash, k),
+            },
+    ))]
     #[inline]
-    fn find(&self, hash: u64, mut is_match: impl FnMut(usize) -> bool) -> Result<usize, usize> {
+    fn find(&self, hash: u64, is_match: impl Fn(usize) -> bool) -> Result<usize, usize> {
+        proof! { lemma_path_in_range(self.shift, hash, 0); }
         let mask = self.slots.len() - 1;
         let mut i = self.start(hash);
+        proof_decl! { let ghost mut k: nat = 0; }
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            self.wf(),
+            mask == self.slots@.len() - 1,
+            i < self.slots@.len(),
+            i == path(self.shift, hash, k),
+            no_match_before(self.slots@, self.shift, hash, k, is_match),
+            forall|p: int| 0 <= p < self.slots@.len() && self.slots@[p] != 0 ==>
+                is_match.requires((#[trigger] self.slots@[p] as usize,)),
+        ))]
         loop {
             let slot = self.slots[i];
             if slot == 0 {
@@ -135,28 +195,123 @@ impl ConsTable {
             if is_match(slot as usize) {
                 return Ok(slot as usize);
             }
+            proof! { lemma_path_in_range(self.shift, hash, k + 1); }
             i = (i + 1) & mask;
+            proof! { k = k + 1; }
         }
     }
 
     /// Inserts a handle known not to be in the table.
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause, verus_spec(
+        requires old(self).wf(), index != 0,
+        ensures
+            final(self).wf(),
+            final(self).shift == old(self).shift,
+            exists|k: nat| #[trigger] probed(old(self).slots@, old(self).shift, hash, k)
+                && old(self).slots@[path(old(self).shift, hash, k)] == 0
+                && final(self).slots@ == old(self).slots@.update(path(old(self).shift, hash, k), index),
+    ))]
     fn insert_new(&mut self, hash: u64, index: u32) {
+        proof! { lemma_path_in_range(self.shift, hash, 0); }
         let mask = self.slots.len() - 1;
         let mut i = self.start(hash);
+        proof_decl! { let ghost mut k: nat = 0; }
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            self == old(self),
+            self.wf(),
+            mask == self.slots@.len() - 1,
+            i < self.slots@.len(),
+            i == path(self.shift, hash, k),
+            probed(self.slots@, self.shift, hash, k),
+        ))]
         while self.slots[i] != 0 {
+            proof! { lemma_path_in_range(self.shift, hash, k + 1); }
             i = (i + 1) & mask;
+            proof! { k = k + 1; }
+        }
+        proof! {
+            lemma_count_nz_update(self.slots@, i as int, index);
+            lemma_count_nz_bound(self.slots@);
+            lemma_path_in_range(self.shift, hash, 0);
         }
         self.slots[i] = index;
         self.len += 1;
     }
 
     /// A table twice the size with the same handles, hashed by `hash_of`.
-    fn grown(&self, mut hash_of: impl FnMut(usize) -> u64) -> ConsTable {
-        let bits = self.slots.len().trailing_zeros() + 1;
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires
+            self.wf(),
+            forall|p: int| 0 <= p < self.slots@.len() && self.slots@[p] != 0 ==>
+                hash_of.requires((#[trigger] self.slots@[p] as usize,)),
+        ensures
+            r.wf(),
+            forall|p: int| 0 <= p < self.slots@.len() && self.slots@[p] != 0 ==>
+                exists|h: u64| hash_of.ensures((#[trigger] self.slots@[p] as usize,), h)
+                    && #[trigger] reach(r.slots@, r.shift, h, self.slots@[p]),
+            forall|q: int| 0 <= q < r.slots@.len() && r.slots@[q] != 0 ==>
+                exists|p: int| 0 <= p < self.slots@.len() && self.slots@[p] == #[trigger] r.slots@[q],
+    ))]
+    fn grown(&self, hash_of: impl Fn(usize) -> u64) -> ConsTable {
+        proof! {
+            axiom_vec_u32_len(&self.slots);
+            lemma_path_in_range(self.shift, 0, 0);
+            assert(cap_of(1) == 0x8000_0000_0000_0000) by (compute);
+        }
+        let bits = 64 - self.shift + 1;
         let mut table = ConsTable::with_bits(bits);
+        #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
+            iter.seq().unref() == self.slots@,
+            table.wf(),
+            table.shift == self.shift - 1,
+            forall|p: int| 0 <= p < iter.index() && self.slots@[p] != 0 ==>
+                exists|h: u64| hash_of.ensures((#[trigger] self.slots@[p] as usize,), h)
+                    && #[trigger] reach(table.slots@, table.shift, h, self.slots@[p]),
+            forall|q: int| 0 <= q < table.slots@.len() && table.slots@[q] != 0 ==>
+                exists|p: int| 0 <= p < self.slots@.len() && self.slots@[p] == #[trigger] table.slots@[q],
+            forall|p: int| 0 <= p < self.slots@.len() && self.slots@[p] != 0 ==>
+                hash_of.requires((#[trigger] self.slots@[p] as usize,)),
+        ))]
         for &slot in &self.slots {
             if slot != 0 {
-                table.insert_new(hash_of(slot as usize), slot);
+                proof_decl! {
+                    let ghost before = table.slots@;
+                    let ghost at = iter.index() as int;
+                    assert(slot == self.slots@[at]);
+                }
+                let h = hash_of(slot as usize);
+                table.insert_new(h, slot);
+                proof! {
+                    let k = choose|k: nat| #[trigger] probed(before, table.shift, h, k)
+                        && before[path(table.shift, h, k)] == 0
+                        && table.slots@ == before.update(path(table.shift, h, k), slot);
+                    let z = path(table.shift, h, k);
+                    lemma_path_in_range(table.shift, h, k);
+                    // the new handle is where its probe ends
+                    assert(reach_at(table.slots@, table.shift, h, slot, k)) by {
+                        assert forall|j: nat| j < k implies table.slots@[#[trigger] path(table.shift, h, j)] != 0 by {
+                            lemma_path_in_range(table.shift, h, j);
+                        }
+                    }
+                    assert(reach(table.slots@, table.shift, h, slot));
+                    assert(hash_of.ensures((self.slots@[at] as usize,), h));
+                    // and the handles put in before are still where theirs end
+                    assert forall|p: int| 0 <= p < at && self.slots@[p] != 0 implies
+                        exists|h2: u64| hash_of.ensures((#[trigger] self.slots@[p] as usize,), h2)
+                            && #[trigger] reach(table.slots@, table.shift, h2, self.slots@[p]) by {
+                        let h2 = choose|h2: u64| hash_of.ensures((self.slots@[p] as usize,), h2)
+                            && #[trigger] reach(before, table.shift, h2, self.slots@[p]);
+                        lemma_reach_update(before, table.shift, h2, self.slots@[p], z, slot);
+                    }
+                    assert forall|q: int| 0 <= q < table.slots@.len() && table.slots@[q] != 0 implies
+                        exists|p: int| 0 <= p < self.slots@.len() && self.slots@[p] == #[trigger] table.slots@[q] by {
+                        if q == z {
+                            assert(self.slots@[at] == table.slots@[q]);
+                        } else {
+                            assert(before[q] == table.slots@[q]);
+                        }
+                    }
+                }
             }
         }
         table
@@ -168,13 +323,16 @@ impl ConsTable {
 /// so lookups stay short on hostile proofs. Nothing but the layout of the
 /// table depends on the keys.
 #[derive(Copy, Clone)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 struct HashKeys {
     k0: u64,
     k1: u64,
     k2: u64,
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl HashKeys {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
     fn random(state: &RandomState) -> HashKeys {
         // Odd multipliers, so that multiplying by them loses nothing.
         HashKeys {
@@ -192,6 +350,7 @@ fn folded_mul(a: u64, b: u64) -> u64 {
     (full as u64) ^ ((full >> 64) as u64)
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
 #[inline]
 fn hash_node(keys: &HashKeys, tag: u32, children: &[Term]) -> u64 {
     let mut h = keys.k0 ^ (u64::from(tag) << 32) ^ children.len() as u64;
@@ -210,6 +369,14 @@ fn hash_node(keys: &HashKeys, tag: u32, children: &[Term]) -> u64 {
 }
 
 /// The tag hashed and compared for a compound kind.
+/// The hash of a literal's value.
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+#[inline]
+fn hash_lit(hasher: &RandomState, lit: &Lit) -> u64 {
+    hasher.hash_one(lit)
+}
+
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 #[inline]
 fn tag_of(kind: Kind) -> u32 {
     match kind {
@@ -223,6 +390,7 @@ fn tag_of(kind: Kind) -> u32 {
 
 /// A size limit of the store's 32-bit handles and positions.
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub enum Limit {
     /// More than 2^32 - 1 terms.
     Terms,
@@ -240,6 +408,7 @@ impl std::fmt::Display for Limit {
 }
 
 /// The arena of terms. See the module documentation.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub struct TermStore {
     nodes: Vec<TermData>,
     types: Vec<Option<Term>>,
@@ -269,6 +438,7 @@ impl Default for TermStore {
     }
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl TermStore {
     pub fn new() -> TermStore {
         let mut s = TermStore {
@@ -285,10 +455,10 @@ impl TermStore {
             lit_hasher: RandomState::new(),
             limit: None,
             mk_count: 0,
-            ty_type: Term(NonZeroU32::MIN),
-            ty_bool: Term(NonZeroU32::MIN),
-            any: Term(NonZeroU32::MIN),
-            null: Term(NonZeroU32::MIN),
+            ty_type: Term::first(),
+            ty_bool: Term::first(),
+            any: Term::first(),
+            null: Term::first(),
         };
         s.ty_type = s.push(TermData::Type, 0).unwrap_or(s.ty_type);
         s.ty_bool = s.push(TermData::BoolType, 0).unwrap_or(s.ty_bool);
@@ -373,7 +543,7 @@ impl TermStore {
     /// term.
     pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
         // there are no more names than terms, so this fits when the term does
-        self.mk_count += 1;
+        self.mk_count = self.mk_count.wrapping_add(1);
         let name_id = self.names.len() as u32;
         let flags = match kind {
             SymbolKind::ProgramConst => FLAG_EVAL,
@@ -397,8 +567,8 @@ impl TermStore {
 
     /// The term for a literal value; equal values give the same term.
     pub fn mk_lit(&mut self, lit: Lit) -> Term {
-        self.mk_count += 1;
-        let hash = self.lit_hasher.hash_one(&lit);
+        self.mk_count = self.mk_count.wrapping_add(1);
+        let hash = hash_lit(&self.lit_hasher, &lit);
         let slot = match self.lit_table.find(hash, |i| self.lit_at(i) == Some(&lit)) {
             Ok(found) => return Term::from_slot(found as u32),
             Err(slot) => slot,
@@ -413,7 +583,7 @@ impl TermStore {
         self.lit_table.len += 1;
         if self.lit_table.needs_growth() {
             let grown = self.lit_table.grown(|i| match self.lit_at(i) {
-                Some(l) => self.lit_hasher.hash_one(l),
+                Some(l) => hash_lit(&self.lit_hasher, l),
                 None => 0,
             });
             self.lit_table = grown;
@@ -444,7 +614,7 @@ impl TermStore {
             }
             Kind::Node(_) | Kind::Eval(_) => {}
         }
-        self.mk_count += 1;
+        self.mk_count = self.mk_count.wrapping_add(1);
         let tag = tag_of(kind);
         let hash = hash_node(&self.keys, tag, children);
         let found = self.table.find(hash, |cand| {
@@ -467,14 +637,17 @@ impl TermStore {
             (Kind::Node(NodeKind::Apply), &[f, a]) => TermData::Apply([f, a]),
             _ => {
                 // the end of the range must fit too: `children_at` adds
-                let range = u32::try_from(self.child_pool.len())
-                    .ok()
-                    .zip(u32::try_from(children.len()).ok())
-                    .filter(|&(start, len)| start.checked_add(len).is_some());
-                let Some((start, len)) = range else {
+                let (Ok(start), Ok(len)) = (
+                    u32::try_from(self.child_pool.len()),
+                    u32::try_from(children.len()),
+                ) else {
                     self.limit = Some(Limit::Children);
                     return self.any;
                 };
+                if start.checked_add(len).is_none() {
+                    self.limit = Some(Limit::Children);
+                    return self.any;
+                }
                 let args = Args { start, len };
                 match kind {
                     Kind::Node(n) => TermData::Node(n, args),
@@ -602,6 +775,7 @@ impl TermStore {
     }
 
     /// The bytes held by the store's tables, for the benchmark.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub fn heap_bytes(&self) -> usize {
         use std::mem::size_of;
         self.nodes.capacity() * size_of::<TermData>()
@@ -843,6 +1017,173 @@ impl TermStore {
         (id != 0 && (id as usize) <= self.len()).then(|| Term::from_slot(id))
     }
 }
+
+/// The store's invariant and its view as trees, for Verus.
+#[cfg(verus_keep_ghost)]
+verus! {
+
+// pathos is built for 64-bit targets only
+global size_of usize == 8;
+
+pub assume_specification[ RandomState::new ]() -> RandomState;
+
+/// Assumed: a vector's contents take at most `isize::MAX` bytes, as the
+/// standard library guarantees. (Verus does not model allocation: a vector
+/// that cannot be allocated ends the program, by a panic or an abort, and
+/// nothing is proved about that.)
+#[verifier::external_body]
+proof fn axiom_vec_u32_len(v: &Vec<u32>)
+    ensures v@.len() <= 0x1fff_ffff_ffff_ffff,
+{
+}
+
+// ---- the open-addressing table ----
+
+/// The number of slots of a table that shifts hashes by `shift`.
+spec fn cap_of(shift: u32) -> int {
+    (1usize << ((64 - shift) as u32)) as int
+}
+
+/// The slot after `i`, cyclically.
+spec fn next_of(cap: int, i: int) -> int {
+    (((i + 1) as usize) & ((cap - 1) as usize)) as int
+}
+
+/// The `k`-th slot a lookup of `hash` visits.
+spec fn path(shift: u32, hash: u64, k: nat) -> int
+    decreases k,
+{
+    if k == 0 {
+        ((hash >> shift) as usize) as int
+    } else {
+        next_of(cap_of(shift), path(shift, hash, (k - 1) as nat))
+    }
+}
+
+proof fn lemma_path_in_range(shift: u32, hash: u64, k: nat)
+    requires 1 <= shift <= 58,
+    ensures
+        0 <= path(shift, hash, k) < cap_of(shift),
+        64 <= cap_of(shift) <= 0x8000_0000_0000_0000,
+    decreases k,
+{
+    assert(64 <= (1usize << ((64 - shift) as u32)) <= 0x8000_0000_0000_0000) by (bit_vector)
+        requires 1 <= shift <= 58;
+    if k == 0 {
+        assert((hash >> shift) < (1usize << ((64 - shift) as u32))) by (bit_vector)
+            requires 1 <= shift <= 58;
+    } else {
+        lemma_path_in_range(shift, hash, (k - 1) as nat);
+        let i = path(shift, hash, (k - 1) as nat) as usize;
+        let mask = (cap_of(shift) - 1) as usize;
+        assert(((i + 1) as usize & mask) <= mask) by (bit_vector);
+    }
+}
+
+/// The first `k` slots a lookup of `hash` visits are taken.
+spec fn probed(slots: Seq<u32>, shift: u32, hash: u64, k: nat) -> bool {
+    forall|j: nat| j < k ==> slots[#[trigger] path(shift, hash, j)] != 0
+}
+
+/// A lookup of `hash` meets the handle `c` at its `k`-th slot, with no
+/// empty slot before.
+spec fn reach_at(slots: Seq<u32>, shift: u32, hash: u64, c: u32, k: nat) -> bool {
+    probed(slots, shift, hash, k) && slots[path(shift, hash, k)] == c
+}
+
+/// A lookup of `hash` meets the handle `c` before it meets an empty slot.
+spec fn reach(slots: Seq<u32>, shift: u32, hash: u64, c: u32) -> bool {
+    exists|k: nat| reach_at(slots, shift, hash, c, k)
+}
+
+/// The first `k` slots a lookup of `hash` visits hold handles that
+/// `is_match` rejects.
+spec fn no_match_before<F: Fn(usize) -> bool>(slots: Seq<u32>, shift: u32, hash: u64, k: nat, is_match: F) -> bool {
+    forall|j: nat| j < k ==> slots[#[trigger] path(shift, hash, j)] != 0
+        && is_match.ensures((slots[path(shift, hash, j)] as usize,), false)
+}
+
+/// Filling an empty slot leaves every handle where lookups find it.
+proof fn lemma_reach_update(slots: Seq<u32>, shift: u32, hash: u64, c: u32, z: int, v: u32)
+    requires
+        1 <= shift <= 58,
+        slots.len() == cap_of(shift),
+        reach(slots, shift, hash, c),
+        c != 0,
+        0 <= z < slots.len(),
+        slots[z] == 0,
+    ensures reach(slots.update(z, v), shift, hash, c),
+{
+    let k = choose|k: nat| reach_at(slots, shift, hash, c, k);
+    let after = slots.update(z, v);
+    lemma_path_in_range(shift, hash, k);
+    assert forall|j: nat| j < k implies after[#[trigger] path(shift, hash, j)] != 0 by {
+        lemma_path_in_range(shift, hash, j);
+    }
+    assert(reach_at(after, shift, hash, c, k));
+}
+
+/// The number of slots that are taken.
+spec fn count_nz(s: Seq<u32>) -> nat
+    decreases s.len(),
+{
+    if s.len() == 0 {
+        0
+    } else {
+        count_nz(s.drop_last()) + (if s.last() != 0 { 1nat } else { 0nat })
+    }
+}
+
+proof fn lemma_count_nz_bound(s: Seq<u32>)
+    ensures count_nz(s) <= s.len(),
+    decreases s.len(),
+{
+    if s.len() > 0 {
+        lemma_count_nz_bound(s.drop_last());
+    }
+}
+
+proof fn lemma_count_nz_zeros()
+    ensures forall|s: Seq<u32>| (forall|i: int| 0 <= i < s.len() ==> s[i] == 0) ==> #[trigger] count_nz(s) == 0,
+{
+    assert forall|s: Seq<u32>| (forall|i: int| 0 <= i < s.len() ==> s[i] == 0) implies #[trigger] count_nz(s) == 0 by {
+        lemma_count_nz_zeros_of(s);
+    }
+}
+
+proof fn lemma_count_nz_zeros_of(s: Seq<u32>)
+    requires forall|i: int| 0 <= i < s.len() ==> s[i] == 0,
+    ensures count_nz(s) == 0,
+    decreases s.len(),
+{
+    if s.len() > 0 {
+        lemma_count_nz_zeros_of(s.drop_last());
+    }
+}
+
+proof fn lemma_count_nz_update(s: Seq<u32>, i: int, v: u32)
+    requires 0 <= i < s.len(), s[i] == 0, v != 0,
+    ensures count_nz(s.update(i, v)) == count_nz(s) + 1,
+    decreases s.len(),
+{
+    let t = s.update(i, v);
+    if i == s.len() - 1 {
+        assert(t.drop_last() == s.drop_last());
+    } else {
+        assert(t.drop_last() == s.drop_last().update(i, v));
+        lemma_count_nz_update(s.drop_last(), i, v);
+    }
+}
+
+impl ConsTable {
+    spec fn wf(&self) -> bool {
+        &&& 1 <= self.shift <= 58
+        &&& self.slots@.len() == cap_of(self.shift)
+        &&& self.len == count_nz(self.slots@)
+    }
+}
+
+} // verus!
 
 #[cfg(test)]
 mod tests {
