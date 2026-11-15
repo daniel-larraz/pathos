@@ -1055,8 +1055,8 @@ of; it cost a quarter of an hour.
 | `matching.rs` | 93 (was 84) | 164 (was 151) | 218 (was 208) |
 | `snapshot.rs` (`pathos-check`) | 296 (was 271) | 9 | 0 |
 
-Verus takes about 30 seconds for `pathos-term` on an idle machine and 3
-for `pathos-check`.
+Verus takes about 43 seconds for `pathos-term` (it was 22 after milestone
+19) and 3 for `pathos-check`.
 
 ### Can the first question be withdrawn?
 
