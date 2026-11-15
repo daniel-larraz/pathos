@@ -1488,6 +1488,17 @@ proof fn axiom_tags_differ(a: Kind, b: Kind)
 pub assume_specification[ <Term as Clone>::clone ](t: &Term) -> (r: Term)
     ensures r == *t;
 
+/// Assumed: the derived `==` of term handles is equality.
+impl vstd::std_specs::cmp::PartialEqSpecImpl for Term {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &Term) -> bool {
+        *self == *other
+    }
+}
+
 impl Term {
     /// The position of the term in its store.
     pub closed spec fn idx(self) -> int {
@@ -1529,6 +1540,20 @@ pub open spec fn tree_is_ground(t: Tree) -> bool
         Tree::Any => false,
         Tree::Node(_, cs) => forall|m: int| 0 <= m < cs.len() ==> tree_is_ground(#[trigger] cs[m]),
         _ => true,
+    }
+}
+
+/// A compound tree is ground exactly when its children are.
+pub proof fn lemma_ground_node(k: Kind, cs: Seq<Tree>)
+    ensures
+        tree_is_ground(Tree::Node(k, cs)) == (forall|m: int| 0 <= m < cs.len() ==> tree_is_ground(#[trigger] cs[m])),
+{
+    let t = Tree::Node(k, cs);
+    assert(t->Node_1 == cs);
+    if tree_is_ground(t) {
+        assert forall|m: int| 0 <= m < cs.len() implies tree_is_ground(#[trigger] cs[m]) by {
+            assert(t->Node_1[m] == cs[m]);
+        }
     }
 }
 
@@ -1778,11 +1803,11 @@ impl TermStore {
                 self.lemma_ground(ks[m].idx());
             }
             assert(self.tree(i) == Tree::Node(self.kind_of(i), cs));
+            lemma_ground_node(self.kind_of(i), cs);
             if self.nonground(i) {
                 let m = choose|m: int| 0 <= m < ks.len() && self.nonground((#[trigger] ks[m]).idx());
                 assert(!tree_is_ground(cs[m]));
                 assert(0 <= m < cs.len());
-                assert(tree_is_ground(Tree::Node(self.kind_of(i), cs)) ==> tree_is_ground(cs[m]));
                 assert(!tree_is_ground(self.tree(i)));
             } else {
                 assert forall|m: int| 0 <= m < cs.len() implies tree_is_ground(#[trigger] cs[m]) by {
