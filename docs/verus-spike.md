@@ -434,7 +434,14 @@ After the changes, on this machine:
 - `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings` and
   `cargo test` in debug and release builds pass. One test was added
   (`compound_kinds_have_different_tags`).
-- `Cargo.lock` is unchanged.
+- `Cargo.lock` is unchanged. `scripts/unsafe-reach` finds the same 17
+  `unsafe` lines of dependencies in the binaries as before; three counts of
+  lines that are not `unsafe` moved by a few
+  ([dependencies.md](dependencies.md) has the new numbers).
+- Speed: the five slowest proofs of the `large` gate, timed twice each
+  before and after, one at a time: 331 s before and 328 s after for the
+  slowest, and within 0.1 s of each other for the other four (123 s, 34 s,
+  11 s, 10 s).
 
 ## For Daniel
 
