@@ -245,30 +245,6 @@ impl EvalOp {
         )
     }
 
-    /// Whether this is one of the list operators.
-    pub fn is_list_op(self) -> bool {
-        matches!(
-            self,
-            EvalOp::Nil
-                | EvalOp::Cons
-                | EvalOp::ListLength
-                | EvalOp::ListConcat
-                | EvalOp::ListNth
-                | EvalOp::ListFind
-                | EvalOp::ListErase
-                | EvalOp::ListEraseAll
-                | EvalOp::ListRev
-                | EvalOp::ListSetof
-                | EvalOp::ListMinclude
-                | EvalOp::ListMeq
-                | EvalOp::ListDiff
-                | EvalOp::ListInter
-                | EvalOp::ListSingletonElim
-                | EvalOp::ListSingletonIntro
-                | EvalOp::ListRepeat
-        )
-    }
-
     /// The name of the Ethos kind, e.g. `EVAL_ADD`.
     fn kind_name(self) -> &'static str {
         match self {
@@ -571,6 +547,30 @@ impl NodeKind {
 
 #[cfg_attr(verus_keep_ghost, verus_verify)]
 impl EvalOp {
+    /// Whether this is one of the list operators.
+    pub fn is_list_op(self) -> bool {
+        matches!(
+            self,
+            EvalOp::Nil
+                | EvalOp::Cons
+                | EvalOp::ListLength
+                | EvalOp::ListConcat
+                | EvalOp::ListNth
+                | EvalOp::ListFind
+                | EvalOp::ListErase
+                | EvalOp::ListEraseAll
+                | EvalOp::ListRev
+                | EvalOp::ListSetof
+                | EvalOp::ListMinclude
+                | EvalOp::ListMeq
+                | EvalOp::ListDiff
+                | EvalOp::ListInter
+                | EvalOp::ListSingletonElim
+                | EvalOp::ListSingletonIntro
+                | EvalOp::ListRepeat
+        )
+    }
+
     #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
     pub fn from_index(i: usize) -> Option<EvalOp> {
         EvalOp::ALL.get(i).map(|&(op, _)| op)

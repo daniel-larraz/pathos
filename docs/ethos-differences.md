@@ -221,6 +221,15 @@ terms, or more than 2^32 - 1 children of non-binary terms in total, ends with
 That takes tens of gigabytes of memory. Ethos has no such limit and no such
 message; it runs until memory is exhausted.
 
+The store also refuses a term with a number of children that its kind
+cannot have: an application without a head, a lambda, a parameterized term
+or a quoted type without its two (or one) children, a proof term without its
+formula. Nothing in pathos builds such a term, and no input is known that
+makes it try; if one did, the command would end with `Internal error: a term
+with a number of children that its kind cannot have`. The check is there so
+that the evaluator, which takes such terms apart, can be proved not to panic
+(`docs/verus-spike.md`, milestone 21).
+
 ### Not observed, but possible
 
 - **`eo::hash` and `eo::cmp`.** Ethos numbers terms as `eo::hash` first sees
