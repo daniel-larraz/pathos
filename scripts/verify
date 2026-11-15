@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# Checks the proofs in pathos-term with Verus
+# (https://github.com/verus-lang/verus), at the release pinned below. This
+# is what the `verify` job of .github/workflows/ci.yml runs; see
+# docs/verus-spike.md for what is proved and what is assumed.
+#
+#   scripts/verify [--setup] [--verus DIR] [-- VERUS-OPTIONS]
+#
+#   --setup   install what is missing: the Verus release, into
+#             target/verus (downloaded from GitHub and checked against the
+#             SHA-256 below), and the Rust toolchain that release names,
+#             with rustup. Without it the script says what is missing and
+#             stops.
+#   --verus   a directory holding the release's files (default:
+#             target/verus/verus-x86-linux)
+#
+# pathos does not depend on Verus's libraries: the specifications are
+# compiled only under cfg(verus_keep_ghost), which Verus sets, and Verus
+# brings its own copy of its library. So this script builds pathos-term's
+# real dependencies (malachite) with Cargo and the toolchain Verus uses,
+# and runs Verus on crates/pathos-term/src/lib.rs against them. Nothing in
+# Cargo.toml or Cargo.lock mentions Verus.
+#
+# Exits 0 if everything verifies, 1 if a proof fails or fewer proof
+# obligations were checked than expected (which would mean that
+# specifications were dropped), 2 if the setup is wrong. Linux x86-64 only:
+# the release is pinned for that platform.
+
+set -uo pipefail
+
+# The pin. To move it: change the three values, run the script, and update
+# docs/verus-spike.md ("The setup").
+VERUS_VERSION=0.2026.11.02.8bf68ee
+VERUS_SHA256=f3a0119292df8855e4435da8130bee1873b0e6a60c306accf81a08ea687bba3c
+VERUS_TOOLCHAIN=1.99.1-x86_64-unknown-linux-gnu
+# The number of functions and proofs Verus checked when this was last
+# changed. Fewer is an error; more is expected as proofs are added.
+MIN_VERIFIED=165
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fail() { echo "scripts/verify: $*" >&2; exit 2; }
+
+setup=0
+verus_dir="$root/target/verus/verus-x86-linux"
+extra=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --setup) setup=1; shift ;;
+    --verus) verus_dir="$2"; shift 2 ;;
+    --) shift; extra=("$@"); break ;;
+    *) fail "unknown argument: $1 (see the header of this script)" ;;
+  esac
+done
+
+[[ "$(uname -s)-$(uname -m)" == Linux-x86_64 ]] ||
+  fail "the Verus release is pinned for Linux x86-64 only"
+
+# The release.
+if [[ ! -x "$verus_dir/verus" ]]; then
+  [[ $setup == 1 ]] ||
+    fail "no Verus in $verus_dir; run scripts/verify --setup to download release $VERUS_VERSION"
+  zip="verus-$VERUS_VERSION-x86-linux.zip"
+  dest="$(dirname "$verus_dir")"
+  mkdir -p "$dest"
+  echo "downloading Verus $VERUS_VERSION"
+  curl --fail --silent --show-error --location --output "$dest/$zip" \
+    "https://github.com/verus-lang/verus/releases/download/release/$VERUS_VERSION/$zip" ||
+    fail "cannot download $zip"
+  echo "$VERUS_SHA256  $dest/$zip" | sha256sum --check --quiet ||
+    fail "$zip does not have the pinned SHA-256"
+  unzip -q -o "$dest/$zip" -d "$dest" || fail "cannot unpack $zip"
+  rm -f "$dest/$zip"
+  [[ -x "$dest/verus-x86-linux/verus" ]] || fail "the archive holds no verus-x86-linux/verus"
+  verus_dir="$dest/verus-x86-linux"
+fi
+grep -q "\"version\": \"$VERUS_VERSION\"" "$verus_dir/version.json" 2>/dev/null ||
+  fail "$verus_dir is not Verus $VERUS_VERSION (see its version.json)"
+
+# The toolchain the release runs on.
+if ! rustup toolchain list | grep -q "^$VERUS_TOOLCHAIN"; then
+  [[ $setup == 1 ]] ||
+    fail "Rust toolchain $VERUS_TOOLCHAIN is not installed; run scripts/verify --setup, or: rustup toolchain install $VERUS_TOOLCHAIN --profile minimal"
+  rustup toolchain install "$VERUS_TOOLCHAIN" --profile minimal || fail "cannot install $VERUS_TOOLCHAIN"
+fi
+
+# pathos-term's dependencies, built by that compiler.
+deps="$root/target/verus/deps"
+cargo "+$VERUS_TOOLCHAIN" build --locked --quiet --manifest-path "$root/Cargo.toml" \
+  -p pathos-term --target-dir "$deps" || fail "cannot build pathos-term's dependencies"
+externs=()
+for crate in malachite_base malachite_nz malachite_q; do
+  rlibs=("$deps"/debug/deps/lib"$crate"-*.rlib)
+  [[ ${#rlibs[@]} == 1 && -f "${rlibs[0]}" ]] ||
+    fail "expected one build of $crate in $deps/debug/deps (remove $deps and run again)"
+  externs+=(--extern "$crate=${rlibs[0]}")
+done
+
+log="$root/target/verus/verify.log"
+start=$(date +%s.%N)
+(cd "$root" && "$verus_dir/verus" crates/pathos-term/src/lib.rs --crate-type=lib \
+  --crate-name pathos_term --edition=2024 -L "dependency=$deps/debug/deps" \
+  "${externs[@]}" ${extra[@]+"${extra[@]}"}) 2>&1 | tee "$log"
+status=${PIPESTATUS[0]}
+end=$(date +%s.%N)
+printf 'Verus %s: %.1f s\n' "$VERUS_VERSION" "$(echo "$end - $start" | bc)"
+
+[[ $status == 0 ]] || { echo "scripts/verify: verification failed" >&2; exit 1; }
+verified="$(sed -n 's/^verification results:: \([0-9]*\) verified, 0 errors$/\1/p' "$log")"
+[[ -n "$verified" ]] || { echo "scripts/verify: no verification result in the output" >&2; exit 1; }
+if (( verified < MIN_VERIFIED )); then
+  echo "scripts/verify: $verified checked, expected at least $MIN_VERIFIED: were specifications removed?" >&2
+  exit 1
+fi

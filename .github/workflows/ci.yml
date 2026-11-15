@@ -1,6 +1,9 @@
 # Checks on every push to main and every pull request:
 #   - rust:        formatting, Clippy (warnings are errors), tests in debug
 #                  and release builds
+#   - verify:      Verus, at the release pinned in scripts/verify, checks the
+#                  specifications in pathos-term: the literal operators
+#                  and the term store (docs/verus-spike.md)
 #   - regressions: pathos against the reference Ethos on Ethos's 230
 #                  regressions, on the saved fuzzing findings (those from
 #                  proofs are skipped: there is no corpus here), and on the
@@ -71,6 +74,25 @@ jobs:
 
       - name: Tests (release)
         run: cargo test --locked --release
+
+  verify:
+    name: Verus proofs of the literal operators and the term store
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      # scripts/verify --setup downloads the pinned Verus release, checks its
+      # SHA-256, and installs the Rust toolchain that release names.
+      - name: Verify
+        run: scripts/verify --setup
+
+      - name: Upload the log
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: verus-log
+          path: target/verus/verify.log
+          if-no-files-found: ignore
 
   regressions:
     name: Agreement with Ethos on its regressions, the fuzzing findings and the command line

@@ -860,6 +860,7 @@ mod spec {
     }
 
     /// `Option::filter`, which Verus's library does not describe.
+    #[verifier::allow(undeclared_external_trait)]
     pub assume_specification<T, P: FnOnce(&T) -> bool + core::marker::Destruct>[ Option::<T>::filter ](
         o: Option<T>,
         f: P,

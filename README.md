@@ -96,6 +96,13 @@ file names, stack depth); and the `eoc` comparison, including logos's
 whole-signature runs. The cvc5 proof gates need a cvc5 build and up to
 24 GB of memory, so they run locally.
 
+Two parts of `pathos-term`, the literal operators and the term store, also
+carry specifications that [Verus](https://github.com/verus-lang/verus)
+proves: `scripts/verify`, and the `verify` job in CI. This is a feasibility
+spike, not a proof that pathos is sound; see
+[docs/verus-spike.md](docs/verus-spike.md). pathos does not depend on
+Verus's libraries.
+
 ## Keeping up with Ethos
 
 pathos is checked against one Ethos revision, `REFERENCE_REV` in
@@ -121,6 +128,7 @@ to do then.
 - [docs/ethos-differences.md](docs/ethos-differences.md): every known difference from Ethos, and the Ethos behaviour pathos reproduces on purpose. What looked like bugs in Ethos was reported as cvc5/ethos#257 to #268.
 - [docs/dependencies.md](docs/dependencies.md): every dependency, its `unsafe` code, what of it can run, and why that is sound, per platform.
 - [docs/panics.md](docs/panics.md): every place pathos could panic, and why input does not reach it.
+- [docs/verus-spike.md](docs/verus-spike.md): what Verus proves about the literal operators and the term store, what it assumes, and what it cost.
 - [docs/brief.md](docs/brief.md) and [docs/reviews/](docs/reviews/): how pathos was built.
 
 ## How it was built

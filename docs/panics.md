@@ -13,7 +13,17 @@ appendix of [evidence.md](evidence.md). Line numbers are those of commit
 `cd5face` on branch `m14`. Milestone 15 added `src/thread.rs` to
 `pathos-elab` (two rows, with that milestone's line numbers) and moved
 lines in the two `main.rs`, `parser.rs`, `path.rs` and `lexer.rs` by a few;
-it added no other construct that can panic.
+it added no other construct that can panic. Milestone 17 moved lines in
+`pathos-term` (`bitvec.rs`, `eostring.rs`, `kind.rs`, `lit.rs`, `num.rs` and
+`store.rs`) by adding specifications for Verus; the rows below still give
+the old line numbers there. It changed three of the constructs listed:
+`self.mk_count += 1` is now `wrapping_add(1)` and cannot overflow, so that
+row no longer applies; the `panic!` of `TermStore::mk` is in a function of
+its own, `atomic_kind`; and the growth test of the hash tables multiplies in
+`u128`. Verus now proves the rows marked "Safe" for `bitvec.rs`, for
+`Lit::evaluate` and its helpers, and for `store.rs` outside the snapshot
+reader and writer, given what [verus-spike.md](verus-spike.md) lists as
+assumed.
 
 ## What was looked for
 
