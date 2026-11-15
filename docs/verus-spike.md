@@ -796,7 +796,8 @@ under the context passed in. Three callers:
   disagreed. It shows only on an application that does not evaluate; one
   that does is replaced by its value before it is typed. pathos
   reproduces Ethos here, so no gate differs; it is recorded in
-  [ethos-differences.md](ethos-differences.md) and not reported to Ethos.
+  [ethos-differences.md](ethos-differences.md) and reported as
+  [cvc5/ethos#269](https://github.com/cvc5/ethos/issues/269).
   Whether it lets a wrong proof through depends on the signature. In the
   four program signatures with a quoted argument that a search of cvc5's
   signature files finds, the quoted parameter is in no other argument's
