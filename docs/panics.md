@@ -24,6 +24,11 @@ its own, `atomic_kind`; and the growth test of the hash tables multiplies in
 `Lit::evaluate` and its helpers, and for `store.rs` outside the snapshot
 reader and writer, given what [verus-spike.md](verus-spike.md) lists as
 assumed.
+Milestone 18 moved matching out of `typing.rs` and `eval.rs` into
+`pathos-check`'s `matching.rs`; the rows for `match_terms` and for
+`child(prog, i)`, `child(case, 0)`, `child(case, 1)` and `child(pat, j)`
+describe that code, which Verus now proves cannot panic when a program's
+cases are pairs. The "Crafted snapshot" row for them stands.
 
 ## What was looked for
 
