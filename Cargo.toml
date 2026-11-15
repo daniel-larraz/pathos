@@ -12,6 +12,9 @@ repository = "https://github.com/daniel-larraz/pathos"
 [workspace.lints.rust]
 # pathos is meant to be memory safe: no unsafe code in its own crates.
 unsafe_code = "forbid"
+# Verus sets this when it verifies pathos-term (scripts/verify); the
+# specifications and proofs are compiled only then. See docs/verus-spike.md.
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(verus_keep_ghost)'] }
 
 [workspace.lints.clippy]
 # The methods listed in clippy.toml treat bytes 0x80 to 0xFF by Unicode
