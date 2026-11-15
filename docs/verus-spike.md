@@ -38,6 +38,9 @@ milestone adds a section at the end of this file:
 - [Milestone 18: matching cannot panic](#milestone-18-matching-cannot-panic)
 - [Milestone 19: matching is correct](#milestone-19-matching-is-correct)
 - [Milestone 20: the snapshot reader cannot panic](#milestone-20-the-snapshot-reader-cannot-panic)
+- Milestone 21, the evaluator: the design is in
+  [verus-eval-design.md](verus-eval-design.md), awaiting review; nothing
+  is proved yet.
 
 ## The setup
 
