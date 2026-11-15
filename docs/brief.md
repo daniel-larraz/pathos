@@ -461,6 +461,40 @@ will decide on later. The rules of the branch:
     such in the specification rather than leaving it out. Also prove, or
     list as assumed with the reason, that `match_terms` terminates.
     The gate: as for milestone 18, on the branch `m19-verus-matching-correct`.
+20. **The snapshot reader cannot panic, whatever the file.** Today a forged
+    snapshot (one whose checksum fits) can make pathos panic: the 23
+    "Crafted snapshot" rows of `docs/panics.md`. That is why the evidence
+    page asks the Ethos developers whether snapshots are trusted like
+    signatures. If the reader cannot panic on any input and every state it
+    accepts satisfies the invariants the rest of the code relies on, the
+    answer no longer matters.
+    - **`pathos-term`:** the codec's `Reader`, `Lit::read_from` and the
+      store's `read_from`. Prove that they cannot panic on any byte
+      sequence, and that a store they return satisfies the invariant of
+      milestones 17 and 19 (valid handles, injective tree view, the flags).
+      Where that needs the reader to check more than it does now, add the
+      check, as a rejection of the snapshot (it is then ignored, as a
+      damaged one is today).
+    - **The shapes the checker relies on.** What milestones 18 and 19
+      assume (`is_program`: every case of a program has two children), and
+      what the "Crafted snapshot" rows say the rest of the code assumes, are
+      either checked by the reader or proved to hold for every term the
+      store can contain. List each.
+    - **`pathos-check` and `pathos-elab`** (`read_term`, the checker's and
+      the state's `read_image`): as far as Verus reaches without bringing
+      the `Checker` itself in; what it does not reach, check in the reader
+      with ordinary code and a test, and say so in `docs/panics.md`.
+    - **Behaviour:** a snapshot that pathos itself wrote is read exactly as
+      before; the `snapshot` gate agrees. A snapshot rejected by a new check
+      is ignored with the same (silent) fallback as a damaged one.
+    - **Fuzzing:** extend the forged-snapshot test with mutations that keep
+      the checksum valid (the reviewer's `snapfuzz.py` in the session
+      scratchpad does this; ask for it) and run it long enough to say so.
+    The gate: `scripts/verify`, `scripts/full-check --quick` (including the
+    `snapshot` gate) pass, CI is green on `m20-verus-snapshot`, the
+    "Crafted snapshot" rows of `docs/panics.md` are updated (each removed,
+    or with what still holds it), and the report section says whether the
+    evidence page's first question for the developers can be withdrawn.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
