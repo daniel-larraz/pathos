@@ -299,14 +299,11 @@ is in the corpus; the fuzzing runs found most of them.
    if the signature files are unchanged and the file's checksum fits; a
    damaged file is ignored. The checksum is not a signature: a file forged
    on purpose can hold a rule that proves anything, exactly as an edited
-   signature file can. It can also hold a term of a shape no signature
-   produces, on which the checker stops with a panic instead of an error
-   (memory safe; 14 places, in [panics.md](panics.md), since the reader now
-   rejects a term with the wrong number of children; see also
-   [reviews/m10-snapshots.md](reviews/m10-snapshots.md)). If snapshots
-   should be treated as untrusted input, the reader has to validate the
-   shape of every term and of the checker's tables. If they are trusted
-   like signatures, nothing needs to change. Which is it?
+   signature file can. (It cannot make the checker panic: the reader
+   rejects a state that no signature gives where the checker would rely on
+   it; [panics.md](panics.md), "Open".) Should a snapshot be trusted like
+   the signature it was made from, or does it need more than a checksum,
+   such as a signature of its own?
 2. **Should the evaluation hooks stay?** Ethos's plugin interface lets a
    plugin take over the evaluation of programs and operators. pathos has
    the same hooks (`EvalPlugin`), but none of the seven eoc stages uses

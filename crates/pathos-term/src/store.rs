@@ -379,7 +379,7 @@ impl TermStore {
     /// term.
     pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
         // there are no more names than terms, so this fits when the term does
-        self.mk_count += 1;
+        self.mk_count = self.mk_count.wrapping_add(1);
         let name_id = self.names.len() as u32;
         let flags = match kind {
             SymbolKind::ProgramConst => FLAG_EVAL,
@@ -403,7 +403,7 @@ impl TermStore {
 
     /// The term for a literal value; equal values give the same term.
     pub fn mk_lit(&mut self, lit: Lit) -> Term {
-        self.mk_count += 1;
+        self.mk_count = self.mk_count.wrapping_add(1);
         let hash = self.lit_hasher.hash_one(&lit);
         let slot = match self.lit_table.find(hash, |i| self.lit_at(i) == Some(&lit)) {
             Ok(found) => return Term::from_slot(found as u32),
@@ -456,7 +456,7 @@ impl TermStore {
             }
             Kind::Eval(_) => {}
         }
-        self.mk_count += 1;
+        self.mk_count = self.mk_count.wrapping_add(1);
         let tag = tag_of(kind);
         let hash = hash_node(&self.keys, tag, children);
         let found = self.table.find(hash, |cand| {
@@ -1080,6 +1080,31 @@ mod tests {
         }
         // the forgery is read when the shape is right
         assert!(reads(NodeKind::Lambda, 2) && reads(NodeKind::Proof, 1));
+    }
+
+    /// Every string pathos writes is text with one character for a byte.
+    #[test]
+    fn a_store_with_a_name_that_is_not_latin_1_is_rejected() {
+        let reads = |name: &str| {
+            let mut s = TermStore::new();
+            let ty = s.mk_type();
+            s.mk_symbol(SymbolKind::Const, name, ty);
+            TermStore::read_from(&mut Reader::new(&written(&s))).is_some()
+        };
+        assert!(reads("caf\u{e9}"));
+        assert!(!reads("caf\u{100}"));
+    }
+
+    /// The counter of a snapshot can be anything; it wraps.
+    #[test]
+    fn the_counter_of_term_requests_wraps() {
+        let mut s = TermStore::new();
+        s.mk_count = u64::MAX;
+        let ty = s.mk_type();
+        let c = s.mk_symbol(SymbolKind::Const, "c", ty);
+        s.mk(Kind::TUPLE, &[c]);
+        s.mk_lit(Lit::Bool(true));
+        assert_eq!(s.mk_count(), 2);
     }
 
     #[test]

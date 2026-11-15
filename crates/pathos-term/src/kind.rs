@@ -472,6 +472,32 @@ impl fmt::Display for Kind {
     }
 }
 
+/// The kinds by their numbers in a snapshot, which are their positions in
+/// the `ALL` lists.
+impl SymbolKind {
+    pub fn from_index(i: usize) -> Option<SymbolKind> {
+        SymbolKind::ALL.get(i).copied()
+    }
+}
+
+impl LitKind {
+    pub fn from_index(i: usize) -> Option<LitKind> {
+        LitKind::ALL.get(i).copied()
+    }
+}
+
+impl NodeKind {
+    pub fn from_index(i: usize) -> Option<NodeKind> {
+        NodeKind::ALL.get(i).copied()
+    }
+}
+
+impl EvalOp {
+    pub fn from_index(i: usize) -> Option<EvalOp> {
+        EvalOp::ALL.get(i).map(|&(op, _)| op)
+    }
+}
+
 impl Kind {
     /// The kind as two bytes, for snapshots: the group and the kind within
     /// it, which is its position in the group's `ALL`.
