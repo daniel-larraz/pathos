@@ -686,8 +686,9 @@ column, agreement with a semantics, is unchanged.
 - **Cost:** about 140 lines of specification and 360 of proof, with no
   change to the code that runs. My estimate was 100 to 150 and 300 to 500.
 - **Two new assumptions**, both about derived traits of `Term`.
-- **One thing I noticed in an unverified caller**, described under
-  "What the callers must do": `get_type_app` can overwrite a binding.
+- **Writing the precondition down found a quirk of Ethos's type checking**
+  that pathos reproduces: a quoted argument rebinds a parameter that an
+  earlier argument bound. See "What the callers must do".
 - **Completeness is not proved:** that when matching fails, no match
   exists.
 
@@ -785,10 +786,20 @@ under the context passed in. Three callers:
   `ctx.insert`, which replaces a binding `x` already had.** If an earlier
   argument's type mentioned `x` and matching bound it, the pairs in
   `visited` were matched under the old binding, and the precondition does
-  not hold for the arguments after. I have not checked whether a signature
-  can reach this or what Ethos does there; the code is the same as Ethos's
-  as far as I can tell. It belongs to the evaluator's milestone, where
-  `get_type_app` is in scope, and is worth a test against Ethos then.
+  not hold for the arguments after.
+
+  I probed it. With `:signature ((BitVec n) (eo::quote n)) (BitVec n)`
+  and `a` of type `(BitVec 5)`, the application `(p a 7)` type-checks with
+  type `(BitVec 7)`, in Ethos and in pathos alike: the second argument
+  rebinds `n` and nothing notices that the first disagreed. pathos
+  reproduces Ethos here, so no gate differs; it is recorded in
+  [ethos-differences.md](ethos-differences.md) and not reported to Ethos.
+  Whether it lets a wrong proof through depends on the signature. In the
+  four program signatures with a quoted argument that a search of cvc5's
+  signature files finds, the quoted parameter is in no other argument's
+  type, so it does not arise there; I did not look further than that
+  search. `get_type_app` is in scope for the evaluator's milestone, whose
+  specification will have to state this.
 
 ### What is assumed
 
