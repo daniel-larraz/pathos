@@ -8,6 +8,7 @@ use std::rc::Rc;
 use pathos_check::Options;
 use pathos_elab::{State, include_file};
 use pathos_term::codec::content_hash;
+use pathos_term::{Kind, SymbolKind};
 
 /// A directory of its own for a test, with the signature files in it.
 fn setup(test: &str) -> PathBuf {
@@ -319,4 +320,89 @@ fn reading_a_forged_snapshot_does_not_panic() {
     // Most changes are caught by the checks on the content; the rest give a
     // state that differs in a name, a number or a term.
     assert!(used < (snap.len() - body_start) * 3);
+}
+
+/// A run of `proof` with a snapshot of the signature whose state `tamper`
+/// changed before it was written: a state that the signature does not give.
+fn run_with_forged_snapshot(test: &str, tamper: impl FnOnce(&mut State), proof: &str) -> Run {
+    let dir = setup(test);
+    let sig = dir.join("sig/Sig.eo");
+    let (mut st, output) = new_state(Options::default());
+    st.record_for_snapshot();
+    include_file(&mut st, &path_str(&sig), true, false, None).unwrap();
+    tamper(&mut st);
+    let snap = st.write_snapshot(&output.borrow()).unwrap();
+    let file = dir.join("proofs/forged.cpc");
+    std::fs::write(&file, format!("(include \"../sig/Sig.eo\")\n{proof}\n")).unwrap();
+    check(&file, Options::default(), Some(&snap))
+}
+
+/// Programs and names the parser never builds, and tables it never fills,
+/// used to make the checker panic when a proof reached them. Such a snapshot
+/// is now rejected when it is read: the run parses the signature, and the
+/// proof fails on the name that only the snapshot had.
+///
+/// (A term with a number of children that its kind cannot have, such as a
+/// lambda without a body, cannot be put in a state this way any more: the
+/// store does not make one. Its test
+/// `a_term_of_the_wrong_shape_is_not_made_and_not_read` covers a snapshot
+/// that holds one.)
+#[test]
+fn a_snapshot_with_a_state_no_signature_gives_is_ignored() {
+    let ignored = |test: &str, tamper: &dyn Fn(&mut State), proof: &str| {
+        let run = run_with_forged_snapshot(test, tamper, proof);
+        assert!(!run.used_snapshot, "{test}");
+        assert!(run.result.is_err(), "{test}");
+    };
+    // a program whose case is not a pair, applied
+    ignored(
+        "forged-program",
+        &|st| {
+            let ty = st.ck.store.mk_type();
+            let a = st.get_var("a").unwrap();
+            let bad = st.ck.mk_symbol(SymbolKind::ProgramConst, "bad", ty);
+            let prog = st.ck.store.mk(Kind::PROGRAM, &[a]);
+            st.ck.define_program(bad, Some(prog));
+            assert!(st.bind("bad", bad));
+        },
+        "(define u () (bad a))",
+    );
+    // a builtin operator of an atomic kind, applied
+    ignored(
+        "forged-builtin",
+        &|st| {
+            let bad = st.ck.mk_builtin("bad", Kind::CONST);
+            assert!(st.bind("bad", bad));
+        },
+        "(define u () (bad a))",
+    );
+    // a name that is not text with one character for a byte, printed
+    ignored(
+        "forged-name",
+        &|st| {
+            let ty = st.ck.store.mk_type();
+            let bad = st.ck.mk_symbol(SymbolKind::Const, "caf\u{100}", ty);
+            assert!(st.bind("bad", bad));
+        },
+        "(echo bad)\n(define u () (bad a))",
+    );
+}
+
+/// The same tampering with a state the signature could give is not
+/// rejected: the snapshot is used.
+#[test]
+fn a_snapshot_with_one_more_ordinary_term_is_used() {
+    let run = run_with_forged_snapshot(
+        "forged-ordinary",
+        |st| {
+            let a = st.get_var("a").unwrap();
+            let int = st.get_var("Int").unwrap();
+            let f = st.ck.mk_symbol(SymbolKind::Const, "extra", int);
+            let pair = st.ck.store.mk(Kind::TUPLE, &[f, a]);
+            assert!(st.bind("extra", pair));
+        },
+        "(define u () extra)",
+    );
+    assert!(run.used_snapshot);
+    assert_eq!(run.result, Ok(false));
 }

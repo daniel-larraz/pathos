@@ -101,9 +101,12 @@ impl Checker {
     pub fn step_ends(&mut self, rule: Term) {
         let mk_count = self.store.mk_count();
         let stat = self.stats.rules.entry(rule).or_default();
-        stat.count += 1;
+        // a count read from a snapshot can be anything: wrap, as a release
+        // build always did
+        stat.count = stat.count.wrapping_add(1);
         if let Some((start, start_mk)) = self.stats.step_start.take() {
-            stat.mk_expr_count += mk_count - start_mk;
+            // the store's counter wraps too
+            stat.mk_expr_count = (stat.mk_expr_count).wrapping_add(mk_count.wrapping_sub(start_mk));
             stat.time_us += start.elapsed().as_micros();
         }
     }
@@ -112,7 +115,8 @@ impl Checker {
     #[inline]
     pub(crate) fn count_program(&mut self, hd: Term) {
         if self.stats.count_programs {
-            *self.stats.programs.entry(hd).or_default() += 1;
+            let count: &mut u64 = self.stats.programs.entry(hd).or_default();
+            *count = count.wrapping_add(1);
         }
     }
 

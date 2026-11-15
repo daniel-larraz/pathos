@@ -14,18 +14,12 @@ appendix of [evidence.md](evidence.md). Line numbers are those of commit
 `pathos-elab` (two rows, with that milestone's line numbers) and moved
 lines in the two `main.rs`, `parser.rs`, `path.rs` and `lexer.rs` by a few;
 it added no other construct that can panic.
-Since then the check of a term's shape is in the store itself:
-`TermStore::mk` does not make a term with a number of children that its
-kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`,
-one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and
-`APPLY_OPAQUE`), and `TermStore::read_from` rejects a snapshot that holds
-one (test `a_term_of_the_wrong_shape_is_not_made_and_not_read`). The rows
-that rest on "from text this kind always has a head" or "two children" no
-longer rest on how each caller builds terms, and the nine "Crafted
-snapshot" rows that needed such a term are closed: `eval.rs` 369 and 680,
-and 600; `typing.rs` 211 and 216, 224, 240, 286 and 322; `build.rs` 451 and
-459; `step.rs` 82. The rows and the counts below are as they were before
-that change.
+Since then the 23 "Crafted snapshot" rows were closed, and are marked
+"Safe (was: crafted snapshot)": the check of a term's shape is in the store
+itself (`TermStore::mk` and `TermStore::read_from`, by `NodeKind::takes`),
+the checker's snapshot reader checks what it only assumed, and the counters
+a snapshot sets wrap. These rows keep their old line numbers, like the
+rest.
 
 ## What was looked for
 
@@ -76,8 +70,8 @@ Reading was backed by runs, on release and debug builds:
 | Safe (fixed in this milestone) | 9 | Input reached it; now an error or a defined result. See below. |
 | Ethos's fatal error | 51 | `pathos-eoc` only: the place where the C++ stage calls `EO_FATAL` or fails an `AlwaysAssert`. It returns an error with Ethos's text, not a panic. |
 | Error where Ethos reads out of bounds | 5 | `pathos-eoc` only: an error with pathos's own text where the C++ would index past a term's children. |
-| Crafted snapshot | 16 | Safe for every signature and proof. Reached only through a snapshot file made on purpose, with a checksum that fits, holding a state no signature gives. Panics in release and debug builds. |
-| Crafted snapshot, debug build only | 7 | The same, where only a debug build panics (a counter read from the snapshot overflows, or a character above 255 reaches the output). A release build wraps or prints `?`. |
+| Safe (was: crafted snapshot) | 16 | Was reached only through a snapshot file made on purpose, with a checksum that fits, holding a state no signature gives. The reader now rejects such a file, or the place cannot fail; each row says which. |
+| Safe (was: crafted snapshot, debug build only) | 7 | The same, where only a debug build panicked (a counter read from the snapshot overflowed, or a character above 255 reached the output). |
 | Stack | 8 | Recursion whose depth the input controls; the process aborts with `has overflowed its stack`. Ethos crashes on the same inputs. |
 | Resource | 13 | Memory or time the input can make arbitrarily large; the process aborts when an allocation fails, or is killed. Ethos behaves alike. |
 
@@ -99,20 +93,18 @@ of any gate.
 
 ### Open
 
-Nothing in the list panics on a signature or proof. Three things remain,
-none of them a panic from text input:
+Nothing in the list panics on a signature or proof. Two things remain,
+none of them a panic from text input, and one was closed:
 
-1. **Crafted snapshots** (23 rows). The snapshot reader checks that the
-   file is a well-formed term store (every child an earlier term, nothing
-   interned twice, every table index in range) and never panics itself. It
-   does not check what only the parser guarantees: the number of children
-   each kind of term has, that a builtin's kind is a compound one, that a
-   program's cases are pairs, that the seven builtin terms the checker
-   keeps are the ones in the file, or the counters. A file forged to break
-   one of those makes the checker panic later, at an index. Whether to
-   close this is the first question in [evidence.md](evidence.md): a
-   snapshot is trusted like the signature it was made from, and a forged
-   one can do worse than panic (it can hold a rule that proves anything).
+1. **Crafted snapshots: closed.** The 23 rows that a forged snapshot (one
+   with a checksum that fits) could reach are now safe. The store does not
+   hold a term with a number of children that its kind cannot have, made or
+   read. The checker's reader checks that a builtin's kind is compound,
+   that a program is a list of cases, and that the store begins with the
+   checker's own builtin terms; strings must be Latin-1; and the counters
+   wrap. Each row says what holds it now, with its test. A forged snapshot
+   can still hold a rule that proves anything, as an edited signature file
+   can: that is a question of trust, not of panics.
 2. **Stack** (8 rows). Three recursions remain, each of which Ethos has
    too: typing a term evaluates its type and `eo::typeof` types a term;
    building an application builds its constructor term's application; an
@@ -232,17 +224,17 @@ such panic.
 | 128, 144 | `self.slots.len() - 1` | Safe | A table has at least 64 slots. |
 | 131, 146, 149 | `self.slots[i]` | Safe | `i` starts below the table size (`store.rs:115`) and is masked after each step; the table is never more than 70% full (`store.rs:414`, `:495`), so the probe ends. |
 | 304 | `self.nodes.len() - 1` | Safe | `nodes` starts with one entry (`store.rs:276`) and never shrinks. |
-| 376, 400, 447 | `self.mk_count += 1` | Crafted snapshot, debug build only | `read_from` installs the snapshot's `mk_count` unchecked (`store.rs:836`); with `u64::MAX` the next term request overflows. From text the counter would need 2^64 requests. |
+| 376, 400, 447 | `self.mk_count += 1` | Safe (was: crafted snapshot, debug build only) | `read_from` installs the snapshot's `mk_count` unchecked (`store.rs:836`); with `u64::MAX` the next term request overflows. From text the counter would need 2^64 requests. **Now the counter wraps (`wrapping_add`); test `the_counter_of_term_requests_wraps`.** |
 | 377, 407 | `self.names.len() as u32`, `self.lits.len() as u32` | Safe | Casts; there are no more names or literals than terms, and terms are limited at `store.rs:330`. |
 | 387 | `self.types[t.index()]` | Safe | `t` was pushed two lines above. |
 | 392-393 | `self.nodes[i]`, `self.lits[id as usize]` | Safe | `i` is a table entry, written only at `store.rs:412` and `:763` with an index that is pushed right after; `id` is `lits.len()` at creation or checked at `store.rs:754`. |
 | 412, 493 | `slots[slot] = t.0.get()` | Safe | `slot` is the empty slot returned by `find`. |
-| 443 | `panic!("TermStore::mk called with the atomic kind ..")` | Crafted snapshot | `pathos-check/src/snapshot.rs:219-223` accepts a symbol or literal kind as a builtin's `AppInfo.kind`, which `build.rs:219` passes on to `build.rs:200`. From text, that kind is set only from the compound kinds at `pathos-elab/src/state.rs:79-85`. |
-| 460 | `self.flags[c.index()]` | Crafted snapshot | `pathos-check/src/snapshot.rs:206-210` compares the builtin term ids as numbers without requiring them to be terms of the snapshot's store, and `install` keeps the old handles. From text every handle comes from the one store. |
+| 443 | `panic!("TermStore::mk called with the atomic kind ..")` | Safe (was: crafted snapshot) | `pathos-check/src/snapshot.rs:219-223` accepts a symbol or literal kind as a builtin's `AppInfo.kind`, which `build.rs:219` passes on to `build.rs:200`. From text, that kind is set only from the compound kinds at `pathos-elab/src/state.rs:79-85`. **Now `read_image` rejects a snapshot in which a builtin's kind is not a compound kind; test `a_builtin_of_an_atomic_kind_is_rejected`.** |
+| 460 | `self.flags[c.index()]` | Safe (was: crafted snapshot) | `pathos-check/src/snapshot.rs:206-210` compares the builtin term ids as numbers without requiring them to be terms of the snapshot's store, and `install` keeps the old handles. From text every handle comes from the one store. **Now `read_image` rejects a snapshot whose store does not begin with the checker's own terms up to the last builtin one (`same_first_terms`), and every other term read (`read_term`, `read_opt_term`) is checked to be one of that store; tests `a_store_without_the_builtin_terms_is_rejected` and `a_store_with_other_terms_in_place_of_the_builtin_ones_is_rejected`.** |
 | 470-473 | `u32::try_from(..).ok()`, `checked_add` | Safe | Checked; a full child pool sets `Limit::Children`. |
-| 506, 521, 533, 549, 565, 573, 582, 588, 595, 601 | `nodes` / `types` / `flags[t.index()]` | Crafted snapshot | Same unchecked property as line 460: a snapshot store smaller than the checker's builtin ids leaves those handles out of range. Line 460 was the one observed. |
+| 506, 521, 533, 549, 565, 573, 582, 588, 595, 601 | `nodes` / `types` / `flags[t.index()]` | Safe (was: crafted snapshot) | Same unchecked property as line 460: a snapshot store smaller than the checker's builtin ids leaves those handles out of range. Line 460 was the one observed. **Now `read_image` rejects a snapshot whose store does not begin with the checker's own terms up to the last builtin one (`same_first_terms`), and every other term read (`read_term`, `read_opt_term`) is checked to be one of that store; tests `a_store_without_the_builtin_terms_is_rejected` and `a_store_with_other_terms_in_place_of_the_builtin_ones_is_rejected`.** |
 | 524 | `child_pool[a.start as usize..(a.start + a.len) as usize]` | Safe | `mk` stores only ranges whose end fits `u32` (`store.rs:473`); `read_from` requires `a + b <= pool.len()` (`store.rs:775-776`) with a 32-bit pool length (`store.rs:692`). |
-| 560 | `self.children_at(t.index())[i]` | Crafted snapshot | `read_from` checks that a store is well formed, not that terms have the shape the checker builds, so a program whose case is not a pair reaches `pathos-check/src/eval.rs:298`. From text, callers check the arity or take terms built with a fixed one; the one that did not (`eo::nameof` on `(eo::var)`) was fixed in 1f7fce7. |
+| 560 | `self.children_at(t.index())[i]` | Safe (was: crafted snapshot) | `read_from` checks that a store is well formed, not that terms have the shape the checker builds, so a program whose case is not a pair reaches `pathos-check/src/eval.rs:298`. From text, callers check the arity or take terms built with a fixed one; the one that did not (`eo::nameof` on `(eo::var)`) was fixed in 1f7fce7. **Now `read_image` rejects a snapshot with a program that is not a list of cases, each a pair whose first element has a head (`is_program_term`); test `a_program_that_is_not_a_list_of_cases_is_rejected`.** |
 | 566, 574 | `self.lits[id as usize]`, `self.names[id as usize]` | Safe | The ids are the vector lengths at creation (`store.rs:377`, `:407`) or checked in `read_from` (`store.rs:741`, `:754`, `:823`). |
 | 634-650 | `self.nodes[i]`, `self.types[i]` | Safe | `i` ranges over `1..self.nodes.len()`, and the vectors grow together (`store.rs:334-336`). |
 | 688, 693, 698 | `Vec::with_capacity(n)`, `(pool_len)`, `(names_len)` | Safe | Each count comes from `Reader::len` with the item's minimum size, so the allocation is a small multiple of the input. |
@@ -272,7 +264,7 @@ such panic.
 
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
-| 24 | `debug_assert!(byte.is_ok(), ..)` | Crafted snapshot, debug build only | Snapshot strings are read as UTF-8 (`pathos-term/src/codec.rs:103-106`) and not checked to be Latin-1, so a name with a character above 255 reaches `encode` when it is printed. From text, every string is `decode` output joined with ASCII. |
+| 24 | `debug_assert!(byte.is_ok(), ..)` | Safe (was: crafted snapshot, debug build only) | Snapshot strings are read as UTF-8 (`pathos-term/src/codec.rs:103-106`) and not checked to be Latin-1, so a name with a character above 255 reaches `encode` when it is printed. From text, every string is `decode` output joined with ASCII. **Now `Reader::str` rejects a string with a character above U+00FF, so no such name or line is read; test `a_store_with_a_name_that_is_not_latin_1_is_rejected`.** |
 | 25 | `byte.unwrap_or(b'?')` | Safe | No unwrap. |
 
 ### src/lexer.rs
@@ -308,17 +300,17 @@ such panic.
 | 126 | `args[0]` | Safe | A term that reaches its second visit is evaluatable or non-ground (eval.rs:56); both flags come from children (store.rs:459-465), so it has one. This holds for snapshot terms too. |
 | 152, 159, 162, 170, 171 | `cchildren[0..3]`, `children[1..3]` | Safe | An if-then-else without exactly three children is finished at its first visit (eval.rs:88-92). |
 | 276, 279 | `children[1..]`, `children[0]` | Safe | Callers pass a head: eval.rs:131 (as line 126), build.rs:260 (non-empty by build.rs:155), step.rs:107 (two or more by step.rs:103). |
-| 296, 298, 320 | `child(prog, i)`, `child(case, 0)`, `child(case, 1)` | Crafted snapshot | From text a program term is built only from pairs (cmd_parser.rs:883 with expr_parser.rs:508, cmd_parser.rs:675-676, build.rs:123-124). Needs a Program symbol whose `AppInfo.cons` is not a list of pairs, which snapshot.rs:218 does not check. Not demonstrated. |
+| 296, 298, 320 | `child(prog, i)`, `child(case, 0)`, `child(case, 1)` | Safe (was: crafted snapshot) | From text a program term is built only from pairs (cmd_parser.rs:883 with expr_parser.rs:508, cmd_parser.rs:675-676, build.rs:123-124). Needs a Program symbol whose `AppInfo.cons` is not a list of pairs, which snapshot.rs:218 does not check. Not demonstrated. **Now `read_image` rejects a snapshot with a program that is not a list of cases, each a pair whose first element has a head (`is_program_term`); test `a_program_that_is_not_a_list_of_cases_is_rejected`.** |
 | 313 | `child(pat, j)` | Safe | `j < nargs == num_children(pat)` (eval.rs:299). |
 | 359-362 | `.first()?`, `.get(1)?` | Safe | Checked accessors. |
 | 350, 370, 581, 704, 925, 970 | calls from `evaluate` into `get_type` and `evaluate_nil`, which call `evaluate` again | Stack | Each call is a native frame, and typing.rs:83 and typing.rs:357 call back. The depth follows a numeral or a chain of declarations in the input, or has no bound at all (a literal type rule `(eo::typeof eo::self)`). |
-| 369, 680 | `child(nil, 1)`, `child(op, 1)` on a `PARAMETERIZED` term | Crafted snapshot | From text only build.rs:70-72 makes this kind, with two children, and no builtin symbol builds it (state.rs:78-85). Needs a `PARAMETERIZED` term with fewer than two children; child counts per kind are not checked (store.rs:680-838). Not demonstrated. |
+| 369, 680 | `child(nil, 1)`, `child(op, 1)` on a `PARAMETERIZED` term | Safe (was: crafted snapshot) | From text only build.rs:70-72 makes this kind, with two children, and no builtin symbol builds it (state.rs:78-85). Needs a `PARAMETERIZED` term with fewer than two children; child counts per kind are not checked (store.rs:680-838). Not demonstrated. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
 | 411, 412, 415 | `child` in `nary_step` | Safe | Kind and `num_children == 2` are checked at eval.rs:408 and 412. |
 | 496 | `args[1]` or `args[2]` | Safe | If-then-else gets here only from build.rs:171 after `check_arity` (three arguments); `evaluate` handles it at eval.rs:150 and never passes it to eval.rs:182. |
 | 504 | `args[0]` | Safe | `first` exists (eval.rs:488). |
 | 537, 542, 543, 556, 559, 560 | `args[1]` | Safe | eval.rs:524-529 returns when there are fewer than two arguments and the first is not stuck; when it is stuck, `&&` and `\|\|` short-circuit before `args[1]`. |
 | 591 | first child of a `VARIABLE` (was `child(first, 0)`) | Safe (fixed in this milestone) | `(eo::var)` has no children; the checked accessor now gives the "Too few arguments" error through `missing_argument`. |
-| 600 | `child(first, 0)` on `APPLY_OPAQUE` | Crafted snapshot | From text this kind always has a head (build.rs:185, build.rs:435, eval.rs:667). Needs an `APPLY_OPAQUE` term with no children; child counts per kind are not checked. Not demonstrated. |
+| 600 | `child(first, 0)` on `APPLY_OPAQUE` | Safe (was: crafted snapshot) | From text this kind always has a head (build.rs:185, build.rs:435, eval.rs:667). Needs an `APPLY_OPAQUE` term with no children; child counts per kind are not checked. Not demonstrated. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
 | 650 | `child(sym, 0)` | Safe | `num_children > 0` is in the loop condition (eval.rs:649). |
 | 677, 698, 704-707 | `args[0]`, `args[1]` | Safe | `first` exists; `args[1]` is guarded by `args.len() > 1` (eval.rs:701). |
 | 713-720, 764 | `args.get` in `arg!`, `hargs.get(i)` | Safe | Checked accessors; a missing argument sets the fatal error. |
@@ -335,14 +327,14 @@ such panic.
 | Line | Construct | Verdict | Why |
 | --- | --- | --- | --- |
 | 83 | `evaluate` of a literal type rule | Stack | Recursion with `get_type` through eval.rs:581; a rule `(eo::typeof eo::self)` never ends. |
-| 211, 216 | `child(e, 0)`, `child(e, 1)` on `LAMBDA` | Crafted snapshot | From text only cmd_parser.rs:150 and cmd_parser.rs:782 build `LAMBDA`, with two children. Needs a `LAMBDA` with fewer; child counts per kind are not checked. The same broken invariant is demonstrated at build.rs:459. |
-| 224 | `child(e, 0)` on `PROOF` | Crafted snapshot | From text only build.rs:57 builds `PROOF`, with one child. Needs a `PROOF` term without children. Not demonstrated. |
-| 240 | `child(e, 1)` on `PARAMETERIZED` | Crafted snapshot | As eval.rs:369. Not demonstrated. |
+| 211, 216 | `child(e, 0)`, `child(e, 1)` on `LAMBDA` | Safe (was: crafted snapshot) | From text only cmd_parser.rs:150 and cmd_parser.rs:782 build `LAMBDA`, with two children. Needs a `LAMBDA` with fewer; child counts per kind are not checked. The same broken invariant is demonstrated at build.rs:459. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
+| 224 | `child(e, 0)` on `PROOF` | Safe (was: crafted snapshot) | From text only build.rs:57 builds `PROOF`, with one child. Needs a `PROOF` term without children. Not demonstrated. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
+| 240 | `child(e, 1)` on `PARAMETERIZED` | Safe (was: crafted snapshot) | As eval.rs:369. Not demonstrated. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
 | 246 | `.first()`, `.get(1)` | Safe | Checked accessors. |
-| 286 | `children[0]` | Crafted snapshot | From text an application always has a head: expr_parser.rs:174-178 rejects an empty frame and `(_)`, and every other `mk_expr(APPLY, ..)` call passes one. Needs an `APPLY` term without children, bound to a name. Demonstrated in release and debug builds. |
+| 286 | `children[0]` | Safe (was: crafted snapshot) | From text an application always has a head: expr_parser.rs:174-178 rejects an empty frame and `(_)`, and every other `mk_expr(APPLY, ..)` call passes one. Needs an `APPLY` term without children, bound to a name. Demonstrated in release and debug builds. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
 | 307, 308 | `wrapping_sub(1)`, `children.len() - 1` | Safe | `children` is non-empty (typing.rs:286). |
 | 315, 316, 345, 356 | `hdtypes[i - 1]`, `children[i]`, `hdtypes[len - 1]` | Safe | `hdtypes.len() == children.len()`, at least 1 (typing.rs:300). |
-| 322 | `child(hdt, 0)` on `QUOTE_TYPE` | Crafted snapshot | From text only build.rs:62 builds `QUOTE_TYPE`, with one child. Needs one without children. Not demonstrated. |
+| 322 | `child(hdt, 0)` on `QUOTE_TYPE` | Safe (was: crafted snapshot) | From text only build.rs:62 builds `QUOTE_TYPE`, with one child. Needs one without children. Not demonstrated. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
 | 357 | `evaluate(ret, ctx)` | Stack | Recursion with `get_type` through eval.rs:581: a return type that applies `eo::typeof` to another application. Depth follows a numeral or a chain of declarations. |
 | 427, 437, 449, 450, 452 | `children[1]`, `child_types[0..2]` | Safe | `check_arity` at typing.rs:419 fixes the number of arguments of each operator. |
 
@@ -357,7 +349,7 @@ such panic.
 | 163, 164 | `children[..2]`, `children[2..]` | Safe | `children.len() > 2` (build.rs:162). |
 | 183 | `children[0]` | Safe | `children.len() == 2` (build.rs:182). |
 | 185, 219, 377, 405, 414 | `mk_expr` called from `mk_apply_expr` and `mk_apply_attr` | Stack | `mk_expr` calls `mk_apply_expr`, which calls `mk_apply_attr`, which calls `mk_expr` on the attribute's term. The depth is the length of a chain of symbols each naming the previous one as its `:pairwise` (or similar) term. |
-| 200 | `store.mk(k, ..)`, which panics at store.rs:443 for an atomic kind | Crafted snapshot | From text `k` is a constant compound kind or an `AppInfo.kind` set only by checker.rs:267 from state.rs:78-85. Needs a symbol whose `AppInfo.kind` is a symbol or literal kind, which snapshot.rs:222 accepts. Demonstrated in release and debug builds. |
+| 200 | `store.mk(k, ..)`, which panics at store.rs:443 for an atomic kind | Safe (was: crafted snapshot) | From text `k` is a constant compound kind or an `AppInfo.kind` set only by checker.rs:267 from state.rs:78-85. Needs a symbol whose `AppInfo.kind` is a symbol or literal kind, which snapshot.rs:222 accepts. Demonstrated in release and debug builds. **Now `read_image` rejects a snapshot in which a builtin's kind is not a compound kind; test `a_builtin_of_an_atomic_kind_is_rejected`.** |
 | 206, 213, 216, 219 | `children[0]`, `children[n - 1]`, `children[1..]` | Safe | `children` is non-empty (build.rs:155). |
 | 285, 287, 291, 297 | `children[0]`, `children[1]` | Safe | `children.len() == 2` (build.rs:192). |
 | 312, 476 | `vchildren[0]` | Safe | Callers build.rs:239, 299 and 481 pass a head. |
@@ -367,7 +359,7 @@ such panic.
 | 409, 410, 413 | `vchildren[1]`, `vchildren[1..]` | Safe | `nchild == 2` is checked first; the slice may be empty. |
 | 435, 440 | `vchildren[..1 + nargs]`, `vchildren[1 + nargs..]` | Safe | `nargs < nchild` (build.rs:426). |
 | 450, 452, 456 | `children[0]`, `children.len() - 1`, `children[1..]` | Safe | `children` is non-empty. |
-| 451, 459 | `child(hd, 0)`, `child(hd, 1)` on `LAMBDA` | Crafted snapshot | As typing.rs:211. Needs a `LAMBDA` with one child, bound to a name and applied. Demonstrated in release and debug builds. |
+| 451, 459 | `child(hd, 0)`, `child(hd, 1)` on `LAMBDA` | Safe (was: crafted snapshot) | As typing.rs:211. Needs a `LAMBDA` with one child, bound to a name and applied. Demonstrated in release and debug builds. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
 | 511, 512, 516 | `ch[..n - 1]`, `ch[n - 1]`, `child(et, 2)` | Safe | `num_children > 0` (build.rs:508) and `== 3` (build.rs:514). |
 
 ### src/step.rs
@@ -375,17 +367,17 @@ such panic.
 | Line | Construct | Verdict | Why |
 | --- | --- | --- | --- |
 | 49, 51, 52, 53 | `t[0..3]` | Safe | `num_children == 4` is checked at step.rs:43, for snapshot terms too. |
-| 82 | `child(e, 0)` on `PROOF` | Crafted snapshot | As typing.rs:224: needs a `PROOF` term without children bound to a name used as a premise. Not demonstrated. |
+| 82 | `child(e, 0)` on `PROOF` | Safe (was: crafted snapshot) | As typing.rs:224: needs a `PROOF` term without children bound to a name used as a premise. Not demonstrated. **Now `TermStore::mk` does not make, and `TermStore::read_from` rejects a snapshot with, a term whose number of children its kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`, one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and `APPLY_OPAQUE`); test `a_term_of_the_wrong_shape_is_not_made_and_not_read`.** |
 | 105, 121 | `children[0]`, `children[1..]` | Safe | `children` starts with the rule's program (step.rs:49). |
 | 111 | `child(result, 0)` | Safe | `result` is an evaluatable `APPLY` (step.rs:108, 110), which has a child (store.rs:459-465). |
-| 115, 118 | `child(child(p, 0), 0)`, `children(pattern)[1..]` | Crafted snapshot | From text the program has one case (step.rs:114), a pair whose first element is an application with a head (cmd_parser.rs:871-878, 673). Needs a rule program whose case is not such a pair. Not demonstrated. |
+| 115, 118 | `child(child(p, 0), 0)`, `children(pattern)[1..]` | Safe (was: crafted snapshot) | From text the program has one case (step.rs:114), a pair whose first element is an application with a head (cmd_parser.rs:871-878, 673). Needs a rule program whose case is not such a pair. Not demonstrated. **Now `read_image` rejects a snapshot with a program that is not a list of cases, each a pair whose first element has a head (`is_program_term`); test `a_program_that_is_not_a_list_of_cases_is_rejected`.** |
 
 ### src/checker.rs
 
 | Line | Construct | Verdict | Why |
 | --- | --- | --- | --- |
 | 327-331 | `pop`, `remove` on an overload list | Safe | Reached through `get_mut(name)?`; `pop` on an empty list returns `None`. |
-| 368 | `hash_counter += 1` | Crafted snapshot, debug build only | From text it needs 2^64 calls. Needs `hash_counter = 2^64 - 1`, which snapshot.rs:265 reads without a bound. Demonstrated in a debug build; a release build wraps. |
+| 368 | `hash_counter += 1` | Safe (was: crafted snapshot, debug build only) | From text it needs 2^64 calls. Needs `hash_counter = 2^64 - 1`, which snapshot.rs:265 reads without a bound. Demonstrated in a debug build; a release build wraps. **Now the counter wraps (`wrapping_add`), as a release build did; test `counters_at_their_maximum_wrap`.** |
 
 ### src/print.rs
 
@@ -410,9 +402,9 @@ such panic.
 
 | Line | Construct | Verdict | Why |
 | --- | --- | --- | --- |
-| 104 | `stat.count += 1` | Crafted snapshot, debug build only | Needs a rule count of 2^64 - 1, which snapshot.rs:287 reads without a bound, then a step of that rule. Demonstrated in a debug build; a release build wraps. |
+| 104 | `stat.count += 1` | Safe (was: crafted snapshot, debug build only) | Needs a rule count of 2^64 - 1, which snapshot.rs:287 reads without a bound, then a step of that rule. Demonstrated in a debug build; a release build wraps. **Now the counter wraps (`wrapping_add`), as a release build did; test `counters_at_their_maximum_wrap`.** |
 | 106 | `mk_count - start_mk` | Safe | The store's count only grows during a step, and a snapshot is installed only by an include, never inside a step. |
-| 115 | `+= 1` on a program count | Crafted snapshot, debug build only | As stats.rs:104, with a program count of 2^64 - 1 and `--stats`. Not demonstrated. |
+| 115 | `+= 1` on a program count | Safe (was: crafted snapshot, debug build only) | As stats.rs:104, with a program count of 2^64 - 1 and `--stats`. Not demonstrated. **Now the counter wraps (`wrapping_add`), as a release build did; test `counters_at_their_maximum_wrap`.** |
 | 208, 210 | divisions | Safe | Floating point: a zero count or total prints `inf` or `NaN`. |
 | 87, 169, 202 | width formatting | Safe | Padding only; a wide value widens its column. |
 
@@ -466,7 +458,7 @@ such panic.
 | 213 | `file.len() - r.remaining()` | Safe | The reader never has more left than the file holds. |
 | 263, 305, 310 | `.get(..)?` | Safe | Checked accessors. |
 | 304 | `&entries[1..]` | Safe | `entries.first()?` at snapshot.rs:285. |
-| 337-340 | printing the lines stored in the snapshot | Crafted snapshot, debug build only | Needs an output line with a character above 255, which the reader accepts as UTF-8 (codec.rs:103-106); writing it trips the `debug_assert!` in latin1.rs:24 from main.rs:132. Demonstrated in a debug build; a release build writes `?`. |
+| 337-340 | printing the lines stored in the snapshot | Safe (was: crafted snapshot, debug build only) | Needs an output line with a character above 255, which the reader accepts as UTF-8 (codec.rs:103-106); writing it trips the `debug_assert!` in latin1.rs:24 from main.rs:132. Demonstrated in a debug build; a release build writes `?`. **Now `Reader::str` rejects a string with a character above U+00FF, so no such name or line is read; test `a_store_with_a_name_that_is_not_latin_1_is_rejected`.** |
 
 ### src/parser.rs
 
@@ -502,7 +494,7 @@ such panic.
 | --- | --- | --- | --- |
 | 64 | `args[i]` | Safe | `i < args.len()` (main.rs:63). |
 | 131-136, 236-238, 242 | writing to stdout and stderr | Safe | `write_all` with its result dropped: a closed pipe, a full device and a closed descriptor are ignored. |
-| 132, 237 | `latin1::encode`, whose `debug_assert!` is at latin1.rs:24 | Crafted snapshot, debug build only | From text every string is input bytes decoded one char per byte, plus ASCII. Needs a snapshot output line or name with a character above 255. Demonstrated in a debug build through snapshot.rs:339. |
+| 132, 237 | `latin1::encode`, whose `debug_assert!` is at latin1.rs:24 | Safe (was: crafted snapshot, debug build only) | From text every string is input bytes decoded one char per byte, plus ASCII. Needs a snapshot output line or name with a character above 255. Demonstrated in a debug build through snapshot.rs:339. **Now `Reader::str` rejects a string with a character above U+00FF, so no such name or line is read; test `a_store_with_a_name_that_is_not_latin_1_is_rejected`.** |
 | 194, 219, 226-229 | paths and arguments that are not UTF-8 | Safe | Arguments are read with `args_os` and paths built with `OsString::from_vec`. |
 | 209-218 | `RefCell`: `borrow_mut` in the two closures, `borrow` at line 218 | Safe | The closures run only inside `include_file` (main.rs:217); `write_snapshot(&self, ..)` cannot call them while the `borrow` is held. |
 

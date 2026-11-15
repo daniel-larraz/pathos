@@ -43,10 +43,39 @@ pub fn read_term(r: &mut Reader, store: &TermStore) -> Option<Term> {
 
 /// Reads a term of the store, or none.
 pub fn read_opt_term(r: &mut Reader, store: &TermStore) -> Option<Option<Term>> {
-    match r.u32()? {
-        0 => Some(None),
-        id => store.term_with_id(id).map(Some),
+    let id = r.u32()?;
+    if id == 0 {
+        return Some(None);
     }
+    Some(Some(store.term_with_id(id)?))
+}
+
+/// Whether the terms numbered `1..=last` are the same in the two stores:
+/// of the same kind, with the same name or value, and with the same
+/// children. Their cached types are not compared.
+fn same_first_terms(a: &TermStore, b: &TermStore, last: u32) -> bool {
+    (1..=last).all(|id| {
+        let (Some(ta), Some(tb)) = (a.term_with_id(id), b.term_with_id(id)) else {
+            return false;
+        };
+        a.kind(ta) == b.kind(tb)
+            && a.children(ta) == b.children(tb)
+            && a.lit(ta) == b.lit(tb)
+            && a.symbol_name(ta) == b.symbol_name(tb)
+    })
+}
+
+/// Whether `prog` has the shape of a program: each of its children, the
+/// cases, has a pattern and a body, and the pattern is an application, with
+/// a head. The parser builds programs so; a snapshot is checked with this.
+fn is_program_term(s: &TermStore, prog: Term) -> bool {
+    for i in 0..s.num_children(prog) {
+        let case = s.child(prog, i);
+        if s.num_children(case) < 2 || s.num_children(s.child(case, 0)) == 0 {
+            return false;
+        }
+    }
+    true
 }
 
 /// The entries of a map in the order of their keys, so that the same state
@@ -208,6 +237,12 @@ impl Checker {
                 return None;
             }
         }
+        // The checker keeps handles to these terms, so the store read must
+        // have them: the same terms, not only terms with the same numbers.
+        let last = fixed.iter().map(|t| t.id()).max().unwrap_or(0);
+        if !same_first_terms(&self.store, &store, last) {
+            return None;
+        }
         let neg_one = read_opt_term(r, &store)?;
 
         let n = r.len(15)?;
@@ -221,6 +256,15 @@ impl Checker {
                 (0, _) => return None,
                 (group, sub) => Some(Kind::from_code(group - 1, sub)?),
             };
+            // a builtin stands for a compound kind: one that `mk_expr` can
+            // build a term of
+            if kind.is_some_and(|k| !matches!(k, Kind::Node(_) | Kind::Eval(_))) {
+                return None;
+            }
+            // a program is a list of cases, as the parser builds them
+            if attr == Attr::Program && cons.is_some_and(|p| !is_program_term(&store, p)) {
+                return None;
+            }
             let overloaded = r.bool()?;
             let overload_name = r.str()?.to_string();
             let ai = AppInfo {
@@ -313,5 +357,140 @@ impl Checker {
         self.sorry_rules = image.sorry_rules;
         self.neg_one = image.neg_one;
         (self.stats).set_counts(image.rule_counts, image.program_counts);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use pathos_term::SymbolKind;
+
+    use super::*;
+
+    fn checker() -> Checker {
+        Checker::new(Options::default(), Box::new(|_| {}))
+    }
+
+    /// Whether a new checker reads the snapshot of `ck`.
+    fn reads(ck: &Checker) -> bool {
+        let mut w = Writer::new();
+        ck.write_snapshot(&mut w);
+        checker().read_image(&mut Reader::new(&w.bytes)).is_some()
+    }
+
+    #[test]
+    fn a_snapshot_reads_back() {
+        let mut ck = checker();
+        let ty = ck.store.mk_type();
+        let f = ck.store.mk_symbol(SymbolKind::Const, "f", ty);
+        ck.app.entry(f).or_default().kind = Some(Kind::FUNCTION_TYPE);
+        assert!(reads(&ck));
+    }
+
+    /// A builtin's kind is passed to `TermStore::mk`, which takes compound
+    /// kinds only.
+    #[test]
+    fn a_builtin_of_an_atomic_kind_is_rejected() {
+        for kind in [Kind::CONST, Kind::NUMERAL, Kind::Type] {
+            let mut ck = checker();
+            let ty = ck.store.mk_type();
+            let f = ck.store.mk_symbol(SymbolKind::Const, "f", ty);
+            ck.app.entry(f).or_default().kind = Some(kind);
+            assert!(!reads(&ck), "{kind}");
+        }
+    }
+
+    /// Matching takes a program's cases apart as pairs of an application
+    /// and a body.
+    #[test]
+    fn a_program_that_is_not_a_list_of_cases_is_rejected() {
+        let program = |shape: u8| {
+            let mut ck = checker();
+            let ty = ck.store.mk_type();
+            let p = ck.store.mk_symbol(SymbolKind::ProgramConst, "p", ty);
+            let x = ck.store.mk_symbol(SymbolKind::Param, "x", ty);
+            let pattern = ck.store.mk(Kind::APPLY, &[p, x]);
+            let case = match shape {
+                // as the parser builds it
+                0 => ck.store.mk(Kind::TUPLE, &[pattern, x]),
+                // a case that is not a pair
+                1 => ck.store.mk(Kind::TUPLE, &[pattern]),
+                2 => x,
+                // a pattern without a head
+                _ => ck.store.mk(Kind::TUPLE, &[x, x]),
+            };
+            let prog = ck.store.mk(Kind::PROGRAM, &[case]);
+            ck.define_program(p, Some(prog));
+            reads(&ck)
+        };
+        assert!(program(0));
+        assert!(!program(1));
+        assert!(!program(2));
+        assert!(!program(3));
+    }
+
+    /// The checker keeps handles to its builtin terms; a snapshot whose
+    /// store does not have them would leave those handles pointing nowhere.
+    #[test]
+    fn a_store_without_the_builtin_terms_is_rejected() {
+        let ck = checker();
+        let mut w = Writer::new();
+        // an empty store, and then what a checker without symbols writes
+        TermStore::new().write_to(&mut w);
+        let fixed = [
+            ck.t_true,
+            ck.t_false,
+            ck.t_self,
+            ck.list_type,
+            ck.list_nil,
+            ck.list_cons,
+            ck.proof_type,
+        ];
+        for t in fixed {
+            w.u32(t.id());
+        }
+        write_opt_term(&mut w, None);
+        w.len(0); // symbols
+        w.len(0); // overloads
+        w.len(0); // literal type rules
+        w.u64(0); // hash counter
+        w.len(0); // hashes
+        w.len(0); // sorry rules
+        w.len(0); // rule counts
+        w.len(0); // program counts
+        let mut r = Reader::new(&w.bytes);
+        assert!(ck.read_image(&mut r).is_none());
+    }
+
+    /// The same numbers are not enough: they must be the same terms.
+    #[test]
+    fn a_store_with_other_terms_in_place_of_the_builtin_ones_is_rejected() {
+        let mut ck = checker();
+        assert!(reads(&ck));
+        // a store as large as the checker's, of other terms
+        let mut other = TermStore::new();
+        let ty = other.mk_type();
+        while other.len() < ck.store.len() {
+            other.mk_symbol(SymbolKind::Const, "c", ty);
+        }
+        ck.store = other;
+        assert!(!reads(&ck));
+    }
+
+    /// The counters of a snapshot can be anything; none of them overflows.
+    #[test]
+    fn counters_at_their_maximum_wrap() {
+        let mut ck = checker();
+        let ty = ck.store.mk_type();
+        let rule = ck.store.mk_symbol(SymbolKind::ProofRule, "r", ty);
+        let prog = ck.store.mk_symbol(SymbolKind::ProgramConst, "p", ty);
+        ck.hash_counter = u64::MAX;
+        assert_eq!(ck.get_hash(rule), 0);
+        ck.count_programs();
+        (ck.stats).set_counts(vec![(rule, u64::MAX)], vec![(prog, u64::MAX)]);
+        ck.step_begins(rule);
+        ck.step_ends(rule);
+        ck.count_program(prog);
+        assert_eq!(ck.stats.rule_counts(), vec![(rule, 0)]);
+        assert_eq!(ck.stats.program_counts(), vec![(prog, 0)]);
     }
 }
