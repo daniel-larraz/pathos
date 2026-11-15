@@ -382,6 +382,20 @@ fn closure<F>(f: F) -> F {
     f
 }
 
+/// `TermStore::mk` was asked for a symbol or a literal: a bug in the caller.
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(requires false,))]
+fn atomic_kind(kind: Kind) -> Term {
+    panic!("TermStore::mk called with the atomic kind {kind}")
+}
+
+/// Whether two lists of terms are the same. (Verus has no specification of
+/// `==` on slices to use, so this states it.)
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == (a@ == b@),))]
+#[inline]
+fn same_terms(a: &[Term], b: &[Term]) -> bool {
+    a == b
+}
+
 /// The hash of a literal's value.
 #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == spec_hash_lit(*hasher, *lit),))]
 #[inline]
@@ -734,12 +748,17 @@ impl TermStore {
     /// `Type`, `Bool` and `eo::?` are also accepted, without children.
     /// Symbols and literals are made with [`TermStore::mk_symbol`] and
     /// [`TermStore::mk_lit`]; asking for one here is a bug in the caller.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
+    #[cfg_attr(verus_keep_ghost, verus_verify(rlimit(200)), verus_spec(r =>
         requires
             old(self).wf(),
             forall|i: int| 0 <= i < children@.len() ==> old(self).has(#[trigger] children@[i]),
             !(kind is Symbol) && !(kind is Lit),
-        ensures final(self).wf(), final(self).has(r), final(self).extends(old(self)),
+        ensures
+            final(self).wf(),
+            final(self).has(r),
+            final(self).extends(old(self)),
+            final(self).spec_limit() is None && (kind is Node || kind is Eval) ==>
+                final(self).is_node(r, kind, children@),
     ))]
     pub fn mk(&mut self, kind: Kind, children: &[Term]) -> Term {
         match kind {
@@ -747,24 +766,55 @@ impl TermStore {
             Kind::BoolType => return self.ty_bool,
             Kind::Any => return self.any,
             Kind::Null => return self.null,
-            Kind::Symbol(_) | Kind::Lit(_) => {
-                panic!("TermStore::mk called with the atomic kind {kind}")
-            }
+            Kind::Symbol(_) | Kind::Lit(_) => return atomic_kind(kind),
             Kind::Node(_) | Kind::Eval(_) => {}
         }
         self.mk_count = self.mk_count.wrapping_add(1);
+        proof_decl! {
+            self.lemma_same_terms(old(self));
+            let ghost before = *self;
+        }
         let tag = tag_of(kind);
         let hash = hash_node(&self.keys, tag, children);
-        let found = self.table.find(hash, |cand| {
-            tag_of(self.kind_at(cand)) == tag && self.children_at(cand) == children
-        });
+        let is_match = closure(
+            #[cfg_attr(verus_keep_ghost, verus_spec(r: bool =>
+                requires self.wf(), 1 <= cand < self.nodes@.len(),
+                ensures r == (spec_tag(self.kind_of(cand as int)) == tag && self.kids(cand as int) == children@),
+            ))]
+            |cand: usize| tag_of(self.kind_at(cand)) == tag && same_terms(self.children_at(cand), children),
+        );
+        let found = self.table.find(hash, is_match);
         let slot = match found {
-            Ok(cand) => return Term::from_slot(cand as u32),
+            Ok(cand) => {
+                proof! {
+                    assert(self.compound(cand as int));
+                    axiom_tags_differ(self.kind_of(cand as int), kind);
+                }
+                return Term::from_slot(cand as u32);
+            }
             Err(slot) => slot,
         };
+        proof_decl! {
+            let ghost k = choose|k: nat| #[trigger] no_match_before(self.table.slots@, self.table.shift, hash, k, is_match)
+                && slot == path(self.table.shift, hash, k);
+            // no term of the store is this one
+            assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.compound(i) implies
+                !(self.kind_of(i) == kind && self.kids(i) == children@) by {
+                if self.kind_of(i) == kind && self.kids(i) == children@ {
+                    lemma_absent(self.table.slots@, self.table.shift, hash, k, i as u32, is_match);
+                }
+            }
+        }
         // not found: make it
         let mut flags = 0;
+        #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
+            iter.seq().unref() == children@,
+            *self == before,
+            self.wf(),
+            forall|i: int| 0 <= i < children@.len() ==> self.has(#[trigger] children@[i]),
+        ))]
         for c in children {
+            proof! { assert(*c == children@[iter.index() as int]); }
             flags |= self.flags[c.index()];
         }
         // An operator applied to nothing counts as a leaf, as in Ethos.
@@ -780,10 +830,12 @@ impl TermStore {
                     u32::try_from(children.len()),
                 ) else {
                     self.limit = Some(Limit::Children);
+                    proof! { self.lemma_same_terms(&before); }
                     return self.any;
                 };
                 if start.checked_add(len).is_none() {
                     self.limit = Some(Limit::Children);
+                    proof! { self.lemma_same_terms(&before); }
                     return self.any;
                 }
                 let args = Args { start, len };
@@ -796,18 +848,44 @@ impl TermStore {
             }
         };
         let Some(t) = self.push(data, flags) else {
+            proof! { self.lemma_same_terms(&before); }
             return self.any;
         };
         if !matches!(data, TermData::Apply(_)) {
             self.child_pool.extend_from_slice(children);
         }
+        proof! {
+            lemma_count_nz_update(self.table.slots@, slot as int, t.idx() as u32);
+            lemma_count_nz_bound(self.table.slots@);
+            lemma_path_in_range(self.table.shift, hash, k);
+        }
         self.table.slots[slot] = t.0.get();
         self.table.len += 1;
+        proof_decl! {
+            assert(self.nodes@.take(before.nodes@.len() as int) =~= before.nodes@);
+            assert(self.child_pool@.take(before.child_pool@.len() as int) =~= before.child_pool@);
+            assert(self.kids(before.nodes@.len() as int) =~= children@);
+            self.lemma_after_node(&before, kind, children@, hash, k);
+            let ghost added = *self;
+        }
         if self.table.needs_growth() {
-            let grown = self
-                .table
-                .grown(|i| hash_node(&self.keys, tag_of(self.kind_at(i)), self.children_at(i)));
+            let hash_of = closure(
+                #[cfg_attr(verus_keep_ghost, verus_spec(r: u64 =>
+                    requires self.wf(), 1 <= i < self.nodes@.len(),
+                    ensures r == self.node_hash(i as int),
+                ))]
+                |i: usize| hash_node(&self.keys, tag_of(self.kind_at(i)), self.children_at(i)),
+            );
+            let grown = self.table.grown(hash_of);
+            proof! {
+                assert forall|p: int| 0 <= p < added.table.slots@.len() && added.table.slots@[p] != 0 implies
+                    #[trigger] reach(grown.slots@, grown.shift, added.node_hash(added.table.slots@[p] as int), added.table.slots@[p]) by {
+                    let c = added.table.slots@[p];
+                    let h = choose|h: u64| hash_of.ensures((c as usize,), h) && #[trigger] reach(grown.slots@, grown.shift, h, c);
+                }
+            }
             self.table = grown;
+            proof! { self.lemma_after_table(&added); }
         }
         t
     }
@@ -1176,7 +1254,7 @@ impl TermStore {
     }
 }
 
-/// The store's invariant and its view as trees, for Verus.
+// The store's invariant and its view as trees, for Verus.
 #[cfg(verus_keep_ghost)]
 verus! {
 
@@ -1545,6 +1623,12 @@ impl TermStore {
             implies self.lit_of(i) != self.lit_of(j) by {
             assert(old.is_lit_at(i) && old.is_lit_at(j));
         }
+        assert forall|p: int| 0 <= p < self.lit_table.slots@.len() && self.lit_table.slots@[p] != 0 implies
+            (#[trigger] self.lit_table.slots@[p]) < self.nodes@.len() && self.is_lit_at(self.lit_table.slots@[p] as int) by {
+            assert(old.is_lit_at(old.lit_table.slots@[p] as int));
+        }
+        self.lemma_keep_compound(old);
+        self.lemma_keep_symbols(old);
     }
 
     /// The invariant of the store.
@@ -1562,6 +1646,263 @@ impl TermStore {
         &&& self.lits@.len() < self.nodes@.len()
         &&& self.lit_table_ok()
         &&& self.lits_differ()
+        &&& self.table_ok()
+        &&& self.nodes_differ()
+        &&& self.symbols_differ()
+    }
+
+    /// The table of compound terms holds exactly those terms, each where a
+    /// lookup of its hash meets it.
+    spec fn table_ok(&self) -> bool {
+        &&& self.table.wf()
+        &&& forall|p: int| 0 <= p < self.table.slots@.len() && self.table.slots@[p] != 0 ==>
+                (#[trigger] self.table.slots@[p]) < self.nodes@.len()
+                    && self.compound(self.table.slots@[p] as int)
+        &&& forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.compound(i) ==>
+                reach(self.table.slots@, self.table.shift, self.node_hash(i), i as u32)
+    }
+
+    /// No two compound terms have the same kind and the same children.
+    spec fn nodes_differ(&self) -> bool {
+        forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.compound(i) && #[trigger] self.compound(j)
+            ==> !(self.kind_of(i) == self.kind_of(j) && self.kids(i) == self.kids(j))
+    }
+
+    spec fn is_symbol_at(&self, i: int) -> bool {
+        self.nodes@[i] is Symbol
+    }
+
+    spec fn name_of(&self, i: int) -> u32 {
+        match self.nodes@[i] {
+            TermData::Symbol(_, id) => id,
+            _ => 0,
+        }
+    }
+
+    /// No two symbols share a name entry: a symbol is its own term.
+    spec fn symbols_differ(&self) -> bool {
+        forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.is_symbol_at(i) && #[trigger] self.is_symbol_at(j)
+            ==> self.name_of(i) != self.name_of(j)
+    }
+
+    /// The term is the compound term of this kind with these children.
+    pub closed spec fn is_node(&self, t: Term, kind: Kind, children: Seq<Term>) -> bool {
+        self.has(t) && self.compound(t.idx()) && self.kind_of(t.idx()) == kind && self.kids(t.idx()) == children
+    }
+
+    /// The compound terms of `old` are those of this store too, in the same
+    /// table.
+    proof fn lemma_keep_compound(&self, old: &TermStore)
+        requires
+            old.wf(),
+            old.nodes@.len() <= self.nodes@.len(),
+            forall|i: int| 0 <= i < old.nodes@.len() ==> self.nodes@[i] == old.nodes@[i],
+            forall|i: int| old.nodes@.len() <= i < self.nodes@.len() ==> !self.compound(i),
+            self.child_pool == old.child_pool,
+            self.table == old.table,
+            self.keys == old.keys,
+        ensures self.table_ok(), self.nodes_differ(),
+    {
+        assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.compound(i) implies
+            reach(self.table.slots@, self.table.shift, self.node_hash(i), i as u32) by {
+            assert(old.compound(i));
+        }
+        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.compound(i) && #[trigger] self.compound(j)
+            implies !(self.kind_of(i) == self.kind_of(j) && self.kids(i) == self.kids(j)) by {
+            assert(old.compound(i) && old.compound(j));
+        }
+        assert forall|p: int| 0 <= p < self.table.slots@.len() && self.table.slots@[p] != 0 implies
+            (#[trigger] self.table.slots@[p]) < self.nodes@.len() && self.compound(self.table.slots@[p] as int) by {
+            assert(old.compound(old.table.slots@[p] as int));
+        }
+    }
+
+    /// The literals of `old` are those of this store too, in the same table.
+    proof fn lemma_keep_lits(&self, old: &TermStore)
+        requires
+            old.wf(),
+            old.nodes@.len() <= self.nodes@.len(),
+            forall|i: int| 0 <= i < old.nodes@.len() ==> self.nodes@[i] == old.nodes@[i],
+            forall|i: int| old.nodes@.len() <= i < self.nodes@.len() ==> !self.is_lit_at(i),
+            self.lits == old.lits,
+            self.lit_table == old.lit_table,
+            self.lit_hasher == old.lit_hasher,
+        ensures self.lit_table_ok(), self.lits_differ(),
+    {
+        assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.is_lit_at(i) implies
+            reach(self.lit_table.slots@, self.lit_table.shift, self.lit_hash(i), i as u32) by {
+            assert(old.is_lit_at(i));
+        }
+        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.is_lit_at(i) && #[trigger] self.is_lit_at(j)
+            implies self.lit_of(i) != self.lit_of(j) by {
+            assert(old.is_lit_at(i) && old.is_lit_at(j));
+        }
+        assert forall|p: int| 0 <= p < self.lit_table.slots@.len() && self.lit_table.slots@[p] != 0 implies
+            (#[trigger] self.lit_table.slots@[p]) < self.nodes@.len() && self.is_lit_at(self.lit_table.slots@[p] as int) by {
+            assert(old.is_lit_at(old.lit_table.slots@[p] as int));
+        }
+    }
+
+    /// The symbols of `old` are those of this store too.
+    proof fn lemma_keep_symbols(&self, old: &TermStore)
+        requires
+            old.wf(),
+            old.nodes@.len() <= self.nodes@.len(),
+            forall|i: int| 0 <= i < old.nodes@.len() ==> self.nodes@[i] == old.nodes@[i],
+            forall|i: int| old.nodes@.len() <= i < self.nodes@.len() ==> !self.is_symbol_at(i),
+        ensures self.symbols_differ(),
+    {
+        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.is_symbol_at(i) && #[trigger] self.is_symbol_at(j)
+            implies self.name_of(i) != self.name_of(j) by {
+            assert(old.is_symbol_at(i) && old.is_symbol_at(j));
+        }
+    }
+
+    /// The store after a compound term was added and entered in the table.
+    proof fn lemma_after_node(&self, old: &TermStore, kind: Kind, children: Seq<Term>, hash: u64, k: nat)
+        requires
+            old.wf(),
+            kind is Node || kind is Eval,
+            forall|i: int| 0 <= i < children.len() ==> (#[trigger] children[i]).idx() < old.nodes@.len(),
+            self.nodes@.len() == old.nodes@.len() + 1,
+            self.nodes@.take(old.nodes@.len() as int) == old.nodes@,
+            self.compound(old.nodes@.len() as int),
+            self.kind_of(old.nodes@.len() as int) == kind,
+            self.kids(old.nodes@.len() as int) == children,
+            self.nodes@.last() matches TermData::Node(n, a) ==>
+                a.start == old.child_pool@.len() && a.len == children.len() && !(n == NodeKind::Apply && a.len == 2),
+            self.nodes@.last() matches TermData::Eval(_, a) ==>
+                a.start == old.child_pool@.len() && a.len == children.len(),
+            self.child_pool@.len() <= u32::MAX,
+            old.child_pool@.len() <= self.child_pool@.len(),
+            self.child_pool@.take(old.child_pool@.len() as int) == old.child_pool@,
+            self.nodes@.last() is Apply ==> self.child_pool == old.child_pool,
+            !(self.nodes@.last() is Apply) ==> self.child_pool@.len() == old.child_pool@.len() + children.len(),
+            self.types@ == old.types@.push(None),
+            self.flags@.len() == self.nodes@.len(),
+            old.nodes@.len() <= u32::MAX,
+            self.lits == old.lits,
+            self.names == old.names,
+            self.lit_table == old.lit_table,
+            self.keys == old.keys,
+            self.lit_hasher == old.lit_hasher,
+            self.ty_type == old.ty_type && self.ty_bool == old.ty_bool && self.any == old.any && self.null == old.null,
+            hash == spec_hash_node(old.keys, spec_tag(kind), children),
+            forall|i: int| 1 <= i < old.nodes@.len() && #[trigger] old.compound(i) ==>
+                !(old.kind_of(i) == kind && old.kids(i) == children),
+            probed(old.table.slots@, old.table.shift, hash, k),
+            old.table.slots@[path(old.table.shift, hash, k)] == 0,
+            self.table.shift == old.table.shift,
+            self.table.slots@ == old.table.slots@.update(path(old.table.shift, hash, k), old.nodes@.len() as u32),
+            self.table.len == count_nz(self.table.slots@),
+        ensures
+            self.wf(),
+            self.extends(old),
+    {
+        let n = old.nodes@.len() as int;
+        let shift = old.table.shift;
+        let z = path(shift, hash, k);
+        lemma_path_in_range(shift, hash, k);
+        assert forall|i: int| 0 <= i < n implies self.nodes@[i] == old.nodes@[i] by {
+            assert(self.nodes@.take(n)[i] == old.nodes@[i]);
+        }
+        assert forall|j: int| 0 <= j < old.child_pool@.len() implies self.child_pool@[j] == old.child_pool@[j] by {
+            assert(self.child_pool@.take(old.child_pool@.len() as int)[j] == old.child_pool@[j]);
+        }
+        assert forall|i: int| 1 <= i < n implies #[trigger] self.kids(i) == old.kids(i) by {
+            old.lemma_node(i);
+            assert(self.kids(i) =~= old.kids(i));
+        }
+        assert forall|i: int| 1 <= i < n implies #[trigger] self.node_ok(i) by {
+            old.lemma_node(i);
+        }
+        assert(self.node_ok(n)) by {
+            match self.nodes@[n] {
+                TermData::Apply(c) => {
+                    assert(children[0] == c@[0] && children[1] == c@[1]);
+                },
+                TermData::Node(_, a) | TermData::Eval(_, a) => {
+                    assert forall|j: int| a.start <= j < a.start + a.len implies (#[trigger] self.child_pool@[j]).idx() < n by {
+                        assert(self.child_pool@[j] == children[j - a.start]);
+                    }
+                },
+                _ => {},
+            }
+        }
+        assert forall|i: int| 1 <= i < n && old.nodes@[i] is Lit implies #[trigger] self.lit_of(i) == old.lit_of(i) by {}
+        self.lemma_keep_lits(old);
+        self.lemma_keep_symbols(old);
+        assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.compound(i) implies
+            reach(self.table.slots@, self.table.shift, self.node_hash(i), i as u32) by {
+            if i < n {
+                assert(old.compound(i));
+                lemma_reach_update(old.table.slots@, shift, old.node_hash(i), i as u32, z, n as u32);
+            } else {
+                assert forall|j: nat| j < k implies self.table.slots@[#[trigger] path(shift, hash, j)] != 0 by {
+                    lemma_path_in_range(shift, hash, j);
+                }
+                assert(reach_at(self.table.slots@, shift, hash, n as u32, k));
+            }
+        }
+        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.compound(i) && #[trigger] self.compound(j)
+            implies !(self.kind_of(i) == self.kind_of(j) && self.kids(i) == self.kids(j)) by {
+            assert(old.compound(i));
+            if j < n {
+                assert(old.compound(j));
+            }
+        }
+        assert forall|p: int| 0 <= p < self.table.slots@.len() && self.table.slots@[p] != 0 implies
+            (#[trigger] self.table.slots@[p]) < self.nodes@.len() && self.compound(self.table.slots@[p] as int) by {
+            if p != z {
+                assert(old.compound(old.table.slots@[p] as int));
+            }
+        }
+    }
+
+    /// The store after its table of compound terms was replaced by a grown
+    /// one.
+    proof fn lemma_after_table(&self, old: &TermStore)
+        requires
+            old.wf(),
+            self.nodes == old.nodes,
+            self.types == old.types,
+            self.flags == old.flags,
+            self.lits == old.lits,
+            self.child_pool == old.child_pool,
+            self.names == old.names,
+            self.lit_table == old.lit_table,
+            self.keys == old.keys,
+            self.lit_hasher == old.lit_hasher,
+            self.ty_type == old.ty_type && self.ty_bool == old.ty_bool && self.any == old.any && self.null == old.null,
+            self.table.wf(),
+            forall|p: int| 0 <= p < old.table.slots@.len() && old.table.slots@[p] != 0 ==>
+                #[trigger] reach(self.table.slots@, self.table.shift, old.node_hash(old.table.slots@[p] as int), old.table.slots@[p]),
+            forall|q: int| 0 <= q < self.table.slots@.len() && self.table.slots@[q] != 0 ==>
+                exists|p: int| 0 <= p < old.table.slots@.len() && old.table.slots@[p] == #[trigger] self.table.slots@[q],
+        ensures self.wf(), self.extends(old),
+    {
+        assert forall|i: int| 1 <= i < self.nodes@.len() implies #[trigger] self.node_ok(i) by {
+            old.lemma_node(i);
+        }
+        self.lemma_keep_lits(old);
+        self.lemma_keep_symbols(old);
+        assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.compound(i) implies
+            reach(self.table.slots@, self.table.shift, self.node_hash(i), i as u32) by {
+            assert(old.compound(i));
+            let k = choose|k: nat| #[trigger] reach_at(old.table.slots@, old.table.shift, old.node_hash(i), i as u32, k);
+            let p = path(old.table.shift, old.node_hash(i), k);
+            lemma_path_in_range(old.table.shift, old.node_hash(i), k);
+            assert(old.table.slots@[p] == i as u32);
+        }
+        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.compound(i) && #[trigger] self.compound(j)
+            implies !(self.kind_of(i) == self.kind_of(j) && self.kids(i) == self.kids(j)) by {
+            assert(old.compound(i) && old.compound(j));
+        }
+        assert forall|q: int| 0 <= q < self.table.slots@.len() && self.table.slots@[q] != 0 implies
+            (#[trigger] self.table.slots@[q]) < self.nodes@.len() && self.compound(self.table.slots@[q] as int) by {
+            let p = choose|p: int| 0 <= p < old.table.slots@.len() && old.table.slots@[p] == self.table.slots@[q];
+            assert(old.compound(old.table.slots@[p] as int));
+        }
     }
 
     /// The table of literals holds exactly the literal terms, each where a
@@ -1602,7 +1943,8 @@ impl TermStore {
             old.wf(),
             self.nodes@.len() == old.nodes@.len() + 1,
             self.nodes@.take(old.nodes@.len() as int) == old.nodes@,
-            self.nodes@.last() matches TermData::Symbol(_, id) && id < self.names@.len(),
+            self.nodes@.last() matches TermData::Symbol(_, id) && id == old.names@.len(),
+            self.table == old.table,
             self.types@.len() == self.nodes@.len(),
             forall|i: int| 0 <= i < self.types@.len() ==>
                 (#[trigger] self.types@[i] matches Some(t) ==> t.idx() < self.nodes@.len()),
@@ -1627,13 +1969,15 @@ impl TermStore {
             }
         }
         assert forall|i: int| 1 <= i < n implies #[trigger] self.kids(i) == old.kids(i) by {}
-        assert forall|i: int| 1 <= i < self.nodes@.len() && #[trigger] self.is_lit_at(i) implies
-            reach(self.lit_table.slots@, self.lit_table.shift, self.lit_hash(i), i as u32) by {
-            assert(old.is_lit_at(i));
-        }
-        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.is_lit_at(i) && #[trigger] self.is_lit_at(j)
-            implies self.lit_of(i) != self.lit_of(j) by {
-            assert(old.is_lit_at(i) && old.is_lit_at(j));
+        self.lemma_keep_lits(old);
+        self.lemma_keep_compound(old);
+        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.is_symbol_at(i) && #[trigger] self.is_symbol_at(j)
+            implies self.name_of(i) != self.name_of(j) by {
+            old.lemma_node(i);
+            assert(old.is_symbol_at(i));
+            if j < n {
+                assert(old.is_symbol_at(j));
+            }
         }
     }
 
@@ -1650,6 +1994,7 @@ impl TermStore {
             self.lits@ == old.lits@.push(lit),
             self.child_pool == old.child_pool,
             self.names == old.names,
+            self.table == old.table,
             self.keys == old.keys,
             self.lit_hasher == old.lit_hasher,
             self.ty_type == old.ty_type && self.ty_bool == old.ty_bool && self.any == old.any && self.null == old.null,
@@ -1704,6 +2049,14 @@ impl TermStore {
                 assert(old.is_lit_at(j));
             }
         }
+        assert forall|p: int| 0 <= p < self.lit_table.slots@.len() && self.lit_table.slots@[p] != 0 implies
+            (#[trigger] self.lit_table.slots@[p]) < self.nodes@.len() && self.is_lit_at(self.lit_table.slots@[p] as int) by {
+            if p != z {
+                assert(old.is_lit_at(old.lit_table.slots@[p] as int));
+            }
+        }
+        self.lemma_keep_compound(old);
+        self.lemma_keep_symbols(old);
     }
 
     /// The store after its table of literals was replaced by a grown one.
@@ -1716,6 +2069,7 @@ impl TermStore {
             self.lits == old.lits,
             self.child_pool == old.child_pool,
             self.names == old.names,
+            self.table == old.table,
             self.keys == old.keys,
             self.lit_hasher == old.lit_hasher,
             self.ty_type == old.ty_type && self.ty_bool == old.ty_bool && self.any == old.any && self.null == old.null,
@@ -1741,6 +2095,13 @@ impl TermStore {
             implies self.lit_of(i) != self.lit_of(j) by {
             assert(old.is_lit_at(i) && old.is_lit_at(j));
         }
+        assert forall|q: int| 0 <= q < self.lit_table.slots@.len() && self.lit_table.slots@[q] != 0 implies
+            (#[trigger] self.lit_table.slots@[q]) < self.nodes@.len() && self.is_lit_at(self.lit_table.slots@[q] as int) by {
+            let p = choose|p: int| 0 <= p < old.lit_table.slots@.len() && old.lit_table.slots@[p] == self.lit_table.slots@[q];
+            assert(old.is_lit_at(old.lit_table.slots@[p] as int));
+        }
+        self.lemma_keep_compound(old);
+        self.lemma_keep_symbols(old);
     }
 }
 
