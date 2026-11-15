@@ -204,6 +204,57 @@ Where pathos does not follow, or cannot tell:
 - **`ulimit -s`.** Ethos gets deeper with a larger stack limit; pathos's
   stack is fixed at 64 MiB (see "Recursion deeper than the stack").
 
+### Terms that Ethos forgets
+
+Ethos keeps one copy of each term by looking terms up in a trie, by kind and
+then child by child, and takes a term out of the trie when nothing refers to
+it any more. The removal (`ExprTrie::remove`, `src/expr_trie.h`) erases the
+whole branch below the last trie node on the term's path that has more than
+one child, without looking at what else is in that branch. When the deleted
+term's children are the first children of another term of the same kind, or
+the other way round, that other term is erased from the trie too, although
+it is still in use. Ethos then builds a second copy the next time the term
+is asked for, and the two copies are different terms to it: `eo::eq` gives
+`false`, matching and the comparison of types fail, a step proves a formula
+that is "not" the expected one, and the printer does not share them.
+
+Applications are binary, except an application to no arguments, `(f)`, so
+this needs `(f)` to be deleted while every application in existence has the
+head `f` (the trie of applications then has one branch). Ethos gives a
+`false` that pathos does not on:
+
+```
+(declare-const Int Type)
+(declare-const f (-> Int Int))
+(declare-const k Int)
+(define a () (f k))
+(define x () (eo::ite true k (f)))
+(define b () (f k))
+(declare-const z (eo::requires (eo::eq a b) true Int))
+```
+
+Ethos: `Parsed type has an unevalated term: (eo::requires false true Int)`;
+pathos: `correct`. With one more application of another symbol before `a`,
+both say `correct`. An overloaded symbol deletes such a term by itself: each
+candidate that does not type check is built and dropped. So with two
+declarations of `BitVec` and nothing else applied, `(BitVec)` between two
+`(BitVec n)` makes the second a new term. The fuzzing finding
+`bd8cdb94afbe` is that case, seen in an error message: Ethos prints `(->
+(BitVec n) (-> (BitVec) (BitVec n)))` where pathos prints `(eo::define ((_v0
+(BitVec n))) (-> _v0 (-> (BitVec) _v0)))`. With `(assume h (P a))` and a
+step concluding `(P b)` from it, Ethos reports `Unexpected conclusion ...
+Proves: (P (BitVec n)) Expected: (P (BitVec n))` and pathos accepts the
+step.
+
+pathos does not reproduce this. It never deletes a term (design decision 2),
+and reproducing it would take Ethos's reference counts for every temporary
+term, to know when each is deleted, and its trie. The other kinds with a
+varying number of children (tuples, some `eo::` operators) can be affected
+in Ethos in the same way; no input was looked for. No regression and no cvc5
+proof in the harness shows it: it needs a term to be deleted while its trie
+path has no branching, which a signature with more than one applied symbol
+rules out for applications.
+
 ### Size limits
 
 An input can ask for more memory than there is, in both checkers:
@@ -219,6 +270,15 @@ terms, or more than 2^32 - 1 children of non-binary terms in total, ends with
 `Term store limit exceeded: <which>` after the command that hit the limit.
 That takes tens of gigabytes of memory. Ethos has no such limit and no such
 message; it runs until memory is exhausted.
+
+The store also refuses a term with a number of children that its kind
+cannot have: an application without a head, a lambda, a parameterized term
+or a quoted type without its two (or one) children, a proof term without its
+formula. Nothing in pathos builds such a term, and no input is known that
+makes it try; if one did, the command would end with `Internal error: a term
+with a number of children that its kind cannot have`. The check is there so
+that the code which takes such terms apart need not rely on how each caller
+builds them.
 
 ### Not observed, but possible
 

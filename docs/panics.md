@@ -14,6 +14,18 @@ appendix of [evidence.md](evidence.md). Line numbers are those of commit
 `pathos-elab` (two rows, with that milestone's line numbers) and moved
 lines in the two `main.rs`, `parser.rs`, `path.rs` and `lexer.rs` by a few;
 it added no other construct that can panic.
+Since then the check of a term's shape is in the store itself:
+`TermStore::mk` does not make a term with a number of children that its
+kind cannot have (`NodeKind::takes`: two for `LAMBDA` and `PARAMETERIZED`,
+one for `PROOF` and `QUOTE_TYPE`, at least one for `APPLY` and
+`APPLY_OPAQUE`), and `TermStore::read_from` rejects a snapshot that holds
+one (test `a_term_of_the_wrong_shape_is_not_made_and_not_read`). The rows
+that rest on "from text this kind always has a head" or "two children" no
+longer rest on how each caller builds terms, and the nine "Crafted
+snapshot" rows that needed such a term are closed: `eval.rs` 369 and 680,
+and 600; `typing.rs` 211 and 216, 224, 240, 286 and 322; `build.rs` 451 and
+459; `step.rs` 82. The rows and the counts below are as they were before
+that change.
 
 ## What was looked for
 
