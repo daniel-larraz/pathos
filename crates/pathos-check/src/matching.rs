@@ -160,7 +160,7 @@ pub(crate) fn match_terms(
                 xs@.len() == ys@.len(),
                 stack@.len() == rest.len() + i,
                 forall|m: int| 0 <= m < stack@.len() ==> s.has((#[trigger] stack@[m]).0) && s.has(stack@[m].1),
-                forall|m: int| 0 <= m < rest.len() ==> stack@[m] == rest[m],
+                forall|m: int| 0 <= m < rest.len() ==> #[trigger] stack@[m] == rest[m],
                 forall|m: int| 0 <= m < i ==> stack@[rest.len() + m] == (xs@[m], ys@[m]),
                 stack_weight(s, stack@) == stack_weight(s, rest) + kids_size(s, x, i as int),
             ))]

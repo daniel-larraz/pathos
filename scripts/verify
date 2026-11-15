@@ -37,8 +37,8 @@ VERUS_SHA256=f3a0119292df8855e4435da8130bee1873b0e6a60c306accf81a08ea687bba3c
 VERUS_TOOLCHAIN=1.99.1-x86_64-unknown-linux-gnu
 # The number of functions and proofs Verus checked in each crate when this
 # was last changed. Fewer is an error; more is expected as proofs are added.
-MIN_VERIFIED_TERM=165
-MIN_VERIFIED_CHECK=2
+MIN_VERIFIED_TERM=178
+MIN_VERIFIED_CHECK=15
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fail() { echo "scripts/verify: $*" >&2; exit 2; }
