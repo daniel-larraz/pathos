@@ -862,7 +862,13 @@ agreement with a written semantics is in the range milestone 17 gave
 
 - `scripts/verify`: `pathos_term` 178 verified, 0 errors; `pathos_check` 15
   verified, 0 errors.
-- `scripts/full-check --quick`: every step passes; the numbers are in the
-  milestone's report to the reviewer and are those of milestone 18.
-- `Cargo.lock` is unchanged; no dependency was added.
+- `scripts/full-check --quick`: every step passes, with the numbers of
+  milestone 18: `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43
+  (344 s, against 351 s), `cli` 3,192 of 3,192, `snapshot` 6,300 of 6,300,
+  `bignum` 7 of 7, and `fuzz` has no finding that still differs.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass.
+- `Cargo.lock` is unchanged; no dependency was added. The code that runs
+  did not change (every added line is behind `cfg(verus_keep_ghost)` or
+  inside a proof block), so the dependency trace was not rerun.
 
