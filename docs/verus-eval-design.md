@@ -20,6 +20,10 @@ deciding.
 The result of milestone 21, with the measurements and what differs from
 this design, is in
 [verus-spike.md](verus-spike.md#milestone-21-the-evaluators-operators-cannot-panic).
+Milestone 22 proved `evaluate`; its result is in
+[verus-spike.md](verus-spike.md#milestone-22-evaluate-cannot-panic). The
+invariant there is stated on the order of handles, not as "The invariant,
+as I would state it" below has it, and it says why.
 The rest of this file is the design as it was reviewed.
 
 ## What stands in the way
