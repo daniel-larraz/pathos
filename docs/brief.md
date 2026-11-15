@@ -495,6 +495,35 @@ will decide on later. The rules of the branch:
     "Crafted snapshot" rows of `docs/panics.md` are updated (each removed,
     or with what still holds it), and the report section says whether the
     evidence page's first question for the developers can be withdrawn.
+21. **Panic freedom of the evaluator.** `eval.rs` (about 970 lines): `evaluate`
+    with its explicit stack of frames, program application, the literal
+    operators' entry point (`Lit::evaluate` is already verified), `eo::nil`,
+    the n-ary helpers and the list operators. Prove that none of it can
+    panic, and that every term it reads, builds or returns is a term of the
+    store, building on milestones 17 to 20. Not its correctness.
+    - **First, the split.** The evaluator is methods of `Checker`, and calls
+      out to the plugin's evaluation hooks, warnings (formatted messages),
+      statistics, the program table and typing. As matching did in
+      milestone 18, separate what Verus must see (the traversal, the
+      frames, the operators) from those side effects, for instance behind
+      a small interface whose methods are trusted (`external_body`) with
+      stated contracts: what they may return, what they may change.
+      Write the design down before proving; if it needs more than moving
+      code, say so and stop for review.
+    - **The stack.** The proof that frames are well formed (each child
+      index in range, each pending term valid, the caches holding store
+      terms) is the core of the milestone; state it as one invariant.
+    - **Assumptions** stay listed: the plugin's contracts, the hash maps'
+      models, termination (not expected: programs need not terminate; say
+      what fuel or measure a later proof would use).
+    - **Behaviour** unchanged: every gate agrees with Ethos, the order of
+      warnings and statistics included.
+    - **The estimate** for the rest (typing and step checking, then
+      correctness with a semantics) is updated from what this milestone
+      cost.
+    The gate: `scripts/verify` and `scripts/full-check --quick` pass, CI is
+    green on `m21-verus-eval`, and the report section is written. The
+    reviewer pushes and starts CI runs.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
