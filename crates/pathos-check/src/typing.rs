@@ -6,6 +6,7 @@ use std::fmt::Write;
 use pathos_term::{EvalOp, Kind, Lit, LitKind, NodeKind, Term};
 
 use crate::checker::{Checker, Ctx};
+use crate::matching;
 
 /// Appends formatted text to an optional error message. Messages are only
 /// built on the second pass, after a check has failed (see
@@ -367,45 +368,7 @@ impl Checker {
         ctx: &mut Ctx,
         visited: &mut HashSet<(Term, Term)>,
     ) -> bool {
-        let s = &self.store;
-        let mut stack = vec![(a, b)];
-        while let Some((x, y)) = stack.pop() {
-            if s.is_ground(x) {
-                if x == y {
-                    continue;
-                }
-                return false;
-            }
-            // Equal non-ground terms are still traversed, to bind each of
-            // their parameters to itself.
-            if !visited.insert((x, y)) {
-                continue;
-            }
-            if s.num_children(x) == 0 {
-                if s.kind(x) != Kind::PARAM {
-                    return false;
-                }
-                // The types of x and y are not compared here.
-                match ctx.get(&x) {
-                    None => {
-                        ctx.insert(x, y);
-                    }
-                    Some(&prev) => {
-                        if prev != y {
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                if s.num_children(x) != s.num_children(y) || s.kind(x) != s.kind(y) {
-                    return false;
-                }
-                for (&cx, &cy) in s.children(x).iter().zip(s.children(y)) {
-                    stack.push((cx, cy));
-                }
-            }
-        }
-        true
+        matching::match_terms(&self.store, a, b, ctx, visited)
     }
 
     /// The type of an `eo::` operator application.

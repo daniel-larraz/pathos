@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Checks the proofs in pathos-term with Verus
+# Checks the proofs in pathos-term and pathos-check with Verus
 # (https://github.com/verus-lang/verus), at the release pinned below. This
 # is what the `verify` job of .github/workflows/ci.yml runs; see
 # docs/verus-spike.md for what is proved and what is assumed.
@@ -18,8 +18,10 @@
 # compiled only under cfg(verus_keep_ghost), which Verus sets, and Verus
 # brings its own copy of its library. So this script builds pathos-term's
 # real dependencies (malachite) with Cargo and the toolchain Verus uses,
-# and runs Verus on crates/pathos-term/src/lib.rs against them. Nothing in
-# Cargo.toml or Cargo.lock mentions Verus.
+# and runs Verus on crates/pathos-term/src/lib.rs against them. Verus then
+# compiles pathos-term and exports what it proved about it, and is run on
+# crates/pathos-check/src/lib.rs against that. Nothing in Cargo.toml or
+# Cargo.lock mentions Verus.
 #
 # Exits 0 if everything verifies, 1 if a proof fails or fewer proof
 # obligations were checked than expected (which would mean that
@@ -33,9 +35,10 @@ set -uo pipefail
 VERUS_VERSION=0.2026.11.02.8bf68ee
 VERUS_SHA256=f3a0119292df8855e4435da8130bee1873b0e6a60c306accf81a08ea687bba3c
 VERUS_TOOLCHAIN=1.99.1-x86_64-unknown-linux-gnu
-# The number of functions and proofs Verus checked when this was last
-# changed. Fewer is an error; more is expected as proofs are added.
-MIN_VERIFIED=165
+# The number of functions and proofs Verus checked in each crate when this
+# was last changed. Fewer is an error; more is expected as proofs are added.
+MIN_VERIFIED_TERM=165
+MIN_VERIFIED_CHECK=2
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fail() { echo "scripts/verify: $*" >&2; exit 2; }
@@ -95,19 +98,45 @@ for crate in malachite_base malachite_nz malachite_q; do
   externs+=(--extern "$crate=${rlibs[0]}")
 done
 
+out="$root/target/verus/out"
+mkdir -p "$out"
 log="$root/target/verus/verify.log"
-start=$(date +%s.%N)
-(cd "$root" && "$verus_dir/verus" crates/pathos-term/src/lib.rs --crate-type=lib \
-  --crate-name pathos_term --edition=2024 -L "dependency=$deps/debug/deps" \
-  "${externs[@]}" ${extra[@]+"${extra[@]}"}) 2>&1 | tee "$log"
-status=${PIPESTATUS[0]}
-end=$(date +%s.%N)
-printf 'Verus %s: %.1f s\n' "$VERUS_VERSION" "$(echo "$end - $start" | bc)"
+: > "$log"
+failed=0
 
-[[ $status == 0 ]] || { echo "scripts/verify: verification failed" >&2; exit 1; }
-verified="$(sed -n 's/^verification results:: \([0-9]*\) verified, 0 errors$/\1/p' "$log")"
-[[ -n "$verified" ]] || { echo "scripts/verify: no verification result in the output" >&2; exit 1; }
-if (( verified < MIN_VERIFIED )); then
-  echo "scripts/verify: $verified checked, expected at least $MIN_VERIFIED: were specifications removed?" >&2
-  exit 1
+# Runs Verus on a crate and checks that it verified at least `min` items.
+verify_crate() {
+  local name="$1" min="$2"; shift 2
+  local crate_log="$root/target/verus/verify-$name.log" start end status verified
+  echo "== $name"
+  start=$(date +%s.%N)
+  (cd "$root" && "$verus_dir/verus" "crates/${name//_/-}/src/lib.rs" --crate-type=lib \
+    --crate-name "$name" --edition=2024 -L "dependency=$deps/debug/deps" \
+    "$@" ${extra[@]+"${extra[@]}"}) 2>&1 | tee "$crate_log"
+  status=${PIPESTATUS[0]}
+  end=$(date +%s.%N)
+  cat "$crate_log" >> "$log"
+  printf '%s: %.1f s\n' "$name" "$(echo "$end - $start" | bc)" | tee -a "$log"
+  if [[ $status != 0 ]]; then
+    echo "scripts/verify: verification of $name failed" >&2
+    failed=1
+    return
+  fi
+  verified="$(sed -n 's/^verification results:: \([0-9]*\) verified, 0 errors$/\1/p' "$crate_log")"
+  if [[ -z "$verified" ]]; then
+    echo "scripts/verify: no verification result for $name" >&2
+    failed=1
+  elif (( verified < min )); then
+    echo "scripts/verify: $name: $verified checked, expected at least $min: were specifications removed?" >&2
+    failed=1
+  fi
+}
+
+echo "Verus $VERUS_VERSION"
+verify_crate pathos_term "$MIN_VERIFIED_TERM" "${externs[@]}" \
+  --compile --out-dir "$out" --export "$out/pathos_term.vir"
+if [[ $failed == 0 ]]; then
+  verify_crate pathos_check "$MIN_VERIFIED_CHECK" -L "dependency=$out" \
+    --extern "pathos_term=$out/libpathos_term.rlib" --import "pathos_term=$out/pathos_term.vir"
 fi
+exit $failed

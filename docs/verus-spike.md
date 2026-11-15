@@ -29,7 +29,13 @@ decision can be made on going further. It does not show that pathos is sound.
   it, whose specifications are assumed. About 35 other statements are
   assumed too. All are listed under "What is assumed".
 
-What needs a decision is at the end, under "For Daniel".
+What needed a decision is under "For Daniel".
+
+The spike was milestone 17. The work continues on the branch `verus`
+(see "The `verus` branch" in [brief.md](brief.md)), and each later
+milestone adds a section at the end of this file:
+
+- [Milestone 18: matching cannot panic](#milestone-18-matching-cannot-panic)
 
 ## The setup
 
@@ -460,3 +466,203 @@ After the changes, on this machine:
    for `pathos-term`; a note there says what changed. Verus now proves the
    "Safe" rows of the store (outside snapshots), of `bitvec.rs` and of
    `Lit::evaluate`.
+
+## Milestone 18: matching cannot panic
+
+### Summary
+
+- **Matching is proved free of panics.** `match_terms` and `match_cases`
+  (the loop that finds the case of a program matching its arguments) cannot
+  panic, and every term they read, push or bind is a term of the store.
+  Verus checks 2 functions in `pathos-check` with no errors in 2 seconds, on
+  top of the 165 items of `pathos-term`.
+- **It was much cheaper than estimated**: 49 lines of specification and 5 of
+  proof for 83 lines of code, against the 400 to 600 lines I estimated. The
+  store's contracts from milestone 17 did the work.
+- **One precondition is not guaranteed by anything Verus checks:** that a
+  program's cases are pairs. It is the "crafted snapshot" case that
+  [panics.md](panics.md) already lists as open.
+- **Rule steps are covered through programs.** A rule's premises, `:args`
+  and conclusion are matched by the same two functions; the code in
+  `check_step` that assembles them is not verified.
+- **Correctness is not proved.** What it would state, and the lemmas it
+  needs from the store, are below. One of them, about the `is_ground` flag,
+  is not in the store's invariant yet.
+- **Verifying a second crate works.** `scripts/verify` has Verus export
+  what it proved about `pathos-term` and checks `pathos-check` against it.
+
+### What was verified
+
+The two functions are in
+[matching.rs](../crates/pathos-check/src/matching.rs), a new module. They
+take the term store, not the checker: matching reads nothing else. The
+checker's `match_terms` method and `evaluate_program_internal` call them.
+
+| Function | Requires | Proved |
+| --- | --- | --- |
+| `match_terms(s, a, b, ctx, visited)` | The store's invariant; `a` and `b` are terms of the store; every key and value of `ctx` is one. | No panic. Every pair on the work stack, and every key and value of `ctx` afterwards, is a term of the store. A binding already in `ctx` is still there, to the same term. |
+| `match_cases(s, prog, children, new_ctx)` | The same, for `prog` and each of `children`; and `is_program(s, prog)`: every child of `prog` has at least two children. | No panic. `new_ctx` holds terms of the store. The body or the pattern returned is a term of the store. |
+
+`match_cases` returns one of three answers: the body of the first matching
+case, the pattern of a case with the wrong number of arguments, or no case.
+The warning for the second, which formats terms, stays in the checker.
+
+Where the three kinds of matching in the milestone go through this code:
+
+- **A program's cases:** `evaluate_program_internal` calls `match_cases`.
+- **A rule's premises, `:args` and conclusion:** `check_step` puts them in
+  one argument list and applies the rule's program to it, so they are
+  matched by `match_cases` too. `check_step` itself builds terms and
+  evaluates, and is left for the evaluator's milestone.
+- **Argument types against a function type** (`get_type_app`) and **the
+  type of a nil terminator** (`evaluate_nil`) call `match_terms`. Their own
+  code is not verified.
+
+Seven deliberate faults are each caught: dropping the `is_program`
+requirement, dropping the comparison of the numbers of children, running
+the argument loop one too far, dropping the requirement that `b` is a term
+of the store, reading a case's third child, dropping the arity check, and
+`assert(false)` at the end of `match_terms`.
+
+### The preconditions, and who meets them
+
+The callers are not verified, so these are obligations on them:
+
+- **Terms of the store, and a context of them.** Every caller passes terms
+  it got from the store, and a context that is new or was filled by
+  matching.
+- **`is_program`.** The parser builds a program only from pairs of a
+  pattern and a body. A snapshot is not checked for it: a forged snapshot
+  whose program symbol points at another kind of term makes
+  `child(case, 0)` panic. This is row "Crafted snapshot" of `eval.rs` in
+  [panics.md](panics.md), and the first open question of
+  [evidence.md](evidence.md). Verus turns it from a note into a stated
+  precondition. Closing it means checking the shape when a snapshot is
+  read, or in `match_cases`.
+
+### What is assumed
+
+One new statement: the derived order of `Term` is a total order that
+agrees with equality (`axiom_terms_are_ordered`), which Verus's model of
+`BTreeMap` asks for. Everything else is from milestone 17's list, plus
+Verus's own specifications of `BTreeMap`, `HashSet` and `Vec`.
+
+Termination of the loop of `match_terms` is not proved.
+
+### Rust features
+
+Accepted as written: `while let Some((x, y)) = stack.pop()`, `BTreeMap::get`
+and `insert`, `HashSet::insert`, `continue`, `vec![...]`, and an enum
+defined outside `verus!`.
+
+Rewritten, with the same behaviour:
+
+| Construct | Problem | Now |
+| --- | --- | --- |
+| `for (&cx, &cy) in s.children(x).iter().zip(s.children(y))` | A loop over a `zip` needs an invariant written against Verus's model of the zipped iterator. | A loop over an index into the two lists. |
+| `children.iter().enumerate().skip(1)` | The same, for `enumerate` and `skip`. | `for j in 1..nargs`. Clippy asks for the iterator back; one `#[allow]`. |
+| The body of the loop in `evaluate_program_internal` | It warns, through the checker, in the middle of matching. | `match_cases` returns `BadArity` and the caller warns. |
+
+### Lines and time
+
+| File | Code | Specification | Proof |
+| --- | --- | --- | --- |
+| `matching.rs` | 83 | 49 | 5 |
+
+The code replaces 56 lines in `typing.rs` and `eval.rs`, which keep 8 lines that call it; the rest of the difference is the result type and the function signatures. Verus takes 1.8
+seconds for `pathos-check`; `scripts/verify` as a whole takes about 33
+seconds.
+
+### Verifying a second crate
+
+Verus is run on `pathos-term` with `--compile --export`, which writes the
+compiled crate and a file of what was proved about it, and then on
+`pathos-check` with `--extern` and `--import` pointing at those. The
+specification functions that `pathos-check` uses (`wf`, `has`, `kids`,
+`idx`) were already public. `scripts/verify` checks a minimum number of
+verified items for each crate.
+
+### What correctness would say
+
+Not proved; this is the statement and what it needs.
+
+**Instantiation.** For a store `s`, a substitution `σ` (the context) and a
+term `x`, `inst(s, σ, x)` is a tree: if `x` is a parameter bound in `σ`,
+the tree of the term it is bound to; if `x` is compound, its kind with the
+instantiations of its children; otherwise the tree of `x`.
+
+**The statement for `match_terms`.** If `match_terms(s, a, b, ctx,
+visited)` returns true, then `inst(s, ctx', a) == s.tree(b)` for the
+context `ctx'` it leaves, provided that for every pair `(x, y)` in
+`visited` beforehand, `inst(s, ctx, x) == s.tree(y)`. That proviso is what
+sharing `visited` between calls means, and it fails after a call that
+returned false: a caller must not reuse `visited` then. Both callers that
+share it stop at the first false.
+
+**Completeness**, if wanted: if it returns false, no extension of `ctx`
+instantiates `a` to the tree of `b`.
+
+**For `match_cases`:** if it returns the body of case `i`, the patterns of
+case `i` instantiated by `new_ctx` are the trees of the arguments, and (with
+completeness) no earlier case matches.
+
+Three things pathos does that the statement has to respect, because the
+specification states what the code does: types of a parameter and the term
+bound to it are not compared; equal non-ground terms are still traversed;
+a non-ground term without children that is not a parameter (`eo::?`) never
+matches.
+
+**Lemmas needed from the store:**
+
+| Lemma | Status |
+| --- | --- |
+| Two terms with the same tree are the same term (so `x == y` on handles decides equality of trees). | Proved: `theorem_same_tree_same_term`. |
+| The tree of a compound term is its kind and the trees of its children. | True by definition, but `tree` is closed: needs a public lemma. Small. |
+| `kind`, `children` and `num_children` return what the tree is made of. | Proved: their `ensures`. |
+| **`is_ground(x)` holds exactly when no parameter and no `eo::?` occurs in `x`**, so that a ground pattern instantiates to itself. | **Missing.** The flags are not in the store's invariant: `mk` computes them from the children's, and nothing is proved about them. Adding it touches `mk`, `mk_symbol` and `new`. |
+| A term of kind `PARAM` is a symbol, with no children. | Follows from `kind_of`; needs stating. |
+| Instantiation does not change when the context grows, for a term whose parameters were all bound. | New, about `inst`; by induction on the term. |
+
+It also needs Verus's model of `HashSet` for `visited`, which asks that the
+derived `Hash` of `Term` agree with its equality (one more assumption), and
+a loop invariant relating the work stack to the pairs still to be matched.
+
+My estimate: 100 to 150 lines of specification and 300 to 500 of proof,
+most of it the loop invariant and the flag lemma.
+
+### The estimate, updated
+
+The estimate of milestone 17 for panic freedom of matching was 400 to 600
+lines; it took 54. Two reasons, and they cut both ways for what is left:
+
+- **The store's contracts carry over.** Once `children` promises terms of
+  the store, code that only reads the store needs almost no proof. The
+  evaluator reads the store in the same way for much of its length.
+- **Matching did not need the checker.** `Checker` holds hash maps, a
+  plugin behind a trait object, a boxed closure and statistics. Matching
+  was moved out of it. The evaluator cannot be: it reads attributes, counts
+  programs, warns and calls the plugin. Getting Verus to accept `Checker`
+  at all, or splitting what the evaluator needs from the rest, is the
+  first cost of the next milestone and is still unmeasured.
+
+So I would lower the panic-freedom column of milestone 17's table to
+roughly a third for code that only reads the store, and leave it as it was
+for code that builds terms and goes through `Checker`. The right-hand
+column, agreement with a semantics, is unchanged.
+
+### Gates
+
+- `scripts/verify`: `pathos_term` 165 verified, 0 errors; `pathos_check` 2
+  verified, 0 errors.
+- `scripts/full-check --quick`: every step passes, with the numbers of
+  milestone 17: `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43,
+  `cli` 3,192 of 3,192, `snapshot` 6,300 of 6,300, `bignum` 7 of 7, and
+  `fuzz` has no finding that still differs.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass.
+- Speed: the `large` gate, which matches more than anything else, took
+  350.6 s against 350.1 s before the change.
+- `Cargo.lock` is unchanged; no dependency was added. `scripts/unsafe-reach`
+  gives the line counts of milestone 17.
+- `.github/workflows/ci.yml` now also runs on pushes to `verus`.
+

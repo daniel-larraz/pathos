@@ -2,8 +2,9 @@
 #   - rust:        formatting, Clippy (warnings are errors), tests in debug
 #                  and release builds
 #   - verify:      Verus, at the release pinned in scripts/verify, checks the
-#                  specifications in pathos-term: the literal operators
-#                  and the term store (docs/verus-spike.md)
+#                  specifications in pathos-term and pathos-check: the
+#                  literal operators, the term store and matching
+#                  (docs/verus-spike.md)
 #   - regressions: pathos against the reference Ethos on Ethos's 230
 #                  regressions, on the saved fuzzing findings (those from
 #                  proofs are skipped: there is no corpus here), and on the
@@ -35,7 +36,8 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    # `verus` is the long-lived branch of the Verus work (docs/brief.md)
+    branches: [main, verus]
   pull_request:
   workflow_dispatch:
 
@@ -76,7 +78,7 @@ jobs:
         run: cargo test --locked --release
 
   verify:
-    name: Verus proofs of the literal operators and the term store
+    name: Verus proofs of the literal operators, the term store and matching
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
