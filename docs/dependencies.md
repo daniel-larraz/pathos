@@ -9,8 +9,8 @@ whether pathos can reach that code, and why it is acceptable. Adding a
 dependency that contains `unsafe` code or binds C code needs the user's
 agreement.
 
-**Status (2026-11-14, milestone 15): option 0 chosen, pinned; awaiting
-Daniel's signature on this text.** Milestone 15 added the trace on the other
+**Status (2026-11-14, milestone 15): option 0 chosen, pinned; approved by
+Daniel Larraz on 2026-11-14 (recorded at his request).** Milestone 15 added the trace on the other
 five platforms ("[On the other platforms](#on-the-other-platforms)"): the
 decision is the one of milestone 14, and the text under it now covers arm64,
 where the `unsafe` lines in the binaries are different ones. The list matches `Cargo.lock`, which has
