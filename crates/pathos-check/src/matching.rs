@@ -160,7 +160,7 @@ pub(crate) fn match_terms(
                 xs@.len() == ys@.len(),
                 stack@.len() == rest.len() + i,
                 forall|m: int| 0 <= m < stack@.len() ==> s.has((#[trigger] stack@[m]).0) && s.has(stack@[m].1),
-                forall|m: int| 0 <= m < rest.len() ==> #[trigger] stack@[m] == rest[m],
+                forall|m: int| 0 <= m < rest.len() ==> stack@[m] == #[trigger] rest[m],
                 forall|m: int| 0 <= m < i ==> stack@[rest.len() + m] == (xs@[m], ys@[m]),
                 stack_weight(s, stack@) == stack_weight(s, rest) + kids_size(s, x, i as int),
             ))]
@@ -445,7 +445,7 @@ proof fn lemma_inst_ground(s: &TermStore, ctx: Map<Term, Term>, x: Term)
         s.lemma_tree_compound(x);
         let ks = s.kids(x.idx());
         let cs = s.tree(x.idx())->Node_1;
-        assert forall|m: int| 0 <= m < ks.len() implies inst_children(s, ctx, x)[m] == cs[m] by {
+        assert forall|m: int| 0 <= m < ks.len() implies inst_children(s, ctx, x)[m] == #[trigger] cs[m] by {
             assert(tree_is_ground(cs[m]));
             lemma_inst_ground(s, ctx, ks[m]);
             assert(inst_child(s, ctx, x, ks[m]) == inst(s, ctx, ks[m]));
@@ -480,7 +480,7 @@ proof fn lemma_inst(s: &TermStore, ctx: Map<Term, Term>, vis: Set<(Term, Term)>,
             }
             s.lemma_tree_compound(y);
             let cs = s.tree(y.idx())->Node_1;
-            assert forall|m: int| 0 <= m < kx.len() implies inst_children(s, ctx, x)[m] == cs[m] by {
+            assert forall|m: int| 0 <= m < kx.len() implies inst_children(s, ctx, x)[m] == #[trigger] cs[m] by {
                 let q = (kx[m], ky[m]);
                 assert(!Seq::<(Term, Term)>::empty().contains(q));
                 assert(resolved(s, vis, kx[m], ky[m]));
