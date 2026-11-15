@@ -418,6 +418,38 @@ intended; everything between gates is not.
     passes, and the report is written. The reviewer pushes and starts CI
     runs, as before.
 
+## The `verus` branch
+
+Milestones 18 and later live on the branch `verus`, not on `main`: an
+exploration of how far pathos can be verified with Verus, which Daniel
+will decide on later. The rules of the branch:
+
+- Each milestone is a branch off `verus` (`m18-verus-matching`, ...),
+  reviewed and merged into `verus` as milestones were into `main`.
+- `main` is merged into `verus` regularly, never the other way round, so
+  that the verified code stays the code that ships.
+- Behaviour does not change: every gate keeps agreeing with Ethos. The
+  specifications state what pathos does now, Ethos's quirks included.
+- No dependency is added to the shipped binaries, and `Cargo.lock` does not
+  change, without Daniel's agreement (the spike's option C).
+- Each milestone adds a section to `docs/verus-spike.md` (or a file it
+  links): what was verified, what is assumed, the cost, and an updated
+  estimate for what is left.
+
+18. **Panic freedom of matching.** `match_terms` (in `typing.rs`) and the
+    code that calls it to match a program's cases and a rule's premises,
+    `:args` and conclusion: prove that it cannot panic, and that every
+    handle it reads and every term it builds is valid in the store, using
+    the store invariant of milestone 17. Not yet its correctness (that the
+    substitution applied to the pattern gives the term), but state the
+    lemmas from the store that correctness will need, and say what the
+    statement would be. Also: add `verus` to the push triggers of
+    `.github/workflows/ci.yml` on this branch, so that every push to it runs
+    the whole CI, and the `verify` job covers the new proofs.
+    The gate: `scripts/verify` and `scripts/full-check --quick` pass, CI is
+    green on the `m18-verus-matching` branch, and the report section is
+    written. The reviewer pushes and starts CI runs.
+
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
 
