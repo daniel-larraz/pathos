@@ -374,6 +374,49 @@ intended; everything between gates is not.
     The gate: the package contains the notices, and one on-demand run of the
     drift job is green against today's Ethos `main`. The reviewer pushes and
     starts the runs, as in milestone 15.
+17. **A Verus feasibility spike.** Verus (https://github.com/verus-lang/verus)
+    proves Rust code against specifications with an SMT solver. The long-term
+    question is whether pathos can be verified to be sound: if it answers
+    `correct`, every step follows from its premises by the rules of the
+    signature. This milestone does not try that. It verifies two small,
+    self-contained parts and measures what it costs, so that Daniel can
+    decide whether to go further.
+    - **Literal operators.** Functional specifications, against Verus's
+      mathematical integers and rationals, for the evaluation of `eo::add`,
+      `eo::neg`, `eo::mul`, `eo::zdiv`, `eo::zmod` and `eo::qdiv` on numerals
+      and rationals, and of `eo::extract`, `eo::concat`, `eo::and`,
+      `eo::or`, `eo::xor` and `eo::not` on binaries (widths, wrap-around,
+      Ethos's division rules: the specification states what pathos does
+      now, which is what Ethos does). `malachite` stays trusted: state what
+      pathos relies on from it as assumed specifications
+      (`assume_specification` or `external_body`), each one listed.
+    - **The term store.** The invariant that every handle the store gives
+      out is valid, and that its view, from handles to trees, is injective
+      (the same tree always gets the same handle), with the store's own code
+      free of panics.
+    - **The setup.** Install Verus at a pinned release, decide how verified
+      code sits in the workspace, and add a CI job that runs the
+      verification. Constraint: the shipped binaries must not gain a
+      dependency without Daniel's agreement (see "Memory safety"). Verus's
+      crates (`vstd`, its macros) would be new dependencies of the build;
+      find out which of them would end up in the binaries, whether they
+      contain `unsafe` code, and what the alternatives are (for instance,
+      code that compiles without Verus's crates when not verifying, or a
+      verified copy kept equal to the shipped code by a check). Write the
+      options down; for the spike, use one that leaves the shipped binaries
+      and `Cargo.lock` as they are, or stop and ask.
+    - **No change in behaviour.** Every gate keeps agreeing with Ethos; if
+      verification needs the code restructured, the gates show it is the
+      same.
+    - **The report** (`docs/verus-spike.md`): what was verified and what was
+      assumed; which Rust features of pathos's code Verus accepted, which
+      it did not, and what had to be rewritten; lines of specification and
+      proof against lines of code; verification time; the CI job; the
+      dependency options; and an estimate, from this experience, of what
+      the evaluator, matching and step checking would take.
+    The gate: the two parts verify in CI, `scripts/full-check --quick`
+    passes, and the report is written. The reviewer pushes and starts CI
+    runs, as before.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
