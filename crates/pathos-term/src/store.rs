@@ -373,6 +373,15 @@ fn hash_node(keys: &HashKeys, tag: u32, children: &[Term]) -> u64 {
 }
 
 /// The tag hashed and compared for a compound kind.
+/// Returns its argument: a closure to be named. The specification of a
+/// closure, for Verus, is an attribute on it, and stable Rust takes an
+/// attribute on an expression only where the expression is an argument.
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(r => ensures r == f,))]
+#[inline(always)]
+fn closure<F>(f: F) -> F {
+    f
+}
+
 /// The hash of a literal's value.
 #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == spec_hash_lit(*hasher, *lit),))]
 #[inline]
@@ -642,11 +651,13 @@ impl TermStore {
         }
         let key = &lit;
         let hash = hash_lit(&self.lit_hasher, key);
-        let is_match = #[cfg_attr(verus_keep_ghost, verus_spec(r: bool =>
-            requires self.wf(), 1 <= i < self.nodes@.len(),
-            ensures r == (self.nodes@[i as int] is Lit && self.lit_of(i as int) == *key),
-        ))]
-        |i: usize| self.lit_is(i, key);
+        let is_match = closure(
+            #[cfg_attr(verus_keep_ghost, verus_spec(r: bool =>
+                requires self.wf(), 1 <= i < self.nodes@.len(),
+                ensures r == (self.nodes@[i as int] is Lit && self.lit_of(i as int) == *key),
+            ))]
+            |i: usize| self.lit_is(i, key),
+        );
         let slot = match self.lit_table.find(hash, is_match) {
             Ok(found) => return Term::from_slot(found as u32),
             Err(slot) => slot,
@@ -682,14 +693,16 @@ impl TermStore {
             let ghost added = *self;
         }
         if self.lit_table.needs_growth() {
-            let hash_of = #[cfg_attr(verus_keep_ghost, verus_spec(r: u64 =>
-                requires self.wf(), 1 <= i < self.nodes@.len(),
-                ensures self.nodes@[i as int] is Lit ==> r == self.lit_hash(i as int),
-            ))]
-            |i: usize| match self.lit_at(i) {
-                Some(l) => hash_lit(&self.lit_hasher, l),
-                None => 0,
-            };
+            let hash_of = closure(
+                #[cfg_attr(verus_keep_ghost, verus_spec(r: u64 =>
+                    requires self.wf(), 1 <= i < self.nodes@.len(),
+                    ensures self.nodes@[i as int] is Lit ==> r == self.lit_hash(i as int),
+                ))]
+                |i: usize| match self.lit_at(i) {
+                    Some(l) => hash_lit(&self.lit_hasher, l),
+                    None => 0,
+                },
+            );
             let grown = self.lit_table.grown(hash_of);
             proof! {
                 assert forall|p: int| 0 <= p < added.lit_table.slots@.len() && added.lit_table.slots@[p] != 0 implies
