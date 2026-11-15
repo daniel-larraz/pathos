@@ -1065,5 +1065,17 @@ I did not edit `docs/evidence.md`: the question is Daniel's to withdraw.
 
 ### Gates
 
-GATES_PLACEHOLDER
+- `scripts/verify`: `pathos_term` 209 verified, 0 errors; `pathos_check` 18
+  verified, 0 errors.
+- `scripts/full-check --quick`: every step passes: `tests` 230 of 230,
+  `proofs` 400 of 400, `large` 43 of 43 (351 s, as before), `cli` 3,192 of
+  3,192, `snapshot` 6,300 of 6,300 and its three proof runs of 400 each,
+  `bignum` 7 of 7, and `fuzz` has no finding that still differs.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass. Ten tests were added.
+- `Cargo.lock` is unchanged; no dependency was added. `scripts/unsafe-reach`
+  finds the same 17 `unsafe` lines of dependencies.
+- The snapshot of cvc5's signature written by this code is identical, byte
+  for byte, to the one written before, and a run with it takes 17.2 ms
+  against 16.7 ms before and 37 ms without a snapshot.
 
