@@ -1,14 +1,20 @@
 //! The checker's state: the term store and what is known about symbols.
 
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
+
 use std::collections::{BTreeMap, HashMap, HashSet};
 
 use pathos_term::{Integer, Kind, Lit, LitKind, SymbolKind, Term, TermStore};
 
 use crate::attr::{AppInfo, Attr};
+#[cfg(verus_keep_ghost)]
+use crate::matching::{ctx_ok, is_program};
 use crate::stats::Stats;
 
 /// The options of Ethos that the checker reads.
 #[derive(Clone, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub struct Options {
     /// Print shared subterms once, with `eo::define`.
     pub print_dag: bool,
@@ -84,6 +90,7 @@ pub type Ctx = BTreeMap<Term, Term>;
 /// A plugin hook raised inside the checker, kept for whoever drives the
 /// checker to deliver (see `pathos_elab::Plugin`).
 #[derive(Copy, Clone, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub enum PluginEvent {
     MarkConstructorKind(Term, Attr, Option<Term>),
     DefineProgram(Term, Option<Term>),
@@ -109,12 +116,32 @@ pub trait EvalPlugin {
     ) -> Option<Term>;
 }
 
+/// Where warnings go. A type of its own because Verus does not accept a
+/// boxed closure as a field of a type it looks into; to Verus this is
+/// opaque.
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+pub(crate) struct Warnings(Box<dyn FnMut(&str)>);
+
+#[cfg_attr(verus_keep_ghost, verus_verify)]
+impl Warnings {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    fn emit(&mut self, msg: &str) {
+        (self.0)(msg);
+    }
+}
+
+/// The evaluation plugin, if there is one. Opaque to Verus, like
+/// [`Warnings`].
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+pub(crate) struct EvalHooks(pub(crate) Option<Box<dyn EvalPlugin>>);
+
 /// The term store together with everything the checker knows about the
 /// terms in it: attributes, overloads, literal type rules. Its methods build
 /// terms ([`Checker::mk_expr`]), type them ([`Checker::get_type`]) and
 /// evaluate them ([`Checker::evaluate`]). The three depend on each other:
 /// building an application may evaluate a program, and evaluating a list
 /// operator reads attributes and types.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub struct Checker {
     pub store: TermStore,
     pub opts: Options,
@@ -131,7 +158,7 @@ pub struct Checker {
     /// The rules and programs used, for the verdict and `--stats`.
     pub(crate) stats: Stats,
     /// Called with each warning; the binary writes them to stderr.
-    warnings: Box<dyn FnMut(&str)>,
+    pub(crate) warnings: Warnings,
     /// Set when the checker met something it cannot go on from: the message
     /// of the error that must end the run. Evaluation stops once it is set,
     /// and the parser reports it at the end of the command.
@@ -139,7 +166,7 @@ pub struct Checker {
     /// The hooks raised since they were last delivered; `None` without a
     /// plugin.
     pub plugin_events: Option<Vec<PluginEvent>>,
-    pub eval_plugin: Option<Box<dyn EvalPlugin>>,
+    pub(crate) eval_plugin: EvalHooks,
 
     pub(crate) t_true: Term,
     pub(crate) t_false: Term,
@@ -177,10 +204,10 @@ impl Checker {
             hash_counter: 0,
             sorry_rules: HashSet::new(),
             stats,
-            warnings,
+            warnings: Warnings(warnings),
             fatal: None,
             plugin_events: None,
-            eval_plugin: None,
+            eval_plugin: EvalHooks(None),
             t_true,
             t_false,
             t_self,
@@ -200,16 +227,12 @@ impl Checker {
         self.fatal.take()
     }
 
-    /// Reports a warning: a line Ethos writes to stderr without stopping.
-    pub fn warn(&mut self, msg: &str) {
-        (self.warnings)(msg);
+    /// Sets the plugin whose evaluation hooks the evaluator calls.
+    pub fn set_eval_plugin(&mut self, plugin: Option<Box<dyn EvalPlugin>>) {
+        self.eval_plugin = EvalHooks(plugin);
     }
 
     // ---------------------------------------------------------- constants
-
-    pub fn mk_type(&self) -> Term {
-        self.store.mk_type()
-    }
 
     pub fn mk_bool_type(&self) -> Term {
         self.store.mk_bool_type()
@@ -217,18 +240,6 @@ impl Checker {
 
     pub fn mk_any(&self) -> Term {
         self.store.mk_any()
-    }
-
-    pub fn mk_true(&self) -> Term {
-        self.t_true
-    }
-
-    pub fn mk_false(&self) -> Term {
-        self.t_false
-    }
-
-    pub fn mk_bool(&self, b: bool) -> Term {
-        if b { self.t_true } else { self.t_false }
     }
 
     /// The parameter `eo::self` of literal type rules.
@@ -242,10 +253,6 @@ impl Checker {
 
     pub fn mk_list_nil(&self) -> Term {
         self.list_nil
-    }
-
-    pub fn mk_list_cons(&self) -> Term {
-        self.list_cons
     }
 
     /// The type of proof terms.
@@ -268,20 +275,7 @@ impl Checker {
         c
     }
 
-    pub fn mk_numeral(&mut self, i: Integer) -> Term {
-        self.store.mk_lit(Lit::Numeral(i))
-    }
-
     // --------------------------------------------------------- attributes
-
-    pub(crate) fn app_info(&self, t: Term) -> Option<&AppInfo> {
-        self.app.get(&t)
-    }
-
-    /// The constructor attribute of a symbol; `Attr::None` if it has none.
-    pub fn attribute_kind(&self, t: Term) -> Attr {
-        self.app.get(&t).map_or(Attr::None, |ai| ai.attr)
-    }
 
     /// The term that goes with the symbol's constructor attribute.
     pub fn attribute_term(&self, t: Term) -> Option<Term> {
@@ -332,14 +326,6 @@ impl Checker {
         back
     }
 
-    /// The cases of a program, as a `PROGRAM` term, if it has been defined.
-    pub fn get_program(&self, t: Term) -> Option<Term> {
-        match self.app.get(&t) {
-            Some(ai) if ai.attr == Attr::Program => ai.cons,
-            _ => None,
-        }
-    }
-
     /// Defines the cases of a program symbol.
     pub fn define_program(&mut self, v: Term, prog: Option<Term>) {
         if prog.is_some() {
@@ -358,10 +344,97 @@ impl Checker {
     pub fn is_proof_rule_sorry(&self, rule: Term) -> bool {
         self.sorry_rules.contains(&rule)
     }
+}
+
+/// What the evaluator uses, with what Verus proves of it: see
+/// `docs/verus-spike.md`.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
+impl Checker {
+    /// Reports a warning: a line Ethos writes to stderr without stopping.
+    #[cfg_attr(verus_keep_ghost, verus_spec(
+        ensures final(self).unchanged(old(self)),
+    ))]
+    pub fn warn(&mut self, msg: &str) {
+        self.warnings.emit(msg);
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_type(&self) -> Term {
+        self.store.mk_type()
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_true(&self) -> Term {
+        self.t_true
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_false(&self) -> Term {
+        self.t_false
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_bool(&self, b: bool) -> Term {
+        if b { self.t_true } else { self.t_false }
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_list_cons(&self) -> Term {
+        self.list_cons
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires old(self).wf(),
+        ensures final(self).wf(), final(self).has(r), final(self).keeps(old(self)),
+    ))]
+    pub fn mk_numeral(&mut self, i: Integer) -> Term {
+        proof_decl! { let ghost before = *self; }
+        let t = self.store.mk_lit(Lit::Numeral(i));
+        proof! { self.lemma_stored(&before); }
+        t
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        ensures r matches Some(ai) ==> self.knows(t, *ai),
+    ))]
+    pub(crate) fn app_info(&self, t: Term) -> Option<&AppInfo> {
+        proof! {
+            axiom_terms_are_keys();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+        }
+        self.app.get(&t)
+    }
+
+    /// The constructor attribute of a symbol; `Attr::None` if it has none.
+    pub fn attribute_kind(&self, t: Term) -> Attr {
+        match self.app_info(t) {
+            Some(ai) => ai.attr,
+            None => Attr::None,
+        }
+    }
+
+    /// The cases of a program, as a `PROGRAM` term, if it has been defined.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires self.wf(),
+        ensures r matches Some(p) ==> self.has_program(p),
+    ))]
+    pub fn get_program(&self, t: Term) -> Option<Term> {
+        match self.app_info(t) {
+            Some(ai) if ai.attr == Attr::Program => ai.cons,
+            _ => None,
+        }
+    }
 
     /// The number `eo::hash` gives a term: terms are numbered from 1 in the
     /// order they are first asked about.
+    #[cfg_attr(verus_keep_ghost, verus_spec(
+        ensures final(self).unchanged(old(self)),
+    ))]
     pub(crate) fn get_hash(&mut self, t: Term) -> u64 {
+        proof! {
+            axiom_terms_are_keys();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+        }
         if let Some(&h) = self.hashes.get(&t) {
             return h;
         }
@@ -372,3 +445,113 @@ impl Checker {
         self.hash_counter
     }
 }
+
+#[cfg(verus_keep_ghost)]
+verus! {
+
+/// Every term of the list is a term of the store.
+pub open spec fn all_has(s: &TermStore, ts: Seq<Term>) -> bool {
+    forall|i: int| 0 <= i < ts.len() ==> s.has(#[trigger] ts[i])
+}
+
+/// The store has the terms of the old one, with their kinds and children.
+pub open spec fn keeps(new: &TermStore, old: &TermStore) -> bool {
+    forall|t: Term| #[trigger] old.has(t) ==> new.has(t)
+        && new.kind_of(t.idx()) == old.kind_of(t.idx())
+        && new.kids(t.idx()) == old.kids(t.idx())
+}
+
+/// What is known of a symbol refers to the store: the term that goes with
+/// its attribute is a term of the store, and that of a program is a list
+/// of cases.
+pub open spec fn app_ok(s: &TermStore, ai: AppInfo) -> bool {
+    ai.cons matches Some(c) ==> s.has(c) && (ai.attr == Attr::Program ==> is_program(s, c))
+}
+
+impl Checker {
+    /// The invariant of the checker that the evaluator relies on and
+    /// keeps. The rest of the checker, which Verus does not look at, is
+    /// trusted to keep it.
+    pub open(crate) spec fn wf(&self) -> bool {
+        &&& self.store.wf()
+        &&& self.store.has(self.t_true) && self.store.has(self.t_false) && self.store.has(self.t_self)
+        &&& self.store.has(self.list_type) && self.store.has(self.list_nil) && self.store.has(self.list_cons)
+        &&& self.store.has(self.proof_type)
+        &&& self.neg_one matches Some(t) ==> self.store.has(t)
+        &&& forall|t: Term| #[trigger] self.app@.contains_key(t) ==> app_ok(&self.store, self.app@[t])
+    }
+
+    /// The attributes and the builtin terms are those of `old`.
+    pub open(crate) spec fn same_tables(&self, old: &Checker) -> bool {
+        &&& self.app == old.app
+        &&& self.t_true == old.t_true && self.t_false == old.t_false && self.t_self == old.t_self
+        &&& self.list_type == old.list_type && self.list_nil == old.list_nil && self.list_cons == old.list_cons
+        &&& self.proof_type == old.proof_type
+        &&& self.neg_one == old.neg_one
+    }
+
+    /// The term is a term of the checker's store.
+    pub open(crate) spec fn has(&self, t: Term) -> bool {
+        self.store.has(t)
+    }
+
+    /// Every term of the list is a term of the store.
+    pub open(crate) spec fn has_all(&self, ts: Seq<Term>) -> bool {
+        all_has(&self.store, ts)
+    }
+
+    /// The substitution is between terms of the store.
+    pub open(crate) spec fn binds(&self, ctx: Map<Term, Term>) -> bool {
+        ctx_ok(&self.store, ctx)
+    }
+
+    /// The term is a term of the store with the shape of a program.
+    pub open(crate) spec fn has_program(&self, p: Term) -> bool {
+        self.store.has(p) && is_program(&self.store, p)
+    }
+
+    /// This is what the checker knows of the symbol.
+    pub open(crate) spec fn knows(&self, t: Term, ai: AppInfo) -> bool {
+        self.app@.contains_key(t) && ai == self.app@[t]
+    }
+
+    /// The store has the terms of `old`'s, as they were.
+    pub open(crate) spec fn keeps(&self, old: &Checker) -> bool {
+        keeps(&self.store, &old.store)
+    }
+
+    /// The store, the attributes and the builtin terms are those of `old`.
+    pub open(crate) spec fn unchanged(&self, old: &Checker) -> bool {
+        self.store == old.store && self.same_tables(old)
+    }
+
+    /// After terms were added to the store, the invariant holds again.
+    pub(crate) proof fn lemma_stored(&self, old: &Checker)
+        requires old.wf(), self.store.wf(), self.store.extends(&old.store), self.same_tables(old),
+        ensures self.wf(), self.keeps(old),
+    {
+        self.store.lemma_extends(&old.store);
+        assert forall|t: Term| #[trigger] self.app@.contains_key(t) implies app_ok(&self.store, self.app@[t]) by {
+            let ai = self.app@[t];
+            assert(app_ok(&old.store, ai));
+            if ai.cons is Some && ai.attr == Attr::Program {
+                let c = ai.cons->0;
+                old.store.lemma_children(c);
+                assert forall|i: int| 0 <= i < self.store.kids(c.idx()).len() implies
+                    self.store.kids((#[trigger] self.store.kids(c.idx())[i]).idx()).len() >= 2 by {
+                    assert(old.store.has(old.store.kids(c.idx())[i]));
+                }
+            }
+        }
+    }
+}
+
+/// Assumed: the derived `Hash` and `Eq` of term handles agree, which is
+/// what a `HashMap` keyed by them needs to behave as a map.
+#[verifier::external_body]
+pub proof fn axiom_terms_are_keys()
+    ensures vstd::std_specs::hash::obeys_key_model::<Term>(),
+{
+}
+
+} // verus!

@@ -337,10 +337,16 @@ fn run_with_forged_snapshot(test: &str, tamper: impl FnOnce(&mut State), proof: 
     check(&file, Options::default(), Some(&snap))
 }
 
-/// Terms of shapes the parser never builds, and tables it never fills, used
-/// to make the checker panic when a proof reached them. Such a snapshot is
-/// now rejected when it is read: the run parses the signature, and the
+/// Programs and names the parser never builds, and tables it never fills,
+/// used to make the checker panic when a proof reached them. Such a snapshot
+/// is now rejected when it is read: the run parses the signature, and the
 /// proof fails on the name that only the snapshot had.
+///
+/// (A term with a number of children that its kind cannot have, such as a
+/// lambda without a body, cannot be put in a state this way any more: the
+/// store does not make one. Its test
+/// `a_term_of_the_wrong_shape_is_not_made_and_not_read` covers a snapshot
+/// that holds one.)
 #[test]
 fn a_snapshot_with_a_state_no_signature_gives_is_ignored() {
     let ignored = |test: &str, tamper: &dyn Fn(&mut State), proof: &str| {
@@ -348,34 +354,6 @@ fn a_snapshot_with_a_state_no_signature_gives_is_ignored() {
         assert!(!run.used_snapshot, "{test}");
         assert!(run.result.is_err(), "{test}");
     };
-    // a lambda without a body, applied
-    ignored(
-        "forged-lambda",
-        &|st| {
-            let a = st.get_var("a").unwrap();
-            let bad = st.ck.store.mk(Kind::LAMBDA, &[a]);
-            assert!(st.bind("bad", bad));
-        },
-        "(define u () (bad a))",
-    );
-    // an application without a head, typed
-    ignored(
-        "forged-apply",
-        &|st| {
-            let bad = st.ck.store.mk(Kind::APPLY, &[]);
-            assert!(st.bind("bad", bad));
-        },
-        "(define u () bad :type Int)",
-    );
-    // a proof term without a formula, as a premise
-    ignored(
-        "forged-proof",
-        &|st| {
-            let bad = st.ck.store.mk(Kind::PROOF, &[]);
-            assert!(st.bind("bad", bad));
-        },
-        "(step q (= b a) :rule symm :premises (bad))",
-    );
     // a program whose case is not a pair, applied
     ignored(
         "forged-program",

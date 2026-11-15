@@ -426,7 +426,8 @@ fn tag_of(kind: Kind) -> u32 {
     }
 }
 
-/// A size limit of the store's 32-bit handles and positions.
+/// What the store refuses to hold: more than its 32-bit handles and
+/// positions can count, or a term that is not one.
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 #[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub enum Limit {
@@ -434,6 +435,10 @@ pub enum Limit {
     Terms,
     /// More than 2^32 - 1 children of non-binary terms in total.
     Children,
+    /// A term with a number of children that its kind cannot have
+    /// ([`NodeKind::takes`]). Nothing in pathos builds one; the store checks
+    /// it so that code reading terms need not.
+    Shape,
 }
 
 impl std::fmt::Display for Limit {
@@ -441,6 +446,7 @@ impl std::fmt::Display for Limit {
         f.write_str(match self {
             Limit::Terms => "more than 4294967295 terms",
             Limit::Children => "more than 4294967295 children of non-binary terms",
+            Limit::Shape => "a term with a number of children that its kind cannot have",
         })
     }
 }
@@ -668,7 +674,7 @@ impl TermStore {
 
     /// The term for a literal value; equal values give the same term.
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
-        requires old(self).wf(),
+        requires old(self).wf(), lit.wf(),
         ensures
             final(self).wf(),
             final(self).has(r),
@@ -789,7 +795,15 @@ impl TermStore {
             Kind::Any => return self.any,
             Kind::Null => return self.null,
             Kind::Symbol(_) | Kind::Lit(_) => return atomic_kind(kind),
-            Kind::Node(_) | Kind::Eval(_) => {}
+            Kind::Node(n) => {
+                if !n.takes(children.len()) {
+                    proof_decl! { let ghost start = *self; }
+                    self.limit = Some(Limit::Shape);
+                    proof! { self.lemma_same_terms(&start); }
+                    return self.any;
+                }
+            }
+            Kind::Eval(_) => {}
         }
         self.mk_count = self.mk_count.wrapping_add(1);
         proof_decl! {
@@ -1001,7 +1015,12 @@ impl TermStore {
     }
 
     /// The value of a literal term.
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires self.wf(), self.has(t),
+        ensures
+            r matches Some(l) ==> l.wf() && self.is_lit(t, *l),
+            r is Some == self.kind_of(t.idx()) is Lit,
+    ))]
     pub fn lit(&self, t: Term) -> Option<&Lit> {
         proof! { self.lemma_node(t.idx()); }
         match self.nodes[t.index()] {
@@ -1038,7 +1057,7 @@ impl TermStore {
     /// Whether the term contains an `eo::` operator application, a program
     /// symbol or `eo::?`.
     #[inline]
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), self.has(t), ensures r == self.evaluatable(t),))]
     pub fn is_evaluatable(&self, t: Term) -> bool {
         self.flags[t.index()] & FLAG_EVAL != 0
     }
@@ -1172,7 +1191,10 @@ impl TermStore {
         }
         let lits_len = r.len(2)?;
         let mut lits: Vec<Lit> = Vec::with_capacity(lits_len);
-        #[cfg_attr(verus_keep_ghost, verus_spec(invariant lits@.len() == i))]
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            lits@.len() == i,
+            forall|j: int| 0 <= j < lits@.len() ==> (#[trigger] lits@[j]).wf(),
+        ))]
         for i in 0..lits_len {
             lits.push(Lit::read_from(r)?);
         }
@@ -1227,6 +1249,7 @@ impl TermStore {
         requires
             old(self).wf(),
             index == old(self).nodes@.len(),
+            forall|j: int| 0 <= j < lits@.len() ==> (#[trigger] lits@[j]).wf(),
         ensures
             res is Some ==> final(self).wf() && final(self).nodes@.len() == index + 1,
     ))]
@@ -1301,13 +1324,8 @@ impl TermStore {
                         Kind::Node(k)
                     }
                 };
-                let fits = match kind {
-                    Kind::Node(k) => k.takes(children.len()),
-                    _ => true,
-                };
-                if !fits {
-                    return None;
-                }
+                // `mk` does not make a term with a number of children that
+                // its kind cannot have: it gives another handle
                 self.mk(kind, children.as_slice())
             }
             _ => return None,
@@ -1626,6 +1644,13 @@ impl Term {
         self.0@ as int
     }
 
+    /// A handle is a position that 32 bits hold, and not zero.
+    pub proof fn lemma_idx_range(t: Term)
+        ensures 0 < t.idx() <= u32::MAX,
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+    }
+
     /// Handles at the same position are the same handle.
     proof fn lemma_eq(a: Term, b: Term)
         requires a.idx() == b.idx(),
@@ -1733,7 +1758,8 @@ impl TermStore {
     spec fn node_ok(&self, i: int) -> bool {
         match self.nodes@[i] {
             TermData::Apply(c) => c@[0].idx() < i && c@[1].idx() < i,
-            TermData::Node(k, a) => self.args_ok(i, a) && !(k == NodeKind::Apply && a.len == 2),
+            TermData::Node(k, a) => self.args_ok(i, a) && !(k == NodeKind::Apply && a.len == 2)
+                && k.spec_takes(a.len as usize),
             TermData::Eval(_, a) => self.args_ok(i, a),
             TermData::Symbol(_, id) => id < self.names@.len(),
             TermData::Lit(_, id) => id < self.lits@.len(),
@@ -1847,6 +1873,8 @@ impl TermStore {
         &&& self.child_pool@.len() <= u32::MAX
         &&& self.names@.len() < self.nodes@.len()
         &&& self.lits@.len() < self.nodes@.len()
+        // every literal is a value: a bit-vector fits its width
+        &&& forall|i: int| 0 <= i < self.lits@.len() ==> (#[trigger] self.lits@[i]).wf()
         &&& self.lit_table_ok()
         &&& self.lits_differ()
         &&& self.table_ok()
@@ -1975,6 +2003,53 @@ impl TermStore {
             0 < (#[trigger] self.kids(t.idx())[m]).idx() by {
             vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(self.kids(t.idx())[m].0);
         }
+    }
+
+    /// A store that extends another has its terms, with their kinds and
+    /// their children.
+    pub proof fn lemma_extends(&self, old: &TermStore)
+        requires self.extends(old),
+        ensures
+            forall|t: Term| #[trigger] old.has(t) ==> self.has(t)
+                && self.kind_of(t.idx()) == old.kind_of(t.idx())
+                && self.kids(t.idx()) == old.kids(t.idx()),
+    {
+        assert forall|t: Term| #[trigger] old.has(t) implies self.has(t)
+            && self.kind_of(t.idx()) == old.kind_of(t.idx())
+            && self.kids(t.idx()) == old.kids(t.idx()) by {
+            vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+        }
+    }
+
+    /// A store extends itself.
+    pub proof fn lemma_extends_itself(&self)
+        ensures self.extends(self),
+    {
+    }
+
+    /// Extending is transitive.
+    pub proof fn lemma_extends_twice(&self, mid: &TermStore, old: &TermStore)
+        requires self.extends(mid), mid.extends(old),
+        ensures self.extends(old),
+    {
+        assert forall|i: int| 1 <= i < old.nodes@.len() implies #[trigger] self.kids(i) == old.kids(i) by {
+            assert(mid.kids(i) == old.kids(i));
+        }
+        assert forall|i: int| 1 <= i < old.nodes@.len() && old.nodes@[i] is Lit implies
+            #[trigger] self.lit_of(i) == old.lit_of(i) by {
+            assert(mid.lit_of(i) == old.lit_of(i));
+        }
+    }
+
+    /// A term has a number of children that its kind can have: an
+    /// application has a head, a parameterized term its parameters and its
+    /// body, and so on ([`NodeKind::takes`]).
+    pub proof fn lemma_shape(&self, t: Term)
+        requires self.wf(), self.has(t),
+        ensures self.kind_of(t.idx()) matches Kind::Node(k) ==> k.spec_takes(self.kids(t.idx()).len() as usize),
+    {
+        self.lemma_children(t);
+        self.lemma_node(t.idx());
     }
 
     /// The tree of a compound term is its kind and the trees of its
@@ -2140,6 +2215,7 @@ impl TermStore {
             self.keys == old.keys,
             self.lit_hasher == old.lit_hasher,
             self.ty_type == old.ty_type && self.ty_bool == old.ty_bool && self.any == old.any && self.null == old.null,
+            kind matches Kind::Node(nk) ==> nk.spec_takes(children.len() as usize),
             hash == spec_hash_node(old.keys, spec_tag(kind), children),
             forall|i: int| 1 <= i < old.nodes@.len() && #[trigger] old.compound(i) ==>
                 !(old.kind_of(i) == kind && old.kids(i) == children),
@@ -2407,6 +2483,11 @@ impl TermStore {
             ==> self.lit_of(i) != self.lit_of(j)
     }
 
+    /// What [`TermStore::is_evaluatable`] says of the term: its flag.
+    pub closed spec fn evaluatable(&self, t: Term) -> bool {
+        self.flags@[t.idx()] & 1u8 != 0
+    }
+
     /// The term is the literal with this value.
     pub closed spec fn is_lit(&self, t: Term, lit: Lit) -> bool {
         self.has(t) && self.nodes@[t.idx()] is Lit && self.lit_of(t.idx()) == lit
@@ -2512,6 +2593,7 @@ impl TermStore {
             self.flag_ok(old.nodes@.len() as int),
             old.nodes@.len() <= u32::MAX,
             self.lits@ == old.lits@.push(lit),
+            lit.wf(),
             self.child_pool == old.child_pool,
             self.names == old.names,
             self.table == old.table,
@@ -2812,34 +2894,57 @@ mod tests {
     }
 
     /// The checker takes terms of some kinds apart without looking at how
-    /// many children they have; the parser builds them with that many. A
-    /// snapshot is checked for it.
+    /// many children they have. The store does not make a term with a
+    /// number of children that its kind cannot have, and a snapshot that
+    /// holds one is rejected.
     #[test]
-    fn a_store_with_a_term_of_the_wrong_shape_is_rejected() {
-        let reads = |kind: Kind, children: usize| {
+    fn a_term_of_the_wrong_shape_is_not_made_and_not_read() {
+        let base = || {
             let mut s = TermStore::new();
             let ty = s.mk_type();
             let c = s.mk_symbol(SymbolKind::Const, "c", ty);
-            s.mk(kind, &vec![c; children]);
-            TermStore::read_from(&mut Reader::new(&written(&s))).is_some()
+            (s, c)
+        };
+        let makes = |kind: Kind, children: usize| {
+            let (mut s, c) = base();
+            let t = s.mk(kind, &vec![c; children]);
+            let made = s.limit_exceeded().is_none();
+            assert_eq!(made, s.kind(t) == kind);
+            assert!(made || s.limit_exceeded() == Some(Limit::Shape));
+            made && TermStore::read_from(&mut Reader::new(&written(&s))).is_some()
+        };
+        // a snapshot with such a term: a tuple, which takes any number of
+        // children, with its kind overwritten
+        let reads = |kind: NodeKind, children: usize| {
+            let (mut s, c) = base();
+            s.mk(Kind::TUPLE, &vec![c; children]);
+            let mut bytes = written(&s);
+            // 4 bytes of count, then 14 bytes a term: the tag, the kind, ...
+            let last = 4 + (s.len() - 1) * 14;
+            assert_eq!(bytes[last + 1], NodeKind::Tuple as u8);
+            bytes[last + 1] = kind as u8;
+            TermStore::read_from(&mut Reader::new(&bytes)).is_some()
         };
         for (kind, right, wrong) in [
-            (Kind::LAMBDA, vec![2], vec![0, 1, 3]),
-            (Kind::PARAMETERIZED, vec![2], vec![0, 1, 3]),
-            (Kind::PROOF, vec![1], vec![0, 2]),
-            (Kind::QUOTE_TYPE, vec![1], vec![0, 2]),
-            (Kind::APPLY, vec![1, 2, 3], vec![0]),
-            (Kind::APPLY_OPAQUE, vec![1, 2], vec![0]),
-            (Kind::TUPLE, vec![0, 1, 2, 3], vec![]),
-            (Kind::VARIABLE, vec![0, 2], vec![]),
+            (NodeKind::Lambda, vec![2], vec![0, 1, 3]),
+            (NodeKind::Parameterized, vec![2], vec![0, 1, 3]),
+            (NodeKind::Proof, vec![1], vec![0, 2]),
+            (NodeKind::QuoteType, vec![1], vec![0, 2]),
+            (NodeKind::Apply, vec![1, 2, 3], vec![0]),
+            (NodeKind::ApplyOpaque, vec![1, 2], vec![0]),
+            (NodeKind::Tuple, vec![0, 1, 2, 3], vec![]),
+            (NodeKind::Variable, vec![0, 2], vec![]),
         ] {
             for n in right {
-                assert!(reads(kind, n), "{kind} with {n} children");
+                assert!(makes(Kind::Node(kind), n), "{kind:?} with {n} children");
             }
             for n in wrong {
-                assert!(!reads(kind, n), "{kind} with {n} children");
+                assert!(!makes(Kind::Node(kind), n), "{kind:?} with {n} children");
+                assert!(!reads(kind, n), "{kind:?} with {n} children");
             }
         }
+        // the forgery is read when the shape is right
+        assert!(reads(NodeKind::Lambda, 2) && reads(NodeKind::Proof, 1));
     }
 
     /// Every string pathos writes is text with one character for a byte.
