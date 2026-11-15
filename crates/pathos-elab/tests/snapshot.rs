@@ -180,11 +180,7 @@ fn a_run_with_a_snapshot_behaves_as_one_without() {
     let err = without.result.unwrap_err();
     // `k` is the second term hashed: `three` was, in the signature
     assert!(err.contains("Proves: (_ (= 2) 2)"), "{err}");
-    assert!(
-        without.stats.contains("$flip: 3"),
-        "{}",
-        without.stats
-    );
+    assert!(without.stats.contains("$flip: 3"), "{}", without.stats);
 }
 
 #[test]
