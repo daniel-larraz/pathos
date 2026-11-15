@@ -72,7 +72,7 @@ All cases agree in every gate.
 | `options` | Regressions and proofs under each of Ethos's eight non-default options, all of them together, and none | 6,300 | all agree | `scripts/difftest options` |
 | `cli` | 42 command-line cases (`--help`, `-t`, `-v`, unknown options, standard input, `--include=`, `--reference=`, the byte `0xFF` and bytes above 127 in a file and on standard input), and regressions and proofs under `--stats`, `--stats-all`, `--stats-compact` | 3,192 | all agree (times and term-store counters masked) | `scripts/difftest cli` |
 | `bignum` | Generated files of `eo::add`, `mul`, `pow`, division, conversions and the bit-vector operations on operands from 64 bits to a million bits, with each expected value computed independently (Python's integers and fractions). Each file ends with one wrong expectation on purpose, so both checkers print a value of up to 600,000 digits in full | 7 (each stops at its deliberate last line, in both) | all agree, byte for byte; Ethos agrees with every computed value | `scripts/difftest bignum` |
-| `fuzz` | The 41 groups of inputs on which a fuzzing run of mutated regressions and proofs found the two to differ | 41 | 36 fixed, 4 accepted differences, 1 Ethos crash; none still differs | `scripts/difftest fuzz` |
+| `fuzz` | The groups of inputs on which two fuzzing runs of mutated regressions and proofs found the two to differ (41 from a first run, 12 from the 24-hour campaign below) | 53 | 37 fixed, 14 accepted differences, 2 Ethos crashes; none still differs | `scripts/difftest fuzz` |
 | `snapshot` | Regressions and proofs under every option set, pathos starting from a snapshot of CPC; and the proofs with a truncated, a corrupted and an empty snapshot | 6,300 + 3 × 400 | all agree | `scripts/difftest snapshot` |
 | `eoc` | eoc's driver with `ethos-eoc` and with `pathos-eoc`: every stage on every rule of the test signatures and of logos's CPC (logos `a3232131`), and logos's `lean --all`; every file written is compared | 3,507 (3,322 ok, 185 errors) | all agree | `scripts/difftest eoc` |
 | logos's acceptance check | `install/install-cpc.sh --all --cached --check` in logos, with `pathos-eoc` in place of `ethos-eoc` | Cpc, CpcMini | "Up to date with the cached signature", exit 0 | commands in [reviews/m13-eoc-lean.md](reviews/m13-eoc-lean.md) |
@@ -96,12 +96,30 @@ times are about twice those of an idle machine (Ethos 658 s, pathos 269 s
 in an earlier run); the ratio has been 41% or 42% in every run. The
 checker's own thread, new in milestone 15, costs 0.17 ms a run.
 
-**A fuzzing campaign** of mutated inputs (seed 3, 24 hours, each run
-limited to 10 s and 4 GiB) is running alongside this review; its final
-count will be added here. In its first two hours it found one difference
-in pathos, in how a type error is reported after a `:let-binder` whose
-list constructor is malformed (being fixed), and six inputs of the first
-kind below, where Ethos reads past the end of an operator's arguments.
+**A fuzzing campaign** of mutated inputs (seed 3, 24 hours ending
+2026-11-15, each run limited to 10 s and 4 GiB) made 22,236,159 runs:
+22,226,677 agree, 1,203 run out of time or memory in both, and 8,279
+differ, in 13 groups. Only one group was a difference to fix in pathos:
+how a type error is reported after a `:let-binder` whose list constructor
+is malformed (fixed in milestone 14). One group ran out of memory in
+both, which the harness of the time did not recognise in Ethos. Eight are
+the first kind below, where Ethos reads past the end of an operator's
+arguments, one is an
+Ethos abort on a malformed string literal (on which the binary the
+campaign ran, from before milestone 14, panicked; pathos now gives a
+parse error), one is Ethos's segmentation fault, and one is a term
+Ethos forgets (the third kind below). The campaign ran a binary frozen
+when it started, so the groups were replayed on the current one; they
+are the 12 newer findings of the `fuzz` gate.
+
+**Ethos under AddressSanitizer.** A build of Ethos (the pinned revision)
+with AddressSanitizer, a compiler option that stops a program at its
+first out-of-bounds or freed-memory access, ran every case of `tests`,
+`proofs`, `options`, `cli` and `bignum` (8,869) and every saved fuzzing
+finding. It reported one memory error, a read past the end of a variable
+made by `(eo::var t)` with one argument (the second item of the first kind
+below, reported on cvc5/ethos#257). Nothing else, so in particular no
+use of freed memory under `--stats`.
 
 ## Platforms
 
@@ -137,7 +155,7 @@ of every job passed:
 | Windows x86-64 (`windows-latest`, Ethos built with MSYS2 MINGW64) | 230 agree; 230 on the CR LF checkout | 1,192 agree, 4 of them accepted Ethos crashes | 7 agree | none still differs | no differences; 5 Ethos crashes |
 | Windows arm64 (`windows-11-arm`, MSYS2 CLANGARM64) | 230 agree; 230 on the CR LF checkout | 1,192 agree, 3 of them accepted Ethos crashes | 7 agree | none still differs | no differences; 5 Ethos crashes |
 
-`fuzz` replays 39 of the 41 saved findings there; two need the cvc5
+`fuzz` replays 51 of the 53 saved findings there; two need the cvc5
 corpus. The Ethos crashes are all the missing file described below.
 
 The cvc5 proof gates, `options`, `perf` and `eoc` run on Linux x86-64
@@ -214,8 +232,8 @@ The full list, with the Ethos source location of each item, is
 of Ethos that look like bugs and that pathos reproduces on purpose (for
 example, the character after a one-letter keyword is lost). Those that
 contradict the user manual or change what is accepted or printed, and the
-crashes below, were reported to Ethos with reproducers on 2026-11-14:
-cvc5/ethos#257 to #268.
+crashes below, were reported to Ethos with reproducers on 2026-11-14 and
+2026-11-15: cvc5/ethos#257 to #269 and #271.
 
 **1. Ethos crashes or reads out of bounds; pathos reports an error.** None
 is in the corpus; the fuzzing runs found most of them.
@@ -257,7 +275,14 @@ is in the corpus; the fuzzing runs found most of them.
 
 - A size limit: pathos's terms are 32-bit handles, so a run that needs more
   than 2^32 - 1 terms ends with `Term store limit exceeded` (tens of
-  gigabytes; Ethos has no such limit).
+  gigabytes; Ethos has no such limit). The store also refuses a term with
+  a number of children its kind cannot have; nothing in pathos builds one.
+- Ethos can forget a term that is still in use when it frees another, and
+  then builds a second copy that it does not consider equal to the first:
+  `eo::eq` is `false` on two equal terms, and a step can be rejected with
+  the same formula as "Proves" and "Expected". It needs a signature with a
+  single applied symbol, or an overloaded one, so no gate but `fuzz` shows
+  it; pathos keeps one term for equal terms (cvc5/ethos#271).
 - Not observed, but possible: `eo::hash` and `eo::cmp` number terms as they
   are first seen, and Ethos forgets a number when it frees the term, which
   pathos never does; and Ethos orders some maps by the address of a term,
@@ -276,7 +301,8 @@ is in the corpus; the fuzzing runs found most of them.
    on purpose can hold a rule that proves anything, exactly as an edited
    signature file can. It can also hold a term of a shape no signature
    produces, on which the checker stops with a panic instead of an error
-   (memory safe; 23 places, in [panics.md](panics.md); see also
+   (memory safe; 14 places, in [panics.md](panics.md), since the reader now
+   rejects a term with the wrong number of children; see also
    [reviews/m10-snapshots.md](reviews/m10-snapshots.md)). If snapshots
    should be treated as untrusted input, the reader has to validate the
    shape of every term and of the checker's tables. If they are trusted
