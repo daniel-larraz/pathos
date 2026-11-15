@@ -117,9 +117,10 @@ none of them a panic from text input, and one was closed:
    The checker's reader checks that a builtin's kind is compound, that a
    program is a list of cases, and that the store begins with the
    checker's own builtin terms; strings must be Latin-1; and the counters
-   wrap. Each row says what holds it now. 62,000 mutated snapshots with a
-   recomputed checksum were then run through release and debug builds; the
-   result is in [verus-spike.md](verus-spike.md). A forged snapshot can
+   wrap. Each row says what holds it now. 84,000 mutated snapshots with a
+   recomputed checksum were then run through release and debug builds
+   without a panic; what that does and does not show is in
+   [verus-spike.md](verus-spike.md). A forged snapshot can
    still hold a rule that proves anything, as an edited signature file
    can: that is a question of trust, not of panics.
 2. **Stack** (8 rows). Three recursions remain, each of which Ethos has

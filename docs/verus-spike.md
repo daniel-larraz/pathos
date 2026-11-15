@@ -986,7 +986,28 @@ read; the new checks are in the table above. Tests:
 
 ### Fuzzing
 
-FUZZ_PLACEHOLDER
+The reviewer's `snapfuzz.py` mutates a snapshot (bit flips, edge bytes,
+32-bit fields set to small or extreme values, swapped bytes), recomputes
+the checksum, and runs pathos with it on a proof. The snapshot was that of
+cvc5's signature (660 kB), with four proofs of the corpus.
+
+| Build | Runs | Panics, crashes, timeouts |
+| --- | --- | --- |
+| This milestone, release | 60,000 (four seeds), then 12,000 on the final code | 0 |
+| This milestone, debug | 10,000 (two seeds), then 2,000 on the final code | 0 |
+| Before this milestone, release | 3,000 | 0 |
+| Before this milestone, debug | 1,500 | 0 |
+
+So 84,000 forged snapshots with a valid checksum, and nothing. But the
+last two rows say how much that is worth: the same fuzzer finds nothing
+on the code that is known to panic, because a random change almost never
+produces the particular states the 23 rows need. It shows that the new
+checks do not make the reader fall over on damaged input. That the 23
+states are rejected is shown by the tests above, which forge them on
+purpose. The first 70,000 runs were on a build without the last two
+checks (the builtin terms being the same terms, and the per-step count);
+the 14,000 after are on the final code.
+
 
 ### What is assumed
 
@@ -1078,4 +1099,3 @@ I did not edit `docs/evidence.md`: the question is Daniel's to withdraw.
 - The snapshot of cvc5's signature written by this code is identical, byte
   for byte, to the one written before, and a run with it takes 17.2 ms
   against 16.7 ms before and 37 ms without a snapshot.
-
