@@ -7,6 +7,7 @@ use pathos_term::{EvalOp, Integer, Kind, Lit, NodeKind, Term};
 
 use crate::attr::Attr;
 use crate::checker::{Checker, Ctx};
+use crate::matching::{self, CaseMatch};
 
 /// One level of evaluation: a term being evaluated in a context. A new level
 /// starts each time a program application reduces to a case's body.
@@ -291,12 +292,9 @@ impl Checker {
             self.warn(&msg);
             return None;
         };
-        let nargs = children.len();
-        for i in 0..self.store.num_children(prog) {
-            let case = self.store.child(prog, i);
-            new_ctx.clear();
-            let pat = self.store.child(case, 0);
-            if nargs != self.store.num_children(pat) {
+        match matching::match_cases(&self.store, prog, children, new_ctx) {
+            CaseMatch::Body(body) => Some(body),
+            CaseMatch::BadArity(pat) => {
                 let msg1 = format!(
                     "*** Bad number of arguments provided in function call to {}",
                     self.show(pat)
@@ -304,23 +302,10 @@ impl Checker {
                 let msg2 = format!("  Arguments: {}", self.show_list(children, " "));
                 self.warn(&msg1);
                 self.warn(&msg2);
-                return None;
+                None
             }
-            let mut matched = true;
-            for (j, &arg) in children.iter().enumerate().skip(1) {
-                // each argument is matched with its own set of visited pairs
-                let mut visited = HashSet::new();
-                let pj = self.store.child(pat, j);
-                if !self.match_terms(pj, arg, new_ctx, &mut visited) {
-                    matched = false;
-                    break;
-                }
-            }
-            if matched {
-                return Some(self.store.child(case, 1));
-            }
+            CaseMatch::NoCase => None,
         }
-        None
     }
 
     /// Applies the `eo::` operator to the arguments. Returns the application
