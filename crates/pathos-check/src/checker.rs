@@ -234,30 +234,8 @@ impl Checker {
 
     // ---------------------------------------------------------- constants
 
-    pub fn mk_bool_type(&self) -> Term {
-        self.store.mk_bool_type()
-    }
-
-    pub fn mk_any(&self) -> Term {
-        self.store.mk_any()
-    }
-
-    /// The parameter `eo::self` of literal type rules.
-    pub fn mk_self(&self) -> Term {
-        self.t_self
-    }
-
-    pub fn mk_list_type(&self) -> Term {
-        self.list_type
-    }
-
     pub fn mk_list_nil(&self) -> Term {
         self.list_nil
-    }
-
-    /// The type of proof terms.
-    pub fn mk_proof_type(&self) -> Term {
-        self.proof_type
     }
 
     // ------------------------------------------------------------ symbols
@@ -356,6 +334,33 @@ impl Checker {
     ))]
     pub fn warn(&mut self, msg: &str) {
         self.warnings.emit(msg);
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_bool_type(&self) -> Term {
+        self.store.mk_bool_type()
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_any(&self) -> Term {
+        self.store.mk_any()
+    }
+
+    /// The parameter `eo::self` of literal type rules.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_self(&self) -> Term {
+        self.t_self
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_list_type(&self) -> Term {
+        self.list_type
+    }
+
+    /// The type of proof terms.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    pub fn mk_proof_type(&self) -> Term {
+        self.proof_type
     }
 
     #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
@@ -479,11 +484,15 @@ impl Checker {
         &&& self.store.has(self.proof_type)
         &&& self.neg_one matches Some(t) ==> self.store.has(t)
         &&& forall|t: Term| #[trigger] self.app@.contains_key(t) ==> app_ok(&self.store, self.app@[t])
+        // the type of a kind of literal is a term of the store
+        &&& forall|k: LitKind| #[trigger] self.literal_type_rules@.contains_key(k)
+            ==> self.store.has(self.literal_type_rules@[k])
     }
 
     /// The attributes and the builtin terms are those of `old`.
     pub open(crate) spec fn same_tables(&self, old: &Checker) -> bool {
         &&& self.app == old.app
+        &&& self.literal_type_rules == old.literal_type_rules
         &&& self.t_true == old.t_true && self.t_false == old.t_false && self.t_self == old.t_self
         &&& self.list_type == old.list_type && self.list_nil == old.list_nil && self.list_cons == old.list_cons
         &&& self.proof_type == old.proof_type

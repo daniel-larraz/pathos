@@ -178,7 +178,7 @@ fn values_or(cchildren: &[Option<Term>], children: &[Term]) -> Vec<Term> {
 
 /// A copy of the terms. (Verus has no specification of `to_vec`.)
 #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@ == ts@,))]
-fn copy_of(ts: &[Term]) -> Vec<Term> {
+pub(crate) fn copy_of(ts: &[Term]) -> Vec<Term> {
     ts.to_vec()
 }
 
@@ -188,7 +188,7 @@ fn copy_of(ts: &[Term]) -> Vec<Term> {
     ensures final(list)@ == old(list)@ + ts@,
 ))]
 #[inline(always)]
-fn push_all(list: &mut Vec<Term>, ts: &[Term]) {
+pub(crate) fn push_all(list: &mut Vec<Term>, ts: &[Term]) {
     list.extend_from_slice(ts);
 }
 
@@ -706,16 +706,14 @@ impl Checker {
 
     /// The type of `e`, if it has one ([`Checker::get_type`] without a
     /// message).
-    ///
-    /// Trusted: typing is not verified. It evaluates terms, so this assumes
-    /// of the evaluator, one level down, what is proved of it here.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires old(self).wf(), old(self).has(e),
         ensures
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn type_of(&mut self, e: Term) -> Option<Term> {
         self.get_type(e, None)
     }
@@ -1317,6 +1315,7 @@ impl Checker {
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn evaluate_dt_constructors(&mut self, arg: Term) -> Option<Term> {
         let mut sym = arg;
         // A parametric datatype is applied to its parameters; it is fully
@@ -2136,8 +2135,8 @@ impl Checker {
 }
 
 /// Whether the `eo::` operator takes `nargs` arguments
-/// ([`Checker::check_arity`], which also writes messages, is not verified).
-#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+/// ([`Checker::check_arity`]).
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 fn arity_ok(k: EvalOp, nargs: usize) -> bool {
     Checker::check_arity(Kind::Eval(k), nargs, None)
 }
@@ -2534,7 +2533,7 @@ proof fn lemma_frame_kept(f: &EvFrame, s1: &TermStore, s0: &TermStore)
 
 /// What a store keeps of a store that kept the terms of a third, it keeps
 /// of the third.
-proof fn lemma_keeps_twice(s2: &TermStore, s1: &TermStore, s0: &TermStore)
+pub(crate) proof fn lemma_keeps_twice(s2: &TermStore, s1: &TermStore, s0: &TermStore)
     requires keeps(s2, s1), keeps(s1, s0),
     ensures keeps(s2, s0),
 {
