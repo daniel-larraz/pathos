@@ -1477,6 +1477,22 @@ impl Term {
     }
 }
 
+/// What a term is: a tree. The store's view takes each of its handles to
+/// one.
+pub enum Tree {
+    Type,
+    BoolType,
+    Any,
+    Null,
+    /// A symbol is its own tree: every symbol made is a new term, also when
+    /// another has the same name and type. The number tells them apart.
+    Symbol(SymbolKind, u32),
+    /// A literal is its value.
+    Lit(Lit),
+    /// A compound term is its kind and the trees of its children.
+    Node(Kind, Seq<Tree>),
+}
+
 impl TermStore {
     /// The store has the term: `t` is a handle this store has given out.
     pub closed spec fn has(&self, t: Term) -> bool {
@@ -1856,6 +1872,130 @@ impl TermStore {
             if p != z {
                 assert(old.compound(old.table.slots@[p] as int));
             }
+        }
+    }
+
+    /// The view of a term: its tree. A child that is not a term made
+    /// before its parent, which the invariant excludes, shows as `Null`.
+    pub closed spec fn tree(&self, i: int) -> Tree
+        decreases i, 2nat,
+    {
+        if i <= 0 {
+            Tree::Null
+        } else {
+            match self.nodes@[i] {
+                TermData::Type => Tree::Type,
+                TermData::BoolType => Tree::BoolType,
+                TermData::Any => Tree::Any,
+                TermData::Null => Tree::Null,
+                TermData::Symbol(k, id) => Tree::Symbol(k, id),
+                TermData::Lit(_, id) => Tree::Lit(self.lits@[id as int]),
+                _ => Tree::Node(self.kind_of(i), self.child_trees(i)),
+            }
+        }
+    }
+
+    /// The trees of the children of the term at position `i`.
+    spec fn child_trees(&self, i: int) -> Seq<Tree>
+        decreases i, 1nat,
+    {
+        Seq::new(self.kids(i).len(), |m: int| self.subtree(i, self.kids(i)[m].idx()))
+    }
+
+    /// The tree of the child at position `c` of the term at position `i`.
+    spec fn subtree(&self, i: int, c: int) -> Tree
+        decreases i, 0nat,
+    {
+        if 0 < c < i { self.tree(c) } else { Tree::Null }
+    }
+
+    /// The view is injective: two terms of a store with the same tree are
+    /// the same term.
+    pub proof fn theorem_same_tree_same_term(&self, a: Term, b: Term)
+        requires self.wf(), self.has(a), self.has(b), self.tree(a.idx()) == self.tree(b.idx()),
+        ensures a == b,
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(a.0);
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(b.0);
+        self.lemma_tree_injective(a.idx(), b.idx());
+        Term::lemma_eq(a, b);
+    }
+
+    proof fn lemma_tree_injective(&self, i: int, j: int)
+        requires self.wf(), 1 <= i < self.nodes@.len(), 1 <= j < self.nodes@.len(), self.tree(i) == self.tree(j),
+        ensures i == j,
+        decreases i,
+    {
+        self.lemma_node(i);
+        self.lemma_node(j);
+        if self.compound(i) {
+            assert(self.compound(j));
+            let (ki, kj) = (self.kids(i), self.kids(j));
+            self.lemma_kids(i);
+            self.lemma_kids(j);
+            let (si, sj) = (self.child_trees(i), self.child_trees(j));
+            assert(si == sj);
+            assert(ki.len() == kj.len()) by {
+                assert(si.len() == sj.len());
+            }
+            assert forall|m: int| 0 <= m < ki.len() implies ki[m] == kj[m] by {
+                vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(ki[m].0);
+                vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(kj[m].0);
+                assert(si[m] == sj[m]);
+                self.lemma_tree_injective(ki[m].idx(), kj[m].idx());
+                Term::lemma_eq(ki[m], kj[m]);
+            }
+            assert(ki =~= kj);
+            if i < j {
+                assert(self.compound(i) && self.compound(j));
+            } else if j < i {
+                assert(self.compound(j) && self.compound(i));
+            }
+        } else if self.is_lit_at(i) {
+            assert(self.is_lit_at(j));
+            if i < j {
+                assert(self.is_lit_at(i) && self.is_lit_at(j));
+            } else if j < i {
+                assert(self.is_lit_at(j) && self.is_lit_at(i));
+            }
+        } else if self.is_symbol_at(i) {
+            assert(self.is_symbol_at(j));
+            if i < j {
+                assert(self.is_symbol_at(i) && self.is_symbol_at(j));
+            } else if j < i {
+                assert(self.is_symbol_at(j) && self.is_symbol_at(i));
+            }
+        }
+    }
+
+    /// Making terms does not change the trees of the terms there were.
+    pub proof fn theorem_trees_are_kept(&self, old: &TermStore, t: Term)
+        requires old.wf(), self.wf(), self.extends(old), old.has(t),
+        ensures self.has(t), self.tree(t.idx()) == old.tree(t.idx()),
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+        self.lemma_tree_kept(old, t.idx());
+    }
+
+    proof fn lemma_tree_kept(&self, old: &TermStore, i: int)
+        requires old.wf(), self.wf(), self.extends(old), 1 <= i < old.nodes@.len(),
+        ensures self.tree(i) == old.tree(i),
+        decreases i,
+    {
+        old.lemma_node(i);
+        old.lemma_kids(i);
+        if old.compound(i) {
+            let ks = old.kids(i);
+            assert(self.kids(i) == ks);
+            let (s1, s2) = (self.child_trees(i), old.child_trees(i));
+            assert forall|m: int| 0 <= m < ks.len() implies s1[m] == s2[m] by {
+                if 0 < ks[m].idx() < i {
+                    self.lemma_tree_kept(old, ks[m].idx());
+                }
+            }
+            assert(s1 =~= s2);
+        } else if old.nodes@[i] is Lit {
+            assert(self.lit_of(i) == old.lit_of(i));
         }
     }
 
