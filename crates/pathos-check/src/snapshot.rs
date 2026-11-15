@@ -489,7 +489,7 @@ mod tests {
         (ck.stats).set_counts(vec![(rule, u64::MAX)], vec![(prog, u64::MAX)]);
         ck.step_begins(rule);
         ck.step_ends(rule);
-        ck.count_program(prog);
+        ck.stats.count_program(prog);
         assert_eq!(ck.stats.rule_counts(), vec![(rule, 0)]);
         assert_eq!(ck.stats.program_counts(), vec![(prog, 0)]);
     }

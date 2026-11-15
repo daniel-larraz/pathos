@@ -149,7 +149,7 @@ pub trait Plugin {
 impl State {
     /// Attaches a plugin. It must be attached before any file is read.
     pub fn set_plugin(&mut self, mut plugin: Box<dyn Plugin>) -> Result<()> {
-        self.ck.eval_plugin = plugin.evaluator();
+        self.ck.set_eval_plugin(plugin.evaluator());
         self.ck.plugin_events = Some(Vec::new());
         plugin.initialize(self)?;
         self.plugin = Some(plugin);

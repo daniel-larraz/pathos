@@ -1,5 +1,8 @@
 //! Attributes of symbols (`attr.h` and `expr_info.h` in Ethos).
 
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
+
 use std::fmt;
 
 use pathos_term::{Kind, Term};
@@ -7,6 +10,7 @@ use pathos_term::{Kind, Term};
 /// An attribute. Those from `List` on say how applications of a symbol are
 /// built, or what the symbol is; a symbol has at most one of them.
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub enum Attr {
     #[default]
     None,
@@ -40,6 +44,24 @@ pub enum Attr {
     AmbDatatypeConstructor,
 }
 
+// `==` on attributes is the derived one, which Verus cannot look into; see
+// the same for the kinds in `pathos-term`.
+#[cfg(verus_keep_ghost)]
+verus! {
+
+impl vstd::std_specs::cmp::PartialEqSpecImpl for Attr {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &Attr) -> bool {
+        *self == *other
+    }
+}
+
+} // verus!
+
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl Attr {
     /// Whether a symbol with this attribute takes any number of arguments.
     pub fn is_nary(self) -> bool {
@@ -113,6 +135,7 @@ impl fmt::Display for Attr {
 /// What the checker knows about a symbol beyond its type: how to build its
 /// applications.
 #[derive(Clone, Default, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub struct AppInfo {
     /// The symbol's constructor attribute.
     pub attr: Attr,

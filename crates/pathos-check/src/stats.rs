@@ -5,6 +5,9 @@
 //! The times and the term-store counters are pathos's own: its store never
 //! deletes a term, so `deleteExprCount` is always 0.
 
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
+
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::time::Instant;
@@ -24,6 +27,7 @@ struct RuleStat {
     time_us: u128,
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
 pub(crate) struct Stats {
     start: Instant,
     /// Every rule a step has named. This is kept without `--stats` too: it
@@ -38,7 +42,19 @@ pub(crate) struct Stats {
     count_programs: bool,
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl Stats {
+    /// Records an application of the program `hd`.
+    #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    pub(crate) fn count_program(&mut self, hd: Term) {
+        if self.count_programs {
+            let count: &mut u64 = self.programs.entry(hd).or_default();
+            *count = count.wrapping_add(1);
+        }
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub(crate) fn new(count_programs: bool) -> Stats {
         Stats {
             count_programs,
@@ -108,15 +124,6 @@ impl Checker {
             // the store's counter wraps too
             stat.mk_expr_count = (stat.mk_expr_count).wrapping_add(mk_count.wrapping_sub(start_mk));
             stat.time_us += start.elapsed().as_micros();
-        }
-    }
-
-    /// Records an application of the program `hd`.
-    #[inline]
-    pub(crate) fn count_program(&mut self, hd: Term) {
-        if self.stats.count_programs {
-            let count: &mut u64 = self.stats.programs.entry(hd).or_default();
-            *count = count.wrapping_add(1);
         }
     }
 
