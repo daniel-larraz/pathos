@@ -221,13 +221,18 @@ fn tag_of(kind: Kind) -> u32 {
     }
 }
 
-/// A size limit of the store's 32-bit handles and positions.
+/// What the store refuses to hold: more than its 32-bit handles and
+/// positions can count, or a term that is not one.
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Limit {
     /// More than 2^32 - 1 terms.
     Terms,
     /// More than 2^32 - 1 children of non-binary terms in total.
     Children,
+    /// A term with a number of children that its kind cannot have
+    /// ([`NodeKind::takes`]). Nothing in pathos builds one; the store checks
+    /// it so that code reading terms need not.
+    Shape,
 }
 
 impl std::fmt::Display for Limit {
@@ -235,6 +240,7 @@ impl std::fmt::Display for Limit {
         f.write_str(match self {
             Limit::Terms => "more than 4294967295 terms",
             Limit::Children => "more than 4294967295 children of non-binary terms",
+            Limit::Shape => "a term with a number of children that its kind cannot have",
         })
     }
 }
@@ -442,7 +448,13 @@ impl TermStore {
             Kind::Symbol(_) | Kind::Lit(_) => {
                 panic!("TermStore::mk called with the atomic kind {kind}")
             }
-            Kind::Node(_) | Kind::Eval(_) => {}
+            Kind::Node(n) => {
+                if !n.takes(children.len()) {
+                    self.limit = Some(Limit::Shape);
+                    return self.any;
+                }
+            }
+            Kind::Eval(_) => {}
         }
         self.mk_count += 1;
         let tag = tag_of(kind);
@@ -790,6 +802,11 @@ impl TermStore {
                                 if k == NodeKind::Apply && b == 2 {
                                     return None;
                                 }
+                                // as `mk`: not a number of children that
+                                // the kind cannot have
+                                if !k.takes(b as usize) {
+                                    return None;
+                                }
                                 (Kind::Node(k), TermData::Node(k, args))
                             }
                         }
@@ -1009,6 +1026,60 @@ mod tests {
                 }
             }
         }
+    }
+
+    /// The checker takes terms of some kinds apart without looking at how
+    /// many children they have. The store does not make a term with a
+    /// number of children that its kind cannot have, and a snapshot that
+    /// holds one is rejected.
+    #[test]
+    fn a_term_of_the_wrong_shape_is_not_made_and_not_read() {
+        let base = || {
+            let mut s = TermStore::new();
+            let ty = s.mk_type();
+            let c = s.mk_symbol(SymbolKind::Const, "c", ty);
+            (s, c)
+        };
+        let makes = |kind: Kind, children: usize| {
+            let (mut s, c) = base();
+            let t = s.mk(kind, &vec![c; children]);
+            let made = s.limit_exceeded().is_none();
+            assert_eq!(made, s.kind(t) == kind);
+            assert!(made || s.limit_exceeded() == Some(Limit::Shape));
+            made && TermStore::read_from(&mut Reader::new(&written(&s))).is_some()
+        };
+        // a snapshot with such a term: a tuple, which takes any number of
+        // children, with its kind overwritten
+        let reads = |kind: NodeKind, children: usize| {
+            let (mut s, c) = base();
+            s.mk(Kind::TUPLE, &vec![c; children]);
+            let mut bytes = written(&s);
+            // 4 bytes of count, then 14 bytes a term: the tag, the kind, ...
+            let last = 4 + (s.len() - 1) * 14;
+            assert_eq!(bytes[last + 1], NodeKind::Tuple as u8);
+            bytes[last + 1] = kind as u8;
+            TermStore::read_from(&mut Reader::new(&bytes)).is_some()
+        };
+        for (kind, right, wrong) in [
+            (NodeKind::Lambda, vec![2], vec![0, 1, 3]),
+            (NodeKind::Parameterized, vec![2], vec![0, 1, 3]),
+            (NodeKind::Proof, vec![1], vec![0, 2]),
+            (NodeKind::QuoteType, vec![1], vec![0, 2]),
+            (NodeKind::Apply, vec![1, 2, 3], vec![0]),
+            (NodeKind::ApplyOpaque, vec![1, 2], vec![0]),
+            (NodeKind::Tuple, vec![0, 1, 2, 3], vec![]),
+            (NodeKind::Variable, vec![0, 2], vec![]),
+        ] {
+            for n in right {
+                assert!(makes(Kind::Node(kind), n), "{kind:?} with {n} children");
+            }
+            for n in wrong {
+                assert!(!makes(Kind::Node(kind), n), "{kind:?} with {n} children");
+                assert!(!reads(kind, n), "{kind:?} with {n} children");
+            }
+        }
+        // the forgery is read when the shape is right
+        assert!(reads(NodeKind::Lambda, 2) && reads(NodeKind::Proof, 1));
     }
 
     #[test]

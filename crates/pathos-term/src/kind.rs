@@ -91,6 +91,21 @@ impl NodeKind {
         NodeKind::Proof,
         NodeKind::Variable,
     ];
+
+    /// Whether a term of this kind can have `n` children. These are the
+    /// numbers the checker builds terms with and relies on when it takes
+    /// them apart: a lambda has its variables and its body, a parameterized
+    /// term its parameters and its head, a proof its formula, a quoted type
+    /// its term, and an application at least a head. The other kinds are
+    /// built with any number.
+    pub fn takes(self, n: usize) -> bool {
+        match self {
+            NodeKind::Lambda | NodeKind::Parameterized => n == 2,
+            NodeKind::Proof | NodeKind::QuoteType => n == 1,
+            NodeKind::Apply | NodeKind::ApplyOpaque => n >= 1,
+            _ => true,
+        }
+    }
 }
 
 /// The builtin `eo::` operators.
