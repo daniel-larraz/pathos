@@ -788,10 +788,13 @@ under the context passed in. Three callers:
   `visited` were matched under the old binding, and the precondition does
   not hold for the arguments after.
 
-  I probed it. With `:signature ((BitVec n) (eo::quote n)) (BitVec n)`
-  and `a` of type `(BitVec 5)`, the application `(p a 7)` type-checks with
-  type `(BitVec 7)`, in Ethos and in pathos alike: the second argument
-  rebinds `n` and nothing notices that the first disagreed. pathos
+  I probed it. With `:signature ((BitVec n) (eo::quote n)) (BitVec n)`,
+  the single case `((p x 0) x)` and `a` of type `(BitVec 5)`, the
+  application `(p a 7)` matches no case, so it stays as it is, and it
+  type-checks with type `(BitVec 7)`, in Ethos and in pathos alike: the
+  second argument rebinds `n` and nothing notices that the first
+  disagreed. It shows only on an application that does not evaluate; one
+  that does is replaced by its value before it is typed. pathos
   reproduces Ethos here, so no gate differs; it is recorded in
   [ethos-differences.md](ethos-differences.md) and not reported to Ethos.
   Whether it lets a wrong proof through depends on the signature. In the
