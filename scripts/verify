@@ -38,7 +38,7 @@ VERUS_TOOLCHAIN=1.99.1-x86_64-unknown-linux-gnu
 # The number of functions and proofs Verus checked in each crate when this
 # was last changed. Fewer is an error; more is expected as proofs are added.
 MIN_VERIFIED_TERM=215
-MIN_VERIFIED_CHECK=70
+MIN_VERIFIED_CHECK=89
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fail() { echo "scripts/verify: $*" >&2; exit 2; }

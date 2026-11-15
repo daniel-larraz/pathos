@@ -41,6 +41,7 @@ milestone adds a section at the end of this file:
 - [Milestone 21: the evaluator's operators cannot panic](#milestone-21-the-evaluators-operators-cannot-panic)
   (the design that was reviewed first is in
   [verus-eval-design.md](verus-eval-design.md))
+- [Milestone 22: `evaluate` cannot panic](#milestone-22-evaluate-cannot-panic)
 
 ## The setup
 
@@ -1391,3 +1392,229 @@ better number for it than milestone 19 gave.
    with Ethos, which has no such check. No input is known that produces
    it.
 3. **Milestone 22** (`evaluate`) is next, with the estimate above.
+
+## Milestone 22: `evaluate` cannot panic
+
+### Summary
+
+- **Proved**: `Checker::evaluate` cannot panic, keeps the checker's
+  invariant, and returns a term of the store. With milestone 21 that is
+  the whole of `eval.rs`. Verus checks 215 items in `pathos-term` and 89
+  in `pathos-check` (70 before), with no errors.
+- **The two `unreachable!` are proved unreachable.** They are now one
+  function, `children_first`, whose precondition is `false`; Verus proves
+  at both calls that every child has its value. The invariant that gives
+  this is under "The invariant of a level".
+- **`evaluate` was cut into four functions**, as the last report said it
+  would be. The steps and their order are the same; see "What had to be
+  rewritten".
+- **Not proved: that evaluation ends.** A program may run for ever, in
+  Ethos too. Eight functions are marked as not proved to terminate.
+- **Behaviour is unchanged**: every gate agrees with Ethos. Against milestone 21 it
+  executes 0.2% fewer instructions on the regressions and 0.9% fewer on
+  the cvc5 proofs; see "Time".
+- **Cost**: 566 lines of specification and proof, against the 1,200 to
+  1,800 estimated. Why is under "The estimate, updated".
+
+### What Verus proves
+
+| Function | What |
+| --- | --- |
+| `evaluate` | The contract milestone 21 trusted: it keeps the invariant, the store keeps its terms, and the result is a term of the store. |
+| `run_frame`, `visit_term`, `revisit_term` | Each keeps the checker's invariant, the invariant of the level it works on and that of the cache of program applications; a new level it asks for is in order. |
+| `EvFrame::new`, `result`, `settle`, `all_values`, `values_or` | What they return, exactly. |
+
+No index is out of range: `args[0]` of an application (the store gives
+the head, `lemma_shape`), `cchildren[0..3]` and `children[1..3]` of an
+`eo::ite` (the invariant says a pending one has three children), and the
+stack of levels, which is no longer indexed.
+
+The two preconditions that milestone 21 left to `evaluate` are proved at
+its calls: the list passed to `evaluate_program_internal` has a head, and
+`eo::ite` is not passed to `evaluate_literal_op_internal`. The same
+preconditions are still left to `build.rs` and `step.rs`.
+
+### The invariant of a level
+
+A level (`EvFrame`) has a work list `visit` and a map `visited` from a
+term to its value, or to `None` while its children are being evaluated
+(the term is *pending*). `EvFrame::ok` says:
+
+1. Everything the level holds is a term of the store.
+2. A place of the work list is *open* when its term is pending and every
+   term above it was made before it (has a smaller handle). Every pending
+   term is at an open place.
+3. For an open place, each child of its term has a value or is on the
+   work list above the place. For `eo::ite`, this is said of the condition
+   only, since the branches are put on the list later, and only if needed.
+4. A pending `eo::ite` has three children.
+
+When a pending term is on top of the list, (2) says its place is open:
+another open place below would have this same term above it, which is not
+older than itself. Then (3) says its children have values, since nothing
+is above the top. That is `lemma_top_open`, and it is all `revisit_term`
+needs.
+
+The design had (3) with "above some occurrence of the term". That is not
+enough by itself: a list `[x, c, x]`, with `c` a child of `x` that has no
+value, satisfies it, and the top `x` would then be looked at again without
+its child. What excludes it is that a subterm is made before the term,
+which the store's invariant gives (`lemma_children`). So the invariant
+speaks of handles, and needs no ghost state to remember where a term was
+expanded: the open place is the only one with nothing newer above it.
+
+Four lemmas keep it, one for each thing that happens to a level:
+`lemma_settle` (the top gets a value and leaves), `lemma_grow` (children
+of the top are put above it), `lemma_frame_kept` (the store grew) and
+`lemma_same`. The levels that wait are only required to be in order; that
+the term on top of a waiting level is the application the level above
+computes, which the design listed, is not needed: handing the result down
+is `lemma_settle` whatever that term is.
+
+### What is trusted
+
+New in this milestone:
+
+| Function | Contract |
+| --- | --- |
+| `plugin_evaluate` (the plugin's `evaluate`) | Keeps the invariant; the store keeps its terms; a term returned is a term of the store. As `plugin_evaluate_program` in milestone 21. |
+| `has_eval_plugin`, `is_fatal` | None: each reads one field and returns a `bool`. |
+| `copy_of` (`to_vec`), `copy_of_ctx` (`clone`), `push_all` (`extend_from_slice`) | The copy has the same terms; the list has the terms added at its end. Each is one call of the standard library that Verus has no usable specification for. |
+| `children_first` | Its precondition is `false`, and Verus proves that at each call; its body, the `unreachable!`, is not looked at. |
+
+Assumed besides: that the `Hash` and `Eq` of a list of term handles agree
+(`axiom_term_lists_are_keys`), for the cache of program applications. The
+same is assumed of a handle and of a pair of handles.
+
+`evaluate` leaves the list of trusted functions. What milestone 21 listed
+is otherwise as it was: typing, `mk_list`, `check_arity`, the plugin, the
+message functions.
+
+#### The circularity, now
+
+Within `eval.rs` there is no assumption left to discharge: `evaluate`
+calls the operators, and one of them, `evaluate_nil`, calls `evaluate`
+(as does `evaluate_program_app`, from outside). Verus checks the cycle as it
+checks any recursion, each call relying on the contract of the function
+called. Verus was told not to ask for a measure (the eight functions
+marked `exec_allows_no_decreases_clause`), so this is a proof that no call
+panics, not that the calls end.
+
+The circularity through typing is as it was: `type_of` is trusted, and
+typing calls `evaluate`.
+
+### What had to be rewritten
+
+`evaluate` was one function of 190 lines: a loop over the stack of levels
+with a loop over the top level's work list inside, and three flags
+(`evaluated`, `new_context`, `can_evaluate`) carried from one turn to the
+next. It is now:
+
+- `evaluate`: the loop over levels. The level at work is a local variable
+  and the levels that wait are on the stack, where before the level at
+  work was the top of the stack. A level is pushed when it has to wait and
+  popped when the one above is done, so a level moves twice for each
+  program application that needs a level of its own. (The proof wants
+  this: Verus then knows that working on one level leaves the others
+  alone.)
+- `run_frame`: the loop over one level's work list.
+- `visit_term`: a term that needs no evaluation, a parameter, the first
+  visit, and a term that has its value already.
+- `revisit_term`: the second visit.
+
+`Step` says what a level does next: go on, wait for a new level, or stop
+because the run is over. It replaces `new_context` and the `break`.
+`can_evaluate` and `evaluated` are locals of `revisit_term`; neither was
+read across turns except `evaluated` at the very end, where it was always
+the result of the bottom level.
+
+Rewritten for Verus, with the same meaning: the two
+`.collect::<Option<Vec<Term>>>()` are `all_values`; the
+`zip`/`map`/`collect` is `values_or`; closures and `while let` are
+`match`; the `if let ... && let` is nested.
+
+One thing is gone: the plugin was given a clone of the level's
+substitution, and is now given a reference to it. The clone was not
+needed.
+
+### Time
+
+The binary of this milestone against that of milestone 21 (`ab2bcb4`),
+instructions counted with Valgrind as for the shape check:
+
+| Corpus | Instructions | Largest increase on one case | Time, best of 3 | Outputs |
+| --- | --- | --- | --- | --- |
+| Regressions (230) | -0.22% | +0.69% | -0.3% | identical |
+| cvc5 proofs (400) | -0.87% | +0.26% | -0.5% | identical |
+
+The times were taken while other jobs ran; the instruction counts are the
+figures to rely on. Where the saving comes from was not looked into; the
+flags are gone, and the plugin's clone was never on this path.
+
+### Lines and time
+
+| File | Code | Specification | Proof |
+| --- | --- | --- | --- |
+| `eval.rs` | 1,178 (was 1,101) | 571 (was 388) | 504 (was 121) |
+| `store.rs` | 714 | 562 | 981 (was 980) |
+
+Verus takes about 35 seconds for `pathos-term` and 7 for `pathos-check`
+(5 before).
+
+### The estimate, updated
+
+| Part | Estimated | Spent |
+| --- | --- | --- |
+| `evaluate`, the frame stack | 1,200 to 1,800 lines | 566 |
+
+The estimate assumed the invariant would have to say what each level
+owes the one below and to carry ghost state for where each term was
+expanded, as `match_terms` needed a measure and a ghost stack. Neither
+was needed: the order of handles says where a term was expanded, and a
+waiting level needs nothing but to be in order. The proof is four lemmas
+about one level and a few lines at each place the code changes it. The
+risk named last time, the solver's budget, did not show once the function
+was cut: no function needs a raised limit.
+
+For what remains (typing, building and step checking, about 1,150 lines
+of code), the estimate of milestone 21 stands: 500 to 900 lines of
+specification and proof for panic freedom, if `build.rs`'s desugaring has
+no invariant of this kind. After two milestones that came in under, I
+would now expect the lower half of that range. Correctness with a
+semantics is a different piece of work, and I have no better number for it
+than milestone 19 gave.
+
+### Gates
+
+Run on this branch with `verus` at `7cd893f` merged in (the snapshot
+reader's checks from `main`, harness pin `237b961`).
+
+- `scripts/verify`: `pathos_term` 215 verified, 0 errors; `pathos_check`
+  89 verified, 0 errors; 41 seconds in all.
+- `scripts/full-check`, the whole of it: every step passes. `tests` 230 of
+  230, `proofs` 400 of 400, `large` 43 of 43, `cli` 3,192 of 3,192,
+  `snapshot` under every option set and with the three broken snapshots,
+  `options` 6,300 of 6,300, `bignum` 7 of 7, `perf` 673 of 673 (Ethos
+  1,249 s, pathos 554 s, 44%), and `fuzz` has no finding that still
+  differs in either set of findings.
+- Three deliberate faults in `evaluate` were each refused by Verus: an
+  `eo::ite` let through with a number of children other than three, a
+  second `pop` of the work list, and the arm for `eo::ite` given to another
+  operator.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass. No test was changed.
+- `Cargo.lock` is unchanged; no dependency was added.
+- The CI job that runs Verus is now named for the evaluator too.
+- CI has not run on this branch yet: the reviewer pushes.
+
+### For Daniel
+
+1. **The restructuring of `evaluate`.** It is more than moving lines: the
+   level at work is held in a local, and the loop is four functions. No
+   output and no count changed on any gate, and the time is in the table
+   above. If you would rather have the old shape back on `main`, the proof
+   depends on the new one.
+2. **Termination is not proved**, and is not planned: it does not hold.
+3. **What is next.** Panic freedom of typing, building and step checking
+   would remove `type_of` from the trusted list, and with it the
+   circularity; the evaluator's contract is the one they need.

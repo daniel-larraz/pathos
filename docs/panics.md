@@ -44,8 +44,15 @@ rows for `children[1..]` and `children[0]` (276, 279, 955 to 983) and for
 the arguments of `eo::ite` (496) as preconditions that the callers named
 in those rows meet, the others outright. That code was rewritten for it
 (`evaluate_list_op` is now one function per operator), so its line numbers
-below are the old ones. The rows of `evaluate` (lines 51 to 207) are
-milestone 22.
+below are the old ones.
+Milestone 22 did the same for `evaluate` (the rows for lines 51 to 207):
+Verus proves that it cannot panic, the two `unreachable!` included, which
+are now one function, `children_first`, that Verus proves is never called.
+The argument of the row for lines 124 and 180 is the invariant of a level,
+`EvFrame::ok`, in `eval.rs`. `evaluate` is now a loop over levels
+(`run_frame`, `visit_term`, `revisit_term`), so its rows keep the old line
+numbers too. The "Stack" rows stand: Verus does not prove that evaluation
+ends, nor how deep its calls go.
 
 ## What was looked for
 

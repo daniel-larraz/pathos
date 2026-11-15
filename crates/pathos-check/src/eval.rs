@@ -3,6 +3,8 @@
 
 use std::collections::{HashMap, HashSet};
 
+#[cfg(verus_keep_ghost)]
+use pathos_term::TermStore;
 use pathos_term::{EvalOp, Integer, Kind, Lit, NodeKind, Term};
 
 #[cfg(verus_keep_ghost)]
@@ -29,6 +31,7 @@ macro_rules! arg {
 
 /// One level of evaluation: a term being evaluated in a context. A new level
 /// starts each time a program application reduces to a case's body.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 struct EvFrame {
     init: Term,
     ctx: Ctx,
@@ -40,16 +43,167 @@ struct EvFrame {
     result_key: Option<Vec<Term>>,
 }
 
+/// The results of program applications in one call of
+/// [`Checker::evaluate`]; `None` is an application that failed.
+type EvalCache = HashMap<Vec<Term>, Option<Term>>;
+
+/// What a level does after a term on its work list was looked at.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
+enum Step {
+    /// Goes on with its work list.
+    Next,
+    /// Waits for a new level: the body of a program's case, which needs
+    /// substitution.
+    Call(EvFrame),
+    /// Stops: the run is over; see [`Checker::take_fatal`].
+    Fatal,
+}
+
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl EvFrame {
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        ensures
+            r.init == init,
+            r.ctx == ctx,
+            r.visited@ == Map::<Term, Option<Term>>::empty(),
+            r.visit@ == seq![init],
+            r.result_key == result_key,
+    ))]
     fn new(init: Term, ctx: Ctx, result_key: Option<Vec<Term>>) -> EvFrame {
+        proof! {
+            use_collections();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+        }
+        // (Verus has no `vec!`)
+        #[allow(clippy::vec_init_then_push)]
+        let visit = {
+            let mut visit = Vec::new();
+            visit.push(init);
+            visit
+        };
         EvFrame {
             init,
             ctx,
             visited: HashMap::new(),
-            visit: vec![init],
+            visit,
             result_key,
         }
     }
+
+    /// The value of the term the level was made for, once its work list is
+    /// empty.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        ensures r == if self.valued(self.init) { self.visited@[self.init]->0 } else { self.init },
+    ))]
+    fn result(&self) -> Term {
+        proof! {
+            use_collections();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+        }
+        match self.visited.get(&self.init) {
+            Some(&Some(v)) => v,
+            _ => self.init,
+        }
+    }
+
+    /// Gives the term on top of the work list its value and takes it off.
+    #[cfg_attr(verus_keep_ghost, verus_spec(
+        requires old(self).visit@.len() > 0,
+        ensures
+            final(self).visit@ == old(self).visit@.drop_last(),
+            final(self).visited@ == old(self).visited@.insert(cur, Some(value)),
+            final(self).init == old(self).init,
+            final(self).ctx == old(self).ctx,
+            final(self).result_key == old(self).result_key,
+    ))]
+    fn settle(&mut self, cur: Term, value: Term) {
+        proof! {
+            use_collections();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+        }
+        self.visited.insert(cur, Some(value));
+        self.visit.pop();
+    }
+}
+
+/// The values, if every child has one.
+// Written for Verus: a loop over indices, and no `?`.
+#[allow(clippy::needless_range_loop, clippy::question_mark)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(r =>
+    ensures
+        r matches Some(a) ==> a@.len() == cchildren@.len()
+            && forall|i: int| 0 <= i < a@.len() ==> cchildren@[i] == Some(#[trigger] a@[i]),
+        (forall|i: int| 0 <= i < cchildren@.len() ==> (#[trigger] cchildren@[i]) is Some) ==> r is Some,
+))]
+fn all_values(cchildren: &[Option<Term>]) -> Option<Vec<Term>> {
+    let mut args = Vec::with_capacity(cchildren.len());
+    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+        args@.len() == i,
+        forall|j: int| 0 <= j < i ==> cchildren@[j] == Some(#[trigger] args@[j]),
+    ))]
+    for i in 0..cchildren.len() {
+        match cchildren[i] {
+            Some(v) => args.push(v),
+            None => return None,
+        }
+    }
+    Some(args)
+}
+
+/// The value of each child, or the child itself where it has none.
+#[allow(clippy::needless_range_loop)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(r =>
+    requires cchildren@.len() == children@.len(),
+    ensures
+        r@.len() == children@.len(),
+        forall|i: int| 0 <= i < r@.len() ==>
+            #[trigger] r@[i] == (if cchildren@[i] is Some { cchildren@[i]->0 } else { children@[i] }),
+))]
+fn values_or(cchildren: &[Option<Term>], children: &[Term]) -> Vec<Term> {
+    let mut args = Vec::with_capacity(children.len());
+    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+        cchildren@.len() == children@.len(),
+        args@.len() == i,
+        forall|j: int| 0 <= j < i ==>
+            #[trigger] args@[j] == (if cchildren@[j] is Some { cchildren@[j]->0 } else { children@[j] }),
+    ))]
+    for i in 0..children.len() {
+        args.push(match cchildren[i] {
+            Some(v) => v,
+            None => children[i],
+        });
+    }
+    args
+}
+
+/// A copy of the terms. (Verus has no specification of `to_vec`.)
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@ == ts@,))]
+fn copy_of(ts: &[Term]) -> Vec<Term> {
+    ts.to_vec()
+}
+
+/// Puts the terms on a list, in their order. (Verus's specification of
+/// `extend_from_slice` speaks of clones.)
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(
+    ensures final(list)@ == old(list)@ + ts@,
+))]
+#[inline(always)]
+fn push_all(list: &mut Vec<Term>, ts: &[Term]) {
+    list.extend_from_slice(ts);
+}
+
+/// A copy of the substitution. (Verus has no specification of `clone` for
+/// the map.)
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@ == ctx@,))]
+fn copy_of_ctx(ctx: &Ctx) -> Ctx {
+    ctx.clone()
+}
+
+/// A term was looked at the second time before its children had values: a
+/// bug in [`Checker::evaluate`].
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(requires false,))]
+fn children_first(what: &str) -> Vec<Term> {
+    unreachable!("children of {what} are evaluated first")
 }
 
 // Written for Verus, which follows a loop over indices without a
@@ -62,8 +216,9 @@ impl Checker {
     /// and `eo::` operators until none applies. Stuck applications stay in
     /// the result.
     ///
-    /// Trusted for now: the proof of this function is milestone 22.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
+    /// Verus proves that it does not panic, not that it ends: a program
+    /// may run for ever.
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause, verifier::loop_isolation(false), verus_spec(r =>
         requires old(self).wf(), old(self).has(e), old(self).binds(ctx@),
         ensures
             final(self).wf(),
@@ -71,207 +226,445 @@ impl Checker {
             final(self).has(r),
     ))]
     pub fn evaluate(&mut self, e: Term, ctx: &Ctx) -> Term {
+        proof! {
+            use_collections();
+            axiom_term_lists_are_keys();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+            broadcast use vstd::std_specs::btree::group_btree_axioms;
+        }
+        proof_decl! { let ghost start = *self; }
         // Results of program applications in this call, so that programs
         // recursing over a term visit shared subterms once. `None` is an
         // application that failed: it is not tried again, as in Ethos, so
         // its warnings appear once.
-        let mut eval_cache: HashMap<Vec<Term>, Option<Term>> = HashMap::new();
-        let mut estack = vec![EvFrame::new(e, ctx.clone(), None)];
-        let mut evaluated: Option<Term> = None;
-        let mut new_context = false;
-        let mut can_evaluate = true;
-        while !estack.is_empty() {
-            let top = estack.len() - 1;
-            while let Some(&cur) = estack[top].visit.last() {
-                let evf = &mut estack[top];
-                // Not evaluatable, and ground or nothing to substitute: the
-                // term stays as it is.
-                if !self.store.is_evaluatable(cur)
-                    && (self.store.is_ground(cur) || evf.ctx.is_empty())
-                {
-                    evf.visited.insert(cur, Some(cur));
-                    evf.visit.pop();
-                    continue;
-                }
-                let ck = self.store.kind(cur);
-                if ck == Kind::PARAM {
-                    // a parameter the context does not bind stays
-                    let v = evf.ctx.get(&cur).copied().unwrap_or(cur);
-                    evf.visited.insert(cur, Some(v));
-                    evf.visit.pop();
-                    continue;
-                }
-                match evf.visited.get(&cur).copied() {
-                    None => {
-                        // a plugin may evaluate the term itself
-                        if self.eval_plugin.0.is_some() {
-                            let ctx = estack[top].ctx.clone();
-                            if let Some(r) = self.plugin_evaluate(cur, &ctx) {
-                                let evf = &mut estack[top];
-                                evf.visited.insert(cur, Some(r));
-                                evf.visit.pop();
-                                continue;
-                            }
-                        }
-                        let evf = &mut estack[top];
-                        // first visit: evaluate the children
-                        evf.visited.insert(cur, None);
-                        let children = self.store.children(cur);
-                        if ck == Kind::Eval(EvalOp::IfThenElse) {
-                            if children.len() != 3 {
-                                // malformed: does not evaluate
-                                evf.visited.insert(cur, Some(cur));
-                                evf.visit.pop();
-                                continue;
-                            }
-                            // only the condition, for now
-                            evf.visit.push(children[0]);
-                        } else {
-                            evf.visit.extend_from_slice(children);
-                        }
-                        continue;
-                    }
-                    Some(Some(_)) => {
-                        evf.visit.pop();
-                        continue;
-                    }
-                    Some(None) => {}
-                }
-                // second visit: the children are evaluated (for
-                // if-then-else, at least the condition is)
-                let children = self.store.children(cur).to_vec();
-                let mut cchildren: Vec<Option<Term>> = Vec::with_capacity(children.len());
-                let mut cchanged = false;
-                for &cp in &children {
-                    let v = evf.visited.get(&cp).copied().flatten();
-                    if let Some(v) = v {
-                        cchanged = cchanged || v != cp;
-                    }
-                    cchildren.push(v);
-                }
-                evaluated = None;
-                match ck {
-                    Kind::Node(NodeKind::Apply | NodeKind::ApplyOpaque) => {
-                        let Some(args) = cchildren.iter().copied().collect::<Option<Vec<Term>>>()
-                        else {
-                            unreachable!("children of an application are evaluated first")
-                        };
-                        if self.store.kind(args[0]) == Kind::PROGRAM_CONST {
-                            if let Some(&r) = eval_cache.get(&args) {
-                                evaluated = r;
-                            } else {
-                                let mut new_ctx = Ctx::new();
-                                evaluated = self.evaluate_program_internal(&args, &mut new_ctx);
-                                match evaluated {
-                                    // a body that needs substitution is
-                                    // evaluated at a new level
-                                    Some(ev)
-                                        if !self.store.is_ground(ev) && !new_ctx.is_empty() =>
-                                    {
-                                        new_context = true;
-                                        estack.push(EvFrame::new(ev, new_ctx, Some(args)));
-                                    }
-                                    // otherwise the result, or the failure,
-                                    // is final
-                                    _ => {
-                                        eval_cache.insert(args, evaluated);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Kind::Eval(EvalOp::IfThenElse) => {
-                        let evf = &mut estack[top];
-                        let cond = cchildren[0].and_then(|c| match self.store.lit(c) {
-                            Some(Lit::Bool(b)) => Some(*b),
-                            _ => None,
-                        });
-                        if let Some(b) = cond {
-                            // only the branch taken is evaluated
-                            let index = if b { 1 } else { 2 };
-                            match cchildren[index] {
-                                None => {
-                                    can_evaluate = false;
-                                    evf.visit.push(children[index]);
-                                }
-                                Some(v) => evaluated = Some(v),
-                            }
-                        } else {
-                            // Both branches are evaluated, so that
-                            // substitution into them is complete.
-                            for i in 1..3 {
-                                if cchildren[i].is_none() {
-                                    evf.visit.push(children[i]);
-                                    can_evaluate = false;
-                                }
-                            }
-                        }
-                    }
-                    Kind::Eval(op) => {
-                        let Some(args) = cchildren.iter().copied().collect::<Option<Vec<Term>>>()
-                        else {
-                            unreachable!("children of an operator are evaluated first")
-                        };
-                        evaluated = self.evaluate_literal_op_internal(op, &args);
-                        if self.fatal.is_some() {
-                            // the run is over; see `Checker::take_fatal`
-                            return e;
-                        }
-                    }
-                    _ => {}
-                }
-                if new_context {
-                    break;
-                }
-                if can_evaluate {
-                    let ev = match evaluated {
-                        Some(ev) => ev,
-                        None if cchanged => {
-                            let args: Vec<Term> = cchildren
-                                .iter()
-                                .zip(&children)
-                                .map(|(c, &orig)| c.unwrap_or(orig))
-                                .collect();
-                            self.store.mk(ck, &args)
-                        }
-                        None => cur,
-                    };
-                    evaluated = Some(ev);
-                    let evf = &mut estack[top];
-                    evf.visited.insert(cur, Some(ev));
-                    evf.visit.pop();
-                } else {
-                    can_evaluate = true;
-                }
+        let mut eval_cache: EvalCache = HashMap::new();
+        // the levels that wait for the one above them, and the one at work
+        let mut estack: Vec<EvFrame> = Vec::new();
+        let mut evf = EvFrame::new(e, copy_of_ctx(ctx), None);
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            start.wf(),
+            start.has(e),
+            self.wf(),
+            self.keeps(&start),
+            evf.ok(&self.store),
+            frames_ok(&self.store, estack@),
+            cache_ok(&self.store, eval_cache@),
+        ))]
+        loop {
+            proof_decl! { let ghost before = *self; }
+            let step = self.run_frame(&mut evf, &mut eval_cache);
+            proof! {
+                lemma_frames_kept(&self.store, &before.store, estack@);
+                lemma_keeps_twice(&self.store, &before.store, &start.store);
             }
-            if new_context {
-                // continue with the level just pushed
-                new_context = false;
-                continue;
+            match step {
+                Step::Next => {}
+                // continue with the new level
+                Step::Call(frame) => {
+                    proof_decl! { let ghost below = estack@; }
+                    estack.push(evf);
+                    evf = frame;
+                    proof! {
+                        assert forall|i: int| 0 <= i < estack@.len() implies (#[trigger] estack@[i]).ok(&self.store) by {
+                            if i < below.len() {
+                                assert(below[i].ok(&self.store));
+                            }
+                        }
+                    }
+                    continue;
+                }
+                Step::Fatal => return e,
             }
             // this level is done: hand its result to the level below
-            let Some(evf) = estack.pop() else { break };
-            let result = evf
-                .visited
-                .get(&evf.init)
-                .copied()
-                .flatten()
-                .unwrap_or(evf.init);
-            evaluated = Some(result);
+            let result = evf.result();
             if let Some(key) = evf.result_key {
                 eval_cache.insert(key, Some(result));
             }
-            if let Some(parent) = estack.last_mut()
-                && let Some(app) = parent.visit.pop()
-            {
-                parent.visited.insert(app, Some(result));
+            proof_decl! { let ghost below = estack@; }
+            match estack.pop() {
+                None => return result,
+                Some(parent) => {
+                    evf = parent;
+                    proof_decl! { let ghost waiting = evf; }
+                    proof! {
+                        assert(below[below.len() - 1].ok(&self.store));
+                        assert(waiting.ok(&self.store));
+                        assert forall|i: int| 0 <= i < estack@.len() implies (#[trigger] estack@[i]).ok(&self.store) by {
+                            assert(below[i].ok(&self.store));
+                        }
+                    }
+                    if let Some(app) = evf.visit.pop() {
+                        evf.visited.insert(app, Some(result));
+                    }
+                    proof! {
+                        if waiting.visit@.len() > 0 {
+                            lemma_settle(&waiting, &evf, &self.store, result);
+                        } else {
+                            lemma_same(&waiting, &evf, &self.store);
+                        }
+                    }
+                }
             }
         }
-        evaluated.unwrap_or(e)
+    }
+
+    /// Works on a level until its work list is empty ([`Step::Next`]) or it
+    /// has to wait or stop.
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause, verifier::loop_isolation(false), verus_spec(r =>
+        requires
+            old(self).wf(),
+            old(evf).ok(&old(self).store),
+            cache_ok(&old(self).store, old(eval_cache)@),
+        ensures
+            final(self).wf(),
+            final(self).keeps(old(self)),
+            final(evf).ok(&final(self).store),
+            cache_ok(&final(self).store, final(eval_cache)@),
+            r matches Step::Call(f) ==> f.ok(&final(self).store),
+    ))]
+    fn run_frame(&mut self, evf: &mut EvFrame, eval_cache: &mut EvalCache) -> Step {
+        proof_decl! { let ghost start = *self; }
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            self.wf(),
+            self.keeps(&start),
+            evf.ok(&self.store),
+            cache_ok(&self.store, eval_cache@),
+        ))]
+        loop {
+            let cur = match evf.visit.last() {
+                Some(&cur) => cur,
+                None => return Step::Next,
+            };
+            proof_decl! { let ghost before = *self; }
+            let step = self.visit_term(evf, eval_cache, cur);
+            proof! { lemma_keeps_twice(&self.store, &before.store, &start.store); }
+            match step {
+                Step::Next => {}
+                other => return other,
+            }
+        }
+    }
+
+    /// Looks at the term on top of a level's work list.
+    #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires
+            old(self).wf(),
+            old(evf).ok(&old(self).store),
+            old(evf).visit@.len() > 0,
+            cur == old(evf).visit@.last(),
+            cache_ok(&old(self).store, old(eval_cache)@),
+        ensures
+            final(self).wf(),
+            final(self).keeps(old(self)),
+            final(evf).ok(&final(self).store),
+            cache_ok(&final(self).store, final(eval_cache)@),
+            r matches Step::Call(f) ==> f.ok(&final(self).store),
+    ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
+    fn visit_term(&mut self, evf: &mut EvFrame, eval_cache: &mut EvalCache, cur: Term) -> Step {
+        proof! {
+            use_collections();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+            broadcast use vstd::std_specs::btree::group_btree_axioms;
+            assert(self.store.has(cur));
+        }
+        proof_decl! { let ghost f0 = *evf; let ghost before = *self; }
+        // Not evaluatable, and ground or nothing to substitute: the
+        // term stays as it is.
+        if !self.store.is_evaluatable(cur) && (self.store.is_ground(cur) || evf.ctx.is_empty()) {
+            evf.settle(cur, cur);
+            proof! { lemma_settle(&f0, evf, &self.store, cur); }
+            return Step::Next;
+        }
+        let ck = self.store.kind(cur);
+        if ck == Kind::PARAM {
+            // a parameter the context does not bind stays
+            let v = match evf.ctx.get(&cur) {
+                Some(&v) => v,
+                None => cur,
+            };
+            evf.settle(cur, v);
+            proof! { lemma_settle(&f0, evf, &self.store, v); }
+            return Step::Next;
+        }
+        let seen = evf.visited.get(&cur).copied();
+        match seen {
+            None => {
+                // a plugin may evaluate the term itself
+                if self.has_eval_plugin() {
+                    let value = self.plugin_evaluate(cur, &evf.ctx);
+                    proof! {
+                        lemma_frame_kept(&f0, &self.store, &before.store);
+                        lemma_cache_kept(&self.store, &before.store, eval_cache@);
+                    }
+                    if let Some(r) = value {
+                        evf.settle(cur, r);
+                        proof! { lemma_settle(&f0, evf, &self.store, r); }
+                        return Step::Next;
+                    }
+                }
+                // first visit: evaluate the children
+                evf.visited.insert(cur, None);
+                let children = self.store.children(cur);
+                if ck == Kind::Eval(EvalOp::IfThenElse) {
+                    if children.len() != 3 {
+                        // malformed: does not evaluate
+                        evf.settle(cur, cur);
+                        proof! {
+                            assert(evf.visited@ =~= f0.visited@.insert(cur, Some(cur)));
+                            lemma_settle(&f0, evf, &self.store, cur);
+                        }
+                        return Step::Next;
+                    }
+                    // only the condition, for now
+                    evf.visit.push(children[0]);
+                    proof! {
+                        let pushed = seq![children@[0]];
+                        assert(evf.visit@ =~= f0.visit@ + pushed);
+                        lemma_grow(&f0, evf, &self.store, pushed);
+                    }
+                } else {
+                    push_all(&mut evf.visit, children);
+                    proof! {
+                        assert(self.store.kind_of(cur.idx()) == ck);
+                        lemma_grow(&f0, evf, &self.store, children@);
+                    }
+                }
+                Step::Next
+            }
+            Some(Some(_v)) => {
+                evf.visit.pop();
+                proof! {
+                    assert(evf.visited@ =~= f0.visited@.insert(cur, Some(_v)));
+                    lemma_settle(&f0, evf, &self.store, _v);
+                }
+                Step::Next
+            }
+            // second visit: the children are evaluated (for if-then-else,
+            // at least the condition is)
+            Some(None) => self.revisit_term(evf, eval_cache, cur, ck),
+        }
+    }
+
+    /// Evaluates the term on top of a level's work list from the values of
+    /// its children.
+    #[inline]
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
+        requires
+            old(self).wf(),
+            old(evf).ok(&old(self).store),
+            old(evf).visit@.len() > 0,
+            cur == old(evf).visit@.last(),
+            cache_ok(&old(self).store, old(eval_cache)@),
+            old(evf).pending(cur),
+            ck == old(self).store.kind_of(cur.idx()),
+        ensures
+            final(self).wf(),
+            final(self).keeps(old(self)),
+            final(evf).ok(&final(self).store),
+            cache_ok(&final(self).store, final(eval_cache)@),
+            r matches Step::Call(f) ==> f.ok(&final(self).store),
+    ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
+    fn revisit_term(
+        &mut self,
+        evf: &mut EvFrame,
+        eval_cache: &mut EvalCache,
+        cur: Term,
+        ck: Kind,
+    ) -> Step {
+        proof! {
+            use_collections();
+            axiom_term_lists_are_keys();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+            broadcast use vstd::std_specs::btree::group_btree_axioms;
+            assert(self.store.has(cur));
+            self.store.lemma_children(cur);
+            self.store.lemma_shape(cur);
+            lemma_top_open(evf, &self.store);
+        }
+        proof_decl! { let ghost f0 = *evf; let ghost before = *self; }
+        let children = copy_of(self.store.children(cur));
+        let mut cchildren: Vec<Option<Term>> = Vec::with_capacity(children.len());
+        let mut cchanged = false;
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            cchildren@.len() == i,
+            cchanged ==> i > 0,
+            forall|j: int| 0 <= j < i ==> #[trigger] cchildren@[j]
+                == (if evf.valued(children@[j]) { evf.visited@[children@[j]] } else { None }),
+            forall|j: int| 0 <= j < i ==> ((#[trigger] cchildren@[j]) matches Some(v) ==> self.store.has(v)),
+        ))]
+        for i in 0..children.len() {
+            let cp = children[i];
+            let v = match evf.visited.get(&cp) {
+                Some(&Some(v)) => Some(v),
+                _ => None,
+            };
+            if let Some(v) = v {
+                cchanged = cchanged || v != cp;
+            }
+            cchildren.push(v);
+        }
+        let mut evaluated: Option<Term> = None;
+        let mut can_evaluate = true;
+        // the children put on the work list here
+        proof_decl! { let ghost mut pushed: Seq<Term> = Seq::empty(); }
+        proof! { assert(evf.visit@ =~= f0.visit@ + pushed); }
+        match ck {
+            Kind::Node(NodeKind::Apply | NodeKind::ApplyOpaque) => {
+                let args = match all_values(&cchildren) {
+                    Some(args) => args,
+                    None => children_first("an application"),
+                };
+                proof! {
+                    assert forall|j: int| 0 <= j < args@.len() implies self.store.has(#[trigger] args@[j]) by {
+                        assert(cchildren@[j] == Some(args@[j]));
+                    }
+                }
+                if self.store.kind(args[0]) == Kind::PROGRAM_CONST {
+                    let cached = eval_cache.get(&args).copied();
+                    if let Some(r) = cached {
+                        evaluated = r;
+                    } else {
+                        let mut new_ctx = Ctx::new();
+                        evaluated = self.evaluate_program_internal(&args, &mut new_ctx);
+                        proof! {
+                            lemma_frame_kept(&f0, &self.store, &before.store);
+                            lemma_cache_kept(&self.store, &before.store, eval_cache@);
+                        }
+                        if let Some(ev) = evaluated {
+                            // a body that needs substitution is evaluated
+                            // at a new level
+                            if !self.store.is_ground(ev) && !new_ctx.is_empty() {
+                                return Step::Call(EvFrame::new(ev, new_ctx, Some(args)));
+                            }
+                        }
+                        // otherwise the result, or the failure, is final
+                        eval_cache.insert(args, evaluated);
+                    }
+                }
+            }
+            Kind::Eval(EvalOp::IfThenElse) => {
+                let cond = match cchildren[0] {
+                    Some(c) => match self.store.lit(c) {
+                        Some(Lit::Bool(b)) => Some(*b),
+                        _ => None,
+                    },
+                    None => None,
+                };
+                if let Some(b) = cond {
+                    // only the branch taken is evaluated
+                    let index = if b { 1 } else { 2 };
+                    match cchildren[index] {
+                        None => {
+                            can_evaluate = false;
+                            evf.visit.push(children[index]);
+                            proof! {
+                                pushed = pushed.push(children@[index as int]);
+                                assert(evf.visit@ =~= f0.visit@ + pushed);
+                            }
+                        }
+                        Some(v) => evaluated = Some(v),
+                    }
+                } else {
+                    // Both branches are evaluated, so that substitution
+                    // into them is complete.
+                    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+                        evf.visited@ == f0.visited@,
+                        evf.init == f0.init && evf.ctx == f0.ctx && evf.result_key == f0.result_key,
+                        evf.visit@ == f0.visit@ + pushed,
+                        can_evaluate ==> pushed.len() == 0,
+                        forall|j: int| 0 <= j < pushed.len() ==> self.store.has(#[trigger] pushed[j])
+                            && pushed[j].idx() < cur.idx(),
+                    ))]
+                    for i in 1..3 {
+                        if cchildren[i].is_none() {
+                            evf.visit.push(children[i]);
+                            can_evaluate = false;
+                            proof! {
+                                pushed = pushed.push(children@[i as int]);
+                                assert(evf.visit@ =~= f0.visit@ + pushed);
+                            }
+                        }
+                    }
+                }
+            }
+            Kind::Eval(op) => {
+                let args = match all_values(&cchildren) {
+                    Some(args) => args,
+                    None => children_first("an operator"),
+                };
+                proof! {
+                    assert forall|j: int| 0 <= j < args@.len() implies self.store.has(#[trigger] args@[j]) by {
+                        assert(cchildren@[j] == Some(args@[j]));
+                    }
+                }
+                evaluated = self.evaluate_literal_op_internal(op, &args);
+                proof! {
+                    lemma_frame_kept(&f0, &self.store, &before.store);
+                    lemma_cache_kept(&self.store, &before.store, eval_cache@);
+                }
+                if self.is_fatal() {
+                    return Step::Fatal;
+                }
+            }
+            _ => {}
+        }
+        if can_evaluate {
+            let ev = match evaluated {
+                Some(ev) => ev,
+                None => {
+                    if cchanged {
+                        let args = values_or(&cchildren, &children);
+                        proof_decl! { let ghost mid = *self; }
+                        let made = self.store.mk(ck, &args);
+                        proof! {
+                            self.lemma_stored(&mid);
+                            lemma_frame_kept(&f0, &self.store, &mid.store);
+                            lemma_cache_kept(&self.store, &mid.store, eval_cache@);
+                        }
+                        made
+                    } else {
+                        cur
+                    }
+                }
+            };
+            proof! { assert(pushed.len() == 0 ==> f0.visit@ + pushed =~= f0.visit@); }
+            evf.settle(cur, ev);
+            proof! { lemma_settle(&f0, evf, &self.store, ev); }
+        }
+        proof! {
+            if !can_evaluate {
+                assert(evf.visited@ =~= f0.visited@.insert(cur, None));
+                lemma_grow(&f0, evf, &self.store, pushed);
+            }
+        }
+        Step::Next
+    }
+
+    /// Whether a plugin may evaluate terms.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    fn has_eval_plugin(&self) -> bool {
+        self.eval_plugin.0.is_some()
+    }
+
+    /// Whether the run is over; see [`Checker::take_fatal`].
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    fn is_fatal(&self) -> bool {
+        self.fatal.is_some()
     }
 
     /// The plugin's value of `e`, if a plugin evaluates it.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    ///
+    /// Trusted: a plugin is code that Verus does not see.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
+        requires old(self).wf(), old(self).has(e), old(self).binds(ctx@),
+        ensures
+            final(self).wf(),
+            final(self).keeps(old(self)),
+            r matches Some(t) ==> final(self).has(t),
+    ))]
     fn plugin_evaluate(&mut self, e: Term, ctx: &Ctx) -> Option<Term> {
         let mut plugin = self.eval_plugin.0.take()?;
         let ret = if plugin.has_evaluation(self, e) {
@@ -495,6 +888,7 @@ impl Checker {
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn evaluate_nil(
         &mut self,
         op: Term,
@@ -744,6 +1138,7 @@ impl Checker {
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     pub(crate) fn evaluate_literal_op_internal(
         &mut self,
         k: EvalOp,
@@ -985,6 +1380,7 @@ impl Checker {
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn evaluate_list_op(&mut self, k: EvalOp, args: &[Term]) -> Option<Term> {
         proof! {
             use_collections();
@@ -1590,6 +1986,7 @@ impl Checker {
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn evaluate_list_singleton_intro(
         &mut self,
         op: Term,
@@ -1818,6 +2215,351 @@ fn counts_cover(count1: &HashMap<Term, u32>, count2: &HashMap<Term, u32>, equall
 
 #[cfg(verus_keep_ghost)]
 verus! {
+
+/// Assumed: the `Hash` and `Eq` of a list of term handles agree, which is
+/// what a `HashMap` keyed by such lists needs to behave as a map.
+#[verifier::external_body]
+pub proof fn axiom_term_lists_are_keys()
+    ensures vstd::std_specs::hash::obeys_key_model::<Vec<Term>>(),
+{
+}
+
+/// The results kept of program applications are terms of the store.
+spec fn cache_ok(s: &TermStore, cache: Map<Vec<Term>, Option<Term>>) -> bool {
+    forall|k: Vec<Term>| #[trigger] cache.contains_key(k) ==> (cache[k] matches Some(t) ==> s.has(t))
+}
+
+/// The term is an application of `eo::ite`.
+spec fn is_ite(s: &TermStore, t: Term) -> bool {
+    s.kind_of(t.idx()) == Kind::Eval(EvalOp::IfThenElse)
+}
+
+/// Every level that waits is in order.
+spec fn frames_ok(s: &TermStore, frames: Seq<EvFrame>) -> bool {
+    forall|i: int| 0 <= i < frames.len() ==> (#[trigger] frames[i]).ok(s)
+}
+
+impl EvFrame {
+    /// The term has its value.
+    spec fn valued(&self, t: Term) -> bool {
+        self.visited@.contains_key(t) && self.visited@[t] is Some
+    }
+
+    /// The term was looked at once: its children are being evaluated.
+    spec fn pending(&self, t: Term) -> bool {
+        self.visited@.contains_key(t) && self.visited@[t] is None
+    }
+
+    /// The place in the work list where a pending term waits for its
+    /// children: everything above it was made before it, as its
+    /// subterms are.
+    spec fn open(&self, p: int) -> bool {
+        &&& 0 <= p < self.visit@.len()
+        &&& self.pending(self.visit@[p])
+        &&& forall|q: int| p < q < self.visit@.len() ==> (#[trigger] self.visit@[q]).idx() < self.visit@[p].idx()
+    }
+
+    /// The term is on the work list above a place.
+    spec fn above(&self, p: int, c: Term) -> bool {
+        exists|q: int| p < q < self.visit@.len() && #[trigger] self.visit@[q] == c
+    }
+
+    /// Everything the level holds is a term of the store.
+    spec fn terms_ok(&self, s: &TermStore) -> bool {
+        &&& s.has(self.init)
+        &&& ctx_ok(s, self.ctx@)
+        &&& all_has(s, self.visit@)
+        &&& forall|t: Term| #[trigger] self.visited@.contains_key(t) ==> s.has(t)
+            && (self.visited@[t] matches Some(v) ==> s.has(v))
+        &&& self.result_key matches Some(k) ==> all_has(s, k@)
+    }
+
+    /// The traversal is in order: a pending term waits at a place of the
+    /// work list, and each of its children has its value or is above that
+    /// place. Of `eo::ite`, which has three children when it is pending,
+    /// this is said of the condition only.
+    spec fn order_ok(&self, s: &TermStore) -> bool {
+        &&& forall|t: Term| #[trigger] self.pending(t) ==> exists|p: int| #[trigger] self.open(p) && self.visit@[p] == t
+        &&& forall|p: int, m: int| #![trigger self.open(p), s.kids(self.visit@[p].idx())[m]]
+            self.open(p) && 0 <= m < s.kids(self.visit@[p].idx()).len() && (is_ite(s, self.visit@[p]) ==> m == 0)
+            ==> self.valued(s.kids(self.visit@[p].idx())[m]) || self.above(p, s.kids(self.visit@[p].idx())[m])
+        &&& forall|t: Term| #[trigger] self.pending(t) && is_ite(s, t) ==> s.kids(t.idx()).len() == 3
+    }
+
+    /// The invariant of a level.
+    spec fn ok(&self, s: &TermStore) -> bool {
+        self.terms_ok(s) && self.order_ok(s)
+    }
+}
+
+/// A pending term on top of the work list waits there, so its children
+/// have their values (of `eo::ite`, the condition).
+proof fn lemma_top_open(f: &EvFrame, s: &TermStore)
+    requires f.ok(s), f.visit@.len() > 0, f.pending(f.visit@.last()),
+    ensures
+        f.open(f.visit@.len() - 1),
+        forall|m: int| 0 <= m < s.kids(f.visit@.last().idx()).len() && (is_ite(s, f.visit@.last()) ==> m == 0)
+            ==> f.valued(#[trigger] s.kids(f.visit@.last().idx())[m]),
+        is_ite(s, f.visit@.last()) ==> s.kids(f.visit@.last().idx()).len() == 3,
+{
+    let top = f.visit@.len() - 1;
+    let cur = f.visit@.last();
+    let p = choose|p: int| #[trigger] f.open(p) && f.visit@[p] == cur;
+    if p < top {
+        assert(f.visit@[top].idx() < f.visit@[p].idx());
+    }
+    assert(f.open(top));
+    assert forall|m: int| 0 <= m < s.kids(cur.idx()).len() && (is_ite(s, cur) ==> m == 0)
+        implies f.valued(#[trigger] s.kids(cur.idx())[m]) by {
+        let c = s.kids(f.visit@[top].idx())[m];
+        assert(f.valued(c) || f.above(top, c));
+    }
+}
+
+/// A level with the same contents is in order too.
+proof fn lemma_same(f0: &EvFrame, f1: &EvFrame, s: &TermStore)
+    requires
+        f0.ok(s),
+        f1.visit@ == f0.visit@,
+        f1.visited@ == f0.visited@,
+        f1.init == f0.init && f1.ctx == f0.ctx && f1.result_key == f0.result_key,
+    ensures f1.ok(s),
+{
+    assert forall|p: int| f1.open(p) == f0.open(p) by {}
+    assert forall|t: Term| #[trigger] f1.pending(t) implies
+        exists|p: int| #[trigger] f1.open(p) && f1.visit@[p] == t by {
+        assert(f0.pending(t));
+        let p0 = choose|p0: int| #[trigger] f0.open(p0) && f0.visit@[p0] == t;
+        assert(f1.open(p0));
+    }
+    assert forall|p: int, m: int| #![trigger f1.open(p), s.kids(f1.visit@[p].idx())[m]]
+        f1.open(p) && 0 <= m < s.kids(f1.visit@[p].idx()).len() && (is_ite(s, f1.visit@[p]) ==> m == 0)
+        implies f1.valued(s.kids(f1.visit@[p].idx())[m]) || f1.above(p, s.kids(f1.visit@[p].idx())[m]) by {
+        let c = s.kids(f0.visit@[p].idx())[m];
+        assert(f0.open(p));
+        if !f0.valued(c) {
+            let q = choose|q: int| p < q < f0.visit@.len() && #[trigger] f0.visit@[q] == c;
+            assert(f1.visit@[q] == c);
+        }
+    }
+    assert forall|t: Term| #[trigger] f1.pending(t) && is_ite(s, t) implies s.kids(t.idx()).len() == 3 by {
+        assert(f0.pending(t));
+    }
+}
+
+/// The term on top of the work list gets a value and leaves the list.
+proof fn lemma_settle(f0: &EvFrame, f1: &EvFrame, s: &TermStore, v: Term)
+    requires
+        f0.ok(s),
+        f0.visit@.len() > 0,
+        s.has(v),
+        f1.visit@ == f0.visit@.drop_last(),
+        f1.visited@ == f0.visited@.insert(f0.visit@.last(), Some(v)),
+        f1.init == f0.init && f1.ctx == f0.ctx && f1.result_key == f0.result_key,
+    ensures f1.ok(s),
+{
+    let cur = f0.visit@.last();
+    let top = f0.visit@.len() - 1;
+    assert(s.has(f0.visit@[top]));
+    assert forall|i: int| 0 <= i < f1.visit@.len() implies s.has(#[trigger] f1.visit@[i]) by {
+        assert(s.has(f0.visit@[i]));
+    }
+    // a place that is open after was open before
+    assert forall|p: int| #[trigger] f1.open(p) implies f0.open(p) by {
+        let t = f1.visit@[p];
+        assert(f0.pending(t));
+        let p0 = choose|p0: int| #[trigger] f0.open(p0) && f0.visit@[p0] == t;
+        if p0 > p {
+            if p0 < top {
+                assert(f1.visit@[p0].idx() < f1.visit@[p].idx());
+            }
+        } else if p0 < p {
+            assert(f0.visit@[p].idx() < f0.visit@[p0].idx());
+        }
+    }
+    assert forall|t: Term| #[trigger] f1.pending(t) implies
+        exists|p: int| #[trigger] f1.open(p) && f1.visit@[p] == t by {
+        assert(f0.pending(t));
+        let p0 = choose|p0: int| #[trigger] f0.open(p0) && f0.visit@[p0] == t;
+        assert(f1.open(p0));
+    }
+    assert forall|p: int, m: int| #![trigger f1.open(p), s.kids(f1.visit@[p].idx())[m]]
+        f1.open(p) && 0 <= m < s.kids(f1.visit@[p].idx()).len() && (is_ite(s, f1.visit@[p]) ==> m == 0)
+        implies f1.valued(s.kids(f1.visit@[p].idx())[m]) || f1.above(p, s.kids(f1.visit@[p].idx())[m]) by {
+        let c = s.kids(f0.visit@[p].idx())[m];
+        assert(f0.open(p));
+        if !f0.valued(c) {
+            let q = choose|q: int| p < q < f0.visit@.len() && #[trigger] f0.visit@[q] == c;
+            if q < top {
+                assert(f1.visit@[q] == c);
+            }
+        }
+    }
+    assert forall|t: Term| #[trigger] f1.pending(t) && is_ite(s, t) implies s.kids(t.idx()).len() == 3 by {
+        assert(f0.pending(t));
+    }
+}
+
+/// Terms made before the term on top of the work list are put above it,
+/// and it is pending: it was, or it becomes so now with the children it
+/// waits for among the terms put there.
+proof fn lemma_grow(f0: &EvFrame, f1: &EvFrame, s: &TermStore, pushed: Seq<Term>)
+    requires
+        s.wf(),
+        f0.ok(s),
+        f0.visit@.len() > 0,
+        f1.visit@ == f0.visit@ + pushed,
+        forall|j: int| 0 <= j < pushed.len() ==> s.has(#[trigger] pushed[j])
+            && pushed[j].idx() < f0.visit@.last().idx(),
+        f1.visited@ == f0.visited@.insert(f0.visit@.last(), None),
+        f1.init == f0.init && f1.ctx == f0.ctx && f1.result_key == f0.result_key,
+        f0.pending(f0.visit@.last()) || {
+            &&& !f0.visited@.contains_key(f0.visit@.last())
+            &&& if is_ite(s, f0.visit@.last()) {
+                s.kids(f0.visit@.last().idx()).len() == 3 && pushed == seq![s.kids(f0.visit@.last().idx())[0]]
+            } else {
+                pushed == s.kids(f0.visit@.last().idx())
+            }
+        },
+    ensures f1.ok(s),
+{
+    let cur = f0.visit@.last();
+    let n0 = f0.visit@.len() as int;
+    let top = n0 - 1;
+    assert(s.has(f0.visit@[top]));
+    assert forall|i: int| 0 <= i < f1.visit@.len() implies s.has(#[trigger] f1.visit@[i]) by {
+        if i < n0 {
+            assert(s.has(f0.visit@[i]));
+        } else {
+            assert(f1.visit@[i] == pushed[i - n0]);
+        }
+    }
+    assert forall|q: int| n0 <= q < f1.visit@.len() implies (#[trigger] f1.visit@[q]).idx() < cur.idx() by {
+        assert(f1.visit@[q] == pushed[q - n0]);
+    }
+    if f0.pending(cur) {
+        assert(f1.visited@ =~= f0.visited@);
+        lemma_top_open(f0, s);
+    }
+    assert(f1.open(top));
+    // a place that was open stays open
+    assert forall|p: int| #[trigger] f0.open(p) implies f1.open(p) by {
+        if p < top {
+            assert(f0.visit@[top].idx() < f0.visit@[p].idx());
+        }
+        assert(f0.visit@[p] != cur || p == top);
+    }
+    // and no other place is open
+    assert forall|p: int| #[trigger] f1.open(p) && p != top implies f0.open(p) && p < top by {
+        let t = f1.visit@[p];
+        if p >= n0 {
+            // a term put above: were it pending, it would wait below the top
+            assert(t.idx() < cur.idx());
+            assert(f0.pending(t));
+            let p0 = choose|p0: int| #[trigger] f0.open(p0) && f0.visit@[p0] == t;
+            if p0 < top {
+                assert(f0.visit@[top].idx() < f0.visit@[p0].idx());
+            }
+            assert(false);
+        }
+        if t == cur {
+            assert(f1.visit@[top].idx() < f1.visit@[p].idx());
+            assert(false);
+        }
+        assert(f0.pending(t));
+    }
+    assert forall|t: Term| #[trigger] f1.pending(t) implies
+        exists|p: int| #[trigger] f1.open(p) && f1.visit@[p] == t by {
+        if t == cur {
+            assert(f1.open(top) && f1.visit@[top] == t);
+        } else {
+            assert(f0.pending(t));
+            let p0 = choose|p0: int| #[trigger] f0.open(p0) && f0.visit@[p0] == t;
+            assert(f1.open(p0));
+        }
+    }
+    assert forall|p: int, m: int| #![trigger f1.open(p), s.kids(f1.visit@[p].idx())[m]]
+        f1.open(p) && 0 <= m < s.kids(f1.visit@[p].idx()).len() && (is_ite(s, f1.visit@[p]) ==> m == 0)
+        implies f1.valued(s.kids(f1.visit@[p].idx())[m]) || f1.above(p, s.kids(f1.visit@[p].idx())[m]) by {
+        let c = s.kids(f1.visit@[p].idx())[m];
+        if p == top && !f0.pending(cur) {
+            assert(f1.visit@[n0 + m] == pushed[m]);
+            assert(f1.visit@[n0 + m] == c);
+        } else {
+            assert(f0.open(p));
+            assert(f0.visit@[p] == f1.visit@[p]);
+            let c0 = s.kids(f0.visit@[p].idx())[m];
+            if !f0.valued(c0) {
+                let q = choose|q: int| p < q < f0.visit@.len() && #[trigger] f0.visit@[q] == c0;
+                assert(f1.visit@[q] == c);
+            } else {
+                assert(c0 != cur || f0.pending(cur));
+            }
+        }
+    }
+    assert forall|t: Term| #[trigger] f1.pending(t) && is_ite(s, t) implies s.kids(t.idx()).len() == 3 by {
+        if t != cur {
+            assert(f0.pending(t));
+        } else if f0.pending(cur) {
+        }
+    }
+}
+
+/// A level is in order in a store that kept the terms of the one it was
+/// in order in.
+proof fn lemma_frame_kept(f: &EvFrame, s1: &TermStore, s0: &TermStore)
+    requires f.ok(s0), keeps(s1, s0),
+    ensures f.ok(s1),
+{
+    assert forall|i: int| 0 <= i < f.visit@.len() implies s1.has(#[trigger] f.visit@[i]) by {
+        assert(s0.has(f.visit@[i]));
+    }
+    if f.result_key is Some {
+        let k = f.result_key->0;
+        assert forall|i: int| 0 <= i < k@.len() implies s1.has(#[trigger] k@[i]) by {
+            assert(s0.has(k@[i]));
+        }
+    }
+    assert forall|p: int, m: int| #![trigger f.open(p), s1.kids(f.visit@[p].idx())[m]]
+        f.open(p) && 0 <= m < s1.kids(f.visit@[p].idx()).len() && (is_ite(s1, f.visit@[p]) ==> m == 0)
+        implies f.valued(s1.kids(f.visit@[p].idx())[m]) || f.above(p, s1.kids(f.visit@[p].idx())[m]) by {
+        assert(s0.has(f.visit@[p]));
+        let c = s0.kids(f.visit@[p].idx())[m];
+        assert(f.valued(c) || f.above(p, c));
+    }
+    assert forall|t: Term| #[trigger] f.pending(t) && is_ite(s1, t) implies s1.kids(t.idx()).len() == 3 by {
+        assert(s0.has(t));
+    }
+}
+
+/// What a store keeps of a store that kept the terms of a third, it keeps
+/// of the third.
+proof fn lemma_keeps_twice(s2: &TermStore, s1: &TermStore, s0: &TermStore)
+    requires keeps(s2, s1), keeps(s1, s0),
+    ensures keeps(s2, s0),
+{
+    assert forall|t: Term| #[trigger] s0.has(t) implies s2.has(t)
+        && s2.kind_of(t.idx()) == s0.kind_of(t.idx()) && s2.kids(t.idx()) == s0.kids(t.idx()) by {
+        assert(s1.has(t));
+    }
+}
+
+/// The same of the levels that wait.
+proof fn lemma_frames_kept(s1: &TermStore, s0: &TermStore, frames: Seq<EvFrame>)
+    requires frames_ok(s0, frames), keeps(s1, s0),
+    ensures frames_ok(s1, frames),
+{
+    assert forall|i: int| 0 <= i < frames.len() implies (#[trigger] frames[i]).ok(s1) by {
+        lemma_frame_kept(&frames[i], s1, s0);
+    }
+}
+
+/// The same of the results kept of program applications.
+proof fn lemma_cache_kept(s1: &TermStore, s0: &TermStore, cache: Map<Vec<Term>, Option<Term>>)
+    requires cache_ok(s0, cache), keeps(s1, s0),
+    ensures cache_ok(s1, cache),
+{
+}
 
 /// What the maps and sets keyed by terms need, to behave as maps and sets:
 /// the assumptions on the derived order and hash of term handles, and
