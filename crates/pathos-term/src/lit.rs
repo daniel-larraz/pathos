@@ -848,6 +848,17 @@ mod spec {
     pub assume_specification[ <Lit as Clone>::clone ](x: &Lit) -> (r: Lit)
         ensures r == x;
 
+    /// Assumed: the derived `==` of literals is equality of their values.
+    impl vstd::std_specs::cmp::PartialEqSpecImpl for Lit {
+        open spec fn obeys_eq_spec() -> bool {
+            true
+        }
+
+        open spec fn eq_spec(&self, other: &Lit) -> bool {
+            *self == *other
+        }
+    }
+
     /// `Option::filter`, which Verus's library does not describe.
     pub assume_specification<T, P: FnOnce(&T) -> bool + core::marker::Destruct>[ Option::<T>::filter ](
         o: Option<T>,
