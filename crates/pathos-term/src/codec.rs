@@ -131,7 +131,9 @@ impl<'a> Reader<'a> {
 #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
 fn latin1_text(bytes: &[u8]) -> Option<&str> {
     let text = std::str::from_utf8(bytes).ok()?;
-    text.chars().all(|c| u32::from(c) < 256).then_some(text)
+    // In UTF-8 a character above U+00FF starts with a byte from 0xC4 up,
+    // and no other byte of valid UTF-8 is that large.
+    bytes.iter().all(|&b| b < 0xc4).then_some(text)
 }
 
 /// A 64-bit hash of the bytes, for detecting damaged or changed files. It
@@ -194,6 +196,13 @@ mod tests {
         let mut w = Writer::new();
         w.str("a\u{100}");
         assert_eq!(Reader::new(&w.bytes).str(), None);
+        // the last character that is read, and the first that is not
+        for (c, read) in [('\u{ff}', true), ('\u{100}', false), ('\u{10ffff}', false)] {
+            let text = format!("a{c}b");
+            let mut w = Writer::new();
+            w.str(&text);
+            assert_eq!(Reader::new(&w.bytes).str(), read.then_some(text.as_str()));
+        }
     }
 
     #[test]

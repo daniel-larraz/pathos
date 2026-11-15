@@ -347,15 +347,15 @@ that the evaluator, which takes such terms apart, can be proved not to panic
   `crates/pathos-elab/src/snapshot.rs`.
 - A snapshot is trusted as the signature is. Its checksum finds damage, not
   forgery: a file made on purpose, with a checksum that fits, can hold
-  rules or terms that no signature gives, and so make pathos accept a wrong
-  proof, or fail on a term of a shape the parser never builds. Reading such
-  a file does not panic and allocates no more than about 40 times its size.
-  Checking with it can: the checker indexes the children its own terms
-  always have, and a forged snapshot can hold an application without a
-  head, or a builtin whose kind is not a compound one. Such a panic is
-  memory safe (an index check that failed) and loses only the error
-  message. [panics.md](panics.md) lists the places, and
-  [evidence.md](evidence.md) puts the question to the developers.
+  rules that no signature gives, and so make pathos accept a wrong proof.
+  It does not make pathos panic: reading such a file allocates no more
+  than about 40 times its size, and the reader rejects what the checker
+  would rely on without looking (a term with a number of children that its
+  kind cannot have, a builtin whose kind is not a compound one, a program
+  that is not a list of cases, a store without the checker's own builtin
+  terms, a string that is not Latin-1). [panics.md](panics.md) lists the
+  places, and [evidence.md](evidence.md) puts the question of trust to the
+  developers.
 - `--show-config` prints pathos's own name and version.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
