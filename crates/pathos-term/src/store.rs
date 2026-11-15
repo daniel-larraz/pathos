@@ -64,6 +64,17 @@ impl Term {
         Term(NonZeroU32::MIN)
     }
 
+    /// The handle with the id `id`, if that is a term made before the one
+    /// at position `index`.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r matches Some(t) ==> t.idx() == id && t.idx() < index,))]
+    fn earlier(id: u32, index: usize) -> Option<Term> {
+        if id != 0 && (id as usize) < index {
+            Some(Term::from_slot(id))
+        } else {
+            None
+        }
+    }
+
     #[inline]
     #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.idx(), 1 <= r <= u32::MAX,))]
     fn index(self) -> usize {
@@ -467,7 +478,7 @@ impl Default for TermStore {
 
 #[cfg_attr(verus_keep_ghost, verus_verify)]
 impl TermStore {
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r.wf(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r.wf(), r.spec_len() == 4,))]
     pub fn new() -> TermStore {
         let mut s = TermStore {
             // index 0 is unused, so that handles are non-zero
@@ -600,7 +611,11 @@ impl TermStore {
     /// term.
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires old(self).wf(), old(self).has(ty),
-        ensures final(self).wf(), final(self).has(r), final(self).extends(old(self)),
+        ensures
+            final(self).wf(),
+            final(self).has(r),
+            final(self).extends(old(self)),
+            final(self).spec_len() <= old(self).spec_len() + 1,
     ))]
     pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
         // there are no more names than terms, so this fits when the term does
@@ -659,6 +674,7 @@ impl TermStore {
             final(self).has(r),
             final(self).extends(old(self)),
             final(self).spec_limit() is None ==> final(self).is_lit(r, lit),
+            final(self).spec_len() <= old(self).spec_len() + 1,
     ))]
     pub fn mk_lit(&mut self, lit: Lit) -> Term {
         self.mk_count = self.mk_count.wrapping_add(1);
@@ -764,6 +780,7 @@ impl TermStore {
             final(self).extends(old(self)),
             final(self).spec_limit() is None && (kind is Node || kind is Eval) ==>
                 final(self).is_node(r, kind, children@),
+            final(self).spec_len() <= old(self).spec_len() + 1,
     ))]
     pub fn mk(&mut self, kind: Kind, children: &[Term]) -> Term {
         match kind {
@@ -1050,6 +1067,7 @@ impl TermStore {
 }
 
 /// The codes of [`TermData`] in a snapshot.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 mod tag {
     pub const TYPE: u8 = 0;
     pub const BOOL_TYPE: u8 = 1;
@@ -1062,10 +1080,12 @@ mod tag {
     pub const EVAL: u8 = 8;
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl TermStore {
     /// Writes the store, for a snapshot: the terms in order, their cached
     /// types, the names and the literal values. The flags and the interning
     /// tables are not written; reading computes them again.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub fn write_to(&self, w: &mut Writer) {
         w.len(self.len());
         for i in 1..self.nodes.len() {
@@ -1110,175 +1130,276 @@ impl TermStore {
     /// - every child and every cached type is a term of the store, and a
     ///   child comes before its parent;
     /// - the symbols use the names in order, and the literals the values;
-    /// - no compound term and no literal value is there twice.
+    /// - no compound term and no literal value is there twice;
+    /// - a term has a number of children its kind can have
+    ///   ([`NodeKind::takes`]).
     ///
-    /// Whether the terms make sense to the checker (say, that a function
-    /// type has an argument) is not checked here.
+    /// The store is not copied from the input: it is built again, term by
+    /// term, with [`TermStore::mk_symbol`], [`TermStore::mk_lit`] and
+    /// [`TermStore::mk`], and the input is rejected if a term does not come
+    /// out where the input has it. So whatever is read is a store those
+    /// functions built, whatever the bytes are.
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(res =>
+        ensures res matches Some(s) ==> s.wf(),
+    ))]
+    // The loops are indexed, which Verus follows without specifications of
+    // iterator adapters; some counters are used by invariants only.
+    #[allow(unused_variables, clippy::needless_range_loop)]
     pub fn read_from(r: &mut Reader) -> Option<TermStore> {
         // a term takes 14 bytes
         let n = r.len(14)?;
         let mut s = TermStore::new();
-        if n < s.len() {
+        let fixed = s.len();
+        if n < fixed {
             return None;
         }
-        let fixed = s.len();
-        let mut raw = Vec::with_capacity(n);
-        for _ in 0..n {
+        let mut raw: Vec<(u8, u8, u32, u32, u32)> = Vec::with_capacity(n);
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant raw@.len() == i))]
+        for i in 0..n {
             raw.push((r.u8()?, r.u8()?, r.u32()?, r.u32()?, r.u32()?));
         }
         let pool_len = r.len(4)?;
-        let mut pool = Vec::with_capacity(pool_len);
-        for _ in 0..pool_len {
+        let mut pool: Vec<u32> = Vec::with_capacity(pool_len);
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant pool@.len() == i))]
+        for i in 0..pool_len {
             pool.push(r.u32()?);
         }
         let names_len = r.len(4)?;
-        let mut names: Vec<Box<str>> = Vec::with_capacity(names_len);
-        for _ in 0..names_len {
-            names.push(r.str()?.into());
+        let mut names: Vec<&str> = Vec::with_capacity(names_len);
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant names@.len() == i))]
+        for i in 0..names_len {
+            names.push(r.str()?);
         }
         let lits_len = r.len(2)?;
-        let mut lits = Vec::with_capacity(lits_len);
-        for _ in 0..lits_len {
+        let mut lits: Vec<Lit> = Vec::with_capacity(lits_len);
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant lits@.len() == i))]
+        for i in 0..lits_len {
             lits.push(Lit::read_from(r)?);
         }
         let mk_count = r.u64()?;
 
         // Size the tables for what is coming, so that they do not grow.
-        let bits = |items: usize| (items * 2).next_power_of_two().trailing_zeros().max(6);
-        s.table = ConsTable::with_bits(bits(n));
-        s.lit_table = ConsTable::with_bits(bits(lits_len));
-        s.nodes.reserve(n - fixed);
-        s.types.reserve(n - fixed);
-        s.flags.reserve(n - fixed);
-        s.child_pool.reserve(pool_len);
-        s.lits = lits;
+        s.size_tables(n, lits_len);
 
-        let (mut next_name, mut next_lit, mut next_child) = (0usize, 0usize, 0usize);
-        for (i, &(tag, sub, a, b, _)) in raw.iter().enumerate() {
-            // this term's handle, and the test for an earlier term
-            let index = i + 1;
-            let earlier = |id: u32| (id != 0 && (id as usize) < index).then(|| Term::from_slot(id));
-            if index <= fixed {
-                // the terms every store starts with, in their places
-                let expected = match s.nodes[index] {
-                    TermData::Type => tag::TYPE,
-                    TermData::BoolType => tag::BOOL_TYPE,
-                    TermData::Any => tag::ANY,
-                    _ => tag::NULL,
-                };
-                if tag != expected {
-                    return None;
-                }
-                continue;
-            }
-            let sub_index = usize::from(sub);
-            let (data, flags) = match tag {
-                tag::SYMBOL => {
-                    let kind = *SymbolKind::ALL.get(sub_index)?;
-                    if a as usize != next_name || next_name >= names.len() {
-                        return None;
-                    }
-                    next_name += 1;
-                    let flags = match kind {
-                        SymbolKind::ProgramConst => FLAG_EVAL,
-                        SymbolKind::Param => FLAG_NON_GROUND,
-                        _ => 0,
-                    };
-                    (TermData::Symbol(kind, a), flags)
-                }
-                tag::LIT => {
-                    let kind = *LitKind::ALL.get(sub_index)?;
-                    if a as usize != next_lit || s.lits.get(next_lit)?.kind() != kind {
-                        return None;
-                    }
-                    let lit = &s.lits[next_lit];
-                    next_lit += 1;
-                    let hash = s.lit_hasher.hash_one(lit);
-                    let slot = (s.lit_table)
-                        .find(hash, |c| s.lit_at(c) == Some(lit))
-                        .err()?;
-                    s.lit_table.slots[slot] = u32::try_from(index).ok()?;
-                    s.lit_table.len += 1;
-                    (TermData::Lit(kind, a), 0)
-                }
-                tag::APPLY | tag::NODE | tag::EVAL => {
-                    let (kind, data) = match tag {
-                        tag::APPLY => {
-                            let pair = [earlier(a)?, earlier(b)?];
-                            (Kind::APPLY, TermData::Apply(pair))
-                        }
-                        _ => {
-                            // the children follow those of the term before
-                            let end = (a as usize).checked_add(b as usize)?;
-                            if a as usize != next_child || end > pool.len() {
-                                return None;
-                            }
-                            for &c in &pool[next_child..end] {
-                                s.child_pool.push(earlier(c)?);
-                            }
-                            next_child = end;
-                            let args = Args { start: a, len: b };
-                            if tag == tag::EVAL {
-                                let op = EvalOp::ALL.get(sub_index)?.0;
-                                (Kind::Eval(op), TermData::Eval(op, args))
-                            } else {
-                                let k = *NodeKind::ALL.get(sub_index)?;
-                                // binary applications have their own form
-                                if k == NodeKind::Apply && b == 2 {
-                                    return None;
-                                }
-                                (Kind::Node(k), TermData::Node(k, args))
-                            }
-                        }
-                    };
-                    let children: &[Term] = match &data {
-                        TermData::Apply(pair) => pair,
-                        _ => &s.child_pool[a as usize..],
-                    };
-                    let mut flags = 0;
-                    for c in children {
-                        flags |= s.flags[c.index()];
-                    }
-                    if matches!(kind, Kind::Eval(_)) && !children.is_empty() {
-                        flags |= FLAG_EVAL;
-                    }
-                    let ktag = tag_of(kind);
-                    let hash = hash_node(&s.keys, ktag, children);
-                    let slot = (s.table)
-                        .find(hash, |c| {
-                            tag_of(s.kind_at(c)) == ktag && s.children_at(c) == children
-                        })
-                        .err()?;
-                    s.table.slots[slot] = u32::try_from(index).ok()?;
-                    s.table.len += 1;
-                    (data, flags)
-                }
-                _ => return None,
-            };
-            s.push(data, flags)?;
-        }
-        if next_name != names.len() || next_lit != s.lits.len() || next_child != pool.len() {
+        // the terms every store starts with, in their places
+        if raw[0].0 != tag::TYPE
+            || raw[1].0 != tag::BOOL_TYPE
+            || raw[2].0 != tag::ANY
+            || raw[3].0 != tag::NULL
+        {
             return None;
         }
-        s.names = names;
-        // the cached types: any term of the store
-        for (i, &(_, _, _, _, ty)) in raw.iter().enumerate() {
-            if ty != 0 {
-                if ty as usize > n {
+        let (mut next_name, mut next_lit, mut next_child) = (0usize, 0usize, 0usize);
+        let mut children: Vec<Term> = Vec::new();
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            s.wf(),
+            s.nodes@.len() == i + 1,
+        ))]
+        for i in fixed..n {
+            s.rebuild(
+                i + 1,
+                raw[i],
+                names.as_slice(),
+                lits.as_slice(),
+                pool.as_slice(),
+                &mut next_name,
+                &mut next_lit,
+                &mut next_child,
+                &mut children,
+            )?;
+        }
+        if next_name != names.len() || next_lit != lits.len() || next_child != pool.len() {
+            return None;
+        }
+        s.set_cached_types(raw.as_slice())?;
+        proof_decl! { let ghost typed = s; }
+        s.mk_count = mk_count;
+        proof! { s.lemma_same_terms(&typed); }
+        Some(s)
+    }
+
+    /// Makes the term that a snapshot has at position `index`, which must
+    /// be the next: `None` if the entry is not a term, or is one the store
+    /// already has. `next_name`, `next_lit` and `next_child` are how far
+    /// the snapshot's names, literals and child pool have been used.
+    #[allow(clippy::too_many_arguments, clippy::needless_range_loop)]
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(res =>
+        requires
+            old(self).wf(),
+            index == old(self).nodes@.len(),
+        ensures
+            res is Some ==> final(self).wf() && final(self).nodes@.len() == index + 1,
+    ))]
+    fn rebuild(
+        &mut self,
+        index: usize,
+        entry: (u8, u8, u32, u32, u32),
+        names: &[&str],
+        lits: &[Lit],
+        pool: &[u32],
+        next_name: &mut usize,
+        next_lit: &mut usize,
+        next_child: &mut usize,
+        children: &mut Vec<Term>,
+    ) -> Option<()> {
+        let (tag, sub, a, b, _) = entry;
+        let sub_index = sub as usize;
+        let t = match tag {
+            tag::SYMBOL => {
+                let kind = SymbolKind::from_index(sub_index)?;
+                if a as usize != *next_name || *next_name >= names.len() {
                     return None;
                 }
-                s.types[i + 1] = Some(Term::from_slot(ty));
+                let name = names[*next_name];
+                *next_name += 1;
+                // the type is set with the others, afterwards
+                let ty = self.ty_type;
+                self.mk_symbol(kind, name, ty)
             }
+            tag::LIT => {
+                let kind = LitKind::from_index(sub_index)?;
+                if a as usize != *next_lit || *next_lit >= lits.len() {
+                    return None;
+                }
+                let lit = lits[*next_lit].clone();
+                if lit.kind() != kind {
+                    return None;
+                }
+                *next_lit += 1;
+                self.mk_lit(lit)
+            }
+            tag::APPLY | tag::NODE | tag::EVAL => {
+                children.clear();
+                let kind = if tag == tag::APPLY {
+                    children.push(Term::earlier(a, index)?);
+                    children.push(Term::earlier(b, index)?);
+                    Kind::APPLY
+                } else {
+                    // the children follow those of the term before
+                    let start = *next_child;
+                    let end = (a as usize).checked_add(b as usize)?;
+                    if a as usize != start || end > pool.len() {
+                        return None;
+                    }
+                    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+                        start <= j <= end,
+                        children@.len() == j - start,
+                        forall|m: int| 0 <= m < children@.len() ==> (#[trigger] children@[m]).idx() < index,
+                    ))]
+                    for j in start..end {
+                        children.push(Term::earlier(pool[j], index)?);
+                    }
+                    *next_child = end;
+                    if tag == tag::EVAL {
+                        Kind::Eval(EvalOp::from_index(sub_index)?)
+                    } else {
+                        let k = NodeKind::from_index(sub_index)?;
+                        // binary applications have their own form
+                        if k == NodeKind::Apply && b == 2 {
+                            return None;
+                        }
+                        Kind::Node(k)
+                    }
+                };
+                let fits = match kind {
+                    Kind::Node(k) => k.takes(children.len()),
+                    _ => true,
+                };
+                if !fits {
+                    return None;
+                }
+                self.mk(kind, children.as_slice())
+            }
+            _ => return None,
+        };
+        // an existing term (one there twice in the snapshot) or a full
+        // store gives another handle
+        if t.index() != index {
+            return None;
         }
-        s.mk_count = mk_count;
-        Some(s)
+        Some(())
+    }
+
+    /// Sets the cached type of every term to what the snapshot says: none,
+    /// or any term of the store.
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(res =>
+        requires old(self).wf(), old(self).nodes@.len() == raw@.len() + 1,
+        ensures res is Some ==> final(self).wf(),
+    ))]
+    #[allow(clippy::needless_range_loop)]
+    fn set_cached_types(&mut self, raw: &[(u8, u8, u32, u32, u32)]) -> Option<()> {
+        let n = raw.len();
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            self.nodes@ == old(self).nodes@,
+            self.flags@ == old(self).flags@,
+            self.types@.len() == old(self).types@.len(),
+            self.same_but_terms(old(self)),
+            forall|m: int| 0 <= m < self.types@.len() ==>
+                (#[trigger] self.types@[m] matches Some(t) ==> t.idx() < self.nodes@.len()),
+        ))]
+        for i in 0..n {
+            let ty = raw[i].4;
+            if ty as usize > n {
+                return None;
+            }
+            self.types[i + 1] = if ty == 0 {
+                None
+            } else {
+                Some(Term::from_slot(ty))
+            };
+        }
+        proof! { self.lemma_same_terms(old(self)); }
+        Some(())
+    }
+
+    /// Replaces the tables of a store that has no compound term and no
+    /// literal yet by empty ones large enough for `terms` terms and
+    /// `lits` literals.
+    #[cfg_attr(verus_keep_ghost, verus_spec(
+        requires
+            old(self).wf(),
+            old(self).nodes@.len() == 5,
+            terms <= u32::MAX,
+            lits <= u32::MAX,
+        ensures
+            final(self).wf(),
+            final(self).nodes@.len() == 5,
+    ))]
+    fn size_tables(&mut self, terms: usize, lits: usize) {
+        self.table = ConsTable::with_bits(table_bits(terms));
+        self.lit_table = ConsTable::with_bits(table_bits(lits));
+        proof! { self.lemma_empty_tables(old(self)); }
     }
 
     /// The term with the given id, if the store has it. For reading
     /// snapshots.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires self.wf(),
+        ensures r matches Some(t) ==> self.has(t) && t.idx() == id,
+    ))]
     pub fn term_with_id(&self, id: u32) -> Option<Term> {
-        (id != 0 && (id as usize) <= self.len()).then(|| Term::from_slot(id))
+        if id != 0 && (id as usize) <= self.len() {
+            Some(Term::from_slot(id))
+        } else {
+            None
+        }
     }
+}
+
+/// The size, as a number of bits, of a table for this many items: the
+/// smallest power of two that is at least twice the number, and at least
+/// 64.
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(r =>
+    requires items <= u32::MAX,
+    ensures 6 <= r <= 40,
+))]
+fn table_bits(items: usize) -> u32 {
+    let mut bits = 6;
+    #[cfg_attr(verus_keep_ghost, verus_spec(invariant 6 <= bits <= 40, items <= u32::MAX, decreases 40 - bits))]
+    while bits < 40 && (1usize << bits) < items * 2 {
+        bits += 1;
+    }
+    bits
 }
 
 // The store's invariant and its view as trees, for Verus.
@@ -2294,6 +2415,39 @@ impl TermStore {
     /// The limit the store has run into, if any.
     pub closed spec fn spec_limit(&self) -> Option<Limit> {
         self.limit
+    }
+
+    /// A store with no compound term and no literal is well formed with
+    /// any empty tables.
+    proof fn lemma_empty_tables(&self, old: &TermStore)
+        requires
+            old.wf(),
+            old.nodes@.len() == 5,
+            self.nodes == old.nodes,
+            self.types == old.types,
+            self.flags == old.flags,
+            self.lits == old.lits,
+            self.child_pool == old.child_pool,
+            self.names == old.names,
+            self.keys == old.keys,
+            self.lit_hasher == old.lit_hasher,
+            self.ty_type == old.ty_type && self.ty_bool == old.ty_bool && self.any == old.any && self.null == old.null,
+            self.table.wf(),
+            self.lit_table.wf(),
+            forall|p: int| 0 <= p < self.table.slots@.len() ==> self.table.slots@[p] == 0,
+            forall|p: int| 0 <= p < self.lit_table.slots@.len() ==> self.lit_table.slots@[p] == 0,
+        ensures self.wf(),
+    {
+        assert forall|i: int| 1 <= i < self.nodes@.len() implies #[trigger] self.node_ok(i) by {
+            old.lemma_node(i);
+        }
+        assert forall|i: int| 1 <= i < self.nodes@.len() implies #[trigger] self.flag_ok(i) by {
+            assert(old.flag_ok(i));
+        }
+        assert forall|i: int, j: int| 1 <= i < j < self.nodes@.len() && #[trigger] self.is_symbol_at(i) && #[trigger] self.is_symbol_at(j)
+            implies self.name_of(i) != self.name_of(j) by {
+            assert(old.is_symbol_at(i) && old.is_symbol_at(j));
+        }
     }
 
     /// The store after a term that is neither a literal nor compound was

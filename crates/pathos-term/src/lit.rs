@@ -553,6 +553,7 @@ impl Lit {
 
     /// Reads a value written by [`Lit::write_to`]. `None` if the input is
     /// not one.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
     pub fn read_from(r: &mut crate::codec::Reader) -> Option<Lit> {
         let kind = *LitKind::ALL.get(usize::from(r.u8()?))?;
         Some(match kind {

@@ -4,6 +4,9 @@
 //! length it reads: every read is checked against what is left of the
 //! input, so nothing is allocated that the input could not fill.
 
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
+
 /// Collects the bytes written.
 #[derive(Default)]
 pub struct Writer {
@@ -45,10 +48,12 @@ impl Writer {
 
 /// Reads from a byte slice. Every method returns `None` at the end of the
 /// input or on a value that cannot be right.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub struct Reader<'a> {
     rest: &'a [u8],
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl<'a> Reader<'a> {
     pub fn new(bytes: &'a [u8]) -> Reader<'a> {
         Reader { rest: bytes }
@@ -63,6 +68,7 @@ impl<'a> Reader<'a> {
         self.rest.len()
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r matches Some(b) ==> b@.len() == n,))]
     pub fn bytes(&mut self, n: usize) -> Option<&'a [u8]> {
         let (head, tail) = self.rest.split_at_checked(n)?;
         self.rest = tail;
@@ -70,7 +76,8 @@ impl<'a> Reader<'a> {
     }
 
     pub fn u8(&mut self) -> Option<u8> {
-        self.bytes(1).map(|b| b[0])
+        let b = self.bytes(1)?;
+        Some(b[0])
     }
 
     pub fn bool(&mut self) -> Option<bool> {
@@ -83,27 +90,48 @@ impl<'a> Reader<'a> {
 
     pub fn u32(&mut self) -> Option<u32> {
         let b = self.bytes(4)?;
-        Some(u32::from_le_bytes(b.try_into().ok()?))
+        Some(u32::from(b[0]) | u32::from(b[1]) << 8 | u32::from(b[2]) << 16 | u32::from(b[3]) << 24)
     }
 
     pub fn u64(&mut self) -> Option<u64> {
-        let b = self.bytes(8)?;
-        Some(u64::from_le_bytes(b.try_into().ok()?))
+        let low = self.u32()?;
+        let high = self.u32()?;
+        Some(u64::from(low) | u64::from(high) << 32)
     }
 
     /// The count of items that follow, each of which takes at least
     /// `min_item_bytes` (not zero) of input. A count that the rest of the
     /// input cannot hold is rejected, so a `Vec` of that capacity is never
     /// larger than a small multiple of the input.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r matches Some(n) ==> n <= u32::MAX,))]
     pub fn len(&mut self, min_item_bytes: usize) -> Option<usize> {
         let n = self.u32()? as usize;
-        (n.checked_mul(min_item_bytes.max(1))? <= self.rest.len()).then_some(n)
+        let item = if min_item_bytes == 0 {
+            1
+        } else {
+            min_item_bytes
+        };
+        if n.checked_mul(item)? <= self.rest.len() {
+            Some(n)
+        } else {
+            None
+        }
     }
 
+    /// A string. Every string pathos writes is text in which each character
+    /// stands for one byte (`pathos_syntax::latin1`), so a string with a
+    /// character above U+00FF is not one of them, and is rejected.
     pub fn str(&mut self) -> Option<&'a str> {
         let n = self.len(1)?;
-        std::str::from_utf8(self.bytes(n)?).ok()
+        latin1_text(self.bytes(n)?)
     }
+}
+
+/// The bytes as text, if they are UTF-8 and no character is above U+00FF.
+#[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+fn latin1_text(bytes: &[u8]) -> Option<&str> {
+    let text = std::str::from_utf8(bytes).ok()?;
+    text.chars().all(|c| u32::from(c) < 256).then_some(text)
 }
 
 /// A 64-bit hash of the bytes, for detecting damaged or changed files. It
@@ -162,6 +190,10 @@ mod tests {
         // invalid UTF-8 and a bad boolean
         assert_eq!(Reader::new(&[1, 0, 0, 0, 0xff]).str(), None);
         assert_eq!(Reader::new(&[2]).bool(), None);
+        // a character above U+00FF: never written, so not read
+        let mut w = Writer::new();
+        w.str("a\u{100}");
+        assert_eq!(Reader::new(&w.bytes).str(), None);
     }
 
     #[test]
