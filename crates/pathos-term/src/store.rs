@@ -2947,6 +2947,18 @@ mod tests {
         assert!(reads(NodeKind::Lambda, 2) && reads(NodeKind::Proof, 1));
     }
 
+    /// The counter of a snapshot can be anything; it wraps.
+    #[test]
+    fn the_counter_of_term_requests_wraps() {
+        let mut s = TermStore::new();
+        s.mk_count = u64::MAX;
+        let ty = s.mk_type();
+        let c = s.mk_symbol(SymbolKind::Const, "c", ty);
+        s.mk(Kind::TUPLE, &[c]);
+        s.mk_lit(Lit::Bool(true));
+        assert_eq!(s.mk_count(), 2);
+    }
+
     /// Every string pathos writes is text with one character for a byte.
     #[test]
     fn a_store_with_a_name_that_is_not_latin_1_is_rejected() {
