@@ -527,6 +527,73 @@ impl fmt::Display for Kind {
     }
 }
 
+/// The kinds by their numbers in a snapshot, which are their positions in
+/// the `ALL` lists.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
+impl SymbolKind {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    pub fn from_index(i: usize) -> Option<SymbolKind> {
+        SymbolKind::ALL.get(i).copied()
+    }
+}
+
+#[cfg_attr(verus_keep_ghost, verus_verify)]
+impl LitKind {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    pub fn from_index(i: usize) -> Option<LitKind> {
+        LitKind::ALL.get(i).copied()
+    }
+}
+
+#[cfg_attr(verus_keep_ghost, verus_verify)]
+impl NodeKind {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    pub fn from_index(i: usize) -> Option<NodeKind> {
+        NodeKind::ALL.get(i).copied()
+    }
+
+    /// Whether a term of this kind can have `n` children. These are the
+    /// numbers the checker builds terms with and relies on when it takes
+    /// them apart: a lambda has its variables and its body, a parameterized
+    /// term its parameters and its head, a proof its formula, a quoted type
+    /// its term, and an application at least a head. The other kinds are
+    /// built with any number.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.spec_takes(n),))]
+    pub fn takes(self, n: usize) -> bool {
+        match self {
+            NodeKind::Lambda | NodeKind::Parameterized => n == 2,
+            NodeKind::Proof | NodeKind::QuoteType => n == 1,
+            NodeKind::Apply | NodeKind::ApplyOpaque => n >= 1,
+            _ => true,
+        }
+    }
+}
+
+#[cfg_attr(verus_keep_ghost, verus_verify)]
+impl EvalOp {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
+    pub fn from_index(i: usize) -> Option<EvalOp> {
+        EvalOp::ALL.get(i).map(|&(op, _)| op)
+    }
+}
+
+#[cfg(verus_keep_ghost)]
+verus! {
+
+impl NodeKind {
+    /// See [`NodeKind::takes`].
+    pub open spec fn spec_takes(self, n: usize) -> bool {
+        match self {
+            NodeKind::Lambda | NodeKind::Parameterized => n == 2,
+            NodeKind::Proof | NodeKind::QuoteType => n == 1,
+            NodeKind::Apply | NodeKind::ApplyOpaque => n >= 1,
+            _ => true,
+        }
+    }
+}
+
+} // verus!
+
 impl Kind {
     /// The kind as two bytes, for snapshots: the group and the kind within
     /// it, which is its position in the group's `ALL`.

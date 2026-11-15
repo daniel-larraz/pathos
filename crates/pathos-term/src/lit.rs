@@ -530,8 +530,10 @@ impl fmt::Display for Lit {
     }
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl Lit {
     /// Writes the value, for snapshots.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external))]
     pub fn write_to(&self, w: &mut crate::codec::Writer) {
         w.u8(self.kind() as u8);
         match self {
@@ -553,8 +555,9 @@ impl Lit {
 
     /// Reads a value written by [`Lit::write_to`]. `None` if the input is
     /// not one.
+    #[cfg_attr(verus_keep_ghost, verus_spec(res => ensures res matches Some(l) ==> l.wf(),))]
     pub fn read_from(r: &mut crate::codec::Reader) -> Option<Lit> {
-        let kind = *LitKind::ALL.get(usize::from(r.u8()?))?;
+        let kind = LitKind::from_index(r.u8()? as usize)?;
         Some(match kind {
             LitKind::Boolean => Lit::Bool(r.bool()?),
             LitKind::Numeral => Lit::Numeral(Integer::parse(r.str()?, 10)?),

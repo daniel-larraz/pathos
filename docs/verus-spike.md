@@ -37,6 +37,7 @@ milestone adds a section at the end of this file:
 
 - [Milestone 18: matching cannot panic](#milestone-18-matching-cannot-panic)
 - [Milestone 19: matching is correct](#milestone-19-matching-is-correct)
+- [Milestone 20: the snapshot reader cannot panic](#milestone-20-the-snapshot-reader-cannot-panic)
 
 ## The setup
 
@@ -876,3 +877,225 @@ agreement with a written semantics is in the range milestone 17 gave
   did not change (every added line is behind `cfg(verus_keep_ghost)` or
   inside a proof block), so the dependency trace was not rerun.
 
+## Milestone 20: the snapshot reader cannot panic
+
+### Summary
+
+- **The store's reader is proved.** `TermStore::read_from`, `Lit::read_from`
+  and the codec's `Reader` cannot panic on any bytes, and a store that
+  `read_from` returns satisfies the whole invariant of milestones 17 and
+  19. Verus checks 209 items in `pathos-term` and 18 in `pathos-check`,
+  with no errors.
+- **How:** the reader no longer copies a store out of the file. It builds
+  the store again with `mk_symbol`, `mk_lit` and `mk`, which are already
+  verified, and rejects the file if a term does not come out where the
+  file has it.
+- **All 23 "crafted snapshot" rows of [panics.md](panics.md) are closed.**
+  The table below says, for each shape the checker relies on, whether it
+  is checked by the reader or proved.
+- **A snapshot pathos wrote reads as before.** The snapshot of cvc5's
+  signature is byte for byte the same file, is still used, and loads in
+  17.2 ms against 16.7 ms.
+- **The first question for the Ethos developers can be withdrawn** as far
+  as it is about panics; see the end of this section for the two
+  conditions.
+- **The checker's own tables are checked by ordinary code, not by Verus.**
+  Verus reaches the functions that take the store alone; the image reader
+  around them holds hash maps of the `Checker`.
+- **The generic fuzzer is weak evidence here**: it found nothing on the
+  old code either. The stronger evidence is the tests that forge each
+  state.
+
+### What Verus proves
+
+In `pathos-term`:
+
+| Function | Proved |
+| --- | --- |
+| `Reader::bytes`, `u8`, `bool`, `u32`, `u64`, `len`, `str`, `new`, `is_at_end`, `remaining` | No panic. `bytes(n)` gives `n` bytes; `len` gives a count that fits 32 bits. |
+| `Lit::read_from` | No panic; a bit-vector it returns fits its width. |
+| `TermStore::read_from` | No panic; a store it returns satisfies `wf`: valid handles, the tables, no two terms alike (so the injective tree view), and the flags. |
+| `TermStore::term_with_id` | The term returned is a term of the store. |
+| `NodeKind::takes` | Meets its specification. |
+
+In `pathos-check`:
+
+| Function | Proved |
+| --- | --- |
+| `read_term`, `read_opt_term` | No panic; the term read is a term of the store. |
+| `is_program_term` | No panic; if it returns true, the term has the shape `match_cases` requires (`is_program`) and every case's pattern has a head. |
+
+Five deliberate faults in the store's reader are each caught (not
+checking that a term came out at its position, that a child range is
+inside the pool, that a child is an earlier term, that a cached type is a
+term of the store, that there is a name left).
+
+### The reader, rewritten
+
+`read_from` used to fill the store's vectors and tables directly, with its
+own copies of the checks `mk` makes. Now, for each term of the file in
+turn, it calls the constructor for that kind and requires the handle it
+gets to be the next one. A term that is in the file twice, or a store that
+is full, gives another handle, and the file is rejected. The tables are
+made large enough beforehand, as before, so they do not grow.
+
+The proof is then short: each constructor keeps the invariant, so the loop
+does. The reader gained about 60 lines of specification and 30 of proof,
+against the 740 lines of proof behind the constructors.
+
+What is accepted is what was accepted before, plus the new checks listed
+below, and the store built is the same store: same terms, child pool,
+names, values, flags and table layout.
+
+### The shapes the checker relies on
+
+| What the checker relies on | Rows of panics.md | Now |
+| --- | --- | --- |
+| Every child and cached type is a term of the store; nothing is interned twice; table entries are in range. | (none: the reader checked these) | **Proved**: `read_from` returns a store satisfying `wf`. |
+| A `LAMBDA` and a `PARAMETERIZED` term have two children; a `PROOF` and a `QUOTE_TYPE` term one; an `APPLY` and an `APPLY_OPAQUE` term at least one. | 9 | **Checked** by `read_from` with `NodeKind::takes`, for every term. Not an invariant of the store: `mk` builds any number of children, and the parser is what keeps to these. |
+| A program is a list of cases, each a pair whose first element has a head (`is_program` of milestones 18 and 19). | 3 | **Checked** by the checker's `read_image` with `is_program_term`, which Verus proves gives `is_program`. |
+| A builtin's kind is a compound kind, which `mk` takes. | 2 | **Checked** by `read_image`. |
+| The builtin terms the checker holds handles to are terms of the store read, and the same terms. | 2 (11 places) | **Checked** by `read_image`: the store read must begin with the same terms as the checker's own, up to the last builtin one (`same_first_terms`). |
+| A name or an output line is text with one character for a byte. | 3 | **Checked** by `Reader::str`, which every string goes through. |
+| The counters do not overflow. | 4 | **Cannot fail**: `hash_counter`, the rule and program counts and the count of terms made per step now wrap, as `mk_count` has since milestone 17. |
+
+The last row includes one place the inventory did not list: the number of
+terms made during a step is a difference of `mk_count` values, which could
+underflow in a debug build after the counter wrapped. It wraps now too.
+
+### What is checked by ordinary code, and its tests
+
+The checker's `read_image` and the state's `read_image` build hash maps of
+`AppInfo`, names and lists. Verus is not run on them, because that needs
+the `Checker`. They already returned `None` on anything they could not
+read; the new checks are in the table above. Tests:
+
+- `pathos-term`: a store with a term of the wrong shape is rejected, for
+  each kind and number of children; a name that is not Latin-1 is rejected.
+- `pathos-check`: a builtin of an atomic kind; a program that is not a
+  list of cases, in three ways; a store without the builtin terms; a store
+  with other terms in their place; counters at their maximum.
+- `pathos-elab`, end to end: six states that no signature gives are forged
+  through the library, written as snapshots and offered to a run of a
+  proof that uses the forged name. All six snapshots are ignored. On the
+  code before this milestone none was rejected: four were used without a
+  panic by the proof I wrote for them, and two of the runs panicked (an
+  application without a head, in `typing.rs`; a builtin of an atomic kind,
+  in `store.rs`).
+- A snapshot with one more ordinary term is still used.
+
+### Fuzzing
+
+The reviewer's `snapfuzz.py` mutates a snapshot (bit flips, edge bytes,
+32-bit fields set to small or extreme values, swapped bytes), recomputes
+the checksum, and runs pathos with it on a proof. The snapshot was that of
+cvc5's signature (660 kB), with four proofs of the corpus.
+
+| Build | Runs | Panics, crashes, timeouts |
+| --- | --- | --- |
+| This milestone, release | 60,000 (four seeds), then 12,000 on the final code | 0 |
+| This milestone, debug | 10,000 (two seeds), then 2,000 on the final code | 0 |
+| Before this milestone, release | 3,000 | 0 |
+| Before this milestone, debug | 1,500 | 0 |
+
+So 84,000 forged snapshots with a valid checksum, and nothing. But the
+last two rows say how much that is worth: the same fuzzer finds nothing
+on the code that is known to panic, because a random change almost never
+produces the particular states the 23 rows need. It shows that the new
+checks do not make the reader fall over on damaged input. That the 23
+states are rejected is shown by the tests above, which forge them on
+purpose. The first 70,000 runs were on a build without the last two
+checks (the builtin terms being the same terms, and the per-step count);
+the 14,000 after are on the final code.
+
+
+### What is assumed
+
+New in this milestone:
+
+- `SymbolKind::from_index`, `LitKind::from_index`, `NodeKind::from_index`
+  and `EvalOp::from_index` (a lookup in a constant table) do not panic.
+- `latin1_text` (`str::from_utf8` and a scan of the characters) does not
+  panic.
+- As before, `Integer::parse` and `Rational::parse` do not panic. The
+  reader hands them strings from the file, so this matters more than it
+  did; milestone 14 ran them on random strings.
+
+Not proved, and not needed for safety:
+
+- **That reading gives back what was written.** The round trip is tested,
+  not proved. One sign of it: dropping the check that the first four terms
+  are `Type`, `Bool`, `eo::?` and the null term changes nothing for Verus,
+  because the store is built with them whatever the file says.
+- **That the checker's tables make sense**, beyond the shapes above.
+
+### What had to be rewritten
+
+| Construct | Problem | Now |
+| --- | --- | --- |
+| `u32::from_le_bytes(b.try_into().ok()?)` | No specification for either. | The four bytes combined with shifts. |
+| `(cond).then_some(n)`, `(cond).then(\|\| ...)`, `.map(Some)` | No specification; a constructor as a function. | `if`. |
+| `*SymbolKind::ALL.get(i)?` and the like | Associated constant tables are not supported. | `from_index` functions, trusted. |
+| `raw.iter().enumerate()`, closures `bits` and `earlier` | As in earlier milestones. | Indexed loops; functions `table_bits` and `Term::earlier`. |
+| `Vec::reserve` on the store's vectors before filling them | It made the invariant hard to carry across, for no behaviour. | Dropped; the vectors grow as they are filled. |
+| One long function | The solver ran out of budget. | Three: `read_from`, `rebuild` (one term) and `set_cached_types`. |
+
+A proof in `match_cases` that passed in milestone 19 stopped passing when
+unrelated definitions were added to the file, and needed its last step
+spelled out. This is the instability the estimate in milestone 17 warned
+of; it cost a quarter of an hour.
+
+### Lines and time
+
+| File | Code | Specification | Proof |
+| --- | --- | --- | --- |
+| `store.rs` | 713 (was 687) | 548 (was 484) | 935 (was 901) |
+| `codec.rs` | 104 (was 88) | 6 | 0 |
+| `kind.rs` | 453 (was 425) | 72 (was 52) | 0 |
+| `matching.rs` | 93 (was 84) | 164 (was 151) | 218 (was 208) |
+| `snapshot.rs` (`pathos-check`) | 296 (was 271) | 9 | 0 |
+
+Verus takes about 43 seconds for `pathos-term` (it was 22 after milestone
+19) and 3 for `pathos-check`.
+
+### Can the first question be withdrawn?
+
+The question on the evidence page is whether a snapshot is trusted like
+the signature it was made from, because a forged one "can also hold a
+term of a shape no signature produces, on which the checker stops with a
+panic", in 23 places.
+
+**Yes, as far as it is about panics**, on two conditions:
+
+1. **The inventory was complete.** The 23 rows are closed. That closes the
+   matter if milestone 14's inventory found every place a forged state
+   could reach, which is what it set out to do; this milestone found one
+   more such place itself (the count of terms per step). For the store,
+   the answer no longer rests on the inventory: Verus proves it. For the
+   checker's tables it still does.
+2. **This work is on `main`.** It is on the `verus` branch, which does not
+   merge into `main`. The checks and the rewritten reader do not depend on
+   Verus and could be brought to `main` on their own.
+
+What stays is not a question for the Ethos developers: a forged snapshot
+can hold a rule that proves anything, exactly as an edited signature file
+can. A snapshot has to be kept as safe as the signature; it no longer has
+to be trusted not to crash the checker.
+
+I did not edit `docs/evidence.md`: the question is Daniel's to withdraw.
+
+### Gates
+
+- `scripts/verify`: `pathos_term` 209 verified, 0 errors; `pathos_check` 18
+  verified, 0 errors.
+- `scripts/full-check --quick`: every step passes: `tests` 230 of 230,
+  `proofs` 400 of 400, `large` 43 of 43 (351 s, as before), `cli` 3,192 of
+  3,192, `snapshot` 6,300 of 6,300 and its three proof runs of 400 each,
+  `bignum` 7 of 7, and `fuzz` has no finding that still differs.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass. Ten tests were added.
+- `Cargo.lock` is unchanged; no dependency was added. `scripts/unsafe-reach`
+  finds the same 17 `unsafe` lines of dependencies.
+- The snapshot of cvc5's signature written by this code is identical, byte
+  for byte, to the one written before, and a run with it takes 17.2 ms
+  against 16.7 ms before and 37 ms without a snapshot.

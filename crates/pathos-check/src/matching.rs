@@ -190,6 +190,26 @@ pub(crate) fn match_terms(
     true
 }
 
+/// Whether `prog` has the shape of a program: each of its children, the
+/// cases, has a pattern and a body, and the pattern is an application, with
+/// a head. The parser builds programs so; a snapshot is checked with this.
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::loop_isolation(false), verus_spec(r =>
+    requires s.wf(), s.has(prog),
+    ensures r ==> is_program(s, prog) && has_patterns(s, prog),
+))]
+pub(crate) fn is_program_term(s: &TermStore, prog: Term) -> bool {
+    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+        forall|m: int| 0 <= m < i ==> case_ok(s, #[trigger] s.kids(prog.idx())[m]),
+    ))]
+    for i in 0..s.num_children(prog) {
+        let case = s.child(prog, i);
+        if s.num_children(case) < 2 || s.num_children(s.child(case, 0)) == 0 {
+            return false;
+        }
+    }
+    true
+}
+
 /// What looking for the case of a program that matches gave.
 #[cfg_attr(verus_keep_ghost, verus_verify)]
 pub(crate) enum CaseMatch {
@@ -272,7 +292,17 @@ pub(crate) fn match_cases(
                     inst(s, new_ctx@, #[trigger] s.kids(pat.idx())[m]) == s.tree(children@[m].idx()) by {
                     lemma_matched_inst(s, new_ctx@, s.kids(pat.idx())[m], children@[m]);
                 }
-                assert(case_matches(s, new_ctx@, s.kids(prog.idx())[i as int], children@, s.kids(case.idx())[1]));
+                let body = s.kids(case.idx())[1];
+                assert(case == s.kids(prog.idx())[i as int]);
+                assert(pat == s.kids(case.idx())[0]);
+                assert(s.kids(case.idx()).len() >= 2);
+                assert(s.kids(pat.idx()).len() == children@.len());
+                assert(case_matches(s, new_ctx@, s.kids(prog.idx())[i as int], children@, body));
+                s.lemma_children(case);
+                assert(s.has(body));
+                assert(0 <= i < s.kids(prog.idx()).len());
+                assert(exists|i2: int| 0 <= i2 < s.kids(prog.idx()).len()
+                    && #[trigger] case_matches(s, new_ctx@, s.kids(prog.idx())[i2], children@, body));
             }
             return CaseMatch::Body(s.child(case, 1));
         }
@@ -299,6 +329,16 @@ pub open spec fn ctx_kept(before: Map<Term, Term>, after: Map<Term, Term>) -> bo
 /// has a pattern and a body.
 pub open spec fn is_program(s: &TermStore, prog: Term) -> bool {
     forall|i: int| 0 <= i < s.kids(prog.idx()).len() ==> s.kids((#[trigger] s.kids(prog.idx())[i]).idx()).len() >= 2
+}
+
+/// A case has a pattern and a body, and the pattern has a head.
+pub open spec fn case_ok(s: &TermStore, case: Term) -> bool {
+    s.kids(case.idx()).len() >= 2 && s.kids(s.kids(case.idx())[0].idx()).len() >= 1
+}
+
+/// Every case of the program has a pattern with a head.
+pub open spec fn has_patterns(s: &TermStore, prog: Term) -> bool {
+    forall|i: int| 0 <= i < s.kids(prog.idx()).len() ==> case_ok(s, #[trigger] s.kids(prog.idx())[i])
 }
 
 /// The term is a parameter.

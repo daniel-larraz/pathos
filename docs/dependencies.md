@@ -18,7 +18,9 @@ where the `unsafe` lines in the binaries are different ones. Milestone 17
 changes to `pathos-term` moved three counts of lines that are not `unsafe`
 in the Linux x86-64 trace below (`itertools` 4 to 6, in the same two
 functions; `malachite-base` 406 to 404; `malachite-nz` 9,117 to 9,124), and
-the 17 `unsafe` lines are the same ones. The traces of the other platforms
+the 17 `unsafe` lines are the same ones. Milestone 20 (the snapshot
+reader, on the `verus` branch) again added no dependency; the count for
+`itertools` is back at 4, and the 17 `unsafe` lines are unchanged. The traces of the other platforms
 have not been rerun. The list matches `Cargo.lock`, which has
 not changed since milestone 1: twelve crates from the registry, all brought
 in by `malachite`. The brief agreed to `malachite` knowing of one `unsafe`
@@ -63,7 +65,7 @@ All of these come from `malachite` and cannot be turned off with features.
 | --- | --- | --- | --- | --- | --- |
 | `hashbrown` | 0.16.1 | `malachite-base` | yes, throughout (325 lines in 18 files) | The hash table behind `std::collections::HashMap`; the standard library ships the same code. | **Not reached**: no code in the binaries. |
 | `foldhash` | 0.2.0 | `hashbrown` | 10 lines in 3 files | The default hasher of `hashbrown`: unaligned reads of byte slices and a seed kept in a static. | **Not reached**: no code in the binaries. |
-| `itertools` | 0.14.0 | all three `malachite` crates | 10 lines in 2 files | `next_array.rs` (filling a `MaybeUninit` array) and `either_or_both.rs` (`unreachable_unchecked` after a check). | **Not reached**: six lines of `itertools` are in the binaries (`repeat_n` and `collect_vec`, used by bit operations, digit conversion and polynomial evaluation); none is `unsafe`, and neither file above is among them. |
+| `itertools` | 0.14.0 | all three `malachite` crates | 10 lines in 2 files | `next_array.rs` (filling a `MaybeUninit` array) and `either_or_both.rs` (`unreachable_unchecked` after a check). | **Not reached**: four lines of `itertools` are in the binaries (`repeat_n` and `collect_vec`, used by bit operations, digit conversion and polynomial evaluation); none is `unsafe`, and neither file above is among them. |
 | `either` | 1.19.0 | `itertools` | 2 lines in 1 file | Pin projection for `Either`. | **Not reached**: no code in the binaries. |
 | `libm` | 0.2.16 | all three `malachite` crates | 56 lines in 9 files | Pure-Rust floating-point functions. The `unsafe` is CPU feature detection and x86/aarch64 intrinsics for `sqrt`, `fma` and rounding. Its build script only sets `cfg` flags. | **Not reached**: no code in the binaries. (With the `std` feature, which pathos uses, `malachite` takes these functions from the standard library.) |
 | `ryu` | 1.0.23 | `malachite-base` | 27 lines in 10 files | Float-to-string conversion, writing digits through raw pointers into a fixed buffer. | **Not reached**: no code in the binaries. pathos converts no floats. |
@@ -96,13 +98,13 @@ Three kinds of evidence, each rerunnable.
    "no code in the binaries" in the table comes from, and the counts of
    lines. The script prints, per crate, the lines with code and those of
    them inside an `unsafe` block, function or impl. Both binaries give the
-   same list (461,211 and 572,358 instructions, as of milestone 17):
+   same list (461,774 and 572,921 instructions, as of milestone 20):
 
    ```
    bytemuck-1.25.2: 5 lines with code, 4 of them unsafe
        src/internal.rs: 112 123
        src/lib.rs: 343 378
-   itertools-0.14.0: 6 lines with code, 0 of them unsafe
+   itertools-0.14.0: 4 lines with code, 0 of them unsafe
    malachite-base-0.14.0: 404 lines with code, 0 of them unsafe
    malachite-nz-0.14.0: 9124 lines with code, 4 of them unsafe
        src/natural/arithmetic/mul/fft/avx2.rs: 182 192 202
