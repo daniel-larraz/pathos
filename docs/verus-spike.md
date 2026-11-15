@@ -1586,7 +1586,26 @@ than milestone 19 gave.
 
 ### Gates
 
-GATES
+Run on this branch with `verus` at `7cd893f` merged in (the snapshot
+reader's checks from `main`, harness pin `237b961`).
+
+- `scripts/verify`: `pathos_term` 215 verified, 0 errors; `pathos_check`
+  89 verified, 0 errors; 41 seconds in all.
+- `scripts/full-check`, the whole of it: every step passes. `tests` 230 of
+  230, `proofs` 400 of 400, `large` 43 of 43, `cli` 3,192 of 3,192,
+  `snapshot` under every option set and with the three broken snapshots,
+  `options` 6,300 of 6,300, `bignum` 7 of 7, `perf` 673 of 673 (Ethos
+  1,249 s, pathos 554 s, 44%), and `fuzz` has no finding that still
+  differs in either set of findings.
+- Three deliberate faults in `evaluate` were each refused by Verus: an
+  `eo::ite` let through with a number of children other than three, a
+  second `pop` of the work list, and the arm for `eo::ite` given to another
+  operator.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass. No test was changed.
+- `Cargo.lock` is unchanged; no dependency was added.
+- The CI job that runs Verus is now named for the evaluator too.
+- CI has not run on this branch yet: the reviewer pushes.
 
 ### For Daniel
 
