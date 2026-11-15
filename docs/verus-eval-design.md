@@ -2,9 +2,25 @@
 
 Milestone 21 of [brief.md](brief.md) asks for the design to be written
 down before anything is proved, and to stop for review if it needs more
-than moving code. **It does need more than moving code**, in three places,
-so nothing has been proved yet. This file says what the split would be,
-what it costs, and what I need decided.
+than moving code. **It does need more than moving code**, in three places.
+This file says what the split would be, what it costs, and what needed
+deciding.
+
+**Decided** (Daniel, 15 November 2026), and what came of it:
+
+1. **Option A**: the evaluator stays methods of `Checker`. Done.
+2. **Shapes: measure a check in `TermStore::mk` first**, and keep it if it
+   costs under about 1%. It costs 0.2% at most, so the check is in, and
+   `shapes_ok` is part of the store's proved invariant, not an assumption
+   about every builder of terms.
+3. **`get_type` and the plugin are trusted**, with the contracts below.
+4. **Two milestones.** Milestone 21 is everything but `evaluate`;
+   milestone 22 is `evaluate`, the frame stack and its two `unreachable!`.
+
+The result of milestone 21, with the measurements and what differs from
+this design, is in
+[verus-spike.md](verus-spike.md#milestone-21-the-evaluators-operators-cannot-panic).
+The rest of this file is the design as it was reviewed.
 
 ## What stands in the way
 

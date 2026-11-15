@@ -33,6 +33,19 @@ snapshot readers now reject the states those rows needed (see "Open",
 below, and each row), `TermStore::read_from` is built on `mk`, `mk_lit`
 and `mk_symbol`, and three more counters wrap. The rows keep their old
 line numbers.
+Milestone 21 put the check of a term's shape into the store itself:
+`TermStore::mk` does not make a term with a number of children that its
+kind cannot have, so the rows that rest on "from text this kind always has
+a head" or "two children" (`eval.rs` 369, 600 and 680, `typing.rs` 240 and
+the like) no longer rest on how each caller builds terms. Verus now proves
+the rows of `eval.rs` from line 276 on (everything but `evaluate`) cannot
+panic, given what [verus-spike.md](verus-spike.md) lists as trusted: the
+rows for `children[1..]` and `children[0]` (276, 279, 955 to 983) and for
+the arguments of `eo::ite` (496) as preconditions that the callers named
+in those rows meet, the others outright. That code was rewritten for it
+(`evaluate_list_op` is now one function per operator), so its line numbers
+below are the old ones. The rows of `evaluate` (lines 51 to 207) are
+milestone 22.
 
 ## What was looked for
 

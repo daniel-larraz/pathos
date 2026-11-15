@@ -38,9 +38,9 @@ milestone adds a section at the end of this file:
 - [Milestone 18: matching cannot panic](#milestone-18-matching-cannot-panic)
 - [Milestone 19: matching is correct](#milestone-19-matching-is-correct)
 - [Milestone 20: the snapshot reader cannot panic](#milestone-20-the-snapshot-reader-cannot-panic)
-- Milestone 21, the evaluator: the design is in
-  [verus-eval-design.md](verus-eval-design.md), awaiting review; nothing
-  is proved yet.
+- [Milestone 21: the evaluator's operators cannot panic](#milestone-21-the-evaluators-operators-cannot-panic)
+  (the design that was reviewed first is in
+  [verus-eval-design.md](verus-eval-design.md))
 
 ## The setup
 
@@ -1102,3 +1102,292 @@ I did not edit `docs/evidence.md`: the question is Daniel's to withdraw.
 - The snapshot of cvc5's signature written by this code is identical, byte
   for byte, to the one written before, and a run with it takes 17.2 ms
   against 16.7 ms before and 37 ms without a snapshot.
+
+## Milestone 21: the evaluator's operators cannot panic
+
+### Summary
+
+- **Scope, after the design review.** The design
+  ([verus-eval-design.md](verus-eval-design.md)) was reviewed before any
+  proof, and the milestone was cut in two. This one is everything in
+  `eval.rs` except `evaluate`: program application, the `eo::` operators'
+  entry point, `eo::nil`, the n-ary helpers, the list operators and the
+  datatype operators. Milestone 22 is `evaluate`, its stack of frames and
+  its two `unreachable!`.
+- **Proved**: none of these 34 functions can panic, each keeps the
+  checker's invariant, and every term one of them reads, builds or
+  returns is a term of the store. Verus checks 215 items in `pathos-term`
+  and 70 in `pathos-check` (18 before), with no errors.
+- **The store now refuses a term of the wrong shape.** The check in
+  `TermStore::mk` was measured, as asked: between -0.1% and +0.2% in instructions, and no slower in time on any corpus. It is kept. So
+  "an application has a head" is part of the store's proved invariant,
+  not an assumption about every builder of terms. **It is on this branch
+  only**; whether it goes to `main` is under "For Daniel".
+- **`evaluate` is trusted for one milestone**, and typing and the plugin
+  for longer. Typing calls `evaluate`, so the proof assumes, one level
+  down, what it proves; see "The circularity".
+- **Behaviour is unchanged**: every gate agrees with Ethos, the order of
+  warnings and statistics included (the `options` gate, which runs
+  `--stats`, was run as well as the quick gates).
+- **Cost**: about 700 lines of specification and proof for the 730 lines
+  of the file after `evaluate`, against the 1,000 to 1,700 the design estimated for these parts.
+  The estimate for `evaluate` stands.
+
+### What Verus proves
+
+Every function below is proved not to panic and to end, given that the
+trusted functions it calls return. Each requires the checker's invariant
+and that its arguments are terms of the store; each ensures the invariant
+again, that the store still has every term it had, with the same kind and
+children, and that a term returned is a term of the store.
+
+| Functions | Also needed, or also proved |
+| --- | --- |
+| `evaluate_program_app`, `evaluate_program_internal` | Require the head: `args` is not empty. The context filled binds terms of the store. The program found has the shape `match_cases` requires, from the invariant. |
+| `evaluate_literal_op`, `evaluate_literal_op_internal` | Require three arguments for `eo::ite`. The literals handed to `Lit::evaluate` are well formed, from the store's invariant. |
+| `evaluate_nil` | `child(nil, 1)` of a parameterized terminator is in range, from the store's invariant. |
+| `nary_step`, `get_nary_children`, `is_nary_list`, `get_nary_nth_tail`, `prepend_nary_children` | The loops over a list end: the tail is an earlier term. A list has at most 2^32 - 1 elements. |
+| `evaluate_dt_constructors` | The loop to the head of an application ends. |
+| `evaluate_list_op`, `evaluate_list_op_with`, `evaluate_list_singleton_intro` | `child(op, 1)` of a parameterized operator is in range. |
+| `list_cons_or_concat`, `list_repeat`, `list_length`, `list_nth`, `list_find`, `list_erase`, `list_rev`, `list_setof`, `list_compare`, `list_diff_or_inter`, `list_singleton_elim` | The counts of `eo::list_meq` and the others cannot overflow, and the count that `eo::list_diff` decrements is at least one. |
+| `compute_constructor_term` | Requires the head. |
+| `missing_argument`, `mk_usize`, `all_ground`, `any_argument_evaluatable`, `all_literals`, `position`, `count_terms`, `counts_cover` | Helpers. |
+| In `checker.rs`: `warn`, `mk_type`, `mk_true`, `mk_false`, `mk_bool`, `mk_list_cons`, `mk_numeral`, `app_info`, `attribute_kind`, `get_program`, `get_hash` | `get_program` returns a term with the shape of a program. |
+
+Three deliberate faults are each caught: not using the shape of a
+parameterized term before `child(nil, 1)`, testing for the wrong number of
+children before `children[1]`, and removing a count at 2 instead of 1.
+
+### The checker's invariant
+
+`Checker::wf`, in `checker.rs`:
+
+- the store's invariant (`TermStore::wf`);
+- the builtin terms (`true`, `false`, `eo::self`, the list type and its
+  constructors, the proof type, and -1 once it is made) are terms of the
+  store;
+- for every symbol with attributes, the term that goes with its attribute
+  is a term of the store, and for a program it is a list of cases, each
+  with a pattern and a body (what `match_cases` requires).
+
+The verified functions prove that they keep it. The rest of the checker
+(the parser, `build.rs`, typing, the snapshot reader) is **trusted** to
+keep it. For the program clause that trust is: `define_program` is given a
+list of pairs, which the parser builds and, since milestone 20, the
+snapshot reader checks.
+
+The store's own invariant gained two clauses, both proved:
+
+- **shapes**: a term has a number of children that its kind can have
+  (`NodeKind::takes`; lemma `lemma_shape`);
+- **literals**: every literal in the store is well formed, that is, a
+  bit-vector fits its width. `mk_lit` now requires it of its argument, and
+  `lit` ensures it of its result. The unverified callers of `mk_lit` are
+  trusted to pass one; they can only get a bit-vector from the functions
+  of `bitvec.rs` (its fields are private), which Verus proves return
+  well-formed ones, or for `BitVec::parse` assumes.
+
+### The shape check: the measurement and the decision
+
+The check is one `match` on the kind and a comparison, at the top of
+`TermStore::mk`. A term that does not fit is not made: the store records
+`Limit::Shape` and returns `eo::?`, as it does when it is full, and the
+command ends with `Internal error: a term with a number of children that
+its kind cannot have`.
+
+Measured on `main` (9f55eac) with and without the check, same compiler,
+release build:
+
+| Corpus | Cases | Instructions | Time, best of several runs |
+| --- | --- | --- | --- |
+| Ethos's regressions | 230 | +0.16% (290.3 to 290.8 million) | 0.402 s both (best of 3) |
+| cvc5 proofs | 400 | -0.11% (105.00 to 104.89 billion); the largest increase on one proof is +0.24% | 19.01 s to 18.93 s, -0.4% (best of 3) |
+| Large cvc5 proofs | 43 | not counted (Valgrind would take hours) | 540.1 s to 534.2 s, -1.1% (best of 2) |
+
+The outputs of the two binaries are the same on all 673 cases.
+
+Instructions are counted with Valgrind (`perf` is not permitted on this
+machine); they do not depend on what else the machine is doing, so they
+are the number to read. The check adds about 0.2% where it shows at all; that the totals on the
+proofs come out lower with it is the compiler laying out `mk` differently,
+not the check being free. The times agree within their noise.
+
+The `perf` gate itself was also run, on this branch with the check: over
+the 629 cases both accept, Ethos takes 1,273 s and pathos 564 s (44%).
+`docs/evidence.md` has 587 s for pathos on the same cases without it.
+
+Under the 1% of the decision, so the check is kept, and:
+
+- no input in the gates makes pathos try to build such a term: the outputs
+  with and without the check are the same on every case, and every gate
+  still agrees with Ethos;
+- the snapshot reader's own shape check (milestone 20) is gone: it is the
+  store's now;
+- two tests that built wrong shapes through `mk` were rewritten: the
+  store's test forges the bytes of a snapshot instead, and also tests that
+  `mk` refuses; three cases of
+  `a_snapshot_with_a_state_no_signature_gives_is_ignored` were dropped,
+  because such a state can no longer be built.
+
+### What is trusted
+
+| Function | Contract |
+| --- | --- |
+| `evaluate` | Keeps the invariant; the store keeps its terms; returns a term of the store. **Until milestone 22.** |
+| `type_of` (which is `get_type` without a message) | The same; a type returned is a term of the store. |
+| `plugin_evaluate_program` (the plugin's `evaluate_program`) | The same; a term returned is a term of the store, and the context filled binds terms of the store. |
+| `list_of` (which is `mk_list`, through `mk_expr`) | The same. |
+| `arity_ok` (which is `check_arity`) | None: it returns a `bool`. |
+| The nine functions that format a message (`msg_no_program`, ...) | None: they take `&self` and return a `String`. They are trusted not to panic on terms of the store. |
+| `Warnings::emit`, `Stats::count_program` | None: each takes only the field it changes, so Verus knows the rest of the checker is as it was. |
+| `reverse` | The list has the same terms, in reverse. |
+
+Assumed besides, and new in this milestone: that the derived `Hash` and
+`Eq` of term handles agree (`axiom_terms_are_keys`), which Verus's model
+of `HashMap` and `HashSet` needs. The same was assumed of pairs of handles
+in milestone 18.
+
+The design listed `warn`, `count_program`, `get_program`, `app_info`,
+`attribute_kind`, `get_hash` and the `mk_` functions as trusted. They are
+verified instead: `AppInfo` turned out to be a type Verus accepts, so the
+attribute table is in the invariant, not behind contracts.
+
+#### The circularity
+
+`type_of` is trusted to keep the invariant and to return a term of the
+store. But typing evaluates: `get_type` calls `evaluate`, and `evaluate`
+calls the functions proved here. So the proof of, say,
+`evaluate_list_op` assumes of the calls it makes into typing what is being
+proved of `evaluate_list_op` itself, one level down. This is not a proof by
+induction, and nothing here shows that the chain ends: a literal type rule
+`(eo::typeof eo::self)` recurses until the stack is full, which
+`docs/panics.md` lists under "Stack". The assumption goes away when typing
+is verified, and the recursion then needs a measure or stays a stated
+exception.
+
+The same holds for the plugin, which is given the checker and may call
+anything.
+
+### The preconditions, and who meets them
+
+| Precondition | Met by |
+| --- | --- |
+| `evaluate_program_app`, `evaluate_program_internal`, `compute_constructor_term`: the list of terms has a head | `build.rs` and `step.rs`, not verified: they pass the children of an application. `evaluate` (milestone 22) will have to prove it. |
+| `evaluate_literal_op`, `evaluate_literal_op_internal`: an `eo::ite` has three arguments | `build.rs`, which checks the arity first. `evaluate` handles `eo::ite` itself and does not pass it on; milestone 22 will have to prove that. |
+| Every term passed is a term of the store | There is one store, so every `Term` is one of its terms; Verus cannot know that of unverified callers. |
+
+### What had to be rewritten
+
+No behaviour changed. What changed in the code:
+
+- **Two wrapper types**, `Warnings` and `EvalHooks`, around the boxed
+  callback and the boxed plugin, which Verus does not accept as fields.
+  `Checker::eval_plugin` is no longer a public field: `set_eval_plugin`
+  sets it (one caller, in `pathos-elab`).
+- **Iterator chains** with closures (`any`, `all`, `position`,
+  `filter_map`, `enumerate`, `rev`) are loops, or small functions
+  (`all_ground`, `any_argument_evaluatable`, `all_literals`, `position`).
+- **`let` in a condition with `&&`** is nested `if`s.
+- **`format!`** is not something Verus checks: each message is built in a
+  function of its own, called where the message was built, so the order
+  of warnings is the same.
+- **The hash-map entry API** (`*map.entry(k).or_default() += 1`,
+  `get_mut`) is `get` and `insert`: `count_terms`, and the loop of
+  `eo::list_diff`. The `for` over a hash map is `counts_cover`.
+- **`arg!`** is a macro of the module, and an argument is bound before the
+  call that uses it: Verus does not take `self.f(arg!(1))` when `arg!` may
+  return through `self`.
+- **`evaluate_list_op` is one function per operator.** As one function of
+  250 lines it was beyond the solver's budget, at ten times the default
+  too. Split, the whole crate takes 5 seconds.
+- `count_program` is a method of `Stats`, and `is_list_op` moved within
+  `kind.rs`.
+
+Accepted as written, which earlier milestones had not tried: `slice::get`
+and `first`, `Option::copied`, `Vec::truncate`, `HashMap` with `get`,
+`insert`, `remove`, `len` and `iter`, `HashSet::insert`, `let ... else`,
+a `macro_rules!` that returns.
+
+### What differs from the design
+
+- Fewer functions are trusted (above).
+- The contracts say that the store **keeps** its terms, with their kinds
+  and children (`keeps`), not the stronger `extends` of milestone 19,
+  which also keeps literals' values. `keeps` is what panic freedom needs,
+  and it composes without a lemma at every call. A proof of correctness
+  will want `extends` back.
+- The store's invariant gained the clause on literals, which the design
+  did not foresee.
+- The loops are proved to end. The design expected nothing on
+  termination; within these functions it came for one `decreases` clause
+  a loop.
+
+### Lines and time
+
+| File | Code | Specification | Proof |
+| --- | --- | --- | --- |
+| `eval.rs` | 1,101 (was 839) | 388 | 121 |
+| `checker.rs` | 284 (was 266) | 81 | 34 |
+| `attr.rs`, `stats.rs` | 281 (was 279) | 18 | 0 |
+| `store.rs` | 714 (was 713) | 562 (was 548) | 980 (was 935) |
+
+`eval.rs` has 262 more lines of code: the headers of the functions that
+`evaluate_list_op` became, the message functions and the helpers.
+
+Verus takes about 36 seconds for `pathos-term` (the milestone 20 report
+had 43) and 5 for `pathos-check` (3 before).
+
+### The estimate, updated
+
+| Part | Estimated in the design | Spent, or still estimated |
+| --- | --- | --- |
+| Making `Checker` visible, the contracts, shapes | 200 to 300 lines | about 190 (spent) |
+| The operators and helpers | 300 to 500 | about 510 for both rows (spent) |
+| The list operators | 500 to 900 | |
+| `evaluate`, the frame stack (milestone 22) | 1,200 to 1,800 | 1,200 to 1,800 (unchanged) |
+
+The operators cost half the estimate because panic freedom asks little of
+them: "these are terms of the store" passes through a function almost
+unchanged, and the store now gives the shapes. That is not true of
+`evaluate`, where the two `unreachable!` need the invariant that says what
+each frame still owes, as `match_terms` did at about nine lines a line. I
+keep that estimate. Its risk is the solver's budget: a loop of 190 lines
+with five kinds of step will need to be cut into functions, as
+`evaluate_list_op` was, and the invariant restated at each cut.
+
+For the rest, from the estimate of milestone 19 (unchanged in kind, firmer
+in one way): typing and step checking for panic freedom should now cost
+like the operators did, about one line of specification and proof a line
+of code, since they too mostly pass terms along: 500 to 900 lines for
+`typing.rs`, `build.rs` and `step.rs` (about 1,150 lines of code), if
+`build.rs`'s desugaring has no invariant of the kind `evaluate` has.
+Correctness with a semantics is a different piece of work and I have no
+better number for it than milestone 19 gave.
+
+### Gates
+
+- `scripts/verify`: `pathos_term` 215 verified, 0 errors; `pathos_check`
+  70 verified, 0 errors; 41 seconds in all.
+- `scripts/full-check`, the whole of it and not only `--quick`: every
+  step passes. `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43,
+  `cli` 3,192 of 3,192, `snapshot` 6,300 of 6,300 and its three proof
+  runs of 400 each, `options` 6,300 of 6,300, `bignum` 7 of 7, `perf`
+  673 of 673, and `fuzz` has no finding that still differs.
+- Formatting, Clippy with warnings as errors, and the tests in debug and
+  release builds pass. One test was rewritten and three cases of another
+  dropped (see the shape check).
+- `Cargo.lock` is unchanged; no dependency was added.
+- CI has not run on this branch yet: the reviewer pushes.
+
+### For Daniel
+
+1. **The shape check and `main`.** It is on this branch only. Bringing it
+   to `main` is four small changes (the check in `mk`, `Limit::Shape` and
+   its message, `NodeKind::takes`, the test) and does not depend on Verus.
+   It turns a class of possible panics in the whole checker, not only the
+   evaluator, into an error message. Nothing was merged.
+2. **The message** for a refused term is `Internal error: a term with a
+   number of children that its kind cannot have`. It cannot be compared
+   with Ethos, which has no such check. No input is known that produces
+   it.
+3. **Milestone 22** (`evaluate`) is next, with the estimate above.
