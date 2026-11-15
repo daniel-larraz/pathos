@@ -781,7 +781,9 @@ impl TermStore {
                 requires self.wf(), 1 <= cand < self.nodes@.len(),
                 ensures r == (spec_tag(self.kind_of(cand as int)) == tag && self.kids(cand as int) == children@),
             ))]
-            |cand: usize| tag_of(self.kind_at(cand)) == tag && same_terms(self.children_at(cand), children),
+            |cand: usize| {
+                tag_of(self.kind_at(cand)) == tag && same_terms(self.children_at(cand), children)
+            },
         );
         let found = self.table.find(hash, is_match);
         let slot = match found {
@@ -2258,6 +2260,18 @@ mod tests {
         assert_eq!(std::mem::size_of::<Term>(), 4);
         assert_eq!(std::mem::size_of::<Option<Term>>(), 4);
         assert_eq!(std::mem::size_of::<TermData>(), 12);
+    }
+
+    /// The proof that compound terms are hash-consed assumes this (see
+    /// `axiom_tags_differ`).
+    #[test]
+    fn compound_kinds_have_different_tags() {
+        let mut kinds: Vec<Kind> = NodeKind::ALL.iter().map(|&n| Kind::Node(n)).collect();
+        kinds.extend(EvalOp::ALL.iter().map(|&(op, _)| Kind::Eval(op)));
+        let mut tags: Vec<u32> = kinds.iter().map(|&k| tag_of(k)).collect();
+        tags.sort_unstable();
+        tags.dedup();
+        assert_eq!(tags.len(), kinds.len());
     }
 
     #[test]
