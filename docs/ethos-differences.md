@@ -9,26 +9,33 @@ The reference is Ethos `9217112f`. "Probed" means the behaviour was compared
 with the reference binary on a small input; the others follow from reading
 the C++.
 
+## Reported to Ethos
+
+What below looks like a bug in Ethos was reported upstream on 2026-11-14,
+with a reproducer and the cause in the source: [#257](https://github.com/cvc5/ethos/issues/257), [#258](https://github.com/cvc5/ethos/issues/258), [#259](https://github.com/cvc5/ethos/issues/259), [#260](https://github.com/cvc5/ethos/issues/260), [#261](https://github.com/cvc5/ethos/issues/261), [#262](https://github.com/cvc5/ethos/issues/262), [#263](https://github.com/cvc5/ethos/issues/263), [#264](https://github.com/cvc5/ethos/issues/264), [#265](https://github.com/cvc5/ethos/issues/265), [#266](https://github.com/cvc5/ethos/issues/266), [#267](https://github.com/cvc5/ethos/issues/267), [#268](https://github.com/cvc5/ethos/issues/268). Each row says which. When Ethos fixes one, the drift job
+(`docs/evidence.md`, "Keeping up with Ethos") goes red, and pathos follows
+the fix in a milestone of its own.
+
 ## Ethos behaviour that pathos reproduces
 
 | Behaviour | Where in Ethos | Checked |
 | --- | --- | --- |
-| After a one-letter keyword such as `:a`, the next character is lost. `(declare-const f T :a)` loses its closing parenthesis. | `Lexer::parseNonEmptyCharList` does not put back the character that ends the list; only keywords ignore its result. | Probed |
-| In a file, the byte `0xFF` ends the current token as if the input ended there; reading then continues after it. Not on Linux on arm64, and not on standard input, where `0xFF` is a character like any other (see "By platform"). | The lexer reads a file into a `char` buffer; where `char` is signed, `0xFF` is `-1`, which is `EOF`. Standard input is read with `istream::get`, which gives 255. | Probed, on each platform |
-| A file that does not exist gives `Couldn't open file: <path>`, without `Error:`, never `Cannot include file`. | `Filepath::exists` always returns true in the non-Windows build. | Probed |
-| Hexadecimal literals print without leading zeros: `#x0f` prints as `#xf`. Only reachable with `--no-normalize-hex` or in signatures. | `BitVector::toString` pads only base 2. | Read |
-| Characters below 32 or above 127 in a string literal are dropped silently, e.g. a newline or a tab. | `String::addCharToInternal` builds an error message and discards it. | Read |
-| `(reset)` also unbinds the builtin symbols (`->`, `eo::add`, `true`, ...). | `State::reset` clears the whole symbol table. | Probed |
-| A symbol stays marked as overloaded after the scope of its overloads ends. Applying it then warns `No overload found when constructing application`. | `State::popScope` removes the overload list but not the flag in `AppInfo`. | Read |
+| After a one-letter keyword such as `:a`, the next character is lost. `(declare-const f T :a)` loses its closing parenthesis. | `Lexer::parseNonEmptyCharList` does not put back the character that ends the list; only keywords ignore its result. Reported: [cvc5/ethos#261](https://github.com/cvc5/ethos/issues/261). | Probed |
+| In a file, the byte `0xFF` ends the current token as if the input ended there; reading then continues after it. Not on Linux on arm64, and not on standard input, where `0xFF` is a character like any other (see "By platform"). | The lexer reads a file into a `char` buffer; where `char` is signed, `0xFF` is `-1`, which is `EOF`. Standard input is read with `istream::get`, which gives 255. Reported: [cvc5/ethos#267](https://github.com/cvc5/ethos/issues/267). | Probed, on each platform |
+| A file that does not exist gives `Couldn't open file: <path>`, without `Error:`, never `Cannot include file`. | `Filepath::exists` always returns true in the non-Windows build. Reported: [cvc5/ethos#264](https://github.com/cvc5/ethos/issues/264). | Probed |
+| Hexadecimal literals print without leading zeros: `#x0f` prints as `#xf`. Only reachable with `--no-normalize-hex` or in signatures. | `BitVector::toString` pads only base 2. Reported: [cvc5/ethos#268](https://github.com/cvc5/ethos/issues/268). | Read |
+| Characters below 32 in a string literal are dropped silently, e.g. a newline or a tab. (Bytes above 127 do not get this far: the parser rejects them with `Extended/unprintable characters are not part of SMT-LIB ...`.) | `String::addCharToInternal` builds an error message and discards it: its `throw` is commented out. Reported: [cvc5/ethos#262](https://github.com/cvc5/ethos/issues/262). | Read |
+| `(reset)` also unbinds the builtin symbols (`->`, `eo::add`, `true`, ...). | `State::reset` clears the whole symbol table. Reported: [cvc5/ethos#260](https://github.com/cvc5/ethos/issues/260). | Probed |
+| A symbol stays marked as overloaded after the scope of its overloads ends. Applying it then warns `No overload found when constructing application`. | `State::popScope` removes the overload list but not the flag in `AppInfo`. | Read; not reproduced (2026-11-14): the flag is set on the inner declaration only, and its name is unbound when the scope ends, so no input was found that applies it again |
 | In `step`, `:args` before `:premises` means the premises are not read, and the command then fails on the `:premises` keyword. | `CmdParser` reads the keywords in a fixed order. | Probed |
-| `(f a)` for a `:right-assoc` or `:left-assoc` (without nil) `f` is just `a`. | `State::mkApplyAttr` with two children. | Read |
-| Including a signature after a `reference` command turns reference checking of assumptions off again. | `State::includeFile` assigns `d_hasReference` on every include. | Read |
+| `(f a)` for a `:right-assoc` or `:left-assoc` (without nil) `f` is just `a`. | `State::mkApplyAttr` with two children. Reported: [cvc5/ethos#258](https://github.com/cvc5/ethos/issues/258). | Read |
+| Including a signature after a `reference` command turns reference checking of assumptions off again. | `State::includeFile` assigns `d_hasReference` on every include. Reported: [cvc5/ethos#259](https://github.com/cvc5/ethos/issues/259). | Read |
 | An unmatched `)` while skipping an s-expression makes Ethos read to the end of the input. | `ExprParser::parseSymbolicExpr` counts parentheses in an unsigned integer. | Read |
 | A token's text ends at its first NUL character: an unterminated string `"ab\0cd` is shown as `` `"ab` `` in `Expected ..., got`. | `Lexer::tokenStr` returns a C string. | Probed |
 | A `:chainable`, `:pairwise` or `:arg-list` operator whose constructor term cannot be computed is applied to Ethos's null expression, printed `[NONE]`: `(= d)` becomes `([NONE])`. Such a term fails to type check with `Unknown kind NONE`. | `State::mkApplyAttr` uses the null `Expr` without checking it. pathos has the same term (`Kind::Null`). | Probed |
 | A failed program application is not tried again in the same evaluation, so `*** Bad number of arguments ...` and `No program defined for ...` appear once per evaluation, not once per occurrence. | `TypeChecker::evaluate` stores the null result in its cache of program applications. | Probed |
 | The nil terminator of an operator with a parameterized terminator is found through the operator's type even if that type does not have two arguments: for `(-> T L)` the "second argument type" is the first child of `L`. | `TypeChecker::evaluateNil` asserts the shape only in debug builds. | Probed |
-| The binding list of a parameterized `:let-binder` operator is built from the wrong terms: `(myLet ((y true)) y)` with `:let-binder (T @cons)` gives `(_ (eo::tuple T @cons) (_ (_ (eo::tuple T) y) true))`, the parameter tuple taken for the pair constructor and the whole tuple for the list constructor. | `State::mkLetBinderList` asserts only in debug builds that the constructor term is a tuple of two, and takes its first two children; for a parameterized operator it is the term pairing the parameters with the tuple. With fewer than two children Ethos reads past their end; pathos then builds no list. | Probed |
+| The binding list of a parameterized `:let-binder` operator is built from the wrong terms: `(myLet ((y true)) y)` with `:let-binder (T @cons)` gives `(_ (eo::tuple T @cons) (_ (_ (eo::tuple T) y) true))`, the parameter tuple taken for the pair constructor and the whole tuple for the list constructor. | `State::mkLetBinderList` asserts only in debug builds that the constructor term is a tuple of two, and takes its first two children (reported, with `:let-binder` missing from the manual: [cvc5/ethos#266](https://github.com/cvc5/ethos/issues/266)); for a parameterized operator it is the term pairing the parameters with the tuple. With fewer than two children Ethos reads past their end; pathos then builds no list. | Probed |
 
 ## Where pathos differs
 
@@ -45,14 +52,14 @@ meaningfully. None is in the corpus.
 
 | Input | Ethos | pathos |
 | --- | --- | --- |
-| A literal such as `-/5`, which the lexer takes for a rational | Uncaught C++ exception from GMP | `Malformed literal` error |
-| An `eo::` operator evaluated without an argument that it reads, e.g. `(eo::is_eq a)` or `(eo::cons f a)` inside a program body. See below. | Reads past the end of the argument vector | Error `Too few arguments when evaluating literal op <kind>, <n> arguments [<arguments>]` |
+| A literal such as `-/5`, which the lexer takes for a rational | Uncaught C++ exception from GMP ([cvc5/ethos#263](https://github.com/cvc5/ethos/issues/263)) | `Malformed literal` error |
+| An `eo::` operator evaluated without an argument that it reads, e.g. `(eo::is_eq a)` or `(eo::cons f a)` inside a program body. See below. | Reads past the end of the argument vector ([cvc5/ethos#257](https://github.com/cvc5/ethos/issues/257)) | Error `Too few arguments when evaluating literal op <kind>, <n> arguments [<arguments>]` |
 | `(eo::var t)`, with one argument | The type rule reads the second child past the end | Type error: `Expected a type for second argument of eo::var`, unless the check of the first argument fails first |
 | The nil terminator of an operator whose type is not a function type, or has too few children for the rule above | Reads past the end of the type's children | The terminator is not found |
-| `(_ bv<n> 0)` in a reference file | Uncaught exception (empty bit string) | The bit-vector of width 0 |
+| `(_ bv<n> 0)` in a reference file | Uncaught exception (empty bit string; [cvc5/ethos#263](https://github.com/cvc5/ethos/issues/263)) | The bit-vector of width 0 |
 | `step-pop` when the assumption scope holds no assumption | Reads past the end of a vector | The step fails to check |
-| `(eo::nameof (eo::var))`: `eo::var` without arguments makes a variable with no children | Reads the name past the end of the children; a segmentation fault when probed | Error `Too few arguments when evaluating literal op EVAL_NAME_OF, 1 arguments [eo::var]` |
-| A quoted symbol or string literal whose text, cut at its first NUL character, is the opening quote alone: `\|\0\|`, `"\0"` | Uncaught C++ exception (`basic_string::erase`) | Error `Malformed quoted symbol` or `Malformed string literal` |
+| `(eo::nameof (eo::var))`: `eo::var` without arguments makes a variable with no children | Reads the name past the end of the children; a segmentation fault when probed ([cvc5/ethos#257](https://github.com/cvc5/ethos/issues/257), second comment) | Error `Too few arguments when evaluating literal op EVAL_NAME_OF, 1 arguments [eo::var]` |
+| A quoted symbol or string literal whose text, cut at its first NUL character, is the opening quote alone: `\|\0\|`, `"\0"` | Uncaught C++ exception (`basic_string::erase`; [cvc5/ethos#263](https://github.com/cvc5/ethos/issues/263)) | Error `Malformed quoted symbol` or `Malformed string literal` |
 | Recursion deeper than the stack: a literal type rule that asks for the type of its own literal (`(declare-consts <numeral> (eo::typeof eo::self))`), a chain of several thousand declarations whose types or constructor terms each use the one before, or includes nested several thousand deep. See below. | Segmentation fault | `thread 'main' has overflowed its stack`, and the process aborts |
 
 #### Operators without an argument they read
@@ -168,7 +175,7 @@ Where Ethos crashes on one platform and pathos reports an error there:
 
 | Input | Where | Ethos | pathos |
 | --- | --- | --- | --- |
-| A file that does not exist, on the command line, in `--include=`, `--reference=` or an `include` command; also an option Ethos does not know, such as `--nope`, which it takes for a file name | Windows | `std::filesystem::canonical` throws and nothing catches it: `terminate called after throwing an instance of 'std::filesystem::__cxx11::filesystem_error'` (x86-64), `libc++abi: terminating due to uncaught exception ...` (arm64) | `Couldn't open file: <name>`, the message of the other platforms, with the name as it was looked up, and exit status 1. The harness accepts these cases by name (`accepted-run.json`) |
+| A file that does not exist, on the command line, in `--include=`, `--reference=` or an `include` command; also an option Ethos does not know, such as `--nope`, which it takes for a file name | Windows | `std::filesystem::canonical` throws and nothing catches it: `terminate called after throwing an instance of 'std::filesystem::__cxx11::filesystem_error'` (x86-64), `libc++abi: terminating due to uncaught exception ...` (arm64). Reported: [cvc5/ethos#264](https://github.com/cvc5/ethos/issues/264) | `Couldn't open file: <name>`, the message of the other platforms, with the name as it was looked up, and exit status 1. The harness accepts these cases by name (`accepted-run.json`) |
 | `--include=` with nothing after it | Windows x86-64 | The same exception (`Invalid argument []`) | `Couldn't open file: ` |
 
 Where pathos does not follow, or cannot tell:
@@ -247,11 +254,16 @@ message; it runs until memory is exhausted.
   differs from run to run in both. Rows equal in both come in the order
   their symbols were made; in Ethos, in the order of their addresses.
 - Ethos keys the statistics by the address of the rule or program and holds
-  no reference to it. If Ethos frees a program that has an entry, printing
-  the entry reads freed memory, and a later program at the same address
-  adds to its count. pathos never reuses a term, so it could not match
-  that. Read from `stats.cpp`, not observed: the regressions, the default
-  corpus and the large proofs give the same rules, programs and counts.
+  no reference to it, and printing turns each address back into a term.
+  That would read freed memory if a rule or program with an entry were
+  freed, but none is: a program's definition, kept in its own `AppInfo`,
+  contains the program (its cases apply it), and a rule's likewise, so
+  their reference counts never reach zero, not even after `(reset)`.
+  Checked on 2026-11-14 with Ethos built with AddressSanitizer, on a rule
+  and a program used, then `(reset)`, then new ones used, under `--stats`
+  and `--stats-all`: no error, and each entry printed under its own name.
+  The regressions, the default corpus and the large proofs give the same
+  rules, programs and counts in both.
 - The columns of the rule table have fixed widths that a long number
   overflows, in Ethos and in pathos alike: a count of seven digits runs
   into the time after it, and a time of nine digits (100 s or more) into
@@ -338,4 +350,5 @@ message; it runs until memory is exhausted.
 - `trim-defs`: `ethos-eoc` overflows its stack on a command nested about
   120,000 parentheses deep; `pathos-eoc` reads it.
 - `smt-meta`: on `(echo "smt-meta <name>")` with a name that is not bound,
-  Ethos crashes (a segmentation fault); pathos reports an error.
+  or not a program, Ethos crashes (a segmentation fault); pathos reports an
+  error. Reported: [cvc5/ethos#265](https://github.com/cvc5/ethos/issues/265).
