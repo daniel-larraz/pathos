@@ -2811,6 +2811,50 @@ mod tests {
         }
     }
 
+    /// The checker takes terms of some kinds apart without looking at how
+    /// many children they have; the parser builds them with that many. A
+    /// snapshot is checked for it.
+    #[test]
+    fn a_store_with_a_term_of_the_wrong_shape_is_rejected() {
+        let reads = |kind: Kind, children: usize| {
+            let mut s = TermStore::new();
+            let ty = s.mk_type();
+            let c = s.mk_symbol(SymbolKind::Const, "c", ty);
+            s.mk(kind, &vec![c; children]);
+            TermStore::read_from(&mut Reader::new(&written(&s))).is_some()
+        };
+        for (kind, right, wrong) in [
+            (Kind::LAMBDA, vec![2], vec![0, 1, 3]),
+            (Kind::PARAMETERIZED, vec![2], vec![0, 1, 3]),
+            (Kind::PROOF, vec![1], vec![0, 2]),
+            (Kind::QUOTE_TYPE, vec![1], vec![0, 2]),
+            (Kind::APPLY, vec![1, 2, 3], vec![0]),
+            (Kind::APPLY_OPAQUE, vec![1, 2], vec![0]),
+            (Kind::TUPLE, vec![0, 1, 2, 3], vec![]),
+            (Kind::VARIABLE, vec![0, 2], vec![]),
+        ] {
+            for n in right {
+                assert!(reads(kind, n), "{kind} with {n} children");
+            }
+            for n in wrong {
+                assert!(!reads(kind, n), "{kind} with {n} children");
+            }
+        }
+    }
+
+    /// Every string pathos writes is text with one character for a byte.
+    #[test]
+    fn a_store_with_a_name_that_is_not_latin_1_is_rejected() {
+        let reads = |name: &str| {
+            let mut s = TermStore::new();
+            let ty = s.mk_type();
+            s.mk_symbol(SymbolKind::Const, name, ty);
+            TermStore::read_from(&mut Reader::new(&written(&s))).is_some()
+        };
+        assert!(reads("caf\u{e9}"));
+        assert!(!reads("caf\u{100}"));
+    }
+
     #[test]
     fn a_store_with_a_term_twice_is_rejected() {
         let mut s = TermStore::new();

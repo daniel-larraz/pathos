@@ -105,7 +105,8 @@ impl Checker {
         // build always did
         stat.count = stat.count.wrapping_add(1);
         if let Some((start, start_mk)) = self.stats.step_start.take() {
-            stat.mk_expr_count += mk_count - start_mk;
+            // the store's counter wraps too
+            stat.mk_expr_count = (stat.mk_expr_count).wrapping_add(mk_count.wrapping_sub(start_mk));
             stat.time_us += start.elapsed().as_micros();
         }
     }
