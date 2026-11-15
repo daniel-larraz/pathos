@@ -190,7 +190,9 @@ impl Integer {
     }
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl From<u32> for Integer {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@ == v,))]
     fn from(v: u32) -> Integer {
         Integer(MInt::from(v))
     }
@@ -202,7 +204,9 @@ impl From<u64> for Integer {
     }
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl From<usize> for Integer {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@ == v,))]
     fn from(v: usize) -> Integer {
         Integer(MInt::from(v))
     }

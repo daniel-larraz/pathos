@@ -8,8 +8,12 @@
 
 use std::fmt;
 
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
+
 /// The kinds of named symbols.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub enum SymbolKind {
     Param,
     Const,
@@ -31,6 +35,7 @@ impl SymbolKind {
 
 /// The kinds of literals.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub enum LitKind {
     Boolean,
     Numeral,
@@ -55,6 +60,7 @@ impl LitKind {
 
 /// The kinds of compound terms other than `eo::` operator applications.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub enum NodeKind {
     FunctionType,
     ProgramType,
@@ -95,6 +101,7 @@ impl NodeKind {
 
 /// The builtin `eo::` operators.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub enum EvalOp {
     // core
     IsOk,
@@ -327,6 +334,7 @@ impl EvalOp {
 
 /// The kind of any term.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub enum Kind {
     Type,
     BoolType,
@@ -341,6 +349,63 @@ pub enum Kind {
     Node(NodeKind),
     Eval(EvalOp),
 }
+
+// The derived `==` of the kinds is equality: Verus does not look into
+// derived implementations, so this is stated, not proved.
+#[cfg(verus_keep_ghost)]
+verus! {
+
+impl vstd::std_specs::cmp::PartialEqSpecImpl for SymbolKind {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &SymbolKind) -> bool {
+        *self == *other
+    }
+}
+
+impl vstd::std_specs::cmp::PartialEqSpecImpl for LitKind {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &LitKind) -> bool {
+        *self == *other
+    }
+}
+
+impl vstd::std_specs::cmp::PartialEqSpecImpl for NodeKind {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &NodeKind) -> bool {
+        *self == *other
+    }
+}
+
+impl vstd::std_specs::cmp::PartialEqSpecImpl for EvalOp {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &EvalOp) -> bool {
+        *self == *other
+    }
+}
+
+impl vstd::std_specs::cmp::PartialEqSpecImpl for Kind {
+    open spec fn obeys_eq_spec() -> bool {
+        true
+    }
+
+    open spec fn eq_spec(&self, other: &Kind) -> bool {
+        *self == *other
+    }
+}
+
+} // verus!
 
 impl Kind {
     pub const PARAM: Kind = Kind::Symbol(SymbolKind::Param);

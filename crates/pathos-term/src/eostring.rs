@@ -2,12 +2,36 @@
 
 use std::fmt::Write;
 
+#[cfg(verus_keep_ghost)]
+use vstd::prelude::*;
+
+#[cfg(verus_keep_ghost)]
+verus! {
+
+impl EoString {
+    /// The number of code points.
+    pub uninterp spec fn spec_len(&self) -> nat;
+}
+
+pub assume_specification[ <EoString as Clone>::clone ](x: &EoString) -> (r: EoString)
+    ensures r == x;
+
+pub assume_specification[ <EoString as Default>::default ]() -> (r: EoString);
+
+} // verus!
+
 /// The number of code points a string character can take: the first three
 /// planes of Unicode, as in the SMT-LIB theory of strings.
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 pub const NUM_CODES: u32 = 196_608;
 
 /// A string literal: a sequence of code points below [`NUM_CODES`].
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Default)]
+#[cfg_attr(
+    verus_keep_ghost,
+    verus_verify(external_body),
+    verifier::external_derive
+)]
 pub struct EoString(Vec<u32>);
 
 fn is_hex_digit(c: char) -> bool {
@@ -23,7 +47,9 @@ fn add_char(c: char, out: &mut Vec<u32>) {
     }
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify)]
 impl EoString {
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
     pub fn from_code_points(v: Vec<u32>) -> EoString {
         EoString(v)
     }
@@ -31,6 +57,7 @@ impl EoString {
     /// Converts text to a string. With `use_escapes`, the SMT-LIB escape
     /// sequences `폒d1d0` and `\u{d0}` to `\u{d4d3d2d1d0}` denote single
     /// code points; malformed or out-of-range sequences are kept verbatim.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
     pub fn parse(s: &str, use_escapes: bool) -> EoString {
         let chars: Vec<char> = s.chars().collect();
         let mut out = Vec::with_capacity(chars.len());
@@ -106,18 +133,22 @@ impl EoString {
         EoString(out)
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == self.spec_len(),))]
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@.len() == self.spec_len(),))]
     pub fn code_points(&self) -> &[u32] {
         &self.0
     }
 
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
     pub fn concat(&self, other: &EoString) -> EoString {
         let mut v = self.0.clone();
         v.extend_from_slice(&other.0);
@@ -125,6 +156,7 @@ impl EoString {
     }
 
     /// The first position at which `y` occurs, if any.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
     pub fn find(&self, y: &EoString) -> Option<usize> {
         if self.len() < y.len() {
             return None;
@@ -137,6 +169,7 @@ impl EoString {
 
     /// The substring of `len` code points starting at `start`. Requires
     /// `start + len <= self.len()`.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => requires start + len <= self.spec_len(), ensures true,))]
     pub fn substr(&self, start: usize, len: usize) -> EoString {
         EoString(self.0[start..start + len].to_vec())
     }
