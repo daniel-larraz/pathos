@@ -2423,12 +2423,12 @@ the store, now includes that the trees of the old terms are kept.
 
 Still open from the first report:
 
-- **The checker's snapshot reader does not check that the numeral kept for
-  `eo::list_find` is -1** (it checks that it is a term of the store). A
-  forged snapshot with another numeral there would make `eo::list_find`
-  return it for "not found": a wrong result from a forged file, not a
-  panic. A one-line check in `read_image` would close it; I did not add
-  it, since it changes what the reader accepts.
+- ~~The checker's snapshot reader does not check that the numeral kept
+  for `eo::list_find` is -1.~~ **Closed** after the milestone, on Daniel's
+  word: `read_image` rejects a snapshot whose kept term is not the numeral
+  -1, and the snapshot is then ignored like a damaged one (test
+  `a_kept_numeral_that_is_not_minus_one_is_rejected`). The reader is
+  ordinary code, not verified, as before.
 - `eo::extract` on a string of 2^32 code points or more is outside the
   statement.
 - For an operator whose terminator depends on a type, that the terminator
@@ -2541,4 +2541,4 @@ What else the pilot shows:
 3. **S2**: whether to go on, and if so whether to take the cache of
    program applications first as a milestone of its own.
 4. **The one-line check in the snapshot reader** for the numeral kept for
-   `eo::list_find`.
+   `eo::list_find`. (Approved and added; see "What is trusted".)
