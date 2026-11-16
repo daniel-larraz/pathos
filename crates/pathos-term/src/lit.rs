@@ -7,7 +7,7 @@ use crate::eostring::{EoString, NUM_CODES};
 use crate::kind::{EvalOp, LitKind};
 use crate::num::{Integer, Rational};
 #[cfg(verus_keep_ghost)]
-use crate::num::{bits_and, bits_or, bits_xor};
+use crate::num::{bits_and, bits_or, bits_xor, floor_div, int_pow, is_floor, real_pow};
 #[cfg(verus_keep_ghost)]
 use vstd::{arithmetic::power2::pow2, prelude::*};
 
@@ -106,18 +106,23 @@ impl Lit {
     /// Applies `op` to literal arguments. Returns `None` when the operator
     /// does not evaluate on them. The caller has checked the arity, and
     /// handles `eo::is_eq`, `eo::ite` and `eo::requires` itself.
-    #[cfg_attr(verus_keep_ghost, verus_spec(res =>
+    ///
+    /// Proved: for the number of arguments the operator takes, the result is
+    /// exactly what [`lit_spec`] says, a value or none. (For `eo::extract`
+    /// on a string, when the string has fewer than 2^32 code points.)
+    #[cfg_attr(verus_keep_ghost, verifier::rlimit(100), verus_spec(res =>
         requires forall|i: int| 0 <= i < args@.len() ==> (#[trigger] args@[i]).wf(),
         ensures
             res matches Some(l) ==> l.wf(),
-            eval_spec(op, args@) matches Some(expected) ==> match expected {
-                Some(v) => res matches Some(l) && l@ == v,
-                None => res is None,
-            },
+            args@.len() == lit_arity(op) && short_strings(args@) ==> (match res {
+                Some(l) => Some(l@),
+                None => None,
+            }) == lit_spec(op, vals(args@)),
     ))]
     // Verus does not take a constructor as a function: no `.map(Lit::Rational)`
     #[allow(clippy::manual_map)]
     pub fn evaluate(op: EvalOp, args: &[&Lit]) -> Option<Lit> {
+        proof! { lemma_vals(args@); }
         let first = *args.first()?;
         // Most operators need all arguments to be of one kind.
         let mixed = matches!(
@@ -144,7 +149,11 @@ impl Lit {
                 _ => None,
             },
             EvalOp::Pow => {
-                let exp = args.get(1)?.as_int().filter(|e| e.fits_u32())?.to_u32();
+                let exp = args.get(1)?.as_int()?;
+                if !exp.fits_u32() {
+                    return None;
+                }
+                let exp = exp.to_u32();
                 match first {
                     Lit::Numeral(i) => Some(Lit::Numeral(i.pow(exp))),
                     Lit::Decimal(r) | Lit::Rational(r) => Some(Lit::rational(ka, r.pow(exp))),
@@ -155,7 +164,11 @@ impl Lit {
                 let base = first.as_int()?;
                 let value = match args.get(1)? {
                     Lit::Numeral(i) => i.clone(),
-                    Lit::Decimal(r) | Lit::Rational(r) => r.floor(),
+                    Lit::Decimal(r) | Lit::Rational(r) => {
+                        let floor = r.floor();
+                        proof! { lemma_floor(r@, floor@); }
+                        floor
+                    }
                     _ => return None,
                 };
                 Some(Lit::Numeral(integer_floor_log(base, &value)))
@@ -219,7 +232,11 @@ impl Lit {
                 Lit::evaluate_extract(first, i1, i2)
             }
             EvalOp::ToInt => match first {
-                Lit::Decimal(r) | Lit::Rational(r) => Some(Lit::Numeral(r.floor())),
+                Lit::Decimal(r) | Lit::Rational(r) => {
+                    let floor = r.floor();
+                    proof! { lemma_floor(r@, floor@); }
+                    Some(Lit::Numeral(floor))
+                }
                 Lit::Numeral(_) => Some(first.clone()),
                 Lit::Binary(b) => Some(Lit::Numeral(b.value().clone())),
                 // a string of length one gives its code point
@@ -235,7 +252,11 @@ impl Lit {
                 _ => None,
             },
             EvalOp::ToBin => {
-                let size = first.as_int().filter(|s| s.fits_u32())?.to_u32();
+                let size = first.as_int()?;
+                if !size.fits_u32() {
+                    return None;
+                }
+                let size = size.to_u32();
                 match args.get(1)? {
                     Lit::Numeral(i) => Some(Lit::Binary(BitVec::new(size, i))),
                     Lit::Hex(b) | Lit::Binary(b) => Some(Lit::Binary(BitVec::new(size, b.value()))),
@@ -245,7 +266,15 @@ impl Lit {
             EvalOp::ToString => match first {
                 // a code point gives the string of that one character
                 Lit::Numeral(i) if i.fits_u32() && i.to_u32() < NUM_CODES => {
-                    Some(Lit::String(EoString::from_code_points(vec![i.to_u32()])))
+                    // (Verus has no `vec!`)
+                    #[allow(clippy::vec_init_then_push)]
+                    let code = {
+                        let mut code = Vec::with_capacity(1);
+                        code.push(i.to_u32());
+                        code
+                    };
+                    proof! { assert(code@ =~= seq![i@ as u32]); }
+                    Some(Lit::String(EoString::from_code_points(code)))
                 }
                 Lit::String(_) => Some(first.clone()),
                 _ => None,
@@ -253,13 +282,13 @@ impl Lit {
             EvalOp::Gt => {
                 let second = *args.get(1)?;
                 match (first, second) {
-                    (Lit::Numeral(a), Lit::Numeral(b)) => Some(Lit::Bool(a > b)),
+                    (Lit::Numeral(a), Lit::Numeral(b)) => Some(Lit::Bool(a.gt(b))),
                     _ => {
                         if let (Some(a), Some(b)) = (first.as_rat(), second.as_rat()) {
-                            return Some(Lit::Bool(a > b));
+                            return Some(Lit::Bool(a.gt(b)));
                         }
                         let (a, b) = (first.as_bv()?, second.as_bv()?);
-                        Some(Lit::Bool(a.value() > b.value()))
+                        Some(Lit::Bool(a.value().gt(b.value())))
                     }
                 }
             }
@@ -313,25 +342,50 @@ impl Lit {
         true
     }
 
-    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(res =>
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verifier::rlimit(100), verus_spec(res =>
         requires
             args@.len() >= 1,
             ka == kind_of(args@[0]@),
             all_kind(args@, ka),
             forall|i: int| 0 <= i < args@.len() ==> (#[trigger] args@[i]).wf(),
+            op == EvalOp::And || op == EvalOp::Or || op == EvalOp::Xor || op == EvalOp::Add
+                || op == EvalOp::Mul || op == EvalOp::Concat,
         ensures
             res matches Some(l) ==> l.wf(),
-            nary_spec(op, args@) matches Some(expected) ==> match expected {
-                Some(v) => res matches Some(l) && l@ == v,
-                None => res is None,
-            },
+            args@.len() == 2 ==> (match res {
+                Some(l) => Some(l@),
+                None => None,
+            }) == nary2(op, args@[0]@, args@[1]@),
     ))]
     fn evaluate_nary(op: EvalOp, ka: LitKind, args: &[&Lit]) -> Option<Lit> {
         let rest = &args[1..];
+        proof! {
+            assert(rest@ == args@.subrange(1, args@.len() as int));
+            // the folds, from their first argument
+            assert(fold_int(op, args@, 1) == int_of(args@[0]@));
+            assert(fold_real(op, args@, 1) == real_of(args@[0]@));
+            assert(fold_bv(op, args@, 1) == bv_of(args@[0]@));
+            if args@.len() == 2 {
+                assert(rest@.len() == 1 && rest@[0] == args@[1]);
+                assert(kind_of(args@[1]@) == ka);
+            }
+        }
         match args[0] {
             Lit::Bool(b) => {
                 let mut res = *b;
+                #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
+                    iter.seq().unref() == rest@,
+                    iter.index() == 0 ==> res == *b,
+                    iter.index() >= 1 ==> op == EvalOp::And || op == EvalOp::Or || op == EvalOp::Xor,
+                    iter.index() == 1 && args@.len() == 2 ==> (args@[1]@ matches Val::Bool(y) && res == bool_op(op, *b, y)),
+                ))]
                 for a in rest {
+                    proof! {
+                        let k = iter.index() + 1;
+                        assert(k < args@.len());
+                        assert(*a == args@[k]);
+                        assert(kind_of(args@[k]@) == ka);
+                    }
                     let a = a.as_bool()?;
                     res = match op {
                         EvalOp::And => res && a,
@@ -347,6 +401,7 @@ impl Lit {
                 #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
                     iter.seq().unref() == rest@,
                     res@ == fold_int(op, args@, iter.index() + 1),
+                    iter.index() >= 1 ==> op == EvalOp::Add || op == EvalOp::Mul,
                 ))]
                 for a in rest {
                     proof! {
@@ -370,6 +425,7 @@ impl Lit {
                 #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
                     iter.seq().unref() == rest@,
                     res@ == fold_real(op, args@, iter.index() + 1),
+                    iter.index() >= 1 ==> op == EvalOp::Add || op == EvalOp::Mul,
                 ))]
                 for a in rest {
                     proof! {
@@ -413,8 +469,7 @@ impl Lit {
                     iter.seq().unref() == rest@,
                     res.wf(),
                     op != EvalOp::Concat ==> res.spec_size() == b.spec_size(),
-                    op == EvalOp::And || op == EvalOp::Or || op == EvalOp::Xor || op == EvalOp::Concat ==>
-                        (res.spec_size(), res.spec_value()) == fold_bv(op, args@, iter.index() + 1),
+                    (res.spec_size(), res.spec_value()) == fold_bv(op, args@, iter.index() + 1),
                 ))]
                 for a in rest {
                     proof! {
@@ -442,7 +497,18 @@ impl Lit {
                     return None;
                 }
                 let mut res = s.clone();
+                #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
+                    iter.seq().unref() == rest@,
+                    iter.index() == 0 ==> res@ == s@,
+                    iter.index() == 1 && args@.len() == 2 ==> (args@[1]@ matches Val::String(y) && res@ == s@ + y),
+                ))]
                 for a in rest {
+                    proof! {
+                        let k = iter.index() + 1;
+                        assert(k < args@.len());
+                        assert(*a == args@[k]);
+                        assert(kind_of(args@[k]@) == ka);
+                    }
                     res = res.concat(a.as_str()?);
                 }
                 Some(Lit::String(res))
@@ -457,6 +523,9 @@ impl Lit {
             res matches Some(l) ==> l.wf(),
             s@ matches Val::Hex(n, v) ==> res matches Some(l) && l@ == mk_bv(LitKind::Hexadecimal, extract_spec(n, v, i1@, i2@)),
             s@ matches Val::Binary(n, v) ==> res matches Some(l) && l@ == mk_bv(LitKind::Binary, extract_spec(n, v, i1@, i2@)),
+            s@ matches Val::String(st) ==> (st.len() <= u32::MAX ==>
+                (res matches Some(l) && l@ == Val::String(substr_spec(st, i1@, i2@)))),
+            !(s@ is Hex || s@ is Binary || s@ is String) ==> res is None,
     ))]
     fn evaluate_extract(s: &Lit, i1: &Integer, i2: &Integer) -> Option<Lit> {
         match s {
@@ -489,6 +558,12 @@ impl Lit {
                     i2.to_u32() as usize
                 };
                 let esize = if v2 >= v1 { v2 + 1 - v1 } else { 0 };
+                proof! {
+                    if st@.len() <= u32::MAX {
+                        assert(v1 == i1@ && v1 <= vs);
+                        assert(substr_spec(st@, i1@, i2@) =~= st@.subrange(v1 as int, v1 + (if esize < vs - v1 { esize } else { (vs - v1) as usize })));
+                    }
+                }
                 Some(Lit::String(
                     st.substr(v1.min(vs), esize.min(vs - v1.min(vs))),
                 ))
@@ -500,21 +575,31 @@ impl Lit {
 
 /// The greatest `m >= 0` with `base^m <= value`, or 0 if `base <= 1` or
 /// `value <= 0`.
-#[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(res => ensures true,))]
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(res => ensures res@ == floor_log(base@, value@),))]
 fn integer_floor_log(base: &Integer, value: &Integer) -> Integer {
     let one = Integer::one();
-    if *base <= one || value.sgn() <= 0 {
+    if !base.gt(&one) || value.sgn() <= 0 {
         return Integer::zero();
     }
     let mut result = Integer::zero();
     let mut remaining = value.clone();
-    while *base <= remaining {
+    #[cfg_attr(verus_keep_ghost, verus_spec(
+        invariant
+            one@ == 1,
+            base@ > 1,
+            remaining@ >= 0,
+            result@ + floor_log(base@, remaining@) == floor_log(base@, value@),
+        decreases remaining@,
+    ))]
+    while !base.gt(&remaining) {
+        proof! { lemma_log_step(base@, remaining@); }
         result = result.add(&one);
         remaining = remaining.floor_div_quotient(base);
     }
     result
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify(external))]
 impl fmt::Display for Lit {
     /// The text of the literal without any decoration: no `#b` prefix and no
     /// quotes. This is `Literal::toString` in Ethos.
@@ -613,7 +698,8 @@ mod spec {
         Rational(real),
         Hex(nat, int),
         Binary(nat, int),
-        String(EoString),
+        /// A string is its code points.
+        String(Seq<u32>),
     }
 
     impl Lit {
@@ -625,7 +711,7 @@ mod spec {
                 Lit::Rational(r) => Val::Rational(r@),
                 Lit::Hex(b) => Val::Hex(b.spec_size(), b.spec_value()),
                 Lit::Binary(b) => Val::Binary(b.spec_size(), b.spec_value()),
-                Lit::String(s) => Val::String(*s),
+                Lit::String(s) => Val::String(s@),
             }
         }
 
@@ -687,34 +773,6 @@ mod spec {
         forall|i: int| 0 <= i < args.len() ==> is_bv_of_size(#[trigger] args[i]@, bv_of(args[0]@).0)
     }
 
-    /// The operators that take any number of arguments of one kind, on
-    /// arguments that are all of the kind of the first: see [`eval_spec`].
-    pub open spec fn nary_spec(op: EvalOp, args: Seq<&Lit>) -> Option<Option<Val>> {
-        let first = args[0]@;
-        let k = kind_of(first);
-        let n = args.len() as int;
-        match first {
-            Val::Numeral(_) => if op == EvalOp::Add || op == EvalOp::Mul {
-                Some(Some(Val::Numeral(fold_int(op, args, n))))
-            } else {
-                None
-            },
-            Val::Decimal(_) | Val::Rational(_) => if op == EvalOp::Add || op == EvalOp::Mul {
-                Some(Some(mk_rat(k, fold_real(op, args, n))))
-            } else {
-                None
-            },
-            Val::Hex(_, _) | Val::Binary(_, _) => if op == EvalOp::Concat {
-                Some(Some(mk_bv(k, fold_bv(op, args, n))))
-            } else if op == EvalOp::And || op == EvalOp::Or || op == EvalOp::Xor {
-                Some(if same_sizes(args) { Some(mk_bv(k, fold_bv(op, args, n))) } else { None })
-            } else {
-                None
-            },
-            _ => None,
-        }
-    }
-
     /// `eo::add` and `eo::mul` on two integers.
     pub open spec fn int_op(op: EvalOp, a: int, b: int) -> int {
         if op == EvalOp::Add { a + b } else { a * b }
@@ -725,13 +783,16 @@ mod spec {
         if op == EvalOp::Add { a + b } else { a * b }
     }
 
-    /// `eo::and`, `eo::or`, `eo::xor` and `eo::concat` on two bit-vectors. The
-    /// width of a concatenation is taken modulo 2^32, and the value cut to it.
+    /// `eo::and`, `eo::or`, `eo::xor`, `eo::add`, `eo::mul` and `eo::concat` on
+    /// two bit-vectors. The width of a concatenation is taken modulo 2^32, and
+    /// the value cut to it.
     pub open spec fn bv_op(op: EvalOp, a: (nat, int), b: (nat, int)) -> (nat, int) {
         match op {
             EvalOp::And => (a.0, bits_and(a.1 as nat, b.1 as nat) as int),
             EvalOp::Or => (a.0, bits_or(a.1 as nat, b.1 as nat) as int),
             EvalOp::Xor => (a.0, bits_xor(a.1 as nat, b.1 as nat) as int),
+            EvalOp::Add => (a.0, (a.1 + b.1) % (pow2(a.0) as int)),
+            EvalOp::Mul => (a.0, (a.1 * b.1) % (pow2(a.0) as int)),
             _ => {
                 let size = ((a.0 + b.0) % 0x1_0000_0000) as nat;
                 (size, (a.1 * pow2(b.0) + b.1) % (pow2(size) as int))
@@ -775,72 +836,293 @@ mod spec {
         }
     }
 
-    /// What [`Lit::evaluate`] gives for the operators and arguments this
-    /// specification covers: `Some(Some(v))` if the application evaluates to
-    /// `v`, `Some(None)` if it does not evaluate, and `None` where nothing is
-    /// specified (the other operators, and these on other kinds of literals).
-    pub open spec fn eval_spec(op: EvalOp, args: Seq<&Lit>) -> Option<Option<Val>> {
-        if args.len() == 0 {
-            Some(None)
+    /// The values of the arguments.
+    pub open spec fn vals(args: Seq<&Lit>) -> Seq<Val> {
+        Seq::new(args.len(), |i: int| args[i]@)
+    }
+
+    pub proof fn lemma_vals(args: Seq<&Lit>)
+        ensures
+            vals(args).len() == args.len(),
+            forall|i: int| 0 <= i < args.len() ==> #[trigger] vals(args)[i] == args[i]@,
+    {
+    }
+
+    /// The number of arguments each operator of [`lit_spec`] takes; the
+    /// same number as `check_arity` allows, where it allows one number.
+    pub open spec fn lit_arity(op: EvalOp) -> nat {
+        match op {
+            EvalOp::Not | EvalOp::Neg | EvalOp::IsNeg | EvalOp::Length | EvalOp::ToInt
+            | EvalOp::ToRat | EvalOp::ToString => 1,
+            EvalOp::Extract => 3,
+            _ => 2,
+        }
+    }
+
+    /// No string among the arguments has 2^32 code points or more.
+    pub open spec fn short_strings(args: Seq<&Lit>) -> bool {
+        forall|i: int| 0 <= i < args.len() ==> ((#[trigger] args[i]@) matches Val::String(s) ==> s.len() <= u32::MAX)
+    }
+
+    /// `eo::and`, `eo::or` and `eo::xor` on two Booleans.
+    pub open spec fn bool_op(op: EvalOp, a: bool, b: bool) -> bool {
+        match op {
+            EvalOp::And => a && b,
+            EvalOp::Or => a || b,
+            _ => a != b,
+        }
+    }
+
+    /// The operators that Ethos reads with any number of arguments, on two
+    /// of one kind. (`$eo_and`, `$eo_or`, `$eo_xor`, `$eo_add`, `$eo_mul`
+    /// and `$eo_concat` of the desugar plugin.)
+    pub open spec fn nary2(op: EvalOp, a: Val, b: Val) -> Option<Val> {
+        let k = kind_of(a);
+        match (a, b) {
+            (Val::Bool(x), Val::Bool(y)) => {
+                if op == EvalOp::And || op == EvalOp::Or || op == EvalOp::Xor {
+                    Some(Val::Bool(bool_op(op, x, y)))
+                } else {
+                    None
+                }
+            },
+            (Val::Numeral(x), Val::Numeral(y)) => {
+                if op == EvalOp::Add || op == EvalOp::Mul { Some(Val::Numeral(int_op(op, x, y))) } else { None }
+            },
+            (Val::Decimal(x), Val::Decimal(y)) | (Val::Rational(x), Val::Rational(y)) => {
+                if op == EvalOp::Add || op == EvalOp::Mul { Some(mk_rat(k, real_op(op, x, y))) } else { None }
+            },
+            // Bit-vectors: of one width, except for a concatenation. The
+            // plugin has one kind of them; here a hexadecimal and a binary
+            // do not mix, and the result is of the kind of the arguments.
+            (Val::Hex(w1, v1), Val::Hex(w2, v2)) | (Val::Binary(w1, v1), Val::Binary(w2, v2)) => {
+                if op == EvalOp::Concat || w1 == w2 { Some(mk_bv(k, bv_op(op, (w1, v1), (w2, v2)))) } else { None }
+            },
+            (Val::String(x), Val::String(y)) => {
+                if op == EvalOp::Concat { Some(Val::String(x + y)) } else { None }
+            },
+            _ => None,
+        }
+    }
+
+    /// `str.substr s i n` of SMT-LIB with `n = i2 - i1 + 1`: the code points
+    /// `i1 ..= i2` that the string has.
+    pub open spec fn substr_spec(s: Seq<u32>, i1: int, i2: int) -> Seq<u32> {
+        if 0 <= i1 < s.len() && i1 <= i2 {
+            s.subrange(i1, if i2 + 1 < s.len() { i2 + 1 } else { s.len() as int })
         } else {
-            let first = args[0]@;
-            let k = kind_of(first);
-            let n = args.len() as int;
+            Seq::empty()
+        }
+    }
+
+    /// The greatest `m >= 0` with `base^m <= value`, or 0 if `base <= 1` or
+    /// `value <= 0`: how often `value` can be divided by `base` before it is
+    /// below it.
+    pub open spec fn floor_log(base: int, value: int) -> int
+        decreases value,
+    {
+        decreases_by(lemma_log_decreases);
+        if base <= 1 || value < base {
+            0
+        } else {
+            1 + floor_log(base, value / base)
+        }
+    }
+
+    #[via_fn]
+    proof fn lemma_log_decreases(base: int, value: int) {
+        if base > 1 && value >= base {
+            vstd::arithmetic::div_mod::lemma_div_decreases(value, base);
+            vstd::arithmetic::div_mod::lemma_div_pos_is_pos(value, base);
+        }
+    }
+
+    /// One division of [`floor_log`].
+    pub proof fn lemma_log_step(base: int, value: int)
+        requires base > 1, value >= base,
+        ensures
+            floor_log(base, value) == 1 + floor_log(base, floor_div(value, base)),
+            0 <= floor_div(value, base) < value,
+    {
+        vstd::arithmetic::div_mod::lemma_div_decreases(value, base);
+        vstd::arithmetic::div_mod::lemma_div_pos_is_pos(value, base);
+    }
+
+    /// The greatest integer that is not above `x`.
+    pub open spec fn real_floor(x: real) -> int {
+        choose|i: int| is_floor(x, i)
+    }
+
+    /// There is one such integer.
+    pub proof fn lemma_floor(x: real, i: int)
+        requires is_floor(x, i),
+        ensures real_floor(x) == i,
+    {
+        let j = real_floor(x);
+        assert(is_floor(x, j));
+    }
+
+    /// What [`Lit::evaluate`] gives: `Some(v)` if the application of `op` to
+    /// literals with the values `a` evaluates to `v`, and `None` if it does
+    /// not evaluate and stays as it is.
+    ///
+    /// Transcribed from Ethos's desugar plugin (`eo_desugar_native.eo`); each
+    /// arm names the program it comes from. Where the binary does something
+    /// else, this follows the binary, and the comment says "binary:". The
+    /// plugin has no decimals and one kind of bit-vector; here a decimal is
+    /// not a rational and a hexadecimal is not a binary, and operators that
+    /// take two values of one kind do not evaluate on a mix.
+    ///
+    /// `a` has the number of values the operator takes ([`lit_arity`]).
+    pub open spec fn lit_spec(op: EvalOp, a: Seq<Val>) -> Option<Val> {
+        let k = kind_of(a[0]);
+        // These read arguments of several kinds; the others take one kind.
+        let mixed = op == EvalOp::Extract || op == EvalOp::ToBin || op == EvalOp::Pow || op == EvalOp::Log;
+        if !mixed && !(forall|i: int| 0 <= i < a.len() ==> kind_of(#[trigger] a[i]) == k) {
+            None
+        } else {
             match op {
-                EvalOp::Add | EvalOp::Mul | EvalOp::And | EvalOp::Or | EvalOp::Xor | EvalOp::Concat => {
-                    if nary_spec(op, args) is Some && !all_kind(args, k) { Some(None) } else { nary_spec(op, args) }
-                },
-                EvalOp::Neg => match first {
-                    Val::Numeral(i) => Some(if all_kind(args, k) { Some(Val::Numeral(-i)) } else { None }),
-                    Val::Decimal(r) | Val::Rational(r) => Some(
-                        if all_kind(args, k) { Some(mk_rat(k, -r)) } else { None },
-                    ),
+                // $eo_not
+                EvalOp::Not => match a[0] {
+                    Val::Bool(b) => Some(Val::Bool(!b)),
+                    Val::Hex(w, v) | Val::Binary(w, v) => Some(mk_bv(k, (w, pow2(w) - 1 - v))),
                     _ => None,
                 },
-                // Euclidean division: the remainder is never negative
-                EvalOp::IntDiv | EvalOp::IntMod => match first {
-                    Val::Numeral(x) => Some(
-                        if all_kind(args, k) && n >= 2 && int_of(args[1]@) != 0 {
-                            let y = int_of(args[1]@);
-                            Some(Val::Numeral(if op == EvalOp::IntDiv { x / y } else { x % y }))
-                        } else {
-                            None
-                        },
-                    ),
+                // $eo_and, $eo_or, $eo_xor, $eo_add, $eo_mul, $eo_concat
+                EvalOp::And | EvalOp::Or | EvalOp::Xor | EvalOp::Add | EvalOp::Mul | EvalOp::Concat => {
+                    nary2(op, a[0], a[1])
+                },
+                // $eo_neg
+                EvalOp::Neg => match a[0] {
+                    Val::Numeral(i) => Some(Val::Numeral(-i)),
+                    Val::Decimal(r) | Val::Rational(r) => Some(mk_rat(k, -r)),
+                    Val::Hex(w, v) | Val::Binary(w, v) => Some(mk_bv(k, (w, (-v) % (pow2(w) as int)))),
                     _ => None,
                 },
-                // the result is a rational, also for decimals
-                EvalOp::RatDiv => match first {
-                    Val::Numeral(x) => Some(
-                        if all_kind(args, k) && n >= 2 && int_of(args[1]@) != 0 {
-                            Some(Val::Rational(x as real / int_of(args[1]@) as real))
-                        } else {
-                            None
-                        },
-                    ),
-                    Val::Decimal(x) | Val::Rational(x) => Some(
-                        if all_kind(args, k) && n >= 2 && real_of(args[1]@) != 0real {
-                            Some(Val::Rational(x / real_of(args[1]@)))
-                        } else {
-                            None
-                        },
-                    ),
+                // $eo_pow. binary: the exponent is from 0 to 2^32 - 1; the
+                // plugin's power is total.
+                EvalOp::Pow => match a[1] {
+                    Val::Numeral(e) => if 0 <= e <= u32::MAX {
+                        match a[0] {
+                            Val::Numeral(b) => Some(Val::Numeral(int_pow(b, e as nat))),
+                            Val::Decimal(b) | Val::Rational(b) => Some(mk_rat(k, real_pow(b, e as nat))),
+                            _ => None,
+                        }
+                    } else {
+                        None
+                    },
                     _ => None,
                 },
-                EvalOp::Not => match first {
-                    Val::Hex(size, v) | Val::Binary(size, v) => Some(
-                        if all_kind(args, k) { Some(mk_bv(k, (size, pow2(size) - 1 - v))) } else { None },
-                    ),
+                // $eo_log: the base is a numeral, the value is floored
+                EvalOp::Log => match a[0] {
+                    Val::Numeral(b) => match a[1] {
+                        Val::Numeral(v) => Some(Val::Numeral(floor_log(b, v))),
+                        Val::Decimal(r) | Val::Rational(r) => Some(Val::Numeral(floor_log(b, real_floor(r)))),
+                        _ => None,
+                    },
                     _ => None,
                 },
-                EvalOp::Extract => match first {
-                    Val::Hex(size, v) | Val::Binary(size, v) => Some(
-                        if n >= 3 && kind_of(args[1]@) == LitKind::Numeral && kind_of(args[2]@) == LitKind::Numeral {
-                            Some(mk_bv(k, extract_spec(size, v, int_of(args[1]@), int_of(args[2]@))))
+                // $eo_zdiv, $eo_zmod: Euclidean on numerals, not by zero; on
+                // bit-vectors of one width, by zero all ones and the dividend
+                EvalOp::IntDiv | EvalOp::IntMod => match (a[0], a[1]) {
+                    (Val::Numeral(x), Val::Numeral(y)) => if y != 0 {
+                        Some(Val::Numeral(if op == EvalOp::IntDiv { x / y } else { x % y }))
+                    } else {
+                        None
+                    },
+                    (Val::Hex(w1, x), Val::Hex(w2, y)) | (Val::Binary(w1, x), Val::Binary(w2, y)) => if w1 == w2 {
+                        Some(mk_bv(k, (w1, if op == EvalOp::IntDiv {
+                            if y == 0 { pow2(w1) - 1 } else { x / y }
                         } else {
-                            None
-                        },
-                    ),
+                            if y == 0 { x } else { x % y }
+                        })))
+                    } else {
+                        None
+                    },
+                    _ => None,
+                },
+                // $eo_qdiv: a rational, also for decimals; not by zero
+                EvalOp::RatDiv => match (a[0], a[1]) {
+                    (Val::Numeral(x), Val::Numeral(y)) => if y != 0 {
+                        Some(Val::Rational(x as real / y as real))
+                    } else {
+                        None
+                    },
+                    (Val::Decimal(x), Val::Decimal(y)) | (Val::Rational(x), Val::Rational(y)) => if y != 0real {
+                        Some(Val::Rational(x / y))
+                    } else {
+                        None
+                    },
+                    _ => None,
+                },
+                // $eo_is_neg
+                EvalOp::IsNeg => match a[0] {
+                    Val::Numeral(i) => Some(Val::Bool(i < 0)),
+                    Val::Decimal(r) | Val::Rational(r) => Some(Val::Bool(r < 0real)),
+                    _ => None,
+                },
+                // $eo_len. binary: not of a hexadecimal
+                EvalOp::Length => match a[0] {
+                    Val::Binary(w, _) => Some(Val::Numeral(w as int)),
+                    Val::String(s) => Some(Val::Numeral(s.len() as int)),
+                    _ => None,
+                },
+                // $eo_extract. binary: on a bit-vector the upper index is cut
+                // to the width (`extract_spec`); the plugin gives the bits
+                // asked for
+                EvalOp::Extract => match (a[1], a[2]) {
+                    (Val::Numeral(i1), Val::Numeral(i2)) => match a[0] {
+                        Val::Hex(w, v) | Val::Binary(w, v) => Some(mk_bv(k, extract_spec(w, v, i1, i2))),
+                        Val::String(s) => Some(Val::String(substr_spec(s, i1, i2))),
+                        _ => None,
+                    },
+                    _ => None,
+                },
+                // $eo_to_z. binary: not of a hexadecimal
+                EvalOp::ToInt => match a[0] {
+                    Val::Numeral(i) => Some(Val::Numeral(i)),
+                    Val::Decimal(r) | Val::Rational(r) => Some(Val::Numeral(real_floor(r))),
+                    Val::Binary(_, v) => Some(Val::Numeral(v)),
+                    Val::String(s) => if s.len() == 1 { Some(Val::Numeral(s[0] as int)) } else { None },
+                    _ => None,
+                },
+                // $eo_to_q
+                EvalOp::ToRat => match a[0] {
+                    Val::Numeral(i) => Some(Val::Rational(i as real)),
+                    Val::Decimal(r) | Val::Rational(r) => Some(Val::Rational(r)),
+                    _ => None,
+                },
+                // $eo_to_bin: a binary of the width given, up to 2^32 - 1
+                EvalOp::ToBin => match a[0] {
+                    Val::Numeral(w) => if 0 <= w <= u32::MAX {
+                        match a[1] {
+                            Val::Numeral(v) | Val::Hex(_, v) | Val::Binary(_, v) => {
+                                Some(Val::Binary(w as nat, v % (pow2(w as nat) as int)))
+                            },
+                            _ => None,
+                        }
+                    } else {
+                        None
+                    },
+                    _ => None,
+                },
+                // $eo_to_str: the string of one code point
+                EvalOp::ToString => match a[0] {
+                    Val::Numeral(i) => if 0 <= i < NUM_CODES { Some(Val::String(seq![i as u32])) } else { None },
+                    Val::String(s) => Some(Val::String(s)),
+                    _ => None,
+                },
+                // $eo_gt. binary: bit-vectors of any two widths are compared;
+                // the plugin wants one width
+                EvalOp::Gt => match (a[0], a[1]) {
+                    (Val::Numeral(x), Val::Numeral(y)) => Some(Val::Bool(x > y)),
+                    (Val::Decimal(x), Val::Decimal(y)) | (Val::Rational(x), Val::Rational(y)) => Some(Val::Bool(x > y)),
+                    (Val::Hex(_, x), Val::Hex(_, y)) | (Val::Binary(_, x), Val::Binary(_, y)) => Some(Val::Bool(x > y)),
+                    _ => None,
+                },
+                // $eo_find: str.indexof from 0
+                EvalOp::Find => match (a[0], a[1]) {
+                    (Val::String(s), Val::String(t)) => Some(Val::Numeral(crate::eostring::index_of(s, t, 0))),
                     _ => None,
                 },
                 _ => None,

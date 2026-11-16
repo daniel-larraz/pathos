@@ -205,6 +205,8 @@ impl EoString {
             None => index_of(self@, y@, 0) == -1,
         },
     ))]
+    // (a loop, which Verus follows; it has no specification of `Iterator::find`)
+    #[allow(clippy::manual_find)]
     pub fn find(&self, y: &EoString) -> Option<usize> {
         if self.len() < y.len() {
             return None;
