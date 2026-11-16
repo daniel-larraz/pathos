@@ -2494,6 +2494,48 @@ impl TermStore {
         self.has(t) && self.nodes@[t.idx()] is Lit && self.lit_of(t.idx()) == lit
     }
 
+    /// The value of a literal term.
+    pub open spec fn value(&self, t: Term) -> Lit {
+        choose|l: Lit| self.is_lit(t, l)
+    }
+
+    /// A literal term has one value, and the kind of a literal.
+    pub proof fn lemma_lit(&self, t: Term, l: Lit)
+        requires self.is_lit(t, l),
+        ensures self.value(t) == l, self.has(t), self.kind_of(t.idx()) is Lit,
+    {
+        let m = self.value(t);
+        assert(self.is_lit(t, m));
+    }
+
+    /// A term of the kind of a literal is a literal term.
+    pub proof fn lemma_lit_exists(&self, t: Term)
+        requires self.wf(), self.has(t), self.kind_of(t.idx()) is Lit,
+        ensures self.is_lit(t, self.value(t)), self.value(t).wf(),
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+        self.lemma_node(t.idx());
+        assert(self.is_lit(t, self.lit_of(t.idx())));
+    }
+
+    /// A literal term of a store is the same literal in a store that
+    /// extends it.
+    pub proof fn lemma_lit_kept(&self, old: &TermStore, t: Term, l: Lit)
+        requires self.extends(old), old.is_lit(t, l),
+        ensures self.is_lit(t, l),
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+    }
+
+    /// The tree of a literal term is its value.
+    pub proof fn lemma_lit_tree(&self, t: Term, l: Lit)
+        requires self.wf(), self.is_lit(t, l),
+        ensures self.tree(t.idx()) == Tree::Lit(l),
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+        self.lemma_node(t.idx());
+    }
+
     /// The limit the store has run into, if any.
     pub closed spec fn spec_limit(&self) -> Option<Limit> {
         self.limit

@@ -436,7 +436,7 @@ impl Checker {
         self.t_false
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r), self.is_bool(r, b),))]
     pub fn mk_bool(&self, b: bool) -> Term {
         if b { self.t_true } else { self.t_false }
     }
@@ -541,6 +541,8 @@ impl Checker {
     pub open(crate) spec fn wf(&self) -> bool {
         &&& self.store.wf()
         &&& self.store.has(self.t_true) && self.store.has(self.t_false) && self.store.has(self.t_self)
+        // `true` and `false` are the Boolean literals
+        &&& self.store.is_lit(self.t_true, Lit::Bool(true)) && self.store.is_lit(self.t_false, Lit::Bool(false))
         &&& self.store.has(self.list_type) && self.store.has(self.list_nil) && self.store.has(self.list_cons)
         &&& self.store.has(self.proof_type)
         &&& self.neg_one matches Some(t) ==> self.store.has(t)
@@ -589,6 +591,11 @@ impl Checker {
         &&& step.assumption matches Some(t) ==> self.store.has(t)
     }
 
+    /// The term is the Boolean literal `b`.
+    pub open(crate) spec fn is_bool(&self, t: Term, b: bool) -> bool {
+        self.store.is_lit(t, Lit::Bool(b))
+    }
+
     /// Each of the terms has two children or more.
     pub open(crate) spec fn has_pairs(&self, ts: Seq<Term>) -> bool {
         forall|j: int| 0 <= j < ts.len() ==> self.store.kids((#[trigger] ts[j]).idx()).len() >= 2
@@ -620,6 +627,8 @@ impl Checker {
         ensures self.wf(), self.keeps(old),
     {
         self.store.lemma_extends(&old.store);
+        self.store.lemma_lit_kept(&old.store, self.t_true, Lit::Bool(true));
+        self.store.lemma_lit_kept(&old.store, self.t_false, Lit::Bool(false));
         assert forall|t: Term| #[trigger] self.app@.contains_key(t) implies app_ok(&self.store, self.app@[t]) by {
             let ai = self.app@[t];
             assert(app_ok(&old.store, ai));

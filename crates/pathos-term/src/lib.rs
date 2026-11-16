@@ -38,6 +38,8 @@ pub use bitvec::BitVec;
 pub use eostring::{EoString, NUM_CODES};
 pub use kind::{EvalOp, Kind, LitKind, NodeKind, SymbolKind};
 pub use lit::Lit;
+#[cfg(verus_keep_ghost)]
+pub use lit::{Val, lemma_vals, lit_arity, lit_spec, short_strings, vals};
 pub use num::{Integer, Rational};
 pub use store::{Args, Limit, Term, TermData, TermStore};
 #[cfg(verus_keep_ghost)]

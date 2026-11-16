@@ -3,9 +3,9 @@
 
 use std::collections::{HashMap, HashSet};
 
-#[cfg(verus_keep_ghost)]
-use pathos_term::TermStore;
 use pathos_term::{EvalOp, Integer, Kind, Lit, NodeKind, Term};
+#[cfg(verus_keep_ghost)]
+use pathos_term::{LitKind, TermStore, Val, lemma_vals, lit_arity, lit_spec, tree_is_ground, vals};
 
 #[cfg(verus_keep_ghost)]
 use vstd::prelude::*;
@@ -719,10 +719,14 @@ impl Checker {
     }
 
     /// Whether every term is ground.
-    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires self.wf(), self.has_all(ts@),
+        ensures r == forall|j: int| 0 <= j < ts@.len() ==> tree_is_ground(self.store.tree((#[trigger] ts@[j]).idx())),
     ))]
     fn all_ground(&self, ts: &[Term]) -> bool {
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            forall|j: int| 0 <= j < i ==> tree_is_ground(self.store.tree((#[trigger] ts@[j]).idx())),
+        ))]
         for i in 0..ts.len() {
             if !self.store.is_ground(ts[i]) {
                 return false;
@@ -745,10 +749,14 @@ impl Checker {
     }
 
     /// Whether every term is a literal.
-    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires self.wf(), self.has_all(ts@),
+        ensures r == forall|j: int| 0 <= j < ts@.len() ==> self.store.kind_of((#[trigger] ts@[j]).idx()) is Lit,
     ))]
     fn all_literals(&self, ts: &[Term]) -> bool {
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            forall|j: int| 0 <= j < i ==> self.store.kind_of((#[trigger] ts@[j]).idx()) is Lit,
+        ))]
         for i in 0..ts.len() {
             if !matches!(self.store.kind(ts[i]), Kind::Lit(_)) {
                 return false;
@@ -1110,6 +1118,63 @@ impl Checker {
         None
     }
 
+    /// Applies the literal operator `k` to literals: [`Lit::evaluate`] on
+    /// their values, and the literal for its result.
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
+        requires
+            old(self).wf(),
+            old(self).has_all(args@),
+            forall|j: int| 0 <= j < args@.len() ==> old(self).store.kind_of((#[trigger] args@[j]).idx()) is Lit,
+        ensures
+            final(self).wf(),
+            final(self).keeps(old(self)),
+            r matches Some(t) ==> final(self).has(t),
+            // exactly the specification, for the number of arguments the
+            // operator takes; unless the store is full, when the term made
+            // is a placeholder
+            is_lit_op(k) && args@.len() == lit_arity(k) && short_args(&old(self).store, args@)
+                && final(self).store.spec_limit() is None ==> (match r {
+                    Some(t) => Some(final(self).store.value(t)@) == lit_spec(k, values(&old(self).store, args@))
+                        && final(self).store.is_lit(t, final(self).store.value(t)),
+                    None => lit_spec(k, values(&old(self).store, args@)) is None,
+                }),
+    ))]
+    fn evaluate_on_literals(&mut self, k: EvalOp, args: &[Term]) -> Option<Term> {
+        proof_decl! { let ghost start = *self; }
+        if !arity_ok(k, args.len()) {
+            let msg = self.msg_wrong_arity(k, args);
+            self.warn(&msg);
+            return None;
+        }
+        let mut lits: Vec<&Lit> = Vec::new();
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            forall|j: int| 0 <= j < lits@.len() ==> (#[trigger] lits@[j]).wf(),
+            lits@.len() == i,
+            forall|j: int| 0 <= j < i ==> *(#[trigger] lits@[j]) == self.store.value(args@[j]),
+        ))]
+        for i in 0..args.len() {
+            if let Some(lit) = self.store.lit(args[i]) {
+                proof! { self.store.lemma_lit(args@[i as int], *lit); }
+                lits.push(lit);
+            }
+        }
+        proof! {
+            lemma_vals(lits@);
+            assert(vals(lits@) =~= values(&self.store, args@));
+            assert(pathos_term::short_strings(lits@) == short_args(&self.store, args@));
+        }
+        let eval = Lit::evaluate(k, lits.as_slice())?;
+        proof_decl! { let ghost before = *self; }
+        let t = self.store.mk_lit(eval);
+        proof! {
+            self.lemma_stored(&before);
+            if self.store.spec_limit() is None {
+                self.store.lemma_lit(t, eval);
+            }
+        }
+        Some(t)
+    }
+
     /// Applies the `eo::` operator to evaluated arguments. Returns `None`
     /// if it does not evaluate on them.
     ///
@@ -1124,6 +1189,14 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            // The operators on values compute their specification, exactly.
+            // (When the store is full, the term made is a placeholder.)
+            is_scalar_op(k) && args@.len() == scalar_arity(k) && short_args(&old(self).store, args@)
+                && final(self).store.spec_limit() is None ==> (match r {
+                    Some(t) => Some(final(self).store.value(t)@) == scalar_spec(&old(self).store, k, args@)
+                        && final(self).store.is_lit(t, final(self).store.value(t)),
+                    None => scalar_spec(&old(self).store, k, args@) is None,
+                }),
     ))]
     #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     pub(crate) fn evaluate_literal_op_internal(
@@ -1189,7 +1262,9 @@ impl Checker {
             EvalOp::Eq => {
                 // only compares values
                 if !self.store.is_evaluatable(first) && !self.store.is_evaluatable(args[1]) {
-                    return Some(self.mk_bool(first == args[1]));
+                    let same = self.mk_bool(first == args[1]);
+                    proof! { self.store.lemma_lit(same, Lit::Bool(first == args@[1])); }
+                    return Some(same);
                 }
                 return None;
             }
@@ -1223,7 +1298,9 @@ impl Checker {
                     EvalOp::IsBool => Kind::BOOLEAN,
                     _ => Kind::VARIABLE,
                 };
-                return Some(self.mk_bool(self.store.kind(first) == kk));
+                let is_kind = self.mk_bool(self.store.kind(first) == kk);
+                proof! { self.store.lemma_lit(is_kind, Lit::Bool(self.store.kind_of(first.idx()) == kk)); }
+                return Some(is_kind);
             }
             EvalOp::TypeOf => {
                 if !self.store.is_evaluatable(first) {
@@ -1271,25 +1348,7 @@ impl Checker {
         // On literal values, run the literal evaluator. Symbols are not
         // values.
         if self.all_literals(args) {
-            if !arity_ok(k, args.len()) {
-                let msg = self.msg_wrong_arity(k, args);
-                self.warn(&msg);
-                return None;
-            }
-            let mut lits: Vec<&Lit> = Vec::new();
-            #[cfg_attr(verus_keep_ghost, verus_spec(
-                invariant forall|j: int| 0 <= j < lits@.len() ==> (#[trigger] lits@[j]).wf(),
-            ))]
-            for i in 0..args.len() {
-                if let Some(lit) = self.store.lit(args[i]) {
-                    lits.push(lit);
-                }
-            }
-            let eval = Lit::evaluate(k, lits.as_slice())?;
-            proof_decl! { let ghost before = *self; }
-            let t = self.store.mk_lit(eval);
-            proof! { self.lemma_stored(&before); }
-            return Some(t);
+            return self.evaluate_on_literals(k, args);
         }
         if !k.is_list_op() {
             return None;
@@ -2126,7 +2185,7 @@ impl Checker {
 
 /// Whether the `eo::` operator takes `nargs` arguments
 /// ([`Checker::check_arity`]).
-#[cfg_attr(verus_keep_ghost, verus_verify)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(r => ensures r == Checker::takes(Kind::Eval(k), nargs),))]
 fn arity_ok(k: EvalOp, nargs: usize) -> bool {
     Checker::check_arity(Kind::Eval(k), nargs, None)
 }
@@ -2204,6 +2263,85 @@ fn counts_cover(count1: &HashMap<Term, u32>, count2: &HashMap<Term, u32>, equall
 
 #[cfg(verus_keep_ghost)]
 verus! {
+
+/// The operators whose result depends on the values of their arguments
+/// alone: the literal operators, `eo::eq` and the `eo::is_*` tests.
+pub open spec fn is_scalar_op(op: EvalOp) -> bool {
+    matches!(
+        op,
+        EvalOp::Not | EvalOp::And | EvalOp::Or | EvalOp::Xor | EvalOp::Add | EvalOp::Mul | EvalOp::Neg
+            | EvalOp::Pow | EvalOp::Log | EvalOp::IntDiv | EvalOp::IntMod | EvalOp::RatDiv | EvalOp::IsNeg
+            | EvalOp::Gt | EvalOp::Length | EvalOp::Concat | EvalOp::Extract | EvalOp::Find | EvalOp::ToInt
+            | EvalOp::ToRat | EvalOp::ToBin | EvalOp::ToString | EvalOp::Eq | EvalOp::IsZ | EvalOp::IsQ
+            | EvalOp::IsBin | EvalOp::IsStr | EvalOp::IsBool | EvalOp::IsVar
+    )
+}
+
+/// The literal operators: those of [`lit_spec`].
+pub open spec fn is_lit_op(op: EvalOp) -> bool {
+    is_scalar_op(op) && !matches!(
+        op,
+        EvalOp::Eq | EvalOp::IsZ | EvalOp::IsQ | EvalOp::IsBin | EvalOp::IsStr | EvalOp::IsBool | EvalOp::IsVar
+    )
+}
+
+/// The number of arguments such an operator takes.
+pub open spec fn scalar_arity(op: EvalOp) -> nat {
+    match op {
+        EvalOp::Eq => 2,
+        EvalOp::IsZ | EvalOp::IsQ | EvalOp::IsBin | EvalOp::IsStr | EvalOp::IsBool | EvalOp::IsVar => 1,
+        _ => lit_arity(op),
+    }
+}
+
+/// The values of terms that are literals.
+pub open spec fn values(s: &TermStore, args: Seq<Term>) -> Seq<Val> {
+    Seq::new(args.len(), |i: int| s.value(args[i])@)
+}
+
+/// No literal string among the arguments has 2^32 code points or more.
+pub open spec fn short_args(s: &TermStore, args: Seq<Term>) -> bool {
+    forall|i: int| 0 <= i < args.len() ==> ((#[trigger] s.value(args[i])@) matches Val::String(st) ==> st.len() <= u32::MAX)
+}
+
+/// What an application of a scalar operator evaluates to: `Some(v)` for
+/// the literal with value `v`, `None` if it does not evaluate and stays as
+/// it is.
+///
+/// - An argument that is not ground: it stays.
+/// - `eo::eq` (`$eo_eq` of the desugar plugin) on two terms that are
+///   values, that is, that hold nothing unevaluated: whether they are the
+///   same term, which is whether their trees are the same. On an
+///   unevaluated argument it stays.
+/// - The tests (`$eo_is_z` and the like): whether the argument is a
+///   literal of that kind, or a variable; `false` also for an unevaluated
+///   argument.
+/// - A literal operator on literals: [`lit_spec`] of their values. On
+///   anything else it stays.
+pub open spec fn scalar_spec(s: &TermStore, op: EvalOp, args: Seq<Term>) -> Option<Val> {
+    if !(forall|i: int| 0 <= i < args.len() ==> tree_is_ground(s.tree((#[trigger] args[i]).idx()))) {
+        None
+    } else {
+        match op {
+            EvalOp::Eq => if !s.evaluatable(args[0]) && !s.evaluatable(args[1]) {
+                Some(Val::Bool(args[0] == args[1]))
+            } else {
+                None
+            },
+            EvalOp::IsZ => Some(Val::Bool(s.kind_of(args[0].idx()) == Kind::Lit(LitKind::Numeral))),
+            EvalOp::IsQ => Some(Val::Bool(s.kind_of(args[0].idx()) == Kind::Lit(LitKind::Rational))),
+            EvalOp::IsBin => Some(Val::Bool(s.kind_of(args[0].idx()) == Kind::Lit(LitKind::Binary))),
+            EvalOp::IsStr => Some(Val::Bool(s.kind_of(args[0].idx()) == Kind::Lit(LitKind::String))),
+            EvalOp::IsBool => Some(Val::Bool(s.kind_of(args[0].idx()) == Kind::Lit(LitKind::Boolean))),
+            EvalOp::IsVar => Some(Val::Bool(s.kind_of(args[0].idx()) == Kind::Node(NodeKind::Variable))),
+            _ => if forall|i: int| 0 <= i < args.len() ==> s.kind_of((#[trigger] args[i]).idx()) is Lit {
+                lit_spec(op, values(s, args))
+            } else {
+                None
+            },
+        }
+    }
+}
 
 /// Assumed: the `Hash` and `Eq` of a list of term handles agree, which is
 /// what a `HashMap` keyed by such lists needs to behave as a map.
