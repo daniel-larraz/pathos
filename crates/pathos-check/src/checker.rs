@@ -426,12 +426,12 @@ impl Checker {
         self.store.mk_type()
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r), self.is_bool(r, true),))]
     pub fn mk_true(&self) -> Term {
         self.t_true
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r), self.is_bool(r, false),))]
     pub fn mk_false(&self) -> Term {
         self.t_false
     }
@@ -530,11 +530,13 @@ pub open spec fn all_has(s: &TermStore, ts: Seq<Term>) -> bool {
     forall|i: int| 0 <= i < ts.len() ==> s.has(#[trigger] ts[i])
 }
 
-/// The store has the terms of the old one, with their kinds and children.
+/// The store has the terms of the old one, with their kinds, their
+/// children and their trees.
 pub open spec fn keeps(new: &TermStore, old: &TermStore) -> bool {
     forall|t: Term| #[trigger] old.has(t) ==> new.has(t)
         && new.kind_of(t.idx()) == old.kind_of(t.idx())
         && new.kids(t.idx()) == old.kids(t.idx())
+        && new.tree(t.idx()) == old.tree(t.idx())
 }
 
 /// What is known of a symbol refers to the store: the term that goes with
@@ -664,6 +666,10 @@ impl Checker {
         ensures self.wf(), self.keeps(old),
     {
         self.store.lemma_extends(&old.store);
+        assert forall|t: Term| #[trigger] old.store.has(t) implies
+            self.store.tree(t.idx()) == old.store.tree(t.idx()) by {
+            self.store.theorem_trees_are_kept(&old.store, t);
+        }
         self.store.lemma_lit_kept(&old.store, self.t_true, Lit::Bool(true));
         self.store.lemma_lit_kept(&old.store, self.t_false, Lit::Bool(false));
         if self.neg_one is Some && !self.is_full() {

@@ -1568,8 +1568,7 @@ impl Checker {
                 if old(self).app@.contains_key(head) && old(self).app@[head].attr.spec_is_list_nil()
                     && old(self).app@[head].cons is Some {
                     let nil = old(self).app@[head].cons->0;
-                    old(self).store.kind_of(nil.idx()) != Kind::Node(NodeKind::Parameterized)
-                        && k != EvalOp::ListSingletonIntro ==> list_ok(
+                    old(self).store.kind_of(nil.idx()) != Kind::Node(NodeKind::Parameterized) ==> list_ok(
                         &old(self).store,
                         &final(self).store,
                         k,
@@ -1633,7 +1632,7 @@ impl Checker {
     /// `eo::list_singleton_intro` on lists of `op` that end in `nil`.
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires
-            k != EvalOp::Nil,
+            k != EvalOp::Nil && k != EvalOp::ListSingletonIntro,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -2303,6 +2302,7 @@ impl Checker {
     /// has the elements of `t2` at least, or exactly, as often.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListMinclude || k == EvalOp::ListMeq,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -2311,6 +2311,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_compare(
         &mut self,
@@ -2331,8 +2332,21 @@ impl Checker {
         self.get_nary_children(list, op, Some(nil), &mut hargs, is_left)?;
         let list2 = arg!(self, k, args, 2);
         self.get_nary_children(list2, op, Some(nil), &mut hargs2, is_left)?;
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost es = elems(f, is_left, s0.tree(list.idx()));
+            let ghost zs = elems(f, is_left, s0.tree(list2.idx()));
+        }
+        proof! {
+            lemma_read(&s0, hargs@, es);
+            lemma_read(&s0, hargs2@, zs);
+        }
         if arg!(self, k, args, 1) == arg!(self, k, args, 2) {
-            return Some(self.mk_true());
+            proof! { lemma_minclude(es, es); }
+            let yes = self.mk_true();
+            proof! { self.store.lemma_lit(yes, Lit::Bool(true)); }
+            return Some(yes);
         }
         let count1 = count_terms(&hargs);
         let count2 = count_terms(&hargs2);
@@ -2340,16 +2354,33 @@ impl Checker {
         // With equally many distinct elements, comparing the counts
         // in one direction is enough.
         if is_eq && count1.len() != count2.len() {
-            return Some(self.mk_false());
+            proof! {
+                lemma_cover(&s0, hargs@, hargs2@, count1@, count2@, is_eq);
+                lemma_minclude(es, zs);
+                lemma_minclude(zs, es);
+            }
+            let no = self.mk_false();
+            proof! { self.store.lemma_lit(no, Lit::Bool(false)); }
+            return Some(no);
         }
-        if !counts_cover(&count1, &count2, is_eq) {
-            return Some(self.mk_false());
+        let covered = counts_cover(&count1, &count2, &hargs2, is_eq);
+        proof! {
+            lemma_cover(&s0, hargs@, hargs2@, count1@, count2@, is_eq);
+            lemma_minclude(es, zs);
+            lemma_minclude(zs, es);
         }
-        Some(self.mk_true())
+        if !covered {
+            let no = self.mk_false();
+            proof! { self.store.lemma_lit(no, Lit::Bool(false)); }
+            return Some(no);
+        }
+        let yes = self.mk_true();
+        proof! { self.store.lemma_lit(yes, Lit::Bool(true)); }
+        Some(yes)
     }
 
     /// `(eo::list_diff op t1 t2)` and `(eo::list_inter op t1 t2)`, on multisets.
-    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verifier::rlimit(150), verus_spec(r =>
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verifier::rlimit(400), verus_spec(r =>
         requires
             k == EvalOp::ListDiff || k == EvalOp::ListInter,
             old(self).wf(),
@@ -2573,6 +2604,17 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            // when the terminator does not depend on a type
+            old(self).store.kind_of(nil.idx()) != Kind::Node(NodeKind::Parameterized) ==> list_ok(
+                &old(self).store,
+                &final(self).store,
+                EvalOp::ListSingletonIntro,
+                op,
+                nil,
+                is_left,
+                args@,
+                r,
+            ),
     ))]
     #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn evaluate_list_singleton_intro(
@@ -2596,7 +2638,21 @@ impl Checker {
         if self.is_nary_list(arg, op, n, is_left) {
             return Some(arg);
         }
-        Some(self.prepend_nary_children(op, n, &[arg], is_left))
+        proof_decl! { let ghost typed = self.store; }
+        let single = [arg];
+        proof! {
+            let one = trees(&typed, single@);
+            assert(one =~= seq![typed.tree(arg.idx())]);
+            assert(one.drop_first() =~= Seq::<Tree>::empty());
+            assert(build(typed.tree(op.idx()), is_left, one, typed.tree(n.idx()))
+                == cons_tree(
+                    typed.tree(op.idx()),
+                    is_left,
+                    one[0],
+                    build(typed.tree(op.idx()), is_left, one.drop_first(), typed.tree(n.idx())),
+                ));
+        }
+        Some(self.prepend_nary_children(op, n, &single, is_left))
     }
 
     /// The constructor term of a symbol for the application in `children`
@@ -2801,17 +2857,43 @@ fn count_terms(ts: &[Term]) -> HashMap<Term, u32> {
     count
 }
 
-/// Whether every term is at least as often in `count1` as in `count2`; with
-/// `equally`, whether each term of `count2` is as often in `count1`.
-#[cfg_attr(verus_keep_ghost, verus_verify, verifier::loop_isolation(false))]
-fn counts_cover(count1: &HashMap<Term, u32>, count2: &HashMap<Term, u32>, equally: bool) -> bool {
+/// Whether every term of `ts2`, which `count2` counts, is at least as
+/// often in `count1`; with `equally`, whether each is as often there.
+///
+/// (It goes through the terms, not through the map's entries, which Verus
+/// cannot follow; the answer is the same.)
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::loop_isolation(false), verus_spec(r =>
+    ensures r == forall|j: int| 0 <= j < ts2@.len() ==> covers(
+        map_count(count1@, #[trigger] ts2@[j]),
+        map_count(count2@, ts2@[j]),
+        equally,
+    ),
+))]
+#[allow(clippy::needless_range_loop)]
+fn counts_cover(
+    count1: &HashMap<Term, u32>,
+    count2: &HashMap<Term, u32>,
+    ts2: &[Term],
+    equally: bool,
+) -> bool {
     proof! {
         use_collections();
         broadcast use vstd::std_specs::hash::group_hash_axioms;
         broadcast use vstd::std_specs::btree::group_btree_axioms;
     }
-    for (elem, &n2) in count2.iter() {
-        let n1 = match count1.get(elem) {
+    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+        forall|j: int| 0 <= j < i ==> covers(
+            map_count(count1@, #[trigger] ts2@[j]),
+            map_count(count2@, ts2@[j]),
+            equally,
+        ),
+    ))]
+    for i in 0..ts2.len() {
+        let n2 = match count2.get(&ts2[i]) {
+            Some(&n) => n,
+            None => 0,
+        };
+        let n1 = match count1.get(&ts2[i]) {
             Some(&n) => n,
             None => 0,
         };
@@ -3237,6 +3319,226 @@ proof fn lemma_same_lists(diff: bool, es: Seq<Tree>)
     }
 }
 
+/// `$eo_list_minclude_rec`: each element of `zs` in turn is erased once
+/// from what is left of `ys`; `b` says whether the last one was there.
+pub open spec fn minclude_rec(ys: Seq<Tree>, zs: Seq<Tree>, b: bool) -> bool
+    decreases zs.len(),
+{
+    if !b {
+        false
+    } else if zs.len() == 0 {
+        true
+    } else {
+        let res = erase_rec(ys, zs[0]);
+        minclude_rec(res, zs.drop_first(), res != ys)
+    }
+}
+
+/// How two counts compare: at least as many, or, with `equally`, as many.
+pub open spec fn covers(n1: nat, n2: nat, equally: bool) -> bool {
+    if equally { n1 == n2 } else { n1 >= n2 }
+}
+
+/// The plugin's erasing one at a time is counting: `zs` is included in
+/// `ys` exactly when nothing is more often in `zs` than in `ys`.
+proof fn lemma_minclude(ys: Seq<Tree>, zs: Seq<Tree>)
+    ensures minclude_rec(ys, zs, true) == (forall|x: Tree| #[trigger] count(zs, x) <= count(ys, x)),
+    decreases zs.len(),
+{
+    if zs.len() == 0 {
+        assert forall|x: Tree| #[trigger] count(zs, x) <= count(ys, x) by {}
+    } else {
+        let x0 = zs[0];
+        let rest = zs.drop_first();
+        let res = erase_rec(ys, x0);
+        lemma_erase_count(ys, x0);
+        if count(ys, x0) == 0 {
+            assert(!minclude_rec(res, rest, false));
+            assert(count(zs, x0) > count(ys, x0));
+        } else {
+            lemma_minclude(res, rest);
+            if minclude_rec(res, rest, true) {
+                assert forall|x: Tree| #[trigger] count(zs, x) <= count(ys, x) by {
+                    assert(count(rest, x) <= count(res, x));
+                }
+            } else {
+                let x = choose|x: Tree| !(#[trigger] count(rest, x) <= count(res, x));
+                assert(count(zs, x) > count(ys, x));
+            }
+        }
+    }
+}
+
+/// An element that is counted is there.
+proof fn lemma_count_pos(es: Seq<Tree>, x: Tree)
+    requires count(es, x) > 0,
+    ensures exists|i: int| 0 <= i < es.len() && es[i] == x,
+    decreases es.len(),
+{
+    if es[0] != x {
+        lemma_count_pos(es.drop_first(), x);
+        let i = choose|i: int| 0 <= i < es.drop_first().len() && es.drop_first()[i] == x;
+        assert(es[i + 1] == x);
+    }
+}
+
+/// What comparing the counts of the second list's terms says of the
+/// lists' trees: for inclusion, that nothing is more often in the second
+/// than in the first; for equality, with equally many distinct terms, that
+/// everything is as often in both.
+proof fn lemma_cover(
+    s: &TermStore,
+    h1: Seq<Term>,
+    h2: Seq<Term>,
+    c1: Map<Term, u32>,
+    c2: Map<Term, u32>,
+    equally: bool,
+)
+    requires
+        s.wf(),
+        all_has(s, h1),
+        all_has(s, h2),
+        forall|t: Term| c1.contains_key(t) ==> #[trigger] c1[t] >= 1,
+        forall|t: Term| c2.contains_key(t) ==> #[trigger] c2[t] >= 1,
+        forall|t: Term| #[trigger] map_count(c1, t) == occ(h1, t),
+        forall|t: Term| #[trigger] map_count(c2, t) == occ(h2, t),
+    ensures
+        ({
+            let es = trees(s, h1);
+            let zs = trees(s, h2);
+            let all = forall|j: int| 0 <= j < h2.len() ==> covers(map_count(c1, #[trigger] h2[j]), map_count(c2, h2[j]), equally);
+            let included = forall|x: Tree| #[trigger] count(zs, x) <= count(es, x);
+            let back = forall|x: Tree| #[trigger] count(es, x) <= count(zs, x);
+            &&& !equally ==> all == included
+            &&& equally ==> (c1.dom().len() == c2.dom().len() && all) == (included && back)
+        }),
+{
+    let es = trees(s, h1);
+    let zs = trees(s, h2);
+    let all = forall|j: int| 0 <= j < h2.len() ==> covers(map_count(c1, #[trigger] h2[j]), map_count(c2, h2[j]), equally);
+    let included = forall|x: Tree| #[trigger] count(zs, x) <= count(es, x);
+    let back = forall|x: Tree| #[trigger] count(es, x) <= count(zs, x);
+    // a term's counts are its tree's
+    assert forall|t: Term| s.has(t) implies
+        #[trigger] map_count(c1, t) == count(es, s.tree(t.idx())) && map_count(c2, t) == count(zs, s.tree(t.idx())) by {
+        lemma_occ_trees(s, h1, t);
+        lemma_occ_trees(s, h2, t);
+    }
+    if !equally {
+        if all {
+            assert forall|x: Tree| #[trigger] count(zs, x) <= count(es, x) by {
+                if count(zs, x) > 0 {
+                    lemma_count_pos(zs, x);
+                    let j = choose|j: int| 0 <= j < zs.len() && zs[j] == x;
+                    assert(s.has(h2[j]));
+                    assert(covers(map_count(c1, h2[j]), map_count(c2, h2[j]), equally));
+                }
+            }
+        }
+        if included {
+            assert forall|j: int| 0 <= j < h2.len() implies
+                covers(map_count(c1, #[trigger] h2[j]), map_count(c2, h2[j]), equally) by {
+                assert(s.has(h2[j]));
+                assert(count(zs, s.tree(h2[j].idx())) <= count(es, s.tree(h2[j].idx())));
+            }
+        }
+    } else {
+        if c1.dom().len() == c2.dom().len() && all {
+            // every term of the second list is as often in the first, so
+            // the second's terms are among the first's; equally many, so
+            // they are the same terms
+            assert forall|t: Term| c2.dom().contains(t) implies c1.dom().contains(t) by {
+                assert(c2.contains_key(t) && c2[t] >= 1);
+                assert(map_count(c2, t) == occ(h2, t));
+                assert(occ(h2, t) >= 1);
+                lemma_occ_trees_pos(s, h2, t);
+                let j = choose|j: int| 0 <= j < h2.len() && h2[j] == t;
+                assert(covers(map_count(c1, h2[j]), map_count(c2, h2[j]), equally));
+            }
+            vstd::set_lib::lemma_subset_equality(c2.dom(), c1.dom());
+            assert(c1.dom() =~= c2.dom());
+            assert forall|x: Tree| #[trigger] count(zs, x) == count(es, x) by {
+                if count(zs, x) > 0 {
+                    lemma_count_pos(zs, x);
+                    let j = choose|j: int| 0 <= j < zs.len() && zs[j] == x;
+                    assert(s.has(h2[j]));
+                    assert(covers(map_count(c1, h2[j]), map_count(c2, h2[j]), equally));
+                } else if count(es, x) > 0 {
+                    lemma_count_pos(es, x);
+                    let j = choose|j: int| 0 <= j < es.len() && es[j] == x;
+                    assert(s.has(h1[j]));
+                    lemma_occ_present(h1, j);
+                    assert(map_count(c1, h1[j]) == occ(h1, h1[j]));
+                    assert(c1.dom().contains(h1[j]));
+                    assert(c2.dom().contains(h1[j]));
+                    assert(c2.contains_key(h1[j]) && c2[h1[j]] >= 1);
+                    assert(map_count(c2, h1[j]) == count(zs, x));
+                }
+            }
+        }
+        if included && back {
+            assert forall|x: Tree| #[trigger] count(zs, x) == count(es, x) by {
+                assert(count(zs, x) <= count(es, x));
+                assert(count(es, x) <= count(zs, x));
+            }
+            assert forall|j: int| 0 <= j < h2.len() implies
+                covers(map_count(c1, #[trigger] h2[j]), map_count(c2, h2[j]), equally) by {
+                assert(s.has(h2[j]));
+                assert(count(zs, s.tree(h2[j].idx())) == count(es, s.tree(h2[j].idx())));
+            }
+            assert forall|t: Term| c1.dom().contains(t) == c2.dom().contains(t) by {
+                if c1.dom().contains(t) {
+                    assert(c1.contains_key(t) && c1[t] >= 1);
+                    assert(map_count(c1, t) == occ(h1, t));
+                    assert(map_count(c2, t) == occ(h2, t));
+                    assert(occ(h1, t) >= 1);
+                    lemma_occ_trees_pos(s, h1, t);
+                    let j = choose|j: int| 0 <= j < h1.len() && h1[j] == t;
+                    assert(s.has(h1[j]));
+                    assert(count(zs, s.tree(t.idx())) == count(es, s.tree(t.idx())));
+                }
+                if c2.dom().contains(t) {
+                    assert(c2.contains_key(t) && c2[t] >= 1);
+                    assert(map_count(c2, t) == occ(h2, t));
+                    assert(map_count(c1, t) == occ(h1, t));
+                    assert(occ(h2, t) >= 1);
+                    lemma_occ_trees_pos(s, h2, t);
+                    let j = choose|j: int| 0 <= j < h2.len() && h2[j] == t;
+                    assert(s.has(h2[j]));
+                    assert(count(zs, s.tree(t.idx())) == count(es, s.tree(t.idx())));
+                }
+            }
+            assert(c1.dom() =~= c2.dom());
+        }
+    }
+}
+
+/// A term that is there is counted.
+proof fn lemma_occ_present(ts: Seq<Term>, i: int)
+    requires 0 <= i < ts.len(),
+    ensures occ(ts, ts[i]) >= 1,
+    decreases ts.len(),
+{
+    if i < ts.len() - 1 {
+        lemma_occ_present(ts.drop_last(), i);
+    }
+}
+
+/// A term that is counted is there.
+proof fn lemma_occ_trees_pos(s: &TermStore, ts: Seq<Term>, t: Term)
+    requires occ(ts, t) > 0,
+    ensures exists|i: int| 0 <= i < ts.len() && ts[i] == t,
+    decreases ts.len(),
+{
+    if ts.last() != t {
+        lemma_occ_trees_pos(s, ts.drop_last(), t);
+        let i = choose|i: int| 0 <= i < ts.drop_last().len() && ts.drop_last()[i] == t;
+        assert(ts[i] == t);
+    } else {
+        assert(ts[ts.len() - 1] == t);
+    }
+}
+
 /// Erasing from a list without the element changes nothing.
 proof fn lemma_erase_none(es: Seq<Tree>, z: Tree)
     requires forall|j: int| 0 <= j < es.len() ==> es[j] != z,
@@ -3439,6 +3741,30 @@ pub open spec fn list_spec(op: EvalOp, f: Tree, nil: Tree, left: bool, a: Seq<Tr
         } else {
             None
         },
+        // $eo_list_minclude: the second list's elements are among the
+        // first's, each as often
+        EvalOp::ListMinclude => if is_list(f, nil, left, a[1]) && is_list(f, nil, left, a[2]) {
+            Some(Out::Bool(minclude_rec(elems(f, left, a[1]), elems(f, left, a[2]), true)))
+        } else {
+            None
+        },
+        // $eo_list_meq: each way
+        EvalOp::ListMeq => if is_list(f, nil, left, a[1]) && is_list(f, nil, left, a[2]) {
+            Some(Out::Bool(
+                minclude_rec(elems(f, left, a[1]), elems(f, left, a[2]), true)
+                    && minclude_rec(elems(f, left, a[2]), elems(f, left, a[1]), true),
+            ))
+        } else {
+            None
+        },
+        // $eo_list_singleton_intro: a list stays; anything else becomes the
+        // list of that one element. (Here for an operator whose terminator
+        // does not depend on a type.)
+        EvalOp::ListSingletonIntro => Some(Out::Term(if is_list(f, nil, left, a[1]) {
+            a[1]
+        } else {
+            cons_tree(f, left, a[1], nil)
+        })),
         // $eo_list_rev
         EvalOp::ListRev => if is_list(f, nil, left, a[1]) {
             Some(Out::Term(build(f, left, elems(f, left, a[1]).reverse(), nil)))
@@ -3471,7 +3797,7 @@ pub open spec fn list_specified(op: EvalOp) -> bool {
         EvalOp::Nil | EvalOp::Cons | EvalOp::ListConcat | EvalOp::ListLength | EvalOp::ListNth
             | EvalOp::ListFind | EvalOp::ListRev | EvalOp::ListSingletonElim | EvalOp::ListRepeat
             | EvalOp::ListErase | EvalOp::ListEraseAll | EvalOp::ListSetof | EvalOp::ListDiff
-            | EvalOp::ListInter
+            | EvalOp::ListInter | EvalOp::ListMinclude | EvalOp::ListMeq | EvalOp::ListSingletonIntro
     )
 }
 
@@ -3974,7 +4300,8 @@ pub(crate) proof fn lemma_keeps_twice(s2: &TermStore, s1: &TermStore, s0: &TermS
     ensures keeps(s2, s0),
 {
     assert forall|t: Term| #[trigger] s0.has(t) implies s2.has(t)
-        && s2.kind_of(t.idx()) == s0.kind_of(t.idx()) && s2.kids(t.idx()) == s0.kids(t.idx()) by {
+        && s2.kind_of(t.idx()) == s0.kind_of(t.idx()) && s2.kids(t.idx()) == s0.kids(t.idx())
+        && s2.tree(t.idx()) == s0.tree(t.idx()) by {
         assert(s1.has(t));
     }
 }
