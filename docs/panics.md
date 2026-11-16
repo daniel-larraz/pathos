@@ -59,6 +59,16 @@ rows marked "Safe" can panic, given a head in the list passed to
 427 to 452 now rests on a specification of `check_arity`
 (`Checker::takes`). Its messages are built in functions of their own, so
 the line numbers below are the old ones. The two "Stack" rows stand.
+Milestone 24 did the same for `build.rs` and `step.rs`: Verus proves that
+their rows marked "Safe" cannot panic. Two rows rest on something outside
+the proof: the row for line 49 of `build.rs` (`mk_requires_list`) is a
+precondition, that each term passed is a pair, which the parser meets as
+the row says; and the row for line 35 (`mk_type_constant`) is in a
+function the parser calls that was not verified. The rows of `eval.rs`
+for `children[1..]` and `children[0]` (276, 279, 955 to 983) and for the
+arguments of `eo::ite` (496), which were preconditions left to `build.rs`
+and `step.rs`, are now proved at their calls. The "Stack" row of
+`build.rs` stands.
 
 ## What was looked for
 

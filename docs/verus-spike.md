@@ -43,6 +43,8 @@ milestone adds a section at the end of this file:
   [verus-eval-design.md](verus-eval-design.md))
 - [Milestone 22: `evaluate` cannot panic](#milestone-22-evaluate-cannot-panic)
 - [Milestone 23: typing cannot panic](#milestone-23-typing-cannot-panic)
+- [Milestone 24: term building and step checking cannot panic](#milestone-24-term-building-and-step-checking-cannot-panic)
+- [Milestones 17 to 24: what is proved, trusted and not covered](#milestones-17-to-24-what-is-proved-trusted-and-not-covered)
 
 ## The setup
 
@@ -1256,8 +1258,9 @@ attribute table is in the invariant, not behind contracts.
 
 #### The circularity
 
-(Milestone 23 verified typing, and this assumption is gone: see "The
-cycle" there.)
+(Milestone 23 verified typing and milestone 24 term building, and this
+assumption is gone: of the cycle only the plugin is trusted. See "The
+cycle, closed" under milestone 24.)
 
 `type_of` is trusted to keep the invariant and to return a term of the
 store. But typing evaluates: `get_type` calls `evaluate`, and `evaluate`
@@ -1496,7 +1499,8 @@ message functions.
 
 #### The circularity, now
 
-(Milestone 23 removed what is left of it here: see "The cycle" there.)
+(Milestones 23 and 24 removed what is left of it: see "The cycle, closed"
+under milestone 24.)
 
 Within `eval.rs` there is no assumption left to discharge: `evaluate`
 calls the operators, and one of them, `evaluate_nil`, calls `evaluate`
@@ -1677,6 +1681,9 @@ more (`get_type`, `get_type_internal`, `get_type_app_internal`,
 A literal type rule `(eo::typeof eo::self)` still recurses until the stack
 is full, as `docs/panics.md` lists under "Stack".
 
+(Milestone 24 removed the three functions named next: see "The cycle,
+closed" there.)
+
 What is left of the circularity is outside these two files. Three trusted
 functions are in `build.rs`: `list_of` (which is `mk_list`, through
 `mk_expr`), and the two new ones below. `mk_expr` types and evaluates, so
@@ -1716,7 +1723,7 @@ in general.
 
 - **Messages.** The functions took `out: Option<&mut String>` and wrote
   with a macro around `write!`, reborrowing with `as_deref_mut`. Verus
-  accepts neither. Now `say(out, text)` appends, the nine texts that
+  accepts neither. Now `say(out, text)` appends, the eleven texts that
   format a kind or print a term are functions (`msg_no_rule`,
   `msg_child_type`, ...), and a function that goes on with its message
   takes `&mut Option<&mut String>`. The public functions keep their
@@ -1750,7 +1757,7 @@ New in this milestone:
 | Function | Contract |
 | --- | --- |
 | `say` | None: it appends text to the message, if there is one. |
-| The nine `msg_` functions | None: each returns a `String`. Six take kinds or numbers only; three print terms (`show`, `show_ctx`) and are trusted not to panic on terms of the store. |
+| The eleven `msg_` functions | None: each returns a `String`. Six take kinds only; five print terms (`show`, `show_ctx`) and are trusted not to panic on terms of the store. |
 | `function_type_of` (which is `mk_function_type`, in `build.rs`) | Keeps the invariant; the store keeps its terms; the type is a term of the store. |
 | `return_type_of` (which is `get_function_type(..).1`, in `build.rs`) | The type is a term of the store. |
 
@@ -1845,3 +1852,296 @@ assumes.
    because of the rebinding of quoted parameters. If Ethos changes that
    (#269), the stronger statement becomes available.
 3. **Milestone 24** (`build.rs`, `step.rs`), with the estimate above.
+
+## Milestone 24: term building and step checking cannot panic
+
+### Summary
+
+- **Proved**: nothing in `build.rs` and `step.rs` that the checker's core
+  uses can panic, each function keeps the checker's invariant, and every
+  term built or returned is a term of the store: `mk_expr` with its
+  desugaring (`mk_apply_expr`, `mk_apply_attr`, `mk_as_expr`,
+  `mk_beta_reduce`, the overload search), the builders of function types,
+  program types, lists, binder lists, pairs and proofs,
+  `get_function_type`, `get_variables`, `has_variable`, and `check_step`.
+  Verus checks 216 items in `pathos-term` and 137 in `pathos-check` (105
+  before), with no errors.
+- **No design stop was needed.** `mk_expr`'s desugaring is as it was, with
+  closures and iterators written as loops.
+- **The trusted wrappers are gone**: `list_of`, `function_type_of` and
+  `return_type_of`. Of the cycle of evaluation, typing and building, only
+  the plugin is trusted.
+- **The two preconditions of milestone 21 are proved** at the calls in
+  `build.rs` and `step.rs`.
+- **Three functions of `build.rs` are not verified**, and say so:
+  `mk_type_constant`, `get_bound_var` and `mk_disambiguated_type`. The
+  parser calls them; nothing verified does.
+- **Behaviour is unchanged**: every gate agrees with Ethos, warnings and
+  step errors included. Against milestone 23 it executes 0.10% more
+  instructions on the regressions and 0.01% more on the cvc5 proofs.
+- **Cost**: about 450 lines of specification and proof for the 558 lines
+  of the two files; the estimate was 300 to 600.
+- **The last section** lists, for milestones 17 to 24 together, what is
+  proved, what is trusted and what is not covered.
+
+### The cycle, closed
+
+Evaluation types and builds; typing evaluates; building evaluates, types,
+and calls itself. After this milestone every function on those paths is
+verified against the same contract:
+
+> given the checker's invariant and terms of the store, the function keeps
+> the invariant, the store keeps its terms, and what it returns is a term
+> of the store.
+
+Verus checks the functions one by one, each with the contracts of those it
+calls. Nothing in the cycle is assumed any more except the plugin's two
+hooks (`plugin_evaluate`, `plugin_evaluate_program`), which are given the
+checker and are code Verus does not see. With no plugin installed, as in
+`pathos` itself, they return at once.
+
+As before, this is a proof for runs that end. In `pathos-check`,
+twenty-four functions on the cycle carry
+`exec_allows_no_decreases_clause`: the fifteen of milestone 23, seven of
+`build.rs` that are on the cycle (`mk_expr`, `mk_apply_expr`,
+`mk_apply_attr`, `mk_as_expr`, `mk_beta_reduce`, `get_overload_internal`,
+`mk_list`), and two that were pulled into it (`evaluate_literal_op`,
+`compute_constructor_term`). `get_variables` and `has_variable` carry it
+too, for their work lists; they do end, and that was not proved. The loops
+of `mk_function_type`, `mk_requires_list`, `get_function_type`,
+`mk_apply_attr` and the overload search are proved to end.
+
+### The preconditions of milestone 21
+
+| Precondition | Proved at |
+| --- | --- |
+| `evaluate_program_internal`, `compute_constructor_term`: the list has a head | `mk_apply_expr`, which `mk_expr` calls only with a non-empty list, and `get_overload_internal`, whose callers pass a head. |
+| `evaluate_program_app`: the list has a head | `check_step`: the list starts with the rule's program. |
+| `evaluate_literal_op`: an `eo::ite` has three arguments | `mk_expr`: it calls it only after `check_arity`, which returns `Checker::takes`. |
+
+What these functions ask of *their* callers, which are the parser and so
+not verified:
+
+| Precondition | Of |
+| --- | --- |
+| Every term passed is a term of the store | All of them. There is one store. |
+| The kind is not that of a symbol or a literal | `mk_expr`. The parser passes constant compound kinds. |
+| Each term is a pair | `mk_requires_list`. The parser passes the pairs it built. |
+
+### The checker's invariant
+
+Three clauses are new. Each is something the code relied on and nothing
+said:
+
+- **A builtin's kind is a compound kind.** `mk_expr` hands it to the store,
+  which refuses a symbol's or a literal's kind by panicking. From text it
+  is set from a fixed table; the snapshot reader checks it (milestone 20).
+- **A program's patterns have a head.** `check_step` takes the arguments of
+  the pattern (`[1..]`) to say what a rule expected. The snapshot reader
+  checks it with the same function that checks the cases are pairs.
+- **The terms a name is bound to are terms of the store** (the table of
+  overloads).
+
+As with the rest of the invariant, the code that is not verified (the
+parser's calls that fill these tables) is trusted to keep it.
+
+### What had to be rewritten
+
+- `at(i)`, a closure in `mk_apply_attr`, is written out at its two uses.
+- `iter().rev()` is a loop that counts down; `zip` is a loop over one
+  index; `to_vec` is `copy_of`; `vec![x]` followed by `extend_from_slice`
+  is `prepend`.
+- A slice by a range goes through `rest_of(ts, from)` or
+  `part_of(ts, from, to)`, whose precondition is the bound that the slice
+  checks.
+- Guards in `match`, `if let ... &&`, `map_or`, `filter`, `then_some`,
+  `unwrap_or`, `saturating_sub` and the slice pattern of
+  `mk_let_binder_list` are `if`s and `match`es.
+- `mk_apply_expr` reads what it needs of the head's record (`kind`,
+  `attr`, `cons`, and the overloads if the name is overloaded) before it
+  starts building, where it read them as it went. The overloads are now
+  looked up for a builtin too, and then not used; nothing else moves.
+- Warnings and step errors: the texts that print something are `msg_`
+  functions, and `check_step` appends with `say`, each line with its
+  newline, where it used `writeln!`.
+
+### What is trusted
+
+New in this milestone:
+
+| Function | Contract |
+| --- | --- |
+| `rest_of`, `part_of` | The slice asked for; the precondition is that the bounds are in range. Each is one slice expression. |
+| Eight `msg_` functions (five in `build.rs`, three in `step.rs`) | None: each returns a `String`. Seven print terms. |
+
+Assumed besides: that the `Hash` and `Eq` of `String` agree
+(`axiom_names_are_keys`), for the table of overloads.
+
+No longer trusted: `list_of`, `function_type_of`, `return_type_of`.
+
+### Time
+
+The binary of this milestone against that of milestone 23 (`f4766d8`),
+instructions counted with Valgrind:
+
+| Corpus | Instructions | Largest increase on one case | Time, best of 3 | Outputs |
+| --- | --- | --- | --- | --- |
+| Regressions (230) | +0.10% | +1.26% | +1.0% | identical |
+| cvc5 proofs (400) | +0.01% | +0.40% | +0.0% | identical |
+
+### Lines and time
+
+| File | Code | Specification | Proof |
+| --- | --- | --- | --- |
+| `build.rs` | 552 (was 445) | 225 | 142 |
+| `step.rs` | 185 (was 113) | 17 | 12 |
+| `checker.rs` | 304 (was 284) | 124 (was 89) | 57 (was 34) |
+| `typing.rs` | 490 (was 496) | 163 (was 174) | 46 |
+| `eval.rs` | 1,175 (was 1,178) | 568 (was 573) | 504 |
+
+The two files have 179 more lines of code: the `msg_` functions and the
+helpers, and `match`es where there were combinators.
+
+Verus takes about 34 seconds for `pathos-term` and 8 for `pathos-check`.
+
+### Gates
+
+- `scripts/verify`: `pathos_term` 216 verified, 0 errors; `pathos_check`
+  137 verified, 0 errors; 42 seconds in all.
+- `scripts/full-check --quick`, as the brief asks: every step passes.
+  `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43, `cli` 3,192
+  of 3,192, `snapshot` under every option set and with the three broken
+  snapshots, `bignum` 7 of 7, and `fuzz` has no finding that still differs
+  in either set. The `options` and `perf` gates were not run; the table
+  under "Time" stands in for `perf`.
+- Four deliberate faults were each refused by Verus: a chain that reads
+  one argument past the end, an opaque application that takes as many
+  arguments as there are, a proof rule accepted with three components, and
+  an `eo::` operator evaluated without the arity check.
+- `cargo test` in debug and release builds and `cargo clippy
+  --all-targets` with warnings as errors pass, and `cargo fmt --check`.
+  No test was changed.
+- `Cargo.lock` is unchanged; no dependency was added.
+- The CI job that runs Verus is renamed for the checker's core.
+- CI has not run on this branch yet: the reviewer pushes.
+
+## Milestones 17 to 24: what is proved, trusted and not covered
+
+This section is the basis for deciding on correctness proofs. It says what
+the eight milestones add up to. Each claim is Verus's, on the code that
+ships: `scripts/verify` checks 216 items in `pathos-term` and 137 in
+`pathos-check`, and CI runs it.
+
+### In one paragraph
+
+The checker's core is the term store, the literal operators, matching,
+the evaluator, typing, term building and step checking: about 4,000 lines
+of code in `pathos-term` and `pathos-check`. **For every run that ends, no
+function of that core can panic, and every term it handles is a term of
+the store**, given that the code around it (the parser, the printer, a
+plugin) hands it terms of the store and keeps the tables of the checker in
+order. Beyond that, three parts are proved **correct** against a
+specification: the literal operators, the term store, and matching of
+programs. The evaluator, typing, building and step checking are proved
+safe, not correct: nothing yet says what the *right* result of evaluating
+a term or checking a step is.
+
+### Proved
+
+| Part | Proved | Milestone |
+| --- | --- | --- |
+| Bit-vectors (`bitvec.rs`) | No panic; each operation computes the stated value on width and integer. | 17 |
+| Literal operators (`Lit::evaluate`) | No panic; agrees with a specification (`eval_spec`) for the arithmetic and bit-vector operators, with Ethos's corner cases; the result of an operation on well-formed literals is well formed. | 17 |
+| Term store (`store.rs`) | No panic. Hash-consing: equal kind and children give the same term, and the store's view as trees is injective (same tree, same term). A child is made before its parent. A term has a number of children its kind can have. `is_ground` means the tree has no parameter and no `eo::?`. Adding terms keeps the old ones as they were. | 17, 19, 21 |
+| Snapshot reader of the store (`read_from`, `Lit::read_from`, the codec) | No panic on any bytes; a store returned satisfies the whole invariant. | 20 |
+| Matching (`match_terms`, `match_cases`) | No panic; ends. A match found is a match: the context, applied to the pattern, gives the term; a ground pattern matches exactly itself; `eo::?` matches nothing; bindings are only added. For programs (`match_cases`) this holds of the case chosen. For typing it holds only when no quoted parameter was rebound (cvc5/ethos#269). | 18, 19, 23 |
+| Evaluator (`eval.rs`) | No panic; keeps the checker's invariant; results are terms of the store. The traversal's invariant: a term is evaluated after its children. | 21, 22 |
+| Typing (`typing.rs`) | The same; `check_arity` computes a stated table. | 23 |
+| Building and step checking (`build.rs`, `step.rs`) | The same. | 24 |
+
+"No panic" covers every index, slice, `unwrap`-like operation, arithmetic
+overflow in a debug build, and the two `unreachable!` of the evaluator. It
+is the property the rows marked "Safe" in [panics.md](panics.md) argued
+for by hand; for these files Verus now checks it.
+
+### Trusted
+
+What Verus is told and does not check. Each item is in the code as a
+function marked `external_body`, or an `axiom_` function.
+
+| What | How much | Why it is believed |
+| --- | --- | --- |
+| Arbitrary-precision numbers (`num.rs` over `malachite`) | 41 functions of `Integer` and `Rational` | Each is one call into `malachite`, with the mathematical operation as its contract. `malachite` is not verified; the `bignum` gate compares its results with Ethos's (GMP) up to a million bits. |
+| Strings (`eostring.rs`) | 9 functions | Not specified at all: the string operators are outside `eval_spec`. They are trusted not to panic. |
+| Parsing and printing of bit-vectors and one logarithm | 3 functions | Text in and out. |
+| Hashing in the store | 7 functions and 2 axioms | The hash functions return a number; that two different node tags differ; a length fact about `Vec`. |
+| Hash and order of keys | 6 axioms | That the derived `Hash`, `Eq` and `Ord` of `Term`, pairs and lists of `Term`, `LitKind` and `String` agree, so that the standard maps behave as maps. |
+| One-line wrappers of the standard library | `copy_of`, `copy_of_ctx`, `push_all`, `rest_of`, `part_of`, `reverse`, `latin1_text`, four `from_index` | Verus has no usable specification for the call; the contract says what the call does. |
+| Messages | `say`, `warn`'s sink, and 28 `msg_` functions | They build text. 21 of them print terms (`show`, `show_list`, `show_ctx`), so **the printer is trusted not to panic on terms of the store**. |
+| Statistics | `Stats`, `count_program` | A counter. |
+| The plugin | `plugin_evaluate`, `plugin_evaluate_program`, `has_eval_plugin` | Code from outside. Trusted to keep the invariant and return terms of the store. Without a plugin, they do nothing. |
+| `is_fatal`, `children_first`, `atomic_kind` | 3 | A field read; and two functions that hold a `panic!`, whose precondition is `false`, proved at every call. |
+| The solver and Verus | | Z3 and Verus itself are trusted, as is the Rust compiler. |
+
+And one thing that is not a function: **the checker's invariant is assumed
+at the boundary.** The verified functions require it and keep it. The
+parser (`pathos-elab`) calls them and also writes to the checker's tables
+directly (attributes, programs, overloads, literal type rules). That it
+passes terms of the store and leaves the tables as the invariant says is
+not proved. The snapshot reader, the other way into those tables, checks
+the invariant's clauses with ordinary code and tests (milestone 20), and
+only its store half is proved.
+
+### Not covered
+
+| What | State |
+| --- | --- |
+| **Correctness of evaluation, typing, building and step checking** | Not stated, so not proved. There is no specification of what `evaluate`, `get_type` or `check_step` should return. This is what a decision on correctness proofs is about. |
+| **Termination** | Proved for matching, the literal operators, some builders, and the store's loops except the two that probe its hash tables (`ConsTable::find` and `ConsTable::insert_new`, which end as long as the table has an empty slot; that they end was not proved). Not proved, and false in general, for evaluation and whatever calls it: a program may run for ever. 28 functions are marked `exec_allows_no_decreases_clause`: those two, 24 on the cycle of evaluation, typing and building, and `get_variables` and `has_variable`, which end too. |
+| **Stack depth and memory** | Not covered. The "Stack" and "Resource" rows of [panics.md](panics.md) stand: three recursions follow the input, and an input can ask for more memory than there is. |
+| **Completeness of matching** | Not proved: that when matching fails, no match exists. |
+| **The parser and the commands** (`pathos-syntax`, `pathos-elab`: about 4,500 lines) | Not verified. Its panic rows in `panics.md` rest on reading and on fuzzing. It is also the code that must keep the checker's invariant. |
+| **The printer** (`print.rs`) | Not verified; see "Messages" above. |
+| **The checker's own snapshot reader and writer, statistics, options** | Ordinary code with tests. |
+| **Three builders the parser calls** (`mk_type_constant`, `get_bound_var`, `mk_disambiguated_type`) | Not verified. The last registers a program, so it too must keep the invariant. |
+| **The string operators and the conversions between kinds of literals** | Proved not to panic only as far as their callers go; what they compute is not specified. |
+| **`pathos-eoc`**, the compiler stages | Not touched. |
+| **Agreement with Ethos** | Not a subject of these proofs at all. It rests on the gates. |
+
+### What it cost
+
+| Milestones | Code verified | Specification | Proof |
+| --- | --- | --- | --- |
+| 17 to 24, both crates | about 4,000 lines (5,780 in the two crates, with the wrappers of `malachite`, the tables of kinds, the printer and the checker's snapshot code) | 2,397 lines | 2,159 lines |
+
+Panic freedom of the evaluator, typing and building (milestones 21 to 24)
+took about 1,950 of those lines for about 2,700 lines of code, or 0.7 lines
+a line. The parts proved correct cost far more per line: matching, 93 lines
+of code, has 396 lines of specification and proof, and the store, 714
+lines, has 1,543.
+
+### For a decision on correctness
+
+Three observations from doing this, not a recommendation:
+
+1. **A correctness proof needs a specification first, and for the evaluator
+   that is the hard part.** For matching the specification was one
+   function (`inst`). For `evaluate` it would be a semantics of Eunoia's
+   programs and operators: what a term evaluates to, including when
+   evaluation is stuck, in which order, and what `eo::ite` leaves
+   unevaluated. Ethos's manual does not give it in that form; it would be
+   written from the C++ and from the manual, and it would itself be the
+   thing to review.
+2. **Some of what pathos must do is not what a clean semantics says.** The
+   rebinding of quoted parameters in typing (#269) is the example: pathos
+   reproduces it. A specification either includes such behaviour, as
+   matching's does for three quirks, or pathos is proved against something
+   Ethos does not do. The terms Ethos forgets (#271) are the opposite
+   case: there pathos already does what a clean semantics says, and
+   differs from Ethos.
+3. **The ratio seen so far for correctness is 4 to 5 lines for each line of
+   code**, against 0.7 for panic freedom. For the evaluator's 1,175 lines
+   that is several thousand lines, on top of the specification, if the
+   ratio holds. It may not: `evaluate`'s invariant for panic freedom
+   turned out much smaller than estimated, and the operators mostly
+   delegate to literal operations that are already specified.

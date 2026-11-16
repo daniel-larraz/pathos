@@ -718,18 +718,6 @@ impl Checker {
         self.get_type(e, None)
     }
 
-    /// [`Checker::mk_list`]. Trusted: building applications is not verified.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
-        requires old(self).wf(), old(self).has_all(args@),
-        ensures
-            final(self).wf(),
-            final(self).keeps(old(self)),
-            final(self).has(r),
-    ))]
-    fn list_of(&mut self, args: &[Term]) -> Term {
-        self.mk_list(args)
-    }
-
     /// Whether every term is ground.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(
         requires self.wf(), self.has_all(ts@),
@@ -861,6 +849,7 @@ impl Checker {
             final(self).keeps(old(self)),
             final(self).has(r),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     pub fn evaluate_literal_op(&mut self, op: EvalOp, args: &[Term]) -> Term {
         match self.evaluate_literal_op_internal(op, args) {
             Some(ret) => ret,
@@ -1368,7 +1357,7 @@ impl Checker {
                 c
             });
         }
-        Some(self.list_of(&cargsp))
+        Some(self.mk_list(&cargsp))
     }
 
     /// Evaluates a list operator: `args[0]` is the list constructor.
@@ -2025,6 +2014,7 @@ impl Checker {
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
     ))]
+    #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     pub(crate) fn compute_constructor_term(
         &mut self,
         attr: Attr,
