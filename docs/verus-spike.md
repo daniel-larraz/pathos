@@ -2396,7 +2396,7 @@ of proof. The result is 876 and 1,215: the specification is over, by the
 counting notions and the store's flag, and the proof is inside the range.
 My estimate for the second part was 570 to 980 lines; it took 971.
 
-**Verification time**: `scripts/verify` takes 62 seconds (42 before): 30
+**Verification time**: `scripts/verify` takes about 60 seconds (42 before): 30
 for `pathos-term` and 32 for `pathos-check`, of which 14 are one function,
 `list_diff_or_inter`. That function needed its solver budget raised twice
 (to 400, where the default is 10): it failed at 150 after unrelated
@@ -2508,7 +2508,26 @@ What else the pilot shows:
 
 ### Gates
 
-GATES
+- `scripts/verify`: `pathos_term` 252 verified, 0 errors; `pathos_check`
+  173 verified, 0 errors; 59 seconds in all.
+- `scripts/full-check --quick`, as the brief asks: every step passes.
+  `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43, `cli` 3,192
+  of 3,192, `snapshot` under every option set and with the three broken
+  snapshots, `bignum` 7 of 7, and `fuzz` has no finding that still differs
+  in either set. The `options` and `perf` gates were not run, and no
+  instruction count was taken: the code that runs changed in
+  `EoString::find` and `substr`, the logarithm, a few comparisons, the
+  scan of `list_erase` and `counts_cover`.
+- Three deliberate faults were each refused by Verus: in the list helpers,
+  the head and tail of a left-nested list swapped, and an application
+  built with its two children swapped; in `list_setof`, the test of "seen
+  before" inverted.
+- `cargo test` in debug and release builds and `cargo clippy
+  --all-targets` with warnings as errors pass, and `cargo fmt --check`.
+  No test was changed.
+- `Cargo.lock` is unchanged; no dependency was added.
+- CI ran green on the first part (`cc0ede7`); it has not run on the
+  second: the reviewer pushes.
 
 ### For Daniel
 
