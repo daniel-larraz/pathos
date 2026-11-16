@@ -182,13 +182,52 @@ The range is wide for two reasons:
 - **The quirks.** Each exclusion adds clauses to every statement that
   meets it.
 
+## After the pilot (milestone 25)
+
+S1 is done: all 46 operators in its scope are proved to compute their
+specification exactly. It took 1,215 lines of proof and 876 of
+specification, inside the range above for proof. The details are in
+[verus-spike.md](verus-spike.md), "Milestone 25".
+
+What it changes in the estimate:
+
+| Milestone | Proof lines, before | Proof lines, after S1 |
+|---|---|---|
+| S1 | 800–1,500 | 1,215 (done) |
+| S2, where the code follows the specification | 1,500–3,000 for all of S2 | 600–1,200 |
+| S2, the refinement: the cache and the frame stack are invisible | (included above) | 1,200–2,500 |
+| S3 | 800–1,500 | unchanged |
+| S4 | 600–1,200 | unchanged |
+| S5 | 600–1,200 | unchanged |
+| Total | 4,000–8,000 | 5,000–8,800 |
+
+- **What is left**, S2 to S5, is 3,800 to 7,600 lines of proof. At S1's
+  ratio of specification to proof (about 0.7), that is 6,000 to 13,000
+  lines of specification and proof together.
+- **The refinement row rests on one data point.** `list_minclude` and
+  `list_meq` keep two hash maps of counts where the plugin erases one
+  element at a time. Proving that they agree cost 5 to 6 lines of proof a
+  line of code, against 1 to 3 for the other list operators.
+  `evaluate`'s cache and frame stack are the same kind of proof, larger
+  and with fuel. If S2 goes ahead, the cache alone, as its own small
+  milestone, would give a second point before the frame stack.
+- **The specification follows the binary** where it and the plugin
+  differ. The pilot found nine such places, listed with inputs in the
+  report. None can be reached from a well-typed CPC proof: CPC declares
+  no decimal or hexadecimal literals, its types rule out the bit-vector
+  cases, it checks the sign before `eo::pow`, and it has no list that
+  nests to the left. The remaining one, an unevaluated element in a list,
+  is the general difference between an unevaluated term (Ethos) and
+  `Stuck` (logos), point 1 of "The decisions the specification forces".
+
 ## Recommendation
 
-1. Milestone 24 is done: the checker's core cannot panic.
-2. Do S1 as a pilot (milestone 25). It is well defined, logos has a
-   precise description of every operator, and its cost gives a real
-   measure for S2 to S5.
-3. Decide on the quirks before S3: (a), (b) or (c) above.
-4. Decide on S2 to S5 with S1's numbers in hand.
+1. Milestones 24 and 25 are done: the checker's core cannot panic, and
+   the operators are proved correct.
+2. Decide on S2 to S5 with the numbers above: 6,000 to 13,000 more lines,
+   the most uncertain part being the refinement in S2.
+3. If S2 goes ahead, take the cache first, alone, for a second measure of
+   the refinement.
+4. Decide on the quirks before S3: (a), (b) or (c) above.
 5. The link to logos is needed only for an end-to-end statement about CPC.
    Leave it until claim 1 is proved, or nearly.
