@@ -5,7 +5,9 @@ use std::collections::{HashMap, HashSet};
 
 use pathos_term::{EvalOp, Integer, Kind, Lit, NodeKind, Term};
 #[cfg(verus_keep_ghost)]
-use pathos_term::{LitKind, TermStore, Val, lemma_vals, lit_arity, lit_spec, tree_is_ground, vals};
+use pathos_term::{
+    LitKind, TermStore, Tree, Val, lemma_vals, lit_arity, lit_spec, tree_is_ground, vals,
+};
 
 #[cfg(verus_keep_ghost)]
 use vstd::prelude::*;
@@ -936,6 +938,7 @@ impl Checker {
         requires
             old(self).wf(),
             old(self).has(e),
+            old(self).has(op),
             check_nil matches Some(n) ==> old(self).has(n),
             old(self).has_all(old(children)@),
         ensures
@@ -944,6 +947,21 @@ impl Checker {
             // a list is no longer than the store is large
             final(children)@.len() <= old(children)@.len() + u32::MAX,
             r matches Some(t) ==> final(self).has(t),
+            // the elements and the tail are those of the tree
+            trees(&final(self).store, final(children)@) == trees(&final(self).store, old(children)@)
+                + elems(final(self).store.tree(op.idx()), is_left, final(self).store.tree(e.idx())),
+            r matches Some(t) ==> final(self).store.tree(t.idx())
+                == tail_of(final(self).store.tree(op.idx()), is_left, final(self).store.tree(e.idx())),
+            // and with a terminator given, there is a result exactly for a list
+            match check_nil {
+                Some(nil) => r is Some == is_list(
+                    final(self).store.tree(op.idx()),
+                    final(self).store.tree(nil.idx()),
+                    is_left,
+                    final(self).store.tree(e.idx()),
+                ),
+                None => r is Some,
+            },
     ))]
     fn get_nary_children(
         &mut self,
@@ -956,17 +974,36 @@ impl Checker {
         let orig = e;
         let mut e = e;
         proof! { Term::lemma_idx_range(orig); }
+        proof_decl! { let ghost f = self.store.tree(op.idx()); let ghost s = self.store; }
+        proof! { assert(trees(&s, children@) + Seq::<Tree>::empty() =~= trees(&s, children@)); }
         #[cfg_attr(verus_keep_ghost, verus_spec(
             invariant
+                self.store == s,
                 self.has(e),
                 0 < e.idx(),
                 self.has_all(children@),
                 children@.len() + e.idx() <= old(children)@.len() + orig.idx(),
+                trees(&s, children@) + elems(f, is_left, s.tree(e.idx()))
+                    == trees(&s, old(children)@) + elems(f, is_left, s.tree(orig.idx())),
+                tail_of(f, is_left, s.tree(e.idx())) == tail_of(f, is_left, s.tree(orig.idx())),
             decreases e.idx(),
         ))]
         while let Some((head, tail)) = self.nary_step(e, op, is_left) {
+            proof_decl! { let ghost before = children@; let ghost cur = e; }
             children.push(head);
             e = tail;
+            proof! {
+                assert(trees(&s, children@) =~= trees(&s, before) + seq![s.tree(head.idx())]);
+                assert(trees(&s, children@) + elems(f, is_left, s.tree(tail.idx()))
+                    =~= trees(&s, before) + elems(f, is_left, s.tree(cur.idx())));
+            }
+        }
+        proof! {
+            assert(elems(f, is_left, s.tree(e.idx())) =~= Seq::<Tree>::empty());
+            assert(trees(&s, children@) + Seq::<Tree>::empty() =~= trees(&s, children@));
+            if check_nil is Some && s.tree(e.idx()) == s.tree(check_nil->0.idx()) {
+                s.theorem_same_tree_same_term(e, check_nil->0);
+            }
         }
         if let Some(nil) = check_nil {
             if e != nil {
@@ -982,39 +1019,74 @@ impl Checker {
     /// associative), its head and tail.
     #[inline]
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
-        requires self.wf(), self.has(e),
-        ensures r matches Some((head, tail)) ==> self.has(head) && self.has(tail)
-            && 0 < head.idx() < e.idx() && 0 < tail.idx() < e.idx(),
+        requires self.wf(), self.has(e), self.has(op),
+        ensures
+            r matches Some((head, tail)) ==> self.has(head) && self.has(tail)
+                && 0 < head.idx() < e.idx() && 0 < tail.idx() < e.idx(),
+            // it is `uncons` on the trees
+            (match r {
+                Some((head, tail)) => Some((self.store.tree(head.idx()), self.store.tree(tail.idx()))),
+                None => None,
+            }) == uncons(self.store.tree(op.idx()), is_left, self.store.tree(e.idx())),
     ))]
     fn nary_step(&self, e: Term, op: Term, is_left: bool) -> Option<(Term, Term)> {
         let s = &self.store;
+        proof! {
+            s.lemma_children(e);
+            if s.is_compound(e.idx()) {
+                s.lemma_tree_compound(e);
+            } else {
+                s.lemma_tree_leaf(e);
+            }
+        }
         if s.kind(e) != Kind::APPLY || s.num_children(e) != 2 {
             return None;
         }
         let cop = s.child(e, 0);
-        if s.kind(cop) != Kind::APPLY || s.num_children(cop) != 2 || s.child(cop, 0) != op {
-            return None;
-        }
         proof! {
-            s.lemma_children(e);
             s.lemma_children(cop);
+            if s.is_compound(cop.idx()) {
+                s.lemma_tree_compound(cop);
+            } else {
+                s.lemma_tree_leaf(cop);
+            }
+        }
+        if s.kind(cop) != Kind::APPLY || s.num_children(cop) != 2 || s.child(cop, 0) != op {
+            proof! {
+                if s.kind_of(cop.idx()) == Kind::APPLY && s.kids(cop.idx()).len() == 2 {
+                    // another head: another tree
+                    if s.tree(s.kids(cop.idx())[0].idx()) == s.tree(op.idx()) {
+                        s.theorem_same_tree_same_term(s.kids(cop.idx())[0], op);
+                    }
+                }
+            }
+            return None;
         }
         let (a, b) = (s.child(cop, 1), s.child(e, 1));
         Some(if is_left { (b, a) } else { (a, b) })
     }
 
     /// Whether `e` is an `op`-list ending in `nil`.
-    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(
-        requires self.wf(), self.has(e),
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
+        requires self.wf(), self.has(e), self.has(op), self.has(nil),
+        ensures r == is_list(self.store.tree(op.idx()), self.store.tree(nil.idx()), is_left, self.store.tree(e.idx())),
     ))]
     fn is_nary_list(&self, e: Term, op: Term, nil: Term, is_left: bool) -> bool {
+        proof_decl! { let ghost orig = e; let ghost f = self.store.tree(op.idx()); }
         let mut e = e;
         #[cfg_attr(verus_keep_ghost, verus_spec(
-            invariant self.has(e),
+            invariant
+                self.has(e),
+                tail_of(f, is_left, self.store.tree(e.idx())) == tail_of(f, is_left, self.store.tree(orig.idx())),
             decreases e.idx(),
         ))]
         while let Some((_, tail)) = self.nary_step(e, op, is_left) {
             e = tail;
+        }
+        proof! {
+            if self.store.tree(e.idx()) == self.store.tree(nil.idx()) {
+                self.store.theorem_same_tree_same_term(e, nil);
+            }
         }
         e == nil
     }
@@ -1022,12 +1094,19 @@ impl Checker {
     /// The `n`-th tail of the `op`-list `e`, which has at least `n`
     /// elements.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
-        requires self.wf(), self.has(e),
-        ensures self.has(r),
+        requires self.wf(), self.has(e), self.has(op),
+        ensures
+            self.has(r),
+            self.store.tree(r.idx()) == nth_tail(self.store.tree(op.idx()), is_left, self.store.tree(e.idx()), n as nat),
     ))]
     fn get_nary_nth_tail(&self, e: Term, op: Term, is_left: bool, n: usize) -> Term {
+        proof_decl! { let ghost orig = e; let ghost f = self.store.tree(op.idx()); }
         let mut e = e;
-        #[cfg_attr(verus_keep_ghost, verus_spec(invariant self.has(e)))]
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            self.has(e),
+            nth_tail(f, is_left, self.store.tree(e.idx()), (n - _i) as nat)
+                == nth_tail(f, is_left, self.store.tree(orig.idx()), n as nat),
+        ))]
         for _i in 0..n {
             match self.nary_step(e, op, is_left) {
                 Some((_, tail)) => e = tail,
@@ -1048,6 +1127,16 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             final(self).has(r),
+            final(self).store.extends(&old(self).store),
+            old(self).store.spec_limit() is Some ==> final(self).store.spec_limit() is Some,
+            // the list built is `build` on the trees, unless the store is
+            // full, when a term made is a placeholder
+            final(self).store.spec_limit() is None ==> final(self).store.tree(r.idx()) == build(
+                old(self).store.tree(op.idx()),
+                is_left,
+                trees(&old(self).store, hargs@),
+                old(self).store.tree(ret.idx()),
+            ),
     ))]
     fn prepend_nary_children(
         &mut self,
@@ -1056,21 +1145,35 @@ impl Checker {
         hargs: &[Term],
         is_left: bool,
     ) -> Term {
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost ts = trees(&s0, hargs@);
+            let ghost tail = s0.tree(ret.idx());
+        }
         let mut ret = ret;
         // from the last element to the first
         let mut i = hargs.len();
+        proof! {
+            self.store.lemma_extends_itself();
+            assert(ts.subrange(i as int, ts.len() as int) =~= Seq::<Tree>::empty());
+        }
         #[cfg_attr(verus_keep_ghost, verus_spec(
             invariant
                 self.wf(),
                 self.keeps(old(self)),
+                self.store.extends(&s0),
+                s0.spec_limit() is Some ==> self.store.spec_limit() is Some,
                 self.has(ret),
                 i <= hargs@.len(),
+                self.store.spec_limit() is None ==> self.store.tree(ret.idx())
+                    == build(f, is_left, ts.subrange(i as int, ts.len() as int), tail),
             decreases i,
         ))]
         while i > 0 {
             i -= 1;
             let h = hargs[i];
-            proof_decl! { let ghost before = *self; }
+            proof_decl! { let ghost before = *self; let ghost rest = ret; }
             ret = if is_left {
                 let c1 = self.store.mk_apply(op, ret);
                 proof_decl! {
@@ -1078,7 +1181,10 @@ impl Checker {
                     let ghost between = *self;
                 }
                 let c2 = self.store.mk_apply(c1, h);
-                proof! { self.lemma_stored(&between); }
+                proof! {
+                    self.lemma_stored(&between);
+                    lemma_cons_built(&s0, &before.store, &between.store, &self.store, op, h, rest, c1, c2, true);
+                }
                 c2
             } else {
                 let c1 = self.store.mk_apply(op, h);
@@ -1087,10 +1193,21 @@ impl Checker {
                     let ghost between = *self;
                 }
                 let c2 = self.store.mk_apply(c1, ret);
-                proof! { self.lemma_stored(&between); }
+                proof! {
+                    self.lemma_stored(&between);
+                    lemma_cons_built(&s0, &before.store, &between.store, &self.store, op, h, rest, c1, c2, false);
+                }
                 c2
             };
+            proof! {
+                if self.store.spec_limit() is None {
+                    let sub = ts.subrange(i as int, ts.len() as int);
+                    assert(sub[0] == s0.tree(h.idx()));
+                    assert(sub.drop_first() =~= ts.subrange(i + 1, ts.len() as int));
+                }
+            }
         }
+        proof! { assert(ts.subrange(0, ts.len() as int) =~= ts); }
         ret
     }
 
@@ -2263,6 +2380,148 @@ fn counts_cover(count1: &HashMap<Term, u32>, count2: &HashMap<Term, u32>, equall
 
 #[cfg(verus_keep_ghost)]
 verus! {
+
+/// The trees of terms.
+pub open spec fn trees(s: &TermStore, ts: Seq<Term>) -> Seq<Tree> {
+    Seq::new(ts.len(), |i: int| s.tree(ts[i].idx()))
+}
+
+/// The application `(f x)`.
+pub open spec fn app(f: Tree, x: Tree) -> Tree {
+    Tree::Node(Kind::Node(NodeKind::Apply), seq![f, x])
+}
+
+/// The list with an element in front: `(f head tail)`, or
+/// `(f tail head)` for an operator whose lists nest to the left.
+pub open spec fn cons_tree(f: Tree, left: bool, head: Tree, tail: Tree) -> Tree {
+    if left { app(app(f, tail), head) } else { app(app(f, head), tail) }
+}
+
+/// If the tree is `(f head tail)` (or `(f tail head)`), its head and its
+/// tail: the pattern `(f x y)` of the plugin's list programs.
+pub open spec fn uncons(f: Tree, left: bool, t: Tree) -> Option<(Tree, Tree)> {
+    match t {
+        Tree::Node(k, cs) => if k == Kind::Node(NodeKind::Apply) && cs.len() == 2 {
+            match cs[0] {
+                Tree::Node(k2, ds) => if k2 == Kind::Node(NodeKind::Apply) && ds.len() == 2 && ds[0] == f {
+                    Some(if left { (cs[1], ds[1]) } else { (ds[1], cs[1]) })
+                } else {
+                    None
+                },
+                _ => None,
+            }
+        } else {
+            None
+        },
+        _ => None,
+    }
+}
+
+/// The elements of a list (`$eo_get_elements_rec`).
+pub open spec fn elems(f: Tree, left: bool, t: Tree) -> Seq<Tree>
+    decreases t,
+{
+    match uncons(f, left, t) {
+        Some((head, tail)) => seq![head] + elems(f, left, tail),
+        None => Seq::empty(),
+    }
+}
+
+/// What a list ends in (`$eo_get_nil_rec`, before it asks whether that is
+/// the terminator).
+pub open spec fn tail_of(f: Tree, left: bool, t: Tree) -> Tree
+    decreases t,
+{
+    match uncons(f, left, t) {
+        Some((head, tail)) => tail_of(f, left, tail),
+        None => t,
+    }
+}
+
+/// Whether the tree is an `f`-list: it ends in the terminator
+/// (`$eo_is_list`).
+pub open spec fn is_list(f: Tree, nil: Tree, left: bool, t: Tree) -> bool {
+    tail_of(f, left, t) == nil
+}
+
+/// The list without its first `n` elements, or what is left of it.
+pub open spec fn nth_tail(f: Tree, left: bool, t: Tree, n: nat) -> Tree
+    decreases n,
+{
+    if n == 0 {
+        t
+    } else {
+        match uncons(f, left, t) {
+            Some((head, tail)) => nth_tail(f, left, tail, (n - 1) as nat),
+            None => t,
+        }
+    }
+}
+
+/// The list of the elements, in front of a tail.
+pub open spec fn build(f: Tree, left: bool, es: Seq<Tree>, tail: Tree) -> Tree
+    decreases es.len(),
+{
+    if es.len() == 0 {
+        tail
+    } else {
+        cons_tree(f, left, es[0], build(f, left, es.drop_first(), tail))
+    }
+}
+
+/// Two applications made one after the other are the list with one more
+/// element, on the trees.
+proof fn lemma_cons_built(
+    s0: &TermStore,
+    s1: &TermStore,
+    s2: &TermStore,
+    s3: &TermStore,
+    op: Term,
+    h: Term,
+    rest: Term,
+    c1: Term,
+    c2: Term,
+    left: bool,
+)
+    requires
+        s0.wf(), s1.wf(), s2.wf(), s3.wf(),
+        s1.extends(s0), s2.extends(s1), s3.extends(s2),
+        s0.has(op), s0.has(h), s1.has(rest),
+        s2.spec_limit() is None ==> s2.is_node(c1, Kind::Node(NodeKind::Apply), if left { seq![op, rest] } else { seq![op, h] }),
+        s3.spec_limit() is None ==> s3.is_node(c2, Kind::Node(NodeKind::Apply), if left { seq![c1, h] } else { seq![c1, rest] }),
+        s2.spec_limit() is Some ==> s3.spec_limit() is Some,
+        s2.has(c1),
+    ensures
+        s3.extends(s0),
+        s3.spec_limit() is None ==> s3.tree(c2.idx())
+            == cons_tree(s0.tree(op.idx()), left, s0.tree(h.idx()), s1.tree(rest.idx())),
+{
+    s2.lemma_extends_twice(s1, s0);
+    s3.lemma_extends_twice(s2, s0);
+    s3.lemma_extends_twice(s2, s1);
+    if s3.spec_limit() is None {
+        s1.theorem_trees_are_kept(s0, op);
+        s1.theorem_trees_are_kept(s0, h);
+        s2.theorem_trees_are_kept(s1, op);
+        s2.theorem_trees_are_kept(s1, h);
+        s2.theorem_trees_are_kept(s1, rest);
+        s3.theorem_trees_are_kept(s2, op);
+        s3.theorem_trees_are_kept(s2, h);
+        s3.theorem_trees_are_kept(s2, rest);
+        s3.theorem_trees_are_kept(s2, c1);
+        s2.lemma_node_tree(c1, Kind::Node(NodeKind::Apply), if left { seq![op, rest] } else { seq![op, h] });
+        s3.lemma_node_tree(c2, Kind::Node(NodeKind::Apply), if left { seq![c1, h] } else { seq![c1, rest] });
+        let t1 = s2.tree(c1.idx());
+        let t2 = s3.tree(c2.idx());
+        if left {
+            assert(t1->Node_1 =~= seq![s0.tree(op.idx()), s1.tree(rest.idx())]);
+            assert(t2->Node_1 =~= seq![t1, s0.tree(h.idx())]);
+        } else {
+            assert(t1->Node_1 =~= seq![s0.tree(op.idx()), s0.tree(h.idx())]);
+            assert(t2->Node_1 =~= seq![t1, s1.tree(rest.idx())]);
+        }
+    }
+}
 
 /// The operators whose result depends on the values of their arguments
 /// alone: the literal operators, `eo::eq` and the `eo::is_*` tests.

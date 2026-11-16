@@ -680,6 +680,7 @@ impl TermStore {
             final(self).has(r),
             final(self).extends(old(self)),
             final(self).spec_limit() is None ==> final(self).is_lit(r, lit),
+            old(self).spec_limit() is Some ==> final(self).spec_limit() is Some,
             final(self).spec_len() <= old(self).spec_len() + 1,
     ))]
     pub fn mk_lit(&mut self, lit: Lit) -> Term {
@@ -763,10 +764,18 @@ impl TermStore {
     #[inline]
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires old(self).wf(), old(self).has(f), old(self).has(a),
-        ensures final(self).wf(), final(self).has(r), final(self).extends(old(self)),
+        ensures
+            final(self).wf(),
+            final(self).has(r),
+            final(self).extends(old(self)),
+            final(self).spec_limit() is None ==>
+                final(self).is_node(r, Kind::Node(NodeKind::Apply), seq![f, a]),
+            old(self).spec_limit() is Some ==> final(self).spec_limit() is Some,
     ))]
     pub fn mk_apply(&mut self, f: Term, a: Term) -> Term {
-        self.mk(Kind::APPLY, &[f, a])
+        let children = [f, a];
+        proof! { assert(children@ =~= seq![f, a]); }
+        self.mk(Kind::APPLY, &children)
     }
 
     /// The term of a compound kind with the given children; equal arguments
@@ -786,6 +795,8 @@ impl TermStore {
             final(self).extends(old(self)),
             final(self).spec_limit() is None && (kind is Node || kind is Eval) ==>
                 final(self).is_node(r, kind, children@),
+            // a store that is full stays so
+            old(self).spec_limit() is Some ==> final(self).spec_limit() is Some,
             final(self).spec_len() <= old(self).spec_len() + 1,
     ))]
     pub fn mk(&mut self, kind: Kind, children: &[Term]) -> Term {
@@ -2115,6 +2126,30 @@ impl TermStore {
     /// The term is the compound term of this kind with these children.
     pub closed spec fn is_node(&self, t: Term, kind: Kind, children: Seq<Term>) -> bool {
         self.has(t) && self.compound(t.idx()) && self.kind_of(t.idx()) == kind && self.kids(t.idx()) == children
+    }
+
+    /// The tree of a term that is not compound is not that of a compound
+    /// term.
+    pub proof fn lemma_tree_leaf(&self, t: Term)
+        requires self.wf(), self.has(t), !self.is_compound(t.idx()),
+        ensures !(self.tree(t.idx()) is Node),
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+    }
+
+    /// What it is to be the compound term of a kind with given children:
+    /// the term has that kind, those children, and the tree made of their
+    /// trees.
+    pub proof fn lemma_node_tree(&self, t: Term, kind: Kind, children: Seq<Term>)
+        requires self.wf(), self.is_node(t, kind, children),
+        ensures
+            self.has(t),
+            self.kind_of(t.idx()) == kind,
+            self.kids(t.idx()) == children,
+            self.tree(t.idx()) matches Tree::Node(k, cs) && k == kind && cs.len() == children.len()
+                && forall|m: int| 0 <= m < cs.len() ==> cs[m] == self.tree((#[trigger] children[m]).idx()),
+    {
+        self.lemma_tree_compound(t);
     }
 
     /// The compound terms of `old` are those of this store too, in the same
