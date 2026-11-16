@@ -16,8 +16,8 @@ C++; its dependencies' `unsafe` code is traced and justified line by line.
 It is checked against Ethos `9217112f`, the current `main`, by
 differential testing on all six platforms Ethos's CI covers: Linux, macOS
 and Windows, each on x86-64 and arm64. On the cvc5 proofs it takes about
-40% of Ethos's time and much less memory (3.8 GB against 24.9 GB on the
-largest, a 453 MB proof).
+44% of Ethos's time and much less memory (3.7 GiB against 24.3 GiB on
+the largest, a 453 MB proof).
 
 **[docs/evidence.md](docs/evidence.md)** is the one page to read: what was
 compared, how to rerun each comparison, the differences from Ethos, and

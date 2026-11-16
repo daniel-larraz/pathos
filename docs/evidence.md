@@ -49,8 +49,8 @@ Ethos `9217112f` (cvc5/ethos `main` with PR #223), built in release mode.
 - **Terms are never freed.** A term is a 32-bit index into a table that
   only grows, so there is no reference counting and no freed term to use
   by mistake, the class of bug PRs #223 and #256 fixed in Ethos. On the
-  largest proof (453 MB) pathos peaks at 3.8 GB where Ethos peaks at
-  24.9 GB.
+  largest proof (453 MB) pathos peaks at 3.7 GiB where Ethos peaks at
+  24.3 GiB.
 
 ## Same behaviour as Ethos
 
@@ -83,18 +83,21 @@ and CI on every push, which runs the gates that need neither the cvc5
 corpus nor much time (`tests`, `fuzz`, the `--stats` part of `cli`, and
 1,055 of the `eoc` cases).
 
-**Performance** (`perf`, 2026-11-14, Linux x86-64, commit `69f7ece`). Over
-the 629 cases both accept, Ethos takes 1,438 s and pathos 587 s (41%): the
-41 large proofs 1,402 s and 566 s, the 400 proofs 34.4 s and 20.3 s, the
-regressions 0.73 s and 0.62 s. Of the 439 cases that take Ethos over 50 ms,
-none is slower in pathos; the least favourable takes 75% of Ethos's time.
-pathos uses less memory than Ethos on every case; the peaks are 3.8 GB and
-24.9 GB. A snapshot of CPC (pathos only) brings the 400 proofs from 19.1 s
-to 11.1 s (measured at milestone 14). The machine was busy with other work
-during this run (load average about 10 on 20 cores), so both checkers'
-times are about twice those of an idle machine (Ethos 658 s, pathos 269 s
-in an earlier run); the ratio has been 41% or 42% in every run. The
-checker's own thread, new in milestone 15, costs 0.17 ms a run.
+**Performance** (`perf`, 2026-11-16, Linux x86-64, commit `e3823e0`, an
+otherwise idle machine: Intel Core Ultra 7 255HX, 20 cores, 64 GB). Over
+the 629 cases both accept, Ethos takes 628.5 s and pathos 274.8 s (44%):
+the 41 large proofs 612.7 s and 265.9 s (43%), the 400 proofs 15.5 s and
+8.6 s (55%), the regressions 0.32 s and 0.25 s (78%). Of the 85 cases that
+take Ethos over 50 ms, none is slower in pathos; the least favourable
+takes 74% of Ethos's time. Sixteen regressions of about 1.3 ms are slower
+in pathos by 0.1 to 0.3 ms, its start-up cost. pathos uses less memory
+than Ethos on all 673 cases; the peaks, both on `regress3/hole10`, are
+3.7 GiB and 24.3 GiB (earlier versions of this page said 3.8 GB and
+24.9 GB, which were MiB counts divided by 1,000). A second run the same
+day gave 43%, and every run since 2026-11-14 has given 41% to 44%. A
+snapshot of CPC (pathos only) brings the 400 proofs from 19.1 s to 11.1 s
+(measured at milestone 14). The checker's own thread, new in milestone
+15, costs 0.17 ms a run.
 
 **A fuzzing campaign** of mutated inputs (seed 3, 24 hours ending
 2026-11-15, each run limited to 10 s and 4 GiB) made 22,236,159 runs:
