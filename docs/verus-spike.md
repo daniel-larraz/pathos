@@ -1988,9 +1988,6 @@ instructions counted with Valgrind:
 | Regressions (230) | +0.10% | +1.26% | +1.0% | identical |
 | cvc5 proofs (400) | +0.01% | +0.40% | +0.0% | identical |
 
-The regression with the largest increase runs 1.2 million instructions in
-all, so 1.26% of it is about 15,000.
-
 ### Lines and time
 
 | File | Code | Specification | Proof |
