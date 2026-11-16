@@ -155,30 +155,61 @@ impl BitVec {
         BitVec::new(self.size, &self.value.bitwise_not())
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r.wf(), r.spec_size() == self.spec_size(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures
+        r.wf(),
+        r.spec_size() == self.spec_size(),
+        r.spec_value() == (self.spec_value() + b.spec_value()) % (pow2(self.spec_size()) as int),
+    ))]
     pub fn add(&self, b: &BitVec) -> BitVec {
         BitVec::new(self.size, &self.value.add(&b.value))
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures r.wf(), r.spec_size() == self.spec_size(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures
+        r.wf(),
+        r.spec_size() == self.spec_size(),
+        r.spec_value() == (-self.spec_value()) % (pow2(self.spec_size()) as int),
+    ))]
     pub fn neg(&self) -> BitVec {
+        proof! { lemma_neg_mod(self.spec_value(), self.spec_size()); }
         self.not().add(&BitVec::new(self.size, &Integer::one()))
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r.wf(), r.spec_size() == self.spec_size(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures
+        r.wf(),
+        r.spec_size() == self.spec_size(),
+        r.spec_value() == (self.spec_value() * b.spec_value()) % (pow2(self.spec_size()) as int),
+    ))]
     pub fn mul(&self, b: &BitVec) -> BitVec {
         BitVec::new(self.size, &self.value.mul(&b.value))
     }
 
     /// Unsigned division; division by zero gives all ones.
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r.wf(), r.spec_size() == self.spec_size(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), y.wf(), ensures
+        r.wf(),
+        r.spec_size() == self.spec_size(),
+        r.spec_value() == (if y.spec_value() == 0 {
+            pow2(self.spec_size()) - 1
+        } else {
+            self.spec_value() / y.spec_value()
+        }),
+    ))]
     pub fn unsigned_div_total(&self, y: &BitVec) -> BitVec {
+        proof! { lemma_div_rem_fit(self.spec_value(), y.spec_value(), self.spec_size()); }
         if y.value.sgn() == 0 {
             // Ethos builds this as 1 one-extended by size - 1 bits; for width
             // zero the count wraps around there, and the result is still
             // reduced modulo 2^0.
             if self.size == 0 {
+                proof! { vstd::arithmetic::power2::lemma2_to64(); }
                 return BitVec::zero(0);
+            }
+            proof! {
+                // 1 with size - 1 ones above it is 2^size - 1
+                vstd::arithmetic::power2::lemma2_to64();
+                vstd::arithmetic::power2::lemma_pow2_unfold(self.size as nat);
+                vstd::arithmetic::power2::lemma_pow2_pos((self.size - 1) as nat);
+                assert(1 + (pow2((self.size - 1) as nat) - 1) * pow2(1) == pow2(self.size as nat) - 1) by (nonlinear_arith)
+                    requires pow2(1) == 2, pow2(self.size as nat) == 2 * pow2((self.size - 1) as nat);
             }
             return BitVec::new(self.size, &Integer::one().one_extend(1, self.size - 1));
         }
@@ -186,8 +217,13 @@ impl BitVec {
     }
 
     /// Unsigned remainder; the remainder by zero is the dividend.
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r.wf(), r.spec_size() == self.spec_size(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), y.wf(), ensures
+        r.wf(),
+        r.spec_size() == self.spec_size(),
+        r.spec_value() == (if y.spec_value() == 0 { self.spec_value() } else { self.spec_value() % y.spec_value() }),
+    ))]
     pub fn unsigned_rem_total(&self, y: &BitVec) -> BitVec {
+        proof! { lemma_div_rem_fit(self.spec_value(), y.spec_value(), self.spec_size()); }
         if y.value.sgn() == 0 {
             return BitVec::new(self.size, &self.value);
         }
@@ -213,6 +249,50 @@ impl BitVec {
     /// bit-vector makes one for which this holds.
     pub closed spec fn wf(&self) -> bool {
         0 <= self.value@ < pow2(self.size as nat)
+    }
+}
+
+/// The two's complement of a value of `n` bits is its negation modulo
+/// `2^n`.
+pub proof fn lemma_neg_mod(v: int, n: nat)
+    requires 0 <= v < pow2(n),
+    ensures (pow2(n) - 1 - v + 1int % (pow2(n) as int)) % (pow2(n) as int) == (-v) % (pow2(n) as int),
+{
+    vstd::arithmetic::power2::lemma_pow2_pos(n);
+    let m = pow2(n) as int;
+    if n == 0 {
+        vstd::arithmetic::power2::lemma2_to64();
+    } else {
+        vstd::arithmetic::power2::lemma_pow2_strictly_increases(0, n);
+        vstd::arithmetic::power2::lemma2_to64();
+        vstd::arithmetic::div_mod::lemma_small_mod(1, m as nat);
+        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(-v, m);
+    }
+}
+
+/// The quotient and the remainder of values of `n` bits are values of `n`
+/// bits, and the quotient rounded down is the Euclidean one.
+pub proof fn lemma_div_rem_fit(x: int, y: int, n: nat)
+    requires 0 <= x < pow2(n), 0 <= y,
+    ensures
+        y != 0 ==> 0 <= x / y < pow2(n) && 0 <= x % y < pow2(n)
+            && (x / y) % (pow2(n) as int) == x / y
+            && (x - y * (x / y)) % (pow2(n) as int) == x % y,
+        x % (pow2(n) as int) == x,
+        (pow2(n) - 1) % (pow2(n) as int) == pow2(n) - 1,
+{
+    vstd::arithmetic::power2::lemma_pow2_pos(n);
+    lemma_mod_pow2_small(x, n);
+    lemma_mod_pow2_small(pow2(n) - 1, n);
+    if y != 0 {
+        vstd::arithmetic::div_mod::lemma_div_pos_is_pos(x, y);
+        vstd::arithmetic::div_mod::lemma_div_is_ordered_by_denominator(x, 1, y);
+        vstd::arithmetic::div_mod::lemma_div_basics(x);
+        vstd::arithmetic::div_mod::lemma_mod_bound(x, y);
+        vstd::arithmetic::div_mod::lemma_mod_decreases(x as nat, y as nat);
+        vstd::arithmetic::div_mod::lemma_fundamental_div_mod(x, y);
+        lemma_mod_pow2_small(x / y, n);
+        lemma_mod_pow2_small(x % y, n);
     }
 }
 

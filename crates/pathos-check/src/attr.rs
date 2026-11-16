@@ -59,6 +59,18 @@ impl vstd::std_specs::cmp::PartialEqSpecImpl for Attr {
     }
 }
 
+impl Attr {
+    /// See [`Attr::is_list_nil`].
+    pub open spec fn spec_is_list_nil(self) -> bool {
+        matches!(self, Attr::LeftAssocNil | Attr::RightAssocNil | Attr::RightAssocNsNil | Attr::LeftAssocNsNil)
+    }
+
+    /// See [`Attr::is_left_nil`].
+    pub open spec fn spec_is_left_nil(self) -> bool {
+        matches!(self, Attr::LeftAssocNil | Attr::LeftAssocNsNil)
+    }
+}
+
 } // verus!
 
 #[cfg_attr(verus_keep_ghost, verus_verify)]
@@ -81,6 +93,7 @@ impl Attr {
 
     /// Whether this is one of the associative attributes with a nil
     /// terminator.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.spec_is_list_nil(),))]
     pub fn is_list_nil(self) -> bool {
         matches!(
             self,
@@ -89,6 +102,7 @@ impl Attr {
     }
 
     /// Whether this is left associative with a nil terminator.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.spec_is_left_nil(),))]
     pub fn is_left_nil(self) -> bool {
         matches!(self, Attr::LeftAssocNil | Attr::LeftAssocNsNil)
     }

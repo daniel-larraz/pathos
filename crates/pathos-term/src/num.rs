@@ -83,7 +83,7 @@ impl Integer {
         self.0 > y.0
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ))]
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@ == int_pow(self@, exp as nat),))]
     pub fn pow(&self, exp: u32) -> Integer {
         Integer((&self.0).pow(u64::from(exp)))
     }
@@ -129,7 +129,9 @@ impl Integer {
     }
 
     /// The value `2^amount - 1` shifted left by `size`, or-ed into `self`.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ))]
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
+        ensures 0 <= self@ < pow2(size as nat) ==> r@ == self@ + (pow2(amount as nat) - 1) * pow2(size as nat),
+    ))]
     pub fn one_extend(&self, size: u32, amount: u32) -> Integer {
         let ones = (MInt::ONE << u64::from(amount)) - MInt::ONE;
         Integer(&self.0 | (ones << u64::from(size)))
@@ -280,7 +282,7 @@ impl Rational {
         }
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ))]
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures is_floor(self@, r@),))]
     pub fn floor(&self) -> Integer {
         Integer((&self.0).floor())
     }
@@ -306,7 +308,13 @@ impl Rational {
         Rational(&self.0 / &y.0)
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ))]
+    /// Whether `self > y`.
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == (self@ > y@),))]
+    pub fn gt(&self, y: &Rational) -> bool {
+        self.0 > y.0
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@ == real_pow(self@, exp as nat),))]
     pub fn pow(&self, exp: u32) -> Rational {
         Rational((&self.0).pow(u64::from(exp)))
     }
@@ -357,6 +365,25 @@ mod spec {
 
     /// The quotient rounded towards negative infinity, for `y != 0`. Verus's
     /// `/` is Euclidean: it rounds down exactly when the divisor is positive.
+    /// `b` to the power `e`.
+    pub open spec fn int_pow(b: int, e: nat) -> int
+        decreases e,
+    {
+        if e == 0 { 1 } else { b * int_pow(b, (e - 1) as nat) }
+    }
+
+    /// `b` to the power `e`.
+    pub open spec fn real_pow(b: real, e: nat) -> real
+        decreases e,
+    {
+        if e == 0 { 1real } else { b * real_pow(b, (e - 1) as nat) }
+    }
+
+    /// `i` is the greatest integer that is not above `x`.
+    pub open spec fn is_floor(x: real, i: int) -> bool {
+        i as real <= x && x < (i + 1) as real
+    }
+
     pub open spec fn floor_div(x: int, y: int) -> int {
         if y > 0 { x / y } else { (-x) / (-y) }
     }

@@ -548,6 +548,7 @@ impl EvalOp {
     }
 
     /// Whether this is one of the list operators.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.spec_is_list_op(),))]
     pub fn is_list_op(self) -> bool {
         matches!(
             self,
@@ -579,6 +580,32 @@ impl EvalOp {
 
 #[cfg(verus_keep_ghost)]
 verus! {
+
+impl EvalOp {
+    /// See [`EvalOp::is_list_op`].
+    pub open spec fn spec_is_list_op(self) -> bool {
+        matches!(
+            self,
+            EvalOp::Nil
+                | EvalOp::Cons
+                | EvalOp::ListLength
+                | EvalOp::ListConcat
+                | EvalOp::ListNth
+                | EvalOp::ListFind
+                | EvalOp::ListErase
+                | EvalOp::ListEraseAll
+                | EvalOp::ListRev
+                | EvalOp::ListSetof
+                | EvalOp::ListMinclude
+                | EvalOp::ListMeq
+                | EvalOp::ListDiff
+                | EvalOp::ListInter
+                | EvalOp::ListSingletonElim
+                | EvalOp::ListSingletonIntro
+                | EvalOp::ListRepeat
+        )
+    }
+}
 
 impl NodeKind {
     /// See [`NodeKind::takes`].

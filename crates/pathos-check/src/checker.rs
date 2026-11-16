@@ -426,17 +426,17 @@ impl Checker {
         self.store.mk_type()
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r), self.is_bool(r, true),))]
     pub fn mk_true(&self) -> Term {
         self.t_true
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r), self.is_bool(r, false),))]
     pub fn mk_false(&self) -> Term {
         self.t_false
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r), self.is_bool(r, b),))]
     pub fn mk_bool(&self, b: bool) -> Term {
         if b { self.t_true } else { self.t_false }
     }
@@ -448,17 +448,30 @@ impl Checker {
 
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires old(self).wf(),
-        ensures final(self).wf(), final(self).has(r), final(self).keeps(old(self)),
+        ensures
+            final(self).wf(),
+            final(self).has(r),
+            final(self).keeps(old(self)),
+            final(self).grew_from(old(self)),
+            // the numeral, unless the store is full
+            !final(self).is_full() ==> final(self).is_numeral(r, i@),
     ))]
     pub fn mk_numeral(&mut self, i: Integer) -> Term {
         proof_decl! { let ghost before = *self; }
         let t = self.store.mk_lit(Lit::Numeral(i));
-        proof! { self.lemma_stored(&before); }
+        proof! {
+            self.lemma_stored(&before);
+            if self.store.spec_limit() is None {
+                self.store.lemma_lit(t, Lit::Numeral(i));
+            }
+        }
         t
     }
 
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
-        ensures r matches Some(ai) ==> self.knows(t, *ai),
+        ensures
+            r matches Some(ai) ==> self.knows(t, *ai),
+            r is None ==> !self.app@.contains_key(t),
     ))]
     pub(crate) fn app_info(&self, t: Term) -> Option<&AppInfo> {
         proof! {
@@ -517,11 +530,13 @@ pub open spec fn all_has(s: &TermStore, ts: Seq<Term>) -> bool {
     forall|i: int| 0 <= i < ts.len() ==> s.has(#[trigger] ts[i])
 }
 
-/// The store has the terms of the old one, with their kinds and children.
+/// The store has the terms of the old one, with their kinds, their
+/// children and their trees.
 pub open spec fn keeps(new: &TermStore, old: &TermStore) -> bool {
     forall|t: Term| #[trigger] old.has(t) ==> new.has(t)
         && new.kind_of(t.idx()) == old.kind_of(t.idx())
         && new.kids(t.idx()) == old.kids(t.idx())
+        && new.tree(t.idx()) == old.tree(t.idx())
 }
 
 /// What is known of a symbol refers to the store: the term that goes with
@@ -541,9 +556,13 @@ impl Checker {
     pub open(crate) spec fn wf(&self) -> bool {
         &&& self.store.wf()
         &&& self.store.has(self.t_true) && self.store.has(self.t_false) && self.store.has(self.t_self)
+        // `true` and `false` are the Boolean literals
+        &&& self.store.is_lit(self.t_true, Lit::Bool(true)) && self.store.is_lit(self.t_false, Lit::Bool(false))
         &&& self.store.has(self.list_type) && self.store.has(self.list_nil) && self.store.has(self.list_cons)
         &&& self.store.has(self.proof_type)
-        &&& self.neg_one matches Some(t) ==> self.store.has(t)
+        // the numeral kept for `eo::list_find` is -1, if it was made
+        // before the store was full
+        &&& self.neg_one matches Some(t) ==> self.store.has(t) && (!self.is_full() ==> self.is_numeral(t, -1))
         &&& forall|t: Term| #[trigger] self.app@.contains_key(t) ==> app_ok(&self.store, self.app@[t])
         // the terms a name is bound to are terms of the store
         &&& forall|name: String| #[trigger] self.overloads@.contains_key(name)
@@ -589,6 +608,27 @@ impl Checker {
         &&& step.assumption matches Some(t) ==> self.store.has(t)
     }
 
+    /// The term is the numeral `n`.
+    pub open(crate) spec fn is_numeral(&self, t: Term, n: int) -> bool {
+        self.store.is_lit(t, self.store.value(t)) && self.store.value(t)@ == pathos_term::Val::Numeral(n)
+    }
+
+    /// The store has run into a limit: a term made since may be a
+    /// placeholder.
+    pub open(crate) spec fn is_full(&self) -> bool {
+        self.store.spec_limit() is Some
+    }
+
+    /// The store is `old`'s with terms added, and still full if that was.
+    pub open(crate) spec fn grew_from(&self, old: &Checker) -> bool {
+        self.store.extends(&old.store) && (old.is_full() ==> self.is_full())
+    }
+
+    /// The term is the Boolean literal `b`.
+    pub open(crate) spec fn is_bool(&self, t: Term, b: bool) -> bool {
+        self.store.is_lit(t, Lit::Bool(b))
+    }
+
     /// Each of the terms has two children or more.
     pub open(crate) spec fn has_pairs(&self, ts: Seq<Term>) -> bool {
         forall|j: int| 0 <= j < ts.len() ==> self.store.kids((#[trigger] ts[j]).idx()).len() >= 2
@@ -616,10 +656,27 @@ impl Checker {
 
     /// After terms were added to the store, the invariant holds again.
     pub(crate) proof fn lemma_stored(&self, old: &Checker)
-        requires old.wf(), self.store.wf(), self.store.extends(&old.store), self.same_tables(old),
+        requires
+            old.wf(),
+            self.store.wf(),
+            self.store.extends(&old.store),
+            // a store that is full stays so
+            old.is_full() ==> self.is_full(),
+            self.same_tables(old),
         ensures self.wf(), self.keeps(old),
     {
         self.store.lemma_extends(&old.store);
+        assert forall|t: Term| #[trigger] old.store.has(t) implies
+            self.store.tree(t.idx()) == old.store.tree(t.idx()) by {
+            self.store.theorem_trees_are_kept(&old.store, t);
+        }
+        self.store.lemma_lit_kept(&old.store, self.t_true, Lit::Bool(true));
+        self.store.lemma_lit_kept(&old.store, self.t_false, Lit::Bool(false));
+        if self.neg_one is Some && !self.is_full() {
+            let t = self.neg_one->0;
+            self.store.lemma_lit_kept(&old.store, t, old.store.value(t));
+            self.store.lemma_lit(t, old.store.value(t));
+        }
         assert forall|t: Term| #[trigger] self.app@.contains_key(t) implies app_ok(&self.store, self.app@[t]) by {
             let ai = self.app@[t];
             assert(app_ok(&old.store, ai));
