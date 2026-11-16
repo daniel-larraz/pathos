@@ -4,7 +4,7 @@
 #   - verify:      Verus, at the release pinned in scripts/verify, checks the
 #                  specifications in pathos-term and pathos-check: the
 #                  literal operators, the term store, matching, the
-#                  evaluator and typing
+#                  evaluator, typing, term building and step checking
 #                  (docs/verus-spike.md)
 #   - regressions: pathos against the reference Ethos on Ethos's 230
 #                  regressions, on the saved fuzzing findings (those from
@@ -79,7 +79,7 @@ jobs:
         run: cargo test --locked --release
 
   verify:
-    name: Verus proofs of the literal operators, the term store, matching, the evaluator and typing
+    name: Verus proofs of the checker's core (store, literals, matching, evaluator, typing, building, steps)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7

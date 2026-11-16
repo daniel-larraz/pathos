@@ -236,15 +236,6 @@ impl EvalOp {
         EvalOp::ALL[self as usize].1
     }
 
-    /// Whether the operator takes two or more arguments in the input
-    /// language, e.g. `(eo::add 1 2 3)`.
-    pub fn is_nary(self) -> bool {
-        matches!(
-            self,
-            EvalOp::Add | EvalOp::Mul | EvalOp::And | EvalOp::Or | EvalOp::Xor | EvalOp::Concat
-        )
-    }
-
     /// The name of the Ethos kind, e.g. `EVAL_ADD`.
     fn kind_name(self) -> &'static str {
         match self {
@@ -547,6 +538,15 @@ impl NodeKind {
 
 #[cfg_attr(verus_keep_ghost, verus_verify)]
 impl EvalOp {
+    /// Whether the operator takes two or more arguments in the input
+    /// language, e.g. `(eo::add 1 2 3)`.
+    pub fn is_nary(self) -> bool {
+        matches!(
+            self,
+            EvalOp::Add | EvalOp::Mul | EvalOp::And | EvalOp::Or | EvalOp::Xor | EvalOp::Concat
+        )
+    }
+
     /// Whether this is one of the list operators.
     pub fn is_list_op(self) -> bool {
         matches!(

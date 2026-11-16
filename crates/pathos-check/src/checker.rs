@@ -9,7 +9,7 @@ use pathos_term::{Integer, Kind, Lit, LitKind, SymbolKind, Term, TermStore};
 
 use crate::attr::{AppInfo, Attr};
 #[cfg(verus_keep_ghost)]
-use crate::matching::{ctx_ok, is_program};
+use crate::matching::{case_ok, ctx_ok, has_patterns, is_program};
 use crate::stats::Stats;
 
 /// The options of Ethos that the checker reads.
@@ -240,10 +240,6 @@ impl Checker {
 
     // ------------------------------------------------------------ symbols
 
-    pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
-        self.store.mk_symbol(kind, name, ty)
-    }
-
     /// A builtin symbol such as `->` or `eo::add`, whose applications build
     /// terms of the given kind.
     pub fn mk_builtin(&mut self, name: &str, kind: Kind) -> Term {
@@ -254,11 +250,6 @@ impl Checker {
     }
 
     // --------------------------------------------------------- attributes
-
-    /// The term that goes with the symbol's constructor attribute.
-    pub fn attribute_term(&self, t: Term) -> Option<Term> {
-        self.app.get(&t).and_then(|ai| ai.cons)
-    }
 
     /// Gives a symbol its constructor attribute. A symbol can have only one;
     /// a second call warns and returns false.
@@ -334,6 +325,73 @@ impl Checker {
     ))]
     pub fn warn(&mut self, msg: &str) {
         self.warnings.emit(msg);
+    }
+
+    /// The term of a compound kind with the given children
+    /// ([`TermStore::mk`]), keeping the checker's invariant.
+    #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires old(self).wf(), old(self).has_all(children@), !(k is Symbol) && !(k is Lit),
+        ensures final(self).wf(), final(self).keeps(old(self)), final(self).has(r),
+    ))]
+    pub(crate) fn mk_term(&mut self, k: Kind, children: &[Term]) -> Term {
+        proof_decl! { let ghost before = *self; }
+        let t = self.store.mk(k, children);
+        proof! { self.lemma_stored(&before); }
+        t
+    }
+
+    /// The application of `f` to `a` ([`TermStore::mk_apply`]), keeping the
+    /// checker's invariant.
+    #[inline]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires old(self).wf(), old(self).has(f), old(self).has(a),
+        ensures final(self).wf(), final(self).keeps(old(self)), final(self).has(r),
+    ))]
+    pub(crate) fn mk_app(&mut self, f: Term, a: Term) -> Term {
+        proof_decl! { let ghost before = *self; }
+        let t = self.store.mk_apply(f, a);
+        proof! { self.lemma_stored(&before); }
+        t
+    }
+
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires old(self).wf(), old(self).has(ty),
+        ensures final(self).wf(), final(self).keeps(old(self)), final(self).has(r),
+    ))]
+    pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
+        proof_decl! { let ghost before = *self; }
+        let t = self.store.mk_symbol(kind, name, ty);
+        proof! { self.lemma_stored(&before); }
+        t
+    }
+
+    /// The term that goes with the symbol's constructor attribute.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires self.wf(),
+        ensures r matches Some(c) ==> self.has(c),
+    ))]
+    pub fn attribute_term(&self, t: Term) -> Option<Term> {
+        match self.app_info(t) {
+            Some(ai) => ai.cons,
+            None => None,
+        }
+    }
+
+    /// The terms the name is bound to, if it is overloaded; none otherwise.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires self.wf(),
+        ensures self.has_all(r@),
+    ))]
+    pub(crate) fn overloads_of(&self, name: &String) -> Vec<Term> {
+        proof! {
+            axiom_names_are_keys();
+            broadcast use vstd::std_specs::hash::group_hash_axioms;
+        }
+        match self.overloads.get(name) {
+            Some(ov) => crate::eval::copy_of(ov.as_slice()),
+            None => Vec::new(),
+        }
     }
 
     #[cfg_attr(verus_keep_ghost, verus_spec(r => requires self.wf(), ensures self.has(r),))]
@@ -470,7 +528,10 @@ pub open spec fn keeps(new: &TermStore, old: &TermStore) -> bool {
 /// its attribute is a term of the store, and that of a program is a list
 /// of cases.
 pub open spec fn app_ok(s: &TermStore, ai: AppInfo) -> bool {
-    ai.cons matches Some(c) ==> s.has(c) && (ai.attr == Attr::Program ==> is_program(s, c))
+    &&& ai.cons matches Some(c) ==> s.has(c)
+        && (ai.attr == Attr::Program ==> is_program(s, c) && has_patterns(s, c))
+    // a builtin stands for a compound kind
+    &&& ai.kind matches Some(k) ==> k is Node || k is Eval
 }
 
 impl Checker {
@@ -484,6 +545,9 @@ impl Checker {
         &&& self.store.has(self.proof_type)
         &&& self.neg_one matches Some(t) ==> self.store.has(t)
         &&& forall|t: Term| #[trigger] self.app@.contains_key(t) ==> app_ok(&self.store, self.app@[t])
+        // the terms a name is bound to are terms of the store
+        &&& forall|name: String| #[trigger] self.overloads@.contains_key(name)
+            ==> all_has(&self.store, self.overloads@[name]@)
         // the type of a kind of literal is a term of the store
         &&& forall|k: LitKind| #[trigger] self.literal_type_rules@.contains_key(k)
             ==> self.store.has(self.literal_type_rules@[k])
@@ -492,6 +556,7 @@ impl Checker {
     /// The attributes and the builtin terms are those of `old`.
     pub open(crate) spec fn same_tables(&self, old: &Checker) -> bool {
         &&& self.app == old.app
+        &&& self.overloads == old.overloads
         &&& self.literal_type_rules == old.literal_type_rules
         &&& self.t_true == old.t_true && self.t_false == old.t_false && self.t_self == old.t_self
         &&& self.list_type == old.list_type && self.list_nil == old.list_nil && self.list_cons == old.list_cons
@@ -514,9 +579,24 @@ impl Checker {
         ctx_ok(&self.store, ctx)
     }
 
+    /// The rule, the conclusion, the premises, the arguments and the
+    /// assumption of the step are terms of the store.
+    pub open(crate) spec fn has_step(&self, step: crate::step::Step) -> bool {
+        &&& self.store.has(step.rule)
+        &&& step.proven matches Some(t) ==> self.store.has(t)
+        &&& all_has(&self.store, step.premises@)
+        &&& all_has(&self.store, step.args@)
+        &&& step.assumption matches Some(t) ==> self.store.has(t)
+    }
+
+    /// Each of the terms has two children or more.
+    pub open(crate) spec fn has_pairs(&self, ts: Seq<Term>) -> bool {
+        forall|j: int| 0 <= j < ts.len() ==> self.store.kids((#[trigger] ts[j]).idx()).len() >= 2
+    }
+
     /// The term is a term of the store with the shape of a program.
     pub open(crate) spec fn has_program(&self, p: Term) -> bool {
-        self.store.has(p) && is_program(&self.store, p)
+        self.store.has(p) && is_program(&self.store, p) && has_patterns(&self.store, p)
     }
 
     /// This is what the checker knows of the symbol.
@@ -550,9 +630,25 @@ impl Checker {
                     self.store.kids((#[trigger] self.store.kids(c.idx())[i]).idx()).len() >= 2 by {
                     assert(old.store.has(old.store.kids(c.idx())[i]));
                 }
+                assert forall|i: int| 0 <= i < self.store.kids(c.idx()).len() implies
+                    case_ok(&self.store, #[trigger] self.store.kids(c.idx())[i]) by {
+                    let case = old.store.kids(c.idx())[i];
+                    assert(old.store.has(case));
+                    assert(case_ok(&old.store, case));
+                    old.store.lemma_children(case);
+                    assert(old.store.has(old.store.kids(case.idx())[0]));
+                }
             }
         }
     }
+}
+
+/// Assumed: the `Hash` and `Eq` of strings agree, which is what the table
+/// of overloaded names needs to behave as a map.
+#[verifier::external_body]
+pub proof fn axiom_names_are_keys()
+    ensures vstd::std_specs::hash::obeys_key_model::<String>(),
+{
 }
 
 /// Assumed: the derived `Hash` and `Eq` of term handles agree, which is

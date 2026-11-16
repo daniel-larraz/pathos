@@ -18,7 +18,7 @@ use crate::eval::{lemma_keeps_twice, use_collections};
 ///
 /// Trusted: Verus does not look into the message.
 #[cfg_attr(verus_keep_ghost, verus_verify(external_body))]
-fn say(out: &mut Option<&mut String>, text: &str) {
+pub(crate) fn say(out: &mut Option<&mut String>, text: &str) {
     if let Some(o) = out.as_deref_mut() {
         o.push_str(text);
     }
@@ -133,30 +133,6 @@ impl Checker {
             self.show(expected),
             self.show_ctx(ctx)
         )
-    }
-
-    /// The return type of the function type `t`
-    /// ([`Checker::get_function_type`]).
-    ///
-    /// Trusted: `build.rs` is not verified.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
-        requires self.wf(), self.has(t),
-        ensures self.has(r),
-    ))]
-    fn return_type_of(&self, t: Term) -> Term {
-        self.get_function_type(t).1
-    }
-
-    /// [`Checker::mk_function_type`]. Trusted: `build.rs` is not verified.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r =>
-        requires old(self).wf(), old(self).has_all(args@), old(self).has(ret),
-        ensures
-            final(self).wf(),
-            final(self).keeps(old(self)),
-            final(self).has(r),
-    ))]
-    fn function_type_of(&mut self, args: &[Term], ret: Term) -> Term {
-        self.mk_function_type(args, ret)
     }
 
     /// Sets the type rule of a literal kind. Fails if the kind is Boolean,
@@ -458,7 +434,7 @@ impl Checker {
                     args.push(self.store.ty(vars[i])?);
                 }
                 let ret = self.store.ty(self.store.child(e, 1))?;
-                Some(self.function_type_of(&args, ret))
+                Some(self.mk_function_type(&args, ret))
             }
             Kind::Type
             | Kind::BoolType
@@ -690,7 +666,7 @@ impl Checker {
             EvalOp::ListRepeat => {
                 let op_type = child_types[0]?;
                 if self.store.kind(op_type) == Kind::FUNCTION_TYPE {
-                    Some(self.return_type_of(op_type))
+                    Some(self.get_function_type(op_type).1)
                 } else {
                     None
                 }
