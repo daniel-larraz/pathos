@@ -6,7 +6,7 @@
 use std::collections::{HashMap, HashSet};
 
 use pathos_term::codec::{Reader, Writer};
-use pathos_term::{Kind, LitKind, Term, TermStore};
+use pathos_term::{Integer, Kind, Lit, LitKind, Term, TermStore};
 
 #[cfg(verus_keep_ghost)]
 use vstd::prelude::*;
@@ -243,6 +243,14 @@ impl Checker {
             return None;
         }
         let neg_one = read_opt_term(r, &store)?;
+        // the numeral kept for the answer of `eo::list_find` when the
+        // element is not there: -1, as the checker makes it
+        if let Some(t) = neg_one {
+            match store.lit(t) {
+                Some(Lit::Numeral(i)) if *i == Integer::one().neg() => {}
+                _ => return None,
+            }
+        }
 
         let n = r.len(15)?;
         let mut app = HashMap::with_capacity(n);
@@ -473,6 +481,33 @@ mod tests {
             other.mk_symbol(SymbolKind::Const, "c", ty);
         }
         ck.store = other;
+        assert!(!reads(&ck));
+    }
+
+    /// `eo::list_find` answers with the numeral the checker keeps for "not
+    /// found"; a snapshot with another term there is not read.
+    #[test]
+    fn a_kept_numeral_that_is_not_minus_one_is_rejected() {
+        let numeral = |ck: &mut Checker, n: &str| {
+            let i = Integer::parse(n, 10).unwrap();
+            ck.store.mk_lit(Lit::Numeral(i))
+        };
+        // none kept, and the one the checker makes
+        let mut ck = checker();
+        assert!(reads(&ck));
+        ck.neg_one = Some(numeral(&mut ck, "-1"));
+        assert!(reads(&ck));
+        // another numeral, a literal of another kind, a term that is none
+        for forged in ["5", "1", "0"] {
+            let mut ck = checker();
+            ck.neg_one = Some(numeral(&mut ck, forged));
+            assert!(!reads(&ck), "{forged}");
+        }
+        let mut ck = checker();
+        ck.neg_one = Some(ck.store.mk_lit(Lit::Bool(true)));
+        assert!(!reads(&ck));
+        let mut ck = checker();
+        ck.neg_one = Some(ck.store.mk_type());
         assert!(!reads(&ck));
     }
 
