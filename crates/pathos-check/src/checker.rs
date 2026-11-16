@@ -448,17 +448,30 @@ impl Checker {
 
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires old(self).wf(),
-        ensures final(self).wf(), final(self).has(r), final(self).keeps(old(self)),
+        ensures
+            final(self).wf(),
+            final(self).has(r),
+            final(self).keeps(old(self)),
+            final(self).grew_from(old(self)),
+            // the numeral, unless the store is full
+            !final(self).is_full() ==> final(self).is_numeral(r, i@),
     ))]
     pub fn mk_numeral(&mut self, i: Integer) -> Term {
         proof_decl! { let ghost before = *self; }
         let t = self.store.mk_lit(Lit::Numeral(i));
-        proof! { self.lemma_stored(&before); }
+        proof! {
+            self.lemma_stored(&before);
+            if self.store.spec_limit() is None {
+                self.store.lemma_lit(t, Lit::Numeral(i));
+            }
+        }
         t
     }
 
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
-        ensures r matches Some(ai) ==> self.knows(t, *ai),
+        ensures
+            r matches Some(ai) ==> self.knows(t, *ai),
+            r is None ==> !self.app@.contains_key(t),
     ))]
     pub(crate) fn app_info(&self, t: Term) -> Option<&AppInfo> {
         proof! {
@@ -545,7 +558,9 @@ impl Checker {
         &&& self.store.is_lit(self.t_true, Lit::Bool(true)) && self.store.is_lit(self.t_false, Lit::Bool(false))
         &&& self.store.has(self.list_type) && self.store.has(self.list_nil) && self.store.has(self.list_cons)
         &&& self.store.has(self.proof_type)
-        &&& self.neg_one matches Some(t) ==> self.store.has(t)
+        // the numeral kept for `eo::list_find` is -1, if it was made
+        // before the store was full
+        &&& self.neg_one matches Some(t) ==> self.store.has(t) && (!self.is_full() ==> self.is_numeral(t, -1))
         &&& forall|t: Term| #[trigger] self.app@.contains_key(t) ==> app_ok(&self.store, self.app@[t])
         // the terms a name is bound to are terms of the store
         &&& forall|name: String| #[trigger] self.overloads@.contains_key(name)
@@ -591,6 +606,22 @@ impl Checker {
         &&& step.assumption matches Some(t) ==> self.store.has(t)
     }
 
+    /// The term is the numeral `n`.
+    pub open(crate) spec fn is_numeral(&self, t: Term, n: int) -> bool {
+        self.store.is_lit(t, self.store.value(t)) && self.store.value(t)@ == pathos_term::Val::Numeral(n)
+    }
+
+    /// The store has run into a limit: a term made since may be a
+    /// placeholder.
+    pub open(crate) spec fn is_full(&self) -> bool {
+        self.store.spec_limit() is Some
+    }
+
+    /// The store is `old`'s with terms added, and still full if that was.
+    pub open(crate) spec fn grew_from(&self, old: &Checker) -> bool {
+        self.store.extends(&old.store) && (old.is_full() ==> self.is_full())
+    }
+
     /// The term is the Boolean literal `b`.
     pub open(crate) spec fn is_bool(&self, t: Term, b: bool) -> bool {
         self.store.is_lit(t, Lit::Bool(b))
@@ -623,12 +654,23 @@ impl Checker {
 
     /// After terms were added to the store, the invariant holds again.
     pub(crate) proof fn lemma_stored(&self, old: &Checker)
-        requires old.wf(), self.store.wf(), self.store.extends(&old.store), self.same_tables(old),
+        requires
+            old.wf(),
+            self.store.wf(),
+            self.store.extends(&old.store),
+            // a store that is full stays so
+            old.is_full() ==> self.is_full(),
+            self.same_tables(old),
         ensures self.wf(), self.keeps(old),
     {
         self.store.lemma_extends(&old.store);
         self.store.lemma_lit_kept(&old.store, self.t_true, Lit::Bool(true));
         self.store.lemma_lit_kept(&old.store, self.t_false, Lit::Bool(false));
+        if self.neg_one is Some && !self.is_full() {
+            let t = self.neg_one->0;
+            self.store.lemma_lit_kept(&old.store, t, old.store.value(t));
+            self.store.lemma_lit(t, old.store.value(t));
+        }
         assert forall|t: Term| #[trigger] self.app@.contains_key(t) implies app_ok(&self.store, self.app@[t]) by {
             let ai = self.app@[t];
             assert(app_ok(&old.store, ai));

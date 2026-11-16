@@ -621,6 +621,7 @@ impl TermStore {
             final(self).wf(),
             final(self).has(r),
             final(self).extends(old(self)),
+            old(self).spec_limit() is Some ==> final(self).spec_limit() is Some,
             final(self).spec_len() <= old(self).spec_len() + 1,
     ))]
     pub fn mk_symbol(&mut self, kind: SymbolKind, name: &str, ty: Term) -> Term {
@@ -1059,7 +1060,7 @@ impl TermStore {
 
     /// Caches the type of the term.
     #[inline]
-    #[cfg_attr(verus_keep_ghost, verus_spec(requires old(self).wf(), old(self).has(t), old(self).has(ty), ensures final(self).wf(), final(self).extends(old(self)),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(requires old(self).wf(), old(self).has(t), old(self).has(ty), ensures final(self).wf(), final(self).extends(old(self)), final(self).spec_limit() == old(self).spec_limit(),))]
     pub fn set_ty(&mut self, t: Term, ty: Term) {
         self.types[t.index()] = Some(ty);
         proof! { self.lemma_same_terms(old(self)); }
@@ -2126,6 +2127,17 @@ impl TermStore {
     /// The term is the compound term of this kind with these children.
     pub closed spec fn is_node(&self, t: Term, kind: Kind, children: Seq<Term>) -> bool {
         self.has(t) && self.compound(t.idx()) && self.kind_of(t.idx()) == kind && self.kids(t.idx()) == children
+    }
+
+    /// A term whose tree is a literal is a literal term.
+    pub proof fn lemma_tree_lit_kind(&self, t: Term)
+        requires self.wf(), self.has(t), self.tree(t.idx()) is Lit,
+        ensures self.kind_of(t.idx()) is Lit,
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+        if self.compound(t.idx()) {
+            self.lemma_tree_compound(t);
+        }
     }
 
     /// The tree of a term that is not compound is not that of a compound

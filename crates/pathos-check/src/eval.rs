@@ -1127,8 +1127,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             final(self).has(r),
-            final(self).store.extends(&old(self).store),
-            old(self).store.spec_limit() is Some ==> final(self).store.spec_limit() is Some,
+            final(self).grew_from(old(self)),
             // the list built is `build` on the trees, unless the store is
             // full, when a term made is a placeholder
             final(self).store.spec_limit() is None ==> final(self).store.tree(r.idx()) == build(
@@ -1213,7 +1212,12 @@ impl Checker {
 
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires old(self).wf(),
-        ensures final(self).wf(), final(self).keeps(old(self)), final(self).has(r),
+        ensures
+            final(self).wf(),
+            final(self).keeps(old(self)),
+            final(self).has(r),
+            final(self).grew_from(old(self)),
+            !final(self).is_full() ==> final(self).is_numeral(r, n as int),
     ))]
     fn mk_usize(&mut self, n: usize) -> Term {
         self.mk_numeral(Integer::from(n))
@@ -1543,6 +1547,32 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            // The tables say whether the first argument builds lists, which
+            // way they nest and what ends them. When the term that ends
+            // them does not depend on a type, the result is the
+            // specification's. (When it does, the terminator is found by
+            // typing and evaluation, and `evaluate_list_op_with` says what
+            // is proved, given the one found.)
+            ({
+                let head = list_head(&old(self).store, args@[0]);
+                if old(self).app@.contains_key(head) && old(self).app@[head].attr.spec_is_list_nil()
+                    && old(self).app@[head].cons is Some {
+                    let nil = old(self).app@[head].cons->0;
+                    old(self).store.kind_of(nil.idx()) != Kind::Node(NodeKind::Parameterized)
+                        && k != EvalOp::Nil && k != EvalOp::ListSingletonIntro ==> list_ok(
+                        &old(self).store,
+                        &final(self).store,
+                        k,
+                        head,
+                        nil,
+                        old(self).app@[head].attr.spec_is_left_nil(),
+                        args@,
+                        r,
+                    )
+                } else {
+                    r is None
+                }
+            }),
     ))]
     #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn evaluate_list_op(&mut self, k: EvalOp, args: &[Term]) -> Option<Term> {
@@ -1601,6 +1631,8 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            // given the terminator, the result is the specification's
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn evaluate_list_op_with(
         &mut self,
@@ -1633,6 +1665,7 @@ impl Checker {
     /// `(eo::cons op e t)` and `(eo::list_concat op t1 t2)`.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::Cons || k == EvalOp::ListConcat,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -1641,6 +1674,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_cons_or_concat(
         &mut self,
@@ -1655,6 +1689,13 @@ impl Checker {
             broadcast use vstd::std_specs::hash::group_hash_axioms;
             broadcast use vstd::std_specs::btree::group_btree_axioms;
         }
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost nl = s0.tree(nil.idx());
+            let ghost a = trees(&s0, args@);
+        }
+        proof! { s0.lemma_extends_itself(); }
         let mut hargs = Vec::new();
         let is_concat = k == EvalOp::ListConcat;
         let tail_index: usize = if is_left { 1 } else { 2 };
@@ -1665,11 +1706,19 @@ impl Checker {
         }
         if k == EvalOp::Cons {
             hargs.push(arg!(self, k, args, 1));
+            proof! {
+                let es = trees(&s0, hargs@);
+                assert(es =~= seq![a[1]]);
+                assert(es.drop_first() =~= Seq::<Tree>::empty());
+                assert(build(f, is_left, es, a[2]) == cons_tree(f, is_left, a[1], build(f, is_left, es.drop_first(), a[2])));
+            }
         } else {
             let list = arg!(self, k, args, head_index);
             self.get_nary_children(list, op, Some(nil), &mut hargs, is_left)?;
+            proof! { lemma_read(&s0, hargs@, elems(f, is_left, s0.tree(list.idx()))); }
             // nothing to rebuild when the tail is empty
             if ret == nil {
+                proof! { lemma_build_elems(f, is_left, s0.tree(list.idx())); }
                 return Some(arg!(self, k, args, head_index));
             }
         }
@@ -1679,6 +1728,7 @@ impl Checker {
     /// `(eo::list_repeat op e n)`: the list of `n` times `e`.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListRepeat,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -1687,6 +1737,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_repeat(
         &mut self,
@@ -1701,22 +1752,60 @@ impl Checker {
             broadcast use vstd::std_specs::hash::group_hash_axioms;
             broadcast use vstd::std_specs::btree::group_btree_axioms;
         }
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost nl = s0.tree(nil.idx());
+            let ghost a = trees(&s0, args@);
+        }
+        proof! { s0.lemma_extends_itself(); }
         let n = arg!(self, k, args, 2);
-        let count = match self.store.lit(n) {
+        let count = self.store.lit(n);
+        proof! {
+            lemma_numeral_of(&s0, n);
+            if count is Some {
+                s0.lemma_lit(n, *count->0);
+            }
+        }
+        let count = match count {
             Some(Lit::Numeral(i)) if i.fits_u32() => i.to_u32(),
             _ => return None,
         };
         let mut ret = nil;
         proof_decl! { let ghost start = *self; }
+        proof! { assert(Seq::new(0, |i: int| a[1]) =~= Seq::<Tree>::empty()); }
         #[cfg_attr(verus_keep_ghost, verus_spec(
             invariant
                 self.wf(),
                 self.keeps(&start),
                 self.has(ret),
+                self.store.extends(&s0),
+                s0.spec_limit() is Some ==> self.store.spec_limit() is Some,
+                self.store.spec_limit() is None ==> self.store.tree(ret.idx())
+                    == build(f, is_left, Seq::new(_i as nat, |i: int| a[1]), nl),
         ))]
         for _i in 0..count {
             let elem = arg!(self, k, args, 1);
-            ret = self.prepend_nary_children(op, ret, &[elem], is_left);
+            proof_decl! { let ghost before = self.store; let ghost rest = ret; }
+            let single = [elem];
+            ret = self.prepend_nary_children(op, ret, &single, is_left);
+            proof! {
+                self.store.lemma_extends_twice(&before, &s0);
+                if self.store.spec_limit() is None {
+                    before.theorem_trees_are_kept(&s0, op);
+                    before.theorem_trees_are_kept(&s0, elem);
+                    let one = trees(&before, single@);
+                    assert(one =~= seq![a[1]]);
+                    assert(one.drop_first() =~= Seq::<Tree>::empty());
+                    assert(build(f, is_left, one, before.tree(rest.idx()))
+                        == cons_tree(f, is_left, a[1], build(f, is_left, one.drop_first(), before.tree(rest.idx()))));
+                    let more = Seq::new((_i + 1) as nat, |i: int| a[1]);
+                    assert(more.drop_first() =~= Seq::new(_i as nat, |i: int| a[1]));
+                    assert(more[0] == a[1]);
+                    assert(build(f, is_left, more, nl)
+                        == cons_tree(f, is_left, more[0], build(f, is_left, more.drop_first(), nl)));
+                }
+            }
         }
         Some(ret)
     }
@@ -1724,6 +1813,7 @@ impl Checker {
     /// `(eo::list_len op t)`.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListLength,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -1732,6 +1822,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_length(
         &mut self,
@@ -1755,6 +1846,7 @@ impl Checker {
     /// `(eo::list_nth op t n)`.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListNth,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -1763,6 +1855,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_nth(
         &mut self,
@@ -1777,21 +1870,37 @@ impl Checker {
             broadcast use vstd::std_specs::hash::group_hash_axioms;
             broadcast use vstd::std_specs::btree::group_btree_axioms;
         }
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost nl = s0.tree(nil.idx());
+            let ghost a = trees(&s0, args@);
+        }
+        proof! { s0.lemma_extends_itself(); }
         let mut hargs = Vec::new();
         let n = arg!(self, k, args, 2);
-        let i = match self.store.lit(n) {
+        let index = self.store.lit(n);
+        proof! {
+            lemma_numeral_of(&s0, n);
+            if index is Some {
+                s0.lemma_lit(n, *index->0);
+            }
+        }
+        let i = match index {
             Some(Lit::Numeral(i)) if i.fits_u32() => i.to_u32() as usize,
             _ => return None,
         };
         // all the elements are read, to check that this is a list
         let list = arg!(self, k, args, 1);
         self.get_nary_children(list, op, Some(nil), &mut hargs, is_left)?;
+        proof! { lemma_read(&s0, hargs@, elems(f, is_left, s0.tree(list.idx()))); }
         hargs.get(i).copied()
     }
 
     /// `(eo::list_find op t e)`: the position of `e` in `t`, or -1.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListFind,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -1800,6 +1909,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_find(
         &mut self,
@@ -1817,8 +1927,27 @@ impl Checker {
         let mut hargs = Vec::new();
         let list = arg!(self, k, args, 1);
         self.get_nary_children(list, op, Some(nil), &mut hargs, is_left)?;
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost es = elems(s0.tree(op.idx()), is_left, s0.tree(list.idx()));
+        }
+        proof! { lemma_read(&s0, hargs@, es); }
         let elem = arg!(self, k, args, 2);
-        match position(&hargs, elem) {
+        let found = position(&hargs, elem);
+        proof! {
+            // terms that differ have trees that differ
+            assert forall|j: int| 0 <= j < hargs@.len() && hargs@[j] != elem implies
+                #[trigger] es[j] != s0.tree(elem.idx()) by {
+                if s0.tree(hargs@[j].idx()) == s0.tree(elem.idx()) {
+                    s0.theorem_same_tree_same_term(hargs@[j], elem);
+                }
+            }
+            match found {
+                Some(i) => lemma_find_at(es, s0.tree(elem.idx()), 0, i as int),
+                None => lemma_find_none(es, s0.tree(elem.idx()), 0),
+            }
+        }
+        match found {
             Some(i) => Some(self.mk_usize(i)),
             None => {
                 let neg_one = match self.neg_one {
@@ -1895,6 +2024,7 @@ impl Checker {
     /// `(eo::list_rev op t)`.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListRev,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -1903,6 +2033,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_rev(
         &mut self,
@@ -1920,7 +2051,13 @@ impl Checker {
         let mut hargs = Vec::new();
         let list = arg!(self, k, args, 1);
         self.get_nary_children(list, op, Some(nil), &mut hargs, is_left)?;
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost es = elems(s0.tree(op.idx()), is_left, s0.tree(list.idx()));
+        }
+        proof! { lemma_read(&s0, hargs@, es); }
         reverse(hargs.as_mut_slice());
+        proof! { assert(trees(&s0, hargs@) =~= es.reverse()); }
         Some(self.prepend_nary_children(op, nil, &hargs, is_left))
     }
 
@@ -2104,6 +2241,7 @@ impl Checker {
     /// `(eo::list_singleton_elim op t)`.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListSingletonElim,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -2112,6 +2250,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_singleton_elim(
         &mut self,
@@ -2308,9 +2447,16 @@ fn arity_ok(k: EvalOp, nargs: usize) -> bool {
 }
 
 /// The position of the first `elem` in `ts`.
-#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(r => ensures r matches Some(i) ==> i < ts@.len(),))]
+#[cfg_attr(verus_keep_ghost, verus_verify, verus_spec(r => ensures
+    r matches Some(i) ==> i < ts@.len() && ts@[i as int] == elem
+        && forall|j: int| 0 <= j < i ==> ts@[j] != elem,
+    r is None ==> forall|j: int| 0 <= j < ts@.len() ==> ts@[j] != elem,
+))]
 #[allow(clippy::needless_range_loop, clippy::manual_find)]
 fn position(ts: &[Term], elem: Term) -> Option<usize> {
+    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+        forall|j: int| 0 <= j < i ==> ts@[j] != elem,
+    ))]
     for i in 0..ts.len() {
         if ts[i] == elem {
             return Some(i);
@@ -2520,6 +2666,235 @@ proof fn lemma_cons_built(
             assert(t1->Node_1 =~= seq![s0.tree(op.idx()), s0.tree(h.idx())]);
             assert(t2->Node_1 =~= seq![t1, s1.tree(rest.idx())]);
         }
+    }
+}
+
+/// What a list operator gives: a term, or a numeral or a Boolean literal.
+pub enum Out {
+    Term(Tree),
+    Num(int),
+    Bool(bool),
+}
+
+/// The term is what the specification gives.
+pub open spec fn out_is(s: &TermStore, t: Term, o: Out) -> bool {
+    match o {
+        Out::Term(tree) => s.tree(t.idx()) == tree,
+        Out::Num(n) => s.is_lit(t, s.value(t)) && s.value(t)@ == Val::Numeral(n),
+        Out::Bool(b) => s.is_lit(t, s.value(t)) && s.value(t)@ == Val::Bool(b),
+    }
+}
+
+/// The numeral a tree is, if it is one.
+pub open spec fn numeral_of(t: Tree) -> Option<int> {
+    match t {
+        Tree::Lit(l) => match l@ {
+            Val::Numeral(n) => Some(n),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+/// The position of the first `z` among the elements, counted from `n`; -1
+/// if there is none (`$eo_list_find_rec`).
+pub open spec fn find_rec(es: Seq<Tree>, z: Tree, n: int) -> int
+    decreases es.len(),
+{
+    if es.len() == 0 {
+        -1
+    } else if es[0] == z {
+        n
+    } else {
+        find_rec(es.drop_first(), z, n + 1)
+    }
+}
+
+/// The number of arguments a list operator takes, the operator among
+/// them.
+pub open spec fn list_arity(op: EvalOp) -> nat {
+    match op {
+        EvalOp::ListLength | EvalOp::ListRev | EvalOp::ListSetof | EvalOp::ListSingletonElim
+        | EvalOp::ListSingletonIntro | EvalOp::Nil => 2,
+        _ => 3,
+    }
+}
+
+/// What a list operator evaluates to on the trees `a` of its arguments
+/// (`a[0]` is the operator's own argument), for the operator `f` whose
+/// lists end in `nil` and nest to the left if `left`; `None` if it does
+/// not evaluate and the application stays.
+///
+/// Transcribed from Ethos's desugar plugin (`eo_desugar.eo`), each arm with
+/// the program it comes from; "binary:" where this follows the binary.
+/// The plugin's lists nest to the right only.
+pub open spec fn list_spec(op: EvalOp, f: Tree, nil: Tree, left: bool, a: Seq<Tree>) -> Option<Out> {
+    match op {
+        // $eo_cons
+        EvalOp::Cons => if is_list(f, nil, left, a[2]) {
+            Some(Out::Term(cons_tree(f, left, a[1], a[2])))
+        } else {
+            None
+        },
+        // $eo_list_concat. binary: of lists that nest to the left, the
+        // second is put in front of the first
+        EvalOp::ListConcat => {
+            let (front, back) = if left { (a[2], a[1]) } else { (a[1], a[2]) };
+            if is_list(f, nil, left, back) && is_list(f, nil, left, front) {
+                Some(Out::Term(build(f, left, elems(f, left, front), back)))
+            } else {
+                None
+            }
+        },
+        // $eo_list_len
+        EvalOp::ListLength => if is_list(f, nil, left, a[1]) {
+            Some(Out::Num(elems(f, left, a[1]).len() as int))
+        } else {
+            None
+        },
+        // $eo_list_nth: stuck past the end. binary: the index is at most
+        // 2^32 - 1
+        EvalOp::ListNth => match numeral_of(a[2]) {
+            Some(n) => if 0 <= n <= u32::MAX && is_list(f, nil, left, a[1]) && n < elems(f, left, a[1]).len() {
+                Some(Out::Term(elems(f, left, a[1])[n]))
+            } else {
+                None
+            },
+            None => None,
+        },
+        // $eo_list_find
+        EvalOp::ListFind => if is_list(f, nil, left, a[1]) {
+            Some(Out::Num(find_rec(elems(f, left, a[1]), a[2], 0)))
+        } else {
+            None
+        },
+        // $eo_list_rev
+        EvalOp::ListRev => if is_list(f, nil, left, a[1]) {
+            Some(Out::Term(build(f, left, elems(f, left, a[1]).reverse(), nil)))
+        } else {
+            None
+        },
+        // $eo_list_singleton_elim
+        EvalOp::ListSingletonElim => if is_list(f, nil, left, a[1]) {
+            Some(Out::Term(if elems(f, left, a[1]).len() == 1 { elems(f, left, a[1])[0] } else { a[1] }))
+        } else {
+            None
+        },
+        // $eo_list_repeat. binary: the count is at most 2^32 - 1
+        EvalOp::ListRepeat => match numeral_of(a[2]) {
+            Some(n) => if 0 <= n <= u32::MAX {
+                Some(Out::Term(build(f, left, Seq::new(n as nat, |i: int| a[1]), nil)))
+            } else {
+                None
+            },
+            None => None,
+        },
+        _ => None,
+    }
+}
+
+/// The list operators that [`list_spec`] specifies.
+pub open spec fn list_specified(op: EvalOp) -> bool {
+    matches!(
+        op,
+        EvalOp::Cons | EvalOp::ListConcat | EvalOp::ListLength | EvalOp::ListNth | EvalOp::ListFind
+            | EvalOp::ListRev | EvalOp::ListSingletonElim | EvalOp::ListRepeat
+    )
+}
+
+/// The operator that a list operator's first argument stands for: the
+/// attributes are on the operator inside `(eo::_ params op)`.
+pub open spec fn list_head(s: &TermStore, t: Term) -> Term {
+    if s.kind_of(t.idx()) == Kind::Node(NodeKind::Parameterized) { s.kids(t.idx())[1] } else { t }
+}
+
+/// What is proved of a list operator: unless the store is full, and for
+/// the number of arguments it takes, its result is the specification's.
+pub open spec fn list_ok(
+    s0: &TermStore,
+    s1: &TermStore,
+    k: EvalOp,
+    op: Term,
+    nil: Term,
+    left: bool,
+    args: Seq<Term>,
+    r: Option<Term>,
+) -> bool {
+    s1.spec_limit() is None && args.len() == list_arity(k) && list_specified(k) ==> (match r {
+        Some(t) => list_spec(k, s0.tree(op.idx()), s0.tree(nil.idx()), left, trees(s0, args)) matches Some(o)
+            && out_is(s1, t, o),
+        None => list_spec(k, s0.tree(op.idx()), s0.tree(nil.idx()), left, trees(s0, args)) is None,
+    })
+}
+
+/// Elements read into an empty list are the list's elements.
+proof fn lemma_read(s: &TermStore, hargs: Seq<Term>, es: Seq<Tree>)
+    requires trees(s, hargs) == trees(s, Seq::<Term>::empty()) + es,
+    ensures trees(s, hargs) == es, hargs.len() == es.len(),
+{
+    assert(trees(s, Seq::<Term>::empty()) + es =~= es);
+}
+
+/// The numeral a term is, on its tree: that of its value, if it is a
+/// literal.
+proof fn lemma_numeral_of(s: &TermStore, t: Term)
+    requires s.wf(), s.has(t),
+    ensures
+        numeral_of(s.tree(t.idx())) == (if s.kind_of(t.idx()) is Lit {
+            match s.value(t)@ {
+                Val::Numeral(n) => Some(n),
+                _ => None,
+            }
+        } else {
+            None
+        }),
+{
+    if s.kind_of(t.idx()) is Lit {
+        s.lemma_lit_exists(t);
+        s.lemma_lit_tree(t, s.value(t));
+    } else if s.tree(t.idx()) is Lit {
+        s.lemma_tree_lit_kind(t);
+    }
+}
+
+/// `find_rec` gives the first position.
+proof fn lemma_find_at(es: Seq<Tree>, z: Tree, n: int, i: int)
+    requires 0 <= i < es.len(), es[i] == z, forall|j: int| 0 <= j < i ==> es[j] != z,
+    ensures find_rec(es, z, n) == n + i,
+    decreases i,
+{
+    if i > 0 {
+        assert(es[0] != z);
+        lemma_find_at(es.drop_first(), z, n + 1, i - 1);
+    }
+}
+
+/// `find_rec` gives -1 when there is none.
+proof fn lemma_find_none(es: Seq<Tree>, z: Tree, n: int)
+    requires forall|j: int| 0 <= j < es.len() ==> es[j] != z,
+    ensures find_rec(es, z, n) == -1,
+    decreases es.len(),
+{
+    if es.len() > 0 {
+        assert(es[0] != z);
+        lemma_find_none(es.drop_first(), z, n + 1);
+    }
+}
+
+/// A list is its elements in front of what it ends in.
+pub proof fn lemma_build_elems(f: Tree, left: bool, t: Tree)
+    ensures build(f, left, elems(f, left, t), tail_of(f, left, t)) == t,
+    decreases t,
+{
+    match uncons(f, left, t) {
+        Some((head, tail)) => {
+            lemma_build_elems(f, left, tail);
+            let es = elems(f, left, t);
+            assert(es.drop_first() =~= elems(f, left, tail));
+            assert(t->Node_1 =~= seq![t->Node_1[0], t->Node_1[1]]);
+            assert(t->Node_1[0]->Node_1 =~= seq![t->Node_1[0]->Node_1[0], t->Node_1[0]->Node_1[1]]);
+        },
+        None => {},
     }
 }
 
