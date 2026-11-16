@@ -1972,8 +1972,9 @@ impl Checker {
     }
 
     /// `(eo::list_erase op t e)` and `(eo::list_erase_all op t e)`.
-    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verifier::rlimit(100), verus_spec(r =>
         requires
+            k == EvalOp::ListErase || k == EvalOp::ListEraseAll,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -1982,6 +1983,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_erase(
         &mut self,
@@ -2003,32 +2005,122 @@ impl Checker {
         let mut result = Vec::new();
         let mut change_index = 0;
         let mut change_size = 0;
-        proof_decl! { let ghost at = *self; }
+        proof_decl! {
+            let ghost at = *self;
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost nl = s0.tree(nil.idx());
+            let ghost es = elems(f, is_left, s0.tree(list.idx()));
+            // the element to erase, when it is there
+            let ghost z = if args@.len() >= 3 { s0.tree(args@[2].idx()) } else { nl };
+        }
+        proof! {
+            lemma_read(&s0, hargs@, es);
+            assert(es.take(0) =~= Seq::<Tree>::empty());
+            assert(trees(&s0, result@) =~= Seq::<Tree>::empty());
+        }
+        // (a loop without `break`, so that the proof knows how it ended)
+        let mut i = 0;
+        let mut stop = false;
         #[cfg_attr(verus_keep_ghost, verus_spec(
-            invariant *self == at, self.has_all(result@), change_index <= i,
+            invariant
+                *self == at,
+                self.has_all(result@),
+                i <= hargs@.len(),
+                change_index <= i,
+                stop ==> !is_all && change_index == i && i >= 1,
+                args@.len() >= 3 ==> (if is_all {
+                    &&& trees(&s0, result@) == erase_all_rec(es.take(i as int), z)
+                    &&& change_size <= result@.len()
+                    &&& trees(&s0, result@).take(change_size as int) == erase_all_rec(es.take(change_index as int), z)
+                    &&& forall|j: int| change_index <= j < i ==> es[j] != z
+                } else if stop {
+                    &&& es[i - 1] == z
+                    &&& trees(&s0, result@) == es.take(i - 1)
+                    &&& forall|j: int| 0 <= j < i - 1 ==> es[j] != z
+                } else {
+                    &&& change_index == 0
+                    &&& trees(&s0, result@) == es.take(i as int)
+                    &&& forall|j: int| 0 <= j < i ==> es[j] != z
+                }),
+            decreases hargs@.len() - i,
         ))]
-        for i in 0..hargs.len() {
+        while i < hargs.len() && !stop {
             let h = hargs[i];
-            if h == arg!(self, k, args, 2) {
-                change_index = i + 1;
-                if !is_all {
-                    break;
+            let elem = arg!(self, k, args, 2);
+            proof_decl! { let ghost before = result@; }
+            proof! {
+                assert(es[i as int] == s0.tree(h.idx()));
+                if s0.tree(h.idx()) == z {
+                    s0.theorem_same_tree_same_term(h, elem);
                 }
-                change_size = result.len();
-                continue;
+                lemma_erase_all_step(es, z, i as int);
             }
-            result.push(h);
+            if h == elem {
+                change_index = i + 1;
+                if is_all {
+                    change_size = result.len();
+                    proof! { assert(trees(&s0, result@).take(change_size as int) =~= trees(&s0, result@)); }
+                } else {
+                    stop = true;
+                    proof! { assert(es.take(i + 1 - 1) =~= es.take(i as int)); }
+                }
+            } else {
+                result.push(h);
+                proof! {
+                    assert(trees(&s0, result@) =~= trees(&s0, before) + seq![es[i as int]]);
+                    if is_all {
+                        assert(trees(&s0, result@).take(change_size as int)
+                            =~= trees(&s0, before).take(change_size as int));
+                    }
+                }
+            }
+            i += 1;
         }
         if change_index == 0 {
+            proof! {
+                if args@.len() >= 3 {
+                    assert(es.take(es.len() as int) =~= es);
+                    lemma_erase_none(es, z);
+                    lemma_build_elems(f, is_left, s0.tree(list.idx()));
+                }
+            }
             return Some(arg!(self, k, args, 1));
         }
         // Keep the list after the last change as it is, and rebuild
         // only what comes before.
+        proof_decl! { let ghost kept = trees(&s0, result@); let ghost whole = result@; }
         if is_all {
             result.truncate(change_size);
+            proof! {
+                if args@.len() >= 3 {
+                    assert(result@ =~= whole.take(change_size as int));
+                    assert(trees(&s0, result@) =~= kept.take(change_size as int));
+                }
+            }
         }
         let list = arg!(self, k, args, 1);
         let ret = self.get_nary_nth_tail(list, op, is_left, change_index);
+        proof! {
+            if args@.len() >= 3 {
+                let c = change_index as int;
+                let n = es.len() as int;
+                lemma_nth_tail(f, is_left, s0.tree(list.idx()), change_index as nat);
+                let rest = es.subrange(c, n);
+                lemma_build_append(f, is_left, trees(&s0, result@), rest, nl);
+                if is_all {
+                    assert(es.take(n) =~= es);
+                    assert(es =~= es.take(c) + rest);
+                    lemma_erase_all_append(es.take(c), rest, z);
+                    assert forall|j: int| 0 <= j < rest.len() implies rest[j] != z by {
+                        assert(rest[j] == es[c + j]);
+                    }
+                    lemma_erase_none(rest, z);
+                } else {
+                    lemma_erase_at(es, z, c - 1);
+                }
+            }
+        }
         Some(self.prepend_nary_children(op, ret, &result, is_left))
     }
 
@@ -2721,6 +2813,143 @@ pub open spec fn find_rec(es: Seq<Tree>, z: Tree, n: int) -> int
     }
 }
 
+/// The elements without the first `z` (`$eo_list_erase_rec`).
+pub open spec fn erase_rec(es: Seq<Tree>, z: Tree) -> Seq<Tree>
+    decreases es.len(),
+{
+    if es.len() == 0 {
+        es
+    } else if es[0] == z {
+        es.drop_first()
+    } else {
+        seq![es[0]] + erase_rec(es.drop_first(), z)
+    }
+}
+
+/// The elements without any `z` (`$eo_list_erase_all_rec`).
+pub open spec fn erase_all_rec(es: Seq<Tree>, z: Tree) -> Seq<Tree>
+    decreases es.len(),
+{
+    if es.len() == 0 {
+        es
+    } else if es[0] == z {
+        erase_all_rec(es.drop_first(), z)
+    } else {
+        seq![es[0]] + erase_all_rec(es.drop_first(), z)
+    }
+}
+
+/// Erasing from a list without the element changes nothing.
+proof fn lemma_erase_none(es: Seq<Tree>, z: Tree)
+    requires forall|j: int| 0 <= j < es.len() ==> es[j] != z,
+    ensures erase_rec(es, z) == es, erase_all_rec(es, z) == es,
+    decreases es.len(),
+{
+    if es.len() > 0 {
+        assert(es[0] != z);
+        lemma_erase_none(es.drop_first(), z);
+        assert(seq![es[0]] + es.drop_first() =~= es);
+    }
+}
+
+/// Erasing the first `z`, which is at position `i`.
+proof fn lemma_erase_at(es: Seq<Tree>, z: Tree, i: int)
+    requires 0 <= i < es.len(), es[i] == z, forall|j: int| 0 <= j < i ==> es[j] != z,
+    ensures erase_rec(es, z) == es.take(i) + es.subrange(i + 1, es.len() as int),
+    decreases i,
+{
+    if i == 0 {
+        assert(es.drop_first() =~= es.take(0) + es.subrange(1, es.len() as int));
+    } else {
+        assert(es[0] != z);
+        let rest = es.drop_first();
+        lemma_erase_at(rest, z, i - 1);
+        assert(seq![es[0]] + (rest.take(i - 1) + rest.subrange(i, rest.len() as int))
+            =~= es.take(i) + es.subrange(i + 1, es.len() as int));
+    }
+}
+
+/// Erasing every `z` from two lists, one after the other.
+proof fn lemma_erase_all_append(a: Seq<Tree>, b: Seq<Tree>, z: Tree)
+    ensures erase_all_rec(a + b, z) == erase_all_rec(a, z) + erase_all_rec(b, z),
+    decreases a.len(),
+{
+    if a.len() == 0 {
+        assert(a + b =~= b);
+        assert(erase_all_rec(a, z) + erase_all_rec(b, z) =~= erase_all_rec(b, z));
+    } else {
+        assert((a + b).drop_first() =~= a.drop_first() + b);
+        assert((a + b)[0] == a[0]);
+        lemma_erase_all_append(a.drop_first(), b, z);
+        if a[0] != z {
+            assert(seq![a[0]] + (erase_all_rec(a.drop_first(), z) + erase_all_rec(b, z))
+                =~= (seq![a[0]] + erase_all_rec(a.drop_first(), z)) + erase_all_rec(b, z));
+        }
+    }
+}
+
+/// Erasing every `z` from one more element.
+proof fn lemma_erase_all_step(es: Seq<Tree>, z: Tree, i: int)
+    requires 0 <= i < es.len(),
+    ensures
+        erase_all_rec(es.take(i + 1), z) == (if es[i] == z {
+            erase_all_rec(es.take(i), z)
+        } else {
+            erase_all_rec(es.take(i), z) + seq![es[i]]
+        }),
+{
+    let one = seq![es[i]];
+    assert(es.take(i + 1) =~= es.take(i) + one);
+    lemma_erase_all_append(es.take(i), one, z);
+    assert(one.drop_first() =~= Seq::<Tree>::empty());
+    assert(erase_all_rec(Seq::<Tree>::empty(), z) =~= Seq::<Tree>::empty());
+    if es[i] == z {
+        assert(erase_all_rec(one, z) =~= Seq::<Tree>::empty());
+        assert(erase_all_rec(es.take(i), z) + Seq::<Tree>::empty() =~= erase_all_rec(es.take(i), z));
+    } else {
+        assert(erase_all_rec(one, z) =~= one);
+    }
+}
+
+/// Elements in front of elements in front of a tail.
+proof fn lemma_build_append(f: Tree, left: bool, a: Seq<Tree>, b: Seq<Tree>, tail: Tree)
+    ensures build(f, left, a + b, tail) == build(f, left, a, build(f, left, b, tail)),
+    decreases a.len(),
+{
+    if a.len() == 0 {
+        assert(a + b =~= b);
+    } else {
+        assert((a + b).drop_first() =~= a.drop_first() + b);
+        assert((a + b)[0] == a[0]);
+        lemma_build_append(f, left, a.drop_first(), b, tail);
+    }
+}
+
+/// The list without its first `k` elements is the rest of the elements
+/// in front of what it ends in.
+proof fn lemma_nth_tail(f: Tree, left: bool, t: Tree, k: nat)
+    requires k <= elems(f, left, t).len(),
+    ensures
+        nth_tail(f, left, t, k)
+            == build(f, left, elems(f, left, t).subrange(k as int, elems(f, left, t).len() as int), tail_of(f, left, t)),
+    decreases k,
+{
+    let es = elems(f, left, t);
+    if k == 0 {
+        assert(es.subrange(0, es.len() as int) =~= es);
+        lemma_build_elems(f, left, t);
+    } else {
+        match uncons(f, left, t) {
+            Some((head, tail)) => {
+                lemma_nth_tail(f, left, tail, (k - 1) as nat);
+                assert(es.subrange(k as int, es.len() as int)
+                    =~= elems(f, left, tail).subrange(k - 1, elems(f, left, tail).len() as int));
+            },
+            None => {},
+        }
+    }
+}
+
 /// The number of arguments a list operator takes, the operator among
 /// them.
 pub open spec fn list_arity(op: EvalOp) -> nat {
@@ -2783,6 +3012,18 @@ pub open spec fn list_spec(op: EvalOp, f: Tree, nil: Tree, left: bool, a: Seq<Tr
         } else {
             None
         },
+        // $eo_list_erase
+        EvalOp::ListErase => if is_list(f, nil, left, a[1]) {
+            Some(Out::Term(build(f, left, erase_rec(elems(f, left, a[1]), a[2]), nil)))
+        } else {
+            None
+        },
+        // $eo_list_erase_all
+        EvalOp::ListEraseAll => if is_list(f, nil, left, a[1]) {
+            Some(Out::Term(build(f, left, erase_all_rec(elems(f, left, a[1]), a[2]), nil)))
+        } else {
+            None
+        },
         // $eo_list_rev
         EvalOp::ListRev => if is_list(f, nil, left, a[1]) {
             Some(Out::Term(build(f, left, elems(f, left, a[1]).reverse(), nil)))
@@ -2814,6 +3055,7 @@ pub open spec fn list_specified(op: EvalOp) -> bool {
         op,
         EvalOp::Nil | EvalOp::Cons | EvalOp::ListConcat | EvalOp::ListLength | EvalOp::ListNth
             | EvalOp::ListFind | EvalOp::ListRev | EvalOp::ListSingletonElim | EvalOp::ListRepeat
+            | EvalOp::ListErase | EvalOp::ListEraseAll
     )
 }
 
