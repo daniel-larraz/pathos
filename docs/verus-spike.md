@@ -1900,7 +1900,8 @@ hooks (`plugin_evaluate`, `plugin_evaluate_program`), which are given the
 checker and are code Verus does not see. With no plugin installed, as in
 `pathos` itself, they return at once.
 
-As before, this is a proof for runs that end. Twenty-four functions carry
+As before, this is a proof for runs that end. In `pathos-check`,
+twenty-four functions on the cycle carry
 `exec_allows_no_decreases_clause`: the fifteen of milestone 23, seven of
 `build.rs` that are on the cycle (`mk_expr`, `mk_apply_expr`,
 `mk_apply_attr`, `mk_as_expr`, `mk_beta_reduce`, `get_overload_internal`,
@@ -2096,7 +2097,7 @@ only its store half is proved.
 | What | State |
 | --- | --- |
 | **Correctness of evaluation, typing, building and step checking** | Not stated, so not proved. There is no specification of what `evaluate`, `get_type` or `check_step` should return. This is what a decision on correctness proofs is about. |
-| **Termination** | Proved for matching and for the loops of the store, the literal operators and some builders. Not proved, and false in general, for evaluation and whatever calls it: a program may run for ever. 24 functions are marked. |
+| **Termination** | Proved for matching, the literal operators, some builders, and the store's loops except the two that probe its hash tables (`ConsTable::find` and `ConsTable::insert_new`, which end as long as the table has an empty slot; that they end was not proved). Not proved, and false in general, for evaluation and whatever calls it: a program may run for ever. 28 functions are marked `exec_allows_no_decreases_clause`: those two, 24 on the cycle of evaluation, typing and building, and `get_variables` and `has_variable`, which end too. |
 | **Stack depth and memory** | Not covered. The "Stack" and "Resource" rows of [panics.md](panics.md) stand: three recursions follow the input, and an input can ask for more memory than there is. |
 | **Completeness of matching** | Not proved: that when matching fails, no match exists. |
 | **The parser and the commands** (`pathos-syntax`, `pathos-elab`: about 4,500 lines) | Not verified. Its panic rows in `panics.md` rest on reading and on fuzzing. It is also the code that must keep the checker's invariant. |
@@ -2132,10 +2133,12 @@ Three observations from doing this, not a recommendation:
    written from the C++ and from the manual, and it would itself be the
    thing to review.
 2. **Some of what pathos must do is not what a clean semantics says.** The
-   rebinding of quoted parameters in typing (#269) and the terms Ethos
-   forgets (#271) are examples. A specification either includes such
-   behaviour, as matching's does for three quirks, or pathos is proved
-   against something Ethos does not do.
+   rebinding of quoted parameters in typing (#269) is the example: pathos
+   reproduces it. A specification either includes such behaviour, as
+   matching's does for three quirks, or pathos is proved against something
+   Ethos does not do. The terms Ethos forgets (#271) are the opposite
+   case: there pathos already does what a clean semantics says, and
+   differs from Ethos.
 3. **The ratio seen so far for correctness is 4 to 5 lines for each line of
    code**, against 0.7 for panic freedom. For the evaluator's 1,175 lines
    that is several thousand lines, on top of the specification, if the
