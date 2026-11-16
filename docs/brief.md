@@ -374,6 +374,49 @@ intended; everything between gates is not.
     The gate: the package contains the notices, and one on-demand run of the
     drift job is green against today's Ethos `main`. The reviewer pushes and
     starts the runs, as in milestone 15.
+26. **Follow Ethos to `c7d3db90`.** (Numbered after the verus milestones
+    17–25; this one is on `main`, branched from it, as milestones 1–16.)
+    Ethos `main` is two commits past `REFERENCE_REV`, and the drift job
+    (run 43982289023, on `c7d3db90`; its reports are the run's artifact)
+    shows both:
+    - **cvc5/ethos#272, "Fix open issues"** (`c7d3db90`) fixes #257–#269 and
+      #271, which pathos reproduces on purpose. It differs on 23 of Ethos's
+      262 `tests/` (the regressions that PR added), the same 23 under the
+      `--stats` options, and 7 command-line cases (`cli/directory`,
+      `cli/file-ff`, `cli/include-empty`, `cli/include-missing`,
+      `cli/missing-file`, `cli/reference-missing`,
+      `cli/reference-unasserted`). Read the PR's C++, not only its
+      description: the messages must be Ethos's, e.g. the new
+      `Wrong number of arguments when applying literal op <kind>, <n>
+      arguments` warnings in place of pathos's `Too few arguments ...`
+      error, and `Could not find symbol -.5`. #271 (the expression trie)
+      has no counterpart in pathos, which never deletes terms; check that
+      its two tests (`expr-trie-*.eo`) agree, and change nothing for it.
+    - **cvc5/ethos#270, "Update eoc to emit term ordering"** (`c077a562`)
+      changes `lean-meta`'s output: 160 of the 175 differing `eoc` cases
+      are `lean` runs. The other 15 are `extract-arity-fail.eo` and
+      `list-op-arity-fail.eo` under the other stages, i.e. #272 again.
+    Update `docs/ethos-differences.md`: the rows of "Ethos behaviour that
+    pathos reproduces" and "Inputs on which Ethos has undefined behaviour
+    or crashes" that these commits fix go (or say what remains, where a
+    fix covers only part of a row), and "Reported to Ethos" says they were
+    fixed by #272. Keep `docs/evidence.md`'s figures as they are for
+    `9217112f` unless a gate is rerun.
+
+    Do not touch `difftest.env` (the reviewer moves `REFERENCE_REV` and
+    `HARNESS_COMMIT` on the branch when the drift job agrees, and updates
+    the harness's accepted fuzzing findings for the fixed issues), and do
+    not touch the verus branch: three of the fixes change code the proofs
+    cover (#257 in `eval.rs`, #269 in `typing.rs`, #258 in `build.rs`), and
+    bringing the proofs along is a milestone of its own on verus after this
+    one is merged into `main`. Say in the report which functions changed,
+    for that milestone.
+
+    The gate: an on-demand run of the drift job on the branch is green
+    against `c7d3db90` (all five comparisons agree, and `fuzz` has none
+    still differing other than accepted ones), and, after the reviewer
+    moves the pins, `scripts/full-check` and `scripts/difftest eoc` agree
+    on CI. The reviewer pushes and starts the runs.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
