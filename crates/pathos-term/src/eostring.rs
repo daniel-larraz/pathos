@@ -9,14 +9,36 @@ use vstd::prelude::*;
 verus! {
 
 impl EoString {
+    /// What the string is: its code points.
+    pub closed spec fn view(&self) -> Seq<u32> {
+        self.0@
+    }
+
     /// The number of code points.
-    pub uninterp spec fn spec_len(&self) -> nat;
+    pub open spec fn spec_len(&self) -> nat {
+        self@.len()
+    }
 }
 
 pub assume_specification[ <EoString as Clone>::clone ](x: &EoString) -> (r: EoString)
-    ensures r == x;
+    ensures r@ == x@;
 
-pub assume_specification[ <EoString as Default>::default ]() -> (r: EoString);
+pub assume_specification[ <EoString as Default>::default ]() -> (r: EoString)
+    ensures r@ == Seq::<u32>::empty();
+
+/// The first position at which `t` occurs in `s`, from position `from` on
+/// (`str.indexof` of SMT-LIB, for `from` within `s`); -1 if there is none.
+pub open spec fn index_of(s: Seq<u32>, t: Seq<u32>, from: int) -> int
+    decreases s.len() - from + 1,
+{
+    if from < 0 || from + t.len() > s.len() {
+        -1
+    } else if s.subrange(from, from + t.len()) == t {
+        from
+    } else {
+        index_of(s, t, from + 1)
+    }
+}
 
 } // verus!
 
@@ -27,11 +49,7 @@ pub const NUM_CODES: u32 = 196_608;
 
 /// A string literal: a sequence of code points below [`NUM_CODES`].
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Default)]
-#[cfg_attr(
-    verus_keep_ghost,
-    verus_verify(external_body),
-    verifier::external_derive
-)]
+#[cfg_attr(verus_keep_ghost, verus_verify, verifier::external_derive)]
 pub struct EoString(Vec<u32>);
 
 fn is_hex_digit(c: char) -> bool {
@@ -49,7 +67,7 @@ fn add_char(c: char, out: &mut Vec<u32>) {
 
 #[cfg_attr(verus_keep_ghost, verus_verify)]
 impl EoString {
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r@ == v@,))]
     pub fn from_code_points(v: Vec<u32>) -> EoString {
         EoString(v)
     }
@@ -133,48 +151,104 @@ impl EoString {
         EoString(out)
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r == self.spec_len(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == self.spec_len(),))]
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r == (self.spec_len() == 0),))]
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures r@.len() == self.spec_len(),))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r@ == self@,))]
     pub fn code_points(&self) -> &[u32] {
-        &self.0
+        self.0.as_slice()
     }
 
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r => ensures r@ == self@ + other@,))]
     pub fn concat(&self, other: &EoString) -> EoString {
         let mut v = self.0.clone();
-        v.extend_from_slice(&other.0);
+        v.extend_from_slice(other.0.as_slice());
         EoString(v)
     }
 
+    /// Whether `y` occurs at position `at`. Requires that it fits there.
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires at + y@.len() <= self@.len(),
+        ensures r == (self@.subrange(at as int, at + y@.len()) == y@),
+    ))]
+    fn occurs_at(&self, y: &EoString, at: usize) -> bool {
+        // (the length is named for the proof: a sum below it does not overflow)
+        let _n = self.0.len();
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            _n == self@.len(),
+            at + y@.len() <= self@.len(),
+            forall|k: int| 0 <= k < j ==> self@[at + k] == y@[k],
+        ))]
+        for j in 0..y.0.len() {
+            if self.0[at + j] != y.0[j] {
+                proof! {
+                    assert(self@.subrange(at as int, at + y@.len())[j as int] == self@[at + j]);
+                }
+                return false;
+            }
+        }
+        proof! { assert(self@.subrange(at as int, at + y@.len()) =~= y@); }
+        true
+    }
+
     /// The first position at which `y` occurs, if any.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => ensures true,))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        ensures match r {
+            Some(i) => index_of(self@, y@, 0) == i,
+            None => index_of(self@, y@, 0) == -1,
+        },
+    ))]
     pub fn find(&self, y: &EoString) -> Option<usize> {
         if self.len() < y.len() {
             return None;
         }
         if y.is_empty() {
+            proof! { assert(self@.subrange(0, 0) =~= y@); }
             return Some(0);
         }
-        self.0.windows(y.len()).position(|w| w == y.0.as_slice())
+        let last = self.len() - y.len();
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            last + y@.len() == self@.len(),
+            index_of(self@, y@, 0) == index_of(self@, y@, at as int),
+        ))]
+        for at in 0..last + 1 {
+            if self.occurs_at(y, at) {
+                return Some(at);
+            }
+        }
+        None
     }
 
     /// The substring of `len` code points starting at `start`. Requires
     /// `start + len <= self.len()`.
-    #[cfg_attr(verus_keep_ghost, verus_verify(external_body), verus_spec(r => requires start + len <= self.spec_len(), ensures true,))]
+    #[cfg_attr(verus_keep_ghost, verus_spec(r =>
+        requires start + len <= self.spec_len(),
+        ensures r@ == self@.subrange(start as int, start + len),
+    ))]
     pub fn substr(&self, start: usize, len: usize) -> EoString {
-        EoString(self.0[start..start + len].to_vec())
+        let mut v = Vec::with_capacity(len);
+        let _n = self.0.len();
+        #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+            _n == self@.len(),
+            start + len <= self@.len(),
+            v@ == self@.subrange(start as int, start + i),
+        ))]
+        for i in 0..len {
+            v.push(self.0[start + i]);
+            proof! { assert(v@ =~= self@.subrange(start as int, start + i + 1)); }
+        }
+        EoString(v)
     }
 }
 
+#[cfg_attr(verus_keep_ghost, verus_verify(external))]
 impl std::fmt::Display for EoString {
     /// Printable ASCII is printed as is, except the backslash; everything
     /// else is printed as `\u{<hex>}`.
