@@ -5,7 +5,7 @@ to be written down, and for a stop for review, before anything is proved.
 This is that document, as it was reviewed. All five decisions at its end
 were approved as recommended (Daniel, 15 November 2026). What came of it,
 and where the result departs from it, is in
-[verus-spike.md](verus-spike.md#milestone-25-the-operators-are-correct-pilot-in-part).
+[verus-spike.md](verus-spike.md#milestone-25-the-operators-are-correct-pilot).
 
 It answers the brief's three questions (how the signature's tables are
 taken, how Stuck is represented, what is left out), says what the theorems

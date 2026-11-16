@@ -45,7 +45,7 @@ milestone adds a section at the end of this file:
 - [Milestone 23: typing cannot panic](#milestone-23-typing-cannot-panic)
 - [Milestone 24: term building and step checking cannot panic](#milestone-24-term-building-and-step-checking-cannot-panic)
 - [Milestones 17 to 24: what is proved, trusted and not covered](#milestones-17-to-24-what-is-proved-trusted-and-not-covered)
-- [Milestone 25: the operators are correct (pilot), in part](#milestone-25-the-operators-are-correct-pilot-in-part)
+- [Milestone 25: the operators are correct (pilot)](#milestone-25-the-operators-are-correct-pilot)
 
 ## The setup
 
@@ -2147,50 +2147,46 @@ Three observations from doing this, not a recommendation:
    turned out much smaller than estimated, and the operators mostly
    delegate to literal operations that are already specified.
 
-## Milestone 25: the operators are correct (pilot), in part
+## Milestone 25: the operators are correct (pilot)
 
 ### Summary
 
-- **The gate is not met in full.** Of the 46 operators in scope, 38 are
-  proved to compute their specification exactly. **Eight list operators
-  are not done**: `eo::list_erase`, `eo::list_erase_all`,
-  `eo::list_setof`, `eo::list_minclude`, `eo::list_meq`, `eo::list_diff`,
-  `eo::list_inter` and `eo::list_singleton_intro`. One supporting proof is
-  not done either: what the store's "evaluatable" flag means on trees. I
-  stopped here because these are the expensive ones, as the design said
-  they would be, and the pilot's question, what correctness costs, has its
-  answer from the 38. What is left, and what it would cost, is under "Not
-  done".
-- **Proved exact** means: the code returns a value exactly when the
-  specification gives one, and that value; and returns nothing, so that
-  the application stays, exactly when the specification gives none. For
-  the number of arguments each operator takes, and unless the term store
-  is full.
-  - All 22 literal operators (`Lit::evaluate` against `lit_spec`).
+- **All 46 operators in scope are proved to compute their specification
+  exactly.** The code returns a value exactly when the specification gives
+  one, and that value; and returns nothing, so that the application stays,
+  exactly when the specification gives none. For the number of arguments
+  each operator takes, and unless the term store is full.
+  - The 22 literal operators (`Lit::evaluate` against `lit_spec`).
   - `eo::eq` and the six `eo::is_*` tests, and the literal operators
     applied to literal terms (`evaluate_literal_op_internal` against
     `scalar_spec`).
-  - `eo::nil`, `eo::cons`, `eo::list_concat`, `eo::list_len`,
-    `eo::list_nth`, `eo::list_find`, `eo::list_rev`,
-    `eo::list_singleton_elim`, `eo::list_repeat` (against `list_spec`).
-- Verus checks 246 items in `pathos-term` and 149 in `pathos-check` (216
+  - The 17 list operators (against `list_spec`): given the terminator for
+    every operator, and from the checker's tables when the terminator does
+    not depend on a type.
+- **The store's "evaluatable" flag has its meaning on trees**, proved in
+  the store as "ground" was, and `eo::eq`'s specification is stated with
+  it, not with the flag.
+- Verus checks 252 items in `pathos-term` and 173 in `pathos-check` (216
   and 137 before), with no errors.
 - **Behaviour is unchanged**: every gate agrees with Ethos.
-- **Cost: 1,120 lines of specification and proof for 38 operators.** About
-  17 lines an operator for the 29 on values; about 70 an operator for the
-  nine on lists, most of it shared groundwork. See "The measure".
-- **Two departures from the approved design**, under "What differs from
-  the design": the list specification is on sequences of elements, not
-  recursive on trees; and the specifications of `eo::eq` and the tests
-  speak of the store's flag for "unevaluated", whose meaning on trees is
-  the proof not done.
+- **Cost: 876 lines of specification and 1,215 of proof.** About 17 lines
+  an operator on values; the list operators range from 15 lines to 125 an
+  operator. `eo::list_minclude` and `eo::list_meq`, where the code counts
+  in hash maps and the plugin erases one element at a time, cost about 250
+  lines for the two. See "The measure".
+- **The list specification is on sequences of elements**, not recursive on
+  trees as decision 3 of the design had it; kept as it is, as agreed for
+  now. What tree-recursive forms proved equal would cost is under "What
+  differs from the design".
 - **Twelve differences between the binary and the plugin**, each with a
-  one-line input, under "Where the binary differs from the plugin". Nine
-  are places where one evaluates what the other leaves stuck, or the
-  values differ.
+  one-line input; nine change whether an application evaluates, or to
+  what. The eight list operators proved last add none of a new kind.
+- **The milestone was done in two parts.** The first stopped at 38
+  operators and reported; the remaining eight and the flag followed on
+  Daniel's word.
 - **One mistake of mine in the process**: a probe asked the binaries for a
   bit-vector of 2^32 - 1 bits and ran outside the memory cap. I stopped
-  it; nothing was left running. The remaining probes ran under a 2 GB cap.
+  it; nothing was left running. Later probes ran under a 2 GB cap.
 
 ### The specifications
 
@@ -2201,8 +2197,8 @@ binary instead.
 | Function | Where | On | Operators |
 | --- | --- | --- | --- |
 | `lit_spec(op, values)` | `lit.rs` | The values of literals: Booleans, integers, reals (decimal or rational), bit-vectors as width and integer (hexadecimal or binary), strings as sequences of code points | 22 |
-| `scalar_spec(store, op, terms)` | `eval.rs` | Terms: whether each is ground, unevaluated, a literal | `eo::eq`, six tests, and the 22 lifted to terms |
-| `list_spec(op, f, nil, left, trees)` | `eval.rs` | The store's trees, for an operator `f` whose lists end in `nil` | 9 |
+| `scalar_spec(store, op, terms)` | `eval.rs` | Terms: whether the tree of each is ground, holds something unevaluated, is a literal | `eo::eq`, six tests, and the 22 lifted to terms |
+| `list_spec(op, f, nil, left, trees)` | `eval.rs` | The store's trees, for an operator `f` whose lists end in `nil` | 17 |
 
 `None` is "the application stays as it is". `eval_spec` of milestone 17 is
 gone: `lit_spec` replaces it and has no "not specified" answer.
@@ -2213,9 +2209,13 @@ application (with the two swapped for an operator whose lists nest to the
 left, which the plugin does not have). From it: `elems` is
 `$eo_get_elements_rec`, `tail_of` is `$eo_get_nil_rec` before its last
 test, `is_list` is `$eo_is_list`, and `build` puts elements in front of a
-tail. The five helper functions of `eval.rs` are proved to compute these
-(`nary_step`, `get_nary_children`, `is_nary_list`, `get_nary_nth_tail`,
-`prepend_nary_children`).
+tail. The five helper functions of `eval.rs` are proved to compute these.
+
+**The operators on the elements.** One function for each of the plugin's
+recursive programs, on the sequence of elements: `find_rec`, `erase_rec`,
+`erase_all_rec`, `setof_rec`, `di_rec` (the difference and the
+intersection, which differ in one test), `minclude_rec`. `list_spec` takes
+a list apart with `elems`, applies one of them, and builds the result.
 
 **The signature's tables**, as designed: `list_spec` takes `f`, `nil` and
 `left` as arguments. `evaluate_list_op_with` is proved against it for
@@ -2224,7 +2224,10 @@ terminator found" for operators whose terminator depends on a type.
 `evaluate_list_op` is proved from the checker's tables when the
 terminator does not depend on a type: it reads the attribute and the
 term, and the result is `list_spec` with them; and it returns nothing when
-the first argument has no list attribute.
+the first argument has no list attribute. `eo::nil` and
+`eo::list_singleton_intro`, which find the terminator themselves, are
+proved in that case; for a terminator that depends on a type they wait
+for S2 and S3, as the design said.
 
 ### What is proved, by function
 
@@ -2234,10 +2237,12 @@ the first argument has no list attribute.
 | `integer_floor_log` | Now verified, against `floor_log`. It was trusted. |
 | `EoString`: `len`, `is_empty`, `code_points`, `concat`, `substr`, `find`, `from_code_points` | Verified against the sequence of code points; `find` against `index_of` (`str.indexof` from a position). They were trusted. `parse` and printing are not verified. |
 | `BitVec`: `add`, `mul`, `neg`, `unsigned_div_total`, `unsigned_rem_total` | Verified to compute the stated values; before, only that the result fits its width. |
+| `TermStore`: `lemma_evaluatable` | The flag `is_evaluatable` reads is `tree_is_evaluatable` of the term's tree: an `eo::` operator applied to something, a program symbol or `eo::?` occurs in it. |
 | `evaluate_on_literals` (new: the step that was inline) | The literal for `lit_spec` of the arguments' values. |
 | `evaluate_literal_op_internal` | For the 29 scalar operators: `scalar_spec`. |
-| The seven functions of the nine list operators | `list_ok`: the result is `list_spec`'s, a tree or a numeral. |
-| `evaluate_list_op_with`, `evaluate_list_op` | As above. |
+| The functions of the list operators | `list_ok`: the result is `list_spec`'s, a tree, a numeral or a Boolean. |
+| `count_terms`, `counts_cover`, `position` | What they count, compare and find. |
+| `evaluate_list_op_with`, `evaluate_list_op`, `evaluate_list_singleton_intro` | As above. |
 
 "Unless the store is full" is in every statement about terms: when the
 store has run into its 32-bit limit, a term made is a placeholder and the
@@ -2250,30 +2255,28 @@ built by steps none of which was a placeholder.
 1. **The list specification is on sequences.** The design, and decision 3,
    said recursive functions on trees, one for each `$eo_list_*_rec`, with
    sequence forms as lemmas. What is written takes a list apart once
-   (`elems`), states each operator on the sequence of its elements, and
-   builds the result (`build`): `list_rev` is
-   `build(elems(a).reverse(), nil)`, where the plugin has an accumulator
-   loop; `list_find` is `find_rec` on the sequence, which does follow the
-   plugin's recursion. This is shorter and it is what the code does, but
-   it is further from the plugin's text than was agreed, and a reviewer
-   comparing the two has to accept that `elems` and `build` are inverse
-   (`lemma_build_elems` proves one direction). I did not go back and
-   write the tree-recursive forms. **This needs a decision**: accept the
-   sequence form, or have the tree forms written and proved equal, which I
-   estimate at 10 to 15 lines an operator.
-2. **"Unevaluated" is the store's flag.** `scalar_spec` says `eo::eq`
-   stays when an argument is unevaluated, and uses the store's flag for
-   that (`evaluatable`), which the store defines as "what
-   `is_evaluatable` returns". The design called for a specification of
-   the flag on trees (it contains an `eo::` application, a program symbol
-   or `eo::?`), proved as "ground" was in milestone 19. That is not done:
-   it means adding to the invariant that the store's `mk` maintains, and
-   `mk` is the store's most expensive proof. Until it is, `eo::eq`'s
-   statement is exact relative to the flag.
-3. **`lit_spec` takes values as a sequence and is stated for the arity of
+   (`elems`), states each operator as a recursive function on the
+   sequence of its elements, and builds the result (`build`). The
+   recursion of each function is the plugin's, with `es[0]` and
+   `es.drop_first()` where the plugin matches `(f x y)`; two are not
+   (`eo::list_rev` is `reverse` of the elements, where the plugin has an
+   accumulator; `eo::list_concat` appends). A reviewer comparing the two
+   texts has to accept that `elems` and `build` are inverse, of which
+   `lemma_build_elems` proves the direction used.
+
+   **What the tree-recursive forms would cost**: for each of the plugin's
+   recursive programs, about eleven, a function on trees by `uncons`, and a lemma that it
+   is `build` of the sequence function on `elems`. From the lemmas of that
+   shape written here (`lemma_nth_tail`, `lemma_build_append`): 10 to 15
+   lines a program, so 110 to 170 lines, and no change to the proofs of
+   the code.
+2. **`lit_spec` takes values as a sequence and is stated for the arity of
    each operator**, as designed; the binary reads `eo::add` and the five
    like it with any number of arguments, and the proof covers two, which
    is what `check_arity` lets through.
+
+The first report listed a second departure, that `eo::eq` was stated with
+the store's flag. That is closed.
 
 ### Where the binary differs from the plugin
 
@@ -2310,8 +2313,28 @@ operators proved here on lists that nest to the right, on the inputs
 tried.
 
 Rows 1 to 5 are one fact: the binary has seven kinds of literal and an
-operator on two literals wants them of one kind. Row 10 is one fact for
-all list operators. Not looked at: the eight list operators not proved.
+operator on two literals wants them of one kind.
+
+**The eight list operators proved last** were probed in the same way
+(30 inputs: each on right-nested lists, on left-nested ones, with a
+duplicate, with an element that is not there, and with an unevaluated
+element). They add no new kind of difference, and two rows widen:
+
+- Row 10 holds for all of them: on a `:left-assoc-nil` operator the binary
+  evaluates (`(eo::list_erase fl (fl a b a) a)` gives the list of `b` and
+  `a`) and the plugin's programs do not match.
+- Row 11 holds for all but `eo::list_singleton_intro`: the plugin's
+  `$eo_list_erase_rec` and `$eo_list_erase_all_rec` compare with `eo::eq`,
+  and `setof`, `diff`, `inter`, `minclude` and `meq` are built on them, so
+  an unevaluated element makes them stuck; the binary compares terms.
+  `(eo::list_erase fr (fr a (eo::zdiv 1 0) b) (eo::zdiv 1 0))` gives the
+  list of `a` and `b`; `(eo::list_meq fr (fr (eo::zdiv 1 0) a) (fr a
+  (eo::zdiv 1 0)))` gives `true`.
+
+On right-nested lists of evaluated elements the binary and the plugin
+agree on every input tried: the first occurrence is erased, the set keeps
+first occurrences, difference and intersection count occurrences, and so
+does inclusion.
 
 ### The measure
 
@@ -2319,62 +2342,69 @@ all list operators. Not looked at: the eight list operators not proved.
 | --- | --- | --- | --- |
 | Literal operators: `lit.rs`, with strings, bit-vector arithmetic and the number contracts | 22 | 222 | 116 |
 | `eo::eq`, the tests, lifting to terms; the store's lemmas on literals | 7 (and the 22) | 95 | 55 |
-| Lists: trees, the five helpers, `list_spec`, nine operators | 9 | 341 | 291 |
-| Total | 38 | 658 | 462 |
+| Lists: trees and the five helpers | shared | about 180 | about 170 |
+| `nil`, `cons`, `list_concat`, `list_len`, `list_nth`, `list_find`, `list_rev`, `list_singleton_elim`, `list_repeat` | 9 | about 160 | about 120 |
+| "Evaluatable" on trees, in the store | | 22 | 75 |
+| `list_erase`, `list_erase_all` | 2 | 55 | 161 |
+| `list_setof` | 1 | 26 | 122 |
+| `list_diff`, `list_inter` | 2 | 57 | 170 |
+| **`list_minclude`, `list_meq`** | 2 | about 50 | about 200 |
+| `list_singleton_intro`, and trees in "keeps" | 1 | about 10 | about 25 |
+| Total | 46 | 876 | 1,215 |
 
-The totals are counted; the split between the second and the third row is
-approximate, since both are in `eval.rs`.
+The totals and the rows with exact numbers are counted from the commits;
+the rows marked "about" share a commit or a file with another and are
+split by reading.
 
-- **On values: 17 lines an operator** (490 for 29). The transcription is
+- **On values: 17 lines an operator** (488 for 29). The transcription is
   about 6 lines of specification an operator; the proofs are short
-  because the code is a `match` of the same shape as the specification
-  and Verus unfolds both. The work was in what the operators stand on:
-  strings needed a model (45 lines), bit-vector arithmetic needed its
-  values proved (73), and the logarithm a specification.
-- **On lists: 70 lines an operator** (632 for 9), of which about 350 are
-  shared: the trees, `uncons`, `elems`, `build`, and the proofs of the
-  five helpers. An operator on top of that cost 15 to 40 lines.
-- The design estimated 540 to 780 lines of specification and 1,050 to
-  1,800 of proof for all 46. For the 38: 658 and 462. The specification
-  is on target; the proof is far under so far, and the eight left are the
-  ones the estimate put the most on.
+  because the code is a `match` of the same shape as the specification.
+  The work was in what the operators stand on: strings needed a model,
+  bit-vector arithmetic needed its values proved, the logarithm a
+  specification.
+- **On lists, where the code does what the plugin says: 15 to 40 lines an
+  operator**, on 350 lines of shared groundwork.
+- **On lists, where the code is cleverer: 75 to 125 lines an operator.**
+  `list_erase`, `list_setof`, `list_diff` and `list_inter` keep the tail
+  of the list after the last change and rebuild only what is before it;
+  the proof carries "since the last change every element was kept"
+  through the loop. `list_diff` and `list_inter` also count in a hash map.
+- **`list_minclude` and `list_meq`: about 250 lines for the two**, 125
+  each, the most of any. The code builds two hash maps of counts and
+  compares them; the plugin erases one element at a time. Three things
+  made up the cost:
+  1. A notion both sides can be stated in: how often a tree is among the
+     elements (`count`), with the lemma that erasing once lowers one
+     count by one (`lemma_erase_count`, shared with `list_diff`).
+  2. That the plugin's recursion is that notion: `lemma_minclude`, 30
+     lines.
+  3. That the code's maps are that notion: the maps count terms and the
+     specification counts trees, so each fact crosses from a term to its
+     tree and back (`lemma_occ_trees`, `lemma_cover`, about 130 lines).
+     For equality the code compares in one direction only and relies on
+     the two maps having equally many keys; the proof needs that a set
+     inside another of the same size is that set.
 
-**Verification time**: `scripts/verify` takes 47 seconds (42 before): 35
-for `pathos-term` and 12 for `pathos-check`. One caution. Run another way,
-with my own script that calls Verus with other library paths and timing
-options, `TermStore::mk`, which this milestone did not touch, went from 29
-to 90 seconds as definitions around it changed, and passed. Under
-`scripts/verify` it shows no such change. I did not find the cause. It
-says that proof is sensitive to its surroundings, and S2 will change the
-store again.
+  This is a refinement proof: the code keeps a representation the
+  specification does not have (the maps), and the proof is an invariant
+  that ties the representation to the specification's value, plus lemmas
+  about the abstraction. It is the first one of this kind here, and the
+  kind S2 needs for its caches.
 
-### Not done
+The design estimated 540 to 780 lines of specification and 1,050 to 1,800
+of proof. The result is 876 and 1,215: the specification is over, by the
+counting notions and the store's flag, and the proof is inside the range.
+My estimate for the second part was 570 to 980 lines; it took 971.
 
-| What | Why it is harder | Estimate |
-| --- | --- | --- |
-| `eo::list_erase`, `eo::list_erase_all` | The code keeps the list's tail and rebuilds only the part before the last change, tracked by two indices; the proof is that this is the plugin's element-by-element recursion. | 80 to 150 lines |
-| `eo::list_setof` | The same, with a hash set of what was seen; the plugin removes later duplicates recursively from the right. | 80 to 150 |
-| `eo::list_diff`, `eo::list_inter` | Counts in a hash map, decremented, against the plugin's erase-one-and-compare. | 120 to 200 |
-| `eo::list_minclude`, `eo::list_meq` | Two hash maps of counts compared, against the plugin's `$eo_list_minclude_rec`: the proof is that the two notions of "contained as a multiset" agree. | 150 to 250 |
-| `eo::list_singleton_intro` | It finds its terminator itself, by typing its argument, twice. Stated given the terminator, as the others. | 40 to 80 |
-| "Evaluatable" on trees | A clause in the store's invariant, kept by `mk`, `mk_symbol` and `mk_lit`, and a lemma as `lemma_ground`. | 100 to 150 |
-| The tree-recursive forms of the list operators, if wanted | See "What differs from the design". | 100 to 250 |
-
-Together 570 to 980 lines without the last row.
-
-Also open, smaller:
-
-- **The checker's snapshot reader does not check two things the invariant
-  now says**: that `true` and `false` are the Boolean literals (it does
-  check that they are the same terms as in a fresh checker, which
-  amounts to it), and that the numeral kept for `eo::list_find` is -1 (it
-  checks only that it is a term of the store). A forged snapshot with
-  another numeral there would make `eo::list_find` return it for "not
-  found". That is a wrong result from a forged file, not a panic; a
-  one-line check in `read_image` would close it and I did not add it,
-  since it changes what the reader accepts.
-- `eo::extract` on a string of 2^32 code points or more is outside the
-  statement.
+**Verification time**: `scripts/verify` takes 62 seconds (42 before): 30
+for `pathos-term` and 32 for `pathos-check`, of which 14 are one function,
+`list_diff_or_inter`. That function needed its solver budget raised twice
+(to 400, where the default is 10): it failed at 150 after unrelated
+specifications were added to the file. `list_erase` has 100. A caution
+from the first part stands too: run with my own script, which calls Verus
+with other library paths and timing options, `TermStore::mk` took 90
+seconds where it took 29, and passed; under `scripts/verify` it shows no
+such change. I did not find the cause.
 
 ### What is trusted
 
@@ -2388,7 +2418,21 @@ strings stay unverified.
 The checker's invariant has two new clauses, kept by the verified code
 and assumed of the rest: `true` and `false` are the Boolean literals; the
 numeral kept for `eo::list_find`, if made before the store was full, is
--1.
+-1. And "keeps", which every function of the checker's core promises of
+the store, now includes that the trees of the old terms are kept.
+
+Still open from the first report:
+
+- **The checker's snapshot reader does not check that the numeral kept for
+  `eo::list_find` is -1** (it checks that it is a term of the store). A
+  forged snapshot with another numeral there would make `eo::list_find`
+  return it for "not found": a wrong result from a forged file, not a
+  panic. A one-line check in `read_image` would close it; I did not add
+  it, since it changes what the reader accepts.
+- `eo::extract` on a string of 2^32 code points or more is outside the
+  statement.
+- For an operator whose terminator depends on a type, that the terminator
+  found is the right one (S2 and S3).
 
 ### What had to be rewritten
 
@@ -2404,70 +2448,78 @@ other means:
   function, `evaluate_on_literals`.
 - In three list operators the literal argument is bound before it is
   matched, so that the proof can speak of it.
+- The scan of `list_erase` is a `while` loop with a stop flag where it was
+  a `for` loop with `break`: Verus does not say, after a loop that can
+  break, whether it ran to its end.
+- `counts_cover` goes through the second list's terms and looks each up in
+  both maps, where it went through the second map's entries: Verus's
+  specification of iterating a hash map was not usable. The answer is the
+  same; a list with many repeated elements costs it more lookups.
 
 ### The estimate for S2 to S5, updated
 
-The scope document has S1 at 800 to 1,500 lines of proof. With what is
-left, S1 comes to about 1,000 to 1,450 lines of proof and 900 to 1,100 of
-specification: inside the range, at the cost of the departures above.
+| | Scope document | After S1 |
+| --- | --- | --- |
+| S1, the operators | 800 to 1,500 lines of proof | **1,215** of proof and 876 of specification (done) |
+| S2, evaluation: the specification with fuel, program application, `eo::ite`, `eo::requires` | 1,500 to 3,000 | 600 to 1,200 for the part where the code follows the specification, by S1's 15 to 40 lines an item |
+| **S2, the refinement: that the cache of program applications and the frame stack are invisible** | (in the row above) | **1,200 to 2,500**, from `list_minclude` and `list_meq`: see below |
+| S3, typing | 800 to 1,500 | unchanged; the quirk of #269 is an exclusion in every statement that meets it |
+| S4, building | 600 to 1,200 | unchanged |
+| S5, checking and the top-level theorem | 600 to 1,200 | unchanged |
+| Total | 4,000 to 8,000 | 5,000 to 8,800 with S1's actual |
 
-What the pilot shows for the rest:
+**The refinement row.** `list_minclude` and `list_meq` cost 250 lines for
+about 45 lines of code (the function and its two counting helpers) that
+keep two maps for the length of one call: 5 to 6 lines of proof a line of
+code, against 1 to 3 elsewhere on lists. What
+`evaluate` keeps is larger in each respect:
+
+- a cache from program applications to results that lives for the whole
+  call, across levels, and is read before it is complete;
+- a stack of levels, each with a work list and a map of values, where a
+  level waits for another;
+- and the statement is not "equal to a function of the arguments" but
+  "equal to the specification at some fuel", so each cache hit needs
+  "this was computed, at a fuel that can be raised".
+
+`evaluate`'s loop and its helpers are about 250 lines of code. At the
+ratio of `list_minclude` that is 1,250 to 1,500; the invariant for panic
+freedom (milestone 22) carries over and saves some of it, while fuel and
+a cache that is read before it is complete add to it. Hence 1,200 to
+2,500, wide because one data point is a
+thin basis. If S2 goes ahead, I would do the cache first and alone, as its
+own small milestone, to get a second point before the frame stack.
+
+What else the pilot shows:
 
 1. **Where the code has the shape of the specification, correctness is
-   cheap**: 17 lines an operator. That will hold for the parts of typing
-   and building that are a `match` over kinds.
-2. **Where the code is cleverer than the specification, the proof is the
-   difference between them.** The eight list operators left are exactly
-   the ones with an optimisation (shared tails, hash maps). S2's caches
-   and frame stack are of this kind, and larger. I would not lower S2's
-   1,500 to 3,000.
-3. **The specification's vocabulary costs more than the theorems.** A
-   third of the lines are trees, lists on trees, the model of strings and
-   the link between a term and its tree. S2 to S5 reuse them.
-4. **The store's proof may be a risk.** Every step that needs a new fact
-   about terms goes through `mk`, whose proof showed itself sensitive
-   (see "The measure").
-5. **The differences are real.** Twelve in 38 operators, nine of them
-   changing whether an application evaluates, or to what. A specification "of
-   Eunoia" and a specification "of the binary" are not the same text, and
-   the theorem is about the second.
-
-I would keep the scope document's total of 4,000 to 8,000 lines of proof
-for S1 to S5, and expect the upper half.
+   cheap**, and that should hold for the parts of typing and building
+   that are a `match` over kinds.
+2. **The specification's vocabulary is a third of the lines**: trees,
+   lists on trees, counts, the model of strings, the link between a term
+   and its tree. S2 to S5 reuse it.
+3. **Solver budgets are a cost that the line counts do not show.** One
+   function here failed twice for reasons outside it. Each such failure
+   is cheap to fix and a nuisance in CI; S2's functions are larger.
+4. **The differences are real.** Twelve in 46 operators, nine of them
+   changing whether an application evaluates, or to what. A specification
+   "of Eunoia" and a specification "of the binary" are not the same text,
+   and the theorem is about the second.
 
 ### Gates
 
-- `scripts/verify`: `pathos_term` 246 verified, 0 errors; `pathos_check`
-  149 verified, 0 errors; 47 seconds in all.
-- `scripts/full-check --quick`, as the brief asks: every step passes.
-  `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43, `cli` 3,192
-  of 3,192, `snapshot` under every option set and with the three broken
-  snapshots, `bignum` 7 of 7, and `fuzz` has no finding that still differs
-  in either set. The `options` and `perf` gates were not run, and no
-  instruction count was taken this time: the code that runs changed in
-  `EoString::find` and `substr`, the logarithm and a few comparisons.
-- Two deliberate faults in the list helpers were each refused by Verus
-  (the head and tail of a left-nested list swapped; an application built
-  with its two children swapped).
-- `cargo test` in debug and release builds and `cargo clippy
-  --all-targets` with warnings as errors pass, and `cargo fmt --check`.
-  No test was changed.
-- `Cargo.lock` is unchanged; no dependency was added.
-- CI has not run on this branch yet: the reviewer pushes.
+GATES
 
 ### For Daniel
 
-1. **Whether to finish S1** (the eight list operators and the flag), at
-   570 to 980 lines, before deciding on S2 to S5, or to decide with the
-   38.
-2. **The sequence form of the list specification**: accept it, or have
-   the tree-recursive forms written.
-3. **The differences**: rows 2 and 4 to 11 are candidates for an Ethos
-   issue. Whether pathos's specification should say what the binary does
-   (as now) or what the plugin does, with the difference as an exclusion,
-   is decision 2 of the scope document, and these rows are its first
-   cases.
-4. **`TermStore::mk`'s proof** is worth a look before more is built on
-   it: its time tripled under one way of running Verus and not under
-   `scripts/verify`. That is work on milestone 17's proof, outside this
-   pilot.
+1. **The sequence form of the list specification**: accept it, or have
+   the tree-recursive forms written and proved equal (110 to 170 lines).
+2. **The differences**: rows 2 and 4 to 11 are candidates for an Ethos
+   issue; rows 10 and 11 hold for nearly all list operators. Whether
+   pathos's specification should say what the binary does (as now) or
+   what the plugin does, with the difference as an exclusion, is decision
+   2 of the scope document, and these rows are its first cases.
+3. **S2**: whether to go on, and if so whether to take the cache of
+   program applications first as a milestone of its own.
+4. **The one-line check in the snapshot reader** for the numeral kept for
+   `eo::list_find`.
