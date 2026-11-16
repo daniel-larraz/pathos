@@ -585,6 +585,61 @@ will decide on later. The rules of the branch:
     green on `m24-verus-build`, and the report section is written. The
     reviewer pushes and starts CI runs.
 
+25. **The operators are correct (pilot of the correctness proofs).** The
+    first step, S1, of the plan in `docs/verus-semantics-scope.md`: claim
+    1 there, that pathos is faithful to a specification of Eunoia, for
+    the `eo::` operators. It is a pilot. What it costs decides whether
+    S2 to S5 follow.
+    - **Which operators.** The ones whose result depends only on their
+      arguments' trees and the signature's tables:
+      - every literal operator of `Lit::evaluate`: arithmetic, comparison,
+        bit-vector, string, the conversions and the `eo::is_*` tests.
+        `eval_spec` covers 12 of them today;
+      - `eo::eq`;
+      - the list operators (`eo::cons`, `eo::nil`, `eo::list_*`).
+
+      Left for S2 and S3, since they need evaluation or typing:
+      `eo::ite`, `eo::requires`, `eo::is_ok`, `eo::is_eq`, `eo::typeof`,
+      `eo::nameof`, `eo::dt_*`, `eo::define`. `eo::hash` and `eo::cmp`
+      stay unspecified: the scope document takes them as functions
+      with only the term-order properties.
+    - **The source.** Ethos's desugar plugin defines each operator in
+      Eunoia: `$ETHOS_HARNESS/plugins/desugar/eo_desugar.eo` (list
+      operators) and `eo_desugar_native.eo` (literal operators). eoc
+      compiles them to the `__eo_*` functions logos proves about.
+      Transcribe from these. Where the binary (Ethos, so pathos) does
+      something other than the plugin's definition, the specification
+      follows the binary. List each such difference in the report with a
+      one-line input showing it. This list is the first evidence for the
+      link to logos.
+    - **Stuck.** An operator that does not apply leaves the application
+      unevaluated. The specification says so, for instance with
+      `Option`, `None` meaning "stays as it is". Say how it relates to
+      logos's `Stuck`.
+    - **The proofs.**
+      - `Lit::evaluate` meets the specification for every literal
+        operator, not only the 12 of today. The strings in `eostring.rs`
+        get a specification as sequences of code points, and their
+        `external_body` functions are proved or keep stated contracts.
+        Say which.
+      - The list operators in `eval.rs` (`evaluate_list_op` and the
+        `list_*` helpers, `evaluate_nil`, the n-ary helpers) return a term
+        whose tree is the specification's result.
+    - **Design first.** Before proving, write down the form of the
+      specification and stop for review:
+      - how it takes the signature's tables (a list operator depends on
+        its head's attribute and nil terminator);
+      - how Stuck is represented;
+      - what is left out, and why.
+    - **The measure.** Record the cost per operator, in lines of
+      specification and proof, separately for literal and list operators.
+      Update the estimate for S2 to S5 from it.
+    - **Assumptions** stay listed; termination as before.
+    - **Behaviour** unchanged: every gate agrees with Ethos.
+    The gate: `scripts/verify` and `scripts/full-check --quick` pass, CI is
+    green on `m25-verus-operators`, and the report section is written.
+    The reviewer pushes and starts CI runs.
+
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
 

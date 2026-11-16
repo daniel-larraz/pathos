@@ -6,20 +6,27 @@ logos's Lean development be reused for that?
 
 ## What "sound" would mean here
 
-There are two claims, and they belong to different tools.
+There are two claims. Only the first is about pathos.
 
-1. **The calculus is sound.** Every CPC rule concludes only what is true in
-   SMT-LIB. This is logos's theorem (`correct___eo_is_refutation`, in Lean).
-   pathos cannot add to it: pathos checks proofs against whatever signature
-   it is given.
-2. **The checker is faithful.** When pathos prints `correct` for a
-   signature S and a proof P, the specification of Eunoia also checks P
-   against S. Verus can prove this. It is what this document scopes.
+1. **The checker is faithful to Eunoia.** When pathos prints `correct` for
+   a signature S and a proof P, the specification of Eunoia also checks P
+   against S. This is the soundness of pathos as a checker, it holds for
+   every signature, and it does not involve logos. Verus can prove it. It
+   is what this document scopes, and the plan below is for it alone.
+2. **The signature is sound.** Every rule of S concludes only what is true
+   in its intended theory. This is a property of the signature, not of the
+   checker: a checker that follows an unsound rule faithfully accepts a
+   wrong proof. For CPC, logos proves it in Lean
+   (`correct___eo_is_refutation`). pathos cannot add to it.
 
-Put together, they give the chain a user wants: pathos accepts a CPC proof,
-so the specification accepts it, so (by logos) its assumptions are
-unsatisfiable. The link in the middle, "the specification's reading of CPC
-is the one logos proved sound", is discussed under "The link to logos".
+Claim 1 has its own weak point: the specification must say what Eunoia
+means. It would be written from Ethos's manual and its C++, so it is what
+a reader has to review, as with any verified checker.
+
+Claim 1 and claim 2 together say that a CPC proof pathos accepts shows what
+it claims. That needs one more step, that the specification reads CPC the
+way logos's compiled version does; it is discussed under "The link to
+logos", and it is needed only for that end-to-end statement.
 
 ## What logos has, and what it does not
 
@@ -45,9 +52,12 @@ cannot be imported, and Lean and Verus share no proof format.
 
 What can be reused:
 - **The operators.** The `__eo_*` definitions are a precise, total
-  description of every `eo::` operator, produced by the same compiler that
-  pathos ports (`pathos-eoc`). They can be transcribed one for one into
-  Verus spec functions, about 70 of them.
+  description of every `eo::` operator. Their source is Eunoia: Ethos's
+  desugar plugin defines each operator as a program
+  (`plugins/desugar/eo_desugar.eo` for the list operators,
+  `eo_desugar_native.eo` for the literal ones, about 1,600 lines together),
+  and eoc compiles them. They can be transcribed one for one into Verus
+  spec functions, about 70 of them.
 - **The shape of the checker's specification.** The state machine of
   `__eo_invoke_cmd`, with assumption pushes, `step`, `step-pop` and the final
   check, is small and calculus-independent. It is the right shape for
@@ -74,8 +84,16 @@ What is missing:
 | Checking | The command state machine and the verdict | logos's `__eo_invoke_cmd` |
 
 The top-level theorem would read: if pathos prints `correct` for a
-signature and a proof, as parsed, then the specification's checker gives
-`correct` on the same parsed commands.
+signature and a proof, as parsed and elaborated, then the specification's
+checker gives `correct` on the same commands.
+
+"Elaborated" matters. The parser and `pathos-elab` (about 4,500 lines)
+turn the signature's declarations into the checker's tables: attributes,
+programs, overloads, literal type rules. The theorem takes those tables as
+given, so an elaboration bug could make pathos check the wrong signature.
+The choice is to trust elaboration, backed by the gates against Ethos, or
+to also specify what each declaration means, which would roughly double
+the work. This document assumes the first.
 
 ## The decisions the specification forces
 
@@ -114,7 +132,7 @@ signature and a proof, as parsed, then the specification's checker gives
    (`int` in Verus). `malachite`'s arithmetic stays trusted. That is the
    same position as logos, which trusts Lean's.
 6. **What stays outside.**
-   - the parser (text to terms);
+   - the parser (text to terms) and elaboration (declarations to tables);
    - the printer;
    - the plugin;
    - `include` and file handling;
@@ -125,20 +143,21 @@ signature and a proof, as parsed, then the specification's checker gives
 
 ## The link to logos
 
-The chain "pathos accepts, so the specification accepts, so logos's theorem
+Only for the end-to-end statement about CPC (claims 1 and 2 together). The chain "pathos accepts, so the specification accepts, so logos's theorem
 applies" needs, for CPC only, that the specification's reading of CPC agrees
 with what `ethos-eoc` compiled for logos. Lean and Verus share no proof
 format, so this step is argued rather than proved:
 - **The operators** are transcribed from the same definitions. A test can
   check every one on generated inputs, using the `bignum` approach with
-  logos's executable as the reference.
+  logos's Lean definitions, run with `#eval`, as the reference.
 - **Programs and rules** are compiled by eoc. The `eoc` gate already
   checks that pathos-eoc and ethos-eoc produce the same Lean, byte for
   byte.
-- **Verdicts:** a new gate would compare pathos's verdict with logos's on
-  the cvc5 corpus. This is cheap and can be added now, independently of
-  any proof. logos answers `incomplete` where its SMT-LIB model stops,
-  which the gate has to allow for.
+- **Verdicts:** a gate could compare pathos's verdict with logos's on the
+  cvc5 corpus. It is not yet known whether logos can run its checker on a
+  proof file rather than only prove theorems about it; a one-off check
+  would say. logos answers `incomplete` where its SMT-LIB model stops,
+  which such a gate has to allow for.
 
 Argued plus tested is the same footing on which logos itself relates its
 compiled CPC to the Eunoia text cvc5 maintains.
@@ -165,10 +184,11 @@ The range is wide for two reasons:
 
 ## Recommendation
 
-1. Finish milestone 24 (panic freedom).
-2. Add the verdict gate against logos now. It is independent of the proofs
-   and tests the link above directly.
-3. Do S1 as a pilot. It is well defined, its specification exists in
-   logos, and its cost gives a real measure for S2 to S5.
-4. Decide on the quirks before S3: (a), (b) or (c) above.
-5. Decide on S2 to S5 with S1's numbers in hand.
+1. Milestone 24 is done: the checker's core cannot panic.
+2. Do S1 as a pilot (milestone 25). It is well defined, logos has a
+   precise description of every operator, and its cost gives a real
+   measure for S2 to S5.
+3. Decide on the quirks before S3: (a), (b) or (c) above.
+4. Decide on S2 to S5 with S1's numbers in hand.
+5. The link to logos is needed only for an end-to-end statement about CPC.
+   Leave it until claim 1 is proved, or nearly.
