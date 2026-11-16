@@ -84,9 +84,18 @@ mkdir -p "$reports"
 
 # A clone of `repo` in `dir` at `rev` (a branch, a tag or a commit); prints
 # the commit.
+#
+# `dir` is used only if git says it is the top of a repository of its own.
+# Otherwise (it is missing, or left without its .git, as a cache that
+# restores target/ leaves it) every `git -C "$dir"` below would act on the
+# repository around it, this pathos checkout, and check Ethos or logos out
+# in its place; so it is cloned afresh.
 checkout() {
   local repo="$1" dir="$2" rev="$3"
-  if [[ ! -d "$dir/.git" ]]; then
+  local top
+  top="$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)" || top=""
+  if [[ ! -d "$dir" || "$(cd "$dir" && pwd -P)" != "$top" ]]; then
+    rm -rf "$dir"
     git clone --quiet "$repo" "$dir" || return 1
   fi
   git -C "$dir" remote set-url origin "$repo" || return 1
