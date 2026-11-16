@@ -2167,6 +2167,7 @@ impl Checker {
     /// `(eo::list_setof op t)`: `t` without the later copies of its elements.
     #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
         requires
+            k == EvalOp::ListSetof,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -2175,6 +2176,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_setof(
         &mut self,
@@ -2196,24 +2198,104 @@ impl Checker {
         let mut result = Vec::new();
         let mut change_index = 0;
         let mut change_size = 0;
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost nl = s0.tree(nil.idx());
+            let ghost es = elems(f, is_left, s0.tree(list.idx()));
+        }
+        proof! {
+            lemma_read(&s0, hargs@, es);
+            assert(es.take(0) =~= Seq::<Tree>::empty());
+            assert(trees(&s0, result@) =~= Seq::<Tree>::empty());
+            assert(es.subrange(0, 0) =~= Seq::<Tree>::empty());
+            assert(trees(&s0, result@).take(0) + es.subrange(0, 0) =~= trees(&s0, result@));
+        }
         #[cfg_attr(verus_keep_ghost, verus_spec(
-            invariant self.has_all(result@), change_index <= i,
+            invariant
+                self.store == s0,
+                self.has_all(result@),
+                change_index <= i,
+                // what was seen: the elements so far
+                forall|t: Term| seen@.contains(t) <==> exists|j: int| 0 <= j < i && #[trigger] hargs@[j] == t,
+                // the result so far is the plugin's on the elements so far;
+                // up to the last change it is what will be rebuilt, and
+                // since then every element was kept
+                trees(&s0, result@) == setof_rec(es.take(i as int)),
+                change_size <= result@.len(),
+                trees(&s0, result@).take(change_size as int) == setof_rec(es.take(change_index as int)),
+                trees(&s0, result@) == trees(&s0, result@).take(change_size as int)
+                    + es.subrange(change_index as int, i as int),
+                change_index == 0 ==> change_size == 0,
         ))]
         for i in 0..hargs.len() {
             let elem = hargs[i];
+            proof_decl! { let ghost before = result@; let ghost was_seen = seen@.contains(elem); }
+            proof! {
+                // seen as a term is seen as a tree
+                if es.take(i as int).contains(es[i as int]) {
+                    let j = choose|j: int| 0 <= j < i && es.take(i as int)[j] == es[i as int];
+                    s0.theorem_same_tree_same_term(hargs@[j], elem);
+                }
+                if was_seen {
+                    let j = choose|j: int| 0 <= j < i && #[trigger] hargs@[j] == elem;
+                    assert(es.take(i as int)[j] == es[i as int]);
+                }
+                lemma_setof_step(es, i as int);
+            }
             if seen.insert(elem) {
                 result.push(elem);
+                proof! {
+                    assert(trees(&s0, result@) =~= trees(&s0, before) + seq![es[i as int]]);
+                    assert(trees(&s0, result@).take(change_size as int) =~= trees(&s0, before).take(change_size as int));
+                    assert(es.subrange(change_index as int, i + 1)
+                        =~= es.subrange(change_index as int, i as int) + seq![es[i as int]]);
+                    assert(trees(&s0, result@) =~= trees(&s0, result@).take(change_size as int)
+                        + es.subrange(change_index as int, i + 1));
+                }
             } else {
                 change_index = i + 1;
                 change_size = result.len();
+                proof! {
+                    assert(trees(&s0, result@).take(change_size as int) =~= trees(&s0, result@));
+                    assert(es.subrange(i + 1, i + 1) =~= Seq::<Tree>::empty());
+                    assert(trees(&s0, result@) =~= trees(&s0, result@).take(change_size as int)
+                        + es.subrange(i + 1, i + 1));
+                }
+            }
+            proof! {
+                assert forall|t: Term| seen@.contains(t) <==> exists|j: int| 0 <= j < i + 1 && #[trigger] hargs@[j] == t by {
+                    if seen@.contains(t) && t != elem {
+                        let j = choose|j: int| 0 <= j < i && #[trigger] hargs@[j] == t;
+                        assert(0 <= j < i + 1 && hargs@[j] == t);
+                    }
+                    if t == elem {
+                        assert(hargs@[i as int] == t);
+                    }
+                }
             }
         }
+        proof! { assert(es.take(es.len() as int) =~= es); }
         if change_index == 0 {
+            proof! {
+                // nothing was seen twice: the set is the list
+                assert(es.subrange(0, es.len() as int) =~= es);
+                assert(Seq::<Tree>::empty() + es =~= es);
+                assert(trees(&s0, result@).take(0) =~= Seq::<Tree>::empty());
+                lemma_build_elems(f, is_left, s0.tree(list.idx()));
+            }
             return Some(arg!(self, k, args, 1));
         }
+        proof_decl! { let ghost kept = trees(&s0, result@); let ghost whole = result@; }
         result.truncate(change_size);
         let list = arg!(self, k, args, 1);
         let ret = self.get_nary_nth_tail(list, op, is_left, change_index);
+        proof! {
+            assert(result@ =~= whole.take(change_size as int));
+            assert(trees(&s0, result@) =~= kept.take(change_size as int));
+            lemma_nth_tail(f, is_left, s0.tree(list.idx()), change_index as nat);
+            lemma_build_append(f, is_left, trees(&s0, result@), es.subrange(change_index as int, es.len() as int), nl);
+        }
         Some(self.prepend_nary_children(op, ret, &result, is_left))
     }
 
@@ -2839,6 +2921,80 @@ pub open spec fn erase_all_rec(es: Seq<Tree>, z: Tree) -> Seq<Tree>
     }
 }
 
+/// The elements, each once, where it first is (`$eo_list_setof_rec`).
+pub open spec fn setof_rec(es: Seq<Tree>) -> Seq<Tree>
+    decreases es.len(),
+{
+    if es.len() == 0 {
+        es
+    } else {
+        seq![es[0]] + erase_all_rec(setof_rec(es.drop_first()), es[0])
+    }
+}
+
+/// The set of a list with one more element at its end: the element is
+/// added if it was not there.
+proof fn lemma_setof_push(a: Seq<Tree>, x: Tree)
+    ensures setof_rec(a.push(x)) == (if a.contains(x) { setof_rec(a) } else { setof_rec(a).push(x) }),
+    decreases a.len(),
+{
+    let ax = a.push(x);
+    let nothing = Seq::<Tree>::empty();
+    assert(erase_all_rec(nothing, x) =~= nothing);
+    if a.len() == 0 {
+        assert(ax.drop_first() =~= nothing);
+        assert(setof_rec(nothing) =~= nothing);
+        assert(setof_rec(ax) =~= seq![x]);
+        assert(setof_rec(a).push(x) =~= seq![x]);
+    } else {
+        let h = a[0];
+        let rest = a.drop_first();
+        assert(ax.drop_first() =~= rest.push(x));
+        assert(ax[0] == h);
+        lemma_setof_push(rest, x);
+        if rest.contains(x) {
+            let j = choose|j: int| 0 <= j < rest.len() && rest[j] == x;
+            assert(a[j + 1] == x);
+        } else {
+            let one = seq![x];
+            assert(setof_rec(rest).push(x) =~= setof_rec(rest) + one);
+            lemma_erase_all_append(setof_rec(rest), one, h);
+            assert(one.drop_first() =~= nothing);
+            assert(erase_all_rec(nothing, h) =~= nothing);
+            if x == h {
+                assert(a[0] == x);
+                assert(erase_all_rec(one, h) =~= nothing);
+                assert(erase_all_rec(setof_rec(rest), h) + nothing =~= erase_all_rec(setof_rec(rest), h));
+            } else {
+                assert(erase_all_rec(one, h) =~= one);
+                assert(!a.contains(x)) by {
+                    if a.contains(x) {
+                        let j = choose|j: int| 0 <= j < a.len() && a[j] == x;
+                        assert(rest[j - 1] == x);
+                    }
+                }
+                assert(seq![h] + (erase_all_rec(setof_rec(rest), h) + one)
+                    =~= (seq![h] + erase_all_rec(setof_rec(rest), h)).push(x));
+            }
+        }
+    }
+}
+
+/// The same, for the elements up to a position.
+proof fn lemma_setof_step(es: Seq<Tree>, i: int)
+    requires 0 <= i < es.len(),
+    ensures
+        setof_rec(es.take(i + 1)) == (if es.take(i).contains(es[i]) {
+            setof_rec(es.take(i))
+        } else {
+            setof_rec(es.take(i)) + seq![es[i]]
+        }),
+{
+    assert(es.take(i + 1) =~= es.take(i).push(es[i]));
+    lemma_setof_push(es.take(i), es[i]);
+    assert(setof_rec(es.take(i)).push(es[i]) =~= setof_rec(es.take(i)) + seq![es[i]]);
+}
+
 /// Erasing from a list without the element changes nothing.
 proof fn lemma_erase_none(es: Seq<Tree>, z: Tree)
     requires forall|j: int| 0 <= j < es.len() ==> es[j] != z,
@@ -3024,6 +3180,12 @@ pub open spec fn list_spec(op: EvalOp, f: Tree, nil: Tree, left: bool, a: Seq<Tr
         } else {
             None
         },
+        // $eo_list_setof
+        EvalOp::ListSetof => if is_list(f, nil, left, a[1]) {
+            Some(Out::Term(build(f, left, setof_rec(elems(f, left, a[1])), nil)))
+        } else {
+            None
+        },
         // $eo_list_rev
         EvalOp::ListRev => if is_list(f, nil, left, a[1]) {
             Some(Out::Term(build(f, left, elems(f, left, a[1]).reverse(), nil)))
@@ -3055,7 +3217,7 @@ pub open spec fn list_specified(op: EvalOp) -> bool {
         op,
         EvalOp::Nil | EvalOp::Cons | EvalOp::ListConcat | EvalOp::ListLength | EvalOp::ListNth
             | EvalOp::ListFind | EvalOp::ListRev | EvalOp::ListSingletonElim | EvalOp::ListRepeat
-            | EvalOp::ListErase | EvalOp::ListEraseAll
+            | EvalOp::ListErase | EvalOp::ListEraseAll | EvalOp::ListSetof
     )
 }
 
