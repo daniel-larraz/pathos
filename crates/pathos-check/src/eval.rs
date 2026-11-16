@@ -6,7 +6,8 @@ use std::collections::{HashMap, HashSet};
 use pathos_term::{EvalOp, Integer, Kind, Lit, NodeKind, Term};
 #[cfg(verus_keep_ghost)]
 use pathos_term::{
-    LitKind, TermStore, Tree, Val, lemma_vals, lit_arity, lit_spec, tree_is_ground, vals,
+    LitKind, TermStore, Tree, Val, lemma_vals, lit_arity, lit_spec, tree_is_evaluatable,
+    tree_is_ground, vals,
 };
 
 #[cfg(verus_keep_ghost)]
@@ -1385,6 +1386,12 @@ impl Checker {
             }
             EvalOp::Eq => {
                 // only compares values
+                proof! {
+                    self.store.lemma_evaluatable(first);
+                    if args@.len() >= 2 {
+                        self.store.lemma_evaluatable(args@[1]);
+                    }
+                }
                 if !self.store.is_evaluatable(first) && !self.store.is_evaluatable(args[1]) {
                     let same = self.mk_bool(first == args[1]);
                     proof! { self.store.lemma_lit(same, Lit::Bool(first == args@[1])); }
@@ -2952,7 +2959,8 @@ pub open spec fn short_args(s: &TermStore, args: Seq<Term>) -> bool {
 ///
 /// - An argument that is not ground: it stays.
 /// - `eo::eq` (`$eo_eq` of the desugar plugin) on two terms that are
-///   values, that is, that hold nothing unevaluated: whether they are the
+///   values, that is, whose trees hold nothing unevaluated (no `eo::`
+///   application, no program symbol, no `eo::?`): whether they are the
 ///   same term, which is whether their trees are the same. On an
 ///   unevaluated argument it stays.
 /// - The tests (`$eo_is_z` and the like): whether the argument is a
@@ -2965,7 +2973,7 @@ pub open spec fn scalar_spec(s: &TermStore, op: EvalOp, args: Seq<Term>) -> Opti
         None
     } else {
         match op {
-            EvalOp::Eq => if !s.evaluatable(args[0]) && !s.evaluatable(args[1]) {
+            EvalOp::Eq => if !tree_is_evaluatable(s.tree(args[0].idx())) && !tree_is_evaluatable(s.tree(args[1].idx())) {
                 Some(Val::Bool(args[0] == args[1]))
             } else {
                 None

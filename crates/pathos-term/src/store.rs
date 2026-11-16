@@ -511,7 +511,7 @@ impl TermStore {
             .push(TermData::Any, FLAG_EVAL | FLAG_NON_GROUND)
             .unwrap_or(s.any);
         s.null = s.push(TermData::Null, 0).unwrap_or(s.null);
-        proof! { assert((1u8 | 2u8) & 2u8 != 0 && 0u8 & 2u8 == 0) by (bit_vector); }
+        proof! { assert((1u8 | 2u8) & 2u8 != 0 && 0u8 & 2u8 == 0 && (1u8 | 2u8) & 1u8 != 0 && 0u8 & 1u8 == 0) by (bit_vector); }
         s
     }
 
@@ -643,6 +643,7 @@ impl TermStore {
             assert(self.nodes@.take(old(self).nodes@.len() as int) =~= old(self).nodes@);
             assert(self.flags@.take(old(self).flags@.len() as int) =~= old(self).flags@);
             assert(1u8 & 2u8 == 0 && 2u8 & 2u8 != 0 && 0u8 & 2u8 == 0) by (bit_vector);
+            assert(1u8 & 1u8 != 0 && 2u8 & 1u8 == 0 && 0u8 & 1u8 == 0) by (bit_vector);
             self.lemma_after_atom(old(self));
         }
         t
@@ -731,7 +732,7 @@ impl TermStore {
         proof_decl! {
             assert(self.nodes@.take(start.nodes@.len() as int) =~= start.nodes@);
             assert(self.flags@.take(start.flags@.len() as int) =~= start.flags@);
-            assert(0u8 & 2u8 == 0) by (bit_vector);
+            assert(0u8 & 2u8 == 0 && 0u8 & 1u8 == 0) by (bit_vector);
             self.lemma_after_lit(&start, lit, hash, k);
             let ghost added = *self;
         }
@@ -857,13 +858,14 @@ impl TermStore {
         }
         // not found: make it
         let mut flags = 0;
-        proof! { assert(0u8 & 2u8 == 0) by (bit_vector); }
+        proof! { assert(0u8 & 2u8 == 0 && 0u8 & 1u8 == 0) by (bit_vector); }
         #[cfg_attr(verus_keep_ghost, verus_spec(iter => invariant
             iter.seq().unref() == children@,
             *self == before,
             self.wf(),
             forall|i: int| 0 <= i < children@.len() ==> self.has(#[trigger] children@[i]),
             (flags & 2u8 != 0) == exists|m: int| 0 <= m < iter.index() && self.nonground((#[trigger] children@[m]).idx()),
+            (flags & 1u8 != 0) == exists|m: int| 0 <= m < iter.index() && self.unevaluated((#[trigger] children@[m]).idx()),
         ))]
         for c in children {
             proof_decl! {
@@ -871,6 +873,7 @@ impl TermStore {
                 let ghost seen = flags;
                 let ghost its = self.flags@[c.idx()];
                 assert(((seen | its) & 2u8 != 0) == ((seen & 2u8 != 0) || (its & 2u8 != 0))) by (bit_vector);
+                assert(((seen | its) & 1u8 != 0) == ((seen & 1u8 != 0) || (its & 1u8 != 0))) by (bit_vector);
             }
             flags |= self.flags[c.index()];
         }
@@ -879,6 +882,7 @@ impl TermStore {
             proof_decl! {
                 let ghost seen = flags;
                 assert(((seen | 1u8) & 2u8 != 0) == (seen & 2u8 != 0)) by (bit_vector);
+                assert((seen | 1u8) & 1u8 != 0) by (bit_vector);
             }
             flags |= FLAG_EVAL;
         }
@@ -929,6 +933,10 @@ impl TermStore {
             assert(self.flags@.take(before.flags@.len() as int) =~= before.flags@);
             assert forall|m: int| 0 <= m < children@.len() implies
                 self.nonground((#[trigger] children@[m]).idx()) == before.nonground(children@[m].idx()) by {
+                assert(self.flags@.take(before.flags@.len() as int)[children@[m].idx()] == before.flags@[children@[m].idx()]);
+            }
+            assert forall|m: int| 0 <= m < children@.len() implies
+                self.unevaluated((#[trigger] children@[m]).idx()) == before.unevaluated(children@[m].idx()) by {
                 assert(self.flags@.take(before.flags@.len() as int)[children@[m].idx()] == before.flags@[children@[m].idx()]);
             }
             self.lemma_after_node(&before, kind, children@, hash, k);
@@ -1701,6 +1709,20 @@ pub open spec fn tree_is_ground(t: Tree) -> bool
     }
 }
 
+/// Something unevaluated occurs in the tree: an `eo::` operator applied to
+/// something, a program symbol, or `eo::?`.
+pub open spec fn tree_is_evaluatable(t: Tree) -> bool
+    decreases t,
+{
+    match t {
+        Tree::Symbol(k, _) => k == SymbolKind::ProgramConst,
+        Tree::Any => true,
+        Tree::Node(k, cs) => (k is Eval && cs.len() > 0)
+            || exists|m: int| 0 <= m < cs.len() && tree_is_evaluatable(#[trigger] cs[m]),
+        _ => false,
+    }
+}
+
 /// A compound tree is ground exactly when its children are.
 pub proof fn lemma_ground_node(k: Kind, cs: Seq<Tree>)
     ensures
@@ -1904,13 +1926,29 @@ impl TermStore {
     /// parameter and `eo::?` are not ground, and a compound term is not
     /// ground exactly when one of its children is not.
     spec fn flag_ok(&self, i: int) -> bool {
-        match self.nodes@[i] {
+        &&& match self.nodes@[i] {
             TermData::Symbol(k, _) => self.nonground(i) == (k == SymbolKind::Param),
             TermData::Any => self.nonground(i),
             TermData::Type | TermData::BoolType | TermData::Null | TermData::Lit(_, _) => !self.nonground(i),
             _ => self.nonground(i) == exists|m: int|
                 0 <= m < self.kids(i).len() && self.nonground((#[trigger] self.kids(i)[m]).idx()),
         }
+        // and the other flag: a program symbol and `eo::?` are unevaluated,
+        // an `eo::` operator applied to something is, and a compound term
+        // with such a child
+        &&& match self.nodes@[i] {
+            TermData::Symbol(k, _) => self.unevaluated(i) == (k == SymbolKind::ProgramConst),
+            TermData::Any => self.unevaluated(i),
+            TermData::Type | TermData::BoolType | TermData::Null | TermData::Lit(_, _) => !self.unevaluated(i),
+            _ => self.unevaluated(i) == ((self.nodes@[i] is Eval && self.kids(i).len() > 0) || exists|m: int|
+                0 <= m < self.kids(i).len() && self.unevaluated((#[trigger] self.kids(i)[m]).idx())),
+        }
+    }
+
+    /// The flag of the term at position `i` says that it holds something
+    /// unevaluated.
+    spec fn unevaluated(&self, i: int) -> bool {
+        self.flags@[i] & 1u8 != 0
     }
 
     spec fn flags_ok(&self) -> bool {
@@ -1939,6 +1977,10 @@ impl TermStore {
                 assert(self.kids(i) == old.kids(i));
                 assert forall|m: int| 0 <= m < old.kids(i).len() implies
                     self.nonground((#[trigger] old.kids(i)[m]).idx()) == old.nonground(old.kids(i)[m].idx()) by {
+                    vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(old.kids(i)[m].0);
+                }
+                assert forall|m: int| 0 <= m < old.kids(i).len() implies
+                    self.unevaluated((#[trigger] old.kids(i)[m]).idx()) == old.unevaluated(old.kids(i)[m].idx()) by {
                     vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(old.kids(i)[m].0);
                 }
             }
@@ -1992,6 +2034,69 @@ impl TermStore {
                 },
             }
         }
+    }
+
+    /// The other flag agrees with the tree too: a term is flagged
+    /// unevaluated exactly when its tree holds something unevaluated.
+    proof fn lemma_unevaluated(&self, i: int)
+        requires self.wf(), 1 <= i < self.nodes@.len(),
+        ensures self.unevaluated(i) == tree_is_evaluatable(self.tree(i)),
+        decreases i,
+    {
+        self.lemma_node(i);
+        self.lemma_kids(i);
+        assert(self.flag_ok(i));
+        if self.compound(i) {
+            let ks = self.kids(i);
+            let cs = self.child_trees(i);
+            assert forall|m: int| 0 <= m < ks.len() implies
+                self.unevaluated((#[trigger] ks[m]).idx()) == tree_is_evaluatable(cs[m]) by {
+                vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(ks[m].0);
+                self.lemma_unevaluated(ks[m].idx());
+            }
+            let t = self.tree(i);
+            assert(t == Tree::Node(self.kind_of(i), cs));
+            assert(t->Node_1 == cs);
+            assert(self.kind_of(i) is Eval == self.nodes@[i] is Eval);
+            if self.unevaluated(i) {
+                if !(self.nodes@[i] is Eval && ks.len() > 0) {
+                    let m = choose|m: int| 0 <= m < ks.len() && self.unevaluated((#[trigger] ks[m]).idx());
+                    assert(tree_is_evaluatable(cs[m]));
+                    assert(0 <= m < t->Node_1.len() && tree_is_evaluatable(t->Node_1[m]));
+                }
+                assert(tree_is_evaluatable(t));
+            } else {
+                if tree_is_evaluatable(t) {
+                    let m = choose|m: int| 0 <= m < t->Node_1.len() && tree_is_evaluatable(#[trigger] t->Node_1[m]);
+                    assert(self.unevaluated(ks[m].idx()));
+                    assert(false);
+                }
+            }
+        } else {
+            match self.nodes@[i] {
+                TermData::Symbol(k, id) => {
+                    assert(self.tree(i) == Tree::Symbol(k, id));
+                },
+                TermData::Lit(_, id) => {
+                    assert(self.tree(i) == Tree::Lit(self.lits@[id as int]));
+                },
+                TermData::Any => {
+                    assert(self.tree(i) == Tree::Any);
+                },
+                _ => {
+                    assert(!tree_is_evaluatable(self.tree(i)));
+                },
+            }
+        }
+    }
+
+    /// What [`TermStore::is_evaluatable`] says, on the tree.
+    pub proof fn lemma_evaluatable(&self, t: Term)
+        requires self.wf(), self.has(t),
+        ensures self.evaluatable(t) == tree_is_evaluatable(self.tree(t.idx())),
+    {
+        vstd::std_specs::nonzero::axiom_nonzero_is_not_zero(t.0);
+        self.lemma_unevaluated(t.idx());
     }
 
     /// Whether the term at a position is a compound term.
