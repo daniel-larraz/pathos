@@ -42,6 +42,7 @@ milestone adds a section at the end of this file:
   (the design that was reviewed first is in
   [verus-eval-design.md](verus-eval-design.md))
 - [Milestone 22: `evaluate` cannot panic](#milestone-22-evaluate-cannot-panic)
+- [Milestone 23: typing cannot panic](#milestone-23-typing-cannot-panic)
 
 ## The setup
 
@@ -1255,6 +1256,9 @@ attribute table is in the invariant, not behind contracts.
 
 #### The circularity
 
+(Milestone 23 verified typing, and this assumption is gone: see "The
+cycle" there.)
+
 `type_of` is trusted to keep the invariant and to return a term of the
 store. But typing evaluates: `get_type` calls `evaluate`, and `evaluate`
 calls the functions proved here. So the proof of, say,
@@ -1492,6 +1496,8 @@ message functions.
 
 #### The circularity, now
 
+(Milestone 23 removed what is left of it here: see "The cycle" there.)
+
 Within `eval.rs` there is no assumption left to discharge: `evaluate`
 calls the operators, and one of them, `evaluate_nil`, calls `evaluate`
 (as does `evaluate_program_app`, from outside). Verus checks the cycle as it
@@ -1618,3 +1624,224 @@ reader's checks from `main`, harness pin `237b961`).
 3. **What is next.** Panic freedom of typing, building and step checking
    would remove `type_of` from the trusted list, and with it the
    circularity; the evaluator's contract is the one they need.
+
+## Milestone 23: typing cannot panic
+
+### Summary
+
+- **Proved**: nothing in `typing.rs` can panic, each function keeps the
+  checker's invariant, and every type returned is a term of the store:
+  `get_type` and its work list, `get_type_internal`,
+  `get_type_app_internal`, `check_arity`, `get_literal_op_type`, and the
+  literal type rules (`set_literal_type_rule`, `get_literal_type_rule`).
+  Verus checks 215 items in `pathos-term` and 105 in `pathos-check` (89
+  before), with no errors.
+- **No design stop was needed for the traversal.** `get_type`'s loop is as
+  it was. Two things are more than moving code, and neither changes what
+  runs: the contract of matching was widened (below), and messages go
+  through helper functions.
+- **The evaluator no longer trusts typing.** `type_of` and `arity_ok` in
+  `eval.rs` call the verified functions. See "The cycle".
+- **Not proved: that typing ends**, as for `evaluate`, which it calls.
+- **Behaviour is unchanged**: every gate agrees with Ethos, the text and
+  order of type errors included (the `tests` and `cli` gates hold the
+  cases that print them). Against milestone 22 it executes 0.5%
+  fewer instructions on the regressions and 0.1% fewer on the cvc5
+  proofs.
+- **Cost**: about 245 lines of specification and proof for the 407 lines
+  of `typing.rs`.
+
+### The cycle
+
+Typing evaluates: a literal's type rule and the return type of an
+application are evaluated. The evaluator types: `eo::typeof`, `eo::nil`
+and the list operators ask for types. Milestones 21 and 22 proved the
+evaluator given a contract for typing that was trusted. Now both sides are
+verified, with the same contract:
+
+> given the checker's invariant and a term of the store, the function
+> keeps the invariant, the store keeps its terms, and what it returns is a
+> term of the store.
+
+`evaluate` meets it and relies on `get_type` meeting it; `get_type` meets
+it and relies on `evaluate` meeting it. Verus checks this as it checks any
+recursion: each function is verified once, with the contracts of the
+functions it calls as assumptions. That is sound for what is claimed, that
+no call panics and that results are terms of the store, for every run
+that ends. It says nothing of a run that does not end, and Verus was told
+not to ask for a measure: fifteen functions carry
+`exec_allows_no_decreases_clause`, the eight of milestone 22 and seven
+more (`get_type`, `get_type_internal`, `get_type_app_internal`,
+`get_literal_op_type`, `literal_type_rule`, and in `eval.rs` `type_of` and
+`evaluate_dt_constructors`).
+A literal type rule `(eo::typeof eo::self)` still recurses until the stack
+is full, as `docs/panics.md` lists under "Stack".
+
+What is left of the circularity is outside these two files. Three trusted
+functions are in `build.rs`: `list_of` (which is `mk_list`, through
+`mk_expr`), and the two new ones below. `mk_expr` types and evaluates, so
+`list_of`'s contract assumes of typing and evaluation, one level down,
+what is proved of them here. Milestone 24 removes that. The plugin is
+given the checker and may call anything; that stays an assumption.
+
+### The contract of matching, widened
+
+`match_terms` (milestone 19) required that every pair seen before the
+call was matched under the context it is called with (`closed`). The
+evaluator's callers meet that: each starts from an empty set.
+`get_type_app_internal` does not, and cannot. It keeps one set of pairs
+for all the arguments of an application, and between two arguments it
+binds the parameter of a quoted argument type to the argument itself. If
+that parameter was bound already, by an earlier argument, the binding is
+replaced, and a pair seen under the old binding is no longer a match under
+the new one. This is the behaviour of Ethos that
+[cvc5/ethos#269](https://github.com/cvc5/ethos/issues/269) is about, and
+pathos reproduces it.
+
+So the requirement was dropped, and what milestone 19 proves of a match is
+now proved *under* it (`was_closed`): a caller that meets it gets exactly
+what it had, and the two callers in the evaluator still verify unchanged.
+Proved without it: matching does not panic, keeps the context a
+substitution between terms of the store, only adds bindings, and a ground
+pattern matches exactly itself. The change is in the specification and
+the proof only; `match_terms` runs as before.
+
+For typing this means: Verus proves that `get_type_app_internal` does not
+panic, and does **not** prove that the type it computes is the
+instantiation of the head's type. That would be a correctness statement,
+which this milestone does not make, and with the rebinding it is not true
+in general.
+
+### What had to be rewritten
+
+- **Messages.** The functions took `out: Option<&mut String>` and wrote
+  with a macro around `write!`, reborrowing with `as_deref_mut`. Verus
+  accepts neither. Now `say(out, text)` appends, the nine texts that
+  format a kind or print a term are functions (`msg_no_rule`,
+  `msg_child_type`, ...), and a function that goes on with its message
+  takes `&mut Option<&mut String>`. The public functions keep their
+  signatures; `check_arity` and `get_literal_type_rule`, which are called
+  from outside with a message by value and from inside with a message that
+  goes on, each have an inner function (`arity`, `literal_type_rule`). The
+  texts are the same, built at the same points, and only when a message
+  was asked for, as before.
+- **`check_arity`'s table** is written twice: as code, and as the
+  specification `Checker::takes`, which Verus proves the code computes.
+  `get_literal_op_type` reads `children[1]` and `child_types[0..2]` on the
+  strength of it.
+- **Loops and conditions**: the `map`/`collect` over children is a loop;
+  `and_then` with a closure, a `match` with a guard and the comparison of
+  two `Option<Term>` are `match`es; `if let ... &&` is nested; the
+  `while let` of `get_type` is a `loop` with a `match`.
+- **Gone**: `Checker::match_terms`, a method that only called
+  `matching::match_terms`; typing calls that directly.
+
+### The checker's invariant
+
+One clause is new: the type rule of each kind of literal is a term of the
+store. `set_literal_type_rule` is verified to keep it; the snapshot
+reader, which also fills the table, reads each rule with `read_term`,
+which is verified to return a term of the store it is given.
+
+### What is trusted
+
+New in this milestone:
+
+| Function | Contract |
+| --- | --- |
+| `say` | None: it appends text to the message, if there is one. |
+| The nine `msg_` functions | None: each returns a `String`. Six take kinds or numbers only; three print terms (`show`, `show_ctx`) and are trusted not to panic on terms of the store. |
+| `function_type_of` (which is `mk_function_type`, in `build.rs`) | Keeps the invariant; the store keeps its terms; the type is a term of the store. |
+| `return_type_of` (which is `get_function_type(..).1`, in `build.rs`) | The type is a term of the store. |
+
+Assumed besides: that the derived `Hash` and `Eq` of `LitKind` agree
+(`axiom_literal_kinds_are_keys`), for the table of type rules.
+
+No longer trusted: `type_of` and `arity_ok`.
+
+### The preconditions, and who meets them
+
+| Precondition | Met by |
+| --- | --- |
+| `get_type_app_internal`: the list has a head | `get_type_internal`, its only caller, from the store's shapes (`lemma_shape`). Proved. |
+| `evaluate_program_app`, `compute_constructor_term`: the list has a head (milestone 21) | Still `build.rs` and `step.rs`. Typing calls neither. |
+| `evaluate_literal_op`: an `eo::ite` has three arguments (milestone 21) | Still `build.rs`. Typing does not call it either, but it now supplies what `build.rs` needs to prove it: `check_arity` returns `Checker::takes(k, n)`, and `takes` of `eo::ite` is `n == 3`. |
+
+So typing discharges neither of the two preconditions left to the callers
+in milestone 21; both are for milestone 24.
+
+### Time
+
+The binary of this milestone against that of milestone 22 (`b991c02`),
+instructions counted with Valgrind:
+
+| Corpus | Instructions | Largest increase on one case | Time, best of 3 | Outputs |
+| --- | --- | --- | --- | --- |
+| Regressions (230) | -0.47% | +0.52% | +0.3% | identical |
+| cvc5 proofs (400) | -0.08% | +0.34% | +0.2% | identical |
+
+### Lines and time
+
+| File | Code | Specification | Proof |
+| --- | --- | --- | --- |
+| `typing.rs` | 496 (was 407) | 174 | 46 |
+| `matching.rs` | 93 | 167 (was 164) | 229 (was 218) |
+| `checker.rs` | 284 | 89 (was 81) | 34 |
+| `eval.rs` | 1,178 | 573 (was 571) | 504 |
+
+`typing.rs` has 89 more lines of code: the message functions, the two
+inner functions and the two wrappers around `build.rs`.
+
+Verus takes about 36 seconds for `pathos-term` and 8 for `pathos-check`
+(7 before).
+
+### The estimate for milestone 24
+
+`build.rs` (560 lines) and `step.rs` (138 lines): 300 to 600 lines of
+specification and proof for panic freedom. Typing cost 0.6 lines a line of
+code and the operators 0.7; `build.rs` is the same kind of code (it passes
+terms along and indexes lists whose length it has just checked), with two
+things that could cost more:
+
+- `mk_expr` desugars: it folds n-ary applications, builds constructor
+  terms and resolves overloads, and it calls typing and the evaluator. Its
+  loops over arguments index several lists together, and I have not looked
+  for an invariant that needs stating.
+- `get_function_type` slices (`&ch[..n - 1]`), and `get_variables` and
+  the overload search keep sets.
+
+Milestone 24 would discharge the two preconditions above, remove
+`list_of`, `function_type_of` and `return_type_of` from the trusted list,
+and leave the plugin, printing and the parser as what the checker's core
+assumes.
+
+### Gates
+
+- `scripts/verify`: `pathos_term` 215 verified, 0 errors; `pathos_check`
+  105 verified, 0 errors; 45 seconds in all.
+- `scripts/full-check --quick`, as the brief asks: every step passes.
+  `tests` 230 of 230, `proofs` 400 of 400, `large` 43 of 43, `cli` 3,192
+  of 3,192, `snapshot` under every option set and with the three broken
+  snapshots, `bignum` 7 of 7, and `fuzz` has no finding that still differs
+  in either set. The `options` and `perf` gates were not run; the table
+  under "Time" stands in for `perf`.
+- Three deliberate faults in typing were each refused by Verus: an index
+  one past the argument types, `child_types[3]` for `eo::requires`, and a
+  wrong number in `check_arity`'s table.
+- `cargo test` in debug and release builds and `cargo clippy
+  --all-targets` with warnings as errors pass, and `cargo fmt --check`.
+  No test was changed.
+- `Cargo.lock` is unchanged; no dependency was added.
+- The CI job that runs Verus is now named for typing too.
+- CI has not run on this branch yet: the reviewer pushes.
+
+### For Daniel
+
+1. **The contract of matching was changed**, not only added to: a
+   requirement of milestone 19 became a hypothesis of its conclusions.
+   Nothing that was proved is lost, and the function is unchanged, but it
+   is a change to a reviewed specification.
+2. **Typing's result is not proved correct even where matching is**,
+   because of the rebinding of quoted parameters. If Ethos changes that
+   (#269), the stronger statement becomes available.
+3. **Milestone 24** (`build.rs`, `step.rs`), with the estimate above.

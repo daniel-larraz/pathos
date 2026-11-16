@@ -53,6 +53,12 @@ The argument of the row for lines 124 and 180 is the invariant of a level,
 (`run_frame`, `visit_term`, `revisit_term`), so its rows keep the old line
 numbers too. The "Stack" rows stand: Verus does not prove that evaluation
 ends, nor how deep its calls go.
+Milestone 23 did the same for `typing.rs`: Verus proves that none of its
+rows marked "Safe" can panic, given a head in the list passed to
+`get_type_app_internal`, which its one caller proves. The row for lines
+427 to 452 now rests on a specification of `check_arity`
+(`Checker::takes`). Its messages are built in functions of their own, so
+the line numbers below are the old ones. The two "Stack" rows stand.
 
 ## What was looked for
 
