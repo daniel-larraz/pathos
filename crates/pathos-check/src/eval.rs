@@ -2349,8 +2349,9 @@ impl Checker {
     }
 
     /// `(eo::list_diff op t1 t2)` and `(eo::list_inter op t1 t2)`, on multisets.
-    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verus_spec(r =>
+    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false), verifier::rlimit(150), verus_spec(r =>
         requires
+            k == EvalOp::ListDiff || k == EvalOp::ListInter,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -2359,6 +2360,7 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            list_ok(&old(self).store, &final(self).store, k, op, nil, is_left, args@, r),
     ))]
     fn list_diff_or_inter(
         &mut self,
@@ -2380,21 +2382,75 @@ impl Checker {
         let list2 = arg!(self, k, args, 2);
         self.get_nary_children(list2, op, Some(nil), &mut hargs2, is_left)?;
         let is_diff = k == EvalOp::ListDiff;
+        proof_decl! {
+            let ghost s0 = self.store;
+            let ghost f = s0.tree(op.idx());
+            let ghost nl = s0.tree(nil.idx());
+            let ghost es = elems(f, is_left, s0.tree(list.idx()));
+            let ghost zs = elems(f, is_left, s0.tree(list2.idx()));
+        }
+        proof! {
+            lemma_read(&s0, hargs@, es);
+            lemma_read(&s0, hargs2@, zs);
+        }
         if arg!(self, k, args, 1) == arg!(self, k, args, 2) {
+            proof! {
+                lemma_same_lists(is_diff, es);
+                lemma_build_elems(f, is_left, s0.tree(list.idx()));
+                assert(build(f, is_left, Seq::<Tree>::empty(), nl) == nl);
+            }
             return Some(if is_diff { nil } else { arg!(self, k, args, 1) });
         }
         let mut count2 = count_terms(&hargs2);
         let mut change_index = 0;
         let mut change_size = 0;
         let mut result = Vec::new();
+        // what is left of the second list
+        proof_decl! { let ghost mut rem = zs; }
+        proof! {
+            assert forall|t: Term| s0.has(t) implies #[trigger] map_count(count2@, t) == count(rem, s0.tree(t.idx())) by {
+                lemma_occ_trees(&s0, hargs2@, t);
+            }
+            assert(es.subrange(0, es.len() as int) =~= es);
+            assert(trees(&s0, result@) =~= Seq::<Tree>::empty());
+            assert(Seq::<Tree>::empty() + di_rec(is_diff, es, zs) =~= di_rec(is_diff, es, zs));
+            assert(es.subrange(0, 0) =~= Seq::<Tree>::empty());
+            assert(trees(&s0, result@).take(0) + es.subrange(0, 0) =~= trees(&s0, result@));
+        }
         #[cfg_attr(verus_keep_ghost, verus_spec(
             invariant
+                self.store == s0,
                 self.has_all(result@),
                 change_index <= i,
                 forall|t: Term| count2@.contains_key(t) ==> #[trigger] count2@[t] >= 1,
+                // the counts are those of what is left of the second list
+                forall|t: Term| s0.has(t) ==> #[trigger] map_count(count2@, t) == count(rem, s0.tree(t.idx())),
+                // the plugin's result is the result so far and its result
+                // on the rest
+                di_rec(is_diff, es, zs)
+                    == trees(&s0, result@) + di_rec(is_diff, es.subrange(i as int, es.len() as int), rem),
+                // since the last change every element was kept
+                change_size <= result@.len(),
+                change_index == 0 ==> change_size == 0,
+                trees(&s0, result@) == trees(&s0, result@).take(change_size as int)
+                    + es.subrange(change_index as int, i as int),
         ))]
         for i in 0..hargs.len() {
             let h = hargs[i];
+            proof_decl! {
+                let ghost x = es[i as int];
+                let ghost before = result@;
+                let ghost counts = count2@;
+                let ghost left = rem;
+                let ghost rest = es.subrange(i as int, es.len() as int);
+            }
+            proof! {
+                assert(x == s0.tree(h.idx()));
+                assert(rest[0] == x);
+                assert(rest.drop_first() =~= es.subrange(i + 1, es.len() as int));
+                lemma_erase_count(left, x);
+                assert(map_count(counts, h) == count(left, x));
+            }
             // one occurrence in the second list is used up
             let found = match count2.get(&h) {
                 Some(&n) => {
@@ -2407,19 +2463,63 @@ impl Checker {
                 }
                 None => false,
             };
+            proof! {
+                rem = erase_rec(left, x);
+                assert forall|t: Term| s0.has(t) implies #[trigger] map_count(count2@, t) == count(rem, s0.tree(t.idx())) by {
+                    assert(map_count(counts, t) == count(left, s0.tree(t.idx())));
+                    if s0.tree(t.idx()) == x {
+                        s0.theorem_same_tree_same_term(t, h);
+                    }
+                }
+            }
             if found == is_diff {
                 change_index = i + 1;
                 change_size = result.len();
+                proof! {
+                    assert(trees(&s0, result@).take(change_size as int) =~= trees(&s0, result@));
+                    assert(es.subrange(i + 1, i + 1) =~= Seq::<Tree>::empty());
+                    assert(trees(&s0, result@) =~= trees(&s0, result@).take(change_size as int)
+                        + es.subrange(i + 1, i + 1));
+                }
                 continue;
             }
             result.push(h);
+            proof! {
+                assert(trees(&s0, result@) =~= trees(&s0, before) + seq![x]);
+                assert(trees(&s0, before) + (seq![x] + di_rec(is_diff, rest.drop_first(), rem))
+                    =~= trees(&s0, result@) + di_rec(is_diff, rest.drop_first(), rem));
+                assert(trees(&s0, result@).take(change_size as int) =~= trees(&s0, before).take(change_size as int));
+                assert(es.subrange(change_index as int, i + 1)
+                    =~= es.subrange(change_index as int, i as int) + seq![x]);
+                assert(trees(&s0, result@) =~= trees(&s0, result@).take(change_size as int)
+                    + es.subrange(change_index as int, i + 1));
+            }
+        }
+        proof! {
+            assert(es.subrange(es.len() as int, es.len() as int) =~= Seq::<Tree>::empty());
+            assert(di_rec(is_diff, es.subrange(es.len() as int, es.len() as int), rem) =~= Seq::<Tree>::empty());
+            assert(trees(&s0, result@) + Seq::<Tree>::empty() =~= trees(&s0, result@));
+            assert(di_rec(is_diff, es, zs) == trees(&s0, result@));
         }
         if change_index == 0 {
+            proof! {
+                assert(es.subrange(0, es.len() as int) =~= es);
+                assert(trees(&s0, result@).take(0) =~= Seq::<Tree>::empty());
+                assert(Seq::<Tree>::empty() + es =~= es);
+                lemma_build_elems(f, is_left, s0.tree(list.idx()));
+            }
             return Some(arg!(self, k, args, 1));
         }
+        proof_decl! { let ghost kept = trees(&s0, result@); let ghost whole = result@; }
         result.truncate(change_size);
         let list = arg!(self, k, args, 1);
         let ret = self.get_nary_nth_tail(list, op, is_left, change_index);
+        proof! {
+            assert(result@ =~= whole.take(change_size as int));
+            assert(trees(&s0, result@) =~= kept.take(change_size as int));
+            lemma_nth_tail(f, is_left, s0.tree(list.idx()), change_index as nat);
+            lemma_build_append(f, is_left, trees(&s0, result@), es.subrange(change_index as int, es.len() as int), nl);
+        }
         Some(self.prepend_nary_children(op, ret, &result, is_left))
     }
 
@@ -2665,7 +2765,9 @@ fn reverse(ts: &mut [Term]) {
 /// elements.
 #[cfg_attr(verus_keep_ghost, verus_verify, verifier::loop_isolation(false), verus_spec(count =>
     requires ts@.len() <= u32::MAX,
-    ensures forall|t: Term| count@.contains_key(t) ==> #[trigger] count@[t] >= 1,
+    ensures
+        forall|t: Term| count@.contains_key(t) ==> #[trigger] count@[t] >= 1,
+        forall|t: Term| #[trigger] map_count(count@, t) == occ(ts@, t),
 ))]
 #[allow(clippy::needless_range_loop)]
 fn count_terms(ts: &[Term]) -> HashMap<Term, u32> {
@@ -2675,16 +2777,27 @@ fn count_terms(ts: &[Term]) -> HashMap<Term, u32> {
         broadcast use vstd::std_specs::btree::group_btree_axioms;
     }
     let mut count: HashMap<Term, u32> = HashMap::new();
-    #[cfg_attr(verus_keep_ghost, verus_spec(
-        invariant forall|t: Term| count@.contains_key(t) ==> 1 <= #[trigger] count@[t] <= i,
+    proof! { assert(ts@.take(0) =~= Seq::<Term>::empty()); }
+    #[cfg_attr(verus_keep_ghost, verus_spec(invariant
+        forall|t: Term| count@.contains_key(t) ==> 1 <= #[trigger] count@[t] <= i,
+        forall|t: Term| #[trigger] map_count(count@, t) == occ(ts@.take(i as int), t),
     ))]
     for i in 0..ts.len() {
         let n = match count.get(&ts[i]) {
             Some(&n) => n,
             None => 0,
         };
+        proof_decl! { let ghost before = count@; }
         count.insert(ts[i], n + 1);
+        proof! {
+            assert(ts@.take(i + 1).drop_last() =~= ts@.take(i as int));
+            assert(ts@.take(i + 1).last() == ts@[i as int]);
+            assert forall|t: Term| #[trigger] map_count(count@, t) == occ(ts@.take(i + 1), t) by {
+                assert(map_count(before, t) == occ(ts@.take(i as int), t));
+            }
+        }
     }
+    proof! { assert(ts@.take(ts@.len() as int) =~= ts@); }
     count
 }
 
@@ -2995,6 +3108,135 @@ proof fn lemma_setof_step(es: Seq<Tree>, i: int)
     assert(setof_rec(es.take(i)).push(es[i]) =~= setof_rec(es.take(i)) + seq![es[i]]);
 }
 
+/// `$eo_list_diff_rec` (with `diff`) and `$eo_list_inter_rec` (without):
+/// each element of the first list in turn is looked for in what is left of
+/// the second and erased there once; the difference keeps the ones not
+/// found, the intersection the ones found.
+pub open spec fn di_rec(diff: bool, es: Seq<Tree>, zs: Seq<Tree>) -> Seq<Tree>
+    decreases es.len(),
+{
+    if es.len() == 0 {
+        es
+    } else {
+        let res = erase_rec(zs, es[0]);
+        let found = res != zs;
+        let rest = di_rec(diff, es.drop_first(), res);
+        if found != diff { seq![es[0]] + rest } else { rest }
+    }
+}
+
+/// How often `x` is among the elements.
+pub open spec fn count(es: Seq<Tree>, x: Tree) -> nat
+    decreases es.len(),
+{
+    if es.len() == 0 {
+        0
+    } else {
+        count(es.drop_first(), x) + (if es[0] == x { 1nat } else { 0nat })
+    }
+}
+
+/// How often `t` is among the terms.
+pub open spec fn occ(ts: Seq<Term>, t: Term) -> nat
+    decreases ts.len(),
+{
+    if ts.len() == 0 {
+        0
+    } else {
+        occ(ts.drop_last(), t) + (if ts.last() == t { 1nat } else { 0nat })
+    }
+}
+
+/// The count a map holds for a term: none is zero.
+pub open spec fn map_count(m: Map<Term, u32>, t: Term) -> nat {
+    if m.contains_key(t) { m[t] as nat } else { 0 }
+}
+
+/// Counting in two lists, one after the other.
+proof fn lemma_count_append(a: Seq<Tree>, b: Seq<Tree>, x: Tree)
+    ensures count(a + b, x) == count(a, x) + count(b, x),
+    decreases a.len(),
+{
+    if a.len() == 0 {
+        assert(a + b =~= b);
+    } else {
+        assert((a + b).drop_first() =~= a.drop_first() + b);
+        assert((a + b)[0] == a[0]);
+        lemma_count_append(a.drop_first(), b, x);
+    }
+}
+
+/// A term is among terms as often as its tree is among their trees.
+proof fn lemma_occ_trees(s: &TermStore, ts: Seq<Term>, t: Term)
+    requires s.wf(), all_has(s, ts), s.has(t),
+    ensures occ(ts, t) == count(trees(s, ts), s.tree(t.idx())),
+    decreases ts.len(),
+{
+    if ts.len() > 0 {
+        let front = ts.drop_last();
+        let one = seq![s.tree(ts.last().idx())];
+        assert(all_has(s, front)) by {
+            assert forall|i: int| 0 <= i < front.len() implies s.has(#[trigger] front[i]) by {
+                assert(s.has(ts[i]));
+            }
+        }
+        lemma_occ_trees(s, front, t);
+        assert(trees(s, ts) =~= trees(s, front) + one);
+        lemma_count_append(trees(s, front), one, s.tree(t.idx()));
+        assert(one.drop_first() =~= Seq::<Tree>::empty());
+        assert(count(Seq::<Tree>::empty(), s.tree(t.idx())) == 0);
+        assert(s.has(ts[ts.len() - 1]));
+        if s.tree(ts.last().idx()) == s.tree(t.idx()) {
+            s.theorem_same_tree_same_term(ts.last(), t);
+        }
+    }
+}
+
+/// Erasing an element once: nothing changes if it is not there; otherwise
+/// the list is one shorter and has it once less.
+proof fn lemma_erase_count(zs: Seq<Tree>, x: Tree)
+    ensures
+        count(zs, x) == 0 ==> erase_rec(zs, x) == zs,
+        count(zs, x) > 0 ==> erase_rec(zs, x).len() + 1 == zs.len() && erase_rec(zs, x) != zs,
+        forall|w: Tree| #[trigger] count(erase_rec(zs, x), w)
+            == count(zs, w) - (if w == x && count(zs, x) > 0 { 1int } else { 0int }),
+    decreases zs.len(),
+{
+    if zs.len() > 0 {
+        let rest = zs.drop_first();
+        lemma_erase_count(rest, x);
+        if zs[0] != x {
+            let r = seq![zs[0]] + erase_rec(rest, x);
+            assert(r.drop_first() =~= erase_rec(rest, x));
+            assert(r[0] == zs[0]);
+            if count(zs, x) == 0 {
+                assert(seq![zs[0]] + rest =~= zs);
+            }
+            assert forall|w: Tree| #[trigger] count(erase_rec(zs, x), w)
+                == count(zs, w) - (if w == x && count(zs, x) > 0 { 1int } else { 0int }) by {
+                assert(count(r, w) == count(erase_rec(rest, x), w) + (if zs[0] == w { 1nat } else { 0nat }));
+            }
+        }
+    }
+}
+
+/// A list against itself: the difference is empty, and the intersection
+/// is the list.
+proof fn lemma_same_lists(diff: bool, es: Seq<Tree>)
+    ensures di_rec(diff, es, es) == (if diff { Seq::<Tree>::empty() } else { es }),
+    decreases es.len(),
+{
+    if es.len() > 0 {
+        let rest = es.drop_first();
+        lemma_same_lists(diff, rest);
+        assert(erase_rec(es, es[0]) == rest);
+        assert(rest.len() != es.len());
+        if !diff {
+            assert(seq![es[0]] + rest =~= es);
+        }
+    }
+}
+
 /// Erasing from a list without the element changes nothing.
 proof fn lemma_erase_none(es: Seq<Tree>, z: Tree)
     requires forall|j: int| 0 <= j < es.len() ==> es[j] != z,
@@ -3186,6 +3428,17 @@ pub open spec fn list_spec(op: EvalOp, f: Tree, nil: Tree, left: bool, a: Seq<Tr
         } else {
             None
         },
+        // $eo_list_diff, $eo_list_inter
+        EvalOp::ListDiff | EvalOp::ListInter => if is_list(f, nil, left, a[1]) && is_list(f, nil, left, a[2]) {
+            Some(Out::Term(build(
+                f,
+                left,
+                di_rec(op == EvalOp::ListDiff, elems(f, left, a[1]), elems(f, left, a[2])),
+                nil,
+            )))
+        } else {
+            None
+        },
         // $eo_list_rev
         EvalOp::ListRev => if is_list(f, nil, left, a[1]) {
             Some(Out::Term(build(f, left, elems(f, left, a[1]).reverse(), nil)))
@@ -3217,7 +3470,8 @@ pub open spec fn list_specified(op: EvalOp) -> bool {
         op,
         EvalOp::Nil | EvalOp::Cons | EvalOp::ListConcat | EvalOp::ListLength | EvalOp::ListNth
             | EvalOp::ListFind | EvalOp::ListRev | EvalOp::ListSingletonElim | EvalOp::ListRepeat
-            | EvalOp::ListErase | EvalOp::ListEraseAll | EvalOp::ListSetof
+            | EvalOp::ListErase | EvalOp::ListEraseAll | EvalOp::ListSetof | EvalOp::ListDiff
+            | EvalOp::ListInter
     )
 }
 
