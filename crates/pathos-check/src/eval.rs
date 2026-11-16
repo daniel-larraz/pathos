@@ -884,6 +884,9 @@ impl Checker {
             final(self).wf(),
             final(self).keeps(old(self)),
             r matches Some(t) ==> final(self).has(t),
+            // a terminator that does not depend on a type is the terminator
+            old(self).store.kind_of(nil.idx()) != Kind::Node(NodeKind::Parameterized)
+                ==> r == Some(nil) && final(self).store == old(self).store,
     ))]
     #[cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
     fn evaluate_nil(
@@ -1559,7 +1562,7 @@ impl Checker {
                     && old(self).app@[head].cons is Some {
                     let nil = old(self).app@[head].cons->0;
                     old(self).store.kind_of(nil.idx()) != Kind::Node(NodeKind::Parameterized)
-                        && k != EvalOp::Nil && k != EvalOp::ListSingletonIntro ==> list_ok(
+                        && k != EvalOp::ListSingletonIntro ==> list_ok(
                         &old(self).store,
                         &final(self).store,
                         k,
@@ -1623,6 +1626,7 @@ impl Checker {
     /// `eo::list_singleton_intro` on lists of `op` that end in `nil`.
     #[cfg_attr(verus_keep_ghost, verus_spec(r =>
         requires
+            k != EvalOp::Nil,
             old(self).wf(),
             old(self).has_all(args@),
             old(self).has(op),
@@ -2730,6 +2734,10 @@ pub open spec fn list_arity(op: EvalOp) -> nat {
 /// The plugin's lists nest to the right only.
 pub open spec fn list_spec(op: EvalOp, f: Tree, nil: Tree, left: bool, a: Seq<Tree>) -> Option<Out> {
     match op {
+        // $eo_nil: the terminator, from the signature's table. (Here for an
+        // operator whose terminator does not depend on a type; the type
+        // given is not looked at.)
+        EvalOp::Nil => Some(Out::Term(nil)),
         // $eo_cons
         EvalOp::Cons => if is_list(f, nil, left, a[2]) {
             Some(Out::Term(cons_tree(f, left, a[1], a[2])))
@@ -2797,8 +2805,8 @@ pub open spec fn list_spec(op: EvalOp, f: Tree, nil: Tree, left: bool, a: Seq<Tr
 pub open spec fn list_specified(op: EvalOp) -> bool {
     matches!(
         op,
-        EvalOp::Cons | EvalOp::ListConcat | EvalOp::ListLength | EvalOp::ListNth | EvalOp::ListFind
-            | EvalOp::ListRev | EvalOp::ListSingletonElim | EvalOp::ListRepeat
+        EvalOp::Nil | EvalOp::Cons | EvalOp::ListConcat | EvalOp::ListLength | EvalOp::ListNth
+            | EvalOp::ListFind | EvalOp::ListRev | EvalOp::ListSingletonElim | EvalOp::ListRepeat
     )
 }
 
