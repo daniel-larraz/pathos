@@ -556,6 +556,35 @@ will decide on later. The rules of the branch:
     green on `m23-verus-typing`, and the report section is written. The
     reviewer pushes and starts CI runs.
 
+24. **Panic freedom of term building and step checking.** `build.rs`
+    (about 560 lines: `mk_expr` and its desugaring of n-ary, chained and
+    pairwise applications, `mk_function_type`, `get_function_type`, the
+    list builders) and `step.rs` (about 140 lines). Prove that none of it
+    can panic and that every term it builds or returns is a term of the
+    store, building on milestones 17 to 23. Not its correctness.
+    - **The trusted wrappers go.** `list_of` (milestone 21),
+      `function_type_of` and `return_type_of` (milestone 23) are replaced
+      by the verified functions, so nothing of the evaluator's and typing's
+      cycle stays trusted but the plugin. Rewrite the circularity
+      paragraphs of the report to say so.
+    - **The callers' preconditions.** The two left in milestone 21 (an
+      argument list has a head; an `eo::ite` has three arguments, for
+      which milestone 23 gave `Checker::takes`) are proved here, and
+      `docs/panics.md` says so.
+    - **Design first** if `mk_expr`'s desugaring needs more than moving code
+      to be visible to Verus: write it down and stop for review.
+    - **Assumptions** stay listed; termination as before.
+    - **Behaviour** unchanged: every gate agrees with Ethos, messages
+      included.
+    - **The summary.** With this milestone the checker's core cannot panic.
+      End the report with one section that lists, for the whole of
+      milestones 17 to 24, what is proved, what is trusted, and what is not
+      covered (the parser, the printer, the plugin, termination), as the
+      basis for deciding on correctness proofs.
+    The gate: `scripts/verify` and `scripts/full-check --quick` pass, CI is
+    green on `m24-verus-build`, and the report section is written. The
+    reviewer pushes and starts CI runs.
+
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
 
