@@ -442,12 +442,18 @@ intended; everything between gates is not.
       logos's CPC at `LOGOS_REV` (`install/defs/Cpc.cached.eo`, with
       `Cpc.eos` and `smt.eos` as `--semantics` and `--smt-semantics`), as
       the PR's `plugins/rust_meta/README.md` says. Add it to the repository
-      as generated code that is never edited by hand, with a script that
+      as `generated/cpc-checker/`, outside `crates/`: its generated
+      `Cargo.toml` declares a workspace of its own, and the root workspace
+      takes everything under `crates/*`. It is generated code that is never
+      edited by hand, and the only part meant to be proved later, with a
+      script that
       regenerates it (`scripts/generate-cpc`) and a note of what it was
       generated from (Ethos commit, logos revision). Its dependencies are
       the `malachite` versions pathos already pins; add no other.
-    - **The adapter and the `pathos` binary.** A new crate whose binary is
-      `pathos`: it loads CPC through `pathos-elab` (a snapshot, so that
+    - **The adapter and the `pathos` binary.** A new crate,
+      `crates/pathos` (package and binary `pathos`, the name the rename
+      freed), depending on the shared crates and on
+      `generated/cpc-checker` as a path dependency. It loads CPC through `pathos-elab` (a snapshot, so that
       loading costs little), reads the proof with the shared front end, and
       instead of checking steps with the interpreter builds, in the
       compiled checker's `Store`, the assumption list and the command list
