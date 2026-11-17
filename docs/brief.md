@@ -493,6 +493,55 @@ intended; everything between gates is not.
     keep the adapter to the interface the PR's README documents, and say in
     the report what would break if the PR changed. The reviewer pushes and
     starts the runs.
+28. **The compiled checker in Aeneas's subset, measured.** After milestone
+    27, whose performance table is the baseline. Not before the reviewer
+    says that the author of cvc5/ethos#274 has been told, so that this does
+    not become a second version of his runtime without his knowing.
+
+    *Why.* The plan is to prove with Charon/Aeneas that the compiled
+    checker computes what logos's checker computes. Aeneas translates only
+    a subset of Rust, so the code that is proved may have to differ from
+    cvc5/ethos#274's baseline, and could be slower. This milestone finds
+    out, before any proof is written. Nothing in it is proved.
+
+    - **What Charon/Aeneas reject.** Install Charon and Aeneas (pin their
+      versions, and note which Lean version Aeneas's library needs against
+      logos's `lean-toolchain`). Run them on `generated/cpc-checker` as
+      milestone 27 left it, and list everything they reject, by file and
+      construct.
+    - **The rewrite.** Change the compiled checker until Charon and Aeneas
+      translate all of it to Lean without errors:
+      - the runtime: an interning table of our own over `Vec` in place of
+        `std::collections::HashMap`, explicit loops in place of iterators
+        and closures, and whatever else they reject;
+      - the generated code: through the generator, never by editing the
+        output. Generator changes go on a branch of the reviewer's Ethos
+        fork (`daniel-larraz/ethos`) on top of cvc5/ethos#274, so that
+        they can be offered upstream; `generated/cpc-checker` is
+        regenerated from it, and its note says from which commit;
+      - caches: if milestone 27 found proofs where the compiled checker
+        walks shared terms once per occurrence, add the type cache and the
+        cache of program applications here, in the subset, since they are
+        part of what would be proved;
+      - big numbers: keep `malachite`, behind a small set of functions
+        that Aeneas treats as external (their behaviour would be stated as
+        axioms in Lean). List those functions in the report: they are what
+        the eventual theorem would trust.
+    - **The measurement.** Time and peak memory of the rewritten checker
+      against milestone 27's baseline, `pathos-eo` (with and without a
+      snapshot) and logos, on the 400 proofs and the 43 large ones, one
+      process at a time on an idle machine, every run under the memory cap
+      (`systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0`) and
+      a time limit. The verdicts must not change.
+
+    Out of scope: proofs; changes to cvc5/ethos#274 itself (the reviewer
+    offers them upstream); proving big numbers of our own.
+
+    The gate: Charon and Aeneas translate the whole compiled checker without
+    errors (the generated Lean is part of the report, not of the
+    repository); `pathos` gives the same verdicts as in milestone 27; the
+    table compares it with the baseline, and the report says where any
+    slowdown comes from. The reviewer pushes and starts the runs.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
