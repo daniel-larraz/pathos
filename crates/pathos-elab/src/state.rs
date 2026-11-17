@@ -36,6 +36,9 @@ pub struct State {
     pub(crate) input_file: String,
     includes: HashSet<String>,
     pub(crate) has_reference: bool,
+    /// Whether `include` and `reference` commands are read and then
+    /// ignored, as a checker with its signature built in does.
+    pub skip_includes: bool,
     /// The function that normalizes reference assertions, if given.
     pub(crate) reference_nf: Option<Term>,
     reference_asserts: HashSet<Term>,
@@ -68,6 +71,7 @@ impl State {
             input_file: String::new(),
             includes: HashSet::new(),
             has_reference: false,
+            skip_includes: false,
             reference_nf: None,
             reference_asserts: HashSet::new(),
             last_step_proves_false_at_level_zero: false,

@@ -11,10 +11,16 @@ proof checker in Rust, meant as a drop-in replacement:
   (`trim-defs`, `desugar`, `model-smt`, `smt-meta`, `lean-meta`). Every
   file it writes is byte for byte what `ethos-eoc` writes.
 
-The binary was called `pathos` until 2026-11-16. That name is kept for a
-checker of CPC alone, compiled from the signature (see
-[docs/brief.md](docs/brief.md), milestone 27); `pathos-eo` is the one that
-reads any signature.
+- **`pathos`** checks proofs in CPC alone, the calculus cvc5 writes, with
+  a checker compiled from CPC instead of interpreted: the Rust code that
+  Ethos's `rust-meta` stage generates
+  ([cvc5/ethos#274](https://github.com/cvc5/ethos/pull/274)), behind
+  pathos's own front end. It answers `correct`, `incorrect` or
+  `incomplete`, as logos does. It is new and unverified; see
+  [docs/pathos-cpc.md](docs/pathos-cpc.md).
+
+(Until 2026-11-16 `pathos` was the name of the binary that is now
+`pathos-eo`.)
 
 pathos contains no `unsafe` code (the compiler enforces it) and no C or
 C++; its dependencies' `unsafe` code is traced and justified line by line.
@@ -36,7 +42,10 @@ target/release/pathos-eo proof.cpc               # as `ethos proof.cpc`
 target/release/pathos-eo --include=cpc.eo proof.cpc
 ```
 
-Every option of `ethos` works the same way (`pathos-eo --help`). Two are
+`target/release/pathos proof.cpc` checks a CPC proof with the compiled
+checker; CPC is built in, so it takes no signature.
+
+Every option of `ethos` works the same way in `pathos-eo` (`pathos-eo --help`). Two are
 pathos's own, and `--help` does not list them, since its output is kept
 identical to Ethos's:
 

@@ -413,6 +413,8 @@ impl Parser<'_> {
             let stuple = self.st.ck.mk_list(sels);
             self.st.ck.mark_constructor_kind(*cons, ac, Some(stuple));
         }
+        self.st
+            .with_plugin(|p, st| p.declare_datatypes(st, &defs.dts, &defs.dtcons));
         if is_multi {
             self.lex.eat_token(Token::Rparen)?;
         }
@@ -819,6 +821,9 @@ impl Parser<'_> {
         if is_reference && self.lex.peek_token()? != Token::Rparen {
             reference_nf = Some(self.parse_expr()?);
         }
+        if self.st.skip_includes {
+            return Ok(());
+        }
         // a file that is not a reference is a signature
         if try_include_file(self.st, &file, !is_reference, is_reference, reference_nf)? {
             Ok(())
@@ -955,7 +960,13 @@ impl Parser<'_> {
             .flatten()
             .map(|r| r.result.filter(|&t| !st.ck.store.is_evaluatable(t)))
         };
-        let checked = match by_plugin(self.st, None) {
+        let from_plugin = by_plugin(self.st, None);
+        // a plugin that failed on the step has nothing to say about it, and
+        // the checker is not asked instead
+        if let Some(e) = self.st.take_plugin_error() {
+            return Err(e);
+        }
+        let checked = match from_plugin {
             Some(result) => result,
             None => self.st.ck.check_step(&step, None),
         };
