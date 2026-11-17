@@ -16,3 +16,7 @@ pathos-syntax = { path = "../pathos-syntax" }
 pathos-elab = { path = "../pathos-elab" }
 pathos-check = { path = "../pathos-check" }
 pathos-compiled-checker = { path = "../../generated/cpc-checker" }
+
+[build-dependencies]
+pathos-elab = { path = "../pathos-elab" }
+pathos-check = { path = "../pathos-check" }

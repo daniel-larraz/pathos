@@ -177,6 +177,72 @@ impl State {
     }
 }
 
+/// Marks a signature image (see [`State::signature_image`]).
+const IMAGE_MAGIC: &[u8; 8] = b"PATHIMAG";
+
+impl State {
+    /// The state after reading the signature `input`, as bytes that
+    /// [`State::load_image`] turns back into that state. This is for a
+    /// program that has its signature built in: unlike a snapshot, an
+    /// image is tied to no file. What the signature prints is not kept.
+    pub fn signature_image(opts: Options, input: Vec<u8>, name: &str) -> Result<Vec<u8>> {
+        let mut st = State::new(opts, Box::new(|_| {}), Box::new(|_| {}));
+        let pristine = state_hash(&st);
+        crate::Parser::new(&mut st, input, name, true, false).parse_all()?;
+        if st.assumption_level() != 0 {
+            return Err(Error::plain("the signature leaves an assumption open"));
+        }
+        let mut w = Writer::new();
+        w.str(VERSION);
+        let key = st.ck.opts.snapshot_key();
+        w.len(key.len());
+        w.bytes.extend_from_slice(&key);
+        w.u64(pristine.0);
+        w.u32(pristine.1);
+        st.write_image(&mut w);
+        let mut file = Vec::with_capacity(w.bytes.len() + 20);
+        file.extend_from_slice(IMAGE_MAGIC);
+        file.extend_from_slice(&FORMAT.to_le_bytes());
+        file.extend_from_slice(&content_hash(&w.bytes).to_le_bytes());
+        file.extend_from_slice(&w.bytes);
+        Ok(file)
+    }
+
+    /// Puts the state of a signature image in place of this one. Returns
+    /// false, and changes nothing, unless the image is whole, was made by
+    /// this version under this state's options, and this state is as new
+    /// as the one the image's signature was read into.
+    pub fn load_image(&mut self, file: &[u8]) -> bool {
+        self.try_load_image(file).is_some()
+    }
+
+    fn try_load_image(&mut self, file: &[u8]) -> Option<()> {
+        let mut r = Reader::new(file);
+        if r.bytes(IMAGE_MAGIC.len())? != IMAGE_MAGIC || r.u32()? != FORMAT {
+            return None;
+        }
+        let checksum = r.u64()?;
+        let body = file.get(IMAGE_MAGIC.len() + 12..)?;
+        if content_hash(body) != checksum || r.str()? != VERSION {
+            return None;
+        }
+        let key_len = r.len(1)?;
+        if r.bytes(key_len)? != self.ck.opts.snapshot_key() {
+            return None;
+        }
+        let pristine = (r.u64()?, r.u32()?);
+        if self.ck.store.len() != pristine.1 as usize || state_hash(self) != pristine {
+            return None;
+        }
+        let image = self.read_image(&mut r)?;
+        if !r.is_at_end() {
+            return None;
+        }
+        self.install(image);
+        Some(())
+    }
+}
+
 /// A snapshot file that is whole and was written under this run's options.
 pub(crate) struct Snapshot {
     file: Vec<u8>,

@@ -960,7 +960,13 @@ impl Parser<'_> {
             .flatten()
             .map(|r| r.result.filter(|&t| !st.ck.store.is_evaluatable(t)))
         };
-        let checked = match by_plugin(self.st, None) {
+        let from_plugin = by_plugin(self.st, None);
+        // a plugin that failed on the step has nothing to say about it, and
+        // the checker is not asked instead
+        if let Some(e) = self.st.take_plugin_error() {
+            return Err(e);
+        }
+        let checked = match from_plugin {
             Some(result) => result,
             None => self.st.ck.check_step(&step, None),
         };
