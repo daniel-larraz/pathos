@@ -136,8 +136,6 @@ pub(crate) fn read_file(path: &str) -> Result<Vec<u8>> {
     let os_path = latin1::to_os(path);
     match std::fs::read(&os_path) {
         Ok(bytes) => Ok(textmode::input(bytes)),
-        // Ethos opens a directory without error and reads nothing from it.
-        Err(_) if std::path::Path::new(&os_path).is_dir() => Ok(Vec::new()),
         Err(_) => Err(Error::fatal(format!("Couldn't open file: {path}"))),
     }
 }

@@ -241,25 +241,18 @@ crashes below, were reported to Ethos with reproducers on 2026-11-14 and
 **1. Ethos crashes or reads out of bounds; pathos reports an error.** None
 is in the corpus; the fuzzing runs found most of them.
 
-- An `eo::` operator evaluated without an argument it reads, e.g.
-  `(eo::is_eq a)` in a program body: Ethos reads past the end of the
-  argument vector (a crash, or a wrong term taken for the argument);
-  pathos stops with `Too few arguments when evaluating literal op ...`.
-- `(eo::var t)` with one argument, `(eo::nameof (eo::var))`, the nil
-  terminator of an operator whose type is not a function type, `step-pop`
-  with no assumption: Ethos reads past the end; pathos gives a type error,
-  an error, or a failed step.
-- A literal such as `-/5`, `(_ bv<n> 0)` in a reference file, a quoted
-  symbol cut to `|` by a NUL character: uncaught C++ exception in Ethos, an
-  error in pathos.
+- The nil terminator of an operator whose type is not a function type,
+  `step-pop` with no assumption: Ethos reads past the end; pathos finds no
+  terminator, or fails the step. (The other inputs of this kind that this
+  list had for Ethos `9217112f`, such as an `eo::` operator without an
+  argument it reads, `(eo::var t)`, `-/5` and a NUL character in a quoted
+  symbol, are errors in Ethos since `c7d3db90`, and pathos gives the same
+  errors since milestone 26.)
 - `ethos-eoc`: a stage that indexes a term's children on the strength of a
   debug-only assertion reads outside the term; `pathos-eoc` stops with
-  `<Stage>: unexpected term: ...`. `(echo "smt-meta <unbound name>")` is a
-  segmentation fault in Ethos.
+  `<Stage>: unexpected term: ...`.
 - Recursion deeper than the stack: a segmentation fault in Ethos, a
   controlled abort in pathos, on fewer inputs.
-- On Windows, a file that does not exist: an uncaught C++ exception in
-  Ethos, `Couldn't open file: <name>` in pathos.
 
 **2. Output that differs by design.**
 

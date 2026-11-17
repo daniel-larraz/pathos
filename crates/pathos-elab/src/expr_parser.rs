@@ -531,9 +531,8 @@ impl Parser<'_> {
         let mut nparen: usize = 0;
         loop {
             match self.lex.next_token()? {
-                // An unmatched `)` makes the count wrap around in Ethos,
-                // which then reads on to the end of the input; a `(` after
-                // it wraps the count back.
+                // Ethos counts in an unsigned integer. No caller starts
+                // at a `)`, so the count does not go below zero.
                 Token::Lparen => nparen = nparen.wrapping_add(1),
                 Token::Rparen => nparen = nparen.wrapping_sub(1),
                 Token::Eof => return Err(self.lex.parse_error("Expected s-expression")),

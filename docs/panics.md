@@ -77,6 +77,8 @@ Reading was backed by runs, on release and debug builds:
 
 ### Fixed in this milestone
 
+(Since milestone 26, which follows Ethos `c7d3db90`, the first two inputs of this table and the last are errors in Ethos itself, with Ethos's messages in pathos: `Expected two arguments to eo::var`, `Illegal character in quoted symbol`, `Control characters other than whitespace are not permitted in string literals ...`, `Expected Eunoia command`. The `Too few arguments` error and `missing_argument` that this document mentions are gone; the line numbers below are those of the audited commit.)
+
 Found by this audit and fixed in commits `1f7fce7` and `cd5face`, each with
 a test except the line number (it needs 4 GiB of input). None is in a case
 of any gate.
