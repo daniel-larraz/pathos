@@ -418,6 +418,82 @@ intended; everything between gates is not.
     still differing other than accepted ones), and, after the reviewer
     moves the pins, `scripts/full-check` and `scripts/difftest eoc` agree
     on CI. The reviewer pushes and starts the runs.
+27. **`pathos` for CPC: pathos's front end feeding the compiled checker;
+    the interpreter becomes `pathos-eo`.** On `main`, after milestone 26.
+
+    *Where this is going.* The project now has two checkers. `pathos-eo` is
+    today's pathos: any Eunoia signature, interpreted. `pathos` checks CPC
+    only, with a checker compiled from CPC by Ethos's `rust-meta` stage
+    (cvc5/ethos#274, open, by the author of Ethos and logos), which mirrors
+    logos's checker function by function. The plan, outside this
+    milestone, is to prove with Charon/Aeneas that this compiled checker
+    computes what logos's does, so that logos's soundness theorem applies
+    to `pathos`. The front end (lexer, parser, elaborator) is shared and
+    stays unverified, as logos's parser is. This milestone builds the
+    unverified binary and measures it; nothing here is proved.
+
+    - **The rename.** The binary `pathos` becomes `pathos-eo`, and the
+      crate `pathos-check` (the interpreter of signatures) becomes
+      `pathos-eo-check`. The shared crates (`pathos-syntax`, `pathos-elab`,
+      `pathos-term`), `pathos-eoc` and the repository keep their names.
+      Update everything that names the binary or the crate: `ci.yml`,
+      `scripts/difftest`, `scripts/drift`, `scripts/package`,
+      `scripts/platform-probe`, `README.md`, and the docs where they mean
+      the binary rather than the project (not the review records under
+      `docs/reviews/`, which stay as written). The harness's references are
+      the reviewer's, on the fork, in step with this milestone. Nothing
+      about `pathos-eo`'s behaviour changes: every existing gate must still
+      agree.
+    - **The compiled checker.** Build `ethos-eoc` from cvc5/ethos#274 at
+      `2f7d6bbb` and generate the crate (`pathos-compiled-checker`) from
+      logos's CPC at `LOGOS_REV` (`install/defs/Cpc.cached.eo`, with
+      `Cpc.eos` and `smt.eos` as `--semantics` and `--smt-semantics`), as
+      the PR's `plugins/rust_meta/README.md` says. Add it to the repository
+      as generated code that is never edited by hand, with a script that
+      regenerates it (`scripts/generate-cpc`) and a note of what it was
+      generated from (Ethos commit, logos revision). Its dependencies are
+      the `malachite` versions pathos already pins; add no other.
+    - **The adapter and the `pathos` binary.** A new crate whose binary is
+      `pathos`: it loads CPC through `pathos-elab` (a snapshot, so that
+      loading costs little), reads the proof with the shared front end, and
+      instead of checking steps with the interpreter builds, in the
+      compiled checker's `Store`, the assumption list and the command list
+      (`step`, `assume-push`, `step-pop`, premises as indices), then calls
+      `check_proof` once. It prints `correct`, `incorrect` or `incomplete`
+      and exits 0, 1 or 2, as logos does. The terms it builds must be the
+      ones logos's parser builds from the same file: constants,
+      literals (canonicalized as logos does), operators, binders,
+      datatypes, `define` and `let`, and the numbering of premises. Read
+      logos's parser (`Cpc/Parser.lean`, `Logos/Parser/`) for each. Where
+      logos rejects an input (for example `lambda` or the `trust` rule
+      today), say what `pathos` does and why.
+    - **Comparison with logos.** A script, `scripts/compare-logos`, that
+      runs `pathos` and logos (built at `LOGOS_REV`) on the 400 proofs and
+      the 43 large ones and lists every proof where the verdicts differ.
+      Every run of every binary is under a memory cap
+      (`systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0`)
+      and a time limit.
+    - **Performance.** On the same proofs, the time and peak memory of
+      `pathos`, `pathos-eo`, `pathos-eo --snapshot`, Ethos and logos, one
+      process at a time on an idle machine, under the same cap. Report the
+      totals and every proof where `pathos` is much slower than `pathos-eo`.
+      We expect some: reading the generated code, it seems to cache neither
+      types nor program results, and logos blows up on proofs whose terms
+      share subterms heavily (`regress1__auflia__bug330`,
+      `regress1__bvdiv2`, among others). Say whether that is the cause, and
+      what caching would fix it, without adding it in this milestone.
+
+    Out of scope: any change to the generated code or to cvc5/ethos#274
+    (report what the adapter needs from it instead), caches, Charon/Aeneas,
+    proofs.
+
+    The gate: every existing gate agrees under the new names; `pathos`
+    gives logos's verdict on every proof logos reads, or each difference is
+    explained; `pathos` never says `correct` where Ethos does not; the
+    performance table is in the report. Since cvc5/ethos#274 is still open,
+    keep the adapter to the interface the PR's README documents, and say in
+    the report what would break if the PR changed. The reviewer pushes and
+    starts the runs.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
