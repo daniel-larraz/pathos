@@ -889,12 +889,12 @@ impl Built {
         let index = |key: &InstanceKey| nodes.iter().position(|k| k == key);
         // which instance reaches which
         let mut reach = vec![vec![false; n]; n];
-        for a in 0..n {
+        for (a, row) in reach.iter_mut().enumerate() {
             let mut todo = vec![a];
             while let Some(x) = todo.pop() {
                 for b in uses[x].iter().filter_map(index) {
-                    if !reach[a][b] {
-                        reach[a][b] = true;
+                    if !row[b] {
+                        row[b] = true;
                         todo.push(b);
                     }
                 }
