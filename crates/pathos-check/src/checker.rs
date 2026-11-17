@@ -309,6 +309,11 @@ impl Checker {
         ov.push(e);
     }
 
+    /// The terms `name` is bound to, oldest first, if there are several.
+    pub fn overloads_of(&self, name: &str) -> &[Term] {
+        self.overloads.get(name).map_or(&[], Vec::as_slice)
+    }
+
     /// Undoes the last [`Checker::add_overload`] for `name`. Returns the term
     /// the name is bound to again.
     pub fn pop_overload(&mut self, name: &str) -> Option<Term> {

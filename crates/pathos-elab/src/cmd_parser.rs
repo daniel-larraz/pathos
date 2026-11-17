@@ -413,6 +413,8 @@ impl Parser<'_> {
             let stuple = self.st.ck.mk_list(sels);
             self.st.ck.mark_constructor_kind(*cons, ac, Some(stuple));
         }
+        self.st
+            .with_plugin(|p, st| p.declare_datatypes(st, &defs.dts, &defs.dtcons));
         if is_multi {
             self.lex.eat_token(Token::Rparen)?;
         }
@@ -818,6 +820,9 @@ impl Parser<'_> {
         let mut reference_nf = None;
         if is_reference && self.lex.peek_token()? != Token::Rparen {
             reference_nf = Some(self.parse_expr()?);
+        }
+        if self.st.skip_includes {
+            return Ok(());
         }
         // a file that is not a reference is a signature
         if try_include_file(self.st, &file, !is_reference, is_reference, reference_nf)? {

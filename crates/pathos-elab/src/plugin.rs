@@ -133,6 +133,18 @@ pub trait Plugin {
     ) -> Result<Option<StepResult>> {
         Ok(None)
     }
+    /// A `declare-datatype` or `declare-datatypes` command, after its
+    /// symbols were bound: each datatype with its constructors, in the order
+    /// of the block, and each constructor with its selectors. Ethos has no
+    /// such hook; its plugins see the constructor kinds instead.
+    fn declare_datatypes(
+        &mut self,
+        st: &mut State,
+        datatypes: &[(Term, Vec<Term>)],
+        constructors: &[(Term, Vec<Term>)],
+    ) -> Result<()> {
+        Ok(())
+    }
     /// An `echo` command. Returns false if the message was for the plugin
     /// and should not be printed.
     fn echo(&mut self, st: &mut State, msg: &str) -> Result<bool> {

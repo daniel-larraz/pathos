@@ -82,10 +82,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "pathos"
+version = "0.1.0"
+dependencies = [
+ "pathos-check",
+ "pathos-compiled-checker",
+ "pathos-elab",
+ "pathos-syntax",
+ "pathos-term",
+]
+
+[[package]]
 name = "pathos-check"
 version = "0.1.0"
 dependencies = [
  "pathos-term",
+]
+
+[[package]]
+name = "pathos-compiled-checker"
+version = "0.1.0"
+dependencies = [
+ "malachite-base",
+ "malachite-nz",
+ "malachite-q",
 ]
 
 [[package]]

@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+# Regenerates generated/cpc-checker, the checker for CPC that Ethos's
+# rust-meta stage compiles from logos's signature (cvc5/ethos#274). The
+# crate is generated code: it is never edited by hand, and this script is
+# the only thing that writes it.
+#
+#   scripts/generate-cpc [--ethos REPO] [--rev COMMIT] [--logos REPO]
+#                        [--logos-rev REV] [--work DIR] [--check]
+#
+#   --ethos      the Ethos repository holding the commit, a URL or a local
+#                clone (default: https://github.com/cvc5/ethos)
+#   --rev        the Ethos commit with the rust-meta stage (default: the
+#                one below; it is a commit of pull request 274, which is
+#                fetched by its hash or through refs/pull/274/head)
+#   --logos      the logos repository (default: LOGOS_REPO of difftest.env)
+#   --logos-rev  the logos revision whose install/defs is compiled
+#                (default: LOGOS_REV of difftest.env)
+#   --work       where to clone and build (default: target/generate-cpc;
+#                kept between runs)
+#   --check      do not write generated/cpc-checker: generate, and say
+#                whether the result is what the repository holds (exit 1 if
+#                it is not)
+#
+# It builds ethos-eoc at that commit and runs, as the stage's README says,
+#
+#   tools/eoc/driver.py rust --semantics <logos>/install/defs/Cpc.eos \
+#     --smt-semantics <logos>/install/defs/smt.eos \
+#     <logos>/install/defs/Cpc.cached.eo
+#
+# then copies the crate the driver writes, without its build directory,
+# with the signature beside it (Cpc.cached.eo, which crates/pathos builds
+# in), and records in generated/cpc-checker/GENERATED.md what it was
+# generated from.
+#
+# Needs git, cmake, a C++ compiler, GMP and Python 3. Every step that can
+# use much memory runs under a cap (CPC_MEMORY_MAX, default 8G) where
+# systemd-run is available.
+
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../difftest.env
+source "$root/difftest.env"
+
+# The commit of cvc5/ethos#274 the checker is generated from.
+default_rev=2f7d6bbb6d358266ef9aca4f007ff02314a2eb64
+pull_request=274
+
+fail() { echo "scripts/generate-cpc: $*" >&2; exit 2; }
+
+ethos_repo=https://github.com/cvc5/ethos
+rev="$default_rev"
+logos_repo="$LOGOS_REPO"
+logos_rev="$LOGOS_REV"
+work="$root/target/generate-cpc"
+check=false
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --ethos) ethos_repo="$2"; shift 2 ;;
+    --rev) rev="$2"; shift 2 ;;
+    --logos) logos_repo="$2"; shift 2 ;;
+    --logos-rev) logos_rev="$2"; shift 2 ;;
+    --work) work="$2"; shift 2 ;;
+    --check) check=true; shift ;;
+    *) fail "unknown argument: $1 (see the header of this script)" ;;
+  esac
+done
+
+capped() {
+  if command -v systemd-run >/dev/null 2>&1 && systemd-run --user --scope -q true 2>/dev/null; then
+    systemd-run --user --scope -q -p "MemoryMax=${CPC_MEMORY_MAX:-8G}" -p MemorySwapMax=0 "$@"
+  else
+    "$@"
+  fi
+}
+
+mkdir -p "$work"
+work="$(cd "$work" && pwd)"
+
+# A clone of `repo` in `dir` at `rev`; prints the commit. `dir` is used only
+# if git says it is the top of a repository of its own (see scripts/drift).
+checkout() {
+  local repo="$1" dir="$2" rev="$3" pull="${4:-}"
+  local top
+  top="$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)" || top=""
+  if [[ ! -d "$dir" || "$(cd "$dir" && pwd -P)" != "$top" ]]; then
+    rm -rf "$dir"
+    git clone --quiet "$repo" "$dir" || return 1
+  fi
+  git -C "$dir" remote set-url origin "$repo" || return 1
+  git -C "$dir" fetch --quiet --tags origin '+refs/heads/*:refs/remotes/origin/*' || return 1
+  local commit
+  if ! commit="$(git -C "$dir" rev-parse --verify --quiet "origin/$rev^{commit}" ||
+    git -C "$dir" rev-parse --verify --quiet "$rev^{commit}")"; then
+    # a commit of a pull request is on no branch
+    git -C "$dir" fetch --quiet origin "$rev" 2>/dev/null ||
+      { [[ -n "$pull" ]] && git -C "$dir" fetch --quiet origin "refs/pull/$pull/head"; } ||
+      return 1
+    commit="$(git -C "$dir" rev-parse --verify --quiet "$rev^{commit}")" || return 1
+  fi
+  git -C "$dir" checkout --quiet --detach "$commit" || return 1
+  echo "$commit"
+}
+
+ethos_commit="$(checkout "$ethos_repo" "$work/ethos" "$rev" "$pull_request")" ||
+  fail "cannot get commit $rev of $ethos_repo"
+logos_commit="$(checkout "$logos_repo" "$work/logos" "$logos_rev")" ||
+  fail "cannot get revision $logos_rev of $logos_repo"
+defs="$work/logos/install/defs"
+for f in Cpc.cached.eo Cpc.eos smt.eos; do
+  [[ -f "$defs/$f" ]] || fail "logos at $logos_commit has no install/defs/$f"
+done
+
+out="$work/out"
+rm -rf "$out"
+echo "generate-cpc: Ethos $ethos_commit, logos $logos_commit"
+(cd "$work/ethos" && capped python3 tools/eoc/driver.py rust \
+  --build-dir "$work/build-eoc" --final-out-dir "$out" \
+  --semantics "$defs/Cpc.eos" --smt-semantics "$defs/smt.eos" \
+  "$defs/Cpc.cached.eo") > "$work/driver.log" 2>&1 ||
+  { tail -n 30 "$work/driver.log" >&2; fail "the driver failed; see $work/driver.log"; }
+[[ -f "$out/rust/Cargo.toml" && -f "$out/rust/src/generated.rs" ]] ||
+  fail "the driver wrote no crate in $out/rust; see $work/driver.log"
+
+# The crate as the repository holds it: the driver's files and the note.
+staged="$work/staged"
+rm -rf "$staged"
+mkdir -p "$staged"
+(cd "$out/rust" && find . -path ./target -prune -o -type f -print0 |
+  while IFS= read -r -d '' f; do
+    mkdir -p "$staged/$(dirname "$f")"
+    cp "$f" "$staged/$f"
+  done)
+# The signature the crate was compiled from: the front end of crates/pathos
+# reads proofs against it.
+cp "$defs/Cpc.cached.eo" "$staged/Cpc.cached.eo"
+cat > "$staged/GENERATED.md" <<EOF
+# generated/cpc-checker
+
+Generated code. Do not edit it: change what it is generated from and run
+\`scripts/generate-cpc\`, which wrote every file here, this one included.
+
+It is the crate \`pathos-compiled-checker\`: the checker for CPC that the
+\`rust-meta\` stage of \`ethos-eoc\` (cvc5/ethos#$pull_request) compiles from
+logos's signature. \`crates/pathos\` builds its input and calls it.
+
+| Generated from | |
+| --- | --- |
+| Ethos (\`ethos-eoc\`, \`tools/eoc/driver.py rust\`, the runtime in \`plugins/rust_meta/runtime\`) | \`$ethos_commit\` |
+| logos (\`install/defs/Cpc.cached.eo\`, with \`Cpc.eos\` as \`--semantics\` and \`smt.eos\` as \`--smt-semantics\`) | \`$logos_commit\` |
+
+\`Cpc.cached.eo\` is a copy of that signature: \`crates/pathos\` builds it in
+and reads proofs against it, so that the names it gives the checker are the
+names the checker was compiled with.
+
+It is a workspace of its own (see its \`Cargo.toml\`), outside pathos's
+workspace, so pathos's lints, formatting and tests do not apply to it.
+EOF
+
+dest="$root/generated/cpc-checker"
+if $check; then
+  if diff -r "$staged" "$dest" > "$work/check.diff" 2>&1; then
+    echo "generate-cpc: generated/cpc-checker is what these revisions generate"
+    exit 0
+  fi
+  head -n 20 "$work/check.diff"
+  echo "generate-cpc: generated/cpc-checker differs (the whole difference: $work/check.diff)"
+  exit 1
+fi
+rm -rf "$dest"
+mkdir -p "$(dirname "$dest")"
+cp -r "$staged" "$dest"
+echo "generate-cpc: wrote generated/cpc-checker ($(cat "$dest"/src/*.rs | wc -l) lines of Rust)"
