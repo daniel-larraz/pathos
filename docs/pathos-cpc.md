@@ -20,8 +20,13 @@ is a refutation, but of a problem outside the fragment logos's theorem
 covers.
 
 ```
-pathos [--explain] [--no-cache] [--cache-stats] <proof.cpc>
+pathos [--explain] [--profile] [--no-cache] [--cache-stats] [--depth=N] <proof.cpc>
 ```
+
+`--explain` says which command of an incorrect proof the checker does not
+accept, `--profile` which rules its time goes to; `--no-cache` and
+`--cache-stats` are for measuring the checker's caches; `--depth` raises
+how deep the checker's functions may nest (100,000 by default).
 
 ## The parts
 
@@ -211,3 +216,37 @@ against 0.2 s), `regress1__bv__fuzz18.smtv1` (15.7 s) and
   number it makes goes through the hash table of terms. A faster hash, or
   native numbers kept out of the table, would address it; another cache
   would not.
+
+### The 41 large proofs of the safe corpus
+
+Only Ethos and `pathos` with its caches were run here, with five minutes
+per run in place of the 30 that the large proofs otherwise get (a decision
+taken to keep the run short; logos, `pathos --no-cache` and `pathos-eo`
+were left out). So a timeout below means "more than 300 s".
+
+| Checker | correct | timeout | error | over the 8 GiB cap | Time on the 31 proofs both decided | Largest peak under the cap |
+| --- | --- | --- | --- | --- | --- | --- |
+| `pathos` | 31 | 7 | 2 | 1 | 957.0 s | 2.92 GiB |
+| Ethos | 40 | 0 | 0 | 1 | 18.3 s | 2.51 GiB |
+
+`pathos` says `correct` on no proof that Ethos does not accept, and gives
+no other verdict on any of the 41: where it finishes, it agrees with Ethos.
+
+- **Timeouts**: `regress2__hole8.cvc`, `regress3__hole9.cvc`,
+  `regress3__bv-fuzz17.smtv1`, `regress3__lpsat-goal-9`,
+  `regress4__bug143.smtv1`, `regress4__fischer3-mutex-16.smtv1` and
+  `regress4__pp-regfile.smtv1`. Ethos takes between 3.4 s and 170 s on
+  them. The slowest that finish are
+  `regress4__swap_t1_pp_nf_ai_00010_004.cvc` (233.5 s against Ethos's
+  2.3 s) and `regress1__quantifiers__inv-conds` (161.3 s against 0.95 s).
+  These proofs were not profiled; the 400 above suggest the same cause.
+- **Errors**: `regress1__arith__issue9427-cdiv-def` uses `lambda`.
+  `regress4__comb2.shuffled-as.sat03-420.smtv1` has 112,463 assumptions,
+  and the compiled checker goes one call deeper for each
+  (`$eo_invoke_assume_list` is not compiled to a loop), past the 100,000
+  that `pathos` allows by default: `the compiled checker stopped without a
+  verdict: Limit`. With `--depth=150000` it gets past the assumptions
+  without overflowing its stack, and then runs for more than 400 s.
+- **`regress3__hole10.cvc`** (475 MB) fits under 8 GiB for neither. Alone
+  under a 32 GiB cap with ten minutes: Ethos `correct` in 435 s with a peak
+  of 21.96 GiB; `pathos` out of time, at 12.70 GiB when it was stopped.

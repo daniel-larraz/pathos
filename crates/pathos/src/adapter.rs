@@ -93,6 +93,7 @@ struct Instance {
 /// What the adapter has written down so far.
 pub struct Built {
     store: Store,
+    caching: bool,
     /// Symbols of the signature have identifiers below this.
     boundary: u32,
     /// The store's term for each front-end term converted so far.
@@ -145,6 +146,7 @@ impl Built {
         store.set_caching(caching);
         Built {
             store,
+            caching,
             boundary,
             memo: HashMap::new(),
             datatypes: HashMap::new(),
@@ -1115,6 +1117,18 @@ impl Built {
         let (store, commands, labels) = (&mut self.store, &self.commands, &self.labels);
         cc::with_checker_stack(|| crate::explain::explain(store, assumptions, commands, labels))
             .map_err(|e| Error::plain(format!("the compiled checker stopped: {e}")))
+    }
+
+    /// Sets how deep the checker's functions may nest. Call it before
+    /// anything is converted: the store is made again.
+    pub fn set_depth(&mut self, depth: u32) {
+        let caching = self.caching;
+        self.store = Store::new(Limits {
+            terms: u32::MAX,
+            calls: u64::MAX,
+            depth,
+        });
+        self.store.set_caching(caching);
     }
 
     /// The checker's caches after a run, in one line.

@@ -37,6 +37,10 @@ correct, incorrect or incomplete (exit status 0, 1 or 2).
   --no-cache     run the checker without its caches of types and of
                  program results
   --cache-stats  print the caches' hits, misses and sizes on standard error
+  --depth=N      let the checker's functions nest N deep (default 100000).
+                 The checker goes one level down for each assumption, among
+                 others. Beyond what its 64 MiB stack holds, the run ends
+                 with a stack overflow instead of an error
   --profile      print on standard error the checker's time by rule (it
                  runs the checker once more for that)
 ";
@@ -54,6 +58,7 @@ struct Invocation {
     no_cache: bool,
     cache_stats: bool,
     profile: bool,
+    depth: Option<u32>,
     file: String,
 }
 
@@ -66,6 +71,7 @@ fn parse_args(args: &[String]) -> Option<Invocation> {
             "--no-cache" => inv.no_cache = true,
             "--cache-stats" => inv.cache_stats = true,
             "--profile" => inv.profile = true,
+            _ if a.starts_with("--depth=") => inv.depth = Some(a["--depth=".len()..].parse().ok()?),
             _ if a.starts_with("--") || file.is_some() => return None,
             _ => file = Some(a.clone()),
         }
@@ -95,6 +101,9 @@ fn prepare(caching: bool) -> Result<(State, Rc<RefCell<adapter::Built>>)> {
 
 fn run(inv: &Invocation) -> Result<Verdict> {
     let (mut st, built) = prepare(!inv.no_cache)?;
+    if let Some(depth) = inv.depth {
+        built.borrow_mut().set_depth(depth);
+    }
     include_file(&mut st, &inv.file, false, false, None)?;
     if inv.profile {
         // a run of its own, before the one that gives the verdict

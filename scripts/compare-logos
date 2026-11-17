@@ -105,7 +105,8 @@ def run(cmd, cwd, timeout, memory):
         verdict = "timeout"
     elif last in VERDICTS:
         verdict = last
-    elif p.returncode in (137, -9) or "Killed" in p.stderr:
+    elif p.returncode in (137, -9, 143, -15) or "Killed" in p.stderr:
+        # the scope was stopped at its memory cap
         verdict = "memory"
     else:
         verdict = "error"
