@@ -406,11 +406,12 @@ intended; everything between gates is not.
     Do not touch `difftest.env` (the reviewer moves `REFERENCE_REV` and
     `HARNESS_COMMIT` on the branch when the drift job agrees, and updates
     the harness's accepted fuzzing findings for the fixed issues), and do
-    not touch the verus branch: three of the fixes change code the proofs
-    cover (#257 in `eval.rs`, #269 in `typing.rs`, #258 in `build.rs`), and
-    bringing the proofs along is a milestone of its own on verus after this
-    one is merged into `main`. Say in the report which functions changed,
-    for that milestone.
+    not touch the verus branch. The Verus work is paused (see
+    `docs/verus-semantics-scope.md` on that branch, "Status: paused"):
+    `main` is not merged into it, and this milestone needs no follow-up
+    there. Three of the fixes change code the proofs cover (#257 in
+    `eval.rs`, #269 in `typing.rs`, #258 in `build.rs`); still say in the
+    report which functions changed, for whoever resumes it.
 
     The gate: an on-demand run of the drift job on the branch is green
     against `c7d3db90` (all five comparisons agree, and `fuzz` has none
