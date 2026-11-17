@@ -149,7 +149,7 @@ mod tests {
             BitVec::parse("0f", 16).unwrap().to_string_base(2),
             "00001111"
         );
-        // hexadecimal output is not padded
+        // hexadecimal output is padded to the digits the width asks for
         assert_eq!(BitVec::parse("0f", 16).unwrap().to_string_base(16), "0f");
         assert_eq!(BitVec::zero(0).to_string_base(2), "");
     }
