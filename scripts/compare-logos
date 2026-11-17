@@ -5,7 +5,7 @@ differ; with --perf, also times them against pathos-eo and Ethos.
   scripts/compare-logos [--perf] [--large] [--corpus DIR] [--filter TEXT]
                         [--jobs N] [--timeout SECONDS] [--memory SIZE]
                         [--logos BIN] [--ethos BIN] [--pathos BIN]
-                        [--report FILE]
+                        [--report FILE] [--reuse FILE]
 
   (default)   the 400 proofs of the harness's safe corpus (work/corpus-safe:
               proofs from a cvc5 built in safe mode, the ones pathos is
@@ -28,6 +28,8 @@ differ; with --perf, also times them against pathos-eo and Ethos.
   --pathos    the pathos binary (default: target/release/pathos, built
               first with cargo, as pathos-eo always is)
   --report    write every run as JSON to FILE
+  --reuse     take the runs of logos, Ethos and pathos-eo from this earlier
+              report (same corpus, cap and time limit) and run only pathos
 
 Every run of every binary is under the memory cap (systemd-run --user
 --scope -p MemoryMax=... -p MemorySwapMax=0) and the time limit.
@@ -126,6 +128,7 @@ def main():
     ap.add_argument("--ethos")
     ap.add_argument("--pathos")
     ap.add_argument("--report")
+    ap.add_argument("--reuse")
     args = ap.parse_args()
     if args.help:
         print(__doc__)
@@ -180,9 +183,13 @@ def main():
         checkers["ethos"] = [str(ethos)]
     jobs = 1 if args.perf else max(1, args.jobs)
 
+    earlier = json.loads(Path(args.reuse).read_text()) if args.reuse else {}
+
     def check(proof):
+        old = earlier.get(proof.name, {})
         return proof.name, {
-            name: run(cmd + [proof.name], proof.parent, timeout, args.memory)
+            name: old[name] if name in old and not name.startswith("pathos ") and name != "pathos"
+            else run(cmd + [proof.name], proof.parent, timeout, args.memory)
             for name, cmd in checkers.items()
         }
 
@@ -206,6 +213,8 @@ def main():
         return ", ".join(f"{k} {counts[k]}" for k in sorted(counts))
 
     print(f"{len(proofs)} proofs from {corpus}/proofs; cap {args.memory}, {timeout} s per run")
+    if earlier:
+        print(f"  (all but pathos's runs are those of {args.reuse})")
     for name in checkers:
         print(f"  {name}: {tally(name)}")
 

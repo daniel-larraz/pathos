@@ -37,6 +37,8 @@ correct, incorrect or incomplete (exit status 0, 1 or 2).
   --no-cache     run the checker without its caches of types and of
                  program results
   --cache-stats  print the caches' hits, misses and sizes on standard error
+  --profile      print on standard error the checker's time by rule (it
+                 runs the checker once more for that)
 ";
 
 fn write_line(mut w: impl Write + IsTerminal, line: &str) {
@@ -51,6 +53,7 @@ struct Invocation {
     explain: bool,
     no_cache: bool,
     cache_stats: bool,
+    profile: bool,
     file: String,
 }
 
@@ -62,6 +65,7 @@ fn parse_args(args: &[String]) -> Option<Invocation> {
             "--explain" => inv.explain = true,
             "--no-cache" => inv.no_cache = true,
             "--cache-stats" => inv.cache_stats = true,
+            "--profile" => inv.profile = true,
             _ if a.starts_with("--") || file.is_some() => return None,
             _ => file = Some(a.clone()),
         }
@@ -92,6 +96,11 @@ fn prepare(caching: bool) -> Result<(State, Rc<RefCell<adapter::Built>>)> {
 fn run(inv: &Invocation) -> Result<Verdict> {
     let (mut st, built) = prepare(!inv.no_cache)?;
     include_file(&mut st, &inv.file, false, false, None)?;
+    if inv.profile {
+        // a run of its own, before the one that gives the verdict
+        let report = built.borrow_mut().profile()?;
+        write_line(std::io::stderr().lock(), &report);
+    }
     let verdict = built.borrow_mut().check()?;
     if inv.cache_stats {
         write_line(std::io::stderr().lock(), &built.borrow().cache_stats());
@@ -207,6 +216,19 @@ mod tests {
     #[test]
     fn a_refutation_is_correct() {
         assert_eq!(verdict(REFUTATION), Ok(Verdict::Correct));
+    }
+
+    /// `eo::is_q` of a term that does not evaluate is false, not stuck:
+    /// the rule's program asks it of every atom of a polynomial.
+    #[test]
+    fn arith_poly_norm_takes_variables() {
+        let proof = "(declare-const x Real)
+(declare-const y Real)
+(assume @a (not (= (+ x y) (+ y x))))
+(step @p1 (= (+ x y) (+ y x)) :rule arith_poly_norm :args ((= (+ x y) (+ y x))))
+(step @p2 false :rule contra :premises (@p1 @a))
+";
+        assert_eq!(verdict(proof), Ok(Verdict::Correct));
     }
 
     #[test]

@@ -1131,6 +1131,38 @@ impl Built {
         )
     }
 
+    /// Where the checker's time goes: the commands grouped by what they
+    /// are (a rule's steps, the comparisons of conclusions), slowest first.
+    pub fn profile(&mut self) -> Result<String> {
+        let assumptions = self.assumption_list()?;
+        let (store, commands) = (&mut self.store, &self.commands);
+        let times =
+            cc::with_checker_stack(|| crate::explain::time_commands(store, assumptions, commands))
+                .map_err(|e| Error::plain(format!("the compiled checker stopped: {e}")))?;
+        let mut by_kind: HashMap<&str, (f64, usize)> = HashMap::new();
+        for (label, t) in self.labels.iter().zip(&times) {
+            // "the step @p (rule r)" is of the kind "rule r"
+            let kind = match label.find("(rule ") {
+                Some(i) if label.starts_with("the step") => {
+                    label[i + 1..].split(')').next().unwrap_or(label)
+                }
+                Some(_) => "comparing a conclusion",
+                None => "assume-push",
+            };
+            let e = by_kind.entry(kind).or_default();
+            e.0 += t;
+            e.1 += 1;
+        }
+        let mut rows: Vec<_> = by_kind.into_iter().collect();
+        rows.sort_by(|a, b| b.1.0.total_cmp(&a.1.0));
+        let total: f64 = times.iter().sum();
+        let mut out = format!("{} commands in {total:.3} s", times.len());
+        for (kind, (t, n)) in rows.into_iter().take(12) {
+            out.push_str(&format!("\n  {t:9.3} s  {n:7}  {kind}"));
+        }
+        Ok(out)
+    }
+
     /// Runs the compiled checker on what was written down.
     pub fn check(&mut self) -> Result<Verdict> {
         let assumptions = self.assumption_list()?;

@@ -6,7 +6,8 @@
 //! of the interface the generator documents (it calls the functions that
 //! `functions.tsv` lists for `$eo_invoke_assume_list`, `$eo_invoke_cmd`
 //! and `$eo_state_is_refutation`), so it is kept apart from the adapter
-//! and never decides a verdict.
+//! and never decides a verdict. `--profile` does the same to say where the
+//! time goes.
 
 use pathos_compiled_checker as cc;
 use pathos_compiled_checker::generated as g;
@@ -88,4 +89,27 @@ pub fn explain(
          every assume-push"
             .into()
     })
+}
+
+/// Runs the commands one by one and returns the time each took, in
+/// seconds, with what the state was after the last one run: for
+/// `--profile`.
+pub fn time_commands(
+    s: &mut Store,
+    assumptions: cc::Term,
+    commands: &[cc::Term],
+) -> CheckResult<Vec<f64>> {
+    let stuck = s.named("$emb_s.Stuck", &[])?;
+    let nil = s.named("$emb_s.nil", &[])?;
+    let mut state = g::eo__24eo_5finvoke_5fassume_5flist(s, nil, assumptions)?;
+    let mut times = Vec::with_capacity(commands.len());
+    for &cmd in commands {
+        if state == stuck {
+            break;
+        }
+        let start = std::time::Instant::now();
+        state = g::eo__24eo_5finvoke_5fcmd(s, state, cmd)?;
+        times.push(start.elapsed().as_secs_f64());
+    }
+    Ok(times)
 }
