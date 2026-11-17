@@ -89,11 +89,6 @@ impl Parser<'_> {
         if let Some(e) = self.st.take_plugin_error() {
             return Err(e);
         }
-        // An error that stopped the checker inside the command comes before
-        // whatever the command made of the unfinished result.
-        if let Some(msg) = self.st.ck.take_fatal() {
-            return Err(self.lex.parse_error(msg));
-        }
         ret
     }
 
@@ -164,11 +159,13 @@ impl Parser<'_> {
             Token::Include | Token::Reference => self.cmd_include(tok == Token::Reference)?,
             Token::Program => self.cmd_program()?,
             Token::Reset => {
-                self.st.reset();
-                // in reference files this also discards the assertions
-                if self.is_reference {
-                    self.st.clear_reference_asserts();
+                // A signature may be included, and a reset while a file is
+                // being included would remove the symbols of the files that
+                // include it.
+                if self.is_signature {
+                    return Err(self.lex.parse_error("Cannot use reset in signature files"));
                 }
+                self.st.reset(self.is_reference);
             }
             Token::Step | Token::StepPop => self.cmd_step(tok == Token::StepPop)?,
             // ------------------------------------ SMT-LIB reference files
@@ -201,14 +198,19 @@ impl Parser<'_> {
             }
             Token::SetInfo => {
                 self.parse_keyword()?;
-                self.parse_symbolic_expr()?;
+                // the value is optional, as in (set-info :a)
+                if self.lex.peek_token()? != Token::Rparen {
+                    self.parse_symbolic_expr()?;
+                }
             }
             Token::SetOption => {
                 let key = self.parse_keyword()?;
+                // the value, which is optional; peeked once
+                let tok = self.lex.peek_token()?;
                 // options in reference files are those of the solver
                 if !self.is_reference {
                     let mut success = false;
-                    if self.lex.peek_token()? == Token::Symbol {
+                    if tok == Token::Symbol {
                         let val = self.lex.token_str();
                         if val == "true" || val == "false" {
                             let val = val == "true";
@@ -221,7 +223,9 @@ impl Parser<'_> {
                             .warn(&format!("Unsupported option or value for option {key}"));
                     }
                 }
-                self.parse_symbolic_expr()?;
+                if tok != Token::Rparen {
+                    self.parse_symbolic_expr()?;
+                }
             }
             Token::Eof => return Err(self.lex.parse_error("Expected Eunoia command")),
             _ => {
@@ -283,7 +287,7 @@ impl Parser<'_> {
         if tok != Token::DeclareFun {
             let mut attrs = AttrMap::new();
             self.parse_attribute_list(AttrCtx::Const, None, &mut attrs, None)?;
-            (ck, cons) = self.process_attribute_map(&attrs);
+            (ck, cons) = self.process_attribute_map(&attrs)?;
         }
         let mut t = self.st.ck.mk_function_type(&sorts, ret);
         let mut opaque_args: Vec<Term> = Vec::new();

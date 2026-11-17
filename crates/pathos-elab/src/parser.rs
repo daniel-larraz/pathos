@@ -3,7 +3,6 @@
 use pathos_syntax::{Error, Lexer, Result, latin1, textmode};
 use pathos_term::Term;
 
-use crate::path::Unresolved;
 use crate::snapshot;
 use crate::state::State;
 
@@ -74,8 +73,7 @@ pub fn include_file(
 }
 
 /// `State::includeFile`: as [`include_file`], but false, for the caller to
-/// report, if the name is not a file's. That happens on Windows only (see
-/// `path::resolve`).
+/// report, if the name is not a regular file's (see `path::resolve`).
 pub(crate) fn try_include_file(
     st: &mut State,
     file: &str,
@@ -83,20 +81,18 @@ pub(crate) fn try_include_file(
     is_reference: bool,
     reference_nf: Option<Term>,
 ) -> Result<bool> {
-    let input_path = match st.resolve_include(file) {
-        Ok(path) => path,
-        Err(Unresolved::NotAFile) => return Ok(false),
-        // Ethos stops on an uncaught exception here
-        Err(Unresolved::Missing(name)) => {
-            return Err(Error::fatal(format!("Couldn't open file: {name}")));
-        }
+    let Ok(input_path) = st.resolve_include(file) else {
+        return Ok(false);
     };
     if !st.mark_included(&input_path) {
         st.record_include(file, is_signature, None);
         return Ok(true);
     }
-    st.has_reference = is_reference;
-    st.reference_nf = reference_nf;
+    // an ordinary include does not switch the reference's checks off
+    if is_reference {
+        st.has_reference = true;
+        st.reference_nf = reference_nf;
+    }
     // a snapshot of this file, if the run has one, stands in for reading it
     if reference_nf.is_none()
         && snapshot::use_for_include(st, &input_path, is_signature, is_reference)

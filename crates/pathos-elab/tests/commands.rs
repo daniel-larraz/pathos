@@ -203,80 +203,82 @@ fn deep_terms_do_not_overflow_the_stack() {
 // The tests below come from the first fuzzing run (docs/reviews/fuzz-1.md).
 
 #[test]
-fn eo_var_with_one_argument_is_a_type_error() {
+fn eo_var_takes_two_arguments() {
     let r = run("(declare-const Int Type)
 (define y () (eo::var Int) :type Int)");
     assert_eq!(
         r.result,
-        Err("Error: t.eo:2.34: Type checking failed:
-Expression: (eo::var Int)
-Message: No type rule declared for literal kind STRING; use declare-consts to declare its \
-             type before use
+        Err("Error: t.eo:2.26: Expected two arguments to eo::var\n".to_string())
+    );
+    let r = run("(define a () (eo::nameof (eo::var)))");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:1.34: Expected two arguments to eo::var\n".to_string())
+    );
+}
+
+/// An operator applied to the wrong number of arguments is not evaluated:
+/// each attempt warns, and the application stays as it is.
+#[test]
+fn an_operator_with_the_wrong_number_of_arguments_is_stuck() {
+    let r = run("(declare-const Int Type)
+(declare-consts <numeral> Int)
+(program f ((x Int)) :signature (Int) Int (((f x) (eo::ite (eo::is_eq x) 1 2))))
+(define y () (f 4))
+(define z () (eo::requires (f 4) 1 Int))
+(declare-const w z)");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:6.18: Type checking failed:
+Expression: (eo::requires (eo::ite (eo::is_eq 4) 1 2) 1 Int)
+Message: Incorrect arity for EVAL_IS_EQ
 
 "
         .to_string())
     );
-}
-
-/// Ethos reads the missing argument from past the end of a vector, and here
-/// crashes. Without the error, the program below would recurse for ever,
-/// since the condition of its `eo::ite` never becomes a value.
-#[test]
-fn evaluating_an_operator_without_an_argument_it_reads_ends_the_run() {
-    let r = run("(declare-const Int Type)
-(declare-consts <numeral> Int)
-(program f ((x Int)) :signature (Int) Int (((f x) (eo::ite (eo::is_eq x) 1 (f x)))))
-(define y () (f 4))");
-    assert_eq!(
-        r.result,
-        Err(
-            "Error: t.eo:4.19: Too few arguments when evaluating literal op EVAL_IS_EQ, 1 \
-             arguments [4]\n"
-                .to_string()
-        )
-    );
     assert_eq!(
         r.warnings,
-        ["Wrong number of arguments when applying literal op EVAL_IS_EQ, 1 arguments"]
+        [
+            "Wrong number of arguments when applying literal op EVAL_IS_EQ, 1 arguments",
+            "Wrong number of arguments when applying literal op EVAL_IS_EQ, 1 arguments ([4])",
+            "Wrong number of arguments when applying literal op EVAL_IS_EQ, 1 arguments ([4])",
+        ]
     );
 }
 
-/// A quoted token's text stops at its first NUL character, so it may lack
-/// its closing quote. Ethos removes the first and the last character all the
-/// same: of `|ab` that leaves `a`, and of `|` alone nothing to remove the
-/// last from, where Ethos ends with an uncaught exception.
+/// A NUL character, like any control character other than whitespace, is
+/// an error in a quoted symbol and in a string literal.
 #[test]
-fn a_quoted_token_cut_short_by_a_nul_character() {
+fn a_nul_character_in_a_quoted_token_is_an_error() {
     let r = run("(declare-const a Type)
 (declare-const |ab\0cd| Type)
 (define x () a :type |a|)");
     assert_eq!(
         r.result,
-        Err("Error: t.eo:3.22: Expression of unexpected type:\n\
-             Expression: a\n      Type: Type\n  Expected: a\n\n"
-            .to_string())
+        Err("Error: t.eo:2.16: Illegal character in quoted symbol\n".to_string())
     );
-    // a character above 127 before the NUL is not cut in two
-    let r = run("(declare-const |\u{e9}\0| Type)");
-    assert_eq!(r.result, Ok(false));
     let r = run("(declare-const |\0| Type)");
     assert_eq!(
         r.result,
-        Err("Error: t.eo:1.16: Malformed quoted symbol\n".to_string())
+        Err("Error: t.eo:1.16: Illegal character in quoted symbol\n".to_string())
     );
-    let r = run("(echo \"\0\")");
+    let r = run("(declare-const a Bool)\n(define b () |ab\0cd)\n");
     assert_eq!(
         r.result,
-        Err("Error: t.eo:1.7: Malformed string literal\n".to_string())
+        Err("Error: t.eo:2.14: Illegal character in quoted symbol\n".to_string())
     );
+    let control = "Control characters other than whitespace are not permitted in string \
+                   literals, they must be encoded as escape sequences\n";
+    let r = run("(echo \"\0\")");
+    assert_eq!(r.result, Err(format!("Error: t.eo:1.7: {control}")));
+    let r = run("(declare-const a Bool)\n(define b () \"ab\0cd)\n");
+    assert_eq!(r.result, Err(format!("Error: t.eo:2.14: {control}")));
 }
 
-/// The constructor term of a parameterized `:let-binder` is not the tuple
-/// (pair constructor, list constructor) itself but the term that pairs the
-/// parameters with it. Ethos takes its first two children all the same, so
-/// the binding list is built from the parameter tuple and the tuple.
+/// The constructors of a `:let-binder` (and of a `:binder`) may not depend
+/// on the operator's parameters.
 #[test]
-fn a_parameterized_let_binder_builds_its_list_from_the_parameterized_term() {
+fn a_let_binder_constructor_may_not_depend_on_parameters() {
     let r = run("(declare-const @List Type)
 (declare-const @nil @List)
 (declare-parameterized-const @cons () (-> @List) :right-assoc-nil @nil)
@@ -285,29 +287,9 @@ fn a_parameterized_let_binder_builds_its_list_from_the_parameterized_term() {
 (assume @p0 (myLet ((y true)) y))");
     assert_eq!(
         r.result,
-        Err("Error: t.eo:6.32: Type checking failed:\n\
-             Expression: (eo::define ((_v0 (eo::var \"y\" Bool))) (_ (_ myLet (_ (eo::tuple T \
-             @cons) (_ (_ (eo::tuple T) _v0) true))) _v0))\n\
-             Message: No type rule declared for literal kind STRING; use declare-consts to \
-             declare its type before use\n\n"
-            .to_string())
-    );
-    assert_eq!(
-        r.warnings,
-        ["Unknown category for parameterized operator myLet"]
-    );
-}
-
-/// `(eo::var)` has no children; Ethos reads the name from past their end
-/// and crashes.
-#[test]
-fn the_name_of_a_variable_without_a_name_ends_the_run() {
-    let r = run("(define a () (eo::nameof (eo::var)))");
-    assert_eq!(
-        r.result,
         Err(
-            "Error: t.eo:1.36: Too few arguments when evaluating literal op EVAL_NAME_OF, 1 \
-             arguments [eo::var]\n"
+            "Error: t.eo:5.97: The constructors given by :let-binder cannot depend on \
+             parameters\n"
                 .to_string()
         )
     );
@@ -324,22 +306,20 @@ fn extracting_two_to_the_32_bits_gives_the_empty_bit_vector() {
     assert_eq!(r.result, Ok(false));
 }
 
-/// Ethos counts parentheses in an unsigned integer while it skips an
-/// s-expression, here the value of an option: after `)` the count wraps
-/// around, and the `(` that follows brings it back to zero.
+/// The value of an option is optional.
 #[test]
-fn skipping_an_s_expression_counts_parentheses_modulo() {
+fn an_option_without_a_value() {
     let r = run("(set-option :x )(");
     assert_eq!(
         r.result,
-        Err("Error: t.eo:1.17: Expected a RPAREN, got `` (EOF).\n\n".to_string())
+        Err("Error: t.eo:1.17: Expected Eunoia command\n".to_string())
     );
+    assert_eq!(r.warnings, ["Unsupported option or value for option x"]);
 }
 
-/// The list is looked at before the missing third argument, so a term that
-/// is not a list makes the operator stuck, with Ethos's warnings.
+/// The number of arguments is checked before the list is looked at.
 #[test]
-fn a_missing_argument_matters_only_once_it_is_read() {
+fn the_arity_of_a_list_operator_is_checked_first() {
     let r = run(
         "(declare-const or (-> Bool Bool Bool) :right-assoc-nil false)
 (declare-const a Bool)
@@ -360,20 +340,26 @@ Evaluation failed: (eo::list_find or (_ (and a) a))
         r.warnings,
         [
             "Wrong number of arguments when applying literal op EVAL_LIST_FIND, 2 arguments",
-            "...expected associative application to end in false, got (_ (and a) a)",
-            "...expected associative application to end in false, got (_ (and a) a)",
+            "Wrong number of arguments when applying literal op EVAL_LIST_FIND, 2 arguments \
+             ([or (_ (and a) a)])",
+            "Wrong number of arguments when applying literal op EVAL_LIST_FIND, 2 arguments \
+             ([or (_ (and a) a)])",
         ]
     );
 }
 
+/// Outside a quoted token, a NUL character is no token at all.
 #[test]
-fn a_token_is_shown_up_to_its_first_nul_character() {
-    let r = run("(declare-const a Bool)\n(define b () \"ab\0cd)\n");
+fn a_nul_character_ends_a_token() {
+    let r = run("(declare-const a Bool)\n(define b () :ab\0cd)\n");
     assert_eq!(
         r.result,
-        Err("Error: t.eo:2.14: Expected SMT-LIBv2 term, got `\"ab` \
-             (UNTERMINATED_STRING_LITERAL).\n\n"
-            .to_string())
+        Err("Error: t.eo:2.14: Expected SMT-LIBv2 term, got `:ab` (KEYWORD).\n\n".to_string())
+    );
+    let r = run("(declare-const a Bool)\n(define b () a\0x)\n");
+    assert_eq!(
+        r.result,
+        Err("Error: t.eo:2.15: Error finding token\n".to_string())
     );
 }
 

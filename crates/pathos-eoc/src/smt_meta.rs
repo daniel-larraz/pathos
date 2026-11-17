@@ -950,14 +950,19 @@ impl Plugin for SmtMeta {
         };
         let eosc = rest.split(' ').next().unwrap_or_default();
         let Some(vv) = st.get_var(eosc) else {
-            return Err(malformed(&format!(
-                "when making verification condition, could not find program {eosc}"
+            return Err(Error::fatal(format!(
+                "When making verification condition, could not find program {eosc}"
             )));
         };
         let ck = &mut st.ck;
-        let def = ck
+        let Some(def) = ck
             .get_program(vv)
-            .ok_or_else(|| malformed(&format!("{eosc} is not a defined program")))?;
+            .filter(|&def| ck.store.num_children(def) != 0)
+        else {
+            return Err(Error::fatal(format!(
+                "When making verification condition, {eosc} is not a program with at least one case"
+            )));
+        };
         let first_case = child(ck, def, 0)?;
         let pat_call = child(ck, first_case, 0)?;
         // the conjecture stands at the end of the file

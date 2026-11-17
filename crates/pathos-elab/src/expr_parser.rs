@@ -176,7 +176,17 @@ impl Parser<'_> {
                     {
                         return Err(self.lex.parse_error("Expected an operator for _"));
                     }
-                    ret = Some(self.st.ck.mk_expr(Kind::APPLY, &sf.args));
+                    let app = self.st.ck.mk_expr(Kind::APPLY, &sf.args);
+                    // A variable has a name and a type. This is checked
+                    // here because code that takes variables apart assumes
+                    // the two; other builtin operators applied to the wrong
+                    // number of arguments are caught by typing.
+                    if self.st.ck.store.kind(app) == Kind::VARIABLE
+                        && self.st.ck.store.num_children(app) != 2
+                    {
+                        return Err(self.lex.parse_error("Expected two arguments to eo::var"));
+                    }
+                    ret = Some(app);
                     for _ in 0..sf.nscopes {
                         self.st.pop_scope()?;
                     }
@@ -288,6 +298,11 @@ impl Parser<'_> {
                 {
                     self.lex.next_token()?;
                     let w = self.parse_integer_numeral()?;
+                    if w == 0 {
+                        return Err(self
+                            .lex
+                            .parse_error("Bit-vector literals must have positive width"));
+                    }
                     self.lex.eat_token(Token::Rparen)?;
                     let value = Integer::parse(digits, 10).unwrap_or_else(Integer::zero);
                     let bv = BitVec::new(w, &value);
@@ -968,7 +983,7 @@ impl Parser<'_> {
         // Ethos visits the parameters in the order of their addresses;
         // pathos visits them in creation order (design decision 7).
         for (v, attrs) in amap {
-            let (ck, cons) = self.process_attribute_map(attrs);
+            let (ck, cons) = self.process_attribute_map(attrs)?;
             if ck != Attr::None {
                 self.st.ck.mark_constructor_kind(*v, ck, cons);
             }
@@ -979,7 +994,10 @@ impl Parser<'_> {
     /// The constructor attribute in an attribute list, and its term. Other
     /// attributes left in the list, and second constructor attributes, give
     /// warnings.
-    pub(crate) fn process_attribute_map(&mut self, attrs: &AttrMap) -> (Attr, Option<Term>) {
+    pub(crate) fn process_attribute_map(
+        &mut self,
+        attrs: &AttrMap,
+    ) -> Result<(Attr, Option<Term>)> {
         let mut ck = Attr::None;
         let mut cons = None;
         for (&a, vals) in attrs {
@@ -995,6 +1013,18 @@ impl Parser<'_> {
                     // a constructor term with parameters is kept with them
                     cons = match av {
                         Some(av) if !self.st.ck.store.is_ground(av) => {
+                            // binder lists are built from the constructors
+                            // as they are, so these cannot have parameters
+                            if a == Attr::Binder || a == Attr::LetBinder {
+                                let which = if a == Attr::Binder {
+                                    ":binder"
+                                } else {
+                                    ":let-binder"
+                                };
+                                return Err(self.lex.parse_error(format!(
+                                    "The constructors given by {which} cannot depend on parameters"
+                                )));
+                            }
                             let params = self.st.ck.get_variables(&[av]);
                             Some(self.st.ck.mk_parameterized(av, &params))
                         }
@@ -1007,7 +1037,7 @@ impl Parser<'_> {
                 }
             }
         }
-        (ck, cons)
+        Ok((ck, cons))
     }
 }
 

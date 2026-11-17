@@ -9,17 +9,15 @@ use crate::token::Token;
 
 const EOF: i32 = -1;
 
-/// Whether C's `char` is signed on the platform pathos is built for, as it
-/// is everywhere Ethos is built but on Linux on arm64. Ethos's behaviour on
-/// the byte 0xFF follows it (see `read_next_char`), so pathos's does too.
-pub const CHAR_IS_SIGNED: bool = std::ffi::c_char::MIN != 0;
-
 const WHITESPACE: u8 = 1 << 0;
 const DECIMAL_DIGIT: u8 = 1 << 1;
 const HEXADECIMAL_DIGIT: u8 = 1 << 2;
 const BIT: u8 = 1 << 3;
 const SYMBOL_START: u8 = 1 << 4;
 const SYMBOL: u8 = 1 << 5;
+/// Whitespace and the printable characters. Every byte from 128 up counts
+/// as printable: it may be part of a UTF-8 encoding.
+const PRINTABLE: u8 = 1 << 6;
 
 /// The non-alphanumeric characters that may occur in symbols.
 const EXTRA_SYMBOL_CHARS: &[u8] = b"+-/*=%?!.$_~&^<>@";
@@ -60,6 +58,16 @@ const fn char_classes() -> [u8; 256] {
     t[b'\t' as usize] |= WHITESPACE;
     t[b'\r' as usize] |= WHITESPACE;
     t[b'\n' as usize] |= WHITESPACE;
+    let mut c = 32;
+    while c < 256 {
+        if c != 127 {
+            t[c] |= PRINTABLE;
+        }
+        c += 1;
+    }
+    t[b'\t' as usize] |= PRINTABLE;
+    t[b'\r' as usize] |= PRINTABLE;
+    t[b'\n' as usize] |= PRINTABLE;
     t
 }
 
@@ -67,7 +75,8 @@ static CHAR_CLASS: [u8; 256] = char_classes();
 
 #[inline]
 fn is_class(ch: i32, class: u8) -> bool {
-    // End of input (-1) indexes entry 255 in Ethos, which has no class.
+    // End of input (-1) indexes entry 255 in Ethos, which is printable and
+    // of no other class; callers test for the end of input first.
     CHAR_CLASS[(ch & 0xff) as usize] & class != 0
 }
 
@@ -209,16 +218,8 @@ impl Lexer {
         match self.input.get(self.pos) {
             Some(&b) => {
                 self.pos += 1;
-                // Ethos reads a file into a `char` buffer. Where `char` is
-                // signed, the byte 0xFF is -1, which is also its
-                // end-of-input marker: a token ends there, but reading goes
-                // on after it. Standard input it reads with `get`, which
-                // gives 255.
-                if b == 0xff && CHAR_IS_SIGNED && !self.is_stream {
-                    EOF
-                } else {
-                    i32::from(b)
-                }
+                // the byte 0xFF is a character, not the end of the input
+                i32::from(b)
             }
             None => EOF,
         }
@@ -288,6 +289,10 @@ impl Lexer {
                 ch = self.next_char();
                 if ch == EOF {
                     return Ok(Token::UnterminatedQuotedSymbol);
+                } else if ch == i32::from(b'\\') || !is_class(ch, PRINTABLE) {
+                    // SMT-LIB allows whitespace and printable characters
+                    // other than backslash and | in a quoted symbol
+                    return Err(self.parse_error("Illegal character in quoted symbol"));
                 }
                 self.push_to_token(ch);
                 if ch == i32::from(b'|') {
@@ -315,6 +320,11 @@ impl Lexer {
                 ch = self.next_char();
                 if ch == EOF {
                     return Ok(Token::UnterminatedStringLiteral);
+                } else if !is_class(ch, PRINTABLE) {
+                    return Err(self.parse_error(
+                        "Control characters other than whitespace are not permitted in string \
+                         literals, they must be encoded as escape sequences",
+                    ));
                 } else if ch == i32::from(b'"') {
                     self.push_to_token(ch);
                     ch = self.next_char();
@@ -330,7 +340,8 @@ impl Lexer {
                 if !self.parse_char(SYMBOL_START) {
                     return Err(self.parse_error("Error expected symbol following :"));
                 }
-                self.parse_non_empty_char_list(SYMBOL);
+                // the rest of the keyword may be empty, as in `:a`
+                self.parse_char_list(SYMBOL);
                 return Ok(Token::Keyword);
             }
             _ => {
@@ -378,8 +389,7 @@ impl Lexer {
     /// Reads one or more characters of the class.
     ///
     /// When the first character is of another class it is consumed and lost,
-    /// as in Ethos. Callers report an error then, except for keywords: after
-    /// a one-letter keyword such as `:a`, the next character disappears.
+    /// as in Ethos. Callers report an error then.
     fn parse_non_empty_char_list(&mut self, class: u8) -> bool {
         let ch = self.next_char();
         if !is_class(ch, class) {
@@ -413,7 +423,9 @@ impl Lexer {
                 for i in 1..t.len() {
                     if is_class(i32::from(t[i]), DECIMAL_DIGIT) {
                         continue;
-                    } else if i + 1 < t.len() && ret == Token::IntegerLiteral {
+                    // a decimal point or a slash follows a digit and has one
+                    // after it: -/5 is a symbol
+                    } else if i > 1 && i + 1 < t.len() && ret == Token::IntegerLiteral {
                         if t[i] == b'.' {
                             ret = Token::DecimalLiteral;
                             continue;
@@ -515,37 +527,23 @@ mod tests {
     }
 
     #[test]
-    fn one_letter_keyword_swallows_next_char() {
-        // as in Ethos
-        assert_eq!(kinds(":a)"), vec![Token::Keyword]);
+    fn one_letter_keyword() {
+        assert_eq!(kinds(":a)"), vec![Token::Keyword, Token::Rparen]);
         assert_eq!(kinds(":ab)"), vec![Token::Keyword, Token::Rparen]);
     }
 
     #[test]
-    fn byte_ff_reads_as_end_of_input_where_char_is_signed() {
-        // as in Ethos
+    fn byte_ff_is_a_character_in_a_file() {
         let mut lexer = Lexer::new(b"(a |x\xffy| b)".to_vec(), "f.eo", true, true);
         let mut seen = Vec::new();
         for _ in 0..6 {
             seen.push(lexer.next_token().unwrap());
         }
         use Token::*;
-        let expected = if CHAR_IS_SIGNED {
-            // `|x` ends at the 0xFF byte; `y` is a symbol; `| b)` runs to
-            // the real end of the input.
-            vec![
-                Lparen,
-                Symbol,
-                UnterminatedQuotedSymbol,
-                Symbol,
-                UnterminatedQuotedSymbol,
-                Eof,
-            ]
-        } else {
-            // Linux on arm64: 0xFF is a byte like any other
+        assert_eq!(
+            seen,
             vec![Lparen, Symbol, QuotedSymbol, Symbol, Rparen, Eof]
-        };
-        assert_eq!(seen, expected);
+        );
     }
 
     #[test]

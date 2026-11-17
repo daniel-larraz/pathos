@@ -272,6 +272,10 @@ pub struct LeanMeta {
     eo_is_obj_defs_simple: String,
     /// The constructors of the Eunoia terms.
     embed_term_dt: String,
+    /// The constructors of `Term` in `embed_term_dt`, in order, each with
+    /// the Lean types of its arguments: what `print_term_cmp` writes its
+    /// cases from.
+    term_cons: Vec<(String, Vec<String>)>,
     /// The constructors of each datatype of the embedding the target
     /// declares, by the name of the type they return; the cases of the
     /// ordering key of each; and how many constructors each has so far.
@@ -372,6 +376,7 @@ impl LeanMeta {
             eo_is_obj_defs: String::new(),
             eo_is_obj_defs_simple: String::new(),
             embed_term_dt: String::new(),
+            term_cons: Vec::new(),
             embed_dt: BTreeMap::new(),
             embed_key: BTreeMap::new(),
             embed_ncons: BTreeMap::new(),
@@ -1212,6 +1217,9 @@ impl LeanMeta {
             _ => text.push_str(print_meta_type_kind(tk).unwrap_or_default()),
         }
         text.push('\n');
+        if tk == MetaKind::Eunoia {
+            self.term_cons.push((cname.clone(), arg_types.clone()));
+        }
         // The ordering keys are written in step with the datatypes they
         // order: the tag of a constructor is its index in the datatype.
         match out {
@@ -1272,11 +1280,83 @@ impl LeanMeta {
             let _ = write!(
                 defs,
                 "/-\n{}\n-/\ninductive {name} : Type where\n{cons}\nderiving Repr, DecidableEq, \
-                 Inhabited, Ord",
+                 Inhabited",
                 TITLES[n]
             );
         }
         defs
+    }
+
+    /// The comparison of each `UserOp` inductive that
+    /// `print_theory_op_defs` writes: the text of `$LEAN_EO_USER_OP_CMPS$`.
+    fn print_user_op_cmps(&self) -> String {
+        let mut os = String::new();
+        let mut first = true;
+        for (n, cons) in self.embed_top_dt.iter().enumerate() {
+            if cons.is_empty() {
+                continue;
+            }
+            if !first {
+                os.push_str("\n\n");
+            }
+            first = false;
+            let name = if n > 0 {
+                format!("UserOp{n}")
+            } else {
+                "UserOp".to_string()
+            };
+            let _ = write!(
+                os,
+                "@[expose] def {} (a b : {name}) : Ordering :=\n  natCmp a.ctorIdx b.ctorIdx",
+                term_cmp_method(&name)
+            );
+        }
+        os
+    }
+
+    /// The cases of `termCmp`, one for each constructor of `Term`: the text
+    /// of `$LEAN_TERM_CMP$`. Lexicographic: the constructor index first,
+    /// then the arguments from the left, each compared by the method its
+    /// type names.
+    fn print_term_cmp(&self) -> String {
+        let mut os = String::new();
+        let mut first = true;
+        for (cname, args) in &self.term_cons {
+            if !first {
+                os.push('\n');
+            }
+            first = false;
+            if args.is_empty() {
+                let _ = write!(
+                    os,
+                    "  | .{cname}, b => natCmp (Term.ctorIdx .{cname}) b.ctorIdx"
+                );
+                continue;
+            }
+            let _ = write!(os, "  | a@(.{cname}");
+            for i in 1..=args.len() {
+                let _ = write!(os, " x{i}");
+            }
+            let _ = write!(os, "), b =>\n    match b with\n    | .{cname}");
+            for i in 1..=args.len() {
+                let _ = write!(os, " y{i}");
+            }
+            os.push_str(" =>\n");
+            for (i, arg) in args.iter().enumerate() {
+                let indent = " ".repeat(6 + 2 * i);
+                let call = format!("{} x{} y{}", term_cmp_method(arg), i + 1, i + 1);
+                if i + 1 == args.len() {
+                    let _ = writeln!(os, "{indent}{call}");
+                } else {
+                    let _ = writeln!(os, "{indent}match {call} with\n{indent}| .eq =>");
+                }
+            }
+            for i in (1..args.len()).rev() {
+                let _ = writeln!(os, "{}| o => o", " ".repeat(6 + 2 * (i - 1)));
+            }
+            os.push_str("    | _ => natCmp a.ctorIdx b.ctorIdx");
+        }
+        os
     }
 
     fn emit(
@@ -1295,6 +1375,16 @@ impl LeanMeta {
     }
 
     fn finalize_checker(&self, ck: &mut Checker) -> Result<()> {
+        self.emit(
+            ck,
+            "plugins/lean_meta/lean_meta_checker_term_order.lean",
+            "plugins/lean_meta/lean_meta_checker_term_order_gen.lean",
+            &[
+                ("$LEAN_EO_USER_OP_CMPS$", self.print_user_op_cmps()),
+                ("$LEAN_TERM_CMP$", self.print_term_cmp()),
+            ],
+            false,
+        )?;
         self.emit(
             ck,
             "plugins/lean_meta/lean_meta_checker_term.lean",
@@ -1863,6 +1953,21 @@ impl LeanMeta {
             true,
         )
     }
+}
+
+/// The comparison a term-order case calls for an argument of Lean type
+/// `t`: the type with any `native_` prefix dropped, its first letter
+/// lowered and `Cmp` appended, e.g. `intCmp` for `native_Int`.
+fn term_cmp_method(t: &str) -> String {
+    let base = t.strip_prefix("native_").unwrap_or(t);
+    let mut out = String::with_capacity(base.len() + 3);
+    let mut chars = base.chars();
+    if let Some(c) = chars.next() {
+        out.push(c.to_ascii_lowercase());
+    }
+    out.push_str(chars.as_str());
+    out.push_str("Cmp");
+    out
 }
 
 /// The case of the ordering key for the constructor `cname`, whose index

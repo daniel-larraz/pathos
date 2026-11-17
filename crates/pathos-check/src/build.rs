@@ -322,6 +322,11 @@ impl Checker {
             | Attr::RightAssocNil
             | Attr::RightAssocNsNil
             | Attr::LeftAssocNsNil => {
+                if matches!(attr, Attr::LeftAssoc | Attr::RightAssoc) && nchild <= 2 {
+                    // Without a nil terminator, one argument is a partial
+                    // application, built as an ordinary one.
+                    return None;
+                }
                 if nchild < 2 {
                     // Applied to nothing, e.g. when a pairwise or chainable
                     // operator has one argument: (distinct t) is true.

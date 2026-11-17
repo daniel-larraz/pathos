@@ -1,32 +1,37 @@
 //! File paths as Ethos handles them (`util/filesystem.cpp`).
 //!
 //! Ethos has two implementations. Everywhere but on Windows a path is a
-//! string, handled without looking at the file system: [`trim`],
+//! string, made canonical without looking at the file system: [`trim`],
 //! [`is_absolute`], [`parent`] and [`canonical`]. On Windows it is a
 //! `std::filesystem::path`, and the canonical path is the one the file
 //! system gives: absolute, with backslashes, and only for a file that
-//! exists. [`resolve`] is the one that applies on the platform pathos is
+//! exists. On both, an include names a file only if the path is a regular
+//! file's. [`resolve`] is the one that applies on the platform pathos is
 //! built for.
 
-/// Why an include names no file to read. Only Windows has these cases:
-/// elsewhere Ethos takes any name and fails when it opens the file.
+/// An include names no file to read: nothing has the name, or it is not a
+/// regular file's (a directory's, say). Ethos's `includeFile` returns
+/// false, and its caller reports that the file cannot be included.
 #[derive(Debug, PartialEq, Eq)]
-pub(crate) enum Unresolved {
-    /// Nothing has the name. Ethos ends with an uncaught C++ exception
-    /// (`std::filesystem::canonical` throws). The name is the one looked up.
-    #[cfg_attr(not(windows), allow(dead_code))]
-    Missing(String),
-    /// The name is not a regular file's: Ethos's `includeFile` returns
-    /// false, and its caller reports that the file cannot be included.
-    #[cfg_attr(not(windows), allow(dead_code))]
-    NotAFile,
-}
+pub(crate) struct NotAFile;
 
 /// The path that `file`, named in an include in the file `includer` (or on
 /// the command line, with `includer` empty), refers to: the name the file is
 /// opened by, shown in error messages by, and remembered as included by.
 #[cfg(not(windows))]
-pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, Unresolved> {
+pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, NotAFile> {
+    let name = name_of(includer, file);
+    // `stat`, which follows links: a regular file
+    if std::path::Path::new(&pathos_syntax::latin1::to_os(&name)).is_file() {
+        Ok(name)
+    } else {
+        Err(NotAFile)
+    }
+}
+
+/// The name [`resolve`] looks for, from the text alone.
+#[cfg(not(windows))]
+fn name_of(includer: &str, file: &str) -> String {
     let file = trim(file);
     let joined = if is_absolute(file) {
         file.to_string()
@@ -35,31 +40,26 @@ pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, Unresolved> 
         p.push_str(file);
         p
     };
-    Ok(canonical(&joined))
+    canonical(&joined)
 }
 
 /// See the other version. Here as `State::includeFile` does it with
 /// `std::filesystem`: the includer's `parent_path()`, `/=` the name as it
-/// is written (no trimming), then `canonical()`, then `exists()`, which
-/// also asks for a regular file.
+/// is written (no trimming), then `canonical()`, which leaves the path as
+/// it is if nothing has it, then `exists()`, which also asks for a regular
+/// file.
 #[cfg(windows)]
-pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, Unresolved> {
+pub(crate) fn resolve(includer: &str, file: &str) -> Result<String, NotAFile> {
     use pathos_syntax::latin1;
     use std::path::PathBuf;
     let mut joined = PathBuf::from(latin1::to_os(includer));
     joined.pop();
     joined.push(latin1::to_os(file));
-    // The empty path, as from `--include=`: the C++ library of Ethos's
-    // arm64 build (libc++) gives the empty path for it, which is no file's;
-    // the one of its x86-64 build (libstdc++) throws, as for a missing file.
-    if cfg!(target_arch = "aarch64") && joined.as_os_str().is_empty() {
-        return Err(Unresolved::NotAFile);
-    }
     let Ok(found) = std::fs::canonicalize(&joined) else {
-        return Err(Unresolved::Missing(latin1::from_os(joined.as_os_str())));
+        return Err(NotAFile);
     };
     if !found.is_file() {
-        return Err(Unresolved::NotAFile);
+        return Err(NotAFile);
     }
     Ok(without_verbatim_prefix(&latin1::from_os(found.as_os_str())))
 }
@@ -164,9 +164,12 @@ mod tests {
     #[cfg(not(windows))]
     #[test]
     fn resolving() {
-        assert_eq!(resolve("", " a/../b.eo ").unwrap(), "b.eo");
-        assert_eq!(resolve("d/main.eo", "sub/x.eo").unwrap(), "d/sub/x.eo");
-        assert_eq!(resolve("d/main.eo", "/x.eo").unwrap(), "/x.eo");
+        assert_eq!(name_of("", " a/../b.eo "), "b.eo");
+        assert_eq!(name_of("d/main.eo", "sub/x.eo"), "d/sub/x.eo");
+        assert_eq!(name_of("d/main.eo", "/x.eo"), "/x.eo");
+        // only a regular file is one
+        assert_eq!(resolve("", "no-such-file.eo"), Err(NotAFile));
+        assert_eq!(resolve("", "/"), Err(NotAFile));
     }
 
     #[test]

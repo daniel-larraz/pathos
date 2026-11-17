@@ -177,8 +177,8 @@ impl Checker {
                 | EvalOp::ListMeq
                 | EvalOp::ListDiff
                 | EvalOp::ListInter
-                | EvalOp::ListRepeat => nargs == 3,
-                EvalOp::Extract => nargs == 3 || nargs == 2,
+                | EvalOp::ListRepeat
+                | EvalOp::Extract => nargs == 3,
                 // the n-ary operators
                 EvalOp::Add
                 | EvalOp::Mul
@@ -239,9 +239,12 @@ impl Checker {
             }
             Kind::Node(NodeKind::Parameterized) => self.store.ty(self.store.child(e, 1)),
             Kind::Node(NodeKind::Variable) => {
-                // `eo::var` can be applied to any number of arguments. Ethos
-                // reads the first two without checking that they are there;
-                // here a missing one fails the check that needs it.
+                // a variable has a name and a type; the parser checks it
+                // too, for the terms it builds
+                if self.store.num_children(e) != 2 {
+                    out!(out, "Expected two arguments to eo::var");
+                    return None;
+                }
                 let children = self.store.children(e);
                 let (c0, c1) = (children.first().copied(), children.get(1).copied());
                 let ctype1 = c0.and_then(|c| self.store.ty(c));
@@ -329,6 +332,25 @@ impl Checker {
                 } else {
                     type_success = true;
                     hdt = x;
+                    // If the type of an earlier argument bound x already,
+                    // it must be bound to this argument.
+                    if let Some(&bound) = ctx.get(&hdt)
+                        && bound != child
+                    {
+                        if out.is_some() {
+                            let msg = format!(
+                                "Checking application of {}\nUnexpected value of quoted child \
+                                 #{}\n  Term: {}\n  Expected: {}\n  Context {}\n",
+                                self.show(hd),
+                                i,
+                                self.show(child),
+                                self.show(bound),
+                                self.show_ctx(ctx)
+                            );
+                            out!(out, "{msg}");
+                        }
+                        return None;
+                    }
                     ctx.insert(hdt, child);
                 }
             } else {

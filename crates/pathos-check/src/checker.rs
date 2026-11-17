@@ -132,10 +132,6 @@ pub struct Checker {
     pub(crate) stats: Stats,
     /// Called with each warning; the binary writes them to stderr.
     warnings: Box<dyn FnMut(&str)>,
-    /// Set when the checker met something it cannot go on from: the message
-    /// of the error that must end the run. Evaluation stops once it is set,
-    /// and the parser reports it at the end of the command.
-    pub(crate) fatal: Option<String>,
     /// The hooks raised since they were last delivered; `None` without a
     /// plugin.
     pub plugin_events: Option<Vec<PluginEvent>>,
@@ -178,7 +174,6 @@ impl Checker {
             sorry_rules: HashSet::new(),
             stats,
             warnings,
-            fatal: None,
             plugin_events: None,
             eval_plugin: None,
             t_true,
@@ -192,12 +187,6 @@ impl Checker {
         };
         ck.mark_constructor_kind(list_cons, Attr::RightAssocNil, Some(list_nil));
         ck
-    }
-
-    /// The message of the error that must end the run, if the checker met
-    /// one. Whatever the command computed after it cannot be trusted.
-    pub fn take_fatal(&mut self) -> Option<String> {
-        self.fatal.take()
     }
 
     /// Reports a warning: a line Ethos writes to stderr without stopping.

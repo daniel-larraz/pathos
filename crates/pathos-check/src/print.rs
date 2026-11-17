@@ -96,14 +96,17 @@ impl Checker {
                 if nchildren == 0 {
                     match (s.lit(cur), s.symbol_name(cur)) {
                         (Some(l), _) => match l {
-                            Lit::Hex(_) => {
+                            // A hexadecimal literal whose width is not a
+                            // positive multiple of 4, as eo::extract makes,
+                            // is written in binary.
+                            Lit::Hex(b) if b.size() > 0 && b.size() % 4 == 0 => {
                                 let _ = write!(os, "#x{l}");
                             }
-                            Lit::Binary(b) => {
+                            Lit::Hex(b) | Lit::Binary(b) => {
                                 if b.size() == 0 {
                                     os.push_str("(eo::to_bin 0 0)");
                                 } else {
-                                    let _ = write!(os, "#b{l}");
+                                    let _ = write!(os, "#b{}", b.to_string_base(2));
                                 }
                             }
                             Lit::String(_) => {

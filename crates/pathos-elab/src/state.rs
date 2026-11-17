@@ -18,6 +18,8 @@ pub struct State {
     pub ck: Checker,
     /// The symbols in scope.
     sym_table: HashMap<String, Term>,
+    /// The builtin symbols, as `new` bound them: what `reset` goes back to.
+    builtin_sym_table: HashMap<String, Term>,
     /// The proof rules, when they have a table of their own.
     rule_sym_table: HashMap<String, Term>,
     /// The symbols bound inside a scope, in the order they were bound.
@@ -56,6 +58,7 @@ impl State {
         let mut st = State {
             ck: Checker::new(opts, warnings),
             sym_table: HashMap::new(),
+            builtin_sym_table: HashMap::new(),
             rule_sym_table: HashMap::new(),
             decls: Vec::new(),
             overloaded_decls: Vec::new(),
@@ -93,6 +96,7 @@ impl State {
         for (name, t) in consts {
             st.bind(name, t);
         }
+        st.builtin_sym_table = st.sym_table.clone();
         st
     }
 
@@ -106,15 +110,25 @@ impl State {
         (self.out)(line);
     }
 
-    /// Forgets all symbols and assumptions, as the `reset` command does.
-    /// The builtin symbols go too, as in Ethos.
-    pub fn reset(&mut self) {
-        self.sym_table.clear();
+    /// Forgets the declarations, the definitions and the assumptions, as
+    /// the `reset` command does; the builtin symbols stay. `in_reference`:
+    /// the command is in a reference file, and only the assertions read so
+    /// far go besides. Otherwise it is in the proof file: the included
+    /// files and the reference are forgotten too, since their symbols are
+    /// gone, so that both can be given again.
+    pub fn reset(&mut self, in_reference: bool) {
+        self.sym_table = self.builtin_sym_table.clone();
         self.assumptions.clear();
         self.assumptions_size_ctx.clear();
         self.decls.clear();
         self.decls_size_ctx.clear();
         self.last_step_proves_false_at_level_zero = false;
+        self.clear_reference_asserts();
+        if !in_reference {
+            self.includes.clear();
+            self.has_reference = false;
+            self.reference_nf = None;
+        }
         self.with_plugin(|p, st| p.reset(st));
     }
 
@@ -270,7 +284,7 @@ impl State {
     pub(crate) fn resolve_include(
         &self,
         file: &str,
-    ) -> std::result::Result<String, path::Unresolved> {
+    ) -> std::result::Result<String, path::NotAFile> {
         path::resolve(&self.input_file, file)
     }
 

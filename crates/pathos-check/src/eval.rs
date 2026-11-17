@@ -180,10 +180,6 @@ impl Checker {
                             unreachable!("children of an operator are evaluated first")
                         };
                         evaluated = self.evaluate_literal_op_internal(op, &args);
-                        if self.fatal.is_some() {
-                            // the run is over; see `Checker::take_fatal`
-                            return e;
-                        }
                     }
                     _ => {}
                 }
@@ -463,21 +459,6 @@ impl Checker {
         self.mk_numeral(Integer::from(n))
     }
 
-    /// Stops the run: evaluating `k` needs an argument that `args` lacks.
-    /// Ethos reads past the end of its argument vector here, which is
-    /// undefined behaviour and usually ends in a segmentation fault.
-    fn missing_argument(&mut self, k: EvalOp, args: &[Term]) -> Option<Term> {
-        if self.fatal.is_none() {
-            self.fatal = Some(format!(
-                "Too few arguments when evaluating literal op {}, {} arguments {}",
-                Kind::Eval(k),
-                args.len(),
-                self.show_list(args, " ")
-            ));
-        }
-        None
-    }
-
     /// Applies the `eo::` operator to evaluated arguments. Returns `None`
     /// if it does not evaluate on them.
     pub(crate) fn evaluate_literal_op_internal(
@@ -485,6 +466,18 @@ impl Checker {
         k: EvalOp,
         args: &[Term],
     ) -> Option<Term> {
+        // The arity comes first: the cases below read the arguments
+        // directly.
+        if !Checker::check_arity(Kind::Eval(k), args.len(), None) {
+            let msg = format!(
+                "Wrong number of arguments when applying literal op {}, {} arguments ({})",
+                Kind::Eval(k),
+                args.len(),
+                self.show_list(args, " ")
+            );
+            self.warn(&msg);
+            return None;
+        }
         let first = *args.first()?;
         let ground = |ck: &Checker, t: Term| ck.store.is_ground(t);
         let is_eval = |ck: &Checker, t: Term| ck.store.is_evaluatable(t);
@@ -501,16 +494,14 @@ impl Checker {
             EvalOp::Requires => {
                 // (eo::requires t s r) is r when t and s are the same value,
                 // whether or not r is ground.
-                if ground(self, args[0]) && !is_eval(self, args[0]) {
-                    let Some(&second) = args.get(1) else {
-                        return self.missing_argument(k, args);
-                    };
-                    if ground(self, second) && !is_eval(self, second) && first == second {
-                        return match args.get(2) {
-                            Some(&r) => Some(r),
-                            None => self.missing_argument(k, args),
-                        };
-                    }
+                let second = args[1];
+                if ground(self, first)
+                    && !is_eval(self, first)
+                    && ground(self, second)
+                    && !is_eval(self, second)
+                    && first == second
+                {
+                    return Some(args[2]);
                 }
                 return None;
             }
@@ -518,14 +509,6 @@ impl Checker {
         }
         if args.iter().any(|&a| !ground(self, a)) {
             return None;
-        }
-        // These three look at their second argument unless the first is
-        // stuck.
-        if matches!(k, EvalOp::IsEq | EvalOp::Eq | EvalOp::Compare)
-            && args.len() < 2
-            && !is_eval(self, first)
-        {
-            return self.missing_argument(k, args);
         }
         match k {
             // false exactly when the argument is stuck
@@ -585,13 +568,9 @@ impl Checker {
                 }
             }
             EvalOp::NameOf => {
-                if self.store.kind(first) == Kind::VARIABLE {
-                    // `(eo::var)` is a variable without children. Ethos
-                    // reads its first child all the same, past the end.
-                    return match self.store.children(first).first() {
-                        Some(&name) => Some(name),
-                        None => self.missing_argument(k, args),
-                    };
+                // `(eo::var)` with other than two arguments has no name
+                if self.store.kind(first) == Kind::VARIABLE && self.store.num_children(first) == 2 {
+                    return Some(self.store.child(first, 0));
                 }
             }
             EvalOp::DtSelectors => {
@@ -619,16 +598,6 @@ impl Checker {
         // On literal values, run the literal evaluator. Symbols are not
         // values.
         if args.iter().all(|&a| self.store.kind(a).is_literal()) {
-            if !Checker::check_arity(Kind::Eval(k), args.len(), None) {
-                let msg = format!(
-                    "Wrong number of arguments when applying literal op {}, {} arguments ({})",
-                    Kind::Eval(k),
-                    args.len(),
-                    self.show_list(args, " ")
-                );
-                self.warn(&msg);
-                return None;
-            }
             let lits: Vec<&Lit> = args.iter().filter_map(|&a| self.store.lit(a)).collect();
             let eval = Lit::evaluate(k, &lits)?;
             return Some(self.store.mk_lit(eval));
@@ -692,9 +661,6 @@ impl Checker {
         // the nil terminator, which may depend on the type of args[1]
         let nil = if k == EvalOp::Nil {
             // eo::nil takes the type itself
-            if args.len() < 2 && self.store.kind(cons) == Kind::PARAMETERIZED {
-                return self.missing_argument(k, args);
-            }
             return self.evaluate_nil(args[0], cons, is_left, args.get(1).copied(), false);
         } else if self.store.kind(cons) != Kind::PARAMETERIZED {
             cons
@@ -708,14 +674,10 @@ impl Checker {
         } else {
             return None;
         };
-        // The `i`-th argument, read where Ethos reads it. A missing one
-        // stops the run.
+        // The `i`-th argument; the arity check above put it there.
         macro_rules! arg {
             ($i:expr) => {
-                match args.get($i) {
-                    Some(&a) => a,
-                    None => return self.missing_argument(k, args),
-                }
+                args[$i]
             };
         }
         let mut hargs = Vec::new();
@@ -919,9 +881,7 @@ impl Checker {
         is_left: bool,
         args: &[Term],
     ) -> Option<Term> {
-        let Some(&arg) = args.get(1) else {
-            return self.missing_argument(EvalOp::ListSingletonIntro, args);
-        };
+        let arg = args[1];
         self.get_type(arg, None);
         let arg_type = self.store.ty(arg);
         if let Some(n) = self.evaluate_nil(op, nil, is_left, arg_type, true)
