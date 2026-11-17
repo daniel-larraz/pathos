@@ -43,7 +43,7 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$root/difftest.env"
 
 # The commit of cvc5/ethos#274 the checker is generated from.
-default_rev=2f7d6bbb6d358266ef9aca4f007ff02314a2eb64
+default_rev=4bd462ee52c4102a7445a1653edd64c65b3932d9
 pull_request=274
 
 fail() { echo "scripts/generate-cpc: $*" >&2; exit 2; }

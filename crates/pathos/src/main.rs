@@ -22,13 +22,16 @@ use pathos_syntax::{Result, latin1, textmode};
 /// the one the front end reads the proof against.
 const CPC: &[u8] = include_bytes!("../../../generated/cpc-checker/Cpc.cached.eo");
 
-const USAGE: &str = "usage: pathos [--explain] <proof.cpc>
+const USAGE: &str = "usage: pathos [options] <proof.cpc>
 
 Checks a CPC proof, as cvc5 writes it with --dump-proofs, and prints
 correct, incorrect or incomplete (exit status 0, 1 or 2).
 
-  --explain  for an incorrect proof, also say on standard error which
-             command the checker does not accept
+  --explain      for an incorrect proof, also say on standard error which
+                 command the checker does not accept
+  --no-cache     run the checker without its caches of types and of
+                 program results
+  --cache-stats  print the caches' hits, misses and sizes on standard error
 ";
 
 fn write_line(mut w: impl Write + IsTerminal, line: &str) {
@@ -37,7 +40,32 @@ fn write_line(mut w: impl Write + IsTerminal, line: &str) {
     let _ = textmode::write(&mut w, &format!("{line}\n"), utf8_only);
 }
 
-fn run(file: &str, explain: bool) -> Result<Verdict> {
+/// What the command line asks for.
+#[derive(Default)]
+struct Invocation {
+    explain: bool,
+    no_cache: bool,
+    cache_stats: bool,
+    file: String,
+}
+
+fn parse_args(args: &[String]) -> Option<Invocation> {
+    let mut inv = Invocation::default();
+    let mut file = None;
+    for a in args {
+        match a.as_str() {
+            "--explain" => inv.explain = true,
+            "--no-cache" => inv.no_cache = true,
+            "--cache-stats" => inv.cache_stats = true,
+            _ if a.starts_with("--") || file.is_some() => return None,
+            _ => file = Some(a.clone()),
+        }
+    }
+    inv.file = file?;
+    Some(inv)
+}
+
+fn run(inv: &Invocation) -> Result<Verdict> {
     let mut st = State::new(
         Options::default(),
         Box::new(|line| write_line(std::io::stderr().lock(), line)),
@@ -46,11 +74,14 @@ fn run(file: &str, explain: bool) -> Result<Verdict> {
     Parser::new(&mut st, CPC.to_vec(), "Cpc.eo", true, false).parse_all()?;
     // The signature is built in: the proof's own includes are not read.
     st.skip_includes = true;
-    let (plugin, built) = adapter::Adapter::new(&st);
+    let (plugin, built) = adapter::Adapter::new(&st, !inv.no_cache);
     st.set_plugin(Box::new(plugin))?;
-    include_file(&mut st, file, false, false, None)?;
+    include_file(&mut st, &inv.file, false, false, None)?;
     let verdict = built.borrow_mut().check()?;
-    if explain && verdict == Verdict::Incorrect {
+    if inv.cache_stats {
+        write_line(std::io::stderr().lock(), &built.borrow().cache_stats());
+    }
+    if inv.explain && verdict == Verdict::Incorrect {
         let why = built.borrow_mut().explain()?;
         write_line(std::io::stderr().lock(), &why);
     }
@@ -66,19 +97,15 @@ fn check() -> ExitCode {
         .skip(1)
         .map(|a| latin1::from_os(&a))
         .collect();
-    let (explain, file) = match args.as_slice() {
-        [help] if help == "--help" => {
-            print!("{USAGE}");
-            return ExitCode::SUCCESS;
-        }
-        [flag, file] if flag == "--explain" => (true, file),
-        [file] if !file.starts_with("--") => (false, file),
-        _ => {
-            eprint!("{USAGE}");
-            return ExitCode::FAILURE;
-        }
+    if args.iter().any(|a| a == "--help") {
+        print!("{USAGE}");
+        return ExitCode::SUCCESS;
+    }
+    let Some(inv) = parse_args(&args) else {
+        eprint!("{USAGE}");
+        return ExitCode::FAILURE;
     };
-    match run(file, explain) {
+    match run(&inv) {
         Ok(verdict) => {
             let (text, status) = match verdict {
                 Verdict::Correct => ("correct", 0),

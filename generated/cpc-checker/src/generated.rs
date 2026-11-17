@@ -2,6 +2,12 @@ use crate::*;
 // EO program "$abconv_int_to_bv_elim"
 pub fn eo__24abconv_5fint_5fto_5fbv_5felim(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(0), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -57,11 +63,18 @@ return Ok(v33);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(0), &cache_args, value)?; }
 result
 }
 // EO program "$abconv_ubv_to_int_elim"
 pub fn eo__24abconv_5fubv_5fto_5fint_5felim(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -112,6 +125,7 @@ return Ok(v29);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1), &cache_args, value)?; }
 result
 }
 // EO program "$aci_norm_eq"
@@ -182,6 +196,12 @@ result
 // EO program "$are_distinct_terms_list"
 pub fn eo__24are_5fdistinct_5fterms_5flist(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(3), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -224,11 +244,18 @@ return Ok(v13);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(3), &cache_args, value)?; }
 result
 }
 // EO program "$are_distinct_terms_list_rec"
 pub fn eo__24are_5fdistinct_5fterms_5flist_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(4), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -280,11 +307,18 @@ return Ok(v18);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(4), &cache_args, value)?; }
 result
 }
 // EO program "$are_distinct_terms_type"
 pub fn eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(5), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -380,6 +414,7 @@ return Ok(v41);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(5), &cache_args, value)?; }
 result
 }
 // EO program "$arith_mk_one"
@@ -1671,6 +1706,12 @@ result
 // EO program "$assoc_nil_nth"
 pub fn eo__24assoc_5fnil_5fnth(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(14), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -1717,11 +1758,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(14), &cache_args, value)?; }
 result
 }
 // EO program "$assoc_nil_nth_type"
 pub fn eo__24assoc_5fnil_5fnth_5ftype(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(15), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -1769,11 +1817,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(15), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitblast_apply_binary"
 pub fn eo__24bv_5fbitblast_5fapply_5fbinary(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(16), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -1819,11 +1874,18 @@ return Ok(v21);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(16), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitblast_apply_ite"
 pub fn eo__24bv_5fbitblast_5fapply_5fite(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(17), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -1872,11 +1934,18 @@ return Ok(v24);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(17), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitblast_apply_unary"
 pub fn eo__24bv_5fbitblast_5fapply_5funary(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(18), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -1908,6 +1977,7 @@ return Ok(v13);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(18), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitblast_binary_app"
@@ -1963,6 +2033,12 @@ result
 // EO program "$bv_bitblast_concat"
 pub fn eo__24bv_5fbitblast_5fconcat(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(20), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -1992,6 +2068,7 @@ return Ok(a1);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(20), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitblast_head"
@@ -2022,6 +2099,12 @@ result
 // EO program "$bv_bitblast_prefix"
 pub fn eo__24bv_5fbitblast_5fprefix(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(22), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -2060,6 +2143,7 @@ return Ok(v16);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(22), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitblast_slt_impl"
@@ -2199,6 +2283,12 @@ result
 // EO program "$bv_bitblast_subsequence"
 pub fn eo__24bv_5fbitblast_5fsubsequence(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(24), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -2246,6 +2336,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(24), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitblast_tail"
@@ -2349,6 +2440,12 @@ result
 // EO program "$bv_bitblast_ult_rec"
 pub fn eo__24bv_5fbitblast_5fult_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(27), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -2423,6 +2520,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(27), &cache_args, value)?; }
 result
 }
 // EO program "$bv_bitwidth"
@@ -2448,6 +2546,12 @@ result
 // EO program "$bv_const_to_bitlist_rec"
 pub fn eo__24bv_5fconst_5fto_5fbitlist_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(29), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -2488,11 +2592,18 @@ return Ok(v19);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(29), &cache_args, value)?; }
 result
 }
 // EO program "$bv_div_mod_impl"
 pub fn eo__24bv_5fdiv_5fmod_5fimpl(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(30), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
 'case0: {
@@ -2873,11 +2984,18 @@ return Ok(v355);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(30), &cache_args, value)?; }
 result
 }
 // EO program "$bv_eval_concat"
 pub fn eo__24bv_5feval_5fconcat(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(31), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -2906,11 +3024,18 @@ return Ok(v10);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(31), &cache_args, value)?; }
 result
 }
 // EO program "$bv_get_first_const_child"
 pub fn eo__24bv_5fget_5ffirst_5fconst_5fchild(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(32), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -2938,6 +3063,7 @@ return Ok(v7);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(32), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step"
@@ -4020,6 +4146,12 @@ result
 // EO program "$bv_mk_bitblast_step_add"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fadd(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(34), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -4059,11 +4191,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(34), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_bitwise"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(35), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -4103,11 +4242,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(35), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_concat"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fconcat(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(36), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -4136,11 +4282,18 @@ return Ok(v10);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(36), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_eq_rec"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(37), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -4188,11 +4341,18 @@ return Ok(v23);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(37), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_ite"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fite(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(38), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -4292,11 +4452,18 @@ return Ok(v63);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(38), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_mul"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fmul(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(39), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -4333,11 +4500,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(39), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_shl_rec"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(40), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -4397,11 +4571,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(40), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_shl_rec_step"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(41), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
 'case0: {
@@ -4477,11 +4658,18 @@ return Ok(v43);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(41), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_shr_rec"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(42), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -4543,11 +4731,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(42), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_shr_rec_step"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(43), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -4658,11 +4853,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(43), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitblast_step_var_rec"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(44), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -4702,6 +4904,7 @@ return Ok(v18);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(44), &cache_args, value)?; }
 result
 }
 // EO program "$bv_mk_bitwise_slicing"
@@ -4809,6 +5012,12 @@ result
 // EO program "$bv_mk_bitwise_slicing_rec"
 pub fn eo__24bv_5fmk_5fbitwise_5fslicing_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4, a5, a6];
+match s.cached_program(ProgramId(46), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? || s.is_stuck(a4)? || s.is_stuck(a5)? || s.is_stuck(a6)? { return Ok(s.stuck()); }
 'case0: {
@@ -4888,11 +5097,18 @@ return Ok(v28);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(46), &cache_args, value)?; }
 result
 }
 // EO program "$bv_ripple_carry_adder_2"
 pub fn eo__24bv_5fripple_5fcarry_5fadder_5f2(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(47), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -4981,6 +5197,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(47), &cache_args, value)?; }
 result
 }
 // EO program "$bv_shift_add_multiplier"
@@ -5019,6 +5236,12 @@ result
 // EO program "$bv_shift_add_multiplier_rec"
 pub fn eo__24bv_5fshift_5fadd_5fmultiplier_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(49), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -5059,11 +5282,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(49), &cache_args, value)?; }
 result
 }
 // EO program "$bv_shift_add_multiplier_rec_step"
 pub fn eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(50), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? || s.is_stuck(a4)? { return Ok(s.stuck()); }
 'case0: {
@@ -5183,11 +5413,18 @@ return Ok(v86);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(50), &cache_args, value)?; }
 result
 }
 // EO program "$bv_smulo_elim_rec"
 pub fn eo__24bv_5fsmulo_5felim_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term, mut a5: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4, a5];
+match s.cached_program(ProgramId(51), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -5289,11 +5526,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(51), &cache_args, value)?; }
 result
 }
 // EO program "$bv_umulo_elim_rec"
 pub fn eo__24bv_5fumulo_5felim_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4, a5];
+match s.cached_program(ProgramId(52), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? || s.is_stuck(a4)? || s.is_stuck(a5)? { return Ok(s.stuck()); }
 'case0: {
@@ -5372,6 +5616,7 @@ return Ok(v57);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(52), &cache_args, value)?; }
 result
 }
 // EO program "$chain_m_resolve"
@@ -5456,6 +5701,12 @@ result
 // EO program "$chain_m_resolve_rec"
 pub fn eo__24chain_5fm_5fresolve_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(55), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -5516,6 +5767,7 @@ return Ok(v30);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(55), &cache_args, value)?; }
 result
 }
 // EO program "$chain_m_resolve_rec_step"
@@ -5656,6 +5908,12 @@ result
 // EO program "$contains_atomic_term_list_free_rec"
 pub fn eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(58), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -5751,11 +6009,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(58), &cache_args, value)?; }
 result
 }
 // EO program "$derivative"
 pub fn eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(59), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -5973,6 +6238,7 @@ return Ok(v112);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(59), &cache_args, value)?; }
 result
 }
 // EO program "$dt_arg_list"
@@ -6012,6 +6278,12 @@ result
 // EO program "$dt_collapse_updater_rhs"
 pub fn eo__24dt_5fcollapse_5fupdater_5frhs(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(61), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -6040,11 +6312,18 @@ return Ok(v11);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(61), &cache_args, value)?; }
 result
 }
 // EO program "$dt_distinct_terms"
 pub fn eo__24dt_5fdistinct_5fterms(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(62), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -6164,11 +6443,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(62), &cache_args, value)?; }
 result
 }
 // EO program "$dt_eq_cons"
 pub fn eo__24dt_5feq_5fcons(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(63), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -6266,11 +6552,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(63), &cache_args, value)?; }
 result
 }
 // EO program "$dt_find_cycle"
 pub fn eo__24dt_5ffind_5fcycle(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(64), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
 'case0: {
@@ -6307,11 +6600,18 @@ return Ok(v11);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(64), &cache_args, value)?; }
 result
 }
 // EO program "$dt_get_constructors"
 pub fn eo__24dt_5fget_5fconstructors(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(65), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -6364,6 +6664,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(65), &cache_args, value)?; }
 result
 }
 // EO program "$dt_get_selectors"
@@ -6413,6 +6714,12 @@ result
 // EO program "$dt_get_selectors_of_app"
 pub fn eo__24dt_5fget_5fselectors_5fof_5fapp(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(67), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -6437,11 +6744,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(67), &cache_args, value)?; }
 result
 }
 // EO program "$dt_updater_elim_rhs"
 pub fn eo__24dt_5fupdater_5felim_5frhs(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(68), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -6549,6 +6863,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(68), &cache_args, value)?; }
 result
 }
 // EO program "$eo_StateObj_proven"
@@ -21411,6 +21726,12 @@ result
 // EO program "$eo_datatype_cons_selectors_rec"
 pub fn eo__24eo_5fdatatype_5fcons_5fselectors_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term, mut a5: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4, a5];
+match s.cached_program(ProgramId(73), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -21478,11 +21799,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(73), &cache_args, value)?; }
 result
 }
 // EO program "$eo_datatype_constructors_rec"
 pub fn eo__24eo_5fdatatype_5fconstructors_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(74), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fedt_2esum, a2)?;
@@ -21504,11 +21832,18 @@ return Ok(v8);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(74), &cache_args, value)?; }
 result
 }
 // EO program "$eo_dd_lookup"
 pub fn eo__24eo_5fdd_5flookup(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(75), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fedd_2econs, a1)?;
@@ -21535,6 +21870,7 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(75), &cache_args, value)?; }
 result
 }
 // EO program "$eo_dd_resolve"
@@ -21632,6 +21968,12 @@ result
 // EO program "$eo_dt_resolve"
 pub fn eo__24eo_5fdt_5fresolve(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(81), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fedt_2esum, a0)?;
@@ -21652,6 +21994,7 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(81), &cache_args, value)?; }
 result
 }
 // EO program "$eo_dt_selectors"
@@ -21691,6 +22034,12 @@ result
 // EO program "$eo_dtc_resolve"
 pub fn eo__24eo_5fdtc_5fresolve(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(84), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fedtc_2econs, a0)?;
@@ -21724,6 +22073,7 @@ return Ok(v12);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(84), &cache_args, value)?; }
 result
 }
 // EO program "$eo_invoke_assume_list"
@@ -21938,6 +22288,12 @@ result
 // EO program "$eo_is_closed_rec"
 pub fn eo__24eo_5fis_5fclosed_5frec(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(92), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -22077,6 +22433,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(92), &cache_args, value)?; }
 result
 }
 // EO program "$eo_is_list_nil"
@@ -66657,6 +67014,12 @@ result
 // EO program "$eo_to_smt"
 pub fn eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(737), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fBoolean, a0)?;
@@ -69827,6 +70190,7 @@ return Ok(v1783);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(737), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_array_deq_diff"
@@ -69879,6 +70243,12 @@ result
 // EO program "$eo_to_smt_datatype"
 pub fn eo__24eo_5fto_5fsmt_5fdatatype(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(740), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fedt_2esum, a0)?;
@@ -69899,11 +70269,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(740), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_datatype_cons"
 pub fn eo__24eo_5fto_5fsmt_5fdatatype_5fcons(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(741), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5fedtc_2eunit, &[])?;
@@ -69924,11 +70301,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(741), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_datatype_decl"
 pub fn eo__24eo_5fto_5fsmt_5fdatatype_5fdecl(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(742), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fedd_2econs, a0)?;
@@ -69949,11 +70333,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(742), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_distinct"
 pub fn eo__24eo_5fto_5fsmt_5fdistinct(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(743), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.unapply(a0)?;
@@ -69993,11 +70384,18 @@ return Ok(v17);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(743), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_distinct_pairs"
 pub fn eo__24eo_5fto_5fsmt_5fdistinct_5fpairs(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(744), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.unapply(a1)?;
@@ -70038,11 +70436,18 @@ return Ok(v18);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(744), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_exists"
 pub fn eo__24eo_5fto_5fsmt_5fexists(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(745), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
@@ -70082,6 +70487,7 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(745), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_nat"
@@ -70130,6 +70536,12 @@ result
 // EO program "$eo_to_smt_quantifiers_skolemize"
 pub fn eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(748), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -70209,11 +70621,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(748), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_re_unfold_pos_component"
 pub fn eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(749), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -70262,6 +70681,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(749), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_reserved_datatype_name"
@@ -70489,6 +70909,12 @@ result
 // EO program "$eo_to_smt_tuple_prepend_rec"
 pub fn eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(759), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.native_pattern("nat.zero", a3)?;
@@ -70513,6 +70939,7 @@ return Ok(v9);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(759), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_tuple_select"
@@ -70622,6 +71049,12 @@ result
 // EO program "$eo_to_smt_type"
 pub fn eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(762), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5fBool, &[])?;
@@ -70855,6 +71288,7 @@ return Ok(v113);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(762), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_type_tuple"
@@ -70913,6 +71347,12 @@ result
 // EO program "$eo_to_smt_typed_list_elem_type"
 pub fn eo__24eo_5fto_5fsmt_5ftyped_5flist_5felem_5ftype(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(764), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.unapply(a0)?;
@@ -70971,6 +71411,7 @@ return Ok(v24);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(764), &cache_args, value)?; }
 result
 }
 // EO program "$eo_to_smt_updater"
@@ -71017,6 +71458,12 @@ result
 // EO program "$eo_to_smt_updater_rec"
 pub fn eo__24eo_5fto_5fsmt_5fupdater_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(766), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fsm_2eDtSel, a0)?;
@@ -71060,11 +71507,18 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(766), &cache_args, value)?; }
 result
 }
 // EO program "$eo_typeof"
 pub fn eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_type(TypeCacheKind::Eunoia, cache_args[0]) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -74238,6 +74692,7 @@ return Ok(v1699);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_type(TypeCacheKind::Eunoia, cache_args[0], value)?; }
 result
 }
 // EO program "$eo_typeof_+"
@@ -74595,6 +75050,12 @@ result
 // EO program "$eo_typeof_@quantifiers_skolemize"
 pub fn eo__24eo_5ftypeof_5f_40quantifiers_5fskolemize(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(786), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
 'case0: {
@@ -74608,6 +75069,7 @@ return Ok(v2);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(786), &cache_args, value)?; }
 result
 }
 // EO program "$eo_typeof_@re_unfold_pos_component"
@@ -75197,6 +75659,12 @@ result
 // EO program "$eo_typeof_dt_cons_rec"
 pub fn eo__24eo_5ftypeof_5fdt_5fcons_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(810), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -75254,11 +75722,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(810), &cache_args, value)?; }
 result
 }
 // EO program "$eo_typeof_dt_sel_return"
 pub fn eo__24eo_5ftypeof_5fdt_5fsel_5freturn(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(811), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -75329,6 +75804,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(811), &cache_args, value)?; }
 result
 }
 // EO program "$eo_typeof_extract"
@@ -76543,6 +77019,12 @@ result
 // EO program "$eo_typeof_tuple"
 pub fn eo__24eo_5ftypeof_5ftuple(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(863), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -76561,11 +77043,18 @@ return Ok(v4);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(863), &cache_args, value)?; }
 result
 }
 // EO program "$eo_typeof_tuple.select"
 pub fn eo__24eo_5ftypeof_5ftuple_2eselect(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(864), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -76578,11 +77067,18 @@ return Ok(v2);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(864), &cache_args, value)?; }
 result
 }
 // EO program "$eo_typeof_tuple.update"
 pub fn eo__24eo_5ftypeof_5ftuple_2eupdate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(865), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
 'case0: {
@@ -76598,6 +77094,7 @@ return Ok(v3);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(865), &cache_args, value)?; }
 result
 }
 // EO program "$eo_typeof_update"
@@ -76647,6 +77144,12 @@ result
 // EO program "$eval_sets_inter"
 pub fn eo__24eval_5fsets_5finter(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(868), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -76700,11 +77203,18 @@ return Ok(v25);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(868), &cache_args, value)?; }
 result
 }
 // EO program "$eval_sets_minus"
 pub fn eo__24eval_5fsets_5fminus(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(869), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -76758,6 +77268,7 @@ return Ok(v25);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(869), &cache_args, value)?; }
 result
 }
 // EO program "$eval_sets_op"
@@ -76858,6 +77369,12 @@ result
 // EO program "$extract_antec_rec"
 pub fn eo__24extract_5fantec_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(872), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -76887,6 +77404,7 @@ return Ok(v11);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(872), &cache_args, value)?; }
 result
 }
 // EO program "$from_clause"
@@ -76963,6 +77481,12 @@ result
 // EO program "$get_a_norm_rec"
 pub fn eo__24get_5fa_5fnorm_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(875), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -76994,6 +77518,7 @@ return Ok(v10);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(875), &cache_args, value)?; }
 result
 }
 // EO program "$get_aci_normal_form"
@@ -77261,6 +77786,12 @@ result
 // EO program "$get_ai_norm_rec"
 pub fn eo__24get_5fai_5fnorm_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(878), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -77293,11 +77824,18 @@ return Ok(v11);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(878), &cache_args, value)?; }
 result
 }
 // EO program "$get_arg_list_rec"
 pub fn eo__24get_5farg_5flist_5frec(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(879), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -77324,11 +77862,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(879), &cache_args, value)?; }
 result
 }
 // EO program "$get_arith_poly_norm"
 pub fn eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(880), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -77580,11 +78125,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(880), &cache_args, value)?; }
 result
 }
 // EO program "$get_bv_poly_norm_rec"
 pub fn eo__24get_5fbv_5fpoly_5fnorm_5frec(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(881), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -77701,11 +78253,18 @@ return Ok(v38);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(881), &cache_args, value)?; }
 result
 }
 // EO program "$get_nth_var_type"
 pub fn eo__24get_5fnth_5fvar_5ftype(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(882), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -77727,6 +78286,7 @@ return Ok(v8);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(882), &cache_args, value)?; }
 result
 }
 // EO program "$get_unused_vars"
@@ -77998,6 +78558,12 @@ result
 // EO program "$iota_rec"
 pub fn eo__24iota_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(887), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -78041,6 +78607,7 @@ return Ok(v21);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(887), &cache_args, value)?; }
 result
 }
 // EO program "$is_absorb"
@@ -78072,6 +78639,12 @@ result
 // EO program "$is_absorb_rec"
 pub fn eo__24is_5fabsorb_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(889), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -78110,6 +78683,7 @@ return Ok(v11);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(889), &cache_args, value)?; }
 result
 }
 // EO program "$is_arith_type"
@@ -78137,6 +78711,12 @@ result
 // EO program "$is_closed_rec"
 pub fn eo__24is_5fclosed_5frec(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(891), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -78226,11 +78806,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(891), &cache_args, value)?; }
 result
 }
 // EO program "$is_cons_app"
 pub fn eo__24is_5fcons_5fapp(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(892), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -78274,6 +78861,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(892), &cache_args, value)?; }
 result
 }
 // EO program "$is_eq_maybe_to_real"
@@ -78306,6 +78894,12 @@ result
 // EO program "$is_instantiation"
 pub fn eo__24is_5finstantiation(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(894), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -78355,6 +78949,7 @@ return Ok(v20);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(894), &cache_args, value)?; }
 result
 }
 // EO program "$is_poly_norm_rel_consts"
@@ -78649,6 +79244,12 @@ result
 // EO program "$is_quant_dt_split"
 pub fn eo__24is_5fquant_5fdt_5fsplit(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(897), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? || s.is_stuck(a4)? { return Ok(s.stuck()); }
 'case0: {
@@ -78715,11 +79316,18 @@ return Ok(v29);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(897), &cache_args, value)?; }
 result
 }
 // EO program "$is_quant_dt_split_conj"
 pub fn eo__24is_5fquant_5fdt_5fsplit_5fconj(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(898), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? || s.is_stuck(a4)? { return Ok(s.stuck()); }
 'case0: {
@@ -78884,11 +79492,18 @@ return Ok(v89);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(898), &cache_args, value)?; }
 result
 }
 // EO program "$is_quant_miniscope_or"
 pub fn eo__24is_5fquant_5fminiscope_5for(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(899), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -79077,11 +79692,18 @@ return Ok(v103);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(899), &cache_args, value)?; }
 result
 }
 // EO program "$is_renaming_rec"
 pub fn eo__24is_5frenaming_5frec(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(900), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -79138,6 +79760,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(900), &cache_args, value)?; }
 result
 }
 // EO program "$is_seq_const"
@@ -79168,6 +79791,12 @@ result
 // EO program "$is_seq_const_rec"
 pub fn eo__24is_5fseq_5fconst_5frec(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(902), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -79219,11 +79848,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(902), &cache_args, value)?; }
 result
 }
 // EO program "$is_var_list"
 pub fn eo__24is_5fvar_5flist(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(903), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -79260,6 +79896,7 @@ return Ok(v12);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(903), &cache_args, value)?; }
 result
 }
 // EO program "$least_int_gt"
@@ -79281,6 +79918,12 @@ result
 // EO program "$lower_not_and"
 pub fn eo__24lower_5fnot_5fand(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(905), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -79313,6 +79956,7 @@ return Ok(v14);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(905), &cache_args, value)?; }
 result
 }
 // EO program "$mk_arith_mult_abs_comparison"
@@ -79442,6 +80086,12 @@ result
 // EO program "$mk_arith_mult_abs_comparison_rec"
 pub fn eo__24mk_5farith_5fmult_5fabs_5fcomparison_5frec(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(907), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -79667,6 +80317,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(907), &cache_args, value)?; }
 result
 }
 // EO program "$mk_arith_mult_neg"
@@ -79904,6 +80555,12 @@ result
 // EO program "$mk_arith_mult_sign_sgn"
 pub fn eo__24mk_5farith_5fmult_5fsign_5fsgn(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(910), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -80081,6 +80738,7 @@ return Ok(v93);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(910), &cache_args, value)?; }
 result
 }
 // EO program "$mk_arith_sum_ub"
@@ -80136,6 +80794,12 @@ result
 // EO program "$mk_arith_sum_ub_rec"
 pub fn eo__24mk_5farith_5fsum_5fub_5frec(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(912), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -80195,6 +80859,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(912), &cache_args, value)?; }
 result
 }
 // EO program "$mk_arith_trichotomy"
@@ -80236,6 +80901,12 @@ result
 // EO program "$mk_cong_rhs"
 pub fn eo__24mk_5fcong_5frhs(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(914), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -80281,11 +80952,18 @@ return Ok(a0);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(914), &cache_args, value)?; }
 result
 }
 // EO program "$mk_distinct_elim"
 pub fn eo__24mk_5fdistinct_5felim(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(915), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -80328,11 +81006,18 @@ return Ok(v19);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(915), &cache_args, value)?; }
 result
 }
 // EO program "$mk_distinct_elim_rec"
 pub fn eo__24mk_5fdistinct_5felim_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(916), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -80372,6 +81057,7 @@ return Ok(a2);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(916), &cache_args, value)?; }
 result
 }
 // EO program "$mk_dt_collapse_updater_rhs"
@@ -80445,6 +81131,12 @@ result
 // EO program "$mk_dt_cons_eq"
 pub fn eo__24mk_5fdt_5fcons_5feq(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(918), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -80538,6 +81230,7 @@ return Ok(v48);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(918), &cache_args, value)?; }
 result
 }
 // EO program "$mk_dt_inst"
@@ -80594,6 +81287,12 @@ result
 // EO program "$mk_dt_inst_rec"
 pub fn eo__24mk_5fdt_5finst_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(920), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -80630,11 +81329,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(920), &cache_args, value)?; }
 result
 }
 // EO program "$mk_dt_inst_tuple_rec"
 pub fn eo__24mk_5fdt_5finst_5ftuple_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(921), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -80669,11 +81375,18 @@ return Ok(v16);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(921), &cache_args, value)?; }
 result
 }
 // EO program "$mk_dt_split"
 pub fn eo__24mk_5fdt_5fsplit(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(922), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -80706,6 +81419,7 @@ return Ok(v14);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(922), &cache_args, value)?; }
 result
 }
 // EO program "$mk_dt_updater_elim_rhs"
@@ -80780,6 +81494,12 @@ result
 // EO program "$mk_ho_cong"
 pub fn eo__24mk_5fho_5fcong(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(924), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -80831,11 +81551,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(924), &cache_args, value)?; }
 result
 }
 // EO program "$mk_nary_cong_rhs"
 pub fn eo__24mk_5fnary_5fcong_5frhs(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(925), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -80887,11 +81614,18 @@ return Ok(a0);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(925), &cache_args, value)?; }
 result
 }
 // EO program "$mk_quant_merge_prenex"
 pub fn eo__24mk_5fquant_5fmerge_5fprenex(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(926), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -80927,11 +81661,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(926), &cache_args, value)?; }
 result
 }
 // EO program "$mk_quant_miniscope_and"
 pub fn eo__24mk_5fquant_5fminiscope_5fand(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(927), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -80965,6 +81706,7 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(927), &cache_args, value)?; }
 result
 }
 // EO program "$mk_quant_var_elim_eq"
@@ -81083,6 +81825,12 @@ result
 // EO program "$mk_re_concat"
 pub fn eo__24mk_5fre_5fconcat(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(929), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -81163,6 +81911,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(929), &cache_args, value)?; }
 result
 }
 // EO program "$mk_re_unfold_neg"
@@ -81720,6 +82469,12 @@ result
 // EO program "$mk_skolems"
 pub fn eo__24mk_5fskolems(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(934), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -81753,6 +82508,7 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(934), &cache_args, value)?; }
 result
 }
 // EO program "$mk_str_eager_reduction"
@@ -82196,6 +82952,12 @@ result
 // EO program "$mk_trans"
 pub fn eo__24mk_5ftrans(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(937), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -82240,6 +83002,7 @@ return Ok(v19);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(937), &cache_args, value)?; }
 result
 }
 // EO program "$mon_mul_mon"
@@ -82287,6 +83050,12 @@ result
 // EO program "$mvar_mul_mvar"
 pub fn eo__24mvar_5fmul_5fmvar(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(939), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -82351,6 +83120,7 @@ return Ok(a1);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(939), &cache_args, value)?; }
 result
 }
 // EO program "$pair_first"
@@ -82406,6 +83176,12 @@ result
 // EO program "$poly_add"
 pub fn eo__24poly_5fadd(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(942), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -82533,11 +83309,18 @@ return Ok(a0);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(942), &cache_args, value)?; }
 result
 }
 // EO program "$poly_mod_coeffs"
 pub fn eo__24poly_5fmod_5fcoeffs(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(943), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -82598,11 +83381,18 @@ return Ok(v20);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(943), &cache_args, value)?; }
 result
 }
 // EO program "$poly_mul"
 pub fn eo__24poly_5fmul(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(944), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -82638,11 +83428,18 @@ return Ok(v13);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(944), &cache_args, value)?; }
 result
 }
 // EO program "$poly_mul_mon"
 pub fn eo__24poly_5fmul_5fmon(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(945), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -82676,11 +83473,18 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(945), &cache_args, value)?; }
 result
 }
 // EO program "$poly_neg"
 pub fn eo__24poly_5fneg(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(946), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -82727,6 +83531,7 @@ return Ok(v23);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(946), &cache_args, value)?; }
 result
 }
 // EO program "$re_ac_merge"
@@ -82973,6 +83778,12 @@ result
 // EO program "$re_flatten"
 pub fn eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(949), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -83204,11 +84015,18 @@ return Ok(a1);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(949), &cache_args, value)?; }
 result
 }
 // EO program "$re_is_unbound_wildcard"
 pub fn eo__24re_5fis_5funbound_5fwildcard(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(950), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -83286,11 +84104,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(950), &cache_args, value)?; }
 result
 }
 // EO program "$re_nullable"
 pub fn eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(951), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -83424,11 +84249,18 @@ return Ok(v63);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(951), &cache_args, value)?; }
 result
 }
 // EO program "$re_rev_comp"
 pub fn eo__24re_5frev_5fcomp(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(952), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -83511,11 +84343,18 @@ return Ok(a0);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(952), &cache_args, value)?; }
 result
 }
 // EO program "$re_rev_map_rev"
 pub fn eo__24re_5frev_5fmap_5frev(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(953), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -83559,11 +84398,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(953), &cache_args, value)?; }
 result
 }
 // EO program "$re_split_str_to_re"
 pub fn eo__24re_5fsplit_5fstr_5fto_5fre(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(954), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -83593,11 +84439,18 @@ return Ok(a1);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(954), &cache_args, value)?; }
 result
 }
 // EO program "$re_unflatten"
 pub fn eo__24re_5funflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(955), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -83734,11 +84587,18 @@ return Ok(a1);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(955), &cache_args, value)?; }
 result
 }
 // EO program "$re_unflatten_str"
 pub fn eo__24re_5funflatten_5fstr(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(956), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -83790,11 +84650,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(956), &cache_args, value)?; }
 result
 }
 // EO program "$re_unfold_pos_concat_rec"
 pub fn eo__24re_5funfold_5fpos_5fconcat_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(957), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
 'case0: {
@@ -83890,11 +84757,18 @@ return Ok(v63);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(957), &cache_args, value)?; }
 result
 }
 // EO program "$run_evaluate"
 pub fn eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(958), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -87271,6 +88145,7 @@ return Ok(a0);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(958), &cache_args, value)?; }
 result
 }
 // EO program "$run_process_scope"
@@ -87302,6 +88177,12 @@ result
 // EO program "$seq_distinct_terms"
 pub fn eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(960), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -87524,6 +88405,7 @@ return Ok(v99);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(960), &cache_args, value)?; }
 result
 }
 // EO program "$seq_element_of_unit"
@@ -87576,6 +88458,12 @@ result
 // EO program "$seq_eval"
 pub fn eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(963), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -88044,11 +88932,18 @@ return Ok(a0);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(963), &cache_args, value)?; }
 result
 }
 // EO program "$seq_eval_replace_all_rec"
 pub fn eo__24seq_5feval_5freplace_5fall_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(964), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -88138,11 +89033,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(964), &cache_args, value)?; }
 result
 }
 // EO program "$seq_find"
 pub fn eo__24seq_5ffind(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(965), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -88196,6 +89098,7 @@ return Ok(v18);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(965), &cache_args, value)?; }
 result
 }
 // EO program "$seq_is_non_empty"
@@ -88249,6 +89152,12 @@ result
 // EO program "$seq_is_prefix"
 pub fn eo__24seq_5fis_5fprefix(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(967), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -88400,11 +89309,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(967), &cache_args, value)?; }
 result
 }
 // EO program "$seq_subsequence_rec"
 pub fn eo__24seq_5fsubsequence_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(968), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -88502,11 +89418,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(968), &cache_args, value)?; }
 result
 }
 // EO program "$set_is_not_subset"
 pub fn eo__24set_5fis_5fnot_5fsubset(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(969), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -88660,11 +89583,18 @@ return Ok(v68);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(969), &cache_args, value)?; }
 result
 }
 // EO program "$set_union_to_list"
 pub fn eo__24set_5funion_5fto_5flist(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(970), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -88728,11 +89658,18 @@ return Ok(v32);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(970), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dd_has_dt"
 pub fn eo__24smtx_5fdd_5fhas_5fdt(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(971), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdd_2econs, a1)?;
@@ -88753,11 +89690,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(971), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dd_lookup"
 pub fn eo__24smtx_5fdd_5flookup(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(972), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdd_2econs, a1)?;
@@ -88784,11 +89728,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(972), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_decl_inhabited"
 pub fn eo__24smtx_5fdecl_5finhabited(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(973), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdd_2econs, a1)?;
@@ -88816,11 +89767,18 @@ return Ok(v7);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(973), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_decl_wf_rec"
 pub fn eo__24smtx_5fdecl_5fwf_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(974), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdd_2econs, a1)?;
@@ -88847,11 +89805,18 @@ return Ok(v12);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(974), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dt_cons_inhabited"
 pub fn eo__24smtx_5fdt_5fcons_5finhabited(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(975), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdtc_2econs, a0)?;
@@ -88886,11 +89851,18 @@ return Ok(v13);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(975), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dt_cons_wf_rec"
 pub fn eo__24smtx_5fdt_5fcons_5fwf_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(976), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdtc_2econs, a1)?;
@@ -88927,11 +89899,18 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(976), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dt_inhabited"
 pub fn eo__24smtx_5fdt_5finhabited(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(977), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdt_2esum, a0)?;
@@ -88952,11 +89931,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(977), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dt_num_sels"
 pub fn eo__24smtx_5fdt_5fnum_5fsels(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(978), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -88997,11 +89983,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(978), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dt_resolve"
 pub fn eo__24smtx_5fdt_5fresolve(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(979), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdt_2esum, a0)?;
@@ -89022,11 +90015,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(979), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dt_wf_rec"
 pub fn eo__24smtx_5fdt_5fwf_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(980), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdt_2esum, a1)?;
@@ -89047,11 +90047,18 @@ return Ok(v6);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(980), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dtc_num_sels"
 pub fn eo__24smtx_5fdtc_5fnum_5fsels(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(981), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdtc_2econs, a0)?;
@@ -89071,11 +90078,18 @@ return Ok(v5);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(981), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_dtc_resolve"
 pub fn eo__24smtx_5fdtc_5fresolve(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(982), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fdtc_2econs, a0)?;
@@ -89109,11 +90123,18 @@ return Ok(v12);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(982), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_inhabited_type"
 pub fn eo__24smtx_5finhabited_5ftype(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(983), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -89164,6 +90185,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(983), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_ret_typeof_sel"
@@ -89184,6 +90206,12 @@ result
 // EO program "$smtx_ret_typeof_sel_rec"
 pub fn eo__24smtx_5fret_5ftypeof_5fsel_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(985), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -89258,11 +90286,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(985), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_type_wf"
 pub fn eo__24smtx_5ftype_5fwf(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(986), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -89287,6 +90322,7 @@ return Ok(v7);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(986), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_type_wf_component"
@@ -89307,6 +90343,12 @@ result
 // EO program "$smtx_type_wf_rec"
 pub fn eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(988), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
@@ -89395,11 +90437,18 @@ return Ok(v37);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(988), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_typeof"
 pub fn eo__24smtx_5ftypeof(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_type(TypeCacheKind::Smt, cache_args[0]) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -91648,6 +92697,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_type(TypeCacheKind::Smt, cache_args[0], value)?; }
 result
 }
 // EO program "$smtx_typeof_="
@@ -91941,6 +92991,12 @@ result
 // EO program "$smtx_typeof_dt_cons_rec"
 pub fn eo__24smtx_5ftypeof_5fdt_5fcons_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1000), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -92001,6 +93057,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1000), &cache_args, value)?; }
 result
 }
 // EO program "$smtx_typeof_extract"
@@ -92994,6 +94051,12 @@ result
 // EO program "$str_arith_entail_is_approx"
 pub fn eo__24str_5farith_5fentail_5fis_5fapprox(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1030), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -93198,6 +94261,7 @@ return Ok(v100);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1030), &cache_args, value)?; }
 result
 }
 // EO program "$str_arith_entail_is_approx_len"
@@ -93534,6 +94598,12 @@ result
 // EO program "$str_arith_entail_simple_rec"
 pub fn eo__24str_5farith_5fentail_5fsimple_5frec(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(1033), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -93641,11 +94711,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1033), &cache_args, value)?; }
 result
 }
 // EO program "$str_case_conv_rec"
 pub fn eo__24str_5fcase_5fconv_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1034), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -93735,11 +94812,18 @@ return Ok(v49);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1034), &cache_args, value)?; }
 result
 }
 // EO program "$str_collect"
 pub fn eo__24str_5fcollect(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(1035), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -93784,6 +94868,7 @@ return Ok(v19);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1035), &cache_args, value)?; }
 result
 }
 // EO program "$str_collect_merge"
@@ -93841,6 +94926,12 @@ result
 // EO program "$str_eval_replace_all_rec"
 pub fn eo__24str_5feval_5freplace_5fall_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(1037), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -93917,6 +95008,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1037), &cache_args, value)?; }
 result
 }
 // EO program "$str_eval_replace_re"
@@ -93982,6 +95074,12 @@ result
 // EO program "$str_eval_replace_re_all_rec"
 pub fn eo__24str_5feval_5freplace_5fre_5fall_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(1039), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -94129,11 +95227,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1039), &cache_args, value)?; }
 result
 }
 // EO program "$str_eval_str_in_re_rec"
 pub fn eo__24str_5feval_5fstr_5fin_5fre_5frec(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1040), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -94174,11 +95279,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1040), &cache_args, value)?; }
 result
 }
 // EO program "$str_first_match_rec"
 pub fn eo__24str_5ffirst_5fmatch_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(1041), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
 'case0: {
@@ -94248,11 +95360,18 @@ return Ok(v27);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1041), &cache_args, value)?; }
 result
 }
 // EO program "$str_first_match_rec_smallest"
 pub fn eo__24str_5ffirst_5fmatch_5frec_5fsmallest(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1042), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -94295,11 +95414,18 @@ return Ok(v16);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1042), &cache_args, value)?; }
 result
 }
 // EO program "$str_fixed_len_re"
 pub fn eo__24str_5ffixed_5flen_5fre(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(1043), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -94418,11 +95544,18 @@ return Ok(v49);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1043), &cache_args, value)?; }
 result
 }
 // EO program "$str_flatten"
 pub fn eo__24str_5fflatten(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(1044), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -94513,11 +95646,18 @@ return Ok(v50);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1044), &cache_args, value)?; }
 result
 }
 // EO program "$str_flatten_word_rec"
 pub fn eo__24str_5fflatten_5fword_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1045), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -94556,11 +95696,18 @@ return Ok(v17);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1045), &cache_args, value)?; }
 result
 }
 // EO program "$str_from_int_eval_rec"
 pub fn eo__24str_5ffrom_5fint_5feval_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1046), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -94613,11 +95760,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1046), &cache_args, value)?; }
 result
 }
 // EO program "$str_is_compatible"
 pub fn eo__24str_5fis_5fcompatible(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1047), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -94707,6 +95861,7 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1047), &cache_args, value)?; }
 result
 }
 // EO program "$str_is_empty"
@@ -94747,6 +95902,12 @@ result
 // EO program "$str_is_multiset_subset_strict"
 pub fn eo__24str_5fis_5fmultiset_5fsubset_5fstrict(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1049), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -94819,11 +95980,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1049), &cache_args, value)?; }
 result
 }
 // EO program "$str_is_multiset_subset_strict_done"
 pub fn eo__24str_5fis_5fmultiset_5fsubset_5fstrict_5fdone(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1050), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -94863,11 +96031,18 @@ return Ok(v16);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1050), &cache_args, value)?; }
 result
 }
 // EO program "$str_is_prefix_flat"
 pub fn eo__24str_5fis_5fprefix_5fflat(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1051), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -94946,11 +96121,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1051), &cache_args, value)?; }
 result
 }
 // EO program "$str_leq_eval_rec"
 pub fn eo__24str_5fleq_5feval_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1052), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -95005,6 +96187,7 @@ return Ok(v22);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1052), &cache_args, value)?; }
 result
 }
 // EO program "$str_membership_re"
@@ -95118,6 +96301,12 @@ result
 // EO program "$str_mk_re_loop_elim_rec"
 pub fn eo__24str_5fmk_5fre_5floop_5felim_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1056), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -95167,11 +96356,18 @@ return Ok(v27);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1056), &cache_args, value)?; }
 result
 }
 // EO program "$str_mk_str_in_re_concat_star_char"
 pub fn eo__24str_5fmk_5fstr_5fin_5fre_5fconcat_5fstar_5fchar(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1057), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -95205,11 +96401,18 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1057), &cache_args, value)?; }
 result
 }
 // EO program "$str_mk_str_in_re_sigma_rec"
 pub fn eo__24str_5fmk_5fstr_5fin_5fre_5fsigma_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3];
+match s.cached_program(ProgramId(1058), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -95307,11 +96510,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1058), &cache_args, value)?; }
 result
 }
 // EO program "$str_mk_str_in_re_sigma_star_rec"
 pub fn eo__24str_5fmk_5fstr_5fin_5fre_5fsigma_5fstar_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1059), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -95372,11 +96582,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1059), &cache_args, value)?; }
 result
 }
 // EO program "$str_multiset_overapprox"
 pub fn eo__24str_5fmultiset_5foverapprox(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(1060), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -95482,11 +96699,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1060), &cache_args, value)?; }
 result
 }
 // EO program "$str_multiset_overapprox_word"
 pub fn eo__24str_5fmultiset_5foverapprox_5fword(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(1061), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -95531,11 +96755,18 @@ return Ok(v12);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1061), &cache_args, value)?; }
 result
 }
 // EO program "$str_overlap_rec"
 pub fn eo__24str_5foverlap_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1062), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -95575,6 +96806,7 @@ return Ok(v16);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1062), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_consume"
@@ -97946,6 +99178,12 @@ result
 // EO program "$str_re_consume_inter"
 pub fn eo__24str_5fre_5fconsume_5finter(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1064), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -98053,11 +99291,18 @@ return Ok(v19);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1064), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_consume_rec"
 pub fn eo__24str_5fre_5fconsume_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1065), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -98681,11 +99926,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1065), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_consume_union"
 pub fn eo__24str_5fre_5fconsume_5funion(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1066), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -98782,11 +100034,18 @@ return Ok(v19);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1066), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_includes_base_rec"
 pub fn eo__24str_5fre_5fincludes_5fbase_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1067), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -98969,11 +100228,18 @@ return Ok(v84);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1067), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_includes_lhs_star"
 pub fn eo__24str_5fre_5fincludes_5flhs_5fstar(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1068), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -99064,11 +100330,18 @@ return Ok(v38);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1068), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_includes_lhs_union"
 pub fn eo__24str_5fre_5fincludes_5flhs_5funion(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1069), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -99112,11 +100385,18 @@ return Ok(v14);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1069), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_includes_rec"
 pub fn eo__24str_5fre_5fincludes_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1070), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -99442,11 +100722,18 @@ return Ok(v162);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1070), &cache_args, value)?; }
 result
 }
 // EO program "$str_re_includes_rhs_inter"
 pub fn eo__24str_5fre_5fincludes_5frhs_5finter(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1071), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -99490,6 +100777,7 @@ return Ok(v14);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1071), &cache_args, value)?; }
 result
 }
 // EO program "$str_reduction_pred"
@@ -103732,6 +105020,12 @@ result
 // EO program "$str_strip_prefix"
 pub fn eo__24str_5fstrip_5fprefix(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1073), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -103778,11 +105072,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1073), &cache_args, value)?; }
 result
 }
 // EO program "$str_to_int_eval_rec"
 pub fn eo__24str_5fto_5fint_5feval_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1074), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -103835,6 +105136,7 @@ return Ok(a2);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1074), &cache_args, value)?; }
 result
 }
 // EO program "$str_unify_split"
@@ -103972,6 +105274,12 @@ result
 // EO program "$strip_even_exponent"
 pub fn eo__24strip_5feven_5fexponent(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1077), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 'recur: loop {
 s.tick()?;
@@ -104016,11 +105324,18 @@ return Ok(s.stuck());
 }
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1077), &cache_args, value)?; }
 result
 }
 // EO program "$substitute_simul_rec"
 pub fn eo__24substitute_5fsimul_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2, a3, a4];
+match s.cached_program(ProgramId(1078), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? || s.is_stuck(a4)? { return Ok(s.stuck()); }
 'case0: {
@@ -104141,6 +105456,7 @@ return Ok(v67);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1078), &cache_args, value)?; }
 result
 }
 // EO program "$to_clause"
@@ -104228,6 +105544,12 @@ result
 // EO program "$tuple_arg_list"
 pub fn eo__24tuple_5farg_5flist(s: &mut Store, a0: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0];
+match s.cached_program(ProgramId(1081), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
@@ -104258,11 +105580,18 @@ return Ok(v12);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1081), &cache_args, value)?; }
 result
 }
 // EO program "$tuple_collapse_updater_rhs"
 pub fn eo__24tuple_5fcollapse_5fupdater_5frhs(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1, a2];
+match s.cached_program(ProgramId(1082), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
 'case0: {
@@ -104315,11 +105644,18 @@ return Ok(v25);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1082), &cache_args, value)?; }
 result
 }
 // EO program "$tuple_get_selectors_rec"
 pub fn eo__24tuple_5fget_5fselectors_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1083), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -104353,11 +105689,18 @@ return Ok(v15);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1083), &cache_args, value)?; }
 result
 }
 // EO program "$tuple_updater_elim_rhs"
 pub fn eo__24tuple_5fupdater_5felim_5frhs(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
+let cache_args = [a0, a1];
+match s.cached_program(ProgramId(1084), &cache_args) {
+Ok(Some(value)) => { s.leave(); return Ok(value); },
+Ok(None) => {},
+Err(error) => { s.leave(); return Err(error); },
+}
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
@@ -104461,6 +105804,7 @@ return Ok(v56);
 Ok(s.stuck())
 })();
 s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1084), &cache_args, value)?; }
 result
 }
 // EO program "$typed_list_element_type"

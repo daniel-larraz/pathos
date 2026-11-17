@@ -2,13 +2,16 @@
 """Runs pathos and logos on the cvc5 proofs and lists where their verdicts
 differ; with --perf, also times them against pathos-eo and Ethos.
 
-  scripts/compare-logos [--perf] [--large] [--filter TEXT] [--jobs N]
-                        [--timeout SECONDS] [--memory SIZE]
+  scripts/compare-logos [--perf] [--large] [--corpus DIR] [--filter TEXT]
+                        [--jobs N] [--timeout SECONDS] [--memory SIZE]
                         [--logos BIN] [--ethos BIN] [--pathos BIN]
                         [--report FILE]
 
-  (default)   the 400 proofs of the harness's corpus
-  --large     the 43 large proofs instead (one at a time unless --jobs)
+  (default)   the 400 proofs of the harness's safe corpus (work/corpus-safe:
+              proofs from a cvc5 built in safe mode, the ones pathos is
+              meant for)
+  --large     the large safe proofs instead (work/corpus-large-safe)
+  --corpus    another corpus: a directory with proofs/ and cpc/
   --perf      also run pathos-eo, pathos-eo with a snapshot of CPC, and
               Ethos, one process at a time, and report time and peak memory
   --filter    only the proofs whose name contains TEXT
@@ -113,6 +116,7 @@ def main():
     ap.add_argument("--help", action="store_true")
     ap.add_argument("--perf", action="store_true")
     ap.add_argument("--large", action="store_true")
+    ap.add_argument("--corpus")
     ap.add_argument("--filter", default="")
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--timeout", type=int)
@@ -133,17 +137,20 @@ def main():
     if not harness:
         fail("set ETHOS_HARNESS (see scripts/difftest)")
     work = Path(harness) / "tools/difftest/work"
-    corpus = work / ("corpus-large" if args.large else "corpus")
+    if args.corpus:
+        corpus = Path(args.corpus).resolve()
+    else:
+        corpus = work / ("corpus-large-safe" if args.large else "corpus-safe")
     proofs = sorted(p for p in (corpus / "proofs").glob("*.cpc") if args.filter in p.name)
     if not proofs:
         fail(f"no proofs in {corpus}/proofs (the harness's gen-proofs makes them)")
     timeout = args.timeout or (int(env.get("LARGE_TIMEOUT", 1800)) if args.large else 120)
 
-    logos = Path(args.logos) if args.logos else work / "logos/.lake/build/bin/logos"
+    logos = Path(args.logos).resolve() if args.logos else work / "logos/.lake/build/bin/logos"
     if not logos.exists():
         fail(f"no logos binary at {logos}; build logos at {env.get('LOGOS_REV')} and pass --logos")
     if args.pathos:
-        pathos = Path(args.pathos)
+        pathos = Path(args.pathos).resolve()
         pathos_eo = pathos.parent / "pathos-eo"
     else:
         built = subprocess.run(
@@ -157,7 +164,7 @@ def main():
 
     checkers = {"pathos": [str(pathos)], "logos": [str(logos)]}
     if args.perf:
-        ethos = Path(args.ethos) if args.ethos else (
+        ethos = Path(args.ethos).resolve() if args.ethos else (
             work / "ref" / env.get("REFERENCE_REV", "")[:12] / "build/src/ethos")
         if not ethos.exists():
             fail(f"no Ethos binary at {ethos}; pass --ethos")
