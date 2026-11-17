@@ -4,6 +4,53 @@ The question this document answers: after milestone 24 the checker's core
 cannot panic. What would it take to prove that pathos is *sound*? And can
 logos's Lean development be reused for that?
 
+## Status: paused (2026-11-16)
+
+The Verus work on this branch is paused, not abandoned. The focus has
+moved to a fast checker for CPC alone, verified the way logos is: the
+checker that Ethos's `rust-meta` stage generates from CPC
+([cvc5/ethos#274](https://github.com/cvc5/ethos/pull/274)), fed by pathos's
+front end, and proved with Charon/Aeneas to compute what logos's checker
+computes, so that logos's soundness theorem applies to it. That is
+different code, checked by a different tool against a different
+specification, so the proofs here do not carry over to it.
+
+**What is proved here**, at `d88294e` (milestones 17 to 25 and the
+snapshot reader's checks):
+
+- the checker's core cannot panic: the store, matching, the evaluator,
+  `evaluate`, typing, term building and step checking (milestones 17 and
+  20 to 24), and a crafted snapshot cannot make the reader panic;
+- the store and matching are correct (milestones 18 and 19);
+- all 46 `eo::` operators compute their specification exactly, the
+  specification being Ethos's desugar plugin (milestone 25, below).
+
+**Against which code.** The last merge of `main` into this branch is
+`7cd893f`, which brought in `main` at `e3823e0`. `main` has moved on since
+and will keep moving (milestone 26 follows Ethos to `c7d3db90`, changing
+`eval.rs`, `typing.rs` and `build.rs`); none of that is proved here.
+
+**What is open**: S2 to S5 below, 6,000 to 13,000 lines of specification
+and proof, and the decision on the quirks before S3.
+
+**While paused:**
+
+- `main` is not merged into this branch, and no milestone on `main` needs
+  a follow-up here; CI on `verus` stays as it is at `d88294e`.
+- No new milestone starts on this branch.
+
+**To resume:** merge `main`, re-prove what changed in the functions the
+proofs cover (at least milestone 26's), then take S2's cache first, as
+the recommendation below says.
+
+**What stays useful meanwhile:** milestone 25 is the closest existing
+work to the refinement proofs that the generated checker's runtime
+operations will need (there against logos's natives); milestones 18 and
+19 show the invariants a hash-consed store needs, the same "equal handles
+if and only if equal terms" that cvc5/ethos#274 lists; and the branch is
+the fallback if the Aeneas route fails, Verus being the other way to
+prove Rust code against a specification.
+
 ## What "sound" would mean here
 
 There are two claims. Only the first is about pathos.
