@@ -418,8 +418,8 @@ intended; everything between gates is not.
     still differing other than accepted ones), and, after the reviewer
     moves the pins, `scripts/full-check` and `scripts/difftest eoc` agree
     on CI. The reviewer pushes and starts the runs.
-27. **`pathos` for CPC: pathos's front end feeding the compiled checker;
-    the interpreter becomes `pathos-eo`.** On `main`, after milestone 26.
+27. **`pathos` for CPC: pathos's front end feeding the compiled checker.**
+    On `main`, after milestone 26.
 
     *Where this is going.* The project now has two checkers. `pathos-eo` is
     today's pathos: any Eunoia signature, interpreted. `pathos` checks CPC
@@ -432,18 +432,11 @@ intended; everything between gates is not.
     stays unverified, as logos's parser is. This milestone builds the
     unverified binary and measures it; nothing here is proved.
 
-    - **The rename.** The binary `pathos` becomes `pathos-eo`, and the
-      crate `pathos-check` (the interpreter of signatures) becomes
-      `pathos-eo-check`. The shared crates (`pathos-syntax`, `pathos-elab`,
-      `pathos-term`), `pathos-eoc` and the repository keep their names.
-      Update everything that names the binary or the crate: `ci.yml`,
-      `scripts/difftest`, `scripts/drift`, `scripts/package`,
-      `scripts/platform-probe`, `README.md`, and the docs where they mean
-      the binary rather than the project (not the review records under
-      `docs/reviews/`, which stay as written). The harness's references are
-      the reviewer's, on the fork, in step with this milestone. Nothing
-      about `pathos-eo`'s behaviour changes: every existing gate must still
-      agree.
+    - **The rename is done** (commit `55796db`, by the reviewer): the
+      binary and its crate are `pathos-eo` (`crates/pathos-eo`). The other
+      crates and the repository keep their names; `pathos-check` too,
+      since the shared front end (`pathos-elab`) depends on it. The new
+      binary of this milestone takes the name `pathos`.
     - **The compiled checker.** Build `ethos-eoc` from cvc5/ethos#274 at
       `2f7d6bbb` and generate the crate (`pathos-compiled-checker`) from
       logos's CPC at `LOGOS_REV` (`install/defs/Cpc.cached.eo`, with
