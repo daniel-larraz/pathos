@@ -12,8 +12,9 @@ differ; with --perf, also times them against pathos-eo and Ethos.
               meant for)
   --large     the large safe proofs instead (work/corpus-large-safe)
   --corpus    another corpus: a directory with proofs/ and cpc/
-  --perf      also run pathos-eo, pathos-eo with a snapshot of CPC, and
-              Ethos, one process at a time, and report time and peak memory
+  --perf      also run pathos without its caches, pathos-eo, pathos-eo with
+              a snapshot of CPC, and Ethos, one process at a time, and
+              report time and peak memory
   --filter    only the proofs whose name contains TEXT
   --jobs      processes at a time (default 4; always 1 with --perf)
   --timeout   seconds per run (default 120; LARGE_TIMEOUT of difftest.env
@@ -25,7 +26,7 @@ differ; with --perf, also times them against pathos-eo and Ethos.
   --ethos     the Ethos binary (default: the harness's build of
               REFERENCE_REV)
   --pathos    the pathos binary (default: target/release/pathos, built
-              first with cargo)
+              first with cargo, as pathos-eo always is)
   --report    write every run as JSON to FILE
 
 Every run of every binary is under the memory cap (systemd-run --user
@@ -149,18 +150,15 @@ def main():
     logos = Path(args.logos).resolve() if args.logos else work / "logos/.lake/build/bin/logos"
     if not logos.exists():
         fail(f"no logos binary at {logos}; build logos at {env.get('LOGOS_REV')} and pass --logos")
-    if args.pathos:
-        pathos = Path(args.pathos).resolve()
-        pathos_eo = pathos.parent / "pathos-eo"
-    else:
-        built = subprocess.run(
-            ["systemd-run", "--user", "--scope", "-q", "-p", "MemoryMax=16G", "-p", "MemorySwapMax=0",
-             "cargo", "build", "--locked", "--release", "--quiet", "--bin", "pathos", "--bin", "pathos-eo"],
-            cwd=ROOT)
-        if built.returncode != 0:
-            fail("cargo build failed")
-        pathos = ROOT / "target/release/pathos"
-        pathos_eo = ROOT / "target/release/pathos-eo"
+    bins = ["--bin", "pathos-eo"] + ([] if args.pathos else ["--bin", "pathos"])
+    built = subprocess.run(
+        ["systemd-run", "--user", "--scope", "-q", "-p", "MemoryMax=16G", "-p", "MemorySwapMax=0",
+         "cargo", "build", "--locked", "--release", "--quiet"] + bins,
+        cwd=ROOT)
+    if built.returncode != 0:
+        fail("cargo build failed")
+    pathos = Path(args.pathos).resolve() if args.pathos else ROOT / "target/release/pathos"
+    pathos_eo = ROOT / "target/release/pathos-eo"
 
     checkers = {"pathos": [str(pathos)], "logos": [str(logos)]}
     if args.perf:
@@ -176,6 +174,7 @@ def main():
             [str(pathos_eo), f"--write-snapshot={snapshot}", str(corpus / "cpc/Cpc.eo")])
         if made.returncode != 0:
             fail("pathos-eo could not write a snapshot of the corpus's Cpc.eo")
+        checkers["pathos --no-cache"] = [str(pathos), "--no-cache"]
         checkers["pathos-eo"] = [str(pathos_eo)]
         checkers["pathos-eo --snapshot"] = [str(pathos_eo), f"--snapshot={snapshot}"]
         checkers["ethos"] = [str(ethos)]
@@ -249,7 +248,18 @@ def main():
                 slow.append((a / max(b, 0.01), n, a, b))
         print(f"\npathos more than twice as slow as pathos-eo (and by more than 0.5 s): {len(slow)}")
         for ratio, n, a, b in sorted(slow, reverse=True):
-            print(f"    {n}: {a:.1f} s against {b:.1f} s ({results[n]['pathos']['verdict']})")
+            nc = results[n]["pathos --no-cache"]
+            print(f"    {n}: {a:.1f} s against {b:.1f} s ({results[n]['pathos']['verdict']}; "
+                  f"without caches {nc['seconds']} s, {nc['verdict']})")
+        gained = []
+        for n, r in results.items():
+            a, b = r["pathos"]["seconds"], r["pathos --no-cache"]["seconds"]
+            if a is not None and b is not None and abs(a - b) > 0.5:
+                gained.append((b - a, n, a, b))
+        print(f"\npathos with and without its caches differ by more than 0.5 s: {len(gained)}")
+        for _, n, a, b in sorted(gained, reverse=True):
+            print(f"    {n}: {a:.1f} s with, {b:.1f} s without "
+                  f"({results[n]['pathos']['verdict']}, {results[n]['pathos --no-cache']['verdict']})")
 
     return 1 if differ or unsound else 0
 
