@@ -153,3 +153,61 @@ verdict.
 from a cvc5 built in safe mode and lists every proof on which the verdicts
 differ; with `--perf` it also times `pathos-eo`, `pathos-eo` with a
 snapshot, and Ethos. Every run is under a memory cap and a time limit.
+
+## Measurements
+
+Milestone 27, on the development machine (Linux x86-64), with the checker
+generated from cvc5/ethos#274 at `8d7f7c68` and logos at `LOGOS_REV`; Ethos
+is `c7d3db90`. Each run under an 8 GiB cap, one process at a time for the
+timings. Rerun with `scripts/compare-logos --perf`.
+
+### The 400 proofs of the safe corpus (120 s per run)
+
+| Checker | correct | incorrect | error | timeout | Time on the 376 proofs every checker decided | Largest peak memory |
+| --- | --- | --- | --- | --- | --- | --- |
+| `pathos` | 383 | 1 | 16 | 0 | 67.6 s | 0.18 GiB |
+| `pathos --no-cache` | 375 | 1 | 16 | 8 | 224.8 s | 0.18 GiB |
+| logos | 378 | 2 | 15 | 5 | 12.0 s | 6.51 GiB |
+| `pathos-eo` | 400 | 0 | 0 | 0 | 6.5 s | 0.02 GiB |
+| `pathos-eo --snapshot` | 400 | 0 | 0 | 0 | 2.9 s | 0.02 GiB |
+| Ethos | 400 | 0 | 0 | 0 | 12.7 s | 0.08 GiB |
+
+`pathos` says `correct` on no proof that Ethos does not accept. It differs
+from logos on six proofs:
+
+| Proofs | logos | `pathos` | Why |
+| --- | --- | --- | --- |
+| `regress1__auflia__bug330`, `regress1__bvdiv2`, `regress1__bv__proj-issue438-prerewrite-fixed-point-original`, `regress1__datatypes__acyclicity-sr-ground096` | timeout | `correct`, each in under a second | The compiled checker caches types and program results; logos computes them again for each occurrence of a shared subterm. Without its caches `pathos` runs out of time on these too. |
+| `regress1__proofs__base-lfsc-treesize` | timeout | error | The proof uses `lambda`; logos does not get as far as refusing it. |
+| `regress1__datatypes__dt-param-card4-unsat` | `incorrect` | `correct` | logos's parser leaves a term of the block `((Pair 2) (Color 0))` stuck ([cvc5/logos#510](https://github.com/cvc5/logos/issues/510)). Ethos accepts the proof. |
+
+The 16 errors are the 16 proofs with `lambda`. The one `incorrect`, which
+logos shares, is `regress1__quantifiers__RND_4_16`: both stop at
+`(assume-push @p2020 ...)`, whose formula is a `forall` with a variable of
+an outer quantifier free in it (`?y2`). The checker accepts only closed
+formulas as assumptions; Ethos has no such condition and accepts the proof.
+
+### Where the time goes
+
+`pathos` is slower than `pathos-eo` on most proofs and much slower on a few:
+on 12 of the 400 it takes more than twice as long and more than half a
+second longer, the worst being `regress1__sets__setofsets-disequal` (20.3 s
+against 0.2 s), `regress1__bv__fuzz18.smtv1` (15.7 s) and
+`regress0__bv__bv-options4` (10.4 s against 0.5 s).
+
+- **The caches** (types, and the results of recursive programs) are what
+  makes the proofs with heavily shared subterms checkable at all: eight
+  proofs that run out of 120 s without them take under a second with them,
+  and the total falls from 224.8 s to 67.6 s.
+- **What is left is not a missing cache.** On the slow proofs nearly all
+  the time is in the steps of one rule, `chain_m_resolution` (`pathos
+  --profile`: 10.27 s of 10.27 s on `bv-options4`, about 16 ms a step, for
+  steps with four premises). A profile of a small case
+  (`regress1__boolean.cvc`, callgrind) puts 33% of the instructions in the
+  hasher (`DefaultHasher::write`, SipHash), 11% in hashing a term for the
+  table of terms, 8% in `Store::intern`, 9% in `Store::native`, 6% in
+  `Store::destruct` and 4% in parsing natural numbers from text. That is
+  the runtime's cost per elementary step: every term and every native
+  number it makes goes through the hash table of terms. A faster hash, or
+  native numbers kept out of the table, would address it; another cache
+  would not.

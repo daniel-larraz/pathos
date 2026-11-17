@@ -5,7 +5,7 @@ differ; with --perf, also times them against pathos-eo and Ethos.
   scripts/compare-logos [--perf] [--large] [--corpus DIR] [--filter TEXT]
                         [--jobs N] [--timeout SECONDS] [--memory SIZE]
                         [--logos BIN] [--ethos BIN] [--pathos BIN]
-                        [--report FILE] [--reuse FILE]
+                        [--report FILE] [--reuse FILE] [--only NAMES]
 
   (default)   the 400 proofs of the harness's safe corpus (work/corpus-safe:
               proofs from a cvc5 built in safe mode, the ones pathos is
@@ -28,6 +28,10 @@ differ; with --perf, also times them against pathos-eo and Ethos.
   --pathos    the pathos binary (default: target/release/pathos, built
               first with cargo, as pathos-eo always is)
   --report    write every run as JSON to FILE
+  --only      with --perf, run only these checkers, a comma-separated list
+              of pathos, logos, pathos --no-cache, pathos-eo,
+              pathos-eo --snapshot, ethos (pathos is always run); without
+              logos, pathos is compared with Ethos instead
   --reuse     take the runs of logos, Ethos and pathos-eo from this earlier
               report (same corpus, cap and time limit) and run only pathos
 
@@ -129,6 +133,7 @@ def main():
     ap.add_argument("--pathos")
     ap.add_argument("--report")
     ap.add_argument("--reuse")
+    ap.add_argument("--only")
     args = ap.parse_args()
     if args.help:
         print(__doc__)
@@ -181,6 +186,14 @@ def main():
         checkers["pathos-eo"] = [str(pathos_eo)]
         checkers["pathos-eo --snapshot"] = [str(pathos_eo), f"--snapshot={snapshot}"]
         checkers["ethos"] = [str(ethos)]
+    if args.only:
+        wanted = {n.strip() for n in args.only.split(",")} | {"pathos"}
+        unknown = wanted - set(checkers)
+        if unknown:
+            fail(f"--only names no checker of this run: {', '.join(sorted(unknown))}")
+        checkers = {n: c for n, c in checkers.items() if n in wanted}
+    # what pathos's verdicts are compared with
+    other = "logos" if "logos" in checkers else "ethos"
     jobs = 1 if args.perf else max(1, args.jobs)
 
     earlier = json.loads(Path(args.reuse).read_text()) if args.reuse else {}
@@ -218,20 +231,20 @@ def main():
     for name in checkers:
         print(f"  {name}: {tally(name)}")
 
-    differ = [(n, r) for n, r in results.items() if r["pathos"]["verdict"] != r["logos"]["verdict"]]
-    print(f"\npathos and logos differ on {len(differ)} proofs")
+    differ = [(n, r) for n, r in results.items() if r["pathos"]["verdict"] != r[other]["verdict"]]
+    print(f"\npathos and {other} differ on {len(differ)} proofs")
     kinds = {}
     for n, r in differ:
-        key = (r["pathos"]["verdict"], r["logos"]["verdict"])
+        key = (r["pathos"]["verdict"], r[other]["verdict"])
         kinds.setdefault(key, []).append((n, r))
     for (pv, lv), cases in sorted(kinds.items()):
-        print(f"\n  pathos {pv}, logos {lv}: {len(cases)}")
+        print(f"\n  pathos {pv}, {other} {lv}: {len(cases)}")
         for n, r in cases:
-            note = r["pathos"]["note"] or r["logos"]["note"]
+            note = r["pathos"]["note"] or r[other]["note"]
             print(f"    {n}" + (f"  [{note}]" if note else ""))
 
     unsound = []
-    if args.perf:
+    if "ethos" in checkers:
         unsound = [n for n, r in results.items()
                    if r["pathos"]["verdict"] == "correct" and r["ethos"]["verdict"] != "correct"]
         print(f"\npathos says correct where Ethos does not: {len(unsound)}")
@@ -251,17 +264,17 @@ def main():
                   f"({total(results.values(), 'seconds'):.1f} s over all), "
                   f"largest peak {peak / 1048576:.2f} GiB")
         slow = []
-        for n, r in results.items():
+        for n, r in results.items() if "pathos-eo" in checkers else []:
             a, b = r["pathos"]["seconds"], r["pathos-eo"]["seconds"]
             if a is not None and b is not None and a > 2 * b and a - b > 0.5:
                 slow.append((a / max(b, 0.01), n, a, b))
         print(f"\npathos more than twice as slow as pathos-eo (and by more than 0.5 s): {len(slow)}")
         for ratio, n, a, b in sorted(slow, reverse=True):
-            nc = results[n]["pathos --no-cache"]
+            nc = results[n].get("pathos --no-cache", {"seconds": "not run", "verdict": "-"})
             print(f"    {n}: {a:.1f} s against {b:.1f} s ({results[n]['pathos']['verdict']}; "
                   f"without caches {nc['seconds']} s, {nc['verdict']})")
         gained = []
-        for n, r in results.items():
+        for n, r in results.items() if "pathos --no-cache" in checkers else []:
             a, b = r["pathos"]["seconds"], r["pathos --no-cache"]["seconds"]
             if a is not None and b is not None and abs(a - b) > 0.5:
                 gained.append((b - a, n, a, b))
