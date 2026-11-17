@@ -172,7 +172,7 @@ def probe_behaviour(ref, cand, work):
         if not same:
             differing += not crash
             show("ethos ", r)
-            show("pathos", c)
+            show("pathos-eo", c)
         elif args != ["--help"]:
             show("both  ", r)
     return differing

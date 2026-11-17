@@ -3,13 +3,18 @@
 A memory-safe reimplementation of the [Ethos](https://github.com/cvc5/ethos)
 proof checker in Rust, meant as a drop-in replacement:
 
-- **`pathos`** replaces the `ethos` checker. It takes the same inputs and
-  options, and gives the same verdicts and the same error messages, with
-  the same positions.
+- **`pathos-eo`** replaces the `ethos` checker, for any Eunoia signature.
+  It takes the same inputs and options, and gives the same verdicts and
+  the same error messages, with the same positions.
 - **`pathos-eoc`** replaces `ethos-eoc`, the Eunoia compiler behind
   [logos](https://github.com/cvc5/logos), with all of its stages
   (`trim-defs`, `desugar`, `model-smt`, `smt-meta`, `lean-meta`). Every
   file it writes is byte for byte what `ethos-eoc` writes.
+
+The binary was called `pathos` until 2026-11-16. That name is kept for a
+checker of CPC alone, compiled from the signature (see
+[docs/brief.md](docs/brief.md), milestone 27); `pathos-eo` is the one that
+reads any signature.
 
 pathos contains no `unsafe` code (the compiler enforces it) and no C or
 C++; its dependencies' `unsafe` code is traced and justified line by line.
@@ -27,11 +32,11 @@ the open questions for the Ethos developers.
 
 ```sh
 cargo build --release --locked
-target/release/pathos proof.cpc                  # as `ethos proof.cpc`
-target/release/pathos --include=cpc.eo proof.cpc
+target/release/pathos-eo proof.cpc               # as `ethos proof.cpc`
+target/release/pathos-eo --include=cpc.eo proof.cpc
 ```
 
-Every option of `ethos` works the same way (`pathos --help`). Two are
+Every option of `ethos` works the same way (`pathos-eo --help`). Two are
 pathos's own, and `--help` does not list them, since its output is kept
 identical to Ethos's:
 

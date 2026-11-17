@@ -1,6 +1,6 @@
 [package]
-name = "pathos"
-description = "The pathos command-line checker"
+name = "pathos-eo"
+description = "pathos-eo: the checker for any Eunoia signature, in place of ethos"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

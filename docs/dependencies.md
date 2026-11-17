@@ -81,7 +81,7 @@ same on rationals. All the calls are in `crates/pathos-term/src/num.rs`.
 
 Three kinds of evidence, each rerunnable.
 
-1. **What is in the binaries.** `scripts/unsafe-reach` builds `pathos` and
+1. **What is in the binaries.** `scripts/unsafe-reach` builds `pathos-eo` and
    `pathos-eoc` in release mode with debug information, disassembles them,
    and maps every instruction to its source lines, including the lines of
    the functions inlined there (`addr2line -i`). The linker drops every

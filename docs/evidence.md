@@ -1,7 +1,7 @@
 # pathos: the evidence for replacing Ethos
 
 For the Ethos developers. pathos is a reimplementation of the Ethos proof
-checker in Rust: the `ethos` binary as `pathos`, and `ethos-eoc` with its
+checker in Rust: the `ethos` binary as `pathos-eo`, and `ethos-eoc` with its
 seven compiler stages as `pathos-eoc`. It is meant to replace the C++ if two
 things hold: it is memory safe, and it does what Ethos does. This page says
 what backs each claim and how to check it. The reference throughout is

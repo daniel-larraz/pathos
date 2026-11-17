@@ -168,8 +168,8 @@ case "$gate" in
   *) fail "unknown gate: $gate" ;;
 esac
 
-cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos
-cand="$root/target/release/pathos$exe"
+cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos-eo
+cand="$root/target/release/pathos-eo$exe"
 
 if [[ "$gate" == eoc ]]; then
   refsrc="$dt/work/ref/${REFERENCE_REV:0:12}/src"
@@ -193,7 +193,7 @@ if [[ "$gate" == snapshot ]]; then
   snap="$root/target/difftest/snapshot"
   mkdir -p "$snap"
   "$cand" --write-snapshot="$snap/cpc.snap" "$corpus/cpc/Cpc.eo" ||
-    fail "pathos --write-snapshot failed"
+    fail "pathos-eo --write-snapshot failed"
   # Broken snapshots, which pathos must ignore: the first half, every 97th
   # byte flipped, and an empty file.
   head -c "$(( $(stat -c %s "$snap/cpc.snap") / 2 ))" "$snap/cpc.snap" > "$snap/truncated.snap"

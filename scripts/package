@@ -21,7 +21,7 @@ case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) exe=".exe"; root="$(cygpath -m "$roo
 python="$(command -v python3 || command -v python)"
 
 mkdir -p "$out/licenses"
-cp "$root/target/release/pathos$exe" "$root/LICENSE" "$out/"
+cp "$root/target/release/pathos-eo$exe" "$root/LICENSE" "$out/"
 # the licence of malachite, whose crates do not ship its text (see LICENSE)
 cp "$root/licenses/lgpl-3.0.txt" "$out/licenses/"
 cargo metadata --locked --format-version 1 --manifest-path "$root/Cargo.toml" |

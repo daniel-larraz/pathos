@@ -415,7 +415,7 @@ jobs:
           exe=""; [[ "$RUNNER_OS" == Windows ]] && exe=".exe"
           "$python" scripts/platform-probe \
             --ref "${{ steps.pins.outputs.ref_dir }}/build/src/ethos$exe" \
-            --cand "target/release/pathos$exe" --work target/platform-probe
+            --cand "target/release/pathos-eo$exe" --work target/platform-probe
 
       # LLVM's tools where binutils cannot read the binaries: Homebrew's on
       # macOS, and on Windows those of MSYS2 or of the runner's LLVM.

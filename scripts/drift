@@ -147,7 +147,7 @@ build() {
   python3 "$dt/difftest.py" build-ref "$ethos_commit" --repo "$work/ethos" \
     --out "$work/ref" --eoc || return 2
   cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" \
-    --bin pathos --bin pathos-eoc || return 2
+    --bin pathos-eo --bin pathos-eoc || return 2
 }
 
 fuzz() {
@@ -160,7 +160,7 @@ fuzz() {
   return $rc
 }
 
-cand="$root/target/release/pathos"
+cand="$root/target/release/pathos-eo"
 run=(python3 "$dt/difftest.py" run --ref "$ref" --cand "$cand"
      --cache "$work/ref-cache.json" --show-all)
 

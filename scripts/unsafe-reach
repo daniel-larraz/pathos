@@ -63,7 +63,7 @@ echo "target: $(rustc -vV | sed -n 's/^host: //p'); tools: $objdump, $addr2line"
 CARGO_TARGET_DIR="$target" CARGO_PROFILE_RELEASE_DEBUG=2 \
   cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" "$@"
 
-for bin in pathos pathos-eoc; do
+for bin in pathos-eo pathos-eoc; do
   exe_path="$target/release/$bin$exe"
   # macOS: the tools look in <binary>.dSYM for a file with the binary's
   # name, and the one cargo leaves there for pathos-eoc is named after the

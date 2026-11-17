@@ -484,7 +484,7 @@ such panic.
 
 | Line | Construct | Verdict | Why |
 | --- | --- | --- | --- |
-| 167-203 | taking and restoring the plugin, the event queue | Safe | No indexing and no unwrap; in the `pathos` binary nothing calls `State::set_plugin`, so there is no plugin and no queue. |
+| 167-203 | taking and restoring the plugin, the event queue | Safe | No indexing and no unwrap; in the `pathos-eo` binary nothing calls `State::set_plugin`, so there is no plugin and no queue. |
 
 ## pathos (the binary)
 
