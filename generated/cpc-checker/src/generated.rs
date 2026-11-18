@@ -46,7 +46,7 @@ let v18 = s.apply(v17, a0)?;
 let v19 = s.apply(v18, a2)?;
 let v20 = s.apply(v16, v19)?;
 let v21 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v22 = s.operator("zdiv", &[a2, v21])?;
+let v22 = s.builtin(EvalOp::IntDiv, &[a2, v21])?;
 let v23 = s.apply(v20, v22)?;
 let v24 = s.apply(v15, v23)?;
 let v25 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
@@ -55,7 +55,7 @@ let v27 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("0")?)))?;
 let v28 = s.apply(v26, v27)?;
 let v29 = s.apply(v14, v28)?;
 let v30 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v31 = s.operator("zdiv", &[a2, v30])?;
+let v31 = s.builtin(EvalOp::IntDiv, &[a2, v30])?;
 let v32 = eo__24abconv_5fint_5fto_5fbv_5felim(s, a0, v8, v31)?;
 let v33 = s.apply(v29, v32)?;
 return Ok(v33);
@@ -117,7 +117,7 @@ let v23 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v24 = s.apply(v22, v23)?;
 let v25 = s.apply(v13, v24)?;
 let v26 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v27 = s.operator("mul", &[a2, v26])?;
+let v27 = s.builtin(EvalOp::Mul, &[a2, v26])?;
 let v28 = eo__24abconv_5fubv_5fto_5fint_5felim(s, a0, v8, v27)?;
 let v29 = s.apply(v25, v28)?;
 return Ok(v29);
@@ -181,7 +181,7 @@ let v21 = a;
 let v22 = s.construct(Constructor::eo__40_40aci_5fsorted, &[])?;
 if v20 != v22 { break 'case2; }
 if v21 != v14 { break 'case2; }
-let v23 = s.operator("list_meq", &[v14, v11, v18])?;
+let v23 = s.builtin(EvalOp::ListMeq, &[v14, v11, v18])?;
 return Ok(v23);
 }
 'case3: {
@@ -271,7 +271,7 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if v4 != v6 { break 'case0; }
-let v7 = s.operator("eq", &[a0, v5])?;
+let v7 = s.builtin(EvalOp::Eq, &[a0, v5])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
 let v9 = s.literal(Lit::Bool(false))?;
@@ -347,9 +347,9 @@ fn case_0_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term,
 'case0: {
 let v0 = s.construct(Constructor::eo_Int, &[])?;
 if a2 != v0 { break 'case0; }
-let v1 = s.operator("is_z", &[a0])?;
-let v2 = s.operator("is_z", &[a1])?;
-let v3 = s.operator("and", &[v1, v2])?;
+let v1 = s.builtin(EvalOp::IsZ, &[a0])?;
+let v2 = s.builtin(EvalOp::IsZ, &[a1])?;
+let v3 = s.builtin(EvalOp::And, &[v1, v2])?;
 return Ok(Some(v3));
 }
 Ok(None)
@@ -358,9 +358,9 @@ fn case_1_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term,
 'case1: {
 let v4 = s.construct(Constructor::eo_Real, &[])?;
 if a2 != v4 { break 'case1; }
-let v5 = s.operator("is_q", &[a0])?;
-let v6 = s.operator("is_q", &[a1])?;
-let v7 = s.operator("and", &[v5, v6])?;
+let v5 = s.builtin(EvalOp::IsQ, &[a0])?;
+let v6 = s.builtin(EvalOp::IsQ, &[a1])?;
+let v7 = s.builtin(EvalOp::And, &[v5, v6])?;
 return Ok(Some(v7));
 }
 Ok(None)
@@ -376,9 +376,9 @@ let v11 = s.construct(Constructor::eo_Seq, &[])?;
 if v9 != v11 { break 'case2; }
 let v12 = s.construct(Constructor::eo_Char, &[])?;
 if v10 != v12 { break 'case2; }
-let v13 = s.operator("is_str", &[a0])?;
-let v14 = s.operator("is_str", &[a1])?;
-let v15 = s.operator("and", &[v13, v14])?;
+let v13 = s.builtin(EvalOp::IsStr, &[a0])?;
+let v14 = s.builtin(EvalOp::IsStr, &[a1])?;
+let v15 = s.builtin(EvalOp::And, &[v13, v14])?;
 return Ok(Some(v15));
 }
 Ok(None)
@@ -392,9 +392,9 @@ let v17 = f;
 let v18 = a;
 let v19 = s.construct(Constructor::eo_BitVec, &[])?;
 if v17 != v19 { break 'case3; }
-let v20 = s.operator("is_bin", &[a0])?;
-let v21 = s.operator("is_bin", &[a1])?;
-let v22 = s.operator("and", &[v20, v21])?;
+let v20 = s.builtin(EvalOp::IsBin, &[a0])?;
+let v21 = s.builtin(EvalOp::IsBin, &[a1])?;
+let v22 = s.builtin(EvalOp::And, &[v20, v21])?;
 return Ok(Some(v22));
 }
 Ok(None)
@@ -403,9 +403,9 @@ fn case_4_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term,
 'case4: {
 let v23 = s.construct(Constructor::eo__24emb_5fBool, &[])?;
 if a2 != v23 { break 'case4; }
-let v24 = s.operator("is_bool", &[a0])?;
-let v25 = s.operator("is_bool", &[a1])?;
-let v26 = s.operator("and", &[v24, v25])?;
+let v24 = s.builtin(EvalOp::IsBool, &[a0])?;
+let v25 = s.builtin(EvalOp::IsBool, &[a1])?;
+let v26 = s.builtin(EvalOp::And, &[v24, v25])?;
 return Ok(Some(v26));
 }
 Ok(None)
@@ -421,7 +421,7 @@ let v30 = s.construct(Constructor::eo_Set, &[])?;
 if v28 != v30 { break 'case5; }
 let v31 = eo__24set_5fis_5fnot_5fsubset(s, a0, a1, v29)?;
 let v32 = eo__24set_5fis_5fnot_5fsubset(s, a1, a0, v29)?;
-let v33 = s.operator("or", &[v31, v32])?;
+let v33 = s.builtin(EvalOp::Or, &[v31, v32])?;
 return Ok(Some(v33));
 }
 Ok(None)
@@ -443,7 +443,7 @@ Ok(None)
 fn case_7_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v39 = eo__24dt_5fdistinct_5fterms(s, a0, a1)?;
-let v40 = s.operator("is_ok", &[v39])?;
+let v40 = s.builtin(EvalOp::IsOk, &[v39])?;
 let v41 = match s.boolean_value(v40, false)? {
 Some(true) => {
 let v42 = eo__24dt_5fdistinct_5fterms(s, a0, a1)?;
@@ -762,7 +762,7 @@ let v129 = s.apply(v123, v128)?;
 let v130 = s.construct(Constructor::eo__40div_5fby_5fzero, &[])?;
 let v131 = eo__24eo_5ftypeof(s, v116)?;
 let v132 = s.construct(Constructor::eo_Int, &[])?;
-let v133 = s.operator("eq", &[v131, v132])?;
+let v133 = s.builtin(EvalOp::Eq, &[v131, v132])?;
 let v134 = match s.boolean_value(v133, false)? {
 Some(true) => {
 let v135 = s.construct(Constructor::eo_to_5freal, &[])?;
@@ -890,7 +890,7 @@ let v218 = s.construct(Constructor::eo_not, &[])?;
 let v219 = s.construct(Constructor::eo__3d, &[])?;
 let v220 = eo__24eo_5ftypeof(s, v198)?;
 let v221 = s.construct(Constructor::eo_Int, &[])?;
-let v222 = s.operator("eq", &[v220, v221])?;
+let v222 = s.builtin(EvalOp::Eq, &[v220, v221])?;
 let v223 = match s.boolean_value(v222, false)? {
 Some(true) => {
 let v224 = s.construct(Constructor::eo_to_5freal, &[])?;
@@ -909,7 +909,7 @@ let v231 = s.construct(Constructor::eo__3d, &[])?;
 let v232 = s.construct(Constructor::eo__2a, &[])?;
 let v233 = eo__24eo_5ftypeof(s, v198)?;
 let v234 = s.construct(Constructor::eo_Int, &[])?;
-let v235 = s.operator("eq", &[v233, v234])?;
+let v235 = s.builtin(EvalOp::Eq, &[v233, v234])?;
 let v236 = match s.boolean_value(v235, false)? {
 Some(true) => {
 let v237 = s.construct(Constructor::eo_to_5freal, &[])?;
@@ -930,7 +930,7 @@ let v246 = s.apply(v240, v245)?;
 let v247 = s.construct(Constructor::eo__2a, &[])?;
 let v248 = eo__24eo_5ftypeof(s, v198)?;
 let v249 = s.construct(Constructor::eo_Int, &[])?;
-let v250 = s.operator("eq", &[v248, v249])?;
+let v250 = s.builtin(EvalOp::Eq, &[v248, v249])?;
 let v251 = match s.boolean_value(v250, false)? {
 Some(true) => {
 let v252 = s.construct(Constructor::eo_to_5freal, &[])?;
@@ -947,7 +947,7 @@ let v257 = s.apply(v239, v256)?;
 let v258 = s.apply(v231, v257)?;
 let v259 = eo__24eo_5ftypeof(s, v201)?;
 let v260 = s.construct(Constructor::eo_Int, &[])?;
-let v261 = s.operator("eq", &[v259, v260])?;
+let v261 = s.builtin(EvalOp::Eq, &[v259, v260])?;
 let v262 = match s.boolean_value(v261, false)? {
 Some(true) => {
 let v263 = s.construct(Constructor::eo_to_5freal, &[])?;
@@ -995,11 +995,11 @@ let v288 = s.apply(v284, v287)?;
 let v289 = s.apply(v283, v288)?;
 let v290 = s.apply(v278, v289)?;
 let v291 = s.construct(Constructor::eo_and, &[])?;
-let v292 = s.operator("is_z", &[v273])?;
+let v292 = s.builtin(EvalOp::IsZ, &[v273])?;
 let v293 = match s.boolean_value(v292, false)? {
 Some(true) => {
 let v294 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v295 = s.operator("eq", &[v273, v294])?;
+let v295 = s.builtin(EvalOp::Eq, &[v273, v294])?;
 let v296 = s.literal(Lit::Bool(false))?;
 let v297 = if v295 == v296 && !s.is_stuck(v295)? {
 let v298 = s.construct(Constructor::eo_and, &[])?;
@@ -1033,7 +1033,7 @@ let v325 = s.apply(v324, v273)?;
 let v326 = s.apply(v322, v325)?;
 let v327 = s.apply(v321, v326)?;
 let v328 = s.construct(Constructor::eo__2b, &[])?;
-let v329 = s.operator("is_neg", &[v273])?;
+let v329 = s.builtin(EvalOp::IsNeg, &[v273])?;
 let v330 = match s.boolean_value(v329, false)? {
 Some(true) => {
 let v331 = s.literal(Lit::Numeral(parse_int("-1")?))?;
@@ -1220,11 +1220,11 @@ let v488 = s.apply(v475, v487)?;
 let v489 = s.apply(v473, v488)?;
 let v490 = s.apply(v468, v489)?;
 let v491 = s.construct(Constructor::eo_and, &[])?;
-let v492 = s.operator("is_z", &[v463])?;
+let v492 = s.builtin(EvalOp::IsZ, &[v463])?;
 let v493 = match s.boolean_value(v492, false)? {
 Some(true) => {
 let v494 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v495 = s.operator("eq", &[v463, v494])?;
+let v495 = s.builtin(EvalOp::Eq, &[v463, v494])?;
 let v496 = s.literal(Lit::Bool(false))?;
 let v497 = if v495 == v496 && !s.is_stuck(v495)? {
 let v498 = s.construct(Constructor::eo_and, &[])?;
@@ -1258,7 +1258,7 @@ let v525 = s.apply(v524, v463)?;
 let v526 = s.apply(v522, v525)?;
 let v527 = s.apply(v521, v526)?;
 let v528 = s.construct(Constructor::eo__2b, &[])?;
-let v529 = s.operator("is_neg", &[v463])?;
+let v529 = s.builtin(EvalOp::IsNeg, &[v463])?;
 let v530 = match s.boolean_value(v529, false)? {
 Some(true) => {
 let v531 = s.literal(Lit::Numeral(parse_int("-1")?))?;
@@ -1879,7 +1879,7 @@ if v11 != a0 { break 'case1; }
 let v13 = a0;
 let v14 = v9;
 let v15 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v16 = s.operator("add", &[a2, v15])?;
+let v16 = s.builtin(EvalOp::Add, &[a2, v15])?;
 let v17 = v16;
 a0 = v13;
 a1 = v14;
@@ -1938,7 +1938,7 @@ if v12 != a0 { break 'case1; }
 let v14 = a0;
 let v15 = v10;
 let v16 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v17 = s.operator("add", &[a2, v16])?;
+let v17 = s.builtin(EvalOp::Add, &[a2, v16])?;
 let v18 = v17;
 a0 = v14;
 a1 = v15;
@@ -2267,7 +2267,7 @@ if v8 != v10 { break 'case2; }
 let v11 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v12 = s.apply(v11, v9)?;
 let v13 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v14 = s.operator("add", &[a0, v13])?;
+let v14 = s.builtin(EvalOp::Add, &[a0, v13])?;
 let v15 = eo__24bv_5fbitblast_5fprefix(s, v14, v6)?;
 let v16 = s.apply(v12, v15)?;
 return Ok(v16);
@@ -2382,9 +2382,9 @@ let v63 = s.apply(v62, v57)?;
 let v64 = s.apply(v60, v63)?;
 let v65 = s.construct(Constructor::eo_and, &[])?;
 let v66 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v67 = s.operator("list_rev", &[v66, v47])?;
+let v67 = s.builtin(EvalOp::ListRev, &[v66, v47])?;
 let v68 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v69 = s.operator("list_rev", &[v68, v54])?;
+let v69 = s.builtin(EvalOp::ListRev, &[v68, v54])?;
 let v70 = eo__24bv_5fbitblast_5fult(s, v67, v69, a2)?;
 let v71 = s.apply(v65, v70)?;
 let v72 = s.literal(Lit::Bool(true))?;
@@ -2435,7 +2435,7 @@ return Ok(v1);
 let v2 = s.literal(Lit::Numeral(parse_int("0")?))?;
 if a0 != v2 { break 'case1; }
 let v3 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v4 = s.operator("add", &[a1, v3])?;
+let v4 = s.builtin(EvalOp::Add, &[a1, v3])?;
 let v5 = eo__24bv_5fbitblast_5fprefix(s, v4, a2)?;
 return Ok(v5);
 }
@@ -2453,10 +2453,10 @@ let v11 = a;
 let v12 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 if v10 != v12 { break 'case2; }
 let v13 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v14 = s.operator("add", &[a0, v13])?;
+let v14 = s.builtin(EvalOp::Add, &[a0, v13])?;
 let v15 = v14;
 let v16 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v17 = s.operator("add", &[a1, v16])?;
+let v17 = s.builtin(EvalOp::Add, &[a1, v16])?;
 let v18 = v17;
 let v19 = v8;
 a0 = v15;
@@ -2713,9 +2713,9 @@ let v11 = a;
 let v12 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if v10 != v12 { break 'case1; }
 let v13 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v14 = s.operator("extract", &[a0, v11, v11])?;
+let v14 = s.builtin(EvalOp::Extract, &[a0, v11, v11])?;
 let v15 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v16 = s.operator("eq", &[v14, v15])?;
+let v16 = s.builtin(EvalOp::Eq, &[v14, v15])?;
 let v17 = s.apply(v13, v16)?;
 let v18 = eo__24bv_5fconst_5fto_5fbitlist_5frec(s, a0, v8)?;
 let v19 = s.apply(v17, v18)?;
@@ -2794,7 +2794,7 @@ let v35 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v36 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v37 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v38 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v39 = s.operator("list_len", &[v38, a0])?;
+let v39 = s.builtin(EvalOp::ListLength, &[v38, a0])?;
 let v40 = eo__24bv_5fbitblast_5fsubsequence(s, v37, v39, a0)?;
 let v41 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v42 = s.literal(Lit::Bool(false))?;
@@ -2804,14 +2804,14 @@ let v45 = s.apply(v43, v44)?;
 let v46 = eo__24bv_5fbitblast_5fconcat(s, v40, v45)?;
 let v47 = eo__24bv_5fdiv_5fmod_5fimpl(s, v46, a1, a2, v13)?;
 let v48 = eo__24pair_5fsecond(s, v47)?;
-let v49 = s.operator("list_len", &[v36, v48])?;
+let v49 = s.builtin(EvalOp::ListLength, &[v36, v48])?;
 let v50 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v51 = s.operator("add", &[v49, v50])?;
+let v51 = s.builtin(EvalOp::Add, &[v49, v50])?;
 let v52 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v53 = s.operator("add", &[v51, v52])?;
+let v53 = s.builtin(EvalOp::Add, &[v51, v52])?;
 let v54 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v55 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v56 = s.operator("list_len", &[v55, a0])?;
+let v56 = s.builtin(EvalOp::ListLength, &[v55, a0])?;
 let v57 = eo__24bv_5fbitblast_5fsubsequence(s, v54, v56, a0)?;
 let v58 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v59 = s.literal(Lit::Bool(false))?;
@@ -2854,7 +2854,7 @@ let v95 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v96 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v97 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v98 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v99 = s.operator("list_len", &[v98, a0])?;
+let v99 = s.builtin(EvalOp::ListLength, &[v98, a0])?;
 let v100 = eo__24bv_5fbitblast_5fsubsequence(s, v97, v99, a0)?;
 let v101 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v102 = s.literal(Lit::Bool(false))?;
@@ -2864,14 +2864,14 @@ let v105 = s.apply(v103, v104)?;
 let v106 = eo__24bv_5fbitblast_5fconcat(s, v100, v105)?;
 let v107 = eo__24bv_5fdiv_5fmod_5fimpl(s, v106, a1, a2, v13)?;
 let v108 = eo__24pair_5ffirst(s, v107)?;
-let v109 = s.operator("list_len", &[v96, v108])?;
+let v109 = s.builtin(EvalOp::ListLength, &[v96, v108])?;
 let v110 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v111 = s.operator("add", &[v109, v110])?;
+let v111 = s.builtin(EvalOp::Add, &[v109, v110])?;
 let v112 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v113 = s.operator("add", &[v111, v112])?;
+let v113 = s.builtin(EvalOp::Add, &[v111, v112])?;
 let v114 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v115 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v116 = s.operator("list_len", &[v115, a0])?;
+let v116 = s.builtin(EvalOp::ListLength, &[v115, a0])?;
 let v117 = eo__24bv_5fbitblast_5fsubsequence(s, v114, v116, a0)?;
 let v118 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v119 = s.literal(Lit::Bool(false))?;
@@ -2897,7 +2897,7 @@ let v138 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v139 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v140 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v141 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v142 = s.operator("list_len", &[v141, a0])?;
+let v142 = s.builtin(EvalOp::ListLength, &[v141, a0])?;
 let v143 = eo__24bv_5fbitblast_5fsubsequence(s, v140, v142, a0)?;
 let v144 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v145 = s.literal(Lit::Bool(false))?;
@@ -2907,14 +2907,14 @@ let v148 = s.apply(v146, v147)?;
 let v149 = eo__24bv_5fbitblast_5fconcat(s, v143, v148)?;
 let v150 = eo__24bv_5fdiv_5fmod_5fimpl(s, v149, a1, a2, v13)?;
 let v151 = eo__24pair_5ffirst(s, v150)?;
-let v152 = s.operator("list_len", &[v139, v151])?;
+let v152 = s.builtin(EvalOp::ListLength, &[v139, v151])?;
 let v153 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v154 = s.operator("add", &[v152, v153])?;
+let v154 = s.builtin(EvalOp::Add, &[v152, v153])?;
 let v155 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v156 = s.operator("add", &[v154, v155])?;
+let v156 = s.builtin(EvalOp::Add, &[v154, v155])?;
 let v157 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v158 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v159 = s.operator("list_len", &[v158, a0])?;
+let v159 = s.builtin(EvalOp::ListLength, &[v158, a0])?;
 let v160 = eo__24bv_5fbitblast_5fsubsequence(s, v157, v159, a0)?;
 let v161 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v162 = s.literal(Lit::Bool(false))?;
@@ -2948,7 +2948,7 @@ let v189 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v190 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v191 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v192 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v193 = s.operator("list_len", &[v192, a0])?;
+let v193 = s.builtin(EvalOp::ListLength, &[v192, a0])?;
 let v194 = eo__24bv_5fbitblast_5fsubsequence(s, v191, v193, a0)?;
 let v195 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v196 = s.literal(Lit::Bool(false))?;
@@ -2958,14 +2958,14 @@ let v199 = s.apply(v197, v198)?;
 let v200 = eo__24bv_5fbitblast_5fconcat(s, v194, v199)?;
 let v201 = eo__24bv_5fdiv_5fmod_5fimpl(s, v200, a1, a2, v13)?;
 let v202 = eo__24pair_5fsecond(s, v201)?;
-let v203 = s.operator("list_len", &[v190, v202])?;
+let v203 = s.builtin(EvalOp::ListLength, &[v190, v202])?;
 let v204 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v205 = s.operator("add", &[v203, v204])?;
+let v205 = s.builtin(EvalOp::Add, &[v203, v204])?;
 let v206 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v207 = s.operator("add", &[v205, v206])?;
+let v207 = s.builtin(EvalOp::Add, &[v205, v206])?;
 let v208 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v209 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v210 = s.operator("list_len", &[v209, a0])?;
+let v210 = s.builtin(EvalOp::ListLength, &[v209, a0])?;
 let v211 = eo__24bv_5fbitblast_5fsubsequence(s, v208, v210, a0)?;
 let v212 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v213 = s.literal(Lit::Bool(false))?;
@@ -3007,7 +3007,7 @@ let v248 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v249 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v250 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v251 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v252 = s.operator("list_len", &[v251, a0])?;
+let v252 = s.builtin(EvalOp::ListLength, &[v251, a0])?;
 let v253 = eo__24bv_5fbitblast_5fsubsequence(s, v250, v252, a0)?;
 let v254 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v255 = s.literal(Lit::Bool(false))?;
@@ -3017,14 +3017,14 @@ let v258 = s.apply(v256, v257)?;
 let v259 = eo__24bv_5fbitblast_5fconcat(s, v253, v258)?;
 let v260 = eo__24bv_5fdiv_5fmod_5fimpl(s, v259, a1, a2, v13)?;
 let v261 = eo__24pair_5fsecond(s, v260)?;
-let v262 = s.operator("list_len", &[v249, v261])?;
+let v262 = s.builtin(EvalOp::ListLength, &[v249, v261])?;
 let v263 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v264 = s.operator("add", &[v262, v263])?;
+let v264 = s.builtin(EvalOp::Add, &[v262, v263])?;
 let v265 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v266 = s.operator("add", &[v264, v265])?;
+let v266 = s.builtin(EvalOp::Add, &[v264, v265])?;
 let v267 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v268 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v269 = s.operator("list_len", &[v268, a0])?;
+let v269 = s.builtin(EvalOp::ListLength, &[v268, a0])?;
 let v270 = eo__24bv_5fbitblast_5fsubsequence(s, v267, v269, a0)?;
 let v271 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v272 = s.literal(Lit::Bool(false))?;
@@ -3059,7 +3059,7 @@ let v300 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v301 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v302 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v303 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v304 = s.operator("list_len", &[v303, a0])?;
+let v304 = s.builtin(EvalOp::ListLength, &[v303, a0])?;
 let v305 = eo__24bv_5fbitblast_5fsubsequence(s, v302, v304, a0)?;
 let v306 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v307 = s.literal(Lit::Bool(false))?;
@@ -3069,14 +3069,14 @@ let v310 = s.apply(v308, v309)?;
 let v311 = eo__24bv_5fbitblast_5fconcat(s, v305, v310)?;
 let v312 = eo__24bv_5fdiv_5fmod_5fimpl(s, v311, a1, a2, v13)?;
 let v313 = eo__24pair_5fsecond(s, v312)?;
-let v314 = s.operator("list_len", &[v301, v313])?;
+let v314 = s.builtin(EvalOp::ListLength, &[v301, v313])?;
 let v315 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v316 = s.operator("add", &[v314, v315])?;
+let v316 = s.builtin(EvalOp::Add, &[v314, v315])?;
 let v317 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v318 = s.operator("add", &[v316, v317])?;
+let v318 = s.builtin(EvalOp::Add, &[v316, v317])?;
 let v319 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v320 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v321 = s.operator("list_len", &[v320, a0])?;
+let v321 = s.builtin(EvalOp::ListLength, &[v320, a0])?;
 let v322 = eo__24bv_5fbitblast_5fsubsequence(s, v319, v321, a0)?;
 let v323 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v324 = s.literal(Lit::Bool(false))?;
@@ -3144,7 +3144,7 @@ let v5 = a;
 let v6 = s.construct(Constructor::eo_concat, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = eo__24bv_5feval_5fconcat(s, v2)?;
-let v8 = s.operator("concat", &[v5, v7])?;
+let v8 = s.builtin(EvalOp::Concat, &[v5, v7])?;
 return Ok(v8);
 }
 'case1: {
@@ -3181,7 +3181,7 @@ let Some((f, a)) = v3 else { break 'case0; }
 ;
 let v4 = f;
 let v5 = a;
-let v6 = s.operator("is_bin", &[v5])?;
+let v6 = s.builtin(EvalOp::IsBin, &[v5])?;
 let v7 = match s.boolean_value(v6, false)? {
 Some(true) => {
 v5
@@ -3274,7 +3274,7 @@ let v12 = s.construct(Constructor::eo__3d, &[])?;
 if v10 != v12 { break 'case1; }
 let v13 = s.construct(Constructor::eo_and, &[])?;
 let v14 = eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec(s, v11, v8)?;
-let v15 = s.operator("list_singleton_elim", &[v13, v14])?;
+let v15 = s.builtin(EvalOp::ListSingletonElim, &[v13, v14])?;
 return Ok(Some(v15));
 }
 Ok(None)
@@ -3334,9 +3334,9 @@ let v39 = a;
 let v40 = s.construct(Constructor::eo_bvslt, &[])?;
 if v38 != v40 { break 'case4; }
 let v41 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v42 = s.operator("list_rev", &[v41, v39])?;
+let v42 = s.builtin(EvalOp::ListRev, &[v41, v39])?;
 let v43 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v44 = s.operator("list_rev", &[v43, v36])?;
+let v44 = s.builtin(EvalOp::ListRev, &[v43, v36])?;
 let v45 = s.literal(Lit::Bool(false))?;
 let v46 = eo__24bv_5fbitblast_5fslt_5fimpl(s, v42, v44, v45)?;
 return Ok(Some(v46));
@@ -3358,9 +3358,9 @@ let v52 = a;
 let v53 = s.construct(Constructor::eo_bvsle, &[])?;
 if v51 != v53 { break 'case5; }
 let v54 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v55 = s.operator("list_rev", &[v54, v52])?;
+let v55 = s.builtin(EvalOp::ListRev, &[v54, v52])?;
 let v56 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v57 = s.operator("list_rev", &[v56, v49])?;
+let v57 = s.builtin(EvalOp::ListRev, &[v56, v49])?;
 let v58 = s.literal(Lit::Bool(true))?;
 let v59 = eo__24bv_5fbitblast_5fslt_5fimpl(s, v55, v57, v58)?;
 return Ok(Some(v59));
@@ -3545,29 +3545,29 @@ let v140 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v141 = s.literal(Lit::Bool(false))?;
 let v142 = eo__24eo_5ftypeof(s, v137)?;
 let v143 = eo__24bv_5fbitwidth(s, v142)?;
-let v144 = s.operator("list_repeat", &[v140, v141, v143])?;
+let v144 = s.builtin(EvalOp::ListRepeat, &[v140, v141, v143])?;
 let v145 = eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec(s, v134, v144)?;
-let v146 = s.operator("list_singleton_elim", &[v139, v145])?;
+let v146 = s.builtin(EvalOp::ListSingletonElim, &[v139, v145])?;
 let v147 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v148 = s.literal(Lit::Bool(true))?;
 let v149 = eo__24eo_5ftypeof(s, v137)?;
 let v150 = eo__24bv_5fbitwidth(s, v149)?;
-let v151 = s.operator("list_repeat", &[v147, v148, v150])?;
+let v151 = s.builtin(EvalOp::ListRepeat, &[v147, v148, v150])?;
 let v152 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v153 = s.literal(Lit::Bool(false))?;
 let v154 = eo__24eo_5ftypeof(s, v137)?;
 let v155 = eo__24bv_5fbitwidth(s, v154)?;
-let v156 = s.operator("list_repeat", &[v152, v153, v155])?;
+let v156 = s.builtin(EvalOp::ListRepeat, &[v152, v153, v155])?;
 let v157 = eo__24eo_5ftypeof(s, v137)?;
 let v158 = eo__24bv_5fbitwidth(s, v157)?;
-let v159 = s.operator("is_neg", &[v158])?;
+let v159 = s.builtin(EvalOp::IsNeg, &[v158])?;
 let v160 = s.literal(Lit::Bool(false))?;
 let v161 = if v159 == v160 && !s.is_stuck(v159)? {
 let v162 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v163 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v164 = eo__24eo_5ftypeof(s, v137)?;
 let v165 = eo__24bv_5fbitwidth(s, v164)?;
-let v166 = s.operator("list_repeat", &[v162, v163, v165])?;
+let v166 = s.builtin(EvalOp::ListRepeat, &[v162, v163, v165])?;
 let v167 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v168 = eo__24iota_5frec(s, v166, v167)?;
 v168
@@ -3598,24 +3598,24 @@ let v180 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v181 = s.literal(Lit::Bool(false))?;
 let v182 = eo__24eo_5ftypeof(s, v177)?;
 let v183 = eo__24bv_5fbitwidth(s, v182)?;
-let v184 = s.operator("list_repeat", &[v180, v181, v183])?;
+let v184 = s.builtin(EvalOp::ListRepeat, &[v180, v181, v183])?;
 let v185 = eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec(s, v174, v184)?;
-let v186 = s.operator("list_singleton_elim", &[v179, v185])?;
+let v186 = s.builtin(EvalOp::ListSingletonElim, &[v179, v185])?;
 let v187 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v188 = s.literal(Lit::Bool(false))?;
 let v189 = eo__24eo_5ftypeof(s, v177)?;
 let v190 = eo__24bv_5fbitwidth(s, v189)?;
-let v191 = s.operator("list_repeat", &[v187, v188, v190])?;
+let v191 = s.builtin(EvalOp::ListRepeat, &[v187, v188, v190])?;
 let v192 = eo__24eo_5ftypeof(s, v177)?;
 let v193 = eo__24bv_5fbitwidth(s, v192)?;
-let v194 = s.operator("is_neg", &[v193])?;
+let v194 = s.builtin(EvalOp::IsNeg, &[v193])?;
 let v195 = s.literal(Lit::Bool(false))?;
 let v196 = if v194 == v195 && !s.is_stuck(v194)? {
 let v197 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v198 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v199 = eo__24eo_5ftypeof(s, v177)?;
 let v200 = eo__24bv_5fbitwidth(s, v199)?;
-let v201 = s.operator("list_repeat", &[v197, v198, v200])?;
+let v201 = s.builtin(EvalOp::ListRepeat, &[v197, v198, v200])?;
 let v202 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v203 = eo__24iota_5frec(s, v201, v202)?;
 v203
@@ -3666,7 +3666,7 @@ let v226 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v227 = s.literal(Lit::Bool(false))?;
 let v228 = eo__24eo_5ftypeof(s, v222)?;
 let v229 = eo__24bv_5fbitwidth(s, v228)?;
-let v230 = s.operator("list_repeat", &[v226, v227, v229])?;
+let v230 = s.builtin(EvalOp::ListRepeat, &[v226, v227, v229])?;
 let v231 = s.literal(Lit::Bool(true))?;
 let v232 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v233 = eo__24bv_5fripple_5fcarry_5fadder_5f2(s, v225, v230, v231, v232)?;
@@ -3717,14 +3717,14 @@ let v253 = eo__24eo_5ftypeof(s, v251)?;
 let v254 = eo__24bv_5fbitwidth(s, v253)?;
 let v255 = eo__24eo_5ftypeof(s, v251)?;
 let v256 = eo__24bv_5fbitwidth(s, v255)?;
-let v257 = s.operator("to_bin", &[v254, v256])?;
+let v257 = s.builtin(EvalOp::ToBin, &[v254, v256])?;
 let v258 = eo__24eo_5ftypeof(s, v251)?;
 let v259 = eo__24bv_5fbitwidth(s, v258)?;
 let v260 = eo__24eo_5ftypeof(s, v251)?;
 let v261 = eo__24bv_5fbitwidth(s, v260)?;
-let v262 = s.operator("to_bin", &[v259, v261])?;
-let v263 = s.operator("len", &[v262])?;
-let v264 = s.operator("is_neg", &[v263])?;
+let v262 = s.builtin(EvalOp::ToBin, &[v259, v261])?;
+let v263 = s.builtin(EvalOp::Length, &[v262])?;
+let v264 = s.builtin(EvalOp::IsNeg, &[v263])?;
 let v265 = s.literal(Lit::Bool(false))?;
 let v266 = if v264 == v265 && !s.is_stuck(v264)? {
 let v267 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -3733,9 +3733,9 @@ let v269 = eo__24eo_5ftypeof(s, v251)?;
 let v270 = eo__24bv_5fbitwidth(s, v269)?;
 let v271 = eo__24eo_5ftypeof(s, v251)?;
 let v272 = eo__24bv_5fbitwidth(s, v271)?;
-let v273 = s.operator("to_bin", &[v270, v272])?;
-let v274 = s.operator("len", &[v273])?;
-let v275 = s.operator("list_repeat", &[v267, v268, v274])?;
+let v273 = s.builtin(EvalOp::ToBin, &[v270, v272])?;
+let v274 = s.builtin(EvalOp::Length, &[v273])?;
+let v275 = s.builtin(EvalOp::ListRepeat, &[v267, v268, v274])?;
 let v276 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v277 = eo__24iota_5frec(s, v275, v276)?;
 v277
@@ -3746,12 +3746,12 @@ let v280 = eo__24bv_5fbitblast_5fult(s, v248, v278, v279)?;
 let v281 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v282 = eo__24eo_5ftypeof(s, v251)?;
 let v283 = eo__24bv_5fbitwidth(s, v282)?;
-let v284 = s.operator("is_z", &[v283])?;
+let v284 = s.builtin(EvalOp::IsZ, &[v283])?;
 let v285 = match s.boolean_value(v284, false)? {
 Some(true) => {
 let v286 = eo__24eo_5ftypeof(s, v251)?;
 let v287 = eo__24bv_5fbitwidth(s, v286)?;
-let v288 = s.operator("is_neg", &[v287])?;
+let v288 = s.builtin(EvalOp::IsNeg, &[v287])?;
 let v289 = match s.boolean_value(v288, false)? {
 Some(true) => {
 let v290 = s.literal(Lit::Bool(false))?;
@@ -3762,12 +3762,12 @@ let v292 = eo__24bv_5fbitwidth(s, v291)?;
 let v293 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v294 = eo__24eo_5ftypeof(s, v251)?;
 let v295 = eo__24bv_5fbitwidth(s, v294)?;
-let v296 = s.operator("is_z", &[v295])?;
+let v296 = s.builtin(EvalOp::IsZ, &[v295])?;
 let v297 = match s.boolean_value(v296, false)? {
 Some(true) => {
 let v298 = eo__24eo_5ftypeof(s, v251)?;
 let v299 = eo__24bv_5fbitwidth(s, v298)?;
-let v300 = s.operator("is_neg", &[v299])?;
+let v300 = s.builtin(EvalOp::IsNeg, &[v299])?;
 let v301 = match s.boolean_value(v300, false)? {
 Some(true) => {
 let v302 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -3776,7 +3776,7 @@ v302
 let v303 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v304 = eo__24eo_5ftypeof(s, v251)?;
 let v305 = eo__24bv_5fbitwidth(s, v304)?;
-let v306 = s.operator("log", &[v303, v305])?;
+let v306 = s.builtin(EvalOp::Log, &[v303, v305])?;
 v306
 }, None => s.stuck(),
 };
@@ -3789,8 +3789,8 @@ let v310 = s.apply(v307, v309)?;
 v310
 }, None => s.stuck(),
 };
-let v311 = s.operator("pow", &[v293, v297])?;
-let v312 = s.operator("eq", &[v292, v311])?;
+let v311 = s.builtin(EvalOp::Pow, &[v293, v297])?;
+let v312 = s.builtin(EvalOp::Eq, &[v292, v311])?;
 v312
 }, None => s.stuck(),
 };
@@ -3807,12 +3807,12 @@ let v317 = match s.boolean_value(v285, false)? {
 Some(true) => {
 let v318 = eo__24eo_5ftypeof(s, v251)?;
 let v319 = eo__24bv_5fbitwidth(s, v318)?;
-let v320 = s.operator("is_z", &[v319])?;
+let v320 = s.builtin(EvalOp::IsZ, &[v319])?;
 let v321 = match s.boolean_value(v320, false)? {
 Some(true) => {
 let v322 = eo__24eo_5ftypeof(s, v251)?;
 let v323 = eo__24bv_5fbitwidth(s, v322)?;
-let v324 = s.operator("is_neg", &[v323])?;
+let v324 = s.builtin(EvalOp::IsNeg, &[v323])?;
 let v325 = match s.boolean_value(v324, false)? {
 Some(true) => {
 let v326 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -3821,7 +3821,7 @@ v326
 let v327 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v328 = eo__24eo_5ftypeof(s, v251)?;
 let v329 = eo__24bv_5fbitwidth(s, v328)?;
-let v330 = s.operator("log", &[v327, v329])?;
+let v330 = s.builtin(EvalOp::Log, &[v327, v329])?;
 v330
 }, None => s.stuck(),
 };
@@ -3838,12 +3838,12 @@ v321
 }, Some(false) => {
 let v335 = eo__24eo_5ftypeof(s, v251)?;
 let v336 = eo__24bv_5fbitwidth(s, v335)?;
-let v337 = s.operator("is_z", &[v336])?;
+let v337 = s.builtin(EvalOp::IsZ, &[v336])?;
 let v338 = match s.boolean_value(v337, false)? {
 Some(true) => {
 let v339 = eo__24eo_5ftypeof(s, v251)?;
 let v340 = eo__24bv_5fbitwidth(s, v339)?;
-let v341 = s.operator("is_neg", &[v340])?;
+let v341 = s.builtin(EvalOp::IsNeg, &[v340])?;
 let v342 = match s.boolean_value(v341, false)? {
 Some(true) => {
 let v343 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -3852,7 +3852,7 @@ v343
 let v344 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v345 = eo__24eo_5ftypeof(s, v251)?;
 let v346 = eo__24bv_5fbitwidth(s, v345)?;
-let v347 = s.operator("log", &[v344, v346])?;
+let v347 = s.builtin(EvalOp::Log, &[v344, v346])?;
 v347
 }, None => s.stuck(),
 };
@@ -3866,21 +3866,21 @@ v351
 }, None => s.stuck(),
 };
 let v352 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v353 = s.operator("add", &[v338, v352])?;
+let v353 = s.builtin(EvalOp::Add, &[v338, v352])?;
 v353
 }, None => s.stuck(),
 };
 let v354 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v355 = s.operator("list_rev", &[v354, v251])?;
+let v355 = s.builtin(EvalOp::ListRev, &[v354, v251])?;
 let v356 = eo__24bv_5fbitblast_5fhead(s, v355)?;
 let v357 = eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec(s, v251, v248, v281, v317, v356)?;
 let v358 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v359 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v360 = s.operator("list_rev", &[v359, v251])?;
+let v360 = s.builtin(EvalOp::ListRev, &[v359, v251])?;
 let v361 = eo__24bv_5fbitblast_5fhead(s, v360)?;
 let v362 = eo__24eo_5ftypeof(s, v251)?;
 let v363 = eo__24bv_5fbitwidth(s, v362)?;
-let v364 = s.operator("list_repeat", &[v358, v361, v363])?;
+let v364 = s.builtin(EvalOp::ListRepeat, &[v358, v361, v363])?;
 let v365 = eo__24bv_5fbitblast_5fapply_5fite(s, v280, v357, v364)?;
 return Ok(Some(v365));
 }
@@ -3904,14 +3904,14 @@ let v373 = eo__24eo_5ftypeof(s, v371)?;
 let v374 = eo__24bv_5fbitwidth(s, v373)?;
 let v375 = eo__24eo_5ftypeof(s, v371)?;
 let v376 = eo__24bv_5fbitwidth(s, v375)?;
-let v377 = s.operator("to_bin", &[v374, v376])?;
+let v377 = s.builtin(EvalOp::ToBin, &[v374, v376])?;
 let v378 = eo__24eo_5ftypeof(s, v371)?;
 let v379 = eo__24bv_5fbitwidth(s, v378)?;
 let v380 = eo__24eo_5ftypeof(s, v371)?;
 let v381 = eo__24bv_5fbitwidth(s, v380)?;
-let v382 = s.operator("to_bin", &[v379, v381])?;
-let v383 = s.operator("len", &[v382])?;
-let v384 = s.operator("is_neg", &[v383])?;
+let v382 = s.builtin(EvalOp::ToBin, &[v379, v381])?;
+let v383 = s.builtin(EvalOp::Length, &[v382])?;
+let v384 = s.builtin(EvalOp::IsNeg, &[v383])?;
 let v385 = s.literal(Lit::Bool(false))?;
 let v386 = if v384 == v385 && !s.is_stuck(v384)? {
 let v387 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -3920,9 +3920,9 @@ let v389 = eo__24eo_5ftypeof(s, v371)?;
 let v390 = eo__24bv_5fbitwidth(s, v389)?;
 let v391 = eo__24eo_5ftypeof(s, v371)?;
 let v392 = eo__24bv_5fbitwidth(s, v391)?;
-let v393 = s.operator("to_bin", &[v390, v392])?;
-let v394 = s.operator("len", &[v393])?;
-let v395 = s.operator("list_repeat", &[v387, v388, v394])?;
+let v393 = s.builtin(EvalOp::ToBin, &[v390, v392])?;
+let v394 = s.builtin(EvalOp::Length, &[v393])?;
+let v395 = s.builtin(EvalOp::ListRepeat, &[v387, v388, v394])?;
 let v396 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v397 = eo__24iota_5frec(s, v395, v396)?;
 v397
@@ -3933,12 +3933,12 @@ let v400 = eo__24bv_5fbitblast_5fult(s, v368, v398, v399)?;
 let v401 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v402 = eo__24eo_5ftypeof(s, v371)?;
 let v403 = eo__24bv_5fbitwidth(s, v402)?;
-let v404 = s.operator("is_z", &[v403])?;
+let v404 = s.builtin(EvalOp::IsZ, &[v403])?;
 let v405 = match s.boolean_value(v404, false)? {
 Some(true) => {
 let v406 = eo__24eo_5ftypeof(s, v371)?;
 let v407 = eo__24bv_5fbitwidth(s, v406)?;
-let v408 = s.operator("is_neg", &[v407])?;
+let v408 = s.builtin(EvalOp::IsNeg, &[v407])?;
 let v409 = match s.boolean_value(v408, false)? {
 Some(true) => {
 let v410 = s.literal(Lit::Bool(false))?;
@@ -3949,12 +3949,12 @@ let v412 = eo__24bv_5fbitwidth(s, v411)?;
 let v413 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v414 = eo__24eo_5ftypeof(s, v371)?;
 let v415 = eo__24bv_5fbitwidth(s, v414)?;
-let v416 = s.operator("is_z", &[v415])?;
+let v416 = s.builtin(EvalOp::IsZ, &[v415])?;
 let v417 = match s.boolean_value(v416, false)? {
 Some(true) => {
 let v418 = eo__24eo_5ftypeof(s, v371)?;
 let v419 = eo__24bv_5fbitwidth(s, v418)?;
-let v420 = s.operator("is_neg", &[v419])?;
+let v420 = s.builtin(EvalOp::IsNeg, &[v419])?;
 let v421 = match s.boolean_value(v420, false)? {
 Some(true) => {
 let v422 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -3963,7 +3963,7 @@ v422
 let v423 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v424 = eo__24eo_5ftypeof(s, v371)?;
 let v425 = eo__24bv_5fbitwidth(s, v424)?;
-let v426 = s.operator("log", &[v423, v425])?;
+let v426 = s.builtin(EvalOp::Log, &[v423, v425])?;
 v426
 }, None => s.stuck(),
 };
@@ -3976,8 +3976,8 @@ let v430 = s.apply(v427, v429)?;
 v430
 }, None => s.stuck(),
 };
-let v431 = s.operator("pow", &[v413, v417])?;
-let v432 = s.operator("eq", &[v412, v431])?;
+let v431 = s.builtin(EvalOp::Pow, &[v413, v417])?;
+let v432 = s.builtin(EvalOp::Eq, &[v412, v431])?;
 v432
 }, None => s.stuck(),
 };
@@ -3994,12 +3994,12 @@ let v437 = match s.boolean_value(v405, false)? {
 Some(true) => {
 let v438 = eo__24eo_5ftypeof(s, v371)?;
 let v439 = eo__24bv_5fbitwidth(s, v438)?;
-let v440 = s.operator("is_z", &[v439])?;
+let v440 = s.builtin(EvalOp::IsZ, &[v439])?;
 let v441 = match s.boolean_value(v440, false)? {
 Some(true) => {
 let v442 = eo__24eo_5ftypeof(s, v371)?;
 let v443 = eo__24bv_5fbitwidth(s, v442)?;
-let v444 = s.operator("is_neg", &[v443])?;
+let v444 = s.builtin(EvalOp::IsNeg, &[v443])?;
 let v445 = match s.boolean_value(v444, false)? {
 Some(true) => {
 let v446 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -4008,7 +4008,7 @@ v446
 let v447 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v448 = eo__24eo_5ftypeof(s, v371)?;
 let v449 = eo__24bv_5fbitwidth(s, v448)?;
-let v450 = s.operator("log", &[v447, v449])?;
+let v450 = s.builtin(EvalOp::Log, &[v447, v449])?;
 v450
 }, None => s.stuck(),
 };
@@ -4025,12 +4025,12 @@ v441
 }, Some(false) => {
 let v455 = eo__24eo_5ftypeof(s, v371)?;
 let v456 = eo__24bv_5fbitwidth(s, v455)?;
-let v457 = s.operator("is_z", &[v456])?;
+let v457 = s.builtin(EvalOp::IsZ, &[v456])?;
 let v458 = match s.boolean_value(v457, false)? {
 Some(true) => {
 let v459 = eo__24eo_5ftypeof(s, v371)?;
 let v460 = eo__24bv_5fbitwidth(s, v459)?;
-let v461 = s.operator("is_neg", &[v460])?;
+let v461 = s.builtin(EvalOp::IsNeg, &[v460])?;
 let v462 = match s.boolean_value(v461, false)? {
 Some(true) => {
 let v463 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -4039,7 +4039,7 @@ v463
 let v464 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v465 = eo__24eo_5ftypeof(s, v371)?;
 let v466 = eo__24bv_5fbitwidth(s, v465)?;
-let v467 = s.operator("log", &[v464, v466])?;
+let v467 = s.builtin(EvalOp::Log, &[v464, v466])?;
 v467
 }, None => s.stuck(),
 };
@@ -4053,7 +4053,7 @@ v471
 }, None => s.stuck(),
 };
 let v472 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v473 = s.operator("add", &[v458, v472])?;
+let v473 = s.builtin(EvalOp::Add, &[v458, v472])?;
 v473
 }, None => s.stuck(),
 };
@@ -4063,7 +4063,7 @@ let v476 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v477 = s.literal(Lit::Bool(false))?;
 let v478 = eo__24eo_5ftypeof(s, v371)?;
 let v479 = eo__24bv_5fbitwidth(s, v478)?;
-let v480 = s.operator("list_repeat", &[v476, v477, v479])?;
+let v480 = s.builtin(EvalOp::ListRepeat, &[v476, v477, v479])?;
 let v481 = eo__24bv_5fbitblast_5fapply_5fite(s, v400, v475, v480)?;
 return Ok(Some(v481));
 }
@@ -4087,14 +4087,14 @@ let v489 = eo__24eo_5ftypeof(s, v487)?;
 let v490 = eo__24bv_5fbitwidth(s, v489)?;
 let v491 = eo__24eo_5ftypeof(s, v487)?;
 let v492 = eo__24bv_5fbitwidth(s, v491)?;
-let v493 = s.operator("to_bin", &[v490, v492])?;
+let v493 = s.builtin(EvalOp::ToBin, &[v490, v492])?;
 let v494 = eo__24eo_5ftypeof(s, v487)?;
 let v495 = eo__24bv_5fbitwidth(s, v494)?;
 let v496 = eo__24eo_5ftypeof(s, v487)?;
 let v497 = eo__24bv_5fbitwidth(s, v496)?;
-let v498 = s.operator("to_bin", &[v495, v497])?;
-let v499 = s.operator("len", &[v498])?;
-let v500 = s.operator("is_neg", &[v499])?;
+let v498 = s.builtin(EvalOp::ToBin, &[v495, v497])?;
+let v499 = s.builtin(EvalOp::Length, &[v498])?;
+let v500 = s.builtin(EvalOp::IsNeg, &[v499])?;
 let v501 = s.literal(Lit::Bool(false))?;
 let v502 = if v500 == v501 && !s.is_stuck(v500)? {
 let v503 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -4103,9 +4103,9 @@ let v505 = eo__24eo_5ftypeof(s, v487)?;
 let v506 = eo__24bv_5fbitwidth(s, v505)?;
 let v507 = eo__24eo_5ftypeof(s, v487)?;
 let v508 = eo__24bv_5fbitwidth(s, v507)?;
-let v509 = s.operator("to_bin", &[v506, v508])?;
-let v510 = s.operator("len", &[v509])?;
-let v511 = s.operator("list_repeat", &[v503, v504, v510])?;
+let v509 = s.builtin(EvalOp::ToBin, &[v506, v508])?;
+let v510 = s.builtin(EvalOp::Length, &[v509])?;
+let v511 = s.builtin(EvalOp::ListRepeat, &[v503, v504, v510])?;
 let v512 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v513 = eo__24iota_5frec(s, v511, v512)?;
 v513
@@ -4116,12 +4116,12 @@ let v516 = eo__24bv_5fbitblast_5fult(s, v484, v514, v515)?;
 let v517 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v518 = eo__24eo_5ftypeof(s, v487)?;
 let v519 = eo__24bv_5fbitwidth(s, v518)?;
-let v520 = s.operator("is_z", &[v519])?;
+let v520 = s.builtin(EvalOp::IsZ, &[v519])?;
 let v521 = match s.boolean_value(v520, false)? {
 Some(true) => {
 let v522 = eo__24eo_5ftypeof(s, v487)?;
 let v523 = eo__24bv_5fbitwidth(s, v522)?;
-let v524 = s.operator("is_neg", &[v523])?;
+let v524 = s.builtin(EvalOp::IsNeg, &[v523])?;
 let v525 = match s.boolean_value(v524, false)? {
 Some(true) => {
 let v526 = s.literal(Lit::Bool(false))?;
@@ -4132,12 +4132,12 @@ let v528 = eo__24bv_5fbitwidth(s, v527)?;
 let v529 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v530 = eo__24eo_5ftypeof(s, v487)?;
 let v531 = eo__24bv_5fbitwidth(s, v530)?;
-let v532 = s.operator("is_z", &[v531])?;
+let v532 = s.builtin(EvalOp::IsZ, &[v531])?;
 let v533 = match s.boolean_value(v532, false)? {
 Some(true) => {
 let v534 = eo__24eo_5ftypeof(s, v487)?;
 let v535 = eo__24bv_5fbitwidth(s, v534)?;
-let v536 = s.operator("is_neg", &[v535])?;
+let v536 = s.builtin(EvalOp::IsNeg, &[v535])?;
 let v537 = match s.boolean_value(v536, false)? {
 Some(true) => {
 let v538 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -4146,7 +4146,7 @@ v538
 let v539 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v540 = eo__24eo_5ftypeof(s, v487)?;
 let v541 = eo__24bv_5fbitwidth(s, v540)?;
-let v542 = s.operator("log", &[v539, v541])?;
+let v542 = s.builtin(EvalOp::Log, &[v539, v541])?;
 v542
 }, None => s.stuck(),
 };
@@ -4159,8 +4159,8 @@ let v546 = s.apply(v543, v545)?;
 v546
 }, None => s.stuck(),
 };
-let v547 = s.operator("pow", &[v529, v533])?;
-let v548 = s.operator("eq", &[v528, v547])?;
+let v547 = s.builtin(EvalOp::Pow, &[v529, v533])?;
+let v548 = s.builtin(EvalOp::Eq, &[v528, v547])?;
 v548
 }, None => s.stuck(),
 };
@@ -4177,12 +4177,12 @@ let v553 = match s.boolean_value(v521, false)? {
 Some(true) => {
 let v554 = eo__24eo_5ftypeof(s, v487)?;
 let v555 = eo__24bv_5fbitwidth(s, v554)?;
-let v556 = s.operator("is_z", &[v555])?;
+let v556 = s.builtin(EvalOp::IsZ, &[v555])?;
 let v557 = match s.boolean_value(v556, false)? {
 Some(true) => {
 let v558 = eo__24eo_5ftypeof(s, v487)?;
 let v559 = eo__24bv_5fbitwidth(s, v558)?;
-let v560 = s.operator("is_neg", &[v559])?;
+let v560 = s.builtin(EvalOp::IsNeg, &[v559])?;
 let v561 = match s.boolean_value(v560, false)? {
 Some(true) => {
 let v562 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -4191,7 +4191,7 @@ v562
 let v563 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v564 = eo__24eo_5ftypeof(s, v487)?;
 let v565 = eo__24bv_5fbitwidth(s, v564)?;
-let v566 = s.operator("log", &[v563, v565])?;
+let v566 = s.builtin(EvalOp::Log, &[v563, v565])?;
 v566
 }, None => s.stuck(),
 };
@@ -4208,12 +4208,12 @@ v557
 }, Some(false) => {
 let v571 = eo__24eo_5ftypeof(s, v487)?;
 let v572 = eo__24bv_5fbitwidth(s, v571)?;
-let v573 = s.operator("is_z", &[v572])?;
+let v573 = s.builtin(EvalOp::IsZ, &[v572])?;
 let v574 = match s.boolean_value(v573, false)? {
 Some(true) => {
 let v575 = eo__24eo_5ftypeof(s, v487)?;
 let v576 = eo__24bv_5fbitwidth(s, v575)?;
-let v577 = s.operator("is_neg", &[v576])?;
+let v577 = s.builtin(EvalOp::IsNeg, &[v576])?;
 let v578 = match s.boolean_value(v577, false)? {
 Some(true) => {
 let v579 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -4222,7 +4222,7 @@ v579
 let v580 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v581 = eo__24eo_5ftypeof(s, v487)?;
 let v582 = eo__24bv_5fbitwidth(s, v581)?;
-let v583 = s.operator("log", &[v580, v582])?;
+let v583 = s.builtin(EvalOp::Log, &[v580, v582])?;
 v583
 }, None => s.stuck(),
 };
@@ -4236,7 +4236,7 @@ v587
 }, None => s.stuck(),
 };
 let v588 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v589 = s.operator("add", &[v574, v588])?;
+let v589 = s.builtin(EvalOp::Add, &[v574, v588])?;
 v589
 }, None => s.stuck(),
 };
@@ -4245,7 +4245,7 @@ let v591 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v592 = s.literal(Lit::Bool(false))?;
 let v593 = eo__24eo_5ftypeof(s, v487)?;
 let v594 = eo__24bv_5fbitwidth(s, v593)?;
-let v595 = s.operator("list_repeat", &[v591, v592, v594])?;
+let v595 = s.builtin(EvalOp::ListRepeat, &[v591, v592, v594])?;
 let v596 = eo__24bv_5fbitblast_5fapply_5fite(s, v516, v590, v595)?;
 return Ok(Some(v596));
 }
@@ -4268,7 +4268,7 @@ if v601 != v603 { break 'case22; }
 let v604 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v605 = s.construct(Constructor::eo_and, &[])?;
 let v606 = eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec(s, v602, v599)?;
-let v607 = s.operator("list_singleton_elim", &[v605, v606])?;
+let v607 = s.builtin(EvalOp::ListSingletonElim, &[v605, v606])?;
 let v608 = s.apply(v604, v607)?;
 let v609 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v610 = s.apply(v608, v609)?;
@@ -4316,9 +4316,9 @@ let v630 = s.construct(Constructor::eo_bvsltbv, &[])?;
 if v628 != v630 { break 'case24; }
 let v631 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v632 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v633 = s.operator("list_rev", &[v632, v629])?;
+let v633 = s.builtin(EvalOp::ListRev, &[v632, v629])?;
 let v634 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v635 = s.operator("list_rev", &[v634, v626])?;
+let v635 = s.builtin(EvalOp::ListRev, &[v634, v626])?;
 let v636 = s.literal(Lit::Bool(false))?;
 let v637 = eo__24bv_5fbitblast_5fslt_5fimpl(s, v633, v635, v636)?;
 let v638 = s.apply(v631, v637)?;
@@ -4341,9 +4341,9 @@ let Some(fields) = v644 else { break 'case25; }
 let v645 = fields;
 let v646 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v647 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v648 = s.operator("list_rev", &[v647, v643])?;
+let v648 = s.builtin(EvalOp::ListRev, &[v647, v643])?;
 let v649 = eo__24bv_5fbitblast_5fhead(s, v648)?;
-let v650 = s.operator("list_repeat", &[v646, v649, v645[0]])?;
+let v650 = s.builtin(EvalOp::ListRepeat, &[v646, v649, v645[0]])?;
 let v651 = eo__24bv_5fbitblast_5fconcat(s, v643, v650)?;
 return Ok(Some(v651));
 }
@@ -4351,17 +4351,17 @@ Ok(None)
 }
 fn case_26_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case26: {
-let v652 = s.operator("is_bin", &[a0])?;
+let v652 = s.builtin(EvalOp::IsBin, &[a0])?;
 let v653 = match s.boolean_value(v652, false)? {
 Some(true) => {
-let v654 = s.operator("len", &[a0])?;
-let v655 = s.operator("is_neg", &[v654])?;
+let v654 = s.builtin(EvalOp::Length, &[a0])?;
+let v655 = s.builtin(EvalOp::IsNeg, &[v654])?;
 let v656 = s.literal(Lit::Bool(false))?;
 let v657 = if v655 == v656 && !s.is_stuck(v655)? {
 let v658 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v659 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v660 = s.operator("len", &[a0])?;
-let v661 = s.operator("list_repeat", &[v658, v659, v660])?;
+let v660 = s.builtin(EvalOp::Length, &[a0])?;
+let v661 = s.builtin(EvalOp::ListRepeat, &[v658, v659, v660])?;
 let v662 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v663 = eo__24iota_5frec(s, v661, v662)?;
 v663
@@ -4371,14 +4371,14 @@ v664
 }, Some(false) => {
 let v665 = eo__24eo_5ftypeof(s, a0)?;
 let v666 = eo__24bv_5fbitwidth(s, v665)?;
-let v667 = s.operator("is_neg", &[v666])?;
+let v667 = s.builtin(EvalOp::IsNeg, &[v666])?;
 let v668 = s.literal(Lit::Bool(false))?;
 let v669 = if v667 == v668 && !s.is_stuck(v667)? {
 let v670 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v671 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v672 = eo__24eo_5ftypeof(s, a0)?;
 let v673 = eo__24bv_5fbitwidth(s, v672)?;
-let v674 = s.operator("list_repeat", &[v670, v671, v673])?;
+let v674 = s.builtin(EvalOp::ListRepeat, &[v670, v671, v673])?;
 let v675 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v676 = eo__24iota_5frec(s, v674, v675)?;
 v676
@@ -4428,7 +4428,7 @@ a1 = v12;
 continue 'recur;
 }
 'case1: {
-let v13 = s.operator("to_z", &[a0])?;
+let v13 = s.builtin(EvalOp::ToInt, &[a0])?;
 let v14 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v15 = if v13 == v14 && !s.is_stuck(v13)? {
 a1
@@ -4737,7 +4737,7 @@ a1 = v9;
 continue 'recur;
 }
 'case1: {
-let v10 = s.operator("to_z", &[a0])?;
+let v10 = s.builtin(EvalOp::ToInt, &[a0])?;
 let v11 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v12 = if v10 == v11 && !s.is_stuck(v10)? {
 a1
@@ -4781,17 +4781,17 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 if v4 != v6 { break 'case1; }
-let v7 = s.operator("is_z", &[a2])?;
+let v7 = s.builtin(EvalOp::IsZ, &[a2])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
-let v9 = s.operator("is_neg", &[a2])?;
+let v9 = s.builtin(EvalOp::IsNeg, &[a2])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = s.literal(Lit::Numeral(parse_int("0")?))?;
 v11
 }, Some(false) => {
 let v12 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v13 = s.operator("pow", &[v12, a2])?;
+let v13 = s.builtin(EvalOp::Pow, &[v12, a2])?;
 v13
 }, None => s.stuck(),
 };
@@ -4806,7 +4806,7 @@ let v16 = eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep(s, a0, a0, v8, v5)?
 let v17 = v16;
 let v18 = v2;
 let v19 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v20 = s.operator("add", &[a2, v19])?;
+let v20 = s.builtin(EvalOp::Add, &[a2, v19])?;
 let v21 = v20;
 let v22 = a3;
 a0 = v17;
@@ -4898,7 +4898,7 @@ let v37 = s.apply(v35, v36)?;
 let v38 = s.apply(v37, v31)?;
 let v39 = s.apply(v33, v38)?;
 let v40 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v41 = s.operator("add", &[a2, v40])?;
+let v41 = s.builtin(EvalOp::Add, &[a2, v40])?;
 let v42 = eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep(s, v28, a1, v41, a3)?;
 let v43 = s.apply(v39, v42)?;
 return Ok(v43);
@@ -4939,17 +4939,17 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 if v4 != v6 { break 'case1; }
-let v7 = s.operator("is_z", &[a2])?;
+let v7 = s.builtin(EvalOp::IsZ, &[a2])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
-let v9 = s.operator("is_neg", &[a2])?;
+let v9 = s.builtin(EvalOp::IsNeg, &[a2])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = s.literal(Lit::Numeral(parse_int("0")?))?;
 v11
 }, Some(false) => {
 let v12 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v13 = s.operator("pow", &[v12, a2])?;
+let v13 = s.builtin(EvalOp::Pow, &[v12, a2])?;
 v13
 }, None => s.stuck(),
 };
@@ -4964,7 +4964,7 @@ let v16 = eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep(s, a0, a0, v8, v5, 
 let v17 = v16;
 let v18 = v2;
 let v19 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v20 = s.operator("add", &[a2, v19])?;
+let v20 = s.builtin(EvalOp::Add, &[a2, v19])?;
 let v21 = v20;
 let v22 = a3;
 let v23 = a4;
@@ -5086,7 +5086,7 @@ if v51 != v53 { break 'case3; }
 let v54 = a0;
 let v55 = v49;
 let v56 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v57 = s.operator("add", &[a2, v56])?;
+let v57 = s.builtin(EvalOp::Add, &[a2, v56])?;
 let v58 = v57;
 let v59 = a3;
 let v60 = a4;
@@ -5173,13 +5173,13 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo_concat, &[])?;
 let v7 = s.construct(Constructor::eo_bvand, &[])?;
-let v8 = s.operator("eq", &[v4, v7])?;
+let v8 = s.builtin(EvalOp::Eq, &[v4, v7])?;
 let v9 = s.construct(Constructor::eo_bvor, &[])?;
-let v10 = s.operator("eq", &[v4, v9])?;
-let v11 = s.operator("or", &[v8, v10])?;
+let v10 = s.builtin(EvalOp::Eq, &[v4, v9])?;
+let v11 = s.builtin(EvalOp::Or, &[v8, v10])?;
 let v12 = s.construct(Constructor::eo_bvxor, &[])?;
-let v13 = s.operator("eq", &[v4, v12])?;
-let v14 = s.operator("or", &[v11, v13])?;
+let v13 = s.builtin(EvalOp::Eq, &[v4, v12])?;
+let v14 = s.builtin(EvalOp::Or, &[v11, v13])?;
 let v15 = s.literal(Lit::Bool(true))?;
 let v16 = if v14 == v15 && !s.is_stuck(v14)? {
 let v17 = s.apply(v4, v5)?;
@@ -5190,8 +5190,8 @@ let v21 = s.apply(v20, v2)?;
 let v22 = s.apply(v4, v5)?;
 let v23 = s.apply(v22, v2)?;
 let v24 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v23)?;
-let v25 = s.operator("list_erase", &[v4, v21, v24])?;
-let v26 = s.operator("list_singleton_elim", &[v4, v25])?;
+let v25 = s.builtin(EvalOp::ListErase, &[v4, v21, v24])?;
+let v26 = s.builtin(EvalOp::ListSingletonElim, &[v4, v25])?;
 let v27 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v28 = s.apply(v4, v5)?;
 let v29 = s.apply(v28, v2)?;
@@ -5199,8 +5199,8 @@ let v30 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v29)?;
 let v31 = s.apply(v4, v5)?;
 let v32 = s.apply(v31, v2)?;
 let v33 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v32)?;
-let v34 = s.operator("len", &[v33])?;
-let v35 = s.operator("is_neg", &[v34])?;
+let v34 = s.builtin(EvalOp::Length, &[v33])?;
+let v35 = s.builtin(EvalOp::IsNeg, &[v34])?;
 let v36 = s.literal(Lit::Bool(false))?;
 let v37 = if v35 == v36 && !s.is_stuck(v35)? {
 let v38 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -5208,48 +5208,48 @@ let v39 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v40 = s.apply(v4, v5)?;
 let v41 = s.apply(v40, v2)?;
 let v42 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v41)?;
-let v43 = s.operator("len", &[v42])?;
-let v44 = s.operator("list_repeat", &[v38, v39, v43])?;
+let v43 = s.builtin(EvalOp::Length, &[v42])?;
+let v44 = s.builtin(EvalOp::ListRepeat, &[v38, v39, v43])?;
 let v45 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v46 = eo__24iota_5frec(s, v44, v45)?;
 v46
 } else { s.stuck() };
 let v47 = eo__24bv_5fconst_5fto_5fbitlist_5frec(s, v30, v37)?;
-let v48 = s.operator("list_rev", &[v27, v47])?;
+let v48 = s.builtin(EvalOp::ListRev, &[v27, v47])?;
 let v49 = s.apply(v4, v5)?;
 let v50 = s.apply(v49, v2)?;
 let v51 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v50)?;
 let v52 = s.apply(v4, v5)?;
 let v53 = s.apply(v52, v2)?;
 let v54 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v53)?;
-let v55 = s.operator("len", &[v54])?;
+let v55 = s.builtin(EvalOp::Length, &[v54])?;
 let v56 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v57 = s.operator("add", &[v55, v56])?;
+let v57 = s.builtin(EvalOp::Add, &[v55, v56])?;
 let v58 = s.apply(v4, v5)?;
 let v59 = s.apply(v58, v2)?;
 let v60 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v59)?;
-let v61 = s.operator("len", &[v60])?;
+let v61 = s.builtin(EvalOp::Length, &[v60])?;
 let v62 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v63 = s.operator("add", &[v61, v62])?;
-let v64 = s.operator("extract", &[v51, v57, v63])?;
+let v63 = s.builtin(EvalOp::Add, &[v61, v62])?;
+let v64 = s.builtin(EvalOp::Extract, &[v51, v57, v63])?;
 let v65 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v66 = s.operator("eq", &[v64, v65])?;
+let v66 = s.builtin(EvalOp::Eq, &[v64, v65])?;
 let v67 = s.apply(v4, v5)?;
 let v68 = s.apply(v67, v2)?;
 let v69 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v68)?;
-let v70 = s.operator("len", &[v69])?;
+let v70 = s.builtin(EvalOp::Length, &[v69])?;
 let v71 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v72 = s.operator("add", &[v70, v71])?;
+let v72 = s.builtin(EvalOp::Add, &[v70, v71])?;
 let v73 = s.apply(v4, v5)?;
 let v74 = s.apply(v73, v2)?;
 let v75 = eo__24bv_5fget_5ffirst_5fconst_5fchild(s, v74)?;
-let v76 = s.operator("len", &[v75])?;
+let v76 = s.builtin(EvalOp::Length, &[v75])?;
 let v77 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v78 = s.operator("add", &[v76, v77])?;
+let v78 = s.builtin(EvalOp::Add, &[v76, v77])?;
 let v79 = eo__24bv_5fmk_5fbitwise_5fslicing_5frec(s, v4, v19, v26, v48, v66, v72, v78)?;
 v79
 } else { s.stuck() };
-let v80 = s.operator("list_singleton_elim", &[v6, v16])?;
+let v80 = s.builtin(EvalOp::ListSingletonElim, &[v6, v16])?;
 return Ok(v80);
 }
 Ok(s.stuck())
@@ -5305,27 +5305,27 @@ let v24 = f;
 let v25 = a;
 let v26 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 if v24 != v26 { break 'case1; }
-let v27 = s.operator("eq", &[v25, a4])?;
+let v27 = s.builtin(EvalOp::Eq, &[v25, a4])?;
 let v28 = match s.boolean_value(v27, false)? {
 Some(true) => {
 let v29 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v30 = s.operator("add", &[a6, v29])?;
+let v30 = s.builtin(EvalOp::Add, &[a6, v29])?;
 let v31 = eo__24bv_5fmk_5fbitwise_5fslicing_5frec(s, a0, a1, a2, v22, v25, a5, v30)?;
 v31
 }, Some(false) => {
 let v32 = s.construct(Constructor::eo_concat, &[])?;
 let v33 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v34 = s.operator("add", &[a6, v33])?;
+let v34 = s.builtin(EvalOp::Add, &[a6, v33])?;
 let v35 = s.construct(Constructor::eo_extract, &[a5, v34])?;
 let v36 = s.apply(v35, a1)?;
 let v37 = s.apply(a0, v36)?;
 let v38 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v39 = s.operator("add", &[a6, v38])?;
+let v39 = s.builtin(EvalOp::Add, &[a6, v38])?;
 let v40 = s.construct(Constructor::eo_extract, &[a5, v39])?;
 let v41 = s.apply(v40, a2)?;
 let v42 = s.apply(a0, v41)?;
 let v43 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v44 = s.operator("add", &[a6, v43])?;
+let v44 = s.builtin(EvalOp::Add, &[a6, v43])?;
 let v45 = s.construct(Constructor::eo_extract, &[a5, v44])?;
 let v46 = s.apply(v45, a1)?;
 let v47 = eo__24eo_5ftypeof(s, v46)?;
@@ -5334,7 +5334,7 @@ let v49 = s.apply(v42, v48)?;
 let v50 = s.apply(v37, v49)?;
 let v51 = s.apply(v32, v50)?;
 let v52 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v53 = s.operator("add", &[a6, v52])?;
+let v53 = s.builtin(EvalOp::Add, &[a6, v52])?;
 let v54 = eo__24bv_5fmk_5fbitwise_5fslicing_5frec(s, a0, a1, a2, v22, v25, a6, v53)?;
 let v55 = s.apply(v51, v54)?;
 v55
@@ -5437,7 +5437,7 @@ if a1 != v52 { break 'case1; }
 let v53 = s.construct(Constructor::eo__40_40pair, &[])?;
 let v54 = s.apply(v53, a2)?;
 let v55 = s.construct(Constructor::eo__40from_5fbools, &[])?;
-let v56 = s.operator("list_rev", &[v55, a3])?;
+let v56 = s.builtin(EvalOp::ListRev, &[v55, a3])?;
 let v57 = s.apply(v54, v56)?;
 return Ok(v57);
 }
@@ -5471,7 +5471,7 @@ let v8 = s.construct(Constructor::eo_and, &[])?;
 let v9 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v10 = eo__24eo_5ftypeof(s, a0)?;
 let v11 = eo__24bv_5fbitwidth(s, v10)?;
-let v12 = s.operator("list_repeat", &[v9, v5, v11])?;
+let v12 = s.builtin(EvalOp::ListRepeat, &[v9, v5, v11])?;
 let v13 = eo__24bv_5fbitblast_5fapply_5fbinary(s, v8, v12, a0)?;
 let v14 = eo__24bv_5fshift_5fadd_5fmultiplier_5frec(s, v2, a0, v7, v13)?;
 return Ok(v14);
@@ -5515,7 +5515,7 @@ if v5 != v7 { break 'case1; }
 let v8 = v3;
 let v9 = a1;
 let v10 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v11 = s.operator("add", &[a2, v10])?;
+let v11 = s.builtin(EvalOp::Add, &[a2, v10])?;
 let v12 = v11;
 let v13 = s.literal(Lit::Bool(false))?;
 let v14 = eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep(s, v6, a1, a2, a3, v13)?;
@@ -5653,7 +5653,7 @@ if v78 != v80 { break 'case2; }
 let v81 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v82 = s.apply(v81, v79)?;
 let v83 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v84 = s.operator("add", &[a2, v83])?;
+let v84 = s.builtin(EvalOp::Add, &[a2, v83])?;
 let v85 = eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep(s, a0, a1, v84, v76, a4)?;
 let v86 = s.apply(v82, v85)?;
 return Ok(v86);
@@ -5707,10 +5707,10 @@ let v13 = a1;
 let v14 = s.construct(Constructor::eo_bvor, &[])?;
 let v15 = s.apply(v14, a2)?;
 let v16 = s.construct(Constructor::eo_bvor, &[])?;
-let v17 = s.operator("neg", &[v10])?;
-let v18 = s.operator("add", &[a5, v17])?;
-let v19 = s.operator("neg", &[v10])?;
-let v20 = s.operator("add", &[a5, v19])?;
+let v17 = s.builtin(EvalOp::Neg, &[v10])?;
+let v18 = s.builtin(EvalOp::Add, &[a5, v17])?;
+let v19 = s.builtin(EvalOp::Neg, &[v10])?;
+let v20 = s.builtin(EvalOp::Add, &[a5, v19])?;
 let v21 = s.construct(Constructor::eo_extract, &[v18, v20])?;
 let v22 = s.apply(v21, a0)?;
 let v23 = s.apply(v16, v22)?;
@@ -5723,9 +5723,9 @@ let v29 = s.apply(v28, a3)?;
 let v30 = s.construct(Constructor::eo_bvor, &[])?;
 let v31 = s.construct(Constructor::eo_bvand, &[])?;
 let v32 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v33 = s.operator("add", &[v10, v32])?;
+let v33 = s.builtin(EvalOp::Add, &[v10, v32])?;
 let v34 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v35 = s.operator("add", &[v10, v34])?;
+let v35 = s.builtin(EvalOp::Add, &[v10, v34])?;
 let v36 = s.construct(Constructor::eo_extract, &[v33, v35])?;
 let v37 = s.apply(v36, a1)?;
 let v38 = s.apply(v31, v37)?;
@@ -5733,10 +5733,10 @@ let v39 = s.construct(Constructor::eo_bvand, &[])?;
 let v40 = s.construct(Constructor::eo_bvor, &[])?;
 let v41 = s.apply(v40, a2)?;
 let v42 = s.construct(Constructor::eo_bvor, &[])?;
-let v43 = s.operator("neg", &[v10])?;
-let v44 = s.operator("add", &[a5, v43])?;
-let v45 = s.operator("neg", &[v10])?;
-let v46 = s.operator("add", &[a5, v45])?;
+let v43 = s.builtin(EvalOp::Neg, &[v10])?;
+let v44 = s.builtin(EvalOp::Add, &[a5, v43])?;
+let v45 = s.builtin(EvalOp::Neg, &[v10])?;
+let v46 = s.builtin(EvalOp::Add, &[a5, v45])?;
 let v47 = s.construct(Constructor::eo_extract, &[v44, v46])?;
 let v48 = s.apply(v47, a0)?;
 let v49 = s.apply(v42, v48)?;
@@ -5746,9 +5746,9 @@ let v52 = s.apply(v41, v51)?;
 let v53 = s.apply(v39, v52)?;
 let v54 = s.construct(Constructor::eo_bvand, &[])?;
 let v55 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v56 = s.operator("add", &[v10, v55])?;
+let v56 = s.builtin(EvalOp::Add, &[v10, v55])?;
 let v57 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v58 = s.operator("add", &[v10, v57])?;
+let v58 = s.builtin(EvalOp::Add, &[v10, v57])?;
 let v59 = s.construct(Constructor::eo_extract, &[v56, v58])?;
 let v60 = s.apply(v59, a1)?;
 let v61 = eo__24eo_5ftypeof(s, v60)?;
@@ -5830,13 +5830,13 @@ let v25 = s.apply(v16, v24)?;
 let v26 = s.apply(v12, v25)?;
 let v27 = s.construct(Constructor::eo_bvor, &[])?;
 let v28 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v29 = s.operator("add", &[a5, v28])?;
-let v30 = s.operator("neg", &[v10])?;
-let v31 = s.operator("add", &[v29, v30])?;
+let v29 = s.builtin(EvalOp::Add, &[a5, v28])?;
+let v30 = s.builtin(EvalOp::Neg, &[v10])?;
+let v31 = s.builtin(EvalOp::Add, &[v29, v30])?;
 let v32 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v33 = s.operator("add", &[a5, v32])?;
-let v34 = s.operator("neg", &[v10])?;
-let v35 = s.operator("add", &[v33, v34])?;
+let v33 = s.builtin(EvalOp::Add, &[a5, v32])?;
+let v34 = s.builtin(EvalOp::Neg, &[v10])?;
+let v35 = s.builtin(EvalOp::Add, &[v33, v34])?;
 let v36 = s.construct(Constructor::eo_extract, &[v31, v35])?;
 let v37 = s.apply(v36, a0)?;
 let v38 = s.apply(v27, v37)?;
@@ -5844,13 +5844,13 @@ let v39 = s.construct(Constructor::eo_bvor, &[])?;
 let v40 = s.apply(v39, a2)?;
 let v41 = s.construct(Constructor::eo_bvor, &[])?;
 let v42 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v43 = s.operator("add", &[a5, v42])?;
-let v44 = s.operator("neg", &[v10])?;
-let v45 = s.operator("add", &[v43, v44])?;
+let v43 = s.builtin(EvalOp::Add, &[a5, v42])?;
+let v44 = s.builtin(EvalOp::Neg, &[v10])?;
+let v45 = s.builtin(EvalOp::Add, &[v43, v44])?;
 let v46 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v47 = s.operator("add", &[a5, v46])?;
-let v48 = s.operator("neg", &[v10])?;
-let v49 = s.operator("add", &[v47, v48])?;
+let v47 = s.builtin(EvalOp::Add, &[a5, v46])?;
+let v48 = s.builtin(EvalOp::Neg, &[v10])?;
+let v49 = s.builtin(EvalOp::Add, &[v47, v48])?;
 let v50 = s.construct(Constructor::eo_extract, &[v45, v49])?;
 let v51 = s.apply(v50, a0)?;
 let v52 = eo__24eo_5ftypeof(s, v51)?;
@@ -5924,7 +5924,7 @@ let v11 = f;
 let v12 = a;
 let v13 = s.construct(Constructor::eo_or, &[])?;
 if v11 != v13 { break 'case0; }
-let v14 = s.operator("eq", &[a0, v12])?;
+let v14 = s.builtin(EvalOp::Eq, &[a0, v12])?;
 let v15 = match s.boolean_value(v14, false)? {
 Some(true) => {
 v5
@@ -5934,8 +5934,8 @@ let v17 = s.construct(Constructor::eo_or, &[])?;
 let v18 = s.construct(Constructor::eo_or, &[])?;
 let v19 = s.apply(v18, v12)?;
 let v20 = s.apply(v19, v9)?;
-let v21 = s.operator("list_diff", &[v17, a0, v20])?;
-let v22 = s.operator("list_concat", &[v16, v21, v5])?;
+let v21 = s.builtin(EvalOp::ListDiff, &[v17, a0, v20])?;
+let v22 = s.builtin(EvalOp::ListConcat, &[v16, v21, v5])?;
 v22
 }, None => s.stuck(),
 };
@@ -6045,7 +6045,7 @@ v9
 a3
 }, None => s.stuck(),
 };
-let v10 = s.operator("eq", &[v7, a1])?;
+let v10 = s.builtin(EvalOp::Eq, &[v7, a1])?;
 let v11 = match s.boolean_value(v10, false)? {
 Some(true) => {
 let v12 = s.construct(Constructor::eo__40_40pair, &[])?;
@@ -6080,8 +6080,8 @@ a3
 };
 let v28 = s.apply(v24, v25)?;
 let v29 = s.apply(v28, v2)?;
-let v30 = s.operator("list_diff", &[v23, a1, v29])?;
-let v31 = s.operator("list_concat", &[v22, v30, v5])?;
+let v30 = s.builtin(EvalOp::ListDiff, &[v23, a1, v29])?;
+let v31 = s.builtin(EvalOp::ListConcat, &[v22, v30, v5])?;
 let v32 = s.apply(v21, v31)?;
 let v33 = s.construct(Constructor::eo_or, &[])?;
 let v34 = match s.boolean_value(a2, false)? {
@@ -6125,17 +6125,17 @@ let v3 = f;
 let v4 = a;
 let v5 = s.construct(Constructor::eo_BitVec, &[])?;
 if v3 != v5 { break 'case1; }
-let v6 = s.operator("is_z", &[v4])?;
+let v6 = s.builtin(EvalOp::IsZ, &[v4])?;
 let v7 = match s.boolean_value(v6, false)? {
 Some(true) => {
-let v8 = s.operator("is_neg", &[v4])?;
+let v8 = s.builtin(EvalOp::IsNeg, &[v4])?;
 let v9 = match s.boolean_value(v8, false)? {
 Some(true) => {
 let v10 = s.literal(Lit::Numeral(parse_int("0")?))?;
 v10
 }, Some(false) => {
 let v11 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v12 = s.operator("pow", &[v11, v4])?;
+let v12 = s.builtin(EvalOp::Pow, &[v11, v4])?;
 v12
 }, None => s.stuck(),
 };
@@ -6195,7 +6195,7 @@ let v15 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v16 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v17 = s.apply(v16, v11)?;
 let v18 = s.apply(v17, v8)?;
-let v19 = s.operator("list_concat", &[v15, v18, a2])?;
+let v19 = s.builtin(EvalOp::ListConcat, &[v15, v18, a2])?;
 let v20 = v19;
 a0 = v13;
 a1 = v14;
@@ -6226,18 +6226,18 @@ let Some(fields) = v28 else { break 'case2; }
 ;
 let v29 = fields;
 let v30 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v31 = s.named("$emb_Var", &[v29[0], v29[1]])?;
-let v32 = s.operator("list_find", &[v30, a1, v31])?;
-let v33 = s.operator("is_neg", &[v32])?;
+let v31 = s.construct(Constructor::eo__24emb_5fVar, &[v29[0], v29[1]])?;
+let v32 = s.builtin(EvalOp::ListFind, &[v30, a1, v31])?;
+let v33 = s.builtin(EvalOp::IsNeg, &[v32])?;
 let v34 = match s.boolean_value(v33, false)? {
 Some(true) => {
 let v35 = s.literal(Lit::Bool(false))?;
 v35
 }, Some(false) => {
 let v36 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v37 = s.named("$emb_Var", &[v29[0], v29[1]])?;
-let v38 = s.operator("list_find", &[v36, a2, v37])?;
-let v39 = s.operator("is_neg", &[v38])?;
+let v37 = s.construct(Constructor::eo__24emb_5fVar, &[v29[0], v29[1]])?;
+let v38 = s.builtin(EvalOp::ListFind, &[v36, a2, v37])?;
+let v39 = s.builtin(EvalOp::IsNeg, &[v38])?;
 v39
 }, None => s.stuck(),
 };
@@ -6433,16 +6433,16 @@ let v62 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v60 != v62 { break 'case6; }
 let v63 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v64 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v65 = s.operator("extract", &[v61, v63, v64])?;
-let v66 = s.operator("eq", &[v65, a0])?;
+let v65 = s.builtin(EvalOp::Extract, &[v61, v63, v64])?;
+let v66 = s.builtin(EvalOp::Eq, &[v65, a0])?;
 let v67 = match s.boolean_value(v66, false)? {
 Some(true) => {
 let v68 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v69 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v70 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v71 = s.operator("len", &[v61])?;
-let v72 = s.operator("add", &[v70, v71])?;
-let v73 = s.operator("extract", &[v61, v69, v72])?;
+let v71 = s.builtin(EvalOp::Length, &[v61])?;
+let v72 = s.builtin(EvalOp::Add, &[v70, v71])?;
+let v73 = s.builtin(EvalOp::Extract, &[v61, v69, v72])?;
 let v74 = s.apply(v68, v73)?;
 v74
 }, Some(false) => {
@@ -6468,35 +6468,35 @@ let v80 = f;
 let v81 = a;
 let v82 = s.construct(Constructor::eo_re_2erange, &[])?;
 if v80 != v82 { break 'case7; }
-let v83 = s.operator("to_z", &[a0])?;
-let v84 = s.operator("to_z", &[v81])?;
-let v85 = s.operator("eq", &[v83, v84])?;
+let v83 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v84 = s.builtin(EvalOp::ToInt, &[v81])?;
+let v85 = s.builtin(EvalOp::Eq, &[v83, v84])?;
 let v86 = match s.boolean_value(v85, false)? {
 Some(true) => {
 let v87 = s.literal(Lit::Bool(true))?;
 v87
 }, Some(false) => {
-let v88 = s.operator("to_z", &[a0])?;
-let v89 = s.operator("to_z", &[v81])?;
-let v90 = s.operator("gt", &[v88, v89])?;
+let v88 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v89 = s.builtin(EvalOp::ToInt, &[v81])?;
+let v90 = s.builtin(EvalOp::Gt, &[v88, v89])?;
 v90
 }, None => s.stuck(),
 };
-let v91 = s.operator("to_z", &[v78])?;
-let v92 = s.operator("to_z", &[a0])?;
-let v93 = s.operator("eq", &[v91, v92])?;
+let v91 = s.builtin(EvalOp::ToInt, &[v78])?;
+let v92 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v93 = s.builtin(EvalOp::Eq, &[v91, v92])?;
 let v94 = match s.boolean_value(v93, false)? {
 Some(true) => {
 let v95 = s.literal(Lit::Bool(true))?;
 v95
 }, Some(false) => {
-let v96 = s.operator("to_z", &[v78])?;
-let v97 = s.operator("to_z", &[a0])?;
-let v98 = s.operator("gt", &[v96, v97])?;
+let v96 = s.builtin(EvalOp::ToInt, &[v78])?;
+let v97 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v98 = s.builtin(EvalOp::Gt, &[v96, v97])?;
 v98
 }, None => s.stuck(),
 };
-let v99 = s.operator("and", &[v86, v94])?;
+let v99 = s.builtin(EvalOp::And, &[v86, v94])?;
 let v100 = match s.boolean_value(v99, false)? {
 Some(true) => {
 let v101 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -6604,7 +6604,7 @@ let Some((f, a)) = v5 else { break 'case1; }
 let v6 = f;
 let v7 = a;
 let v8 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v9 = s.operator("add", &[a2, v8])?;
+let v9 = s.builtin(EvalOp::Add, &[a2, v8])?;
 let v10 = eo__24dt_5fcollapse_5fupdater_5frhs(s, v6, a1, v9)?;
 let v11 = s.apply(v10, v7)?;
 return Ok(v11);
@@ -6645,7 +6645,7 @@ Some(true) => {
 let v8 = s.literal(Lit::Bool(true))?;
 v8
 }, Some(false) => {
-let v9 = s.operator("eq", &[v2, v5])?;
+let v9 = s.builtin(EvalOp::Eq, &[v2, v5])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = s.literal(Lit::Bool(false))?;
@@ -6687,21 +6687,21 @@ continue 'recur;
 }
 'case3: {
 let v24 = s.construct(Constructor::eo_tuple, &[])?;
-let v25 = s.operator("is_eq", &[a0, v24])?;
+let v25 = s.builtin(EvalOp::IsEq, &[a0, v24])?;
 let v26 = match s.boolean_value(v25, false)? {
 Some(true) => {
 let v27 = s.literal(Lit::Bool(true))?;
 v27
 }, Some(false) => {
 let v28 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
-let v29 = s.operator("is_eq", &[a0, v28])?;
+let v29 = s.builtin(EvalOp::IsEq, &[a0, v28])?;
 let v30 = match s.boolean_value(v29, false)? {
 Some(true) => {
 let v31 = s.literal(Lit::Bool(true))?;
 v31
 }, Some(false) => {
 let v32 = eo__24eo_5fdt_5fselectors(s, a0)?;
-let v33 = s.operator("is_ok", &[v32])?;
+let v33 = s.builtin(EvalOp::IsOk, &[v32])?;
 v33
 }, None => s.stuck(),
 };
@@ -6709,32 +6709,32 @@ v30
 }, None => s.stuck(),
 };
 let v34 = s.construct(Constructor::eo_tuple, &[])?;
-let v35 = s.operator("is_eq", &[a1, v34])?;
+let v35 = s.builtin(EvalOp::IsEq, &[a1, v34])?;
 let v36 = match s.boolean_value(v35, false)? {
 Some(true) => {
 let v37 = s.literal(Lit::Bool(true))?;
 v37
 }, Some(false) => {
 let v38 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
-let v39 = s.operator("is_eq", &[a1, v38])?;
+let v39 = s.builtin(EvalOp::IsEq, &[a1, v38])?;
 let v40 = match s.boolean_value(v39, false)? {
 Some(true) => {
 let v41 = s.literal(Lit::Bool(true))?;
 v41
 }, Some(false) => {
 let v42 = eo__24eo_5fdt_5fselectors(s, a1)?;
-let v43 = s.operator("is_ok", &[v42])?;
+let v43 = s.builtin(EvalOp::IsOk, &[v42])?;
 v43
 }, None => s.stuck(),
 };
 v40
 }, None => s.stuck(),
 };
-let v44 = s.operator("and", &[v26, v36])?;
+let v44 = s.builtin(EvalOp::And, &[v26, v36])?;
 let v45 = s.literal(Lit::Bool(true))?;
 let v46 = if v44 == v45 && !s.is_stuck(v44)? {
-let v47 = s.operator("eq", &[a0, a1])?;
-let v48 = s.operator("not", &[v47])?;
+let v47 = s.builtin(EvalOp::Eq, &[a0, a1])?;
+let v48 = s.builtin(EvalOp::Not, &[v47])?;
 v48
 } else { s.stuck() };
 return Ok(v46);
@@ -6785,21 +6785,21 @@ continue 'recur;
 }
 'case2: {
 let v10 = s.construct(Constructor::eo_tuple, &[])?;
-let v11 = s.operator("is_eq", &[a0, v10])?;
+let v11 = s.builtin(EvalOp::IsEq, &[a0, v10])?;
 let v12 = match s.boolean_value(v11, false)? {
 Some(true) => {
 let v13 = s.literal(Lit::Bool(true))?;
 v13
 }, Some(false) => {
 let v14 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
-let v15 = s.operator("is_eq", &[a0, v14])?;
+let v15 = s.builtin(EvalOp::IsEq, &[a0, v14])?;
 let v16 = match s.boolean_value(v15, false)? {
 Some(true) => {
 let v17 = s.literal(Lit::Bool(true))?;
 v17
 }, Some(false) => {
 let v18 = eo__24eo_5fdt_5fselectors(s, a0)?;
-let v19 = s.operator("is_ok", &[v18])?;
+let v19 = s.builtin(EvalOp::IsOk, &[v18])?;
 v19
 }, None => s.stuck(),
 };
@@ -6808,28 +6808,28 @@ v16
 };
 let v20 = s.literal(Lit::Bool(true))?;
 let v21 = if v12 == v20 && !s.is_stuck(v12)? {
-let v22 = s.operator("eq", &[a0, a1])?;
+let v22 = s.builtin(EvalOp::Eq, &[a0, a1])?;
 let v23 = match s.boolean_value(v22, false)? {
 Some(true) => {
 let v24 = s.literal(Lit::Bool(true))?;
 v24
 }, Some(false) => {
 let v25 = s.construct(Constructor::eo_tuple, &[])?;
-let v26 = s.operator("is_eq", &[a1, v25])?;
+let v26 = s.builtin(EvalOp::IsEq, &[a1, v25])?;
 let v27 = match s.boolean_value(v26, false)? {
 Some(true) => {
 let v28 = s.literal(Lit::Bool(true))?;
 v28
 }, Some(false) => {
 let v29 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
-let v30 = s.operator("is_eq", &[a1, v29])?;
+let v30 = s.builtin(EvalOp::IsEq, &[a1, v29])?;
 let v31 = match s.boolean_value(v30, false)? {
 Some(true) => {
 let v32 = s.literal(Lit::Bool(true))?;
 v32
 }, Some(false) => {
 let v33 = eo__24eo_5fdt_5fselectors(s, a1)?;
-let v34 = s.operator("is_ok", &[v33])?;
+let v34 = s.builtin(EvalOp::IsOk, &[v33])?;
 v34
 }, None => s.stuck(),
 };
@@ -24494,7 +24494,7 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5fedtc_2eunit, &[])?;
 if v1[0] != v2 { break 'case0; }
-let v3 = s.native_pattern("nat.zero", a4)?;
+let v3 = s.native_pattern_nat_zero(a4)?;
 let Some(fields) = v3 else { break 'case0; }
 ;
 let v4 = fields;
@@ -24510,7 +24510,7 @@ let v8 = s.destruct(Constructor::eo__24emb_5fedtc_2econs, v7[0])?;
 let Some(fields) = v8 else { break 'case1; }
 ;
 let v9 = fields;
-let v10 = s.native_pattern("nat.zero", a4)?;
+let v10 = s.native_pattern_nat_zero(a4)?;
 let Some(fields) = v10 else { break 'case1; }
 ;
 let v11 = fields;
@@ -24518,8 +24518,8 @@ let v12 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v13 = s.construct(Constructor::eo__24emb_5fDtSel, &[a0, a1, a2, a5])?;
 let v14 = s.apply(v12, v13)?;
 let v15 = s.construct(Constructor::eo__24emb_5fedt_2esum, &[v9[1], v7[1]])?;
-let v16 = s.native("nat.zero", &[])?;
-let v17 = s.native("nat.succ", &[a5])?;
+let v16 = s.native_nat_zero()?;
+let v17 = s.native_op(NativeOp::NatSucc, &[a5])?;
 let v18 = eo__24eo_5fdatatype_5fcons_5fselectors_5frec(s, a0, a1, a2, v15, v16, v17)?;
 let v19 = s.apply(v14, v18)?;
 return Ok(v19);
@@ -24529,7 +24529,7 @@ let v20 = s.destruct(Constructor::eo__24emb_5fedt_2esum, a3)?;
 let Some(fields) = v20 else { break 'case2; }
 ;
 let v21 = fields;
-let v22 = s.native_pattern("nat.succ", a4)?;
+let v22 = s.native_pattern_succ(a4)?;
 let Some(fields) = v22 else { break 'case2; }
 ;
 let v23 = fields;
@@ -24572,7 +24572,7 @@ let v1 = fields;
 let v2 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3 = s.construct(Constructor::eo__24emb_5fDtCons, &[a0, a1, a3])?;
 let v4 = s.apply(v2, v3)?;
-let v5 = s.native("nat.succ", &[a3])?;
+let v5 = s.native_op(NativeOp::NatSucc, &[a3])?;
 let v6 = eo__24eo_5fdatatype_5fconstructors_5frec(s, a0, a1, v1[1], v5)?;
 let v7 = s.apply(v4, v6)?;
 return Ok(v7);
@@ -24602,7 +24602,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5fedd_2econs, a1)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("streq", &[a0, v1[0]])?;
+let v2 = s.native_op(NativeOp::Streq, &[a0, v1[0]])?;
 let v3 = match s.boolean_value(v2, true)? {
 Some(true) => {
 v1[1]
@@ -24694,7 +24694,7 @@ let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = eo__24eo_5fdd_5flookup(s, v1[0], v1[1])?;
-let v3 = s.native("nat.zero", &[])?;
+let v3 = s.native_nat_zero()?;
 let v4 = eo__24eo_5fdatatype_5fconstructors_5frec(s, v1[0], v1[1], v2, v3)?;
 return Ok(v4);
 }
@@ -24760,7 +24760,7 @@ let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = eo__24eo_5fdd_5fresolve(s, v1[0], v1[1])?;
-let v3 = s.native("nat.zero", &[])?;
+let v3 = s.native_nat_zero()?;
 let v4 = eo__24eo_5fdatatype_5fcons_5fselectors_5frec(s, v1[0], v1[1], v1[2], v2, v1[2], v3)?;
 return Ok(v4);
 }
@@ -24847,7 +24847,7 @@ let Some(fields) = v1 else { break 'case1; }
 let v2 = fields;
 let v3 = eo__24eo_5fis_5fbool_5ftype(s, v2[0])?;
 let v4 = eo__24eo_5fis_5fclosed(s, v2[0])?;
-let v5 = s.operator("and", &[v3, v4])?;
+let v5 = s.builtin(EvalOp::And, &[v3, v4])?;
 pending.push((v5, v2[0]));
 args = v2[1];
 s.tick()?;
@@ -24880,7 +24880,7 @@ let Some(fields) = v2 else { break 'case1; }
 let v3 = fields;
 let v4 = eo__24eo_5fis_5fbool_5ftype(s, v3[0])?;
 let v5 = eo__24eo_5fis_5fclosed(s, v3[0])?;
-let v6 = s.operator("and", &[v4, v5])?;
+let v6 = s.builtin(EvalOp::And, &[v4, v5])?;
 let v7 = eo__24eo_5fpush_5fassume_5fcheck(s, v6, v3[0], a0)?;
 return Ok(v7);
 }
@@ -24927,7 +24927,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5fso_2eproven, v1[0])?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.operator("eq", &[v3[0], a1])?;
+let v4 = s.builtin(EvalOp::Eq, &[v3[0], a1])?;
 let v5 = eo__24eo_5fpush_5fproven_5fcheck(s, v4, v3[0], v1[1])?;
 return Ok(v5);
 }
@@ -25023,7 +25023,7 @@ if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
 let v0 = eo__24eo_5ftypeof(s, a0)?;
 let v1 = s.construct(Constructor::eo__24emb_5fBool, &[])?;
-let v2 = s.operator("eq", &[v0, v1])?;
+let v2 = s.builtin(EvalOp::Eq, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -25125,7 +25125,7 @@ let v11 = a;
 let v12 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if v10 != v12 { break 'case1; }
 let v13 = s.construct(Constructor::eo__24emb_5fVar, &[v5[0], v5[1]])?;
-let v14 = s.operator("eq", &[v13, v11])?;
+let v14 = s.builtin(EvalOp::Eq, &[v13, v11])?;
 let v15 = match s.boolean_value(v14, false)? {
 Some(true) => {
 let v16 = s.literal(Lit::Bool(true))?;
@@ -25156,7 +25156,7 @@ let v25 = s.construct(Constructor::eo_forall, &[])?;
 if v23 != v25 { break 'case2; }
 let v26 = v21;
 let v27 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v28 = s.operator("list_concat", &[v27, v24, a1])?;
+let v28 = s.builtin(EvalOp::ListConcat, &[v27, v24, a1])?;
 let v29 = v28;
 return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Tail([v26, v29]));
 }
@@ -25178,7 +25178,7 @@ let v36 = s.construct(Constructor::eo_exists, &[])?;
 if v34 != v36 { break 'case3; }
 let v37 = v32;
 let v38 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v39 = s.operator("list_concat", &[v38, v35, a1])?;
+let v39 = s.builtin(EvalOp::ListConcat, &[v38, v35, a1])?;
 let v40 = v39;
 return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Tail([v37, v40]));
 }
@@ -25193,7 +25193,7 @@ let v42 = f;
 let v43 = a;
 let v44 = eo__24eo_5fis_5fclosed_5frec(s, v42, a1)?;
 let v45 = eo__24eo_5fis_5fclosed_5frec(s, v43, a1)?;
-let v46 = s.operator("and", &[v44, v45])?;
+let v46 = s.builtin(EvalOp::And, &[v44, v45])?;
 return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v46));
 }
 Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
@@ -25218,7 +25218,7 @@ let Some(fields) = v51 else { break 'case6; }
 let v52 = fields;
 let v53 = eo__24eo_5fis_5fclosed_5frec(s, v52[1], a1)?;
 let v54 = eo__24eo_5fis_5fclosed_5frec(s, v52[2], a1)?;
-let v55 = s.operator("and", &[v53, v54])?;
+let v55 = s.builtin(EvalOp::And, &[v53, v54])?;
 return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v55));
 }
 Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
@@ -25231,9 +25231,9 @@ let Some(fields) = v56 else { break 'case7; }
 let v57 = fields;
 let v58 = eo__24eo_5fis_5fclosed_5frec(s, v57[1], a1)?;
 let v59 = eo__24eo_5fis_5fclosed_5frec(s, v57[2], a1)?;
-let v60 = s.operator("and", &[v58, v59])?;
+let v60 = s.builtin(EvalOp::And, &[v58, v59])?;
 let v61 = eo__24eo_5fis_5fclosed_5frec(s, v57[3], a1)?;
-let v62 = s.operator("and", &[v60, v61])?;
+let v62 = s.builtin(EvalOp::And, &[v60, v61])?;
 return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v62));
 }
 Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
@@ -25506,9 +25506,9 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("to_q", &[a0])?;
+let v0 = s.builtin(EvalOp::ToRat, &[a0])?;
 let v1 = s.literal(Lit::Rational(parse_rat("1/1")?))?;
-let v2 = s.operator("is_eq", &[v0, v1])?;
+let v2 = s.builtin(EvalOp::IsEq, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -25522,9 +25522,9 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("to_q", &[a0])?;
+let v0 = s.builtin(EvalOp::ToRat, &[a0])?;
 let v1 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v2 = s.operator("is_eq", &[v0, v1])?;
+let v2 = s.builtin(EvalOp::IsEq, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -25559,9 +25559,9 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("to_z", &[a0])?;
+let v0 = s.builtin(EvalOp::ToInt, &[a0])?;
 let v1 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v2 = s.operator("is_eq", &[v0, v1])?;
+let v2 = s.builtin(EvalOp::IsEq, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -25575,10 +25575,10 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("not", &[a0])?;
-let v1 = s.operator("to_z", &[v0])?;
+let v0 = s.builtin(EvalOp::Not, &[a0])?;
+let v1 = s.builtin(EvalOp::ToInt, &[v0])?;
 let v2 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v3 = s.operator("is_eq", &[v1, v2])?;
+let v3 = s.builtin(EvalOp::IsEq, &[v1, v2])?;
 return Ok(v3);
 }
 Ok(s.stuck())
@@ -25592,9 +25592,9 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("to_z", &[a0])?;
+let v0 = s.builtin(EvalOp::ToInt, &[a0])?;
 let v1 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v2 = s.operator("is_eq", &[v0, v1])?;
+let v2 = s.builtin(EvalOp::IsEq, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -25608,9 +25608,9 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("to_z", &[a0])?;
+let v0 = s.builtin(EvalOp::ToInt, &[a0])?;
 let v1 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v2 = s.operator("is_eq", &[v0, v1])?;
+let v2 = s.builtin(EvalOp::IsEq, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -25624,9 +25624,9 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("to_z", &[a0])?;
+let v0 = s.builtin(EvalOp::ToInt, &[a0])?;
 let v1 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v2 = s.operator("is_eq", &[v0, v1])?;
+let v2 = s.builtin(EvalOp::IsEq, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -25649,7 +25649,7 @@ return Ok(v2);
 }
 'case1: {
 let v3 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
-let v4 = s.operator("eq", &[a0, v3])?;
+let v4 = s.builtin(EvalOp::Eq, &[a0, v3])?;
 return Ok(v4);
 }
 Ok(s.stuck())
@@ -25664,7 +25664,7 @@ let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
 let v0 = s.construct(Constructor::eo_BitVec, &[])?;
-let v1 = s.operator("len", &[a0])?;
+let v1 = s.builtin(EvalOp::Length, &[a0])?;
 let v2 = s.apply(v0, v1)?;
 return Ok(v2);
 }
@@ -25735,7 +25735,7 @@ let Some(fields) = v3 else { break 'case1; }
 let v4 = fields;
 let v5 = eo__24eo_5fstate_5fproven_5fnth(s, a2, v4[0])?;
 let v6 = eo__24eo_5fmk_5fpremise_5flist(s, a0, v4[1], a2)?;
-let v7 = s.operator("cons", &[a0, v5, v6])?;
+let v7 = s.builtin(EvalOp::Cons, &[a0, v5, v6])?;
 return Ok(v7);
 }
 Ok(s.stuck())
@@ -26022,7 +26022,7 @@ let v2 = a;
 let v3 = s.construct(Constructor::eo_BitVec, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v5 = s.operator("to_bin", &[v2, v4])?;
+let v5 = s.builtin(EvalOp::ToBin, &[v2, v4])?;
 return Ok(v5);
 }
 Ok(s.stuck())
@@ -26044,8 +26044,8 @@ let v2 = a;
 let v3 = s.construct(Constructor::eo_BitVec, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v5 = s.operator("to_bin", &[v2, v4])?;
-let v6 = s.operator("not", &[v5])?;
+let v5 = s.builtin(EvalOp::ToBin, &[v2, v4])?;
+let v6 = s.builtin(EvalOp::Not, &[v5])?;
 return Ok(v6);
 }
 Ok(s.stuck())
@@ -26067,7 +26067,7 @@ let v2 = a;
 let v3 = s.construct(Constructor::eo_BitVec, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v5 = s.operator("to_bin", &[v2, v4])?;
+let v5 = s.builtin(EvalOp::ToBin, &[v2, v4])?;
 return Ok(v5);
 }
 Ok(s.stuck())
@@ -26089,7 +26089,7 @@ let v2 = a;
 let v3 = s.construct(Constructor::eo_BitVec, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v5 = s.operator("to_bin", &[v2, v4])?;
+let v5 = s.builtin(EvalOp::ToBin, &[v2, v4])?;
 return Ok(v5);
 }
 Ok(s.stuck())
@@ -26111,7 +26111,7 @@ let v2 = a;
 let v3 = s.construct(Constructor::eo_BitVec, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v5 = s.operator("to_bin", &[v2, v4])?;
+let v5 = s.builtin(EvalOp::ToBin, &[v2, v4])?;
 return Ok(v5);
 }
 Ok(s.stuck())
@@ -26242,17 +26242,17 @@ if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck());
 'case0: {
 let v0 = eo__24is_5fvar_5flist(s, a1)?;
 let v1 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v2 = s.operator("list_setof", &[v1, a1])?;
-let v3 = s.operator("eq", &[v2, a1])?;
-let v4 = s.operator("and", &[v0, v3])?;
+let v2 = s.builtin(EvalOp::ListSetof, &[v1, a1])?;
+let v3 = s.builtin(EvalOp::Eq, &[v2, a1])?;
+let v4 = s.builtin(EvalOp::And, &[v0, v3])?;
 let v5 = eo__24is_5fvar_5flist(s, a2)?;
 let v6 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v7 = s.operator("list_setof", &[v6, a2])?;
-let v8 = s.operator("eq", &[v7, a2])?;
-let v9 = s.operator("and", &[v5, v8])?;
-let v10 = s.operator("and", &[v4, v9])?;
+let v7 = s.builtin(EvalOp::ListSetof, &[v6, a2])?;
+let v8 = s.builtin(EvalOp::Eq, &[v7, a2])?;
+let v9 = s.builtin(EvalOp::And, &[v5, v8])?;
+let v10 = s.builtin(EvalOp::And, &[v4, v9])?;
 let v11 = eo__24is_5frenaming_5frec(s, a1, a2)?;
-let v12 = s.operator("and", &[v10, v11])?;
+let v12 = s.builtin(EvalOp::And, &[v10, v11])?;
 let v13 = s.literal(Lit::Bool(true))?;
 let v14 = if v12 == v13 && !s.is_stuck(v12)? {
 let v15 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
@@ -26293,7 +26293,7 @@ let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = s.construct(Constructor::eo_and, &[])?;
-let v3 = s.operator("list_nth", &[v2, v1[0], a0])?;
+let v3 = s.builtin(EvalOp::ListNth, &[v2, v1[0], a0])?;
 return Ok(v3);
 }
 Ok(s.stuck())
@@ -27691,7 +27691,7 @@ let v23 = s.apply(v22, a2)?;
 let v24 = s.apply(v23, a0)?;
 let v25 = s.apply(v21, v24)?;
 let v26 = s.apply(v25, a3)?;
-let v27 = s.operator("list_concat", &[v20, a1, v26])?;
+let v27 = s.builtin(EvalOp::ListConcat, &[v20, a1, v26])?;
 let v28 = s.apply(v19, v27)?;
 let v29 = s.apply(v28, a0)?;
 let v30 = s.apply(v18, v29)?;
@@ -27701,8 +27701,8 @@ let v33 = s.construct(Constructor::eo__2b, &[])?;
 let v34 = s.construct(Constructor::eo__2b, &[])?;
 let v35 = s.apply(v34, a2)?;
 let v36 = s.apply(v35, a3)?;
-let v37 = s.operator("list_concat", &[v33, a1, v36])?;
-let v38 = s.operator("list_singleton_elim", &[v32, v37])?;
+let v37 = s.builtin(EvalOp::ListConcat, &[v33, a1, v36])?;
+let v38 = s.builtin(EvalOp::ListSingletonElim, &[v32, v37])?;
 let v39 = s.apply(v31, v38)?;
 let v40 = s.apply(v39, a0)?;
 let v41 = s.apply(v30, v40)?;
@@ -27819,7 +27819,7 @@ let v23 = s.apply(v22, a2)?;
 let v24 = s.apply(v23, a0)?;
 let v25 = s.apply(v21, v24)?;
 let v26 = s.apply(v25, a3)?;
-let v27 = s.operator("list_concat", &[v20, a1, v26])?;
+let v27 = s.builtin(EvalOp::ListConcat, &[v20, a1, v26])?;
 let v28 = s.apply(v19, v27)?;
 let v29 = s.apply(v28, a0)?;
 let v30 = s.apply(v18, v29)?;
@@ -27829,8 +27829,8 @@ let v33 = s.construct(Constructor::eo__2a, &[])?;
 let v34 = s.construct(Constructor::eo__2a, &[])?;
 let v35 = s.apply(v34, a2)?;
 let v36 = s.apply(v35, a3)?;
-let v37 = s.operator("list_concat", &[v33, a1, v36])?;
-let v38 = s.operator("list_singleton_elim", &[v32, v37])?;
+let v37 = s.builtin(EvalOp::ListConcat, &[v33, a1, v36])?;
+let v38 = s.builtin(EvalOp::ListSingletonElim, &[v32, v37])?;
 let v39 = s.apply(v31, v38)?;
 let v40 = s.apply(v39, a0)?;
 let v41 = s.apply(v30, v40)?;
@@ -28372,7 +28372,7 @@ let v54 = a;
 let v55 = s.construct(Constructor::eo__2a, &[])?;
 if v53 != v55 { break 'case0; }
 if v51 != v37 { break 'case0; }
-let v56 = s.operator("to_q", &[v37])?;
+let v56 = s.builtin(EvalOp::ToRat, &[v37])?;
 let v57 = s.literal(Lit::Rational(parse_rat("1/1")?))?;
 let v58 = if v56 == v57 && !s.is_stuck(v56)? {
 let v59 = s.apply(v11, v33)?;
@@ -28983,9 +28983,9 @@ let v6 = s.construct(Constructor::eo_not, &[])?;
 let v7 = s.apply(v6, a1)?;
 let v8 = s.apply(v5, v7)?;
 let v9 = s.apply(v8, a3)?;
-let v10 = s.operator("list_concat", &[v4, a2, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v4, a2, v9])?;
 let v11 = s.apply(v3, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.literal(Lit::Bool(false))?;
 let v15 = s.apply(v13, v14)?;
@@ -29012,9 +29012,9 @@ let v6 = s.construct(Constructor::eo_and, &[])?;
 let v7 = s.construct(Constructor::eo_and, &[])?;
 let v8 = s.apply(v7, a1)?;
 let v9 = s.apply(v8, a3)?;
-let v10 = s.operator("list_concat", &[v6, a2, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v6, a2, v9])?;
 let v11 = s.apply(v5, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.literal(Lit::Bool(false))?;
 let v15 = s.apply(v13, v14)?;
@@ -29051,7 +29051,7 @@ let v16 = s.construct(Constructor::eo_and, &[])?;
 let v17 = s.construct(Constructor::eo_and, &[])?;
 let v18 = s.apply(v17, a1)?;
 let v19 = s.apply(v18, a2)?;
-let v20 = s.operator("list_singleton_elim", &[v16, v19])?;
+let v20 = s.builtin(EvalOp::ListSingletonElim, &[v16, v19])?;
 let v21 = s.apply(v15, v20)?;
 let v22 = s.apply(v14, v21)?;
 let v23 = s.literal(Lit::Bool(false))?;
@@ -29351,7 +29351,7 @@ let v18 = s.construct(Constructor::eo_or, &[])?;
 let v19 = s.construct(Constructor::eo_or, &[])?;
 let v20 = s.apply(v19, a1)?;
 let v21 = s.apply(v20, a2)?;
-let v22 = s.operator("list_singleton_elim", &[v18, v21])?;
+let v22 = s.builtin(EvalOp::ListSingletonElim, &[v18, v21])?;
 let v23 = s.apply(v17, v22)?;
 let v24 = s.apply(v23, a3)?;
 let v25 = s.apply(v16, v24)?;
@@ -29582,7 +29582,7 @@ let v24 = s.construct(Constructor::eo_and, &[])?;
 let v25 = s.construct(Constructor::eo_and, &[])?;
 let v26 = s.apply(v25, a1)?;
 let v27 = s.apply(v26, a2)?;
-let v28 = s.operator("list_singleton_elim", &[v24, v27])?;
+let v28 = s.builtin(EvalOp::ListSingletonElim, &[v24, v27])?;
 let v29 = s.apply(v23, v28)?;
 let v30 = s.construct(Constructor::eo_or, &[])?;
 let v31 = s.apply(v30, a3)?;
@@ -29626,7 +29626,7 @@ let v16 = s.construct(Constructor::eo_or, &[])?;
 let v17 = s.construct(Constructor::eo_or, &[])?;
 let v18 = s.apply(v17, a1)?;
 let v19 = s.apply(v18, a2)?;
-let v20 = s.operator("list_singleton_elim", &[v16, v19])?;
+let v20 = s.builtin(EvalOp::ListSingletonElim, &[v16, v19])?;
 let v21 = s.apply(v15, v20)?;
 let v22 = s.apply(v14, v21)?;
 let v23 = s.literal(Lit::Bool(true))?;
@@ -29656,9 +29656,9 @@ let v6 = s.construct(Constructor::eo_not, &[])?;
 let v7 = s.apply(v6, a1)?;
 let v8 = s.apply(v5, v7)?;
 let v9 = s.apply(v8, a3)?;
-let v10 = s.operator("list_concat", &[v4, a2, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v4, a2, v9])?;
 let v11 = s.apply(v3, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.literal(Lit::Bool(true))?;
 let v15 = s.apply(v13, v14)?;
@@ -29685,9 +29685,9 @@ let v6 = s.construct(Constructor::eo_or, &[])?;
 let v7 = s.construct(Constructor::eo_or, &[])?;
 let v8 = s.apply(v7, a1)?;
 let v9 = s.apply(v8, a3)?;
-let v10 = s.operator("list_concat", &[v6, a2, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v6, a2, v9])?;
 let v11 = s.apply(v5, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.literal(Lit::Bool(true))?;
 let v15 = s.apply(v13, v14)?;
@@ -29974,18 +29974,18 @@ let v76 = s.apply(v75, a2)?;
 let v77 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v78 = s.apply(v76, v77)?;
 let v79 = s.apply(v74, v78)?;
-let v80 = s.operator("list_concat", &[v72, a4, v79])?;
+let v80 = s.builtin(EvalOp::ListConcat, &[v72, a4, v79])?;
 let v81 = s.apply(v71, v80)?;
 let v82 = s.apply(v81, a1)?;
-let v83 = s.operator("list_concat", &[v70, a0, v82])?;
+let v83 = s.builtin(EvalOp::ListConcat, &[v70, a0, v82])?;
 let v84 = s.apply(v69, v83)?;
 let v85 = s.construct(Constructor::eo_concat, &[])?;
 let v86 = s.construct(Constructor::eo_bvand, &[])?;
 let v87 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v88 = s.construct(Constructor::eo_bvand, &[])?;
 let v89 = s.construct(Constructor::eo_bvand, &[])?;
-let v90 = s.operator("list_concat", &[v89, a0, a1])?;
-let v91 = s.operator("list_singleton_elim", &[v88, v90])?;
+let v90 = s.builtin(EvalOp::ListConcat, &[v89, a0, a1])?;
+let v91 = s.builtin(EvalOp::ListSingletonElim, &[v88, v90])?;
 let v92 = s.apply(v87, v91)?;
 let v93 = s.apply(v86, v92)?;
 let v94 = s.construct(Constructor::eo_bvand, &[])?;
@@ -29995,15 +29995,15 @@ let v97 = s.construct(Constructor::eo_concat, &[])?;
 let v98 = s.apply(v97, a3)?;
 let v99 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v100 = s.apply(v98, v99)?;
-let v101 = s.operator("list_concat", &[v96, a4, v100])?;
-let v102 = s.operator("list_singleton_elim", &[v95, v101])?;
+let v101 = s.builtin(EvalOp::ListConcat, &[v96, a4, v100])?;
+let v102 = s.builtin(EvalOp::ListSingletonElim, &[v95, v101])?;
 let v103 = s.apply(v94, v102)?;
 let v104 = s.construct(Constructor::eo_bvand, &[])?;
 let v105 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v106 = s.construct(Constructor::eo_bvand, &[])?;
 let v107 = s.construct(Constructor::eo_bvand, &[])?;
-let v108 = s.operator("list_concat", &[v107, a0, a1])?;
-let v109 = s.operator("list_singleton_elim", &[v106, v108])?;
+let v108 = s.builtin(EvalOp::ListConcat, &[v107, a0, a1])?;
+let v109 = s.builtin(EvalOp::ListSingletonElim, &[v106, v108])?;
 let v110 = s.apply(v105, v109)?;
 let v111 = eo__24eo_5ftypeof(s, v110)?;
 let v112 = eo__24eo_5fnil(s, v104, v111)?;
@@ -30016,8 +30016,8 @@ let v118 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v119 = s.construct(Constructor::eo_extract, &[a7, v118])?;
 let v120 = s.construct(Constructor::eo_bvand, &[])?;
 let v121 = s.construct(Constructor::eo_bvand, &[])?;
-let v122 = s.operator("list_concat", &[v121, a0, a1])?;
-let v123 = s.operator("list_singleton_elim", &[v120, v122])?;
+let v122 = s.builtin(EvalOp::ListConcat, &[v121, a0, a1])?;
+let v123 = s.builtin(EvalOp::ListSingletonElim, &[v120, v122])?;
 let v124 = s.apply(v119, v123)?;
 let v125 = s.apply(v117, v124)?;
 let v126 = s.construct(Constructor::eo_bvand, &[])?;
@@ -30027,8 +30027,8 @@ let v129 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v130 = s.construct(Constructor::eo_extract, &[a7, v129])?;
 let v131 = s.construct(Constructor::eo_bvand, &[])?;
 let v132 = s.construct(Constructor::eo_bvand, &[])?;
-let v133 = s.operator("list_concat", &[v132, a0, a1])?;
-let v134 = s.operator("list_singleton_elim", &[v131, v133])?;
+let v133 = s.builtin(EvalOp::ListConcat, &[v132, a0, a1])?;
+let v134 = s.builtin(EvalOp::ListSingletonElim, &[v131, v133])?;
 let v135 = s.apply(v130, v134)?;
 let v136 = eo__24eo_5ftypeof(s, v135)?;
 let v137 = eo__24eo_5fnil(s, v128, v136)?;
@@ -30284,15 +30284,15 @@ let v126 = s.apply(v125, a4)?;
 let v127 = s.apply(v123, v126)?;
 let v128 = s.apply(v121, v127)?;
 let v129 = s.apply(v128, a1)?;
-let v130 = s.operator("list_concat", &[v120, a0, v129])?;
+let v130 = s.builtin(EvalOp::ListConcat, &[v120, a0, v129])?;
 let v131 = s.apply(v119, v130)?;
 let v132 = s.construct(Constructor::eo_concat, &[])?;
 let v133 = s.construct(Constructor::eo_bvand, &[])?;
 let v134 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v135 = s.construct(Constructor::eo_bvand, &[])?;
 let v136 = s.construct(Constructor::eo_bvand, &[])?;
-let v137 = s.operator("list_concat", &[v136, a0, a1])?;
-let v138 = s.operator("list_singleton_elim", &[v135, v137])?;
+let v137 = s.builtin(EvalOp::ListConcat, &[v136, a0, a1])?;
+let v138 = s.builtin(EvalOp::ListSingletonElim, &[v135, v137])?;
 let v139 = s.apply(v134, v138)?;
 let v140 = s.apply(v133, v139)?;
 let v141 = s.construct(Constructor::eo_bvand, &[])?;
@@ -30301,8 +30301,8 @@ let v143 = s.construct(Constructor::eo_bvand, &[])?;
 let v144 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v145 = s.construct(Constructor::eo_bvand, &[])?;
 let v146 = s.construct(Constructor::eo_bvand, &[])?;
-let v147 = s.operator("list_concat", &[v146, a0, a1])?;
-let v148 = s.operator("list_singleton_elim", &[v145, v147])?;
+let v147 = s.builtin(EvalOp::ListConcat, &[v146, a0, a1])?;
+let v148 = s.builtin(EvalOp::ListSingletonElim, &[v145, v147])?;
 let v149 = s.apply(v144, v148)?;
 let v150 = eo__24eo_5ftypeof(s, v149)?;
 let v151 = eo__24eo_5fnil(s, v143, v150)?;
@@ -30315,8 +30315,8 @@ let v157 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v158 = s.construct(Constructor::eo_extract, &[a7, v157])?;
 let v159 = s.construct(Constructor::eo_bvand, &[])?;
 let v160 = s.construct(Constructor::eo_bvand, &[])?;
-let v161 = s.operator("list_concat", &[v160, a0, a1])?;
-let v162 = s.operator("list_singleton_elim", &[v159, v161])?;
+let v161 = s.builtin(EvalOp::ListConcat, &[v160, a0, a1])?;
+let v162 = s.builtin(EvalOp::ListSingletonElim, &[v159, v161])?;
 let v163 = s.apply(v158, v162)?;
 let v164 = s.apply(v156, v163)?;
 let v165 = s.construct(Constructor::eo_bvand, &[])?;
@@ -30324,15 +30324,15 @@ let v166 = s.construct(Constructor::eo_concat, &[])?;
 let v167 = s.construct(Constructor::eo_concat, &[])?;
 let v168 = s.apply(v167, a2)?;
 let v169 = s.apply(v168, a4)?;
-let v170 = s.operator("list_singleton_elim", &[v166, v169])?;
+let v170 = s.builtin(EvalOp::ListSingletonElim, &[v166, v169])?;
 let v171 = s.apply(v165, v170)?;
 let v172 = s.construct(Constructor::eo_bvand, &[])?;
 let v173 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v174 = s.construct(Constructor::eo_extract, &[a7, v173])?;
 let v175 = s.construct(Constructor::eo_bvand, &[])?;
 let v176 = s.construct(Constructor::eo_bvand, &[])?;
-let v177 = s.operator("list_concat", &[v176, a0, a1])?;
-let v178 = s.operator("list_singleton_elim", &[v175, v177])?;
+let v177 = s.builtin(EvalOp::ListConcat, &[v176, a0, a1])?;
+let v178 = s.builtin(EvalOp::ListSingletonElim, &[v175, v177])?;
 let v179 = s.apply(v174, v178)?;
 let v180 = eo__24eo_5ftypeof(s, v179)?;
 let v181 = eo__24eo_5fnil(s, v172, v180)?;
@@ -30660,15 +30660,15 @@ let v168 = s.apply(v163, v167)?;
 let v169 = s.apply(v161, v168)?;
 let v170 = s.apply(v159, v169)?;
 let v171 = s.apply(v170, a1)?;
-let v172 = s.operator("list_concat", &[v158, a0, v171])?;
+let v172 = s.builtin(EvalOp::ListConcat, &[v158, a0, v171])?;
 let v173 = s.apply(v157, v172)?;
 let v174 = s.construct(Constructor::eo_concat, &[])?;
 let v175 = s.construct(Constructor::eo_bvand, &[])?;
 let v176 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v177 = s.construct(Constructor::eo_bvand, &[])?;
 let v178 = s.construct(Constructor::eo_bvand, &[])?;
-let v179 = s.operator("list_concat", &[v178, a0, a1])?;
-let v180 = s.operator("list_singleton_elim", &[v177, v179])?;
+let v179 = s.builtin(EvalOp::ListConcat, &[v178, a0, a1])?;
+let v180 = s.builtin(EvalOp::ListSingletonElim, &[v177, v179])?;
 let v181 = s.apply(v176, v180)?;
 let v182 = s.apply(v175, v181)?;
 let v183 = s.construct(Constructor::eo_bvand, &[])?;
@@ -30677,8 +30677,8 @@ let v185 = s.construct(Constructor::eo_bvand, &[])?;
 let v186 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v187 = s.construct(Constructor::eo_bvand, &[])?;
 let v188 = s.construct(Constructor::eo_bvand, &[])?;
-let v189 = s.operator("list_concat", &[v188, a0, a1])?;
-let v190 = s.operator("list_singleton_elim", &[v187, v189])?;
+let v189 = s.builtin(EvalOp::ListConcat, &[v188, a0, a1])?;
+let v190 = s.builtin(EvalOp::ListSingletonElim, &[v187, v189])?;
 let v191 = s.apply(v186, v190)?;
 let v192 = eo__24eo_5ftypeof(s, v191)?;
 let v193 = eo__24eo_5fnil(s, v185, v192)?;
@@ -30690,8 +30690,8 @@ let v198 = s.construct(Constructor::eo_bvand, &[])?;
 let v199 = s.construct(Constructor::eo_extract, &[a7, a8])?;
 let v200 = s.construct(Constructor::eo_bvand, &[])?;
 let v201 = s.construct(Constructor::eo_bvand, &[])?;
-let v202 = s.operator("list_concat", &[v201, a0, a1])?;
-let v203 = s.operator("list_singleton_elim", &[v200, v202])?;
+let v202 = s.builtin(EvalOp::ListConcat, &[v201, a0, a1])?;
+let v203 = s.builtin(EvalOp::ListSingletonElim, &[v200, v202])?;
 let v204 = s.apply(v199, v203)?;
 let v205 = s.apply(v198, v204)?;
 let v206 = s.construct(Constructor::eo_bvand, &[])?;
@@ -30700,8 +30700,8 @@ let v208 = s.construct(Constructor::eo_bvand, &[])?;
 let v209 = s.construct(Constructor::eo_extract, &[a7, a8])?;
 let v210 = s.construct(Constructor::eo_bvand, &[])?;
 let v211 = s.construct(Constructor::eo_bvand, &[])?;
-let v212 = s.operator("list_concat", &[v211, a0, a1])?;
-let v213 = s.operator("list_singleton_elim", &[v210, v212])?;
+let v212 = s.builtin(EvalOp::ListConcat, &[v211, a0, a1])?;
+let v213 = s.builtin(EvalOp::ListSingletonElim, &[v210, v212])?;
 let v214 = s.apply(v209, v213)?;
 let v215 = eo__24eo_5ftypeof(s, v214)?;
 let v216 = eo__24eo_5fnil(s, v208, v215)?;
@@ -30714,8 +30714,8 @@ let v222 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v223 = s.construct(Constructor::eo_extract, &[a9, v222])?;
 let v224 = s.construct(Constructor::eo_bvand, &[])?;
 let v225 = s.construct(Constructor::eo_bvand, &[])?;
-let v226 = s.operator("list_concat", &[v225, a0, a1])?;
-let v227 = s.operator("list_singleton_elim", &[v224, v226])?;
+let v226 = s.builtin(EvalOp::ListConcat, &[v225, a0, a1])?;
+let v227 = s.builtin(EvalOp::ListSingletonElim, &[v224, v226])?;
 let v228 = s.apply(v223, v227)?;
 let v229 = s.apply(v221, v228)?;
 let v230 = s.construct(Constructor::eo_bvand, &[])?;
@@ -30725,8 +30725,8 @@ let v233 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v234 = s.construct(Constructor::eo_extract, &[a9, v233])?;
 let v235 = s.construct(Constructor::eo_bvand, &[])?;
 let v236 = s.construct(Constructor::eo_bvand, &[])?;
-let v237 = s.operator("list_concat", &[v236, a0, a1])?;
-let v238 = s.operator("list_singleton_elim", &[v235, v237])?;
+let v237 = s.builtin(EvalOp::ListConcat, &[v236, a0, a1])?;
+let v238 = s.builtin(EvalOp::ListSingletonElim, &[v235, v237])?;
 let v239 = s.apply(v234, v238)?;
 let v240 = eo__24eo_5ftypeof(s, v239)?;
 let v241 = eo__24eo_5fnil(s, v232, v240)?;
@@ -30786,9 +30786,9 @@ let v19 = s.construct(Constructor::eo_bvand, &[])?;
 let v20 = s.construct(Constructor::eo_bvand, &[])?;
 let v21 = s.apply(v20, a3)?;
 let v22 = s.apply(v21, a2)?;
-let v23 = s.operator("list_concat", &[v19, a1, v22])?;
+let v23 = s.builtin(EvalOp::ListConcat, &[v19, a1, v22])?;
 let v24 = s.apply(v18, v23)?;
-let v25 = s.operator("list_concat", &[v14, a0, v24])?;
+let v25 = s.builtin(EvalOp::ListConcat, &[v14, a0, v24])?;
 let v26 = s.apply(v13, v25)?;
 let v27 = s.construct(Constructor::eo_int_5fto_5fbv, &[a4])?;
 let v28 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -30842,9 +30842,9 @@ let v19 = s.construct(Constructor::eo_bvnot, &[])?;
 let v20 = s.apply(v19, a3)?;
 let v21 = s.apply(v18, v20)?;
 let v22 = s.apply(v21, a2)?;
-let v23 = s.operator("list_concat", &[v17, a1, v22])?;
+let v23 = s.builtin(EvalOp::ListConcat, &[v17, a1, v22])?;
 let v24 = s.apply(v16, v23)?;
-let v25 = s.operator("list_concat", &[v14, a0, v24])?;
+let v25 = s.builtin(EvalOp::ListConcat, &[v14, a0, v24])?;
 let v26 = s.apply(v13, v25)?;
 let v27 = s.construct(Constructor::eo_int_5fto_5fbv, &[a4])?;
 let v28 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -31410,7 +31410,7 @@ let v33 = s.apply(v32, a1)?;
 let v34 = s.apply(v31, v33)?;
 let v35 = s.apply(v34, a2)?;
 let v36 = s.apply(v30, v35)?;
-let v37 = s.operator("list_concat", &[v26, a0, v36])?;
+let v37 = s.builtin(EvalOp::ListConcat, &[v26, a0, v36])?;
 let v38 = s.apply(v25, v37)?;
 let v39 = s.construct(Constructor::eo_concat, &[])?;
 let v40 = s.construct(Constructor::eo_concat, &[])?;
@@ -31419,8 +31419,8 @@ let v42 = s.construct(Constructor::eo_extract, &[a6, a3])?;
 let v43 = s.apply(v42, a1)?;
 let v44 = s.apply(v41, v43)?;
 let v45 = s.apply(v44, a2)?;
-let v46 = s.operator("list_concat", &[v40, a0, v45])?;
-let v47 = s.operator("list_singleton_elim", &[v39, v46])?;
+let v46 = s.builtin(EvalOp::ListConcat, &[v40, a0, v45])?;
+let v47 = s.builtin(EvalOp::ListSingletonElim, &[v39, v46])?;
 let v48 = s.apply(v38, v47)?;
 return Ok(v48);
 }
@@ -31492,7 +31492,7 @@ let v32 = s.apply(v31, a3)?;
 let v33 = s.apply(v30, v32)?;
 let v34 = s.apply(v33, a6)?;
 let v35 = s.apply(v29, v34)?;
-let v36 = s.operator("list_concat", &[v25, a0, v35])?;
+let v36 = s.builtin(EvalOp::ListConcat, &[v25, a0, v35])?;
 let v37 = s.apply(v24, v36)?;
 let v38 = s.construct(Constructor::eo_concat, &[])?;
 let v39 = s.construct(Constructor::eo_concat, &[])?;
@@ -31522,8 +31522,8 @@ let v62 = s.apply(v52, v61)?;
 let v63 = s.apply(v41, v62)?;
 let v64 = s.apply(v40, v63)?;
 let v65 = s.apply(v64, a6)?;
-let v66 = s.operator("list_concat", &[v39, a0, v65])?;
-let v67 = s.operator("list_singleton_elim", &[v38, v66])?;
+let v66 = s.builtin(EvalOp::ListConcat, &[v39, a0, v65])?;
+let v67 = s.builtin(EvalOp::ListSingletonElim, &[v38, v66])?;
 let v68 = s.apply(v37, v67)?;
 return Ok(v68);
 }
@@ -32171,7 +32171,7 @@ let v27 = s.apply(v26, a0)?;
 let v28 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v29 = s.apply(v27, v28)?;
 let v30 = s.apply(v25, v29)?;
-let v31 = s.operator("list_concat", &[v23, a1, v30])?;
+let v31 = s.builtin(EvalOp::ListConcat, &[v23, a1, v30])?;
 let v32 = s.apply(v22, v31)?;
 let v33 = s.apply(v21, v32)?;
 let v34 = s.construct(Constructor::eo_extract, &[a4, a3])?;
@@ -32355,7 +32355,7 @@ let v89 = s.apply(v88, a0)?;
 let v90 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v91 = s.apply(v89, v90)?;
 let v92 = s.apply(v87, v91)?;
-let v93 = s.operator("list_concat", &[v85, a1, v92])?;
+let v93 = s.builtin(EvalOp::ListConcat, &[v85, a1, v92])?;
 let v94 = s.apply(v84, v93)?;
 let v95 = s.apply(v83, v94)?;
 let v96 = s.construct(Constructor::eo_concat, &[])?;
@@ -32367,8 +32367,8 @@ let v101 = s.construct(Constructor::eo_concat, &[])?;
 let v102 = s.apply(v101, a2)?;
 let v103 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v104 = s.apply(v102, v103)?;
-let v105 = s.operator("list_concat", &[v100, a1, v104])?;
-let v106 = s.operator("list_singleton_elim", &[v99, v105])?;
+let v105 = s.builtin(EvalOp::ListConcat, &[v100, a1, v104])?;
+let v106 = s.builtin(EvalOp::ListSingletonElim, &[v99, v105])?;
 let v107 = s.apply(v98, v106)?;
 let v108 = s.apply(v96, v107)?;
 let v109 = s.construct(Constructor::eo_concat, &[])?;
@@ -32517,7 +32517,7 @@ let v67 = s.apply(v66, a0)?;
 let v68 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v69 = s.apply(v67, v68)?;
 let v70 = s.apply(v65, v69)?;
-let v71 = s.operator("list_concat", &[v63, a2, v70])?;
+let v71 = s.builtin(EvalOp::ListConcat, &[v63, a2, v70])?;
 let v72 = s.apply(v62, v71)?;
 let v73 = s.apply(v61, v72)?;
 let v74 = s.construct(Constructor::eo_extract, &[a5, a6])?;
@@ -32527,8 +32527,8 @@ let v77 = s.construct(Constructor::eo_concat, &[])?;
 let v78 = s.apply(v77, a1)?;
 let v79 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v80 = s.apply(v78, v79)?;
-let v81 = s.operator("list_concat", &[v76, a2, v80])?;
-let v82 = s.operator("list_singleton_elim", &[v75, v81])?;
+let v81 = s.builtin(EvalOp::ListConcat, &[v76, a2, v80])?;
+let v82 = s.builtin(EvalOp::ListSingletonElim, &[v75, v81])?;
 let v83 = s.apply(v74, v82)?;
 let v84 = s.apply(v73, v83)?;
 return Ok(v84);
@@ -32638,7 +32638,7 @@ let v51 = s.construct(Constructor::eo_concat, &[])?;
 let v52 = s.apply(v51, a1)?;
 let v53 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v54 = s.apply(v52, v53)?;
-let v55 = s.operator("list_concat", &[v50, a2, v54])?;
+let v55 = s.builtin(EvalOp::ListConcat, &[v50, a2, v54])?;
 let v56 = s.apply(v49, v55)?;
 let v57 = s.apply(v47, v56)?;
 let v58 = s.apply(v46, v57)?;
@@ -32649,8 +32649,8 @@ let v62 = s.construct(Constructor::eo_concat, &[])?;
 let v63 = s.apply(v62, a1)?;
 let v64 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v65 = s.apply(v63, v64)?;
-let v66 = s.operator("list_concat", &[v61, a2, v65])?;
-let v67 = s.operator("list_singleton_elim", &[v60, v66])?;
+let v66 = s.builtin(EvalOp::ListConcat, &[v61, a2, v65])?;
+let v67 = s.builtin(EvalOp::ListSingletonElim, &[v60, v66])?;
 let v68 = s.apply(v59, v67)?;
 let v69 = s.apply(v58, v68)?;
 return Ok(v69);
@@ -34879,7 +34879,7 @@ let v61 = s.apply(v60, a4)?;
 let v62 = s.apply(v59, v61)?;
 let v63 = s.apply(v62, a1)?;
 let v64 = s.apply(v58, v63)?;
-let v65 = s.operator("list_concat", &[v56, a0, v64])?;
+let v65 = s.builtin(EvalOp::ListConcat, &[v56, a0, v64])?;
 let v66 = s.apply(v55, v65)?;
 let v67 = s.construct(Constructor::eo_concat, &[])?;
 let v68 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -34889,8 +34889,8 @@ let v71 = s.construct(Constructor::eo_bvmul, &[])?;
 let v72 = s.construct(Constructor::eo_bvmul, &[])?;
 let v73 = s.apply(v72, a2)?;
 let v74 = s.apply(v73, a1)?;
-let v75 = s.operator("list_concat", &[v71, a0, v74])?;
-let v76 = s.operator("list_singleton_elim", &[v70, v75])?;
+let v75 = s.builtin(EvalOp::ListConcat, &[v71, a0, v74])?;
+let v76 = s.builtin(EvalOp::ListSingletonElim, &[v70, v75])?;
 let v77 = s.apply(v69, v76)?;
 let v78 = s.apply(v67, v77)?;
 let v79 = s.construct(Constructor::eo_concat, &[])?;
@@ -35088,7 +35088,7 @@ let v94 = s.apply(v93, a4)?;
 let v95 = s.apply(v92, v94)?;
 let v96 = s.apply(v95, a1)?;
 let v97 = s.apply(v91, v96)?;
-let v98 = s.operator("list_concat", &[v89, a0, v97])?;
+let v98 = s.builtin(EvalOp::ListConcat, &[v89, a0, v97])?;
 let v99 = s.apply(v88, v98)?;
 let v100 = s.construct(Constructor::eo_concat, &[])?;
 let v101 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -35099,8 +35099,8 @@ let v105 = s.construct(Constructor::eo_bvmul, &[])?;
 let v106 = s.construct(Constructor::eo_bvmul, &[])?;
 let v107 = s.apply(v106, a2)?;
 let v108 = s.apply(v107, a1)?;
-let v109 = s.operator("list_concat", &[v105, a0, v108])?;
-let v110 = s.operator("list_singleton_elim", &[v104, v109])?;
+let v109 = s.builtin(EvalOp::ListConcat, &[v105, a0, v108])?;
+let v110 = s.builtin(EvalOp::ListSingletonElim, &[v104, v109])?;
 let v111 = s.apply(v103, v110)?;
 let v112 = s.apply(v102, v111)?;
 let v113 = s.apply(v100, v112)?;
@@ -36151,18 +36151,18 @@ let v76 = s.apply(v75, a2)?;
 let v77 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v78 = s.apply(v76, v77)?;
 let v79 = s.apply(v74, v78)?;
-let v80 = s.operator("list_concat", &[v72, a4, v79])?;
+let v80 = s.builtin(EvalOp::ListConcat, &[v72, a4, v79])?;
 let v81 = s.apply(v71, v80)?;
 let v82 = s.apply(v81, a1)?;
-let v83 = s.operator("list_concat", &[v70, a0, v82])?;
+let v83 = s.builtin(EvalOp::ListConcat, &[v70, a0, v82])?;
 let v84 = s.apply(v69, v83)?;
 let v85 = s.construct(Constructor::eo_concat, &[])?;
 let v86 = s.construct(Constructor::eo_bvor, &[])?;
 let v87 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v88 = s.construct(Constructor::eo_bvor, &[])?;
 let v89 = s.construct(Constructor::eo_bvor, &[])?;
-let v90 = s.operator("list_concat", &[v89, a0, a1])?;
-let v91 = s.operator("list_singleton_elim", &[v88, v90])?;
+let v90 = s.builtin(EvalOp::ListConcat, &[v89, a0, a1])?;
+let v91 = s.builtin(EvalOp::ListSingletonElim, &[v88, v90])?;
 let v92 = s.apply(v87, v91)?;
 let v93 = s.apply(v86, v92)?;
 let v94 = s.construct(Constructor::eo_bvor, &[])?;
@@ -36172,15 +36172,15 @@ let v97 = s.construct(Constructor::eo_concat, &[])?;
 let v98 = s.apply(v97, a3)?;
 let v99 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v100 = s.apply(v98, v99)?;
-let v101 = s.operator("list_concat", &[v96, a4, v100])?;
-let v102 = s.operator("list_singleton_elim", &[v95, v101])?;
+let v101 = s.builtin(EvalOp::ListConcat, &[v96, a4, v100])?;
+let v102 = s.builtin(EvalOp::ListSingletonElim, &[v95, v101])?;
 let v103 = s.apply(v94, v102)?;
 let v104 = s.construct(Constructor::eo_bvor, &[])?;
 let v105 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v106 = s.construct(Constructor::eo_bvor, &[])?;
 let v107 = s.construct(Constructor::eo_bvor, &[])?;
-let v108 = s.operator("list_concat", &[v107, a0, a1])?;
-let v109 = s.operator("list_singleton_elim", &[v106, v108])?;
+let v108 = s.builtin(EvalOp::ListConcat, &[v107, a0, a1])?;
+let v109 = s.builtin(EvalOp::ListSingletonElim, &[v106, v108])?;
 let v110 = s.apply(v105, v109)?;
 let v111 = eo__24eo_5ftypeof(s, v110)?;
 let v112 = eo__24eo_5fnil(s, v104, v111)?;
@@ -36193,8 +36193,8 @@ let v118 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v119 = s.construct(Constructor::eo_extract, &[a7, v118])?;
 let v120 = s.construct(Constructor::eo_bvor, &[])?;
 let v121 = s.construct(Constructor::eo_bvor, &[])?;
-let v122 = s.operator("list_concat", &[v121, a0, a1])?;
-let v123 = s.operator("list_singleton_elim", &[v120, v122])?;
+let v122 = s.builtin(EvalOp::ListConcat, &[v121, a0, a1])?;
+let v123 = s.builtin(EvalOp::ListSingletonElim, &[v120, v122])?;
 let v124 = s.apply(v119, v123)?;
 let v125 = s.apply(v117, v124)?;
 let v126 = s.construct(Constructor::eo_bvor, &[])?;
@@ -36204,8 +36204,8 @@ let v129 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v130 = s.construct(Constructor::eo_extract, &[a7, v129])?;
 let v131 = s.construct(Constructor::eo_bvor, &[])?;
 let v132 = s.construct(Constructor::eo_bvor, &[])?;
-let v133 = s.operator("list_concat", &[v132, a0, a1])?;
-let v134 = s.operator("list_singleton_elim", &[v131, v133])?;
+let v133 = s.builtin(EvalOp::ListConcat, &[v132, a0, a1])?;
+let v134 = s.builtin(EvalOp::ListSingletonElim, &[v131, v133])?;
 let v135 = s.apply(v130, v134)?;
 let v136 = eo__24eo_5ftypeof(s, v135)?;
 let v137 = eo__24eo_5fnil(s, v128, v136)?;
@@ -36461,15 +36461,15 @@ let v126 = s.apply(v125, a4)?;
 let v127 = s.apply(v123, v126)?;
 let v128 = s.apply(v121, v127)?;
 let v129 = s.apply(v128, a1)?;
-let v130 = s.operator("list_concat", &[v120, a0, v129])?;
+let v130 = s.builtin(EvalOp::ListConcat, &[v120, a0, v129])?;
 let v131 = s.apply(v119, v130)?;
 let v132 = s.construct(Constructor::eo_concat, &[])?;
 let v133 = s.construct(Constructor::eo_bvor, &[])?;
 let v134 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v135 = s.construct(Constructor::eo_bvor, &[])?;
 let v136 = s.construct(Constructor::eo_bvor, &[])?;
-let v137 = s.operator("list_concat", &[v136, a0, a1])?;
-let v138 = s.operator("list_singleton_elim", &[v135, v137])?;
+let v137 = s.builtin(EvalOp::ListConcat, &[v136, a0, a1])?;
+let v138 = s.builtin(EvalOp::ListSingletonElim, &[v135, v137])?;
 let v139 = s.apply(v134, v138)?;
 let v140 = s.apply(v133, v139)?;
 let v141 = s.construct(Constructor::eo_bvor, &[])?;
@@ -36478,8 +36478,8 @@ let v143 = s.construct(Constructor::eo_bvor, &[])?;
 let v144 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v145 = s.construct(Constructor::eo_bvor, &[])?;
 let v146 = s.construct(Constructor::eo_bvor, &[])?;
-let v147 = s.operator("list_concat", &[v146, a0, a1])?;
-let v148 = s.operator("list_singleton_elim", &[v145, v147])?;
+let v147 = s.builtin(EvalOp::ListConcat, &[v146, a0, a1])?;
+let v148 = s.builtin(EvalOp::ListSingletonElim, &[v145, v147])?;
 let v149 = s.apply(v144, v148)?;
 let v150 = eo__24eo_5ftypeof(s, v149)?;
 let v151 = eo__24eo_5fnil(s, v143, v150)?;
@@ -36492,8 +36492,8 @@ let v157 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v158 = s.construct(Constructor::eo_extract, &[a7, v157])?;
 let v159 = s.construct(Constructor::eo_bvor, &[])?;
 let v160 = s.construct(Constructor::eo_bvor, &[])?;
-let v161 = s.operator("list_concat", &[v160, a0, a1])?;
-let v162 = s.operator("list_singleton_elim", &[v159, v161])?;
+let v161 = s.builtin(EvalOp::ListConcat, &[v160, a0, a1])?;
+let v162 = s.builtin(EvalOp::ListSingletonElim, &[v159, v161])?;
 let v163 = s.apply(v158, v162)?;
 let v164 = s.apply(v156, v163)?;
 let v165 = s.construct(Constructor::eo_bvor, &[])?;
@@ -36501,15 +36501,15 @@ let v166 = s.construct(Constructor::eo_concat, &[])?;
 let v167 = s.construct(Constructor::eo_concat, &[])?;
 let v168 = s.apply(v167, a2)?;
 let v169 = s.apply(v168, a4)?;
-let v170 = s.operator("list_singleton_elim", &[v166, v169])?;
+let v170 = s.builtin(EvalOp::ListSingletonElim, &[v166, v169])?;
 let v171 = s.apply(v165, v170)?;
 let v172 = s.construct(Constructor::eo_bvor, &[])?;
 let v173 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v174 = s.construct(Constructor::eo_extract, &[a7, v173])?;
 let v175 = s.construct(Constructor::eo_bvor, &[])?;
 let v176 = s.construct(Constructor::eo_bvor, &[])?;
-let v177 = s.operator("list_concat", &[v176, a0, a1])?;
-let v178 = s.operator("list_singleton_elim", &[v175, v177])?;
+let v177 = s.builtin(EvalOp::ListConcat, &[v176, a0, a1])?;
+let v178 = s.builtin(EvalOp::ListSingletonElim, &[v175, v177])?;
 let v179 = s.apply(v174, v178)?;
 let v180 = eo__24eo_5ftypeof(s, v179)?;
 let v181 = eo__24eo_5fnil(s, v172, v180)?;
@@ -36837,15 +36837,15 @@ let v168 = s.apply(v163, v167)?;
 let v169 = s.apply(v161, v168)?;
 let v170 = s.apply(v159, v169)?;
 let v171 = s.apply(v170, a1)?;
-let v172 = s.operator("list_concat", &[v158, a0, v171])?;
+let v172 = s.builtin(EvalOp::ListConcat, &[v158, a0, v171])?;
 let v173 = s.apply(v157, v172)?;
 let v174 = s.construct(Constructor::eo_concat, &[])?;
 let v175 = s.construct(Constructor::eo_bvor, &[])?;
 let v176 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v177 = s.construct(Constructor::eo_bvor, &[])?;
 let v178 = s.construct(Constructor::eo_bvor, &[])?;
-let v179 = s.operator("list_concat", &[v178, a0, a1])?;
-let v180 = s.operator("list_singleton_elim", &[v177, v179])?;
+let v179 = s.builtin(EvalOp::ListConcat, &[v178, a0, a1])?;
+let v180 = s.builtin(EvalOp::ListSingletonElim, &[v177, v179])?;
 let v181 = s.apply(v176, v180)?;
 let v182 = s.apply(v175, v181)?;
 let v183 = s.construct(Constructor::eo_bvor, &[])?;
@@ -36854,8 +36854,8 @@ let v185 = s.construct(Constructor::eo_bvor, &[])?;
 let v186 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v187 = s.construct(Constructor::eo_bvor, &[])?;
 let v188 = s.construct(Constructor::eo_bvor, &[])?;
-let v189 = s.operator("list_concat", &[v188, a0, a1])?;
-let v190 = s.operator("list_singleton_elim", &[v187, v189])?;
+let v189 = s.builtin(EvalOp::ListConcat, &[v188, a0, a1])?;
+let v190 = s.builtin(EvalOp::ListSingletonElim, &[v187, v189])?;
 let v191 = s.apply(v186, v190)?;
 let v192 = eo__24eo_5ftypeof(s, v191)?;
 let v193 = eo__24eo_5fnil(s, v185, v192)?;
@@ -36867,8 +36867,8 @@ let v198 = s.construct(Constructor::eo_bvor, &[])?;
 let v199 = s.construct(Constructor::eo_extract, &[a7, a8])?;
 let v200 = s.construct(Constructor::eo_bvor, &[])?;
 let v201 = s.construct(Constructor::eo_bvor, &[])?;
-let v202 = s.operator("list_concat", &[v201, a0, a1])?;
-let v203 = s.operator("list_singleton_elim", &[v200, v202])?;
+let v202 = s.builtin(EvalOp::ListConcat, &[v201, a0, a1])?;
+let v203 = s.builtin(EvalOp::ListSingletonElim, &[v200, v202])?;
 let v204 = s.apply(v199, v203)?;
 let v205 = s.apply(v198, v204)?;
 let v206 = s.construct(Constructor::eo_bvor, &[])?;
@@ -36877,8 +36877,8 @@ let v208 = s.construct(Constructor::eo_bvor, &[])?;
 let v209 = s.construct(Constructor::eo_extract, &[a7, a8])?;
 let v210 = s.construct(Constructor::eo_bvor, &[])?;
 let v211 = s.construct(Constructor::eo_bvor, &[])?;
-let v212 = s.operator("list_concat", &[v211, a0, a1])?;
-let v213 = s.operator("list_singleton_elim", &[v210, v212])?;
+let v212 = s.builtin(EvalOp::ListConcat, &[v211, a0, a1])?;
+let v213 = s.builtin(EvalOp::ListSingletonElim, &[v210, v212])?;
 let v214 = s.apply(v209, v213)?;
 let v215 = eo__24eo_5ftypeof(s, v214)?;
 let v216 = eo__24eo_5fnil(s, v208, v215)?;
@@ -36891,8 +36891,8 @@ let v222 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v223 = s.construct(Constructor::eo_extract, &[a9, v222])?;
 let v224 = s.construct(Constructor::eo_bvor, &[])?;
 let v225 = s.construct(Constructor::eo_bvor, &[])?;
-let v226 = s.operator("list_concat", &[v225, a0, a1])?;
-let v227 = s.operator("list_singleton_elim", &[v224, v226])?;
+let v226 = s.builtin(EvalOp::ListConcat, &[v225, a0, a1])?;
+let v227 = s.builtin(EvalOp::ListSingletonElim, &[v224, v226])?;
 let v228 = s.apply(v223, v227)?;
 let v229 = s.apply(v221, v228)?;
 let v230 = s.construct(Constructor::eo_bvor, &[])?;
@@ -36902,8 +36902,8 @@ let v233 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v234 = s.construct(Constructor::eo_extract, &[a9, v233])?;
 let v235 = s.construct(Constructor::eo_bvor, &[])?;
 let v236 = s.construct(Constructor::eo_bvor, &[])?;
-let v237 = s.operator("list_concat", &[v236, a0, a1])?;
-let v238 = s.operator("list_singleton_elim", &[v235, v237])?;
+let v237 = s.builtin(EvalOp::ListConcat, &[v236, a0, a1])?;
+let v238 = s.builtin(EvalOp::ListSingletonElim, &[v235, v237])?;
 let v239 = s.apply(v234, v238)?;
 let v240 = eo__24eo_5ftypeof(s, v239)?;
 let v241 = eo__24eo_5fnil(s, v232, v240)?;
@@ -36963,9 +36963,9 @@ let v19 = s.construct(Constructor::eo_bvor, &[])?;
 let v20 = s.construct(Constructor::eo_bvor, &[])?;
 let v21 = s.apply(v20, a3)?;
 let v22 = s.apply(v21, a2)?;
-let v23 = s.operator("list_concat", &[v19, a1, v22])?;
+let v23 = s.builtin(EvalOp::ListConcat, &[v19, a1, v22])?;
 let v24 = s.apply(v18, v23)?;
-let v25 = s.operator("list_concat", &[v14, a0, v24])?;
+let v25 = s.builtin(EvalOp::ListConcat, &[v14, a0, v24])?;
 let v26 = s.apply(v13, v25)?;
 let v27 = s.construct(Constructor::eo_bvnot, &[])?;
 let v28 = s.construct(Constructor::eo_int_5fto_5fbv, &[a4])?;
@@ -37021,9 +37021,9 @@ let v19 = s.construct(Constructor::eo_bvnot, &[])?;
 let v20 = s.apply(v19, a3)?;
 let v21 = s.apply(v18, v20)?;
 let v22 = s.apply(v21, a2)?;
-let v23 = s.operator("list_concat", &[v17, a1, v22])?;
+let v23 = s.builtin(EvalOp::ListConcat, &[v17, a1, v22])?;
 let v24 = s.apply(v16, v23)?;
-let v25 = s.operator("list_concat", &[v14, a0, v24])?;
+let v25 = s.builtin(EvalOp::ListConcat, &[v14, a0, v24])?;
 let v26 = s.apply(v13, v25)?;
 let v27 = s.construct(Constructor::eo_bvnot, &[])?;
 let v28 = s.construct(Constructor::eo_int_5fto_5fbv, &[a4])?;
@@ -37168,14 +37168,14 @@ let Some(fields) = v10 else { break 'case0; }
 ;
 let v11 = fields;
 let v12 = s.construct(Constructor::eo_concat, &[])?;
-let v13 = s.operator("is_z", &[v11[0]])?;
-let v14 = s.operator("is_neg", &[v11[0]])?;
-let v15 = s.operator("not", &[v14])?;
-let v16 = s.operator("and", &[v13, v15])?;
+let v13 = s.builtin(EvalOp::IsZ, &[v11[0]])?;
+let v14 = s.builtin(EvalOp::IsNeg, &[v11[0]])?;
+let v15 = s.builtin(EvalOp::Not, &[v14])?;
+let v16 = s.builtin(EvalOp::And, &[v13, v15])?;
 let v17 = match s.boolean_value(v16, false)? {
 Some(true) => {
 let v18 = s.construct(Constructor::eo_concat, &[])?;
-let v19 = s.operator("list_repeat", &[v18, v9, v11[0]])?;
+let v19 = s.builtin(EvalOp::ListRepeat, &[v18, v9, v11[0]])?;
 v19
 }, Some(false) => {
 let v20 = s.construct(Constructor::eo_repeat, &[v11[0]])?;
@@ -37183,7 +37183,7 @@ let v21 = s.apply(v20, v9)?;
 v21
 }, None => s.stuck(),
 };
-let v22 = s.operator("list_singleton_elim", &[v12, v17])?;
+let v22 = s.builtin(EvalOp::ListSingletonElim, &[v12, v17])?;
 let v23 = if v22 == v2 && !s.is_stuck(v22)? {
 let v24 = s.construct(Constructor::eo__3d, &[])?;
 let v25 = s.construct(Constructor::eo_repeat, &[v11[0]])?;
@@ -40634,7 +40634,7 @@ if v11 != v13 { break 'case0; }
 let v14 = eo__24eo_5ftypeof(s, v12)?;
 let v15 = eo__24bv_5fbitwidth(s, v14)?;
 let v16 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v17 = s.operator("eq", &[v15, v16])?;
+let v17 = s.builtin(EvalOp::Eq, &[v15, v16])?;
 let v18 = match s.boolean_value(v17, false)? {
 Some(true) => {
 let v19 = s.construct(Constructor::eo__3d, &[])?;
@@ -40655,7 +40655,7 @@ v31
 let v32 = eo__24eo_5ftypeof(s, v12)?;
 let v33 = eo__24bv_5fbitwidth(s, v32)?;
 let v34 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v35 = s.operator("eq", &[v33, v34])?;
+let v35 = s.builtin(EvalOp::Eq, &[v33, v34])?;
 let v36 = match s.boolean_value(v35, false)? {
 Some(true) => {
 let v37 = s.construct(Constructor::eo__3d, &[])?;
@@ -40689,11 +40689,11 @@ let v64 = s.construct(Constructor::eo_bvxor, &[])?;
 let v65 = eo__24eo_5ftypeof(s, v12)?;
 let v66 = eo__24bv_5fbitwidth(s, v65)?;
 let v67 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v68 = s.operator("add", &[v66, v67])?;
+let v68 = s.builtin(EvalOp::Add, &[v66, v67])?;
 let v69 = eo__24eo_5ftypeof(s, v12)?;
 let v70 = eo__24bv_5fbitwidth(s, v69)?;
 let v71 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v72 = s.operator("add", &[v70, v71])?;
+let v72 = s.builtin(EvalOp::Add, &[v70, v71])?;
 let v73 = s.construct(Constructor::eo_extract, &[v68, v72])?;
 let v74 = s.construct(Constructor::eo_bvmul, &[])?;
 let v75 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -40757,16 +40757,16 @@ let v130 = s.construct(Constructor::eo_bvxor, &[])?;
 let v131 = eo__24eo_5ftypeof(s, v12)?;
 let v132 = eo__24bv_5fbitwidth(s, v131)?;
 let v133 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v134 = s.operator("add", &[v132, v133])?;
+let v134 = s.builtin(EvalOp::Add, &[v132, v133])?;
 let v135 = s.construct(Constructor::eo_sign_5fextend, &[v134])?;
 let v136 = eo__24eo_5ftypeof(s, v12)?;
 let v137 = eo__24bv_5fbitwidth(s, v136)?;
 let v138 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v139 = s.operator("add", &[v137, v138])?;
+let v139 = s.builtin(EvalOp::Add, &[v137, v138])?;
 let v140 = eo__24eo_5ftypeof(s, v12)?;
 let v141 = eo__24bv_5fbitwidth(s, v140)?;
 let v142 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v143 = s.operator("add", &[v141, v142])?;
+let v143 = s.builtin(EvalOp::Add, &[v141, v142])?;
 let v144 = s.construct(Constructor::eo_extract, &[v139, v143])?;
 let v145 = s.apply(v144, v12)?;
 let v146 = s.apply(v135, v145)?;
@@ -40782,16 +40782,16 @@ let v155 = s.construct(Constructor::eo_bvxor, &[])?;
 let v156 = eo__24eo_5ftypeof(s, v12)?;
 let v157 = eo__24bv_5fbitwidth(s, v156)?;
 let v158 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v159 = s.operator("add", &[v157, v158])?;
+let v159 = s.builtin(EvalOp::Add, &[v157, v158])?;
 let v160 = s.construct(Constructor::eo_sign_5fextend, &[v159])?;
 let v161 = eo__24eo_5ftypeof(s, v12)?;
 let v162 = eo__24bv_5fbitwidth(s, v161)?;
 let v163 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v164 = s.operator("add", &[v162, v163])?;
+let v164 = s.builtin(EvalOp::Add, &[v162, v163])?;
 let v165 = eo__24eo_5ftypeof(s, v12)?;
 let v166 = eo__24bv_5fbitwidth(s, v165)?;
 let v167 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v168 = s.operator("add", &[v166, v167])?;
+let v168 = s.builtin(EvalOp::Add, &[v166, v167])?;
 let v169 = s.construct(Constructor::eo_extract, &[v164, v168])?;
 let v170 = s.apply(v169, v9)?;
 let v171 = s.apply(v160, v170)?;
@@ -40804,11 +40804,11 @@ let v177 = s.apply(v154, v176)?;
 let v178 = eo__24eo_5ftypeof(s, v12)?;
 let v179 = eo__24bv_5fbitwidth(s, v178)?;
 let v180 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v181 = s.operator("add", &[v179, v180])?;
+let v181 = s.builtin(EvalOp::Add, &[v179, v180])?;
 let v182 = eo__24eo_5ftypeof(s, v12)?;
 let v183 = eo__24bv_5fbitwidth(s, v182)?;
 let v184 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v185 = s.operator("add", &[v183, v184])?;
+let v185 = s.builtin(EvalOp::Add, &[v183, v184])?;
 let v186 = s.construct(Constructor::eo_extract, &[v181, v185])?;
 let v187 = s.construct(Constructor::eo_bvxor, &[])?;
 let v188 = s.apply(v187, v12)?;
@@ -40816,16 +40816,16 @@ let v189 = s.construct(Constructor::eo_bvxor, &[])?;
 let v190 = eo__24eo_5ftypeof(s, v12)?;
 let v191 = eo__24bv_5fbitwidth(s, v190)?;
 let v192 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v193 = s.operator("add", &[v191, v192])?;
+let v193 = s.builtin(EvalOp::Add, &[v191, v192])?;
 let v194 = s.construct(Constructor::eo_sign_5fextend, &[v193])?;
 let v195 = eo__24eo_5ftypeof(s, v12)?;
 let v196 = eo__24bv_5fbitwidth(s, v195)?;
 let v197 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v198 = s.operator("add", &[v196, v197])?;
+let v198 = s.builtin(EvalOp::Add, &[v196, v197])?;
 let v199 = eo__24eo_5ftypeof(s, v12)?;
 let v200 = eo__24bv_5fbitwidth(s, v199)?;
 let v201 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v202 = s.operator("add", &[v200, v201])?;
+let v202 = s.builtin(EvalOp::Add, &[v200, v201])?;
 let v203 = s.construct(Constructor::eo_extract, &[v198, v202])?;
 let v204 = s.apply(v203, v12)?;
 let v205 = s.apply(v194, v204)?;
@@ -40846,16 +40846,16 @@ let v219 = s.construct(Constructor::eo_bvxor, &[])?;
 let v220 = eo__24eo_5ftypeof(s, v12)?;
 let v221 = eo__24bv_5fbitwidth(s, v220)?;
 let v222 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v223 = s.operator("add", &[v221, v222])?;
+let v223 = s.builtin(EvalOp::Add, &[v221, v222])?;
 let v224 = s.construct(Constructor::eo_sign_5fextend, &[v223])?;
 let v225 = eo__24eo_5ftypeof(s, v12)?;
 let v226 = eo__24bv_5fbitwidth(s, v225)?;
 let v227 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v228 = s.operator("add", &[v226, v227])?;
+let v228 = s.builtin(EvalOp::Add, &[v226, v227])?;
 let v229 = eo__24eo_5ftypeof(s, v12)?;
 let v230 = eo__24bv_5fbitwidth(s, v229)?;
 let v231 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v232 = s.operator("add", &[v230, v231])?;
+let v232 = s.builtin(EvalOp::Add, &[v230, v231])?;
 let v233 = s.construct(Constructor::eo_extract, &[v228, v232])?;
 let v234 = s.apply(v233, v9)?;
 let v235 = s.apply(v224, v234)?;
@@ -40871,11 +40871,11 @@ let v244 = s.construct(Constructor::eo_bvand, &[])?;
 let v245 = eo__24eo_5ftypeof(s, v12)?;
 let v246 = eo__24bv_5fbitwidth(s, v245)?;
 let v247 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v248 = s.operator("add", &[v246, v247])?;
+let v248 = s.builtin(EvalOp::Add, &[v246, v247])?;
 let v249 = eo__24eo_5ftypeof(s, v12)?;
 let v250 = eo__24bv_5fbitwidth(s, v249)?;
 let v251 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v252 = s.operator("add", &[v250, v251])?;
+let v252 = s.builtin(EvalOp::Add, &[v250, v251])?;
 let v253 = s.construct(Constructor::eo_extract, &[v248, v252])?;
 let v254 = s.construct(Constructor::eo_bvxor, &[])?;
 let v255 = s.apply(v254, v12)?;
@@ -40883,16 +40883,16 @@ let v256 = s.construct(Constructor::eo_bvxor, &[])?;
 let v257 = eo__24eo_5ftypeof(s, v12)?;
 let v258 = eo__24bv_5fbitwidth(s, v257)?;
 let v259 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v260 = s.operator("add", &[v258, v259])?;
+let v260 = s.builtin(EvalOp::Add, &[v258, v259])?;
 let v261 = s.construct(Constructor::eo_sign_5fextend, &[v260])?;
 let v262 = eo__24eo_5ftypeof(s, v12)?;
 let v263 = eo__24bv_5fbitwidth(s, v262)?;
 let v264 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v265 = s.operator("add", &[v263, v264])?;
+let v265 = s.builtin(EvalOp::Add, &[v263, v264])?;
 let v266 = eo__24eo_5ftypeof(s, v12)?;
 let v267 = eo__24bv_5fbitwidth(s, v266)?;
 let v268 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v269 = s.operator("add", &[v267, v268])?;
+let v269 = s.builtin(EvalOp::Add, &[v267, v268])?;
 let v270 = s.construct(Constructor::eo_extract, &[v265, v269])?;
 let v271 = s.apply(v270, v12)?;
 let v272 = s.apply(v261, v271)?;
@@ -40914,16 +40914,16 @@ let v287 = s.construct(Constructor::eo_bvxor, &[])?;
 let v288 = eo__24eo_5ftypeof(s, v12)?;
 let v289 = eo__24bv_5fbitwidth(s, v288)?;
 let v290 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v291 = s.operator("add", &[v289, v290])?;
+let v291 = s.builtin(EvalOp::Add, &[v289, v290])?;
 let v292 = s.construct(Constructor::eo_sign_5fextend, &[v291])?;
 let v293 = eo__24eo_5ftypeof(s, v12)?;
 let v294 = eo__24bv_5fbitwidth(s, v293)?;
 let v295 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v296 = s.operator("add", &[v294, v295])?;
+let v296 = s.builtin(EvalOp::Add, &[v294, v295])?;
 let v297 = eo__24eo_5ftypeof(s, v12)?;
 let v298 = eo__24bv_5fbitwidth(s, v297)?;
 let v299 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v300 = s.operator("add", &[v298, v299])?;
+let v300 = s.builtin(EvalOp::Add, &[v298, v299])?;
 let v301 = s.construct(Constructor::eo_extract, &[v296, v300])?;
 let v302 = s.apply(v301, v9)?;
 let v303 = s.apply(v292, v302)?;
@@ -40943,12 +40943,12 @@ let v316 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v317 = eo__24eo_5ftypeof(s, v12)?;
 let v318 = eo__24bv_5fbitwidth(s, v317)?;
 let v319 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v320 = s.operator("add", &[v318, v319])?;
-let v321 = s.operator("add", &[v316, v320])?;
-let v322 = s.operator("add", &[v315, v321])?;
+let v320 = s.builtin(EvalOp::Add, &[v318, v319])?;
+let v321 = s.builtin(EvalOp::Add, &[v316, v320])?;
+let v322 = s.builtin(EvalOp::Add, &[v315, v321])?;
 let v323 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v324 = s.operator("add", &[v322, v323])?;
-let v325 = s.operator("is_neg", &[v324])?;
+let v324 = s.builtin(EvalOp::Add, &[v322, v323])?;
+let v325 = s.builtin(EvalOp::IsNeg, &[v324])?;
 let v326 = s.literal(Lit::Bool(false))?;
 let v327 = if v325 == v326 && !s.is_stuck(v325)? {
 let v328 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -40958,12 +40958,12 @@ let v331 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v332 = eo__24eo_5ftypeof(s, v12)?;
 let v333 = eo__24bv_5fbitwidth(s, v332)?;
 let v334 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v335 = s.operator("add", &[v333, v334])?;
-let v336 = s.operator("add", &[v331, v335])?;
-let v337 = s.operator("add", &[v330, v336])?;
+let v335 = s.builtin(EvalOp::Add, &[v333, v334])?;
+let v336 = s.builtin(EvalOp::Add, &[v331, v335])?;
+let v337 = s.builtin(EvalOp::Add, &[v330, v336])?;
 let v338 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v339 = s.operator("add", &[v337, v338])?;
-let v340 = s.operator("list_repeat", &[v328, v329, v339])?;
+let v339 = s.builtin(EvalOp::Add, &[v337, v338])?;
+let v340 = s.builtin(EvalOp::ListRepeat, &[v328, v329, v339])?;
 let v341 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v342 = eo__24iota_5frec(s, v340, v341)?;
 v342
@@ -40971,7 +40971,7 @@ v342
 let v343 = eo__24eo_5ftypeof(s, v12)?;
 let v344 = eo__24bv_5fbitwidth(s, v343)?;
 let v345 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v346 = s.operator("add", &[v344, v345])?;
+let v346 = s.builtin(EvalOp::Add, &[v344, v345])?;
 let v347 = eo__24bv_5fsmulo_5felim_5frec(s, v152, v177, v212, v314, v327, v346)?;
 let v348 = s.apply(v127, v347)?;
 let v349 = s.construct(Constructor::eo_bvor, &[])?;
@@ -41005,11 +41005,11 @@ let v376 = s.construct(Constructor::eo_bvxor, &[])?;
 let v377 = eo__24eo_5ftypeof(s, v12)?;
 let v378 = eo__24bv_5fbitwidth(s, v377)?;
 let v379 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v380 = s.operator("add", &[v378, v379])?;
+let v380 = s.builtin(EvalOp::Add, &[v378, v379])?;
 let v381 = eo__24eo_5ftypeof(s, v12)?;
 let v382 = eo__24bv_5fbitwidth(s, v381)?;
 let v383 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v384 = s.operator("add", &[v382, v383])?;
+let v384 = s.builtin(EvalOp::Add, &[v382, v383])?;
 let v385 = s.construct(Constructor::eo_extract, &[v380, v384])?;
 let v386 = s.construct(Constructor::eo_bvmul, &[])?;
 let v387 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -41068,16 +41068,16 @@ let v439 = s.construct(Constructor::eo_bvxor, &[])?;
 let v440 = eo__24eo_5ftypeof(s, v12)?;
 let v441 = eo__24bv_5fbitwidth(s, v440)?;
 let v442 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v443 = s.operator("add", &[v441, v442])?;
+let v443 = s.builtin(EvalOp::Add, &[v441, v442])?;
 let v444 = s.construct(Constructor::eo_sign_5fextend, &[v443])?;
 let v445 = eo__24eo_5ftypeof(s, v12)?;
 let v446 = eo__24bv_5fbitwidth(s, v445)?;
 let v447 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v448 = s.operator("add", &[v446, v447])?;
+let v448 = s.builtin(EvalOp::Add, &[v446, v447])?;
 let v449 = eo__24eo_5ftypeof(s, v12)?;
 let v450 = eo__24bv_5fbitwidth(s, v449)?;
 let v451 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v452 = s.operator("add", &[v450, v451])?;
+let v452 = s.builtin(EvalOp::Add, &[v450, v451])?;
 let v453 = s.construct(Constructor::eo_extract, &[v448, v452])?;
 let v454 = s.apply(v453, v12)?;
 let v455 = s.apply(v444, v454)?;
@@ -41093,16 +41093,16 @@ let v464 = s.construct(Constructor::eo_bvxor, &[])?;
 let v465 = eo__24eo_5ftypeof(s, v12)?;
 let v466 = eo__24bv_5fbitwidth(s, v465)?;
 let v467 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v468 = s.operator("add", &[v466, v467])?;
+let v468 = s.builtin(EvalOp::Add, &[v466, v467])?;
 let v469 = s.construct(Constructor::eo_sign_5fextend, &[v468])?;
 let v470 = eo__24eo_5ftypeof(s, v12)?;
 let v471 = eo__24bv_5fbitwidth(s, v470)?;
 let v472 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v473 = s.operator("add", &[v471, v472])?;
+let v473 = s.builtin(EvalOp::Add, &[v471, v472])?;
 let v474 = eo__24eo_5ftypeof(s, v12)?;
 let v475 = eo__24bv_5fbitwidth(s, v474)?;
 let v476 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v477 = s.operator("add", &[v475, v476])?;
+let v477 = s.builtin(EvalOp::Add, &[v475, v476])?;
 let v478 = s.construct(Constructor::eo_extract, &[v473, v477])?;
 let v479 = s.apply(v478, v9)?;
 let v480 = s.apply(v469, v479)?;
@@ -41115,11 +41115,11 @@ let v486 = s.apply(v463, v485)?;
 let v487 = eo__24eo_5ftypeof(s, v12)?;
 let v488 = eo__24bv_5fbitwidth(s, v487)?;
 let v489 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v490 = s.operator("add", &[v488, v489])?;
+let v490 = s.builtin(EvalOp::Add, &[v488, v489])?;
 let v491 = eo__24eo_5ftypeof(s, v12)?;
 let v492 = eo__24bv_5fbitwidth(s, v491)?;
 let v493 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v494 = s.operator("add", &[v492, v493])?;
+let v494 = s.builtin(EvalOp::Add, &[v492, v493])?;
 let v495 = s.construct(Constructor::eo_extract, &[v490, v494])?;
 let v496 = s.construct(Constructor::eo_bvxor, &[])?;
 let v497 = s.apply(v496, v12)?;
@@ -41127,16 +41127,16 @@ let v498 = s.construct(Constructor::eo_bvxor, &[])?;
 let v499 = eo__24eo_5ftypeof(s, v12)?;
 let v500 = eo__24bv_5fbitwidth(s, v499)?;
 let v501 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v502 = s.operator("add", &[v500, v501])?;
+let v502 = s.builtin(EvalOp::Add, &[v500, v501])?;
 let v503 = s.construct(Constructor::eo_sign_5fextend, &[v502])?;
 let v504 = eo__24eo_5ftypeof(s, v12)?;
 let v505 = eo__24bv_5fbitwidth(s, v504)?;
 let v506 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v507 = s.operator("add", &[v505, v506])?;
+let v507 = s.builtin(EvalOp::Add, &[v505, v506])?;
 let v508 = eo__24eo_5ftypeof(s, v12)?;
 let v509 = eo__24bv_5fbitwidth(s, v508)?;
 let v510 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v511 = s.operator("add", &[v509, v510])?;
+let v511 = s.builtin(EvalOp::Add, &[v509, v510])?;
 let v512 = s.construct(Constructor::eo_extract, &[v507, v511])?;
 let v513 = s.apply(v512, v12)?;
 let v514 = s.apply(v503, v513)?;
@@ -41157,16 +41157,16 @@ let v528 = s.construct(Constructor::eo_bvxor, &[])?;
 let v529 = eo__24eo_5ftypeof(s, v12)?;
 let v530 = eo__24bv_5fbitwidth(s, v529)?;
 let v531 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v532 = s.operator("add", &[v530, v531])?;
+let v532 = s.builtin(EvalOp::Add, &[v530, v531])?;
 let v533 = s.construct(Constructor::eo_sign_5fextend, &[v532])?;
 let v534 = eo__24eo_5ftypeof(s, v12)?;
 let v535 = eo__24bv_5fbitwidth(s, v534)?;
 let v536 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v537 = s.operator("add", &[v535, v536])?;
+let v537 = s.builtin(EvalOp::Add, &[v535, v536])?;
 let v538 = eo__24eo_5ftypeof(s, v12)?;
 let v539 = eo__24bv_5fbitwidth(s, v538)?;
 let v540 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v541 = s.operator("add", &[v539, v540])?;
+let v541 = s.builtin(EvalOp::Add, &[v539, v540])?;
 let v542 = s.construct(Constructor::eo_extract, &[v537, v541])?;
 let v543 = s.apply(v542, v9)?;
 let v544 = s.apply(v533, v543)?;
@@ -41182,11 +41182,11 @@ let v553 = s.construct(Constructor::eo_bvand, &[])?;
 let v554 = eo__24eo_5ftypeof(s, v12)?;
 let v555 = eo__24bv_5fbitwidth(s, v554)?;
 let v556 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v557 = s.operator("add", &[v555, v556])?;
+let v557 = s.builtin(EvalOp::Add, &[v555, v556])?;
 let v558 = eo__24eo_5ftypeof(s, v12)?;
 let v559 = eo__24bv_5fbitwidth(s, v558)?;
 let v560 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v561 = s.operator("add", &[v559, v560])?;
+let v561 = s.builtin(EvalOp::Add, &[v559, v560])?;
 let v562 = s.construct(Constructor::eo_extract, &[v557, v561])?;
 let v563 = s.construct(Constructor::eo_bvxor, &[])?;
 let v564 = s.apply(v563, v12)?;
@@ -41194,16 +41194,16 @@ let v565 = s.construct(Constructor::eo_bvxor, &[])?;
 let v566 = eo__24eo_5ftypeof(s, v12)?;
 let v567 = eo__24bv_5fbitwidth(s, v566)?;
 let v568 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v569 = s.operator("add", &[v567, v568])?;
+let v569 = s.builtin(EvalOp::Add, &[v567, v568])?;
 let v570 = s.construct(Constructor::eo_sign_5fextend, &[v569])?;
 let v571 = eo__24eo_5ftypeof(s, v12)?;
 let v572 = eo__24bv_5fbitwidth(s, v571)?;
 let v573 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v574 = s.operator("add", &[v572, v573])?;
+let v574 = s.builtin(EvalOp::Add, &[v572, v573])?;
 let v575 = eo__24eo_5ftypeof(s, v12)?;
 let v576 = eo__24bv_5fbitwidth(s, v575)?;
 let v577 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v578 = s.operator("add", &[v576, v577])?;
+let v578 = s.builtin(EvalOp::Add, &[v576, v577])?;
 let v579 = s.construct(Constructor::eo_extract, &[v574, v578])?;
 let v580 = s.apply(v579, v12)?;
 let v581 = s.apply(v570, v580)?;
@@ -41225,16 +41225,16 @@ let v596 = s.construct(Constructor::eo_bvxor, &[])?;
 let v597 = eo__24eo_5ftypeof(s, v12)?;
 let v598 = eo__24bv_5fbitwidth(s, v597)?;
 let v599 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v600 = s.operator("add", &[v598, v599])?;
+let v600 = s.builtin(EvalOp::Add, &[v598, v599])?;
 let v601 = s.construct(Constructor::eo_sign_5fextend, &[v600])?;
 let v602 = eo__24eo_5ftypeof(s, v12)?;
 let v603 = eo__24bv_5fbitwidth(s, v602)?;
 let v604 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v605 = s.operator("add", &[v603, v604])?;
+let v605 = s.builtin(EvalOp::Add, &[v603, v604])?;
 let v606 = eo__24eo_5ftypeof(s, v12)?;
 let v607 = eo__24bv_5fbitwidth(s, v606)?;
 let v608 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v609 = s.operator("add", &[v607, v608])?;
+let v609 = s.builtin(EvalOp::Add, &[v607, v608])?;
 let v610 = s.construct(Constructor::eo_extract, &[v605, v609])?;
 let v611 = s.apply(v610, v9)?;
 let v612 = s.apply(v601, v611)?;
@@ -41254,12 +41254,12 @@ let v625 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v626 = eo__24eo_5ftypeof(s, v12)?;
 let v627 = eo__24bv_5fbitwidth(s, v626)?;
 let v628 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v629 = s.operator("add", &[v627, v628])?;
-let v630 = s.operator("add", &[v625, v629])?;
-let v631 = s.operator("add", &[v624, v630])?;
+let v629 = s.builtin(EvalOp::Add, &[v627, v628])?;
+let v630 = s.builtin(EvalOp::Add, &[v625, v629])?;
+let v631 = s.builtin(EvalOp::Add, &[v624, v630])?;
 let v632 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v633 = s.operator("add", &[v631, v632])?;
-let v634 = s.operator("is_neg", &[v633])?;
+let v633 = s.builtin(EvalOp::Add, &[v631, v632])?;
+let v634 = s.builtin(EvalOp::IsNeg, &[v633])?;
 let v635 = s.literal(Lit::Bool(false))?;
 let v636 = if v634 == v635 && !s.is_stuck(v634)? {
 let v637 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -41269,12 +41269,12 @@ let v640 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v641 = eo__24eo_5ftypeof(s, v12)?;
 let v642 = eo__24bv_5fbitwidth(s, v641)?;
 let v643 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v644 = s.operator("add", &[v642, v643])?;
-let v645 = s.operator("add", &[v640, v644])?;
-let v646 = s.operator("add", &[v639, v645])?;
+let v644 = s.builtin(EvalOp::Add, &[v642, v643])?;
+let v645 = s.builtin(EvalOp::Add, &[v640, v644])?;
+let v646 = s.builtin(EvalOp::Add, &[v639, v645])?;
 let v647 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v648 = s.operator("add", &[v646, v647])?;
-let v649 = s.operator("list_repeat", &[v637, v638, v648])?;
+let v648 = s.builtin(EvalOp::Add, &[v646, v647])?;
+let v649 = s.builtin(EvalOp::ListRepeat, &[v637, v638, v648])?;
 let v650 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v651 = eo__24iota_5frec(s, v649, v650)?;
 v651
@@ -41282,7 +41282,7 @@ v651
 let v652 = eo__24eo_5ftypeof(s, v12)?;
 let v653 = eo__24bv_5fbitwidth(s, v652)?;
 let v654 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v655 = s.operator("add", &[v653, v654])?;
+let v655 = s.builtin(EvalOp::Add, &[v653, v654])?;
 let v656 = eo__24bv_5fsmulo_5felim_5frec(s, v461, v486, v521, v623, v636, v655)?;
 let v657 = eo__24eo_5ftypeof(s, v656)?;
 let v658 = eo__24eo_5fnil(s, v436, v657)?;
@@ -42270,7 +42270,7 @@ let v31 = s.construct(Constructor::eo_bvadd, &[])?;
 let v32 = s.construct(Constructor::eo_bvadd, &[])?;
 let v33 = s.apply(v32, a3)?;
 let v34 = s.apply(v33, a2)?;
-let v35 = s.operator("list_concat", &[v31, a1, v34])?;
+let v35 = s.builtin(EvalOp::ListConcat, &[v31, a1, v34])?;
 let v36 = s.apply(v30, v35)?;
 let v37 = s.apply(v28, v36)?;
 let v38 = s.construct(Constructor::eo_and, &[])?;
@@ -42278,8 +42278,8 @@ let v39 = s.construct(Constructor::eo_not, &[])?;
 let v40 = s.construct(Constructor::eo__3d, &[])?;
 let v41 = s.construct(Constructor::eo_bvadd, &[])?;
 let v42 = s.construct(Constructor::eo_bvadd, &[])?;
-let v43 = s.operator("list_concat", &[v42, a1, a2])?;
-let v44 = s.operator("list_singleton_elim", &[v41, v43])?;
+let v43 = s.builtin(EvalOp::ListConcat, &[v42, a1, a2])?;
+let v44 = s.builtin(EvalOp::ListSingletonElim, &[v41, v43])?;
 let v45 = s.apply(v40, v44)?;
 let v46 = s.construct(Constructor::eo_bvnot, &[])?;
 let v47 = s.construct(Constructor::eo_int_5fto_5fbv, &[a4])?;
@@ -42294,8 +42294,8 @@ let v55 = s.construct(Constructor::eo_not, &[])?;
 let v56 = s.construct(Constructor::eo_bvult, &[])?;
 let v57 = s.construct(Constructor::eo_bvadd, &[])?;
 let v58 = s.construct(Constructor::eo_bvadd, &[])?;
-let v59 = s.operator("list_concat", &[v58, a1, a2])?;
-let v60 = s.operator("list_singleton_elim", &[v57, v59])?;
+let v59 = s.builtin(EvalOp::ListConcat, &[v58, a1, a2])?;
+let v60 = s.builtin(EvalOp::ListSingletonElim, &[v57, v59])?;
 let v61 = s.apply(v56, v60)?;
 let v62 = s.apply(v61, a0)?;
 let v63 = s.apply(v55, v62)?;
@@ -42558,7 +42558,7 @@ if v11 != v13 { break 'case0; }
 let v14 = eo__24eo_5ftypeof(s, v12)?;
 let v15 = eo__24bv_5fbitwidth(s, v14)?;
 let v16 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v17 = s.operator("eq", &[v15, v16])?;
+let v17 = s.builtin(EvalOp::Eq, &[v15, v16])?;
 let v18 = match s.boolean_value(v17, false)? {
 Some(true) => {
 let v19 = s.literal(Lit::Bool(false))?;
@@ -42568,11 +42568,11 @@ let v20 = s.construct(Constructor::eo__3d, &[])?;
 let v21 = eo__24eo_5ftypeof(s, v12)?;
 let v22 = eo__24bv_5fbitwidth(s, v21)?;
 let v23 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v24 = s.operator("add", &[v22, v23])?;
+let v24 = s.builtin(EvalOp::Add, &[v22, v23])?;
 let v25 = eo__24eo_5ftypeof(s, v12)?;
 let v26 = eo__24bv_5fbitwidth(s, v25)?;
 let v27 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v28 = s.operator("add", &[v26, v27])?;
+let v28 = s.builtin(EvalOp::Add, &[v26, v27])?;
 let v29 = s.construct(Constructor::eo_extract, &[v24, v28])?;
 let v30 = s.apply(v29, v12)?;
 let v31 = s.construct(Constructor::eo_bvor, &[])?;
@@ -42663,11 +42663,11 @@ let v115 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v116 = eo__24eo_5ftypeof(s, v12)?;
 let v117 = eo__24bv_5fbitwidth(s, v116)?;
 let v118 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v119 = s.operator("add", &[v117, v118])?;
-let v120 = s.operator("add", &[v115, v119])?;
+let v119 = s.builtin(EvalOp::Add, &[v117, v118])?;
+let v120 = s.builtin(EvalOp::Add, &[v115, v119])?;
 let v121 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v122 = s.operator("add", &[v120, v121])?;
-let v123 = s.operator("is_neg", &[v122])?;
+let v122 = s.builtin(EvalOp::Add, &[v120, v121])?;
+let v123 = s.builtin(EvalOp::IsNeg, &[v122])?;
 let v124 = s.literal(Lit::Bool(false))?;
 let v125 = if v123 == v124 && !s.is_stuck(v123)? {
 let v126 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -42676,11 +42676,11 @@ let v128 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v129 = eo__24eo_5ftypeof(s, v12)?;
 let v130 = eo__24bv_5fbitwidth(s, v129)?;
 let v131 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v132 = s.operator("add", &[v130, v131])?;
-let v133 = s.operator("add", &[v128, v132])?;
+let v132 = s.builtin(EvalOp::Add, &[v130, v131])?;
+let v133 = s.builtin(EvalOp::Add, &[v128, v132])?;
 let v134 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v135 = s.operator("add", &[v133, v134])?;
-let v136 = s.operator("list_repeat", &[v126, v127, v135])?;
+let v135 = s.builtin(EvalOp::Add, &[v133, v134])?;
+let v136 = s.builtin(EvalOp::ListRepeat, &[v126, v127, v135])?;
 let v137 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v138 = eo__24iota_5frec(s, v136, v137)?;
 v138
@@ -43190,18 +43190,18 @@ let v76 = s.apply(v75, a2)?;
 let v77 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v78 = s.apply(v76, v77)?;
 let v79 = s.apply(v74, v78)?;
-let v80 = s.operator("list_concat", &[v72, a4, v79])?;
+let v80 = s.builtin(EvalOp::ListConcat, &[v72, a4, v79])?;
 let v81 = s.apply(v71, v80)?;
 let v82 = s.apply(v81, a1)?;
-let v83 = s.operator("list_concat", &[v70, a0, v82])?;
+let v83 = s.builtin(EvalOp::ListConcat, &[v70, a0, v82])?;
 let v84 = s.apply(v69, v83)?;
 let v85 = s.construct(Constructor::eo_concat, &[])?;
 let v86 = s.construct(Constructor::eo_bvxor, &[])?;
 let v87 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v88 = s.construct(Constructor::eo_bvxor, &[])?;
 let v89 = s.construct(Constructor::eo_bvxor, &[])?;
-let v90 = s.operator("list_concat", &[v89, a0, a1])?;
-let v91 = s.operator("list_singleton_elim", &[v88, v90])?;
+let v90 = s.builtin(EvalOp::ListConcat, &[v89, a0, a1])?;
+let v91 = s.builtin(EvalOp::ListSingletonElim, &[v88, v90])?;
 let v92 = s.apply(v87, v91)?;
 let v93 = s.apply(v86, v92)?;
 let v94 = s.construct(Constructor::eo_bvxor, &[])?;
@@ -43211,15 +43211,15 @@ let v97 = s.construct(Constructor::eo_concat, &[])?;
 let v98 = s.apply(v97, a3)?;
 let v99 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v100 = s.apply(v98, v99)?;
-let v101 = s.operator("list_concat", &[v96, a4, v100])?;
-let v102 = s.operator("list_singleton_elim", &[v95, v101])?;
+let v101 = s.builtin(EvalOp::ListConcat, &[v96, a4, v100])?;
+let v102 = s.builtin(EvalOp::ListSingletonElim, &[v95, v101])?;
 let v103 = s.apply(v94, v102)?;
 let v104 = s.construct(Constructor::eo_bvxor, &[])?;
 let v105 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v106 = s.construct(Constructor::eo_bvxor, &[])?;
 let v107 = s.construct(Constructor::eo_bvxor, &[])?;
-let v108 = s.operator("list_concat", &[v107, a0, a1])?;
-let v109 = s.operator("list_singleton_elim", &[v106, v108])?;
+let v108 = s.builtin(EvalOp::ListConcat, &[v107, a0, a1])?;
+let v109 = s.builtin(EvalOp::ListSingletonElim, &[v106, v108])?;
 let v110 = s.apply(v105, v109)?;
 let v111 = eo__24eo_5ftypeof(s, v110)?;
 let v112 = eo__24eo_5fnil(s, v104, v111)?;
@@ -43232,8 +43232,8 @@ let v118 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v119 = s.construct(Constructor::eo_extract, &[a7, v118])?;
 let v120 = s.construct(Constructor::eo_bvxor, &[])?;
 let v121 = s.construct(Constructor::eo_bvxor, &[])?;
-let v122 = s.operator("list_concat", &[v121, a0, a1])?;
-let v123 = s.operator("list_singleton_elim", &[v120, v122])?;
+let v122 = s.builtin(EvalOp::ListConcat, &[v121, a0, a1])?;
+let v123 = s.builtin(EvalOp::ListSingletonElim, &[v120, v122])?;
 let v124 = s.apply(v119, v123)?;
 let v125 = s.apply(v117, v124)?;
 let v126 = s.construct(Constructor::eo_bvxor, &[])?;
@@ -43243,8 +43243,8 @@ let v129 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v130 = s.construct(Constructor::eo_extract, &[a7, v129])?;
 let v131 = s.construct(Constructor::eo_bvxor, &[])?;
 let v132 = s.construct(Constructor::eo_bvxor, &[])?;
-let v133 = s.operator("list_concat", &[v132, a0, a1])?;
-let v134 = s.operator("list_singleton_elim", &[v131, v133])?;
+let v133 = s.builtin(EvalOp::ListConcat, &[v132, a0, a1])?;
+let v134 = s.builtin(EvalOp::ListSingletonElim, &[v131, v133])?;
 let v135 = s.apply(v130, v134)?;
 let v136 = eo__24eo_5ftypeof(s, v135)?;
 let v137 = eo__24eo_5fnil(s, v128, v136)?;
@@ -43500,15 +43500,15 @@ let v126 = s.apply(v125, a4)?;
 let v127 = s.apply(v123, v126)?;
 let v128 = s.apply(v121, v127)?;
 let v129 = s.apply(v128, a1)?;
-let v130 = s.operator("list_concat", &[v120, a0, v129])?;
+let v130 = s.builtin(EvalOp::ListConcat, &[v120, a0, v129])?;
 let v131 = s.apply(v119, v130)?;
 let v132 = s.construct(Constructor::eo_concat, &[])?;
 let v133 = s.construct(Constructor::eo_bvxor, &[])?;
 let v134 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v135 = s.construct(Constructor::eo_bvxor, &[])?;
 let v136 = s.construct(Constructor::eo_bvxor, &[])?;
-let v137 = s.operator("list_concat", &[v136, a0, a1])?;
-let v138 = s.operator("list_singleton_elim", &[v135, v137])?;
+let v137 = s.builtin(EvalOp::ListConcat, &[v136, a0, a1])?;
+let v138 = s.builtin(EvalOp::ListSingletonElim, &[v135, v137])?;
 let v139 = s.apply(v134, v138)?;
 let v140 = s.apply(v133, v139)?;
 let v141 = s.construct(Constructor::eo_bvxor, &[])?;
@@ -43517,8 +43517,8 @@ let v143 = s.construct(Constructor::eo_bvxor, &[])?;
 let v144 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v145 = s.construct(Constructor::eo_bvxor, &[])?;
 let v146 = s.construct(Constructor::eo_bvxor, &[])?;
-let v147 = s.operator("list_concat", &[v146, a0, a1])?;
-let v148 = s.operator("list_singleton_elim", &[v145, v147])?;
+let v147 = s.builtin(EvalOp::ListConcat, &[v146, a0, a1])?;
+let v148 = s.builtin(EvalOp::ListSingletonElim, &[v145, v147])?;
 let v149 = s.apply(v144, v148)?;
 let v150 = eo__24eo_5ftypeof(s, v149)?;
 let v151 = eo__24eo_5fnil(s, v143, v150)?;
@@ -43531,8 +43531,8 @@ let v157 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v158 = s.construct(Constructor::eo_extract, &[a7, v157])?;
 let v159 = s.construct(Constructor::eo_bvxor, &[])?;
 let v160 = s.construct(Constructor::eo_bvxor, &[])?;
-let v161 = s.operator("list_concat", &[v160, a0, a1])?;
-let v162 = s.operator("list_singleton_elim", &[v159, v161])?;
+let v161 = s.builtin(EvalOp::ListConcat, &[v160, a0, a1])?;
+let v162 = s.builtin(EvalOp::ListSingletonElim, &[v159, v161])?;
 let v163 = s.apply(v158, v162)?;
 let v164 = s.apply(v156, v163)?;
 let v165 = s.construct(Constructor::eo_bvxor, &[])?;
@@ -43540,15 +43540,15 @@ let v166 = s.construct(Constructor::eo_concat, &[])?;
 let v167 = s.construct(Constructor::eo_concat, &[])?;
 let v168 = s.apply(v167, a2)?;
 let v169 = s.apply(v168, a4)?;
-let v170 = s.operator("list_singleton_elim", &[v166, v169])?;
+let v170 = s.builtin(EvalOp::ListSingletonElim, &[v166, v169])?;
 let v171 = s.apply(v165, v170)?;
 let v172 = s.construct(Constructor::eo_bvxor, &[])?;
 let v173 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v174 = s.construct(Constructor::eo_extract, &[a7, v173])?;
 let v175 = s.construct(Constructor::eo_bvxor, &[])?;
 let v176 = s.construct(Constructor::eo_bvxor, &[])?;
-let v177 = s.operator("list_concat", &[v176, a0, a1])?;
-let v178 = s.operator("list_singleton_elim", &[v175, v177])?;
+let v177 = s.builtin(EvalOp::ListConcat, &[v176, a0, a1])?;
+let v178 = s.builtin(EvalOp::ListSingletonElim, &[v175, v177])?;
 let v179 = s.apply(v174, v178)?;
 let v180 = eo__24eo_5ftypeof(s, v179)?;
 let v181 = eo__24eo_5fnil(s, v172, v180)?;
@@ -43876,15 +43876,15 @@ let v168 = s.apply(v163, v167)?;
 let v169 = s.apply(v161, v168)?;
 let v170 = s.apply(v159, v169)?;
 let v171 = s.apply(v170, a1)?;
-let v172 = s.operator("list_concat", &[v158, a0, v171])?;
+let v172 = s.builtin(EvalOp::ListConcat, &[v158, a0, v171])?;
 let v173 = s.apply(v157, v172)?;
 let v174 = s.construct(Constructor::eo_concat, &[])?;
 let v175 = s.construct(Constructor::eo_bvxor, &[])?;
 let v176 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v177 = s.construct(Constructor::eo_bvxor, &[])?;
 let v178 = s.construct(Constructor::eo_bvxor, &[])?;
-let v179 = s.operator("list_concat", &[v178, a0, a1])?;
-let v180 = s.operator("list_singleton_elim", &[v177, v179])?;
+let v179 = s.builtin(EvalOp::ListConcat, &[v178, a0, a1])?;
+let v180 = s.builtin(EvalOp::ListSingletonElim, &[v177, v179])?;
 let v181 = s.apply(v176, v180)?;
 let v182 = s.apply(v175, v181)?;
 let v183 = s.construct(Constructor::eo_bvxor, &[])?;
@@ -43893,8 +43893,8 @@ let v185 = s.construct(Constructor::eo_bvxor, &[])?;
 let v186 = s.construct(Constructor::eo_extract, &[a5, a6])?;
 let v187 = s.construct(Constructor::eo_bvxor, &[])?;
 let v188 = s.construct(Constructor::eo_bvxor, &[])?;
-let v189 = s.operator("list_concat", &[v188, a0, a1])?;
-let v190 = s.operator("list_singleton_elim", &[v187, v189])?;
+let v189 = s.builtin(EvalOp::ListConcat, &[v188, a0, a1])?;
+let v190 = s.builtin(EvalOp::ListSingletonElim, &[v187, v189])?;
 let v191 = s.apply(v186, v190)?;
 let v192 = eo__24eo_5ftypeof(s, v191)?;
 let v193 = eo__24eo_5fnil(s, v185, v192)?;
@@ -43906,8 +43906,8 @@ let v198 = s.construct(Constructor::eo_bvxor, &[])?;
 let v199 = s.construct(Constructor::eo_extract, &[a7, a8])?;
 let v200 = s.construct(Constructor::eo_bvxor, &[])?;
 let v201 = s.construct(Constructor::eo_bvxor, &[])?;
-let v202 = s.operator("list_concat", &[v201, a0, a1])?;
-let v203 = s.operator("list_singleton_elim", &[v200, v202])?;
+let v202 = s.builtin(EvalOp::ListConcat, &[v201, a0, a1])?;
+let v203 = s.builtin(EvalOp::ListSingletonElim, &[v200, v202])?;
 let v204 = s.apply(v199, v203)?;
 let v205 = s.apply(v198, v204)?;
 let v206 = s.construct(Constructor::eo_bvxor, &[])?;
@@ -43916,8 +43916,8 @@ let v208 = s.construct(Constructor::eo_bvxor, &[])?;
 let v209 = s.construct(Constructor::eo_extract, &[a7, a8])?;
 let v210 = s.construct(Constructor::eo_bvxor, &[])?;
 let v211 = s.construct(Constructor::eo_bvxor, &[])?;
-let v212 = s.operator("list_concat", &[v211, a0, a1])?;
-let v213 = s.operator("list_singleton_elim", &[v210, v212])?;
+let v212 = s.builtin(EvalOp::ListConcat, &[v211, a0, a1])?;
+let v213 = s.builtin(EvalOp::ListSingletonElim, &[v210, v212])?;
 let v214 = s.apply(v209, v213)?;
 let v215 = eo__24eo_5ftypeof(s, v214)?;
 let v216 = eo__24eo_5fnil(s, v208, v215)?;
@@ -43930,8 +43930,8 @@ let v222 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v223 = s.construct(Constructor::eo_extract, &[a9, v222])?;
 let v224 = s.construct(Constructor::eo_bvxor, &[])?;
 let v225 = s.construct(Constructor::eo_bvxor, &[])?;
-let v226 = s.operator("list_concat", &[v225, a0, a1])?;
-let v227 = s.operator("list_singleton_elim", &[v224, v226])?;
+let v226 = s.builtin(EvalOp::ListConcat, &[v225, a0, a1])?;
+let v227 = s.builtin(EvalOp::ListSingletonElim, &[v224, v226])?;
 let v228 = s.apply(v223, v227)?;
 let v229 = s.apply(v221, v228)?;
 let v230 = s.construct(Constructor::eo_bvxor, &[])?;
@@ -43941,8 +43941,8 @@ let v233 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v234 = s.construct(Constructor::eo_extract, &[a9, v233])?;
 let v235 = s.construct(Constructor::eo_bvxor, &[])?;
 let v236 = s.construct(Constructor::eo_bvxor, &[])?;
-let v237 = s.operator("list_concat", &[v236, a0, a1])?;
-let v238 = s.operator("list_singleton_elim", &[v235, v237])?;
+let v237 = s.builtin(EvalOp::ListConcat, &[v236, a0, a1])?;
+let v238 = s.builtin(EvalOp::ListSingletonElim, &[v235, v237])?;
 let v239 = s.apply(v234, v238)?;
 let v240 = eo__24eo_5ftypeof(s, v239)?;
 let v241 = eo__24eo_5fnil(s, v232, v240)?;
@@ -44106,13 +44106,13 @@ let v24 = s.construct(Constructor::eo_int_5fto_5fbv, &[a3])?;
 let v25 = s.apply(v24, a2)?;
 let v26 = s.apply(v23, v25)?;
 let v27 = s.apply(v26, a1)?;
-let v28 = s.operator("list_concat", &[v22, a0, v27])?;
+let v28 = s.builtin(EvalOp::ListConcat, &[v22, a0, v27])?;
 let v29 = s.apply(v21, v28)?;
 let v30 = s.construct(Constructor::eo_bvnot, &[])?;
 let v31 = s.construct(Constructor::eo_bvxor, &[])?;
 let v32 = s.construct(Constructor::eo_bvxor, &[])?;
-let v33 = s.operator("list_concat", &[v32, a0, a1])?;
-let v34 = s.operator("list_singleton_elim", &[v31, v33])?;
+let v33 = s.builtin(EvalOp::ListConcat, &[v32, a0, a1])?;
+let v34 = s.builtin(EvalOp::ListSingletonElim, &[v31, v33])?;
 let v35 = s.apply(v30, v34)?;
 let v36 = s.apply(v29, v35)?;
 return Ok(v36);
@@ -44136,16 +44136,16 @@ let v4 = s.construct(Constructor::eo_bvxor, &[])?;
 let v5 = s.construct(Constructor::eo_bvxor, &[])?;
 let v6 = s.apply(v5, a3)?;
 let v7 = s.apply(v6, a2)?;
-let v8 = s.operator("list_concat", &[v4, a1, v7])?;
+let v8 = s.builtin(EvalOp::ListConcat, &[v4, a1, v7])?;
 let v9 = s.apply(v3, v8)?;
-let v10 = s.operator("list_concat", &[v1, a0, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v1, a0, v9])?;
 let v11 = s.apply(v0, v10)?;
 let v12 = s.construct(Constructor::eo_bvxor, &[])?;
 let v13 = s.construct(Constructor::eo_bvxor, &[])?;
 let v14 = s.construct(Constructor::eo_bvxor, &[])?;
-let v15 = s.operator("list_concat", &[v14, a1, a2])?;
-let v16 = s.operator("list_concat", &[v13, a0, v15])?;
-let v17 = s.operator("list_singleton_elim", &[v12, v16])?;
+let v15 = s.builtin(EvalOp::ListConcat, &[v14, a1, a2])?;
+let v16 = s.builtin(EvalOp::ListConcat, &[v13, a0, v15])?;
+let v17 = s.builtin(EvalOp::ListSingletonElim, &[v12, v16])?;
 let v18 = s.apply(v11, v17)?;
 return Ok(v18);
 }
@@ -44170,17 +44170,17 @@ let v6 = s.construct(Constructor::eo_bvnot, &[])?;
 let v7 = s.apply(v6, a3)?;
 let v8 = s.apply(v5, v7)?;
 let v9 = s.apply(v8, a2)?;
-let v10 = s.operator("list_concat", &[v4, a1, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v4, a1, v9])?;
 let v11 = s.apply(v3, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.construct(Constructor::eo_bvnot, &[])?;
 let v15 = s.construct(Constructor::eo_bvxor, &[])?;
 let v16 = s.construct(Constructor::eo_bvxor, &[])?;
 let v17 = s.construct(Constructor::eo_bvxor, &[])?;
-let v18 = s.operator("list_concat", &[v17, a1, a2])?;
-let v19 = s.operator("list_concat", &[v16, a0, v18])?;
-let v20 = s.operator("list_singleton_elim", &[v15, v19])?;
+let v18 = s.builtin(EvalOp::ListConcat, &[v17, a1, a2])?;
+let v19 = s.builtin(EvalOp::ListConcat, &[v16, a0, v18])?;
+let v20 = s.builtin(EvalOp::ListSingletonElim, &[v15, v19])?;
 let v21 = s.apply(v14, v20)?;
 let v22 = s.apply(v13, v21)?;
 return Ok(v22);
@@ -44206,17 +44206,17 @@ let v6 = s.construct(Constructor::eo_bvxor, &[])?;
 let v7 = s.construct(Constructor::eo_bvxor, &[])?;
 let v8 = s.apply(v7, a3)?;
 let v9 = s.apply(v8, a2)?;
-let v10 = s.operator("list_concat", &[v6, a1, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v6, a1, v9])?;
 let v11 = s.apply(v5, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.construct(Constructor::eo_bvnot, &[])?;
 let v15 = s.construct(Constructor::eo_bvxor, &[])?;
 let v16 = s.construct(Constructor::eo_bvxor, &[])?;
 let v17 = s.construct(Constructor::eo_bvxor, &[])?;
-let v18 = s.operator("list_concat", &[v17, a1, a2])?;
-let v19 = s.operator("list_concat", &[v16, a0, v18])?;
-let v20 = s.operator("list_singleton_elim", &[v15, v19])?;
+let v18 = s.builtin(EvalOp::ListConcat, &[v17, a1, a2])?;
+let v19 = s.builtin(EvalOp::ListConcat, &[v16, a0, v18])?;
+let v20 = s.builtin(EvalOp::ListSingletonElim, &[v15, v19])?;
 let v21 = s.apply(v14, v20)?;
 let v22 = s.apply(v13, v21)?;
 return Ok(v22);
@@ -44847,12 +44847,12 @@ if v4 != v6 { break 'case0; }
 let v7 = eo__24get_5fbv_5fpoly_5fnorm_5frec(s, v5)?;
 let v8 = eo__24eo_5ftypeof(s, v5)?;
 let v9 = eo__24bv_5fbitwidth(s, v8)?;
-let v10 = s.operator("is_z", &[v9])?;
+let v10 = s.builtin(EvalOp::IsZ, &[v9])?;
 let v11 = match s.boolean_value(v10, false)? {
 Some(true) => {
 let v12 = eo__24eo_5ftypeof(s, v5)?;
 let v13 = eo__24bv_5fbitwidth(s, v12)?;
-let v14 = s.operator("is_neg", &[v13])?;
+let v14 = s.builtin(EvalOp::IsNeg, &[v13])?;
 let v15 = match s.boolean_value(v14, false)? {
 Some(true) => {
 let v16 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -44861,7 +44861,7 @@ v16
 let v17 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v18 = eo__24eo_5ftypeof(s, v5)?;
 let v19 = eo__24bv_5fbitwidth(s, v18)?;
-let v20 = s.operator("pow", &[v17, v19])?;
+let v20 = s.builtin(EvalOp::Pow, &[v17, v19])?;
 v20
 }, None => s.stuck(),
 };
@@ -44878,12 +44878,12 @@ let v25 = eo__24poly_5fmod_5fcoeffs(s, v7, v11)?;
 let v26 = eo__24get_5fbv_5fpoly_5fnorm_5frec(s, v2)?;
 let v27 = eo__24eo_5ftypeof(s, v5)?;
 let v28 = eo__24bv_5fbitwidth(s, v27)?;
-let v29 = s.operator("is_z", &[v28])?;
+let v29 = s.builtin(EvalOp::IsZ, &[v28])?;
 let v30 = match s.boolean_value(v29, false)? {
 Some(true) => {
 let v31 = eo__24eo_5ftypeof(s, v5)?;
 let v32 = eo__24bv_5fbitwidth(s, v31)?;
-let v33 = s.operator("is_neg", &[v32])?;
+let v33 = s.builtin(EvalOp::IsNeg, &[v32])?;
 let v34 = match s.boolean_value(v33, false)? {
 Some(true) => {
 let v35 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -44892,7 +44892,7 @@ v35
 let v36 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v37 = eo__24eo_5ftypeof(s, v5)?;
 let v38 = eo__24bv_5fbitwidth(s, v37)?;
-let v39 = s.operator("pow", &[v36, v38])?;
+let v39 = s.builtin(EvalOp::Pow, &[v36, v38])?;
 v39
 }, None => s.stuck(),
 };
@@ -44906,7 +44906,7 @@ v43
 }, None => s.stuck(),
 };
 let v44 = eo__24poly_5fmod_5fcoeffs(s, v26, v30)?;
-let v45 = s.operator("eq", &[v25, v44])?;
+let v45 = s.builtin(EvalOp::Eq, &[v25, v44])?;
 let v46 = s.literal(Lit::Bool(true))?;
 let v47 = if v45 == v46 && !s.is_stuck(v45)? {
 let v48 = s.construct(Constructor::eo__3d, &[])?;
@@ -45056,17 +45056,17 @@ if v69 != v71 { break 'case0; }
 if v70 != v19 { break 'case0; }
 if v67 != v16 { break 'case0; }
 if v60 != v39 { break 'case0; }
-let v72 = s.operator("to_z", &[v39])?;
+let v72 = s.builtin(EvalOp::ToInt, &[v39])?;
 let v73 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v74 = if v72 == v73 && !s.is_stuck(v72)? {
-let v75 = s.operator("to_z", &[v35])?;
+let v75 = s.builtin(EvalOp::ToInt, &[v35])?;
 let v76 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v77 = s.operator("zmod", &[v75, v76])?;
+let v77 = s.builtin(EvalOp::IntMod, &[v75, v76])?;
 let v78 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v79 = if v77 == v78 && !s.is_stuck(v77)? {
-let v80 = s.operator("to_z", &[v56])?;
+let v80 = s.builtin(EvalOp::ToInt, &[v56])?;
 let v81 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v82 = s.operator("zmod", &[v80, v81])?;
+let v82 = s.builtin(EvalOp::IntMod, &[v80, v81])?;
 let v83 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v84 = if v82 == v83 && !s.is_stuck(v82)? {
 let v85 = s.construct(Constructor::eo__3d, &[])?;
@@ -45103,9 +45103,9 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = s.construct(Constructor::eo_or, &[])?;
 let v3 = eo__24chain_5fm_5fresolve(s, v1[0], a1, a2)?;
-let v4 = s.operator("list_setof", &[v2, v3])?;
+let v4 = s.builtin(EvalOp::ListSetof, &[v2, v3])?;
 let v5 = eo__24from_5fclause(s, v4)?;
-let v6 = s.operator("eq", &[v5, a0])?;
+let v6 = s.builtin(EvalOp::Eq, &[v5, a0])?;
 let v7 = match s.boolean_value(v6, false)? {
 Some(true) => {
 let v8 = s.literal(Lit::Bool(true))?;
@@ -45114,8 +45114,8 @@ v8
 let v9 = s.construct(Constructor::eo_or, &[])?;
 let v10 = s.construct(Constructor::eo_or, &[])?;
 let v11 = eo__24chain_5fm_5fresolve(s, v1[0], a1, a2)?;
-let v12 = s.operator("list_setof", &[v10, v11])?;
-let v13 = s.operator("list_minclude", &[v9, a0, v12])?;
+let v12 = s.builtin(EvalOp::ListSetof, &[v10, v11])?;
+let v13 = s.builtin(EvalOp::ListMinclude, &[v9, a0, v12])?;
 v13
 }, None => s.stuck(),
 };
@@ -45178,7 +45178,7 @@ let v2 = s.apply(v1, a0)?;
 let v3 = s.apply(v0, v2)?;
 let v4 = s.construct(Constructor::eo_or, &[])?;
 let v5 = s.construct(Constructor::eo_and, &[])?;
-let v6 = s.operator("list_nth", &[v5, a0, a1])?;
+let v6 = s.builtin(EvalOp::ListNth, &[v5, a0, a1])?;
 let v7 = s.apply(v4, v6)?;
 let v8 = s.literal(Lit::Bool(false))?;
 let v9 = s.apply(v7, v8)?;
@@ -45761,7 +45761,7 @@ let v1 = s.apply(v0, a0)?;
 let v2 = s.construct(Constructor::eo_or, &[])?;
 let v3 = s.construct(Constructor::eo_not, &[])?;
 let v4 = s.construct(Constructor::eo_or, &[])?;
-let v5 = s.operator("list_nth", &[v4, a0, a1])?;
+let v5 = s.builtin(EvalOp::ListNth, &[v4, a0, a1])?;
 let v6 = s.apply(v3, v5)?;
 let v7 = s.apply(v2, v6)?;
 let v8 = s.literal(Lit::Bool(false))?;
@@ -46015,17 +46015,17 @@ let v28 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v30 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v31 = s.operator("list_singleton_intro", &[v30, v7])?;
-let v32 = s.operator("list_rev", &[v29, v31])?;
+let v31 = s.builtin(EvalOp::ListSingletonIntro, &[v30, v7])?;
+let v32 = s.builtin(EvalOp::ListRev, &[v29, v31])?;
 v32
 }, Some(false) => {
 let v33 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v34 = s.operator("list_singleton_intro", &[v33, v7])?;
+let v34 = s.builtin(EvalOp::ListSingletonIntro, &[v33, v7])?;
 v34
 }, None => s.stuck(),
 };
 let v35 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v36 = s.operator("list_nth", &[v27, v28, v35])?;
+let v36 = s.builtin(EvalOp::ListNth, &[v27, v28, v35])?;
 let v37 = if v36 == v24 && !s.is_stuck(v36)? {
 let v38 = s.construct(Constructor::eo__3d, &[])?;
 let v39 = s.apply(v38, v24)?;
@@ -46048,17 +46048,17 @@ let v54 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v55 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v56 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v57 = s.operator("list_singleton_intro", &[v56, v4])?;
-let v58 = s.operator("list_rev", &[v55, v57])?;
+let v57 = s.builtin(EvalOp::ListSingletonIntro, &[v56, v4])?;
+let v58 = s.builtin(EvalOp::ListRev, &[v55, v57])?;
 v58
 }, Some(false) => {
 let v59 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v60 = s.operator("list_singleton_intro", &[v59, v4])?;
+let v60 = s.builtin(EvalOp::ListSingletonIntro, &[v59, v4])?;
 v60
 }, None => s.stuck(),
 };
 let v61 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v62 = s.operator("list_nth", &[v53, v54, v61])?;
+let v62 = s.builtin(EvalOp::ListNth, &[v53, v54, v61])?;
 let v63 = s.apply(v52, v62)?;
 let v64 = s.construct(Constructor::eo__2d, &[])?;
 let v65 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -46067,17 +46067,17 @@ let v67 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v68 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v69 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v70 = s.operator("list_singleton_intro", &[v69, v4])?;
-let v71 = s.operator("list_rev", &[v68, v70])?;
+let v70 = s.builtin(EvalOp::ListSingletonIntro, &[v69, v4])?;
+let v71 = s.builtin(EvalOp::ListRev, &[v68, v70])?;
 v71
 }, Some(false) => {
 let v72 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v73 = s.operator("list_singleton_intro", &[v72, v4])?;
+let v73 = s.builtin(EvalOp::ListSingletonIntro, &[v72, v4])?;
 v73
 }, None => s.stuck(),
 };
 let v74 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v75 = s.operator("list_nth", &[v66, v67, v74])?;
+let v75 = s.builtin(EvalOp::ListNth, &[v66, v67, v74])?;
 let v76 = s.apply(v65, v75)?;
 let v77 = s.apply(v64, v76)?;
 let v78 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -46092,38 +46092,38 @@ let v84 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v85 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v86 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v87 = s.operator("list_singleton_intro", &[v86, v4])?;
-let v88 = s.operator("list_rev", &[v85, v87])?;
+let v87 = s.builtin(EvalOp::ListSingletonIntro, &[v86, v4])?;
+let v88 = s.builtin(EvalOp::ListRev, &[v85, v87])?;
 v88
 }, Some(false) => {
 let v89 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v90 = s.operator("list_singleton_intro", &[v89, v4])?;
+let v90 = s.builtin(EvalOp::ListSingletonIntro, &[v89, v4])?;
 v90
 }, None => s.stuck(),
 };
 let v91 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v92 = s.operator("list_nth", &[v83, v84, v91])?;
+let v92 = s.builtin(EvalOp::ListNth, &[v83, v84, v91])?;
 let v93 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v94 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v95 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v96 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v97 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v98 = s.operator("list_singleton_intro", &[v97, v4])?;
-let v99 = s.operator("list_rev", &[v96, v98])?;
+let v98 = s.builtin(EvalOp::ListSingletonIntro, &[v97, v4])?;
+let v99 = s.builtin(EvalOp::ListRev, &[v96, v98])?;
 v99
 }, Some(false) => {
 let v100 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v101 = s.operator("list_singleton_intro", &[v100, v4])?;
+let v101 = s.builtin(EvalOp::ListSingletonIntro, &[v100, v4])?;
 v101
 }, None => s.stuck(),
 };
 let v102 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v103 = s.operator("list_nth", &[v94, v95, v102])?;
-let v104 = s.operator("len", &[v103])?;
+let v103 = s.builtin(EvalOp::ListNth, &[v94, v95, v102])?;
+let v104 = s.builtin(EvalOp::Length, &[v103])?;
 let v105 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v106 = s.operator("add", &[v104, v105])?;
-let v107 = s.operator("extract", &[v92, v93, v106])?;
+let v106 = s.builtin(EvalOp::Add, &[v104, v105])?;
+let v107 = s.builtin(EvalOp::Extract, &[v92, v93, v106])?;
 v107
 }, Some(false) => {
 let v108 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46131,42 +46131,42 @@ let v109 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v110 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v111 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v112 = s.operator("list_singleton_intro", &[v111, v4])?;
-let v113 = s.operator("list_rev", &[v110, v112])?;
+let v112 = s.builtin(EvalOp::ListSingletonIntro, &[v111, v4])?;
+let v113 = s.builtin(EvalOp::ListRev, &[v110, v112])?;
 v113
 }, Some(false) => {
 let v114 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v115 = s.operator("list_singleton_intro", &[v114, v4])?;
+let v115 = s.builtin(EvalOp::ListSingletonIntro, &[v114, v4])?;
 v115
 }, None => s.stuck(),
 };
 let v116 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v117 = s.operator("list_nth", &[v108, v109, v116])?;
+let v117 = s.builtin(EvalOp::ListNth, &[v108, v109, v116])?;
 let v118 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v119 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v120 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v121 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v122 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v123 = s.operator("list_singleton_intro", &[v122, v4])?;
-let v124 = s.operator("list_rev", &[v121, v123])?;
+let v123 = s.builtin(EvalOp::ListSingletonIntro, &[v122, v4])?;
+let v124 = s.builtin(EvalOp::ListRev, &[v121, v123])?;
 v124
 }, Some(false) => {
 let v125 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v126 = s.operator("list_singleton_intro", &[v125, v4])?;
+let v126 = s.builtin(EvalOp::ListSingletonIntro, &[v125, v4])?;
 v126
 }, None => s.stuck(),
 };
 let v127 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v128 = s.operator("list_nth", &[v119, v120, v127])?;
-let v129 = s.operator("len", &[v128])?;
-let v130 = s.operator("extract", &[v117, v118, v129])?;
+let v128 = s.builtin(EvalOp::ListNth, &[v119, v120, v127])?;
+let v129 = s.builtin(EvalOp::Length, &[v128])?;
+let v130 = s.builtin(EvalOp::Extract, &[v117, v118, v129])?;
 v130
 }, None => s.stuck(),
 };
-let v131 = s.operator("list_singleton_intro", &[v81, v82])?;
+let v131 = s.builtin(EvalOp::ListSingletonIntro, &[v81, v82])?;
 let v132 = eo__24str_5fflatten(s, v131)?;
-let v133 = s.operator("list_rev", &[v80, v132])?;
+let v133 = s.builtin(EvalOp::ListRev, &[v80, v132])?;
 v133
 }, Some(false) => {
 let v134 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46177,38 +46177,38 @@ let v137 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v138 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v139 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v140 = s.operator("list_singleton_intro", &[v139, v4])?;
-let v141 = s.operator("list_rev", &[v138, v140])?;
+let v140 = s.builtin(EvalOp::ListSingletonIntro, &[v139, v4])?;
+let v141 = s.builtin(EvalOp::ListRev, &[v138, v140])?;
 v141
 }, Some(false) => {
 let v142 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v143 = s.operator("list_singleton_intro", &[v142, v4])?;
+let v143 = s.builtin(EvalOp::ListSingletonIntro, &[v142, v4])?;
 v143
 }, None => s.stuck(),
 };
 let v144 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v145 = s.operator("list_nth", &[v136, v137, v144])?;
+let v145 = s.builtin(EvalOp::ListNth, &[v136, v137, v144])?;
 let v146 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v147 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v148 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v149 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v150 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v151 = s.operator("list_singleton_intro", &[v150, v4])?;
-let v152 = s.operator("list_rev", &[v149, v151])?;
+let v151 = s.builtin(EvalOp::ListSingletonIntro, &[v150, v4])?;
+let v152 = s.builtin(EvalOp::ListRev, &[v149, v151])?;
 v152
 }, Some(false) => {
 let v153 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v154 = s.operator("list_singleton_intro", &[v153, v4])?;
+let v154 = s.builtin(EvalOp::ListSingletonIntro, &[v153, v4])?;
 v154
 }, None => s.stuck(),
 };
 let v155 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v156 = s.operator("list_nth", &[v147, v148, v155])?;
-let v157 = s.operator("len", &[v156])?;
+let v156 = s.builtin(EvalOp::ListNth, &[v147, v148, v155])?;
+let v157 = s.builtin(EvalOp::Length, &[v156])?;
 let v158 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v159 = s.operator("add", &[v157, v158])?;
-let v160 = s.operator("extract", &[v145, v146, v159])?;
+let v159 = s.builtin(EvalOp::Add, &[v157, v158])?;
+let v160 = s.builtin(EvalOp::Extract, &[v145, v146, v159])?;
 v160
 }, Some(false) => {
 let v161 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46216,40 +46216,40 @@ let v162 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v163 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v164 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v165 = s.operator("list_singleton_intro", &[v164, v4])?;
-let v166 = s.operator("list_rev", &[v163, v165])?;
+let v165 = s.builtin(EvalOp::ListSingletonIntro, &[v164, v4])?;
+let v166 = s.builtin(EvalOp::ListRev, &[v163, v165])?;
 v166
 }, Some(false) => {
 let v167 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v168 = s.operator("list_singleton_intro", &[v167, v4])?;
+let v168 = s.builtin(EvalOp::ListSingletonIntro, &[v167, v4])?;
 v168
 }, None => s.stuck(),
 };
 let v169 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v170 = s.operator("list_nth", &[v161, v162, v169])?;
+let v170 = s.builtin(EvalOp::ListNth, &[v161, v162, v169])?;
 let v171 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v172 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v173 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v174 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v175 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v176 = s.operator("list_singleton_intro", &[v175, v4])?;
-let v177 = s.operator("list_rev", &[v174, v176])?;
+let v176 = s.builtin(EvalOp::ListSingletonIntro, &[v175, v4])?;
+let v177 = s.builtin(EvalOp::ListRev, &[v174, v176])?;
 v177
 }, Some(false) => {
 let v178 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v179 = s.operator("list_singleton_intro", &[v178, v4])?;
+let v179 = s.builtin(EvalOp::ListSingletonIntro, &[v178, v4])?;
 v179
 }, None => s.stuck(),
 };
 let v180 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v181 = s.operator("list_nth", &[v172, v173, v180])?;
-let v182 = s.operator("len", &[v181])?;
-let v183 = s.operator("extract", &[v170, v171, v182])?;
+let v181 = s.builtin(EvalOp::ListNth, &[v172, v173, v180])?;
+let v182 = s.builtin(EvalOp::Length, &[v181])?;
+let v183 = s.builtin(EvalOp::Extract, &[v170, v171, v182])?;
 v183
 }, None => s.stuck(),
 };
-let v184 = s.operator("list_singleton_intro", &[v134, v135])?;
+let v184 = s.builtin(EvalOp::ListSingletonIntro, &[v134, v135])?;
 let v185 = eo__24str_5fflatten(s, v184)?;
 v185
 }, None => s.stuck(),
@@ -46263,20 +46263,20 @@ let v190 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v191 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v192 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v193 = s.operator("list_singleton_intro", &[v192, v7])?;
-let v194 = s.operator("list_rev", &[v191, v193])?;
+let v193 = s.builtin(EvalOp::ListSingletonIntro, &[v192, v7])?;
+let v194 = s.builtin(EvalOp::ListRev, &[v191, v193])?;
 v194
 }, Some(false) => {
 let v195 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v196 = s.operator("list_singleton_intro", &[v195, v7])?;
+let v196 = s.builtin(EvalOp::ListSingletonIntro, &[v195, v7])?;
 v196
 }, None => s.stuck(),
 };
 let v197 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v198 = s.operator("list_nth", &[v189, v190, v197])?;
-let v199 = s.operator("list_singleton_intro", &[v188, v198])?;
+let v198 = s.builtin(EvalOp::ListNth, &[v189, v190, v197])?;
+let v199 = s.builtin(EvalOp::ListSingletonIntro, &[v188, v198])?;
 let v200 = eo__24str_5fflatten(s, v199)?;
-let v201 = s.operator("list_rev", &[v187, v200])?;
+let v201 = s.builtin(EvalOp::ListRev, &[v187, v200])?;
 v201
 }, Some(false) => {
 let v202 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46285,24 +46285,24 @@ let v204 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v205 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v206 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v207 = s.operator("list_singleton_intro", &[v206, v7])?;
-let v208 = s.operator("list_rev", &[v205, v207])?;
+let v207 = s.builtin(EvalOp::ListSingletonIntro, &[v206, v7])?;
+let v208 = s.builtin(EvalOp::ListRev, &[v205, v207])?;
 v208
 }, Some(false) => {
 let v209 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v210 = s.operator("list_singleton_intro", &[v209, v7])?;
+let v210 = s.builtin(EvalOp::ListSingletonIntro, &[v209, v7])?;
 v210
 }, None => s.stuck(),
 };
 let v211 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v212 = s.operator("list_nth", &[v203, v204, v211])?;
-let v213 = s.operator("list_singleton_intro", &[v202, v212])?;
+let v212 = s.builtin(EvalOp::ListNth, &[v203, v204, v211])?;
+let v213 = s.builtin(EvalOp::ListSingletonIntro, &[v202, v212])?;
 let v214 = eo__24str_5fflatten(s, v213)?;
 v214
 }, None => s.stuck(),
 };
 let v215 = eo__24str_5foverlap_5frec(s, v79, v186)?;
-let v216 = s.operator("add", &[v78, v215])?;
+let v216 = s.builtin(EvalOp::Add, &[v78, v215])?;
 let v217 = s.apply(v77, v216)?;
 let v218 = s.apply(v63, v217)?;
 let v219 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -46317,38 +46317,38 @@ let v225 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v226 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v227 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v228 = s.operator("list_singleton_intro", &[v227, v4])?;
-let v229 = s.operator("list_rev", &[v226, v228])?;
+let v228 = s.builtin(EvalOp::ListSingletonIntro, &[v227, v4])?;
+let v229 = s.builtin(EvalOp::ListRev, &[v226, v228])?;
 v229
 }, Some(false) => {
 let v230 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v231 = s.operator("list_singleton_intro", &[v230, v4])?;
+let v231 = s.builtin(EvalOp::ListSingletonIntro, &[v230, v4])?;
 v231
 }, None => s.stuck(),
 };
 let v232 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v233 = s.operator("list_nth", &[v224, v225, v232])?;
+let v233 = s.builtin(EvalOp::ListNth, &[v224, v225, v232])?;
 let v234 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v235 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v236 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v237 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v238 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v239 = s.operator("list_singleton_intro", &[v238, v4])?;
-let v240 = s.operator("list_rev", &[v237, v239])?;
+let v239 = s.builtin(EvalOp::ListSingletonIntro, &[v238, v4])?;
+let v240 = s.builtin(EvalOp::ListRev, &[v237, v239])?;
 v240
 }, Some(false) => {
 let v241 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v242 = s.operator("list_singleton_intro", &[v241, v4])?;
+let v242 = s.builtin(EvalOp::ListSingletonIntro, &[v241, v4])?;
 v242
 }, None => s.stuck(),
 };
 let v243 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v244 = s.operator("list_nth", &[v235, v236, v243])?;
-let v245 = s.operator("len", &[v244])?;
+let v244 = s.builtin(EvalOp::ListNth, &[v235, v236, v243])?;
+let v245 = s.builtin(EvalOp::Length, &[v244])?;
 let v246 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v247 = s.operator("add", &[v245, v246])?;
-let v248 = s.operator("extract", &[v233, v234, v247])?;
+let v247 = s.builtin(EvalOp::Add, &[v245, v246])?;
+let v248 = s.builtin(EvalOp::Extract, &[v233, v234, v247])?;
 v248
 }, Some(false) => {
 let v249 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46356,42 +46356,42 @@ let v250 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v251 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v252 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v253 = s.operator("list_singleton_intro", &[v252, v4])?;
-let v254 = s.operator("list_rev", &[v251, v253])?;
+let v253 = s.builtin(EvalOp::ListSingletonIntro, &[v252, v4])?;
+let v254 = s.builtin(EvalOp::ListRev, &[v251, v253])?;
 v254
 }, Some(false) => {
 let v255 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v256 = s.operator("list_singleton_intro", &[v255, v4])?;
+let v256 = s.builtin(EvalOp::ListSingletonIntro, &[v255, v4])?;
 v256
 }, None => s.stuck(),
 };
 let v257 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v258 = s.operator("list_nth", &[v249, v250, v257])?;
+let v258 = s.builtin(EvalOp::ListNth, &[v249, v250, v257])?;
 let v259 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v260 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v261 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v262 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v263 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v264 = s.operator("list_singleton_intro", &[v263, v4])?;
-let v265 = s.operator("list_rev", &[v262, v264])?;
+let v264 = s.builtin(EvalOp::ListSingletonIntro, &[v263, v4])?;
+let v265 = s.builtin(EvalOp::ListRev, &[v262, v264])?;
 v265
 }, Some(false) => {
 let v266 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v267 = s.operator("list_singleton_intro", &[v266, v4])?;
+let v267 = s.builtin(EvalOp::ListSingletonIntro, &[v266, v4])?;
 v267
 }, None => s.stuck(),
 };
 let v268 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v269 = s.operator("list_nth", &[v260, v261, v268])?;
-let v270 = s.operator("len", &[v269])?;
-let v271 = s.operator("extract", &[v258, v259, v270])?;
+let v269 = s.builtin(EvalOp::ListNth, &[v260, v261, v268])?;
+let v270 = s.builtin(EvalOp::Length, &[v269])?;
+let v271 = s.builtin(EvalOp::Extract, &[v258, v259, v270])?;
 v271
 }, None => s.stuck(),
 };
-let v272 = s.operator("list_singleton_intro", &[v222, v223])?;
+let v272 = s.builtin(EvalOp::ListSingletonIntro, &[v222, v223])?;
 let v273 = eo__24str_5fflatten(s, v272)?;
-let v274 = s.operator("list_rev", &[v221, v273])?;
+let v274 = s.builtin(EvalOp::ListRev, &[v221, v273])?;
 v274
 }, Some(false) => {
 let v275 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46402,38 +46402,38 @@ let v278 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v279 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v280 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v281 = s.operator("list_singleton_intro", &[v280, v4])?;
-let v282 = s.operator("list_rev", &[v279, v281])?;
+let v281 = s.builtin(EvalOp::ListSingletonIntro, &[v280, v4])?;
+let v282 = s.builtin(EvalOp::ListRev, &[v279, v281])?;
 v282
 }, Some(false) => {
 let v283 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v284 = s.operator("list_singleton_intro", &[v283, v4])?;
+let v284 = s.builtin(EvalOp::ListSingletonIntro, &[v283, v4])?;
 v284
 }, None => s.stuck(),
 };
 let v285 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v286 = s.operator("list_nth", &[v277, v278, v285])?;
+let v286 = s.builtin(EvalOp::ListNth, &[v277, v278, v285])?;
 let v287 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v288 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v289 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v290 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v291 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v292 = s.operator("list_singleton_intro", &[v291, v4])?;
-let v293 = s.operator("list_rev", &[v290, v292])?;
+let v292 = s.builtin(EvalOp::ListSingletonIntro, &[v291, v4])?;
+let v293 = s.builtin(EvalOp::ListRev, &[v290, v292])?;
 v293
 }, Some(false) => {
 let v294 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v295 = s.operator("list_singleton_intro", &[v294, v4])?;
+let v295 = s.builtin(EvalOp::ListSingletonIntro, &[v294, v4])?;
 v295
 }, None => s.stuck(),
 };
 let v296 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v297 = s.operator("list_nth", &[v288, v289, v296])?;
-let v298 = s.operator("len", &[v297])?;
+let v297 = s.builtin(EvalOp::ListNth, &[v288, v289, v296])?;
+let v298 = s.builtin(EvalOp::Length, &[v297])?;
 let v299 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v300 = s.operator("add", &[v298, v299])?;
-let v301 = s.operator("extract", &[v286, v287, v300])?;
+let v300 = s.builtin(EvalOp::Add, &[v298, v299])?;
+let v301 = s.builtin(EvalOp::Extract, &[v286, v287, v300])?;
 v301
 }, Some(false) => {
 let v302 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46441,40 +46441,40 @@ let v303 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v304 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v305 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v306 = s.operator("list_singleton_intro", &[v305, v4])?;
-let v307 = s.operator("list_rev", &[v304, v306])?;
+let v306 = s.builtin(EvalOp::ListSingletonIntro, &[v305, v4])?;
+let v307 = s.builtin(EvalOp::ListRev, &[v304, v306])?;
 v307
 }, Some(false) => {
 let v308 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v309 = s.operator("list_singleton_intro", &[v308, v4])?;
+let v309 = s.builtin(EvalOp::ListSingletonIntro, &[v308, v4])?;
 v309
 }, None => s.stuck(),
 };
 let v310 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v311 = s.operator("list_nth", &[v302, v303, v310])?;
+let v311 = s.builtin(EvalOp::ListNth, &[v302, v303, v310])?;
 let v312 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v313 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v314 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v315 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v316 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v317 = s.operator("list_singleton_intro", &[v316, v4])?;
-let v318 = s.operator("list_rev", &[v315, v317])?;
+let v317 = s.builtin(EvalOp::ListSingletonIntro, &[v316, v4])?;
+let v318 = s.builtin(EvalOp::ListRev, &[v315, v317])?;
 v318
 }, Some(false) => {
 let v319 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v320 = s.operator("list_singleton_intro", &[v319, v4])?;
+let v320 = s.builtin(EvalOp::ListSingletonIntro, &[v319, v4])?;
 v320
 }, None => s.stuck(),
 };
 let v321 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v322 = s.operator("list_nth", &[v313, v314, v321])?;
-let v323 = s.operator("len", &[v322])?;
-let v324 = s.operator("extract", &[v311, v312, v323])?;
+let v322 = s.builtin(EvalOp::ListNth, &[v313, v314, v321])?;
+let v323 = s.builtin(EvalOp::Length, &[v322])?;
+let v324 = s.builtin(EvalOp::Extract, &[v311, v312, v323])?;
 v324
 }, None => s.stuck(),
 };
-let v325 = s.operator("list_singleton_intro", &[v275, v276])?;
+let v325 = s.builtin(EvalOp::ListSingletonIntro, &[v275, v276])?;
 let v326 = eo__24str_5fflatten(s, v325)?;
 v326
 }, None => s.stuck(),
@@ -46488,20 +46488,20 @@ let v331 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v332 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v333 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v334 = s.operator("list_singleton_intro", &[v333, v7])?;
-let v335 = s.operator("list_rev", &[v332, v334])?;
+let v334 = s.builtin(EvalOp::ListSingletonIntro, &[v333, v7])?;
+let v335 = s.builtin(EvalOp::ListRev, &[v332, v334])?;
 v335
 }, Some(false) => {
 let v336 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v337 = s.operator("list_singleton_intro", &[v336, v7])?;
+let v337 = s.builtin(EvalOp::ListSingletonIntro, &[v336, v7])?;
 v337
 }, None => s.stuck(),
 };
 let v338 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v339 = s.operator("list_nth", &[v330, v331, v338])?;
-let v340 = s.operator("list_singleton_intro", &[v329, v339])?;
+let v339 = s.builtin(EvalOp::ListNth, &[v330, v331, v338])?;
+let v340 = s.builtin(EvalOp::ListSingletonIntro, &[v329, v339])?;
 let v341 = eo__24str_5fflatten(s, v340)?;
-let v342 = s.operator("list_rev", &[v328, v341])?;
+let v342 = s.builtin(EvalOp::ListRev, &[v328, v341])?;
 v342
 }, Some(false) => {
 let v343 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46510,24 +46510,24 @@ let v345 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v346 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v347 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v348 = s.operator("list_singleton_intro", &[v347, v7])?;
-let v349 = s.operator("list_rev", &[v346, v348])?;
+let v348 = s.builtin(EvalOp::ListSingletonIntro, &[v347, v7])?;
+let v349 = s.builtin(EvalOp::ListRev, &[v346, v348])?;
 v349
 }, Some(false) => {
 let v350 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v351 = s.operator("list_singleton_intro", &[v350, v7])?;
+let v351 = s.builtin(EvalOp::ListSingletonIntro, &[v350, v7])?;
 v351
 }, None => s.stuck(),
 };
 let v352 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v353 = s.operator("list_nth", &[v344, v345, v352])?;
-let v354 = s.operator("list_singleton_intro", &[v343, v353])?;
+let v353 = s.builtin(EvalOp::ListNth, &[v344, v345, v352])?;
+let v354 = s.builtin(EvalOp::ListSingletonIntro, &[v343, v353])?;
 let v355 = eo__24str_5fflatten(s, v354)?;
 v355
 }, None => s.stuck(),
 };
 let v356 = eo__24str_5foverlap_5frec(s, v220, v327)?;
-let v357 = s.operator("add", &[v219, v356])?;
+let v357 = s.builtin(EvalOp::Add, &[v219, v356])?;
 let v358 = s.apply(v218, v357)?;
 let v359 = s.apply(v51, v358)?;
 let v360 = s.apply(v50, v359)?;
@@ -46541,17 +46541,17 @@ let v367 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v368 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v369 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v370 = s.operator("list_singleton_intro", &[v369, v4])?;
-let v371 = s.operator("list_rev", &[v368, v370])?;
+let v370 = s.builtin(EvalOp::ListSingletonIntro, &[v369, v4])?;
+let v371 = s.builtin(EvalOp::ListRev, &[v368, v370])?;
 v371
 }, Some(false) => {
 let v372 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v373 = s.operator("list_singleton_intro", &[v372, v4])?;
+let v373 = s.builtin(EvalOp::ListSingletonIntro, &[v372, v4])?;
 v373
 }, None => s.stuck(),
 };
 let v374 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v375 = s.operator("list_nth", &[v366, v367, v374])?;
+let v375 = s.builtin(EvalOp::ListNth, &[v366, v367, v374])?;
 let v376 = s.apply(v365, v375)?;
 let v377 = s.construct(Constructor::eo__2d, &[])?;
 let v378 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -46560,17 +46560,17 @@ let v380 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v381 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v382 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v383 = s.operator("list_singleton_intro", &[v382, v4])?;
-let v384 = s.operator("list_rev", &[v381, v383])?;
+let v383 = s.builtin(EvalOp::ListSingletonIntro, &[v382, v4])?;
+let v384 = s.builtin(EvalOp::ListRev, &[v381, v383])?;
 v384
 }, Some(false) => {
 let v385 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v386 = s.operator("list_singleton_intro", &[v385, v4])?;
+let v386 = s.builtin(EvalOp::ListSingletonIntro, &[v385, v4])?;
 v386
 }, None => s.stuck(),
 };
 let v387 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v388 = s.operator("list_nth", &[v379, v380, v387])?;
+let v388 = s.builtin(EvalOp::ListNth, &[v379, v380, v387])?;
 let v389 = s.apply(v378, v388)?;
 let v390 = s.apply(v377, v389)?;
 let v391 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -46585,38 +46585,38 @@ let v397 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v398 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v399 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v400 = s.operator("list_singleton_intro", &[v399, v4])?;
-let v401 = s.operator("list_rev", &[v398, v400])?;
+let v400 = s.builtin(EvalOp::ListSingletonIntro, &[v399, v4])?;
+let v401 = s.builtin(EvalOp::ListRev, &[v398, v400])?;
 v401
 }, Some(false) => {
 let v402 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v403 = s.operator("list_singleton_intro", &[v402, v4])?;
+let v403 = s.builtin(EvalOp::ListSingletonIntro, &[v402, v4])?;
 v403
 }, None => s.stuck(),
 };
 let v404 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v405 = s.operator("list_nth", &[v396, v397, v404])?;
+let v405 = s.builtin(EvalOp::ListNth, &[v396, v397, v404])?;
 let v406 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v407 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v408 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v409 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v410 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v411 = s.operator("list_singleton_intro", &[v410, v4])?;
-let v412 = s.operator("list_rev", &[v409, v411])?;
+let v411 = s.builtin(EvalOp::ListSingletonIntro, &[v410, v4])?;
+let v412 = s.builtin(EvalOp::ListRev, &[v409, v411])?;
 v412
 }, Some(false) => {
 let v413 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v414 = s.operator("list_singleton_intro", &[v413, v4])?;
+let v414 = s.builtin(EvalOp::ListSingletonIntro, &[v413, v4])?;
 v414
 }, None => s.stuck(),
 };
 let v415 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v416 = s.operator("list_nth", &[v407, v408, v415])?;
-let v417 = s.operator("len", &[v416])?;
+let v416 = s.builtin(EvalOp::ListNth, &[v407, v408, v415])?;
+let v417 = s.builtin(EvalOp::Length, &[v416])?;
 let v418 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v419 = s.operator("add", &[v417, v418])?;
-let v420 = s.operator("extract", &[v405, v406, v419])?;
+let v419 = s.builtin(EvalOp::Add, &[v417, v418])?;
+let v420 = s.builtin(EvalOp::Extract, &[v405, v406, v419])?;
 v420
 }, Some(false) => {
 let v421 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46624,42 +46624,42 @@ let v422 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v423 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v424 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v425 = s.operator("list_singleton_intro", &[v424, v4])?;
-let v426 = s.operator("list_rev", &[v423, v425])?;
+let v425 = s.builtin(EvalOp::ListSingletonIntro, &[v424, v4])?;
+let v426 = s.builtin(EvalOp::ListRev, &[v423, v425])?;
 v426
 }, Some(false) => {
 let v427 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v428 = s.operator("list_singleton_intro", &[v427, v4])?;
+let v428 = s.builtin(EvalOp::ListSingletonIntro, &[v427, v4])?;
 v428
 }, None => s.stuck(),
 };
 let v429 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v430 = s.operator("list_nth", &[v421, v422, v429])?;
+let v430 = s.builtin(EvalOp::ListNth, &[v421, v422, v429])?;
 let v431 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v432 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v433 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v434 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v435 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v436 = s.operator("list_singleton_intro", &[v435, v4])?;
-let v437 = s.operator("list_rev", &[v434, v436])?;
+let v436 = s.builtin(EvalOp::ListSingletonIntro, &[v435, v4])?;
+let v437 = s.builtin(EvalOp::ListRev, &[v434, v436])?;
 v437
 }, Some(false) => {
 let v438 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v439 = s.operator("list_singleton_intro", &[v438, v4])?;
+let v439 = s.builtin(EvalOp::ListSingletonIntro, &[v438, v4])?;
 v439
 }, None => s.stuck(),
 };
 let v440 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v441 = s.operator("list_nth", &[v432, v433, v440])?;
-let v442 = s.operator("len", &[v441])?;
-let v443 = s.operator("extract", &[v430, v431, v442])?;
+let v441 = s.builtin(EvalOp::ListNth, &[v432, v433, v440])?;
+let v442 = s.builtin(EvalOp::Length, &[v441])?;
+let v443 = s.builtin(EvalOp::Extract, &[v430, v431, v442])?;
 v443
 }, None => s.stuck(),
 };
-let v444 = s.operator("list_singleton_intro", &[v394, v395])?;
+let v444 = s.builtin(EvalOp::ListSingletonIntro, &[v394, v395])?;
 let v445 = eo__24str_5fflatten(s, v444)?;
-let v446 = s.operator("list_rev", &[v393, v445])?;
+let v446 = s.builtin(EvalOp::ListRev, &[v393, v445])?;
 v446
 }, Some(false) => {
 let v447 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46670,38 +46670,38 @@ let v450 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v451 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v452 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v453 = s.operator("list_singleton_intro", &[v452, v4])?;
-let v454 = s.operator("list_rev", &[v451, v453])?;
+let v453 = s.builtin(EvalOp::ListSingletonIntro, &[v452, v4])?;
+let v454 = s.builtin(EvalOp::ListRev, &[v451, v453])?;
 v454
 }, Some(false) => {
 let v455 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v456 = s.operator("list_singleton_intro", &[v455, v4])?;
+let v456 = s.builtin(EvalOp::ListSingletonIntro, &[v455, v4])?;
 v456
 }, None => s.stuck(),
 };
 let v457 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v458 = s.operator("list_nth", &[v449, v450, v457])?;
+let v458 = s.builtin(EvalOp::ListNth, &[v449, v450, v457])?;
 let v459 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v460 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v461 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v462 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v463 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v464 = s.operator("list_singleton_intro", &[v463, v4])?;
-let v465 = s.operator("list_rev", &[v462, v464])?;
+let v464 = s.builtin(EvalOp::ListSingletonIntro, &[v463, v4])?;
+let v465 = s.builtin(EvalOp::ListRev, &[v462, v464])?;
 v465
 }, Some(false) => {
 let v466 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v467 = s.operator("list_singleton_intro", &[v466, v4])?;
+let v467 = s.builtin(EvalOp::ListSingletonIntro, &[v466, v4])?;
 v467
 }, None => s.stuck(),
 };
 let v468 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v469 = s.operator("list_nth", &[v460, v461, v468])?;
-let v470 = s.operator("len", &[v469])?;
+let v469 = s.builtin(EvalOp::ListNth, &[v460, v461, v468])?;
+let v470 = s.builtin(EvalOp::Length, &[v469])?;
 let v471 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v472 = s.operator("add", &[v470, v471])?;
-let v473 = s.operator("extract", &[v458, v459, v472])?;
+let v472 = s.builtin(EvalOp::Add, &[v470, v471])?;
+let v473 = s.builtin(EvalOp::Extract, &[v458, v459, v472])?;
 v473
 }, Some(false) => {
 let v474 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46709,40 +46709,40 @@ let v475 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v476 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v477 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v478 = s.operator("list_singleton_intro", &[v477, v4])?;
-let v479 = s.operator("list_rev", &[v476, v478])?;
+let v478 = s.builtin(EvalOp::ListSingletonIntro, &[v477, v4])?;
+let v479 = s.builtin(EvalOp::ListRev, &[v476, v478])?;
 v479
 }, Some(false) => {
 let v480 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v481 = s.operator("list_singleton_intro", &[v480, v4])?;
+let v481 = s.builtin(EvalOp::ListSingletonIntro, &[v480, v4])?;
 v481
 }, None => s.stuck(),
 };
 let v482 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v483 = s.operator("list_nth", &[v474, v475, v482])?;
+let v483 = s.builtin(EvalOp::ListNth, &[v474, v475, v482])?;
 let v484 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v485 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v486 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v487 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v488 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v489 = s.operator("list_singleton_intro", &[v488, v4])?;
-let v490 = s.operator("list_rev", &[v487, v489])?;
+let v489 = s.builtin(EvalOp::ListSingletonIntro, &[v488, v4])?;
+let v490 = s.builtin(EvalOp::ListRev, &[v487, v489])?;
 v490
 }, Some(false) => {
 let v491 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v492 = s.operator("list_singleton_intro", &[v491, v4])?;
+let v492 = s.builtin(EvalOp::ListSingletonIntro, &[v491, v4])?;
 v492
 }, None => s.stuck(),
 };
 let v493 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v494 = s.operator("list_nth", &[v485, v486, v493])?;
-let v495 = s.operator("len", &[v494])?;
-let v496 = s.operator("extract", &[v483, v484, v495])?;
+let v494 = s.builtin(EvalOp::ListNth, &[v485, v486, v493])?;
+let v495 = s.builtin(EvalOp::Length, &[v494])?;
+let v496 = s.builtin(EvalOp::Extract, &[v483, v484, v495])?;
 v496
 }, None => s.stuck(),
 };
-let v497 = s.operator("list_singleton_intro", &[v447, v448])?;
+let v497 = s.builtin(EvalOp::ListSingletonIntro, &[v447, v448])?;
 let v498 = eo__24str_5fflatten(s, v497)?;
 v498
 }, None => s.stuck(),
@@ -46756,20 +46756,20 @@ let v503 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v504 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v505 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v506 = s.operator("list_singleton_intro", &[v505, v7])?;
-let v507 = s.operator("list_rev", &[v504, v506])?;
+let v506 = s.builtin(EvalOp::ListSingletonIntro, &[v505, v7])?;
+let v507 = s.builtin(EvalOp::ListRev, &[v504, v506])?;
 v507
 }, Some(false) => {
 let v508 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v509 = s.operator("list_singleton_intro", &[v508, v7])?;
+let v509 = s.builtin(EvalOp::ListSingletonIntro, &[v508, v7])?;
 v509
 }, None => s.stuck(),
 };
 let v510 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v511 = s.operator("list_nth", &[v502, v503, v510])?;
-let v512 = s.operator("list_singleton_intro", &[v501, v511])?;
+let v511 = s.builtin(EvalOp::ListNth, &[v502, v503, v510])?;
+let v512 = s.builtin(EvalOp::ListSingletonIntro, &[v501, v511])?;
 let v513 = eo__24str_5fflatten(s, v512)?;
-let v514 = s.operator("list_rev", &[v500, v513])?;
+let v514 = s.builtin(EvalOp::ListRev, &[v500, v513])?;
 v514
 }, Some(false) => {
 let v515 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46778,24 +46778,24 @@ let v517 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v518 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v519 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v520 = s.operator("list_singleton_intro", &[v519, v7])?;
-let v521 = s.operator("list_rev", &[v518, v520])?;
+let v520 = s.builtin(EvalOp::ListSingletonIntro, &[v519, v7])?;
+let v521 = s.builtin(EvalOp::ListRev, &[v518, v520])?;
 v521
 }, Some(false) => {
 let v522 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v523 = s.operator("list_singleton_intro", &[v522, v7])?;
+let v523 = s.builtin(EvalOp::ListSingletonIntro, &[v522, v7])?;
 v523
 }, None => s.stuck(),
 };
 let v524 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v525 = s.operator("list_nth", &[v516, v517, v524])?;
-let v526 = s.operator("list_singleton_intro", &[v515, v525])?;
+let v525 = s.builtin(EvalOp::ListNth, &[v516, v517, v524])?;
+let v526 = s.builtin(EvalOp::ListSingletonIntro, &[v515, v525])?;
 let v527 = eo__24str_5fflatten(s, v526)?;
 v527
 }, None => s.stuck(),
 };
 let v528 = eo__24str_5foverlap_5frec(s, v392, v499)?;
-let v529 = s.operator("add", &[v391, v528])?;
+let v529 = s.builtin(EvalOp::Add, &[v391, v528])?;
 let v530 = s.apply(v390, v529)?;
 let v531 = s.apply(v376, v530)?;
 let v532 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -46810,38 +46810,38 @@ let v538 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v539 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v540 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v541 = s.operator("list_singleton_intro", &[v540, v4])?;
-let v542 = s.operator("list_rev", &[v539, v541])?;
+let v541 = s.builtin(EvalOp::ListSingletonIntro, &[v540, v4])?;
+let v542 = s.builtin(EvalOp::ListRev, &[v539, v541])?;
 v542
 }, Some(false) => {
 let v543 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v544 = s.operator("list_singleton_intro", &[v543, v4])?;
+let v544 = s.builtin(EvalOp::ListSingletonIntro, &[v543, v4])?;
 v544
 }, None => s.stuck(),
 };
 let v545 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v546 = s.operator("list_nth", &[v537, v538, v545])?;
+let v546 = s.builtin(EvalOp::ListNth, &[v537, v538, v545])?;
 let v547 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v548 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v549 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v550 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v551 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v552 = s.operator("list_singleton_intro", &[v551, v4])?;
-let v553 = s.operator("list_rev", &[v550, v552])?;
+let v552 = s.builtin(EvalOp::ListSingletonIntro, &[v551, v4])?;
+let v553 = s.builtin(EvalOp::ListRev, &[v550, v552])?;
 v553
 }, Some(false) => {
 let v554 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v555 = s.operator("list_singleton_intro", &[v554, v4])?;
+let v555 = s.builtin(EvalOp::ListSingletonIntro, &[v554, v4])?;
 v555
 }, None => s.stuck(),
 };
 let v556 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v557 = s.operator("list_nth", &[v548, v549, v556])?;
-let v558 = s.operator("len", &[v557])?;
+let v557 = s.builtin(EvalOp::ListNth, &[v548, v549, v556])?;
+let v558 = s.builtin(EvalOp::Length, &[v557])?;
 let v559 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v560 = s.operator("add", &[v558, v559])?;
-let v561 = s.operator("extract", &[v546, v547, v560])?;
+let v560 = s.builtin(EvalOp::Add, &[v558, v559])?;
+let v561 = s.builtin(EvalOp::Extract, &[v546, v547, v560])?;
 v561
 }, Some(false) => {
 let v562 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46849,42 +46849,42 @@ let v563 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v564 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v565 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v566 = s.operator("list_singleton_intro", &[v565, v4])?;
-let v567 = s.operator("list_rev", &[v564, v566])?;
+let v566 = s.builtin(EvalOp::ListSingletonIntro, &[v565, v4])?;
+let v567 = s.builtin(EvalOp::ListRev, &[v564, v566])?;
 v567
 }, Some(false) => {
 let v568 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v569 = s.operator("list_singleton_intro", &[v568, v4])?;
+let v569 = s.builtin(EvalOp::ListSingletonIntro, &[v568, v4])?;
 v569
 }, None => s.stuck(),
 };
 let v570 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v571 = s.operator("list_nth", &[v562, v563, v570])?;
+let v571 = s.builtin(EvalOp::ListNth, &[v562, v563, v570])?;
 let v572 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v573 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v574 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v575 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v576 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v577 = s.operator("list_singleton_intro", &[v576, v4])?;
-let v578 = s.operator("list_rev", &[v575, v577])?;
+let v577 = s.builtin(EvalOp::ListSingletonIntro, &[v576, v4])?;
+let v578 = s.builtin(EvalOp::ListRev, &[v575, v577])?;
 v578
 }, Some(false) => {
 let v579 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v580 = s.operator("list_singleton_intro", &[v579, v4])?;
+let v580 = s.builtin(EvalOp::ListSingletonIntro, &[v579, v4])?;
 v580
 }, None => s.stuck(),
 };
 let v581 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v582 = s.operator("list_nth", &[v573, v574, v581])?;
-let v583 = s.operator("len", &[v582])?;
-let v584 = s.operator("extract", &[v571, v572, v583])?;
+let v582 = s.builtin(EvalOp::ListNth, &[v573, v574, v581])?;
+let v583 = s.builtin(EvalOp::Length, &[v582])?;
+let v584 = s.builtin(EvalOp::Extract, &[v571, v572, v583])?;
 v584
 }, None => s.stuck(),
 };
-let v585 = s.operator("list_singleton_intro", &[v535, v536])?;
+let v585 = s.builtin(EvalOp::ListSingletonIntro, &[v535, v536])?;
 let v586 = eo__24str_5fflatten(s, v585)?;
-let v587 = s.operator("list_rev", &[v534, v586])?;
+let v587 = s.builtin(EvalOp::ListRev, &[v534, v586])?;
 v587
 }, Some(false) => {
 let v588 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46895,38 +46895,38 @@ let v591 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v592 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v593 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v594 = s.operator("list_singleton_intro", &[v593, v4])?;
-let v595 = s.operator("list_rev", &[v592, v594])?;
+let v594 = s.builtin(EvalOp::ListSingletonIntro, &[v593, v4])?;
+let v595 = s.builtin(EvalOp::ListRev, &[v592, v594])?;
 v595
 }, Some(false) => {
 let v596 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v597 = s.operator("list_singleton_intro", &[v596, v4])?;
+let v597 = s.builtin(EvalOp::ListSingletonIntro, &[v596, v4])?;
 v597
 }, None => s.stuck(),
 };
 let v598 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v599 = s.operator("list_nth", &[v590, v591, v598])?;
+let v599 = s.builtin(EvalOp::ListNth, &[v590, v591, v598])?;
 let v600 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v601 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v602 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v603 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v604 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v605 = s.operator("list_singleton_intro", &[v604, v4])?;
-let v606 = s.operator("list_rev", &[v603, v605])?;
+let v605 = s.builtin(EvalOp::ListSingletonIntro, &[v604, v4])?;
+let v606 = s.builtin(EvalOp::ListRev, &[v603, v605])?;
 v606
 }, Some(false) => {
 let v607 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v608 = s.operator("list_singleton_intro", &[v607, v4])?;
+let v608 = s.builtin(EvalOp::ListSingletonIntro, &[v607, v4])?;
 v608
 }, None => s.stuck(),
 };
 let v609 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v610 = s.operator("list_nth", &[v601, v602, v609])?;
-let v611 = s.operator("len", &[v610])?;
+let v610 = s.builtin(EvalOp::ListNth, &[v601, v602, v609])?;
+let v611 = s.builtin(EvalOp::Length, &[v610])?;
 let v612 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v613 = s.operator("add", &[v611, v612])?;
-let v614 = s.operator("extract", &[v599, v600, v613])?;
+let v613 = s.builtin(EvalOp::Add, &[v611, v612])?;
+let v614 = s.builtin(EvalOp::Extract, &[v599, v600, v613])?;
 v614
 }, Some(false) => {
 let v615 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -46934,40 +46934,40 @@ let v616 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v617 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v618 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v619 = s.operator("list_singleton_intro", &[v618, v4])?;
-let v620 = s.operator("list_rev", &[v617, v619])?;
+let v619 = s.builtin(EvalOp::ListSingletonIntro, &[v618, v4])?;
+let v620 = s.builtin(EvalOp::ListRev, &[v617, v619])?;
 v620
 }, Some(false) => {
 let v621 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v622 = s.operator("list_singleton_intro", &[v621, v4])?;
+let v622 = s.builtin(EvalOp::ListSingletonIntro, &[v621, v4])?;
 v622
 }, None => s.stuck(),
 };
 let v623 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v624 = s.operator("list_nth", &[v615, v616, v623])?;
+let v624 = s.builtin(EvalOp::ListNth, &[v615, v616, v623])?;
 let v625 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v626 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v627 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v628 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v629 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v630 = s.operator("list_singleton_intro", &[v629, v4])?;
-let v631 = s.operator("list_rev", &[v628, v630])?;
+let v630 = s.builtin(EvalOp::ListSingletonIntro, &[v629, v4])?;
+let v631 = s.builtin(EvalOp::ListRev, &[v628, v630])?;
 v631
 }, Some(false) => {
 let v632 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v633 = s.operator("list_singleton_intro", &[v632, v4])?;
+let v633 = s.builtin(EvalOp::ListSingletonIntro, &[v632, v4])?;
 v633
 }, None => s.stuck(),
 };
 let v634 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v635 = s.operator("list_nth", &[v626, v627, v634])?;
-let v636 = s.operator("len", &[v635])?;
-let v637 = s.operator("extract", &[v624, v625, v636])?;
+let v635 = s.builtin(EvalOp::ListNth, &[v626, v627, v634])?;
+let v636 = s.builtin(EvalOp::Length, &[v635])?;
+let v637 = s.builtin(EvalOp::Extract, &[v624, v625, v636])?;
 v637
 }, None => s.stuck(),
 };
-let v638 = s.operator("list_singleton_intro", &[v588, v589])?;
+let v638 = s.builtin(EvalOp::ListSingletonIntro, &[v588, v589])?;
 let v639 = eo__24str_5fflatten(s, v638)?;
 v639
 }, None => s.stuck(),
@@ -46981,20 +46981,20 @@ let v644 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v645 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v646 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v647 = s.operator("list_singleton_intro", &[v646, v7])?;
-let v648 = s.operator("list_rev", &[v645, v647])?;
+let v647 = s.builtin(EvalOp::ListSingletonIntro, &[v646, v7])?;
+let v648 = s.builtin(EvalOp::ListRev, &[v645, v647])?;
 v648
 }, Some(false) => {
 let v649 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v650 = s.operator("list_singleton_intro", &[v649, v7])?;
+let v650 = s.builtin(EvalOp::ListSingletonIntro, &[v649, v7])?;
 v650
 }, None => s.stuck(),
 };
 let v651 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v652 = s.operator("list_nth", &[v643, v644, v651])?;
-let v653 = s.operator("list_singleton_intro", &[v642, v652])?;
+let v652 = s.builtin(EvalOp::ListNth, &[v643, v644, v651])?;
+let v653 = s.builtin(EvalOp::ListSingletonIntro, &[v642, v652])?;
 let v654 = eo__24str_5fflatten(s, v653)?;
-let v655 = s.operator("list_rev", &[v641, v654])?;
+let v655 = s.builtin(EvalOp::ListRev, &[v641, v654])?;
 v655
 }, Some(false) => {
 let v656 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47003,24 +47003,24 @@ let v658 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v659 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v660 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v661 = s.operator("list_singleton_intro", &[v660, v7])?;
-let v662 = s.operator("list_rev", &[v659, v661])?;
+let v661 = s.builtin(EvalOp::ListSingletonIntro, &[v660, v7])?;
+let v662 = s.builtin(EvalOp::ListRev, &[v659, v661])?;
 v662
 }, Some(false) => {
 let v663 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v664 = s.operator("list_singleton_intro", &[v663, v7])?;
+let v664 = s.builtin(EvalOp::ListSingletonIntro, &[v663, v7])?;
 v664
 }, None => s.stuck(),
 };
 let v665 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v666 = s.operator("list_nth", &[v657, v658, v665])?;
-let v667 = s.operator("list_singleton_intro", &[v656, v666])?;
+let v666 = s.builtin(EvalOp::ListNth, &[v657, v658, v665])?;
+let v667 = s.builtin(EvalOp::ListSingletonIntro, &[v656, v666])?;
 let v668 = eo__24str_5fflatten(s, v667)?;
 v668
 }, None => s.stuck(),
 };
 let v669 = eo__24str_5foverlap_5frec(s, v533, v640)?;
-let v670 = s.operator("add", &[v532, v669])?;
+let v670 = s.builtin(EvalOp::Add, &[v532, v669])?;
 let v671 = s.apply(v531, v670)?;
 let v672 = s.apply(v364, v671)?;
 let v673 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47040,17 +47040,17 @@ let v686 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v687 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v688 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v689 = s.operator("list_singleton_intro", &[v688, v4])?;
-let v690 = s.operator("list_rev", &[v687, v689])?;
+let v689 = s.builtin(EvalOp::ListSingletonIntro, &[v688, v4])?;
+let v690 = s.builtin(EvalOp::ListRev, &[v687, v689])?;
 v690
 }, Some(false) => {
 let v691 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v692 = s.operator("list_singleton_intro", &[v691, v4])?;
+let v692 = s.builtin(EvalOp::ListSingletonIntro, &[v691, v4])?;
 v692
 }, None => s.stuck(),
 };
 let v693 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v694 = s.operator("list_nth", &[v685, v686, v693])?;
+let v694 = s.builtin(EvalOp::ListNth, &[v685, v686, v693])?;
 let v695 = s.apply(v684, v694)?;
 let v696 = s.construct(Constructor::eo__2d, &[])?;
 let v697 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -47059,17 +47059,17 @@ let v699 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v700 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v701 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v702 = s.operator("list_singleton_intro", &[v701, v4])?;
-let v703 = s.operator("list_rev", &[v700, v702])?;
+let v702 = s.builtin(EvalOp::ListSingletonIntro, &[v701, v4])?;
+let v703 = s.builtin(EvalOp::ListRev, &[v700, v702])?;
 v703
 }, Some(false) => {
 let v704 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v705 = s.operator("list_singleton_intro", &[v704, v4])?;
+let v705 = s.builtin(EvalOp::ListSingletonIntro, &[v704, v4])?;
 v705
 }, None => s.stuck(),
 };
 let v706 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v707 = s.operator("list_nth", &[v698, v699, v706])?;
+let v707 = s.builtin(EvalOp::ListNth, &[v698, v699, v706])?;
 let v708 = s.apply(v697, v707)?;
 let v709 = s.apply(v696, v708)?;
 let v710 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -47084,38 +47084,38 @@ let v716 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v717 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v718 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v719 = s.operator("list_singleton_intro", &[v718, v4])?;
-let v720 = s.operator("list_rev", &[v717, v719])?;
+let v719 = s.builtin(EvalOp::ListSingletonIntro, &[v718, v4])?;
+let v720 = s.builtin(EvalOp::ListRev, &[v717, v719])?;
 v720
 }, Some(false) => {
 let v721 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v722 = s.operator("list_singleton_intro", &[v721, v4])?;
+let v722 = s.builtin(EvalOp::ListSingletonIntro, &[v721, v4])?;
 v722
 }, None => s.stuck(),
 };
 let v723 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v724 = s.operator("list_nth", &[v715, v716, v723])?;
+let v724 = s.builtin(EvalOp::ListNth, &[v715, v716, v723])?;
 let v725 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v726 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v727 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v728 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v729 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v730 = s.operator("list_singleton_intro", &[v729, v4])?;
-let v731 = s.operator("list_rev", &[v728, v730])?;
+let v730 = s.builtin(EvalOp::ListSingletonIntro, &[v729, v4])?;
+let v731 = s.builtin(EvalOp::ListRev, &[v728, v730])?;
 v731
 }, Some(false) => {
 let v732 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v733 = s.operator("list_singleton_intro", &[v732, v4])?;
+let v733 = s.builtin(EvalOp::ListSingletonIntro, &[v732, v4])?;
 v733
 }, None => s.stuck(),
 };
 let v734 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v735 = s.operator("list_nth", &[v726, v727, v734])?;
-let v736 = s.operator("len", &[v735])?;
+let v735 = s.builtin(EvalOp::ListNth, &[v726, v727, v734])?;
+let v736 = s.builtin(EvalOp::Length, &[v735])?;
 let v737 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v738 = s.operator("add", &[v736, v737])?;
-let v739 = s.operator("extract", &[v724, v725, v738])?;
+let v738 = s.builtin(EvalOp::Add, &[v736, v737])?;
+let v739 = s.builtin(EvalOp::Extract, &[v724, v725, v738])?;
 v739
 }, Some(false) => {
 let v740 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47123,42 +47123,42 @@ let v741 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v742 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v743 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v744 = s.operator("list_singleton_intro", &[v743, v4])?;
-let v745 = s.operator("list_rev", &[v742, v744])?;
+let v744 = s.builtin(EvalOp::ListSingletonIntro, &[v743, v4])?;
+let v745 = s.builtin(EvalOp::ListRev, &[v742, v744])?;
 v745
 }, Some(false) => {
 let v746 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v747 = s.operator("list_singleton_intro", &[v746, v4])?;
+let v747 = s.builtin(EvalOp::ListSingletonIntro, &[v746, v4])?;
 v747
 }, None => s.stuck(),
 };
 let v748 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v749 = s.operator("list_nth", &[v740, v741, v748])?;
+let v749 = s.builtin(EvalOp::ListNth, &[v740, v741, v748])?;
 let v750 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v751 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v752 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v753 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v754 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v755 = s.operator("list_singleton_intro", &[v754, v4])?;
-let v756 = s.operator("list_rev", &[v753, v755])?;
+let v755 = s.builtin(EvalOp::ListSingletonIntro, &[v754, v4])?;
+let v756 = s.builtin(EvalOp::ListRev, &[v753, v755])?;
 v756
 }, Some(false) => {
 let v757 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v758 = s.operator("list_singleton_intro", &[v757, v4])?;
+let v758 = s.builtin(EvalOp::ListSingletonIntro, &[v757, v4])?;
 v758
 }, None => s.stuck(),
 };
 let v759 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v760 = s.operator("list_nth", &[v751, v752, v759])?;
-let v761 = s.operator("len", &[v760])?;
-let v762 = s.operator("extract", &[v749, v750, v761])?;
+let v760 = s.builtin(EvalOp::ListNth, &[v751, v752, v759])?;
+let v761 = s.builtin(EvalOp::Length, &[v760])?;
+let v762 = s.builtin(EvalOp::Extract, &[v749, v750, v761])?;
 v762
 }, None => s.stuck(),
 };
-let v763 = s.operator("list_singleton_intro", &[v713, v714])?;
+let v763 = s.builtin(EvalOp::ListSingletonIntro, &[v713, v714])?;
 let v764 = eo__24str_5fflatten(s, v763)?;
-let v765 = s.operator("list_rev", &[v712, v764])?;
+let v765 = s.builtin(EvalOp::ListRev, &[v712, v764])?;
 v765
 }, Some(false) => {
 let v766 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47169,38 +47169,38 @@ let v769 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v770 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v771 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v772 = s.operator("list_singleton_intro", &[v771, v4])?;
-let v773 = s.operator("list_rev", &[v770, v772])?;
+let v772 = s.builtin(EvalOp::ListSingletonIntro, &[v771, v4])?;
+let v773 = s.builtin(EvalOp::ListRev, &[v770, v772])?;
 v773
 }, Some(false) => {
 let v774 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v775 = s.operator("list_singleton_intro", &[v774, v4])?;
+let v775 = s.builtin(EvalOp::ListSingletonIntro, &[v774, v4])?;
 v775
 }, None => s.stuck(),
 };
 let v776 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v777 = s.operator("list_nth", &[v768, v769, v776])?;
+let v777 = s.builtin(EvalOp::ListNth, &[v768, v769, v776])?;
 let v778 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v779 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v780 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v781 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v782 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v783 = s.operator("list_singleton_intro", &[v782, v4])?;
-let v784 = s.operator("list_rev", &[v781, v783])?;
+let v783 = s.builtin(EvalOp::ListSingletonIntro, &[v782, v4])?;
+let v784 = s.builtin(EvalOp::ListRev, &[v781, v783])?;
 v784
 }, Some(false) => {
 let v785 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v786 = s.operator("list_singleton_intro", &[v785, v4])?;
+let v786 = s.builtin(EvalOp::ListSingletonIntro, &[v785, v4])?;
 v786
 }, None => s.stuck(),
 };
 let v787 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v788 = s.operator("list_nth", &[v779, v780, v787])?;
-let v789 = s.operator("len", &[v788])?;
+let v788 = s.builtin(EvalOp::ListNth, &[v779, v780, v787])?;
+let v789 = s.builtin(EvalOp::Length, &[v788])?;
 let v790 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v791 = s.operator("add", &[v789, v790])?;
-let v792 = s.operator("extract", &[v777, v778, v791])?;
+let v791 = s.builtin(EvalOp::Add, &[v789, v790])?;
+let v792 = s.builtin(EvalOp::Extract, &[v777, v778, v791])?;
 v792
 }, Some(false) => {
 let v793 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47208,40 +47208,40 @@ let v794 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v795 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v796 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v797 = s.operator("list_singleton_intro", &[v796, v4])?;
-let v798 = s.operator("list_rev", &[v795, v797])?;
+let v797 = s.builtin(EvalOp::ListSingletonIntro, &[v796, v4])?;
+let v798 = s.builtin(EvalOp::ListRev, &[v795, v797])?;
 v798
 }, Some(false) => {
 let v799 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v800 = s.operator("list_singleton_intro", &[v799, v4])?;
+let v800 = s.builtin(EvalOp::ListSingletonIntro, &[v799, v4])?;
 v800
 }, None => s.stuck(),
 };
 let v801 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v802 = s.operator("list_nth", &[v793, v794, v801])?;
+let v802 = s.builtin(EvalOp::ListNth, &[v793, v794, v801])?;
 let v803 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v804 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v805 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v806 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v807 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v808 = s.operator("list_singleton_intro", &[v807, v4])?;
-let v809 = s.operator("list_rev", &[v806, v808])?;
+let v808 = s.builtin(EvalOp::ListSingletonIntro, &[v807, v4])?;
+let v809 = s.builtin(EvalOp::ListRev, &[v806, v808])?;
 v809
 }, Some(false) => {
 let v810 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v811 = s.operator("list_singleton_intro", &[v810, v4])?;
+let v811 = s.builtin(EvalOp::ListSingletonIntro, &[v810, v4])?;
 v811
 }, None => s.stuck(),
 };
 let v812 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v813 = s.operator("list_nth", &[v804, v805, v812])?;
-let v814 = s.operator("len", &[v813])?;
-let v815 = s.operator("extract", &[v802, v803, v814])?;
+let v813 = s.builtin(EvalOp::ListNth, &[v804, v805, v812])?;
+let v814 = s.builtin(EvalOp::Length, &[v813])?;
+let v815 = s.builtin(EvalOp::Extract, &[v802, v803, v814])?;
 v815
 }, None => s.stuck(),
 };
-let v816 = s.operator("list_singleton_intro", &[v766, v767])?;
+let v816 = s.builtin(EvalOp::ListSingletonIntro, &[v766, v767])?;
 let v817 = eo__24str_5fflatten(s, v816)?;
 v817
 }, None => s.stuck(),
@@ -47255,20 +47255,20 @@ let v822 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v823 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v824 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v825 = s.operator("list_singleton_intro", &[v824, v7])?;
-let v826 = s.operator("list_rev", &[v823, v825])?;
+let v825 = s.builtin(EvalOp::ListSingletonIntro, &[v824, v7])?;
+let v826 = s.builtin(EvalOp::ListRev, &[v823, v825])?;
 v826
 }, Some(false) => {
 let v827 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v828 = s.operator("list_singleton_intro", &[v827, v7])?;
+let v828 = s.builtin(EvalOp::ListSingletonIntro, &[v827, v7])?;
 v828
 }, None => s.stuck(),
 };
 let v829 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v830 = s.operator("list_nth", &[v821, v822, v829])?;
-let v831 = s.operator("list_singleton_intro", &[v820, v830])?;
+let v830 = s.builtin(EvalOp::ListNth, &[v821, v822, v829])?;
+let v831 = s.builtin(EvalOp::ListSingletonIntro, &[v820, v830])?;
 let v832 = eo__24str_5fflatten(s, v831)?;
-let v833 = s.operator("list_rev", &[v819, v832])?;
+let v833 = s.builtin(EvalOp::ListRev, &[v819, v832])?;
 v833
 }, Some(false) => {
 let v834 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47277,24 +47277,24 @@ let v836 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v837 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v838 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v839 = s.operator("list_singleton_intro", &[v838, v7])?;
-let v840 = s.operator("list_rev", &[v837, v839])?;
+let v839 = s.builtin(EvalOp::ListSingletonIntro, &[v838, v7])?;
+let v840 = s.builtin(EvalOp::ListRev, &[v837, v839])?;
 v840
 }, Some(false) => {
 let v841 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v842 = s.operator("list_singleton_intro", &[v841, v7])?;
+let v842 = s.builtin(EvalOp::ListSingletonIntro, &[v841, v7])?;
 v842
 }, None => s.stuck(),
 };
 let v843 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v844 = s.operator("list_nth", &[v835, v836, v843])?;
-let v845 = s.operator("list_singleton_intro", &[v834, v844])?;
+let v844 = s.builtin(EvalOp::ListNth, &[v835, v836, v843])?;
+let v845 = s.builtin(EvalOp::ListSingletonIntro, &[v834, v844])?;
 let v846 = eo__24str_5fflatten(s, v845)?;
 v846
 }, None => s.stuck(),
 };
 let v847 = eo__24str_5foverlap_5frec(s, v711, v818)?;
-let v848 = s.operator("add", &[v710, v847])?;
+let v848 = s.builtin(EvalOp::Add, &[v710, v847])?;
 let v849 = s.apply(v709, v848)?;
 let v850 = s.apply(v695, v849)?;
 let v851 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -47309,38 +47309,38 @@ let v857 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v858 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v859 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v860 = s.operator("list_singleton_intro", &[v859, v4])?;
-let v861 = s.operator("list_rev", &[v858, v860])?;
+let v860 = s.builtin(EvalOp::ListSingletonIntro, &[v859, v4])?;
+let v861 = s.builtin(EvalOp::ListRev, &[v858, v860])?;
 v861
 }, Some(false) => {
 let v862 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v863 = s.operator("list_singleton_intro", &[v862, v4])?;
+let v863 = s.builtin(EvalOp::ListSingletonIntro, &[v862, v4])?;
 v863
 }, None => s.stuck(),
 };
 let v864 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v865 = s.operator("list_nth", &[v856, v857, v864])?;
+let v865 = s.builtin(EvalOp::ListNth, &[v856, v857, v864])?;
 let v866 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v867 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v868 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v869 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v870 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v871 = s.operator("list_singleton_intro", &[v870, v4])?;
-let v872 = s.operator("list_rev", &[v869, v871])?;
+let v871 = s.builtin(EvalOp::ListSingletonIntro, &[v870, v4])?;
+let v872 = s.builtin(EvalOp::ListRev, &[v869, v871])?;
 v872
 }, Some(false) => {
 let v873 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v874 = s.operator("list_singleton_intro", &[v873, v4])?;
+let v874 = s.builtin(EvalOp::ListSingletonIntro, &[v873, v4])?;
 v874
 }, None => s.stuck(),
 };
 let v875 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v876 = s.operator("list_nth", &[v867, v868, v875])?;
-let v877 = s.operator("len", &[v876])?;
+let v876 = s.builtin(EvalOp::ListNth, &[v867, v868, v875])?;
+let v877 = s.builtin(EvalOp::Length, &[v876])?;
 let v878 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v879 = s.operator("add", &[v877, v878])?;
-let v880 = s.operator("extract", &[v865, v866, v879])?;
+let v879 = s.builtin(EvalOp::Add, &[v877, v878])?;
+let v880 = s.builtin(EvalOp::Extract, &[v865, v866, v879])?;
 v880
 }, Some(false) => {
 let v881 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47348,42 +47348,42 @@ let v882 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v883 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v884 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v885 = s.operator("list_singleton_intro", &[v884, v4])?;
-let v886 = s.operator("list_rev", &[v883, v885])?;
+let v885 = s.builtin(EvalOp::ListSingletonIntro, &[v884, v4])?;
+let v886 = s.builtin(EvalOp::ListRev, &[v883, v885])?;
 v886
 }, Some(false) => {
 let v887 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v888 = s.operator("list_singleton_intro", &[v887, v4])?;
+let v888 = s.builtin(EvalOp::ListSingletonIntro, &[v887, v4])?;
 v888
 }, None => s.stuck(),
 };
 let v889 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v890 = s.operator("list_nth", &[v881, v882, v889])?;
+let v890 = s.builtin(EvalOp::ListNth, &[v881, v882, v889])?;
 let v891 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v892 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v893 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v894 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v895 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v896 = s.operator("list_singleton_intro", &[v895, v4])?;
-let v897 = s.operator("list_rev", &[v894, v896])?;
+let v896 = s.builtin(EvalOp::ListSingletonIntro, &[v895, v4])?;
+let v897 = s.builtin(EvalOp::ListRev, &[v894, v896])?;
 v897
 }, Some(false) => {
 let v898 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v899 = s.operator("list_singleton_intro", &[v898, v4])?;
+let v899 = s.builtin(EvalOp::ListSingletonIntro, &[v898, v4])?;
 v899
 }, None => s.stuck(),
 };
 let v900 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v901 = s.operator("list_nth", &[v892, v893, v900])?;
-let v902 = s.operator("len", &[v901])?;
-let v903 = s.operator("extract", &[v890, v891, v902])?;
+let v901 = s.builtin(EvalOp::ListNth, &[v892, v893, v900])?;
+let v902 = s.builtin(EvalOp::Length, &[v901])?;
+let v903 = s.builtin(EvalOp::Extract, &[v890, v891, v902])?;
 v903
 }, None => s.stuck(),
 };
-let v904 = s.operator("list_singleton_intro", &[v854, v855])?;
+let v904 = s.builtin(EvalOp::ListSingletonIntro, &[v854, v855])?;
 let v905 = eo__24str_5fflatten(s, v904)?;
-let v906 = s.operator("list_rev", &[v853, v905])?;
+let v906 = s.builtin(EvalOp::ListRev, &[v853, v905])?;
 v906
 }, Some(false) => {
 let v907 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47394,38 +47394,38 @@ let v910 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v911 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v912 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v913 = s.operator("list_singleton_intro", &[v912, v4])?;
-let v914 = s.operator("list_rev", &[v911, v913])?;
+let v913 = s.builtin(EvalOp::ListSingletonIntro, &[v912, v4])?;
+let v914 = s.builtin(EvalOp::ListRev, &[v911, v913])?;
 v914
 }, Some(false) => {
 let v915 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v916 = s.operator("list_singleton_intro", &[v915, v4])?;
+let v916 = s.builtin(EvalOp::ListSingletonIntro, &[v915, v4])?;
 v916
 }, None => s.stuck(),
 };
 let v917 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v918 = s.operator("list_nth", &[v909, v910, v917])?;
+let v918 = s.builtin(EvalOp::ListNth, &[v909, v910, v917])?;
 let v919 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v920 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v921 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v922 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v923 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v924 = s.operator("list_singleton_intro", &[v923, v4])?;
-let v925 = s.operator("list_rev", &[v922, v924])?;
+let v924 = s.builtin(EvalOp::ListSingletonIntro, &[v923, v4])?;
+let v925 = s.builtin(EvalOp::ListRev, &[v922, v924])?;
 v925
 }, Some(false) => {
 let v926 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v927 = s.operator("list_singleton_intro", &[v926, v4])?;
+let v927 = s.builtin(EvalOp::ListSingletonIntro, &[v926, v4])?;
 v927
 }, None => s.stuck(),
 };
 let v928 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v929 = s.operator("list_nth", &[v920, v921, v928])?;
-let v930 = s.operator("len", &[v929])?;
+let v929 = s.builtin(EvalOp::ListNth, &[v920, v921, v928])?;
+let v930 = s.builtin(EvalOp::Length, &[v929])?;
 let v931 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v932 = s.operator("add", &[v930, v931])?;
-let v933 = s.operator("extract", &[v918, v919, v932])?;
+let v932 = s.builtin(EvalOp::Add, &[v930, v931])?;
+let v933 = s.builtin(EvalOp::Extract, &[v918, v919, v932])?;
 v933
 }, Some(false) => {
 let v934 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47433,40 +47433,40 @@ let v935 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v936 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v937 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v938 = s.operator("list_singleton_intro", &[v937, v4])?;
-let v939 = s.operator("list_rev", &[v936, v938])?;
+let v938 = s.builtin(EvalOp::ListSingletonIntro, &[v937, v4])?;
+let v939 = s.builtin(EvalOp::ListRev, &[v936, v938])?;
 v939
 }, Some(false) => {
 let v940 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v941 = s.operator("list_singleton_intro", &[v940, v4])?;
+let v941 = s.builtin(EvalOp::ListSingletonIntro, &[v940, v4])?;
 v941
 }, None => s.stuck(),
 };
 let v942 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v943 = s.operator("list_nth", &[v934, v935, v942])?;
+let v943 = s.builtin(EvalOp::ListNth, &[v934, v935, v942])?;
 let v944 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v945 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v946 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v947 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v948 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v949 = s.operator("list_singleton_intro", &[v948, v4])?;
-let v950 = s.operator("list_rev", &[v947, v949])?;
+let v949 = s.builtin(EvalOp::ListSingletonIntro, &[v948, v4])?;
+let v950 = s.builtin(EvalOp::ListRev, &[v947, v949])?;
 v950
 }, Some(false) => {
 let v951 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v952 = s.operator("list_singleton_intro", &[v951, v4])?;
+let v952 = s.builtin(EvalOp::ListSingletonIntro, &[v951, v4])?;
 v952
 }, None => s.stuck(),
 };
 let v953 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v954 = s.operator("list_nth", &[v945, v946, v953])?;
-let v955 = s.operator("len", &[v954])?;
-let v956 = s.operator("extract", &[v943, v944, v955])?;
+let v954 = s.builtin(EvalOp::ListNth, &[v945, v946, v953])?;
+let v955 = s.builtin(EvalOp::Length, &[v954])?;
+let v956 = s.builtin(EvalOp::Extract, &[v943, v944, v955])?;
 v956
 }, None => s.stuck(),
 };
-let v957 = s.operator("list_singleton_intro", &[v907, v908])?;
+let v957 = s.builtin(EvalOp::ListSingletonIntro, &[v907, v908])?;
 let v958 = eo__24str_5fflatten(s, v957)?;
 v958
 }, None => s.stuck(),
@@ -47480,20 +47480,20 @@ let v963 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v964 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v965 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v966 = s.operator("list_singleton_intro", &[v965, v7])?;
-let v967 = s.operator("list_rev", &[v964, v966])?;
+let v966 = s.builtin(EvalOp::ListSingletonIntro, &[v965, v7])?;
+let v967 = s.builtin(EvalOp::ListRev, &[v964, v966])?;
 v967
 }, Some(false) => {
 let v968 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v969 = s.operator("list_singleton_intro", &[v968, v7])?;
+let v969 = s.builtin(EvalOp::ListSingletonIntro, &[v968, v7])?;
 v969
 }, None => s.stuck(),
 };
 let v970 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v971 = s.operator("list_nth", &[v962, v963, v970])?;
-let v972 = s.operator("list_singleton_intro", &[v961, v971])?;
+let v971 = s.builtin(EvalOp::ListNth, &[v962, v963, v970])?;
+let v972 = s.builtin(EvalOp::ListSingletonIntro, &[v961, v971])?;
 let v973 = eo__24str_5fflatten(s, v972)?;
-let v974 = s.operator("list_rev", &[v960, v973])?;
+let v974 = s.builtin(EvalOp::ListRev, &[v960, v973])?;
 v974
 }, Some(false) => {
 let v975 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47502,24 +47502,24 @@ let v977 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v978 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v979 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v980 = s.operator("list_singleton_intro", &[v979, v7])?;
-let v981 = s.operator("list_rev", &[v978, v980])?;
+let v980 = s.builtin(EvalOp::ListSingletonIntro, &[v979, v7])?;
+let v981 = s.builtin(EvalOp::ListRev, &[v978, v980])?;
 v981
 }, Some(false) => {
 let v982 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v983 = s.operator("list_singleton_intro", &[v982, v7])?;
+let v983 = s.builtin(EvalOp::ListSingletonIntro, &[v982, v7])?;
 v983
 }, None => s.stuck(),
 };
 let v984 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v985 = s.operator("list_nth", &[v976, v977, v984])?;
-let v986 = s.operator("list_singleton_intro", &[v975, v985])?;
+let v985 = s.builtin(EvalOp::ListNth, &[v976, v977, v984])?;
+let v986 = s.builtin(EvalOp::ListSingletonIntro, &[v975, v985])?;
 let v987 = eo__24str_5fflatten(s, v986)?;
 v987
 }, None => s.stuck(),
 };
 let v988 = eo__24str_5foverlap_5frec(s, v852, v959)?;
-let v989 = s.operator("add", &[v851, v988])?;
+let v989 = s.builtin(EvalOp::Add, &[v851, v988])?;
 let v990 = s.apply(v850, v989)?;
 let v991 = s.apply(v683, v990)?;
 let v992 = s.apply(v682, v991)?;
@@ -47538,17 +47538,17 @@ let v1002 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1003 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1004 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1005 = s.operator("list_singleton_intro", &[v1004, v4])?;
-let v1006 = s.operator("list_rev", &[v1003, v1005])?;
+let v1005 = s.builtin(EvalOp::ListSingletonIntro, &[v1004, v4])?;
+let v1006 = s.builtin(EvalOp::ListRev, &[v1003, v1005])?;
 v1006
 }, Some(false) => {
 let v1007 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1008 = s.operator("list_singleton_intro", &[v1007, v4])?;
+let v1008 = s.builtin(EvalOp::ListSingletonIntro, &[v1007, v4])?;
 v1008
 }, None => s.stuck(),
 };
 let v1009 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1010 = s.operator("list_nth", &[v1001, v1002, v1009])?;
+let v1010 = s.builtin(EvalOp::ListNth, &[v1001, v1002, v1009])?;
 let v1011 = s.apply(v1000, v1010)?;
 let v1012 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1013 = s.apply(v1011, v1012)?;
@@ -47564,38 +47564,38 @@ let v1020 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1021 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1022 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1023 = s.operator("list_singleton_intro", &[v1022, v4])?;
-let v1024 = s.operator("list_rev", &[v1021, v1023])?;
+let v1023 = s.builtin(EvalOp::ListSingletonIntro, &[v1022, v4])?;
+let v1024 = s.builtin(EvalOp::ListRev, &[v1021, v1023])?;
 v1024
 }, Some(false) => {
 let v1025 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1026 = s.operator("list_singleton_intro", &[v1025, v4])?;
+let v1026 = s.builtin(EvalOp::ListSingletonIntro, &[v1025, v4])?;
 v1026
 }, None => s.stuck(),
 };
 let v1027 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1028 = s.operator("list_nth", &[v1019, v1020, v1027])?;
+let v1028 = s.builtin(EvalOp::ListNth, &[v1019, v1020, v1027])?;
 let v1029 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1030 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1031 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1032 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1033 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1034 = s.operator("list_singleton_intro", &[v1033, v4])?;
-let v1035 = s.operator("list_rev", &[v1032, v1034])?;
+let v1034 = s.builtin(EvalOp::ListSingletonIntro, &[v1033, v4])?;
+let v1035 = s.builtin(EvalOp::ListRev, &[v1032, v1034])?;
 v1035
 }, Some(false) => {
 let v1036 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1037 = s.operator("list_singleton_intro", &[v1036, v4])?;
+let v1037 = s.builtin(EvalOp::ListSingletonIntro, &[v1036, v4])?;
 v1037
 }, None => s.stuck(),
 };
 let v1038 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1039 = s.operator("list_nth", &[v1030, v1031, v1038])?;
-let v1040 = s.operator("len", &[v1039])?;
+let v1039 = s.builtin(EvalOp::ListNth, &[v1030, v1031, v1038])?;
+let v1040 = s.builtin(EvalOp::Length, &[v1039])?;
 let v1041 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1042 = s.operator("add", &[v1040, v1041])?;
-let v1043 = s.operator("extract", &[v1028, v1029, v1042])?;
+let v1042 = s.builtin(EvalOp::Add, &[v1040, v1041])?;
+let v1043 = s.builtin(EvalOp::Extract, &[v1028, v1029, v1042])?;
 v1043
 }, Some(false) => {
 let v1044 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47603,42 +47603,42 @@ let v1045 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1046 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1047 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1048 = s.operator("list_singleton_intro", &[v1047, v4])?;
-let v1049 = s.operator("list_rev", &[v1046, v1048])?;
+let v1048 = s.builtin(EvalOp::ListSingletonIntro, &[v1047, v4])?;
+let v1049 = s.builtin(EvalOp::ListRev, &[v1046, v1048])?;
 v1049
 }, Some(false) => {
 let v1050 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1051 = s.operator("list_singleton_intro", &[v1050, v4])?;
+let v1051 = s.builtin(EvalOp::ListSingletonIntro, &[v1050, v4])?;
 v1051
 }, None => s.stuck(),
 };
 let v1052 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1053 = s.operator("list_nth", &[v1044, v1045, v1052])?;
+let v1053 = s.builtin(EvalOp::ListNth, &[v1044, v1045, v1052])?;
 let v1054 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1055 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1056 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1057 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1058 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1059 = s.operator("list_singleton_intro", &[v1058, v4])?;
-let v1060 = s.operator("list_rev", &[v1057, v1059])?;
+let v1059 = s.builtin(EvalOp::ListSingletonIntro, &[v1058, v4])?;
+let v1060 = s.builtin(EvalOp::ListRev, &[v1057, v1059])?;
 v1060
 }, Some(false) => {
 let v1061 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1062 = s.operator("list_singleton_intro", &[v1061, v4])?;
+let v1062 = s.builtin(EvalOp::ListSingletonIntro, &[v1061, v4])?;
 v1062
 }, None => s.stuck(),
 };
 let v1063 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1064 = s.operator("list_nth", &[v1055, v1056, v1063])?;
-let v1065 = s.operator("len", &[v1064])?;
-let v1066 = s.operator("extract", &[v1053, v1054, v1065])?;
+let v1064 = s.builtin(EvalOp::ListNth, &[v1055, v1056, v1063])?;
+let v1065 = s.builtin(EvalOp::Length, &[v1064])?;
+let v1066 = s.builtin(EvalOp::Extract, &[v1053, v1054, v1065])?;
 v1066
 }, None => s.stuck(),
 };
-let v1067 = s.operator("list_singleton_intro", &[v1017, v1018])?;
+let v1067 = s.builtin(EvalOp::ListSingletonIntro, &[v1017, v1018])?;
 let v1068 = eo__24str_5fflatten(s, v1067)?;
-let v1069 = s.operator("list_rev", &[v1016, v1068])?;
+let v1069 = s.builtin(EvalOp::ListRev, &[v1016, v1068])?;
 v1069
 }, Some(false) => {
 let v1070 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47649,38 +47649,38 @@ let v1073 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1074 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1075 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1076 = s.operator("list_singleton_intro", &[v1075, v4])?;
-let v1077 = s.operator("list_rev", &[v1074, v1076])?;
+let v1076 = s.builtin(EvalOp::ListSingletonIntro, &[v1075, v4])?;
+let v1077 = s.builtin(EvalOp::ListRev, &[v1074, v1076])?;
 v1077
 }, Some(false) => {
 let v1078 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1079 = s.operator("list_singleton_intro", &[v1078, v4])?;
+let v1079 = s.builtin(EvalOp::ListSingletonIntro, &[v1078, v4])?;
 v1079
 }, None => s.stuck(),
 };
 let v1080 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1081 = s.operator("list_nth", &[v1072, v1073, v1080])?;
+let v1081 = s.builtin(EvalOp::ListNth, &[v1072, v1073, v1080])?;
 let v1082 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1083 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1084 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1085 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1086 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1087 = s.operator("list_singleton_intro", &[v1086, v4])?;
-let v1088 = s.operator("list_rev", &[v1085, v1087])?;
+let v1087 = s.builtin(EvalOp::ListSingletonIntro, &[v1086, v4])?;
+let v1088 = s.builtin(EvalOp::ListRev, &[v1085, v1087])?;
 v1088
 }, Some(false) => {
 let v1089 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1090 = s.operator("list_singleton_intro", &[v1089, v4])?;
+let v1090 = s.builtin(EvalOp::ListSingletonIntro, &[v1089, v4])?;
 v1090
 }, None => s.stuck(),
 };
 let v1091 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1092 = s.operator("list_nth", &[v1083, v1084, v1091])?;
-let v1093 = s.operator("len", &[v1092])?;
+let v1092 = s.builtin(EvalOp::ListNth, &[v1083, v1084, v1091])?;
+let v1093 = s.builtin(EvalOp::Length, &[v1092])?;
 let v1094 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1095 = s.operator("add", &[v1093, v1094])?;
-let v1096 = s.operator("extract", &[v1081, v1082, v1095])?;
+let v1095 = s.builtin(EvalOp::Add, &[v1093, v1094])?;
+let v1096 = s.builtin(EvalOp::Extract, &[v1081, v1082, v1095])?;
 v1096
 }, Some(false) => {
 let v1097 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47688,40 +47688,40 @@ let v1098 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1099 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1100 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1101 = s.operator("list_singleton_intro", &[v1100, v4])?;
-let v1102 = s.operator("list_rev", &[v1099, v1101])?;
+let v1101 = s.builtin(EvalOp::ListSingletonIntro, &[v1100, v4])?;
+let v1102 = s.builtin(EvalOp::ListRev, &[v1099, v1101])?;
 v1102
 }, Some(false) => {
 let v1103 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1104 = s.operator("list_singleton_intro", &[v1103, v4])?;
+let v1104 = s.builtin(EvalOp::ListSingletonIntro, &[v1103, v4])?;
 v1104
 }, None => s.stuck(),
 };
 let v1105 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1106 = s.operator("list_nth", &[v1097, v1098, v1105])?;
+let v1106 = s.builtin(EvalOp::ListNth, &[v1097, v1098, v1105])?;
 let v1107 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1108 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1109 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1110 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1111 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1112 = s.operator("list_singleton_intro", &[v1111, v4])?;
-let v1113 = s.operator("list_rev", &[v1110, v1112])?;
+let v1112 = s.builtin(EvalOp::ListSingletonIntro, &[v1111, v4])?;
+let v1113 = s.builtin(EvalOp::ListRev, &[v1110, v1112])?;
 v1113
 }, Some(false) => {
 let v1114 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1115 = s.operator("list_singleton_intro", &[v1114, v4])?;
+let v1115 = s.builtin(EvalOp::ListSingletonIntro, &[v1114, v4])?;
 v1115
 }, None => s.stuck(),
 };
 let v1116 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1117 = s.operator("list_nth", &[v1108, v1109, v1116])?;
-let v1118 = s.operator("len", &[v1117])?;
-let v1119 = s.operator("extract", &[v1106, v1107, v1118])?;
+let v1117 = s.builtin(EvalOp::ListNth, &[v1108, v1109, v1116])?;
+let v1118 = s.builtin(EvalOp::Length, &[v1117])?;
+let v1119 = s.builtin(EvalOp::Extract, &[v1106, v1107, v1118])?;
 v1119
 }, None => s.stuck(),
 };
-let v1120 = s.operator("list_singleton_intro", &[v1070, v1071])?;
+let v1120 = s.builtin(EvalOp::ListSingletonIntro, &[v1070, v1071])?;
 let v1121 = eo__24str_5fflatten(s, v1120)?;
 v1121
 }, None => s.stuck(),
@@ -47735,20 +47735,20 @@ let v1126 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1127 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1128 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1129 = s.operator("list_singleton_intro", &[v1128, v7])?;
-let v1130 = s.operator("list_rev", &[v1127, v1129])?;
+let v1129 = s.builtin(EvalOp::ListSingletonIntro, &[v1128, v7])?;
+let v1130 = s.builtin(EvalOp::ListRev, &[v1127, v1129])?;
 v1130
 }, Some(false) => {
 let v1131 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1132 = s.operator("list_singleton_intro", &[v1131, v7])?;
+let v1132 = s.builtin(EvalOp::ListSingletonIntro, &[v1131, v7])?;
 v1132
 }, None => s.stuck(),
 };
 let v1133 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1134 = s.operator("list_nth", &[v1125, v1126, v1133])?;
-let v1135 = s.operator("list_singleton_intro", &[v1124, v1134])?;
+let v1134 = s.builtin(EvalOp::ListNth, &[v1125, v1126, v1133])?;
+let v1135 = s.builtin(EvalOp::ListSingletonIntro, &[v1124, v1134])?;
 let v1136 = eo__24str_5fflatten(s, v1135)?;
-let v1137 = s.operator("list_rev", &[v1123, v1136])?;
+let v1137 = s.builtin(EvalOp::ListRev, &[v1123, v1136])?;
 v1137
 }, Some(false) => {
 let v1138 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47757,24 +47757,24 @@ let v1140 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1141 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1142 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1143 = s.operator("list_singleton_intro", &[v1142, v7])?;
-let v1144 = s.operator("list_rev", &[v1141, v1143])?;
+let v1143 = s.builtin(EvalOp::ListSingletonIntro, &[v1142, v7])?;
+let v1144 = s.builtin(EvalOp::ListRev, &[v1141, v1143])?;
 v1144
 }, Some(false) => {
 let v1145 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1146 = s.operator("list_singleton_intro", &[v1145, v7])?;
+let v1146 = s.builtin(EvalOp::ListSingletonIntro, &[v1145, v7])?;
 v1146
 }, None => s.stuck(),
 };
 let v1147 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1148 = s.operator("list_nth", &[v1139, v1140, v1147])?;
-let v1149 = s.operator("list_singleton_intro", &[v1138, v1148])?;
+let v1148 = s.builtin(EvalOp::ListNth, &[v1139, v1140, v1147])?;
+let v1149 = s.builtin(EvalOp::ListSingletonIntro, &[v1138, v1148])?;
 let v1150 = eo__24str_5fflatten(s, v1149)?;
 v1150
 }, None => s.stuck(),
 };
 let v1151 = eo__24str_5foverlap_5frec(s, v1015, v1122)?;
-let v1152 = s.operator("add", &[v1014, v1151])?;
+let v1152 = s.builtin(EvalOp::Add, &[v1014, v1151])?;
 let v1153 = s.apply(v1013, v1152)?;
 let v1154 = s.apply(v999, v1153)?;
 let v1155 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47788,17 +47788,17 @@ let v1162 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1163 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1164 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1165 = s.operator("list_singleton_intro", &[v1164, v4])?;
-let v1166 = s.operator("list_rev", &[v1163, v1165])?;
+let v1165 = s.builtin(EvalOp::ListSingletonIntro, &[v1164, v4])?;
+let v1166 = s.builtin(EvalOp::ListRev, &[v1163, v1165])?;
 v1166
 }, Some(false) => {
 let v1167 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1168 = s.operator("list_singleton_intro", &[v1167, v4])?;
+let v1168 = s.builtin(EvalOp::ListSingletonIntro, &[v1167, v4])?;
 v1168
 }, None => s.stuck(),
 };
 let v1169 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1170 = s.operator("list_nth", &[v1161, v1162, v1169])?;
+let v1170 = s.builtin(EvalOp::ListNth, &[v1161, v1162, v1169])?;
 let v1171 = s.apply(v1160, v1170)?;
 let v1172 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1173 = s.apply(v1171, v1172)?;
@@ -47814,38 +47814,38 @@ let v1180 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1181 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1182 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1183 = s.operator("list_singleton_intro", &[v1182, v4])?;
-let v1184 = s.operator("list_rev", &[v1181, v1183])?;
+let v1183 = s.builtin(EvalOp::ListSingletonIntro, &[v1182, v4])?;
+let v1184 = s.builtin(EvalOp::ListRev, &[v1181, v1183])?;
 v1184
 }, Some(false) => {
 let v1185 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1186 = s.operator("list_singleton_intro", &[v1185, v4])?;
+let v1186 = s.builtin(EvalOp::ListSingletonIntro, &[v1185, v4])?;
 v1186
 }, None => s.stuck(),
 };
 let v1187 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1188 = s.operator("list_nth", &[v1179, v1180, v1187])?;
+let v1188 = s.builtin(EvalOp::ListNth, &[v1179, v1180, v1187])?;
 let v1189 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1190 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1191 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1192 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1193 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1194 = s.operator("list_singleton_intro", &[v1193, v4])?;
-let v1195 = s.operator("list_rev", &[v1192, v1194])?;
+let v1194 = s.builtin(EvalOp::ListSingletonIntro, &[v1193, v4])?;
+let v1195 = s.builtin(EvalOp::ListRev, &[v1192, v1194])?;
 v1195
 }, Some(false) => {
 let v1196 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1197 = s.operator("list_singleton_intro", &[v1196, v4])?;
+let v1197 = s.builtin(EvalOp::ListSingletonIntro, &[v1196, v4])?;
 v1197
 }, None => s.stuck(),
 };
 let v1198 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1199 = s.operator("list_nth", &[v1190, v1191, v1198])?;
-let v1200 = s.operator("len", &[v1199])?;
+let v1199 = s.builtin(EvalOp::ListNth, &[v1190, v1191, v1198])?;
+let v1200 = s.builtin(EvalOp::Length, &[v1199])?;
 let v1201 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1202 = s.operator("add", &[v1200, v1201])?;
-let v1203 = s.operator("extract", &[v1188, v1189, v1202])?;
+let v1202 = s.builtin(EvalOp::Add, &[v1200, v1201])?;
+let v1203 = s.builtin(EvalOp::Extract, &[v1188, v1189, v1202])?;
 v1203
 }, Some(false) => {
 let v1204 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47853,42 +47853,42 @@ let v1205 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1206 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1207 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1208 = s.operator("list_singleton_intro", &[v1207, v4])?;
-let v1209 = s.operator("list_rev", &[v1206, v1208])?;
+let v1208 = s.builtin(EvalOp::ListSingletonIntro, &[v1207, v4])?;
+let v1209 = s.builtin(EvalOp::ListRev, &[v1206, v1208])?;
 v1209
 }, Some(false) => {
 let v1210 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1211 = s.operator("list_singleton_intro", &[v1210, v4])?;
+let v1211 = s.builtin(EvalOp::ListSingletonIntro, &[v1210, v4])?;
 v1211
 }, None => s.stuck(),
 };
 let v1212 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1213 = s.operator("list_nth", &[v1204, v1205, v1212])?;
+let v1213 = s.builtin(EvalOp::ListNth, &[v1204, v1205, v1212])?;
 let v1214 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1215 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1216 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1217 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1218 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1219 = s.operator("list_singleton_intro", &[v1218, v4])?;
-let v1220 = s.operator("list_rev", &[v1217, v1219])?;
+let v1219 = s.builtin(EvalOp::ListSingletonIntro, &[v1218, v4])?;
+let v1220 = s.builtin(EvalOp::ListRev, &[v1217, v1219])?;
 v1220
 }, Some(false) => {
 let v1221 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1222 = s.operator("list_singleton_intro", &[v1221, v4])?;
+let v1222 = s.builtin(EvalOp::ListSingletonIntro, &[v1221, v4])?;
 v1222
 }, None => s.stuck(),
 };
 let v1223 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1224 = s.operator("list_nth", &[v1215, v1216, v1223])?;
-let v1225 = s.operator("len", &[v1224])?;
-let v1226 = s.operator("extract", &[v1213, v1214, v1225])?;
+let v1224 = s.builtin(EvalOp::ListNth, &[v1215, v1216, v1223])?;
+let v1225 = s.builtin(EvalOp::Length, &[v1224])?;
+let v1226 = s.builtin(EvalOp::Extract, &[v1213, v1214, v1225])?;
 v1226
 }, None => s.stuck(),
 };
-let v1227 = s.operator("list_singleton_intro", &[v1177, v1178])?;
+let v1227 = s.builtin(EvalOp::ListSingletonIntro, &[v1177, v1178])?;
 let v1228 = eo__24str_5fflatten(s, v1227)?;
-let v1229 = s.operator("list_rev", &[v1176, v1228])?;
+let v1229 = s.builtin(EvalOp::ListRev, &[v1176, v1228])?;
 v1229
 }, Some(false) => {
 let v1230 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47899,38 +47899,38 @@ let v1233 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1234 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1235 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1236 = s.operator("list_singleton_intro", &[v1235, v4])?;
-let v1237 = s.operator("list_rev", &[v1234, v1236])?;
+let v1236 = s.builtin(EvalOp::ListSingletonIntro, &[v1235, v4])?;
+let v1237 = s.builtin(EvalOp::ListRev, &[v1234, v1236])?;
 v1237
 }, Some(false) => {
 let v1238 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1239 = s.operator("list_singleton_intro", &[v1238, v4])?;
+let v1239 = s.builtin(EvalOp::ListSingletonIntro, &[v1238, v4])?;
 v1239
 }, None => s.stuck(),
 };
 let v1240 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1241 = s.operator("list_nth", &[v1232, v1233, v1240])?;
+let v1241 = s.builtin(EvalOp::ListNth, &[v1232, v1233, v1240])?;
 let v1242 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1243 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1244 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1245 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1246 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1247 = s.operator("list_singleton_intro", &[v1246, v4])?;
-let v1248 = s.operator("list_rev", &[v1245, v1247])?;
+let v1247 = s.builtin(EvalOp::ListSingletonIntro, &[v1246, v4])?;
+let v1248 = s.builtin(EvalOp::ListRev, &[v1245, v1247])?;
 v1248
 }, Some(false) => {
 let v1249 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1250 = s.operator("list_singleton_intro", &[v1249, v4])?;
+let v1250 = s.builtin(EvalOp::ListSingletonIntro, &[v1249, v4])?;
 v1250
 }, None => s.stuck(),
 };
 let v1251 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1252 = s.operator("list_nth", &[v1243, v1244, v1251])?;
-let v1253 = s.operator("len", &[v1252])?;
+let v1252 = s.builtin(EvalOp::ListNth, &[v1243, v1244, v1251])?;
+let v1253 = s.builtin(EvalOp::Length, &[v1252])?;
 let v1254 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1255 = s.operator("add", &[v1253, v1254])?;
-let v1256 = s.operator("extract", &[v1241, v1242, v1255])?;
+let v1255 = s.builtin(EvalOp::Add, &[v1253, v1254])?;
+let v1256 = s.builtin(EvalOp::Extract, &[v1241, v1242, v1255])?;
 v1256
 }, Some(false) => {
 let v1257 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -47938,40 +47938,40 @@ let v1258 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1259 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1260 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1261 = s.operator("list_singleton_intro", &[v1260, v4])?;
-let v1262 = s.operator("list_rev", &[v1259, v1261])?;
+let v1261 = s.builtin(EvalOp::ListSingletonIntro, &[v1260, v4])?;
+let v1262 = s.builtin(EvalOp::ListRev, &[v1259, v1261])?;
 v1262
 }, Some(false) => {
 let v1263 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1264 = s.operator("list_singleton_intro", &[v1263, v4])?;
+let v1264 = s.builtin(EvalOp::ListSingletonIntro, &[v1263, v4])?;
 v1264
 }, None => s.stuck(),
 };
 let v1265 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1266 = s.operator("list_nth", &[v1257, v1258, v1265])?;
+let v1266 = s.builtin(EvalOp::ListNth, &[v1257, v1258, v1265])?;
 let v1267 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1268 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1269 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1270 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1271 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1272 = s.operator("list_singleton_intro", &[v1271, v4])?;
-let v1273 = s.operator("list_rev", &[v1270, v1272])?;
+let v1272 = s.builtin(EvalOp::ListSingletonIntro, &[v1271, v4])?;
+let v1273 = s.builtin(EvalOp::ListRev, &[v1270, v1272])?;
 v1273
 }, Some(false) => {
 let v1274 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1275 = s.operator("list_singleton_intro", &[v1274, v4])?;
+let v1275 = s.builtin(EvalOp::ListSingletonIntro, &[v1274, v4])?;
 v1275
 }, None => s.stuck(),
 };
 let v1276 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1277 = s.operator("list_nth", &[v1268, v1269, v1276])?;
-let v1278 = s.operator("len", &[v1277])?;
-let v1279 = s.operator("extract", &[v1266, v1267, v1278])?;
+let v1277 = s.builtin(EvalOp::ListNth, &[v1268, v1269, v1276])?;
+let v1278 = s.builtin(EvalOp::Length, &[v1277])?;
+let v1279 = s.builtin(EvalOp::Extract, &[v1266, v1267, v1278])?;
 v1279
 }, None => s.stuck(),
 };
-let v1280 = s.operator("list_singleton_intro", &[v1230, v1231])?;
+let v1280 = s.builtin(EvalOp::ListSingletonIntro, &[v1230, v1231])?;
 let v1281 = eo__24str_5fflatten(s, v1280)?;
 v1281
 }, None => s.stuck(),
@@ -47985,20 +47985,20 @@ let v1286 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1287 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1288 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1289 = s.operator("list_singleton_intro", &[v1288, v7])?;
-let v1290 = s.operator("list_rev", &[v1287, v1289])?;
+let v1289 = s.builtin(EvalOp::ListSingletonIntro, &[v1288, v7])?;
+let v1290 = s.builtin(EvalOp::ListRev, &[v1287, v1289])?;
 v1290
 }, Some(false) => {
 let v1291 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1292 = s.operator("list_singleton_intro", &[v1291, v7])?;
+let v1292 = s.builtin(EvalOp::ListSingletonIntro, &[v1291, v7])?;
 v1292
 }, None => s.stuck(),
 };
 let v1293 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1294 = s.operator("list_nth", &[v1285, v1286, v1293])?;
-let v1295 = s.operator("list_singleton_intro", &[v1284, v1294])?;
+let v1294 = s.builtin(EvalOp::ListNth, &[v1285, v1286, v1293])?;
+let v1295 = s.builtin(EvalOp::ListSingletonIntro, &[v1284, v1294])?;
 let v1296 = eo__24str_5fflatten(s, v1295)?;
-let v1297 = s.operator("list_rev", &[v1283, v1296])?;
+let v1297 = s.builtin(EvalOp::ListRev, &[v1283, v1296])?;
 v1297
 }, Some(false) => {
 let v1298 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48007,24 +48007,24 @@ let v1300 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1301 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1302 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1303 = s.operator("list_singleton_intro", &[v1302, v7])?;
-let v1304 = s.operator("list_rev", &[v1301, v1303])?;
+let v1303 = s.builtin(EvalOp::ListSingletonIntro, &[v1302, v7])?;
+let v1304 = s.builtin(EvalOp::ListRev, &[v1301, v1303])?;
 v1304
 }, Some(false) => {
 let v1305 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1306 = s.operator("list_singleton_intro", &[v1305, v7])?;
+let v1306 = s.builtin(EvalOp::ListSingletonIntro, &[v1305, v7])?;
 v1306
 }, None => s.stuck(),
 };
 let v1307 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1308 = s.operator("list_nth", &[v1299, v1300, v1307])?;
-let v1309 = s.operator("list_singleton_intro", &[v1298, v1308])?;
+let v1308 = s.builtin(EvalOp::ListNth, &[v1299, v1300, v1307])?;
+let v1309 = s.builtin(EvalOp::ListSingletonIntro, &[v1298, v1308])?;
 let v1310 = eo__24str_5fflatten(s, v1309)?;
 v1310
 }, None => s.stuck(),
 };
 let v1311 = eo__24str_5foverlap_5frec(s, v1175, v1282)?;
-let v1312 = s.operator("add", &[v1174, v1311])?;
+let v1312 = s.builtin(EvalOp::Add, &[v1174, v1311])?;
 let v1313 = s.apply(v1173, v1312)?;
 let v1314 = s.apply(v1159, v1313)?;
 let v1315 = s.apply(v1158, v1314)?;
@@ -48039,17 +48039,17 @@ let v1323 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1324 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1325 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1326 = s.operator("list_singleton_intro", &[v1325, v4])?;
-let v1327 = s.operator("list_rev", &[v1324, v1326])?;
+let v1326 = s.builtin(EvalOp::ListSingletonIntro, &[v1325, v4])?;
+let v1327 = s.builtin(EvalOp::ListRev, &[v1324, v1326])?;
 v1327
 }, Some(false) => {
 let v1328 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1329 = s.operator("list_singleton_intro", &[v1328, v4])?;
+let v1329 = s.builtin(EvalOp::ListSingletonIntro, &[v1328, v4])?;
 v1329
 }, None => s.stuck(),
 };
 let v1330 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1331 = s.operator("list_nth", &[v1322, v1323, v1330])?;
+let v1331 = s.builtin(EvalOp::ListNth, &[v1322, v1323, v1330])?;
 let v1332 = s.apply(v1321, v1331)?;
 let v1333 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1334 = s.apply(v1332, v1333)?;
@@ -48065,38 +48065,38 @@ let v1341 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1342 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1343 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1344 = s.operator("list_singleton_intro", &[v1343, v4])?;
-let v1345 = s.operator("list_rev", &[v1342, v1344])?;
+let v1344 = s.builtin(EvalOp::ListSingletonIntro, &[v1343, v4])?;
+let v1345 = s.builtin(EvalOp::ListRev, &[v1342, v1344])?;
 v1345
 }, Some(false) => {
 let v1346 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1347 = s.operator("list_singleton_intro", &[v1346, v4])?;
+let v1347 = s.builtin(EvalOp::ListSingletonIntro, &[v1346, v4])?;
 v1347
 }, None => s.stuck(),
 };
 let v1348 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1349 = s.operator("list_nth", &[v1340, v1341, v1348])?;
+let v1349 = s.builtin(EvalOp::ListNth, &[v1340, v1341, v1348])?;
 let v1350 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1351 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1352 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1353 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1354 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1355 = s.operator("list_singleton_intro", &[v1354, v4])?;
-let v1356 = s.operator("list_rev", &[v1353, v1355])?;
+let v1355 = s.builtin(EvalOp::ListSingletonIntro, &[v1354, v4])?;
+let v1356 = s.builtin(EvalOp::ListRev, &[v1353, v1355])?;
 v1356
 }, Some(false) => {
 let v1357 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1358 = s.operator("list_singleton_intro", &[v1357, v4])?;
+let v1358 = s.builtin(EvalOp::ListSingletonIntro, &[v1357, v4])?;
 v1358
 }, None => s.stuck(),
 };
 let v1359 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1360 = s.operator("list_nth", &[v1351, v1352, v1359])?;
-let v1361 = s.operator("len", &[v1360])?;
+let v1360 = s.builtin(EvalOp::ListNth, &[v1351, v1352, v1359])?;
+let v1361 = s.builtin(EvalOp::Length, &[v1360])?;
 let v1362 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1363 = s.operator("add", &[v1361, v1362])?;
-let v1364 = s.operator("extract", &[v1349, v1350, v1363])?;
+let v1363 = s.builtin(EvalOp::Add, &[v1361, v1362])?;
+let v1364 = s.builtin(EvalOp::Extract, &[v1349, v1350, v1363])?;
 v1364
 }, Some(false) => {
 let v1365 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48104,42 +48104,42 @@ let v1366 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1367 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1368 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1369 = s.operator("list_singleton_intro", &[v1368, v4])?;
-let v1370 = s.operator("list_rev", &[v1367, v1369])?;
+let v1369 = s.builtin(EvalOp::ListSingletonIntro, &[v1368, v4])?;
+let v1370 = s.builtin(EvalOp::ListRev, &[v1367, v1369])?;
 v1370
 }, Some(false) => {
 let v1371 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1372 = s.operator("list_singleton_intro", &[v1371, v4])?;
+let v1372 = s.builtin(EvalOp::ListSingletonIntro, &[v1371, v4])?;
 v1372
 }, None => s.stuck(),
 };
 let v1373 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1374 = s.operator("list_nth", &[v1365, v1366, v1373])?;
+let v1374 = s.builtin(EvalOp::ListNth, &[v1365, v1366, v1373])?;
 let v1375 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1376 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1377 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1378 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1379 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1380 = s.operator("list_singleton_intro", &[v1379, v4])?;
-let v1381 = s.operator("list_rev", &[v1378, v1380])?;
+let v1380 = s.builtin(EvalOp::ListSingletonIntro, &[v1379, v4])?;
+let v1381 = s.builtin(EvalOp::ListRev, &[v1378, v1380])?;
 v1381
 }, Some(false) => {
 let v1382 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1383 = s.operator("list_singleton_intro", &[v1382, v4])?;
+let v1383 = s.builtin(EvalOp::ListSingletonIntro, &[v1382, v4])?;
 v1383
 }, None => s.stuck(),
 };
 let v1384 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1385 = s.operator("list_nth", &[v1376, v1377, v1384])?;
-let v1386 = s.operator("len", &[v1385])?;
-let v1387 = s.operator("extract", &[v1374, v1375, v1386])?;
+let v1385 = s.builtin(EvalOp::ListNth, &[v1376, v1377, v1384])?;
+let v1386 = s.builtin(EvalOp::Length, &[v1385])?;
+let v1387 = s.builtin(EvalOp::Extract, &[v1374, v1375, v1386])?;
 v1387
 }, None => s.stuck(),
 };
-let v1388 = s.operator("list_singleton_intro", &[v1338, v1339])?;
+let v1388 = s.builtin(EvalOp::ListSingletonIntro, &[v1338, v1339])?;
 let v1389 = eo__24str_5fflatten(s, v1388)?;
-let v1390 = s.operator("list_rev", &[v1337, v1389])?;
+let v1390 = s.builtin(EvalOp::ListRev, &[v1337, v1389])?;
 v1390
 }, Some(false) => {
 let v1391 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48150,38 +48150,38 @@ let v1394 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1395 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1396 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1397 = s.operator("list_singleton_intro", &[v1396, v4])?;
-let v1398 = s.operator("list_rev", &[v1395, v1397])?;
+let v1397 = s.builtin(EvalOp::ListSingletonIntro, &[v1396, v4])?;
+let v1398 = s.builtin(EvalOp::ListRev, &[v1395, v1397])?;
 v1398
 }, Some(false) => {
 let v1399 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1400 = s.operator("list_singleton_intro", &[v1399, v4])?;
+let v1400 = s.builtin(EvalOp::ListSingletonIntro, &[v1399, v4])?;
 v1400
 }, None => s.stuck(),
 };
 let v1401 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1402 = s.operator("list_nth", &[v1393, v1394, v1401])?;
+let v1402 = s.builtin(EvalOp::ListNth, &[v1393, v1394, v1401])?;
 let v1403 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1404 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1405 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1406 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1407 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1408 = s.operator("list_singleton_intro", &[v1407, v4])?;
-let v1409 = s.operator("list_rev", &[v1406, v1408])?;
+let v1408 = s.builtin(EvalOp::ListSingletonIntro, &[v1407, v4])?;
+let v1409 = s.builtin(EvalOp::ListRev, &[v1406, v1408])?;
 v1409
 }, Some(false) => {
 let v1410 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1411 = s.operator("list_singleton_intro", &[v1410, v4])?;
+let v1411 = s.builtin(EvalOp::ListSingletonIntro, &[v1410, v4])?;
 v1411
 }, None => s.stuck(),
 };
 let v1412 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1413 = s.operator("list_nth", &[v1404, v1405, v1412])?;
-let v1414 = s.operator("len", &[v1413])?;
+let v1413 = s.builtin(EvalOp::ListNth, &[v1404, v1405, v1412])?;
+let v1414 = s.builtin(EvalOp::Length, &[v1413])?;
 let v1415 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1416 = s.operator("add", &[v1414, v1415])?;
-let v1417 = s.operator("extract", &[v1402, v1403, v1416])?;
+let v1416 = s.builtin(EvalOp::Add, &[v1414, v1415])?;
+let v1417 = s.builtin(EvalOp::Extract, &[v1402, v1403, v1416])?;
 v1417
 }, Some(false) => {
 let v1418 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48189,40 +48189,40 @@ let v1419 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1420 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1421 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1422 = s.operator("list_singleton_intro", &[v1421, v4])?;
-let v1423 = s.operator("list_rev", &[v1420, v1422])?;
+let v1422 = s.builtin(EvalOp::ListSingletonIntro, &[v1421, v4])?;
+let v1423 = s.builtin(EvalOp::ListRev, &[v1420, v1422])?;
 v1423
 }, Some(false) => {
 let v1424 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1425 = s.operator("list_singleton_intro", &[v1424, v4])?;
+let v1425 = s.builtin(EvalOp::ListSingletonIntro, &[v1424, v4])?;
 v1425
 }, None => s.stuck(),
 };
 let v1426 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1427 = s.operator("list_nth", &[v1418, v1419, v1426])?;
+let v1427 = s.builtin(EvalOp::ListNth, &[v1418, v1419, v1426])?;
 let v1428 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1429 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1430 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1431 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1432 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1433 = s.operator("list_singleton_intro", &[v1432, v4])?;
-let v1434 = s.operator("list_rev", &[v1431, v1433])?;
+let v1433 = s.builtin(EvalOp::ListSingletonIntro, &[v1432, v4])?;
+let v1434 = s.builtin(EvalOp::ListRev, &[v1431, v1433])?;
 v1434
 }, Some(false) => {
 let v1435 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1436 = s.operator("list_singleton_intro", &[v1435, v4])?;
+let v1436 = s.builtin(EvalOp::ListSingletonIntro, &[v1435, v4])?;
 v1436
 }, None => s.stuck(),
 };
 let v1437 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1438 = s.operator("list_nth", &[v1429, v1430, v1437])?;
-let v1439 = s.operator("len", &[v1438])?;
-let v1440 = s.operator("extract", &[v1427, v1428, v1439])?;
+let v1438 = s.builtin(EvalOp::ListNth, &[v1429, v1430, v1437])?;
+let v1439 = s.builtin(EvalOp::Length, &[v1438])?;
+let v1440 = s.builtin(EvalOp::Extract, &[v1427, v1428, v1439])?;
 v1440
 }, None => s.stuck(),
 };
-let v1441 = s.operator("list_singleton_intro", &[v1391, v1392])?;
+let v1441 = s.builtin(EvalOp::ListSingletonIntro, &[v1391, v1392])?;
 let v1442 = eo__24str_5fflatten(s, v1441)?;
 v1442
 }, None => s.stuck(),
@@ -48236,20 +48236,20 @@ let v1447 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1448 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1449 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1450 = s.operator("list_singleton_intro", &[v1449, v7])?;
-let v1451 = s.operator("list_rev", &[v1448, v1450])?;
+let v1450 = s.builtin(EvalOp::ListSingletonIntro, &[v1449, v7])?;
+let v1451 = s.builtin(EvalOp::ListRev, &[v1448, v1450])?;
 v1451
 }, Some(false) => {
 let v1452 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1453 = s.operator("list_singleton_intro", &[v1452, v7])?;
+let v1453 = s.builtin(EvalOp::ListSingletonIntro, &[v1452, v7])?;
 v1453
 }, None => s.stuck(),
 };
 let v1454 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1455 = s.operator("list_nth", &[v1446, v1447, v1454])?;
-let v1456 = s.operator("list_singleton_intro", &[v1445, v1455])?;
+let v1455 = s.builtin(EvalOp::ListNth, &[v1446, v1447, v1454])?;
+let v1456 = s.builtin(EvalOp::ListSingletonIntro, &[v1445, v1455])?;
 let v1457 = eo__24str_5fflatten(s, v1456)?;
-let v1458 = s.operator("list_rev", &[v1444, v1457])?;
+let v1458 = s.builtin(EvalOp::ListRev, &[v1444, v1457])?;
 v1458
 }, Some(false) => {
 let v1459 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48258,24 +48258,24 @@ let v1461 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1462 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1463 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1464 = s.operator("list_singleton_intro", &[v1463, v7])?;
-let v1465 = s.operator("list_rev", &[v1462, v1464])?;
+let v1464 = s.builtin(EvalOp::ListSingletonIntro, &[v1463, v7])?;
+let v1465 = s.builtin(EvalOp::ListRev, &[v1462, v1464])?;
 v1465
 }, Some(false) => {
 let v1466 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1467 = s.operator("list_singleton_intro", &[v1466, v7])?;
+let v1467 = s.builtin(EvalOp::ListSingletonIntro, &[v1466, v7])?;
 v1467
 }, None => s.stuck(),
 };
 let v1468 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1469 = s.operator("list_nth", &[v1460, v1461, v1468])?;
-let v1470 = s.operator("list_singleton_intro", &[v1459, v1469])?;
+let v1469 = s.builtin(EvalOp::ListNth, &[v1460, v1461, v1468])?;
+let v1470 = s.builtin(EvalOp::ListSingletonIntro, &[v1459, v1469])?;
 let v1471 = eo__24str_5fflatten(s, v1470)?;
 v1471
 }, None => s.stuck(),
 };
 let v1472 = eo__24str_5foverlap_5frec(s, v1336, v1443)?;
-let v1473 = s.operator("add", &[v1335, v1472])?;
+let v1473 = s.builtin(EvalOp::Add, &[v1335, v1472])?;
 let v1474 = s.apply(v1334, v1473)?;
 let v1475 = s.apply(v1320, v1474)?;
 let v1476 = s.apply(v1319, v1475)?;
@@ -48289,17 +48289,17 @@ let v1483 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1484 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1485 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1486 = s.operator("list_singleton_intro", &[v1485, v4])?;
-let v1487 = s.operator("list_rev", &[v1484, v1486])?;
+let v1486 = s.builtin(EvalOp::ListSingletonIntro, &[v1485, v4])?;
+let v1487 = s.builtin(EvalOp::ListRev, &[v1484, v1486])?;
 v1487
 }, Some(false) => {
 let v1488 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1489 = s.operator("list_singleton_intro", &[v1488, v4])?;
+let v1489 = s.builtin(EvalOp::ListSingletonIntro, &[v1488, v4])?;
 v1489
 }, None => s.stuck(),
 };
 let v1490 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1491 = s.operator("list_nth", &[v1482, v1483, v1490])?;
+let v1491 = s.builtin(EvalOp::ListNth, &[v1482, v1483, v1490])?;
 let v1492 = s.apply(v1481, v1491)?;
 let v1493 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1494 = s.apply(v1492, v1493)?;
@@ -48315,38 +48315,38 @@ let v1501 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1502 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1503 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1504 = s.operator("list_singleton_intro", &[v1503, v4])?;
-let v1505 = s.operator("list_rev", &[v1502, v1504])?;
+let v1504 = s.builtin(EvalOp::ListSingletonIntro, &[v1503, v4])?;
+let v1505 = s.builtin(EvalOp::ListRev, &[v1502, v1504])?;
 v1505
 }, Some(false) => {
 let v1506 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1507 = s.operator("list_singleton_intro", &[v1506, v4])?;
+let v1507 = s.builtin(EvalOp::ListSingletonIntro, &[v1506, v4])?;
 v1507
 }, None => s.stuck(),
 };
 let v1508 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1509 = s.operator("list_nth", &[v1500, v1501, v1508])?;
+let v1509 = s.builtin(EvalOp::ListNth, &[v1500, v1501, v1508])?;
 let v1510 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1511 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1512 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1513 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1514 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1515 = s.operator("list_singleton_intro", &[v1514, v4])?;
-let v1516 = s.operator("list_rev", &[v1513, v1515])?;
+let v1515 = s.builtin(EvalOp::ListSingletonIntro, &[v1514, v4])?;
+let v1516 = s.builtin(EvalOp::ListRev, &[v1513, v1515])?;
 v1516
 }, Some(false) => {
 let v1517 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1518 = s.operator("list_singleton_intro", &[v1517, v4])?;
+let v1518 = s.builtin(EvalOp::ListSingletonIntro, &[v1517, v4])?;
 v1518
 }, None => s.stuck(),
 };
 let v1519 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1520 = s.operator("list_nth", &[v1511, v1512, v1519])?;
-let v1521 = s.operator("len", &[v1520])?;
+let v1520 = s.builtin(EvalOp::ListNth, &[v1511, v1512, v1519])?;
+let v1521 = s.builtin(EvalOp::Length, &[v1520])?;
 let v1522 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1523 = s.operator("add", &[v1521, v1522])?;
-let v1524 = s.operator("extract", &[v1509, v1510, v1523])?;
+let v1523 = s.builtin(EvalOp::Add, &[v1521, v1522])?;
+let v1524 = s.builtin(EvalOp::Extract, &[v1509, v1510, v1523])?;
 v1524
 }, Some(false) => {
 let v1525 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48354,42 +48354,42 @@ let v1526 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1527 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1528 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1529 = s.operator("list_singleton_intro", &[v1528, v4])?;
-let v1530 = s.operator("list_rev", &[v1527, v1529])?;
+let v1529 = s.builtin(EvalOp::ListSingletonIntro, &[v1528, v4])?;
+let v1530 = s.builtin(EvalOp::ListRev, &[v1527, v1529])?;
 v1530
 }, Some(false) => {
 let v1531 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1532 = s.operator("list_singleton_intro", &[v1531, v4])?;
+let v1532 = s.builtin(EvalOp::ListSingletonIntro, &[v1531, v4])?;
 v1532
 }, None => s.stuck(),
 };
 let v1533 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1534 = s.operator("list_nth", &[v1525, v1526, v1533])?;
+let v1534 = s.builtin(EvalOp::ListNth, &[v1525, v1526, v1533])?;
 let v1535 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1536 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1537 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1538 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1539 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1540 = s.operator("list_singleton_intro", &[v1539, v4])?;
-let v1541 = s.operator("list_rev", &[v1538, v1540])?;
+let v1540 = s.builtin(EvalOp::ListSingletonIntro, &[v1539, v4])?;
+let v1541 = s.builtin(EvalOp::ListRev, &[v1538, v1540])?;
 v1541
 }, Some(false) => {
 let v1542 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1543 = s.operator("list_singleton_intro", &[v1542, v4])?;
+let v1543 = s.builtin(EvalOp::ListSingletonIntro, &[v1542, v4])?;
 v1543
 }, None => s.stuck(),
 };
 let v1544 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1545 = s.operator("list_nth", &[v1536, v1537, v1544])?;
-let v1546 = s.operator("len", &[v1545])?;
-let v1547 = s.operator("extract", &[v1534, v1535, v1546])?;
+let v1545 = s.builtin(EvalOp::ListNth, &[v1536, v1537, v1544])?;
+let v1546 = s.builtin(EvalOp::Length, &[v1545])?;
+let v1547 = s.builtin(EvalOp::Extract, &[v1534, v1535, v1546])?;
 v1547
 }, None => s.stuck(),
 };
-let v1548 = s.operator("list_singleton_intro", &[v1498, v1499])?;
+let v1548 = s.builtin(EvalOp::ListSingletonIntro, &[v1498, v1499])?;
 let v1549 = eo__24str_5fflatten(s, v1548)?;
-let v1550 = s.operator("list_rev", &[v1497, v1549])?;
+let v1550 = s.builtin(EvalOp::ListRev, &[v1497, v1549])?;
 v1550
 }, Some(false) => {
 let v1551 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48400,38 +48400,38 @@ let v1554 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1555 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1556 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1557 = s.operator("list_singleton_intro", &[v1556, v4])?;
-let v1558 = s.operator("list_rev", &[v1555, v1557])?;
+let v1557 = s.builtin(EvalOp::ListSingletonIntro, &[v1556, v4])?;
+let v1558 = s.builtin(EvalOp::ListRev, &[v1555, v1557])?;
 v1558
 }, Some(false) => {
 let v1559 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1560 = s.operator("list_singleton_intro", &[v1559, v4])?;
+let v1560 = s.builtin(EvalOp::ListSingletonIntro, &[v1559, v4])?;
 v1560
 }, None => s.stuck(),
 };
 let v1561 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1562 = s.operator("list_nth", &[v1553, v1554, v1561])?;
+let v1562 = s.builtin(EvalOp::ListNth, &[v1553, v1554, v1561])?;
 let v1563 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1564 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1565 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1566 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1567 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1568 = s.operator("list_singleton_intro", &[v1567, v4])?;
-let v1569 = s.operator("list_rev", &[v1566, v1568])?;
+let v1568 = s.builtin(EvalOp::ListSingletonIntro, &[v1567, v4])?;
+let v1569 = s.builtin(EvalOp::ListRev, &[v1566, v1568])?;
 v1569
 }, Some(false) => {
 let v1570 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1571 = s.operator("list_singleton_intro", &[v1570, v4])?;
+let v1571 = s.builtin(EvalOp::ListSingletonIntro, &[v1570, v4])?;
 v1571
 }, None => s.stuck(),
 };
 let v1572 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1573 = s.operator("list_nth", &[v1564, v1565, v1572])?;
-let v1574 = s.operator("len", &[v1573])?;
+let v1573 = s.builtin(EvalOp::ListNth, &[v1564, v1565, v1572])?;
+let v1574 = s.builtin(EvalOp::Length, &[v1573])?;
 let v1575 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1576 = s.operator("add", &[v1574, v1575])?;
-let v1577 = s.operator("extract", &[v1562, v1563, v1576])?;
+let v1576 = s.builtin(EvalOp::Add, &[v1574, v1575])?;
+let v1577 = s.builtin(EvalOp::Extract, &[v1562, v1563, v1576])?;
 v1577
 }, Some(false) => {
 let v1578 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48439,40 +48439,40 @@ let v1579 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1580 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1581 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1582 = s.operator("list_singleton_intro", &[v1581, v4])?;
-let v1583 = s.operator("list_rev", &[v1580, v1582])?;
+let v1582 = s.builtin(EvalOp::ListSingletonIntro, &[v1581, v4])?;
+let v1583 = s.builtin(EvalOp::ListRev, &[v1580, v1582])?;
 v1583
 }, Some(false) => {
 let v1584 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1585 = s.operator("list_singleton_intro", &[v1584, v4])?;
+let v1585 = s.builtin(EvalOp::ListSingletonIntro, &[v1584, v4])?;
 v1585
 }, None => s.stuck(),
 };
 let v1586 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1587 = s.operator("list_nth", &[v1578, v1579, v1586])?;
+let v1587 = s.builtin(EvalOp::ListNth, &[v1578, v1579, v1586])?;
 let v1588 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1589 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1590 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1591 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1592 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1593 = s.operator("list_singleton_intro", &[v1592, v4])?;
-let v1594 = s.operator("list_rev", &[v1591, v1593])?;
+let v1593 = s.builtin(EvalOp::ListSingletonIntro, &[v1592, v4])?;
+let v1594 = s.builtin(EvalOp::ListRev, &[v1591, v1593])?;
 v1594
 }, Some(false) => {
 let v1595 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1596 = s.operator("list_singleton_intro", &[v1595, v4])?;
+let v1596 = s.builtin(EvalOp::ListSingletonIntro, &[v1595, v4])?;
 v1596
 }, None => s.stuck(),
 };
 let v1597 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1598 = s.operator("list_nth", &[v1589, v1590, v1597])?;
-let v1599 = s.operator("len", &[v1598])?;
-let v1600 = s.operator("extract", &[v1587, v1588, v1599])?;
+let v1598 = s.builtin(EvalOp::ListNth, &[v1589, v1590, v1597])?;
+let v1599 = s.builtin(EvalOp::Length, &[v1598])?;
+let v1600 = s.builtin(EvalOp::Extract, &[v1587, v1588, v1599])?;
 v1600
 }, None => s.stuck(),
 };
-let v1601 = s.operator("list_singleton_intro", &[v1551, v1552])?;
+let v1601 = s.builtin(EvalOp::ListSingletonIntro, &[v1551, v1552])?;
 let v1602 = eo__24str_5fflatten(s, v1601)?;
 v1602
 }, None => s.stuck(),
@@ -48486,20 +48486,20 @@ let v1607 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1608 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1609 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1610 = s.operator("list_singleton_intro", &[v1609, v7])?;
-let v1611 = s.operator("list_rev", &[v1608, v1610])?;
+let v1610 = s.builtin(EvalOp::ListSingletonIntro, &[v1609, v7])?;
+let v1611 = s.builtin(EvalOp::ListRev, &[v1608, v1610])?;
 v1611
 }, Some(false) => {
 let v1612 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1613 = s.operator("list_singleton_intro", &[v1612, v7])?;
+let v1613 = s.builtin(EvalOp::ListSingletonIntro, &[v1612, v7])?;
 v1613
 }, None => s.stuck(),
 };
 let v1614 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1615 = s.operator("list_nth", &[v1606, v1607, v1614])?;
-let v1616 = s.operator("list_singleton_intro", &[v1605, v1615])?;
+let v1615 = s.builtin(EvalOp::ListNth, &[v1606, v1607, v1614])?;
+let v1616 = s.builtin(EvalOp::ListSingletonIntro, &[v1605, v1615])?;
 let v1617 = eo__24str_5fflatten(s, v1616)?;
-let v1618 = s.operator("list_rev", &[v1604, v1617])?;
+let v1618 = s.builtin(EvalOp::ListRev, &[v1604, v1617])?;
 v1618
 }, Some(false) => {
 let v1619 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -48508,24 +48508,24 @@ let v1621 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v1622 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1623 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1624 = s.operator("list_singleton_intro", &[v1623, v7])?;
-let v1625 = s.operator("list_rev", &[v1622, v1624])?;
+let v1624 = s.builtin(EvalOp::ListSingletonIntro, &[v1623, v7])?;
+let v1625 = s.builtin(EvalOp::ListRev, &[v1622, v1624])?;
 v1625
 }, Some(false) => {
 let v1626 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1627 = s.operator("list_singleton_intro", &[v1626, v7])?;
+let v1627 = s.builtin(EvalOp::ListSingletonIntro, &[v1626, v7])?;
 v1627
 }, None => s.stuck(),
 };
 let v1628 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1629 = s.operator("list_nth", &[v1620, v1621, v1628])?;
-let v1630 = s.operator("list_singleton_intro", &[v1619, v1629])?;
+let v1629 = s.builtin(EvalOp::ListNth, &[v1620, v1621, v1628])?;
+let v1630 = s.builtin(EvalOp::ListSingletonIntro, &[v1619, v1629])?;
 let v1631 = eo__24str_5fflatten(s, v1630)?;
 v1631
 }, None => s.stuck(),
 };
 let v1632 = eo__24str_5foverlap_5frec(s, v1496, v1603)?;
-let v1633 = s.operator("add", &[v1495, v1632])?;
+let v1633 = s.builtin(EvalOp::Add, &[v1495, v1632])?;
 let v1634 = s.apply(v1494, v1633)?;
 let v1635 = eo__24eo_5ftypeof(s, v1634)?;
 let v1636 = eo__24eo_5fnil(s, v1480, v1635)?;
@@ -48603,37 +48603,37 @@ let v28 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v30 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v31 = s.operator("list_singleton_intro", &[v30, v7])?;
-let v32 = s.operator("list_rev", &[v29, v31])?;
+let v31 = s.builtin(EvalOp::ListSingletonIntro, &[v30, v7])?;
+let v32 = s.builtin(EvalOp::ListRev, &[v29, v31])?;
 v32
 }, Some(false) => {
 let v33 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v34 = s.operator("list_singleton_intro", &[v33, v7])?;
+let v34 = s.builtin(EvalOp::ListSingletonIntro, &[v33, v7])?;
 v34
 }, None => s.stuck(),
 };
 let v35 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v36 = s.operator("list_nth", &[v27, v28, v35])?;
+let v36 = s.builtin(EvalOp::ListNth, &[v27, v28, v35])?;
 let v37 = if v36 == v24 && !s.is_stuck(v36)? {
 let v38 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v39 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v40 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v41 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v42 = s.operator("list_singleton_intro", &[v41, v4])?;
-let v43 = s.operator("list_rev", &[v40, v42])?;
+let v42 = s.builtin(EvalOp::ListSingletonIntro, &[v41, v4])?;
+let v43 = s.builtin(EvalOp::ListRev, &[v40, v42])?;
 v43
 }, Some(false) => {
 let v44 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v45 = s.operator("list_singleton_intro", &[v44, v4])?;
+let v45 = s.builtin(EvalOp::ListSingletonIntro, &[v44, v4])?;
 v45
 }, None => s.stuck(),
 };
 let v46 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v47 = s.operator("list_nth", &[v38, v39, v46])?;
-let v48 = s.operator("len", &[v47])?;
+let v47 = s.builtin(EvalOp::ListNth, &[v38, v39, v46])?;
+let v48 = s.builtin(EvalOp::Length, &[v47])?;
 let v49 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v50 = s.operator("is_eq", &[v48, v49])?;
+let v50 = s.builtin(EvalOp::IsEq, &[v48, v49])?;
 let v51 = s.literal(Lit::Bool(true))?;
 let v52 = if v50 == v51 && !s.is_stuck(v50)? {
 let v53 = s.construct(Constructor::eo__3d, &[])?;
@@ -48661,17 +48661,17 @@ let v73 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v74 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v75 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v76 = s.operator("list_singleton_intro", &[v75, v4])?;
-let v77 = s.operator("list_rev", &[v74, v76])?;
+let v76 = s.builtin(EvalOp::ListSingletonIntro, &[v75, v4])?;
+let v77 = s.builtin(EvalOp::ListRev, &[v74, v76])?;
 v77
 }, Some(false) => {
 let v78 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v79 = s.operator("list_singleton_intro", &[v78, v4])?;
+let v79 = s.builtin(EvalOp::ListSingletonIntro, &[v78, v4])?;
 v79
 }, None => s.stuck(),
 };
 let v80 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v81 = s.operator("list_nth", &[v72, v73, v80])?;
+let v81 = s.builtin(EvalOp::ListNth, &[v72, v73, v80])?;
 let v82 = s.apply(v71, v81)?;
 let v83 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v84 = s.construct(Constructor::eo__40purify, &[])?;
@@ -48699,17 +48699,17 @@ let v103 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v104 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v105 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v106 = s.operator("list_singleton_intro", &[v105, v4])?;
-let v107 = s.operator("list_rev", &[v104, v106])?;
+let v106 = s.builtin(EvalOp::ListSingletonIntro, &[v105, v4])?;
+let v107 = s.builtin(EvalOp::ListRev, &[v104, v106])?;
 v107
 }, Some(false) => {
 let v108 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v109 = s.operator("list_singleton_intro", &[v108, v4])?;
+let v109 = s.builtin(EvalOp::ListSingletonIntro, &[v108, v4])?;
 v109
 }, None => s.stuck(),
 };
 let v110 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v111 = s.operator("list_nth", &[v102, v103, v110])?;
+let v111 = s.builtin(EvalOp::ListNth, &[v102, v103, v110])?;
 let v112 = s.apply(v101, v111)?;
 let v113 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v114 = s.construct(Constructor::eo__40purify, &[])?;
@@ -48732,17 +48732,17 @@ let v130 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v131 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v132 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v133 = s.operator("list_singleton_intro", &[v132, v4])?;
-let v134 = s.operator("list_rev", &[v131, v133])?;
+let v133 = s.builtin(EvalOp::ListSingletonIntro, &[v132, v4])?;
+let v134 = s.builtin(EvalOp::ListRev, &[v131, v133])?;
 v134
 }, Some(false) => {
 let v135 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v136 = s.operator("list_singleton_intro", &[v135, v4])?;
+let v136 = s.builtin(EvalOp::ListSingletonIntro, &[v135, v4])?;
 v136
 }, None => s.stuck(),
 };
 let v137 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v138 = s.operator("list_nth", &[v129, v130, v137])?;
+let v138 = s.builtin(EvalOp::ListNth, &[v129, v130, v137])?;
 let v139 = eo__24eo_5ftypeof(s, v138)?;
 let v140 = eo__24eo_5fnil(s, v128, v139)?;
 let v141 = s.apply(v127, v140)?;
@@ -48793,12 +48793,12 @@ let v13 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v14 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v15 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v16 = s.operator("list_singleton_intro", &[v15, v7])?;
-let v17 = s.operator("list_rev", &[v14, v16])?;
+let v16 = s.builtin(EvalOp::ListSingletonIntro, &[v15, v7])?;
+let v17 = s.builtin(EvalOp::ListRev, &[v14, v16])?;
 v17
 }, Some(false) => {
 let v18 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v19 = s.operator("list_singleton_intro", &[v18, v7])?;
+let v19 = s.builtin(EvalOp::ListSingletonIntro, &[v18, v7])?;
 v19
 }, None => s.stuck(),
 };
@@ -48806,30 +48806,30 @@ let v20 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v21 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v22 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v23 = s.operator("list_singleton_intro", &[v22, v4])?;
-let v24 = s.operator("list_rev", &[v21, v23])?;
+let v23 = s.builtin(EvalOp::ListSingletonIntro, &[v22, v4])?;
+let v24 = s.builtin(EvalOp::ListRev, &[v21, v23])?;
 v24
 }, Some(false) => {
 let v25 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v26 = s.operator("list_singleton_intro", &[v25, v4])?;
+let v26 = s.builtin(EvalOp::ListSingletonIntro, &[v25, v4])?;
 v26
 }, None => s.stuck(),
 };
 let v27 = eo__24str_5fstrip_5fprefix(s, v13, v20)?;
 let v28 = eo__24pair_5ffirst(s, v27)?;
-let v29 = s.operator("list_rev", &[v12, v28])?;
+let v29 = s.builtin(EvalOp::ListRev, &[v12, v28])?;
 v29
 }, Some(false) => {
 let v30 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v31 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v32 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v33 = s.operator("list_singleton_intro", &[v32, v7])?;
-let v34 = s.operator("list_rev", &[v31, v33])?;
+let v33 = s.builtin(EvalOp::ListSingletonIntro, &[v32, v7])?;
+let v34 = s.builtin(EvalOp::ListRev, &[v31, v33])?;
 v34
 }, Some(false) => {
 let v35 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v36 = s.operator("list_singleton_intro", &[v35, v7])?;
+let v36 = s.builtin(EvalOp::ListSingletonIntro, &[v35, v7])?;
 v36
 }, None => s.stuck(),
 };
@@ -48837,12 +48837,12 @@ let v37 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v38 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v39 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v40 = s.operator("list_singleton_intro", &[v39, v4])?;
-let v41 = s.operator("list_rev", &[v38, v40])?;
+let v40 = s.builtin(EvalOp::ListSingletonIntro, &[v39, v4])?;
+let v41 = s.builtin(EvalOp::ListRev, &[v38, v40])?;
 v41
 }, Some(false) => {
 let v42 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v43 = s.operator("list_singleton_intro", &[v42, v4])?;
+let v43 = s.builtin(EvalOp::ListSingletonIntro, &[v42, v4])?;
 v43
 }, None => s.stuck(),
 };
@@ -48851,7 +48851,7 @@ let v45 = eo__24pair_5ffirst(s, v44)?;
 v45
 }, None => s.stuck(),
 };
-let v46 = s.operator("list_singleton_elim", &[v10, v11])?;
+let v46 = s.builtin(EvalOp::ListSingletonElim, &[v10, v11])?;
 let v47 = s.apply(v9, v46)?;
 let v48 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v49 = match s.boolean_value(a0, false)? {
@@ -48861,12 +48861,12 @@ let v51 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v52 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v53 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v54 = s.operator("list_singleton_intro", &[v53, v7])?;
-let v55 = s.operator("list_rev", &[v52, v54])?;
+let v54 = s.builtin(EvalOp::ListSingletonIntro, &[v53, v7])?;
+let v55 = s.builtin(EvalOp::ListRev, &[v52, v54])?;
 v55
 }, Some(false) => {
 let v56 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v57 = s.operator("list_singleton_intro", &[v56, v7])?;
+let v57 = s.builtin(EvalOp::ListSingletonIntro, &[v56, v7])?;
 v57
 }, None => s.stuck(),
 };
@@ -48874,30 +48874,30 @@ let v58 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v59 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v60 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v61 = s.operator("list_singleton_intro", &[v60, v4])?;
-let v62 = s.operator("list_rev", &[v59, v61])?;
+let v61 = s.builtin(EvalOp::ListSingletonIntro, &[v60, v4])?;
+let v62 = s.builtin(EvalOp::ListRev, &[v59, v61])?;
 v62
 }, Some(false) => {
 let v63 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v64 = s.operator("list_singleton_intro", &[v63, v4])?;
+let v64 = s.builtin(EvalOp::ListSingletonIntro, &[v63, v4])?;
 v64
 }, None => s.stuck(),
 };
 let v65 = eo__24str_5fstrip_5fprefix(s, v51, v58)?;
 let v66 = eo__24pair_5fsecond(s, v65)?;
-let v67 = s.operator("list_rev", &[v50, v66])?;
+let v67 = s.builtin(EvalOp::ListRev, &[v50, v66])?;
 v67
 }, Some(false) => {
 let v68 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v69 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v70 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v71 = s.operator("list_singleton_intro", &[v70, v7])?;
-let v72 = s.operator("list_rev", &[v69, v71])?;
+let v71 = s.builtin(EvalOp::ListSingletonIntro, &[v70, v7])?;
+let v72 = s.builtin(EvalOp::ListRev, &[v69, v71])?;
 v72
 }, Some(false) => {
 let v73 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v74 = s.operator("list_singleton_intro", &[v73, v7])?;
+let v74 = s.builtin(EvalOp::ListSingletonIntro, &[v73, v7])?;
 v74
 }, None => s.stuck(),
 };
@@ -48905,12 +48905,12 @@ let v75 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v76 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v77 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v78 = s.operator("list_singleton_intro", &[v77, v4])?;
-let v79 = s.operator("list_rev", &[v76, v78])?;
+let v78 = s.builtin(EvalOp::ListSingletonIntro, &[v77, v4])?;
+let v79 = s.builtin(EvalOp::ListRev, &[v76, v78])?;
 v79
 }, Some(false) => {
 let v80 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v81 = s.operator("list_singleton_intro", &[v80, v4])?;
+let v81 = s.builtin(EvalOp::ListSingletonIntro, &[v80, v4])?;
 v81
 }, None => s.stuck(),
 };
@@ -48919,7 +48919,7 @@ let v83 = eo__24pair_5fsecond(s, v82)?;
 v83
 }, None => s.stuck(),
 };
-let v84 = s.operator("list_singleton_elim", &[v48, v49])?;
+let v84 = s.builtin(EvalOp::ListSingletonElim, &[v48, v49])?;
 let v85 = s.apply(v47, v84)?;
 return Ok(v85);
 }
@@ -48985,34 +48985,34 @@ let v27 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v28 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v30 = s.operator("list_singleton_intro", &[v29, v7])?;
-let v31 = s.operator("list_rev", &[v28, v30])?;
+let v30 = s.builtin(EvalOp::ListSingletonIntro, &[v29, v7])?;
+let v31 = s.builtin(EvalOp::ListRev, &[v28, v30])?;
 v31
 }, Some(false) => {
 let v32 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v33 = s.operator("list_singleton_intro", &[v32, v7])?;
+let v33 = s.builtin(EvalOp::ListSingletonIntro, &[v32, v7])?;
 v33
 }, None => s.stuck(),
 };
 let v34 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v35 = s.operator("list_nth", &[v26, v27, v34])?;
+let v35 = s.builtin(EvalOp::ListNth, &[v26, v27, v34])?;
 let v36 = if v35 == v20 && !s.is_stuck(v35)? {
 let v37 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v38 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v39 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v40 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v41 = s.operator("list_singleton_intro", &[v40, v4])?;
-let v42 = s.operator("list_rev", &[v39, v41])?;
+let v41 = s.builtin(EvalOp::ListSingletonIntro, &[v40, v4])?;
+let v42 = s.builtin(EvalOp::ListRev, &[v39, v41])?;
 v42
 }, Some(false) => {
 let v43 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v44 = s.operator("list_singleton_intro", &[v43, v4])?;
+let v44 = s.builtin(EvalOp::ListSingletonIntro, &[v43, v4])?;
 v44
 }, None => s.stuck(),
 };
 let v45 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v46 = s.operator("list_nth", &[v37, v38, v45])?;
+let v46 = s.builtin(EvalOp::ListNth, &[v37, v38, v45])?;
 let v47 = if v46 == v24 && !s.is_stuck(v46)? {
 let v48 = s.construct(Constructor::eo_and, &[])?;
 let v49 = s.construct(Constructor::eo__3d, &[])?;
@@ -49021,17 +49021,17 @@ let v51 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v52 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v53 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v54 = s.operator("list_singleton_intro", &[v53, v7])?;
-let v55 = s.operator("list_rev", &[v52, v54])?;
+let v54 = s.builtin(EvalOp::ListSingletonIntro, &[v53, v7])?;
+let v55 = s.builtin(EvalOp::ListRev, &[v52, v54])?;
 v55
 }, Some(false) => {
 let v56 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v57 = s.operator("list_singleton_intro", &[v56, v7])?;
+let v57 = s.builtin(EvalOp::ListSingletonIntro, &[v56, v7])?;
 v57
 }, None => s.stuck(),
 };
 let v58 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v59 = s.operator("list_nth", &[v50, v51, v58])?;
+let v59 = s.builtin(EvalOp::ListNth, &[v50, v51, v58])?;
 let v60 = s.apply(v49, v59)?;
 let v61 = match s.boolean_value(a0, false)? {
 Some(true) => {
@@ -49042,33 +49042,33 @@ let v65 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v66 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v67 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v68 = s.operator("list_singleton_intro", &[v67, v7])?;
-let v69 = s.operator("list_rev", &[v66, v68])?;
+let v68 = s.builtin(EvalOp::ListSingletonIntro, &[v67, v7])?;
+let v69 = s.builtin(EvalOp::ListRev, &[v66, v68])?;
 v69
 }, Some(false) => {
 let v70 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v71 = s.operator("list_singleton_intro", &[v70, v7])?;
+let v71 = s.builtin(EvalOp::ListSingletonIntro, &[v70, v7])?;
 v71
 }, None => s.stuck(),
 };
 let v72 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v73 = s.operator("list_nth", &[v64, v65, v72])?;
+let v73 = s.builtin(EvalOp::ListNth, &[v64, v65, v72])?;
 let v74 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v75 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v76 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v77 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v78 = s.operator("list_singleton_intro", &[v77, v4])?;
-let v79 = s.operator("list_rev", &[v76, v78])?;
+let v78 = s.builtin(EvalOp::ListSingletonIntro, &[v77, v4])?;
+let v79 = s.builtin(EvalOp::ListRev, &[v76, v78])?;
 v79
 }, Some(false) => {
 let v80 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v81 = s.operator("list_singleton_intro", &[v80, v4])?;
+let v81 = s.builtin(EvalOp::ListSingletonIntro, &[v80, v4])?;
 v81
 }, None => s.stuck(),
 };
 let v82 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v83 = s.operator("list_nth", &[v74, v75, v82])?;
+let v83 = s.builtin(EvalOp::ListNth, &[v74, v75, v82])?;
 let v84 = eo__24str_5funify_5fsplit(s, v73, v83, a0)?;
 let v85 = s.apply(v63, v84)?;
 let v86 = s.apply(v62, v85)?;
@@ -49078,17 +49078,17 @@ let v89 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v90 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v91 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v92 = s.operator("list_singleton_intro", &[v91, v4])?;
-let v93 = s.operator("list_rev", &[v90, v92])?;
+let v92 = s.builtin(EvalOp::ListSingletonIntro, &[v91, v4])?;
+let v93 = s.builtin(EvalOp::ListRev, &[v90, v92])?;
 v93
 }, Some(false) => {
 let v94 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v95 = s.operator("list_singleton_intro", &[v94, v4])?;
+let v95 = s.builtin(EvalOp::ListSingletonIntro, &[v94, v4])?;
 v95
 }, None => s.stuck(),
 };
 let v96 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v97 = s.operator("list_nth", &[v88, v89, v96])?;
+let v97 = s.builtin(EvalOp::ListNth, &[v88, v89, v96])?;
 let v98 = s.apply(v87, v97)?;
 let v99 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v100 = s.construct(Constructor::eo__40purify, &[])?;
@@ -49097,33 +49097,33 @@ let v102 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v103 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v104 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v105 = s.operator("list_singleton_intro", &[v104, v7])?;
-let v106 = s.operator("list_rev", &[v103, v105])?;
+let v105 = s.builtin(EvalOp::ListSingletonIntro, &[v104, v7])?;
+let v106 = s.builtin(EvalOp::ListRev, &[v103, v105])?;
 v106
 }, Some(false) => {
 let v107 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v108 = s.operator("list_singleton_intro", &[v107, v7])?;
+let v108 = s.builtin(EvalOp::ListSingletonIntro, &[v107, v7])?;
 v108
 }, None => s.stuck(),
 };
 let v109 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v110 = s.operator("list_nth", &[v101, v102, v109])?;
+let v110 = s.builtin(EvalOp::ListNth, &[v101, v102, v109])?;
 let v111 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v112 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v113 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v114 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v115 = s.operator("list_singleton_intro", &[v114, v4])?;
-let v116 = s.operator("list_rev", &[v113, v115])?;
+let v115 = s.builtin(EvalOp::ListSingletonIntro, &[v114, v4])?;
+let v116 = s.builtin(EvalOp::ListRev, &[v113, v115])?;
 v116
 }, Some(false) => {
 let v117 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v118 = s.operator("list_singleton_intro", &[v117, v4])?;
+let v118 = s.builtin(EvalOp::ListSingletonIntro, &[v117, v4])?;
 v118
 }, None => s.stuck(),
 };
 let v119 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v120 = s.operator("list_nth", &[v111, v112, v119])?;
+let v120 = s.builtin(EvalOp::ListNth, &[v111, v112, v119])?;
 let v121 = eo__24str_5funify_5fsplit(s, v110, v120, a0)?;
 let v122 = s.apply(v100, v121)?;
 let v123 = eo__24eo_5ftypeof(s, v122)?;
@@ -49138,17 +49138,17 @@ let v129 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v130 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v131 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v132 = s.operator("list_singleton_intro", &[v131, v4])?;
-let v133 = s.operator("list_rev", &[v130, v132])?;
+let v132 = s.builtin(EvalOp::ListSingletonIntro, &[v131, v4])?;
+let v133 = s.builtin(EvalOp::ListRev, &[v130, v132])?;
 v133
 }, Some(false) => {
 let v134 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v135 = s.operator("list_singleton_intro", &[v134, v4])?;
+let v135 = s.builtin(EvalOp::ListSingletonIntro, &[v134, v4])?;
 v135
 }, None => s.stuck(),
 };
 let v136 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v137 = s.operator("list_nth", &[v128, v129, v136])?;
+let v137 = s.builtin(EvalOp::ListNth, &[v128, v129, v136])?;
 let v138 = s.apply(v127, v137)?;
 let v139 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v140 = s.construct(Constructor::eo__40purify, &[])?;
@@ -49157,33 +49157,33 @@ let v142 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v143 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v144 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v145 = s.operator("list_singleton_intro", &[v144, v7])?;
-let v146 = s.operator("list_rev", &[v143, v145])?;
+let v145 = s.builtin(EvalOp::ListSingletonIntro, &[v144, v7])?;
+let v146 = s.builtin(EvalOp::ListRev, &[v143, v145])?;
 v146
 }, Some(false) => {
 let v147 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v148 = s.operator("list_singleton_intro", &[v147, v7])?;
+let v148 = s.builtin(EvalOp::ListSingletonIntro, &[v147, v7])?;
 v148
 }, None => s.stuck(),
 };
 let v149 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v150 = s.operator("list_nth", &[v141, v142, v149])?;
+let v150 = s.builtin(EvalOp::ListNth, &[v141, v142, v149])?;
 let v151 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v152 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v153 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v154 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v155 = s.operator("list_singleton_intro", &[v154, v4])?;
-let v156 = s.operator("list_rev", &[v153, v155])?;
+let v155 = s.builtin(EvalOp::ListSingletonIntro, &[v154, v4])?;
+let v156 = s.builtin(EvalOp::ListRev, &[v153, v155])?;
 v156
 }, Some(false) => {
 let v157 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v158 = s.operator("list_singleton_intro", &[v157, v4])?;
+let v158 = s.builtin(EvalOp::ListSingletonIntro, &[v157, v4])?;
 v158
 }, None => s.stuck(),
 };
 let v159 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v160 = s.operator("list_nth", &[v151, v152, v159])?;
+let v160 = s.builtin(EvalOp::ListNth, &[v151, v152, v159])?;
 let v161 = eo__24str_5funify_5fsplit(s, v150, v160, a0)?;
 let v162 = s.apply(v140, v161)?;
 let v163 = s.apply(v139, v162)?;
@@ -49193,17 +49193,17 @@ let v166 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v167 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v168 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v169 = s.operator("list_singleton_intro", &[v168, v4])?;
-let v170 = s.operator("list_rev", &[v167, v169])?;
+let v169 = s.builtin(EvalOp::ListSingletonIntro, &[v168, v4])?;
+let v170 = s.builtin(EvalOp::ListRev, &[v167, v169])?;
 v170
 }, Some(false) => {
 let v171 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v172 = s.operator("list_singleton_intro", &[v171, v4])?;
+let v172 = s.builtin(EvalOp::ListSingletonIntro, &[v171, v4])?;
 v172
 }, None => s.stuck(),
 };
 let v173 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v174 = s.operator("list_nth", &[v165, v166, v173])?;
+let v174 = s.builtin(EvalOp::ListNth, &[v165, v166, v173])?;
 let v175 = eo__24eo_5ftypeof(s, v174)?;
 let v176 = eo__24eo_5fnil(s, v164, v175)?;
 let v177 = s.apply(v163, v176)?;
@@ -49222,33 +49222,33 @@ let v186 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v187 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v188 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v189 = s.operator("list_singleton_intro", &[v188, v7])?;
-let v190 = s.operator("list_rev", &[v187, v189])?;
+let v189 = s.builtin(EvalOp::ListSingletonIntro, &[v188, v7])?;
+let v190 = s.builtin(EvalOp::ListRev, &[v187, v189])?;
 v190
 }, Some(false) => {
 let v191 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v192 = s.operator("list_singleton_intro", &[v191, v7])?;
+let v192 = s.builtin(EvalOp::ListSingletonIntro, &[v191, v7])?;
 v192
 }, None => s.stuck(),
 };
 let v193 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v194 = s.operator("list_nth", &[v185, v186, v193])?;
+let v194 = s.builtin(EvalOp::ListNth, &[v185, v186, v193])?;
 let v195 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v196 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v197 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v198 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v199 = s.operator("list_singleton_intro", &[v198, v4])?;
-let v200 = s.operator("list_rev", &[v197, v199])?;
+let v199 = s.builtin(EvalOp::ListSingletonIntro, &[v198, v4])?;
+let v200 = s.builtin(EvalOp::ListRev, &[v197, v199])?;
 v200
 }, Some(false) => {
 let v201 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v202 = s.operator("list_singleton_intro", &[v201, v4])?;
+let v202 = s.builtin(EvalOp::ListSingletonIntro, &[v201, v4])?;
 v202
 }, None => s.stuck(),
 };
 let v203 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v204 = s.operator("list_nth", &[v195, v196, v203])?;
+let v204 = s.builtin(EvalOp::ListNth, &[v195, v196, v203])?;
 let v205 = eo__24str_5funify_5fsplit(s, v194, v204, a0)?;
 let v206 = s.apply(v184, v205)?;
 let v207 = s.apply(v183, v206)?;
@@ -49258,33 +49258,33 @@ let v210 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v211 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v212 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v213 = s.operator("list_singleton_intro", &[v212, v7])?;
-let v214 = s.operator("list_rev", &[v211, v213])?;
+let v213 = s.builtin(EvalOp::ListSingletonIntro, &[v212, v7])?;
+let v214 = s.builtin(EvalOp::ListRev, &[v211, v213])?;
 v214
 }, Some(false) => {
 let v215 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v216 = s.operator("list_singleton_intro", &[v215, v7])?;
+let v216 = s.builtin(EvalOp::ListSingletonIntro, &[v215, v7])?;
 v216
 }, None => s.stuck(),
 };
 let v217 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v218 = s.operator("list_nth", &[v209, v210, v217])?;
+let v218 = s.builtin(EvalOp::ListNth, &[v209, v210, v217])?;
 let v219 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v220 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v221 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v222 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v223 = s.operator("list_singleton_intro", &[v222, v4])?;
-let v224 = s.operator("list_rev", &[v221, v223])?;
+let v223 = s.builtin(EvalOp::ListSingletonIntro, &[v222, v4])?;
+let v224 = s.builtin(EvalOp::ListRev, &[v221, v223])?;
 v224
 }, Some(false) => {
 let v225 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v226 = s.operator("list_singleton_intro", &[v225, v4])?;
+let v226 = s.builtin(EvalOp::ListSingletonIntro, &[v225, v4])?;
 v226
 }, None => s.stuck(),
 };
 let v227 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v228 = s.operator("list_nth", &[v219, v220, v227])?;
+let v228 = s.builtin(EvalOp::ListNth, &[v219, v220, v227])?;
 let v229 = eo__24str_5funify_5fsplit(s, v218, v228, a0)?;
 let v230 = s.apply(v208, v229)?;
 let v231 = eo__24eo_5ftypeof(s, v230)?;
@@ -49301,33 +49301,33 @@ let v241 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v242 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v243 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v244 = s.operator("list_singleton_intro", &[v243, v7])?;
-let v245 = s.operator("list_rev", &[v242, v244])?;
+let v244 = s.builtin(EvalOp::ListSingletonIntro, &[v243, v7])?;
+let v245 = s.builtin(EvalOp::ListRev, &[v242, v244])?;
 v245
 }, Some(false) => {
 let v246 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v247 = s.operator("list_singleton_intro", &[v246, v7])?;
+let v247 = s.builtin(EvalOp::ListSingletonIntro, &[v246, v7])?;
 v247
 }, None => s.stuck(),
 };
 let v248 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v249 = s.operator("list_nth", &[v240, v241, v248])?;
+let v249 = s.builtin(EvalOp::ListNth, &[v240, v241, v248])?;
 let v250 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v251 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v252 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v253 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v254 = s.operator("list_singleton_intro", &[v253, v4])?;
-let v255 = s.operator("list_rev", &[v252, v254])?;
+let v254 = s.builtin(EvalOp::ListSingletonIntro, &[v253, v4])?;
+let v255 = s.builtin(EvalOp::ListRev, &[v252, v254])?;
 v255
 }, Some(false) => {
 let v256 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v257 = s.operator("list_singleton_intro", &[v256, v4])?;
+let v257 = s.builtin(EvalOp::ListSingletonIntro, &[v256, v4])?;
 v257
 }, None => s.stuck(),
 };
 let v258 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v259 = s.operator("list_nth", &[v250, v251, v258])?;
+let v259 = s.builtin(EvalOp::ListNth, &[v250, v251, v258])?;
 let v260 = eo__24str_5funify_5fsplit(s, v249, v259, a0)?;
 let v261 = s.apply(v239, v260)?;
 let v262 = s.apply(v238, v261)?;
@@ -49414,34 +49414,34 @@ let v31 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v32 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v33 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v34 = s.operator("list_singleton_intro", &[v33, v7])?;
-let v35 = s.operator("list_rev", &[v32, v34])?;
+let v34 = s.builtin(EvalOp::ListSingletonIntro, &[v33, v7])?;
+let v35 = s.builtin(EvalOp::ListRev, &[v32, v34])?;
 v35
 }, Some(false) => {
 let v36 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v37 = s.operator("list_singleton_intro", &[v36, v7])?;
+let v37 = s.builtin(EvalOp::ListSingletonIntro, &[v36, v7])?;
 v37
 }, None => s.stuck(),
 };
 let v38 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v39 = s.operator("list_nth", &[v30, v31, v38])?;
+let v39 = s.builtin(EvalOp::ListNth, &[v30, v31, v38])?;
 let v40 = if v39 == v24 && !s.is_stuck(v39)? {
 let v41 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v42 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v43 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v44 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v45 = s.operator("list_singleton_intro", &[v44, v4])?;
-let v46 = s.operator("list_rev", &[v43, v45])?;
+let v45 = s.builtin(EvalOp::ListSingletonIntro, &[v44, v4])?;
+let v46 = s.builtin(EvalOp::ListRev, &[v43, v45])?;
 v46
 }, Some(false) => {
 let v47 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v48 = s.operator("list_singleton_intro", &[v47, v4])?;
+let v48 = s.builtin(EvalOp::ListSingletonIntro, &[v47, v4])?;
 v48
 }, None => s.stuck(),
 };
 let v49 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v50 = s.operator("list_nth", &[v41, v42, v49])?;
+let v50 = s.builtin(EvalOp::ListNth, &[v41, v42, v49])?;
 let v51 = if v50 == v28 && !s.is_stuck(v50)? {
 let v52 = s.construct(Constructor::eo_and, &[])?;
 let v53 = s.construct(Constructor::eo_or, &[])?;
@@ -49451,17 +49451,17 @@ let v56 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v57 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v58 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v59 = s.operator("list_singleton_intro", &[v58, v7])?;
-let v60 = s.operator("list_rev", &[v57, v59])?;
+let v59 = s.builtin(EvalOp::ListSingletonIntro, &[v58, v7])?;
+let v60 = s.builtin(EvalOp::ListRev, &[v57, v59])?;
 v60
 }, Some(false) => {
 let v61 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v62 = s.operator("list_singleton_intro", &[v61, v7])?;
+let v62 = s.builtin(EvalOp::ListSingletonIntro, &[v61, v7])?;
 v62
 }, None => s.stuck(),
 };
 let v63 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v64 = s.operator("list_nth", &[v55, v56, v63])?;
+let v64 = s.builtin(EvalOp::ListNth, &[v55, v56, v63])?;
 let v65 = s.apply(v54, v64)?;
 let v66 = match s.boolean_value(a0, false)? {
 Some(true) => {
@@ -49472,33 +49472,33 @@ let v70 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v71 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v72 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v73 = s.operator("list_singleton_intro", &[v72, v7])?;
-let v74 = s.operator("list_rev", &[v71, v73])?;
+let v73 = s.builtin(EvalOp::ListSingletonIntro, &[v72, v7])?;
+let v74 = s.builtin(EvalOp::ListRev, &[v71, v73])?;
 v74
 }, Some(false) => {
 let v75 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v76 = s.operator("list_singleton_intro", &[v75, v7])?;
+let v76 = s.builtin(EvalOp::ListSingletonIntro, &[v75, v7])?;
 v76
 }, None => s.stuck(),
 };
 let v77 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v78 = s.operator("list_nth", &[v69, v70, v77])?;
+let v78 = s.builtin(EvalOp::ListNth, &[v69, v70, v77])?;
 let v79 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v80 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v81 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v82 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v83 = s.operator("list_singleton_intro", &[v82, v4])?;
-let v84 = s.operator("list_rev", &[v81, v83])?;
+let v83 = s.builtin(EvalOp::ListSingletonIntro, &[v82, v4])?;
+let v84 = s.builtin(EvalOp::ListRev, &[v81, v83])?;
 v84
 }, Some(false) => {
 let v85 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v86 = s.operator("list_singleton_intro", &[v85, v4])?;
+let v86 = s.builtin(EvalOp::ListSingletonIntro, &[v85, v4])?;
 v86
 }, None => s.stuck(),
 };
 let v87 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v88 = s.operator("list_nth", &[v79, v80, v87])?;
+let v88 = s.builtin(EvalOp::ListNth, &[v79, v80, v87])?;
 let v89 = eo__24str_5funify_5fsplit(s, v78, v88, a0)?;
 let v90 = s.apply(v68, v89)?;
 let v91 = s.apply(v67, v90)?;
@@ -49508,17 +49508,17 @@ let v94 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v95 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v96 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v97 = s.operator("list_singleton_intro", &[v96, v4])?;
-let v98 = s.operator("list_rev", &[v95, v97])?;
+let v97 = s.builtin(EvalOp::ListSingletonIntro, &[v96, v4])?;
+let v98 = s.builtin(EvalOp::ListRev, &[v95, v97])?;
 v98
 }, Some(false) => {
 let v99 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v100 = s.operator("list_singleton_intro", &[v99, v4])?;
+let v100 = s.builtin(EvalOp::ListSingletonIntro, &[v99, v4])?;
 v100
 }, None => s.stuck(),
 };
 let v101 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v102 = s.operator("list_nth", &[v93, v94, v101])?;
+let v102 = s.builtin(EvalOp::ListNth, &[v93, v94, v101])?;
 let v103 = s.apply(v92, v102)?;
 let v104 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v105 = s.construct(Constructor::eo__40purify, &[])?;
@@ -49527,33 +49527,33 @@ let v107 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v108 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v109 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v110 = s.operator("list_singleton_intro", &[v109, v7])?;
-let v111 = s.operator("list_rev", &[v108, v110])?;
+let v110 = s.builtin(EvalOp::ListSingletonIntro, &[v109, v7])?;
+let v111 = s.builtin(EvalOp::ListRev, &[v108, v110])?;
 v111
 }, Some(false) => {
 let v112 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v113 = s.operator("list_singleton_intro", &[v112, v7])?;
+let v113 = s.builtin(EvalOp::ListSingletonIntro, &[v112, v7])?;
 v113
 }, None => s.stuck(),
 };
 let v114 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v115 = s.operator("list_nth", &[v106, v107, v114])?;
+let v115 = s.builtin(EvalOp::ListNth, &[v106, v107, v114])?;
 let v116 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v117 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v118 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v119 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v120 = s.operator("list_singleton_intro", &[v119, v4])?;
-let v121 = s.operator("list_rev", &[v118, v120])?;
+let v120 = s.builtin(EvalOp::ListSingletonIntro, &[v119, v4])?;
+let v121 = s.builtin(EvalOp::ListRev, &[v118, v120])?;
 v121
 }, Some(false) => {
 let v122 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v123 = s.operator("list_singleton_intro", &[v122, v4])?;
+let v123 = s.builtin(EvalOp::ListSingletonIntro, &[v122, v4])?;
 v123
 }, None => s.stuck(),
 };
 let v124 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v125 = s.operator("list_nth", &[v116, v117, v124])?;
+let v125 = s.builtin(EvalOp::ListNth, &[v116, v117, v124])?;
 let v126 = eo__24str_5funify_5fsplit(s, v115, v125, a0)?;
 let v127 = s.apply(v105, v126)?;
 let v128 = eo__24eo_5ftypeof(s, v127)?;
@@ -49568,17 +49568,17 @@ let v134 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v135 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v136 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v137 = s.operator("list_singleton_intro", &[v136, v4])?;
-let v138 = s.operator("list_rev", &[v135, v137])?;
+let v137 = s.builtin(EvalOp::ListSingletonIntro, &[v136, v4])?;
+let v138 = s.builtin(EvalOp::ListRev, &[v135, v137])?;
 v138
 }, Some(false) => {
 let v139 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v140 = s.operator("list_singleton_intro", &[v139, v4])?;
+let v140 = s.builtin(EvalOp::ListSingletonIntro, &[v139, v4])?;
 v140
 }, None => s.stuck(),
 };
 let v141 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v142 = s.operator("list_nth", &[v133, v134, v141])?;
+let v142 = s.builtin(EvalOp::ListNth, &[v133, v134, v141])?;
 let v143 = s.apply(v132, v142)?;
 let v144 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v145 = s.construct(Constructor::eo__40purify, &[])?;
@@ -49587,33 +49587,33 @@ let v147 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v148 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v149 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v150 = s.operator("list_singleton_intro", &[v149, v7])?;
-let v151 = s.operator("list_rev", &[v148, v150])?;
+let v150 = s.builtin(EvalOp::ListSingletonIntro, &[v149, v7])?;
+let v151 = s.builtin(EvalOp::ListRev, &[v148, v150])?;
 v151
 }, Some(false) => {
 let v152 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v153 = s.operator("list_singleton_intro", &[v152, v7])?;
+let v153 = s.builtin(EvalOp::ListSingletonIntro, &[v152, v7])?;
 v153
 }, None => s.stuck(),
 };
 let v154 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v155 = s.operator("list_nth", &[v146, v147, v154])?;
+let v155 = s.builtin(EvalOp::ListNth, &[v146, v147, v154])?;
 let v156 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v157 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v158 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v159 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v160 = s.operator("list_singleton_intro", &[v159, v4])?;
-let v161 = s.operator("list_rev", &[v158, v160])?;
+let v160 = s.builtin(EvalOp::ListSingletonIntro, &[v159, v4])?;
+let v161 = s.builtin(EvalOp::ListRev, &[v158, v160])?;
 v161
 }, Some(false) => {
 let v162 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v163 = s.operator("list_singleton_intro", &[v162, v4])?;
+let v163 = s.builtin(EvalOp::ListSingletonIntro, &[v162, v4])?;
 v163
 }, None => s.stuck(),
 };
 let v164 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v165 = s.operator("list_nth", &[v156, v157, v164])?;
+let v165 = s.builtin(EvalOp::ListNth, &[v156, v157, v164])?;
 let v166 = eo__24str_5funify_5fsplit(s, v155, v165, a0)?;
 let v167 = s.apply(v145, v166)?;
 let v168 = s.apply(v144, v167)?;
@@ -49623,17 +49623,17 @@ let v171 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v172 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v173 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v174 = s.operator("list_singleton_intro", &[v173, v4])?;
-let v175 = s.operator("list_rev", &[v172, v174])?;
+let v174 = s.builtin(EvalOp::ListSingletonIntro, &[v173, v4])?;
+let v175 = s.builtin(EvalOp::ListRev, &[v172, v174])?;
 v175
 }, Some(false) => {
 let v176 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v177 = s.operator("list_singleton_intro", &[v176, v4])?;
+let v177 = s.builtin(EvalOp::ListSingletonIntro, &[v176, v4])?;
 v177
 }, None => s.stuck(),
 };
 let v178 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v179 = s.operator("list_nth", &[v170, v171, v178])?;
+let v179 = s.builtin(EvalOp::ListNth, &[v170, v171, v178])?;
 let v180 = eo__24eo_5ftypeof(s, v179)?;
 let v181 = eo__24eo_5fnil(s, v169, v180)?;
 let v182 = s.apply(v168, v181)?;
@@ -49650,17 +49650,17 @@ let v189 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v190 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v191 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v192 = s.operator("list_singleton_intro", &[v191, v4])?;
-let v193 = s.operator("list_rev", &[v190, v192])?;
+let v192 = s.builtin(EvalOp::ListSingletonIntro, &[v191, v4])?;
+let v193 = s.builtin(EvalOp::ListRev, &[v190, v192])?;
 v193
 }, Some(false) => {
 let v194 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v195 = s.operator("list_singleton_intro", &[v194, v4])?;
+let v195 = s.builtin(EvalOp::ListSingletonIntro, &[v194, v4])?;
 v195
 }, None => s.stuck(),
 };
 let v196 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v197 = s.operator("list_nth", &[v188, v189, v196])?;
+let v197 = s.builtin(EvalOp::ListNth, &[v188, v189, v196])?;
 let v198 = s.apply(v187, v197)?;
 let v199 = match s.boolean_value(a0, false)? {
 Some(true) => {
@@ -49671,33 +49671,33 @@ let v203 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v204 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v205 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v206 = s.operator("list_singleton_intro", &[v205, v7])?;
-let v207 = s.operator("list_rev", &[v204, v206])?;
+let v206 = s.builtin(EvalOp::ListSingletonIntro, &[v205, v7])?;
+let v207 = s.builtin(EvalOp::ListRev, &[v204, v206])?;
 v207
 }, Some(false) => {
 let v208 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v209 = s.operator("list_singleton_intro", &[v208, v7])?;
+let v209 = s.builtin(EvalOp::ListSingletonIntro, &[v208, v7])?;
 v209
 }, None => s.stuck(),
 };
 let v210 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v211 = s.operator("list_nth", &[v202, v203, v210])?;
+let v211 = s.builtin(EvalOp::ListNth, &[v202, v203, v210])?;
 let v212 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v213 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v214 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v215 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v216 = s.operator("list_singleton_intro", &[v215, v4])?;
-let v217 = s.operator("list_rev", &[v214, v216])?;
+let v216 = s.builtin(EvalOp::ListSingletonIntro, &[v215, v4])?;
+let v217 = s.builtin(EvalOp::ListRev, &[v214, v216])?;
 v217
 }, Some(false) => {
 let v218 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v219 = s.operator("list_singleton_intro", &[v218, v4])?;
+let v219 = s.builtin(EvalOp::ListSingletonIntro, &[v218, v4])?;
 v219
 }, None => s.stuck(),
 };
 let v220 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v221 = s.operator("list_nth", &[v212, v213, v220])?;
+let v221 = s.builtin(EvalOp::ListNth, &[v212, v213, v220])?;
 let v222 = eo__24str_5funify_5fsplit(s, v211, v221, a0)?;
 let v223 = s.apply(v201, v222)?;
 let v224 = s.apply(v200, v223)?;
@@ -49707,17 +49707,17 @@ let v227 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v228 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v229 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v230 = s.operator("list_singleton_intro", &[v229, v7])?;
-let v231 = s.operator("list_rev", &[v228, v230])?;
+let v230 = s.builtin(EvalOp::ListSingletonIntro, &[v229, v7])?;
+let v231 = s.builtin(EvalOp::ListRev, &[v228, v230])?;
 v231
 }, Some(false) => {
 let v232 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v233 = s.operator("list_singleton_intro", &[v232, v7])?;
+let v233 = s.builtin(EvalOp::ListSingletonIntro, &[v232, v7])?;
 v233
 }, None => s.stuck(),
 };
 let v234 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v235 = s.operator("list_nth", &[v226, v227, v234])?;
+let v235 = s.builtin(EvalOp::ListNth, &[v226, v227, v234])?;
 let v236 = s.apply(v225, v235)?;
 let v237 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v238 = s.construct(Constructor::eo__40purify, &[])?;
@@ -49726,33 +49726,33 @@ let v240 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v241 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v242 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v243 = s.operator("list_singleton_intro", &[v242, v7])?;
-let v244 = s.operator("list_rev", &[v241, v243])?;
+let v243 = s.builtin(EvalOp::ListSingletonIntro, &[v242, v7])?;
+let v244 = s.builtin(EvalOp::ListRev, &[v241, v243])?;
 v244
 }, Some(false) => {
 let v245 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v246 = s.operator("list_singleton_intro", &[v245, v7])?;
+let v246 = s.builtin(EvalOp::ListSingletonIntro, &[v245, v7])?;
 v246
 }, None => s.stuck(),
 };
 let v247 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v248 = s.operator("list_nth", &[v239, v240, v247])?;
+let v248 = s.builtin(EvalOp::ListNth, &[v239, v240, v247])?;
 let v249 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v250 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v251 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v252 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v253 = s.operator("list_singleton_intro", &[v252, v4])?;
-let v254 = s.operator("list_rev", &[v251, v253])?;
+let v253 = s.builtin(EvalOp::ListSingletonIntro, &[v252, v4])?;
+let v254 = s.builtin(EvalOp::ListRev, &[v251, v253])?;
 v254
 }, Some(false) => {
 let v255 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v256 = s.operator("list_singleton_intro", &[v255, v4])?;
+let v256 = s.builtin(EvalOp::ListSingletonIntro, &[v255, v4])?;
 v256
 }, None => s.stuck(),
 };
 let v257 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v258 = s.operator("list_nth", &[v249, v250, v257])?;
+let v258 = s.builtin(EvalOp::ListNth, &[v249, v250, v257])?;
 let v259 = eo__24str_5funify_5fsplit(s, v248, v258, a0)?;
 let v260 = s.apply(v238, v259)?;
 let v261 = eo__24eo_5ftypeof(s, v260)?;
@@ -49767,17 +49767,17 @@ let v267 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v268 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v269 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v270 = s.operator("list_singleton_intro", &[v269, v7])?;
-let v271 = s.operator("list_rev", &[v268, v270])?;
+let v270 = s.builtin(EvalOp::ListSingletonIntro, &[v269, v7])?;
+let v271 = s.builtin(EvalOp::ListRev, &[v268, v270])?;
 v271
 }, Some(false) => {
 let v272 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v273 = s.operator("list_singleton_intro", &[v272, v7])?;
+let v273 = s.builtin(EvalOp::ListSingletonIntro, &[v272, v7])?;
 v273
 }, None => s.stuck(),
 };
 let v274 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v275 = s.operator("list_nth", &[v266, v267, v274])?;
+let v275 = s.builtin(EvalOp::ListNth, &[v266, v267, v274])?;
 let v276 = s.apply(v265, v275)?;
 let v277 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v278 = s.construct(Constructor::eo__40purify, &[])?;
@@ -49786,33 +49786,33 @@ let v280 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v281 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v282 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v283 = s.operator("list_singleton_intro", &[v282, v7])?;
-let v284 = s.operator("list_rev", &[v281, v283])?;
+let v283 = s.builtin(EvalOp::ListSingletonIntro, &[v282, v7])?;
+let v284 = s.builtin(EvalOp::ListRev, &[v281, v283])?;
 v284
 }, Some(false) => {
 let v285 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v286 = s.operator("list_singleton_intro", &[v285, v7])?;
+let v286 = s.builtin(EvalOp::ListSingletonIntro, &[v285, v7])?;
 v286
 }, None => s.stuck(),
 };
 let v287 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v288 = s.operator("list_nth", &[v279, v280, v287])?;
+let v288 = s.builtin(EvalOp::ListNth, &[v279, v280, v287])?;
 let v289 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v290 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v291 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v292 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v293 = s.operator("list_singleton_intro", &[v292, v4])?;
-let v294 = s.operator("list_rev", &[v291, v293])?;
+let v293 = s.builtin(EvalOp::ListSingletonIntro, &[v292, v4])?;
+let v294 = s.builtin(EvalOp::ListRev, &[v291, v293])?;
 v294
 }, Some(false) => {
 let v295 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v296 = s.operator("list_singleton_intro", &[v295, v4])?;
+let v296 = s.builtin(EvalOp::ListSingletonIntro, &[v295, v4])?;
 v296
 }, None => s.stuck(),
 };
 let v297 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v298 = s.operator("list_nth", &[v289, v290, v297])?;
+let v298 = s.builtin(EvalOp::ListNth, &[v289, v290, v297])?;
 let v299 = eo__24str_5funify_5fsplit(s, v288, v298, a0)?;
 let v300 = s.apply(v278, v299)?;
 let v301 = s.apply(v277, v300)?;
@@ -49822,17 +49822,17 @@ let v304 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v305 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v306 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v307 = s.operator("list_singleton_intro", &[v306, v7])?;
-let v308 = s.operator("list_rev", &[v305, v307])?;
+let v307 = s.builtin(EvalOp::ListSingletonIntro, &[v306, v7])?;
+let v308 = s.builtin(EvalOp::ListRev, &[v305, v307])?;
 v308
 }, Some(false) => {
 let v309 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v310 = s.operator("list_singleton_intro", &[v309, v7])?;
+let v310 = s.builtin(EvalOp::ListSingletonIntro, &[v309, v7])?;
 v310
 }, None => s.stuck(),
 };
 let v311 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v312 = s.operator("list_nth", &[v303, v304, v311])?;
+let v312 = s.builtin(EvalOp::ListNth, &[v303, v304, v311])?;
 let v313 = eo__24eo_5ftypeof(s, v312)?;
 let v314 = eo__24eo_5fnil(s, v302, v313)?;
 let v315 = s.apply(v301, v314)?;
@@ -49855,33 +49855,33 @@ let v328 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v329 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v330 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v331 = s.operator("list_singleton_intro", &[v330, v7])?;
-let v332 = s.operator("list_rev", &[v329, v331])?;
+let v331 = s.builtin(EvalOp::ListSingletonIntro, &[v330, v7])?;
+let v332 = s.builtin(EvalOp::ListRev, &[v329, v331])?;
 v332
 }, Some(false) => {
 let v333 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v334 = s.operator("list_singleton_intro", &[v333, v7])?;
+let v334 = s.builtin(EvalOp::ListSingletonIntro, &[v333, v7])?;
 v334
 }, None => s.stuck(),
 };
 let v335 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v336 = s.operator("list_nth", &[v327, v328, v335])?;
+let v336 = s.builtin(EvalOp::ListNth, &[v327, v328, v335])?;
 let v337 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v338 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v339 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v340 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v341 = s.operator("list_singleton_intro", &[v340, v4])?;
-let v342 = s.operator("list_rev", &[v339, v341])?;
+let v341 = s.builtin(EvalOp::ListSingletonIntro, &[v340, v4])?;
+let v342 = s.builtin(EvalOp::ListRev, &[v339, v341])?;
 v342
 }, Some(false) => {
 let v343 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v344 = s.operator("list_singleton_intro", &[v343, v4])?;
+let v344 = s.builtin(EvalOp::ListSingletonIntro, &[v343, v4])?;
 v344
 }, None => s.stuck(),
 };
 let v345 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v346 = s.operator("list_nth", &[v337, v338, v345])?;
+let v346 = s.builtin(EvalOp::ListNth, &[v337, v338, v345])?;
 let v347 = eo__24str_5funify_5fsplit(s, v336, v346, a0)?;
 let v348 = s.apply(v326, v347)?;
 let v349 = s.apply(v325, v348)?;
@@ -49891,33 +49891,33 @@ let v352 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v353 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v354 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v355 = s.operator("list_singleton_intro", &[v354, v7])?;
-let v356 = s.operator("list_rev", &[v353, v355])?;
+let v355 = s.builtin(EvalOp::ListSingletonIntro, &[v354, v7])?;
+let v356 = s.builtin(EvalOp::ListRev, &[v353, v355])?;
 v356
 }, Some(false) => {
 let v357 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v358 = s.operator("list_singleton_intro", &[v357, v7])?;
+let v358 = s.builtin(EvalOp::ListSingletonIntro, &[v357, v7])?;
 v358
 }, None => s.stuck(),
 };
 let v359 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v360 = s.operator("list_nth", &[v351, v352, v359])?;
+let v360 = s.builtin(EvalOp::ListNth, &[v351, v352, v359])?;
 let v361 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v362 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v363 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v364 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v365 = s.operator("list_singleton_intro", &[v364, v4])?;
-let v366 = s.operator("list_rev", &[v363, v365])?;
+let v365 = s.builtin(EvalOp::ListSingletonIntro, &[v364, v4])?;
+let v366 = s.builtin(EvalOp::ListRev, &[v363, v365])?;
 v366
 }, Some(false) => {
 let v367 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v368 = s.operator("list_singleton_intro", &[v367, v4])?;
+let v368 = s.builtin(EvalOp::ListSingletonIntro, &[v367, v4])?;
 v368
 }, None => s.stuck(),
 };
 let v369 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v370 = s.operator("list_nth", &[v361, v362, v369])?;
+let v370 = s.builtin(EvalOp::ListNth, &[v361, v362, v369])?;
 let v371 = eo__24str_5funify_5fsplit(s, v360, v370, a0)?;
 let v372 = s.apply(v350, v371)?;
 let v373 = eo__24eo_5ftypeof(s, v372)?;
@@ -49934,33 +49934,33 @@ let v383 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v384 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v385 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v386 = s.operator("list_singleton_intro", &[v385, v7])?;
-let v387 = s.operator("list_rev", &[v384, v386])?;
+let v386 = s.builtin(EvalOp::ListSingletonIntro, &[v385, v7])?;
+let v387 = s.builtin(EvalOp::ListRev, &[v384, v386])?;
 v387
 }, Some(false) => {
 let v388 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v389 = s.operator("list_singleton_intro", &[v388, v7])?;
+let v389 = s.builtin(EvalOp::ListSingletonIntro, &[v388, v7])?;
 v389
 }, None => s.stuck(),
 };
 let v390 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v391 = s.operator("list_nth", &[v382, v383, v390])?;
+let v391 = s.builtin(EvalOp::ListNth, &[v382, v383, v390])?;
 let v392 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v393 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v394 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v395 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v396 = s.operator("list_singleton_intro", &[v395, v4])?;
-let v397 = s.operator("list_rev", &[v394, v396])?;
+let v396 = s.builtin(EvalOp::ListSingletonIntro, &[v395, v4])?;
+let v397 = s.builtin(EvalOp::ListRev, &[v394, v396])?;
 v397
 }, Some(false) => {
 let v398 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v399 = s.operator("list_singleton_intro", &[v398, v4])?;
+let v399 = s.builtin(EvalOp::ListSingletonIntro, &[v398, v4])?;
 v399
 }, None => s.stuck(),
 };
 let v400 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v401 = s.operator("list_nth", &[v392, v393, v400])?;
+let v401 = s.builtin(EvalOp::ListNth, &[v392, v393, v400])?;
 let v402 = eo__24str_5funify_5fsplit(s, v391, v401, a0)?;
 let v403 = s.apply(v381, v402)?;
 let v404 = s.apply(v380, v403)?;
@@ -50040,34 +50040,34 @@ let v27 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v28 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v30 = s.operator("list_singleton_intro", &[v29, v7])?;
-let v31 = s.operator("list_rev", &[v28, v30])?;
+let v30 = s.builtin(EvalOp::ListSingletonIntro, &[v29, v7])?;
+let v31 = s.builtin(EvalOp::ListRev, &[v28, v30])?;
 v31
 }, Some(false) => {
 let v32 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v33 = s.operator("list_singleton_intro", &[v32, v7])?;
+let v33 = s.builtin(EvalOp::ListSingletonIntro, &[v32, v7])?;
 v33
 }, None => s.stuck(),
 };
 let v34 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v35 = s.operator("list_nth", &[v26, v27, v34])?;
+let v35 = s.builtin(EvalOp::ListNth, &[v26, v27, v34])?;
 let v36 = if v35 == v20 && !s.is_stuck(v35)? {
 let v37 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v38 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v39 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v40 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v41 = s.operator("list_singleton_intro", &[v40, v4])?;
-let v42 = s.operator("list_rev", &[v39, v41])?;
+let v41 = s.builtin(EvalOp::ListSingletonIntro, &[v40, v4])?;
+let v42 = s.builtin(EvalOp::ListRev, &[v39, v41])?;
 v42
 }, Some(false) => {
 let v43 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v44 = s.operator("list_singleton_intro", &[v43, v4])?;
+let v44 = s.builtin(EvalOp::ListSingletonIntro, &[v43, v4])?;
 v44
 }, None => s.stuck(),
 };
 let v45 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v46 = s.operator("list_nth", &[v37, v38, v45])?;
+let v46 = s.builtin(EvalOp::ListNth, &[v37, v38, v45])?;
 let v47 = if v46 == v24 && !s.is_stuck(v46)? {
 let v48 = s.construct(Constructor::eo__3d, &[])?;
 let v49 = s.apply(v48, v20)?;
@@ -50096,7 +50096,7 @@ let v1 = fields;
 let v2 = s.construct(Constructor::eo__3d, &[])?;
 let v3 = s.apply(v2, a0)?;
 let v4 = s.construct(Constructor::eo_and, &[])?;
-let v5 = s.operator("list_rev", &[v4, v1[0]])?;
+let v5 = s.builtin(EvalOp::ListRev, &[v4, v1[0]])?;
 let v6 = eo__24mk_5fcong_5frhs(s, a0, v5)?;
 let v7 = s.apply(v3, v6)?;
 return Ok(v7);
@@ -50195,12 +50195,12 @@ if v8 != v10 { break 'case0; }
 let v11 = s.literal(Lit::Bool(false))?;
 if v2 != v11 { break 'case0; }
 let v12 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v13 = s.operator("list_len", &[v12, v9])?;
+let v13 = s.builtin(EvalOp::ListLength, &[v12, v9])?;
 let v14 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v15 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v16 = eo__24assoc_5fnil_5fnth_5ftype(s, v14, v9, v15)?;
 let v17 = eo__24compute_5fcard(s, v16)?;
-let v18 = s.operator("gt", &[v13, v17])?;
+let v18 = s.builtin(EvalOp::Gt, &[v13, v17])?;
 let v19 = s.literal(Lit::Bool(true))?;
 let v20 = if v18 == v19 && !s.is_stuck(v18)? {
 let v21 = s.construct(Constructor::eo__3d, &[])?;
@@ -50238,7 +50238,7 @@ let v6 = s.construct(Constructor::eo__3d, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo_and, &[])?;
 let v8 = eo__24mk_5fdistinct_5felim(s, v5)?;
-let v9 = s.operator("list_singleton_elim", &[v7, v8])?;
+let v9 = s.builtin(EvalOp::ListSingletonElim, &[v7, v8])?;
 let v10 = if v9 == v2 && !s.is_stuck(v9)? {
 let v11 = s.construct(Constructor::eo__3d, &[])?;
 let v12 = s.apply(v11, v5)?;
@@ -50280,8 +50280,8 @@ if v8 != v10 { break 'case0; }
 let v11 = s.literal(Lit::Bool(false))?;
 if v2 != v11 { break 'case0; }
 let v12 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v13 = s.operator("list_setof", &[v12, v9])?;
-let v14 = s.operator("eq", &[v13, v9])?;
+let v13 = s.builtin(EvalOp::ListSetof, &[v12, v9])?;
+let v14 = s.builtin(EvalOp::Eq, &[v13, v9])?;
 let v15 = s.literal(Lit::Bool(false))?;
 let v16 = if v14 == v15 && !s.is_stuck(v14)? {
 let v17 = s.construct(Constructor::eo__3d, &[])?;
@@ -50352,7 +50352,7 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("eq", &[a0, a1])?;
+let v0 = s.builtin(EvalOp::Eq, &[a0, a1])?;
 let v1 = match s.boolean_value(v0, false)? {
 Some(true) => {
 let v2 = s.literal(Lit::Bool(false))?;
@@ -50407,7 +50407,7 @@ let v11 = eo__24dt_5farg_5flist(s, v9)?;
 let v12 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v13 = eo__24eo_5ftypeof(s, v9)?;
 let v14 = eo__24dt_5fget_5fselectors_5fof_5fapp(s, v13, v9)?;
-let v15 = s.operator("list_find", &[v12, v14, v8])?;
+let v15 = s.builtin(EvalOp::ListFind, &[v12, v14, v8])?;
 let v16 = eo__24assoc_5fnil_5fnth(s, v10, v11, v15)?;
 let v17 = if v16 == v2 && !s.is_stuck(v16)? {
 let v18 = s.construct(Constructor::eo__3d, &[])?;
@@ -50498,7 +50498,7 @@ if v2 != v12 { break 'case0; }
 let v13 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v14 = eo__24eo_5ftypeof(s, v9)?;
 let v15 = eo__24dt_5fget_5fconstructors(s, v14)?;
-let v16 = s.operator("list_len", &[v13, v15])?;
+let v16 = s.builtin(EvalOp::ListLength, &[v13, v15])?;
 let v17 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v18 = if v16 == v17 && !s.is_stuck(v16)? {
 let v19 = s.construct(Constructor::eo__3d, &[])?;
@@ -50580,7 +50580,7 @@ let v13 = s.construct(Constructor::eo__3d, &[])?;
 if v11 != v13 { break 'case0; }
 let v14 = s.construct(Constructor::eo_and, &[])?;
 let v15 = eo__24mk_5fdt_5fcons_5feq(s, v12, v9)?;
-let v16 = s.operator("list_singleton_elim", &[v14, v15])?;
+let v16 = s.builtin(EvalOp::ListSingletonElim, &[v14, v15])?;
 let v17 = if v16 == v2 && !s.is_stuck(v16)? {
 let v18 = s.construct(Constructor::eo__3d, &[])?;
 let v19 = s.construct(Constructor::eo__3d, &[])?;
@@ -50629,7 +50629,7 @@ let v13 = s.construct(Constructor::eo__3d, &[])?;
 if v11 != v13 { break 'case0; }
 let v14 = s.literal(Lit::Bool(false))?;
 if v2 != v14 { break 'case0; }
-let v15 = s.operator("eq", &[v12, v9])?;
+let v15 = s.builtin(EvalOp::Eq, &[v12, v9])?;
 let v16 = match s.boolean_value(v15, false)? {
 Some(true) => {
 let v17 = s.literal(Lit::Bool(false))?;
@@ -50863,7 +50863,7 @@ let v0 = s.construct(Constructor::eo_or, &[])?;
 let v1 = eo__24eo_5ftypeof(s, a0)?;
 let v2 = eo__24dt_5fget_5fconstructors(s, v1)?;
 let v3 = eo__24mk_5fdt_5fsplit(s, v2, a0)?;
-let v4 = s.operator("list_singleton_elim", &[v0, v3])?;
+let v4 = s.builtin(EvalOp::ListSingletonElim, &[v0, v3])?;
 return Ok(v4);
 }
 Ok(s.stuck())
@@ -51236,11 +51236,11 @@ let v2 = a;
 let v3 = s.construct(Constructor::eo_Seq, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v5 = s.operator("gt", &[a1, v4])?;
+let v5 = s.builtin(EvalOp::Gt, &[a1, v4])?;
 let v6 = s.literal(Lit::Bool(true))?;
 let v7 = if v5 == v6 && !s.is_stuck(v5)? {
 let v8 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v9 = s.operator("gt", &[a2, v8])?;
+let v9 = s.builtin(EvalOp::Gt, &[a2, v8])?;
 let v10 = s.literal(Lit::Bool(true))?;
 let v11 = if v9 == v10 && !s.is_stuck(v9)? {
 let v12 = s.construct(Constructor::eo__3d, &[])?;
@@ -51272,7 +51272,7 @@ let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = s.construct(Constructor::eo_or, &[])?;
-let v3 = s.operator("list_setof", &[v2, v1[0]])?;
+let v3 = s.builtin(EvalOp::ListSetof, &[v2, v1[0]])?;
 let v4 = eo__24from_5fclause(s, v3)?;
 return Ok(v4);
 }
@@ -51485,18 +51485,18 @@ let v11 = fields;
 let v12 = s.construct(Constructor::eo_concat, &[])?;
 let v13 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v14 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v15 = s.operator("list_repeat", &[v13, v14, v11[0]])?;
-let v16 = s.operator("is_z", &[v11[0]])?;
+let v15 = s.builtin(EvalOp::ListRepeat, &[v13, v14, v11[0]])?;
+let v16 = s.builtin(EvalOp::IsZ, &[v11[0]])?;
 let v17 = match s.boolean_value(v16, false)? {
 Some(true) => {
-let v18 = s.operator("is_neg", &[v11[0]])?;
+let v18 = s.builtin(EvalOp::IsNeg, &[v11[0]])?;
 let v19 = match s.boolean_value(v18, false)? {
 Some(true) => {
 let v20 = s.literal(Lit::Numeral(parse_int("0")?))?;
 v20
 }, Some(false) => {
 let v21 = s.literal(Lit::Numeral(parse_int("2")?))?;
-let v22 = s.operator("pow", &[v21, v11[0]])?;
+let v22 = s.builtin(EvalOp::Pow, &[v21, v11[0]])?;
 v22
 }, None => s.stuck(),
 };
@@ -51508,7 +51508,7 @@ v24
 }, None => s.stuck(),
 };
 let v25 = eo__24abconv_5fint_5fto_5fbv_5felim(s, v9, v15, v17)?;
-let v26 = s.operator("list_singleton_elim", &[v12, v25])?;
+let v26 = s.builtin(EvalOp::ListSingletonElim, &[v12, v25])?;
 let v27 = if v26 == v2 && !s.is_stuck(v26)? {
 let v28 = s.construct(Constructor::eo__3d, &[])?;
 let v29 = s.construct(Constructor::eo_int_5fto_5fbv, &[v11[0]])?;
@@ -52620,7 +52620,7 @@ let v5 = s.construct(Constructor::eo_not, &[])?;
 if v3 != v5 { break 'case0; }
 let v6 = s.construct(Constructor::eo_not, &[])?;
 let v7 = s.construct(Constructor::eo_or, &[])?;
-let v8 = s.operator("list_nth", &[v7, v4, a0])?;
+let v8 = s.builtin(EvalOp::ListNth, &[v7, v4, a0])?;
 let v9 = s.apply(v6, v8)?;
 return Ok(v9);
 }
@@ -52857,10 +52857,10 @@ let Some((f, a)) = v10 else { break 'case0; }
 let v11 = f;
 let v12 = a;
 let v13 = s.construct(Constructor::eo_forall, &[])?;
-let v14 = s.operator("eq", &[v11, v13])?;
+let v14 = s.builtin(EvalOp::Eq, &[v11, v13])?;
 let v15 = s.construct(Constructor::eo_exists, &[])?;
-let v16 = s.operator("eq", &[v11, v15])?;
-let v17 = s.operator("or", &[v14, v16])?;
+let v16 = s.builtin(EvalOp::Eq, &[v11, v15])?;
+let v17 = s.builtin(EvalOp::Or, &[v14, v16])?;
 let v18 = s.literal(Lit::Bool(true))?;
 let v19 = if v17 == v18 && !s.is_stuck(v17)? {
 let v20 = s.apply(v11, v12)?;
@@ -53134,10 +53134,10 @@ let Some((f, a)) = v10 else { break 'case0; }
 let v11 = f;
 let v12 = a;
 let v13 = s.construct(Constructor::eo_forall, &[])?;
-let v14 = s.operator("eq", &[v11, v13])?;
+let v14 = s.builtin(EvalOp::Eq, &[v11, v13])?;
 let v15 = s.construct(Constructor::eo_exists, &[])?;
-let v16 = s.operator("eq", &[v11, v15])?;
-let v17 = s.operator("or", &[v14, v16])?;
+let v16 = s.builtin(EvalOp::Eq, &[v11, v15])?;
+let v17 = s.builtin(EvalOp::Or, &[v14, v16])?;
 let v18 = s.literal(Lit::Bool(true))?;
 let v19 = if v17 == v18 && !s.is_stuck(v17)? {
 let v20 = s.apply(v11, v12)?;
@@ -53272,7 +53272,7 @@ let v20 = s.construct(Constructor::eo_forall, &[])?;
 if v18 != v20 { break 'case0; }
 if v16 != v9 { break 'case0; }
 let v21 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v22 = s.operator("list_meq", &[v21, v12, v19])?;
+let v22 = s.builtin(EvalOp::ListMeq, &[v21, v12, v19])?;
 let v23 = s.literal(Lit::Bool(true))?;
 let v24 = if v22 == v23 && !s.is_stuck(v22)? {
 let v25 = s.construct(Constructor::eo__3d, &[])?;
@@ -53327,7 +53327,7 @@ let v8 = s.apply(v7, a2)?;
 let v9 = s.apply(v6, v8)?;
 let v10 = s.apply(v9, a3)?;
 let v11 = s.apply(v5, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v15 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
@@ -53343,8 +53343,8 @@ let v24 = s.apply(v19, v23)?;
 let v25 = s.apply(v17, v24)?;
 let v26 = s.apply(v16, v25)?;
 let v27 = s.apply(v26, a3)?;
-let v28 = s.operator("list_concat", &[v15, a0, v27])?;
-let v29 = s.operator("list_singleton_elim", &[v14, v28])?;
+let v28 = s.builtin(EvalOp::ListConcat, &[v15, a0, v27])?;
+let v29 = s.builtin(EvalOp::ListSingletonElim, &[v14, v28])?;
 let v30 = s.apply(v13, v29)?;
 return Ok(v30);
 }
@@ -53403,7 +53403,7 @@ let v25 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v26 = s.apply(v25, a1)?;
 let v27 = s.apply(v26, a2)?;
 let v28 = s.apply(v24, v27)?;
-let v29 = s.operator("list_concat", &[v19, a0, v28])?;
+let v29 = s.builtin(EvalOp::ListConcat, &[v19, a0, v28])?;
 let v30 = s.apply(v18, v29)?;
 let v31 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v32 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
@@ -53413,8 +53413,8 @@ let v35 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 let v36 = s.apply(v34, v35)?;
 let v37 = s.apply(v33, v36)?;
 let v38 = s.apply(v37, a2)?;
-let v39 = s.operator("list_concat", &[v32, a0, v38])?;
-let v40 = s.operator("list_singleton_elim", &[v31, v39])?;
+let v39 = s.builtin(EvalOp::ListConcat, &[v32, a0, v38])?;
+let v40 = s.builtin(EvalOp::ListSingletonElim, &[v31, v39])?;
 let v41 = s.apply(v30, v40)?;
 return Ok(v41);
 }
@@ -53473,7 +53473,7 @@ let v25 = s.apply(v23, v24)?;
 let v26 = s.apply(v22, v25)?;
 let v27 = s.apply(v26, a2)?;
 let v28 = s.apply(v21, v27)?;
-let v29 = s.operator("list_concat", &[v19, a0, v28])?;
+let v29 = s.builtin(EvalOp::ListConcat, &[v19, a0, v28])?;
 let v30 = s.apply(v18, v29)?;
 let v31 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v32 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
@@ -53483,8 +53483,8 @@ let v35 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 let v36 = s.apply(v34, v35)?;
 let v37 = s.apply(v33, v36)?;
 let v38 = s.apply(v37, a2)?;
-let v39 = s.operator("list_concat", &[v32, a0, v38])?;
-let v40 = s.operator("list_singleton_elim", &[v31, v39])?;
+let v39 = s.builtin(EvalOp::ListConcat, &[v32, a0, v38])?;
+let v40 = s.builtin(EvalOp::ListSingletonElim, &[v31, v39])?;
 let v41 = s.apply(v30, v40)?;
 return Ok(v41);
 }
@@ -53511,7 +53511,7 @@ let v8 = s.apply(v7, a1)?;
 let v9 = s.apply(v6, v8)?;
 let v10 = s.apply(v9, a2)?;
 let v11 = s.apply(v5, v10)?;
-let v12 = s.operator("list_concat", &[v1, a0, v11])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v1, a0, v11])?;
 let v13 = s.apply(v0, v12)?;
 let v14 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v15 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
@@ -53520,8 +53520,8 @@ let v17 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 let v18 = s.apply(v17, a1)?;
 let v19 = s.apply(v16, v18)?;
 let v20 = s.apply(v19, a2)?;
-let v21 = s.operator("list_concat", &[v15, a0, v20])?;
-let v22 = s.operator("list_singleton_elim", &[v14, v21])?;
+let v21 = s.builtin(EvalOp::ListConcat, &[v15, a0, v20])?;
+let v22 = s.builtin(EvalOp::ListSingletonElim, &[v14, v21])?;
 let v23 = s.apply(v13, v22)?;
 return Ok(v23);
 }
@@ -53546,7 +53546,7 @@ let v6 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v7 = s.apply(v6, a1)?;
 let v8 = s.apply(v7, a2)?;
 let v9 = s.apply(v5, v8)?;
-let v10 = s.operator("list_concat", &[v1, a0, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v1, a0, v9])?;
 let v11 = s.apply(v0, v10)?;
 let v12 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v13 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
@@ -53557,7 +53557,7 @@ let v17 = s.apply(v16, a1)?;
 let v18 = s.apply(v15, v17)?;
 let v19 = s.apply(v18, a2)?;
 let v20 = s.apply(v14, v19)?;
-let v21 = s.operator("list_concat", &[v12, a0, v20])?;
+let v21 = s.builtin(EvalOp::ListConcat, &[v12, a0, v20])?;
 let v22 = s.apply(v11, v21)?;
 return Ok(v22);
 }
@@ -53637,7 +53637,7 @@ let v23 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46
 let v24 = s.construct(Constructor::eo_Seq, &[])?;
 let v25 = s.construct(Constructor::eo_Char, &[])?;
 let v26 = s.apply(v24, v25)?;
-let v27 = s.named("$emb_Var", &[v23, v26])?;
+let v27 = s.construct(Constructor::eo__24emb_5fVar, &[v23, v26])?;
 let v28 = s.apply(v22, v27)?;
 let v29 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v30 = s.apply(v28, v29)?;
@@ -53648,7 +53648,7 @@ let v34 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46
 let v35 = s.construct(Constructor::eo_Seq, &[])?;
 let v36 = s.construct(Constructor::eo_Char, &[])?;
 let v37 = s.apply(v35, v36)?;
-let v38 = s.named("$emb_Var", &[v34, v37])?;
+let v38 = s.construct(Constructor::eo__24emb_5fVar, &[v34, v37])?;
 let v39 = s.apply(v33, v38)?;
 let v40 = s.apply(v39, v12)?;
 let v41 = s.apply(v32, v40)?;
@@ -53657,7 +53657,7 @@ let v43 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46
 let v44 = s.construct(Constructor::eo_Seq, &[])?;
 let v45 = s.construct(Constructor::eo_Char, &[])?;
 let v46 = s.apply(v44, v45)?;
-let v47 = s.named("$emb_Var", &[v43, v46])?;
+let v47 = s.construct(Constructor::eo__24emb_5fVar, &[v43, v46])?;
 let v48 = s.apply(v42, v47)?;
 let v49 = s.apply(v48, v9)?;
 let v50 = s.apply(v41, v49)?;
@@ -53814,12 +53814,12 @@ let v4 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 let v5 = s.apply(v3, v4)?;
 let v6 = s.apply(v2, v5)?;
 let v7 = s.apply(v6, a1)?;
-let v8 = s.operator("list_concat", &[v1, a0, v7])?;
+let v8 = s.builtin(EvalOp::ListConcat, &[v1, a0, v7])?;
 let v9 = s.apply(v0, v8)?;
 let v10 = s.construct(Constructor::eo_re_2einter, &[])?;
 let v11 = s.construct(Constructor::eo_re_2einter, &[])?;
-let v12 = s.operator("list_concat", &[v11, a0, a1])?;
-let v13 = s.operator("list_singleton_elim", &[v10, v12])?;
+let v12 = s.builtin(EvalOp::ListConcat, &[v11, a0, a1])?;
+let v13 = s.builtin(EvalOp::ListSingletonElim, &[v10, v12])?;
 let v14 = s.apply(v9, v13)?;
 return Ok(v14);
 }
@@ -54066,7 +54066,7 @@ let v27 = s.literal(Lit::Bool(true))?;
 let v28 = eo__24re_5fflatten(s, v27, v23)?;
 let v29 = s.literal(Lit::Bool(true))?;
 let v30 = eo__24re_5fflatten(s, v29, v12)?;
-let v31 = s.operator("eq", &[v28, v30])?;
+let v31 = s.builtin(EvalOp::Eq, &[v28, v30])?;
 let v32 = match s.boolean_value(v31, false)? {
 Some(true) => {
 let v33 = s.literal(Lit::Bool(true))?;
@@ -54131,21 +54131,21 @@ let v10 = s.destruct(Constructor::eo_re_2eloop, v8)?;
 let Some(fields) = v10 else { break 'case0; }
 ;
 let v11 = fields;
-let v12 = s.operator("neg", &[v11[0]])?;
-let v13 = s.operator("add", &[v12, v11[1]])?;
-let v14 = s.operator("is_neg", &[v13])?;
+let v12 = s.builtin(EvalOp::Neg, &[v11[0]])?;
+let v13 = s.builtin(EvalOp::Add, &[v12, v11[1]])?;
+let v14 = s.builtin(EvalOp::IsNeg, &[v13])?;
 let v15 = s.literal(Lit::Bool(false))?;
 let v16 = if v14 == v15 && !s.is_stuck(v14)? {
 let v17 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v18 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v19 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v20 = s.operator("neg", &[v11[0]])?;
-let v21 = s.operator("add", &[v20, v11[1]])?;
-let v22 = s.operator("list_repeat", &[v18, v19, v21])?;
+let v20 = s.builtin(EvalOp::Neg, &[v11[0]])?;
+let v21 = s.builtin(EvalOp::Add, &[v20, v11[1]])?;
+let v22 = s.builtin(EvalOp::ListRepeat, &[v18, v19, v21])?;
 let v23 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
-let v24 = s.operator("list_repeat", &[v23, v9, v11[0]])?;
+let v24 = s.builtin(EvalOp::ListRepeat, &[v23, v9, v11[0]])?;
 let v25 = eo__24str_5fmk_5fre_5floop_5felim_5frec(s, v22, v9, v24)?;
-let v26 = s.operator("list_singleton_elim", &[v17, v25])?;
+let v26 = s.builtin(EvalOp::ListSingletonElim, &[v17, v25])?;
 let v27 = if v26 == v2 && !s.is_stuck(v26)? {
 let v28 = s.construct(Constructor::eo__3d, &[])?;
 let v29 = s.construct(Constructor::eo_re_2eloop, &[v11[0], v11[1]])?;
@@ -54736,7 +54736,7 @@ let v3 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v4 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 let v5 = s.apply(v3, v4)?;
 let v6 = s.apply(v5, a1)?;
-let v7 = s.operator("list_concat", &[v2, a0, v6])?;
+let v7 = s.builtin(EvalOp::ListConcat, &[v2, a0, v6])?;
 let v8 = s.apply(v1, v7)?;
 let v9 = s.apply(v0, v8)?;
 let v10 = s.construct(Constructor::eo_re_2e_2a, &[])?;
@@ -54765,14 +54765,14 @@ let v5 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v6 = s.apply(v4, v5)?;
 let v7 = s.apply(v3, v6)?;
 let v8 = s.apply(v7, a1)?;
-let v9 = s.operator("list_concat", &[v2, a0, v8])?;
+let v9 = s.builtin(EvalOp::ListConcat, &[v2, a0, v8])?;
 let v10 = s.apply(v1, v9)?;
 let v11 = s.apply(v0, v10)?;
 let v12 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 let v13 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v14 = s.construct(Constructor::eo_re_2eunion, &[])?;
-let v15 = s.operator("list_concat", &[v14, a0, a1])?;
-let v16 = s.operator("list_singleton_elim", &[v13, v15])?;
+let v15 = s.builtin(EvalOp::ListConcat, &[v14, a0, a1])?;
+let v16 = s.builtin(EvalOp::ListSingletonElim, &[v13, v15])?;
 let v17 = s.apply(v12, v16)?;
 let v18 = s.apply(v11, v17)?;
 return Ok(v18);
@@ -54796,7 +54796,7 @@ let v4 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 let v5 = s.apply(v3, v4)?;
 let v6 = s.apply(v2, v5)?;
 let v7 = s.apply(v6, a1)?;
-let v8 = s.operator("list_concat", &[v1, a0, v7])?;
+let v8 = s.builtin(EvalOp::ListConcat, &[v1, a0, v7])?;
 let v9 = s.apply(v0, v8)?;
 let v10 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 let v11 = s.construct(Constructor::eo_re_2eallchar, &[])?;
@@ -54930,7 +54930,7 @@ let v31 = s.literal(Lit::Bool(true))?;
 let v32 = eo__24re_5fflatten(s, v31, v12)?;
 let v33 = s.literal(Lit::Bool(true))?;
 let v34 = eo__24re_5fflatten(s, v33, v23)?;
-let v35 = s.operator("eq", &[v32, v34])?;
+let v35 = s.builtin(EvalOp::Eq, &[v32, v34])?;
 let v36 = match s.boolean_value(v35, false)? {
 Some(true) => {
 let v37 = s.literal(Lit::Bool(true))?;
@@ -54980,7 +54980,7 @@ let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = s.construct(Constructor::eo_and, &[])?;
-let v3 = s.operator("list_rev", &[v2, v1[0]])?;
+let v3 = s.builtin(EvalOp::ListRev, &[v2, v1[0]])?;
 let v4 = s.construct(Constructor::eo_str_2ein_5fre, &[])?;
 let v5 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v6 = s.apply(v4, v5)?;
@@ -55119,7 +55119,7 @@ if v10 != v12 { break 'case0; }
 let v13 = match s.boolean_value(a0, false)? {
 Some(true) => {
 let v14 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
-let v15 = s.operator("list_rev", &[v14, v8])?;
+let v15 = s.builtin(EvalOp::ListRev, &[v14, v8])?;
 v15
 }, Some(false) => {
 v8
@@ -55189,7 +55189,7 @@ let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = s.construct(Constructor::eo_or, &[])?;
-let v3 = s.operator("list_minclude", &[v2, a0, v1[0]])?;
+let v3 = s.builtin(EvalOp::ListMinclude, &[v2, a0, v1[0]])?;
 let v4 = s.literal(Lit::Bool(true))?;
 let v5 = if v3 == v4 && !s.is_stuck(v3)? {
 a0
@@ -55226,7 +55226,7 @@ v7
 }, None => s.stuck(),
 };
 let v8 = eo__24to_5fclause(s, v1[0])?;
-let v9 = s.operator("eq", &[v5, v8])?;
+let v9 = s.builtin(EvalOp::Eq, &[v5, v8])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = s.literal(Lit::Bool(false))?;
@@ -55243,7 +55243,7 @@ let v16 = s.apply(v15, a1)?;
 v16
 }, None => s.stuck(),
 };
-let v17 = s.operator("list_erase", &[v12, v13, v14])?;
+let v17 = s.builtin(EvalOp::ListErase, &[v12, v13, v14])?;
 v17
 }, None => s.stuck(),
 };
@@ -55257,7 +55257,7 @@ a1
 }, None => s.stuck(),
 };
 let v21 = eo__24to_5fclause(s, v3[0])?;
-let v22 = s.operator("eq", &[v18, v21])?;
+let v22 = s.builtin(EvalOp::Eq, &[v18, v21])?;
 let v23 = match s.boolean_value(v22, false)? {
 Some(true) => {
 let v24 = s.literal(Lit::Bool(false))?;
@@ -55274,11 +55274,11 @@ v29
 a1
 }, None => s.stuck(),
 };
-let v30 = s.operator("list_erase", &[v25, v26, v27])?;
+let v30 = s.builtin(EvalOp::ListErase, &[v25, v26, v27])?;
 v30
 }, None => s.stuck(),
 };
-let v31 = s.operator("list_concat", &[v4, v10, v23])?;
+let v31 = s.builtin(EvalOp::ListConcat, &[v4, v10, v23])?;
 let v32 = eo__24from_5fclause(s, v31)?;
 return Ok(v32);
 }
@@ -55508,7 +55508,7 @@ let v52 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 let v53 = s.apply(v52, a2)?;
 let v54 = s.apply(v51, v53)?;
 let v55 = s.apply(v54, a3)?;
-let v56 = s.operator("list_concat", &[v50, a1, v55])?;
+let v56 = s.builtin(EvalOp::ListConcat, &[v50, a1, v55])?;
 let v57 = s.apply(v49, v56)?;
 let v58 = s.apply(v47, v57)?;
 let v59 = s.apply(v58, a4)?;
@@ -55560,7 +55560,7 @@ let v7 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v8 = eo__24eo_5ftypeof(s, a0)?;
 let v9 = eo__24eo_5fnil(s, v7, v8)?;
 let v10 = s.apply(v6, v9)?;
-let v11 = s.operator("list_concat", &[v4, a1, v10])?;
+let v11 = s.builtin(EvalOp::ListConcat, &[v4, a1, v10])?;
 let v12 = s.apply(v3, v11)?;
 let v13 = s.apply(v1, v12)?;
 let v14 = s.apply(v0, v13)?;
@@ -55574,7 +55574,7 @@ let v21 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v22 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v23 = s.apply(v22, a0)?;
 let v24 = s.apply(v23, a1)?;
-let v25 = s.operator("list_singleton_elim", &[v21, v24])?;
+let v25 = s.builtin(EvalOp::ListSingletonElim, &[v21, v24])?;
 let v26 = s.apply(v20, v25)?;
 let v27 = s.apply(v19, v26)?;
 let v28 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -55733,9 +55733,9 @@ if v4 != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v8 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v9 = eo__24eval_5fsets_5fop(s, v5)?;
-let v10 = s.operator("list_setof", &[v8, v9])?;
+let v10 = s.builtin(EvalOp::ListSetof, &[v8, v9])?;
 let v11 = eo__24set_5funion_5fto_5flist(s, v2)?;
-let v12 = s.operator("list_meq", &[v7, v10, v11])?;
+let v12 = s.builtin(EvalOp::ListMeq, &[v7, v10, v11])?;
 let v13 = s.literal(Lit::Bool(true))?;
 let v14 = if v12 == v13 && !s.is_stuck(v12)? {
 let v15 = s.construct(Constructor::eo__3d, &[])?;
@@ -56640,7 +56640,7 @@ let v17 = eo__24is_5fclosed_5frec(s, v15, v16)?;
 let v18 = s.literal(Lit::Bool(true))?;
 let v19 = if v17 == v18 && !s.is_stuck(v17)? {
 let v20 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v21 = s.operator("list_setof", &[v20, v11])?;
+let v21 = s.builtin(EvalOp::ListSetof, &[v20, v11])?;
 let v22 = if v21 == v11 && !s.is_stuck(v21)? {
 let v23 = s.literal(Lit::Bool(false))?;
 let v24 = s.construct(Constructor::eo_not, &[])?;
@@ -56878,7 +56878,7 @@ let v39 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v40 = eo__24eo_5ftypeof(s, a1)?;
 let v41 = eo__24eo_5fnil(s, v39, v40)?;
 let v42 = s.apply(v38, v41)?;
-let v43 = s.operator("list_concat", &[v36, a1, v42])?;
+let v43 = s.builtin(EvalOp::ListConcat, &[v36, a1, v42])?;
 let v44 = s.apply(v35, v43)?;
 let v45 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v46 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -56887,7 +56887,7 @@ let v48 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v49 = eo__24eo_5ftypeof(s, a3)?;
 let v50 = eo__24eo_5fnil(s, v48, v49)?;
 let v51 = s.apply(v47, v50)?;
-let v52 = s.operator("list_concat", &[v45, a3, v51])?;
+let v52 = s.builtin(EvalOp::ListConcat, &[v45, a3, v51])?;
 let v53 = s.apply(v44, v52)?;
 let v54 = s.apply(v34, v53)?;
 let v55 = s.literal(Lit::Bool(false))?;
@@ -57066,7 +57066,7 @@ let v40 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v41 = eo__24eo_5ftypeof(s, a2)?;
 let v42 = eo__24eo_5fnil(s, v40, v41)?;
 let v43 = s.apply(v39, v42)?;
-let v44 = s.operator("list_concat", &[v37, a2, v43])?;
+let v44 = s.builtin(EvalOp::ListConcat, &[v37, a2, v43])?;
 let v45 = s.apply(v36, v44)?;
 let v46 = s.apply(v34, v45)?;
 let v47 = s.literal(Lit::Bool(false))?;
@@ -57106,13 +57106,13 @@ let v18 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v19 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v20 = s.apply(v19, a1)?;
 let v21 = s.apply(v20, a2)?;
-let v22 = s.operator("list_singleton_elim", &[v18, v21])?;
+let v22 = s.builtin(EvalOp::ListSingletonElim, &[v18, v21])?;
 let v23 = s.apply(v17, v22)?;
 let v24 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v25 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v26 = s.apply(v25, a3)?;
 let v27 = s.apply(v26, a4)?;
-let v28 = s.operator("list_singleton_elim", &[v24, v27])?;
+let v28 = s.builtin(EvalOp::ListSingletonElim, &[v24, v27])?;
 let v29 = s.apply(v23, v28)?;
 let v30 = s.apply(v16, v29)?;
 return Ok(v30);
@@ -57155,7 +57155,7 @@ let v20 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v21 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v22 = s.apply(v21, a1)?;
 let v23 = s.apply(v22, a2)?;
-let v24 = s.operator("list_singleton_elim", &[v20, v23])?;
+let v24 = s.builtin(EvalOp::ListSingletonElim, &[v20, v23])?;
 let v25 = s.apply(v19, v24)?;
 let v26 = s.apply(v14, v25)?;
 return Ok(v26);
@@ -57190,7 +57190,7 @@ let v12 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v13 = eo__24eo_5ftypeof(s, a1)?;
 let v14 = eo__24eo_5fnil(s, v12, v13)?;
 let v15 = s.apply(v11, v14)?;
-let v16 = s.operator("list_concat", &[v9, a2, v15])?;
+let v16 = s.builtin(EvalOp::ListConcat, &[v9, a2, v15])?;
 let v17 = s.apply(v8, v16)?;
 let v18 = s.apply(v6, v17)?;
 let v19 = s.apply(v4, v18)?;
@@ -57203,7 +57203,7 @@ let v25 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v26 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v27 = s.apply(v26, a1)?;
 let v28 = s.apply(v27, a2)?;
-let v29 = s.operator("list_singleton_elim", &[v25, v28])?;
+let v29 = s.builtin(EvalOp::ListSingletonElim, &[v25, v28])?;
 let v30 = s.apply(v24, v29)?;
 let v31 = s.apply(v19, v30)?;
 return Ok(v31);
@@ -57230,7 +57230,7 @@ let v7 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v8 = eo__24eo_5ftypeof(s, a1)?;
 let v9 = eo__24eo_5fnil(s, v7, v8)?;
 let v10 = s.apply(v6, v9)?;
-let v11 = s.operator("list_concat", &[v4, a2, v10])?;
+let v11 = s.builtin(EvalOp::ListConcat, &[v4, a2, v10])?;
 let v12 = s.apply(v3, v11)?;
 let v13 = s.apply(v1, v12)?;
 let v14 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -57242,7 +57242,7 @@ let v19 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v20 = eo__24eo_5ftypeof(s, a3)?;
 let v21 = eo__24eo_5fnil(s, v19, v20)?;
 let v22 = s.apply(v18, v21)?;
-let v23 = s.operator("list_concat", &[v16, a4, v22])?;
+let v23 = s.builtin(EvalOp::ListConcat, &[v16, a4, v22])?;
 let v24 = s.apply(v15, v23)?;
 let v25 = s.apply(v13, v24)?;
 let v26 = s.apply(v0, v25)?;
@@ -57251,13 +57251,13 @@ let v28 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v30 = s.apply(v29, a1)?;
 let v31 = s.apply(v30, a2)?;
-let v32 = s.operator("list_singleton_elim", &[v28, v31])?;
+let v32 = s.builtin(EvalOp::ListSingletonElim, &[v28, v31])?;
 let v33 = s.apply(v27, v32)?;
 let v34 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v35 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v36 = s.apply(v35, a3)?;
 let v37 = s.apply(v36, a4)?;
-let v38 = s.operator("list_singleton_elim", &[v34, v37])?;
+let v38 = s.builtin(EvalOp::ListSingletonElim, &[v34, v37])?;
 let v39 = s.apply(v33, v38)?;
 let v40 = s.apply(v26, v39)?;
 return Ok(v40);
@@ -57379,7 +57379,7 @@ let v19 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v20 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v21 = s.apply(v20, a1)?;
 let v22 = s.apply(v21, a3)?;
-let v23 = s.operator("list_concat", &[v19, a0, v22])?;
+let v23 = s.builtin(EvalOp::ListConcat, &[v19, a0, v22])?;
 let v24 = s.apply(v18, v23)?;
 let v25 = s.apply(v24, a2)?;
 let v26 = s.apply(v17, v25)?;
@@ -57437,7 +57437,7 @@ let v20 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v21 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v22 = s.apply(v21, a1)?;
 let v23 = s.apply(v22, a3)?;
-let v24 = s.operator("list_concat", &[v20, a0, v23])?;
+let v24 = s.builtin(EvalOp::ListConcat, &[v20, a0, v23])?;
 let v25 = s.apply(v19, v24)?;
 let v26 = s.apply(v17, v25)?;
 let v27 = s.literal(Lit::Bool(false))?;
@@ -57855,7 +57855,7 @@ let v32 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v33 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v34 = s.apply(v33, a1)?;
 let v35 = s.apply(v34, a2)?;
-let v36 = s.operator("list_singleton_elim", &[v32, v35])?;
+let v36 = s.builtin(EvalOp::ListSingletonElim, &[v32, v35])?;
 let v37 = s.apply(v31, v36)?;
 let v38 = s.apply(v37, a3)?;
 let v39 = s.apply(v30, v38)?;
@@ -57903,7 +57903,7 @@ if v11 != v13 { break 'case0; }
 let v14 = s.literal(Lit::Bool(false))?;
 if v2 != v14 { break 'case0; }
 let v15 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v16 = s.operator("list_singleton_intro", &[v15, v9])?;
+let v16 = s.builtin(EvalOp::ListSingletonIntro, &[v15, v9])?;
 let v17 = eo__24str_5fflatten(s, v16)?;
 let v18 = eo__24str_5fmultiset_5foverapprox(s, v12)?;
 let v19 = s.construct(Constructor::eo__40_40TypedList_2enil, &[])?;
@@ -57972,7 +57972,7 @@ let v19 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v20 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v21 = s.apply(v20, a1)?;
 let v22 = s.apply(v21, a2)?;
-let v23 = s.operator("list_concat", &[v19, a0, v22])?;
+let v23 = s.builtin(EvalOp::ListConcat, &[v19, a0, v22])?;
 let v24 = s.apply(v18, v23)?;
 let v25 = s.apply(v24, a3)?;
 let v26 = s.apply(v17, v25)?;
@@ -58910,11 +58910,11 @@ let v11 = f;
 let v12 = a;
 let v13 = s.construct(Constructor::eo_str_2ein_5fre, &[])?;
 if v11 != v13 { break 'case0; }
-let v14 = s.operator("is_str", &[v12])?;
+let v14 = s.builtin(EvalOp::IsStr, &[v12])?;
 let v15 = s.literal(Lit::Bool(true))?;
 let v16 = if v14 == v15 && !s.is_stuck(v14)? {
 let v17 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v18 = s.operator("list_singleton_intro", &[v17, v12])?;
+let v18 = s.builtin(EvalOp::ListSingletonIntro, &[v17, v12])?;
 let v19 = eo__24str_5fflatten(s, v18)?;
 let v20 = eo__24str_5feval_5fstr_5fin_5fre_5frec(s, v19, v9)?;
 v20
@@ -59069,7 +59069,7 @@ let v19 = s.construct(Constructor::eo_re_2einter, &[])?;
 let v20 = s.construct(Constructor::eo_re_2einter, &[])?;
 let v21 = s.apply(v20, a2)?;
 let v22 = s.apply(v21, a3)?;
-let v23 = s.operator("list_singleton_elim", &[v19, v22])?;
+let v23 = s.builtin(EvalOp::ListSingletonElim, &[v19, v22])?;
 let v24 = s.apply(v18, v23)?;
 let v25 = s.apply(v16, v24)?;
 let v26 = s.literal(Lit::Bool(true))?;
@@ -59313,7 +59313,7 @@ let v19 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v20 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v21 = s.apply(v20, a2)?;
 let v22 = s.apply(v21, a3)?;
-let v23 = s.operator("list_singleton_elim", &[v19, v22])?;
+let v23 = s.builtin(EvalOp::ListSingletonElim, &[v19, v22])?;
 let v24 = s.apply(v18, v23)?;
 let v25 = s.apply(v16, v24)?;
 let v26 = s.literal(Lit::Bool(false))?;
@@ -59342,7 +59342,7 @@ let v5 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v6 = s.apply(v5, a3)?;
 let v7 = s.apply(v6, a2)?;
 let v8 = s.apply(v4, v7)?;
-let v9 = s.operator("list_concat", &[v2, a0, v8])?;
+let v9 = s.builtin(EvalOp::ListConcat, &[v2, a0, v8])?;
 let v10 = s.apply(v1, v9)?;
 let v11 = s.apply(v10, a1)?;
 let v12 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -59357,8 +59357,8 @@ let v20 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v21 = eo__24eo_5ftypeof(s, a0)?;
 let v22 = eo__24eo_5fnil(s, v20, v21)?;
 let v23 = s.apply(v19, v22)?;
-let v24 = s.operator("list_concat", &[v17, a0, v23])?;
-let v25 = s.operator("list_singleton_elim", &[v16, v24])?;
+let v24 = s.builtin(EvalOp::ListConcat, &[v17, a0, v23])?;
+let v25 = s.builtin(EvalOp::ListSingletonElim, &[v16, v24])?;
 let v26 = s.apply(v15, v25)?;
 let v27 = s.apply(v26, a1)?;
 let v28 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -60192,7 +60192,7 @@ let v1 = s.construct(Constructor::eo_str_2eindexof, &[])?;
 let v2 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v3 = s.apply(v2, a0)?;
 let v4 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v5 = s.operator("list_concat", &[v4, a1, a2])?;
+let v5 = s.builtin(EvalOp::ListConcat, &[v4, a1, a2])?;
 let v6 = s.apply(v3, v5)?;
 let v7 = s.apply(v1, v6)?;
 let v8 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -60371,24 +60371,24 @@ let v14 = f;
 let v15 = a;
 let v16 = s.construct(Constructor::eo_str_2eindexof_5fre, &[])?;
 if v14 != v16 { break 'case0; }
-let v17 = s.operator("len", &[v15])?;
-let v18 = s.operator("gt", &[v9, v17])?;
-let v19 = s.operator("is_neg", &[v9])?;
-let v20 = s.operator("or", &[v18, v19])?;
+let v17 = s.builtin(EvalOp::Length, &[v15])?;
+let v18 = s.builtin(EvalOp::Gt, &[v9, v17])?;
+let v19 = s.builtin(EvalOp::IsNeg, &[v9])?;
+let v20 = s.builtin(EvalOp::Or, &[v18, v19])?;
 let v21 = match s.boolean_value(v20, false)? {
 Some(true) => {
 let v22 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v22
 }, Some(false) => {
-let v23 = s.operator("len", &[v15])?;
-let v24 = s.operator("extract", &[v15, v9, v23])?;
-let v25 = s.operator("is_str", &[v24])?;
+let v23 = s.builtin(EvalOp::Length, &[v15])?;
+let v24 = s.builtin(EvalOp::Extract, &[v15, v9, v23])?;
+let v25 = s.builtin(EvalOp::IsStr, &[v24])?;
 let v26 = s.literal(Lit::Bool(true))?;
 let v27 = if v25 == v26 && !s.is_stuck(v25)? {
 let v28 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v29 = s.operator("len", &[v15])?;
-let v30 = s.operator("extract", &[v15, v9, v29])?;
-let v31 = s.operator("list_singleton_intro", &[v28, v30])?;
+let v29 = s.builtin(EvalOp::Length, &[v15])?;
+let v30 = s.builtin(EvalOp::Extract, &[v15, v9, v29])?;
+let v31 = s.builtin(EvalOp::ListSingletonIntro, &[v28, v30])?;
 let v32 = eo__24str_5fflatten(s, v31)?;
 let v33 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v34 = s.apply(v33, v12)?;
@@ -60406,21 +60406,21 @@ v44
 } else { s.stuck() };
 let v45 = eo__24pair_5ffirst(s, v27)?;
 let v46 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v47 = s.operator("eq", &[v45, v46])?;
+let v47 = s.builtin(EvalOp::Eq, &[v45, v46])?;
 let v48 = match s.boolean_value(v47, false)? {
 Some(true) => {
 let v49 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v49
 }, Some(false) => {
-let v50 = s.operator("len", &[v15])?;
-let v51 = s.operator("extract", &[v15, v9, v50])?;
-let v52 = s.operator("is_str", &[v51])?;
+let v50 = s.builtin(EvalOp::Length, &[v15])?;
+let v51 = s.builtin(EvalOp::Extract, &[v15, v9, v50])?;
+let v52 = s.builtin(EvalOp::IsStr, &[v51])?;
 let v53 = s.literal(Lit::Bool(true))?;
 let v54 = if v52 == v53 && !s.is_stuck(v52)? {
 let v55 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v56 = s.operator("len", &[v15])?;
-let v57 = s.operator("extract", &[v15, v9, v56])?;
-let v58 = s.operator("list_singleton_intro", &[v55, v57])?;
+let v56 = s.builtin(EvalOp::Length, &[v15])?;
+let v57 = s.builtin(EvalOp::Extract, &[v15, v9, v56])?;
+let v58 = s.builtin(EvalOp::ListSingletonIntro, &[v55, v57])?;
 let v59 = eo__24str_5fflatten(s, v58)?;
 let v60 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v61 = s.apply(v60, v12)?;
@@ -60437,7 +60437,7 @@ let v71 = eo__24str_5ffirst_5fmatch_5frec(s, v59, v12, v69, v70)?;
 v71
 } else { s.stuck() };
 let v72 = eo__24pair_5ffirst(s, v54)?;
-let v73 = s.operator("add", &[v9, v72])?;
+let v73 = s.builtin(EvalOp::Add, &[v9, v72])?;
 v73
 }, None => s.stuck(),
 };
@@ -60583,7 +60583,7 @@ let v16 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v17 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v18 = s.apply(v17, a1)?;
 let v19 = s.apply(v18, a2)?;
-let v20 = s.operator("list_singleton_elim", &[v16, v19])?;
+let v20 = s.builtin(EvalOp::ListSingletonElim, &[v16, v19])?;
 let v21 = s.apply(v15, v20)?;
 let v22 = s.apply(v14, v21)?;
 let v23 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -60674,7 +60674,7 @@ let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v30 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v31 = s.apply(v30, a1)?;
 let v32 = s.apply(v31, a2)?;
-let v33 = s.operator("list_singleton_elim", &[v29, v32])?;
+let v33 = s.builtin(EvalOp::ListSingletonElim, &[v29, v32])?;
 let v34 = s.apply(v28, v33)?;
 let v35 = s.apply(v27, v34)?;
 let v36 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -61235,13 +61235,13 @@ let v36 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v37 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v38 = s.apply(v37, a1)?;
 let v39 = s.apply(v38, a3)?;
-let v40 = s.operator("list_concat", &[v36, a0, v39])?;
+let v40 = s.builtin(EvalOp::ListConcat, &[v36, a0, v39])?;
 let v41 = s.apply(v35, v40)?;
 let v42 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v43 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v44 = s.apply(v43, a2)?;
 let v45 = s.apply(v44, a4)?;
-let v46 = s.operator("list_concat", &[v42, a0, v45])?;
+let v46 = s.builtin(EvalOp::ListConcat, &[v42, a0, v45])?;
 let v47 = s.apply(v41, v46)?;
 let v48 = s.apply(v34, v47)?;
 let v49 = s.literal(Lit::Bool(false))?;
@@ -61361,13 +61361,13 @@ let v53 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v54 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v55 = s.apply(v54, a1)?;
 let v56 = s.apply(v55, a3)?;
-let v57 = s.operator("list_concat", &[v53, a0, v56])?;
+let v57 = s.builtin(EvalOp::ListConcat, &[v53, a0, v56])?;
 let v58 = s.apply(v52, v57)?;
 let v59 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v60 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v61 = s.apply(v60, a2)?;
 let v62 = s.apply(v61, a4)?;
-let v63 = s.operator("list_concat", &[v59, a0, v62])?;
+let v63 = s.builtin(EvalOp::ListConcat, &[v59, a0, v62])?;
 let v64 = s.apply(v58, v63)?;
 let v65 = s.apply(v51, v64)?;
 let v66 = s.literal(Lit::Bool(true))?;
@@ -61618,37 +61618,37 @@ let v84 = eo__24str_5fis_5fempty(s, v30)?;
 let v85 = s.literal(Lit::Bool(true))?;
 let v86 = if v84 == v85 && !s.is_stuck(v84)? {
 let v87 = eo__24str_5fvalue_5flen(s, v40)?;
-let v88 = s.operator("is_z", &[v87])?;
+let v88 = s.builtin(EvalOp::IsZ, &[v87])?;
 let v89 = s.literal(Lit::Bool(true))?;
 let v90 = if v88 == v89 && !s.is_stuck(v88)? {
 let v91 = eo__24str_5fvalue_5flen(s, v54)?;
-let v92 = s.operator("is_z", &[v91])?;
+let v92 = s.builtin(EvalOp::IsZ, &[v91])?;
 let v93 = s.literal(Lit::Bool(true))?;
 let v94 = if v92 == v93 && !s.is_stuck(v92)? {
 let v95 = eo__24str_5fvalue_5flen(s, v19)?;
 let v96 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v97 = s.operator("list_singleton_intro", &[v96, v19])?;
+let v97 = s.builtin(EvalOp::ListSingletonIntro, &[v96, v19])?;
 let v98 = eo__24str_5fflatten(s, v97)?;
 let v99 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v100 = s.operator("list_singleton_intro", &[v99, v40])?;
+let v100 = s.builtin(EvalOp::ListSingletonIntro, &[v99, v40])?;
 let v101 = eo__24str_5fflatten(s, v100)?;
 let v102 = eo__24str_5foverlap_5frec(s, v98, v101)?;
-let v103 = s.operator("gt", &[v95, v102])?;
+let v103 = s.builtin(EvalOp::Gt, &[v95, v102])?;
 let v104 = s.literal(Lit::Bool(false))?;
 let v105 = if v103 == v104 && !s.is_stuck(v103)? {
 let v106 = eo__24str_5fvalue_5flen(s, v33)?;
 let v107 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v108 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v109 = s.operator("list_singleton_intro", &[v108, v33])?;
+let v109 = s.builtin(EvalOp::ListSingletonIntro, &[v108, v33])?;
 let v110 = eo__24str_5fflatten(s, v109)?;
-let v111 = s.operator("list_rev", &[v107, v110])?;
+let v111 = s.builtin(EvalOp::ListRev, &[v107, v110])?;
 let v112 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v113 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v114 = s.operator("list_singleton_intro", &[v113, v54])?;
+let v114 = s.builtin(EvalOp::ListSingletonIntro, &[v113, v54])?;
 let v115 = eo__24str_5fflatten(s, v114)?;
-let v116 = s.operator("list_rev", &[v112, v115])?;
+let v116 = s.builtin(EvalOp::ListRev, &[v112, v115])?;
 let v117 = eo__24str_5foverlap_5frec(s, v111, v116)?;
-let v118 = s.operator("gt", &[v106, v117])?;
+let v118 = s.builtin(EvalOp::Gt, &[v106, v117])?;
 let v119 = s.literal(Lit::Bool(false))?;
 let v120 = if v118 == v119 && !s.is_stuck(v118)? {
 let v121 = s.construct(Constructor::eo__3d, &[])?;
@@ -61841,22 +61841,22 @@ let v71 = eo__24str_5fis_5fempty(s, v26)?;
 let v72 = s.literal(Lit::Bool(true))?;
 let v73 = if v71 == v72 && !s.is_stuck(v71)? {
 let v74 = eo__24str_5fvalue_5flen(s, v43)?;
-let v75 = s.operator("is_z", &[v74])?;
+let v75 = s.builtin(EvalOp::IsZ, &[v74])?;
 let v76 = s.literal(Lit::Bool(true))?;
 let v77 = if v75 == v76 && !s.is_stuck(v75)? {
 let v78 = eo__24str_5fvalue_5flen(s, v29)?;
 let v79 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v80 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v81 = s.operator("list_singleton_intro", &[v80, v29])?;
+let v81 = s.builtin(EvalOp::ListSingletonIntro, &[v80, v29])?;
 let v82 = eo__24str_5fflatten(s, v81)?;
-let v83 = s.operator("list_rev", &[v79, v82])?;
+let v83 = s.builtin(EvalOp::ListRev, &[v79, v82])?;
 let v84 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v85 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v86 = s.operator("list_singleton_intro", &[v85, v43])?;
+let v86 = s.builtin(EvalOp::ListSingletonIntro, &[v85, v43])?;
 let v87 = eo__24str_5fflatten(s, v86)?;
-let v88 = s.operator("list_rev", &[v84, v87])?;
+let v88 = s.builtin(EvalOp::ListRev, &[v84, v87])?;
 let v89 = eo__24str_5foverlap_5frec(s, v83, v88)?;
-let v90 = s.operator("gt", &[v78, v89])?;
+let v90 = s.builtin(EvalOp::Gt, &[v78, v89])?;
 let v91 = s.literal(Lit::Bool(false))?;
 let v92 = if v90 == v91 && !s.is_stuck(v90)? {
 let v93 = s.construct(Constructor::eo__3d, &[])?;
@@ -62113,37 +62113,37 @@ let v111 = eo__24str_5fis_5fempty(s, v33)?;
 let v112 = s.literal(Lit::Bool(true))?;
 let v113 = if v111 == v112 && !s.is_stuck(v111)? {
 let v114 = eo__24str_5fvalue_5flen(s, v43)?;
-let v115 = s.operator("is_z", &[v114])?;
+let v115 = s.builtin(EvalOp::IsZ, &[v114])?;
 let v116 = s.literal(Lit::Bool(true))?;
 let v117 = if v115 == v116 && !s.is_stuck(v115)? {
 let v118 = eo__24str_5fvalue_5flen(s, v57)?;
-let v119 = s.operator("is_z", &[v118])?;
+let v119 = s.builtin(EvalOp::IsZ, &[v118])?;
 let v120 = s.literal(Lit::Bool(true))?;
 let v121 = if v119 == v120 && !s.is_stuck(v119)? {
 let v122 = eo__24str_5fvalue_5flen(s, v22)?;
 let v123 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v124 = s.operator("list_singleton_intro", &[v123, v22])?;
+let v124 = s.builtin(EvalOp::ListSingletonIntro, &[v123, v22])?;
 let v125 = eo__24str_5fflatten(s, v124)?;
 let v126 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v127 = s.operator("list_singleton_intro", &[v126, v43])?;
+let v127 = s.builtin(EvalOp::ListSingletonIntro, &[v126, v43])?;
 let v128 = eo__24str_5fflatten(s, v127)?;
 let v129 = eo__24str_5foverlap_5frec(s, v125, v128)?;
-let v130 = s.operator("gt", &[v122, v129])?;
+let v130 = s.builtin(EvalOp::Gt, &[v122, v129])?;
 let v131 = s.literal(Lit::Bool(false))?;
 let v132 = if v130 == v131 && !s.is_stuck(v130)? {
 let v133 = eo__24str_5fvalue_5flen(s, v36)?;
 let v134 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v135 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v136 = s.operator("list_singleton_intro", &[v135, v36])?;
+let v136 = s.builtin(EvalOp::ListSingletonIntro, &[v135, v36])?;
 let v137 = eo__24str_5fflatten(s, v136)?;
-let v138 = s.operator("list_rev", &[v134, v137])?;
+let v138 = s.builtin(EvalOp::ListRev, &[v134, v137])?;
 let v139 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v140 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v141 = s.operator("list_singleton_intro", &[v140, v57])?;
+let v141 = s.builtin(EvalOp::ListSingletonIntro, &[v140, v57])?;
 let v142 = eo__24str_5fflatten(s, v141)?;
-let v143 = s.operator("list_rev", &[v139, v142])?;
+let v143 = s.builtin(EvalOp::ListRev, &[v139, v142])?;
 let v144 = eo__24str_5foverlap_5frec(s, v138, v143)?;
-let v145 = s.operator("gt", &[v133, v144])?;
+let v145 = s.builtin(EvalOp::Gt, &[v133, v144])?;
 let v146 = s.literal(Lit::Bool(false))?;
 let v147 = if v145 == v146 && !s.is_stuck(v145)? {
 let v148 = s.construct(Constructor::eo__3d, &[])?;
@@ -62335,24 +62335,24 @@ let v65 = s.literal(Lit::Bool(true))?;
 let v66 = if v64 == v65 && !s.is_stuck(v64)? {
 let v67 = eo__24str_5fvalue_5flen(s, v26)?;
 let v68 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v69 = s.operator("list_singleton_intro", &[v68, v26])?;
+let v69 = s.builtin(EvalOp::ListSingletonIntro, &[v68, v26])?;
 let v70 = eo__24str_5fflatten(s, v69)?;
 let v71 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v72 = s.operator("list_singleton_intro", &[v71, v9])?;
+let v72 = s.builtin(EvalOp::ListSingletonIntro, &[v71, v9])?;
 let v73 = eo__24str_5fflatten(s, v72)?;
 let v74 = eo__24str_5foverlap_5frec(s, v70, v73)?;
-let v75 = s.operator("gt", &[v67, v74])?;
+let v75 = s.builtin(EvalOp::Gt, &[v67, v74])?;
 let v76 = s.literal(Lit::Bool(false))?;
 let v77 = if v75 == v76 && !s.is_stuck(v75)? {
 let v78 = eo__24str_5fvalue_5flen(s, v9)?;
 let v79 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v80 = s.operator("list_singleton_intro", &[v79, v9])?;
+let v80 = s.builtin(EvalOp::ListSingletonIntro, &[v79, v9])?;
 let v81 = eo__24str_5fflatten(s, v80)?;
 let v82 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v83 = s.operator("list_singleton_intro", &[v82, v26])?;
+let v83 = s.builtin(EvalOp::ListSingletonIntro, &[v82, v26])?;
 let v84 = eo__24str_5fflatten(s, v83)?;
 let v85 = eo__24str_5foverlap_5frec(s, v81, v84)?;
-let v86 = s.operator("gt", &[v78, v85])?;
+let v86 = s.builtin(EvalOp::Gt, &[v78, v85])?;
 let v87 = s.literal(Lit::Bool(false))?;
 let v88 = if v86 == v87 && !s.is_stuck(v86)? {
 let v89 = s.construct(Constructor::eo__3d, &[])?;
@@ -64686,7 +64686,7 @@ let v2 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v3 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v4 = s.apply(v3, a0)?;
 let v5 = s.apply(v4, a3)?;
-let v6 = s.operator("list_concat", &[v2, a2, v5])?;
+let v6 = s.builtin(EvalOp::ListConcat, &[v2, a2, v5])?;
 let v7 = s.apply(v1, v6)?;
 let v8 = s.apply(v7, a0)?;
 let v9 = s.apply(v8, a1)?;
@@ -64702,14 +64702,14 @@ let v18 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v19 = eo__24eo_5ftypeof(s, a2)?;
 let v20 = eo__24eo_5fnil(s, v18, v19)?;
 let v21 = s.apply(v17, v20)?;
-let v22 = s.operator("list_concat", &[v15, a2, v21])?;
-let v23 = s.operator("list_singleton_elim", &[v14, v22])?;
+let v22 = s.builtin(EvalOp::ListConcat, &[v15, a2, v21])?;
+let v23 = s.builtin(EvalOp::ListSingletonElim, &[v14, v22])?;
 let v24 = s.apply(v13, v23)?;
 let v25 = s.apply(v24, a0)?;
 let v26 = s.apply(v25, a1)?;
 let v27 = s.apply(v12, v26)?;
 let v28 = s.apply(v27, a3)?;
-let v29 = s.operator("list_singleton_elim", &[v11, v28])?;
+let v29 = s.builtin(EvalOp::ListSingletonElim, &[v11, v28])?;
 let v30 = s.apply(v10, v29)?;
 return Ok(v30);
 }
@@ -64834,9 +64834,9 @@ let v22 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v23 = eo__24eo_5ftypeof(s, a3)?;
 let v24 = eo__24eo_5fnil(s, v22, v23)?;
 let v25 = s.apply(v21, v24)?;
-let v26 = s.operator("list_concat", &[v19, a4, v25])?;
+let v26 = s.builtin(EvalOp::ListConcat, &[v19, a4, v25])?;
 let v27 = s.apply(v18, v26)?;
-let v28 = s.operator("list_concat", &[v16, a3, v27])?;
+let v28 = s.builtin(EvalOp::ListConcat, &[v16, a3, v27])?;
 let v29 = s.apply(v15, v28)?;
 let v30 = s.apply(v29, a1)?;
 let v31 = s.apply(v30, a2)?;
@@ -64848,8 +64848,8 @@ let v36 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v37 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v38 = s.apply(v37, a0)?;
 let v39 = s.apply(v38, a4)?;
-let v40 = s.operator("list_concat", &[v36, a3, v39])?;
-let v41 = s.operator("list_singleton_elim", &[v35, v40])?;
+let v40 = s.builtin(EvalOp::ListConcat, &[v36, a3, v39])?;
+let v41 = s.builtin(EvalOp::ListSingletonElim, &[v35, v40])?;
 let v42 = s.apply(v34, v41)?;
 let v43 = s.apply(v42, a1)?;
 let v44 = s.apply(v43, a2)?;
@@ -64863,8 +64863,8 @@ let v51 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v52 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v53 = s.apply(v52, a0)?;
 let v54 = s.apply(v53, a4)?;
-let v55 = s.operator("list_concat", &[v51, a3, v54])?;
-let v56 = s.operator("list_singleton_elim", &[v50, v55])?;
+let v55 = s.builtin(EvalOp::ListConcat, &[v51, a3, v54])?;
+let v56 = s.builtin(EvalOp::ListSingletonElim, &[v50, v55])?;
 let v57 = s.apply(v49, v56)?;
 let v58 = s.apply(v57, a1)?;
 let v59 = s.apply(v58, a2)?;
@@ -64923,7 +64923,7 @@ let v1 = s.construct(Constructor::eo_str_2ereplace, &[])?;
 let v2 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v3 = s.apply(v2, a0)?;
 let v4 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v5 = s.operator("list_concat", &[v4, a1, a2])?;
+let v5 = s.builtin(EvalOp::ListConcat, &[v4, a1, a2])?;
 let v6 = s.apply(v3, v5)?;
 let v7 = s.apply(v1, v6)?;
 let v8 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -64936,7 +64936,7 @@ let v14 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v15 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v16 = s.apply(v15, a3)?;
 let v17 = s.apply(v16, a2)?;
-let v18 = s.operator("list_singleton_elim", &[v14, v17])?;
+let v18 = s.builtin(EvalOp::ListSingletonElim, &[v14, v17])?;
 let v19 = s.apply(v13, v18)?;
 return Ok(v19);
 }
@@ -64980,12 +64980,12 @@ let v14 = f;
 let v15 = a;
 let v16 = s.construct(Constructor::eo_str_2ereplace_5fre_5fall, &[])?;
 if v14 != v16 { break 'case0; }
-let v17 = s.operator("is_str", &[v15])?;
+let v17 = s.builtin(EvalOp::IsStr, &[v15])?;
 let v18 = s.literal(Lit::Bool(true))?;
 let v19 = if v17 == v18 && !s.is_stuck(v17)? {
 let v20 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v21 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v22 = s.operator("list_singleton_intro", &[v21, v15])?;
+let v22 = s.builtin(EvalOp::ListSingletonIntro, &[v21, v15])?;
 let v23 = eo__24str_5fflatten(s, v22)?;
 let v24 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v25 = s.construct(Constructor::eo_re_2einter, &[])?;
@@ -65002,7 +65002,7 @@ let v35 = s.apply(v33, v34)?;
 let v36 = s.apply(v26, v35)?;
 let v37 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v38 = eo__24str_5feval_5freplace_5fre_5fall_5frec(s, v23, v24, v36, v9, v37)?;
-let v39 = s.operator("list_singleton_elim", &[v20, v38])?;
+let v39 = s.builtin(EvalOp::ListSingletonElim, &[v20, v38])?;
 let v40 = if v39 == v2 && !s.is_stuck(v39)? {
 let v41 = s.construct(Constructor::eo__3d, &[])?;
 let v42 = s.construct(Constructor::eo_str_2ereplace_5fre_5fall, &[])?;
@@ -65078,11 +65078,11 @@ let v14 = f;
 let v15 = a;
 let v16 = s.construct(Constructor::eo_str_2ereplace_5fre, &[])?;
 if v14 != v16 { break 'case0; }
-let v17 = s.operator("is_str", &[v15])?;
+let v17 = s.builtin(EvalOp::IsStr, &[v15])?;
 let v18 = s.literal(Lit::Bool(true))?;
 let v19 = if v17 == v18 && !s.is_stuck(v17)? {
 let v20 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v21 = s.operator("list_singleton_intro", &[v20, v15])?;
+let v21 = s.builtin(EvalOp::ListSingletonIntro, &[v20, v15])?;
 let v22 = eo__24str_5fflatten(s, v21)?;
 let v23 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v24 = s.apply(v23, v12)?;
@@ -66139,7 +66139,7 @@ let v34 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v35 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v36 = s.apply(v35, a1)?;
 let v37 = s.apply(v36, a2)?;
-let v38 = s.operator("list_singleton_elim", &[v34, v37])?;
+let v38 = s.builtin(EvalOp::ListSingletonElim, &[v34, v37])?;
 let v39 = s.apply(v33, v38)?;
 let v40 = s.construct(Constructor::eo__2d, &[])?;
 let v41 = s.apply(v40, a3)?;
@@ -66965,7 +66965,7 @@ let v38 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v39 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v40 = s.apply(v39, a1)?;
 let v41 = s.apply(v40, a2)?;
-let v42 = s.operator("list_singleton_elim", &[v38, v41])?;
+let v42 = s.builtin(EvalOp::ListSingletonElim, &[v38, v41])?;
 let v43 = s.apply(v37, v42)?;
 let v44 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v45 = s.apply(v43, v44)?;
@@ -67535,7 +67535,7 @@ let v38 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v39 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v40 = s.apply(v39, a1)?;
 let v41 = s.apply(v40, a2)?;
-let v42 = s.operator("list_concat", &[v38, a0, v41])?;
+let v42 = s.builtin(EvalOp::ListConcat, &[v38, a0, v41])?;
 let v43 = s.apply(v37, v42)?;
 let v44 = s.apply(v36, v43)?;
 let v45 = s.literal(Lit::Numeral(parse_int("-1")?))?;
@@ -67573,7 +67573,7 @@ let v16 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v17 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v18 = s.apply(v17, a1)?;
 let v19 = s.apply(v18, a2)?;
-let v20 = s.operator("list_singleton_elim", &[v16, v19])?;
+let v20 = s.builtin(EvalOp::ListSingletonElim, &[v16, v19])?;
 let v21 = s.apply(v15, v20)?;
 let v22 = s.apply(v14, v21)?;
 let v23 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
@@ -67701,7 +67701,7 @@ let v16 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v17 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v18 = s.apply(v17, a1)?;
 let v19 = s.apply(v18, a2)?;
-let v20 = s.operator("list_singleton_elim", &[v16, v19])?;
+let v20 = s.builtin(EvalOp::ListSingletonElim, &[v16, v19])?;
 let v21 = s.apply(v15, v20)?;
 let v22 = s.apply(v14, v21)?;
 let v23 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
@@ -67934,7 +67934,7 @@ let v67 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v68 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v69 = s.apply(v68, a2)?;
 let v70 = s.apply(v69, a3)?;
-let v71 = s.operator("list_concat", &[v67, a1, v70])?;
+let v71 = s.builtin(EvalOp::ListConcat, &[v67, a1, v70])?;
 let v72 = s.apply(v66, v71)?;
 let v73 = s.apply(v64, v72)?;
 let v74 = s.apply(v73, a4)?;
@@ -67946,7 +67946,7 @@ let v79 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v80 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v81 = s.apply(v80, a5)?;
 let v82 = s.apply(v81, a3)?;
-let v83 = s.operator("list_concat", &[v79, a1, v82])?;
+let v83 = s.builtin(EvalOp::ListConcat, &[v79, a1, v82])?;
 let v84 = s.apply(v78, v83)?;
 let v85 = s.apply(v76, v84)?;
 return Ok(v85);
@@ -68026,7 +68026,7 @@ let v36 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v37 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v38 = s.apply(v37, a3)?;
 let v39 = s.apply(v38, a1)?;
-let v40 = s.operator("list_singleton_elim", &[v36, v39])?;
+let v40 = s.builtin(EvalOp::ListSingletonElim, &[v36, v39])?;
 let v41 = s.apply(v35, v40)?;
 return Ok(v41);
 }
@@ -69153,21 +69153,21 @@ if v8 != v10 { break 'case0; }
 let v11 = s.construct(Constructor::eo__2b, &[])?;
 let v12 = eo__24eo_5ftypeof(s, v9)?;
 let v13 = eo__24bv_5fbitwidth(s, v12)?;
-let v14 = s.operator("is_neg", &[v13])?;
+let v14 = s.builtin(EvalOp::IsNeg, &[v13])?;
 let v15 = s.literal(Lit::Bool(false))?;
 let v16 = if v14 == v15 && !s.is_stuck(v14)? {
 let v17 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v18 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v19 = eo__24eo_5ftypeof(s, v9)?;
 let v20 = eo__24bv_5fbitwidth(s, v19)?;
-let v21 = s.operator("list_repeat", &[v17, v18, v20])?;
+let v21 = s.builtin(EvalOp::ListRepeat, &[v17, v18, v20])?;
 let v22 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v23 = eo__24iota_5frec(s, v21, v22)?;
 v23
 } else { s.stuck() };
 let v24 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v25 = eo__24abconv_5fubv_5fto_5fint_5felim(s, v9, v16, v24)?;
-let v26 = s.operator("list_singleton_elim", &[v11, v25])?;
+let v26 = s.builtin(EvalOp::ListSingletonElim, &[v11, v25])?;
 let v27 = if v26 == v2 && !s.is_stuck(v26)? {
 let v28 = s.construct(Constructor::eo__3d, &[])?;
 let v29 = s.construct(Constructor::eo_ubv_5fto_5fint, &[])?;
@@ -69211,12 +69211,12 @@ let v15 = s.apply(v14, v2)?;
 let v16 = s.apply(v13, v15)?;
 let v17 = eo__24eo_5ftypeof(s, v2)?;
 let v18 = eo__24bv_5fbitwidth(s, v17)?;
-let v19 = s.operator("is_z", &[v18])?;
+let v19 = s.builtin(EvalOp::IsZ, &[v18])?;
 let v20 = match s.boolean_value(v19, false)? {
 Some(true) => {
 let v21 = eo__24eo_5ftypeof(s, v2)?;
 let v22 = eo__24bv_5fbitwidth(s, v21)?;
-let v23 = s.operator("is_neg", &[v22])?;
+let v23 = s.builtin(EvalOp::IsNeg, &[v22])?;
 let v24 = match s.boolean_value(v23, false)? {
 Some(true) => {
 let v25 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -69225,7 +69225,7 @@ v25
 let v26 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v27 = eo__24eo_5ftypeof(s, v2)?;
 let v28 = eo__24bv_5fbitwidth(s, v27)?;
-let v29 = s.operator("pow", &[v26, v28])?;
+let v29 = s.builtin(EvalOp::Pow, &[v26, v28])?;
 v29
 }, None => s.stuck(),
 };
@@ -69915,7 +69915,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5fso_2eassume_5fpush, v1[0])?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("false", &[])?;
+let v4 = s.native_bool(false)?;
 return Ok(v4);
 }
 'case1: {
@@ -69930,11 +69930,11 @@ continue 'recur;
 'case2: {
 let v8 = s.construct(Constructor::eo__24emb_5fs_2enil, &[])?;
 if a0 != v8 { break 'case2; }
-let v9 = s.native("true", &[])?;
+let v9 = s.native_bool(true)?;
 return Ok(v9);
 }
 'case3: {
-let v10 = s.native("false", &[])?;
+let v10 = s.native_bool(false)?;
 return Ok(v10);
 }
 return Ok(s.stuck());
@@ -70289,7 +70289,7 @@ let v35 = s.destruct(Constructor::eo__24emb_5fUConst, a0)?;
 let Some(fields) = v35 else { break 'case8; }
 ;
 let v36 = fields;
-let v37 = s.native("uconst_id", &[v36[0]])?;
+let v37 = s.native_op(NativeOp::UconstId, &[v36[0]])?;
 let v38 = eo__24eo_5fto_5fsmt_5ftype(s, v36[1])?;
 let v39 = s.construct(Constructor::eo__24emb_5fsm_2eUConst, &[v37, v38])?;
 return Ok(Some(v39));
@@ -70454,7 +70454,7 @@ let v113 = s.construct(Constructor::eo_distinct, &[])?;
 if v111 != v113 { break 'case16; }
 let v114 = eo__24eo_5fto_5fsmt_5ftyped_5flist_5felem_5ftype(s, v112)?;
 let v115 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
-let v116 = s.native("Teq", &[v114, v115])?;
+let v116 = s.native_op(NativeOp::Teq, &[v114, v115])?;
 let v117 = match s.boolean_value(v116, true)? {
 Some(true) => {
 let v118 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
@@ -70808,7 +70808,7 @@ let v270 = a;
 let v271 = s.construct(Constructor::eo_int_2eispow2, &[])?;
 if v269 != v271 { break 'case35; }
 let v272 = eo__24eo_5fto_5fsmt(s, v270)?;
-let v273 = s.native("0", &[])?;
+let v273 = s.native_constant(0)?;
 let v274 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v273])?;
 let v275 = s.construct(Constructor::eo__24emb_5fsm_2e_3e_3d, &[v272, v274])?;
 let v276 = eo__24eo_5fto_5fsmt(s, v270)?;
@@ -70873,7 +70873,7 @@ let v304 = a;
 let v305 = s.construct(Constructor::eo__40int_5fdiv_5fby_5fzero, &[])?;
 if v303 != v305 { break 'case38; }
 let v306 = eo__24eo_5fto_5fsmt(s, v304)?;
-let v307 = s.native("0", &[])?;
+let v307 = s.native_constant(0)?;
 let v308 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v307])?;
 let v309 = s.construct(Constructor::eo__24emb_5fsm_2ediv, &[v306, v308])?;
 return Ok(Some(v309));
@@ -70890,7 +70890,7 @@ let v312 = a;
 let v313 = s.construct(Constructor::eo__40mod_5fby_5fzero, &[])?;
 if v311 != v313 { break 'case39; }
 let v314 = eo__24eo_5fto_5fsmt(s, v312)?;
-let v315 = s.native("0", &[])?;
+let v315 = s.native_constant(0)?;
 let v316 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v315])?;
 let v317 = s.construct(Constructor::eo__24emb_5fsm_2emod, &[v314, v316])?;
 return Ok(Some(v317));
@@ -70979,11 +70979,11 @@ let v357 = f;
 let v358 = a;
 let v359 = s.construct(Constructor::eo__40bvsize, &[])?;
 if v357 != v359 { break 'case43; }
-let v360 = s.native("0", &[])?;
+let v360 = s.native_constant(0)?;
 let v361 = eo__24eo_5fto_5fsmt(s, v358)?;
 let v362 = eo__24smtx_5ftypeof(s, v361)?;
 let v363 = eo__24eo_5fto_5fsmt_5fbv_5fsize(s, v362)?;
-let v364 = s.native("zleq", &[v360, v363])?;
+let v364 = s.native_op(NativeOp::Zleq, &[v360, v363])?;
 let v365 = match s.boolean_value(v364, true)? {
 Some(true) => {
 let v366 = eo__24eo_5fto_5fsmt(s, v358)?;
@@ -71727,8 +71727,8 @@ let v711 = a;
 let v712 = s.construct(Constructor::eo_bvite, &[])?;
 if v710 != v712 { break 'case79; }
 let v713 = eo__24eo_5fto_5fsmt(s, v711)?;
-let v714 = s.native("1", &[])?;
-let v715 = s.native("1", &[])?;
+let v714 = s.native_constant(1)?;
+let v715 = s.native_constant(1)?;
 let v716 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v714, v715])?;
 let v717 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v713, v716])?;
 let v718 = eo__24eo_5fto_5fsmt(s, v708)?;
@@ -71917,11 +71917,11 @@ if v801 != v803 { break 'case88; }
 let v804 = eo__24eo_5fto_5fsmt(s, v802)?;
 let v805 = eo__24eo_5fto_5fsmt(s, v799)?;
 let v806 = s.construct(Constructor::eo__24emb_5fsm_2ebvult, &[v804, v805])?;
-let v807 = s.native("1", &[])?;
-let v808 = s.native("1", &[])?;
+let v807 = s.native_constant(1)?;
+let v808 = s.native_constant(1)?;
 let v809 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v807, v808])?;
-let v810 = s.native("1", &[])?;
-let v811 = s.native("0", &[])?;
+let v810 = s.native_constant(1)?;
+let v811 = s.native_constant(0)?;
 let v812 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v810, v811])?;
 let v813 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v806, v809, v812])?;
 return Ok(Some(v813));
@@ -71945,11 +71945,11 @@ if v818 != v820 { break 'case89; }
 let v821 = eo__24eo_5fto_5fsmt(s, v819)?;
 let v822 = eo__24eo_5fto_5fsmt(s, v816)?;
 let v823 = s.construct(Constructor::eo__24emb_5fsm_2ebvslt, &[v821, v822])?;
-let v824 = s.native("1", &[])?;
-let v825 = s.native("1", &[])?;
+let v824 = s.native_constant(1)?;
+let v825 = s.native_constant(1)?;
 let v826 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v824, v825])?;
-let v827 = s.native("1", &[])?;
-let v828 = s.native("0", &[])?;
+let v827 = s.native_constant(1)?;
+let v828 = s.native_constant(0)?;
 let v829 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v827, v828])?;
 let v830 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v823, v826, v829])?;
 return Ok(Some(v830));
@@ -71969,7 +71969,7 @@ let v835 = eo__24eo_5fto_5fsmt(s, v833)?;
 let v836 = eo__24eo_5fto_5fsmt(s, v833)?;
 let v837 = eo__24smtx_5ftypeof(s, v836)?;
 let v838 = eo__24eo_5fto_5fsmt_5fbv_5fsize(s, v837)?;
-let v839 = s.native("0", &[])?;
+let v839 = s.native_constant(0)?;
 let v840 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v838, v839])?;
 let v841 = s.construct(Constructor::eo__24emb_5fsm_2ebvnot, &[v840])?;
 let v842 = s.construct(Constructor::eo__24emb_5fsm_2ebvcomp, &[v835, v841])?;
@@ -71990,7 +71990,7 @@ let v847 = eo__24eo_5fto_5fsmt(s, v845)?;
 let v848 = eo__24eo_5fto_5fsmt(s, v845)?;
 let v849 = eo__24smtx_5ftypeof(s, v848)?;
 let v850 = eo__24eo_5fto_5fsmt_5fbv_5fsize(s, v849)?;
-let v851 = s.native("0", &[])?;
+let v851 = s.native_constant(0)?;
 let v852 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v850, v851])?;
 let v853 = s.construct(Constructor::eo__24emb_5fsm_2ebvcomp, &[v847, v852])?;
 let v854 = s.construct(Constructor::eo__24emb_5fsm_2ebvnot, &[v853])?;
@@ -72013,8 +72013,8 @@ let v860 = eo__24eo_5fto_5fsmt(s, v859[0])?;
 let v861 = eo__24eo_5fto_5fsmt(s, v859[0])?;
 let v862 = eo__24eo_5fto_5fsmt(s, v857)?;
 let v863 = s.construct(Constructor::eo__24emb_5fsm_2eextract, &[v860, v861, v862])?;
-let v864 = s.native("1", &[])?;
-let v865 = s.native("1", &[])?;
+let v864 = s.native_constant(1)?;
+let v865 = s.native_constant(1)?;
 let v866 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v864, v865])?;
 let v867 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v863, v866])?;
 return Ok(Some(v867));
@@ -72037,11 +72037,11 @@ let v874 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 if v872 != v874 { break 'case93; }
 let v875 = eo__24eo_5fto_5fsmt(s, v870)?;
 let v876 = eo__24eo_5fto_5fsmt(s, v873)?;
-let v877 = s.native("1", &[])?;
-let v878 = s.native("1", &[])?;
+let v877 = s.native_constant(1)?;
+let v878 = s.native_constant(1)?;
 let v879 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v877, v878])?;
-let v880 = s.native("1", &[])?;
-let v881 = s.native("0", &[])?;
+let v880 = s.native_constant(1)?;
+let v881 = s.native_constant(0)?;
 let v882 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v880, v881])?;
 let v883 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v876, v879, v882])?;
 let v884 = s.construct(Constructor::eo__24emb_5fsm_2econcat, &[v875, v883])?;
@@ -72919,13 +72919,13 @@ let v1278 = a;
 let v1279 = s.construct(Constructor::eo__40strings_5fstoi_5fresult, &[])?;
 if v1277 != v1279 { break 'case139; }
 let v1280 = eo__24eo_5fto_5fsmt(s, v1275)?;
-let v1281 = s.native("0", &[])?;
+let v1281 = s.native_constant(0)?;
 let v1282 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1281])?;
 let v1283 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v1280, v1282])?;
-let v1284 = s.native("0", &[])?;
+let v1284 = s.native_constant(0)?;
 let v1285 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1284])?;
 let v1286 = eo__24eo_5fto_5fsmt(s, v1278)?;
-let v1287 = s.native("0", &[])?;
+let v1287 = s.native_constant(0)?;
 let v1288 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1287])?;
 let v1289 = eo__24eo_5fto_5fsmt(s, v1275)?;
 let v1290 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1286, v1288, v1289])?;
@@ -72946,14 +72946,14 @@ let v1296 = s.construct(Constructor::eo__40strings_5fstoi_5fnon_5fdigit, &[])?;
 if v1294 != v1296 { break 'case140; }
 let v1297 = eo__24eo_5fto_5fsmt(s, v1295)?;
 let v1298 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eallchar, &[])?;
-let v1299 = s.native("\"0\"", &[])?;
+let v1299 = s.native_constant(2)?;
 let v1300 = s.construct(Constructor::eo__24emb_5fsm_2eString, &[v1299])?;
-let v1301 = s.native("\"9\"", &[])?;
+let v1301 = s.native_constant(3)?;
 let v1302 = s.construct(Constructor::eo__24emb_5fsm_2eString, &[v1301])?;
 let v1303 = s.construct(Constructor::eo__24emb_5fsm_2ere_2erange, &[v1300, v1302])?;
 let v1304 = s.construct(Constructor::eo__24emb_5fsm_2ere_2ecomp, &[v1303])?;
 let v1305 = s.construct(Constructor::eo__24emb_5fsm_2ere_2einter, &[v1298, v1304])?;
-let v1306 = s.native("0", &[])?;
+let v1306 = s.native_constant(0)?;
 let v1307 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1306])?;
 let v1308 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eindexof_5fre, &[v1297, v1305, v1307])?;
 return Ok(Some(v1308));
@@ -72975,14 +72975,14 @@ let v1314 = a;
 let v1315 = s.construct(Constructor::eo__40strings_5fitos_5fresult, &[])?;
 if v1313 != v1315 { break 'case141; }
 let v1316 = eo__24eo_5fto_5fsmt(s, v1311)?;
-let v1317 = s.native("0", &[])?;
+let v1317 = s.native_constant(0)?;
 let v1318 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1317])?;
 let v1319 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v1316, v1318])?;
-let v1320 = s.native("0", &[])?;
+let v1320 = s.native_constant(0)?;
 let v1321 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1320])?;
 let v1322 = eo__24eo_5fto_5fsmt(s, v1314)?;
 let v1323 = s.construct(Constructor::eo__24emb_5fsm_2estr_2efrom_5fint, &[v1322])?;
-let v1324 = s.native("0", &[])?;
+let v1324 = s.native_constant(0)?;
 let v1325 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1324])?;
 let v1326 = eo__24eo_5fto_5fsmt(s, v1311)?;
 let v1327 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1323, v1325, v1326])?;
@@ -73009,9 +73009,9 @@ if v1334 != v1336 { break 'case142; }
 let v1337 = eo__24eo_5fto_5fsmt(s, v1335)?;
 let v1338 = eo__24eo_5fto_5fsmt(s, v1332)?;
 let v1339 = eo__24eo_5fto_5fsmt(s, v1335)?;
-let v1340 = s.native("0", &[])?;
+let v1340 = s.native_constant(0)?;
 let v1341 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1340])?;
-let v1342 = s.native("1", &[])?;
+let v1342 = s.native_constant(1)?;
 let v1343 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1342])?;
 let v1344 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1339, v1341, v1343])?;
 let v1345 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fall, &[v1337, v1338, v1344])?;
@@ -73019,9 +73019,9 @@ let v1346 = s.construct(Constructor::eo__24emb_5fsm_2estr_2elen, &[v1345])?;
 let v1347 = eo__24eo_5fto_5fsmt(s, v1335)?;
 let v1348 = eo__24eo_5fto_5fsmt(s, v1332)?;
 let v1349 = eo__24eo_5fto_5fsmt(s, v1335)?;
-let v1350 = s.native("0", &[])?;
+let v1350 = s.native_constant(0)?;
 let v1351 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1350])?;
-let v1352 = s.native("0", &[])?;
+let v1352 = s.native_constant(0)?;
 let v1353 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1352])?;
 let v1354 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1349, v1351, v1353])?;
 let v1355 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fall, &[v1347, v1348, v1354])?;
@@ -73048,9 +73048,9 @@ if v1362 != v1364 { break 'case143; }
 let v1365 = eo__24eo_5fto_5fsmt(s, v1363)?;
 let v1366 = eo__24eo_5fto_5fsmt(s, v1360)?;
 let v1367 = eo__24eo_5fto_5fsmt(s, v1363)?;
-let v1368 = s.native("0", &[])?;
+let v1368 = s.native_constant(0)?;
 let v1369 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1368])?;
-let v1370 = s.native("1", &[])?;
+let v1370 = s.native_constant(1)?;
 let v1371 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1370])?;
 let v1372 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1367, v1369, v1371])?;
 let v1373 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre_5fall, &[v1365, v1366, v1372])?;
@@ -73058,9 +73058,9 @@ let v1374 = s.construct(Constructor::eo__24emb_5fsm_2estr_2elen, &[v1373])?;
 let v1375 = eo__24eo_5fto_5fsmt(s, v1363)?;
 let v1376 = eo__24eo_5fto_5fsmt(s, v1360)?;
 let v1377 = eo__24eo_5fto_5fsmt(s, v1363)?;
-let v1378 = s.native("0", &[])?;
+let v1378 = s.native_constant(0)?;
 let v1379 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1378])?;
-let v1380 = s.native("0", &[])?;
+let v1380 = s.native_constant(0)?;
 let v1381 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1380])?;
 let v1382 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1377, v1379, v1381])?;
 let v1383 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre_5fall, &[v1375, v1376, v1382])?;
@@ -73214,9 +73214,9 @@ Some(true) => {
 let v1466 = eo__24eo_5fto_5fsmt_5fnat_5fis_5fvalid(s, v1463[2])?;
 let v1467 = match s.boolean_value(v1466, true)? {
 Some(true) => {
-let v1468 = s.native("\"@x\"", &[])?;
+let v1468 = s.native_constant(4)?;
 let v1469 = eo__24eo_5fto_5fsmt_5ftype(s, v1463[0])?;
-let v1470 = s.native("\"@x\"", &[])?;
+let v1470 = s.native_constant(4)?;
 let v1471 = eo__24eo_5fto_5fsmt_5ftype(s, v1463[0])?;
 let v1472 = s.construct(Constructor::eo__24emb_5fsm_2eVar, &[v1470, v1471])?;
 let v1473 = s.construct(Constructor::eo__24emb_5fsm_2estr_2elen, &[v1472])?;
@@ -73286,14 +73286,14 @@ fn case_151_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<T
 'case151: {
 let v1500 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
 if a0 != v1500 { break 'case151; }
-let v1501 = s.native("\"@Tuple\"", &[])?;
-let v1502 = s.native("\"@Tuple\"", &[])?;
+let v1501 = s.native_constant(5)?;
+let v1502 = s.native_constant(5)?;
 let v1503 = s.construct(Constructor::eo__24emb_5fdtc_2eunit, &[])?;
 let v1504 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 let v1505 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v1503, v1504])?;
 let v1506 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 let v1507 = s.construct(Constructor::eo__24emb_5fdd_2econs, &[v1502, v1505, v1506])?;
-let v1508 = s.native("nat.zero", &[])?;
+let v1508 = s.native_nat_zero()?;
 let v1509 = s.construct(Constructor::eo__24emb_5fsm_2eDtCons, &[v1501, v1507, v1508])?;
 return Ok(Some(v1509));
 }
@@ -73659,9 +73659,9 @@ let v1686 = a;
 let v1687 = s.construct(Constructor::eo__40div_5fby_5fzero, &[])?;
 if v1685 != v1687 { break 'case169; }
 let v1688 = eo__24eo_5fto_5fsmt(s, v1686)?;
-let v1689 = s.native("0", &[])?;
-let v1690 = s.native("1", &[])?;
-let v1691 = s.native("mk_rational", &[v1689, v1690])?;
+let v1689 = s.native_constant(0)?;
+let v1690 = s.native_constant(1)?;
+let v1691 = s.native_op(NativeOp::MkRational, &[v1689, v1690])?;
 let v1692 = s.construct(Constructor::eo__24emb_5fsm_2eRational, &[v1691])?;
 let v1693 = s.construct(Constructor::eo__24emb_5fsm_2e_2f, &[v1688, v1692])?;
 return Ok(Some(v1693));
@@ -73845,7 +73845,7 @@ let v1770 = eo__24eo_5fto_5fsmt_5fnat_5fis_5fvalid(s, v1769[0])?;
 let v1771 = match s.boolean_value(v1770, true)? {
 Some(true) => {
 let v1772 = eo__24eo_5fto_5fsmt_5fnat(s, v1769[0])?;
-let v1773 = s.native("const_id", &[v1772])?;
+let v1773 = s.native_op(NativeOp::ConstId, &[v1772])?;
 let v1774 = eo__24eo_5fto_5fsmt_5ftype(s, v1769[1])?;
 let v1775 = s.construct(Constructor::eo__24emb_5fsm_2eUConst, &[v1773, v1774])?;
 v1775
@@ -73913,12 +73913,12 @@ let v0 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("nat.to_int", &[v1[0]])?;
+let v2 = s.native_op(NativeOp::NatToInt, &[v1[0]])?;
 return Ok(v2);
 }
 'case1: {
-let v3 = s.native("1", &[])?;
-let v4 = s.native("zneg", &[v3])?;
+let v3 = s.native_constant(1)?;
+let v4 = s.native_op(NativeOp::Zneg, &[v3])?;
 return Ok(v4);
 }
 Ok(s.stuck())
@@ -74059,7 +74059,7 @@ let v12 = f;
 let v13 = a;
 let v14 = s.construct(Constructor::eo__40_40TypedList_2enil, &[])?;
 if v12 != v14 { break 'case1; }
-let v15 = s.native("true", &[])?;
+let v15 = s.native_bool(true)?;
 let v16 = s.construct(Constructor::eo__24emb_5fsm_2eBoolean, &[v15])?;
 return Ok(v16);
 }
@@ -74111,7 +74111,7 @@ let v13 = f;
 let v14 = a;
 let v15 = s.construct(Constructor::eo__40_40TypedList_2enil, &[])?;
 if v13 != v15 { break 'case1; }
-let v16 = s.native("true", &[])?;
+let v16 = s.native_bool(true)?;
 let v17 = s.construct(Constructor::eo__24emb_5fsm_2eBoolean, &[v16])?;
 return Ok(v17);
 }
@@ -74185,11 +74185,11 @@ let v0 = s.destruct(Constructor::eo__24emb_5fNumeral, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("int.to_nat", &[v1[0]])?;
+let v2 = s.native_op(NativeOp::IntToNat, &[v1[0]])?;
 return Ok(v2);
 }
 'case1: {
-let v3 = s.native("nat.zero", &[])?;
+let v3 = s.native_nat_zero()?;
 return Ok(v3);
 }
 Ok(s.stuck())
@@ -74206,12 +74206,12 @@ let v0 = s.destruct(Constructor::eo__24emb_5fNumeral, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("0", &[])?;
-let v3 = s.native("zleq", &[v2, v1[0]])?;
+let v2 = s.native_constant(0)?;
+let v3 = s.native_op(NativeOp::Zleq, &[v2, v1[0]])?;
 return Ok(v3);
 }
 'case1: {
-let v4 = s.native("false", &[])?;
+let v4 = s.native_bool(false)?;
 return Ok(v4);
 }
 Ok(s.stuck())
@@ -74252,7 +74252,7 @@ let v9 = s.destruct(Constructor::eo__24emb_5fString, v8[0])?;
 let Some(fields) = v9 else { break 'case0; }
 ;
 let v10 = fields;
-let v11 = s.native_pattern("nat.zero", a2)?;
+let v11 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v11 else { break 'case0; }
 ;
 let v12 = fields;
@@ -74282,7 +74282,7 @@ let v25 = s.destruct(Constructor::eo__24emb_5fString, v24[0])?;
 let Some(fields) = v25 else { break 'case1; }
 ;
 let v26 = fields;
-let v27 = s.native_pattern("nat.succ", a2)?;
+let v27 = s.native_pattern_succ(a2)?;
 let Some(fields) = v27 else { break 'case1; }
 ;
 let v28 = fields;
@@ -74327,11 +74327,11 @@ let v0 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2e_2b_2b, a1)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native_pattern("nat.zero", a2)?;
+let v2 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("0", &[])?;
+let v4 = s.native_constant(0)?;
 let v5 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v4])?;
 let v6 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eindexof_5fre_5fsplit, &[a0, v1[0], v1[1]])?;
 let v7 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[a0, v5, v6])?;
@@ -74342,7 +74342,7 @@ let v8 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2e_2b_2b, a1)?;
 let Some(fields) = v8 else { break 'case1; }
 ;
 let v9 = fields;
-let v10 = s.native_pattern("nat.succ", a2)?;
+let v10 = s.native_pattern_succ(a2)?;
 let Some(fields) = v10 else { break 'case1; }
 ;
 let v11 = fields;
@@ -74375,8 +74375,8 @@ pub fn eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname(s: &mut Store, a0: Term)
 s.enter()?;
 let result = (|| {
 'case0: {
-let v0 = s.native("\"@\"", &[])?;
-let v1 = s.native("string_prefix_eq", &[v0, a0])?;
+let v0 = s.native_constant(6)?;
+let v1 = s.native_op(NativeOp::StringPrefixEq, &[v0, a0])?;
 return Ok(v1);
 }
 Ok(s.stuck())
@@ -74497,7 +74497,7 @@ pub fn eo__24eo_5fto_5fsmt_5ftuple_5fdecl(s: &mut Store, a0: Term) -> CheckResul
 s.enter()?;
 let result = (|| {
 'case0: {
-let v0 = s.native("\"@Tuple\"", &[])?;
+let v0 = s.native_constant(5)?;
 let v1 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 let v2 = s.construct(Constructor::eo__24emb_5fdd_2econs, &[v0, a0, v1])?;
 return Ok(v2);
@@ -74542,19 +74542,19 @@ let v6 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 if v5[1] != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 if v3[2] != v7 { break 'case0; }
-let v8 = s.native("\"@Tuple\"", &[])?;
-let v9 = s.native("streq", &[v1[0], v8])?;
-let v10 = s.native("\"@Tuple\"", &[])?;
-let v11 = s.native("streq", &[v3[0], v10])?;
-let v12 = s.native("and", &[v9, v11])?;
-let v13 = s.native("\"@Tuple\"", &[])?;
+let v8 = s.native_constant(5)?;
+let v9 = s.native_op(NativeOp::Streq, &[v1[0], v8])?;
+let v10 = s.native_constant(5)?;
+let v11 = s.native_op(NativeOp::Streq, &[v3[0], v10])?;
+let v12 = s.native_op(NativeOp::And, &[v9, v11])?;
+let v13 = s.native_constant(5)?;
 let v14 = s.construct(Constructor::eo__24emb_5fdtc_2econs, &[a2, v5[0]])?;
 let v15 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 let v16 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v14, v15])?;
 let v17 = eo__24eo_5fto_5fsmt_5ftuple_5fdecl(s, v16)?;
 let v18 = s.construct(Constructor::eo__24emb_5ftsm_2eDatatype, &[v13, v17])?;
 let v19 = eo__24smtx_5ftype_5fwf(s, v18)?;
-let v20 = s.native("and", &[v12, v19])?;
+let v20 = s.native_op(NativeOp::And, &[v12, v19])?;
 let v21 = match s.boolean_value(v20, true)? {
 Some(true) => {
 let v22 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
@@ -74564,14 +74564,14 @@ let v25 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 let v26 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v5[0], v25])?;
 let v27 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 let v28 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v5[0], v27])?;
-let v29 = s.native("nat.zero", &[])?;
+let v29 = s.native_nat_zero()?;
 let v30 = eo__24smtx_5fdt_5fnum_5fsels(s, v28, v29)?;
-let v31 = s.native("\"@Tuple\"", &[])?;
+let v31 = s.native_constant(5)?;
 let v32 = s.construct(Constructor::eo__24emb_5fdtc_2econs, &[a2, v5[0]])?;
 let v33 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 let v34 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v32, v33])?;
 let v35 = eo__24eo_5fto_5fsmt_5ftuple_5fdecl(s, v34)?;
-let v36 = s.native("nat.zero", &[])?;
+let v36 = s.native_nat_zero()?;
 let v37 = s.construct(Constructor::eo__24emb_5fsm_2eDtCons, &[v31, v35, v36])?;
 let v38 = s.construct(Constructor::eo__24emb_5fsm_2eApply, &[v37, a1])?;
 let v39 = eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec(s, v24, v26, a3, v30, v38)?;
@@ -74603,20 +74603,20 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 'case0: {
-let v0 = s.native_pattern("nat.zero", a3)?;
+let v0 = s.native_pattern_nat_zero(a3)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 return Ok(a4);
 }
 'case1: {
-let v2 = s.native_pattern("nat.succ", a3)?;
+let v2 = s.native_pattern_succ(a3)?;
 let Some(fields) = v2 else { break 'case1; }
 ;
 let v3 = fields;
 let v4 = eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec(s, a0, a1, a2, v3[0], a4)?;
-let v5 = s.native("\"@Tuple\"", &[])?;
-let v6 = s.native("nat.zero", &[])?;
+let v5 = s.native_constant(5)?;
+let v6 = s.native_nat_zero()?;
 let v7 = s.construct(Constructor::eo__24emb_5fsm_2eDtSel, &[v5, a0, v6, v3[0]])?;
 let v8 = s.construct(Constructor::eo__24emb_5fsm_2eApply, &[v7, a2])?;
 let v9 = s.construct(Constructor::eo__24emb_5fsm_2eApply, &[v4, v8])?;
@@ -74647,20 +74647,20 @@ let v5 = s.destruct(Constructor::eo__24emb_5fsm_2eNumeral, a1)?;
 let Some(fields) = v5 else { break 'case0; }
 ;
 let v6 = fields;
-let v7 = s.native("\"@Tuple\"", &[])?;
-let v8 = s.native("streq", &[v1[0], v7])?;
-let v9 = s.native("\"@Tuple\"", &[])?;
-let v10 = s.native("streq", &[v3[0], v9])?;
-let v11 = s.native("and", &[v8, v10])?;
-let v12 = s.native("0", &[])?;
-let v13 = s.native("zleq", &[v12, v6[0]])?;
-let v14 = s.native("and", &[v11, v13])?;
+let v7 = s.native_constant(5)?;
+let v8 = s.native_op(NativeOp::Streq, &[v1[0], v7])?;
+let v9 = s.native_constant(5)?;
+let v10 = s.native_op(NativeOp::Streq, &[v3[0], v9])?;
+let v11 = s.native_op(NativeOp::And, &[v8, v10])?;
+let v12 = s.native_constant(0)?;
+let v13 = s.native_op(NativeOp::Zleq, &[v12, v6[0]])?;
+let v14 = s.native_op(NativeOp::And, &[v11, v13])?;
 let v15 = match s.boolean_value(v14, true)? {
 Some(true) => {
-let v16 = s.native("\"@Tuple\"", &[])?;
+let v16 = s.native_constant(5)?;
 let v17 = eo__24eo_5fto_5fsmt_5ftuple_5fdecl(s, v3[1])?;
-let v18 = s.native("nat.zero", &[])?;
-let v19 = s.native("int.to_nat", &[v6[0]])?;
+let v18 = s.native_nat_zero()?;
+let v19 = s.native_op(NativeOp::IntToNat, &[v6[0]])?;
 let v20 = s.construct(Constructor::eo__24emb_5fsm_2eDtSel, &[v16, v17, v18, v19])?;
 let v21 = s.construct(Constructor::eo__24emb_5fsm_2eApply, &[v20, a2])?;
 v21
@@ -74699,20 +74699,20 @@ let v5 = s.destruct(Constructor::eo__24emb_5fsm_2eNumeral, a1)?;
 let Some(fields) = v5 else { break 'case0; }
 ;
 let v6 = fields;
-let v7 = s.native("\"@Tuple\"", &[])?;
-let v8 = s.native("streq", &[v1[0], v7])?;
-let v9 = s.native("\"@Tuple\"", &[])?;
-let v10 = s.native("streq", &[v3[0], v9])?;
-let v11 = s.native("and", &[v8, v10])?;
-let v12 = s.native("0", &[])?;
-let v13 = s.native("zleq", &[v12, v6[0]])?;
-let v14 = s.native("and", &[v11, v13])?;
+let v7 = s.native_constant(5)?;
+let v8 = s.native_op(NativeOp::Streq, &[v1[0], v7])?;
+let v9 = s.native_constant(5)?;
+let v10 = s.native_op(NativeOp::Streq, &[v3[0], v9])?;
+let v11 = s.native_op(NativeOp::And, &[v8, v10])?;
+let v12 = s.native_constant(0)?;
+let v13 = s.native_op(NativeOp::Zleq, &[v12, v6[0]])?;
+let v14 = s.native_op(NativeOp::And, &[v11, v13])?;
 let v15 = match s.boolean_value(v14, true)? {
 Some(true) => {
-let v16 = s.native("\"@Tuple\"", &[])?;
+let v16 = s.native_constant(5)?;
 let v17 = eo__24eo_5fto_5fsmt_5ftuple_5fdecl(s, v3[1])?;
-let v18 = s.native("nat.zero", &[])?;
-let v19 = s.native("int.to_nat", &[v6[0]])?;
+let v18 = s.native_nat_zero()?;
+let v19 = s.native_op(NativeOp::IntToNat, &[v6[0]])?;
 let v20 = s.construct(Constructor::eo__24emb_5fsm_2eDtSel, &[v16, v17, v18, v19])?;
 let v21 = eo__24eo_5fto_5fsmt_5fupdater(s, v20, a2, a3)?;
 v21
@@ -74860,7 +74860,7 @@ let v28 = r;
 let v29 = s.unapply(f)?;
 let Some((op, l)) = v29 else { break 'case5; }
 ;
-if !s.is_named(op, "$emb_FunType")? { break 'case5; }
+if !s.is_node(op, Some(Constructor::eo__24emb_5fFunType))? { break 'case5; }
 let v30 = l;
 let v31 = eo__24eo_5fto_5fsmt_5ftype(s, v30)?;
 let v32 = eo__24eo_5fto_5fsmt_5ftype(s, v28)?;
@@ -74904,11 +74904,11 @@ let v46 = s.destruct(Constructor::eo__24emb_5fNumeral, v44)?;
 let Some(fields) = v46 else { break 'case8; }
 ;
 let v47 = fields;
-let v48 = s.native("0", &[])?;
-let v49 = s.native("zleq", &[v48, v47[0]])?;
+let v48 = s.native_constant(0)?;
+let v49 = s.native_op(NativeOp::Zleq, &[v48, v47[0]])?;
 let v50 = match s.boolean_value(v49, true)? {
 Some(true) => {
-let v51 = s.native("int.to_nat", &[v47[0]])?;
+let v51 = s.native_op(NativeOp::IntToNat, &[v47[0]])?;
 let v52 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v51])?;
 v52
 }, Some(false) => {
@@ -74984,8 +74984,8 @@ fn case_13_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Op
 'case13: {
 let v80 = s.construct(Constructor::eo_UnitTuple, &[])?;
 if a0 != v80 { break 'case13; }
-let v81 = s.native("\"@Tuple\"", &[])?;
-let v82 = s.native("\"@Tuple\"", &[])?;
+let v81 = s.native_constant(5)?;
+let v82 = s.native_constant(5)?;
 let v83 = s.construct(Constructor::eo__24emb_5fdtc_2eunit, &[])?;
 let v84 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 let v85 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v83, v84])?;
@@ -75074,16 +75074,16 @@ let v6 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 if v5[1] != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 if v3[2] != v7 { break 'case0; }
-let v8 = s.native("\"@Tuple\"", &[])?;
-let v9 = s.native("streq", &[v1[0], v8])?;
-let v10 = s.native("\"@Tuple\"", &[])?;
-let v11 = s.native("streq", &[v3[0], v10])?;
-let v12 = s.native("and", &[v9, v11])?;
+let v8 = s.native_constant(5)?;
+let v9 = s.native_op(NativeOp::Streq, &[v1[0], v8])?;
+let v10 = s.native_constant(5)?;
+let v11 = s.native_op(NativeOp::Streq, &[v3[0], v10])?;
+let v12 = s.native_op(NativeOp::And, &[v9, v11])?;
 let v13 = eo__24smtx_5ftype_5fwf_5fcomponent(s, a0)?;
-let v14 = s.native("and", &[v12, v13])?;
+let v14 = s.native_op(NativeOp::And, &[v12, v13])?;
 let v15 = match s.boolean_value(v14, true)? {
 Some(true) => {
-let v16 = s.native("\"@Tuple\"", &[])?;
+let v16 = s.native_constant(5)?;
 let v17 = s.construct(Constructor::eo__24emb_5fdtc_2econs, &[a0, v5[0]])?;
 let v18 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 let v19 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v17, v18])?;
@@ -75153,7 +75153,7 @@ if v13 != v15 { break 'case1; }
 let v16 = eo__24eo_5fto_5fsmt(s, v14)?;
 let v17 = eo__24smtx_5ftypeof(s, v16)?;
 let v18 = eo__24eo_5fto_5fsmt_5ftyped_5flist_5felem_5ftype(s, v11)?;
-let v19 = s.native("Teq", &[v17, v18])?;
+let v19 = s.native_op(NativeOp::Teq, &[v17, v18])?;
 let v20 = match s.boolean_value(v19, true)? {
 Some(true) => {
 let v21 = eo__24eo_5fto_5fsmt(s, v14)?;
@@ -75185,11 +75185,11 @@ let v0 = s.destruct(Constructor::eo__24emb_5fsm_2eDtSel, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("nat.to_int", &[v1[3]])?;
+let v2 = s.native_op(NativeOp::NatToInt, &[v1[3]])?;
 let v3 = eo__24smtx_5fdd_5flookup(s, v1[0], v1[1])?;
 let v4 = eo__24smtx_5fdt_5fnum_5fsels(s, v3, v1[2])?;
-let v5 = s.native("nat.to_int", &[v4])?;
-let v6 = s.native("zlt", &[v2, v5])?;
+let v5 = s.native_op(NativeOp::NatToInt, &[v4])?;
+let v6 = s.native_op(NativeOp::Zlt, &[v2, v5])?;
 let v7 = match s.boolean_value(v6, true)? {
 Some(true) => {
 let v8 = s.construct(Constructor::eo__24emb_5fsm_2eDtTester, &[v1[0], v1[1], v1[2]])?;
@@ -75232,7 +75232,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5fsm_2eDtSel, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native_pattern("nat.zero", a1)?;
+let v2 = s.native_pattern_nat_zero(a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
@@ -75243,13 +75243,13 @@ let v4 = s.destruct(Constructor::eo__24emb_5fsm_2eDtSel, a0)?;
 let Some(fields) = v4 else { break 'case1; }
 ;
 let v5 = fields;
-let v6 = s.native_pattern("nat.succ", a1)?;
+let v6 = s.native_pattern_succ(a1)?;
 let Some(fields) = v6 else { break 'case1; }
 ;
 let v7 = fields;
 let v8 = s.construct(Constructor::eo__24emb_5fsm_2eDtSel, &[v5[0], v5[1], v5[2], v5[3]])?;
 let v9 = eo__24eo_5fto_5fsmt_5fupdater_5frec(s, v8, v7[0], a2, a3, a4)?;
-let v10 = s.native("nateq", &[v5[3], v7[0]])?;
+let v10 = s.native_op(NativeOp::Nateq, &[v5[3], v7[0]])?;
 let v11 = match s.boolean_value(v10, true)? {
 Some(true) => {
 a3
@@ -75610,7 +75610,7 @@ let v32 = fields;
 let v33 = eo__24eo_5fdd_5fresolve(s, v32[0], v32[1])?;
 let v34 = eo__24eo_5ftypeof_5fdt_5fsel_5freturn(s, v33, v32[2], v32[3])?;
 let v35 = s.construct(Constructor::eo__24emb_5fDatatypeType, &[v32[0], v32[1]])?;
-let v36 = s.named("$emb_FunType", &[])?;
+let v36 = s.construct(Constructor::eo__24emb_5fFunType, &[])?;
 let v37 = s.apply(v36, v35)?;
 let v38 = s.apply(v37, v34)?;
 return Ok(Some(v38));
@@ -75656,7 +75656,7 @@ let v47 = r;
 let v48 = s.unapply(f)?;
 let Some((op, l)) = v48 else { break 'case12; }
 ;
-if !s.is_named(op, "$emb_FunType")? { break 'case12; }
+if !s.is_node(op, Some(Constructor::eo__24emb_5fFunType))? { break 'case12; }
 let v49 = l;
 let v50 = eo__24eo_5ftypeof(s, v49)?;
 let v51 = eo__24eo_5ftypeof(s, v47)?;
@@ -75703,7 +75703,7 @@ let v62 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if v60 != v62 { break 'case16; }
 let v63 = s.construct(Constructor::eo__24eo_5fList, &[])?;
 let v64 = s.construct(Constructor::eo__24eo_5fList, &[])?;
-let v65 = s.named("$emb_FunType", &[])?;
+let v65 = s.construct(Constructor::eo__24emb_5fFunType, &[])?;
 let v66 = s.apply(v65, v64)?;
 let v67 = s.apply(v66, v63)?;
 return Ok(Some(v67));
@@ -79623,7 +79623,7 @@ let v4 = s.construct(Constructor::eo_BitVec, &[])?;
 if v2 != v4 { break 'case0; }
 let v5 = s.construct(Constructor::eo_BitVec, &[])?;
 let v6 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v7 = s.operator("add", &[v6, v3])?;
+let v7 = s.builtin(EvalOp::Add, &[v6, v3])?;
 let v8 = s.apply(v5, v7)?;
 return Ok(v8);
 }
@@ -79966,7 +79966,7 @@ let v1 = r;
 let v2 = s.unapply(f)?;
 let Some((op, l)) = v2 else { break 'case0; }
 ;
-if !s.is_named(op, "$emb_FunType")? { break 'case0; }
+if !s.is_node(op, Some(Constructor::eo__24emb_5fFunType))? { break 'case0; }
 let v3 = l;
 let v4 = if v3 == a1 && !s.is_stuck(v3)? {
 v1
@@ -80188,7 +80188,7 @@ let v6 = a;
 let v7 = s.construct(Constructor::eo_BitVec, &[])?;
 if v5 != v7 { break 'case0; }
 let v8 = s.construct(Constructor::eo_BitVec, &[])?;
-let v9 = s.operator("add", &[v2, v6])?;
+let v9 = s.builtin(EvalOp::Add, &[v2, v6])?;
 let v10 = s.apply(v8, v9)?;
 return Ok(v10);
 }
@@ -80274,7 +80274,7 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5fedtc_2eunit, &[])?;
 if v1[0] != v2 { break 'case0; }
-let v3 = s.native_pattern("nat.zero", a2)?;
+let v3 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v3 else { break 'case0; }
 ;
 let v4 = fields;
@@ -80289,12 +80289,12 @@ let v7 = s.destruct(Constructor::eo__24emb_5fedtc_2econs, v6[0])?;
 let Some(fields) = v7 else { break 'case1; }
 ;
 let v8 = fields;
-let v9 = s.native_pattern("nat.zero", a2)?;
+let v9 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v9 else { break 'case1; }
 ;
 let v10 = fields;
 let v11 = s.construct(Constructor::eo__24emb_5fedt_2esum, &[v8[1], v6[1]])?;
-let v12 = s.native("nat.zero", &[])?;
+let v12 = s.native_nat_zero()?;
 let v13 = eo__24eo_5ftypeof_5fdt_5fcons_5frec(s, a0, v11, v12)?;
 let v14 = s.construct(Constructor::eo__24emb_5fDtcAppType, &[v8[0], v13])?;
 return Ok(v14);
@@ -80304,7 +80304,7 @@ let v15 = s.destruct(Constructor::eo__24emb_5fedt_2esum, a1)?;
 let Some(fields) = v15 else { break 'case2; }
 ;
 let v16 = fields;
-let v17 = s.native_pattern("nat.succ", a2)?;
+let v17 = s.native_pattern_succ(a2)?;
 let Some(fields) = v17 else { break 'case2; }
 ;
 let v18 = fields;
@@ -80344,11 +80344,11 @@ let v2 = s.destruct(Constructor::eo__24emb_5fedtc_2econs, v1[0])?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native_pattern("nat.zero", a1)?;
+let v4 = s.native_pattern_nat_zero(a1)?;
 let Some(fields) = v4 else { break 'case0; }
 ;
 let v5 = fields;
-let v6 = s.native_pattern("nat.zero", a2)?;
+let v6 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v6 else { break 'case0; }
 ;
 let v7 = fields;
@@ -80363,17 +80363,17 @@ let v10 = s.destruct(Constructor::eo__24emb_5fedtc_2econs, v9[0])?;
 let Some(fields) = v10 else { break 'case1; }
 ;
 let v11 = fields;
-let v12 = s.native_pattern("nat.zero", a1)?;
+let v12 = s.native_pattern_nat_zero(a1)?;
 let Some(fields) = v12 else { break 'case1; }
 ;
 let v13 = fields;
-let v14 = s.native_pattern("nat.succ", a2)?;
+let v14 = s.native_pattern_succ(a2)?;
 let Some(fields) = v14 else { break 'case1; }
 ;
 let v15 = fields;
 let v16 = s.construct(Constructor::eo__24emb_5fedt_2esum, &[v11[1], v9[1]])?;
 let v17 = v16;
-let v18 = s.native("nat.zero", &[])?;
+let v18 = s.native_nat_zero()?;
 let v19 = v18;
 let v20 = v15[0];
 a0 = v17;
@@ -80386,7 +80386,7 @@ let v21 = s.destruct(Constructor::eo__24emb_5fedt_2esum, a0)?;
 let Some(fields) = v21 else { break 'case2; }
 ;
 let v22 = fields;
-let v23 = s.native_pattern("nat.succ", a1)?;
+let v23 = s.native_pattern_succ(a1)?;
 let Some(fields) = v23 else { break 'case2; }
 ;
 let v24 = fields;
@@ -80424,24 +80424,24 @@ let v5 = s.construct(Constructor::eo_BitVec, &[])?;
 if v3 != v5 { break 'case0; }
 let v6 = s.construct(Constructor::eo_BitVec, &[])?;
 let v7 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v8 = s.operator("gt", &[a3, v7])?;
+let v8 = s.builtin(EvalOp::Gt, &[a3, v7])?;
 let v9 = s.literal(Lit::Bool(true))?;
 let v10 = if v8 == v9 && !s.is_stuck(v8)? {
-let v11 = s.operator("gt", &[v4, a1])?;
+let v11 = s.builtin(EvalOp::Gt, &[v4, a1])?;
 let v12 = s.literal(Lit::Bool(true))?;
 let v13 = if v11 == v12 && !s.is_stuck(v11)? {
-let v14 = s.operator("neg", &[a3])?;
-let v15 = s.operator("add", &[a1, v14])?;
+let v14 = s.builtin(EvalOp::Neg, &[a3])?;
+let v15 = s.builtin(EvalOp::Add, &[a1, v14])?;
 let v16 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v17 = s.operator("add", &[v15, v16])?;
+let v17 = s.builtin(EvalOp::Add, &[v15, v16])?;
 let v18 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v19 = s.operator("gt", &[v17, v18])?;
+let v19 = s.builtin(EvalOp::Gt, &[v17, v18])?;
 let v20 = s.literal(Lit::Bool(true))?;
 let v21 = if v19 == v20 && !s.is_stuck(v19)? {
-let v22 = s.operator("neg", &[a3])?;
-let v23 = s.operator("add", &[a1, v22])?;
+let v22 = s.builtin(EvalOp::Neg, &[a3])?;
+let v23 = s.builtin(EvalOp::Add, &[a1, v22])?;
 let v24 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v25 = s.operator("add", &[v23, v24])?;
+let v25 = s.builtin(EvalOp::Add, &[v23, v24])?;
 v25
 } else { s.stuck() };
 v21
@@ -80535,7 +80535,7 @@ if a0 != v0 { break 'case0; }
 let v1 = s.construct(Constructor::eo_Int, &[])?;
 if a2 != v1 { break 'case0; }
 let v2 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v3 = s.operator("gt", &[a1, v2])?;
+let v3 = s.builtin(EvalOp::Gt, &[a1, v2])?;
 let v4 = s.literal(Lit::Bool(true))?;
 let v5 = if v3 == v4 && !s.is_stuck(v3)? {
 let v6 = s.construct(Constructor::eo_BitVec, &[])?;
@@ -80674,7 +80674,7 @@ if a0 != v0 { break 'case0; }
 let v1 = s.construct(Constructor::eo_RegLan, &[])?;
 if a2 != v1 { break 'case0; }
 let v2 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v3 = s.operator("gt", &[a1, v2])?;
+let v3 = s.builtin(EvalOp::Gt, &[a1, v2])?;
 let v4 = s.literal(Lit::Bool(true))?;
 let v5 = if v3 == v4 && !s.is_stuck(v3)? {
 let v6 = s.construct(Constructor::eo_RegLan, &[])?;
@@ -80700,11 +80700,11 @@ if a2 != v1 { break 'case0; }
 let v2 = s.construct(Constructor::eo_RegLan, &[])?;
 if a4 != v2 { break 'case0; }
 let v3 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v4 = s.operator("gt", &[a1, v3])?;
+let v4 = s.builtin(EvalOp::Gt, &[a1, v3])?;
 let v5 = s.literal(Lit::Bool(true))?;
 let v6 = if v4 == v5 && !s.is_stuck(v4)? {
 let v7 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v8 = s.operator("gt", &[a3, v7])?;
+let v8 = s.builtin(EvalOp::Gt, &[a3, v7])?;
 let v9 = s.literal(Lit::Bool(true))?;
 let v10 = if v8 == v9 && !s.is_stuck(v8)? {
 let v11 = s.construct(Constructor::eo_RegLan, &[])?;
@@ -80767,11 +80767,11 @@ let v3 = a;
 let v4 = s.construct(Constructor::eo_BitVec, &[])?;
 if v2 != v4 { break 'case0; }
 let v5 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v6 = s.operator("gt", &[a1, v5])?;
+let v6 = s.builtin(EvalOp::Gt, &[a1, v5])?;
 let v7 = s.literal(Lit::Bool(true))?;
 let v8 = if v6 == v7 && !s.is_stuck(v6)? {
 let v9 = s.construct(Constructor::eo_BitVec, &[])?;
-let v10 = s.operator("mul", &[a1, v3])?;
+let v10 = s.builtin(EvalOp::Mul, &[a1, v3])?;
 let v11 = s.apply(v9, v10)?;
 v11
 } else { s.stuck() };
@@ -80798,7 +80798,7 @@ let v3 = a;
 let v4 = s.construct(Constructor::eo_BitVec, &[])?;
 if v2 != v4 { break 'case0; }
 let v5 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v6 = s.operator("gt", &[a1, v5])?;
+let v6 = s.builtin(EvalOp::Gt, &[a1, v5])?;
 let v7 = s.literal(Lit::Bool(true))?;
 let v8 = if v6 == v7 && !s.is_stuck(v6)? {
 let v9 = s.construct(Constructor::eo_BitVec, &[])?;
@@ -81627,8 +81627,8 @@ let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
 'case0: {
 let v0 = s.construct(Constructor::eo_Tuple, &[])?;
-let v1 = s.operator("list_len", &[v0, a1])?;
-let v2 = s.operator("is_ok", &[v1])?;
+let v1 = s.builtin(EvalOp::ListLength, &[v0, a1])?;
+let v2 = s.builtin(EvalOp::IsOk, &[v1])?;
 let v3 = s.literal(Lit::Bool(true))?;
 let v4 = if v2 == v3 && !s.is_stuck(v2)? {
 let v5 = s.construct(Constructor::eo_Tuple, &[])?;
@@ -81659,7 +81659,7 @@ if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck());
 let v0 = s.construct(Constructor::eo_Int, &[])?;
 if a0 != v0 { break 'case0; }
 let v1 = s.construct(Constructor::eo_Tuple, &[])?;
-let v2 = s.operator("list_nth", &[v1, a2, a1])?;
+let v2 = s.builtin(EvalOp::ListNth, &[v1, a2, a1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -81683,7 +81683,7 @@ if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { re
 let v0 = s.construct(Constructor::eo_Int, &[])?;
 if a0 != v0 { break 'case0; }
 let v1 = s.construct(Constructor::eo_Tuple, &[])?;
-let v2 = s.operator("list_nth", &[v1, a2, a1])?;
+let v2 = s.builtin(EvalOp::ListNth, &[v1, a2, a1])?;
 let v3 = if a3 == v2 && !s.is_stuck(a3)? {
 a2
 } else { s.stuck() };
@@ -81724,11 +81724,11 @@ let v3 = a;
 let v4 = s.construct(Constructor::eo_BitVec, &[])?;
 if v2 != v4 { break 'case0; }
 let v5 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v6 = s.operator("gt", &[a1, v5])?;
+let v6 = s.builtin(EvalOp::Gt, &[a1, v5])?;
 let v7 = s.literal(Lit::Bool(true))?;
 let v8 = if v6 == v7 && !s.is_stuck(v6)? {
 let v9 = s.construct(Constructor::eo_BitVec, &[])?;
-let v10 = s.operator("add", &[v3, a1])?;
+let v10 = s.builtin(EvalOp::Add, &[v3, a1])?;
 let v11 = s.apply(v9, v10)?;
 v11
 } else { s.stuck() };
@@ -81764,8 +81764,8 @@ let v5 = a;
 let v6 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v8 = s.operator("list_find", &[v7, a1, v5])?;
-let v9 = s.operator("is_neg", &[v8])?;
+let v8 = s.builtin(EvalOp::ListFind, &[v7, a1, v5])?;
+let v9 = s.builtin(EvalOp::IsNeg, &[v8])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = eo__24eo_5ftypeof(s, v5)?;
@@ -81829,8 +81829,8 @@ let v5 = a;
 let v6 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v8 = s.operator("list_find", &[v7, a1, v5])?;
-let v9 = s.operator("is_neg", &[v8])?;
+let v8 = s.builtin(EvalOp::ListFind, &[v7, a1, v5])?;
+let v9 = s.builtin(EvalOp::IsNeg, &[v8])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = eo__24eo_5ftypeof(s, v5)?;
@@ -81890,7 +81890,7 @@ if v4 != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v8 = eo__24set_5funion_5fto_5flist(s, v5)?;
 let v9 = eo__24set_5funion_5fto_5flist(s, v2)?;
-let v10 = s.operator("list_concat", &[v7, v8, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v7, v8, v9])?;
 return Ok(v10);
 }
 'case1: {
@@ -82024,7 +82024,7 @@ let v5 = a;
 let v6 = s.construct(Constructor::eo_or, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = s.literal(Lit::Bool(false))?;
-let v8 = s.operator("eq", &[v2, v7])?;
+let v8 = s.builtin(EvalOp::Eq, &[v2, v7])?;
 let v9 = match s.boolean_value(v8, false)? {
 Some(true) => {
 v5
@@ -82068,7 +82068,7 @@ let v9 = eo__24eo_5fnil(s, v4, v8)?;
 let v10 = s.apply(v4, v5)?;
 let v11 = s.apply(v10, v2)?;
 let v12 = eo__24get_5fa_5fnorm_5frec(s, v4, v9, v11)?;
-let v13 = s.operator("list_singleton_elim", &[v4, v12])?;
+let v13 = s.builtin(EvalOp::ListSingletonElim, &[v4, v12])?;
 return Ok(v13);
 }
 Ok(s.stuck())
@@ -82101,7 +82101,7 @@ let v5 = a;
 if v4 != a0 { break 'case0; }
 let v6 = eo__24get_5fa_5fnorm_5frec(s, a0, a1, v5)?;
 let v7 = eo__24get_5fa_5fnorm_5frec(s, a0, a1, v2)?;
-let v8 = s.operator("list_concat", &[a0, v6, v7])?;
+let v8 = s.builtin(EvalOp::ListConcat, &[a0, v6, v7])?;
 return Ok(v8);
 }
 'case1: {
@@ -82425,7 +82425,7 @@ let v9 = eo__24eo_5fnil(s, v4, v8)?;
 let v10 = s.apply(v4, v5)?;
 let v11 = s.apply(v10, v2)?;
 let v12 = eo__24get_5fai_5fnorm_5frec(s, v4, v9, v11)?;
-let v13 = s.operator("list_singleton_elim", &[v4, v12])?;
+let v13 = s.builtin(EvalOp::ListSingletonElim, &[v4, v12])?;
 return Ok(v13);
 }
 Ok(s.stuck())
@@ -82458,8 +82458,8 @@ let v5 = a;
 if v4 != a0 { break 'case0; }
 let v6 = eo__24get_5fai_5fnorm_5frec(s, a0, a1, v5)?;
 let v7 = eo__24get_5fai_5fnorm_5frec(s, a0, a1, v2)?;
-let v8 = s.operator("list_concat", &[a0, v6, v7])?;
-let v9 = s.operator("list_setof", &[a0, v8])?;
+let v8 = s.builtin(EvalOp::ListConcat, &[a0, v6, v7])?;
+let v9 = s.builtin(EvalOp::ListSetof, &[a0, v8])?;
 return Ok(v9);
 }
 'case1: {
@@ -82653,14 +82653,14 @@ let v41 = f;
 let v42 = a;
 let v43 = s.construct(Constructor::eo__2f, &[])?;
 if v41 != v43 { break 'case4; }
-let v44 = s.operator("to_q", &[v39])?;
-let v45 = s.operator("is_q", &[v44])?;
+let v44 = s.builtin(EvalOp::ToRat, &[v39])?;
+let v45 = s.builtin(EvalOp::IsQ, &[v44])?;
 let v46 = match s.boolean_value(v45, false)? {
 Some(true) => {
-let v47 = s.operator("to_q", &[v39])?;
+let v47 = s.builtin(EvalOp::ToRat, &[v39])?;
 let v48 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v49 = s.operator("eq", &[v47, v48])?;
-let v50 = s.operator("not", &[v49])?;
+let v49 = s.builtin(EvalOp::Eq, &[v47, v48])?;
+let v50 = s.builtin(EvalOp::Not, &[v49])?;
 v50
 }, Some(false) => {
 let v51 = s.literal(Lit::Bool(false))?;
@@ -82673,8 +82673,8 @@ let v53 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v54 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v55 = s.apply(v53, v54)?;
 let v56 = s.literal(Lit::Rational(parse_rat("1/1")?))?;
-let v57 = s.operator("to_q", &[v39])?;
-let v58 = s.operator("qdiv", &[v56, v57])?;
+let v57 = s.builtin(EvalOp::ToRat, &[v39])?;
+let v58 = s.builtin(EvalOp::RatDiv, &[v56, v57])?;
 let v59 = s.apply(v55, v58)?;
 let v60 = eo__24get_5farith_5fpoly_5fnorm(s, v42)?;
 let v61 = eo__24poly_5fmul_5fmon(s, v59, v60)?;
@@ -82716,14 +82716,14 @@ let v81 = f;
 let v82 = a;
 let v83 = s.construct(Constructor::eo__2f_5ftotal, &[])?;
 if v81 != v83 { break 'case5; }
-let v84 = s.operator("to_q", &[v79])?;
-let v85 = s.operator("is_q", &[v84])?;
+let v84 = s.builtin(EvalOp::ToRat, &[v79])?;
+let v85 = s.builtin(EvalOp::IsQ, &[v84])?;
 let v86 = match s.boolean_value(v85, false)? {
 Some(true) => {
-let v87 = s.operator("to_q", &[v79])?;
+let v87 = s.builtin(EvalOp::ToRat, &[v79])?;
 let v88 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v89 = s.operator("eq", &[v87, v88])?;
-let v90 = s.operator("not", &[v89])?;
+let v89 = s.builtin(EvalOp::Eq, &[v87, v88])?;
+let v90 = s.builtin(EvalOp::Not, &[v89])?;
 v90
 }, Some(false) => {
 let v91 = s.literal(Lit::Bool(false))?;
@@ -82736,8 +82736,8 @@ let v93 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v94 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v95 = s.apply(v93, v94)?;
 let v96 = s.literal(Lit::Rational(parse_rat("1/1")?))?;
-let v97 = s.operator("to_q", &[v79])?;
-let v98 = s.operator("qdiv", &[v96, v97])?;
+let v97 = s.builtin(EvalOp::ToRat, &[v79])?;
+let v98 = s.builtin(EvalOp::RatDiv, &[v96, v97])?;
 let v99 = s.apply(v95, v98)?;
 let v100 = eo__24get_5farith_5fpoly_5fnorm(s, v82)?;
 let v101 = eo__24poly_5fmul_5fmon(s, v99, v100)?;
@@ -82781,13 +82781,13 @@ Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
 }
 fn case_7_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case7: {
-let v122 = s.operator("to_q", &[a0])?;
-let v123 = s.operator("is_q", &[v122])?;
+let v122 = s.builtin(EvalOp::ToRat, &[a0])?;
+let v123 = s.builtin(EvalOp::IsQ, &[v122])?;
 let v124 = match s.boolean_value(v123, false)? {
 Some(true) => {
-let v125 = s.operator("to_q", &[a0])?;
+let v125 = s.builtin(EvalOp::ToRat, &[a0])?;
 let v126 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v127 = s.operator("is_eq", &[v125, v126])?;
+let v127 = s.builtin(EvalOp::IsEq, &[v125, v126])?;
 let v128 = match s.boolean_value(v127, false)? {
 Some(true) => {
 let v129 = s.construct(Constructor::eo__40_40poly_2ezero, &[])?;
@@ -82797,7 +82797,7 @@ let v130 = s.construct(Constructor::eo__40_40poly, &[])?;
 let v131 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v132 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v133 = s.apply(v131, v132)?;
-let v134 = s.operator("to_q", &[a0])?;
+let v134 = s.builtin(EvalOp::ToRat, &[a0])?;
 let v135 = s.apply(v133, v134)?;
 let v136 = s.apply(v130, v135)?;
 let v137 = s.construct(Constructor::eo__40_40poly_2ezero, &[])?;
@@ -82905,12 +82905,12 @@ let v36 = eo__24poly_5fmul(s, v34, v35)?;
 return Ok(v36);
 }
 'case4: {
-let v37 = s.operator("is_bin", &[a0])?;
+let v37 = s.builtin(EvalOp::IsBin, &[a0])?;
 let v38 = match s.boolean_value(v37, false)? {
 Some(true) => {
-let v39 = s.operator("to_z", &[a0])?;
+let v39 = s.builtin(EvalOp::ToInt, &[a0])?;
 let v40 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v41 = s.operator("is_eq", &[v39, v40])?;
+let v41 = s.builtin(EvalOp::IsEq, &[v39, v40])?;
 let v42 = match s.boolean_value(v41, false)? {
 Some(true) => {
 let v43 = s.construct(Constructor::eo__40_40poly_2ezero, &[])?;
@@ -82920,8 +82920,8 @@ let v44 = s.construct(Constructor::eo__40_40poly, &[])?;
 let v45 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v46 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v47 = s.apply(v45, v46)?;
-let v48 = s.operator("to_z", &[a0])?;
-let v49 = s.operator("to_q", &[v48])?;
+let v48 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v49 = s.builtin(EvalOp::ToRat, &[v48])?;
 let v50 = s.apply(v47, v49)?;
 let v51 = s.apply(v44, v50)?;
 let v52 = s.construct(Constructor::eo__40_40poly_2ezero, &[])?;
@@ -82977,7 +82977,7 @@ let Some((f, a)) = v3 else { break 'case0; }
 let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v7 = s.operator("list_nth", &[v6, v5, a1])?;
+let v7 = s.builtin(EvalOp::ListNth, &[v6, v5, a1])?;
 let v8 = eo__24get_5fvar_5ftype(s, v7)?;
 return Ok(v8);
 }
@@ -83017,14 +83017,14 @@ if v10 != v4 { break 'case0; }
 if v8 != v2 { break 'case0; }
 let v12 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v13 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v14 = s.operator("list_setof", &[v13, v5])?;
-let v15 = s.operator("list_minclude", &[v12, v14, v11])?;
+let v14 = s.builtin(EvalOp::ListSetof, &[v13, v5])?;
+let v15 = s.builtin(EvalOp::ListMinclude, &[v12, v14, v11])?;
 let v16 = s.literal(Lit::Bool(true))?;
 let v17 = if v15 == v16 && !s.is_stuck(v15)? {
 let v18 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v19 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v20 = s.operator("list_setof", &[v19, v5])?;
-let v21 = s.operator("list_diff", &[v18, v20, v11])?;
+let v20 = s.builtin(EvalOp::ListSetof, &[v19, v5])?;
+let v21 = s.builtin(EvalOp::ListDiff, &[v18, v20, v11])?;
 v21
 } else { s.stuck() };
 return Ok(v17);
@@ -83042,7 +83042,7 @@ let v26 = f;
 let v27 = a;
 if a1 != v24 { break 'case1; }
 let v28 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v29 = s.operator("list_setof", &[v28, v27])?;
+let v29 = s.builtin(EvalOp::ListSetof, &[v28, v27])?;
 return Ok(v29);
 }
 Ok(s.stuck())
@@ -83169,12 +83169,12 @@ let v47 = eo__24eo_5ftypeof(s, v45)?;
 let v48 = eo__24bv_5fbitwidth(s, v47)?;
 let v49 = eo__24eo_5ftypeof(s, v45)?;
 let v50 = eo__24bv_5fbitwidth(s, v49)?;
-let v51 = s.operator("is_z", &[v50])?;
+let v51 = s.builtin(EvalOp::IsZ, &[v50])?;
 let v52 = match s.boolean_value(v51, false)? {
 Some(true) => {
 let v53 = eo__24eo_5ftypeof(s, v45)?;
 let v54 = eo__24bv_5fbitwidth(s, v53)?;
-let v55 = s.operator("is_neg", &[v54])?;
+let v55 = s.builtin(EvalOp::IsNeg, &[v54])?;
 let v56 = match s.boolean_value(v55, false)? {
 Some(true) => {
 let v57 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -83183,7 +83183,7 @@ v57
 let v58 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v59 = eo__24eo_5ftypeof(s, v45)?;
 let v60 = eo__24bv_5fbitwidth(s, v59)?;
-let v61 = s.operator("pow", &[v58, v60])?;
+let v61 = s.builtin(EvalOp::Pow, &[v58, v60])?;
 v61
 }, None => s.stuck(),
 };
@@ -83197,8 +83197,8 @@ v65
 }, None => s.stuck(),
 };
 let v66 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v67 = s.operator("add", &[v52, v66])?;
-let v68 = s.operator("to_bin", &[v48, v67])?;
+let v67 = s.builtin(EvalOp::Add, &[v52, v66])?;
+let v68 = s.builtin(EvalOp::ToBin, &[v48, v67])?;
 return Ok(v68);
 }
 'case6: {
@@ -83217,7 +83217,7 @@ if v73 != v75 { break 'case6; }
 let v76 = eo__24eo_5ftypeof(s, v74)?;
 let v77 = eo__24bv_5fbitwidth(s, v76)?;
 let v78 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v79 = s.operator("to_bin", &[v77, v78])?;
+let v79 = s.builtin(EvalOp::ToBin, &[v77, v78])?;
 return Ok(v79);
 }
 Ok(s.stuck())
@@ -83231,18 +83231,18 @@ s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
-let v0 = s.operator("to_q", &[a0])?;
-let v1 = s.operator("to_z", &[a0])?;
-let v2 = s.operator("to_q", &[v1])?;
-let v3 = s.operator("eq", &[v0, v2])?;
+let v0 = s.builtin(EvalOp::ToRat, &[a0])?;
+let v1 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v2 = s.builtin(EvalOp::ToRat, &[v1])?;
+let v3 = s.builtin(EvalOp::Eq, &[v0, v2])?;
 let v4 = match s.boolean_value(v3, false)? {
 Some(true) => {
 let v5 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v6 = s.operator("to_z", &[a0])?;
-let v7 = s.operator("add", &[v5, v6])?;
+let v6 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v7 = s.builtin(EvalOp::Add, &[v5, v6])?;
 v7
 }, Some(false) => {
-let v8 = s.operator("to_z", &[a0])?;
+let v8 = s.builtin(EvalOp::ToInt, &[a0])?;
 v8
 }, None => s.stuck(),
 };
@@ -83297,7 +83297,7 @@ if v13 != v15 { break 'case1; }
 let v16 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v17 = s.apply(v16, a1)?;
 let v18 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v19 = s.operator("add", &[a1, v18])?;
+let v19 = s.builtin(EvalOp::Add, &[a1, v18])?;
 let v20 = eo__24iota_5frec(s, v10, v19)?;
 let v21 = s.apply(v17, v20)?;
 return Ok(v21);
@@ -83447,9 +83447,9 @@ let v14 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v15 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v16 = s.apply(v15, v11)?;
 let v17 = s.apply(v16, v8)?;
-let v18 = s.operator("list_concat", &[v14, v17, a1])?;
+let v18 = s.builtin(EvalOp::ListConcat, &[v14, v17, a1])?;
 let v19 = eo__24is_5fclosed_5frec(s, v2, v18)?;
-let v20 = s.operator("and", &[v13, v19])?;
+let v20 = s.builtin(EvalOp::And, &[v13, v19])?;
 return Ok(v20);
 }
 'case1: {
@@ -83460,7 +83460,7 @@ let v22 = f;
 let v23 = a;
 let v24 = eo__24is_5fclosed_5frec(s, v22, a1)?;
 let v25 = eo__24is_5fclosed_5frec(s, v23, a1)?;
-let v26 = s.operator("and", &[v24, v25])?;
+let v26 = s.builtin(EvalOp::And, &[v24, v25])?;
 return Ok(v26);
 }
 'case2: {
@@ -83469,10 +83469,10 @@ let Some(fields) = v27 else { break 'case2; }
 ;
 let v28 = fields;
 let v29 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v30 = s.named("$emb_Var", &[v28[0], v28[1]])?;
-let v31 = s.operator("list_find", &[v29, a1, v30])?;
-let v32 = s.operator("is_neg", &[v31])?;
-let v33 = s.operator("not", &[v32])?;
+let v30 = s.construct(Constructor::eo__24emb_5fVar, &[v28[0], v28[1]])?;
+let v31 = s.builtin(EvalOp::ListFind, &[v29, a1, v30])?;
+let v32 = s.builtin(EvalOp::IsNeg, &[v31])?;
+let v33 = s.builtin(EvalOp::Not, &[v32])?;
 return Ok(v33);
 }
 'case3: {
@@ -83493,7 +83493,7 @@ let Some(fields) = v38 else { break 'case4; }
 let v39 = fields;
 let v40 = eo__24is_5fclosed_5frec(s, v39[0], a1)?;
 let v41 = eo__24is_5fclosed_5frec(s, v39[1], a1)?;
-let v42 = s.operator("and", &[v40, v41])?;
+let v42 = s.builtin(EvalOp::And, &[v40, v41])?;
 return Ok(v42);
 }
 'case5: {
@@ -83532,21 +83532,21 @@ continue 'recur;
 }
 'case1: {
 let v4 = s.construct(Constructor::eo_tuple, &[])?;
-let v5 = s.operator("is_eq", &[a0, v4])?;
+let v5 = s.builtin(EvalOp::IsEq, &[a0, v4])?;
 let v6 = match s.boolean_value(v5, false)? {
 Some(true) => {
 let v7 = s.literal(Lit::Bool(true))?;
 v7
 }, Some(false) => {
 let v8 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
-let v9 = s.operator("is_eq", &[a0, v8])?;
+let v9 = s.builtin(EvalOp::IsEq, &[a0, v8])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = s.literal(Lit::Bool(true))?;
 v11
 }, Some(false) => {
 let v12 = eo__24eo_5fdt_5fselectors(s, a0)?;
-let v13 = s.operator("is_ok", &[v12])?;
+let v13 = s.builtin(EvalOp::IsOk, &[v12])?;
 v13
 }, None => s.stuck(),
 };
@@ -83666,18 +83666,18 @@ let Some((f, a)) = v3 else { break 'case0; }
 ;
 let v4 = f;
 let v5 = a;
-let v6 = s.operator("to_q", &[v5])?;
+let v6 = s.builtin(EvalOp::ToRat, &[v5])?;
 let v7 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v8 = s.operator("eq", &[v6, v7])?;
-let v9 = s.operator("to_q", &[v2])?;
+let v8 = s.builtin(EvalOp::Eq, &[v6, v7])?;
+let v9 = s.builtin(EvalOp::ToRat, &[v2])?;
 let v10 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v11 = s.operator("eq", &[v9, v10])?;
-let v12 = s.operator("or", &[v8, v11])?;
-let v13 = s.operator("not", &[v12])?;
+let v11 = s.builtin(EvalOp::Eq, &[v9, v10])?;
+let v12 = s.builtin(EvalOp::Or, &[v8, v11])?;
+let v13 = s.builtin(EvalOp::Not, &[v12])?;
 let v14 = s.apply(v4, v5)?;
 let v15 = s.apply(v14, v2)?;
 let v16 = eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel(s, v15)?;
-let v17 = s.operator("and", &[v13, v16])?;
+let v17 = s.builtin(EvalOp::And, &[v13, v16])?;
 return Ok(v17);
 }
 Ok(s.stuck())
@@ -83703,14 +83703,14 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo__3c, &[])?;
 if v4 != v6 { break 'case0; }
-let v7 = s.operator("is_neg", &[v5])?;
+let v7 = s.builtin(EvalOp::IsNeg, &[v5])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
 let v9 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v9
 }, Some(false) => {
-let v10 = s.operator("neg", &[v5])?;
-let v11 = s.operator("is_neg", &[v10])?;
+let v10 = s.builtin(EvalOp::Neg, &[v5])?;
+let v11 = s.builtin(EvalOp::IsNeg, &[v10])?;
 let v12 = match s.boolean_value(v11, false)? {
 Some(true) => {
 let v13 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83723,14 +83723,14 @@ v14
 v12
 }, None => s.stuck(),
 };
-let v15 = s.operator("is_neg", &[v2])?;
+let v15 = s.builtin(EvalOp::IsNeg, &[v2])?;
 let v16 = match s.boolean_value(v15, false)? {
 Some(true) => {
 let v17 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v17
 }, Some(false) => {
-let v18 = s.operator("neg", &[v2])?;
-let v19 = s.operator("is_neg", &[v18])?;
+let v18 = s.builtin(EvalOp::Neg, &[v2])?;
+let v19 = s.builtin(EvalOp::IsNeg, &[v18])?;
 let v20 = match s.boolean_value(v19, false)? {
 Some(true) => {
 let v21 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83743,7 +83743,7 @@ v22
 v20
 }, None => s.stuck(),
 };
-let v23 = s.operator("eq", &[v8, v16])?;
+let v23 = s.builtin(EvalOp::Eq, &[v8, v16])?;
 return Ok(v23);
 }
 'case1: {
@@ -83759,14 +83759,14 @@ let v28 = f;
 let v29 = a;
 let v30 = s.construct(Constructor::eo__3c_3d, &[])?;
 if v28 != v30 { break 'case1; }
-let v31 = s.operator("is_neg", &[v29])?;
+let v31 = s.builtin(EvalOp::IsNeg, &[v29])?;
 let v32 = match s.boolean_value(v31, false)? {
 Some(true) => {
 let v33 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v33
 }, Some(false) => {
-let v34 = s.operator("neg", &[v29])?;
-let v35 = s.operator("is_neg", &[v34])?;
+let v34 = s.builtin(EvalOp::Neg, &[v29])?;
+let v35 = s.builtin(EvalOp::IsNeg, &[v34])?;
 let v36 = match s.boolean_value(v35, false)? {
 Some(true) => {
 let v37 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83779,14 +83779,14 @@ v38
 v36
 }, None => s.stuck(),
 };
-let v39 = s.operator("is_neg", &[v26])?;
+let v39 = s.builtin(EvalOp::IsNeg, &[v26])?;
 let v40 = match s.boolean_value(v39, false)? {
 Some(true) => {
 let v41 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v41
 }, Some(false) => {
-let v42 = s.operator("neg", &[v26])?;
-let v43 = s.operator("is_neg", &[v42])?;
+let v42 = s.builtin(EvalOp::Neg, &[v26])?;
+let v43 = s.builtin(EvalOp::IsNeg, &[v42])?;
 let v44 = match s.boolean_value(v43, false)? {
 Some(true) => {
 let v45 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83799,7 +83799,7 @@ v46
 v44
 }, None => s.stuck(),
 };
-let v47 = s.operator("eq", &[v32, v40])?;
+let v47 = s.builtin(EvalOp::Eq, &[v32, v40])?;
 return Ok(v47);
 }
 'case2: {
@@ -83831,14 +83831,14 @@ let v60 = f;
 let v61 = a;
 let v62 = s.construct(Constructor::eo__3e_3d, &[])?;
 if v60 != v62 { break 'case3; }
-let v63 = s.operator("is_neg", &[v61])?;
+let v63 = s.builtin(EvalOp::IsNeg, &[v61])?;
 let v64 = match s.boolean_value(v63, false)? {
 Some(true) => {
 let v65 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v65
 }, Some(false) => {
-let v66 = s.operator("neg", &[v61])?;
-let v67 = s.operator("is_neg", &[v66])?;
+let v66 = s.builtin(EvalOp::Neg, &[v61])?;
+let v67 = s.builtin(EvalOp::IsNeg, &[v66])?;
 let v68 = match s.boolean_value(v67, false)? {
 Some(true) => {
 let v69 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83851,14 +83851,14 @@ v70
 v68
 }, None => s.stuck(),
 };
-let v71 = s.operator("is_neg", &[v58])?;
+let v71 = s.builtin(EvalOp::IsNeg, &[v58])?;
 let v72 = match s.boolean_value(v71, false)? {
 Some(true) => {
 let v73 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v73
 }, Some(false) => {
-let v74 = s.operator("neg", &[v58])?;
-let v75 = s.operator("is_neg", &[v74])?;
+let v74 = s.builtin(EvalOp::Neg, &[v58])?;
+let v75 = s.builtin(EvalOp::IsNeg, &[v74])?;
 let v76 = match s.boolean_value(v75, false)? {
 Some(true) => {
 let v77 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83871,7 +83871,7 @@ v78
 v76
 }, None => s.stuck(),
 };
-let v79 = s.operator("eq", &[v64, v72])?;
+let v79 = s.builtin(EvalOp::Eq, &[v64, v72])?;
 return Ok(v79);
 }
 'case4: {
@@ -83887,14 +83887,14 @@ let v84 = f;
 let v85 = a;
 let v86 = s.construct(Constructor::eo__3e, &[])?;
 if v84 != v86 { break 'case4; }
-let v87 = s.operator("is_neg", &[v85])?;
+let v87 = s.builtin(EvalOp::IsNeg, &[v85])?;
 let v88 = match s.boolean_value(v87, false)? {
 Some(true) => {
 let v89 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v89
 }, Some(false) => {
-let v90 = s.operator("neg", &[v85])?;
-let v91 = s.operator("is_neg", &[v90])?;
+let v90 = s.builtin(EvalOp::Neg, &[v85])?;
+let v91 = s.builtin(EvalOp::IsNeg, &[v90])?;
 let v92 = match s.boolean_value(v91, false)? {
 Some(true) => {
 let v93 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83907,14 +83907,14 @@ v94
 v92
 }, None => s.stuck(),
 };
-let v95 = s.operator("is_neg", &[v82])?;
+let v95 = s.builtin(EvalOp::IsNeg, &[v82])?;
 let v96 = match s.boolean_value(v95, false)? {
 Some(true) => {
 let v97 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v97
 }, Some(false) => {
-let v98 = s.operator("neg", &[v82])?;
-let v99 = s.operator("is_neg", &[v98])?;
+let v98 = s.builtin(EvalOp::Neg, &[v82])?;
+let v99 = s.builtin(EvalOp::IsNeg, &[v98])?;
 let v100 = match s.boolean_value(v99, false)? {
 Some(true) => {
 let v101 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -83927,7 +83927,7 @@ v102
 v100
 }, None => s.stuck(),
 };
-let v103 = s.operator("eq", &[v88, v96])?;
+let v103 = s.builtin(EvalOp::Eq, &[v88, v96])?;
 return Ok(v103);
 }
 'case5: {
@@ -84067,7 +84067,7 @@ let v20 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if v18 != v20 { break 'case0; }
 if v19 != v5 { break 'case0; }
 let v21 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v22 = s.operator("list_find", &[v21, v16, v5])?;
+let v22 = s.builtin(EvalOp::ListFind, &[v21, v16, v5])?;
 let v23 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v24 = if v22 == v23 && !s.is_stuck(v22)? {
 let v25 = s.construct(Constructor::eo_forall, &[])?;
@@ -84106,7 +84106,7 @@ let v42 = a;
 let v43 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if v41 != v43 { break 'case1; }
 let v44 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v45 = s.operator("list_find", &[v44, v39, v42])?;
+let v45 = s.builtin(EvalOp::ListFind, &[v44, v39, v42])?;
 let v46 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v47 = if v45 == v46 && !s.is_stuck(v45)? {
 let v48 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
@@ -84160,7 +84160,7 @@ let v81 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v82 = s.apply(v80, v81)?;
 let v83 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v84 = eo__24substitute_5fsimul_5frec(s, v74, a3, v78, v82, v83)?;
-let v85 = s.operator("eq", &[v84, v65])?;
+let v85 = s.builtin(EvalOp::Eq, &[v84, v65])?;
 v85
 } else { s.stuck() };
 return Ok(v73);
@@ -84182,7 +84182,7 @@ let v97 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v98 = s.apply(v96, v97)?;
 let v99 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v100 = eo__24substitute_5fsimul_5frec(s, v90, a3, v94, v98, v99)?;
-let v101 = s.operator("eq", &[v100, a4])?;
+let v101 = s.builtin(EvalOp::Eq, &[v100, a4])?;
 v101
 } else { s.stuck() };
 return Ok(v89);
@@ -84573,7 +84573,7 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if v4 != v6 { break 'case0; }
-let v7 = s.operator("is_var", &[v5])?;
+let v7 = s.builtin(EvalOp::IsVar, &[v5])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
 let v9 = eo__24is_5fvar_5flist(s, v2)?;
@@ -84604,8 +84604,8 @@ let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
 'case0: {
 let v0 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1 = s.operator("to_z", &[a0])?;
-let v2 = s.operator("add", &[v0, v1])?;
+let v1 = s.builtin(EvalOp::ToInt, &[a0])?;
+let v2 = s.builtin(EvalOp::Add, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -84850,7 +84850,7 @@ let v31 = s.construct(Constructor::eo__2a, &[])?;
 let v32 = eo__24eo_5ftypeof(s, v15)?;
 let v33 = eo__24eo_5fnil(s, v31, v32)?;
 let v34 = s.apply(v30, v33)?;
-let v35 = s.operator("list_concat", &[v28, v26, v34])?;
+let v35 = s.builtin(EvalOp::ListConcat, &[v28, v26, v34])?;
 let v36 = s.apply(v11, v35)?;
 let v37 = s.construct(Constructor::eo__2a, &[])?;
 let v38 = s.construct(Constructor::eo__2a, &[])?;
@@ -84859,7 +84859,7 @@ let v40 = s.construct(Constructor::eo__2a, &[])?;
 let v41 = eo__24eo_5ftypeof(s, v19)?;
 let v42 = eo__24eo_5fnil(s, v40, v41)?;
 let v43 = s.apply(v39, v42)?;
-let v44 = s.operator("list_concat", &[v37, v23, v43])?;
+let v44 = s.builtin(EvalOp::ListConcat, &[v37, v23, v43])?;
 let v45 = s.apply(v36, v44)?;
 let v46 = v45;
 a0 = v27;
@@ -84963,7 +84963,7 @@ let v99 = f;
 let v100 = a;
 let v101 = s.construct(Constructor::eo__3e, &[])?;
 if v99 != v101 { break 'case1; }
-let v102 = s.operator("to_q", &[v89])?;
+let v102 = s.builtin(EvalOp::ToRat, &[v89])?;
 let v103 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
 let v104 = if v102 == v103 && !s.is_stuck(v102)? {
 let v105 = s.construct(Constructor::eo__3e, &[])?;
@@ -84974,7 +84974,7 @@ let v109 = s.construct(Constructor::eo__2a, &[])?;
 let v110 = eo__24eo_5ftypeof(s, v70)?;
 let v111 = eo__24eo_5fnil(s, v109, v110)?;
 let v112 = s.apply(v108, v111)?;
-let v113 = s.operator("list_concat", &[v106, v100, v112])?;
+let v113 = s.builtin(EvalOp::ListConcat, &[v106, v100, v112])?;
 let v114 = s.apply(v105, v113)?;
 let v115 = s.construct(Constructor::eo__2a, &[])?;
 let v116 = s.construct(Constructor::eo__2a, &[])?;
@@ -84983,7 +84983,7 @@ let v118 = s.construct(Constructor::eo__2a, &[])?;
 let v119 = eo__24eo_5ftypeof(s, v74)?;
 let v120 = eo__24eo_5fnil(s, v118, v119)?;
 let v121 = s.apply(v117, v120)?;
-let v122 = s.operator("list_concat", &[v115, v97, v121])?;
+let v122 = s.builtin(EvalOp::ListConcat, &[v115, v97, v121])?;
 let v123 = s.apply(v114, v122)?;
 let v124 = eo__24mk_5farith_5fmult_5fabs_5fcomparison_5frec(s, v49, v123)?;
 v124
@@ -85319,7 +85319,7 @@ let v30 = a;
 let v31 = s.construct(Constructor::eo__2a, &[])?;
 if v29 != v31 { break 'case0; }
 if v30 != v16 { break 'case0; }
-let v32 = s.operator("to_q", &[v13])?;
+let v32 = s.builtin(EvalOp::ToRat, &[v13])?;
 let v33 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
 let v34 = if v32 == v33 && !s.is_stuck(v32)? {
 let v35 = eo__24strip_5feven_5fexponent(s, v16, v27)?;
@@ -85366,7 +85366,7 @@ let v56 = a;
 let v57 = s.construct(Constructor::eo__2a, &[])?;
 if v55 != v57 { break 'case1; }
 if v56 != v49 { break 'case1; }
-let v58 = s.operator("to_q", &[v46])?;
+let v58 = s.builtin(EvalOp::ToRat, &[v46])?;
 let v59 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
 let v60 = if v58 == v59 && !s.is_stuck(v58)? {
 let v61 = eo__24strip_5feven_5fexponent(s, v49, v53)?;
@@ -85413,10 +85413,10 @@ let v82 = a;
 let v83 = s.construct(Constructor::eo__2a, &[])?;
 if v81 != v83 { break 'case2; }
 if v82 != v75 { break 'case2; }
-let v84 = s.operator("to_q", &[v72])?;
+let v84 = s.builtin(EvalOp::ToRat, &[v72])?;
 let v85 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
 let v86 = if v84 == v85 && !s.is_stuck(v84)? {
-let v87 = s.operator("not", &[a0])?;
+let v87 = s.builtin(EvalOp::Not, &[a0])?;
 let v88 = eo__24strip_5feven_5fexponent(s, v75, v79)?;
 let v89 = eo__24mk_5farith_5fmult_5fsign_5fsgn(s, v87, v65, v88)?;
 v89
@@ -85426,7 +85426,7 @@ return Ok(v86);
 'case3: {
 let v90 = s.literal(Lit::Bool(true))?;
 if a1 != v90 { break 'case3; }
-let v91 = s.operator("to_q", &[a2])?;
+let v91 = s.builtin(EvalOp::ToRat, &[a2])?;
 let v92 = s.literal(Lit::Rational(parse_rat("1/1")?))?;
 let v93 = if v91 == v92 && !s.is_stuck(v91)? {
 a0
@@ -85473,7 +85473,7 @@ let v15 = s.apply(v11, v12)?;
 let v16 = s.apply(v15, v9)?;
 let v17 = s.apply(v14, v16)?;
 let v18 = s.apply(v17, v2)?;
-let v19 = s.operator("list_rev", &[v13, v18])?;
+let v19 = s.builtin(EvalOp::ListRev, &[v13, v18])?;
 let v20 = s.construct(Constructor::eo__3d, &[])?;
 let v21 = eo__24eo_5ftypeof(s, v12)?;
 let v22 = eo__24arith_5fmk_5fzero(s, v21)?;
@@ -85781,22 +85781,22 @@ let v7 = fields;
 let v8 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v9 = eo__24eo_5ftypeof(s, v5)?;
 let v10 = eo__24dt_5fget_5fselectors_5fof_5fapp(s, v9, v5)?;
-let v11 = s.operator("list_find", &[v8, v10, v7[0]])?;
-let v12 = s.operator("is_neg", &[v11])?;
+let v11 = s.builtin(EvalOp::ListFind, &[v8, v10, v7[0]])?;
+let v12 = s.builtin(EvalOp::IsNeg, &[v11])?;
 let v13 = match s.boolean_value(v12, false)? {
 Some(true) => {
 v5
 }, Some(false) => {
 let v14 = eo__24eo_5ftypeof(s, v5)?;
 let v15 = eo__24dt_5fget_5fselectors_5fof_5fapp(s, v14, v5)?;
-let v16 = s.operator("len", &[v15])?;
+let v16 = s.builtin(EvalOp::Length, &[v15])?;
 let v17 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v18 = eo__24eo_5ftypeof(s, v5)?;
 let v19 = eo__24dt_5fget_5fselectors_5fof_5fapp(s, v18, v5)?;
-let v20 = s.operator("list_find", &[v17, v19, v7[0]])?;
-let v21 = s.operator("add", &[v16, v20])?;
+let v20 = s.builtin(EvalOp::ListFind, &[v17, v19, v7[0]])?;
+let v21 = s.builtin(EvalOp::Add, &[v16, v20])?;
 let v22 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v23 = s.operator("add", &[v21, v22])?;
+let v23 = s.builtin(EvalOp::Add, &[v21, v22])?;
 let v24 = eo__24dt_5fcollapse_5fupdater_5frhs(s, v5, v2, v23)?;
 v24
 }, None => s.stuck(),
@@ -85891,27 +85891,27 @@ let v32 = s.apply(v31, v26)?;
 let v33 = s.apply(v29, v32)?;
 let v34 = s.literal(Lit::Bool(true))?;
 let v35 = s.apply(v33, v34)?;
-let v36 = s.operator("list_concat", &[v27, v28, v35])?;
+let v36 = s.builtin(EvalOp::ListConcat, &[v27, v28, v35])?;
 return Ok(v36);
 }
 'case2: {
 if a1 != a0 { break 'case2; }
 let v37 = s.construct(Constructor::eo_tuple, &[])?;
-let v38 = s.operator("is_eq", &[a0, v37])?;
+let v38 = s.builtin(EvalOp::IsEq, &[a0, v37])?;
 let v39 = match s.boolean_value(v38, false)? {
 Some(true) => {
 let v40 = s.literal(Lit::Bool(true))?;
 v40
 }, Some(false) => {
 let v41 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
-let v42 = s.operator("is_eq", &[a0, v41])?;
+let v42 = s.builtin(EvalOp::IsEq, &[a0, v41])?;
 let v43 = match s.boolean_value(v42, false)? {
 Some(true) => {
 let v44 = s.literal(Lit::Bool(true))?;
 v44
 }, Some(false) => {
 let v45 = eo__24eo_5fdt_5fselectors(s, a0)?;
-let v46 = s.operator("is_ok", &[v45])?;
+let v46 = s.builtin(EvalOp::IsOk, &[v45])?;
 v46
 }, None => s.stuck(),
 };
@@ -85972,7 +85972,7 @@ let v17 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v18 = eo__24eo_5fdt_5fconstructors(s, a0)?;
 let v19 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v20 = eo__24dt_5fget_5fconstructors(s, a0)?;
-let v21 = s.operator("list_find", &[v19, v20, a1])?;
+let v21 = s.builtin(EvalOp::ListFind, &[v19, v20, a1])?;
 let v22 = eo__24assoc_5fnil_5fnth(s, v17, v18, v21)?;
 let v23 = eo__24mk_5fdt_5finst_5frec(s, v16, a2, v22)?;
 return Ok(v23);
@@ -86065,7 +86065,7 @@ let v10 = s.construct(Constructor::eo_tuple_2eselect, &[a2])?;
 let v11 = s.apply(v10, a1)?;
 let v12 = s.apply(v9, v11)?;
 let v13 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v14 = s.operator("add", &[a2, v13])?;
+let v14 = s.builtin(EvalOp::Add, &[a2, v13])?;
 let v15 = eo__24mk_5fdt_5finst_5ftuple_5frec(s, v4, a1, v14)?;
 let v16 = s.apply(v12, v15)?;
 return Ok(v16);
@@ -86141,8 +86141,8 @@ let Some(fields) = v6 else { break 'case0; }
 ;
 let v7 = fields;
 let v8 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v9 = s.operator("list_find", &[v8, a2, v7[0]])?;
-let v10 = s.operator("is_neg", &[v9])?;
+let v9 = s.builtin(EvalOp::ListFind, &[v8, a2, v7[0]])?;
+let v10 = s.builtin(EvalOp::IsNeg, &[v9])?;
 let v11 = s.literal(Lit::Bool(false))?;
 let v12 = if v10 == v11 && !s.is_stuck(v10)? {
 let v13 = s.construct(Constructor::eo_update, &[v7[0]])?;
@@ -86154,7 +86154,7 @@ let v18 = eo__24eo_5fdt_5fconstructors(s, v17)?;
 let v19 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v20 = eo__24eo_5ftypeof(s, v5)?;
 let v21 = eo__24dt_5fget_5fconstructors(s, v20)?;
-let v22 = s.operator("list_find", &[v19, v21, a1])?;
+let v22 = s.builtin(EvalOp::ListFind, &[v19, v21, a1])?;
 let v23 = eo__24assoc_5fnil_5fnth(s, v16, v18, v22)?;
 let v24 = eo__24dt_5fupdater_5felim_5frhs(s, v15, a2, v23)?;
 v24
@@ -86343,7 +86343,7 @@ if v4 != a0 { break 'case0; }
 let v6 = a0;
 let v7 = v2;
 let v8 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v9 = s.operator("list_concat", &[v8, a2, v5])?;
+let v9 = s.builtin(EvalOp::ListConcat, &[v8, a2, v5])?;
 let v10 = v9;
 a0 = v6;
 a1 = v7;
@@ -86500,7 +86500,7 @@ let v55 = s.literal(Lit::Bool(false))?;
 let v56 = if v54 == v55 && !s.is_stuck(v54)? {
 let v57 = s.literal(Lit::Bool(false))?;
 let v58 = s.construct(Constructor::eo_or, &[])?;
-let v59 = s.operator("list_singleton_elim", &[v58, v33])?;
+let v59 = s.builtin(EvalOp::ListSingletonElim, &[v58, v33])?;
 let v60 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v61 = s.apply(v60, a0)?;
 let v62 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
@@ -86638,7 +86638,7 @@ let v13 = s.construct(Constructor::eo_forall, &[])?;
 let v14 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v15 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v16 = s.construct(Constructor::eo_Int, &[])?;
-let v17 = s.named("$emb_Var", &[v15, v16])?;
+let v17 = s.construct(Constructor::eo__24emb_5fVar, &[v15, v16])?;
 let v18 = s.apply(v14, v17)?;
 let v19 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v20 = s.apply(v18, v19)?;
@@ -86647,7 +86647,7 @@ let v22 = s.construct(Constructor::eo_or, &[])?;
 let v23 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v24 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v25 = s.construct(Constructor::eo_Int, &[])?;
-let v26 = s.named("$emb_Var", &[v24, v25])?;
+let v26 = s.construct(Constructor::eo__24emb_5fVar, &[v24, v25])?;
 let v27 = s.apply(v23, v26)?;
 let v28 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v29 = s.apply(v27, v28)?;
@@ -86659,7 +86659,7 @@ let v34 = s.apply(v33, a0)?;
 let v35 = s.apply(v32, v34)?;
 let v36 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v37 = s.construct(Constructor::eo_Int, &[])?;
-let v38 = s.named("$emb_Var", &[v36, v37])?;
+let v38 = s.construct(Constructor::eo__24emb_5fVar, &[v36, v37])?;
 let v39 = s.apply(v35, v38)?;
 let v40 = s.apply(v31, v39)?;
 let v41 = s.construct(Constructor::eo_or, &[])?;
@@ -86671,7 +86671,7 @@ let v46 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v47 = s.apply(v45, v46)?;
 let v48 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v49 = s.construct(Constructor::eo_Int, &[])?;
-let v50 = s.named("$emb_Var", &[v48, v49])?;
+let v50 = s.construct(Constructor::eo__24emb_5fVar, &[v48, v49])?;
 let v51 = s.apply(v47, v50)?;
 let v52 = s.apply(v43, v51)?;
 let v53 = s.apply(v52, v2)?;
@@ -86684,7 +86684,7 @@ let v59 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v60 = s.apply(v59, a0)?;
 let v61 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v62 = s.construct(Constructor::eo_Int, &[])?;
-let v63 = s.named("$emb_Var", &[v61, v62])?;
+let v63 = s.construct(Constructor::eo__24emb_5fVar, &[v61, v62])?;
 let v64 = s.apply(v60, v63)?;
 let v65 = s.construct(Constructor::eo__2d, &[])?;
 let v66 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -86692,7 +86692,7 @@ let v67 = s.apply(v66, a0)?;
 let v68 = s.apply(v65, v67)?;
 let v69 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v70 = s.construct(Constructor::eo_Int, &[])?;
-let v71 = s.named("$emb_Var", &[v69, v70])?;
+let v71 = s.construct(Constructor::eo__24emb_5fVar, &[v69, v70])?;
 let v72 = s.apply(v68, v71)?;
 let v73 = s.apply(v64, v72)?;
 let v74 = s.apply(v58, v73)?;
@@ -86730,7 +86730,7 @@ let v97 = s.construct(Constructor::eo_forall, &[])?;
 let v98 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v99 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v100 = s.construct(Constructor::eo_Int, &[])?;
-let v101 = s.named("$emb_Var", &[v99, v100])?;
+let v101 = s.construct(Constructor::eo__24emb_5fVar, &[v99, v100])?;
 let v102 = s.apply(v98, v101)?;
 let v103 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v104 = s.apply(v102, v103)?;
@@ -86739,7 +86739,7 @@ let v106 = s.construct(Constructor::eo_or, &[])?;
 let v107 = s.construct(Constructor::eo__3c, &[])?;
 let v108 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v109 = s.construct(Constructor::eo_Int, &[])?;
-let v110 = s.named("$emb_Var", &[v108, v109])?;
+let v110 = s.construct(Constructor::eo__24emb_5fVar, &[v108, v109])?;
 let v111 = s.apply(v107, v110)?;
 let v112 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v113 = s.apply(v111, v112)?;
@@ -86751,7 +86751,7 @@ let v118 = s.apply(v117, a0)?;
 let v119 = s.apply(v116, v118)?;
 let v120 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v121 = s.construct(Constructor::eo_Int, &[])?;
-let v122 = s.named("$emb_Var", &[v120, v121])?;
+let v122 = s.construct(Constructor::eo__24emb_5fVar, &[v120, v121])?;
 let v123 = s.apply(v119, v122)?;
 let v124 = s.apply(v115, v123)?;
 let v125 = s.construct(Constructor::eo_or, &[])?;
@@ -86763,7 +86763,7 @@ let v130 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v131 = s.apply(v129, v130)?;
 let v132 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v133 = s.construct(Constructor::eo_Int, &[])?;
-let v134 = s.named("$emb_Var", &[v132, v133])?;
+let v134 = s.construct(Constructor::eo__24emb_5fVar, &[v132, v133])?;
 let v135 = s.apply(v131, v134)?;
 let v136 = s.apply(v127, v135)?;
 let v137 = s.apply(v136, v95)?;
@@ -86776,7 +86776,7 @@ let v143 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v144 = s.apply(v143, a0)?;
 let v145 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v146 = s.construct(Constructor::eo_Int, &[])?;
-let v147 = s.named("$emb_Var", &[v145, v146])?;
+let v147 = s.construct(Constructor::eo__24emb_5fVar, &[v145, v146])?;
 let v148 = s.apply(v144, v147)?;
 let v149 = s.construct(Constructor::eo__2d, &[])?;
 let v150 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -86784,12 +86784,12 @@ let v151 = s.apply(v150, a0)?;
 let v152 = s.apply(v149, v151)?;
 let v153 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v154 = s.construct(Constructor::eo_Int, &[])?;
-let v155 = s.named("$emb_Var", &[v153, v154])?;
+let v155 = s.construct(Constructor::eo__24emb_5fVar, &[v153, v154])?;
 let v156 = s.apply(v152, v155)?;
 let v157 = s.apply(v148, v156)?;
 let v158 = s.apply(v142, v157)?;
 let v159 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
-let v160 = s.operator("list_singleton_elim", &[v159, v92])?;
+let v160 = s.builtin(EvalOp::ListSingletonElim, &[v159, v92])?;
 let v161 = s.apply(v158, v160)?;
 let v162 = s.apply(v141, v161)?;
 let v163 = s.apply(v140, v162)?;
@@ -86863,13 +86863,13 @@ let v41 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v42 = match s.boolean_value(a2, false)? {
 Some(true) => {
 let v43 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
-let v44 = s.operator("list_rev", &[v43, v2])?;
+let v44 = s.builtin(EvalOp::ListRev, &[v43, v2])?;
 v44
 }, Some(false) => {
 v2
 }, None => s.stuck(),
 };
-let v45 = s.operator("list_singleton_elim", &[v41, v42])?;
+let v45 = s.builtin(EvalOp::ListSingletonElim, &[v41, v42])?;
 let v46 = s.apply(v40, v45)?;
 let v47 = s.apply(v27, v46)?;
 let v48 = s.apply(v26, v47)?;
@@ -86907,7 +86907,7 @@ let v77 = s.apply(v75, v76)?;
 let v78 = s.apply(v71, v77)?;
 let v79 = s.apply(v67, v78)?;
 let v80 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
-let v81 = s.operator("list_singleton_elim", &[v80, v2])?;
+let v81 = s.builtin(EvalOp::ListSingletonElim, &[v80, v2])?;
 let v82 = s.apply(v79, v81)?;
 let v83 = s.apply(v66, v82)?;
 let v84 = s.apply(v65, v83)?;
@@ -87017,7 +87017,7 @@ let v72 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v73 = eo__24re_5funfold_5fpos_5fconcat_5frec(s, a0, v68, v71, v72)?;
 let v74 = eo__24pair_5fsecond(s, v73)?;
 let v75 = s.literal(Lit::Bool(true))?;
-let v76 = s.operator("eq", &[v74, v75])?;
+let v76 = s.builtin(EvalOp::Eq, &[v74, v75])?;
 let v77 = match s.boolean_value(v76, false)? {
 Some(true) => {
 let v78 = s.construct(Constructor::eo__3d, &[])?;
@@ -87192,7 +87192,7 @@ let v7 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v8 = s.construct(Constructor::eo__40quantifiers_5fskolemize, &[a1, a2])?;
 let v9 = s.apply(v7, v8)?;
 let v10 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v11 = s.operator("add", &[a2, v10])?;
+let v11 = s.builtin(EvalOp::Add, &[a2, v10])?;
 let v12 = eo__24mk_5fskolems(s, v2, a1, v11)?;
 let v13 = s.apply(v9, v12)?;
 return Ok(v13);
@@ -87736,7 +87736,7 @@ if v11 != v13 { break 'case0; }
 let v14 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v15 = eo__24mvar_5fmul_5fmvar(s, v5, v12)?;
 let v16 = s.apply(v14, v15)?;
-let v17 = s.operator("mul", &[v2, v9])?;
+let v17 = s.builtin(EvalOp::Mul, &[v2, v9])?;
 let v18 = s.apply(v16, v17)?;
 return Ok(v18);
 }
@@ -87781,7 +87781,7 @@ let v11 = f;
 let v12 = a;
 let v13 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if v11 != v13 { break 'case0; }
-let v14 = s.operator("cmp", &[v12, v5])?;
+let v14 = s.builtin(EvalOp::Compare, &[v12, v5])?;
 let v15 = match s.boolean_value(v14, false)? {
 Some(true) => {
 let v16 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
@@ -87931,12 +87931,12 @@ let v25 = f;
 let v26 = a;
 let v27 = s.construct(Constructor::eo__40_40mon, &[])?;
 if v25 != v27 { break 'case0; }
-let v28 = s.operator("eq", &[v12, v26])?;
+let v28 = s.builtin(EvalOp::Eq, &[v12, v26])?;
 let v29 = match s.boolean_value(v28, false)? {
 Some(true) => {
-let v30 = s.operator("add", &[v9, v23])?;
+let v30 = s.builtin(EvalOp::Add, &[v9, v23])?;
 let v31 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v32 = s.operator("eq", &[v30, v31])?;
+let v32 = s.builtin(EvalOp::Eq, &[v30, v31])?;
 let v33 = match s.boolean_value(v32, false)? {
 Some(true) => {
 let v34 = eo__24poly_5fadd(s, v2, v16)?;
@@ -87945,7 +87945,7 @@ v34
 let v35 = s.construct(Constructor::eo__40_40poly, &[])?;
 let v36 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v37 = s.apply(v36, v12)?;
-let v38 = s.operator("add", &[v9, v23])?;
+let v38 = s.builtin(EvalOp::Add, &[v9, v23])?;
 let v39 = s.apply(v37, v38)?;
 let v40 = s.apply(v35, v39)?;
 let v41 = eo__24poly_5fadd(s, v2, v16)?;
@@ -87955,7 +87955,7 @@ v42
 };
 v33
 }, Some(false) => {
-let v43 = s.operator("cmp", &[v26, v12])?;
+let v43 = s.builtin(EvalOp::Compare, &[v26, v12])?;
 let v44 = match s.boolean_value(v43, false)? {
 Some(true) => {
 let v45 = s.construct(Constructor::eo__40_40poly, &[])?;
@@ -88052,10 +88052,10 @@ let v13 = f;
 let v14 = a;
 let v15 = s.construct(Constructor::eo__40_40mon, &[])?;
 if v13 != v15 { break 'case1; }
-let v16 = s.operator("to_z", &[v11])?;
-let v17 = s.operator("zmod", &[v16, a1])?;
+let v16 = s.builtin(EvalOp::ToInt, &[v11])?;
+let v17 = s.builtin(EvalOp::IntMod, &[v16, a1])?;
 let v18 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v19 = s.operator("eq", &[v17, v18])?;
+let v19 = s.builtin(EvalOp::Eq, &[v17, v18])?;
 let v20 = match s.boolean_value(v19, false)? {
 Some(true) => {
 let v21 = eo__24poly_5fmod_5fcoeffs(s, v4, a1)?;
@@ -88064,9 +88064,9 @@ v21
 let v22 = s.construct(Constructor::eo__40_40poly, &[])?;
 let v23 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v24 = s.apply(v23, v14)?;
-let v25 = s.operator("to_z", &[v11])?;
-let v26 = s.operator("zmod", &[v25, a1])?;
-let v27 = s.operator("to_q", &[v26])?;
+let v25 = s.builtin(EvalOp::ToInt, &[v11])?;
+let v26 = s.builtin(EvalOp::IntMod, &[v25, a1])?;
+let v27 = s.builtin(EvalOp::ToRat, &[v26])?;
 let v28 = s.apply(v24, v27)?;
 let v29 = s.apply(v22, v28)?;
 let v30 = eo__24poly_5fmod_5fcoeffs(s, v4, a1)?;
@@ -88219,7 +88219,7 @@ if v13 != v15 { break 'case1; }
 let v16 = s.construct(Constructor::eo__40_40poly, &[])?;
 let v17 = s.construct(Constructor::eo__40_40mon, &[])?;
 let v18 = s.apply(v17, v14)?;
-let v19 = s.operator("neg", &[v11])?;
+let v19 = s.builtin(EvalOp::Neg, &[v11])?;
 let v20 = s.apply(v18, v19)?;
 let v21 = s.apply(v16, v20)?;
 let v22 = eo__24poly_5fneg(s, v4)?;
@@ -88283,10 +88283,10 @@ let v17 = s.apply(a0, v10)?;
 let v18 = s.apply(v17, v7)?;
 let v19 = s.apply(a0, v16)?;
 let v20 = s.apply(v19, v13)?;
-let v21 = s.operator("list_diff", &[a0, v18, v20])?;
+let v21 = s.builtin(EvalOp::ListDiff, &[a0, v18, v20])?;
 let v22 = s.apply(a0, v16)?;
 let v23 = s.apply(v22, v13)?;
-let v24 = s.operator("list_concat", &[a0, v21, v23])?;
+let v24 = s.builtin(EvalOp::ListConcat, &[a0, v21, v23])?;
 return Ok(v24);
 }
 'case4: {
@@ -88303,8 +88303,8 @@ let v30 = a;
 if v29 != a0 { break 'case4; }
 let v31 = s.apply(a0, v30)?;
 let v32 = s.apply(v31, v27)?;
-let v33 = s.operator("list_find", &[a0, v32, a2])?;
-let v34 = s.operator("is_neg", &[v33])?;
+let v33 = s.builtin(EvalOp::ListFind, &[a0, v32, a2])?;
+let v34 = s.builtin(EvalOp::IsNeg, &[v33])?;
 let v35 = match s.boolean_value(v34, false)? {
 Some(true) => {
 let v36 = s.apply(a0, a2)?;
@@ -88334,8 +88334,8 @@ let v47 = a;
 if v46 != a0 { break 'case5; }
 let v48 = s.apply(a0, v47)?;
 let v49 = s.apply(v48, v44)?;
-let v50 = s.operator("list_find", &[a0, v49, a1])?;
-let v51 = s.operator("is_neg", &[v50])?;
+let v50 = s.builtin(EvalOp::ListFind, &[a0, v49, a1])?;
+let v51 = s.builtin(EvalOp::IsNeg, &[v50])?;
 let v52 = match s.boolean_value(v51, false)? {
 Some(true) => {
 let v53 = s.apply(a0, a1)?;
@@ -88402,7 +88402,7 @@ let v17 = s.apply(v16, v2)?;
 let v18 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v19 = s.apply(v18, v12)?;
 let v20 = s.apply(v19, v9)?;
-let v21 = s.operator("list_concat", &[v14, v17, v20])?;
+let v21 = s.builtin(EvalOp::ListConcat, &[v14, v17, v20])?;
 return Ok(v21);
 }
 'case1: {
@@ -88554,7 +88554,7 @@ let v19 = a;
 let v20 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v18 != v20 { break 'case1; }
 let v21 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v22 = s.operator("list_singleton_intro", &[v21, v19])?;
+let v22 = s.builtin(EvalOp::ListSingletonIntro, &[v21, v19])?;
 let v23 = eo__24str_5fflatten(s, v22)?;
 let v24 = s.literal(Lit::Bool(true))?;
 let v25 = eo__24re_5fflatten(s, v24, v12)?;
@@ -88599,7 +88599,7 @@ let v46 = s.apply(v45, v37)?;
 let v47 = eo__24re_5fflatten(s, v43, v46)?;
 let v48 = s.literal(Lit::Bool(true))?;
 let v49 = eo__24re_5fflatten(s, v48, v30)?;
-let v50 = s.operator("list_concat", &[v42, v47, v49])?;
+let v50 = s.builtin(EvalOp::ListConcat, &[v42, v47, v49])?;
 return Ok(Some(v50));
 }
 Ok(None)
@@ -88643,7 +88643,7 @@ let v69 = a;
 let v70 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v68 != v70 { break 'case4; }
 let v71 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v72 = s.operator("list_singleton_intro", &[v71, v69])?;
+let v72 = s.builtin(EvalOp::ListSingletonIntro, &[v71, v69])?;
 let v73 = eo__24str_5fflatten(s, v72)?;
 let v74 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v75 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
@@ -88932,11 +88932,11 @@ let v7 = f;
 let v8 = a;
 let v9 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v7 != v9 { break 'case3; }
-let v10 = s.operator("is_str", &[v8])?;
+let v10 = s.builtin(EvalOp::IsStr, &[v8])?;
 let v11 = s.literal(Lit::Bool(true))?;
 let v12 = if v10 == v11 && !s.is_stuck(v10)? {
 let v13 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
-let v14 = s.operator("eq", &[v8, v13])?;
+let v14 = s.builtin(EvalOp::Eq, &[v8, v13])?;
 v14
 } else { s.stuck() };
 return Ok(Some(v12));
@@ -88992,7 +88992,7 @@ let v34 = s.construct(Constructor::eo_re_2eunion, &[])?;
 if v32 != v34 { break 'case6; }
 let v35 = eo__24re_5fnullable(s, v33)?;
 let v36 = eo__24re_5fnullable(s, v30)?;
-let v37 = s.operator("or", &[v35, v36])?;
+let v37 = s.builtin(EvalOp::Or, &[v35, v36])?;
 return Ok(Some(v37));
 }
 Ok(None)
@@ -89013,7 +89013,7 @@ let v44 = s.construct(Constructor::eo_re_2einter, &[])?;
 if v42 != v44 { break 'case7; }
 let v45 = eo__24re_5fnullable(s, v43)?;
 let v46 = eo__24re_5fnullable(s, v40)?;
-let v47 = s.operator("and", &[v45, v46])?;
+let v47 = s.builtin(EvalOp::And, &[v45, v46])?;
 return Ok(Some(v47));
 }
 Ok(None)
@@ -89034,7 +89034,7 @@ let v54 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 if v52 != v54 { break 'case8; }
 let v55 = eo__24re_5fnullable(s, v53)?;
 let v56 = eo__24re_5fnullable(s, v50)?;
-let v57 = s.operator("and", &[v55, v56])?;
+let v57 = s.builtin(EvalOp::And, &[v55, v56])?;
 return Ok(Some(v57));
 }
 Ok(None)
@@ -89049,7 +89049,7 @@ let v60 = a;
 let v61 = s.construct(Constructor::eo_re_2ecomp, &[])?;
 if v59 != v61 { break 'case9; }
 let v62 = eo__24re_5fnullable(s, v60)?;
-let v63 = s.operator("not", &[v62])?;
+let v63 = s.builtin(EvalOp::Not, &[v62])?;
 return Ok(Some(v63));
 }
 Ok(None)
@@ -89278,7 +89278,7 @@ let v10 = a;
 let v11 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v9 != v11 { break 'case0; }
 let v12 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v13 = s.operator("list_singleton_intro", &[v12, v10])?;
+let v13 = s.builtin(EvalOp::ListSingletonIntro, &[v12, v10])?;
 let v14 = eo__24re_5funflatten_5fstr(s, v13, v3)?;
 return Ok(v14);
 }
@@ -89325,7 +89325,7 @@ let v36 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 let v37 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v38 = s.literal(Lit::Bool(true))?;
 let v39 = eo__24re_5funflatten(s, v38, v34)?;
-let v40 = s.operator("list_singleton_elim", &[v37, v39])?;
+let v40 = s.builtin(EvalOp::ListSingletonElim, &[v37, v39])?;
 let v41 = s.apply(v36, v40)?;
 return Ok(v41);
 }
@@ -89348,7 +89348,7 @@ let v50 = s.construct(Constructor::eo_re_2einter, &[])?;
 let v51 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v52 = s.literal(Lit::Bool(true))?;
 let v53 = eo__24re_5funflatten(s, v52, v48)?;
-let v54 = s.operator("list_singleton_elim", &[v51, v53])?;
+let v54 = s.builtin(EvalOp::ListSingletonElim, &[v51, v53])?;
 let v55 = s.apply(v50, v54)?;
 let v56 = s.literal(Lit::Bool(false))?;
 let v57 = eo__24re_5funflatten(s, v56, v45)?;
@@ -89374,7 +89374,7 @@ let v67 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v68 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v69 = s.literal(Lit::Bool(true))?;
 let v70 = eo__24re_5funflatten(s, v69, v65)?;
-let v71 = s.operator("list_singleton_elim", &[v68, v70])?;
+let v71 = s.builtin(EvalOp::ListSingletonElim, &[v68, v70])?;
 let v72 = s.apply(v67, v71)?;
 let v73 = s.literal(Lit::Bool(false))?;
 let v74 = eo__24re_5funflatten(s, v73, v62)?;
@@ -89427,8 +89427,8 @@ let v10 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v8 != v10 { break 'case0; }
 let v11 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v12 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v13 = s.operator("list_singleton_intro", &[v12, v9])?;
-let v14 = s.operator("list_concat", &[v11, a0, v13])?;
+let v13 = s.builtin(EvalOp::ListSingletonIntro, &[v12, v9])?;
+let v14 = s.builtin(EvalOp::ListConcat, &[v11, a0, v13])?;
 let v15 = v14;
 let v16 = v2;
 a0 = v15;
@@ -89440,7 +89440,7 @@ let v17 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v18 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v19 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v20 = eo__24str_5fcollect(s, a0)?;
-let v21 = s.operator("list_singleton_elim", &[v19, v20])?;
+let v21 = s.builtin(EvalOp::ListSingletonElim, &[v19, v20])?;
 let v22 = s.apply(v18, v21)?;
 let v23 = s.apply(v17, v22)?;
 let v24 = s.literal(Lit::Bool(true))?;
@@ -89507,13 +89507,13 @@ let v21 = s.construct(Constructor::eo__40_40pair, &[])?;
 let v22 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v23 = s.apply(v22, v19)?;
 let v24 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v25 = s.operator("add", &[a3, v24])?;
+let v25 = s.builtin(EvalOp::Add, &[a3, v24])?;
 let v26 = eo__24re_5funfold_5fpos_5fconcat_5frec(s, a0, v12, a2, v25)?;
 let v27 = eo__24pair_5ffirst(s, v26)?;
 let v28 = s.apply(v23, v27)?;
 let v29 = s.apply(v21, v28)?;
 let v30 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v31 = s.operator("add", &[a3, v30])?;
+let v31 = s.builtin(EvalOp::Add, &[a3, v30])?;
 let v32 = eo__24re_5funfold_5fpos_5fconcat_5frec(s, a0, v12, a2, v31)?;
 let v33 = eo__24pair_5fsecond(s, v32)?;
 let v34 = s.apply(v29, v33)?;
@@ -89537,7 +89537,7 @@ let v43 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v44 = s.construct(Constructor::eo__40re_5funfold_5fpos_5fcomponent, &[a0, a2, a3])?;
 let v45 = s.apply(v43, v44)?;
 let v46 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v47 = s.operator("add", &[a3, v46])?;
+let v47 = s.builtin(EvalOp::Add, &[a3, v46])?;
 let v48 = eo__24re_5funfold_5fpos_5fconcat_5frec(s, a0, v37, a2, v47)?;
 let v49 = eo__24pair_5ffirst(s, v48)?;
 let v50 = s.apply(v45, v49)?;
@@ -89549,7 +89549,7 @@ let v55 = s.apply(v53, v54)?;
 let v56 = s.apply(v55, v40)?;
 let v57 = s.apply(v52, v56)?;
 let v58 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v59 = s.operator("add", &[a3, v58])?;
+let v59 = s.builtin(EvalOp::Add, &[a3, v58])?;
 let v60 = eo__24re_5funfold_5fpos_5fconcat_5frec(s, a0, v37, a2, v59)?;
 let v61 = eo__24pair_5fsecond(s, v60)?;
 let v62 = s.apply(v57, v61)?;
@@ -89680,63 +89680,63 @@ let v5 = a;
 let v6 = s.construct(Constructor::eo__3d, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = eo__24run_5fevaluate(s, v5)?;
-let v8 = s.operator("is_q", &[v7])?;
+let v8 = s.builtin(EvalOp::IsQ, &[v7])?;
 let v9 = eo__24run_5fevaluate(s, v2)?;
-let v10 = s.operator("is_q", &[v9])?;
-let v11 = s.operator("and", &[v8, v10])?;
+let v10 = s.builtin(EvalOp::IsQ, &[v9])?;
+let v11 = s.builtin(EvalOp::And, &[v8, v10])?;
 let v12 = match s.boolean_value(v11, false)? {
 Some(true) => {
 let v13 = eo__24run_5fevaluate(s, v5)?;
 let v14 = eo__24run_5fevaluate(s, v2)?;
-let v15 = s.operator("eq", &[v13, v14])?;
+let v15 = s.builtin(EvalOp::Eq, &[v13, v14])?;
 v15
 }, Some(false) => {
 let v16 = eo__24run_5fevaluate(s, v5)?;
-let v17 = s.operator("is_z", &[v16])?;
+let v17 = s.builtin(EvalOp::IsZ, &[v16])?;
 let v18 = eo__24run_5fevaluate(s, v2)?;
-let v19 = s.operator("is_z", &[v18])?;
-let v20 = s.operator("and", &[v17, v19])?;
+let v19 = s.builtin(EvalOp::IsZ, &[v18])?;
+let v20 = s.builtin(EvalOp::And, &[v17, v19])?;
 let v21 = match s.boolean_value(v20, false)? {
 Some(true) => {
 let v22 = eo__24run_5fevaluate(s, v5)?;
 let v23 = eo__24run_5fevaluate(s, v2)?;
-let v24 = s.operator("eq", &[v22, v23])?;
+let v24 = s.builtin(EvalOp::Eq, &[v22, v23])?;
 v24
 }, Some(false) => {
 let v25 = eo__24run_5fevaluate(s, v5)?;
-let v26 = s.operator("is_bin", &[v25])?;
+let v26 = s.builtin(EvalOp::IsBin, &[v25])?;
 let v27 = eo__24run_5fevaluate(s, v2)?;
-let v28 = s.operator("is_bin", &[v27])?;
-let v29 = s.operator("and", &[v26, v28])?;
+let v28 = s.builtin(EvalOp::IsBin, &[v27])?;
+let v29 = s.builtin(EvalOp::And, &[v26, v28])?;
 let v30 = match s.boolean_value(v29, false)? {
 Some(true) => {
 let v31 = eo__24run_5fevaluate(s, v5)?;
 let v32 = eo__24run_5fevaluate(s, v2)?;
-let v33 = s.operator("eq", &[v31, v32])?;
+let v33 = s.builtin(EvalOp::Eq, &[v31, v32])?;
 v33
 }, Some(false) => {
 let v34 = eo__24run_5fevaluate(s, v5)?;
-let v35 = s.operator("is_str", &[v34])?;
+let v35 = s.builtin(EvalOp::IsStr, &[v34])?;
 let v36 = eo__24run_5fevaluate(s, v2)?;
-let v37 = s.operator("is_str", &[v36])?;
-let v38 = s.operator("and", &[v35, v37])?;
+let v37 = s.builtin(EvalOp::IsStr, &[v36])?;
+let v38 = s.builtin(EvalOp::And, &[v35, v37])?;
 let v39 = match s.boolean_value(v38, false)? {
 Some(true) => {
 let v40 = eo__24run_5fevaluate(s, v5)?;
 let v41 = eo__24run_5fevaluate(s, v2)?;
-let v42 = s.operator("eq", &[v40, v41])?;
+let v42 = s.builtin(EvalOp::Eq, &[v40, v41])?;
 v42
 }, Some(false) => {
 let v43 = eo__24run_5fevaluate(s, v5)?;
-let v44 = s.operator("is_bool", &[v43])?;
+let v44 = s.builtin(EvalOp::IsBool, &[v43])?;
 let v45 = eo__24run_5fevaluate(s, v2)?;
-let v46 = s.operator("is_bool", &[v45])?;
-let v47 = s.operator("and", &[v44, v46])?;
+let v46 = s.builtin(EvalOp::IsBool, &[v45])?;
+let v47 = s.builtin(EvalOp::And, &[v44, v46])?;
 let v48 = match s.boolean_value(v47, false)? {
 Some(true) => {
 let v49 = eo__24run_5fevaluate(s, v5)?;
 let v50 = eo__24run_5fevaluate(s, v2)?;
-let v51 = s.operator("eq", &[v49, v50])?;
+let v51 = s.builtin(EvalOp::Eq, &[v49, v50])?;
 v51
 }, Some(false) => {
 let v52 = s.construct(Constructor::eo__3d, &[])?;
@@ -89773,7 +89773,7 @@ let v59 = a;
 let v60 = s.construct(Constructor::eo_not, &[])?;
 if v58 != v60 { break 'case1; }
 let v61 = eo__24run_5fevaluate(s, v59)?;
-let v62 = s.operator("not", &[v61])?;
+let v62 = s.builtin(EvalOp::Not, &[v61])?;
 return Ok(Some(v62));
 }
 Ok(None)
@@ -89827,7 +89827,7 @@ let v83 = s.construct(Constructor::eo_or, &[])?;
 if v81 != v83 { break 'case3; }
 let v84 = eo__24run_5fevaluate(s, v82)?;
 let v85 = eo__24run_5fevaluate(s, v79)?;
-let v86 = s.operator("or", &[v84, v85])?;
+let v86 = s.builtin(EvalOp::Or, &[v84, v85])?;
 return Ok(Some(v86));
 }
 Ok(None)
@@ -89847,9 +89847,9 @@ let v92 = a;
 let v93 = s.construct(Constructor::eo__3d_3e, &[])?;
 if v91 != v93 { break 'case4; }
 let v94 = eo__24run_5fevaluate(s, v92)?;
-let v95 = s.operator("not", &[v94])?;
+let v95 = s.builtin(EvalOp::Not, &[v94])?;
 let v96 = eo__24run_5fevaluate(s, v89)?;
-let v97 = s.operator("or", &[v95, v96])?;
+let v97 = s.builtin(EvalOp::Or, &[v95, v96])?;
 return Ok(Some(v97));
 }
 Ok(None)
@@ -89870,7 +89870,7 @@ let v104 = s.construct(Constructor::eo_and, &[])?;
 if v102 != v104 { break 'case5; }
 let v105 = eo__24run_5fevaluate(s, v103)?;
 let v106 = eo__24run_5fevaluate(s, v100)?;
-let v107 = s.operator("and", &[v105, v106])?;
+let v107 = s.builtin(EvalOp::And, &[v105, v106])?;
 return Ok(Some(v107));
 }
 Ok(None)
@@ -89891,7 +89891,7 @@ let v114 = s.construct(Constructor::eo_xor, &[])?;
 if v112 != v114 { break 'case6; }
 let v115 = eo__24run_5fevaluate(s, v113)?;
 let v116 = eo__24run_5fevaluate(s, v110)?;
-let v117 = s.operator("xor", &[v115, v116])?;
+let v117 = s.builtin(EvalOp::Xor, &[v115, v116])?;
 return Ok(Some(v117));
 }
 Ok(None)
@@ -89912,9 +89912,9 @@ let v124 = s.construct(Constructor::eo__3c, &[])?;
 if v122 != v124 { break 'case7; }
 let v125 = eo__24run_5fevaluate(s, v123)?;
 let v126 = eo__24run_5fevaluate(s, v120)?;
-let v127 = s.operator("neg", &[v126])?;
-let v128 = s.operator("add", &[v125, v127])?;
-let v129 = s.operator("is_neg", &[v128])?;
+let v127 = s.builtin(EvalOp::Neg, &[v126])?;
+let v128 = s.builtin(EvalOp::Add, &[v125, v127])?;
+let v129 = s.builtin(EvalOp::IsNeg, &[v128])?;
 return Ok(Some(v129));
 }
 Ok(None)
@@ -89935,17 +89935,17 @@ let v136 = s.construct(Constructor::eo__3c_3d, &[])?;
 if v134 != v136 { break 'case8; }
 let v137 = eo__24run_5fevaluate(s, v135)?;
 let v138 = eo__24run_5fevaluate(s, v132)?;
-let v139 = s.operator("neg", &[v138])?;
-let v140 = s.operator("add", &[v137, v139])?;
-let v141 = s.operator("is_neg", &[v140])?;
+let v139 = s.builtin(EvalOp::Neg, &[v138])?;
+let v140 = s.builtin(EvalOp::Add, &[v137, v139])?;
+let v141 = s.builtin(EvalOp::IsNeg, &[v140])?;
 let v142 = eo__24run_5fevaluate(s, v135)?;
 let v143 = eo__24run_5fevaluate(s, v132)?;
-let v144 = s.operator("neg", &[v143])?;
-let v145 = s.operator("add", &[v142, v144])?;
-let v146 = s.operator("to_q", &[v145])?;
+let v144 = s.builtin(EvalOp::Neg, &[v143])?;
+let v145 = s.builtin(EvalOp::Add, &[v142, v144])?;
+let v146 = s.builtin(EvalOp::ToRat, &[v145])?;
 let v147 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v148 = s.operator("eq", &[v146, v147])?;
-let v149 = s.operator("or", &[v141, v148])?;
+let v148 = s.builtin(EvalOp::Eq, &[v146, v147])?;
+let v149 = s.builtin(EvalOp::Or, &[v141, v148])?;
 return Ok(Some(v149));
 }
 Ok(None)
@@ -89966,9 +89966,9 @@ let v156 = s.construct(Constructor::eo__3e, &[])?;
 if v154 != v156 { break 'case9; }
 let v157 = eo__24run_5fevaluate(s, v152)?;
 let v158 = eo__24run_5fevaluate(s, v155)?;
-let v159 = s.operator("neg", &[v158])?;
-let v160 = s.operator("add", &[v157, v159])?;
-let v161 = s.operator("is_neg", &[v160])?;
+let v159 = s.builtin(EvalOp::Neg, &[v158])?;
+let v160 = s.builtin(EvalOp::Add, &[v157, v159])?;
+let v161 = s.builtin(EvalOp::IsNeg, &[v160])?;
 return Ok(Some(v161));
 }
 Ok(None)
@@ -89989,17 +89989,17 @@ let v168 = s.construct(Constructor::eo__3e_3d, &[])?;
 if v166 != v168 { break 'case10; }
 let v169 = eo__24run_5fevaluate(s, v164)?;
 let v170 = eo__24run_5fevaluate(s, v167)?;
-let v171 = s.operator("neg", &[v170])?;
-let v172 = s.operator("add", &[v169, v171])?;
-let v173 = s.operator("is_neg", &[v172])?;
+let v171 = s.builtin(EvalOp::Neg, &[v170])?;
+let v172 = s.builtin(EvalOp::Add, &[v169, v171])?;
+let v173 = s.builtin(EvalOp::IsNeg, &[v172])?;
 let v174 = eo__24run_5fevaluate(s, v164)?;
 let v175 = eo__24run_5fevaluate(s, v167)?;
-let v176 = s.operator("neg", &[v175])?;
-let v177 = s.operator("add", &[v174, v176])?;
-let v178 = s.operator("to_q", &[v177])?;
+let v176 = s.builtin(EvalOp::Neg, &[v175])?;
+let v177 = s.builtin(EvalOp::Add, &[v174, v176])?;
+let v178 = s.builtin(EvalOp::ToRat, &[v177])?;
 let v179 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v180 = s.operator("eq", &[v178, v179])?;
-let v181 = s.operator("or", &[v173, v180])?;
+let v180 = s.builtin(EvalOp::Eq, &[v178, v179])?;
+let v181 = s.builtin(EvalOp::Or, &[v173, v180])?;
 return Ok(Some(v181));
 }
 Ok(None)
@@ -90020,7 +90020,7 @@ let v188 = s.construct(Constructor::eo__2b, &[])?;
 if v186 != v188 { break 'case11; }
 let v189 = eo__24run_5fevaluate(s, v187)?;
 let v190 = eo__24run_5fevaluate(s, v184)?;
-let v191 = s.operator("add", &[v189, v190])?;
+let v191 = s.builtin(EvalOp::Add, &[v189, v190])?;
 return Ok(Some(v191));
 }
 Ok(None)
@@ -90041,8 +90041,8 @@ let v198 = s.construct(Constructor::eo__2d, &[])?;
 if v196 != v198 { break 'case12; }
 let v199 = eo__24run_5fevaluate(s, v197)?;
 let v200 = eo__24run_5fevaluate(s, v194)?;
-let v201 = s.operator("neg", &[v200])?;
-let v202 = s.operator("add", &[v199, v201])?;
+let v201 = s.builtin(EvalOp::Neg, &[v200])?;
+let v202 = s.builtin(EvalOp::Add, &[v199, v201])?;
 return Ok(Some(v202));
 }
 Ok(None)
@@ -90063,7 +90063,7 @@ let v209 = s.construct(Constructor::eo__2a, &[])?;
 if v207 != v209 { break 'case13; }
 let v210 = eo__24run_5fevaluate(s, v208)?;
 let v211 = eo__24run_5fevaluate(s, v205)?;
-let v212 = s.operator("mul", &[v210, v211])?;
+let v212 = s.builtin(EvalOp::Mul, &[v210, v211])?;
 return Ok(Some(v212));
 }
 Ok(None)
@@ -90078,7 +90078,7 @@ let v215 = a;
 let v216 = s.construct(Constructor::eo__24eoo_5f_2d_2e2, &[])?;
 if v214 != v216 { break 'case14; }
 let v217 = eo__24run_5fevaluate(s, v215)?;
-let v218 = s.operator("neg", &[v217])?;
+let v218 = s.builtin(EvalOp::Neg, &[v217])?;
 return Ok(Some(v218));
 }
 Ok(None)
@@ -90098,10 +90098,10 @@ let v224 = a;
 let v225 = s.construct(Constructor::eo__2f, &[])?;
 if v223 != v225 { break 'case15; }
 let v226 = eo__24run_5fevaluate(s, v224)?;
-let v227 = s.operator("to_q", &[v226])?;
+let v227 = s.builtin(EvalOp::ToRat, &[v226])?;
 let v228 = eo__24run_5fevaluate(s, v221)?;
-let v229 = s.operator("to_q", &[v228])?;
-let v230 = s.operator("qdiv", &[v227, v229])?;
+let v229 = s.builtin(EvalOp::ToRat, &[v228])?;
+let v230 = s.builtin(EvalOp::RatDiv, &[v227, v229])?;
 return Ok(Some(v230));
 }
 Ok(None)
@@ -90121,19 +90121,19 @@ let v236 = a;
 let v237 = s.construct(Constructor::eo__2f_5ftotal, &[])?;
 if v235 != v237 { break 'case16; }
 let v238 = eo__24run_5fevaluate(s, v233)?;
-let v239 = s.operator("to_q", &[v238])?;
+let v239 = s.builtin(EvalOp::ToRat, &[v238])?;
 let v240 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
-let v241 = s.operator("eq", &[v239, v240])?;
+let v241 = s.builtin(EvalOp::Eq, &[v239, v240])?;
 let v242 = match s.boolean_value(v241, false)? {
 Some(true) => {
 let v243 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
 v243
 }, Some(false) => {
 let v244 = eo__24run_5fevaluate(s, v236)?;
-let v245 = s.operator("to_q", &[v244])?;
+let v245 = s.builtin(EvalOp::ToRat, &[v244])?;
 let v246 = eo__24run_5fevaluate(s, v233)?;
-let v247 = s.operator("to_q", &[v246])?;
-let v248 = s.operator("qdiv", &[v245, v247])?;
+let v247 = s.builtin(EvalOp::ToRat, &[v246])?;
+let v248 = s.builtin(EvalOp::RatDiv, &[v245, v247])?;
 v248
 }, None => s.stuck(),
 };
@@ -90157,7 +90157,7 @@ let v255 = s.construct(Constructor::eo_div, &[])?;
 if v253 != v255 { break 'case17; }
 let v256 = eo__24run_5fevaluate(s, v254)?;
 let v257 = eo__24run_5fevaluate(s, v251)?;
-let v258 = s.operator("zdiv", &[v256, v257])?;
+let v258 = s.builtin(EvalOp::IntDiv, &[v256, v257])?;
 return Ok(Some(v258));
 }
 Ok(None)
@@ -90178,7 +90178,7 @@ let v265 = s.construct(Constructor::eo_div_5ftotal, &[])?;
 if v263 != v265 { break 'case18; }
 let v266 = eo__24run_5fevaluate(s, v261)?;
 let v267 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v268 = s.operator("eq", &[v266, v267])?;
+let v268 = s.builtin(EvalOp::Eq, &[v266, v267])?;
 let v269 = match s.boolean_value(v268, false)? {
 Some(true) => {
 let v270 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -90186,7 +90186,7 @@ v270
 }, Some(false) => {
 let v271 = eo__24run_5fevaluate(s, v264)?;
 let v272 = eo__24run_5fevaluate(s, v261)?;
-let v273 = s.operator("zdiv", &[v271, v272])?;
+let v273 = s.builtin(EvalOp::IntDiv, &[v271, v272])?;
 v273
 }, None => s.stuck(),
 };
@@ -90210,7 +90210,7 @@ let v280 = s.construct(Constructor::eo_mod, &[])?;
 if v278 != v280 { break 'case19; }
 let v281 = eo__24run_5fevaluate(s, v279)?;
 let v282 = eo__24run_5fevaluate(s, v276)?;
-let v283 = s.operator("zmod", &[v281, v282])?;
+let v283 = s.builtin(EvalOp::IntMod, &[v281, v282])?;
 return Ok(Some(v283));
 }
 Ok(None)
@@ -90231,7 +90231,7 @@ let v290 = s.construct(Constructor::eo_mod_5ftotal, &[])?;
 if v288 != v290 { break 'case20; }
 let v291 = eo__24run_5fevaluate(s, v286)?;
 let v292 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v293 = s.operator("eq", &[v291, v292])?;
+let v293 = s.builtin(EvalOp::Eq, &[v291, v292])?;
 let v294 = match s.boolean_value(v293, false)? {
 Some(true) => {
 let v295 = eo__24run_5fevaluate(s, v289)?;
@@ -90239,7 +90239,7 @@ v295
 }, Some(false) => {
 let v296 = eo__24run_5fevaluate(s, v289)?;
 let v297 = eo__24run_5fevaluate(s, v286)?;
-let v298 = s.operator("zmod", &[v296, v297])?;
+let v298 = s.builtin(EvalOp::IntMod, &[v296, v297])?;
 v298
 }, None => s.stuck(),
 };
@@ -90257,7 +90257,7 @@ let v301 = a;
 let v302 = s.construct(Constructor::eo_to_5freal, &[])?;
 if v300 != v302 { break 'case21; }
 let v303 = eo__24run_5fevaluate(s, v301)?;
-let v304 = s.operator("to_q", &[v303])?;
+let v304 = s.builtin(EvalOp::ToRat, &[v303])?;
 return Ok(Some(v304));
 }
 Ok(None)
@@ -90272,7 +90272,7 @@ let v307 = a;
 let v308 = s.construct(Constructor::eo_to_5fint, &[])?;
 if v306 != v308 { break 'case22; }
 let v309 = eo__24run_5fevaluate(s, v307)?;
-let v310 = s.operator("to_z", &[v309])?;
+let v310 = s.builtin(EvalOp::ToInt, &[v309])?;
 return Ok(Some(v310));
 }
 Ok(None)
@@ -90287,11 +90287,11 @@ let v313 = a;
 let v314 = s.construct(Constructor::eo_is_5fint, &[])?;
 if v312 != v314 { break 'case23; }
 let v315 = eo__24run_5fevaluate(s, v313)?;
-let v316 = s.operator("to_z", &[v315])?;
-let v317 = s.operator("to_q", &[v316])?;
+let v316 = s.builtin(EvalOp::ToInt, &[v315])?;
+let v317 = s.builtin(EvalOp::ToRat, &[v316])?;
 let v318 = eo__24run_5fevaluate(s, v313)?;
-let v319 = s.operator("to_q", &[v318])?;
-let v320 = s.operator("eq", &[v317, v319])?;
+let v319 = s.builtin(EvalOp::ToRat, &[v318])?;
+let v320 = s.builtin(EvalOp::Eq, &[v317, v319])?;
 return Ok(Some(v320));
 }
 Ok(None)
@@ -90306,11 +90306,11 @@ let v323 = a;
 let v324 = s.construct(Constructor::eo_abs, &[])?;
 if v322 != v324 { break 'case24; }
 let v325 = eo__24run_5fevaluate(s, v323)?;
-let v326 = s.operator("is_neg", &[v325])?;
+let v326 = s.builtin(EvalOp::IsNeg, &[v325])?;
 let v327 = match s.boolean_value(v326, false)? {
 Some(true) => {
 let v328 = eo__24run_5fevaluate(s, v323)?;
-let v329 = s.operator("neg", &[v328])?;
+let v329 = s.builtin(EvalOp::Neg, &[v328])?;
 v329
 }, Some(false) => {
 let v330 = eo__24run_5fevaluate(s, v323)?;
@@ -90331,11 +90331,11 @@ let v333 = a;
 let v334 = s.construct(Constructor::eo_int_2elog2, &[])?;
 if v332 != v334 { break 'case25; }
 let v335 = eo__24run_5fevaluate(s, v333)?;
-let v336 = s.operator("is_z", &[v335])?;
+let v336 = s.builtin(EvalOp::IsZ, &[v335])?;
 let v337 = match s.boolean_value(v336, false)? {
 Some(true) => {
 let v338 = eo__24run_5fevaluate(s, v333)?;
-let v339 = s.operator("is_neg", &[v338])?;
+let v339 = s.builtin(EvalOp::IsNeg, &[v338])?;
 let v340 = match s.boolean_value(v339, false)? {
 Some(true) => {
 let v341 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -90343,7 +90343,7 @@ v341
 }, Some(false) => {
 let v342 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v343 = eo__24run_5fevaluate(s, v333)?;
-let v344 = s.operator("log", &[v342, v343])?;
+let v344 = s.builtin(EvalOp::Log, &[v342, v343])?;
 v344
 }, None => s.stuck(),
 };
@@ -90369,11 +90369,11 @@ let v350 = a;
 let v351 = s.construct(Constructor::eo_int_2epow2, &[])?;
 if v349 != v351 { break 'case26; }
 let v352 = eo__24run_5fevaluate(s, v350)?;
-let v353 = s.operator("is_z", &[v352])?;
+let v353 = s.builtin(EvalOp::IsZ, &[v352])?;
 let v354 = match s.boolean_value(v353, false)? {
 Some(true) => {
 let v355 = eo__24run_5fevaluate(s, v350)?;
-let v356 = s.operator("is_neg", &[v355])?;
+let v356 = s.builtin(EvalOp::IsNeg, &[v355])?;
 let v357 = match s.boolean_value(v356, false)? {
 Some(true) => {
 let v358 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -90381,7 +90381,7 @@ v358
 }, Some(false) => {
 let v359 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v360 = eo__24run_5fevaluate(s, v350)?;
-let v361 = s.operator("pow", &[v359, v360])?;
+let v361 = s.builtin(EvalOp::Pow, &[v359, v360])?;
 v361
 }, None => s.stuck(),
 };
@@ -90407,11 +90407,11 @@ let v367 = a;
 let v368 = s.construct(Constructor::eo_int_2eispow2, &[])?;
 if v366 != v368 { break 'case27; }
 let v369 = eo__24run_5fevaluate(s, v367)?;
-let v370 = s.operator("is_z", &[v369])?;
+let v370 = s.builtin(EvalOp::IsZ, &[v369])?;
 let v371 = match s.boolean_value(v370, false)? {
 Some(true) => {
 let v372 = eo__24run_5fevaluate(s, v367)?;
-let v373 = s.operator("is_neg", &[v372])?;
+let v373 = s.builtin(EvalOp::IsNeg, &[v372])?;
 let v374 = match s.boolean_value(v373, false)? {
 Some(true) => {
 let v375 = s.literal(Lit::Bool(false))?;
@@ -90420,11 +90420,11 @@ v375
 let v376 = eo__24run_5fevaluate(s, v367)?;
 let v377 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v378 = eo__24run_5fevaluate(s, v367)?;
-let v379 = s.operator("is_z", &[v378])?;
+let v379 = s.builtin(EvalOp::IsZ, &[v378])?;
 let v380 = match s.boolean_value(v379, false)? {
 Some(true) => {
 let v381 = eo__24run_5fevaluate(s, v367)?;
-let v382 = s.operator("is_neg", &[v381])?;
+let v382 = s.builtin(EvalOp::IsNeg, &[v381])?;
 let v383 = match s.boolean_value(v382, false)? {
 Some(true) => {
 let v384 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -90432,7 +90432,7 @@ v384
 }, Some(false) => {
 let v385 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v386 = eo__24run_5fevaluate(s, v367)?;
-let v387 = s.operator("log", &[v385, v386])?;
+let v387 = s.builtin(EvalOp::Log, &[v385, v386])?;
 v387
 }, None => s.stuck(),
 };
@@ -90444,8 +90444,8 @@ let v390 = s.apply(v388, v389)?;
 v390
 }, None => s.stuck(),
 };
-let v391 = s.operator("pow", &[v377, v380])?;
-let v392 = s.operator("eq", &[v376, v391])?;
+let v391 = s.builtin(EvalOp::Pow, &[v377, v380])?;
+let v392 = s.builtin(EvalOp::Eq, &[v376, v391])?;
 v392
 }, None => s.stuck(),
 };
@@ -90477,7 +90477,7 @@ let v402 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v400 != v402 { break 'case28; }
 let v403 = eo__24run_5fevaluate(s, v401)?;
 let v404 = eo__24run_5fevaluate(s, v398)?;
-let v405 = s.operator("concat", &[v403, v404])?;
+let v405 = s.builtin(EvalOp::Concat, &[v403, v404])?;
 return Ok(Some(v405));
 }
 Ok(None)
@@ -90492,7 +90492,7 @@ let v408 = a;
 let v409 = s.construct(Constructor::eo_str_2elen, &[])?;
 if v407 != v409 { break 'case29; }
 let v410 = eo__24run_5fevaluate(s, v408)?;
-let v411 = s.operator("len", &[v410])?;
+let v411 = s.builtin(EvalOp::Length, &[v410])?;
 return Ok(Some(v411));
 }
 Ok(None)
@@ -90520,10 +90520,10 @@ let v422 = eo__24run_5fevaluate(s, v420)?;
 let v423 = eo__24run_5fevaluate(s, v417)?;
 let v424 = eo__24run_5fevaluate(s, v417)?;
 let v425 = eo__24run_5fevaluate(s, v414)?;
-let v426 = s.operator("add", &[v424, v425])?;
+let v426 = s.builtin(EvalOp::Add, &[v424, v425])?;
 let v427 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v428 = s.operator("add", &[v426, v427])?;
-let v429 = s.operator("extract", &[v422, v423, v428])?;
+let v428 = s.builtin(EvalOp::Add, &[v426, v427])?;
+let v429 = s.builtin(EvalOp::Extract, &[v422, v423, v428])?;
 return Ok(Some(v429));
 }
 Ok(None)
@@ -90545,7 +90545,7 @@ if v434 != v436 { break 'case31; }
 let v437 = eo__24run_5fevaluate(s, v435)?;
 let v438 = eo__24run_5fevaluate(s, v432)?;
 let v439 = eo__24run_5fevaluate(s, v432)?;
-let v440 = s.operator("extract", &[v437, v438, v439])?;
+let v440 = s.builtin(EvalOp::Extract, &[v437, v438, v439])?;
 return Ok(Some(v440));
 }
 Ok(None)
@@ -90566,9 +90566,9 @@ let v447 = s.construct(Constructor::eo_str_2econtains, &[])?;
 if v445 != v447 { break 'case32; }
 let v448 = eo__24run_5fevaluate(s, v446)?;
 let v449 = eo__24run_5fevaluate(s, v443)?;
-let v450 = s.operator("find", &[v448, v449])?;
-let v451 = s.operator("is_neg", &[v450])?;
-let v452 = s.operator("not", &[v451])?;
+let v450 = s.builtin(EvalOp::Find, &[v448, v449])?;
+let v451 = s.builtin(EvalOp::IsNeg, &[v450])?;
+let v452 = s.builtin(EvalOp::Not, &[v451])?;
 return Ok(Some(v452));
 }
 Ok(None)
@@ -90593,11 +90593,11 @@ let v461 = a;
 let v462 = s.construct(Constructor::eo_str_2ereplace, &[])?;
 if v460 != v462 { break 'case33; }
 let v463 = eo__24run_5fevaluate(s, v461)?;
-let v464 = s.operator("to_str", &[v463])?;
+let v464 = s.builtin(EvalOp::ToString, &[v463])?;
 let v465 = eo__24run_5fevaluate(s, v458)?;
-let v466 = s.operator("to_str", &[v465])?;
-let v467 = s.operator("find", &[v464, v466])?;
-let v468 = s.operator("is_neg", &[v467])?;
+let v466 = s.builtin(EvalOp::ToString, &[v465])?;
+let v467 = s.builtin(EvalOp::Find, &[v464, v466])?;
+let v468 = s.builtin(EvalOp::IsNeg, &[v467])?;
 let v469 = match s.boolean_value(v468, false)? {
 Some(true) => {
 let v470 = eo__24run_5fevaluate(s, v461)?;
@@ -90606,28 +90606,28 @@ v470
 let v471 = eo__24run_5fevaluate(s, v461)?;
 let v472 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v473 = eo__24run_5fevaluate(s, v461)?;
-let v474 = s.operator("to_str", &[v473])?;
+let v474 = s.builtin(EvalOp::ToString, &[v473])?;
 let v475 = eo__24run_5fevaluate(s, v458)?;
-let v476 = s.operator("to_str", &[v475])?;
-let v477 = s.operator("find", &[v474, v476])?;
+let v476 = s.builtin(EvalOp::ToString, &[v475])?;
+let v477 = s.builtin(EvalOp::Find, &[v474, v476])?;
 let v478 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v479 = s.operator("add", &[v477, v478])?;
-let v480 = s.operator("extract", &[v471, v472, v479])?;
+let v479 = s.builtin(EvalOp::Add, &[v477, v478])?;
+let v480 = s.builtin(EvalOp::Extract, &[v471, v472, v479])?;
 let v481 = eo__24run_5fevaluate(s, v455)?;
-let v482 = s.operator("concat", &[v480, v481])?;
+let v482 = s.builtin(EvalOp::Concat, &[v480, v481])?;
 let v483 = eo__24run_5fevaluate(s, v461)?;
 let v484 = eo__24run_5fevaluate(s, v461)?;
-let v485 = s.operator("to_str", &[v484])?;
+let v485 = s.builtin(EvalOp::ToString, &[v484])?;
 let v486 = eo__24run_5fevaluate(s, v458)?;
-let v487 = s.operator("to_str", &[v486])?;
-let v488 = s.operator("find", &[v485, v487])?;
+let v487 = s.builtin(EvalOp::ToString, &[v486])?;
+let v488 = s.builtin(EvalOp::Find, &[v485, v487])?;
 let v489 = eo__24run_5fevaluate(s, v458)?;
-let v490 = s.operator("len", &[v489])?;
-let v491 = s.operator("add", &[v488, v490])?;
+let v490 = s.builtin(EvalOp::Length, &[v489])?;
+let v491 = s.builtin(EvalOp::Add, &[v488, v490])?;
 let v492 = eo__24run_5fevaluate(s, v461)?;
-let v493 = s.operator("len", &[v492])?;
-let v494 = s.operator("extract", &[v483, v491, v493])?;
-let v495 = s.operator("concat", &[v482, v494])?;
+let v493 = s.builtin(EvalOp::Length, &[v492])?;
+let v494 = s.builtin(EvalOp::Extract, &[v483, v491, v493])?;
+let v495 = s.builtin(EvalOp::Concat, &[v482, v494])?;
 v495
 }, None => s.stuck(),
 };
@@ -90654,27 +90654,27 @@ let v503 = f;
 let v504 = a;
 let v505 = s.construct(Constructor::eo_str_2ereplace_5fall, &[])?;
 if v503 != v505 { break 'case34; }
-let v506 = s.operator("is_str", &[v504])?;
-let v507 = s.operator("is_str", &[v501])?;
-let v508 = s.operator("and", &[v506, v507])?;
-let v509 = s.operator("is_str", &[v498])?;
-let v510 = s.operator("and", &[v508, v509])?;
+let v506 = s.builtin(EvalOp::IsStr, &[v504])?;
+let v507 = s.builtin(EvalOp::IsStr, &[v501])?;
+let v508 = s.builtin(EvalOp::And, &[v506, v507])?;
+let v509 = s.builtin(EvalOp::IsStr, &[v498])?;
+let v510 = s.builtin(EvalOp::And, &[v508, v509])?;
 let v511 = match s.boolean_value(v510, false)? {
 Some(true) => {
 let v512 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
-let v513 = s.operator("eq", &[v501, v512])?;
+let v513 = s.builtin(EvalOp::Eq, &[v501, v512])?;
 let v514 = match s.boolean_value(v513, false)? {
 Some(true) => {
 v504
 }, Some(false) => {
 let v515 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v516 = s.operator("list_singleton_intro", &[v515, v504])?;
+let v516 = s.builtin(EvalOp::ListSingletonIntro, &[v515, v504])?;
 let v517 = eo__24str_5fflatten(s, v516)?;
 let v518 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v519 = s.operator("list_singleton_intro", &[v518, v501])?;
+let v519 = s.builtin(EvalOp::ListSingletonIntro, &[v518, v501])?;
 let v520 = eo__24str_5fflatten(s, v519)?;
 let v521 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v522 = s.operator("len", &[v501])?;
+let v522 = s.builtin(EvalOp::Length, &[v501])?;
 let v523 = eo__24str_5feval_5freplace_5fall_5frec(s, v517, v520, v498, v521, v522)?;
 v523
 }, None => s.stuck(),
@@ -90710,11 +90710,11 @@ let v535 = eo__24run_5fevaluate(s, v533)?;
 let v536 = eo__24run_5fevaluate(s, v530)?;
 let v537 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v538 = eo__24run_5fevaluate(s, v533)?;
-let v539 = s.operator("len", &[v538])?;
+let v539 = s.builtin(EvalOp::Length, &[v538])?;
 let v540 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v541 = s.operator("add", &[v539, v540])?;
-let v542 = s.operator("extract", &[v536, v537, v541])?;
-let v543 = s.operator("eq", &[v535, v542])?;
+let v541 = s.builtin(EvalOp::Add, &[v539, v540])?;
+let v542 = s.builtin(EvalOp::Extract, &[v536, v537, v541])?;
+let v543 = s.builtin(EvalOp::Eq, &[v535, v542])?;
 return Ok(Some(v543));
 }
 Ok(None)
@@ -90736,17 +90736,17 @@ if v548 != v550 { break 'case36; }
 let v551 = eo__24run_5fevaluate(s, v549)?;
 let v552 = eo__24run_5fevaluate(s, v546)?;
 let v553 = eo__24run_5fevaluate(s, v546)?;
-let v554 = s.operator("len", &[v553])?;
+let v554 = s.builtin(EvalOp::Length, &[v553])?;
 let v555 = eo__24run_5fevaluate(s, v549)?;
-let v556 = s.operator("len", &[v555])?;
-let v557 = s.operator("neg", &[v556])?;
-let v558 = s.operator("add", &[v554, v557])?;
+let v556 = s.builtin(EvalOp::Length, &[v555])?;
+let v557 = s.builtin(EvalOp::Neg, &[v556])?;
+let v558 = s.builtin(EvalOp::Add, &[v554, v557])?;
 let v559 = eo__24run_5fevaluate(s, v546)?;
-let v560 = s.operator("len", &[v559])?;
+let v560 = s.builtin(EvalOp::Length, &[v559])?;
 let v561 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v562 = s.operator("add", &[v560, v561])?;
-let v563 = s.operator("extract", &[v552, v558, v562])?;
-let v564 = s.operator("eq", &[v551, v563])?;
+let v562 = s.builtin(EvalOp::Add, &[v560, v561])?;
+let v563 = s.builtin(EvalOp::Extract, &[v552, v558, v562])?;
+let v564 = s.builtin(EvalOp::Eq, &[v551, v563])?;
 return Ok(Some(v564));
 }
 Ok(None)
@@ -90771,7 +90771,7 @@ let v573 = a;
 let v574 = s.construct(Constructor::eo_str_2eindexof, &[])?;
 if v572 != v574 { break 'case37; }
 let v575 = eo__24run_5fevaluate(s, v567)?;
-let v576 = s.operator("is_neg", &[v575])?;
+let v576 = s.builtin(EvalOp::IsNeg, &[v575])?;
 let v577 = match s.boolean_value(v576, false)? {
 Some(true) => {
 let v578 = s.literal(Lit::Numeral(parse_int("-1")?))?;
@@ -90779,8 +90779,8 @@ v578
 }, Some(false) => {
 let v579 = eo__24run_5fevaluate(s, v567)?;
 let v580 = eo__24run_5fevaluate(s, v573)?;
-let v581 = s.operator("len", &[v580])?;
-let v582 = s.operator("gt", &[v579, v581])?;
+let v581 = s.builtin(EvalOp::Length, &[v580])?;
+let v582 = s.builtin(EvalOp::Gt, &[v579, v581])?;
 let v583 = match s.boolean_value(v582, false)? {
 Some(true) => {
 let v584 = s.literal(Lit::Numeral(parse_int("-1")?))?;
@@ -90788,34 +90788,34 @@ v584
 }, Some(false) => {
 let v585 = eo__24run_5fevaluate(s, v573)?;
 let v586 = eo__24run_5fevaluate(s, v573)?;
-let v587 = s.operator("len", &[v586])?;
-let v588 = s.operator("extract", &[v585, v567, v587])?;
-let v589 = s.operator("to_str", &[v588])?;
+let v587 = s.builtin(EvalOp::Length, &[v586])?;
+let v588 = s.builtin(EvalOp::Extract, &[v585, v567, v587])?;
+let v589 = s.builtin(EvalOp::ToString, &[v588])?;
 let v590 = eo__24run_5fevaluate(s, v570)?;
-let v591 = s.operator("to_str", &[v590])?;
-let v592 = s.operator("find", &[v589, v591])?;
-let v593 = s.operator("is_neg", &[v592])?;
+let v591 = s.builtin(EvalOp::ToString, &[v590])?;
+let v592 = s.builtin(EvalOp::Find, &[v589, v591])?;
+let v593 = s.builtin(EvalOp::IsNeg, &[v592])?;
 let v594 = match s.boolean_value(v593, false)? {
 Some(true) => {
 let v595 = eo__24run_5fevaluate(s, v573)?;
 let v596 = eo__24run_5fevaluate(s, v573)?;
-let v597 = s.operator("len", &[v596])?;
-let v598 = s.operator("extract", &[v595, v567, v597])?;
-let v599 = s.operator("to_str", &[v598])?;
+let v597 = s.builtin(EvalOp::Length, &[v596])?;
+let v598 = s.builtin(EvalOp::Extract, &[v595, v567, v597])?;
+let v599 = s.builtin(EvalOp::ToString, &[v598])?;
 let v600 = eo__24run_5fevaluate(s, v570)?;
-let v601 = s.operator("to_str", &[v600])?;
-let v602 = s.operator("find", &[v599, v601])?;
+let v601 = s.builtin(EvalOp::ToString, &[v600])?;
+let v602 = s.builtin(EvalOp::Find, &[v599, v601])?;
 v602
 }, Some(false) => {
 let v603 = eo__24run_5fevaluate(s, v573)?;
 let v604 = eo__24run_5fevaluate(s, v573)?;
-let v605 = s.operator("len", &[v604])?;
-let v606 = s.operator("extract", &[v603, v567, v605])?;
-let v607 = s.operator("to_str", &[v606])?;
+let v605 = s.builtin(EvalOp::Length, &[v604])?;
+let v606 = s.builtin(EvalOp::Extract, &[v603, v567, v605])?;
+let v607 = s.builtin(EvalOp::ToString, &[v606])?;
 let v608 = eo__24run_5fevaluate(s, v570)?;
-let v609 = s.operator("to_str", &[v608])?;
-let v610 = s.operator("find", &[v607, v609])?;
-let v611 = s.operator("add", &[v567, v610])?;
+let v609 = s.builtin(EvalOp::ToString, &[v608])?;
+let v610 = s.builtin(EvalOp::Find, &[v607, v609])?;
+let v611 = s.builtin(EvalOp::Add, &[v567, v610])?;
 v611
 }, None => s.stuck(),
 };
@@ -90839,18 +90839,18 @@ let v614 = a;
 let v615 = s.construct(Constructor::eo_str_2eto_5fcode, &[])?;
 if v613 != v615 { break 'case38; }
 let v616 = eo__24run_5fevaluate(s, v614)?;
-let v617 = s.operator("len", &[v616])?;
+let v617 = s.builtin(EvalOp::Length, &[v616])?;
 let v618 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v619 = s.operator("eq", &[v617, v618])?;
+let v619 = s.builtin(EvalOp::Eq, &[v617, v618])?;
 let v620 = match s.boolean_value(v619, false)? {
 Some(true) => {
 let v621 = eo__24run_5fevaluate(s, v614)?;
-let v622 = s.operator("to_z", &[v621])?;
+let v622 = s.builtin(EvalOp::ToInt, &[v621])?;
 v622
 }, Some(false) => {
 let v623 = eo__24run_5fevaluate(s, v614)?;
-let v624 = s.operator("len", &[v623])?;
-let v625 = s.operator("is_z", &[v624])?;
+let v624 = s.builtin(EvalOp::Length, &[v623])?;
+let v625 = s.builtin(EvalOp::IsZ, &[v624])?;
 let v626 = match s.boolean_value(v625, false)? {
 Some(true) => {
 let v627 = s.literal(Lit::Numeral(parse_int("-1")?))?;
@@ -90879,16 +90879,16 @@ let v633 = a;
 let v634 = s.construct(Constructor::eo_str_2efrom_5fcode, &[])?;
 if v632 != v634 { break 'case39; }
 let v635 = eo__24run_5fevaluate(s, v633)?;
-let v636 = s.operator("is_z", &[v635])?;
+let v636 = s.builtin(EvalOp::IsZ, &[v635])?;
 let v637 = match s.boolean_value(v636, false)? {
 Some(true) => {
 let v638 = eo__24run_5fevaluate(s, v633)?;
-let v639 = s.operator("is_z", &[v638])?;
+let v639 = s.builtin(EvalOp::IsZ, &[v638])?;
 let v640 = match s.boolean_value(v639, false)? {
 Some(true) => {
 let v641 = s.literal(Lit::Numeral(parse_int("196608")?))?;
 let v642 = eo__24run_5fevaluate(s, v633)?;
-let v643 = s.operator("eq", &[v641, v642])?;
+let v643 = s.builtin(EvalOp::Eq, &[v641, v642])?;
 let v644 = match s.boolean_value(v643, false)? {
 Some(true) => {
 let v645 = s.literal(Lit::Bool(true))?;
@@ -90896,15 +90896,15 @@ v645
 }, Some(false) => {
 let v646 = s.literal(Lit::Numeral(parse_int("196608")?))?;
 let v647 = eo__24run_5fevaluate(s, v633)?;
-let v648 = s.operator("gt", &[v646, v647])?;
+let v648 = s.builtin(EvalOp::Gt, &[v646, v647])?;
 v648
 }, None => s.stuck(),
 };
 let v649 = match s.boolean_value(v644, false)? {
 Some(true) => {
 let v650 = eo__24run_5fevaluate(s, v633)?;
-let v651 = s.operator("is_neg", &[v650])?;
-let v652 = s.operator("not", &[v651])?;
+let v651 = s.builtin(EvalOp::IsNeg, &[v650])?;
+let v652 = s.builtin(EvalOp::Not, &[v651])?;
 v652
 }, Some(false) => {
 let v653 = s.literal(Lit::Bool(false))?;
@@ -90919,7 +90919,7 @@ v654
 };
 let v655 = match s.boolean_value(v640, false)? {
 Some(true) => {
-let v656 = s.operator("to_str", &[v633])?;
+let v656 = s.builtin(EvalOp::ToString, &[v633])?;
 v656
 }, Some(false) => {
 let v657 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
@@ -90947,12 +90947,12 @@ let v662 = a;
 let v663 = s.construct(Constructor::eo_str_2eto_5fint, &[])?;
 if v661 != v663 { break 'case40; }
 let v664 = eo__24run_5fevaluate(s, v662)?;
-let v665 = s.operator("is_str", &[v664])?;
+let v665 = s.builtin(EvalOp::IsStr, &[v664])?;
 let v666 = match s.boolean_value(v665, false)? {
 Some(true) => {
 let v667 = eo__24run_5fevaluate(s, v662)?;
 let v668 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
-let v669 = s.operator("eq", &[v667, v668])?;
+let v669 = s.builtin(EvalOp::Eq, &[v667, v668])?;
 let v670 = match s.boolean_value(v669, false)? {
 Some(true) => {
 let v671 = s.literal(Lit::Numeral(parse_int("-1")?))?;
@@ -90961,9 +90961,9 @@ v671
 let v672 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v673 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v674 = eo__24run_5fevaluate(s, v662)?;
-let v675 = s.operator("list_singleton_intro", &[v673, v674])?;
+let v675 = s.builtin(EvalOp::ListSingletonIntro, &[v673, v674])?;
 let v676 = eo__24str_5fflatten(s, v675)?;
-let v677 = s.operator("list_rev", &[v672, v676])?;
+let v677 = s.builtin(EvalOp::ListRev, &[v672, v676])?;
 let v678 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v679 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v680 = eo__24str_5fto_5fint_5feval_5frec(s, v677, v678, v679)?;
@@ -90992,11 +90992,11 @@ let v686 = a;
 let v687 = s.construct(Constructor::eo_str_2efrom_5fint, &[])?;
 if v685 != v687 { break 'case41; }
 let v688 = eo__24run_5fevaluate(s, v686)?;
-let v689 = s.operator("is_z", &[v688])?;
+let v689 = s.builtin(EvalOp::IsZ, &[v688])?;
 let v690 = match s.boolean_value(v689, false)? {
 Some(true) => {
 let v691 = eo__24run_5fevaluate(s, v686)?;
-let v692 = s.operator("is_neg", &[v691])?;
+let v692 = s.builtin(EvalOp::IsNeg, &[v691])?;
 let v693 = match s.boolean_value(v692, false)? {
 Some(true) => {
 let v694 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
@@ -91004,20 +91004,20 @@ v694
 }, Some(false) => {
 let v695 = s.literal(Lit::Numeral(parse_int("10")?))?;
 let v696 = eo__24run_5fevaluate(s, v686)?;
-let v697 = s.operator("log", &[v695, v696])?;
+let v697 = s.builtin(EvalOp::Log, &[v695, v696])?;
 let v698 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v699 = s.operator("add", &[v697, v698])?;
-let v700 = s.operator("is_neg", &[v699])?;
+let v699 = s.builtin(EvalOp::Add, &[v697, v698])?;
+let v700 = s.builtin(EvalOp::IsNeg, &[v699])?;
 let v701 = s.literal(Lit::Bool(false))?;
 let v702 = if v700 == v701 && !s.is_stuck(v700)? {
 let v703 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v704 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v705 = s.literal(Lit::Numeral(parse_int("10")?))?;
 let v706 = eo__24run_5fevaluate(s, v686)?;
-let v707 = s.operator("log", &[v705, v706])?;
+let v707 = s.builtin(EvalOp::Log, &[v705, v706])?;
 let v708 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v709 = s.operator("add", &[v707, v708])?;
-let v710 = s.operator("list_repeat", &[v703, v704, v709])?;
+let v709 = s.builtin(EvalOp::Add, &[v707, v708])?;
+let v710 = s.builtin(EvalOp::ListRepeat, &[v703, v704, v709])?;
 let v711 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v712 = eo__24iota_5frec(s, v710, v711)?;
 v712
@@ -91055,19 +91055,19 @@ let v724 = a;
 let v725 = s.construct(Constructor::eo_str_2e_3c_3d, &[])?;
 if v723 != v725 { break 'case42; }
 let v726 = eo__24run_5fevaluate(s, v724)?;
-let v727 = s.operator("is_str", &[v726])?;
+let v727 = s.builtin(EvalOp::IsStr, &[v726])?;
 let v728 = eo__24run_5fevaluate(s, v721)?;
-let v729 = s.operator("is_str", &[v728])?;
-let v730 = s.operator("and", &[v727, v729])?;
+let v729 = s.builtin(EvalOp::IsStr, &[v728])?;
+let v730 = s.builtin(EvalOp::And, &[v727, v729])?;
 let v731 = match s.boolean_value(v730, false)? {
 Some(true) => {
 let v732 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v733 = eo__24run_5fevaluate(s, v724)?;
-let v734 = s.operator("list_singleton_intro", &[v732, v733])?;
+let v734 = s.builtin(EvalOp::ListSingletonIntro, &[v732, v733])?;
 let v735 = eo__24str_5fflatten(s, v734)?;
 let v736 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v737 = eo__24run_5fevaluate(s, v721)?;
-let v738 = s.operator("list_singleton_intro", &[v736, v737])?;
+let v738 = s.builtin(EvalOp::ListSingletonIntro, &[v736, v737])?;
 let v739 = eo__24str_5fflatten(s, v738)?;
 let v740 = eo__24str_5fleq_5feval_5frec(s, v735, v739)?;
 v740
@@ -91094,12 +91094,12 @@ let v748 = a;
 let v749 = s.construct(Constructor::eo_str_2eto_5flower, &[])?;
 if v747 != v749 { break 'case43; }
 let v750 = eo__24run_5fevaluate(s, v748)?;
-let v751 = s.operator("is_str", &[v750])?;
+let v751 = s.builtin(EvalOp::IsStr, &[v750])?;
 let v752 = match s.boolean_value(v751, false)? {
 Some(true) => {
 let v753 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v754 = eo__24run_5fevaluate(s, v748)?;
-let v755 = s.operator("list_singleton_intro", &[v753, v754])?;
+let v755 = s.builtin(EvalOp::ListSingletonIntro, &[v753, v754])?;
 let v756 = eo__24str_5fflatten(s, v755)?;
 let v757 = s.literal(Lit::Bool(true))?;
 let v758 = eo__24str_5fcase_5fconv_5frec(s, v756, v757)?;
@@ -91125,12 +91125,12 @@ let v764 = a;
 let v765 = s.construct(Constructor::eo_str_2eto_5fupper, &[])?;
 if v763 != v765 { break 'case44; }
 let v766 = eo__24run_5fevaluate(s, v764)?;
-let v767 = s.operator("is_str", &[v766])?;
+let v767 = s.builtin(EvalOp::IsStr, &[v766])?;
 let v768 = match s.boolean_value(v767, false)? {
 Some(true) => {
 let v769 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v770 = eo__24run_5fevaluate(s, v764)?;
-let v771 = s.operator("list_singleton_intro", &[v769, v770])?;
+let v771 = s.builtin(EvalOp::ListSingletonIntro, &[v769, v770])?;
 let v772 = eo__24str_5fflatten(s, v771)?;
 let v773 = s.literal(Lit::Bool(false))?;
 let v774 = eo__24str_5fcase_5fconv_5frec(s, v772, v773)?;
@@ -91156,18 +91156,18 @@ let v780 = a;
 let v781 = s.construct(Constructor::eo_str_2erev, &[])?;
 if v779 != v781 { break 'case45; }
 let v782 = eo__24run_5fevaluate(s, v780)?;
-let v783 = s.operator("is_str", &[v782])?;
+let v783 = s.builtin(EvalOp::IsStr, &[v782])?;
 let v784 = match s.boolean_value(v783, false)? {
 Some(true) => {
 let v785 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v786 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v787 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v788 = eo__24run_5fevaluate(s, v780)?;
-let v789 = s.operator("list_singleton_intro", &[v787, v788])?;
+let v789 = s.builtin(EvalOp::ListSingletonIntro, &[v787, v788])?;
 let v790 = eo__24str_5fflatten(s, v789)?;
-let v791 = s.operator("list_rev", &[v786, v790])?;
+let v791 = s.builtin(EvalOp::ListRev, &[v786, v790])?;
 let v792 = eo__24str_5fcollect(s, v791)?;
-let v793 = s.operator("list_singleton_elim", &[v785, v792])?;
+let v793 = s.builtin(EvalOp::ListSingletonElim, &[v785, v792])?;
 v793
 }, Some(false) => {
 let v794 = s.construct(Constructor::eo_str_2erev, &[])?;
@@ -91201,12 +91201,12 @@ let v806 = s.construct(Constructor::eo_str_2eupdate, &[])?;
 if v804 != v806 { break 'case46; }
 let v807 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v808 = eo__24run_5fevaluate(s, v802)?;
-let v809 = s.operator("gt", &[v807, v808])?;
+let v809 = s.builtin(EvalOp::Gt, &[v807, v808])?;
 let v810 = eo__24run_5fevaluate(s, v802)?;
 let v811 = eo__24run_5fevaluate(s, v805)?;
-let v812 = s.operator("len", &[v811])?;
-let v813 = s.operator("gt", &[v810, v812])?;
-let v814 = s.operator("or", &[v809, v813])?;
+let v812 = s.builtin(EvalOp::Length, &[v811])?;
+let v813 = s.builtin(EvalOp::Gt, &[v810, v812])?;
+let v814 = s.builtin(EvalOp::Or, &[v809, v813])?;
 let v815 = match s.boolean_value(v814, false)? {
 Some(true) => {
 let v816 = eo__24run_5fevaluate(s, v805)?;
@@ -91216,28 +91216,28 @@ let v817 = eo__24run_5fevaluate(s, v805)?;
 let v818 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v819 = eo__24run_5fevaluate(s, v802)?;
 let v820 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v821 = s.operator("add", &[v819, v820])?;
-let v822 = s.operator("extract", &[v817, v818, v821])?;
+let v821 = s.builtin(EvalOp::Add, &[v819, v820])?;
+let v822 = s.builtin(EvalOp::Extract, &[v817, v818, v821])?;
 let v823 = eo__24run_5fevaluate(s, v799)?;
 let v824 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v825 = eo__24run_5fevaluate(s, v802)?;
-let v826 = s.operator("neg", &[v825])?;
+let v826 = s.builtin(EvalOp::Neg, &[v825])?;
 let v827 = eo__24run_5fevaluate(s, v805)?;
-let v828 = s.operator("len", &[v827])?;
-let v829 = s.operator("add", &[v826, v828])?;
+let v828 = s.builtin(EvalOp::Length, &[v827])?;
+let v829 = s.builtin(EvalOp::Add, &[v826, v828])?;
 let v830 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v831 = s.operator("add", &[v829, v830])?;
-let v832 = s.operator("extract", &[v823, v824, v831])?;
-let v833 = s.operator("concat", &[v822, v832])?;
+let v831 = s.builtin(EvalOp::Add, &[v829, v830])?;
+let v832 = s.builtin(EvalOp::Extract, &[v823, v824, v831])?;
+let v833 = s.builtin(EvalOp::Concat, &[v822, v832])?;
 let v834 = eo__24run_5fevaluate(s, v805)?;
 let v835 = eo__24run_5fevaluate(s, v802)?;
 let v836 = eo__24run_5fevaluate(s, v799)?;
-let v837 = s.operator("len", &[v836])?;
-let v838 = s.operator("add", &[v835, v837])?;
+let v837 = s.builtin(EvalOp::Length, &[v836])?;
+let v838 = s.builtin(EvalOp::Add, &[v835, v837])?;
 let v839 = eo__24run_5fevaluate(s, v805)?;
-let v840 = s.operator("len", &[v839])?;
-let v841 = s.operator("extract", &[v834, v838, v840])?;
-let v842 = s.operator("concat", &[v833, v841])?;
+let v840 = s.builtin(EvalOp::Length, &[v839])?;
+let v841 = s.builtin(EvalOp::Extract, &[v834, v838, v840])?;
+let v842 = s.builtin(EvalOp::Concat, &[v833, v841])?;
 v842
 }, None => s.stuck(),
 };
@@ -91255,7 +91255,7 @@ let v845 = a;
 let v846 = s.construct(Constructor::eo_bvnot, &[])?;
 if v844 != v846 { break 'case47; }
 let v847 = eo__24run_5fevaluate(s, v845)?;
-let v848 = s.operator("not", &[v847])?;
+let v848 = s.builtin(EvalOp::Not, &[v847])?;
 return Ok(Some(v848));
 }
 Ok(None)
@@ -91270,7 +91270,7 @@ let v851 = a;
 let v852 = s.construct(Constructor::eo_bvneg, &[])?;
 if v850 != v852 { break 'case48; }
 let v853 = eo__24run_5fevaluate(s, v851)?;
-let v854 = s.operator("neg", &[v853])?;
+let v854 = s.builtin(EvalOp::Neg, &[v853])?;
 return Ok(Some(v854));
 }
 Ok(None)
@@ -91291,7 +91291,7 @@ let v861 = s.construct(Constructor::eo_bvadd, &[])?;
 if v859 != v861 { break 'case49; }
 let v862 = eo__24run_5fevaluate(s, v860)?;
 let v863 = eo__24run_5fevaluate(s, v857)?;
-let v864 = s.operator("add", &[v862, v863])?;
+let v864 = s.builtin(EvalOp::Add, &[v862, v863])?;
 return Ok(Some(v864));
 }
 Ok(None)
@@ -91312,7 +91312,7 @@ let v871 = s.construct(Constructor::eo_bvmul, &[])?;
 if v869 != v871 { break 'case50; }
 let v872 = eo__24run_5fevaluate(s, v870)?;
 let v873 = eo__24run_5fevaluate(s, v867)?;
-let v874 = s.operator("mul", &[v872, v873])?;
+let v874 = s.builtin(EvalOp::Mul, &[v872, v873])?;
 return Ok(Some(v874));
 }
 Ok(None)
@@ -91332,21 +91332,21 @@ let v880 = a;
 let v881 = s.construct(Constructor::eo_bvudiv, &[])?;
 if v879 != v881 { break 'case51; }
 let v882 = eo__24run_5fevaluate(s, v877)?;
-let v883 = s.operator("to_z", &[v882])?;
+let v883 = s.builtin(EvalOp::ToInt, &[v882])?;
 let v884 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v885 = s.operator("eq", &[v883, v884])?;
+let v885 = s.builtin(EvalOp::Eq, &[v883, v884])?;
 let v886 = match s.boolean_value(v885, false)? {
 Some(true) => {
 let v887 = eo__24eo_5ftypeof(s, v880)?;
 let v888 = eo__24bv_5fbitwidth(s, v887)?;
 let v889 = eo__24eo_5ftypeof(s, v880)?;
 let v890 = eo__24bv_5fbitwidth(s, v889)?;
-let v891 = s.operator("is_z", &[v890])?;
+let v891 = s.builtin(EvalOp::IsZ, &[v890])?;
 let v892 = match s.boolean_value(v891, false)? {
 Some(true) => {
 let v893 = eo__24eo_5ftypeof(s, v880)?;
 let v894 = eo__24bv_5fbitwidth(s, v893)?;
-let v895 = s.operator("is_neg", &[v894])?;
+let v895 = s.builtin(EvalOp::IsNeg, &[v894])?;
 let v896 = match s.boolean_value(v895, false)? {
 Some(true) => {
 let v897 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -91355,7 +91355,7 @@ v897
 let v898 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v899 = eo__24eo_5ftypeof(s, v880)?;
 let v900 = eo__24bv_5fbitwidth(s, v899)?;
-let v901 = s.operator("pow", &[v898, v900])?;
+let v901 = s.builtin(EvalOp::Pow, &[v898, v900])?;
 v901
 }, None => s.stuck(),
 };
@@ -91369,13 +91369,13 @@ v905
 }, None => s.stuck(),
 };
 let v906 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v907 = s.operator("add", &[v892, v906])?;
-let v908 = s.operator("to_bin", &[v888, v907])?;
+let v907 = s.builtin(EvalOp::Add, &[v892, v906])?;
+let v908 = s.builtin(EvalOp::ToBin, &[v888, v907])?;
 v908
 }, Some(false) => {
 let v909 = eo__24run_5fevaluate(s, v880)?;
 let v910 = eo__24run_5fevaluate(s, v877)?;
-let v911 = s.operator("zdiv", &[v909, v910])?;
+let v911 = s.builtin(EvalOp::IntDiv, &[v909, v910])?;
 v911
 }, None => s.stuck(),
 };
@@ -91398,9 +91398,9 @@ let v917 = a;
 let v918 = s.construct(Constructor::eo_bvurem, &[])?;
 if v916 != v918 { break 'case52; }
 let v919 = eo__24run_5fevaluate(s, v914)?;
-let v920 = s.operator("to_z", &[v919])?;
+let v920 = s.builtin(EvalOp::ToInt, &[v919])?;
 let v921 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v922 = s.operator("eq", &[v920, v921])?;
+let v922 = s.builtin(EvalOp::Eq, &[v920, v921])?;
 let v923 = match s.boolean_value(v922, false)? {
 Some(true) => {
 let v924 = eo__24run_5fevaluate(s, v917)?;
@@ -91408,7 +91408,7 @@ v924
 }, Some(false) => {
 let v925 = eo__24run_5fevaluate(s, v917)?;
 let v926 = eo__24run_5fevaluate(s, v914)?;
-let v927 = s.operator("zmod", &[v925, v926])?;
+let v927 = s.builtin(EvalOp::IntMod, &[v925, v926])?;
 v927
 }, None => s.stuck(),
 };
@@ -91432,7 +91432,7 @@ let v934 = s.construct(Constructor::eo_bvand, &[])?;
 if v932 != v934 { break 'case53; }
 let v935 = eo__24run_5fevaluate(s, v933)?;
 let v936 = eo__24run_5fevaluate(s, v930)?;
-let v937 = s.operator("and", &[v935, v936])?;
+let v937 = s.builtin(EvalOp::And, &[v935, v936])?;
 return Ok(Some(v937));
 }
 Ok(None)
@@ -91453,7 +91453,7 @@ let v944 = s.construct(Constructor::eo_bvor, &[])?;
 if v942 != v944 { break 'case54; }
 let v945 = eo__24run_5fevaluate(s, v943)?;
 let v946 = eo__24run_5fevaluate(s, v940)?;
-let v947 = s.operator("or", &[v945, v946])?;
+let v947 = s.builtin(EvalOp::Or, &[v945, v946])?;
 return Ok(Some(v947));
 }
 Ok(None)
@@ -91474,7 +91474,7 @@ let v954 = s.construct(Constructor::eo_bvxor, &[])?;
 if v952 != v954 { break 'case55; }
 let v955 = eo__24run_5fevaluate(s, v953)?;
 let v956 = eo__24run_5fevaluate(s, v950)?;
-let v957 = s.operator("xor", &[v955, v956])?;
+let v957 = s.builtin(EvalOp::Xor, &[v955, v956])?;
 return Ok(Some(v957));
 }
 Ok(None)
@@ -91495,7 +91495,7 @@ let v964 = s.construct(Constructor::eo_concat, &[])?;
 if v962 != v964 { break 'case56; }
 let v965 = eo__24run_5fevaluate(s, v963)?;
 let v966 = eo__24run_5fevaluate(s, v960)?;
-let v967 = s.operator("concat", &[v965, v966])?;
+let v967 = s.builtin(EvalOp::Concat, &[v965, v966])?;
 return Ok(Some(v967));
 }
 Ok(None)
@@ -91516,8 +91516,8 @@ let v974 = s.construct(Constructor::eo_bvsub, &[])?;
 if v972 != v974 { break 'case57; }
 let v975 = eo__24run_5fevaluate(s, v973)?;
 let v976 = eo__24run_5fevaluate(s, v970)?;
-let v977 = s.operator("neg", &[v976])?;
-let v978 = s.operator("add", &[v975, v977])?;
+let v977 = s.builtin(EvalOp::Neg, &[v976])?;
+let v978 = s.builtin(EvalOp::Add, &[v975, v977])?;
 return Ok(Some(v978));
 }
 Ok(None)
@@ -91534,7 +91534,7 @@ let Some(fields) = v982 else { break 'case58; }
 ;
 let v983 = fields;
 let v984 = eo__24run_5fevaluate(s, v981)?;
-let v985 = s.operator("extract", &[v984, v983[1], v983[0]])?;
+let v985 = s.builtin(EvalOp::Extract, &[v984, v983[1], v983[0]])?;
 return Ok(Some(v985));
 }
 Ok(None)
@@ -91554,10 +91554,10 @@ let v991 = a;
 let v992 = s.construct(Constructor::eo_bvult, &[])?;
 if v990 != v992 { break 'case59; }
 let v993 = eo__24run_5fevaluate(s, v988)?;
-let v994 = s.operator("to_z", &[v993])?;
+let v994 = s.builtin(EvalOp::ToInt, &[v993])?;
 let v995 = eo__24run_5fevaluate(s, v991)?;
-let v996 = s.operator("to_z", &[v995])?;
-let v997 = s.operator("gt", &[v994, v996])?;
+let v996 = s.builtin(EvalOp::ToInt, &[v995])?;
+let v997 = s.builtin(EvalOp::Gt, &[v994, v996])?;
 return Ok(Some(v997));
 }
 Ok(None)
@@ -91578,11 +91578,11 @@ let v1004 = s.construct(Constructor::eo_bvule, &[])?;
 if v1002 != v1004 { break 'case60; }
 let v1005 = eo__24run_5fevaluate(s, v1000)?;
 let v1006 = eo__24run_5fevaluate(s, v1003)?;
-let v1007 = s.operator("gt", &[v1005, v1006])?;
+let v1007 = s.builtin(EvalOp::Gt, &[v1005, v1006])?;
 let v1008 = eo__24run_5fevaluate(s, v1003)?;
 let v1009 = eo__24run_5fevaluate(s, v1000)?;
-let v1010 = s.operator("eq", &[v1008, v1009])?;
-let v1011 = s.operator("or", &[v1007, v1010])?;
+let v1010 = s.builtin(EvalOp::Eq, &[v1008, v1009])?;
+let v1011 = s.builtin(EvalOp::Or, &[v1007, v1010])?;
 return Ok(Some(v1011));
 }
 Ok(None)
@@ -91602,10 +91602,10 @@ let v1017 = a;
 let v1018 = s.construct(Constructor::eo_bvugt, &[])?;
 if v1016 != v1018 { break 'case61; }
 let v1019 = eo__24run_5fevaluate(s, v1017)?;
-let v1020 = s.operator("to_z", &[v1019])?;
+let v1020 = s.builtin(EvalOp::ToInt, &[v1019])?;
 let v1021 = eo__24run_5fevaluate(s, v1014)?;
-let v1022 = s.operator("to_z", &[v1021])?;
-let v1023 = s.operator("gt", &[v1020, v1022])?;
+let v1022 = s.builtin(EvalOp::ToInt, &[v1021])?;
+let v1023 = s.builtin(EvalOp::Gt, &[v1020, v1022])?;
 return Ok(Some(v1023));
 }
 Ok(None)
@@ -91626,11 +91626,11 @@ let v1030 = s.construct(Constructor::eo_bvuge, &[])?;
 if v1028 != v1030 { break 'case62; }
 let v1031 = eo__24run_5fevaluate(s, v1029)?;
 let v1032 = eo__24run_5fevaluate(s, v1026)?;
-let v1033 = s.operator("gt", &[v1031, v1032])?;
+let v1033 = s.builtin(EvalOp::Gt, &[v1031, v1032])?;
 let v1034 = eo__24run_5fevaluate(s, v1029)?;
 let v1035 = eo__24run_5fevaluate(s, v1026)?;
-let v1036 = s.operator("eq", &[v1034, v1035])?;
-let v1037 = s.operator("or", &[v1033, v1036])?;
+let v1036 = s.builtin(EvalOp::Eq, &[v1034, v1035])?;
+let v1037 = s.builtin(EvalOp::Or, &[v1033, v1036])?;
 return Ok(Some(v1037));
 }
 Ok(None)
@@ -91654,31 +91654,31 @@ let v1046 = eo__24run_5fevaluate(s, v1040)?;
 let v1047 = eo__24eo_5ftypeof(s, v1046)?;
 let v1048 = eo__24bv_5fbitwidth(s, v1047)?;
 let v1049 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1050 = s.operator("add", &[v1048, v1049])?;
+let v1050 = s.builtin(EvalOp::Add, &[v1048, v1049])?;
 let v1051 = eo__24run_5fevaluate(s, v1040)?;
 let v1052 = eo__24eo_5ftypeof(s, v1051)?;
 let v1053 = eo__24bv_5fbitwidth(s, v1052)?;
 let v1054 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1055 = s.operator("add", &[v1053, v1054])?;
-let v1056 = s.operator("extract", &[v1045, v1050, v1055])?;
+let v1055 = s.builtin(EvalOp::Add, &[v1053, v1054])?;
+let v1056 = s.builtin(EvalOp::Extract, &[v1045, v1050, v1055])?;
 let v1057 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1058 = s.operator("eq", &[v1056, v1057])?;
+let v1058 = s.builtin(EvalOp::Eq, &[v1056, v1057])?;
 let v1059 = match s.boolean_value(v1058, false)? {
 Some(true) => {
 let v1060 = eo__24run_5fevaluate(s, v1040)?;
 let v1061 = eo__24eo_5ftypeof(s, v1060)?;
 let v1062 = eo__24bv_5fbitwidth(s, v1061)?;
 let v1063 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1064 = s.operator("add", &[v1062, v1063])?;
-let v1065 = s.operator("is_z", &[v1064])?;
+let v1064 = s.builtin(EvalOp::Add, &[v1062, v1063])?;
+let v1065 = s.builtin(EvalOp::IsZ, &[v1064])?;
 let v1066 = match s.boolean_value(v1065, false)? {
 Some(true) => {
 let v1067 = eo__24run_5fevaluate(s, v1040)?;
 let v1068 = eo__24eo_5ftypeof(s, v1067)?;
 let v1069 = eo__24bv_5fbitwidth(s, v1068)?;
 let v1070 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1071 = s.operator("add", &[v1069, v1070])?;
-let v1072 = s.operator("is_neg", &[v1071])?;
+let v1071 = s.builtin(EvalOp::Add, &[v1069, v1070])?;
+let v1072 = s.builtin(EvalOp::IsNeg, &[v1071])?;
 let v1073 = match s.boolean_value(v1072, false)? {
 Some(true) => {
 let v1074 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -91689,8 +91689,8 @@ let v1076 = eo__24run_5fevaluate(s, v1040)?;
 let v1077 = eo__24eo_5ftypeof(s, v1076)?;
 let v1078 = eo__24bv_5fbitwidth(s, v1077)?;
 let v1079 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1080 = s.operator("add", &[v1078, v1079])?;
-let v1081 = s.operator("pow", &[v1075, v1080])?;
+let v1080 = s.builtin(EvalOp::Add, &[v1078, v1079])?;
+let v1081 = s.builtin(EvalOp::Pow, &[v1075, v1080])?;
 v1081
 }, None => s.stuck(),
 };
@@ -91701,22 +91701,22 @@ let v1083 = eo__24run_5fevaluate(s, v1040)?;
 let v1084 = eo__24eo_5ftypeof(s, v1083)?;
 let v1085 = eo__24bv_5fbitwidth(s, v1084)?;
 let v1086 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1087 = s.operator("add", &[v1085, v1086])?;
+let v1087 = s.builtin(EvalOp::Add, &[v1085, v1086])?;
 let v1088 = s.apply(v1082, v1087)?;
 v1088
 }, None => s.stuck(),
 };
-let v1089 = s.operator("neg", &[v1066])?;
+let v1089 = s.builtin(EvalOp::Neg, &[v1066])?;
 let v1090 = eo__24run_5fevaluate(s, v1040)?;
 let v1091 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1092 = eo__24run_5fevaluate(s, v1040)?;
 let v1093 = eo__24eo_5ftypeof(s, v1092)?;
 let v1094 = eo__24bv_5fbitwidth(s, v1093)?;
 let v1095 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1096 = s.operator("add", &[v1094, v1095])?;
-let v1097 = s.operator("extract", &[v1090, v1091, v1096])?;
-let v1098 = s.operator("to_z", &[v1097])?;
-let v1099 = s.operator("add", &[v1089, v1098])?;
+let v1096 = s.builtin(EvalOp::Add, &[v1094, v1095])?;
+let v1097 = s.builtin(EvalOp::Extract, &[v1090, v1091, v1096])?;
+let v1098 = s.builtin(EvalOp::ToInt, &[v1097])?;
+let v1099 = s.builtin(EvalOp::Add, &[v1089, v1098])?;
 v1099
 }, Some(false) => {
 let v1100 = eo__24run_5fevaluate(s, v1040)?;
@@ -91725,9 +91725,9 @@ let v1102 = eo__24run_5fevaluate(s, v1040)?;
 let v1103 = eo__24eo_5ftypeof(s, v1102)?;
 let v1104 = eo__24bv_5fbitwidth(s, v1103)?;
 let v1105 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1106 = s.operator("add", &[v1104, v1105])?;
-let v1107 = s.operator("extract", &[v1100, v1101, v1106])?;
-let v1108 = s.operator("to_z", &[v1107])?;
+let v1106 = s.builtin(EvalOp::Add, &[v1104, v1105])?;
+let v1107 = s.builtin(EvalOp::Extract, &[v1100, v1101, v1106])?;
+let v1108 = s.builtin(EvalOp::ToInt, &[v1107])?;
 v1108
 }, None => s.stuck(),
 };
@@ -91736,31 +91736,31 @@ let v1110 = eo__24run_5fevaluate(s, v1043)?;
 let v1111 = eo__24eo_5ftypeof(s, v1110)?;
 let v1112 = eo__24bv_5fbitwidth(s, v1111)?;
 let v1113 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1114 = s.operator("add", &[v1112, v1113])?;
+let v1114 = s.builtin(EvalOp::Add, &[v1112, v1113])?;
 let v1115 = eo__24run_5fevaluate(s, v1043)?;
 let v1116 = eo__24eo_5ftypeof(s, v1115)?;
 let v1117 = eo__24bv_5fbitwidth(s, v1116)?;
 let v1118 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1119 = s.operator("add", &[v1117, v1118])?;
-let v1120 = s.operator("extract", &[v1109, v1114, v1119])?;
+let v1119 = s.builtin(EvalOp::Add, &[v1117, v1118])?;
+let v1120 = s.builtin(EvalOp::Extract, &[v1109, v1114, v1119])?;
 let v1121 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1122 = s.operator("eq", &[v1120, v1121])?;
+let v1122 = s.builtin(EvalOp::Eq, &[v1120, v1121])?;
 let v1123 = match s.boolean_value(v1122, false)? {
 Some(true) => {
 let v1124 = eo__24run_5fevaluate(s, v1043)?;
 let v1125 = eo__24eo_5ftypeof(s, v1124)?;
 let v1126 = eo__24bv_5fbitwidth(s, v1125)?;
 let v1127 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1128 = s.operator("add", &[v1126, v1127])?;
-let v1129 = s.operator("is_z", &[v1128])?;
+let v1128 = s.builtin(EvalOp::Add, &[v1126, v1127])?;
+let v1129 = s.builtin(EvalOp::IsZ, &[v1128])?;
 let v1130 = match s.boolean_value(v1129, false)? {
 Some(true) => {
 let v1131 = eo__24run_5fevaluate(s, v1043)?;
 let v1132 = eo__24eo_5ftypeof(s, v1131)?;
 let v1133 = eo__24bv_5fbitwidth(s, v1132)?;
 let v1134 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1135 = s.operator("add", &[v1133, v1134])?;
-let v1136 = s.operator("is_neg", &[v1135])?;
+let v1135 = s.builtin(EvalOp::Add, &[v1133, v1134])?;
+let v1136 = s.builtin(EvalOp::IsNeg, &[v1135])?;
 let v1137 = match s.boolean_value(v1136, false)? {
 Some(true) => {
 let v1138 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -91771,8 +91771,8 @@ let v1140 = eo__24run_5fevaluate(s, v1043)?;
 let v1141 = eo__24eo_5ftypeof(s, v1140)?;
 let v1142 = eo__24bv_5fbitwidth(s, v1141)?;
 let v1143 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1144 = s.operator("add", &[v1142, v1143])?;
-let v1145 = s.operator("pow", &[v1139, v1144])?;
+let v1144 = s.builtin(EvalOp::Add, &[v1142, v1143])?;
+let v1145 = s.builtin(EvalOp::Pow, &[v1139, v1144])?;
 v1145
 }, None => s.stuck(),
 };
@@ -91783,22 +91783,22 @@ let v1147 = eo__24run_5fevaluate(s, v1043)?;
 let v1148 = eo__24eo_5ftypeof(s, v1147)?;
 let v1149 = eo__24bv_5fbitwidth(s, v1148)?;
 let v1150 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1151 = s.operator("add", &[v1149, v1150])?;
+let v1151 = s.builtin(EvalOp::Add, &[v1149, v1150])?;
 let v1152 = s.apply(v1146, v1151)?;
 v1152
 }, None => s.stuck(),
 };
-let v1153 = s.operator("neg", &[v1130])?;
+let v1153 = s.builtin(EvalOp::Neg, &[v1130])?;
 let v1154 = eo__24run_5fevaluate(s, v1043)?;
 let v1155 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1156 = eo__24run_5fevaluate(s, v1043)?;
 let v1157 = eo__24eo_5ftypeof(s, v1156)?;
 let v1158 = eo__24bv_5fbitwidth(s, v1157)?;
 let v1159 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1160 = s.operator("add", &[v1158, v1159])?;
-let v1161 = s.operator("extract", &[v1154, v1155, v1160])?;
-let v1162 = s.operator("to_z", &[v1161])?;
-let v1163 = s.operator("add", &[v1153, v1162])?;
+let v1160 = s.builtin(EvalOp::Add, &[v1158, v1159])?;
+let v1161 = s.builtin(EvalOp::Extract, &[v1154, v1155, v1160])?;
+let v1162 = s.builtin(EvalOp::ToInt, &[v1161])?;
+let v1163 = s.builtin(EvalOp::Add, &[v1153, v1162])?;
 v1163
 }, Some(false) => {
 let v1164 = eo__24run_5fevaluate(s, v1043)?;
@@ -91807,13 +91807,13 @@ let v1166 = eo__24run_5fevaluate(s, v1043)?;
 let v1167 = eo__24eo_5ftypeof(s, v1166)?;
 let v1168 = eo__24bv_5fbitwidth(s, v1167)?;
 let v1169 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1170 = s.operator("add", &[v1168, v1169])?;
-let v1171 = s.operator("extract", &[v1164, v1165, v1170])?;
-let v1172 = s.operator("to_z", &[v1171])?;
+let v1170 = s.builtin(EvalOp::Add, &[v1168, v1169])?;
+let v1171 = s.builtin(EvalOp::Extract, &[v1164, v1165, v1170])?;
+let v1172 = s.builtin(EvalOp::ToInt, &[v1171])?;
 v1172
 }, None => s.stuck(),
 };
-let v1173 = s.operator("gt", &[v1059, v1123])?;
+let v1173 = s.builtin(EvalOp::Gt, &[v1059, v1123])?;
 return Ok(Some(v1173));
 }
 Ok(None)
@@ -91837,31 +91837,31 @@ let v1182 = eo__24run_5fevaluate(s, v1176)?;
 let v1183 = eo__24eo_5ftypeof(s, v1182)?;
 let v1184 = eo__24bv_5fbitwidth(s, v1183)?;
 let v1185 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1186 = s.operator("add", &[v1184, v1185])?;
+let v1186 = s.builtin(EvalOp::Add, &[v1184, v1185])?;
 let v1187 = eo__24run_5fevaluate(s, v1176)?;
 let v1188 = eo__24eo_5ftypeof(s, v1187)?;
 let v1189 = eo__24bv_5fbitwidth(s, v1188)?;
 let v1190 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1191 = s.operator("add", &[v1189, v1190])?;
-let v1192 = s.operator("extract", &[v1181, v1186, v1191])?;
+let v1191 = s.builtin(EvalOp::Add, &[v1189, v1190])?;
+let v1192 = s.builtin(EvalOp::Extract, &[v1181, v1186, v1191])?;
 let v1193 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1194 = s.operator("eq", &[v1192, v1193])?;
+let v1194 = s.builtin(EvalOp::Eq, &[v1192, v1193])?;
 let v1195 = match s.boolean_value(v1194, false)? {
 Some(true) => {
 let v1196 = eo__24run_5fevaluate(s, v1176)?;
 let v1197 = eo__24eo_5ftypeof(s, v1196)?;
 let v1198 = eo__24bv_5fbitwidth(s, v1197)?;
 let v1199 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1200 = s.operator("add", &[v1198, v1199])?;
-let v1201 = s.operator("is_z", &[v1200])?;
+let v1200 = s.builtin(EvalOp::Add, &[v1198, v1199])?;
+let v1201 = s.builtin(EvalOp::IsZ, &[v1200])?;
 let v1202 = match s.boolean_value(v1201, false)? {
 Some(true) => {
 let v1203 = eo__24run_5fevaluate(s, v1176)?;
 let v1204 = eo__24eo_5ftypeof(s, v1203)?;
 let v1205 = eo__24bv_5fbitwidth(s, v1204)?;
 let v1206 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1207 = s.operator("add", &[v1205, v1206])?;
-let v1208 = s.operator("is_neg", &[v1207])?;
+let v1207 = s.builtin(EvalOp::Add, &[v1205, v1206])?;
+let v1208 = s.builtin(EvalOp::IsNeg, &[v1207])?;
 let v1209 = match s.boolean_value(v1208, false)? {
 Some(true) => {
 let v1210 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -91872,8 +91872,8 @@ let v1212 = eo__24run_5fevaluate(s, v1176)?;
 let v1213 = eo__24eo_5ftypeof(s, v1212)?;
 let v1214 = eo__24bv_5fbitwidth(s, v1213)?;
 let v1215 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1216 = s.operator("add", &[v1214, v1215])?;
-let v1217 = s.operator("pow", &[v1211, v1216])?;
+let v1216 = s.builtin(EvalOp::Add, &[v1214, v1215])?;
+let v1217 = s.builtin(EvalOp::Pow, &[v1211, v1216])?;
 v1217
 }, None => s.stuck(),
 };
@@ -91884,22 +91884,22 @@ let v1219 = eo__24run_5fevaluate(s, v1176)?;
 let v1220 = eo__24eo_5ftypeof(s, v1219)?;
 let v1221 = eo__24bv_5fbitwidth(s, v1220)?;
 let v1222 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1223 = s.operator("add", &[v1221, v1222])?;
+let v1223 = s.builtin(EvalOp::Add, &[v1221, v1222])?;
 let v1224 = s.apply(v1218, v1223)?;
 v1224
 }, None => s.stuck(),
 };
-let v1225 = s.operator("neg", &[v1202])?;
+let v1225 = s.builtin(EvalOp::Neg, &[v1202])?;
 let v1226 = eo__24run_5fevaluate(s, v1176)?;
 let v1227 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1228 = eo__24run_5fevaluate(s, v1176)?;
 let v1229 = eo__24eo_5ftypeof(s, v1228)?;
 let v1230 = eo__24bv_5fbitwidth(s, v1229)?;
 let v1231 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1232 = s.operator("add", &[v1230, v1231])?;
-let v1233 = s.operator("extract", &[v1226, v1227, v1232])?;
-let v1234 = s.operator("to_z", &[v1233])?;
-let v1235 = s.operator("add", &[v1225, v1234])?;
+let v1232 = s.builtin(EvalOp::Add, &[v1230, v1231])?;
+let v1233 = s.builtin(EvalOp::Extract, &[v1226, v1227, v1232])?;
+let v1234 = s.builtin(EvalOp::ToInt, &[v1233])?;
+let v1235 = s.builtin(EvalOp::Add, &[v1225, v1234])?;
 v1235
 }, Some(false) => {
 let v1236 = eo__24run_5fevaluate(s, v1176)?;
@@ -91908,9 +91908,9 @@ let v1238 = eo__24run_5fevaluate(s, v1176)?;
 let v1239 = eo__24eo_5ftypeof(s, v1238)?;
 let v1240 = eo__24bv_5fbitwidth(s, v1239)?;
 let v1241 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1242 = s.operator("add", &[v1240, v1241])?;
-let v1243 = s.operator("extract", &[v1236, v1237, v1242])?;
-let v1244 = s.operator("to_z", &[v1243])?;
+let v1242 = s.builtin(EvalOp::Add, &[v1240, v1241])?;
+let v1243 = s.builtin(EvalOp::Extract, &[v1236, v1237, v1242])?;
+let v1244 = s.builtin(EvalOp::ToInt, &[v1243])?;
 v1244
 }, None => s.stuck(),
 };
@@ -91919,31 +91919,31 @@ let v1246 = eo__24run_5fevaluate(s, v1179)?;
 let v1247 = eo__24eo_5ftypeof(s, v1246)?;
 let v1248 = eo__24bv_5fbitwidth(s, v1247)?;
 let v1249 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1250 = s.operator("add", &[v1248, v1249])?;
+let v1250 = s.builtin(EvalOp::Add, &[v1248, v1249])?;
 let v1251 = eo__24run_5fevaluate(s, v1179)?;
 let v1252 = eo__24eo_5ftypeof(s, v1251)?;
 let v1253 = eo__24bv_5fbitwidth(s, v1252)?;
 let v1254 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1255 = s.operator("add", &[v1253, v1254])?;
-let v1256 = s.operator("extract", &[v1245, v1250, v1255])?;
+let v1255 = s.builtin(EvalOp::Add, &[v1253, v1254])?;
+let v1256 = s.builtin(EvalOp::Extract, &[v1245, v1250, v1255])?;
 let v1257 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1258 = s.operator("eq", &[v1256, v1257])?;
+let v1258 = s.builtin(EvalOp::Eq, &[v1256, v1257])?;
 let v1259 = match s.boolean_value(v1258, false)? {
 Some(true) => {
 let v1260 = eo__24run_5fevaluate(s, v1179)?;
 let v1261 = eo__24eo_5ftypeof(s, v1260)?;
 let v1262 = eo__24bv_5fbitwidth(s, v1261)?;
 let v1263 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1264 = s.operator("add", &[v1262, v1263])?;
-let v1265 = s.operator("is_z", &[v1264])?;
+let v1264 = s.builtin(EvalOp::Add, &[v1262, v1263])?;
+let v1265 = s.builtin(EvalOp::IsZ, &[v1264])?;
 let v1266 = match s.boolean_value(v1265, false)? {
 Some(true) => {
 let v1267 = eo__24run_5fevaluate(s, v1179)?;
 let v1268 = eo__24eo_5ftypeof(s, v1267)?;
 let v1269 = eo__24bv_5fbitwidth(s, v1268)?;
 let v1270 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1271 = s.operator("add", &[v1269, v1270])?;
-let v1272 = s.operator("is_neg", &[v1271])?;
+let v1271 = s.builtin(EvalOp::Add, &[v1269, v1270])?;
+let v1272 = s.builtin(EvalOp::IsNeg, &[v1271])?;
 let v1273 = match s.boolean_value(v1272, false)? {
 Some(true) => {
 let v1274 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -91954,8 +91954,8 @@ let v1276 = eo__24run_5fevaluate(s, v1179)?;
 let v1277 = eo__24eo_5ftypeof(s, v1276)?;
 let v1278 = eo__24bv_5fbitwidth(s, v1277)?;
 let v1279 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1280 = s.operator("add", &[v1278, v1279])?;
-let v1281 = s.operator("pow", &[v1275, v1280])?;
+let v1280 = s.builtin(EvalOp::Add, &[v1278, v1279])?;
+let v1281 = s.builtin(EvalOp::Pow, &[v1275, v1280])?;
 v1281
 }, None => s.stuck(),
 };
@@ -91966,22 +91966,22 @@ let v1283 = eo__24run_5fevaluate(s, v1179)?;
 let v1284 = eo__24eo_5ftypeof(s, v1283)?;
 let v1285 = eo__24bv_5fbitwidth(s, v1284)?;
 let v1286 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1287 = s.operator("add", &[v1285, v1286])?;
+let v1287 = s.builtin(EvalOp::Add, &[v1285, v1286])?;
 let v1288 = s.apply(v1282, v1287)?;
 v1288
 }, None => s.stuck(),
 };
-let v1289 = s.operator("neg", &[v1266])?;
+let v1289 = s.builtin(EvalOp::Neg, &[v1266])?;
 let v1290 = eo__24run_5fevaluate(s, v1179)?;
 let v1291 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1292 = eo__24run_5fevaluate(s, v1179)?;
 let v1293 = eo__24eo_5ftypeof(s, v1292)?;
 let v1294 = eo__24bv_5fbitwidth(s, v1293)?;
 let v1295 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1296 = s.operator("add", &[v1294, v1295])?;
-let v1297 = s.operator("extract", &[v1290, v1291, v1296])?;
-let v1298 = s.operator("to_z", &[v1297])?;
-let v1299 = s.operator("add", &[v1289, v1298])?;
+let v1296 = s.builtin(EvalOp::Add, &[v1294, v1295])?;
+let v1297 = s.builtin(EvalOp::Extract, &[v1290, v1291, v1296])?;
+let v1298 = s.builtin(EvalOp::ToInt, &[v1297])?;
+let v1299 = s.builtin(EvalOp::Add, &[v1289, v1298])?;
 v1299
 }, Some(false) => {
 let v1300 = eo__24run_5fevaluate(s, v1179)?;
@@ -91990,43 +91990,43 @@ let v1302 = eo__24run_5fevaluate(s, v1179)?;
 let v1303 = eo__24eo_5ftypeof(s, v1302)?;
 let v1304 = eo__24bv_5fbitwidth(s, v1303)?;
 let v1305 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1306 = s.operator("add", &[v1304, v1305])?;
-let v1307 = s.operator("extract", &[v1300, v1301, v1306])?;
-let v1308 = s.operator("to_z", &[v1307])?;
+let v1306 = s.builtin(EvalOp::Add, &[v1304, v1305])?;
+let v1307 = s.builtin(EvalOp::Extract, &[v1300, v1301, v1306])?;
+let v1308 = s.builtin(EvalOp::ToInt, &[v1307])?;
 v1308
 }, None => s.stuck(),
 };
-let v1309 = s.operator("gt", &[v1195, v1259])?;
+let v1309 = s.builtin(EvalOp::Gt, &[v1195, v1259])?;
 let v1310 = eo__24run_5fevaluate(s, v1179)?;
 let v1311 = eo__24run_5fevaluate(s, v1179)?;
 let v1312 = eo__24eo_5ftypeof(s, v1311)?;
 let v1313 = eo__24bv_5fbitwidth(s, v1312)?;
 let v1314 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1315 = s.operator("add", &[v1313, v1314])?;
+let v1315 = s.builtin(EvalOp::Add, &[v1313, v1314])?;
 let v1316 = eo__24run_5fevaluate(s, v1179)?;
 let v1317 = eo__24eo_5ftypeof(s, v1316)?;
 let v1318 = eo__24bv_5fbitwidth(s, v1317)?;
 let v1319 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1320 = s.operator("add", &[v1318, v1319])?;
-let v1321 = s.operator("extract", &[v1310, v1315, v1320])?;
+let v1320 = s.builtin(EvalOp::Add, &[v1318, v1319])?;
+let v1321 = s.builtin(EvalOp::Extract, &[v1310, v1315, v1320])?;
 let v1322 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1323 = s.operator("eq", &[v1321, v1322])?;
+let v1323 = s.builtin(EvalOp::Eq, &[v1321, v1322])?;
 let v1324 = match s.boolean_value(v1323, false)? {
 Some(true) => {
 let v1325 = eo__24run_5fevaluate(s, v1179)?;
 let v1326 = eo__24eo_5ftypeof(s, v1325)?;
 let v1327 = eo__24bv_5fbitwidth(s, v1326)?;
 let v1328 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1329 = s.operator("add", &[v1327, v1328])?;
-let v1330 = s.operator("is_z", &[v1329])?;
+let v1329 = s.builtin(EvalOp::Add, &[v1327, v1328])?;
+let v1330 = s.builtin(EvalOp::IsZ, &[v1329])?;
 let v1331 = match s.boolean_value(v1330, false)? {
 Some(true) => {
 let v1332 = eo__24run_5fevaluate(s, v1179)?;
 let v1333 = eo__24eo_5ftypeof(s, v1332)?;
 let v1334 = eo__24bv_5fbitwidth(s, v1333)?;
 let v1335 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1336 = s.operator("add", &[v1334, v1335])?;
-let v1337 = s.operator("is_neg", &[v1336])?;
+let v1336 = s.builtin(EvalOp::Add, &[v1334, v1335])?;
+let v1337 = s.builtin(EvalOp::IsNeg, &[v1336])?;
 let v1338 = match s.boolean_value(v1337, false)? {
 Some(true) => {
 let v1339 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92037,8 +92037,8 @@ let v1341 = eo__24run_5fevaluate(s, v1179)?;
 let v1342 = eo__24eo_5ftypeof(s, v1341)?;
 let v1343 = eo__24bv_5fbitwidth(s, v1342)?;
 let v1344 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1345 = s.operator("add", &[v1343, v1344])?;
-let v1346 = s.operator("pow", &[v1340, v1345])?;
+let v1345 = s.builtin(EvalOp::Add, &[v1343, v1344])?;
+let v1346 = s.builtin(EvalOp::Pow, &[v1340, v1345])?;
 v1346
 }, None => s.stuck(),
 };
@@ -92049,22 +92049,22 @@ let v1348 = eo__24run_5fevaluate(s, v1179)?;
 let v1349 = eo__24eo_5ftypeof(s, v1348)?;
 let v1350 = eo__24bv_5fbitwidth(s, v1349)?;
 let v1351 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1352 = s.operator("add", &[v1350, v1351])?;
+let v1352 = s.builtin(EvalOp::Add, &[v1350, v1351])?;
 let v1353 = s.apply(v1347, v1352)?;
 v1353
 }, None => s.stuck(),
 };
-let v1354 = s.operator("neg", &[v1331])?;
+let v1354 = s.builtin(EvalOp::Neg, &[v1331])?;
 let v1355 = eo__24run_5fevaluate(s, v1179)?;
 let v1356 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1357 = eo__24run_5fevaluate(s, v1179)?;
 let v1358 = eo__24eo_5ftypeof(s, v1357)?;
 let v1359 = eo__24bv_5fbitwidth(s, v1358)?;
 let v1360 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1361 = s.operator("add", &[v1359, v1360])?;
-let v1362 = s.operator("extract", &[v1355, v1356, v1361])?;
-let v1363 = s.operator("to_z", &[v1362])?;
-let v1364 = s.operator("add", &[v1354, v1363])?;
+let v1361 = s.builtin(EvalOp::Add, &[v1359, v1360])?;
+let v1362 = s.builtin(EvalOp::Extract, &[v1355, v1356, v1361])?;
+let v1363 = s.builtin(EvalOp::ToInt, &[v1362])?;
+let v1364 = s.builtin(EvalOp::Add, &[v1354, v1363])?;
 v1364
 }, Some(false) => {
 let v1365 = eo__24run_5fevaluate(s, v1179)?;
@@ -92073,9 +92073,9 @@ let v1367 = eo__24run_5fevaluate(s, v1179)?;
 let v1368 = eo__24eo_5ftypeof(s, v1367)?;
 let v1369 = eo__24bv_5fbitwidth(s, v1368)?;
 let v1370 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1371 = s.operator("add", &[v1369, v1370])?;
-let v1372 = s.operator("extract", &[v1365, v1366, v1371])?;
-let v1373 = s.operator("to_z", &[v1372])?;
+let v1371 = s.builtin(EvalOp::Add, &[v1369, v1370])?;
+let v1372 = s.builtin(EvalOp::Extract, &[v1365, v1366, v1371])?;
+let v1373 = s.builtin(EvalOp::ToInt, &[v1372])?;
 v1373
 }, None => s.stuck(),
 };
@@ -92084,31 +92084,31 @@ let v1375 = eo__24run_5fevaluate(s, v1176)?;
 let v1376 = eo__24eo_5ftypeof(s, v1375)?;
 let v1377 = eo__24bv_5fbitwidth(s, v1376)?;
 let v1378 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1379 = s.operator("add", &[v1377, v1378])?;
+let v1379 = s.builtin(EvalOp::Add, &[v1377, v1378])?;
 let v1380 = eo__24run_5fevaluate(s, v1176)?;
 let v1381 = eo__24eo_5ftypeof(s, v1380)?;
 let v1382 = eo__24bv_5fbitwidth(s, v1381)?;
 let v1383 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1384 = s.operator("add", &[v1382, v1383])?;
-let v1385 = s.operator("extract", &[v1374, v1379, v1384])?;
+let v1384 = s.builtin(EvalOp::Add, &[v1382, v1383])?;
+let v1385 = s.builtin(EvalOp::Extract, &[v1374, v1379, v1384])?;
 let v1386 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1387 = s.operator("eq", &[v1385, v1386])?;
+let v1387 = s.builtin(EvalOp::Eq, &[v1385, v1386])?;
 let v1388 = match s.boolean_value(v1387, false)? {
 Some(true) => {
 let v1389 = eo__24run_5fevaluate(s, v1176)?;
 let v1390 = eo__24eo_5ftypeof(s, v1389)?;
 let v1391 = eo__24bv_5fbitwidth(s, v1390)?;
 let v1392 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1393 = s.operator("add", &[v1391, v1392])?;
-let v1394 = s.operator("is_z", &[v1393])?;
+let v1393 = s.builtin(EvalOp::Add, &[v1391, v1392])?;
+let v1394 = s.builtin(EvalOp::IsZ, &[v1393])?;
 let v1395 = match s.boolean_value(v1394, false)? {
 Some(true) => {
 let v1396 = eo__24run_5fevaluate(s, v1176)?;
 let v1397 = eo__24eo_5ftypeof(s, v1396)?;
 let v1398 = eo__24bv_5fbitwidth(s, v1397)?;
 let v1399 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1400 = s.operator("add", &[v1398, v1399])?;
-let v1401 = s.operator("is_neg", &[v1400])?;
+let v1400 = s.builtin(EvalOp::Add, &[v1398, v1399])?;
+let v1401 = s.builtin(EvalOp::IsNeg, &[v1400])?;
 let v1402 = match s.boolean_value(v1401, false)? {
 Some(true) => {
 let v1403 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92119,8 +92119,8 @@ let v1405 = eo__24run_5fevaluate(s, v1176)?;
 let v1406 = eo__24eo_5ftypeof(s, v1405)?;
 let v1407 = eo__24bv_5fbitwidth(s, v1406)?;
 let v1408 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1409 = s.operator("add", &[v1407, v1408])?;
-let v1410 = s.operator("pow", &[v1404, v1409])?;
+let v1409 = s.builtin(EvalOp::Add, &[v1407, v1408])?;
+let v1410 = s.builtin(EvalOp::Pow, &[v1404, v1409])?;
 v1410
 }, None => s.stuck(),
 };
@@ -92131,22 +92131,22 @@ let v1412 = eo__24run_5fevaluate(s, v1176)?;
 let v1413 = eo__24eo_5ftypeof(s, v1412)?;
 let v1414 = eo__24bv_5fbitwidth(s, v1413)?;
 let v1415 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1416 = s.operator("add", &[v1414, v1415])?;
+let v1416 = s.builtin(EvalOp::Add, &[v1414, v1415])?;
 let v1417 = s.apply(v1411, v1416)?;
 v1417
 }, None => s.stuck(),
 };
-let v1418 = s.operator("neg", &[v1395])?;
+let v1418 = s.builtin(EvalOp::Neg, &[v1395])?;
 let v1419 = eo__24run_5fevaluate(s, v1176)?;
 let v1420 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1421 = eo__24run_5fevaluate(s, v1176)?;
 let v1422 = eo__24eo_5ftypeof(s, v1421)?;
 let v1423 = eo__24bv_5fbitwidth(s, v1422)?;
 let v1424 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1425 = s.operator("add", &[v1423, v1424])?;
-let v1426 = s.operator("extract", &[v1419, v1420, v1425])?;
-let v1427 = s.operator("to_z", &[v1426])?;
-let v1428 = s.operator("add", &[v1418, v1427])?;
+let v1425 = s.builtin(EvalOp::Add, &[v1423, v1424])?;
+let v1426 = s.builtin(EvalOp::Extract, &[v1419, v1420, v1425])?;
+let v1427 = s.builtin(EvalOp::ToInt, &[v1426])?;
+let v1428 = s.builtin(EvalOp::Add, &[v1418, v1427])?;
 v1428
 }, Some(false) => {
 let v1429 = eo__24run_5fevaluate(s, v1176)?;
@@ -92155,14 +92155,14 @@ let v1431 = eo__24run_5fevaluate(s, v1176)?;
 let v1432 = eo__24eo_5ftypeof(s, v1431)?;
 let v1433 = eo__24bv_5fbitwidth(s, v1432)?;
 let v1434 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1435 = s.operator("add", &[v1433, v1434])?;
-let v1436 = s.operator("extract", &[v1429, v1430, v1435])?;
-let v1437 = s.operator("to_z", &[v1436])?;
+let v1435 = s.builtin(EvalOp::Add, &[v1433, v1434])?;
+let v1436 = s.builtin(EvalOp::Extract, &[v1429, v1430, v1435])?;
+let v1437 = s.builtin(EvalOp::ToInt, &[v1436])?;
 v1437
 }, None => s.stuck(),
 };
-let v1438 = s.operator("eq", &[v1324, v1388])?;
-let v1439 = s.operator("or", &[v1309, v1438])?;
+let v1438 = s.builtin(EvalOp::Eq, &[v1324, v1388])?;
+let v1439 = s.builtin(EvalOp::Or, &[v1309, v1438])?;
 return Ok(Some(v1439));
 }
 Ok(None)
@@ -92186,31 +92186,31 @@ let v1448 = eo__24run_5fevaluate(s, v1445)?;
 let v1449 = eo__24eo_5ftypeof(s, v1448)?;
 let v1450 = eo__24bv_5fbitwidth(s, v1449)?;
 let v1451 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1452 = s.operator("add", &[v1450, v1451])?;
+let v1452 = s.builtin(EvalOp::Add, &[v1450, v1451])?;
 let v1453 = eo__24run_5fevaluate(s, v1445)?;
 let v1454 = eo__24eo_5ftypeof(s, v1453)?;
 let v1455 = eo__24bv_5fbitwidth(s, v1454)?;
 let v1456 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1457 = s.operator("add", &[v1455, v1456])?;
-let v1458 = s.operator("extract", &[v1447, v1452, v1457])?;
+let v1457 = s.builtin(EvalOp::Add, &[v1455, v1456])?;
+let v1458 = s.builtin(EvalOp::Extract, &[v1447, v1452, v1457])?;
 let v1459 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1460 = s.operator("eq", &[v1458, v1459])?;
+let v1460 = s.builtin(EvalOp::Eq, &[v1458, v1459])?;
 let v1461 = match s.boolean_value(v1460, false)? {
 Some(true) => {
 let v1462 = eo__24run_5fevaluate(s, v1445)?;
 let v1463 = eo__24eo_5ftypeof(s, v1462)?;
 let v1464 = eo__24bv_5fbitwidth(s, v1463)?;
 let v1465 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1466 = s.operator("add", &[v1464, v1465])?;
-let v1467 = s.operator("is_z", &[v1466])?;
+let v1466 = s.builtin(EvalOp::Add, &[v1464, v1465])?;
+let v1467 = s.builtin(EvalOp::IsZ, &[v1466])?;
 let v1468 = match s.boolean_value(v1467, false)? {
 Some(true) => {
 let v1469 = eo__24run_5fevaluate(s, v1445)?;
 let v1470 = eo__24eo_5ftypeof(s, v1469)?;
 let v1471 = eo__24bv_5fbitwidth(s, v1470)?;
 let v1472 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1473 = s.operator("add", &[v1471, v1472])?;
-let v1474 = s.operator("is_neg", &[v1473])?;
+let v1473 = s.builtin(EvalOp::Add, &[v1471, v1472])?;
+let v1474 = s.builtin(EvalOp::IsNeg, &[v1473])?;
 let v1475 = match s.boolean_value(v1474, false)? {
 Some(true) => {
 let v1476 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92221,8 +92221,8 @@ let v1478 = eo__24run_5fevaluate(s, v1445)?;
 let v1479 = eo__24eo_5ftypeof(s, v1478)?;
 let v1480 = eo__24bv_5fbitwidth(s, v1479)?;
 let v1481 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1482 = s.operator("add", &[v1480, v1481])?;
-let v1483 = s.operator("pow", &[v1477, v1482])?;
+let v1482 = s.builtin(EvalOp::Add, &[v1480, v1481])?;
+let v1483 = s.builtin(EvalOp::Pow, &[v1477, v1482])?;
 v1483
 }, None => s.stuck(),
 };
@@ -92233,22 +92233,22 @@ let v1485 = eo__24run_5fevaluate(s, v1445)?;
 let v1486 = eo__24eo_5ftypeof(s, v1485)?;
 let v1487 = eo__24bv_5fbitwidth(s, v1486)?;
 let v1488 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1489 = s.operator("add", &[v1487, v1488])?;
+let v1489 = s.builtin(EvalOp::Add, &[v1487, v1488])?;
 let v1490 = s.apply(v1484, v1489)?;
 v1490
 }, None => s.stuck(),
 };
-let v1491 = s.operator("neg", &[v1468])?;
+let v1491 = s.builtin(EvalOp::Neg, &[v1468])?;
 let v1492 = eo__24run_5fevaluate(s, v1445)?;
 let v1493 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1494 = eo__24run_5fevaluate(s, v1445)?;
 let v1495 = eo__24eo_5ftypeof(s, v1494)?;
 let v1496 = eo__24bv_5fbitwidth(s, v1495)?;
 let v1497 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1498 = s.operator("add", &[v1496, v1497])?;
-let v1499 = s.operator("extract", &[v1492, v1493, v1498])?;
-let v1500 = s.operator("to_z", &[v1499])?;
-let v1501 = s.operator("add", &[v1491, v1500])?;
+let v1498 = s.builtin(EvalOp::Add, &[v1496, v1497])?;
+let v1499 = s.builtin(EvalOp::Extract, &[v1492, v1493, v1498])?;
+let v1500 = s.builtin(EvalOp::ToInt, &[v1499])?;
+let v1501 = s.builtin(EvalOp::Add, &[v1491, v1500])?;
 v1501
 }, Some(false) => {
 let v1502 = eo__24run_5fevaluate(s, v1445)?;
@@ -92257,9 +92257,9 @@ let v1504 = eo__24run_5fevaluate(s, v1445)?;
 let v1505 = eo__24eo_5ftypeof(s, v1504)?;
 let v1506 = eo__24bv_5fbitwidth(s, v1505)?;
 let v1507 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1508 = s.operator("add", &[v1506, v1507])?;
-let v1509 = s.operator("extract", &[v1502, v1503, v1508])?;
-let v1510 = s.operator("to_z", &[v1509])?;
+let v1508 = s.builtin(EvalOp::Add, &[v1506, v1507])?;
+let v1509 = s.builtin(EvalOp::Extract, &[v1502, v1503, v1508])?;
+let v1510 = s.builtin(EvalOp::ToInt, &[v1509])?;
 v1510
 }, None => s.stuck(),
 };
@@ -92268,31 +92268,31 @@ let v1512 = eo__24run_5fevaluate(s, v1442)?;
 let v1513 = eo__24eo_5ftypeof(s, v1512)?;
 let v1514 = eo__24bv_5fbitwidth(s, v1513)?;
 let v1515 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1516 = s.operator("add", &[v1514, v1515])?;
+let v1516 = s.builtin(EvalOp::Add, &[v1514, v1515])?;
 let v1517 = eo__24run_5fevaluate(s, v1442)?;
 let v1518 = eo__24eo_5ftypeof(s, v1517)?;
 let v1519 = eo__24bv_5fbitwidth(s, v1518)?;
 let v1520 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1521 = s.operator("add", &[v1519, v1520])?;
-let v1522 = s.operator("extract", &[v1511, v1516, v1521])?;
+let v1521 = s.builtin(EvalOp::Add, &[v1519, v1520])?;
+let v1522 = s.builtin(EvalOp::Extract, &[v1511, v1516, v1521])?;
 let v1523 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1524 = s.operator("eq", &[v1522, v1523])?;
+let v1524 = s.builtin(EvalOp::Eq, &[v1522, v1523])?;
 let v1525 = match s.boolean_value(v1524, false)? {
 Some(true) => {
 let v1526 = eo__24run_5fevaluate(s, v1442)?;
 let v1527 = eo__24eo_5ftypeof(s, v1526)?;
 let v1528 = eo__24bv_5fbitwidth(s, v1527)?;
 let v1529 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1530 = s.operator("add", &[v1528, v1529])?;
-let v1531 = s.operator("is_z", &[v1530])?;
+let v1530 = s.builtin(EvalOp::Add, &[v1528, v1529])?;
+let v1531 = s.builtin(EvalOp::IsZ, &[v1530])?;
 let v1532 = match s.boolean_value(v1531, false)? {
 Some(true) => {
 let v1533 = eo__24run_5fevaluate(s, v1442)?;
 let v1534 = eo__24eo_5ftypeof(s, v1533)?;
 let v1535 = eo__24bv_5fbitwidth(s, v1534)?;
 let v1536 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1537 = s.operator("add", &[v1535, v1536])?;
-let v1538 = s.operator("is_neg", &[v1537])?;
+let v1537 = s.builtin(EvalOp::Add, &[v1535, v1536])?;
+let v1538 = s.builtin(EvalOp::IsNeg, &[v1537])?;
 let v1539 = match s.boolean_value(v1538, false)? {
 Some(true) => {
 let v1540 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92303,8 +92303,8 @@ let v1542 = eo__24run_5fevaluate(s, v1442)?;
 let v1543 = eo__24eo_5ftypeof(s, v1542)?;
 let v1544 = eo__24bv_5fbitwidth(s, v1543)?;
 let v1545 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1546 = s.operator("add", &[v1544, v1545])?;
-let v1547 = s.operator("pow", &[v1541, v1546])?;
+let v1546 = s.builtin(EvalOp::Add, &[v1544, v1545])?;
+let v1547 = s.builtin(EvalOp::Pow, &[v1541, v1546])?;
 v1547
 }, None => s.stuck(),
 };
@@ -92315,22 +92315,22 @@ let v1549 = eo__24run_5fevaluate(s, v1442)?;
 let v1550 = eo__24eo_5ftypeof(s, v1549)?;
 let v1551 = eo__24bv_5fbitwidth(s, v1550)?;
 let v1552 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1553 = s.operator("add", &[v1551, v1552])?;
+let v1553 = s.builtin(EvalOp::Add, &[v1551, v1552])?;
 let v1554 = s.apply(v1548, v1553)?;
 v1554
 }, None => s.stuck(),
 };
-let v1555 = s.operator("neg", &[v1532])?;
+let v1555 = s.builtin(EvalOp::Neg, &[v1532])?;
 let v1556 = eo__24run_5fevaluate(s, v1442)?;
 let v1557 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1558 = eo__24run_5fevaluate(s, v1442)?;
 let v1559 = eo__24eo_5ftypeof(s, v1558)?;
 let v1560 = eo__24bv_5fbitwidth(s, v1559)?;
 let v1561 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1562 = s.operator("add", &[v1560, v1561])?;
-let v1563 = s.operator("extract", &[v1556, v1557, v1562])?;
-let v1564 = s.operator("to_z", &[v1563])?;
-let v1565 = s.operator("add", &[v1555, v1564])?;
+let v1562 = s.builtin(EvalOp::Add, &[v1560, v1561])?;
+let v1563 = s.builtin(EvalOp::Extract, &[v1556, v1557, v1562])?;
+let v1564 = s.builtin(EvalOp::ToInt, &[v1563])?;
+let v1565 = s.builtin(EvalOp::Add, &[v1555, v1564])?;
 v1565
 }, Some(false) => {
 let v1566 = eo__24run_5fevaluate(s, v1442)?;
@@ -92339,13 +92339,13 @@ let v1568 = eo__24run_5fevaluate(s, v1442)?;
 let v1569 = eo__24eo_5ftypeof(s, v1568)?;
 let v1570 = eo__24bv_5fbitwidth(s, v1569)?;
 let v1571 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1572 = s.operator("add", &[v1570, v1571])?;
-let v1573 = s.operator("extract", &[v1566, v1567, v1572])?;
-let v1574 = s.operator("to_z", &[v1573])?;
+let v1572 = s.builtin(EvalOp::Add, &[v1570, v1571])?;
+let v1573 = s.builtin(EvalOp::Extract, &[v1566, v1567, v1572])?;
+let v1574 = s.builtin(EvalOp::ToInt, &[v1573])?;
 v1574
 }, None => s.stuck(),
 };
-let v1575 = s.operator("gt", &[v1461, v1525])?;
+let v1575 = s.builtin(EvalOp::Gt, &[v1461, v1525])?;
 return Ok(Some(v1575));
 }
 Ok(None)
@@ -92369,31 +92369,31 @@ let v1584 = eo__24run_5fevaluate(s, v1581)?;
 let v1585 = eo__24eo_5ftypeof(s, v1584)?;
 let v1586 = eo__24bv_5fbitwidth(s, v1585)?;
 let v1587 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1588 = s.operator("add", &[v1586, v1587])?;
+let v1588 = s.builtin(EvalOp::Add, &[v1586, v1587])?;
 let v1589 = eo__24run_5fevaluate(s, v1581)?;
 let v1590 = eo__24eo_5ftypeof(s, v1589)?;
 let v1591 = eo__24bv_5fbitwidth(s, v1590)?;
 let v1592 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1593 = s.operator("add", &[v1591, v1592])?;
-let v1594 = s.operator("extract", &[v1583, v1588, v1593])?;
+let v1593 = s.builtin(EvalOp::Add, &[v1591, v1592])?;
+let v1594 = s.builtin(EvalOp::Extract, &[v1583, v1588, v1593])?;
 let v1595 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1596 = s.operator("eq", &[v1594, v1595])?;
+let v1596 = s.builtin(EvalOp::Eq, &[v1594, v1595])?;
 let v1597 = match s.boolean_value(v1596, false)? {
 Some(true) => {
 let v1598 = eo__24run_5fevaluate(s, v1581)?;
 let v1599 = eo__24eo_5ftypeof(s, v1598)?;
 let v1600 = eo__24bv_5fbitwidth(s, v1599)?;
 let v1601 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1602 = s.operator("add", &[v1600, v1601])?;
-let v1603 = s.operator("is_z", &[v1602])?;
+let v1602 = s.builtin(EvalOp::Add, &[v1600, v1601])?;
+let v1603 = s.builtin(EvalOp::IsZ, &[v1602])?;
 let v1604 = match s.boolean_value(v1603, false)? {
 Some(true) => {
 let v1605 = eo__24run_5fevaluate(s, v1581)?;
 let v1606 = eo__24eo_5ftypeof(s, v1605)?;
 let v1607 = eo__24bv_5fbitwidth(s, v1606)?;
 let v1608 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1609 = s.operator("add", &[v1607, v1608])?;
-let v1610 = s.operator("is_neg", &[v1609])?;
+let v1609 = s.builtin(EvalOp::Add, &[v1607, v1608])?;
+let v1610 = s.builtin(EvalOp::IsNeg, &[v1609])?;
 let v1611 = match s.boolean_value(v1610, false)? {
 Some(true) => {
 let v1612 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92404,8 +92404,8 @@ let v1614 = eo__24run_5fevaluate(s, v1581)?;
 let v1615 = eo__24eo_5ftypeof(s, v1614)?;
 let v1616 = eo__24bv_5fbitwidth(s, v1615)?;
 let v1617 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1618 = s.operator("add", &[v1616, v1617])?;
-let v1619 = s.operator("pow", &[v1613, v1618])?;
+let v1618 = s.builtin(EvalOp::Add, &[v1616, v1617])?;
+let v1619 = s.builtin(EvalOp::Pow, &[v1613, v1618])?;
 v1619
 }, None => s.stuck(),
 };
@@ -92416,22 +92416,22 @@ let v1621 = eo__24run_5fevaluate(s, v1581)?;
 let v1622 = eo__24eo_5ftypeof(s, v1621)?;
 let v1623 = eo__24bv_5fbitwidth(s, v1622)?;
 let v1624 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1625 = s.operator("add", &[v1623, v1624])?;
+let v1625 = s.builtin(EvalOp::Add, &[v1623, v1624])?;
 let v1626 = s.apply(v1620, v1625)?;
 v1626
 }, None => s.stuck(),
 };
-let v1627 = s.operator("neg", &[v1604])?;
+let v1627 = s.builtin(EvalOp::Neg, &[v1604])?;
 let v1628 = eo__24run_5fevaluate(s, v1581)?;
 let v1629 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1630 = eo__24run_5fevaluate(s, v1581)?;
 let v1631 = eo__24eo_5ftypeof(s, v1630)?;
 let v1632 = eo__24bv_5fbitwidth(s, v1631)?;
 let v1633 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1634 = s.operator("add", &[v1632, v1633])?;
-let v1635 = s.operator("extract", &[v1628, v1629, v1634])?;
-let v1636 = s.operator("to_z", &[v1635])?;
-let v1637 = s.operator("add", &[v1627, v1636])?;
+let v1634 = s.builtin(EvalOp::Add, &[v1632, v1633])?;
+let v1635 = s.builtin(EvalOp::Extract, &[v1628, v1629, v1634])?;
+let v1636 = s.builtin(EvalOp::ToInt, &[v1635])?;
+let v1637 = s.builtin(EvalOp::Add, &[v1627, v1636])?;
 v1637
 }, Some(false) => {
 let v1638 = eo__24run_5fevaluate(s, v1581)?;
@@ -92440,9 +92440,9 @@ let v1640 = eo__24run_5fevaluate(s, v1581)?;
 let v1641 = eo__24eo_5ftypeof(s, v1640)?;
 let v1642 = eo__24bv_5fbitwidth(s, v1641)?;
 let v1643 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1644 = s.operator("add", &[v1642, v1643])?;
-let v1645 = s.operator("extract", &[v1638, v1639, v1644])?;
-let v1646 = s.operator("to_z", &[v1645])?;
+let v1644 = s.builtin(EvalOp::Add, &[v1642, v1643])?;
+let v1645 = s.builtin(EvalOp::Extract, &[v1638, v1639, v1644])?;
+let v1646 = s.builtin(EvalOp::ToInt, &[v1645])?;
 v1646
 }, None => s.stuck(),
 };
@@ -92451,31 +92451,31 @@ let v1648 = eo__24run_5fevaluate(s, v1578)?;
 let v1649 = eo__24eo_5ftypeof(s, v1648)?;
 let v1650 = eo__24bv_5fbitwidth(s, v1649)?;
 let v1651 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1652 = s.operator("add", &[v1650, v1651])?;
+let v1652 = s.builtin(EvalOp::Add, &[v1650, v1651])?;
 let v1653 = eo__24run_5fevaluate(s, v1578)?;
 let v1654 = eo__24eo_5ftypeof(s, v1653)?;
 let v1655 = eo__24bv_5fbitwidth(s, v1654)?;
 let v1656 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1657 = s.operator("add", &[v1655, v1656])?;
-let v1658 = s.operator("extract", &[v1647, v1652, v1657])?;
+let v1657 = s.builtin(EvalOp::Add, &[v1655, v1656])?;
+let v1658 = s.builtin(EvalOp::Extract, &[v1647, v1652, v1657])?;
 let v1659 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1660 = s.operator("eq", &[v1658, v1659])?;
+let v1660 = s.builtin(EvalOp::Eq, &[v1658, v1659])?;
 let v1661 = match s.boolean_value(v1660, false)? {
 Some(true) => {
 let v1662 = eo__24run_5fevaluate(s, v1578)?;
 let v1663 = eo__24eo_5ftypeof(s, v1662)?;
 let v1664 = eo__24bv_5fbitwidth(s, v1663)?;
 let v1665 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1666 = s.operator("add", &[v1664, v1665])?;
-let v1667 = s.operator("is_z", &[v1666])?;
+let v1666 = s.builtin(EvalOp::Add, &[v1664, v1665])?;
+let v1667 = s.builtin(EvalOp::IsZ, &[v1666])?;
 let v1668 = match s.boolean_value(v1667, false)? {
 Some(true) => {
 let v1669 = eo__24run_5fevaluate(s, v1578)?;
 let v1670 = eo__24eo_5ftypeof(s, v1669)?;
 let v1671 = eo__24bv_5fbitwidth(s, v1670)?;
 let v1672 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1673 = s.operator("add", &[v1671, v1672])?;
-let v1674 = s.operator("is_neg", &[v1673])?;
+let v1673 = s.builtin(EvalOp::Add, &[v1671, v1672])?;
+let v1674 = s.builtin(EvalOp::IsNeg, &[v1673])?;
 let v1675 = match s.boolean_value(v1674, false)? {
 Some(true) => {
 let v1676 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92486,8 +92486,8 @@ let v1678 = eo__24run_5fevaluate(s, v1578)?;
 let v1679 = eo__24eo_5ftypeof(s, v1678)?;
 let v1680 = eo__24bv_5fbitwidth(s, v1679)?;
 let v1681 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1682 = s.operator("add", &[v1680, v1681])?;
-let v1683 = s.operator("pow", &[v1677, v1682])?;
+let v1682 = s.builtin(EvalOp::Add, &[v1680, v1681])?;
+let v1683 = s.builtin(EvalOp::Pow, &[v1677, v1682])?;
 v1683
 }, None => s.stuck(),
 };
@@ -92498,22 +92498,22 @@ let v1685 = eo__24run_5fevaluate(s, v1578)?;
 let v1686 = eo__24eo_5ftypeof(s, v1685)?;
 let v1687 = eo__24bv_5fbitwidth(s, v1686)?;
 let v1688 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1689 = s.operator("add", &[v1687, v1688])?;
+let v1689 = s.builtin(EvalOp::Add, &[v1687, v1688])?;
 let v1690 = s.apply(v1684, v1689)?;
 v1690
 }, None => s.stuck(),
 };
-let v1691 = s.operator("neg", &[v1668])?;
+let v1691 = s.builtin(EvalOp::Neg, &[v1668])?;
 let v1692 = eo__24run_5fevaluate(s, v1578)?;
 let v1693 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1694 = eo__24run_5fevaluate(s, v1578)?;
 let v1695 = eo__24eo_5ftypeof(s, v1694)?;
 let v1696 = eo__24bv_5fbitwidth(s, v1695)?;
 let v1697 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1698 = s.operator("add", &[v1696, v1697])?;
-let v1699 = s.operator("extract", &[v1692, v1693, v1698])?;
-let v1700 = s.operator("to_z", &[v1699])?;
-let v1701 = s.operator("add", &[v1691, v1700])?;
+let v1698 = s.builtin(EvalOp::Add, &[v1696, v1697])?;
+let v1699 = s.builtin(EvalOp::Extract, &[v1692, v1693, v1698])?;
+let v1700 = s.builtin(EvalOp::ToInt, &[v1699])?;
+let v1701 = s.builtin(EvalOp::Add, &[v1691, v1700])?;
 v1701
 }, Some(false) => {
 let v1702 = eo__24run_5fevaluate(s, v1578)?;
@@ -92522,43 +92522,43 @@ let v1704 = eo__24run_5fevaluate(s, v1578)?;
 let v1705 = eo__24eo_5ftypeof(s, v1704)?;
 let v1706 = eo__24bv_5fbitwidth(s, v1705)?;
 let v1707 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1708 = s.operator("add", &[v1706, v1707])?;
-let v1709 = s.operator("extract", &[v1702, v1703, v1708])?;
-let v1710 = s.operator("to_z", &[v1709])?;
+let v1708 = s.builtin(EvalOp::Add, &[v1706, v1707])?;
+let v1709 = s.builtin(EvalOp::Extract, &[v1702, v1703, v1708])?;
+let v1710 = s.builtin(EvalOp::ToInt, &[v1709])?;
 v1710
 }, None => s.stuck(),
 };
-let v1711 = s.operator("gt", &[v1597, v1661])?;
+let v1711 = s.builtin(EvalOp::Gt, &[v1597, v1661])?;
 let v1712 = eo__24run_5fevaluate(s, v1581)?;
 let v1713 = eo__24run_5fevaluate(s, v1581)?;
 let v1714 = eo__24eo_5ftypeof(s, v1713)?;
 let v1715 = eo__24bv_5fbitwidth(s, v1714)?;
 let v1716 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1717 = s.operator("add", &[v1715, v1716])?;
+let v1717 = s.builtin(EvalOp::Add, &[v1715, v1716])?;
 let v1718 = eo__24run_5fevaluate(s, v1581)?;
 let v1719 = eo__24eo_5ftypeof(s, v1718)?;
 let v1720 = eo__24bv_5fbitwidth(s, v1719)?;
 let v1721 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1722 = s.operator("add", &[v1720, v1721])?;
-let v1723 = s.operator("extract", &[v1712, v1717, v1722])?;
+let v1722 = s.builtin(EvalOp::Add, &[v1720, v1721])?;
+let v1723 = s.builtin(EvalOp::Extract, &[v1712, v1717, v1722])?;
 let v1724 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1725 = s.operator("eq", &[v1723, v1724])?;
+let v1725 = s.builtin(EvalOp::Eq, &[v1723, v1724])?;
 let v1726 = match s.boolean_value(v1725, false)? {
 Some(true) => {
 let v1727 = eo__24run_5fevaluate(s, v1581)?;
 let v1728 = eo__24eo_5ftypeof(s, v1727)?;
 let v1729 = eo__24bv_5fbitwidth(s, v1728)?;
 let v1730 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1731 = s.operator("add", &[v1729, v1730])?;
-let v1732 = s.operator("is_z", &[v1731])?;
+let v1731 = s.builtin(EvalOp::Add, &[v1729, v1730])?;
+let v1732 = s.builtin(EvalOp::IsZ, &[v1731])?;
 let v1733 = match s.boolean_value(v1732, false)? {
 Some(true) => {
 let v1734 = eo__24run_5fevaluate(s, v1581)?;
 let v1735 = eo__24eo_5ftypeof(s, v1734)?;
 let v1736 = eo__24bv_5fbitwidth(s, v1735)?;
 let v1737 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1738 = s.operator("add", &[v1736, v1737])?;
-let v1739 = s.operator("is_neg", &[v1738])?;
+let v1738 = s.builtin(EvalOp::Add, &[v1736, v1737])?;
+let v1739 = s.builtin(EvalOp::IsNeg, &[v1738])?;
 let v1740 = match s.boolean_value(v1739, false)? {
 Some(true) => {
 let v1741 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92569,8 +92569,8 @@ let v1743 = eo__24run_5fevaluate(s, v1581)?;
 let v1744 = eo__24eo_5ftypeof(s, v1743)?;
 let v1745 = eo__24bv_5fbitwidth(s, v1744)?;
 let v1746 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1747 = s.operator("add", &[v1745, v1746])?;
-let v1748 = s.operator("pow", &[v1742, v1747])?;
+let v1747 = s.builtin(EvalOp::Add, &[v1745, v1746])?;
+let v1748 = s.builtin(EvalOp::Pow, &[v1742, v1747])?;
 v1748
 }, None => s.stuck(),
 };
@@ -92581,22 +92581,22 @@ let v1750 = eo__24run_5fevaluate(s, v1581)?;
 let v1751 = eo__24eo_5ftypeof(s, v1750)?;
 let v1752 = eo__24bv_5fbitwidth(s, v1751)?;
 let v1753 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1754 = s.operator("add", &[v1752, v1753])?;
+let v1754 = s.builtin(EvalOp::Add, &[v1752, v1753])?;
 let v1755 = s.apply(v1749, v1754)?;
 v1755
 }, None => s.stuck(),
 };
-let v1756 = s.operator("neg", &[v1733])?;
+let v1756 = s.builtin(EvalOp::Neg, &[v1733])?;
 let v1757 = eo__24run_5fevaluate(s, v1581)?;
 let v1758 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1759 = eo__24run_5fevaluate(s, v1581)?;
 let v1760 = eo__24eo_5ftypeof(s, v1759)?;
 let v1761 = eo__24bv_5fbitwidth(s, v1760)?;
 let v1762 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1763 = s.operator("add", &[v1761, v1762])?;
-let v1764 = s.operator("extract", &[v1757, v1758, v1763])?;
-let v1765 = s.operator("to_z", &[v1764])?;
-let v1766 = s.operator("add", &[v1756, v1765])?;
+let v1763 = s.builtin(EvalOp::Add, &[v1761, v1762])?;
+let v1764 = s.builtin(EvalOp::Extract, &[v1757, v1758, v1763])?;
+let v1765 = s.builtin(EvalOp::ToInt, &[v1764])?;
+let v1766 = s.builtin(EvalOp::Add, &[v1756, v1765])?;
 v1766
 }, Some(false) => {
 let v1767 = eo__24run_5fevaluate(s, v1581)?;
@@ -92605,9 +92605,9 @@ let v1769 = eo__24run_5fevaluate(s, v1581)?;
 let v1770 = eo__24eo_5ftypeof(s, v1769)?;
 let v1771 = eo__24bv_5fbitwidth(s, v1770)?;
 let v1772 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1773 = s.operator("add", &[v1771, v1772])?;
-let v1774 = s.operator("extract", &[v1767, v1768, v1773])?;
-let v1775 = s.operator("to_z", &[v1774])?;
+let v1773 = s.builtin(EvalOp::Add, &[v1771, v1772])?;
+let v1774 = s.builtin(EvalOp::Extract, &[v1767, v1768, v1773])?;
+let v1775 = s.builtin(EvalOp::ToInt, &[v1774])?;
 v1775
 }, None => s.stuck(),
 };
@@ -92616,31 +92616,31 @@ let v1777 = eo__24run_5fevaluate(s, v1578)?;
 let v1778 = eo__24eo_5ftypeof(s, v1777)?;
 let v1779 = eo__24bv_5fbitwidth(s, v1778)?;
 let v1780 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1781 = s.operator("add", &[v1779, v1780])?;
+let v1781 = s.builtin(EvalOp::Add, &[v1779, v1780])?;
 let v1782 = eo__24run_5fevaluate(s, v1578)?;
 let v1783 = eo__24eo_5ftypeof(s, v1782)?;
 let v1784 = eo__24bv_5fbitwidth(s, v1783)?;
 let v1785 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1786 = s.operator("add", &[v1784, v1785])?;
-let v1787 = s.operator("extract", &[v1776, v1781, v1786])?;
+let v1786 = s.builtin(EvalOp::Add, &[v1784, v1785])?;
+let v1787 = s.builtin(EvalOp::Extract, &[v1776, v1781, v1786])?;
 let v1788 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1789 = s.operator("eq", &[v1787, v1788])?;
+let v1789 = s.builtin(EvalOp::Eq, &[v1787, v1788])?;
 let v1790 = match s.boolean_value(v1789, false)? {
 Some(true) => {
 let v1791 = eo__24run_5fevaluate(s, v1578)?;
 let v1792 = eo__24eo_5ftypeof(s, v1791)?;
 let v1793 = eo__24bv_5fbitwidth(s, v1792)?;
 let v1794 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1795 = s.operator("add", &[v1793, v1794])?;
-let v1796 = s.operator("is_z", &[v1795])?;
+let v1795 = s.builtin(EvalOp::Add, &[v1793, v1794])?;
+let v1796 = s.builtin(EvalOp::IsZ, &[v1795])?;
 let v1797 = match s.boolean_value(v1796, false)? {
 Some(true) => {
 let v1798 = eo__24run_5fevaluate(s, v1578)?;
 let v1799 = eo__24eo_5ftypeof(s, v1798)?;
 let v1800 = eo__24bv_5fbitwidth(s, v1799)?;
 let v1801 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1802 = s.operator("add", &[v1800, v1801])?;
-let v1803 = s.operator("is_neg", &[v1802])?;
+let v1802 = s.builtin(EvalOp::Add, &[v1800, v1801])?;
+let v1803 = s.builtin(EvalOp::IsNeg, &[v1802])?;
 let v1804 = match s.boolean_value(v1803, false)? {
 Some(true) => {
 let v1805 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92651,8 +92651,8 @@ let v1807 = eo__24run_5fevaluate(s, v1578)?;
 let v1808 = eo__24eo_5ftypeof(s, v1807)?;
 let v1809 = eo__24bv_5fbitwidth(s, v1808)?;
 let v1810 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1811 = s.operator("add", &[v1809, v1810])?;
-let v1812 = s.operator("pow", &[v1806, v1811])?;
+let v1811 = s.builtin(EvalOp::Add, &[v1809, v1810])?;
+let v1812 = s.builtin(EvalOp::Pow, &[v1806, v1811])?;
 v1812
 }, None => s.stuck(),
 };
@@ -92663,22 +92663,22 @@ let v1814 = eo__24run_5fevaluate(s, v1578)?;
 let v1815 = eo__24eo_5ftypeof(s, v1814)?;
 let v1816 = eo__24bv_5fbitwidth(s, v1815)?;
 let v1817 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1818 = s.operator("add", &[v1816, v1817])?;
+let v1818 = s.builtin(EvalOp::Add, &[v1816, v1817])?;
 let v1819 = s.apply(v1813, v1818)?;
 v1819
 }, None => s.stuck(),
 };
-let v1820 = s.operator("neg", &[v1797])?;
+let v1820 = s.builtin(EvalOp::Neg, &[v1797])?;
 let v1821 = eo__24run_5fevaluate(s, v1578)?;
 let v1822 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1823 = eo__24run_5fevaluate(s, v1578)?;
 let v1824 = eo__24eo_5ftypeof(s, v1823)?;
 let v1825 = eo__24bv_5fbitwidth(s, v1824)?;
 let v1826 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1827 = s.operator("add", &[v1825, v1826])?;
-let v1828 = s.operator("extract", &[v1821, v1822, v1827])?;
-let v1829 = s.operator("to_z", &[v1828])?;
-let v1830 = s.operator("add", &[v1820, v1829])?;
+let v1827 = s.builtin(EvalOp::Add, &[v1825, v1826])?;
+let v1828 = s.builtin(EvalOp::Extract, &[v1821, v1822, v1827])?;
+let v1829 = s.builtin(EvalOp::ToInt, &[v1828])?;
+let v1830 = s.builtin(EvalOp::Add, &[v1820, v1829])?;
 v1830
 }, Some(false) => {
 let v1831 = eo__24run_5fevaluate(s, v1578)?;
@@ -92687,14 +92687,14 @@ let v1833 = eo__24run_5fevaluate(s, v1578)?;
 let v1834 = eo__24eo_5ftypeof(s, v1833)?;
 let v1835 = eo__24bv_5fbitwidth(s, v1834)?;
 let v1836 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1837 = s.operator("add", &[v1835, v1836])?;
-let v1838 = s.operator("extract", &[v1831, v1832, v1837])?;
-let v1839 = s.operator("to_z", &[v1838])?;
+let v1837 = s.builtin(EvalOp::Add, &[v1835, v1836])?;
+let v1838 = s.builtin(EvalOp::Extract, &[v1831, v1832, v1837])?;
+let v1839 = s.builtin(EvalOp::ToInt, &[v1838])?;
 v1839
 }, None => s.stuck(),
 };
-let v1840 = s.operator("eq", &[v1726, v1790])?;
-let v1841 = s.operator("or", &[v1711, v1840])?;
+let v1840 = s.builtin(EvalOp::Eq, &[v1726, v1790])?;
+let v1841 = s.builtin(EvalOp::Or, &[v1711, v1840])?;
 return Ok(Some(v1841));
 }
 Ok(None)
@@ -92714,30 +92714,30 @@ let v1847 = a;
 let v1848 = s.construct(Constructor::eo_bvshl, &[])?;
 if v1846 != v1848 { break 'case67; }
 let v1849 = eo__24run_5fevaluate(s, v1844)?;
-let v1850 = s.operator("to_z", &[v1849])?;
+let v1850 = s.builtin(EvalOp::ToInt, &[v1849])?;
 let v1851 = eo__24eo_5ftypeof(s, v1847)?;
 let v1852 = eo__24bv_5fbitwidth(s, v1851)?;
-let v1853 = s.operator("gt", &[v1850, v1852])?;
+let v1853 = s.builtin(EvalOp::Gt, &[v1850, v1852])?;
 let v1854 = match s.boolean_value(v1853, false)? {
 Some(true) => {
 let v1855 = eo__24eo_5ftypeof(s, v1847)?;
 let v1856 = eo__24bv_5fbitwidth(s, v1855)?;
 let v1857 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1858 = s.operator("to_bin", &[v1856, v1857])?;
+let v1858 = s.builtin(EvalOp::ToBin, &[v1856, v1857])?;
 v1858
 }, Some(false) => {
 let v1859 = eo__24eo_5ftypeof(s, v1847)?;
 let v1860 = eo__24bv_5fbitwidth(s, v1859)?;
 let v1861 = eo__24run_5fevaluate(s, v1847)?;
-let v1862 = s.operator("to_z", &[v1861])?;
+let v1862 = s.builtin(EvalOp::ToInt, &[v1861])?;
 let v1863 = eo__24run_5fevaluate(s, v1844)?;
-let v1864 = s.operator("to_z", &[v1863])?;
-let v1865 = s.operator("is_z", &[v1864])?;
+let v1864 = s.builtin(EvalOp::ToInt, &[v1863])?;
+let v1865 = s.builtin(EvalOp::IsZ, &[v1864])?;
 let v1866 = match s.boolean_value(v1865, false)? {
 Some(true) => {
 let v1867 = eo__24run_5fevaluate(s, v1844)?;
-let v1868 = s.operator("to_z", &[v1867])?;
-let v1869 = s.operator("is_neg", &[v1868])?;
+let v1868 = s.builtin(EvalOp::ToInt, &[v1867])?;
+let v1869 = s.builtin(EvalOp::IsNeg, &[v1868])?;
 let v1870 = match s.boolean_value(v1869, false)? {
 Some(true) => {
 let v1871 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92745,8 +92745,8 @@ v1871
 }, Some(false) => {
 let v1872 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v1873 = eo__24run_5fevaluate(s, v1844)?;
-let v1874 = s.operator("to_z", &[v1873])?;
-let v1875 = s.operator("pow", &[v1872, v1874])?;
+let v1874 = s.builtin(EvalOp::ToInt, &[v1873])?;
+let v1875 = s.builtin(EvalOp::Pow, &[v1872, v1874])?;
 v1875
 }, None => s.stuck(),
 };
@@ -92754,13 +92754,13 @@ v1870
 }, Some(false) => {
 let v1876 = s.construct(Constructor::eo_int_2epow2, &[])?;
 let v1877 = eo__24run_5fevaluate(s, v1844)?;
-let v1878 = s.operator("to_z", &[v1877])?;
+let v1878 = s.builtin(EvalOp::ToInt, &[v1877])?;
 let v1879 = s.apply(v1876, v1878)?;
 v1879
 }, None => s.stuck(),
 };
-let v1880 = s.operator("mul", &[v1862, v1866])?;
-let v1881 = s.operator("to_bin", &[v1860, v1880])?;
+let v1880 = s.builtin(EvalOp::Mul, &[v1862, v1866])?;
+let v1881 = s.builtin(EvalOp::ToBin, &[v1860, v1880])?;
 v1881
 }, None => s.stuck(),
 };
@@ -92783,30 +92783,30 @@ let v1887 = a;
 let v1888 = s.construct(Constructor::eo_bvlshr, &[])?;
 if v1886 != v1888 { break 'case68; }
 let v1889 = eo__24run_5fevaluate(s, v1884)?;
-let v1890 = s.operator("to_z", &[v1889])?;
+let v1890 = s.builtin(EvalOp::ToInt, &[v1889])?;
 let v1891 = eo__24eo_5ftypeof(s, v1887)?;
 let v1892 = eo__24bv_5fbitwidth(s, v1891)?;
-let v1893 = s.operator("gt", &[v1890, v1892])?;
+let v1893 = s.builtin(EvalOp::Gt, &[v1890, v1892])?;
 let v1894 = match s.boolean_value(v1893, false)? {
 Some(true) => {
 let v1895 = eo__24eo_5ftypeof(s, v1887)?;
 let v1896 = eo__24bv_5fbitwidth(s, v1895)?;
 let v1897 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v1898 = s.operator("to_bin", &[v1896, v1897])?;
+let v1898 = s.builtin(EvalOp::ToBin, &[v1896, v1897])?;
 v1898
 }, Some(false) => {
 let v1899 = eo__24eo_5ftypeof(s, v1887)?;
 let v1900 = eo__24bv_5fbitwidth(s, v1899)?;
 let v1901 = eo__24run_5fevaluate(s, v1887)?;
-let v1902 = s.operator("to_z", &[v1901])?;
+let v1902 = s.builtin(EvalOp::ToInt, &[v1901])?;
 let v1903 = eo__24run_5fevaluate(s, v1884)?;
-let v1904 = s.operator("to_z", &[v1903])?;
-let v1905 = s.operator("is_z", &[v1904])?;
+let v1904 = s.builtin(EvalOp::ToInt, &[v1903])?;
+let v1905 = s.builtin(EvalOp::IsZ, &[v1904])?;
 let v1906 = match s.boolean_value(v1905, false)? {
 Some(true) => {
 let v1907 = eo__24run_5fevaluate(s, v1884)?;
-let v1908 = s.operator("to_z", &[v1907])?;
-let v1909 = s.operator("is_neg", &[v1908])?;
+let v1908 = s.builtin(EvalOp::ToInt, &[v1907])?;
+let v1909 = s.builtin(EvalOp::IsNeg, &[v1908])?;
 let v1910 = match s.boolean_value(v1909, false)? {
 Some(true) => {
 let v1911 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92814,8 +92814,8 @@ v1911
 }, Some(false) => {
 let v1912 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v1913 = eo__24run_5fevaluate(s, v1884)?;
-let v1914 = s.operator("to_z", &[v1913])?;
-let v1915 = s.operator("pow", &[v1912, v1914])?;
+let v1914 = s.builtin(EvalOp::ToInt, &[v1913])?;
+let v1915 = s.builtin(EvalOp::Pow, &[v1912, v1914])?;
 v1915
 }, None => s.stuck(),
 };
@@ -92823,13 +92823,13 @@ v1910
 }, Some(false) => {
 let v1916 = s.construct(Constructor::eo_int_2epow2, &[])?;
 let v1917 = eo__24run_5fevaluate(s, v1884)?;
-let v1918 = s.operator("to_z", &[v1917])?;
+let v1918 = s.builtin(EvalOp::ToInt, &[v1917])?;
 let v1919 = s.apply(v1916, v1918)?;
 v1919
 }, None => s.stuck(),
 };
-let v1920 = s.operator("zdiv", &[v1902, v1906])?;
-let v1921 = s.operator("to_bin", &[v1900, v1920])?;
+let v1920 = s.builtin(EvalOp::IntDiv, &[v1902, v1906])?;
+let v1921 = s.builtin(EvalOp::ToBin, &[v1900, v1920])?;
 v1921
 }, None => s.stuck(),
 };
@@ -92858,31 +92858,31 @@ let v1932 = eo__24run_5fevaluate(s, v1927)?;
 let v1933 = eo__24eo_5ftypeof(s, v1932)?;
 let v1934 = eo__24bv_5fbitwidth(s, v1933)?;
 let v1935 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1936 = s.operator("add", &[v1934, v1935])?;
+let v1936 = s.builtin(EvalOp::Add, &[v1934, v1935])?;
 let v1937 = eo__24run_5fevaluate(s, v1927)?;
 let v1938 = eo__24eo_5ftypeof(s, v1937)?;
 let v1939 = eo__24bv_5fbitwidth(s, v1938)?;
 let v1940 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1941 = s.operator("add", &[v1939, v1940])?;
-let v1942 = s.operator("extract", &[v1931, v1936, v1941])?;
+let v1941 = s.builtin(EvalOp::Add, &[v1939, v1940])?;
+let v1942 = s.builtin(EvalOp::Extract, &[v1931, v1936, v1941])?;
 let v1943 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v1944 = s.operator("eq", &[v1942, v1943])?;
+let v1944 = s.builtin(EvalOp::Eq, &[v1942, v1943])?;
 let v1945 = match s.boolean_value(v1944, false)? {
 Some(true) => {
 let v1946 = eo__24run_5fevaluate(s, v1927)?;
 let v1947 = eo__24eo_5ftypeof(s, v1946)?;
 let v1948 = eo__24bv_5fbitwidth(s, v1947)?;
 let v1949 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1950 = s.operator("add", &[v1948, v1949])?;
-let v1951 = s.operator("is_z", &[v1950])?;
+let v1950 = s.builtin(EvalOp::Add, &[v1948, v1949])?;
+let v1951 = s.builtin(EvalOp::IsZ, &[v1950])?;
 let v1952 = match s.boolean_value(v1951, false)? {
 Some(true) => {
 let v1953 = eo__24run_5fevaluate(s, v1927)?;
 let v1954 = eo__24eo_5ftypeof(s, v1953)?;
 let v1955 = eo__24bv_5fbitwidth(s, v1954)?;
 let v1956 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1957 = s.operator("add", &[v1955, v1956])?;
-let v1958 = s.operator("is_neg", &[v1957])?;
+let v1957 = s.builtin(EvalOp::Add, &[v1955, v1956])?;
+let v1958 = s.builtin(EvalOp::IsNeg, &[v1957])?;
 let v1959 = match s.boolean_value(v1958, false)? {
 Some(true) => {
 let v1960 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92893,8 +92893,8 @@ let v1962 = eo__24run_5fevaluate(s, v1927)?;
 let v1963 = eo__24eo_5ftypeof(s, v1962)?;
 let v1964 = eo__24bv_5fbitwidth(s, v1963)?;
 let v1965 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1966 = s.operator("add", &[v1964, v1965])?;
-let v1967 = s.operator("pow", &[v1961, v1966])?;
+let v1966 = s.builtin(EvalOp::Add, &[v1964, v1965])?;
+let v1967 = s.builtin(EvalOp::Pow, &[v1961, v1966])?;
 v1967
 }, None => s.stuck(),
 };
@@ -92905,22 +92905,22 @@ let v1969 = eo__24run_5fevaluate(s, v1927)?;
 let v1970 = eo__24eo_5ftypeof(s, v1969)?;
 let v1971 = eo__24bv_5fbitwidth(s, v1970)?;
 let v1972 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v1973 = s.operator("add", &[v1971, v1972])?;
+let v1973 = s.builtin(EvalOp::Add, &[v1971, v1972])?;
 let v1974 = s.apply(v1968, v1973)?;
 v1974
 }, None => s.stuck(),
 };
-let v1975 = s.operator("neg", &[v1952])?;
+let v1975 = s.builtin(EvalOp::Neg, &[v1952])?;
 let v1976 = eo__24run_5fevaluate(s, v1927)?;
 let v1977 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1978 = eo__24run_5fevaluate(s, v1927)?;
 let v1979 = eo__24eo_5ftypeof(s, v1978)?;
 let v1980 = eo__24bv_5fbitwidth(s, v1979)?;
 let v1981 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1982 = s.operator("add", &[v1980, v1981])?;
-let v1983 = s.operator("extract", &[v1976, v1977, v1982])?;
-let v1984 = s.operator("to_z", &[v1983])?;
-let v1985 = s.operator("add", &[v1975, v1984])?;
+let v1982 = s.builtin(EvalOp::Add, &[v1980, v1981])?;
+let v1983 = s.builtin(EvalOp::Extract, &[v1976, v1977, v1982])?;
+let v1984 = s.builtin(EvalOp::ToInt, &[v1983])?;
+let v1985 = s.builtin(EvalOp::Add, &[v1975, v1984])?;
 v1985
 }, Some(false) => {
 let v1986 = eo__24run_5fevaluate(s, v1927)?;
@@ -92929,20 +92929,20 @@ let v1988 = eo__24run_5fevaluate(s, v1927)?;
 let v1989 = eo__24eo_5ftypeof(s, v1988)?;
 let v1990 = eo__24bv_5fbitwidth(s, v1989)?;
 let v1991 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v1992 = s.operator("add", &[v1990, v1991])?;
-let v1993 = s.operator("extract", &[v1986, v1987, v1992])?;
-let v1994 = s.operator("to_z", &[v1993])?;
+let v1992 = s.builtin(EvalOp::Add, &[v1990, v1991])?;
+let v1993 = s.builtin(EvalOp::Extract, &[v1986, v1987, v1992])?;
+let v1994 = s.builtin(EvalOp::ToInt, &[v1993])?;
 v1994
 }, None => s.stuck(),
 };
 let v1995 = eo__24run_5fevaluate(s, v1924)?;
-let v1996 = s.operator("to_z", &[v1995])?;
-let v1997 = s.operator("is_z", &[v1996])?;
+let v1996 = s.builtin(EvalOp::ToInt, &[v1995])?;
+let v1997 = s.builtin(EvalOp::IsZ, &[v1996])?;
 let v1998 = match s.boolean_value(v1997, false)? {
 Some(true) => {
 let v1999 = eo__24run_5fevaluate(s, v1924)?;
-let v2000 = s.operator("to_z", &[v1999])?;
-let v2001 = s.operator("is_neg", &[v2000])?;
+let v2000 = s.builtin(EvalOp::ToInt, &[v1999])?;
+let v2001 = s.builtin(EvalOp::IsNeg, &[v2000])?;
 let v2002 = match s.boolean_value(v2001, false)? {
 Some(true) => {
 let v2003 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -92950,8 +92950,8 @@ v2003
 }, Some(false) => {
 let v2004 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v2005 = eo__24run_5fevaluate(s, v1924)?;
-let v2006 = s.operator("to_z", &[v2005])?;
-let v2007 = s.operator("pow", &[v2004, v2006])?;
+let v2006 = s.builtin(EvalOp::ToInt, &[v2005])?;
+let v2007 = s.builtin(EvalOp::Pow, &[v2004, v2006])?;
 v2007
 }, None => s.stuck(),
 };
@@ -92959,13 +92959,13 @@ v2002
 }, Some(false) => {
 let v2008 = s.construct(Constructor::eo_int_2epow2, &[])?;
 let v2009 = eo__24run_5fevaluate(s, v1924)?;
-let v2010 = s.operator("to_z", &[v2009])?;
+let v2010 = s.builtin(EvalOp::ToInt, &[v2009])?;
 let v2011 = s.apply(v2008, v2010)?;
 v2011
 }, None => s.stuck(),
 };
-let v2012 = s.operator("zdiv", &[v1945, v1998])?;
-let v2013 = s.operator("to_bin", &[v1930, v2012])?;
+let v2012 = s.builtin(EvalOp::IntDiv, &[v1945, v1998])?;
+let v2013 = s.builtin(EvalOp::ToBin, &[v1930, v2012])?;
 return Ok(Some(v2013));
 }
 Ok(None)
@@ -92982,17 +92982,17 @@ let Some(fields) = v2017 else { break 'case70; }
 ;
 let v2018 = fields;
 let v2019 = eo__24run_5fevaluate(s, v2018[0])?;
-let v2020 = s.operator("is_z", &[v2019])?;
+let v2020 = s.builtin(EvalOp::IsZ, &[v2019])?;
 let v2021 = eo__24run_5fevaluate(s, v2018[0])?;
-let v2022 = s.operator("is_neg", &[v2021])?;
-let v2023 = s.operator("not", &[v2022])?;
-let v2024 = s.operator("and", &[v2020, v2023])?;
+let v2022 = s.builtin(EvalOp::IsNeg, &[v2021])?;
+let v2023 = s.builtin(EvalOp::Not, &[v2022])?;
+let v2024 = s.builtin(EvalOp::And, &[v2020, v2023])?;
 let v2025 = match s.boolean_value(v2024, false)? {
 Some(true) => {
 let v2026 = s.construct(Constructor::eo_concat, &[])?;
 let v2027 = eo__24run_5fevaluate(s, v2016)?;
 let v2028 = eo__24run_5fevaluate(s, v2018[0])?;
-let v2029 = s.operator("list_repeat", &[v2026, v2027, v2028])?;
+let v2029 = s.builtin(EvalOp::ListRepeat, &[v2026, v2027, v2028])?;
 let v2030 = eo__24bv_5feval_5fconcat(s, v2029)?;
 v2030
 }, Some(false) => {
@@ -93022,37 +93022,37 @@ let v2040 = eo__24run_5fevaluate(s, v2037)?;
 let v2041 = eo__24eo_5ftypeof(s, v2040)?;
 let v2042 = eo__24bv_5fbitwidth(s, v2041)?;
 let v2043 = eo__24run_5fevaluate(s, v2039[0])?;
-let v2044 = s.operator("add", &[v2042, v2043])?;
+let v2044 = s.builtin(EvalOp::Add, &[v2042, v2043])?;
 let v2045 = eo__24run_5fevaluate(s, v2037)?;
 let v2046 = eo__24run_5fevaluate(s, v2037)?;
 let v2047 = eo__24eo_5ftypeof(s, v2046)?;
 let v2048 = eo__24bv_5fbitwidth(s, v2047)?;
 let v2049 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2050 = s.operator("add", &[v2048, v2049])?;
+let v2050 = s.builtin(EvalOp::Add, &[v2048, v2049])?;
 let v2051 = eo__24run_5fevaluate(s, v2037)?;
 let v2052 = eo__24eo_5ftypeof(s, v2051)?;
 let v2053 = eo__24bv_5fbitwidth(s, v2052)?;
 let v2054 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2055 = s.operator("add", &[v2053, v2054])?;
-let v2056 = s.operator("extract", &[v2045, v2050, v2055])?;
+let v2055 = s.builtin(EvalOp::Add, &[v2053, v2054])?;
+let v2056 = s.builtin(EvalOp::Extract, &[v2045, v2050, v2055])?;
 let v2057 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("1")?)))?;
-let v2058 = s.operator("eq", &[v2056, v2057])?;
+let v2058 = s.builtin(EvalOp::Eq, &[v2056, v2057])?;
 let v2059 = match s.boolean_value(v2058, false)? {
 Some(true) => {
 let v2060 = eo__24run_5fevaluate(s, v2037)?;
 let v2061 = eo__24eo_5ftypeof(s, v2060)?;
 let v2062 = eo__24bv_5fbitwidth(s, v2061)?;
 let v2063 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2064 = s.operator("add", &[v2062, v2063])?;
-let v2065 = s.operator("is_z", &[v2064])?;
+let v2064 = s.builtin(EvalOp::Add, &[v2062, v2063])?;
+let v2065 = s.builtin(EvalOp::IsZ, &[v2064])?;
 let v2066 = match s.boolean_value(v2065, false)? {
 Some(true) => {
 let v2067 = eo__24run_5fevaluate(s, v2037)?;
 let v2068 = eo__24eo_5ftypeof(s, v2067)?;
 let v2069 = eo__24bv_5fbitwidth(s, v2068)?;
 let v2070 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2071 = s.operator("add", &[v2069, v2070])?;
-let v2072 = s.operator("is_neg", &[v2071])?;
+let v2071 = s.builtin(EvalOp::Add, &[v2069, v2070])?;
+let v2072 = s.builtin(EvalOp::IsNeg, &[v2071])?;
 let v2073 = match s.boolean_value(v2072, false)? {
 Some(true) => {
 let v2074 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -93063,8 +93063,8 @@ let v2076 = eo__24run_5fevaluate(s, v2037)?;
 let v2077 = eo__24eo_5ftypeof(s, v2076)?;
 let v2078 = eo__24bv_5fbitwidth(s, v2077)?;
 let v2079 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2080 = s.operator("add", &[v2078, v2079])?;
-let v2081 = s.operator("pow", &[v2075, v2080])?;
+let v2080 = s.builtin(EvalOp::Add, &[v2078, v2079])?;
+let v2081 = s.builtin(EvalOp::Pow, &[v2075, v2080])?;
 v2081
 }, None => s.stuck(),
 };
@@ -93075,22 +93075,22 @@ let v2083 = eo__24run_5fevaluate(s, v2037)?;
 let v2084 = eo__24eo_5ftypeof(s, v2083)?;
 let v2085 = eo__24bv_5fbitwidth(s, v2084)?;
 let v2086 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2087 = s.operator("add", &[v2085, v2086])?;
+let v2087 = s.builtin(EvalOp::Add, &[v2085, v2086])?;
 let v2088 = s.apply(v2082, v2087)?;
 v2088
 }, None => s.stuck(),
 };
-let v2089 = s.operator("neg", &[v2066])?;
+let v2089 = s.builtin(EvalOp::Neg, &[v2066])?;
 let v2090 = eo__24run_5fevaluate(s, v2037)?;
 let v2091 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v2092 = eo__24run_5fevaluate(s, v2037)?;
 let v2093 = eo__24eo_5ftypeof(s, v2092)?;
 let v2094 = eo__24bv_5fbitwidth(s, v2093)?;
 let v2095 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v2096 = s.operator("add", &[v2094, v2095])?;
-let v2097 = s.operator("extract", &[v2090, v2091, v2096])?;
-let v2098 = s.operator("to_z", &[v2097])?;
-let v2099 = s.operator("add", &[v2089, v2098])?;
+let v2096 = s.builtin(EvalOp::Add, &[v2094, v2095])?;
+let v2097 = s.builtin(EvalOp::Extract, &[v2090, v2091, v2096])?;
+let v2098 = s.builtin(EvalOp::ToInt, &[v2097])?;
+let v2099 = s.builtin(EvalOp::Add, &[v2089, v2098])?;
 v2099
 }, Some(false) => {
 let v2100 = eo__24run_5fevaluate(s, v2037)?;
@@ -93099,13 +93099,13 @@ let v2102 = eo__24run_5fevaluate(s, v2037)?;
 let v2103 = eo__24eo_5ftypeof(s, v2102)?;
 let v2104 = eo__24bv_5fbitwidth(s, v2103)?;
 let v2105 = s.literal(Lit::Numeral(parse_int("-2")?))?;
-let v2106 = s.operator("add", &[v2104, v2105])?;
-let v2107 = s.operator("extract", &[v2100, v2101, v2106])?;
-let v2108 = s.operator("to_z", &[v2107])?;
+let v2106 = s.builtin(EvalOp::Add, &[v2104, v2105])?;
+let v2107 = s.builtin(EvalOp::Extract, &[v2100, v2101, v2106])?;
+let v2108 = s.builtin(EvalOp::ToInt, &[v2107])?;
 v2108
 }, None => s.stuck(),
 };
-let v2109 = s.operator("to_bin", &[v2044, v2059])?;
+let v2109 = s.builtin(EvalOp::ToBin, &[v2044, v2059])?;
 return Ok(Some(v2109));
 }
 Ok(None)
@@ -93125,10 +93125,10 @@ let v2115 = eo__24run_5fevaluate(s, v2112)?;
 let v2116 = eo__24eo_5ftypeof(s, v2115)?;
 let v2117 = eo__24bv_5fbitwidth(s, v2116)?;
 let v2118 = eo__24run_5fevaluate(s, v2114[0])?;
-let v2119 = s.operator("add", &[v2117, v2118])?;
+let v2119 = s.builtin(EvalOp::Add, &[v2117, v2118])?;
 let v2120 = eo__24run_5fevaluate(s, v2112)?;
-let v2121 = s.operator("to_z", &[v2120])?;
-let v2122 = s.operator("to_bin", &[v2119, v2121])?;
+let v2121 = s.builtin(EvalOp::ToInt, &[v2120])?;
+let v2122 = s.builtin(EvalOp::ToBin, &[v2119, v2121])?;
 return Ok(Some(v2122));
 }
 Ok(None)
@@ -93161,7 +93161,7 @@ let Some(fields) = v2132 else { break 'case74; }
 let v2133 = fields;
 let v2134 = eo__24run_5fevaluate(s, v2133[0])?;
 let v2135 = eo__24run_5fevaluate(s, v2131)?;
-let v2136 = s.operator("to_bin", &[v2134, v2135])?;
+let v2136 = s.builtin(EvalOp::ToBin, &[v2134, v2135])?;
 return Ok(Some(v2136));
 }
 Ok(None)
@@ -93176,7 +93176,7 @@ let v2139 = a;
 let v2140 = s.construct(Constructor::eo_ubv_5fto_5fint, &[])?;
 if v2138 != v2140 { break 'case75; }
 let v2141 = eo__24run_5fevaluate(s, v2139)?;
-let v2142 = s.operator("to_z", &[v2141])?;
+let v2142 = s.builtin(EvalOp::ToInt, &[v2141])?;
 return Ok(Some(v2142));
 }
 Ok(None)
@@ -93194,7 +93194,7 @@ let v2147 = eo__24run_5fevaluate(s, v2145)?;
 let v2148 = eo__24eo_5ftypeof(s, v2147)?;
 let v2149 = eo__24bv_5fbitwidth(s, v2148)?;
 let v2150 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v2151 = s.operator("eq", &[v2149, v2150])?;
+let v2151 = s.builtin(EvalOp::Eq, &[v2149, v2150])?;
 let v2152 = match s.boolean_value(v2151, false)? {
 Some(true) => {
 let v2153 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -93203,32 +93203,32 @@ v2153
 let v2154 = eo__24eo_5ftypeof(s, v2145)?;
 let v2155 = eo__24bv_5fbitwidth(s, v2154)?;
 let v2156 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2157 = s.operator("add", &[v2155, v2156])?;
+let v2157 = s.builtin(EvalOp::Add, &[v2155, v2156])?;
 let v2158 = eo__24eo_5ftypeof(s, v2145)?;
 let v2159 = eo__24bv_5fbitwidth(s, v2158)?;
 let v2160 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v2161 = s.operator("add", &[v2159, v2160])?;
-let v2162 = s.operator("extract", &[v2145, v2157, v2161])?;
+let v2161 = s.builtin(EvalOp::Add, &[v2159, v2160])?;
+let v2162 = s.builtin(EvalOp::Extract, &[v2145, v2157, v2161])?;
 let v2163 = s.literal(Lit::Binary(BitVec::new(1, &parse_int("0")?)))?;
-let v2164 = s.operator("eq", &[v2162, v2163])?;
+let v2164 = s.builtin(EvalOp::Eq, &[v2162, v2163])?;
 let v2165 = match s.boolean_value(v2164, false)? {
 Some(true) => {
 let v2166 = eo__24run_5fevaluate(s, v2145)?;
-let v2167 = s.operator("to_z", &[v2166])?;
+let v2167 = s.builtin(EvalOp::ToInt, &[v2166])?;
 v2167
 }, Some(false) => {
 let v2168 = eo__24run_5fevaluate(s, v2145)?;
-let v2169 = s.operator("to_z", &[v2168])?;
+let v2169 = s.builtin(EvalOp::ToInt, &[v2168])?;
 let v2170 = eo__24run_5fevaluate(s, v2145)?;
 let v2171 = eo__24eo_5ftypeof(s, v2170)?;
 let v2172 = eo__24bv_5fbitwidth(s, v2171)?;
-let v2173 = s.operator("is_z", &[v2172])?;
+let v2173 = s.builtin(EvalOp::IsZ, &[v2172])?;
 let v2174 = match s.boolean_value(v2173, false)? {
 Some(true) => {
 let v2175 = eo__24run_5fevaluate(s, v2145)?;
 let v2176 = eo__24eo_5ftypeof(s, v2175)?;
 let v2177 = eo__24bv_5fbitwidth(s, v2176)?;
-let v2178 = s.operator("is_neg", &[v2177])?;
+let v2178 = s.builtin(EvalOp::IsNeg, &[v2177])?;
 let v2179 = match s.boolean_value(v2178, false)? {
 Some(true) => {
 let v2180 = s.literal(Lit::Numeral(parse_int("0")?))?;
@@ -93238,7 +93238,7 @@ let v2181 = s.literal(Lit::Numeral(parse_int("2")?))?;
 let v2182 = eo__24run_5fevaluate(s, v2145)?;
 let v2183 = eo__24eo_5ftypeof(s, v2182)?;
 let v2184 = eo__24bv_5fbitwidth(s, v2183)?;
-let v2185 = s.operator("pow", &[v2181, v2184])?;
+let v2185 = s.builtin(EvalOp::Pow, &[v2181, v2184])?;
 v2185
 }, None => s.stuck(),
 };
@@ -93252,8 +93252,8 @@ let v2190 = s.apply(v2186, v2189)?;
 v2190
 }, None => s.stuck(),
 };
-let v2191 = s.operator("neg", &[v2174])?;
-let v2192 = s.operator("add", &[v2169, v2191])?;
+let v2191 = s.builtin(EvalOp::Neg, &[v2174])?;
+let v2192 = s.builtin(EvalOp::Add, &[v2169, v2191])?;
 v2192
 }, None => s.stuck(),
 };
@@ -93346,7 +93346,7 @@ let v19 = f;
 let v20 = a;
 let v21 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v19 != v21 { break 'case0; }
-let v22 = s.operator("eq", &[v9, v20])?;
+let v22 = s.builtin(EvalOp::Eq, &[v9, v20])?;
 let v23 = match s.boolean_value(v22, false)? {
 Some(true) => {
 let v24 = s.literal(Lit::Bool(false))?;
@@ -93382,7 +93382,7 @@ let v34 = f;
 let v35 = a;
 let v36 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v34 != v36 { break 'case1; }
-let v37 = s.operator("eq", &[v31, v35])?;
+let v37 = s.builtin(EvalOp::Eq, &[v31, v35])?;
 let v38 = match s.boolean_value(v37, false)? {
 Some(true) => {
 let v39 = s.literal(Lit::Bool(false))?;
@@ -93421,7 +93421,7 @@ let v53 = f;
 let v54 = a;
 let v55 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v53 != v55 { break 'case2; }
-let v56 = s.operator("eq", &[v50, v54])?;
+let v56 = s.builtin(EvalOp::Eq, &[v50, v54])?;
 let v57 = match s.boolean_value(v56, false)? {
 Some(true) => {
 let v58 = s.literal(Lit::Bool(false))?;
@@ -93469,7 +93469,7 @@ let v75 = f;
 let v76 = a;
 let v77 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v75 != v77 { break 'case3; }
-let v78 = s.operator("eq", &[v65, v76])?;
+let v78 = s.builtin(EvalOp::Eq, &[v65, v76])?;
 let v79 = match s.boolean_value(v78, false)? {
 Some(true) => {
 let v80 = s.literal(Lit::Bool(false))?;
@@ -93634,8 +93634,8 @@ let v8 = s.literal(Lit::Bool(true))?;
 let v9 = if v7 == v8 && !s.is_stuck(v7)? {
 let v10 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v11 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v12 = s.operator("list_singleton_intro", &[v11, v5])?;
-let v13 = s.operator("list_nth", &[v10, v12, v2])?;
+let v12 = s.builtin(EvalOp::ListSingletonIntro, &[v11, v5])?;
+let v13 = s.builtin(EvalOp::ListNth, &[v10, v12, v2])?;
 let v14 = eo__24seq_5felement_5fof_5funit(s, v13)?;
 v14
 } else { s.stuck() };
@@ -93653,7 +93653,7 @@ let v17 = a;
 let v18 = s.construct(Constructor::eo_str_2elen, &[])?;
 if v16 != v18 { break 'case1; }
 let v19 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v20 = s.operator("list_singleton_intro", &[v19, v17])?;
+let v20 = s.builtin(EvalOp::ListSingletonIntro, &[v19, v17])?;
 let v21 = eo__24str_5fvalue_5flen(s, v20)?;
 return Ok(Some(v21));
 }
@@ -93676,12 +93676,12 @@ if v26 != v28 { break 'case2; }
 let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v30 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v31 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v32 = s.operator("list_singleton_intro", &[v31, v27])?;
+let v32 = s.builtin(EvalOp::ListSingletonIntro, &[v31, v27])?;
 let v33 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v34 = eo__24seq_5feval(s, v24)?;
-let v35 = s.operator("list_singleton_intro", &[v33, v34])?;
-let v36 = s.operator("list_concat", &[v30, v32, v35])?;
-let v37 = s.operator("list_singleton_elim", &[v29, v36])?;
+let v35 = s.builtin(EvalOp::ListSingletonIntro, &[v33, v34])?;
+let v36 = s.builtin(EvalOp::ListConcat, &[v30, v32, v35])?;
+let v37 = s.builtin(EvalOp::ListSingletonElim, &[v29, v36])?;
 return Ok(Some(v37));
 }
 Ok(None)
@@ -93706,24 +93706,24 @@ let v46 = a;
 let v47 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 if v45 != v47 { break 'case3; }
 let v48 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v49 = s.operator("add", &[v43, v40])?;
-let v50 = s.operator("is_neg", &[v49])?;
+let v49 = s.builtin(EvalOp::Add, &[v43, v40])?;
+let v50 = s.builtin(EvalOp::IsNeg, &[v49])?;
 let v51 = match s.boolean_value(v50, false)? {
 Some(true) => {
 let v52 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v53 = s.operator("list_singleton_intro", &[v52, v46])?;
+let v53 = s.builtin(EvalOp::ListSingletonIntro, &[v52, v46])?;
 let v54 = eo__24eo_5ftypeof(s, v53)?;
 let v55 = s.construct(Constructor::eo_seq_2eempty, &[v54])?;
 v55
 }, Some(false) => {
-let v56 = s.operator("add", &[v43, v40])?;
+let v56 = s.builtin(EvalOp::Add, &[v43, v40])?;
 let v57 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v58 = s.operator("list_singleton_intro", &[v57, v46])?;
+let v58 = s.builtin(EvalOp::ListSingletonIntro, &[v57, v46])?;
 let v59 = eo__24seq_5fsubsequence_5frec(s, v43, v56, v58)?;
 v59
 }, None => s.stuck(),
 };
-let v60 = s.operator("list_singleton_elim", &[v48, v51])?;
+let v60 = s.builtin(EvalOp::ListSingletonElim, &[v48, v51])?;
 return Ok(Some(v60));
 }
 Ok(None)
@@ -93749,13 +93749,13 @@ let v71 = eo__24is_5fseq_5fconst(s, v63)?;
 let v72 = s.literal(Lit::Bool(true))?;
 let v73 = if v71 == v72 && !s.is_stuck(v71)? {
 let v74 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v75 = s.operator("list_singleton_intro", &[v74, v66])?;
+let v75 = s.builtin(EvalOp::ListSingletonIntro, &[v74, v66])?;
 let v76 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v77 = s.operator("list_singleton_intro", &[v76, v63])?;
+let v77 = s.builtin(EvalOp::ListSingletonIntro, &[v76, v63])?;
 let v78 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v79 = eo__24seq_5ffind(s, v75, v77, v78)?;
-let v80 = s.operator("is_neg", &[v79])?;
-let v81 = s.operator("not", &[v80])?;
+let v80 = s.builtin(EvalOp::IsNeg, &[v79])?;
+let v81 = s.builtin(EvalOp::Not, &[v80])?;
 v81
 } else { s.stuck() };
 v73
@@ -93790,12 +93790,12 @@ let v95 = eo__24is_5fseq_5fconst(s, v87)?;
 let v96 = s.literal(Lit::Bool(true))?;
 let v97 = if v95 == v96 && !s.is_stuck(v95)? {
 let v98 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v99 = s.operator("list_singleton_intro", &[v98, v90])?;
+let v99 = s.builtin(EvalOp::ListSingletonIntro, &[v98, v90])?;
 let v100 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v101 = s.operator("list_singleton_intro", &[v100, v87])?;
+let v101 = s.builtin(EvalOp::ListSingletonIntro, &[v100, v87])?;
 let v102 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v103 = eo__24seq_5ffind(s, v99, v101, v102)?;
-let v104 = s.operator("is_neg", &[v103])?;
+let v104 = s.builtin(EvalOp::IsNeg, &[v103])?;
 let v105 = match s.boolean_value(v104, false)? {
 Some(true) => {
 v90
@@ -93803,64 +93803,64 @@ v90
 let v106 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v107 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v108 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v109 = s.operator("list_singleton_intro", &[v108, v90])?;
+let v109 = s.builtin(EvalOp::ListSingletonIntro, &[v108, v90])?;
 let v110 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v111 = s.operator("list_singleton_intro", &[v110, v87])?;
+let v111 = s.builtin(EvalOp::ListSingletonIntro, &[v110, v87])?;
 let v112 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v113 = eo__24seq_5ffind(s, v109, v111, v112)?;
-let v114 = s.operator("is_neg", &[v113])?;
+let v114 = s.builtin(EvalOp::IsNeg, &[v113])?;
 let v115 = match s.boolean_value(v114, false)? {
 Some(true) => {
 let v116 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v117 = s.operator("list_singleton_intro", &[v116, v90])?;
+let v117 = s.builtin(EvalOp::ListSingletonIntro, &[v116, v90])?;
 let v118 = eo__24eo_5ftypeof(s, v117)?;
 let v119 = s.construct(Constructor::eo_seq_2eempty, &[v118])?;
 v119
 }, Some(false) => {
 let v120 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v121 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v122 = s.operator("list_singleton_intro", &[v121, v90])?;
+let v122 = s.builtin(EvalOp::ListSingletonIntro, &[v121, v90])?;
 let v123 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v124 = s.operator("list_singleton_intro", &[v123, v87])?;
+let v124 = s.builtin(EvalOp::ListSingletonIntro, &[v123, v87])?;
 let v125 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v126 = eo__24seq_5ffind(s, v122, v124, v125)?;
 let v127 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v128 = s.operator("list_singleton_intro", &[v127, v90])?;
+let v128 = s.builtin(EvalOp::ListSingletonIntro, &[v127, v90])?;
 let v129 = eo__24seq_5fsubsequence_5frec(s, v120, v126, v128)?;
 v129
 }, None => s.stuck(),
 };
 let v130 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v131 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v132 = s.operator("list_singleton_intro", &[v131, v84])?;
+let v132 = s.builtin(EvalOp::ListSingletonIntro, &[v131, v84])?;
 let v133 = eo__24str_5fvalue_5flen(s, v90)?;
-let v134 = s.operator("is_neg", &[v133])?;
+let v134 = s.builtin(EvalOp::IsNeg, &[v133])?;
 let v135 = match s.boolean_value(v134, false)? {
 Some(true) => {
 let v136 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v137 = s.operator("list_singleton_intro", &[v136, v90])?;
+let v137 = s.builtin(EvalOp::ListSingletonIntro, &[v136, v90])?;
 let v138 = eo__24eo_5ftypeof(s, v137)?;
 let v139 = s.construct(Constructor::eo_seq_2eempty, &[v138])?;
 v139
 }, Some(false) => {
 let v140 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v141 = s.operator("list_singleton_intro", &[v140, v90])?;
+let v141 = s.builtin(EvalOp::ListSingletonIntro, &[v140, v90])?;
 let v142 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v143 = s.operator("list_singleton_intro", &[v142, v87])?;
+let v143 = s.builtin(EvalOp::ListSingletonIntro, &[v142, v87])?;
 let v144 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v145 = eo__24seq_5ffind(s, v141, v143, v144)?;
 let v146 = eo__24str_5fvalue_5flen(s, v87)?;
-let v147 = s.operator("add", &[v145, v146])?;
+let v147 = s.builtin(EvalOp::Add, &[v145, v146])?;
 let v148 = eo__24str_5fvalue_5flen(s, v90)?;
 let v149 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v150 = s.operator("list_singleton_intro", &[v149, v90])?;
+let v150 = s.builtin(EvalOp::ListSingletonIntro, &[v149, v90])?;
 let v151 = eo__24seq_5fsubsequence_5frec(s, v147, v148, v150)?;
 v151
 }, None => s.stuck(),
 };
-let v152 = s.operator("list_concat", &[v130, v132, v135])?;
-let v153 = s.operator("list_concat", &[v107, v115, v152])?;
-let v154 = s.operator("list_singleton_elim", &[v106, v153])?;
+let v152 = s.builtin(EvalOp::ListConcat, &[v130, v132, v135])?;
+let v153 = s.builtin(EvalOp::ListConcat, &[v107, v115, v152])?;
+let v154 = s.builtin(EvalOp::ListSingletonElim, &[v106, v153])?;
 v154
 }, None => s.stuck(),
 };
@@ -93896,22 +93896,22 @@ let v166 = s.literal(Lit::Bool(true))?;
 let v167 = if v165 == v166 && !s.is_stuck(v165)? {
 let v168 = eo__24str_5fvalue_5flen(s, v160)?;
 let v169 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v170 = s.operator("eq", &[v168, v169])?;
+let v170 = s.builtin(EvalOp::Eq, &[v168, v169])?;
 let v171 = match s.boolean_value(v170, false)? {
 Some(true) => {
 v163
 }, Some(false) => {
 let v172 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v173 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v174 = s.operator("list_singleton_intro", &[v173, v163])?;
+let v174 = s.builtin(EvalOp::ListSingletonIntro, &[v173, v163])?;
 let v175 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v176 = s.operator("list_singleton_intro", &[v175, v160])?;
+let v176 = s.builtin(EvalOp::ListSingletonIntro, &[v175, v160])?;
 let v177 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v178 = s.operator("list_singleton_intro", &[v177, v157])?;
+let v178 = s.builtin(EvalOp::ListSingletonIntro, &[v177, v157])?;
 let v179 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v180 = eo__24str_5fvalue_5flen(s, v160)?;
 let v181 = eo__24seq_5feval_5freplace_5fall_5frec(s, v174, v176, v178, v179, v180)?;
-let v182 = s.operator("list_singleton_elim", &[v172, v181])?;
+let v182 = s.builtin(EvalOp::ListSingletonElim, &[v172, v181])?;
 v182
 }, None => s.stuck(),
 };
@@ -93943,38 +93943,38 @@ if v190 != v192 { break 'case7; }
 let v193 = eo__24is_5fseq_5fconst(s, v188)?;
 let v194 = s.literal(Lit::Bool(true))?;
 let v195 = if v193 == v194 && !s.is_stuck(v193)? {
-let v196 = s.operator("is_neg", &[v185])?;
+let v196 = s.builtin(EvalOp::IsNeg, &[v185])?;
 let v197 = match s.boolean_value(v196, false)? {
 Some(true) => {
 let v198 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v198
 }, Some(false) => {
 let v199 = eo__24str_5fvalue_5flen(s, v191)?;
-let v200 = s.operator("gt", &[v185, v199])?;
+let v200 = s.builtin(EvalOp::Gt, &[v185, v199])?;
 let v201 = match s.boolean_value(v200, false)? {
 Some(true) => {
 let v202 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 v202
 }, Some(false) => {
 let v203 = eo__24str_5fvalue_5flen(s, v191)?;
-let v204 = s.operator("is_neg", &[v203])?;
+let v204 = s.builtin(EvalOp::IsNeg, &[v203])?;
 let v205 = match s.boolean_value(v204, false)? {
 Some(true) => {
 let v206 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v207 = s.operator("list_singleton_intro", &[v206, v191])?;
+let v207 = s.builtin(EvalOp::ListSingletonIntro, &[v206, v191])?;
 let v208 = eo__24eo_5ftypeof(s, v207)?;
 let v209 = s.construct(Constructor::eo_seq_2eempty, &[v208])?;
 v209
 }, Some(false) => {
 let v210 = eo__24str_5fvalue_5flen(s, v191)?;
 let v211 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v212 = s.operator("list_singleton_intro", &[v211, v191])?;
+let v212 = s.builtin(EvalOp::ListSingletonIntro, &[v211, v191])?;
 let v213 = eo__24seq_5fsubsequence_5frec(s, v185, v210, v212)?;
 v213
 }, None => s.stuck(),
 };
 let v214 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v215 = s.operator("list_singleton_intro", &[v214, v188])?;
+let v215 = s.builtin(EvalOp::ListSingletonIntro, &[v214, v188])?;
 let v216 = eo__24seq_5ffind(s, v205, v215, v185)?;
 v216
 }, None => s.stuck(),
@@ -94003,9 +94003,9 @@ let v222 = a;
 let v223 = s.construct(Constructor::eo_str_2eprefixof, &[])?;
 if v221 != v223 { break 'case8; }
 let v224 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v225 = s.operator("list_singleton_intro", &[v224, v222])?;
+let v225 = s.builtin(EvalOp::ListSingletonIntro, &[v224, v222])?;
 let v226 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v227 = s.operator("list_singleton_intro", &[v226, v219])?;
+let v227 = s.builtin(EvalOp::ListSingletonIntro, &[v226, v219])?;
 let v228 = eo__24seq_5fis_5fprefix(s, v225, v227)?;
 return Ok(Some(v228));
 }
@@ -94033,12 +94033,12 @@ let v240 = s.literal(Lit::Bool(true))?;
 let v241 = if v239 == v240 && !s.is_stuck(v239)? {
 let v242 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v243 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v244 = s.operator("list_singleton_intro", &[v243, v234])?;
-let v245 = s.operator("list_rev", &[v242, v244])?;
+let v244 = s.builtin(EvalOp::ListSingletonIntro, &[v243, v234])?;
+let v245 = s.builtin(EvalOp::ListRev, &[v242, v244])?;
 let v246 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v247 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v248 = s.operator("list_singleton_intro", &[v247, v231])?;
-let v249 = s.operator("list_rev", &[v246, v248])?;
+let v248 = s.builtin(EvalOp::ListSingletonIntro, &[v247, v231])?;
+let v249 = s.builtin(EvalOp::ListRev, &[v246, v248])?;
 let v250 = eo__24seq_5fis_5fprefix(s, v245, v249)?;
 v250
 } else { s.stuck() };
@@ -94064,25 +94064,25 @@ let v257 = s.construct(Constructor::eo_str_2eat, &[])?;
 if v255 != v257 { break 'case10; }
 let v258 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v259 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v260 = s.operator("add", &[v253, v259])?;
-let v261 = s.operator("is_neg", &[v260])?;
+let v260 = s.builtin(EvalOp::Add, &[v253, v259])?;
+let v261 = s.builtin(EvalOp::IsNeg, &[v260])?;
 let v262 = match s.boolean_value(v261, false)? {
 Some(true) => {
 let v263 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v264 = s.operator("list_singleton_intro", &[v263, v256])?;
+let v264 = s.builtin(EvalOp::ListSingletonIntro, &[v263, v256])?;
 let v265 = eo__24eo_5ftypeof(s, v264)?;
 let v266 = s.construct(Constructor::eo_seq_2eempty, &[v265])?;
 v266
 }, Some(false) => {
 let v267 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v268 = s.operator("add", &[v253, v267])?;
+let v268 = s.builtin(EvalOp::Add, &[v253, v267])?;
 let v269 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v270 = s.operator("list_singleton_intro", &[v269, v256])?;
+let v270 = s.builtin(EvalOp::ListSingletonIntro, &[v269, v256])?;
 let v271 = eo__24seq_5fsubsequence_5frec(s, v253, v268, v270)?;
 v271
 }, None => s.stuck(),
 };
-let v272 = s.operator("list_singleton_elim", &[v258, v262])?;
+let v272 = s.builtin(EvalOp::ListSingletonElim, &[v258, v262])?;
 return Ok(Some(v272));
 }
 Ok(None)
@@ -94102,9 +94102,9 @@ let v279 = if v277 == v278 && !s.is_stuck(v277)? {
 let v280 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v281 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v282 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v283 = s.operator("list_singleton_intro", &[v282, v275])?;
-let v284 = s.operator("list_rev", &[v281, v283])?;
-let v285 = s.operator("list_singleton_elim", &[v280, v284])?;
+let v283 = s.builtin(EvalOp::ListSingletonIntro, &[v282, v275])?;
+let v284 = s.builtin(EvalOp::ListRev, &[v281, v283])?;
+let v285 = s.builtin(EvalOp::ListSingletonElim, &[v280, v284])?;
 v285
 } else { s.stuck() };
 return Ok(Some(v279));
@@ -94170,15 +94170,15 @@ let v21 = match s.boolean_value(v20, false)? {
 Some(true) => {
 let v22 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v23 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v24 = s.operator("add", &[a4, v23])?;
+let v24 = s.builtin(EvalOp::Add, &[a4, v23])?;
 let v25 = eo__24seq_5feval_5freplace_5fall_5frec(s, v11, a1, a2, v24, a4)?;
-let v26 = s.operator("list_concat", &[v22, a2, v25])?;
+let v26 = s.builtin(EvalOp::ListConcat, &[v22, a2, v25])?;
 v26
 }, Some(false) => {
 let v27 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v28 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v29 = eo__24seq_5feval_5freplace_5fall_5frec(s, v11, a1, a2, v28, a4)?;
-let v30 = s.operator("cons", &[v27, v14, v29])?;
+let v30 = s.builtin(EvalOp::Cons, &[v27, v14, v29])?;
 v30
 }, None => s.stuck(),
 };
@@ -94201,7 +94201,7 @@ let v38 = v33;
 let v39 = a1;
 let v40 = a2;
 let v41 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v42 = s.operator("add", &[a3, v41])?;
+let v42 = s.builtin(EvalOp::Add, &[a3, v41])?;
 let v43 = v42;
 let v44 = a4;
 a0 = v38;
@@ -94270,7 +94270,7 @@ Some(true) => {
 a2
 }, Some(false) => {
 let v19 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v20 = s.operator("add", &[a2, v19])?;
+let v20 = s.builtin(EvalOp::Add, &[a2, v19])?;
 let v21 = eo__24seq_5ffind(s, v9, a1, v20)?;
 v21
 }, None => s.stuck(),
@@ -94420,7 +94420,7 @@ let v36 = f;
 let v37 = a;
 let v38 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v36 != v38 { break 'case2; }
-let v39 = s.operator("eq", &[v26, v37])?;
+let v39 = s.builtin(EvalOp::Eq, &[v26, v37])?;
 let v40 = match s.boolean_value(v39, false)? {
 Some(true) => {
 let v41 = s.literal(Lit::Bool(false))?;
@@ -94559,7 +94559,7 @@ let v26 = s.apply(v25, v22)?;
 let v27 = s.apply(v24, v26)?;
 let v28 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v29 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v30 = s.operator("add", &[a1, v29])?;
+let v30 = s.builtin(EvalOp::Add, &[a1, v29])?;
 let v31 = eo__24seq_5fsubsequence_5frec(s, v28, v30, v15)?;
 let v32 = s.apply(v27, v31)?;
 return Ok(v32);
@@ -94585,10 +94585,10 @@ let v42 = a;
 let v43 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v41 != v43 { break 'case3; }
 let v44 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v45 = s.operator("add", &[a0, v44])?;
+let v45 = s.builtin(EvalOp::Add, &[a0, v44])?;
 let v46 = v45;
 let v47 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v48 = s.operator("add", &[a1, v47])?;
+let v48 = s.builtin(EvalOp::Add, &[a1, v47])?;
 let v49 = v48;
 let v50 = v35;
 a0 = v46;
@@ -94666,7 +94666,7 @@ let v23 = f;
 let v24 = a;
 let v25 = s.construct(Constructor::eo_set_2esingleton, &[])?;
 if v23 != v25 { break 'case2; }
-let v26 = s.operator("eq", &[v20, v24])?;
+let v26 = s.builtin(EvalOp::Eq, &[v20, v24])?;
 let v27 = match s.boolean_value(v26, false)? {
 Some(true) => {
 let v28 = s.literal(Lit::Bool(false))?;
@@ -94705,7 +94705,7 @@ let v42 = f;
 let v43 = a;
 let v44 = s.construct(Constructor::eo_set_2esingleton, &[])?;
 if v42 != v44 { break 'case3; }
-let v45 = s.operator("eq", &[v32, v43])?;
+let v45 = s.builtin(EvalOp::Eq, &[v32, v43])?;
 let v46 = match s.boolean_value(v45, false)? {
 Some(true) => {
 let v47 = s.literal(Lit::Bool(false))?;
@@ -94858,15 +94858,15 @@ let v0 = s.destruct(Constructor::eo__24emb_5fdd_2econs, a1)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("streq", &[a0, v1[0]])?;
+let v2 = s.native_op(NativeOp::Streq, &[a0, v1[0]])?;
 let v3 = eo__24smtx_5fdd_5fhas_5fdt(s, a0, v1[2])?;
-let v4 = s.native("or", &[v2, v3])?;
+let v4 = s.native_op(NativeOp::Or, &[v2, v3])?;
 return Ok(v4);
 }
 'case1: {
 let v5 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 if a1 != v5 { break 'case1; }
-let v6 = s.native("false", &[])?;
+let v6 = s.native_bool(false)?;
 return Ok(v6);
 }
 Ok(s.stuck())
@@ -94890,7 +94890,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5fdd_2econs, a1)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("streq", &[a0, v1[0]])?;
+let v2 = s.native_op(NativeOp::Streq, &[a0, v1[0]])?;
 let v3 = match s.boolean_value(v2, true)? {
 Some(true) => {
 v1[1]
@@ -94928,7 +94928,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5fdd_2econs, a1)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("streq", &[a0, v1[0]])?;
+let v2 = s.native_op(NativeOp::Streq, &[a0, v1[0]])?;
 let v3 = match s.boolean_value(v2, true)? {
 Some(true) => {
 let v4 = eo__24smtx_5fdt_5finhabited(s, v1[1], v1[2])?;
@@ -94943,7 +94943,7 @@ return Ok(v3);
 'case1: {
 let v6 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 if a1 != v6 { break 'case1; }
-let v7 = s.native("false", &[])?;
+let v7 = s.native_bool(false)?;
 return Ok(v7);
 }
 Ok(s.stuck())
@@ -94972,16 +94972,16 @@ let v3 = s.construct(Constructor::eo__24emb_5ftsm_2eDatatype, &[v1[0], a0])?;
 let v4 = eo__24smtx_5finhabited_5ftype(s, v3)?;
 let v5 = eo__24smtx_5fdecl_5fwf_5frec(s, a0, v1[2])?;
 let v6 = eo__24smtx_5fdd_5fhas_5fdt(s, v1[0], v1[2])?;
-let v7 = s.native("not", &[v6])?;
-let v8 = s.native("and", &[v5, v7])?;
-let v9 = s.native("and", &[v4, v8])?;
-let v10 = s.native("and", &[v2, v9])?;
+let v7 = s.native_op(NativeOp::Not, &[v6])?;
+let v8 = s.native_op(NativeOp::And, &[v5, v7])?;
+let v9 = s.native_op(NativeOp::And, &[v4, v8])?;
+let v10 = s.native_op(NativeOp::And, &[v2, v9])?;
 return Ok(v10);
 }
 'case1: {
 let v11 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 if a1 != v11 { break 'case1; }
-let v12 = s.native("true", &[])?;
+let v12 = s.native_bool(true)?;
 return Ok(v12);
 }
 Ok(s.stuck())
@@ -95011,7 +95011,7 @@ let Some(fields) = v2 else { break 'case0; }
 let v3 = fields;
 let v4 = eo__24smtx_5fdecl_5finhabited(s, v3[0], a1)?;
 let v5 = eo__24smtx_5fdt_5fcons_5finhabited(s, v1[1], a1)?;
-let v6 = s.native("and", &[v4, v5])?;
+let v6 = s.native_op(NativeOp::And, &[v4, v5])?;
 return Ok(v6);
 }
 'case1: {
@@ -95021,13 +95021,13 @@ let Some(fields) = v7 else { break 'case1; }
 let v8 = fields;
 let v9 = eo__24smtx_5finhabited_5ftype(s, v8[0])?;
 let v10 = eo__24smtx_5fdt_5fcons_5finhabited(s, v8[1], a1)?;
-let v11 = s.native("and", &[v9, v10])?;
+let v11 = s.native_op(NativeOp::And, &[v9, v10])?;
 return Ok(v11);
 }
 'case2: {
 let v12 = s.construct(Constructor::eo__24emb_5fdtc_2eunit, &[])?;
 if a0 != v12 { break 'case2; }
-let v13 = s.native("true", &[])?;
+let v13 = s.native_bool(true)?;
 return Ok(v13);
 }
 Ok(s.stuck())
@@ -95057,7 +95057,7 @@ let Some(fields) = v2 else { break 'case0; }
 let v3 = fields;
 let v4 = eo__24smtx_5fdd_5fhas_5fdt(s, v3[0], a0)?;
 let v5 = eo__24smtx_5fdt_5fcons_5fwf_5frec(s, a0, v1[1])?;
-let v6 = s.native("and", &[v4, v5])?;
+let v6 = s.native_op(NativeOp::And, &[v4, v5])?;
 return Ok(v6);
 }
 'case1: {
@@ -95067,15 +95067,15 @@ let Some(fields) = v7 else { break 'case1; }
 let v8 = fields;
 let v9 = eo__24smtx_5finhabited_5ftype(s, v8[0])?;
 let v10 = eo__24smtx_5ftype_5fwf_5frec(s, v8[0])?;
-let v11 = s.native("and", &[v9, v10])?;
+let v11 = s.native_op(NativeOp::And, &[v9, v10])?;
 let v12 = eo__24smtx_5fdt_5fcons_5fwf_5frec(s, a0, v8[1])?;
-let v13 = s.native("and", &[v11, v12])?;
+let v13 = s.native_op(NativeOp::And, &[v11, v12])?;
 return Ok(v13);
 }
 'case2: {
 let v14 = s.construct(Constructor::eo__24emb_5fdtc_2eunit, &[])?;
 if a1 != v14 { break 'case2; }
-let v15 = s.native("true", &[])?;
+let v15 = s.native_bool(true)?;
 return Ok(v15);
 }
 Ok(s.stuck())
@@ -95101,13 +95101,13 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = eo__24smtx_5fdt_5fcons_5finhabited(s, v1[0], a1)?;
 let v3 = eo__24smtx_5fdt_5finhabited(s, v1[1], a1)?;
-let v4 = s.native("or", &[v2, v3])?;
+let v4 = s.native_op(NativeOp::Or, &[v2, v3])?;
 return Ok(v4);
 }
 'case1: {
 let v5 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 if a0 != v5 { break 'case1; }
-let v6 = s.native("false", &[])?;
+let v6 = s.native_bool(false)?;
 return Ok(v6);
 }
 Ok(s.stuck())
@@ -95133,7 +95133,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5fdt_2esum, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native_pattern("nat.zero", a1)?;
+let v2 = s.native_pattern_nat_zero(a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
@@ -95145,7 +95145,7 @@ let v5 = s.destruct(Constructor::eo__24emb_5fdt_2esum, a0)?;
 let Some(fields) = v5 else { break 'case1; }
 ;
 let v6 = fields;
-let v7 = s.native_pattern("nat.succ", a1)?;
+let v7 = s.native_pattern_succ(a1)?;
 let Some(fields) = v7 else { break 'case1; }
 ;
 let v8 = fields;
@@ -95158,7 +95158,7 @@ continue 'recur;
 'case2: {
 let v11 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 if a0 != v11 { break 'case2; }
-let v12 = s.native("nat.zero", &[])?;
+let v12 = s.native_nat_zero()?;
 return Ok(v12);
 }
 return Ok(s.stuck());
@@ -95217,13 +95217,13 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = eo__24smtx_5fdt_5fcons_5fwf_5frec(s, a0, v1[0])?;
 let v3 = eo__24smtx_5fdt_5fwf_5frec(s, a0, v1[1])?;
-let v4 = s.native("and", &[v2, v3])?;
+let v4 = s.native_op(NativeOp::And, &[v2, v3])?;
 return Ok(v4);
 }
 'case1: {
 let v5 = s.construct(Constructor::eo__24emb_5fdt_2enull, &[])?;
 if a1 != v5 { break 'case1; }
-let v6 = s.native("true", &[])?;
+let v6 = s.native_bool(true)?;
 return Ok(v6);
 }
 Ok(s.stuck())
@@ -95248,13 +95248,13 @@ let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = eo__24smtx_5fdtc_5fnum_5fsels(s, v1[1])?;
-let v3 = s.native("nat.succ", &[v2])?;
+let v3 = s.native_op(NativeOp::NatSucc, &[v2])?;
 return Ok(v3);
 }
 'case1: {
 let v4 = s.construct(Constructor::eo__24emb_5fdtc_2eunit, &[])?;
 if a0 != v4 { break 'case1; }
-let v5 = s.native("nat.zero", &[])?;
+let v5 = s.native_nat_zero()?;
 return Ok(v5);
 }
 Ok(s.stuck())
@@ -95323,7 +95323,7 @@ s.tick()?;
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 if a0 != v0 { break 'case0; }
-let v1 = s.native("false", &[])?;
+let v1 = s.native_bool(false)?;
 return Ok(v1);
 }
 'case1: {
@@ -95348,7 +95348,7 @@ let v8 = s.destruct(Constructor::eo__24emb_5ftsm_2eTypeRef, a0)?;
 let Some(fields) = v8 else { break 'case3; }
 ;
 let v9 = fields;
-let v10 = s.native("false", &[])?;
+let v10 = s.native_bool(false)?;
 return Ok(v10);
 }
 'case4: {
@@ -95356,11 +95356,11 @@ let v11 = s.destruct(Constructor::eo__24emb_5ftsm_2eDtcAppType, a0)?;
 let Some(fields) = v11 else { break 'case4; }
 ;
 let v12 = fields;
-let v13 = s.native("false", &[])?;
+let v13 = s.native_bool(false)?;
 return Ok(v13);
 }
 'case5: {
-let v14 = s.native("true", &[])?;
+let v14 = s.native_bool(true)?;
 return Ok(v14);
 }
 return Ok(s.stuck());
@@ -95406,11 +95406,11 @@ let v2 = s.destruct(Constructor::eo__24emb_5fdtc_2econs, v1[0])?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native_pattern("nat.zero", a1)?;
+let v4 = s.native_pattern_nat_zero(a1)?;
 let Some(fields) = v4 else { break 'case0; }
 ;
 let v5 = fields;
-let v6 = s.native_pattern("nat.zero", a2)?;
+let v6 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v6 else { break 'case0; }
 ;
 let v7 = fields;
@@ -95425,17 +95425,17 @@ let v10 = s.destruct(Constructor::eo__24emb_5fdtc_2econs, v9[0])?;
 let Some(fields) = v10 else { break 'case1; }
 ;
 let v11 = fields;
-let v12 = s.native_pattern("nat.zero", a1)?;
+let v12 = s.native_pattern_nat_zero(a1)?;
 let Some(fields) = v12 else { break 'case1; }
 ;
 let v13 = fields;
-let v14 = s.native_pattern("nat.succ", a2)?;
+let v14 = s.native_pattern_succ(a2)?;
 let Some(fields) = v14 else { break 'case1; }
 ;
 let v15 = fields;
 let v16 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v11[1], v9[1]])?;
 let v17 = v16;
-let v18 = s.native("nat.zero", &[])?;
+let v18 = s.native_nat_zero()?;
 let v19 = v18;
 let v20 = v15[0];
 a0 = v17;
@@ -95448,7 +95448,7 @@ let v21 = s.destruct(Constructor::eo__24emb_5fdt_2esum, a0)?;
 let Some(fields) = v21 else { break 'case2; }
 ;
 let v22 = fields;
-let v23 = s.native_pattern("nat.succ", a1)?;
+let v23 = s.native_pattern_succ(a1)?;
 let Some(fields) = v23 else { break 'case2; }
 ;
 let v24 = fields;
@@ -95484,7 +95484,7 @@ let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
 if a0 != v0 { break 'case0; }
-let v1 = s.native("true", &[])?;
+let v1 = s.native_bool(true)?;
 return Ok(v1);
 }
 'case1: {
@@ -95494,7 +95494,7 @@ let Some(fields) = v2 else { break 'case1; }
 let v3 = fields;
 let v4 = eo__24smtx_5ftype_5fwf_5fcomponent(s, v3[0])?;
 let v5 = eo__24smtx_5ftype_5fwf(s, v3[1])?;
-let v6 = s.native("and", &[v4, v5])?;
+let v6 = s.native_op(NativeOp::And, &[v4, v5])?;
 return Ok(v6);
 }
 'case2: {
@@ -95514,7 +95514,7 @@ let result = (|| {
 'case0: {
 let v0 = eo__24smtx_5finhabited_5ftype(s, a0)?;
 let v1 = eo__24smtx_5ftype_5fwf_5frec(s, a0)?;
-let v2 = s.native("and", &[v0, v1])?;
+let v2 = s.native_op(NativeOp::And, &[v0, v1])?;
 return Ok(v2);
 }
 Ok(s.stuck())
@@ -95560,7 +95560,7 @@ fn case_0_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<O
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 if a0 != v0 { break 'case0; }
-let v1 = s.native("false", &[])?;
+let v1 = s.native_bool(false)?;
 return Ok(Some(v1));
 }
 Ok(None)
@@ -95569,7 +95569,7 @@ fn case_1_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<O
 'case1: {
 let v2 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
 if a0 != v2 { break 'case1; }
-let v3 = s.native("false", &[])?;
+let v3 = s.native_bool(false)?;
 return Ok(Some(v3));
 }
 Ok(None)
@@ -95582,11 +95582,11 @@ let Some(fields) = v4 else { break 'case2; }
 let v5 = fields;
 let v6 = eo__24smtx_5finhabited_5ftype(s, v5[0])?;
 let v7 = eo__24smtx_5ftype_5fwf_5frec(s, v5[0])?;
-let v8 = s.native("and", &[v6, v7])?;
+let v8 = s.native_op(NativeOp::And, &[v6, v7])?;
 let v9 = eo__24smtx_5finhabited_5ftype(s, v5[1])?;
 let v10 = eo__24smtx_5ftype_5fwf_5frec(s, v5[1])?;
-let v11 = s.native("and", &[v9, v10])?;
-let v12 = s.native("and", &[v8, v11])?;
+let v11 = s.native_op(NativeOp::And, &[v9, v10])?;
+let v12 = s.native_op(NativeOp::And, &[v8, v11])?;
 return Ok(Some(v12));
 }
 Ok(None)
@@ -95599,7 +95599,7 @@ let Some(fields) = v13 else { break 'case3; }
 let v14 = fields;
 let v15 = eo__24smtx_5finhabited_5ftype(s, v14[0])?;
 let v16 = eo__24smtx_5ftype_5fwf_5frec(s, v14[0])?;
-let v17 = s.native("and", &[v15, v16])?;
+let v17 = s.native_op(NativeOp::And, &[v15, v16])?;
 return Ok(Some(v17));
 }
 Ok(None)
@@ -95612,7 +95612,7 @@ let Some(fields) = v18 else { break 'case4; }
 let v19 = fields;
 let v20 = eo__24smtx_5finhabited_5ftype(s, v19[0])?;
 let v21 = eo__24smtx_5ftype_5fwf_5frec(s, v19[0])?;
-let v22 = s.native("and", &[v20, v21])?;
+let v22 = s.native_op(NativeOp::And, &[v20, v21])?;
 return Ok(Some(v22));
 }
 Ok(None)
@@ -95625,7 +95625,7 @@ let Some(fields) = v23 else { break 'case5; }
 let v24 = fields;
 let v25 = eo__24smtx_5fdd_5fhas_5fdt(s, v24[0], v24[1])?;
 let v26 = eo__24smtx_5fdecl_5fwf_5frec(s, v24[1], v24[1])?;
-let v27 = s.native("and", &[v25, v26])?;
+let v27 = s.native_op(NativeOp::And, &[v25, v26])?;
 return Ok(Some(v27));
 }
 Ok(None)
@@ -95636,7 +95636,7 @@ let v28 = s.destruct(Constructor::eo__24emb_5ftsm_2eTypeRef, a0)?;
 let Some(fields) = v28 else { break 'case6; }
 ;
 let v29 = fields;
-let v30 = s.native("false", &[])?;
+let v30 = s.native_bool(false)?;
 return Ok(Some(v30));
 }
 Ok(None)
@@ -95647,7 +95647,7 @@ let v31 = s.destruct(Constructor::eo__24emb_5ftsm_2eFunType, a0)?;
 let Some(fields) = v31 else { break 'case7; }
 ;
 let v32 = fields;
-let v33 = s.native("false", &[])?;
+let v33 = s.native_bool(false)?;
 return Ok(Some(v33));
 }
 Ok(None)
@@ -95658,14 +95658,14 @@ let v34 = s.destruct(Constructor::eo__24emb_5ftsm_2eDtcAppType, a0)?;
 let Some(fields) = v34 else { break 'case8; }
 ;
 let v35 = fields;
-let v36 = s.native("false", &[])?;
+let v36 = s.native_bool(false)?;
 return Ok(Some(v36));
 }
 Ok(None)
 }
 fn case_9_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
-let v37 = s.native("true", &[])?;
+let v37 = s.native_bool(true)?;
 return Ok(Some(v37));
 }
 Ok(None)
@@ -95893,7 +95893,7 @@ let v9 = s.destruct(Constructor::eo__24emb_5fsm_2eString, a0)?;
 let Some(fields) = v9 else { break 'case3; }
 ;
 let v10 = fields;
-let v11 = s.native("string_valid", &[v10[0]])?;
+let v11 = s.native_op(NativeOp::StringValid, &[v10[0]])?;
 let v12 = match s.boolean_value(v11, true)? {
 Some(true) => {
 let v13 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
@@ -95914,15 +95914,15 @@ let v16 = s.destruct(Constructor::eo__24emb_5fsm_2eBinary, a0)?;
 let Some(fields) = v16 else { break 'case4; }
 ;
 let v17 = fields;
-let v18 = s.native("0", &[])?;
-let v19 = s.native("zleq", &[v18, v17[0]])?;
-let v20 = s.native("int.pow2", &[v17[0]])?;
-let v21 = s.native("mod_total", &[v17[1], v20])?;
-let v22 = s.native("zeq", &[v17[1], v21])?;
-let v23 = s.native("and", &[v19, v22])?;
+let v18 = s.native_constant(0)?;
+let v19 = s.native_op(NativeOp::Zleq, &[v18, v17[0]])?;
+let v20 = s.native_op(NativeOp::IntPow2, &[v17[0]])?;
+let v21 = s.native_op(NativeOp::ModTotal, &[v17[1], v20])?;
+let v22 = s.native_op(NativeOp::Zeq, &[v17[1], v21])?;
+let v23 = s.native_op(NativeOp::And, &[v19, v22])?;
 let v24 = match s.boolean_value(v23, true)? {
 Some(true) => {
-let v25 = s.native("int.to_nat", &[v17[0]])?;
+let v25 = s.native_op(NativeOp::IntToNat, &[v17[0]])?;
 let v26 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v25])?;
 v26
 }, Some(false) => {
@@ -95956,7 +95956,7 @@ let Some(fields) = v34 else { break 'case6; }
 let v35 = fields;
 let v36 = eo__24smtx_5ftypeof(s, v35[0])?;
 let v37 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v38 = s.native("Teq", &[v36, v37])?;
+let v38 = s.native_op(NativeOp::Teq, &[v36, v37])?;
 let v39 = match s.boolean_value(v38, true)? {
 Some(true) => {
 let v40 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -95978,12 +95978,12 @@ let Some(fields) = v42 else { break 'case7; }
 let v43 = fields;
 let v44 = eo__24smtx_5ftypeof(s, v43[0])?;
 let v45 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v46 = s.native("Teq", &[v44, v45])?;
+let v46 = s.native_op(NativeOp::Teq, &[v44, v45])?;
 let v47 = match s.boolean_value(v46, true)? {
 Some(true) => {
 let v48 = eo__24smtx_5ftypeof(s, v43[1])?;
 let v49 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v50 = s.native("Teq", &[v48, v49])?;
+let v50 = s.native_op(NativeOp::Teq, &[v48, v49])?;
 let v51 = match s.boolean_value(v50, true)? {
 Some(true) => {
 let v52 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -96011,12 +96011,12 @@ let Some(fields) = v55 else { break 'case8; }
 let v56 = fields;
 let v57 = eo__24smtx_5ftypeof(s, v56[0])?;
 let v58 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v59 = s.native("Teq", &[v57, v58])?;
+let v59 = s.native_op(NativeOp::Teq, &[v57, v58])?;
 let v60 = match s.boolean_value(v59, true)? {
 Some(true) => {
 let v61 = eo__24smtx_5ftypeof(s, v56[1])?;
 let v62 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v63 = s.native("Teq", &[v61, v62])?;
+let v63 = s.native_op(NativeOp::Teq, &[v61, v62])?;
 let v64 = match s.boolean_value(v63, true)? {
 Some(true) => {
 let v65 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -96044,12 +96044,12 @@ let Some(fields) = v68 else { break 'case9; }
 let v69 = fields;
 let v70 = eo__24smtx_5ftypeof(s, v69[0])?;
 let v71 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v72 = s.native("Teq", &[v70, v71])?;
+let v72 = s.native_op(NativeOp::Teq, &[v70, v71])?;
 let v73 = match s.boolean_value(v72, true)? {
 Some(true) => {
 let v74 = eo__24smtx_5ftypeof(s, v69[1])?;
 let v75 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v76 = s.native("Teq", &[v74, v75])?;
+let v76 = s.native_op(NativeOp::Teq, &[v74, v75])?;
 let v77 = match s.boolean_value(v76, true)? {
 Some(true) => {
 let v78 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -96077,12 +96077,12 @@ let Some(fields) = v81 else { break 'case10; }
 let v82 = fields;
 let v83 = eo__24smtx_5ftypeof(s, v82[0])?;
 let v84 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v85 = s.native("Teq", &[v83, v84])?;
+let v85 = s.native_op(NativeOp::Teq, &[v83, v84])?;
 let v86 = match s.boolean_value(v85, true)? {
 Some(true) => {
 let v87 = eo__24smtx_5ftypeof(s, v82[1])?;
 let v88 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v89 = s.native("Teq", &[v87, v88])?;
+let v89 = s.native_op(NativeOp::Teq, &[v87, v88])?;
 let v90 = match s.boolean_value(v89, true)? {
 Some(true) => {
 let v91 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -96229,7 +96229,7 @@ let Some(fields) = v141 else { break 'case20; }
 let v142 = fields;
 let v143 = eo__24smtx_5ftypeof(s, v142[0])?;
 let v144 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v145 = s.native("Teq", &[v143, v144])?;
+let v145 = s.native_op(NativeOp::Teq, &[v143, v144])?;
 let v146 = match s.boolean_value(v145, true)? {
 Some(true) => {
 let v147 = s.construct(Constructor::eo__24emb_5ftsm_2eReal, &[])?;
@@ -96251,7 +96251,7 @@ let Some(fields) = v149 else { break 'case21; }
 let v150 = fields;
 let v151 = eo__24smtx_5ftypeof(s, v150[0])?;
 let v152 = s.construct(Constructor::eo__24emb_5ftsm_2eReal, &[])?;
-let v153 = s.native("Teq", &[v151, v152])?;
+let v153 = s.native_op(NativeOp::Teq, &[v151, v152])?;
 let v154 = match s.boolean_value(v153, true)? {
 Some(true) => {
 let v155 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -96273,7 +96273,7 @@ let Some(fields) = v157 else { break 'case22; }
 let v158 = fields;
 let v159 = eo__24smtx_5ftypeof(s, v158[0])?;
 let v160 = s.construct(Constructor::eo__24emb_5ftsm_2eReal, &[])?;
-let v161 = s.native("Teq", &[v159, v160])?;
+let v161 = s.native_op(NativeOp::Teq, &[v159, v160])?;
 let v162 = match s.boolean_value(v161, true)? {
 Some(true) => {
 let v163 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -96319,12 +96319,12 @@ let Some(fields) = v173 else { break 'case25; }
 let v174 = fields;
 let v175 = eo__24smtx_5ftypeof(s, v174[0])?;
 let v176 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v177 = s.native("Teq", &[v175, v176])?;
+let v177 = s.native_op(NativeOp::Teq, &[v175, v176])?;
 let v178 = match s.boolean_value(v177, true)? {
 Some(true) => {
 let v179 = eo__24smtx_5ftypeof(s, v174[1])?;
 let v180 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v181 = s.native("Teq", &[v179, v180])?;
+let v181 = s.native_op(NativeOp::Teq, &[v179, v180])?;
 let v182 = match s.boolean_value(v181, true)? {
 Some(true) => {
 let v183 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -96352,12 +96352,12 @@ let Some(fields) = v186 else { break 'case26; }
 let v187 = fields;
 let v188 = eo__24smtx_5ftypeof(s, v187[0])?;
 let v189 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v190 = s.native("Teq", &[v188, v189])?;
+let v190 = s.native_op(NativeOp::Teq, &[v188, v189])?;
 let v191 = match s.boolean_value(v190, true)? {
 Some(true) => {
 let v192 = eo__24smtx_5ftypeof(s, v187[1])?;
 let v193 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v194 = s.native("Teq", &[v192, v193])?;
+let v194 = s.native_op(NativeOp::Teq, &[v192, v193])?;
 let v195 = match s.boolean_value(v194, true)? {
 Some(true) => {
 let v196 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -96385,12 +96385,12 @@ let Some(fields) = v199 else { break 'case27; }
 let v200 = fields;
 let v201 = eo__24smtx_5ftypeof(s, v200[0])?;
 let v202 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v203 = s.native("Teq", &[v201, v202])?;
+let v203 = s.native_op(NativeOp::Teq, &[v201, v202])?;
 let v204 = match s.boolean_value(v203, true)? {
 Some(true) => {
 let v205 = eo__24smtx_5ftypeof(s, v200[1])?;
 let v206 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v207 = s.native("Teq", &[v205, v206])?;
+let v207 = s.native_op(NativeOp::Teq, &[v205, v206])?;
 let v208 = match s.boolean_value(v207, true)? {
 Some(true) => {
 let v209 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -96418,7 +96418,7 @@ let Some(fields) = v212 else { break 'case28; }
 let v213 = fields;
 let v214 = eo__24smtx_5ftypeof(s, v213[0])?;
 let v215 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v216 = s.native("Teq", &[v214, v215])?;
+let v216 = s.native_op(NativeOp::Teq, &[v214, v215])?;
 let v217 = match s.boolean_value(v216, true)? {
 Some(true) => {
 let v218 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -96440,7 +96440,7 @@ let Some(fields) = v220 else { break 'case29; }
 let v221 = fields;
 let v222 = eo__24smtx_5ftypeof(s, v221[0])?;
 let v223 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v224 = s.native("Teq", &[v222, v223])?;
+let v224 = s.native_op(NativeOp::Teq, &[v222, v223])?;
 let v225 = match s.boolean_value(v224, true)? {
 Some(true) => {
 let v226 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -96462,12 +96462,12 @@ let Some(fields) = v228 else { break 'case30; }
 let v229 = fields;
 let v230 = eo__24smtx_5ftypeof(s, v229[0])?;
 let v231 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v232 = s.native("Teq", &[v230, v231])?;
+let v232 = s.native_op(NativeOp::Teq, &[v230, v231])?;
 let v233 = match s.boolean_value(v232, true)? {
 Some(true) => {
 let v234 = eo__24smtx_5ftypeof(s, v229[1])?;
 let v235 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v236 = s.native("Teq", &[v234, v235])?;
+let v236 = s.native_op(NativeOp::Teq, &[v234, v235])?;
 let v237 = match s.boolean_value(v236, true)? {
 Some(true) => {
 let v238 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -96495,12 +96495,12 @@ let Some(fields) = v241 else { break 'case31; }
 let v242 = fields;
 let v243 = eo__24smtx_5ftypeof(s, v242[0])?;
 let v244 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v245 = s.native("Teq", &[v243, v244])?;
+let v245 = s.native_op(NativeOp::Teq, &[v243, v244])?;
 let v246 = match s.boolean_value(v245, true)? {
 Some(true) => {
 let v247 = eo__24smtx_5ftypeof(s, v242[1])?;
 let v248 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v249 = s.native("Teq", &[v247, v248])?;
+let v249 = s.native_op(NativeOp::Teq, &[v247, v248])?;
 let v250 = match s.boolean_value(v249, true)? {
 Some(true) => {
 let v251 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -96695,8 +96695,8 @@ let Some(fields) = v317 else { break 'case45; }
 let v318 = fields;
 let v319 = eo__24smtx_5ftypeof(s, v318[0])?;
 let v320 = eo__24smtx_5ftypeof(s, v318[1])?;
-let v321 = s.native("nat.zero", &[])?;
-let v322 = s.native("nat.succ", &[v321])?;
+let v321 = s.native_nat_zero()?;
+let v322 = s.native_op(NativeOp::NatSucc, &[v321])?;
 let v323 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v322])?;
 let v324 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v319, v320, v323)?;
 return Ok(case_result_eo__24smtx_5ftypeof::Value(v324));
@@ -97300,7 +97300,7 @@ let v562 = fields;
 let v563 = eo__24smtx_5ftypeof(s, v562[0])?;
 let v564 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v565 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v564])?;
-let v566 = s.native("Teq", &[v563, v565])?;
+let v566 = s.native_op(NativeOp::Teq, &[v563, v565])?;
 let v567 = match s.boolean_value(v566, true)? {
 Some(true) => {
 let v568 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
@@ -97324,7 +97324,7 @@ let v572 = fields;
 let v573 = eo__24smtx_5ftypeof(s, v572[0])?;
 let v574 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v575 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v574])?;
-let v576 = s.native("Teq", &[v573, v575])?;
+let v576 = s.native_op(NativeOp::Teq, &[v573, v575])?;
 let v577 = match s.boolean_value(v576, true)? {
 Some(true) => {
 let v578 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
@@ -97348,7 +97348,7 @@ let v582 = fields;
 let v583 = eo__24smtx_5ftypeof(s, v582[0])?;
 let v584 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v585 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v584])?;
-let v586 = s.native("Teq", &[v583, v585])?;
+let v586 = s.native_op(NativeOp::Teq, &[v583, v585])?;
 let v587 = match s.boolean_value(v586, true)? {
 Some(true) => {
 let v588 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -97370,7 +97370,7 @@ let Some(fields) = v590 else { break 'case93; }
 let v591 = fields;
 let v592 = eo__24smtx_5ftypeof(s, v591[0])?;
 let v593 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v594 = s.native("Teq", &[v592, v593])?;
+let v594 = s.native_op(NativeOp::Teq, &[v592, v593])?;
 let v595 = match s.boolean_value(v594, true)? {
 Some(true) => {
 let v596 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
@@ -97394,7 +97394,7 @@ let v600 = fields;
 let v601 = eo__24smtx_5ftypeof(s, v600[0])?;
 let v602 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v603 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v602])?;
-let v604 = s.native("Teq", &[v601, v603])?;
+let v604 = s.native_op(NativeOp::Teq, &[v601, v603])?;
 let v605 = match s.boolean_value(v604, true)? {
 Some(true) => {
 let v606 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -97417,7 +97417,7 @@ let v609 = fields;
 let v610 = eo__24smtx_5ftypeof(s, v609[0])?;
 let v611 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v612 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v611])?;
-let v613 = s.native("Teq", &[v610, v612])?;
+let v613 = s.native_op(NativeOp::Teq, &[v610, v612])?;
 let v614 = match s.boolean_value(v613, true)? {
 Some(true) => {
 let v615 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -97439,7 +97439,7 @@ let Some(fields) = v617 else { break 'case96; }
 let v618 = fields;
 let v619 = eo__24smtx_5ftypeof(s, v618[0])?;
 let v620 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v621 = s.native("Teq", &[v619, v620])?;
+let v621 = s.native_op(NativeOp::Teq, &[v619, v620])?;
 let v622 = match s.boolean_value(v621, true)? {
 Some(true) => {
 let v623 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
@@ -97463,13 +97463,13 @@ let v627 = fields;
 let v628 = eo__24smtx_5ftypeof(s, v627[0])?;
 let v629 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v630 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v629])?;
-let v631 = s.native("Teq", &[v628, v630])?;
+let v631 = s.native_op(NativeOp::Teq, &[v628, v630])?;
 let v632 = match s.boolean_value(v631, true)? {
 Some(true) => {
 let v633 = eo__24smtx_5ftypeof(s, v627[1])?;
 let v634 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v635 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v634])?;
-let v636 = s.native("Teq", &[v633, v635])?;
+let v636 = s.native_op(NativeOp::Teq, &[v633, v635])?;
 let v637 = match s.boolean_value(v636, true)? {
 Some(true) => {
 let v638 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -97498,13 +97498,13 @@ let v642 = fields;
 let v643 = eo__24smtx_5ftypeof(s, v642[0])?;
 let v644 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v645 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v644])?;
-let v646 = s.native("Teq", &[v643, v645])?;
+let v646 = s.native_op(NativeOp::Teq, &[v643, v645])?;
 let v647 = match s.boolean_value(v646, true)? {
 Some(true) => {
 let v648 = eo__24smtx_5ftypeof(s, v642[1])?;
 let v649 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v650 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v649])?;
-let v651 = s.native("Teq", &[v648, v650])?;
+let v651 = s.native_op(NativeOp::Teq, &[v648, v650])?;
 let v652 = match s.boolean_value(v651, true)? {
 Some(true) => {
 let v653 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -97547,18 +97547,18 @@ let v663 = fields;
 let v664 = eo__24smtx_5ftypeof(s, v663[0])?;
 let v665 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v666 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v665])?;
-let v667 = s.native("Teq", &[v664, v666])?;
+let v667 = s.native_op(NativeOp::Teq, &[v664, v666])?;
 let v668 = match s.boolean_value(v667, true)? {
 Some(true) => {
 let v669 = eo__24smtx_5ftypeof(s, v663[1])?;
 let v670 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v671 = s.native("Teq", &[v669, v670])?;
+let v671 = s.native_op(NativeOp::Teq, &[v669, v670])?;
 let v672 = match s.boolean_value(v671, true)? {
 Some(true) => {
 let v673 = eo__24smtx_5ftypeof(s, v663[2])?;
 let v674 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v675 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v674])?;
-let v676 = s.native("Teq", &[v673, v675])?;
+let v676 = s.native_op(NativeOp::Teq, &[v673, v675])?;
 let v677 = match s.boolean_value(v676, true)? {
 Some(true) => {
 let v678 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
@@ -97594,18 +97594,18 @@ let v684 = fields;
 let v685 = eo__24smtx_5ftypeof(s, v684[0])?;
 let v686 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v687 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v686])?;
-let v688 = s.native("Teq", &[v685, v687])?;
+let v688 = s.native_op(NativeOp::Teq, &[v685, v687])?;
 let v689 = match s.boolean_value(v688, true)? {
 Some(true) => {
 let v690 = eo__24smtx_5ftypeof(s, v684[1])?;
 let v691 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v692 = s.native("Teq", &[v690, v691])?;
+let v692 = s.native_op(NativeOp::Teq, &[v690, v691])?;
 let v693 = match s.boolean_value(v692, true)? {
 Some(true) => {
 let v694 = eo__24smtx_5ftypeof(s, v684[2])?;
 let v695 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v696 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v695])?;
-let v697 = s.native("Teq", &[v694, v696])?;
+let v697 = s.native_op(NativeOp::Teq, &[v694, v696])?;
 let v698 = match s.boolean_value(v697, true)? {
 Some(true) => {
 let v699 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
@@ -97641,17 +97641,17 @@ let v705 = fields;
 let v706 = eo__24smtx_5ftypeof(s, v705[0])?;
 let v707 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v708 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v707])?;
-let v709 = s.native("Teq", &[v706, v708])?;
+let v709 = s.native_op(NativeOp::Teq, &[v706, v708])?;
 let v710 = match s.boolean_value(v709, true)? {
 Some(true) => {
 let v711 = eo__24smtx_5ftypeof(s, v705[1])?;
 let v712 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v713 = s.native("Teq", &[v711, v712])?;
+let v713 = s.native_op(NativeOp::Teq, &[v711, v712])?;
 let v714 = match s.boolean_value(v713, true)? {
 Some(true) => {
 let v715 = eo__24smtx_5ftypeof(s, v705[2])?;
 let v716 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v717 = s.native("Teq", &[v715, v716])?;
+let v717 = s.native_op(NativeOp::Teq, &[v715, v716])?;
 let v718 = match s.boolean_value(v717, true)? {
 Some(true) => {
 let v719 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -97713,7 +97713,7 @@ let v730 = fields;
 let v731 = eo__24smtx_5ftypeof(s, v730[0])?;
 let v732 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v733 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v732])?;
-let v734 = s.native("Teq", &[v731, v733])?;
+let v734 = s.native_op(NativeOp::Teq, &[v731, v733])?;
 let v735 = match s.boolean_value(v734, true)? {
 Some(true) => {
 let v736 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97735,7 +97735,7 @@ let Some(fields) = v738 else { break 'case107; }
 let v739 = fields;
 let v740 = eo__24smtx_5ftypeof(s, v739[0])?;
 let v741 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v742 = s.native("Teq", &[v740, v741])?;
+let v742 = s.native_op(NativeOp::Teq, &[v740, v741])?;
 let v743 = match s.boolean_value(v742, true)? {
 Some(true) => {
 let v744 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97757,7 +97757,7 @@ let Some(fields) = v746 else { break 'case108; }
 let v747 = fields;
 let v748 = eo__24smtx_5ftypeof(s, v747[0])?;
 let v749 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v750 = s.native("Teq", &[v748, v749])?;
+let v750 = s.native_op(NativeOp::Teq, &[v748, v749])?;
 let v751 = match s.boolean_value(v750, true)? {
 Some(true) => {
 let v752 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97791,7 +97791,7 @@ let Some(fields) = v758 else { break 'case110; }
 let v759 = fields;
 let v760 = eo__24smtx_5ftypeof(s, v759[0])?;
 let v761 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v762 = s.native("Teq", &[v760, v761])?;
+let v762 = s.native_op(NativeOp::Teq, &[v760, v761])?;
 let v763 = match s.boolean_value(v762, true)? {
 Some(true) => {
 let v764 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97813,7 +97813,7 @@ let Some(fields) = v766 else { break 'case111; }
 let v767 = fields;
 let v768 = eo__24smtx_5ftypeof(s, v767[0])?;
 let v769 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v770 = s.native("Teq", &[v768, v769])?;
+let v770 = s.native_op(NativeOp::Teq, &[v768, v769])?;
 let v771 = match s.boolean_value(v770, true)? {
 Some(true) => {
 let v772 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97836,13 +97836,13 @@ let v775 = fields;
 let v776 = eo__24smtx_5ftypeof(s, v775[0])?;
 let v777 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v778 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v777])?;
-let v779 = s.native("Teq", &[v776, v778])?;
+let v779 = s.native_op(NativeOp::Teq, &[v776, v778])?;
 let v780 = match s.boolean_value(v779, true)? {
 Some(true) => {
 let v781 = eo__24smtx_5ftypeof(s, v775[1])?;
 let v782 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v783 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v782])?;
-let v784 = s.native("Teq", &[v781, v783])?;
+let v784 = s.native_op(NativeOp::Teq, &[v781, v783])?;
 let v785 = match s.boolean_value(v784, true)? {
 Some(true) => {
 let v786 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97870,12 +97870,12 @@ let Some(fields) = v789 else { break 'case113; }
 let v790 = fields;
 let v791 = eo__24smtx_5ftypeof(s, v790[0])?;
 let v792 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v793 = s.native("Teq", &[v791, v792])?;
+let v793 = s.native_op(NativeOp::Teq, &[v791, v792])?;
 let v794 = match s.boolean_value(v793, true)? {
 Some(true) => {
 let v795 = eo__24smtx_5ftypeof(s, v790[1])?;
 let v796 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v797 = s.native("Teq", &[v795, v796])?;
+let v797 = s.native_op(NativeOp::Teq, &[v795, v796])?;
 let v798 = match s.boolean_value(v797, true)? {
 Some(true) => {
 let v799 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97903,12 +97903,12 @@ let Some(fields) = v802 else { break 'case114; }
 let v803 = fields;
 let v804 = eo__24smtx_5ftypeof(s, v803[0])?;
 let v805 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v806 = s.native("Teq", &[v804, v805])?;
+let v806 = s.native_op(NativeOp::Teq, &[v804, v805])?;
 let v807 = match s.boolean_value(v806, true)? {
 Some(true) => {
 let v808 = eo__24smtx_5ftypeof(s, v803[1])?;
 let v809 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v810 = s.native("Teq", &[v808, v809])?;
+let v810 = s.native_op(NativeOp::Teq, &[v808, v809])?;
 let v811 = match s.boolean_value(v810, true)? {
 Some(true) => {
 let v812 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97936,12 +97936,12 @@ let Some(fields) = v815 else { break 'case115; }
 let v816 = fields;
 let v817 = eo__24smtx_5ftypeof(s, v816[0])?;
 let v818 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v819 = s.native("Teq", &[v817, v818])?;
+let v819 = s.native_op(NativeOp::Teq, &[v817, v818])?;
 let v820 = match s.boolean_value(v819, true)? {
 Some(true) => {
 let v821 = eo__24smtx_5ftypeof(s, v816[1])?;
 let v822 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v823 = s.native("Teq", &[v821, v822])?;
+let v823 = s.native_op(NativeOp::Teq, &[v821, v822])?;
 let v824 = match s.boolean_value(v823, true)? {
 Some(true) => {
 let v825 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -97969,12 +97969,12 @@ let Some(fields) = v828 else { break 'case116; }
 let v829 = fields;
 let v830 = eo__24smtx_5ftypeof(s, v829[0])?;
 let v831 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v832 = s.native("Teq", &[v830, v831])?;
+let v832 = s.native_op(NativeOp::Teq, &[v830, v831])?;
 let v833 = match s.boolean_value(v832, true)? {
 Some(true) => {
 let v834 = eo__24smtx_5ftypeof(s, v829[1])?;
 let v835 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v836 = s.native("Teq", &[v834, v835])?;
+let v836 = s.native_op(NativeOp::Teq, &[v834, v835])?;
 let v837 = match s.boolean_value(v836, true)? {
 Some(true) => {
 let v838 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -98015,12 +98015,12 @@ let v846 = fields;
 let v847 = eo__24smtx_5ftypeof(s, v846[0])?;
 let v848 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v849 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v848])?;
-let v850 = s.native("Teq", &[v847, v849])?;
+let v850 = s.native_op(NativeOp::Teq, &[v847, v849])?;
 let v851 = match s.boolean_value(v850, true)? {
 Some(true) => {
 let v852 = eo__24smtx_5ftypeof(s, v846[1])?;
 let v853 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v854 = s.native("Teq", &[v852, v853])?;
+let v854 = s.native_op(NativeOp::Teq, &[v852, v853])?;
 let v855 = match s.boolean_value(v854, true)? {
 Some(true) => {
 let v856 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -98077,17 +98077,17 @@ let v872 = fields;
 let v873 = eo__24smtx_5ftypeof(s, v872[0])?;
 let v874 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v875 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v874])?;
-let v876 = s.native("Teq", &[v873, v875])?;
+let v876 = s.native_op(NativeOp::Teq, &[v873, v875])?;
 let v877 = match s.boolean_value(v876, true)? {
 Some(true) => {
 let v878 = eo__24smtx_5ftypeof(s, v872[1])?;
 let v879 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v880 = s.native("Teq", &[v878, v879])?;
+let v880 = s.native_op(NativeOp::Teq, &[v878, v879])?;
 let v881 = match s.boolean_value(v880, true)? {
 Some(true) => {
 let v882 = eo__24smtx_5ftypeof(s, v872[2])?;
 let v883 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v884 = s.native("Teq", &[v882, v883])?;
+let v884 = s.native_op(NativeOp::Teq, &[v882, v883])?;
 let v885 = match s.boolean_value(v884, true)? {
 Some(true) => {
 let v886 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -98149,17 +98149,17 @@ let v902 = fields;
 let v903 = eo__24smtx_5ftypeof(s, v902[0])?;
 let v904 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
 let v905 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v904])?;
-let v906 = s.native("Teq", &[v903, v905])?;
+let v906 = s.native_op(NativeOp::Teq, &[v903, v905])?;
 let v907 = match s.boolean_value(v906, true)? {
 Some(true) => {
 let v908 = eo__24smtx_5ftypeof(s, v902[1])?;
 let v909 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-let v910 = s.native("Teq", &[v908, v909])?;
+let v910 = s.native_op(NativeOp::Teq, &[v908, v909])?;
 let v911 = match s.boolean_value(v910, true)? {
 Some(true) => {
 let v912 = eo__24smtx_5ftypeof(s, v902[2])?;
 let v913 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-let v914 = s.native("Teq", &[v912, v913])?;
+let v914 = s.native_op(NativeOp::Teq, &[v912, v913])?;
 let v915 = match s.boolean_value(v914, true)? {
 Some(true) => {
 let v916 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -98193,7 +98193,7 @@ let Some(fields) = v920 else { break 'case125; }
 let v921 = fields;
 let v922 = eo__24smtx_5ftypeof(s, v921[2])?;
 let v923 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v924 = s.native("Teq", &[v922, v923])?;
+let v924 = s.native_op(NativeOp::Teq, &[v922, v923])?;
 let v925 = match s.boolean_value(v924, true)? {
 Some(true) => {
 let v926 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v921[1], v921[1])?;
@@ -98337,7 +98337,7 @@ let Some(fields) = v978 else { break 'case135; }
 let v979 = fields;
 let v980 = eo__24smtx_5ftypeof(s, v979[2])?;
 let v981 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v982 = s.native("Teq", &[v980, v981])?;
+let v982 = s.native_op(NativeOp::Teq, &[v980, v981])?;
 let v983 = match s.boolean_value(v982, true)? {
 Some(true) => {
 let v984 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -98360,7 +98360,7 @@ let Some(fields) = v987 else { break 'case136; }
 let v988 = fields;
 let v989 = eo__24smtx_5ftypeof(s, v988[2])?;
 let v990 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-let v991 = s.native("Teq", &[v989, v990])?;
+let v991 = s.native_op(NativeOp::Teq, &[v989, v990])?;
 let v992 = match s.boolean_value(v991, true)? {
 Some(true) => {
 let v993 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -98382,7 +98382,7 @@ let Some(fields) = v996 else { break 'case137; }
 ;
 let v997 = fields;
 let v998 = eo__24smtx_5ftypeof(s, v997[2])?;
-let v999 = s.native("Teq", &[v998, v997[1]])?;
+let v999 = s.native_op(NativeOp::Teq, &[v998, v997[1]])?;
 let v1000 = match s.boolean_value(v999, true)? {
 Some(true) => {
 let v1001 = eo__24smtx_5ftypeof(s, v997[3])?;
@@ -98543,7 +98543,7 @@ pub fn eo__24smtx_5ftypeof_5f_3d(s: &mut Store, a0: Term, a1: Term) -> CheckResu
 s.enter()?;
 let result = (|| {
 'case0: {
-let v0 = s.native("Teq", &[a0, a1])?;
+let v0 = s.native_op(NativeOp::Teq, &[a0, a1])?;
 let v1 = match s.boolean_value(v0, true)? {
 Some(true) => {
 let v2 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -98570,7 +98570,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5ftsm_2eFunType, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("Teq", &[v1[0], a1])?;
+let v2 = s.native_op(NativeOp::Teq, &[v1[0], a1])?;
 let v3 = match s.boolean_value(v2, true)? {
 Some(true) => {
 v1[1]
@@ -98587,7 +98587,7 @@ let v6 = s.destruct(Constructor::eo__24emb_5ftsm_2eDtcAppType, a0)?;
 let Some(fields) = v6 else { break 'case1; }
 ;
 let v7 = fields;
-let v8 = s.native("Teq", &[v7[0], a1])?;
+let v8 = s.native_op(NativeOp::Teq, &[v7[0], a1])?;
 let v9 = match s.boolean_value(v8, true)? {
 Some(true) => {
 v7[1]
@@ -98743,7 +98743,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("nateq", &[v1[0], v3[0]])?;
+let v4 = s.native_op(NativeOp::Nateq, &[v1[0], v3[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 let v6 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v1[0]])?;
@@ -98777,7 +98777,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("nateq", &[v1[0], v3[0]])?;
+let v4 = s.native_op(NativeOp::Nateq, &[v1[0], v3[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 a2
@@ -98810,10 +98810,10 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("nat.to_int", &[v1[0]])?;
-let v5 = s.native("nat.to_int", &[v3[0]])?;
-let v6 = s.native("zplus", &[v4, v5])?;
-let v7 = s.native("int.to_nat", &[v6])?;
+let v4 = s.native_op(NativeOp::NatToInt, &[v1[0]])?;
+let v5 = s.native_op(NativeOp::NatToInt, &[v3[0]])?;
+let v6 = s.native_op(NativeOp::Zplus, &[v4, v5])?;
+let v7 = s.native_op(NativeOp::IntToNat, &[v6])?;
 let v8 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v7])?;
 return Ok(v8);
 }
@@ -98845,7 +98845,7 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5fdtc_2eunit, &[])?;
 if v1[0] != v2 { break 'case0; }
-let v3 = s.native_pattern("nat.zero", a2)?;
+let v3 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v3 else { break 'case0; }
 ;
 let v4 = fields;
@@ -98860,12 +98860,12 @@ let v7 = s.destruct(Constructor::eo__24emb_5fdtc_2econs, v6[0])?;
 let Some(fields) = v7 else { break 'case1; }
 ;
 let v8 = fields;
-let v9 = s.native_pattern("nat.zero", a2)?;
+let v9 = s.native_pattern_nat_zero(a2)?;
 let Some(fields) = v9 else { break 'case1; }
 ;
 let v10 = fields;
 let v11 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v8[1], v6[1]])?;
-let v12 = s.native("nat.zero", &[])?;
+let v12 = s.native_nat_zero()?;
 let v13 = eo__24smtx_5ftypeof_5fdt_5fcons_5frec(s, a0, v11, v12)?;
 let v14 = s.construct(Constructor::eo__24emb_5ftsm_2eDtcAppType, &[v8[0], v13])?;
 return Ok(v14);
@@ -98875,7 +98875,7 @@ let v15 = s.destruct(Constructor::eo__24emb_5fdt_2esum, a1)?;
 let Some(fields) = v15 else { break 'case2; }
 ;
 let v16 = fields;
-let v17 = s.native_pattern("nat.succ", a2)?;
+let v17 = s.native_pattern_succ(a2)?;
 let Some(fields) = v17 else { break 'case2; }
 ;
 let v18 = fields;
@@ -98915,27 +98915,27 @@ let v4 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a2)?;
 let Some(fields) = v4 else { break 'case0; }
 ;
 let v5 = fields;
-let v6 = s.native("0", &[])?;
-let v7 = s.native("zleq", &[v6, v3[0]])?;
+let v6 = s.native_constant(0)?;
+let v7 = s.native_op(NativeOp::Zleq, &[v6, v3[0]])?;
 let v8 = match s.boolean_value(v7, true)? {
 Some(true) => {
-let v9 = s.native("nat.to_int", &[v5[0]])?;
-let v10 = s.native("zlt", &[v1[0], v9])?;
+let v9 = s.native_op(NativeOp::NatToInt, &[v5[0]])?;
+let v10 = s.native_op(NativeOp::Zlt, &[v1[0], v9])?;
 let v11 = match s.boolean_value(v10, true)? {
 Some(true) => {
-let v12 = s.native("0", &[])?;
-let v13 = s.native("1", &[])?;
-let v14 = s.native("zplus", &[v1[0], v13])?;
-let v15 = s.native("zneg", &[v3[0]])?;
-let v16 = s.native("zplus", &[v14, v15])?;
-let v17 = s.native("zlt", &[v12, v16])?;
+let v12 = s.native_constant(0)?;
+let v13 = s.native_constant(1)?;
+let v14 = s.native_op(NativeOp::Zplus, &[v1[0], v13])?;
+let v15 = s.native_op(NativeOp::Zneg, &[v3[0]])?;
+let v16 = s.native_op(NativeOp::Zplus, &[v14, v15])?;
+let v17 = s.native_op(NativeOp::Zlt, &[v12, v16])?;
 let v18 = match s.boolean_value(v17, true)? {
 Some(true) => {
-let v19 = s.native("1", &[])?;
-let v20 = s.native("zplus", &[v1[0], v19])?;
-let v21 = s.native("zneg", &[v3[0]])?;
-let v22 = s.native("zplus", &[v20, v21])?;
-let v23 = s.native("int.to_nat", &[v22])?;
+let v19 = s.native_constant(1)?;
+let v20 = s.native_op(NativeOp::Zplus, &[v1[0], v19])?;
+let v21 = s.native_op(NativeOp::Zneg, &[v3[0]])?;
+let v22 = s.native_op(NativeOp::Zplus, &[v20, v21])?;
+let v23 = s.native_op(NativeOp::IntToNat, &[v22])?;
 let v24 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v23])?;
 v24
 }, Some(false) => {
@@ -98972,7 +98972,7 @@ s.enter()?;
 let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
-let v1 = s.native("Teq", &[a0, v0])?;
+let v1 = s.native_op(NativeOp::Teq, &[a0, v0])?;
 let v2 = match s.boolean_value(v1, true)? {
 Some(true) => {
 let v3 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
@@ -99020,11 +99020,11 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
 if a1 != v2 { break 'case0; }
-let v3 = s.native("0", &[])?;
-let v4 = s.native("zleq", &[v3, v1[0]])?;
+let v3 = s.native_constant(0)?;
+let v4 = s.native_op(NativeOp::Zleq, &[v3, v1[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
-let v6 = s.native("int.to_nat", &[v1[0]])?;
+let v6 = s.native_op(NativeOp::IntToNat, &[v1[0]])?;
 let v7 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v6])?;
 v7
 }, Some(false) => {
@@ -99050,7 +99050,7 @@ let result = (|| {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 if a0 != v0 { break 'case0; }
-let v1 = s.native("Teq", &[a1, a2])?;
+let v1 = s.native_op(NativeOp::Teq, &[a1, a2])?;
 let v2 = match s.boolean_value(v1, true)? {
 Some(true) => {
 a1
@@ -99083,9 +99083,9 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eMap, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("Teq", &[v1[0], v3[0]])?;
-let v5 = s.native("Teq", &[v1[1], v3[1]])?;
-let v6 = s.native("and", &[v4, v5])?;
+let v4 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
+let v5 = s.native_op(NativeOp::Teq, &[v1[1], v3[1]])?;
+let v6 = s.native_op(NativeOp::And, &[v4, v5])?;
 let v7 = match s.boolean_value(v6, true)? {
 Some(true) => {
 v1[0]
@@ -99105,7 +99105,7 @@ let v11 = s.destruct(Constructor::eo__24emb_5ftsm_2eSet, a1)?;
 let Some(fields) = v11 else { break 'case1; }
 ;
 let v12 = fields;
-let v13 = s.native("Teq", &[v10[0], v12[0]])?;
+let v13 = s.native_op(NativeOp::Teq, &[v10[0], v12[0]])?;
 let v14 = match s.boolean_value(v13, true)? {
 Some(true) => {
 v10[0]
@@ -99136,8 +99136,8 @@ let Some(fields) = v0 else { break 'case0; }
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
 if a1 != v2 { break 'case0; }
-let v3 = s.native("0", &[])?;
-let v4 = s.native("zleq", &[v3, v1[0]])?;
+let v3 = s.native_constant(0)?;
+let v4 = s.native_op(NativeOp::Zleq, &[v3, v1[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 let v6 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -99173,12 +99173,12 @@ let Some(fields) = v2 else { break 'case0; }
 let v3 = fields;
 let v4 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
 if a2 != v4 { break 'case0; }
-let v5 = s.native("0", &[])?;
-let v6 = s.native("zleq", &[v5, v1[0]])?;
+let v5 = s.native_constant(0)?;
+let v6 = s.native_op(NativeOp::Zleq, &[v5, v1[0]])?;
 let v7 = match s.boolean_value(v6, true)? {
 Some(true) => {
-let v8 = s.native("0", &[])?;
-let v9 = s.native("zleq", &[v8, v3[0]])?;
+let v8 = s.native_constant(0)?;
+let v9 = s.native_op(NativeOp::Zleq, &[v8, v3[0]])?;
 let v10 = match s.boolean_value(v9, true)? {
 Some(true) => {
 let v11 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
@@ -99218,13 +99218,13 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("1", &[])?;
-let v5 = s.native("zleq", &[v4, v1[0]])?;
+let v4 = s.native_constant(1)?;
+let v5 = s.native_op(NativeOp::Zleq, &[v4, v1[0]])?;
 let v6 = match s.boolean_value(v5, true)? {
 Some(true) => {
-let v7 = s.native("nat.to_int", &[v3[0]])?;
-let v8 = s.native("zmult", &[v1[0], v7])?;
-let v9 = s.native("int.to_nat", &[v8])?;
+let v7 = s.native_op(NativeOp::NatToInt, &[v3[0]])?;
+let v8 = s.native_op(NativeOp::Zmult, &[v1[0], v7])?;
+let v9 = s.native_op(NativeOp::IntToNat, &[v8])?;
 let v10 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v9])?;
 v10
 }, Some(false) => {
@@ -99256,8 +99256,8 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("0", &[])?;
-let v5 = s.native("zleq", &[v4, v1[0]])?;
+let v4 = s.native_constant(0)?;
+let v5 = s.native_op(NativeOp::Zleq, &[v4, v1[0]])?;
 let v6 = match s.boolean_value(v5, true)? {
 Some(true) => {
 let v7 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v3[0]])?;
@@ -99291,8 +99291,8 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("0", &[])?;
-let v5 = s.native("zleq", &[v4, v1[0]])?;
+let v4 = s.native_constant(0)?;
+let v5 = s.native_op(NativeOp::Zleq, &[v4, v1[0]])?;
 let v6 = match s.boolean_value(v5, true)? {
 Some(true) => {
 let v7 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v3[0]])?;
@@ -99322,7 +99322,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5ftsm_2eMap, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("Teq", &[v1[0], a1])?;
+let v2 = s.native_op(NativeOp::Teq, &[v1[0], a1])?;
 let v3 = match s.boolean_value(v2, true)? {
 Some(true) => {
 v1[1]
@@ -99378,7 +99378,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eSeq, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("Teq", &[v1[0], v3[0]])?;
+let v4 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 let v6 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -99453,7 +99453,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eSeq, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("Teq", &[v1[0], v3[0]])?;
+let v4 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 let v6 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v1[0]])?;
@@ -99487,7 +99487,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eSeq, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("Teq", &[v1[0], v3[0]])?;
+let v4 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 a2
@@ -99524,10 +99524,10 @@ let v4 = s.destruct(Constructor::eo__24emb_5ftsm_2eSeq, a2)?;
 let Some(fields) = v4 else { break 'case0; }
 ;
 let v5 = fields;
-let v6 = s.native("Teq", &[v1[0], v3[0]])?;
+let v6 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
 let v7 = match s.boolean_value(v6, true)? {
 Some(true) => {
-let v8 = s.native("Teq", &[v3[0], v5[0]])?;
+let v8 = s.native_op(NativeOp::Teq, &[v3[0], v5[0]])?;
 let v9 = match s.boolean_value(v8, true)? {
 Some(true) => {
 let v10 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v1[0]])?;
@@ -99563,7 +99563,7 @@ let v0 = s.destruct(Constructor::eo__24emb_5ftsm_2eSet, a1)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("Teq", &[a0, v1[0]])?;
+let v2 = s.native_op(NativeOp::Teq, &[a0, v1[0]])?;
 let v3 = match s.boolean_value(v2, true)? {
 Some(true) => {
 let v4 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
@@ -99597,7 +99597,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eSet, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("Teq", &[v1[0], v3[0]])?;
+let v4 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 let v6 = s.construct(Constructor::eo__24emb_5ftsm_2eSet, &[v1[0]])?;
@@ -99631,7 +99631,7 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eSet, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("Teq", &[v1[0], v3[0]])?;
+let v4 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 a2
@@ -99664,13 +99664,13 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("0", &[])?;
-let v5 = s.native("zleq", &[v4, v1[0]])?;
+let v4 = s.native_constant(0)?;
+let v5 = s.native_op(NativeOp::Zleq, &[v4, v1[0]])?;
 let v6 = match s.boolean_value(v5, true)? {
 Some(true) => {
-let v7 = s.native("nat.to_int", &[v3[0]])?;
-let v8 = s.native("zplus", &[v1[0], v7])?;
-let v9 = s.native("int.to_nat", &[v8])?;
+let v7 = s.native_op(NativeOp::NatToInt, &[v3[0]])?;
+let v8 = s.native_op(NativeOp::Zplus, &[v1[0], v7])?;
+let v9 = s.native_op(NativeOp::IntToNat, &[v8])?;
 let v10 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v9])?;
 v10
 }, Some(false) => {
@@ -99698,10 +99698,10 @@ let v0 = s.destruct(Constructor::eo__24emb_5ftsm_2eMap, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
-let v2 = s.native("Teq", &[v1[0], a1])?;
+let v2 = s.native_op(NativeOp::Teq, &[v1[0], a1])?;
 let v3 = match s.boolean_value(v2, true)? {
 Some(true) => {
-let v4 = s.native("Teq", &[v1[1], a2])?;
+let v4 = s.native_op(NativeOp::Teq, &[v1[1], a2])?;
 let v5 = match s.boolean_value(v4, true)? {
 Some(true) => {
 let v6 = s.construct(Constructor::eo__24emb_5ftsm_2eMap, &[v1[0], v1[1]])?;
@@ -99766,7 +99766,7 @@ let Some(fields) = v2 else { break 'case0; }
 let v3 = fields;
 let v4 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
 if a2 != v4 { break 'case0; }
-let v5 = s.native("Teq", &[v1[0], v3[0]])?;
+let v5 = s.native_op(NativeOp::Teq, &[v1[0], v3[0]])?;
 let v6 = match s.boolean_value(v5, true)? {
 Some(true) => {
 let v7 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
@@ -99827,7 +99827,7 @@ let v3 = s.destruct(Constructor::eo__24emb_5ftsm_2eSeq, a2)?;
 let Some(fields) = v3 else { break 'case0; }
 ;
 let v4 = fields;
-let v5 = s.native("Teq", &[v1[0], v4[0]])?;
+let v5 = s.native_op(NativeOp::Teq, &[v1[0], v4[0]])?;
 let v6 = match s.boolean_value(v5, true)? {
 Some(true) => {
 let v7 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v1[0]])?;
@@ -99861,13 +99861,13 @@ let v2 = s.destruct(Constructor::eo__24emb_5ftsm_2eBitVec, a1)?;
 let Some(fields) = v2 else { break 'case0; }
 ;
 let v3 = fields;
-let v4 = s.native("0", &[])?;
-let v5 = s.native("zleq", &[v4, v1[0]])?;
+let v4 = s.native_constant(0)?;
+let v5 = s.native_op(NativeOp::Zleq, &[v4, v1[0]])?;
 let v6 = match s.boolean_value(v5, true)? {
 Some(true) => {
-let v7 = s.native("nat.to_int", &[v3[0]])?;
-let v8 = s.native("zplus", &[v1[0], v7])?;
-let v9 = s.native("int.to_nat", &[v8])?;
+let v7 = s.native_op(NativeOp::NatToInt, &[v3[0]])?;
+let v8 = s.native_op(NativeOp::Zplus, &[v1[0], v7])?;
+let v9 = s.native_op(NativeOp::IntToNat, &[v8])?;
 let v10 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v9])?;
 v10
 }, Some(false) => {
@@ -99932,17 +99932,17 @@ let v14 = a;
 let v15 = s.construct(Constructor::eo_str_2eindexof, &[])?;
 if v13 != v15 { break 'case2; }
 let v16 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v17 = s.operator("eq", &[a1, v16])?;
+let v17 = s.builtin(EvalOp::Eq, &[a1, v16])?;
 let v18 = match s.boolean_value(v17, false)? {
 Some(true) => {
 a2
 }, Some(false) => {
 let v19 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v20 = s.apply(v19, v14)?;
-let v21 = s.operator("eq", &[a1, v20])?;
+let v21 = s.builtin(EvalOp::Eq, &[a1, v20])?;
 let v22 = match s.boolean_value(v21, false)? {
 Some(true) => {
-let v23 = s.operator("not", &[a2])?;
+let v23 = s.builtin(EvalOp::Not, &[a2])?;
 v23
 }, Some(false) => {
 let v24 = s.construct(Constructor::eo__2d, &[])?;
@@ -99952,10 +99952,10 @@ let v27 = s.apply(v24, v26)?;
 let v28 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v29 = s.apply(v28, v11)?;
 let v30 = s.apply(v27, v29)?;
-let v31 = s.operator("eq", &[a1, v30])?;
+let v31 = s.builtin(EvalOp::Eq, &[a1, v30])?;
 let v32 = match s.boolean_value(v31, false)? {
 Some(true) => {
-let v33 = s.operator("not", &[a2])?;
+let v33 = s.builtin(EvalOp::Not, &[a2])?;
 let v34 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v35 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v36 = s.apply(v35, v14)?;
@@ -99964,7 +99964,7 @@ let v38 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v39 = s.apply(v38, v11)?;
 let v40 = s.apply(v37, v39)?;
 let v41 = eo__24str_5farith_5fentail_5fsimple_5fpred(s, v40)?;
-let v42 = s.operator("and", &[v33, v41])?;
+let v42 = s.builtin(EvalOp::And, &[v33, v41])?;
 v42
 }, Some(false) => {
 let v43 = s.literal(Lit::Bool(false))?;
@@ -99988,7 +99988,7 @@ let v46 = a;
 let v47 = s.construct(Constructor::eo_str_2eto_5fint, &[])?;
 if v45 != v47 { break 'case3; }
 let v48 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v49 = s.operator("eq", &[a1, v48])?;
+let v49 = s.builtin(EvalOp::Eq, &[a1, v48])?;
 let v50 = match s.boolean_value(v49, false)? {
 Some(true) => {
 a2
@@ -100026,7 +100026,7 @@ let v65 = s.construct(Constructor::eo__2b, &[])?;
 if v63 != v65 { break 'case4; }
 let v66 = eo__24str_5farith_5fentail_5fis_5fapprox(s, v57, v64, a2)?;
 let v67 = eo__24str_5farith_5fentail_5fis_5fapprox(s, v54, v61, a2)?;
-let v68 = s.operator("and", &[v66, v67])?;
+let v68 = s.builtin(EvalOp::And, &[v66, v67])?;
 return Ok(v68);
 }
 'case5: {
@@ -100083,10 +100083,10 @@ let v97 = s.construct(Constructor::eo__2a, &[])?;
 if v95 != v97 { break 'case5; }
 let v98 = s.literal(Lit::Numeral(parse_int("1")?))?;
 if v93 != v98 { break 'case5; }
-let v99 = s.operator("is_neg", &[v74])?;
+let v99 = s.builtin(EvalOp::IsNeg, &[v74])?;
 let v100 = match s.boolean_value(v99, false)? {
 Some(true) => {
-let v101 = s.operator("not", &[a2])?;
+let v101 = s.builtin(EvalOp::Not, &[a2])?;
 let v102 = eo__24str_5farith_5fentail_5fis_5fapprox(s, v81, v96, v101)?;
 v102
 }, Some(false) => {
@@ -100125,7 +100125,7 @@ let v7 = f;
 let v8 = a;
 let v9 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 if v7 != v9 { break 'case0; }
-let v10 = s.operator("eq", &[a1, v2])?;
+let v10 = s.builtin(EvalOp::Eq, &[a1, v2])?;
 let v11 = match s.boolean_value(v10, false)? {
 Some(true) => {
 let v12 = match s.boolean_value(a2, false)? {
@@ -100145,7 +100145,7 @@ let v24 = s.apply(v22, v23)?;
 let v25 = s.apply(v20, v24)?;
 let v26 = s.apply(v18, v25)?;
 let v27 = eo__24str_5farith_5fentail_5fsimple_5fpred(s, v26)?;
-let v28 = s.operator("and", &[v14, v27])?;
+let v28 = s.builtin(EvalOp::And, &[v14, v27])?;
 v28
 }, Some(false) => {
 let v29 = eo__24get_5farith_5fpoly_5fnorm(s, v2)?;
@@ -100157,10 +100157,10 @@ v12
 }, Some(false) => {
 let v31 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v32 = s.apply(v31, v8)?;
-let v33 = s.operator("eq", &[a1, v32])?;
+let v33 = s.builtin(EvalOp::Eq, &[a1, v32])?;
 let v34 = match s.boolean_value(v33, false)? {
 Some(true) => {
-let v35 = s.operator("not", &[a2])?;
+let v35 = s.builtin(EvalOp::Not, &[a2])?;
 v35
 }, Some(false) => {
 let v36 = s.construct(Constructor::eo__2d, &[])?;
@@ -100168,7 +100168,7 @@ let v37 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v38 = s.apply(v37, v8)?;
 let v39 = s.apply(v36, v38)?;
 let v40 = s.apply(v39, v5)?;
-let v41 = s.operator("eq", &[a1, v40])?;
+let v41 = s.builtin(EvalOp::Eq, &[a1, v40])?;
 let v42 = match s.boolean_value(v41, false)? {
 Some(true) => {
 let v43 = match s.boolean_value(a2, false)? {
@@ -100188,7 +100188,7 @@ let v55 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v56 = s.apply(v55, v8)?;
 let v57 = s.apply(v54, v56)?;
 let v58 = eo__24str_5farith_5fentail_5fsimple_5fpred(s, v57)?;
-let v59 = s.operator("and", &[v45, v58])?;
+let v59 = s.builtin(EvalOp::And, &[v45, v58])?;
 v59
 }, Some(false) => {
 let v60 = s.construct(Constructor::eo__3e_3d, &[])?;
@@ -100234,7 +100234,7 @@ let v76 = s.construct(Constructor::eo_str_2ereplace, &[])?;
 if v74 != v76 { break 'case1; }
 let v77 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v78 = s.apply(v77, v75)?;
-let v79 = s.operator("eq", &[a1, v78])?;
+let v79 = s.builtin(EvalOp::Eq, &[a1, v78])?;
 let v80 = match s.boolean_value(v79, false)? {
 Some(true) => {
 let v81 = match s.boolean_value(a2, false)? {
@@ -100255,7 +100255,7 @@ let v94 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v95 = s.apply(v94, v75)?;
 let v96 = s.apply(v93, v95)?;
 let v97 = eo__24str_5farith_5fentail_5fsimple_5fpred(s, v96)?;
-let v98 = s.operator("or", &[v89, v97])?;
+let v98 = s.builtin(EvalOp::Or, &[v89, v97])?;
 v98
 }, Some(false) => {
 let v99 = s.construct(Constructor::eo__3e_3d, &[])?;
@@ -100282,10 +100282,10 @@ let v114 = s.apply(v111, v113)?;
 let v115 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v116 = s.apply(v114, v115)?;
 let v117 = s.apply(v110, v116)?;
-let v118 = s.operator("eq", &[a1, v117])?;
+let v118 = s.builtin(EvalOp::Eq, &[a1, v117])?;
 let v119 = match s.boolean_value(v118, false)? {
 Some(true) => {
-let v120 = s.operator("not", &[a2])?;
+let v120 = s.builtin(EvalOp::Not, &[a2])?;
 v120
 }, Some(false) => {
 let v121 = s.construct(Constructor::eo__2d, &[])?;
@@ -100295,7 +100295,7 @@ let v124 = s.apply(v121, v123)?;
 let v125 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v126 = s.apply(v125, v72)?;
 let v127 = s.apply(v124, v126)?;
-let v128 = s.operator("eq", &[a1, v127])?;
+let v128 = s.builtin(EvalOp::Eq, &[a1, v127])?;
 let v129 = match s.boolean_value(v128, false)? {
 Some(true) => {
 a2
@@ -100328,34 +100328,34 @@ let v139 = s.apply(v137, v138)?;
 let v140 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v141 = s.apply(v139, v140)?;
 let v142 = s.apply(v136, v141)?;
-let v143 = s.operator("eq", &[a1, v142])?;
+let v143 = s.builtin(EvalOp::Eq, &[a1, v142])?;
 let v144 = match s.boolean_value(v143, false)? {
 Some(true) => {
-let v145 = s.operator("not", &[a2])?;
+let v145 = s.builtin(EvalOp::Not, &[a2])?;
 let v146 = eo__24get_5farith_5fpoly_5fnorm(s, v133)?;
 let v147 = eo__24str_5farith_5fentail_5fsimple_5frec(s, v146)?;
-let v148 = s.operator("and", &[v145, v147])?;
+let v148 = s.builtin(EvalOp::And, &[v145, v147])?;
 v148
 }, Some(false) => {
-let v149 = s.operator("eq", &[a1, v133])?;
+let v149 = s.builtin(EvalOp::Eq, &[a1, v133])?;
 let v150 = match s.boolean_value(v149, false)? {
 Some(true) => {
-let v151 = s.operator("not", &[a2])?;
+let v151 = s.builtin(EvalOp::Not, &[a2])?;
 let v152 = s.construct(Constructor::eo__3e, &[])?;
 let v153 = s.apply(v152, v133)?;
 let v154 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v155 = s.apply(v153, v154)?;
 let v156 = eo__24str_5farith_5fentail_5fsimple_5fpred(s, v155)?;
-let v157 = s.operator("and", &[v151, v156])?;
+let v157 = s.builtin(EvalOp::And, &[v151, v156])?;
 v157
 }, Some(false) => {
 let v158 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v159 = s.operator("eq", &[a1, v158])?;
+let v159 = s.builtin(EvalOp::Eq, &[a1, v158])?;
 let v160 = match s.boolean_value(v159, false)? {
 Some(true) => {
 let v161 = eo__24get_5farith_5fpoly_5fnorm(s, v133)?;
 let v162 = eo__24str_5farith_5fentail_5fsimple_5frec(s, v161)?;
-let v163 = s.operator("and", &[a2, v162])?;
+let v163 = s.builtin(EvalOp::And, &[a2, v162])?;
 v163
 }, Some(false) => {
 let v164 = s.literal(Lit::Bool(false))?;
@@ -100533,7 +100533,7 @@ let v47 = s.construct(Constructor::eo__40_40mon, &[])?;
 if v45 != v47 { break 'case2; }
 let v48 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 if v46 != v48 { break 'case2; }
-let v49 = s.operator("is_neg", &[v43])?;
+let v49 = s.builtin(EvalOp::IsNeg, &[v43])?;
 let v50 = match s.boolean_value(v49, false)? {
 Some(true) => {
 let v51 = s.literal(Lit::Bool(false))?;
@@ -100578,14 +100578,14 @@ let v6 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = s.literal(Lit::Bool(true))?;
 if a1 != v7 { break 'case0; }
-let v8 = s.operator("to_z", &[v5])?;
+let v8 = s.builtin(EvalOp::ToInt, &[v5])?;
 let v9 = s.literal(Lit::Numeral(parse_int("91")?))?;
-let v10 = s.operator("to_z", &[v5])?;
-let v11 = s.operator("gt", &[v9, v10])?;
-let v12 = s.operator("to_z", &[v5])?;
+let v10 = s.builtin(EvalOp::ToInt, &[v5])?;
+let v11 = s.builtin(EvalOp::Gt, &[v9, v10])?;
+let v12 = s.builtin(EvalOp::ToInt, &[v5])?;
 let v13 = s.literal(Lit::Numeral(parse_int("64")?))?;
-let v14 = s.operator("gt", &[v12, v13])?;
-let v15 = s.operator("and", &[v11, v14])?;
+let v14 = s.builtin(EvalOp::Gt, &[v12, v13])?;
+let v15 = s.builtin(EvalOp::And, &[v11, v14])?;
 let v16 = match s.boolean_value(v15, false)? {
 Some(true) => {
 let v17 = s.literal(Lit::Numeral(parse_int("32")?))?;
@@ -100595,11 +100595,11 @@ let v18 = s.literal(Lit::Numeral(parse_int("0")?))?;
 v18
 }, None => s.stuck(),
 };
-let v19 = s.operator("add", &[v8, v16])?;
-let v20 = s.operator("to_str", &[v19])?;
+let v19 = s.builtin(EvalOp::Add, &[v8, v16])?;
+let v20 = s.builtin(EvalOp::ToString, &[v19])?;
 let v21 = s.literal(Lit::Bool(true))?;
 let v22 = eo__24str_5fcase_5fconv_5frec(s, v2, v21)?;
-let v23 = s.operator("concat", &[v20, v22])?;
+let v23 = s.builtin(EvalOp::Concat, &[v20, v22])?;
 return Ok(v23);
 }
 'case1: {
@@ -100617,14 +100617,14 @@ let v30 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v28 != v30 { break 'case1; }
 let v31 = s.literal(Lit::Bool(false))?;
 if a1 != v31 { break 'case1; }
-let v32 = s.operator("to_z", &[v29])?;
+let v32 = s.builtin(EvalOp::ToInt, &[v29])?;
 let v33 = s.literal(Lit::Numeral(parse_int("123")?))?;
-let v34 = s.operator("to_z", &[v29])?;
-let v35 = s.operator("gt", &[v33, v34])?;
-let v36 = s.operator("to_z", &[v29])?;
+let v34 = s.builtin(EvalOp::ToInt, &[v29])?;
+let v35 = s.builtin(EvalOp::Gt, &[v33, v34])?;
+let v36 = s.builtin(EvalOp::ToInt, &[v29])?;
 let v37 = s.literal(Lit::Numeral(parse_int("96")?))?;
-let v38 = s.operator("gt", &[v36, v37])?;
-let v39 = s.operator("and", &[v35, v38])?;
+let v38 = s.builtin(EvalOp::Gt, &[v36, v37])?;
+let v39 = s.builtin(EvalOp::And, &[v35, v38])?;
 let v40 = match s.boolean_value(v39, false)? {
 Some(true) => {
 let v41 = s.literal(Lit::Numeral(parse_int("-32")?))?;
@@ -100634,11 +100634,11 @@ let v42 = s.literal(Lit::Numeral(parse_int("0")?))?;
 v42
 }, None => s.stuck(),
 };
-let v43 = s.operator("add", &[v32, v40])?;
-let v44 = s.operator("to_str", &[v43])?;
+let v43 = s.builtin(EvalOp::Add, &[v32, v40])?;
+let v44 = s.builtin(EvalOp::ToString, &[v43])?;
 let v45 = s.literal(Lit::Bool(false))?;
 let v46 = eo__24str_5fcase_5fconv_5frec(s, v26, v45)?;
-let v47 = s.operator("concat", &[v44, v46])?;
+let v47 = s.builtin(EvalOp::Concat, &[v44, v46])?;
 return Ok(v47);
 }
 'case2: {
@@ -100677,9 +100677,9 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v4 != v6 { break 'case0; }
-let v7 = s.operator("len", &[v5])?;
+let v7 = s.builtin(EvalOp::Length, &[v5])?;
 let v8 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v9 = s.operator("is_eq", &[v7, v8])?;
+let v9 = s.builtin(EvalOp::IsEq, &[v7, v8])?;
 let v10 = match s.boolean_value(v9, false)? {
 Some(true) => {
 let v11 = eo__24str_5fcollect(s, v2)?;
@@ -100727,11 +100727,11 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v4 != v6 { break 'case0; }
-let v7 = s.operator("is_str", &[v5])?;
+let v7 = s.builtin(EvalOp::IsStr, &[v5])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
 let v9 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v10 = s.operator("concat", &[a0, v5])?;
+let v10 = s.builtin(EvalOp::Concat, &[a0, v5])?;
 let v11 = s.apply(v9, v10)?;
 let v12 = s.apply(v11, v2)?;
 v12
@@ -100802,14 +100802,14 @@ let v13 = eo__24str_5fis_5fprefix_5fflat(s, v12, a1)?;
 let v14 = match s.boolean_value(v13, false)? {
 Some(true) => {
 let v15 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v16 = s.operator("add", &[a4, v15])?;
+let v16 = s.builtin(EvalOp::Add, &[a4, v15])?;
 let v17 = eo__24str_5feval_5freplace_5fall_5frec(s, v4, a1, a2, v16, a4)?;
-let v18 = s.operator("concat", &[a2, v17])?;
+let v18 = s.builtin(EvalOp::Concat, &[a2, v17])?;
 v18
 }, Some(false) => {
 let v19 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v20 = eo__24str_5feval_5freplace_5fall_5frec(s, v4, a1, a2, v19, a4)?;
-let v21 = s.operator("concat", &[v7, v20])?;
+let v21 = s.builtin(EvalOp::Concat, &[v7, v20])?;
 v21
 }, None => s.stuck(),
 };
@@ -100832,7 +100832,7 @@ let v29 = v24;
 let v30 = a1;
 let v31 = a2;
 let v32 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v33 = s.operator("add", &[a3, v32])?;
+let v33 = s.builtin(EvalOp::Add, &[a3, v32])?;
 let v34 = v33;
 let v35 = a4;
 a0 = v29;
@@ -100889,14 +100889,14 @@ if v13 != v15 { break 'case1; }
 let v16 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v17 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v18 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v19 = s.operator("add", &[v14, v18])?;
-let v20 = s.operator("extract", &[a0, v17, v19])?;
+let v19 = s.builtin(EvalOp::Add, &[v14, v18])?;
+let v20 = s.builtin(EvalOp::Extract, &[a0, v17, v19])?;
 let v21 = s.apply(v16, v20)?;
 let v22 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v23 = s.apply(v22, a2)?;
 let v24 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v25 = s.operator("len", &[a0])?;
-let v26 = s.operator("extract", &[a0, v11, v25])?;
+let v25 = s.builtin(EvalOp::Length, &[a0])?;
+let v26 = s.builtin(EvalOp::Extract, &[a0, v11, v25])?;
 let v27 = s.apply(v24, v26)?;
 let v28 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v29 = s.apply(v27, v28)?;
@@ -100926,7 +100926,7 @@ if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? || s
 let v0 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 if a0 != v0 { break 'case0; }
 let v1 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
-let v2 = s.operator("eq", &[a1, v1])?;
+let v2 = s.builtin(EvalOp::Eq, &[a1, v1])?;
 let v3 = match s.boolean_value(v2, false)? {
 Some(true) => {
 let v4 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
@@ -100984,10 +100984,10 @@ v37
 }, None => s.stuck(),
 };
 let v38 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v39 = s.operator("eq", &[v31, v38])?;
+let v39 = s.builtin(EvalOp::Eq, &[v31, v38])?;
 let v40 = match s.boolean_value(v39, false)? {
 Some(true) => {
-let v41 = s.operator("concat", &[a1, v14])?;
+let v41 = s.builtin(EvalOp::Concat, &[a1, v14])?;
 let v42 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v43 = eo__24str_5feval_5freplace_5fre_5fall_5frec(s, v11, v41, a2, a3, v42)?;
 v43
@@ -101025,7 +101025,7 @@ v69
 }, None => s.stuck(),
 };
 let v70 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v71 = s.operator("add", &[v63, v70])?;
+let v71 = s.builtin(EvalOp::Add, &[v63, v70])?;
 let v72 = eo__24str_5feval_5freplace_5fre_5fall_5frec(s, v11, v48, a2, a3, v71)?;
 let v73 = s.apply(v47, v72)?;
 let v74 = s.apply(v45, v73)?;
@@ -101052,7 +101052,7 @@ let v83 = a1;
 let v84 = a2;
 let v85 = a3;
 let v86 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v87 = s.operator("add", &[a4, v86])?;
+let v87 = s.builtin(EvalOp::Add, &[a4, v86])?;
 let v88 = v87;
 a0 = v82;
 a1 = v83;
@@ -101157,12 +101157,12 @@ let v15 = s.apply(v14, v5)?;
 let v16 = s.apply(v15, v2)?;
 let v17 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v18 = eo__24str_5ffirst_5fmatch_5frec_5fsmallest(s, v16, a1, v17)?;
-let v19 = s.operator("add", &[a3, v18])?;
+let v19 = s.builtin(EvalOp::Add, &[a3, v18])?;
 let v20 = s.apply(v13, v19)?;
 v20
 }, Some(false) => {
 let v21 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v22 = s.operator("add", &[a3, v21])?;
+let v22 = s.builtin(EvalOp::Add, &[a3, v21])?;
 let v23 = eo__24str_5ffirst_5fmatch_5frec(s, v2, a1, a2, v22)?;
 v23
 }, None => s.stuck(),
@@ -101181,7 +101181,7 @@ let v29 = s.apply(v28, a3)?;
 let v30 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v31 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v32 = eo__24str_5ffirst_5fmatch_5frec_5fsmallest(s, v30, a1, v31)?;
-let v33 = s.operator("add", &[a3, v32])?;
+let v33 = s.builtin(EvalOp::Add, &[a3, v32])?;
 let v34 = s.apply(v29, v33)?;
 v34
 }, Some(false) => {
@@ -101232,7 +101232,7 @@ a2
 }, Some(false) => {
 let v9 = eo__24derivative(s, v5, a1)?;
 let v10 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v11 = s.operator("add", &[a2, v10])?;
+let v11 = s.builtin(EvalOp::Add, &[a2, v10])?;
 let v12 = eo__24str_5ffirst_5fmatch_5frec_5fsmallest(s, v2, v9, v11)?;
 v12
 }, None => s.stuck(),
@@ -101281,7 +101281,7 @@ let v6 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = eo__24str_5ffixed_5flen_5fre(s, v5)?;
 let v8 = eo__24str_5ffixed_5flen_5fre(s, v2)?;
-let v9 = s.operator("add", &[v7, v8])?;
+let v9 = s.builtin(EvalOp::Add, &[v7, v8])?;
 return Ok(v9);
 }
 'case1: {
@@ -101314,7 +101314,7 @@ let v21 = f;
 let v22 = a;
 let v23 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v21 != v23 { break 'case3; }
-let v24 = s.operator("len", &[v22])?;
+let v24 = s.builtin(EvalOp::Length, &[v22])?;
 return Ok(v24);
 }
 'case4: {
@@ -101331,7 +101331,7 @@ let v30 = a;
 let v31 = s.construct(Constructor::eo_re_2eunion, &[])?;
 if v29 != v31 { break 'case4; }
 let v32 = s.construct(Constructor::eo_re_2enone, &[])?;
-let v33 = s.operator("eq", &[v27, v32])?;
+let v33 = s.builtin(EvalOp::Eq, &[v27, v32])?;
 let v34 = match s.boolean_value(v33, false)? {
 Some(true) => {
 let v35 = eo__24str_5ffixed_5flen_5fre(s, v30)?;
@@ -101362,7 +101362,7 @@ let v45 = a;
 let v46 = s.construct(Constructor::eo_re_2einter, &[])?;
 if v44 != v46 { break 'case5; }
 let v47 = s.construct(Constructor::eo_re_2eall, &[])?;
-let v48 = s.operator("eq", &[v42, v47])?;
+let v48 = s.builtin(EvalOp::Eq, &[v42, v47])?;
 let v49 = match s.boolean_value(v48, false)? {
 Some(true) => {
 let v50 = eo__24str_5ffixed_5flen_5fre(s, v45)?;
@@ -101427,7 +101427,7 @@ let v16 = s.apply(v15, v12)?;
 let v17 = s.apply(v16, v9)?;
 let v18 = eo__24str_5fflatten(s, v17)?;
 let v19 = eo__24str_5fflatten(s, v2)?;
-let v20 = s.operator("list_concat", &[v14, v18, v19])?;
+let v20 = s.builtin(EvalOp::ListConcat, &[v14, v18, v19])?;
 return Ok(v20);
 }
 'case1: {
@@ -101443,25 +101443,25 @@ let v25 = f;
 let v26 = a;
 let v27 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v25 != v27 { break 'case1; }
-let v28 = s.operator("is_str", &[v26])?;
+let v28 = s.builtin(EvalOp::IsStr, &[v26])?;
 let v29 = match s.boolean_value(v28, false)? {
 Some(true) => {
 let v30 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v31 = s.operator("len", &[v26])?;
-let v32 = s.operator("is_neg", &[v31])?;
+let v31 = s.builtin(EvalOp::Length, &[v26])?;
+let v32 = s.builtin(EvalOp::IsNeg, &[v31])?;
 let v33 = s.literal(Lit::Bool(false))?;
 let v34 = if v32 == v33 && !s.is_stuck(v32)? {
 let v35 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v36 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v37 = s.operator("len", &[v26])?;
-let v38 = s.operator("list_repeat", &[v35, v36, v37])?;
+let v37 = s.builtin(EvalOp::Length, &[v26])?;
+let v38 = s.builtin(EvalOp::ListRepeat, &[v35, v36, v37])?;
 let v39 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v40 = eo__24iota_5frec(s, v38, v39)?;
 v40
 } else { s.stuck() };
 let v41 = eo__24str_5fflatten_5fword_5frec(s, v34, v26)?;
 let v42 = eo__24str_5fflatten(s, v23)?;
-let v43 = s.operator("list_concat", &[v30, v41, v42])?;
+let v43 = s.builtin(EvalOp::ListConcat, &[v30, v41, v42])?;
 v43
 }, Some(false) => {
 let v44 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -101525,7 +101525,7 @@ let v11 = a;
 let v12 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if v10 != v12 { break 'case1; }
 let v13 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v14 = s.operator("extract", &[a1, v11, v11])?;
+let v14 = s.builtin(EvalOp::Extract, &[a1, v11, v11])?;
 let v15 = s.apply(v13, v14)?;
 let v16 = eo__24str_5fflatten_5fword_5frec(s, v8, a1)?;
 let v17 = s.apply(v15, v16)?;
@@ -101554,7 +101554,7 @@ if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck());
 let v0 = s.literal(Lit::Numeral(parse_int("0")?))?;
 if a1 != v0 { break 'case0; }
 let v1 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
-let v2 = s.operator("eq", &[a2, v1])?;
+let v2 = s.builtin(EvalOp::Eq, &[a2, v1])?;
 let v3 = match s.boolean_value(v2, false)? {
 Some(true) => {
 let v4 = s.literal(Lit::String(EoString::from_code_points(vec![48,])))?;
@@ -101580,14 +101580,14 @@ let v11 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if v9 != v11 { break 'case1; }
 let v12 = v7;
 let v13 = s.literal(Lit::Numeral(parse_int("10")?))?;
-let v14 = s.operator("zdiv", &[a1, v13])?;
+let v14 = s.builtin(EvalOp::IntDiv, &[a1, v13])?;
 let v15 = v14;
 let v16 = s.literal(Lit::Numeral(parse_int("48")?))?;
 let v17 = s.literal(Lit::Numeral(parse_int("10")?))?;
-let v18 = s.operator("zmod", &[a1, v17])?;
-let v19 = s.operator("add", &[v16, v18])?;
-let v20 = s.operator("to_str", &[v19])?;
-let v21 = s.operator("concat", &[v20, a2])?;
+let v18 = s.builtin(EvalOp::IntMod, &[a1, v17])?;
+let v19 = s.builtin(EvalOp::Add, &[v16, v18])?;
+let v20 = s.builtin(EvalOp::ToString, &[v19])?;
+let v21 = s.builtin(EvalOp::Concat, &[v20, a2])?;
 let v22 = v21;
 a0 = v12;
 a1 = v15;
@@ -101671,7 +101671,7 @@ let v27 = f;
 let v28 = a;
 let v29 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v27 != v29 { break 'case1; }
-let v30 = s.operator("eq", &[v21, v28])?;
+let v30 = s.builtin(EvalOp::Eq, &[v21, v28])?;
 let v31 = match s.boolean_value(v30, false)? {
 Some(true) => {
 let v32 = s.literal(Lit::Bool(false))?;
@@ -101692,7 +101692,7 @@ return Ok(v36);
 'case2: {
 let v38 = eo__24str_5fis_5fempty(s, a0)?;
 let v39 = eo__24str_5fis_5fempty(s, a1)?;
-let v40 = s.operator("or", &[v38, v39])?;
+let v40 = s.builtin(EvalOp::Or, &[v38, v39])?;
 return Ok(v40);
 }
 return Ok(s.stuck());
@@ -101765,11 +101765,11 @@ let v6 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = v2;
 let v8 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v9 = s.operator("list_erase", &[v8, a1, v5])?;
+let v9 = s.builtin(EvalOp::ListErase, &[v8, a1, v5])?;
 let v10 = v9;
 let v11 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v12 = s.operator("list_erase", &[v11, a1, v5])?;
-let v13 = s.operator("eq", &[a1, v12])?;
+let v12 = s.builtin(EvalOp::ListErase, &[v11, a1, v5])?;
+let v13 = s.builtin(EvalOp::Eq, &[a1, v12])?;
 let v14 = match s.boolean_value(v13, false)? {
 Some(true) => {
 let v15 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -101794,10 +101794,10 @@ let v21 = eo__24str_5fis_5fmultiset_5fsubset_5fstrict_5fdone(s, a1, a2)?;
 v21
 }, Some(false) => {
 let v22 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v23 = s.operator("list_erase", &[v22, a1, a0])?;
+let v23 = s.builtin(EvalOp::ListErase, &[v22, a1, a0])?;
 let v24 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
-let v25 = s.operator("list_erase", &[v24, a1, a0])?;
-let v26 = s.operator("eq", &[a1, v25])?;
+let v25 = s.builtin(EvalOp::ListErase, &[v24, a1, a0])?;
+let v26 = s.builtin(EvalOp::Eq, &[a1, v25])?;
 let v27 = match s.boolean_value(v26, false)? {
 Some(true) => {
 let v28 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
@@ -101847,10 +101847,10 @@ let v6 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = eo__24str_5fvalue_5flen(s, v5)?;
 let v8 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v9 = s.operator("is_eq", &[v7, v8])?;
+let v9 = s.builtin(EvalOp::IsEq, &[v7, v8])?;
 let v10 = eo__24eo_5ftypeof(s, v5)?;
 let v11 = eo__24are_5fdistinct_5fterms_5flist_5frec(s, v5, a0, v10)?;
-let v12 = s.operator("and", &[v9, v11])?;
+let v12 = s.builtin(EvalOp::And, &[v9, v11])?;
 let v13 = match s.boolean_value(v12, false)? {
 Some(true) => {
 let v14 = s.literal(Lit::Bool(true))?;
@@ -101998,15 +101998,15 @@ let v11 = f;
 let v12 = a;
 let v13 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v11 != v13 { break 'case0; }
-let v14 = s.operator("eq", &[v5, v12])?;
+let v14 = s.builtin(EvalOp::Eq, &[v5, v12])?;
 let v15 = match s.boolean_value(v14, false)? {
 Some(true) => {
 let v16 = eo__24str_5fleq_5feval_5frec(s, v2, v9)?;
 v16
 }, Some(false) => {
-let v17 = s.operator("to_z", &[v12])?;
-let v18 = s.operator("to_z", &[v5])?;
-let v19 = s.operator("gt", &[v17, v18])?;
+let v17 = s.builtin(EvalOp::ToInt, &[v12])?;
+let v18 = s.builtin(EvalOp::ToInt, &[v5])?;
+let v19 = s.builtin(EvalOp::Gt, &[v17, v18])?;
 v19
 }, None => s.stuck(),
 };
@@ -102159,7 +102159,7 @@ let v4 = s.construct(Constructor::eo_Int, &[])?;
 if v2 != v4 { break 'case0; }
 let v5 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v6 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
-let v7 = s.operator("list_singleton_elim", &[v6, a2])?;
+let v7 = s.builtin(EvalOp::ListSingletonElim, &[v6, a2])?;
 let v8 = s.apply(v5, v7)?;
 let v9 = s.construct(Constructor::eo_re_2enone, &[])?;
 let v10 = s.apply(v8, v9)?;
@@ -102182,7 +102182,7 @@ let v18 = s.literal(Lit::Numeral(parse_int("0")?))?;
 if v16 != v18 { break 'case1; }
 let v19 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v20 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
-let v21 = s.operator("list_singleton_elim", &[v20, a2])?;
+let v21 = s.builtin(EvalOp::ListSingletonElim, &[v20, a2])?;
 let v22 = s.apply(v19, v21)?;
 let v23 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v24 = s.apply(v23, a1)?;
@@ -102302,7 +102302,7 @@ if v21 != v23 { break 'case1; }
 let v24 = a0;
 let v25 = v18;
 let v26 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v27 = s.operator("add", &[a2, v26])?;
+let v27 = s.builtin(EvalOp::Add, &[a2, v26])?;
 let v28 = v27;
 let v29 = a3;
 a0 = v24;
@@ -102375,7 +102375,7 @@ if v1 != v3 { break 'case0; }
 let v4 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 if v2 != v4 { break 'case0; }
 let v5 = s.literal(Lit::Numeral(parse_int("0")?))?;
-let v6 = s.operator("eq", &[a2, v5])?;
+let v6 = s.builtin(EvalOp::Eq, &[a2, v5])?;
 let v7 = s.literal(Lit::Bool(false))?;
 let v8 = if v6 == v7 && !s.is_stuck(v6)? {
 let v9 = s.construct(Constructor::eo__3d, &[])?;
@@ -102409,7 +102409,7 @@ if v23 != v25 { break 'case1; }
 let v26 = a0;
 let v27 = v20;
 let v28 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v29 = s.operator("add", &[a2, v28])?;
+let v29 = s.builtin(EvalOp::Add, &[a2, v28])?;
 let v30 = v29;
 a0 = v26;
 a1 = v27;
@@ -102452,7 +102452,7 @@ if v4 != v6 { break 'case0; }
 let v7 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v8 = eo__24str_5fmultiset_5foverapprox(s, v5)?;
 let v9 = eo__24str_5fmultiset_5foverapprox(s, v2)?;
-let v10 = s.operator("list_concat", &[v7, v8, v9])?;
+let v10 = s.builtin(EvalOp::ListConcat, &[v7, v8, v9])?;
 return Ok(v10);
 }
 'case1: {
@@ -102498,7 +102498,7 @@ if v29 != v31 { break 'case2; }
 let v32 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 let v33 = eo__24str_5fmultiset_5foverapprox(s, v30)?;
 let v34 = eo__24str_5fmultiset_5foverapprox(s, v24)?;
-let v35 = s.operator("list_concat", &[v32, v33, v34])?;
+let v35 = s.builtin(EvalOp::ListConcat, &[v32, v33, v34])?;
 return Ok(v35);
 }
 'case3: {
@@ -102510,11 +102510,11 @@ let v39 = eo__24eo_5ftypeof(s, a0)?;
 let v40 = s.apply(v38, v39)?;
 v40
 }, Some(false) => {
-let v41 = s.operator("is_str", &[a0])?;
+let v41 = s.builtin(EvalOp::IsStr, &[a0])?;
 let v42 = match s.boolean_value(v41, false)? {
 Some(true) => {
 let v43 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v44 = s.operator("list_singleton_intro", &[v43, a0])?;
+let v44 = s.builtin(EvalOp::ListSingletonIntro, &[v43, a0])?;
 let v45 = eo__24str_5fflatten(s, v44)?;
 let v46 = eo__24str_5fmultiset_5foverapprox_5fword(s, v45)?;
 v46
@@ -102631,7 +102631,7 @@ v12
 }, Some(false) => {
 let v13 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v14 = eo__24str_5foverlap_5frec(s, v2, a1)?;
-let v15 = s.operator("add", &[v13, v14])?;
+let v15 = s.builtin(EvalOp::Add, &[v13, v14])?;
 v15
 }, None => s.stuck(),
 };
@@ -102662,9 +102662,9 @@ let v3 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v5 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v6 = s.operator("list_singleton_intro", &[v5, a0])?;
+let v6 = s.builtin(EvalOp::ListSingletonIntro, &[v5, a0])?;
 let v7 = eo__24str_5fflatten(s, v6)?;
-let v8 = s.operator("list_rev", &[v4, v7])?;
+let v8 = s.builtin(EvalOp::ListRev, &[v4, v7])?;
 let v9 = s.literal(Lit::Bool(true))?;
 let v10 = eo__24re_5fflatten(s, v9, v2)?;
 let v11 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102673,12 +102673,12 @@ let v13 = s.apply(v11, v12)?;
 let v14 = eo__24re_5frev_5fmap_5frev(s, v10, v13)?;
 let v15 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v16 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v17 = s.operator("list_singleton_intro", &[v16, a0])?;
+let v17 = s.builtin(EvalOp::ListSingletonIntro, &[v16, a0])?;
 let v18 = eo__24str_5fflatten(s, v17)?;
-let v19 = s.operator("list_rev", &[v15, v18])?;
+let v19 = s.builtin(EvalOp::ListRev, &[v15, v18])?;
 let v20 = eo__24str_5fre_5fconsume_5frec(s, v8, v14, v19)?;
 let v21 = s.literal(Lit::Bool(false))?;
-let v22 = s.operator("eq", &[v20, v21])?;
+let v22 = s.builtin(EvalOp::Eq, &[v20, v21])?;
 let v23 = match s.boolean_value(v22, false)? {
 Some(true) => {
 let v24 = s.literal(Lit::Bool(false))?;
@@ -102688,9 +102688,9 @@ let v25 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v26 = s.literal(Lit::Bool(true))?;
 let v27 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v28 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v29 = s.operator("list_singleton_intro", &[v28, a0])?;
+let v29 = s.builtin(EvalOp::ListSingletonIntro, &[v28, a0])?;
 let v30 = eo__24str_5fflatten(s, v29)?;
-let v31 = s.operator("list_rev", &[v27, v30])?;
+let v31 = s.builtin(EvalOp::ListRev, &[v27, v30])?;
 let v32 = s.literal(Lit::Bool(true))?;
 let v33 = eo__24re_5fflatten(s, v32, v2)?;
 let v34 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102699,31 +102699,31 @@ let v36 = s.apply(v34, v35)?;
 let v37 = eo__24re_5frev_5fmap_5frev(s, v33, v36)?;
 let v38 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v39 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v40 = s.operator("list_singleton_intro", &[v39, a0])?;
+let v40 = s.builtin(EvalOp::ListSingletonIntro, &[v39, a0])?;
 let v41 = eo__24str_5fflatten(s, v40)?;
-let v42 = s.operator("list_rev", &[v38, v41])?;
+let v42 = s.builtin(EvalOp::ListRev, &[v38, v41])?;
 let v43 = eo__24str_5fre_5fconsume_5frec(s, v31, v37, v42)?;
 let v44 = eo__24str_5fmembership_5fre(s, v43)?;
 let v45 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v46 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v47 = s.apply(v45, v46)?;
-let v48 = s.operator("eq", &[v44, v47])?;
-let v49 = s.operator("not", &[v48])?;
-let v50 = s.operator("and", &[v26, v49])?;
+let v48 = s.builtin(EvalOp::Eq, &[v44, v47])?;
+let v49 = s.builtin(EvalOp::Not, &[v48])?;
+let v50 = s.builtin(EvalOp::And, &[v26, v49])?;
 let v51 = match s.boolean_value(v50, false)? {
 Some(true) => {
 let v52 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v53 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v54 = s.operator("list_singleton_intro", &[v53, a0])?;
+let v54 = s.builtin(EvalOp::ListSingletonIntro, &[v53, a0])?;
 let v55 = eo__24str_5fflatten(s, v54)?;
-let v56 = s.operator("list_rev", &[v52, v55])?;
+let v56 = s.builtin(EvalOp::ListRev, &[v52, v55])?;
 v56
 }, Some(false) => {
 let v57 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v58 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v59 = s.operator("list_singleton_intro", &[v58, a0])?;
+let v59 = s.builtin(EvalOp::ListSingletonIntro, &[v58, a0])?;
 let v60 = eo__24str_5fflatten(s, v59)?;
-let v61 = s.operator("list_rev", &[v57, v60])?;
+let v61 = s.builtin(EvalOp::ListRev, &[v57, v60])?;
 let v62 = s.literal(Lit::Bool(true))?;
 let v63 = eo__24re_5fflatten(s, v62, v2)?;
 let v64 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102732,22 +102732,22 @@ let v66 = s.apply(v64, v65)?;
 let v67 = eo__24re_5frev_5fmap_5frev(s, v63, v66)?;
 let v68 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v69 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v70 = s.operator("list_singleton_intro", &[v69, a0])?;
+let v70 = s.builtin(EvalOp::ListSingletonIntro, &[v69, a0])?;
 let v71 = eo__24str_5fflatten(s, v70)?;
-let v72 = s.operator("list_rev", &[v68, v71])?;
+let v72 = s.builtin(EvalOp::ListRev, &[v68, v71])?;
 let v73 = eo__24str_5fre_5fconsume_5frec(s, v61, v67, v72)?;
 let v74 = eo__24str_5fmembership_5fstr(s, v73)?;
 v74
 }, None => s.stuck(),
 };
-let v75 = s.operator("list_rev", &[v25, v51])?;
+let v75 = s.builtin(EvalOp::ListRev, &[v25, v51])?;
 let v76 = s.literal(Lit::Bool(true))?;
 let v77 = s.literal(Lit::Bool(true))?;
 let v78 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v79 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v80 = s.operator("list_singleton_intro", &[v79, a0])?;
+let v80 = s.builtin(EvalOp::ListSingletonIntro, &[v79, a0])?;
 let v81 = eo__24str_5fflatten(s, v80)?;
-let v82 = s.operator("list_rev", &[v78, v81])?;
+let v82 = s.builtin(EvalOp::ListRev, &[v78, v81])?;
 let v83 = s.literal(Lit::Bool(true))?;
 let v84 = eo__24re_5fflatten(s, v83, v2)?;
 let v85 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102756,17 +102756,17 @@ let v87 = s.apply(v85, v86)?;
 let v88 = eo__24re_5frev_5fmap_5frev(s, v84, v87)?;
 let v89 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v90 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v91 = s.operator("list_singleton_intro", &[v90, a0])?;
+let v91 = s.builtin(EvalOp::ListSingletonIntro, &[v90, a0])?;
 let v92 = eo__24str_5fflatten(s, v91)?;
-let v93 = s.operator("list_rev", &[v89, v92])?;
+let v93 = s.builtin(EvalOp::ListRev, &[v89, v92])?;
 let v94 = eo__24str_5fre_5fconsume_5frec(s, v82, v88, v93)?;
 let v95 = eo__24str_5fmembership_5fre(s, v94)?;
 let v96 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v97 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v98 = s.apply(v96, v97)?;
-let v99 = s.operator("eq", &[v95, v98])?;
-let v100 = s.operator("not", &[v99])?;
-let v101 = s.operator("and", &[v77, v100])?;
+let v99 = s.builtin(EvalOp::Eq, &[v95, v98])?;
+let v100 = s.builtin(EvalOp::Not, &[v99])?;
+let v101 = s.builtin(EvalOp::And, &[v77, v100])?;
 let v102 = match s.boolean_value(v101, false)? {
 Some(true) => {
 let v103 = s.literal(Lit::Bool(true))?;
@@ -102779,9 +102779,9 @@ v108
 }, Some(false) => {
 let v109 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v110 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v111 = s.operator("list_singleton_intro", &[v110, a0])?;
+let v111 = s.builtin(EvalOp::ListSingletonIntro, &[v110, a0])?;
 let v112 = eo__24str_5fflatten(s, v111)?;
-let v113 = s.operator("list_rev", &[v109, v112])?;
+let v113 = s.builtin(EvalOp::ListRev, &[v109, v112])?;
 let v114 = s.literal(Lit::Bool(true))?;
 let v115 = eo__24re_5fflatten(s, v114, v2)?;
 let v116 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102790,9 +102790,9 @@ let v118 = s.apply(v116, v117)?;
 let v119 = eo__24re_5frev_5fmap_5frev(s, v115, v118)?;
 let v120 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v121 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v122 = s.operator("list_singleton_intro", &[v121, a0])?;
+let v122 = s.builtin(EvalOp::ListSingletonIntro, &[v121, a0])?;
 let v123 = eo__24str_5fflatten(s, v122)?;
-let v124 = s.operator("list_rev", &[v120, v123])?;
+let v124 = s.builtin(EvalOp::ListRev, &[v120, v123])?;
 let v125 = eo__24str_5fre_5fconsume_5frec(s, v113, v119, v124)?;
 let v126 = eo__24str_5fmembership_5fre(s, v125)?;
 v126
@@ -102807,9 +102807,9 @@ let v132 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v133 = s.literal(Lit::Bool(true))?;
 let v134 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v135 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v136 = s.operator("list_singleton_intro", &[v135, a0])?;
+let v136 = s.builtin(EvalOp::ListSingletonIntro, &[v135, a0])?;
 let v137 = eo__24str_5fflatten(s, v136)?;
-let v138 = s.operator("list_rev", &[v134, v137])?;
+let v138 = s.builtin(EvalOp::ListRev, &[v134, v137])?;
 let v139 = s.literal(Lit::Bool(true))?;
 let v140 = eo__24re_5fflatten(s, v139, v2)?;
 let v141 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102818,31 +102818,31 @@ let v143 = s.apply(v141, v142)?;
 let v144 = eo__24re_5frev_5fmap_5frev(s, v140, v143)?;
 let v145 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v146 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v147 = s.operator("list_singleton_intro", &[v146, a0])?;
+let v147 = s.builtin(EvalOp::ListSingletonIntro, &[v146, a0])?;
 let v148 = eo__24str_5fflatten(s, v147)?;
-let v149 = s.operator("list_rev", &[v145, v148])?;
+let v149 = s.builtin(EvalOp::ListRev, &[v145, v148])?;
 let v150 = eo__24str_5fre_5fconsume_5frec(s, v138, v144, v149)?;
 let v151 = eo__24str_5fmembership_5fre(s, v150)?;
 let v152 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v153 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v154 = s.apply(v152, v153)?;
-let v155 = s.operator("eq", &[v151, v154])?;
-let v156 = s.operator("not", &[v155])?;
-let v157 = s.operator("and", &[v133, v156])?;
+let v155 = s.builtin(EvalOp::Eq, &[v151, v154])?;
+let v156 = s.builtin(EvalOp::Not, &[v155])?;
+let v157 = s.builtin(EvalOp::And, &[v133, v156])?;
 let v158 = match s.boolean_value(v157, false)? {
 Some(true) => {
 let v159 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v160 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v161 = s.operator("list_singleton_intro", &[v160, a0])?;
+let v161 = s.builtin(EvalOp::ListSingletonIntro, &[v160, a0])?;
 let v162 = eo__24str_5fflatten(s, v161)?;
-let v163 = s.operator("list_rev", &[v159, v162])?;
+let v163 = s.builtin(EvalOp::ListRev, &[v159, v162])?;
 v163
 }, Some(false) => {
 let v164 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v165 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v166 = s.operator("list_singleton_intro", &[v165, a0])?;
+let v166 = s.builtin(EvalOp::ListSingletonIntro, &[v165, a0])?;
 let v167 = eo__24str_5fflatten(s, v166)?;
-let v168 = s.operator("list_rev", &[v164, v167])?;
+let v168 = s.builtin(EvalOp::ListRev, &[v164, v167])?;
 let v169 = s.literal(Lit::Bool(true))?;
 let v170 = eo__24re_5fflatten(s, v169, v2)?;
 let v171 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102851,18 +102851,18 @@ let v173 = s.apply(v171, v172)?;
 let v174 = eo__24re_5frev_5fmap_5frev(s, v170, v173)?;
 let v175 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v176 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v177 = s.operator("list_singleton_intro", &[v176, a0])?;
+let v177 = s.builtin(EvalOp::ListSingletonIntro, &[v176, a0])?;
 let v178 = eo__24str_5fflatten(s, v177)?;
-let v179 = s.operator("list_rev", &[v175, v178])?;
+let v179 = s.builtin(EvalOp::ListRev, &[v175, v178])?;
 let v180 = eo__24str_5fre_5fconsume_5frec(s, v168, v174, v179)?;
 let v181 = eo__24str_5fmembership_5fstr(s, v180)?;
 v181
 }, None => s.stuck(),
 };
-let v182 = s.operator("list_rev", &[v132, v158])?;
+let v182 = s.builtin(EvalOp::ListRev, &[v132, v158])?;
 let v183 = eo__24str_5fre_5fconsume_5frec(s, v75, v131, v182)?;
 let v184 = s.literal(Lit::Bool(false))?;
-let v185 = s.operator("eq", &[v183, v184])?;
+let v185 = s.builtin(EvalOp::Eq, &[v183, v184])?;
 let v186 = match s.boolean_value(v185, false)? {
 Some(true) => {
 let v187 = s.literal(Lit::Bool(false))?;
@@ -102874,9 +102874,9 @@ let v190 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v191 = s.literal(Lit::Bool(true))?;
 let v192 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v193 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v194 = s.operator("list_singleton_intro", &[v193, a0])?;
+let v194 = s.builtin(EvalOp::ListSingletonIntro, &[v193, a0])?;
 let v195 = eo__24str_5fflatten(s, v194)?;
-let v196 = s.operator("list_rev", &[v192, v195])?;
+let v196 = s.builtin(EvalOp::ListRev, &[v192, v195])?;
 let v197 = s.literal(Lit::Bool(true))?;
 let v198 = eo__24re_5fflatten(s, v197, v2)?;
 let v199 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102885,31 +102885,31 @@ let v201 = s.apply(v199, v200)?;
 let v202 = eo__24re_5frev_5fmap_5frev(s, v198, v201)?;
 let v203 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v204 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v205 = s.operator("list_singleton_intro", &[v204, a0])?;
+let v205 = s.builtin(EvalOp::ListSingletonIntro, &[v204, a0])?;
 let v206 = eo__24str_5fflatten(s, v205)?;
-let v207 = s.operator("list_rev", &[v203, v206])?;
+let v207 = s.builtin(EvalOp::ListRev, &[v203, v206])?;
 let v208 = eo__24str_5fre_5fconsume_5frec(s, v196, v202, v207)?;
 let v209 = eo__24str_5fmembership_5fre(s, v208)?;
 let v210 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v211 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v212 = s.apply(v210, v211)?;
-let v213 = s.operator("eq", &[v209, v212])?;
-let v214 = s.operator("not", &[v213])?;
-let v215 = s.operator("and", &[v191, v214])?;
+let v213 = s.builtin(EvalOp::Eq, &[v209, v212])?;
+let v214 = s.builtin(EvalOp::Not, &[v213])?;
+let v215 = s.builtin(EvalOp::And, &[v191, v214])?;
 let v216 = match s.boolean_value(v215, false)? {
 Some(true) => {
 let v217 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v218 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v219 = s.operator("list_singleton_intro", &[v218, a0])?;
+let v219 = s.builtin(EvalOp::ListSingletonIntro, &[v218, a0])?;
 let v220 = eo__24str_5fflatten(s, v219)?;
-let v221 = s.operator("list_rev", &[v217, v220])?;
+let v221 = s.builtin(EvalOp::ListRev, &[v217, v220])?;
 v221
 }, Some(false) => {
 let v222 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v223 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v224 = s.operator("list_singleton_intro", &[v223, a0])?;
+let v224 = s.builtin(EvalOp::ListSingletonIntro, &[v223, a0])?;
 let v225 = eo__24str_5fflatten(s, v224)?;
-let v226 = s.operator("list_rev", &[v222, v225])?;
+let v226 = s.builtin(EvalOp::ListRev, &[v222, v225])?;
 let v227 = s.literal(Lit::Bool(true))?;
 let v228 = eo__24re_5fflatten(s, v227, v2)?;
 let v229 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102918,22 +102918,22 @@ let v231 = s.apply(v229, v230)?;
 let v232 = eo__24re_5frev_5fmap_5frev(s, v228, v231)?;
 let v233 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v234 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v235 = s.operator("list_singleton_intro", &[v234, a0])?;
+let v235 = s.builtin(EvalOp::ListSingletonIntro, &[v234, a0])?;
 let v236 = eo__24str_5fflatten(s, v235)?;
-let v237 = s.operator("list_rev", &[v233, v236])?;
+let v237 = s.builtin(EvalOp::ListRev, &[v233, v236])?;
 let v238 = eo__24str_5fre_5fconsume_5frec(s, v226, v232, v237)?;
 let v239 = eo__24str_5fmembership_5fstr(s, v238)?;
 v239
 }, None => s.stuck(),
 };
-let v240 = s.operator("list_rev", &[v190, v216])?;
+let v240 = s.builtin(EvalOp::ListRev, &[v190, v216])?;
 let v241 = s.literal(Lit::Bool(true))?;
 let v242 = s.literal(Lit::Bool(true))?;
 let v243 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v244 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v245 = s.operator("list_singleton_intro", &[v244, a0])?;
+let v245 = s.builtin(EvalOp::ListSingletonIntro, &[v244, a0])?;
 let v246 = eo__24str_5fflatten(s, v245)?;
-let v247 = s.operator("list_rev", &[v243, v246])?;
+let v247 = s.builtin(EvalOp::ListRev, &[v243, v246])?;
 let v248 = s.literal(Lit::Bool(true))?;
 let v249 = eo__24re_5fflatten(s, v248, v2)?;
 let v250 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102942,17 +102942,17 @@ let v252 = s.apply(v250, v251)?;
 let v253 = eo__24re_5frev_5fmap_5frev(s, v249, v252)?;
 let v254 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v255 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v256 = s.operator("list_singleton_intro", &[v255, a0])?;
+let v256 = s.builtin(EvalOp::ListSingletonIntro, &[v255, a0])?;
 let v257 = eo__24str_5fflatten(s, v256)?;
-let v258 = s.operator("list_rev", &[v254, v257])?;
+let v258 = s.builtin(EvalOp::ListRev, &[v254, v257])?;
 let v259 = eo__24str_5fre_5fconsume_5frec(s, v247, v253, v258)?;
 let v260 = eo__24str_5fmembership_5fre(s, v259)?;
 let v261 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v262 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v263 = s.apply(v261, v262)?;
-let v264 = s.operator("eq", &[v260, v263])?;
-let v265 = s.operator("not", &[v264])?;
-let v266 = s.operator("and", &[v242, v265])?;
+let v264 = s.builtin(EvalOp::Eq, &[v260, v263])?;
+let v265 = s.builtin(EvalOp::Not, &[v264])?;
+let v266 = s.builtin(EvalOp::And, &[v242, v265])?;
 let v267 = match s.boolean_value(v266, false)? {
 Some(true) => {
 let v268 = s.literal(Lit::Bool(true))?;
@@ -102965,9 +102965,9 @@ v273
 }, Some(false) => {
 let v274 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v275 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v276 = s.operator("list_singleton_intro", &[v275, a0])?;
+let v276 = s.builtin(EvalOp::ListSingletonIntro, &[v275, a0])?;
 let v277 = eo__24str_5fflatten(s, v276)?;
-let v278 = s.operator("list_rev", &[v274, v277])?;
+let v278 = s.builtin(EvalOp::ListRev, &[v274, v277])?;
 let v279 = s.literal(Lit::Bool(true))?;
 let v280 = eo__24re_5fflatten(s, v279, v2)?;
 let v281 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -102976,9 +102976,9 @@ let v283 = s.apply(v281, v282)?;
 let v284 = eo__24re_5frev_5fmap_5frev(s, v280, v283)?;
 let v285 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v286 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v287 = s.operator("list_singleton_intro", &[v286, a0])?;
+let v287 = s.builtin(EvalOp::ListSingletonIntro, &[v286, a0])?;
 let v288 = eo__24str_5fflatten(s, v287)?;
-let v289 = s.operator("list_rev", &[v285, v288])?;
+let v289 = s.builtin(EvalOp::ListRev, &[v285, v288])?;
 let v290 = eo__24str_5fre_5fconsume_5frec(s, v278, v284, v289)?;
 let v291 = eo__24str_5fmembership_5fre(s, v290)?;
 v291
@@ -102993,9 +102993,9 @@ let v297 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v298 = s.literal(Lit::Bool(true))?;
 let v299 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v300 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v301 = s.operator("list_singleton_intro", &[v300, a0])?;
+let v301 = s.builtin(EvalOp::ListSingletonIntro, &[v300, a0])?;
 let v302 = eo__24str_5fflatten(s, v301)?;
-let v303 = s.operator("list_rev", &[v299, v302])?;
+let v303 = s.builtin(EvalOp::ListRev, &[v299, v302])?;
 let v304 = s.literal(Lit::Bool(true))?;
 let v305 = eo__24re_5fflatten(s, v304, v2)?;
 let v306 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103004,31 +103004,31 @@ let v308 = s.apply(v306, v307)?;
 let v309 = eo__24re_5frev_5fmap_5frev(s, v305, v308)?;
 let v310 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v311 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v312 = s.operator("list_singleton_intro", &[v311, a0])?;
+let v312 = s.builtin(EvalOp::ListSingletonIntro, &[v311, a0])?;
 let v313 = eo__24str_5fflatten(s, v312)?;
-let v314 = s.operator("list_rev", &[v310, v313])?;
+let v314 = s.builtin(EvalOp::ListRev, &[v310, v313])?;
 let v315 = eo__24str_5fre_5fconsume_5frec(s, v303, v309, v314)?;
 let v316 = eo__24str_5fmembership_5fre(s, v315)?;
 let v317 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v318 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v319 = s.apply(v317, v318)?;
-let v320 = s.operator("eq", &[v316, v319])?;
-let v321 = s.operator("not", &[v320])?;
-let v322 = s.operator("and", &[v298, v321])?;
+let v320 = s.builtin(EvalOp::Eq, &[v316, v319])?;
+let v321 = s.builtin(EvalOp::Not, &[v320])?;
+let v322 = s.builtin(EvalOp::And, &[v298, v321])?;
 let v323 = match s.boolean_value(v322, false)? {
 Some(true) => {
 let v324 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v325 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v326 = s.operator("list_singleton_intro", &[v325, a0])?;
+let v326 = s.builtin(EvalOp::ListSingletonIntro, &[v325, a0])?;
 let v327 = eo__24str_5fflatten(s, v326)?;
-let v328 = s.operator("list_rev", &[v324, v327])?;
+let v328 = s.builtin(EvalOp::ListRev, &[v324, v327])?;
 v328
 }, Some(false) => {
 let v329 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v330 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v331 = s.operator("list_singleton_intro", &[v330, a0])?;
+let v331 = s.builtin(EvalOp::ListSingletonIntro, &[v330, a0])?;
 let v332 = eo__24str_5fflatten(s, v331)?;
-let v333 = s.operator("list_rev", &[v329, v332])?;
+let v333 = s.builtin(EvalOp::ListRev, &[v329, v332])?;
 let v334 = s.literal(Lit::Bool(true))?;
 let v335 = eo__24re_5fflatten(s, v334, v2)?;
 let v336 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103037,19 +103037,19 @@ let v338 = s.apply(v336, v337)?;
 let v339 = eo__24re_5frev_5fmap_5frev(s, v335, v338)?;
 let v340 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v341 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v342 = s.operator("list_singleton_intro", &[v341, a0])?;
+let v342 = s.builtin(EvalOp::ListSingletonIntro, &[v341, a0])?;
 let v343 = eo__24str_5fflatten(s, v342)?;
-let v344 = s.operator("list_rev", &[v340, v343])?;
+let v344 = s.builtin(EvalOp::ListRev, &[v340, v343])?;
 let v345 = eo__24str_5fre_5fconsume_5frec(s, v333, v339, v344)?;
 let v346 = eo__24str_5fmembership_5fstr(s, v345)?;
 v346
 }, None => s.stuck(),
 };
-let v347 = s.operator("list_rev", &[v297, v323])?;
+let v347 = s.builtin(EvalOp::ListRev, &[v297, v323])?;
 let v348 = eo__24str_5fre_5fconsume_5frec(s, v240, v296, v347)?;
 let v349 = eo__24str_5fmembership_5fstr(s, v348)?;
 let v350 = eo__24str_5fcollect(s, v349)?;
-let v351 = s.operator("list_singleton_elim", &[v189, v350])?;
+let v351 = s.builtin(EvalOp::ListSingletonElim, &[v189, v350])?;
 let v352 = s.apply(v188, v351)?;
 let v353 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v354 = s.literal(Lit::Bool(true))?;
@@ -103057,9 +103057,9 @@ let v355 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v356 = s.literal(Lit::Bool(true))?;
 let v357 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v358 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v359 = s.operator("list_singleton_intro", &[v358, a0])?;
+let v359 = s.builtin(EvalOp::ListSingletonIntro, &[v358, a0])?;
 let v360 = eo__24str_5fflatten(s, v359)?;
-let v361 = s.operator("list_rev", &[v357, v360])?;
+let v361 = s.builtin(EvalOp::ListRev, &[v357, v360])?;
 let v362 = s.literal(Lit::Bool(true))?;
 let v363 = eo__24re_5fflatten(s, v362, v2)?;
 let v364 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103068,31 +103068,31 @@ let v366 = s.apply(v364, v365)?;
 let v367 = eo__24re_5frev_5fmap_5frev(s, v363, v366)?;
 let v368 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v369 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v370 = s.operator("list_singleton_intro", &[v369, a0])?;
+let v370 = s.builtin(EvalOp::ListSingletonIntro, &[v369, a0])?;
 let v371 = eo__24str_5fflatten(s, v370)?;
-let v372 = s.operator("list_rev", &[v368, v371])?;
+let v372 = s.builtin(EvalOp::ListRev, &[v368, v371])?;
 let v373 = eo__24str_5fre_5fconsume_5frec(s, v361, v367, v372)?;
 let v374 = eo__24str_5fmembership_5fre(s, v373)?;
 let v375 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v376 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v377 = s.apply(v375, v376)?;
-let v378 = s.operator("eq", &[v374, v377])?;
-let v379 = s.operator("not", &[v378])?;
-let v380 = s.operator("and", &[v356, v379])?;
+let v378 = s.builtin(EvalOp::Eq, &[v374, v377])?;
+let v379 = s.builtin(EvalOp::Not, &[v378])?;
+let v380 = s.builtin(EvalOp::And, &[v356, v379])?;
 let v381 = match s.boolean_value(v380, false)? {
 Some(true) => {
 let v382 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v383 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v384 = s.operator("list_singleton_intro", &[v383, a0])?;
+let v384 = s.builtin(EvalOp::ListSingletonIntro, &[v383, a0])?;
 let v385 = eo__24str_5fflatten(s, v384)?;
-let v386 = s.operator("list_rev", &[v382, v385])?;
+let v386 = s.builtin(EvalOp::ListRev, &[v382, v385])?;
 v386
 }, Some(false) => {
 let v387 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v388 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v389 = s.operator("list_singleton_intro", &[v388, a0])?;
+let v389 = s.builtin(EvalOp::ListSingletonIntro, &[v388, a0])?;
 let v390 = eo__24str_5fflatten(s, v389)?;
-let v391 = s.operator("list_rev", &[v387, v390])?;
+let v391 = s.builtin(EvalOp::ListRev, &[v387, v390])?;
 let v392 = s.literal(Lit::Bool(true))?;
 let v393 = eo__24re_5fflatten(s, v392, v2)?;
 let v394 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103101,22 +103101,22 @@ let v396 = s.apply(v394, v395)?;
 let v397 = eo__24re_5frev_5fmap_5frev(s, v393, v396)?;
 let v398 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v399 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v400 = s.operator("list_singleton_intro", &[v399, a0])?;
+let v400 = s.builtin(EvalOp::ListSingletonIntro, &[v399, a0])?;
 let v401 = eo__24str_5fflatten(s, v400)?;
-let v402 = s.operator("list_rev", &[v398, v401])?;
+let v402 = s.builtin(EvalOp::ListRev, &[v398, v401])?;
 let v403 = eo__24str_5fre_5fconsume_5frec(s, v391, v397, v402)?;
 let v404 = eo__24str_5fmembership_5fstr(s, v403)?;
 v404
 }, None => s.stuck(),
 };
-let v405 = s.operator("list_rev", &[v355, v381])?;
+let v405 = s.builtin(EvalOp::ListRev, &[v355, v381])?;
 let v406 = s.literal(Lit::Bool(true))?;
 let v407 = s.literal(Lit::Bool(true))?;
 let v408 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v409 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v410 = s.operator("list_singleton_intro", &[v409, a0])?;
+let v410 = s.builtin(EvalOp::ListSingletonIntro, &[v409, a0])?;
 let v411 = eo__24str_5fflatten(s, v410)?;
-let v412 = s.operator("list_rev", &[v408, v411])?;
+let v412 = s.builtin(EvalOp::ListRev, &[v408, v411])?;
 let v413 = s.literal(Lit::Bool(true))?;
 let v414 = eo__24re_5fflatten(s, v413, v2)?;
 let v415 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103125,17 +103125,17 @@ let v417 = s.apply(v415, v416)?;
 let v418 = eo__24re_5frev_5fmap_5frev(s, v414, v417)?;
 let v419 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v420 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v421 = s.operator("list_singleton_intro", &[v420, a0])?;
+let v421 = s.builtin(EvalOp::ListSingletonIntro, &[v420, a0])?;
 let v422 = eo__24str_5fflatten(s, v421)?;
-let v423 = s.operator("list_rev", &[v419, v422])?;
+let v423 = s.builtin(EvalOp::ListRev, &[v419, v422])?;
 let v424 = eo__24str_5fre_5fconsume_5frec(s, v412, v418, v423)?;
 let v425 = eo__24str_5fmembership_5fre(s, v424)?;
 let v426 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v427 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v428 = s.apply(v426, v427)?;
-let v429 = s.operator("eq", &[v425, v428])?;
-let v430 = s.operator("not", &[v429])?;
-let v431 = s.operator("and", &[v407, v430])?;
+let v429 = s.builtin(EvalOp::Eq, &[v425, v428])?;
+let v430 = s.builtin(EvalOp::Not, &[v429])?;
+let v431 = s.builtin(EvalOp::And, &[v407, v430])?;
 let v432 = match s.boolean_value(v431, false)? {
 Some(true) => {
 let v433 = s.literal(Lit::Bool(true))?;
@@ -103148,9 +103148,9 @@ v438
 }, Some(false) => {
 let v439 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v440 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v441 = s.operator("list_singleton_intro", &[v440, a0])?;
+let v441 = s.builtin(EvalOp::ListSingletonIntro, &[v440, a0])?;
 let v442 = eo__24str_5fflatten(s, v441)?;
-let v443 = s.operator("list_rev", &[v439, v442])?;
+let v443 = s.builtin(EvalOp::ListRev, &[v439, v442])?;
 let v444 = s.literal(Lit::Bool(true))?;
 let v445 = eo__24re_5fflatten(s, v444, v2)?;
 let v446 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103159,9 +103159,9 @@ let v448 = s.apply(v446, v447)?;
 let v449 = eo__24re_5frev_5fmap_5frev(s, v445, v448)?;
 let v450 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v451 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v452 = s.operator("list_singleton_intro", &[v451, a0])?;
+let v452 = s.builtin(EvalOp::ListSingletonIntro, &[v451, a0])?;
 let v453 = eo__24str_5fflatten(s, v452)?;
-let v454 = s.operator("list_rev", &[v450, v453])?;
+let v454 = s.builtin(EvalOp::ListRev, &[v450, v453])?;
 let v455 = eo__24str_5fre_5fconsume_5frec(s, v443, v449, v454)?;
 let v456 = eo__24str_5fmembership_5fre(s, v455)?;
 v456
@@ -103176,9 +103176,9 @@ let v462 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v463 = s.literal(Lit::Bool(true))?;
 let v464 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v465 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v466 = s.operator("list_singleton_intro", &[v465, a0])?;
+let v466 = s.builtin(EvalOp::ListSingletonIntro, &[v465, a0])?;
 let v467 = eo__24str_5fflatten(s, v466)?;
-let v468 = s.operator("list_rev", &[v464, v467])?;
+let v468 = s.builtin(EvalOp::ListRev, &[v464, v467])?;
 let v469 = s.literal(Lit::Bool(true))?;
 let v470 = eo__24re_5fflatten(s, v469, v2)?;
 let v471 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103187,31 +103187,31 @@ let v473 = s.apply(v471, v472)?;
 let v474 = eo__24re_5frev_5fmap_5frev(s, v470, v473)?;
 let v475 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v476 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v477 = s.operator("list_singleton_intro", &[v476, a0])?;
+let v477 = s.builtin(EvalOp::ListSingletonIntro, &[v476, a0])?;
 let v478 = eo__24str_5fflatten(s, v477)?;
-let v479 = s.operator("list_rev", &[v475, v478])?;
+let v479 = s.builtin(EvalOp::ListRev, &[v475, v478])?;
 let v480 = eo__24str_5fre_5fconsume_5frec(s, v468, v474, v479)?;
 let v481 = eo__24str_5fmembership_5fre(s, v480)?;
 let v482 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v483 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v484 = s.apply(v482, v483)?;
-let v485 = s.operator("eq", &[v481, v484])?;
-let v486 = s.operator("not", &[v485])?;
-let v487 = s.operator("and", &[v463, v486])?;
+let v485 = s.builtin(EvalOp::Eq, &[v481, v484])?;
+let v486 = s.builtin(EvalOp::Not, &[v485])?;
+let v487 = s.builtin(EvalOp::And, &[v463, v486])?;
 let v488 = match s.boolean_value(v487, false)? {
 Some(true) => {
 let v489 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v490 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v491 = s.operator("list_singleton_intro", &[v490, a0])?;
+let v491 = s.builtin(EvalOp::ListSingletonIntro, &[v490, a0])?;
 let v492 = eo__24str_5fflatten(s, v491)?;
-let v493 = s.operator("list_rev", &[v489, v492])?;
+let v493 = s.builtin(EvalOp::ListRev, &[v489, v492])?;
 v493
 }, Some(false) => {
 let v494 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v495 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v496 = s.operator("list_singleton_intro", &[v495, a0])?;
+let v496 = s.builtin(EvalOp::ListSingletonIntro, &[v495, a0])?;
 let v497 = eo__24str_5fflatten(s, v496)?;
-let v498 = s.operator("list_rev", &[v494, v497])?;
+let v498 = s.builtin(EvalOp::ListRev, &[v494, v497])?;
 let v499 = s.literal(Lit::Bool(true))?;
 let v500 = eo__24re_5fflatten(s, v499, v2)?;
 let v501 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103220,19 +103220,19 @@ let v503 = s.apply(v501, v502)?;
 let v504 = eo__24re_5frev_5fmap_5frev(s, v500, v503)?;
 let v505 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v506 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v507 = s.operator("list_singleton_intro", &[v506, a0])?;
+let v507 = s.builtin(EvalOp::ListSingletonIntro, &[v506, a0])?;
 let v508 = eo__24str_5fflatten(s, v507)?;
-let v509 = s.operator("list_rev", &[v505, v508])?;
+let v509 = s.builtin(EvalOp::ListRev, &[v505, v508])?;
 let v510 = eo__24str_5fre_5fconsume_5frec(s, v498, v504, v509)?;
 let v511 = eo__24str_5fmembership_5fstr(s, v510)?;
 v511
 }, None => s.stuck(),
 };
-let v512 = s.operator("list_rev", &[v462, v488])?;
+let v512 = s.builtin(EvalOp::ListRev, &[v462, v488])?;
 let v513 = eo__24str_5fre_5fconsume_5frec(s, v405, v461, v512)?;
 let v514 = eo__24str_5fmembership_5fre(s, v513)?;
 let v515 = eo__24re_5funflatten(s, v354, v514)?;
-let v516 = s.operator("list_singleton_elim", &[v353, v515])?;
+let v516 = s.builtin(EvalOp::ListSingletonElim, &[v353, v515])?;
 let v517 = s.apply(v352, v516)?;
 v517
 }, None => s.stuck(),
@@ -103241,7 +103241,7 @@ v186
 }, None => s.stuck(),
 };
 let v518 = s.literal(Lit::Bool(false))?;
-let v519 = s.operator("eq", &[v23, v518])?;
+let v519 = s.builtin(EvalOp::Eq, &[v23, v518])?;
 let v520 = match s.boolean_value(v519, false)? {
 Some(true) => {
 let v521 = s.literal(Lit::Bool(false))?;
@@ -103249,9 +103249,9 @@ v521
 }, Some(false) => {
 let v522 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v523 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v524 = s.operator("list_singleton_intro", &[v523, a0])?;
+let v524 = s.builtin(EvalOp::ListSingletonIntro, &[v523, a0])?;
 let v525 = eo__24str_5fflatten(s, v524)?;
-let v526 = s.operator("list_rev", &[v522, v525])?;
+let v526 = s.builtin(EvalOp::ListRev, &[v522, v525])?;
 let v527 = s.literal(Lit::Bool(true))?;
 let v528 = eo__24re_5fflatten(s, v527, v2)?;
 let v529 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103260,12 +103260,12 @@ let v531 = s.apply(v529, v530)?;
 let v532 = eo__24re_5frev_5fmap_5frev(s, v528, v531)?;
 let v533 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v534 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v535 = s.operator("list_singleton_intro", &[v534, a0])?;
+let v535 = s.builtin(EvalOp::ListSingletonIntro, &[v534, a0])?;
 let v536 = eo__24str_5fflatten(s, v535)?;
-let v537 = s.operator("list_rev", &[v533, v536])?;
+let v537 = s.builtin(EvalOp::ListRev, &[v533, v536])?;
 let v538 = eo__24str_5fre_5fconsume_5frec(s, v526, v532, v537)?;
 let v539 = s.literal(Lit::Bool(false))?;
-let v540 = s.operator("eq", &[v538, v539])?;
+let v540 = s.builtin(EvalOp::Eq, &[v538, v539])?;
 let v541 = match s.boolean_value(v540, false)? {
 Some(true) => {
 let v542 = s.literal(Lit::Bool(false))?;
@@ -103275,9 +103275,9 @@ let v543 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v544 = s.literal(Lit::Bool(true))?;
 let v545 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v546 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v547 = s.operator("list_singleton_intro", &[v546, a0])?;
+let v547 = s.builtin(EvalOp::ListSingletonIntro, &[v546, a0])?;
 let v548 = eo__24str_5fflatten(s, v547)?;
-let v549 = s.operator("list_rev", &[v545, v548])?;
+let v549 = s.builtin(EvalOp::ListRev, &[v545, v548])?;
 let v550 = s.literal(Lit::Bool(true))?;
 let v551 = eo__24re_5fflatten(s, v550, v2)?;
 let v552 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103286,31 +103286,31 @@ let v554 = s.apply(v552, v553)?;
 let v555 = eo__24re_5frev_5fmap_5frev(s, v551, v554)?;
 let v556 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v557 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v558 = s.operator("list_singleton_intro", &[v557, a0])?;
+let v558 = s.builtin(EvalOp::ListSingletonIntro, &[v557, a0])?;
 let v559 = eo__24str_5fflatten(s, v558)?;
-let v560 = s.operator("list_rev", &[v556, v559])?;
+let v560 = s.builtin(EvalOp::ListRev, &[v556, v559])?;
 let v561 = eo__24str_5fre_5fconsume_5frec(s, v549, v555, v560)?;
 let v562 = eo__24str_5fmembership_5fre(s, v561)?;
 let v563 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v564 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v565 = s.apply(v563, v564)?;
-let v566 = s.operator("eq", &[v562, v565])?;
-let v567 = s.operator("not", &[v566])?;
-let v568 = s.operator("and", &[v544, v567])?;
+let v566 = s.builtin(EvalOp::Eq, &[v562, v565])?;
+let v567 = s.builtin(EvalOp::Not, &[v566])?;
+let v568 = s.builtin(EvalOp::And, &[v544, v567])?;
 let v569 = match s.boolean_value(v568, false)? {
 Some(true) => {
 let v570 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v571 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v572 = s.operator("list_singleton_intro", &[v571, a0])?;
+let v572 = s.builtin(EvalOp::ListSingletonIntro, &[v571, a0])?;
 let v573 = eo__24str_5fflatten(s, v572)?;
-let v574 = s.operator("list_rev", &[v570, v573])?;
+let v574 = s.builtin(EvalOp::ListRev, &[v570, v573])?;
 v574
 }, Some(false) => {
 let v575 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v576 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v577 = s.operator("list_singleton_intro", &[v576, a0])?;
+let v577 = s.builtin(EvalOp::ListSingletonIntro, &[v576, a0])?;
 let v578 = eo__24str_5fflatten(s, v577)?;
-let v579 = s.operator("list_rev", &[v575, v578])?;
+let v579 = s.builtin(EvalOp::ListRev, &[v575, v578])?;
 let v580 = s.literal(Lit::Bool(true))?;
 let v581 = eo__24re_5fflatten(s, v580, v2)?;
 let v582 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103319,22 +103319,22 @@ let v584 = s.apply(v582, v583)?;
 let v585 = eo__24re_5frev_5fmap_5frev(s, v581, v584)?;
 let v586 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v587 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v588 = s.operator("list_singleton_intro", &[v587, a0])?;
+let v588 = s.builtin(EvalOp::ListSingletonIntro, &[v587, a0])?;
 let v589 = eo__24str_5fflatten(s, v588)?;
-let v590 = s.operator("list_rev", &[v586, v589])?;
+let v590 = s.builtin(EvalOp::ListRev, &[v586, v589])?;
 let v591 = eo__24str_5fre_5fconsume_5frec(s, v579, v585, v590)?;
 let v592 = eo__24str_5fmembership_5fstr(s, v591)?;
 v592
 }, None => s.stuck(),
 };
-let v593 = s.operator("list_rev", &[v543, v569])?;
+let v593 = s.builtin(EvalOp::ListRev, &[v543, v569])?;
 let v594 = s.literal(Lit::Bool(true))?;
 let v595 = s.literal(Lit::Bool(true))?;
 let v596 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v597 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v598 = s.operator("list_singleton_intro", &[v597, a0])?;
+let v598 = s.builtin(EvalOp::ListSingletonIntro, &[v597, a0])?;
 let v599 = eo__24str_5fflatten(s, v598)?;
-let v600 = s.operator("list_rev", &[v596, v599])?;
+let v600 = s.builtin(EvalOp::ListRev, &[v596, v599])?;
 let v601 = s.literal(Lit::Bool(true))?;
 let v602 = eo__24re_5fflatten(s, v601, v2)?;
 let v603 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103343,17 +103343,17 @@ let v605 = s.apply(v603, v604)?;
 let v606 = eo__24re_5frev_5fmap_5frev(s, v602, v605)?;
 let v607 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v608 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v609 = s.operator("list_singleton_intro", &[v608, a0])?;
+let v609 = s.builtin(EvalOp::ListSingletonIntro, &[v608, a0])?;
 let v610 = eo__24str_5fflatten(s, v609)?;
-let v611 = s.operator("list_rev", &[v607, v610])?;
+let v611 = s.builtin(EvalOp::ListRev, &[v607, v610])?;
 let v612 = eo__24str_5fre_5fconsume_5frec(s, v600, v606, v611)?;
 let v613 = eo__24str_5fmembership_5fre(s, v612)?;
 let v614 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v615 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v616 = s.apply(v614, v615)?;
-let v617 = s.operator("eq", &[v613, v616])?;
-let v618 = s.operator("not", &[v617])?;
-let v619 = s.operator("and", &[v595, v618])?;
+let v617 = s.builtin(EvalOp::Eq, &[v613, v616])?;
+let v618 = s.builtin(EvalOp::Not, &[v617])?;
+let v619 = s.builtin(EvalOp::And, &[v595, v618])?;
 let v620 = match s.boolean_value(v619, false)? {
 Some(true) => {
 let v621 = s.literal(Lit::Bool(true))?;
@@ -103366,9 +103366,9 @@ v626
 }, Some(false) => {
 let v627 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v628 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v629 = s.operator("list_singleton_intro", &[v628, a0])?;
+let v629 = s.builtin(EvalOp::ListSingletonIntro, &[v628, a0])?;
 let v630 = eo__24str_5fflatten(s, v629)?;
-let v631 = s.operator("list_rev", &[v627, v630])?;
+let v631 = s.builtin(EvalOp::ListRev, &[v627, v630])?;
 let v632 = s.literal(Lit::Bool(true))?;
 let v633 = eo__24re_5fflatten(s, v632, v2)?;
 let v634 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103377,9 +103377,9 @@ let v636 = s.apply(v634, v635)?;
 let v637 = eo__24re_5frev_5fmap_5frev(s, v633, v636)?;
 let v638 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v639 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v640 = s.operator("list_singleton_intro", &[v639, a0])?;
+let v640 = s.builtin(EvalOp::ListSingletonIntro, &[v639, a0])?;
 let v641 = eo__24str_5fflatten(s, v640)?;
-let v642 = s.operator("list_rev", &[v638, v641])?;
+let v642 = s.builtin(EvalOp::ListRev, &[v638, v641])?;
 let v643 = eo__24str_5fre_5fconsume_5frec(s, v631, v637, v642)?;
 let v644 = eo__24str_5fmembership_5fre(s, v643)?;
 v644
@@ -103394,9 +103394,9 @@ let v650 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v651 = s.literal(Lit::Bool(true))?;
 let v652 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v653 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v654 = s.operator("list_singleton_intro", &[v653, a0])?;
+let v654 = s.builtin(EvalOp::ListSingletonIntro, &[v653, a0])?;
 let v655 = eo__24str_5fflatten(s, v654)?;
-let v656 = s.operator("list_rev", &[v652, v655])?;
+let v656 = s.builtin(EvalOp::ListRev, &[v652, v655])?;
 let v657 = s.literal(Lit::Bool(true))?;
 let v658 = eo__24re_5fflatten(s, v657, v2)?;
 let v659 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103405,31 +103405,31 @@ let v661 = s.apply(v659, v660)?;
 let v662 = eo__24re_5frev_5fmap_5frev(s, v658, v661)?;
 let v663 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v664 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v665 = s.operator("list_singleton_intro", &[v664, a0])?;
+let v665 = s.builtin(EvalOp::ListSingletonIntro, &[v664, a0])?;
 let v666 = eo__24str_5fflatten(s, v665)?;
-let v667 = s.operator("list_rev", &[v663, v666])?;
+let v667 = s.builtin(EvalOp::ListRev, &[v663, v666])?;
 let v668 = eo__24str_5fre_5fconsume_5frec(s, v656, v662, v667)?;
 let v669 = eo__24str_5fmembership_5fre(s, v668)?;
 let v670 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v671 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v672 = s.apply(v670, v671)?;
-let v673 = s.operator("eq", &[v669, v672])?;
-let v674 = s.operator("not", &[v673])?;
-let v675 = s.operator("and", &[v651, v674])?;
+let v673 = s.builtin(EvalOp::Eq, &[v669, v672])?;
+let v674 = s.builtin(EvalOp::Not, &[v673])?;
+let v675 = s.builtin(EvalOp::And, &[v651, v674])?;
 let v676 = match s.boolean_value(v675, false)? {
 Some(true) => {
 let v677 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v678 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v679 = s.operator("list_singleton_intro", &[v678, a0])?;
+let v679 = s.builtin(EvalOp::ListSingletonIntro, &[v678, a0])?;
 let v680 = eo__24str_5fflatten(s, v679)?;
-let v681 = s.operator("list_rev", &[v677, v680])?;
+let v681 = s.builtin(EvalOp::ListRev, &[v677, v680])?;
 v681
 }, Some(false) => {
 let v682 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v683 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v684 = s.operator("list_singleton_intro", &[v683, a0])?;
+let v684 = s.builtin(EvalOp::ListSingletonIntro, &[v683, a0])?;
 let v685 = eo__24str_5fflatten(s, v684)?;
-let v686 = s.operator("list_rev", &[v682, v685])?;
+let v686 = s.builtin(EvalOp::ListRev, &[v682, v685])?;
 let v687 = s.literal(Lit::Bool(true))?;
 let v688 = eo__24re_5fflatten(s, v687, v2)?;
 let v689 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103438,18 +103438,18 @@ let v691 = s.apply(v689, v690)?;
 let v692 = eo__24re_5frev_5fmap_5frev(s, v688, v691)?;
 let v693 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v694 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v695 = s.operator("list_singleton_intro", &[v694, a0])?;
+let v695 = s.builtin(EvalOp::ListSingletonIntro, &[v694, a0])?;
 let v696 = eo__24str_5fflatten(s, v695)?;
-let v697 = s.operator("list_rev", &[v693, v696])?;
+let v697 = s.builtin(EvalOp::ListRev, &[v693, v696])?;
 let v698 = eo__24str_5fre_5fconsume_5frec(s, v686, v692, v697)?;
 let v699 = eo__24str_5fmembership_5fstr(s, v698)?;
 v699
 }, None => s.stuck(),
 };
-let v700 = s.operator("list_rev", &[v650, v676])?;
+let v700 = s.builtin(EvalOp::ListRev, &[v650, v676])?;
 let v701 = eo__24str_5fre_5fconsume_5frec(s, v593, v649, v700)?;
 let v702 = s.literal(Lit::Bool(false))?;
-let v703 = s.operator("eq", &[v701, v702])?;
+let v703 = s.builtin(EvalOp::Eq, &[v701, v702])?;
 let v704 = match s.boolean_value(v703, false)? {
 Some(true) => {
 let v705 = s.literal(Lit::Bool(false))?;
@@ -103461,9 +103461,9 @@ let v708 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v709 = s.literal(Lit::Bool(true))?;
 let v710 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v711 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v712 = s.operator("list_singleton_intro", &[v711, a0])?;
+let v712 = s.builtin(EvalOp::ListSingletonIntro, &[v711, a0])?;
 let v713 = eo__24str_5fflatten(s, v712)?;
-let v714 = s.operator("list_rev", &[v710, v713])?;
+let v714 = s.builtin(EvalOp::ListRev, &[v710, v713])?;
 let v715 = s.literal(Lit::Bool(true))?;
 let v716 = eo__24re_5fflatten(s, v715, v2)?;
 let v717 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103472,31 +103472,31 @@ let v719 = s.apply(v717, v718)?;
 let v720 = eo__24re_5frev_5fmap_5frev(s, v716, v719)?;
 let v721 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v722 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v723 = s.operator("list_singleton_intro", &[v722, a0])?;
+let v723 = s.builtin(EvalOp::ListSingletonIntro, &[v722, a0])?;
 let v724 = eo__24str_5fflatten(s, v723)?;
-let v725 = s.operator("list_rev", &[v721, v724])?;
+let v725 = s.builtin(EvalOp::ListRev, &[v721, v724])?;
 let v726 = eo__24str_5fre_5fconsume_5frec(s, v714, v720, v725)?;
 let v727 = eo__24str_5fmembership_5fre(s, v726)?;
 let v728 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v729 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v730 = s.apply(v728, v729)?;
-let v731 = s.operator("eq", &[v727, v730])?;
-let v732 = s.operator("not", &[v731])?;
-let v733 = s.operator("and", &[v709, v732])?;
+let v731 = s.builtin(EvalOp::Eq, &[v727, v730])?;
+let v732 = s.builtin(EvalOp::Not, &[v731])?;
+let v733 = s.builtin(EvalOp::And, &[v709, v732])?;
 let v734 = match s.boolean_value(v733, false)? {
 Some(true) => {
 let v735 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v736 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v737 = s.operator("list_singleton_intro", &[v736, a0])?;
+let v737 = s.builtin(EvalOp::ListSingletonIntro, &[v736, a0])?;
 let v738 = eo__24str_5fflatten(s, v737)?;
-let v739 = s.operator("list_rev", &[v735, v738])?;
+let v739 = s.builtin(EvalOp::ListRev, &[v735, v738])?;
 v739
 }, Some(false) => {
 let v740 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v741 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v742 = s.operator("list_singleton_intro", &[v741, a0])?;
+let v742 = s.builtin(EvalOp::ListSingletonIntro, &[v741, a0])?;
 let v743 = eo__24str_5fflatten(s, v742)?;
-let v744 = s.operator("list_rev", &[v740, v743])?;
+let v744 = s.builtin(EvalOp::ListRev, &[v740, v743])?;
 let v745 = s.literal(Lit::Bool(true))?;
 let v746 = eo__24re_5fflatten(s, v745, v2)?;
 let v747 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103505,22 +103505,22 @@ let v749 = s.apply(v747, v748)?;
 let v750 = eo__24re_5frev_5fmap_5frev(s, v746, v749)?;
 let v751 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v752 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v753 = s.operator("list_singleton_intro", &[v752, a0])?;
+let v753 = s.builtin(EvalOp::ListSingletonIntro, &[v752, a0])?;
 let v754 = eo__24str_5fflatten(s, v753)?;
-let v755 = s.operator("list_rev", &[v751, v754])?;
+let v755 = s.builtin(EvalOp::ListRev, &[v751, v754])?;
 let v756 = eo__24str_5fre_5fconsume_5frec(s, v744, v750, v755)?;
 let v757 = eo__24str_5fmembership_5fstr(s, v756)?;
 v757
 }, None => s.stuck(),
 };
-let v758 = s.operator("list_rev", &[v708, v734])?;
+let v758 = s.builtin(EvalOp::ListRev, &[v708, v734])?;
 let v759 = s.literal(Lit::Bool(true))?;
 let v760 = s.literal(Lit::Bool(true))?;
 let v761 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v762 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v763 = s.operator("list_singleton_intro", &[v762, a0])?;
+let v763 = s.builtin(EvalOp::ListSingletonIntro, &[v762, a0])?;
 let v764 = eo__24str_5fflatten(s, v763)?;
-let v765 = s.operator("list_rev", &[v761, v764])?;
+let v765 = s.builtin(EvalOp::ListRev, &[v761, v764])?;
 let v766 = s.literal(Lit::Bool(true))?;
 let v767 = eo__24re_5fflatten(s, v766, v2)?;
 let v768 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103529,17 +103529,17 @@ let v770 = s.apply(v768, v769)?;
 let v771 = eo__24re_5frev_5fmap_5frev(s, v767, v770)?;
 let v772 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v773 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v774 = s.operator("list_singleton_intro", &[v773, a0])?;
+let v774 = s.builtin(EvalOp::ListSingletonIntro, &[v773, a0])?;
 let v775 = eo__24str_5fflatten(s, v774)?;
-let v776 = s.operator("list_rev", &[v772, v775])?;
+let v776 = s.builtin(EvalOp::ListRev, &[v772, v775])?;
 let v777 = eo__24str_5fre_5fconsume_5frec(s, v765, v771, v776)?;
 let v778 = eo__24str_5fmembership_5fre(s, v777)?;
 let v779 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v780 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v781 = s.apply(v779, v780)?;
-let v782 = s.operator("eq", &[v778, v781])?;
-let v783 = s.operator("not", &[v782])?;
-let v784 = s.operator("and", &[v760, v783])?;
+let v782 = s.builtin(EvalOp::Eq, &[v778, v781])?;
+let v783 = s.builtin(EvalOp::Not, &[v782])?;
+let v784 = s.builtin(EvalOp::And, &[v760, v783])?;
 let v785 = match s.boolean_value(v784, false)? {
 Some(true) => {
 let v786 = s.literal(Lit::Bool(true))?;
@@ -103552,9 +103552,9 @@ v791
 }, Some(false) => {
 let v792 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v793 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v794 = s.operator("list_singleton_intro", &[v793, a0])?;
+let v794 = s.builtin(EvalOp::ListSingletonIntro, &[v793, a0])?;
 let v795 = eo__24str_5fflatten(s, v794)?;
-let v796 = s.operator("list_rev", &[v792, v795])?;
+let v796 = s.builtin(EvalOp::ListRev, &[v792, v795])?;
 let v797 = s.literal(Lit::Bool(true))?;
 let v798 = eo__24re_5fflatten(s, v797, v2)?;
 let v799 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103563,9 +103563,9 @@ let v801 = s.apply(v799, v800)?;
 let v802 = eo__24re_5frev_5fmap_5frev(s, v798, v801)?;
 let v803 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v804 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v805 = s.operator("list_singleton_intro", &[v804, a0])?;
+let v805 = s.builtin(EvalOp::ListSingletonIntro, &[v804, a0])?;
 let v806 = eo__24str_5fflatten(s, v805)?;
-let v807 = s.operator("list_rev", &[v803, v806])?;
+let v807 = s.builtin(EvalOp::ListRev, &[v803, v806])?;
 let v808 = eo__24str_5fre_5fconsume_5frec(s, v796, v802, v807)?;
 let v809 = eo__24str_5fmembership_5fre(s, v808)?;
 v809
@@ -103580,9 +103580,9 @@ let v815 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v816 = s.literal(Lit::Bool(true))?;
 let v817 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v818 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v819 = s.operator("list_singleton_intro", &[v818, a0])?;
+let v819 = s.builtin(EvalOp::ListSingletonIntro, &[v818, a0])?;
 let v820 = eo__24str_5fflatten(s, v819)?;
-let v821 = s.operator("list_rev", &[v817, v820])?;
+let v821 = s.builtin(EvalOp::ListRev, &[v817, v820])?;
 let v822 = s.literal(Lit::Bool(true))?;
 let v823 = eo__24re_5fflatten(s, v822, v2)?;
 let v824 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103591,31 +103591,31 @@ let v826 = s.apply(v824, v825)?;
 let v827 = eo__24re_5frev_5fmap_5frev(s, v823, v826)?;
 let v828 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v829 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v830 = s.operator("list_singleton_intro", &[v829, a0])?;
+let v830 = s.builtin(EvalOp::ListSingletonIntro, &[v829, a0])?;
 let v831 = eo__24str_5fflatten(s, v830)?;
-let v832 = s.operator("list_rev", &[v828, v831])?;
+let v832 = s.builtin(EvalOp::ListRev, &[v828, v831])?;
 let v833 = eo__24str_5fre_5fconsume_5frec(s, v821, v827, v832)?;
 let v834 = eo__24str_5fmembership_5fre(s, v833)?;
 let v835 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v836 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v837 = s.apply(v835, v836)?;
-let v838 = s.operator("eq", &[v834, v837])?;
-let v839 = s.operator("not", &[v838])?;
-let v840 = s.operator("and", &[v816, v839])?;
+let v838 = s.builtin(EvalOp::Eq, &[v834, v837])?;
+let v839 = s.builtin(EvalOp::Not, &[v838])?;
+let v840 = s.builtin(EvalOp::And, &[v816, v839])?;
 let v841 = match s.boolean_value(v840, false)? {
 Some(true) => {
 let v842 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v843 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v844 = s.operator("list_singleton_intro", &[v843, a0])?;
+let v844 = s.builtin(EvalOp::ListSingletonIntro, &[v843, a0])?;
 let v845 = eo__24str_5fflatten(s, v844)?;
-let v846 = s.operator("list_rev", &[v842, v845])?;
+let v846 = s.builtin(EvalOp::ListRev, &[v842, v845])?;
 v846
 }, Some(false) => {
 let v847 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v848 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v849 = s.operator("list_singleton_intro", &[v848, a0])?;
+let v849 = s.builtin(EvalOp::ListSingletonIntro, &[v848, a0])?;
 let v850 = eo__24str_5fflatten(s, v849)?;
-let v851 = s.operator("list_rev", &[v847, v850])?;
+let v851 = s.builtin(EvalOp::ListRev, &[v847, v850])?;
 let v852 = s.literal(Lit::Bool(true))?;
 let v853 = eo__24re_5fflatten(s, v852, v2)?;
 let v854 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103624,19 +103624,19 @@ let v856 = s.apply(v854, v855)?;
 let v857 = eo__24re_5frev_5fmap_5frev(s, v853, v856)?;
 let v858 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v859 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v860 = s.operator("list_singleton_intro", &[v859, a0])?;
+let v860 = s.builtin(EvalOp::ListSingletonIntro, &[v859, a0])?;
 let v861 = eo__24str_5fflatten(s, v860)?;
-let v862 = s.operator("list_rev", &[v858, v861])?;
+let v862 = s.builtin(EvalOp::ListRev, &[v858, v861])?;
 let v863 = eo__24str_5fre_5fconsume_5frec(s, v851, v857, v862)?;
 let v864 = eo__24str_5fmembership_5fstr(s, v863)?;
 v864
 }, None => s.stuck(),
 };
-let v865 = s.operator("list_rev", &[v815, v841])?;
+let v865 = s.builtin(EvalOp::ListRev, &[v815, v841])?;
 let v866 = eo__24str_5fre_5fconsume_5frec(s, v758, v814, v865)?;
 let v867 = eo__24str_5fmembership_5fstr(s, v866)?;
 let v868 = eo__24str_5fcollect(s, v867)?;
-let v869 = s.operator("list_singleton_elim", &[v707, v868])?;
+let v869 = s.builtin(EvalOp::ListSingletonElim, &[v707, v868])?;
 let v870 = s.apply(v706, v869)?;
 let v871 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v872 = s.literal(Lit::Bool(true))?;
@@ -103644,9 +103644,9 @@ let v873 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v874 = s.literal(Lit::Bool(true))?;
 let v875 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v876 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v877 = s.operator("list_singleton_intro", &[v876, a0])?;
+let v877 = s.builtin(EvalOp::ListSingletonIntro, &[v876, a0])?;
 let v878 = eo__24str_5fflatten(s, v877)?;
-let v879 = s.operator("list_rev", &[v875, v878])?;
+let v879 = s.builtin(EvalOp::ListRev, &[v875, v878])?;
 let v880 = s.literal(Lit::Bool(true))?;
 let v881 = eo__24re_5fflatten(s, v880, v2)?;
 let v882 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103655,31 +103655,31 @@ let v884 = s.apply(v882, v883)?;
 let v885 = eo__24re_5frev_5fmap_5frev(s, v881, v884)?;
 let v886 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v887 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v888 = s.operator("list_singleton_intro", &[v887, a0])?;
+let v888 = s.builtin(EvalOp::ListSingletonIntro, &[v887, a0])?;
 let v889 = eo__24str_5fflatten(s, v888)?;
-let v890 = s.operator("list_rev", &[v886, v889])?;
+let v890 = s.builtin(EvalOp::ListRev, &[v886, v889])?;
 let v891 = eo__24str_5fre_5fconsume_5frec(s, v879, v885, v890)?;
 let v892 = eo__24str_5fmembership_5fre(s, v891)?;
 let v893 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v894 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v895 = s.apply(v893, v894)?;
-let v896 = s.operator("eq", &[v892, v895])?;
-let v897 = s.operator("not", &[v896])?;
-let v898 = s.operator("and", &[v874, v897])?;
+let v896 = s.builtin(EvalOp::Eq, &[v892, v895])?;
+let v897 = s.builtin(EvalOp::Not, &[v896])?;
+let v898 = s.builtin(EvalOp::And, &[v874, v897])?;
 let v899 = match s.boolean_value(v898, false)? {
 Some(true) => {
 let v900 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v901 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v902 = s.operator("list_singleton_intro", &[v901, a0])?;
+let v902 = s.builtin(EvalOp::ListSingletonIntro, &[v901, a0])?;
 let v903 = eo__24str_5fflatten(s, v902)?;
-let v904 = s.operator("list_rev", &[v900, v903])?;
+let v904 = s.builtin(EvalOp::ListRev, &[v900, v903])?;
 v904
 }, Some(false) => {
 let v905 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v906 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v907 = s.operator("list_singleton_intro", &[v906, a0])?;
+let v907 = s.builtin(EvalOp::ListSingletonIntro, &[v906, a0])?;
 let v908 = eo__24str_5fflatten(s, v907)?;
-let v909 = s.operator("list_rev", &[v905, v908])?;
+let v909 = s.builtin(EvalOp::ListRev, &[v905, v908])?;
 let v910 = s.literal(Lit::Bool(true))?;
 let v911 = eo__24re_5fflatten(s, v910, v2)?;
 let v912 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103688,22 +103688,22 @@ let v914 = s.apply(v912, v913)?;
 let v915 = eo__24re_5frev_5fmap_5frev(s, v911, v914)?;
 let v916 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v917 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v918 = s.operator("list_singleton_intro", &[v917, a0])?;
+let v918 = s.builtin(EvalOp::ListSingletonIntro, &[v917, a0])?;
 let v919 = eo__24str_5fflatten(s, v918)?;
-let v920 = s.operator("list_rev", &[v916, v919])?;
+let v920 = s.builtin(EvalOp::ListRev, &[v916, v919])?;
 let v921 = eo__24str_5fre_5fconsume_5frec(s, v909, v915, v920)?;
 let v922 = eo__24str_5fmembership_5fstr(s, v921)?;
 v922
 }, None => s.stuck(),
 };
-let v923 = s.operator("list_rev", &[v873, v899])?;
+let v923 = s.builtin(EvalOp::ListRev, &[v873, v899])?;
 let v924 = s.literal(Lit::Bool(true))?;
 let v925 = s.literal(Lit::Bool(true))?;
 let v926 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v927 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v928 = s.operator("list_singleton_intro", &[v927, a0])?;
+let v928 = s.builtin(EvalOp::ListSingletonIntro, &[v927, a0])?;
 let v929 = eo__24str_5fflatten(s, v928)?;
-let v930 = s.operator("list_rev", &[v926, v929])?;
+let v930 = s.builtin(EvalOp::ListRev, &[v926, v929])?;
 let v931 = s.literal(Lit::Bool(true))?;
 let v932 = eo__24re_5fflatten(s, v931, v2)?;
 let v933 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103712,17 +103712,17 @@ let v935 = s.apply(v933, v934)?;
 let v936 = eo__24re_5frev_5fmap_5frev(s, v932, v935)?;
 let v937 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v938 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v939 = s.operator("list_singleton_intro", &[v938, a0])?;
+let v939 = s.builtin(EvalOp::ListSingletonIntro, &[v938, a0])?;
 let v940 = eo__24str_5fflatten(s, v939)?;
-let v941 = s.operator("list_rev", &[v937, v940])?;
+let v941 = s.builtin(EvalOp::ListRev, &[v937, v940])?;
 let v942 = eo__24str_5fre_5fconsume_5frec(s, v930, v936, v941)?;
 let v943 = eo__24str_5fmembership_5fre(s, v942)?;
 let v944 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v945 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v946 = s.apply(v944, v945)?;
-let v947 = s.operator("eq", &[v943, v946])?;
-let v948 = s.operator("not", &[v947])?;
-let v949 = s.operator("and", &[v925, v948])?;
+let v947 = s.builtin(EvalOp::Eq, &[v943, v946])?;
+let v948 = s.builtin(EvalOp::Not, &[v947])?;
+let v949 = s.builtin(EvalOp::And, &[v925, v948])?;
 let v950 = match s.boolean_value(v949, false)? {
 Some(true) => {
 let v951 = s.literal(Lit::Bool(true))?;
@@ -103735,9 +103735,9 @@ v956
 }, Some(false) => {
 let v957 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v958 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v959 = s.operator("list_singleton_intro", &[v958, a0])?;
+let v959 = s.builtin(EvalOp::ListSingletonIntro, &[v958, a0])?;
 let v960 = eo__24str_5fflatten(s, v959)?;
-let v961 = s.operator("list_rev", &[v957, v960])?;
+let v961 = s.builtin(EvalOp::ListRev, &[v957, v960])?;
 let v962 = s.literal(Lit::Bool(true))?;
 let v963 = eo__24re_5fflatten(s, v962, v2)?;
 let v964 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103746,9 +103746,9 @@ let v966 = s.apply(v964, v965)?;
 let v967 = eo__24re_5frev_5fmap_5frev(s, v963, v966)?;
 let v968 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v969 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v970 = s.operator("list_singleton_intro", &[v969, a0])?;
+let v970 = s.builtin(EvalOp::ListSingletonIntro, &[v969, a0])?;
 let v971 = eo__24str_5fflatten(s, v970)?;
-let v972 = s.operator("list_rev", &[v968, v971])?;
+let v972 = s.builtin(EvalOp::ListRev, &[v968, v971])?;
 let v973 = eo__24str_5fre_5fconsume_5frec(s, v961, v967, v972)?;
 let v974 = eo__24str_5fmembership_5fre(s, v973)?;
 v974
@@ -103763,9 +103763,9 @@ let v980 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v981 = s.literal(Lit::Bool(true))?;
 let v982 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v983 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v984 = s.operator("list_singleton_intro", &[v983, a0])?;
+let v984 = s.builtin(EvalOp::ListSingletonIntro, &[v983, a0])?;
 let v985 = eo__24str_5fflatten(s, v984)?;
-let v986 = s.operator("list_rev", &[v982, v985])?;
+let v986 = s.builtin(EvalOp::ListRev, &[v982, v985])?;
 let v987 = s.literal(Lit::Bool(true))?;
 let v988 = eo__24re_5fflatten(s, v987, v2)?;
 let v989 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103774,31 +103774,31 @@ let v991 = s.apply(v989, v990)?;
 let v992 = eo__24re_5frev_5fmap_5frev(s, v988, v991)?;
 let v993 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v994 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v995 = s.operator("list_singleton_intro", &[v994, a0])?;
+let v995 = s.builtin(EvalOp::ListSingletonIntro, &[v994, a0])?;
 let v996 = eo__24str_5fflatten(s, v995)?;
-let v997 = s.operator("list_rev", &[v993, v996])?;
+let v997 = s.builtin(EvalOp::ListRev, &[v993, v996])?;
 let v998 = eo__24str_5fre_5fconsume_5frec(s, v986, v992, v997)?;
 let v999 = eo__24str_5fmembership_5fre(s, v998)?;
 let v1000 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1001 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1002 = s.apply(v1000, v1001)?;
-let v1003 = s.operator("eq", &[v999, v1002])?;
-let v1004 = s.operator("not", &[v1003])?;
-let v1005 = s.operator("and", &[v981, v1004])?;
+let v1003 = s.builtin(EvalOp::Eq, &[v999, v1002])?;
+let v1004 = s.builtin(EvalOp::Not, &[v1003])?;
+let v1005 = s.builtin(EvalOp::And, &[v981, v1004])?;
 let v1006 = match s.boolean_value(v1005, false)? {
 Some(true) => {
 let v1007 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1008 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1009 = s.operator("list_singleton_intro", &[v1008, a0])?;
+let v1009 = s.builtin(EvalOp::ListSingletonIntro, &[v1008, a0])?;
 let v1010 = eo__24str_5fflatten(s, v1009)?;
-let v1011 = s.operator("list_rev", &[v1007, v1010])?;
+let v1011 = s.builtin(EvalOp::ListRev, &[v1007, v1010])?;
 v1011
 }, Some(false) => {
 let v1012 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1013 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1014 = s.operator("list_singleton_intro", &[v1013, a0])?;
+let v1014 = s.builtin(EvalOp::ListSingletonIntro, &[v1013, a0])?;
 let v1015 = eo__24str_5fflatten(s, v1014)?;
-let v1016 = s.operator("list_rev", &[v1012, v1015])?;
+let v1016 = s.builtin(EvalOp::ListRev, &[v1012, v1015])?;
 let v1017 = s.literal(Lit::Bool(true))?;
 let v1018 = eo__24re_5fflatten(s, v1017, v2)?;
 let v1019 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103807,19 +103807,19 @@ let v1021 = s.apply(v1019, v1020)?;
 let v1022 = eo__24re_5frev_5fmap_5frev(s, v1018, v1021)?;
 let v1023 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1024 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1025 = s.operator("list_singleton_intro", &[v1024, a0])?;
+let v1025 = s.builtin(EvalOp::ListSingletonIntro, &[v1024, a0])?;
 let v1026 = eo__24str_5fflatten(s, v1025)?;
-let v1027 = s.operator("list_rev", &[v1023, v1026])?;
+let v1027 = s.builtin(EvalOp::ListRev, &[v1023, v1026])?;
 let v1028 = eo__24str_5fre_5fconsume_5frec(s, v1016, v1022, v1027)?;
 let v1029 = eo__24str_5fmembership_5fstr(s, v1028)?;
 v1029
 }, None => s.stuck(),
 };
-let v1030 = s.operator("list_rev", &[v980, v1006])?;
+let v1030 = s.builtin(EvalOp::ListRev, &[v980, v1006])?;
 let v1031 = eo__24str_5fre_5fconsume_5frec(s, v923, v979, v1030)?;
 let v1032 = eo__24str_5fmembership_5fre(s, v1031)?;
 let v1033 = eo__24re_5funflatten(s, v872, v1032)?;
-let v1034 = s.operator("list_singleton_elim", &[v871, v1033])?;
+let v1034 = s.builtin(EvalOp::ListSingletonElim, &[v871, v1033])?;
 let v1035 = s.apply(v870, v1034)?;
 v1035
 }, None => s.stuck(),
@@ -103835,9 +103835,9 @@ let v1040 = if v1036 == v1039 && !s.is_stuck(v1036)? {
 let v1041 = s.construct(Constructor::eo_str_2ein_5fre, &[])?;
 let v1042 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1043 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1044 = s.operator("list_singleton_intro", &[v1043, a0])?;
+let v1044 = s.builtin(EvalOp::ListSingletonIntro, &[v1043, a0])?;
 let v1045 = eo__24str_5fflatten(s, v1044)?;
-let v1046 = s.operator("list_rev", &[v1042, v1045])?;
+let v1046 = s.builtin(EvalOp::ListRev, &[v1042, v1045])?;
 let v1047 = s.literal(Lit::Bool(true))?;
 let v1048 = eo__24re_5fflatten(s, v1047, v2)?;
 let v1049 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103846,12 +103846,12 @@ let v1051 = s.apply(v1049, v1050)?;
 let v1052 = eo__24re_5frev_5fmap_5frev(s, v1048, v1051)?;
 let v1053 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1054 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1055 = s.operator("list_singleton_intro", &[v1054, a0])?;
+let v1055 = s.builtin(EvalOp::ListSingletonIntro, &[v1054, a0])?;
 let v1056 = eo__24str_5fflatten(s, v1055)?;
-let v1057 = s.operator("list_rev", &[v1053, v1056])?;
+let v1057 = s.builtin(EvalOp::ListRev, &[v1053, v1056])?;
 let v1058 = eo__24str_5fre_5fconsume_5frec(s, v1046, v1052, v1057)?;
 let v1059 = s.literal(Lit::Bool(false))?;
-let v1060 = s.operator("eq", &[v1058, v1059])?;
+let v1060 = s.builtin(EvalOp::Eq, &[v1058, v1059])?;
 let v1061 = match s.boolean_value(v1060, false)? {
 Some(true) => {
 let v1062 = s.literal(Lit::Bool(false))?;
@@ -103861,9 +103861,9 @@ let v1063 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1064 = s.literal(Lit::Bool(true))?;
 let v1065 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1066 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1067 = s.operator("list_singleton_intro", &[v1066, a0])?;
+let v1067 = s.builtin(EvalOp::ListSingletonIntro, &[v1066, a0])?;
 let v1068 = eo__24str_5fflatten(s, v1067)?;
-let v1069 = s.operator("list_rev", &[v1065, v1068])?;
+let v1069 = s.builtin(EvalOp::ListRev, &[v1065, v1068])?;
 let v1070 = s.literal(Lit::Bool(true))?;
 let v1071 = eo__24re_5fflatten(s, v1070, v2)?;
 let v1072 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103872,31 +103872,31 @@ let v1074 = s.apply(v1072, v1073)?;
 let v1075 = eo__24re_5frev_5fmap_5frev(s, v1071, v1074)?;
 let v1076 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1077 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1078 = s.operator("list_singleton_intro", &[v1077, a0])?;
+let v1078 = s.builtin(EvalOp::ListSingletonIntro, &[v1077, a0])?;
 let v1079 = eo__24str_5fflatten(s, v1078)?;
-let v1080 = s.operator("list_rev", &[v1076, v1079])?;
+let v1080 = s.builtin(EvalOp::ListRev, &[v1076, v1079])?;
 let v1081 = eo__24str_5fre_5fconsume_5frec(s, v1069, v1075, v1080)?;
 let v1082 = eo__24str_5fmembership_5fre(s, v1081)?;
 let v1083 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1084 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1085 = s.apply(v1083, v1084)?;
-let v1086 = s.operator("eq", &[v1082, v1085])?;
-let v1087 = s.operator("not", &[v1086])?;
-let v1088 = s.operator("and", &[v1064, v1087])?;
+let v1086 = s.builtin(EvalOp::Eq, &[v1082, v1085])?;
+let v1087 = s.builtin(EvalOp::Not, &[v1086])?;
+let v1088 = s.builtin(EvalOp::And, &[v1064, v1087])?;
 let v1089 = match s.boolean_value(v1088, false)? {
 Some(true) => {
 let v1090 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1091 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1092 = s.operator("list_singleton_intro", &[v1091, a0])?;
+let v1092 = s.builtin(EvalOp::ListSingletonIntro, &[v1091, a0])?;
 let v1093 = eo__24str_5fflatten(s, v1092)?;
-let v1094 = s.operator("list_rev", &[v1090, v1093])?;
+let v1094 = s.builtin(EvalOp::ListRev, &[v1090, v1093])?;
 v1094
 }, Some(false) => {
 let v1095 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1096 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1097 = s.operator("list_singleton_intro", &[v1096, a0])?;
+let v1097 = s.builtin(EvalOp::ListSingletonIntro, &[v1096, a0])?;
 let v1098 = eo__24str_5fflatten(s, v1097)?;
-let v1099 = s.operator("list_rev", &[v1095, v1098])?;
+let v1099 = s.builtin(EvalOp::ListRev, &[v1095, v1098])?;
 let v1100 = s.literal(Lit::Bool(true))?;
 let v1101 = eo__24re_5fflatten(s, v1100, v2)?;
 let v1102 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103905,22 +103905,22 @@ let v1104 = s.apply(v1102, v1103)?;
 let v1105 = eo__24re_5frev_5fmap_5frev(s, v1101, v1104)?;
 let v1106 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1107 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1108 = s.operator("list_singleton_intro", &[v1107, a0])?;
+let v1108 = s.builtin(EvalOp::ListSingletonIntro, &[v1107, a0])?;
 let v1109 = eo__24str_5fflatten(s, v1108)?;
-let v1110 = s.operator("list_rev", &[v1106, v1109])?;
+let v1110 = s.builtin(EvalOp::ListRev, &[v1106, v1109])?;
 let v1111 = eo__24str_5fre_5fconsume_5frec(s, v1099, v1105, v1110)?;
 let v1112 = eo__24str_5fmembership_5fstr(s, v1111)?;
 v1112
 }, None => s.stuck(),
 };
-let v1113 = s.operator("list_rev", &[v1063, v1089])?;
+let v1113 = s.builtin(EvalOp::ListRev, &[v1063, v1089])?;
 let v1114 = s.literal(Lit::Bool(true))?;
 let v1115 = s.literal(Lit::Bool(true))?;
 let v1116 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1117 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1118 = s.operator("list_singleton_intro", &[v1117, a0])?;
+let v1118 = s.builtin(EvalOp::ListSingletonIntro, &[v1117, a0])?;
 let v1119 = eo__24str_5fflatten(s, v1118)?;
-let v1120 = s.operator("list_rev", &[v1116, v1119])?;
+let v1120 = s.builtin(EvalOp::ListRev, &[v1116, v1119])?;
 let v1121 = s.literal(Lit::Bool(true))?;
 let v1122 = eo__24re_5fflatten(s, v1121, v2)?;
 let v1123 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103929,17 +103929,17 @@ let v1125 = s.apply(v1123, v1124)?;
 let v1126 = eo__24re_5frev_5fmap_5frev(s, v1122, v1125)?;
 let v1127 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1128 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1129 = s.operator("list_singleton_intro", &[v1128, a0])?;
+let v1129 = s.builtin(EvalOp::ListSingletonIntro, &[v1128, a0])?;
 let v1130 = eo__24str_5fflatten(s, v1129)?;
-let v1131 = s.operator("list_rev", &[v1127, v1130])?;
+let v1131 = s.builtin(EvalOp::ListRev, &[v1127, v1130])?;
 let v1132 = eo__24str_5fre_5fconsume_5frec(s, v1120, v1126, v1131)?;
 let v1133 = eo__24str_5fmembership_5fre(s, v1132)?;
 let v1134 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1135 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1136 = s.apply(v1134, v1135)?;
-let v1137 = s.operator("eq", &[v1133, v1136])?;
-let v1138 = s.operator("not", &[v1137])?;
-let v1139 = s.operator("and", &[v1115, v1138])?;
+let v1137 = s.builtin(EvalOp::Eq, &[v1133, v1136])?;
+let v1138 = s.builtin(EvalOp::Not, &[v1137])?;
+let v1139 = s.builtin(EvalOp::And, &[v1115, v1138])?;
 let v1140 = match s.boolean_value(v1139, false)? {
 Some(true) => {
 let v1141 = s.literal(Lit::Bool(true))?;
@@ -103952,9 +103952,9 @@ v1146
 }, Some(false) => {
 let v1147 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1148 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1149 = s.operator("list_singleton_intro", &[v1148, a0])?;
+let v1149 = s.builtin(EvalOp::ListSingletonIntro, &[v1148, a0])?;
 let v1150 = eo__24str_5fflatten(s, v1149)?;
-let v1151 = s.operator("list_rev", &[v1147, v1150])?;
+let v1151 = s.builtin(EvalOp::ListRev, &[v1147, v1150])?;
 let v1152 = s.literal(Lit::Bool(true))?;
 let v1153 = eo__24re_5fflatten(s, v1152, v2)?;
 let v1154 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103963,9 +103963,9 @@ let v1156 = s.apply(v1154, v1155)?;
 let v1157 = eo__24re_5frev_5fmap_5frev(s, v1153, v1156)?;
 let v1158 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1159 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1160 = s.operator("list_singleton_intro", &[v1159, a0])?;
+let v1160 = s.builtin(EvalOp::ListSingletonIntro, &[v1159, a0])?;
 let v1161 = eo__24str_5fflatten(s, v1160)?;
-let v1162 = s.operator("list_rev", &[v1158, v1161])?;
+let v1162 = s.builtin(EvalOp::ListRev, &[v1158, v1161])?;
 let v1163 = eo__24str_5fre_5fconsume_5frec(s, v1151, v1157, v1162)?;
 let v1164 = eo__24str_5fmembership_5fre(s, v1163)?;
 v1164
@@ -103980,9 +103980,9 @@ let v1170 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1171 = s.literal(Lit::Bool(true))?;
 let v1172 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1173 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1174 = s.operator("list_singleton_intro", &[v1173, a0])?;
+let v1174 = s.builtin(EvalOp::ListSingletonIntro, &[v1173, a0])?;
 let v1175 = eo__24str_5fflatten(s, v1174)?;
-let v1176 = s.operator("list_rev", &[v1172, v1175])?;
+let v1176 = s.builtin(EvalOp::ListRev, &[v1172, v1175])?;
 let v1177 = s.literal(Lit::Bool(true))?;
 let v1178 = eo__24re_5fflatten(s, v1177, v2)?;
 let v1179 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -103991,31 +103991,31 @@ let v1181 = s.apply(v1179, v1180)?;
 let v1182 = eo__24re_5frev_5fmap_5frev(s, v1178, v1181)?;
 let v1183 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1184 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1185 = s.operator("list_singleton_intro", &[v1184, a0])?;
+let v1185 = s.builtin(EvalOp::ListSingletonIntro, &[v1184, a0])?;
 let v1186 = eo__24str_5fflatten(s, v1185)?;
-let v1187 = s.operator("list_rev", &[v1183, v1186])?;
+let v1187 = s.builtin(EvalOp::ListRev, &[v1183, v1186])?;
 let v1188 = eo__24str_5fre_5fconsume_5frec(s, v1176, v1182, v1187)?;
 let v1189 = eo__24str_5fmembership_5fre(s, v1188)?;
 let v1190 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1191 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1192 = s.apply(v1190, v1191)?;
-let v1193 = s.operator("eq", &[v1189, v1192])?;
-let v1194 = s.operator("not", &[v1193])?;
-let v1195 = s.operator("and", &[v1171, v1194])?;
+let v1193 = s.builtin(EvalOp::Eq, &[v1189, v1192])?;
+let v1194 = s.builtin(EvalOp::Not, &[v1193])?;
+let v1195 = s.builtin(EvalOp::And, &[v1171, v1194])?;
 let v1196 = match s.boolean_value(v1195, false)? {
 Some(true) => {
 let v1197 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1198 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1199 = s.operator("list_singleton_intro", &[v1198, a0])?;
+let v1199 = s.builtin(EvalOp::ListSingletonIntro, &[v1198, a0])?;
 let v1200 = eo__24str_5fflatten(s, v1199)?;
-let v1201 = s.operator("list_rev", &[v1197, v1200])?;
+let v1201 = s.builtin(EvalOp::ListRev, &[v1197, v1200])?;
 v1201
 }, Some(false) => {
 let v1202 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1203 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1204 = s.operator("list_singleton_intro", &[v1203, a0])?;
+let v1204 = s.builtin(EvalOp::ListSingletonIntro, &[v1203, a0])?;
 let v1205 = eo__24str_5fflatten(s, v1204)?;
-let v1206 = s.operator("list_rev", &[v1202, v1205])?;
+let v1206 = s.builtin(EvalOp::ListRev, &[v1202, v1205])?;
 let v1207 = s.literal(Lit::Bool(true))?;
 let v1208 = eo__24re_5fflatten(s, v1207, v2)?;
 let v1209 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104024,18 +104024,18 @@ let v1211 = s.apply(v1209, v1210)?;
 let v1212 = eo__24re_5frev_5fmap_5frev(s, v1208, v1211)?;
 let v1213 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1214 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1215 = s.operator("list_singleton_intro", &[v1214, a0])?;
+let v1215 = s.builtin(EvalOp::ListSingletonIntro, &[v1214, a0])?;
 let v1216 = eo__24str_5fflatten(s, v1215)?;
-let v1217 = s.operator("list_rev", &[v1213, v1216])?;
+let v1217 = s.builtin(EvalOp::ListRev, &[v1213, v1216])?;
 let v1218 = eo__24str_5fre_5fconsume_5frec(s, v1206, v1212, v1217)?;
 let v1219 = eo__24str_5fmembership_5fstr(s, v1218)?;
 v1219
 }, None => s.stuck(),
 };
-let v1220 = s.operator("list_rev", &[v1170, v1196])?;
+let v1220 = s.builtin(EvalOp::ListRev, &[v1170, v1196])?;
 let v1221 = eo__24str_5fre_5fconsume_5frec(s, v1113, v1169, v1220)?;
 let v1222 = s.literal(Lit::Bool(false))?;
-let v1223 = s.operator("eq", &[v1221, v1222])?;
+let v1223 = s.builtin(EvalOp::Eq, &[v1221, v1222])?;
 let v1224 = match s.boolean_value(v1223, false)? {
 Some(true) => {
 let v1225 = s.literal(Lit::Bool(false))?;
@@ -104047,9 +104047,9 @@ let v1228 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1229 = s.literal(Lit::Bool(true))?;
 let v1230 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1231 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1232 = s.operator("list_singleton_intro", &[v1231, a0])?;
+let v1232 = s.builtin(EvalOp::ListSingletonIntro, &[v1231, a0])?;
 let v1233 = eo__24str_5fflatten(s, v1232)?;
-let v1234 = s.operator("list_rev", &[v1230, v1233])?;
+let v1234 = s.builtin(EvalOp::ListRev, &[v1230, v1233])?;
 let v1235 = s.literal(Lit::Bool(true))?;
 let v1236 = eo__24re_5fflatten(s, v1235, v2)?;
 let v1237 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104058,31 +104058,31 @@ let v1239 = s.apply(v1237, v1238)?;
 let v1240 = eo__24re_5frev_5fmap_5frev(s, v1236, v1239)?;
 let v1241 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1242 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1243 = s.operator("list_singleton_intro", &[v1242, a0])?;
+let v1243 = s.builtin(EvalOp::ListSingletonIntro, &[v1242, a0])?;
 let v1244 = eo__24str_5fflatten(s, v1243)?;
-let v1245 = s.operator("list_rev", &[v1241, v1244])?;
+let v1245 = s.builtin(EvalOp::ListRev, &[v1241, v1244])?;
 let v1246 = eo__24str_5fre_5fconsume_5frec(s, v1234, v1240, v1245)?;
 let v1247 = eo__24str_5fmembership_5fre(s, v1246)?;
 let v1248 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1249 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1250 = s.apply(v1248, v1249)?;
-let v1251 = s.operator("eq", &[v1247, v1250])?;
-let v1252 = s.operator("not", &[v1251])?;
-let v1253 = s.operator("and", &[v1229, v1252])?;
+let v1251 = s.builtin(EvalOp::Eq, &[v1247, v1250])?;
+let v1252 = s.builtin(EvalOp::Not, &[v1251])?;
+let v1253 = s.builtin(EvalOp::And, &[v1229, v1252])?;
 let v1254 = match s.boolean_value(v1253, false)? {
 Some(true) => {
 let v1255 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1256 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1257 = s.operator("list_singleton_intro", &[v1256, a0])?;
+let v1257 = s.builtin(EvalOp::ListSingletonIntro, &[v1256, a0])?;
 let v1258 = eo__24str_5fflatten(s, v1257)?;
-let v1259 = s.operator("list_rev", &[v1255, v1258])?;
+let v1259 = s.builtin(EvalOp::ListRev, &[v1255, v1258])?;
 v1259
 }, Some(false) => {
 let v1260 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1261 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1262 = s.operator("list_singleton_intro", &[v1261, a0])?;
+let v1262 = s.builtin(EvalOp::ListSingletonIntro, &[v1261, a0])?;
 let v1263 = eo__24str_5fflatten(s, v1262)?;
-let v1264 = s.operator("list_rev", &[v1260, v1263])?;
+let v1264 = s.builtin(EvalOp::ListRev, &[v1260, v1263])?;
 let v1265 = s.literal(Lit::Bool(true))?;
 let v1266 = eo__24re_5fflatten(s, v1265, v2)?;
 let v1267 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104091,22 +104091,22 @@ let v1269 = s.apply(v1267, v1268)?;
 let v1270 = eo__24re_5frev_5fmap_5frev(s, v1266, v1269)?;
 let v1271 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1272 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1273 = s.operator("list_singleton_intro", &[v1272, a0])?;
+let v1273 = s.builtin(EvalOp::ListSingletonIntro, &[v1272, a0])?;
 let v1274 = eo__24str_5fflatten(s, v1273)?;
-let v1275 = s.operator("list_rev", &[v1271, v1274])?;
+let v1275 = s.builtin(EvalOp::ListRev, &[v1271, v1274])?;
 let v1276 = eo__24str_5fre_5fconsume_5frec(s, v1264, v1270, v1275)?;
 let v1277 = eo__24str_5fmembership_5fstr(s, v1276)?;
 v1277
 }, None => s.stuck(),
 };
-let v1278 = s.operator("list_rev", &[v1228, v1254])?;
+let v1278 = s.builtin(EvalOp::ListRev, &[v1228, v1254])?;
 let v1279 = s.literal(Lit::Bool(true))?;
 let v1280 = s.literal(Lit::Bool(true))?;
 let v1281 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1282 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1283 = s.operator("list_singleton_intro", &[v1282, a0])?;
+let v1283 = s.builtin(EvalOp::ListSingletonIntro, &[v1282, a0])?;
 let v1284 = eo__24str_5fflatten(s, v1283)?;
-let v1285 = s.operator("list_rev", &[v1281, v1284])?;
+let v1285 = s.builtin(EvalOp::ListRev, &[v1281, v1284])?;
 let v1286 = s.literal(Lit::Bool(true))?;
 let v1287 = eo__24re_5fflatten(s, v1286, v2)?;
 let v1288 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104115,17 +104115,17 @@ let v1290 = s.apply(v1288, v1289)?;
 let v1291 = eo__24re_5frev_5fmap_5frev(s, v1287, v1290)?;
 let v1292 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1293 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1294 = s.operator("list_singleton_intro", &[v1293, a0])?;
+let v1294 = s.builtin(EvalOp::ListSingletonIntro, &[v1293, a0])?;
 let v1295 = eo__24str_5fflatten(s, v1294)?;
-let v1296 = s.operator("list_rev", &[v1292, v1295])?;
+let v1296 = s.builtin(EvalOp::ListRev, &[v1292, v1295])?;
 let v1297 = eo__24str_5fre_5fconsume_5frec(s, v1285, v1291, v1296)?;
 let v1298 = eo__24str_5fmembership_5fre(s, v1297)?;
 let v1299 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1300 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1301 = s.apply(v1299, v1300)?;
-let v1302 = s.operator("eq", &[v1298, v1301])?;
-let v1303 = s.operator("not", &[v1302])?;
-let v1304 = s.operator("and", &[v1280, v1303])?;
+let v1302 = s.builtin(EvalOp::Eq, &[v1298, v1301])?;
+let v1303 = s.builtin(EvalOp::Not, &[v1302])?;
+let v1304 = s.builtin(EvalOp::And, &[v1280, v1303])?;
 let v1305 = match s.boolean_value(v1304, false)? {
 Some(true) => {
 let v1306 = s.literal(Lit::Bool(true))?;
@@ -104138,9 +104138,9 @@ v1311
 }, Some(false) => {
 let v1312 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1313 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1314 = s.operator("list_singleton_intro", &[v1313, a0])?;
+let v1314 = s.builtin(EvalOp::ListSingletonIntro, &[v1313, a0])?;
 let v1315 = eo__24str_5fflatten(s, v1314)?;
-let v1316 = s.operator("list_rev", &[v1312, v1315])?;
+let v1316 = s.builtin(EvalOp::ListRev, &[v1312, v1315])?;
 let v1317 = s.literal(Lit::Bool(true))?;
 let v1318 = eo__24re_5fflatten(s, v1317, v2)?;
 let v1319 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104149,9 +104149,9 @@ let v1321 = s.apply(v1319, v1320)?;
 let v1322 = eo__24re_5frev_5fmap_5frev(s, v1318, v1321)?;
 let v1323 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1324 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1325 = s.operator("list_singleton_intro", &[v1324, a0])?;
+let v1325 = s.builtin(EvalOp::ListSingletonIntro, &[v1324, a0])?;
 let v1326 = eo__24str_5fflatten(s, v1325)?;
-let v1327 = s.operator("list_rev", &[v1323, v1326])?;
+let v1327 = s.builtin(EvalOp::ListRev, &[v1323, v1326])?;
 let v1328 = eo__24str_5fre_5fconsume_5frec(s, v1316, v1322, v1327)?;
 let v1329 = eo__24str_5fmembership_5fre(s, v1328)?;
 v1329
@@ -104166,9 +104166,9 @@ let v1335 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1336 = s.literal(Lit::Bool(true))?;
 let v1337 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1338 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1339 = s.operator("list_singleton_intro", &[v1338, a0])?;
+let v1339 = s.builtin(EvalOp::ListSingletonIntro, &[v1338, a0])?;
 let v1340 = eo__24str_5fflatten(s, v1339)?;
-let v1341 = s.operator("list_rev", &[v1337, v1340])?;
+let v1341 = s.builtin(EvalOp::ListRev, &[v1337, v1340])?;
 let v1342 = s.literal(Lit::Bool(true))?;
 let v1343 = eo__24re_5fflatten(s, v1342, v2)?;
 let v1344 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104177,31 +104177,31 @@ let v1346 = s.apply(v1344, v1345)?;
 let v1347 = eo__24re_5frev_5fmap_5frev(s, v1343, v1346)?;
 let v1348 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1349 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1350 = s.operator("list_singleton_intro", &[v1349, a0])?;
+let v1350 = s.builtin(EvalOp::ListSingletonIntro, &[v1349, a0])?;
 let v1351 = eo__24str_5fflatten(s, v1350)?;
-let v1352 = s.operator("list_rev", &[v1348, v1351])?;
+let v1352 = s.builtin(EvalOp::ListRev, &[v1348, v1351])?;
 let v1353 = eo__24str_5fre_5fconsume_5frec(s, v1341, v1347, v1352)?;
 let v1354 = eo__24str_5fmembership_5fre(s, v1353)?;
 let v1355 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1356 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1357 = s.apply(v1355, v1356)?;
-let v1358 = s.operator("eq", &[v1354, v1357])?;
-let v1359 = s.operator("not", &[v1358])?;
-let v1360 = s.operator("and", &[v1336, v1359])?;
+let v1358 = s.builtin(EvalOp::Eq, &[v1354, v1357])?;
+let v1359 = s.builtin(EvalOp::Not, &[v1358])?;
+let v1360 = s.builtin(EvalOp::And, &[v1336, v1359])?;
 let v1361 = match s.boolean_value(v1360, false)? {
 Some(true) => {
 let v1362 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1363 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1364 = s.operator("list_singleton_intro", &[v1363, a0])?;
+let v1364 = s.builtin(EvalOp::ListSingletonIntro, &[v1363, a0])?;
 let v1365 = eo__24str_5fflatten(s, v1364)?;
-let v1366 = s.operator("list_rev", &[v1362, v1365])?;
+let v1366 = s.builtin(EvalOp::ListRev, &[v1362, v1365])?;
 v1366
 }, Some(false) => {
 let v1367 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1368 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1369 = s.operator("list_singleton_intro", &[v1368, a0])?;
+let v1369 = s.builtin(EvalOp::ListSingletonIntro, &[v1368, a0])?;
 let v1370 = eo__24str_5fflatten(s, v1369)?;
-let v1371 = s.operator("list_rev", &[v1367, v1370])?;
+let v1371 = s.builtin(EvalOp::ListRev, &[v1367, v1370])?;
 let v1372 = s.literal(Lit::Bool(true))?;
 let v1373 = eo__24re_5fflatten(s, v1372, v2)?;
 let v1374 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104210,19 +104210,19 @@ let v1376 = s.apply(v1374, v1375)?;
 let v1377 = eo__24re_5frev_5fmap_5frev(s, v1373, v1376)?;
 let v1378 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1379 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1380 = s.operator("list_singleton_intro", &[v1379, a0])?;
+let v1380 = s.builtin(EvalOp::ListSingletonIntro, &[v1379, a0])?;
 let v1381 = eo__24str_5fflatten(s, v1380)?;
-let v1382 = s.operator("list_rev", &[v1378, v1381])?;
+let v1382 = s.builtin(EvalOp::ListRev, &[v1378, v1381])?;
 let v1383 = eo__24str_5fre_5fconsume_5frec(s, v1371, v1377, v1382)?;
 let v1384 = eo__24str_5fmembership_5fstr(s, v1383)?;
 v1384
 }, None => s.stuck(),
 };
-let v1385 = s.operator("list_rev", &[v1335, v1361])?;
+let v1385 = s.builtin(EvalOp::ListRev, &[v1335, v1361])?;
 let v1386 = eo__24str_5fre_5fconsume_5frec(s, v1278, v1334, v1385)?;
 let v1387 = eo__24str_5fmembership_5fstr(s, v1386)?;
 let v1388 = eo__24str_5fcollect(s, v1387)?;
-let v1389 = s.operator("list_singleton_elim", &[v1227, v1388])?;
+let v1389 = s.builtin(EvalOp::ListSingletonElim, &[v1227, v1388])?;
 let v1390 = s.apply(v1226, v1389)?;
 let v1391 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v1392 = s.literal(Lit::Bool(true))?;
@@ -104230,9 +104230,9 @@ let v1393 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1394 = s.literal(Lit::Bool(true))?;
 let v1395 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1396 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1397 = s.operator("list_singleton_intro", &[v1396, a0])?;
+let v1397 = s.builtin(EvalOp::ListSingletonIntro, &[v1396, a0])?;
 let v1398 = eo__24str_5fflatten(s, v1397)?;
-let v1399 = s.operator("list_rev", &[v1395, v1398])?;
+let v1399 = s.builtin(EvalOp::ListRev, &[v1395, v1398])?;
 let v1400 = s.literal(Lit::Bool(true))?;
 let v1401 = eo__24re_5fflatten(s, v1400, v2)?;
 let v1402 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104241,31 +104241,31 @@ let v1404 = s.apply(v1402, v1403)?;
 let v1405 = eo__24re_5frev_5fmap_5frev(s, v1401, v1404)?;
 let v1406 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1407 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1408 = s.operator("list_singleton_intro", &[v1407, a0])?;
+let v1408 = s.builtin(EvalOp::ListSingletonIntro, &[v1407, a0])?;
 let v1409 = eo__24str_5fflatten(s, v1408)?;
-let v1410 = s.operator("list_rev", &[v1406, v1409])?;
+let v1410 = s.builtin(EvalOp::ListRev, &[v1406, v1409])?;
 let v1411 = eo__24str_5fre_5fconsume_5frec(s, v1399, v1405, v1410)?;
 let v1412 = eo__24str_5fmembership_5fre(s, v1411)?;
 let v1413 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1414 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1415 = s.apply(v1413, v1414)?;
-let v1416 = s.operator("eq", &[v1412, v1415])?;
-let v1417 = s.operator("not", &[v1416])?;
-let v1418 = s.operator("and", &[v1394, v1417])?;
+let v1416 = s.builtin(EvalOp::Eq, &[v1412, v1415])?;
+let v1417 = s.builtin(EvalOp::Not, &[v1416])?;
+let v1418 = s.builtin(EvalOp::And, &[v1394, v1417])?;
 let v1419 = match s.boolean_value(v1418, false)? {
 Some(true) => {
 let v1420 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1421 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1422 = s.operator("list_singleton_intro", &[v1421, a0])?;
+let v1422 = s.builtin(EvalOp::ListSingletonIntro, &[v1421, a0])?;
 let v1423 = eo__24str_5fflatten(s, v1422)?;
-let v1424 = s.operator("list_rev", &[v1420, v1423])?;
+let v1424 = s.builtin(EvalOp::ListRev, &[v1420, v1423])?;
 v1424
 }, Some(false) => {
 let v1425 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1426 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1427 = s.operator("list_singleton_intro", &[v1426, a0])?;
+let v1427 = s.builtin(EvalOp::ListSingletonIntro, &[v1426, a0])?;
 let v1428 = eo__24str_5fflatten(s, v1427)?;
-let v1429 = s.operator("list_rev", &[v1425, v1428])?;
+let v1429 = s.builtin(EvalOp::ListRev, &[v1425, v1428])?;
 let v1430 = s.literal(Lit::Bool(true))?;
 let v1431 = eo__24re_5fflatten(s, v1430, v2)?;
 let v1432 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104274,22 +104274,22 @@ let v1434 = s.apply(v1432, v1433)?;
 let v1435 = eo__24re_5frev_5fmap_5frev(s, v1431, v1434)?;
 let v1436 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1437 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1438 = s.operator("list_singleton_intro", &[v1437, a0])?;
+let v1438 = s.builtin(EvalOp::ListSingletonIntro, &[v1437, a0])?;
 let v1439 = eo__24str_5fflatten(s, v1438)?;
-let v1440 = s.operator("list_rev", &[v1436, v1439])?;
+let v1440 = s.builtin(EvalOp::ListRev, &[v1436, v1439])?;
 let v1441 = eo__24str_5fre_5fconsume_5frec(s, v1429, v1435, v1440)?;
 let v1442 = eo__24str_5fmembership_5fstr(s, v1441)?;
 v1442
 }, None => s.stuck(),
 };
-let v1443 = s.operator("list_rev", &[v1393, v1419])?;
+let v1443 = s.builtin(EvalOp::ListRev, &[v1393, v1419])?;
 let v1444 = s.literal(Lit::Bool(true))?;
 let v1445 = s.literal(Lit::Bool(true))?;
 let v1446 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1447 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1448 = s.operator("list_singleton_intro", &[v1447, a0])?;
+let v1448 = s.builtin(EvalOp::ListSingletonIntro, &[v1447, a0])?;
 let v1449 = eo__24str_5fflatten(s, v1448)?;
-let v1450 = s.operator("list_rev", &[v1446, v1449])?;
+let v1450 = s.builtin(EvalOp::ListRev, &[v1446, v1449])?;
 let v1451 = s.literal(Lit::Bool(true))?;
 let v1452 = eo__24re_5fflatten(s, v1451, v2)?;
 let v1453 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104298,17 +104298,17 @@ let v1455 = s.apply(v1453, v1454)?;
 let v1456 = eo__24re_5frev_5fmap_5frev(s, v1452, v1455)?;
 let v1457 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1458 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1459 = s.operator("list_singleton_intro", &[v1458, a0])?;
+let v1459 = s.builtin(EvalOp::ListSingletonIntro, &[v1458, a0])?;
 let v1460 = eo__24str_5fflatten(s, v1459)?;
-let v1461 = s.operator("list_rev", &[v1457, v1460])?;
+let v1461 = s.builtin(EvalOp::ListRev, &[v1457, v1460])?;
 let v1462 = eo__24str_5fre_5fconsume_5frec(s, v1450, v1456, v1461)?;
 let v1463 = eo__24str_5fmembership_5fre(s, v1462)?;
 let v1464 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1465 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1466 = s.apply(v1464, v1465)?;
-let v1467 = s.operator("eq", &[v1463, v1466])?;
-let v1468 = s.operator("not", &[v1467])?;
-let v1469 = s.operator("and", &[v1445, v1468])?;
+let v1467 = s.builtin(EvalOp::Eq, &[v1463, v1466])?;
+let v1468 = s.builtin(EvalOp::Not, &[v1467])?;
+let v1469 = s.builtin(EvalOp::And, &[v1445, v1468])?;
 let v1470 = match s.boolean_value(v1469, false)? {
 Some(true) => {
 let v1471 = s.literal(Lit::Bool(true))?;
@@ -104321,9 +104321,9 @@ v1476
 }, Some(false) => {
 let v1477 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1478 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1479 = s.operator("list_singleton_intro", &[v1478, a0])?;
+let v1479 = s.builtin(EvalOp::ListSingletonIntro, &[v1478, a0])?;
 let v1480 = eo__24str_5fflatten(s, v1479)?;
-let v1481 = s.operator("list_rev", &[v1477, v1480])?;
+let v1481 = s.builtin(EvalOp::ListRev, &[v1477, v1480])?;
 let v1482 = s.literal(Lit::Bool(true))?;
 let v1483 = eo__24re_5fflatten(s, v1482, v2)?;
 let v1484 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104332,9 +104332,9 @@ let v1486 = s.apply(v1484, v1485)?;
 let v1487 = eo__24re_5frev_5fmap_5frev(s, v1483, v1486)?;
 let v1488 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1489 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1490 = s.operator("list_singleton_intro", &[v1489, a0])?;
+let v1490 = s.builtin(EvalOp::ListSingletonIntro, &[v1489, a0])?;
 let v1491 = eo__24str_5fflatten(s, v1490)?;
-let v1492 = s.operator("list_rev", &[v1488, v1491])?;
+let v1492 = s.builtin(EvalOp::ListRev, &[v1488, v1491])?;
 let v1493 = eo__24str_5fre_5fconsume_5frec(s, v1481, v1487, v1492)?;
 let v1494 = eo__24str_5fmembership_5fre(s, v1493)?;
 v1494
@@ -104349,9 +104349,9 @@ let v1500 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1501 = s.literal(Lit::Bool(true))?;
 let v1502 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1503 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1504 = s.operator("list_singleton_intro", &[v1503, a0])?;
+let v1504 = s.builtin(EvalOp::ListSingletonIntro, &[v1503, a0])?;
 let v1505 = eo__24str_5fflatten(s, v1504)?;
-let v1506 = s.operator("list_rev", &[v1502, v1505])?;
+let v1506 = s.builtin(EvalOp::ListRev, &[v1502, v1505])?;
 let v1507 = s.literal(Lit::Bool(true))?;
 let v1508 = eo__24re_5fflatten(s, v1507, v2)?;
 let v1509 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104360,31 +104360,31 @@ let v1511 = s.apply(v1509, v1510)?;
 let v1512 = eo__24re_5frev_5fmap_5frev(s, v1508, v1511)?;
 let v1513 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1514 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1515 = s.operator("list_singleton_intro", &[v1514, a0])?;
+let v1515 = s.builtin(EvalOp::ListSingletonIntro, &[v1514, a0])?;
 let v1516 = eo__24str_5fflatten(s, v1515)?;
-let v1517 = s.operator("list_rev", &[v1513, v1516])?;
+let v1517 = s.builtin(EvalOp::ListRev, &[v1513, v1516])?;
 let v1518 = eo__24str_5fre_5fconsume_5frec(s, v1506, v1512, v1517)?;
 let v1519 = eo__24str_5fmembership_5fre(s, v1518)?;
 let v1520 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1521 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1522 = s.apply(v1520, v1521)?;
-let v1523 = s.operator("eq", &[v1519, v1522])?;
-let v1524 = s.operator("not", &[v1523])?;
-let v1525 = s.operator("and", &[v1501, v1524])?;
+let v1523 = s.builtin(EvalOp::Eq, &[v1519, v1522])?;
+let v1524 = s.builtin(EvalOp::Not, &[v1523])?;
+let v1525 = s.builtin(EvalOp::And, &[v1501, v1524])?;
 let v1526 = match s.boolean_value(v1525, false)? {
 Some(true) => {
 let v1527 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1528 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1529 = s.operator("list_singleton_intro", &[v1528, a0])?;
+let v1529 = s.builtin(EvalOp::ListSingletonIntro, &[v1528, a0])?;
 let v1530 = eo__24str_5fflatten(s, v1529)?;
-let v1531 = s.operator("list_rev", &[v1527, v1530])?;
+let v1531 = s.builtin(EvalOp::ListRev, &[v1527, v1530])?;
 v1531
 }, Some(false) => {
 let v1532 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1533 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1534 = s.operator("list_singleton_intro", &[v1533, a0])?;
+let v1534 = s.builtin(EvalOp::ListSingletonIntro, &[v1533, a0])?;
 let v1535 = eo__24str_5fflatten(s, v1534)?;
-let v1536 = s.operator("list_rev", &[v1532, v1535])?;
+let v1536 = s.builtin(EvalOp::ListRev, &[v1532, v1535])?;
 let v1537 = s.literal(Lit::Bool(true))?;
 let v1538 = eo__24re_5fflatten(s, v1537, v2)?;
 let v1539 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104393,19 +104393,19 @@ let v1541 = s.apply(v1539, v1540)?;
 let v1542 = eo__24re_5frev_5fmap_5frev(s, v1538, v1541)?;
 let v1543 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1544 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1545 = s.operator("list_singleton_intro", &[v1544, a0])?;
+let v1545 = s.builtin(EvalOp::ListSingletonIntro, &[v1544, a0])?;
 let v1546 = eo__24str_5fflatten(s, v1545)?;
-let v1547 = s.operator("list_rev", &[v1543, v1546])?;
+let v1547 = s.builtin(EvalOp::ListRev, &[v1543, v1546])?;
 let v1548 = eo__24str_5fre_5fconsume_5frec(s, v1536, v1542, v1547)?;
 let v1549 = eo__24str_5fmembership_5fstr(s, v1548)?;
 v1549
 }, None => s.stuck(),
 };
-let v1550 = s.operator("list_rev", &[v1500, v1526])?;
+let v1550 = s.builtin(EvalOp::ListRev, &[v1500, v1526])?;
 let v1551 = eo__24str_5fre_5fconsume_5frec(s, v1443, v1499, v1550)?;
 let v1552 = eo__24str_5fmembership_5fre(s, v1551)?;
 let v1553 = eo__24re_5funflatten(s, v1392, v1552)?;
-let v1554 = s.operator("list_singleton_elim", &[v1391, v1553])?;
+let v1554 = s.builtin(EvalOp::ListSingletonElim, &[v1391, v1553])?;
 let v1555 = s.apply(v1390, v1554)?;
 v1555
 }, None => s.stuck(),
@@ -104428,9 +104428,9 @@ return Ok(v520);
 'case1: {
 let v1561 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1562 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1563 = s.operator("list_singleton_intro", &[v1562, a0])?;
+let v1563 = s.builtin(EvalOp::ListSingletonIntro, &[v1562, a0])?;
 let v1564 = eo__24str_5fflatten(s, v1563)?;
-let v1565 = s.operator("list_rev", &[v1561, v1564])?;
+let v1565 = s.builtin(EvalOp::ListRev, &[v1561, v1564])?;
 let v1566 = s.literal(Lit::Bool(true))?;
 let v1567 = eo__24re_5fflatten(s, v1566, a1)?;
 let v1568 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104439,12 +104439,12 @@ let v1570 = s.apply(v1568, v1569)?;
 let v1571 = eo__24re_5frev_5fmap_5frev(s, v1567, v1570)?;
 let v1572 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1573 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1574 = s.operator("list_singleton_intro", &[v1573, a0])?;
+let v1574 = s.builtin(EvalOp::ListSingletonIntro, &[v1573, a0])?;
 let v1575 = eo__24str_5fflatten(s, v1574)?;
-let v1576 = s.operator("list_rev", &[v1572, v1575])?;
+let v1576 = s.builtin(EvalOp::ListRev, &[v1572, v1575])?;
 let v1577 = eo__24str_5fre_5fconsume_5frec(s, v1565, v1571, v1576)?;
 let v1578 = s.literal(Lit::Bool(false))?;
-let v1579 = s.operator("eq", &[v1577, v1578])?;
+let v1579 = s.builtin(EvalOp::Eq, &[v1577, v1578])?;
 let v1580 = match s.boolean_value(v1579, false)? {
 Some(true) => {
 let v1581 = s.literal(Lit::Bool(false))?;
@@ -104454,9 +104454,9 @@ let v1582 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1583 = s.literal(Lit::Bool(false))?;
 let v1584 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1585 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1586 = s.operator("list_singleton_intro", &[v1585, a0])?;
+let v1586 = s.builtin(EvalOp::ListSingletonIntro, &[v1585, a0])?;
 let v1587 = eo__24str_5fflatten(s, v1586)?;
-let v1588 = s.operator("list_rev", &[v1584, v1587])?;
+let v1588 = s.builtin(EvalOp::ListRev, &[v1584, v1587])?;
 let v1589 = s.literal(Lit::Bool(true))?;
 let v1590 = eo__24re_5fflatten(s, v1589, a1)?;
 let v1591 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104465,31 +104465,31 @@ let v1593 = s.apply(v1591, v1592)?;
 let v1594 = eo__24re_5frev_5fmap_5frev(s, v1590, v1593)?;
 let v1595 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1596 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1597 = s.operator("list_singleton_intro", &[v1596, a0])?;
+let v1597 = s.builtin(EvalOp::ListSingletonIntro, &[v1596, a0])?;
 let v1598 = eo__24str_5fflatten(s, v1597)?;
-let v1599 = s.operator("list_rev", &[v1595, v1598])?;
+let v1599 = s.builtin(EvalOp::ListRev, &[v1595, v1598])?;
 let v1600 = eo__24str_5fre_5fconsume_5frec(s, v1588, v1594, v1599)?;
 let v1601 = eo__24str_5fmembership_5fre(s, v1600)?;
 let v1602 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1603 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1604 = s.apply(v1602, v1603)?;
-let v1605 = s.operator("eq", &[v1601, v1604])?;
-let v1606 = s.operator("not", &[v1605])?;
-let v1607 = s.operator("and", &[v1583, v1606])?;
+let v1605 = s.builtin(EvalOp::Eq, &[v1601, v1604])?;
+let v1606 = s.builtin(EvalOp::Not, &[v1605])?;
+let v1607 = s.builtin(EvalOp::And, &[v1583, v1606])?;
 let v1608 = match s.boolean_value(v1607, false)? {
 Some(true) => {
 let v1609 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1610 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1611 = s.operator("list_singleton_intro", &[v1610, a0])?;
+let v1611 = s.builtin(EvalOp::ListSingletonIntro, &[v1610, a0])?;
 let v1612 = eo__24str_5fflatten(s, v1611)?;
-let v1613 = s.operator("list_rev", &[v1609, v1612])?;
+let v1613 = s.builtin(EvalOp::ListRev, &[v1609, v1612])?;
 v1613
 }, Some(false) => {
 let v1614 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1615 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1616 = s.operator("list_singleton_intro", &[v1615, a0])?;
+let v1616 = s.builtin(EvalOp::ListSingletonIntro, &[v1615, a0])?;
 let v1617 = eo__24str_5fflatten(s, v1616)?;
-let v1618 = s.operator("list_rev", &[v1614, v1617])?;
+let v1618 = s.builtin(EvalOp::ListRev, &[v1614, v1617])?;
 let v1619 = s.literal(Lit::Bool(true))?;
 let v1620 = eo__24re_5fflatten(s, v1619, a1)?;
 let v1621 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104498,22 +104498,22 @@ let v1623 = s.apply(v1621, v1622)?;
 let v1624 = eo__24re_5frev_5fmap_5frev(s, v1620, v1623)?;
 let v1625 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1626 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1627 = s.operator("list_singleton_intro", &[v1626, a0])?;
+let v1627 = s.builtin(EvalOp::ListSingletonIntro, &[v1626, a0])?;
 let v1628 = eo__24str_5fflatten(s, v1627)?;
-let v1629 = s.operator("list_rev", &[v1625, v1628])?;
+let v1629 = s.builtin(EvalOp::ListRev, &[v1625, v1628])?;
 let v1630 = eo__24str_5fre_5fconsume_5frec(s, v1618, v1624, v1629)?;
 let v1631 = eo__24str_5fmembership_5fstr(s, v1630)?;
 v1631
 }, None => s.stuck(),
 };
-let v1632 = s.operator("list_rev", &[v1582, v1608])?;
+let v1632 = s.builtin(EvalOp::ListRev, &[v1582, v1608])?;
 let v1633 = s.literal(Lit::Bool(true))?;
 let v1634 = s.literal(Lit::Bool(false))?;
 let v1635 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1636 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1637 = s.operator("list_singleton_intro", &[v1636, a0])?;
+let v1637 = s.builtin(EvalOp::ListSingletonIntro, &[v1636, a0])?;
 let v1638 = eo__24str_5fflatten(s, v1637)?;
-let v1639 = s.operator("list_rev", &[v1635, v1638])?;
+let v1639 = s.builtin(EvalOp::ListRev, &[v1635, v1638])?;
 let v1640 = s.literal(Lit::Bool(true))?;
 let v1641 = eo__24re_5fflatten(s, v1640, a1)?;
 let v1642 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104522,17 +104522,17 @@ let v1644 = s.apply(v1642, v1643)?;
 let v1645 = eo__24re_5frev_5fmap_5frev(s, v1641, v1644)?;
 let v1646 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1647 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1648 = s.operator("list_singleton_intro", &[v1647, a0])?;
+let v1648 = s.builtin(EvalOp::ListSingletonIntro, &[v1647, a0])?;
 let v1649 = eo__24str_5fflatten(s, v1648)?;
-let v1650 = s.operator("list_rev", &[v1646, v1649])?;
+let v1650 = s.builtin(EvalOp::ListRev, &[v1646, v1649])?;
 let v1651 = eo__24str_5fre_5fconsume_5frec(s, v1639, v1645, v1650)?;
 let v1652 = eo__24str_5fmembership_5fre(s, v1651)?;
 let v1653 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1654 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1655 = s.apply(v1653, v1654)?;
-let v1656 = s.operator("eq", &[v1652, v1655])?;
-let v1657 = s.operator("not", &[v1656])?;
-let v1658 = s.operator("and", &[v1634, v1657])?;
+let v1656 = s.builtin(EvalOp::Eq, &[v1652, v1655])?;
+let v1657 = s.builtin(EvalOp::Not, &[v1656])?;
+let v1658 = s.builtin(EvalOp::And, &[v1634, v1657])?;
 let v1659 = match s.boolean_value(v1658, false)? {
 Some(true) => {
 let v1660 = s.literal(Lit::Bool(true))?;
@@ -104545,9 +104545,9 @@ v1665
 }, Some(false) => {
 let v1666 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1667 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1668 = s.operator("list_singleton_intro", &[v1667, a0])?;
+let v1668 = s.builtin(EvalOp::ListSingletonIntro, &[v1667, a0])?;
 let v1669 = eo__24str_5fflatten(s, v1668)?;
-let v1670 = s.operator("list_rev", &[v1666, v1669])?;
+let v1670 = s.builtin(EvalOp::ListRev, &[v1666, v1669])?;
 let v1671 = s.literal(Lit::Bool(true))?;
 let v1672 = eo__24re_5fflatten(s, v1671, a1)?;
 let v1673 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104556,9 +104556,9 @@ let v1675 = s.apply(v1673, v1674)?;
 let v1676 = eo__24re_5frev_5fmap_5frev(s, v1672, v1675)?;
 let v1677 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1678 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1679 = s.operator("list_singleton_intro", &[v1678, a0])?;
+let v1679 = s.builtin(EvalOp::ListSingletonIntro, &[v1678, a0])?;
 let v1680 = eo__24str_5fflatten(s, v1679)?;
-let v1681 = s.operator("list_rev", &[v1677, v1680])?;
+let v1681 = s.builtin(EvalOp::ListRev, &[v1677, v1680])?;
 let v1682 = eo__24str_5fre_5fconsume_5frec(s, v1670, v1676, v1681)?;
 let v1683 = eo__24str_5fmembership_5fre(s, v1682)?;
 v1683
@@ -104573,9 +104573,9 @@ let v1689 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1690 = s.literal(Lit::Bool(false))?;
 let v1691 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1692 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1693 = s.operator("list_singleton_intro", &[v1692, a0])?;
+let v1693 = s.builtin(EvalOp::ListSingletonIntro, &[v1692, a0])?;
 let v1694 = eo__24str_5fflatten(s, v1693)?;
-let v1695 = s.operator("list_rev", &[v1691, v1694])?;
+let v1695 = s.builtin(EvalOp::ListRev, &[v1691, v1694])?;
 let v1696 = s.literal(Lit::Bool(true))?;
 let v1697 = eo__24re_5fflatten(s, v1696, a1)?;
 let v1698 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104584,31 +104584,31 @@ let v1700 = s.apply(v1698, v1699)?;
 let v1701 = eo__24re_5frev_5fmap_5frev(s, v1697, v1700)?;
 let v1702 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1703 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1704 = s.operator("list_singleton_intro", &[v1703, a0])?;
+let v1704 = s.builtin(EvalOp::ListSingletonIntro, &[v1703, a0])?;
 let v1705 = eo__24str_5fflatten(s, v1704)?;
-let v1706 = s.operator("list_rev", &[v1702, v1705])?;
+let v1706 = s.builtin(EvalOp::ListRev, &[v1702, v1705])?;
 let v1707 = eo__24str_5fre_5fconsume_5frec(s, v1695, v1701, v1706)?;
 let v1708 = eo__24str_5fmembership_5fre(s, v1707)?;
 let v1709 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1710 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1711 = s.apply(v1709, v1710)?;
-let v1712 = s.operator("eq", &[v1708, v1711])?;
-let v1713 = s.operator("not", &[v1712])?;
-let v1714 = s.operator("and", &[v1690, v1713])?;
+let v1712 = s.builtin(EvalOp::Eq, &[v1708, v1711])?;
+let v1713 = s.builtin(EvalOp::Not, &[v1712])?;
+let v1714 = s.builtin(EvalOp::And, &[v1690, v1713])?;
 let v1715 = match s.boolean_value(v1714, false)? {
 Some(true) => {
 let v1716 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1717 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1718 = s.operator("list_singleton_intro", &[v1717, a0])?;
+let v1718 = s.builtin(EvalOp::ListSingletonIntro, &[v1717, a0])?;
 let v1719 = eo__24str_5fflatten(s, v1718)?;
-let v1720 = s.operator("list_rev", &[v1716, v1719])?;
+let v1720 = s.builtin(EvalOp::ListRev, &[v1716, v1719])?;
 v1720
 }, Some(false) => {
 let v1721 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1722 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1723 = s.operator("list_singleton_intro", &[v1722, a0])?;
+let v1723 = s.builtin(EvalOp::ListSingletonIntro, &[v1722, a0])?;
 let v1724 = eo__24str_5fflatten(s, v1723)?;
-let v1725 = s.operator("list_rev", &[v1721, v1724])?;
+let v1725 = s.builtin(EvalOp::ListRev, &[v1721, v1724])?;
 let v1726 = s.literal(Lit::Bool(true))?;
 let v1727 = eo__24re_5fflatten(s, v1726, a1)?;
 let v1728 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104617,18 +104617,18 @@ let v1730 = s.apply(v1728, v1729)?;
 let v1731 = eo__24re_5frev_5fmap_5frev(s, v1727, v1730)?;
 let v1732 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1733 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1734 = s.operator("list_singleton_intro", &[v1733, a0])?;
+let v1734 = s.builtin(EvalOp::ListSingletonIntro, &[v1733, a0])?;
 let v1735 = eo__24str_5fflatten(s, v1734)?;
-let v1736 = s.operator("list_rev", &[v1732, v1735])?;
+let v1736 = s.builtin(EvalOp::ListRev, &[v1732, v1735])?;
 let v1737 = eo__24str_5fre_5fconsume_5frec(s, v1725, v1731, v1736)?;
 let v1738 = eo__24str_5fmembership_5fstr(s, v1737)?;
 v1738
 }, None => s.stuck(),
 };
-let v1739 = s.operator("list_rev", &[v1689, v1715])?;
+let v1739 = s.builtin(EvalOp::ListRev, &[v1689, v1715])?;
 let v1740 = eo__24str_5fre_5fconsume_5frec(s, v1632, v1688, v1739)?;
 let v1741 = s.literal(Lit::Bool(false))?;
-let v1742 = s.operator("eq", &[v1740, v1741])?;
+let v1742 = s.builtin(EvalOp::Eq, &[v1740, v1741])?;
 let v1743 = match s.boolean_value(v1742, false)? {
 Some(true) => {
 let v1744 = s.literal(Lit::Bool(false))?;
@@ -104640,9 +104640,9 @@ let v1747 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1748 = s.literal(Lit::Bool(false))?;
 let v1749 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1750 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1751 = s.operator("list_singleton_intro", &[v1750, a0])?;
+let v1751 = s.builtin(EvalOp::ListSingletonIntro, &[v1750, a0])?;
 let v1752 = eo__24str_5fflatten(s, v1751)?;
-let v1753 = s.operator("list_rev", &[v1749, v1752])?;
+let v1753 = s.builtin(EvalOp::ListRev, &[v1749, v1752])?;
 let v1754 = s.literal(Lit::Bool(true))?;
 let v1755 = eo__24re_5fflatten(s, v1754, a1)?;
 let v1756 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104651,31 +104651,31 @@ let v1758 = s.apply(v1756, v1757)?;
 let v1759 = eo__24re_5frev_5fmap_5frev(s, v1755, v1758)?;
 let v1760 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1761 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1762 = s.operator("list_singleton_intro", &[v1761, a0])?;
+let v1762 = s.builtin(EvalOp::ListSingletonIntro, &[v1761, a0])?;
 let v1763 = eo__24str_5fflatten(s, v1762)?;
-let v1764 = s.operator("list_rev", &[v1760, v1763])?;
+let v1764 = s.builtin(EvalOp::ListRev, &[v1760, v1763])?;
 let v1765 = eo__24str_5fre_5fconsume_5frec(s, v1753, v1759, v1764)?;
 let v1766 = eo__24str_5fmembership_5fre(s, v1765)?;
 let v1767 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1768 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1769 = s.apply(v1767, v1768)?;
-let v1770 = s.operator("eq", &[v1766, v1769])?;
-let v1771 = s.operator("not", &[v1770])?;
-let v1772 = s.operator("and", &[v1748, v1771])?;
+let v1770 = s.builtin(EvalOp::Eq, &[v1766, v1769])?;
+let v1771 = s.builtin(EvalOp::Not, &[v1770])?;
+let v1772 = s.builtin(EvalOp::And, &[v1748, v1771])?;
 let v1773 = match s.boolean_value(v1772, false)? {
 Some(true) => {
 let v1774 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1775 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1776 = s.operator("list_singleton_intro", &[v1775, a0])?;
+let v1776 = s.builtin(EvalOp::ListSingletonIntro, &[v1775, a0])?;
 let v1777 = eo__24str_5fflatten(s, v1776)?;
-let v1778 = s.operator("list_rev", &[v1774, v1777])?;
+let v1778 = s.builtin(EvalOp::ListRev, &[v1774, v1777])?;
 v1778
 }, Some(false) => {
 let v1779 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1780 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1781 = s.operator("list_singleton_intro", &[v1780, a0])?;
+let v1781 = s.builtin(EvalOp::ListSingletonIntro, &[v1780, a0])?;
 let v1782 = eo__24str_5fflatten(s, v1781)?;
-let v1783 = s.operator("list_rev", &[v1779, v1782])?;
+let v1783 = s.builtin(EvalOp::ListRev, &[v1779, v1782])?;
 let v1784 = s.literal(Lit::Bool(true))?;
 let v1785 = eo__24re_5fflatten(s, v1784, a1)?;
 let v1786 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104684,22 +104684,22 @@ let v1788 = s.apply(v1786, v1787)?;
 let v1789 = eo__24re_5frev_5fmap_5frev(s, v1785, v1788)?;
 let v1790 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1791 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1792 = s.operator("list_singleton_intro", &[v1791, a0])?;
+let v1792 = s.builtin(EvalOp::ListSingletonIntro, &[v1791, a0])?;
 let v1793 = eo__24str_5fflatten(s, v1792)?;
-let v1794 = s.operator("list_rev", &[v1790, v1793])?;
+let v1794 = s.builtin(EvalOp::ListRev, &[v1790, v1793])?;
 let v1795 = eo__24str_5fre_5fconsume_5frec(s, v1783, v1789, v1794)?;
 let v1796 = eo__24str_5fmembership_5fstr(s, v1795)?;
 v1796
 }, None => s.stuck(),
 };
-let v1797 = s.operator("list_rev", &[v1747, v1773])?;
+let v1797 = s.builtin(EvalOp::ListRev, &[v1747, v1773])?;
 let v1798 = s.literal(Lit::Bool(true))?;
 let v1799 = s.literal(Lit::Bool(false))?;
 let v1800 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1801 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1802 = s.operator("list_singleton_intro", &[v1801, a0])?;
+let v1802 = s.builtin(EvalOp::ListSingletonIntro, &[v1801, a0])?;
 let v1803 = eo__24str_5fflatten(s, v1802)?;
-let v1804 = s.operator("list_rev", &[v1800, v1803])?;
+let v1804 = s.builtin(EvalOp::ListRev, &[v1800, v1803])?;
 let v1805 = s.literal(Lit::Bool(true))?;
 let v1806 = eo__24re_5fflatten(s, v1805, a1)?;
 let v1807 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104708,17 +104708,17 @@ let v1809 = s.apply(v1807, v1808)?;
 let v1810 = eo__24re_5frev_5fmap_5frev(s, v1806, v1809)?;
 let v1811 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1812 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1813 = s.operator("list_singleton_intro", &[v1812, a0])?;
+let v1813 = s.builtin(EvalOp::ListSingletonIntro, &[v1812, a0])?;
 let v1814 = eo__24str_5fflatten(s, v1813)?;
-let v1815 = s.operator("list_rev", &[v1811, v1814])?;
+let v1815 = s.builtin(EvalOp::ListRev, &[v1811, v1814])?;
 let v1816 = eo__24str_5fre_5fconsume_5frec(s, v1804, v1810, v1815)?;
 let v1817 = eo__24str_5fmembership_5fre(s, v1816)?;
 let v1818 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1819 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1820 = s.apply(v1818, v1819)?;
-let v1821 = s.operator("eq", &[v1817, v1820])?;
-let v1822 = s.operator("not", &[v1821])?;
-let v1823 = s.operator("and", &[v1799, v1822])?;
+let v1821 = s.builtin(EvalOp::Eq, &[v1817, v1820])?;
+let v1822 = s.builtin(EvalOp::Not, &[v1821])?;
+let v1823 = s.builtin(EvalOp::And, &[v1799, v1822])?;
 let v1824 = match s.boolean_value(v1823, false)? {
 Some(true) => {
 let v1825 = s.literal(Lit::Bool(true))?;
@@ -104731,9 +104731,9 @@ v1830
 }, Some(false) => {
 let v1831 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1832 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1833 = s.operator("list_singleton_intro", &[v1832, a0])?;
+let v1833 = s.builtin(EvalOp::ListSingletonIntro, &[v1832, a0])?;
 let v1834 = eo__24str_5fflatten(s, v1833)?;
-let v1835 = s.operator("list_rev", &[v1831, v1834])?;
+let v1835 = s.builtin(EvalOp::ListRev, &[v1831, v1834])?;
 let v1836 = s.literal(Lit::Bool(true))?;
 let v1837 = eo__24re_5fflatten(s, v1836, a1)?;
 let v1838 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104742,9 +104742,9 @@ let v1840 = s.apply(v1838, v1839)?;
 let v1841 = eo__24re_5frev_5fmap_5frev(s, v1837, v1840)?;
 let v1842 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1843 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1844 = s.operator("list_singleton_intro", &[v1843, a0])?;
+let v1844 = s.builtin(EvalOp::ListSingletonIntro, &[v1843, a0])?;
 let v1845 = eo__24str_5fflatten(s, v1844)?;
-let v1846 = s.operator("list_rev", &[v1842, v1845])?;
+let v1846 = s.builtin(EvalOp::ListRev, &[v1842, v1845])?;
 let v1847 = eo__24str_5fre_5fconsume_5frec(s, v1835, v1841, v1846)?;
 let v1848 = eo__24str_5fmembership_5fre(s, v1847)?;
 v1848
@@ -104759,9 +104759,9 @@ let v1854 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1855 = s.literal(Lit::Bool(false))?;
 let v1856 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1857 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1858 = s.operator("list_singleton_intro", &[v1857, a0])?;
+let v1858 = s.builtin(EvalOp::ListSingletonIntro, &[v1857, a0])?;
 let v1859 = eo__24str_5fflatten(s, v1858)?;
-let v1860 = s.operator("list_rev", &[v1856, v1859])?;
+let v1860 = s.builtin(EvalOp::ListRev, &[v1856, v1859])?;
 let v1861 = s.literal(Lit::Bool(true))?;
 let v1862 = eo__24re_5fflatten(s, v1861, a1)?;
 let v1863 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104770,31 +104770,31 @@ let v1865 = s.apply(v1863, v1864)?;
 let v1866 = eo__24re_5frev_5fmap_5frev(s, v1862, v1865)?;
 let v1867 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1868 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1869 = s.operator("list_singleton_intro", &[v1868, a0])?;
+let v1869 = s.builtin(EvalOp::ListSingletonIntro, &[v1868, a0])?;
 let v1870 = eo__24str_5fflatten(s, v1869)?;
-let v1871 = s.operator("list_rev", &[v1867, v1870])?;
+let v1871 = s.builtin(EvalOp::ListRev, &[v1867, v1870])?;
 let v1872 = eo__24str_5fre_5fconsume_5frec(s, v1860, v1866, v1871)?;
 let v1873 = eo__24str_5fmembership_5fre(s, v1872)?;
 let v1874 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1875 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1876 = s.apply(v1874, v1875)?;
-let v1877 = s.operator("eq", &[v1873, v1876])?;
-let v1878 = s.operator("not", &[v1877])?;
-let v1879 = s.operator("and", &[v1855, v1878])?;
+let v1877 = s.builtin(EvalOp::Eq, &[v1873, v1876])?;
+let v1878 = s.builtin(EvalOp::Not, &[v1877])?;
+let v1879 = s.builtin(EvalOp::And, &[v1855, v1878])?;
 let v1880 = match s.boolean_value(v1879, false)? {
 Some(true) => {
 let v1881 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1882 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1883 = s.operator("list_singleton_intro", &[v1882, a0])?;
+let v1883 = s.builtin(EvalOp::ListSingletonIntro, &[v1882, a0])?;
 let v1884 = eo__24str_5fflatten(s, v1883)?;
-let v1885 = s.operator("list_rev", &[v1881, v1884])?;
+let v1885 = s.builtin(EvalOp::ListRev, &[v1881, v1884])?;
 v1885
 }, Some(false) => {
 let v1886 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1887 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1888 = s.operator("list_singleton_intro", &[v1887, a0])?;
+let v1888 = s.builtin(EvalOp::ListSingletonIntro, &[v1887, a0])?;
 let v1889 = eo__24str_5fflatten(s, v1888)?;
-let v1890 = s.operator("list_rev", &[v1886, v1889])?;
+let v1890 = s.builtin(EvalOp::ListRev, &[v1886, v1889])?;
 let v1891 = s.literal(Lit::Bool(true))?;
 let v1892 = eo__24re_5fflatten(s, v1891, a1)?;
 let v1893 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104803,19 +104803,19 @@ let v1895 = s.apply(v1893, v1894)?;
 let v1896 = eo__24re_5frev_5fmap_5frev(s, v1892, v1895)?;
 let v1897 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1898 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1899 = s.operator("list_singleton_intro", &[v1898, a0])?;
+let v1899 = s.builtin(EvalOp::ListSingletonIntro, &[v1898, a0])?;
 let v1900 = eo__24str_5fflatten(s, v1899)?;
-let v1901 = s.operator("list_rev", &[v1897, v1900])?;
+let v1901 = s.builtin(EvalOp::ListRev, &[v1897, v1900])?;
 let v1902 = eo__24str_5fre_5fconsume_5frec(s, v1890, v1896, v1901)?;
 let v1903 = eo__24str_5fmembership_5fstr(s, v1902)?;
 v1903
 }, None => s.stuck(),
 };
-let v1904 = s.operator("list_rev", &[v1854, v1880])?;
+let v1904 = s.builtin(EvalOp::ListRev, &[v1854, v1880])?;
 let v1905 = eo__24str_5fre_5fconsume_5frec(s, v1797, v1853, v1904)?;
 let v1906 = eo__24str_5fmembership_5fstr(s, v1905)?;
 let v1907 = eo__24str_5fcollect(s, v1906)?;
-let v1908 = s.operator("list_singleton_elim", &[v1746, v1907])?;
+let v1908 = s.builtin(EvalOp::ListSingletonElim, &[v1746, v1907])?;
 let v1909 = s.apply(v1745, v1908)?;
 let v1910 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v1911 = s.literal(Lit::Bool(true))?;
@@ -104823,9 +104823,9 @@ let v1912 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1913 = s.literal(Lit::Bool(false))?;
 let v1914 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1915 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1916 = s.operator("list_singleton_intro", &[v1915, a0])?;
+let v1916 = s.builtin(EvalOp::ListSingletonIntro, &[v1915, a0])?;
 let v1917 = eo__24str_5fflatten(s, v1916)?;
-let v1918 = s.operator("list_rev", &[v1914, v1917])?;
+let v1918 = s.builtin(EvalOp::ListRev, &[v1914, v1917])?;
 let v1919 = s.literal(Lit::Bool(true))?;
 let v1920 = eo__24re_5fflatten(s, v1919, a1)?;
 let v1921 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104834,31 +104834,31 @@ let v1923 = s.apply(v1921, v1922)?;
 let v1924 = eo__24re_5frev_5fmap_5frev(s, v1920, v1923)?;
 let v1925 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1926 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1927 = s.operator("list_singleton_intro", &[v1926, a0])?;
+let v1927 = s.builtin(EvalOp::ListSingletonIntro, &[v1926, a0])?;
 let v1928 = eo__24str_5fflatten(s, v1927)?;
-let v1929 = s.operator("list_rev", &[v1925, v1928])?;
+let v1929 = s.builtin(EvalOp::ListRev, &[v1925, v1928])?;
 let v1930 = eo__24str_5fre_5fconsume_5frec(s, v1918, v1924, v1929)?;
 let v1931 = eo__24str_5fmembership_5fre(s, v1930)?;
 let v1932 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1933 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1934 = s.apply(v1932, v1933)?;
-let v1935 = s.operator("eq", &[v1931, v1934])?;
-let v1936 = s.operator("not", &[v1935])?;
-let v1937 = s.operator("and", &[v1913, v1936])?;
+let v1935 = s.builtin(EvalOp::Eq, &[v1931, v1934])?;
+let v1936 = s.builtin(EvalOp::Not, &[v1935])?;
+let v1937 = s.builtin(EvalOp::And, &[v1913, v1936])?;
 let v1938 = match s.boolean_value(v1937, false)? {
 Some(true) => {
 let v1939 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1940 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1941 = s.operator("list_singleton_intro", &[v1940, a0])?;
+let v1941 = s.builtin(EvalOp::ListSingletonIntro, &[v1940, a0])?;
 let v1942 = eo__24str_5fflatten(s, v1941)?;
-let v1943 = s.operator("list_rev", &[v1939, v1942])?;
+let v1943 = s.builtin(EvalOp::ListRev, &[v1939, v1942])?;
 v1943
 }, Some(false) => {
 let v1944 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1945 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1946 = s.operator("list_singleton_intro", &[v1945, a0])?;
+let v1946 = s.builtin(EvalOp::ListSingletonIntro, &[v1945, a0])?;
 let v1947 = eo__24str_5fflatten(s, v1946)?;
-let v1948 = s.operator("list_rev", &[v1944, v1947])?;
+let v1948 = s.builtin(EvalOp::ListRev, &[v1944, v1947])?;
 let v1949 = s.literal(Lit::Bool(true))?;
 let v1950 = eo__24re_5fflatten(s, v1949, a1)?;
 let v1951 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104867,22 +104867,22 @@ let v1953 = s.apply(v1951, v1952)?;
 let v1954 = eo__24re_5frev_5fmap_5frev(s, v1950, v1953)?;
 let v1955 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1956 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1957 = s.operator("list_singleton_intro", &[v1956, a0])?;
+let v1957 = s.builtin(EvalOp::ListSingletonIntro, &[v1956, a0])?;
 let v1958 = eo__24str_5fflatten(s, v1957)?;
-let v1959 = s.operator("list_rev", &[v1955, v1958])?;
+let v1959 = s.builtin(EvalOp::ListRev, &[v1955, v1958])?;
 let v1960 = eo__24str_5fre_5fconsume_5frec(s, v1948, v1954, v1959)?;
 let v1961 = eo__24str_5fmembership_5fstr(s, v1960)?;
 v1961
 }, None => s.stuck(),
 };
-let v1962 = s.operator("list_rev", &[v1912, v1938])?;
+let v1962 = s.builtin(EvalOp::ListRev, &[v1912, v1938])?;
 let v1963 = s.literal(Lit::Bool(true))?;
 let v1964 = s.literal(Lit::Bool(false))?;
 let v1965 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1966 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1967 = s.operator("list_singleton_intro", &[v1966, a0])?;
+let v1967 = s.builtin(EvalOp::ListSingletonIntro, &[v1966, a0])?;
 let v1968 = eo__24str_5fflatten(s, v1967)?;
-let v1969 = s.operator("list_rev", &[v1965, v1968])?;
+let v1969 = s.builtin(EvalOp::ListRev, &[v1965, v1968])?;
 let v1970 = s.literal(Lit::Bool(true))?;
 let v1971 = eo__24re_5fflatten(s, v1970, a1)?;
 let v1972 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104891,17 +104891,17 @@ let v1974 = s.apply(v1972, v1973)?;
 let v1975 = eo__24re_5frev_5fmap_5frev(s, v1971, v1974)?;
 let v1976 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1977 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1978 = s.operator("list_singleton_intro", &[v1977, a0])?;
+let v1978 = s.builtin(EvalOp::ListSingletonIntro, &[v1977, a0])?;
 let v1979 = eo__24str_5fflatten(s, v1978)?;
-let v1980 = s.operator("list_rev", &[v1976, v1979])?;
+let v1980 = s.builtin(EvalOp::ListRev, &[v1976, v1979])?;
 let v1981 = eo__24str_5fre_5fconsume_5frec(s, v1969, v1975, v1980)?;
 let v1982 = eo__24str_5fmembership_5fre(s, v1981)?;
 let v1983 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v1984 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1985 = s.apply(v1983, v1984)?;
-let v1986 = s.operator("eq", &[v1982, v1985])?;
-let v1987 = s.operator("not", &[v1986])?;
-let v1988 = s.operator("and", &[v1964, v1987])?;
+let v1986 = s.builtin(EvalOp::Eq, &[v1982, v1985])?;
+let v1987 = s.builtin(EvalOp::Not, &[v1986])?;
+let v1988 = s.builtin(EvalOp::And, &[v1964, v1987])?;
 let v1989 = match s.boolean_value(v1988, false)? {
 Some(true) => {
 let v1990 = s.literal(Lit::Bool(true))?;
@@ -104914,9 +104914,9 @@ v1995
 }, Some(false) => {
 let v1996 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1997 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v1998 = s.operator("list_singleton_intro", &[v1997, a0])?;
+let v1998 = s.builtin(EvalOp::ListSingletonIntro, &[v1997, a0])?;
 let v1999 = eo__24str_5fflatten(s, v1998)?;
-let v2000 = s.operator("list_rev", &[v1996, v1999])?;
+let v2000 = s.builtin(EvalOp::ListRev, &[v1996, v1999])?;
 let v2001 = s.literal(Lit::Bool(true))?;
 let v2002 = eo__24re_5fflatten(s, v2001, a1)?;
 let v2003 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104925,9 +104925,9 @@ let v2005 = s.apply(v2003, v2004)?;
 let v2006 = eo__24re_5frev_5fmap_5frev(s, v2002, v2005)?;
 let v2007 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v2008 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v2009 = s.operator("list_singleton_intro", &[v2008, a0])?;
+let v2009 = s.builtin(EvalOp::ListSingletonIntro, &[v2008, a0])?;
 let v2010 = eo__24str_5fflatten(s, v2009)?;
-let v2011 = s.operator("list_rev", &[v2007, v2010])?;
+let v2011 = s.builtin(EvalOp::ListRev, &[v2007, v2010])?;
 let v2012 = eo__24str_5fre_5fconsume_5frec(s, v2000, v2006, v2011)?;
 let v2013 = eo__24str_5fmembership_5fre(s, v2012)?;
 v2013
@@ -104942,9 +104942,9 @@ let v2019 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v2020 = s.literal(Lit::Bool(false))?;
 let v2021 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v2022 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v2023 = s.operator("list_singleton_intro", &[v2022, a0])?;
+let v2023 = s.builtin(EvalOp::ListSingletonIntro, &[v2022, a0])?;
 let v2024 = eo__24str_5fflatten(s, v2023)?;
-let v2025 = s.operator("list_rev", &[v2021, v2024])?;
+let v2025 = s.builtin(EvalOp::ListRev, &[v2021, v2024])?;
 let v2026 = s.literal(Lit::Bool(true))?;
 let v2027 = eo__24re_5fflatten(s, v2026, a1)?;
 let v2028 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104953,31 +104953,31 @@ let v2030 = s.apply(v2028, v2029)?;
 let v2031 = eo__24re_5frev_5fmap_5frev(s, v2027, v2030)?;
 let v2032 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v2033 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v2034 = s.operator("list_singleton_intro", &[v2033, a0])?;
+let v2034 = s.builtin(EvalOp::ListSingletonIntro, &[v2033, a0])?;
 let v2035 = eo__24str_5fflatten(s, v2034)?;
-let v2036 = s.operator("list_rev", &[v2032, v2035])?;
+let v2036 = s.builtin(EvalOp::ListRev, &[v2032, v2035])?;
 let v2037 = eo__24str_5fre_5fconsume_5frec(s, v2025, v2031, v2036)?;
 let v2038 = eo__24str_5fmembership_5fre(s, v2037)?;
 let v2039 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v2040 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v2041 = s.apply(v2039, v2040)?;
-let v2042 = s.operator("eq", &[v2038, v2041])?;
-let v2043 = s.operator("not", &[v2042])?;
-let v2044 = s.operator("and", &[v2020, v2043])?;
+let v2042 = s.builtin(EvalOp::Eq, &[v2038, v2041])?;
+let v2043 = s.builtin(EvalOp::Not, &[v2042])?;
+let v2044 = s.builtin(EvalOp::And, &[v2020, v2043])?;
 let v2045 = match s.boolean_value(v2044, false)? {
 Some(true) => {
 let v2046 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v2047 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v2048 = s.operator("list_singleton_intro", &[v2047, a0])?;
+let v2048 = s.builtin(EvalOp::ListSingletonIntro, &[v2047, a0])?;
 let v2049 = eo__24str_5fflatten(s, v2048)?;
-let v2050 = s.operator("list_rev", &[v2046, v2049])?;
+let v2050 = s.builtin(EvalOp::ListRev, &[v2046, v2049])?;
 v2050
 }, Some(false) => {
 let v2051 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v2052 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v2053 = s.operator("list_singleton_intro", &[v2052, a0])?;
+let v2053 = s.builtin(EvalOp::ListSingletonIntro, &[v2052, a0])?;
 let v2054 = eo__24str_5fflatten(s, v2053)?;
-let v2055 = s.operator("list_rev", &[v2051, v2054])?;
+let v2055 = s.builtin(EvalOp::ListRev, &[v2051, v2054])?;
 let v2056 = s.literal(Lit::Bool(true))?;
 let v2057 = eo__24re_5fflatten(s, v2056, a1)?;
 let v2058 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
@@ -104986,19 +104986,19 @@ let v2060 = s.apply(v2058, v2059)?;
 let v2061 = eo__24re_5frev_5fmap_5frev(s, v2057, v2060)?;
 let v2062 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v2063 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v2064 = s.operator("list_singleton_intro", &[v2063, a0])?;
+let v2064 = s.builtin(EvalOp::ListSingletonIntro, &[v2063, a0])?;
 let v2065 = eo__24str_5fflatten(s, v2064)?;
-let v2066 = s.operator("list_rev", &[v2062, v2065])?;
+let v2066 = s.builtin(EvalOp::ListRev, &[v2062, v2065])?;
 let v2067 = eo__24str_5fre_5fconsume_5frec(s, v2055, v2061, v2066)?;
 let v2068 = eo__24str_5fmembership_5fstr(s, v2067)?;
 v2068
 }, None => s.stuck(),
 };
-let v2069 = s.operator("list_rev", &[v2019, v2045])?;
+let v2069 = s.builtin(EvalOp::ListRev, &[v2019, v2045])?;
 let v2070 = eo__24str_5fre_5fconsume_5frec(s, v1962, v2018, v2069)?;
 let v2071 = eo__24str_5fmembership_5fre(s, v2070)?;
 let v2072 = eo__24re_5funflatten(s, v1911, v2071)?;
-let v2073 = s.operator("list_singleton_elim", &[v1910, v2072])?;
+let v2073 = s.builtin(EvalOp::ListSingletonElim, &[v1910, v2072])?;
 let v2074 = s.apply(v1909, v2073)?;
 v2074
 }, None => s.stuck(),
@@ -105057,7 +105057,7 @@ let v15 = s.construct(Constructor::eo_re_2einter, &[])?;
 if v13 != v15 { break 'case1; }
 let v16 = eo__24str_5fre_5fconsume_5frec(s, a0, v14, a2)?;
 let v17 = s.literal(Lit::Bool(false))?;
-let v18 = s.operator("is_eq", &[v16, v17])?;
+let v18 = s.builtin(EvalOp::IsEq, &[v16, v17])?;
 let v19 = match s.boolean_value(v18, false)? {
 Some(true) => {
 let v20 = s.literal(Lit::Bool(false))?;
@@ -105068,12 +105068,12 @@ let v22 = eo__24str_5fmembership_5fre(s, v21)?;
 let v23 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v24 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v25 = s.apply(v23, v24)?;
-let v26 = s.operator("eq", &[v22, v25])?;
+let v26 = s.builtin(EvalOp::Eq, &[v22, v25])?;
 let v27 = match s.boolean_value(v26, false)? {
 Some(true) => {
 let v28 = eo__24str_5fre_5fconsume_5finter(s, a0, v11, a2)?;
 let v29 = s.literal(Lit::Bool(false))?;
-let v30 = s.operator("is_eq", &[v28, v29])?;
+let v30 = s.builtin(EvalOp::IsEq, &[v28, v29])?;
 let v31 = match s.boolean_value(v30, false)? {
 Some(true) => {
 let v32 = s.literal(Lit::Bool(false))?;
@@ -105081,7 +105081,7 @@ v32
 }, Some(false) => {
 let v33 = eo__24str_5fre_5fconsume_5frec(s, a0, v14, a2)?;
 let v34 = eo__24str_5fre_5fconsume_5finter(s, a0, v11, a2)?;
-let v35 = s.operator("eq", &[v33, v34])?;
+let v35 = s.builtin(EvalOp::Eq, &[v33, v34])?;
 let v36 = match s.boolean_value(v35, false)? {
 Some(true) => {
 let v37 = eo__24str_5fre_5fconsume_5frec(s, a0, v14, a2)?;
@@ -105103,7 +105103,7 @@ v31
 }, Some(false) => {
 let v44 = eo__24str_5fre_5fconsume_5finter(s, a0, v11, a2)?;
 let v45 = s.literal(Lit::Bool(false))?;
-let v46 = s.operator("is_eq", &[v44, v45])?;
+let v46 = s.builtin(EvalOp::IsEq, &[v44, v45])?;
 let v47 = match s.boolean_value(v46, false)? {
 Some(true) => {
 let v48 = s.literal(Lit::Bool(false))?;
@@ -105260,19 +105260,19 @@ let v40 = f;
 let v41 = a;
 let v42 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v40 != v42 { break 'case1; }
-let v43 = s.operator("eq", &[v30, v41])?;
+let v43 = s.builtin(EvalOp::Eq, &[v30, v41])?;
 let v44 = match s.boolean_value(v43, false)? {
 Some(true) => {
 let v45 = eo__24str_5fre_5fconsume_5frec(s, v27, v34, a2)?;
 v45
 }, Some(false) => {
-let v46 = s.operator("len", &[v30])?;
+let v46 = s.builtin(EvalOp::Length, &[v30])?;
 let v47 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v48 = s.operator("is_eq", &[v46, v47])?;
-let v49 = s.operator("len", &[v41])?;
+let v48 = s.builtin(EvalOp::IsEq, &[v46, v47])?;
+let v49 = s.builtin(EvalOp::Length, &[v41])?;
 let v50 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v51 = s.operator("is_eq", &[v49, v50])?;
-let v52 = s.operator("and", &[v48, v51])?;
+let v51 = s.builtin(EvalOp::IsEq, &[v49, v50])?;
+let v52 = s.builtin(EvalOp::And, &[v48, v51])?;
 let v53 = match s.boolean_value(v52, false)? {
 Some(true) => {
 let v54 = s.literal(Lit::Bool(false))?;
@@ -105337,24 +105337,24 @@ let v84 = f;
 let v85 = a;
 let v86 = s.construct(Constructor::eo_re_2erange, &[])?;
 if v84 != v86 { break 'case2; }
-let v87 = s.operator("len", &[v71])?;
+let v87 = s.builtin(EvalOp::Length, &[v71])?;
 let v88 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v89 = s.operator("is_eq", &[v87, v88])?;
-let v90 = s.operator("len", &[v85])?;
+let v89 = s.builtin(EvalOp::IsEq, &[v87, v88])?;
+let v90 = s.builtin(EvalOp::Length, &[v85])?;
 let v91 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v92 = s.operator("is_eq", &[v90, v91])?;
-let v93 = s.operator("len", &[v82])?;
+let v92 = s.builtin(EvalOp::IsEq, &[v90, v91])?;
+let v93 = s.builtin(EvalOp::Length, &[v82])?;
 let v94 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v95 = s.operator("is_eq", &[v93, v94])?;
-let v96 = s.operator("and", &[v92, v95])?;
-let v97 = s.operator("and", &[v89, v96])?;
+let v95 = s.builtin(EvalOp::IsEq, &[v93, v94])?;
+let v96 = s.builtin(EvalOp::And, &[v92, v95])?;
+let v97 = s.builtin(EvalOp::And, &[v89, v96])?;
 let v98 = match s.boolean_value(v97, false)? {
 Some(true) => {
-let v99 = s.operator("is_str", &[v71])?;
+let v99 = s.builtin(EvalOp::IsStr, &[v71])?;
 let v100 = s.literal(Lit::Bool(true))?;
 let v101 = if v99 == v100 && !s.is_stuck(v99)? {
 let v102 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v103 = s.operator("list_singleton_intro", &[v102, v71])?;
+let v103 = s.builtin(EvalOp::ListSingletonIntro, &[v102, v71])?;
 let v104 = eo__24str_5fflatten(s, v103)?;
 let v105 = s.construct(Constructor::eo_re_2erange, &[])?;
 let v106 = s.apply(v105, v85)?;
@@ -105420,9 +105420,9 @@ let v137 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 if v135 != v137 { break 'case3; }
 let v138 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 if v136 != v138 { break 'case3; }
-let v139 = s.operator("len", &[v129])?;
+let v139 = s.builtin(EvalOp::Length, &[v129])?;
 let v140 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v141 = s.operator("is_eq", &[v139, v140])?;
+let v141 = s.builtin(EvalOp::IsEq, &[v139, v140])?;
 let v142 = match s.boolean_value(v141, false)? {
 Some(true) => {
 let v143 = eo__24str_5fre_5fconsume_5frec(s, v126, v133, a2)?;
@@ -105498,7 +105498,7 @@ let v183 = s.apply(v182, v177)?;
 let v184 = s.apply(v183, v174)?;
 let v185 = eo__24str_5fre_5fconsume_5frec(s, v181, v170, v184)?;
 let v186 = s.literal(Lit::Bool(false))?;
-let v187 = s.operator("eq", &[v185, v186])?;
+let v187 = s.builtin(EvalOp::Eq, &[v185, v186])?;
 let v188 = match s.boolean_value(v187, false)? {
 Some(true) => {
 let v189 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -105521,7 +105521,7 @@ let v203 = eo__24str_5fmembership_5fre(s, v202)?;
 let v204 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v205 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v206 = s.apply(v204, v205)?;
-let v207 = s.operator("eq", &[v203, v206])?;
+let v207 = s.builtin(EvalOp::Eq, &[v203, v206])?;
 let v208 = match s.boolean_value(v207, false)? {
 Some(true) => {
 let v209 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -105532,7 +105532,7 @@ let v213 = s.apply(v212, v177)?;
 let v214 = s.apply(v213, v174)?;
 let v215 = eo__24str_5fre_5fconsume_5frec(s, v211, v163, v214)?;
 let v216 = s.literal(Lit::Bool(false))?;
-let v217 = s.operator("is_eq", &[v215, v216])?;
+let v217 = s.builtin(EvalOp::IsEq, &[v215, v216])?;
 let v218 = match s.boolean_value(v217, false)? {
 Some(true) => {
 let v219 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -105546,7 +105546,7 @@ let v226 = s.apply(v225, v177)?;
 let v227 = s.apply(v226, v174)?;
 let v228 = eo__24str_5fre_5fconsume_5frec(s, v224, v170, v227)?;
 let v229 = eo__24str_5fmembership_5fstr(s, v228)?;
-let v230 = s.operator("eq", &[v221, v229])?;
+let v230 = s.builtin(EvalOp::Eq, &[v221, v229])?;
 let v231 = match s.boolean_value(v230, false)? {
 Some(true) => {
 let v232 = s.construct(Constructor::eo_str_2ein_5fre, &[])?;
@@ -105697,7 +105697,7 @@ let v323 = s.apply(v322, v313)?;
 let v324 = s.apply(v323, v310)?;
 let v325 = eo__24str_5fre_5fconsume_5frec(s, v324, v320, a2)?;
 let v326 = s.literal(Lit::Bool(false))?;
-let v327 = s.operator("is_eq", &[v325, v326])?;
+let v327 = s.builtin(EvalOp::IsEq, &[v325, v326])?;
 let v328 = match s.boolean_value(v327, false)? {
 Some(true) => {
 let v329 = s.literal(Lit::Bool(false))?;
@@ -105711,7 +105711,7 @@ let v334 = eo__24str_5fmembership_5fre(s, v333)?;
 let v335 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v336 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v337 = s.apply(v335, v336)?;
-let v338 = s.operator("is_eq", &[v334, v337])?;
+let v338 = s.builtin(EvalOp::IsEq, &[v334, v337])?;
 let v339 = match s.boolean_value(v338, false)? {
 Some(true) => {
 let v340 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -105868,7 +105868,7 @@ let v15 = s.construct(Constructor::eo_re_2eunion, &[])?;
 if v13 != v15 { break 'case1; }
 let v16 = eo__24str_5fre_5fconsume_5frec(s, a0, v14, a2)?;
 let v17 = s.literal(Lit::Bool(false))?;
-let v18 = s.operator("is_eq", &[v16, v17])?;
+let v18 = s.builtin(EvalOp::IsEq, &[v16, v17])?;
 let v19 = match s.boolean_value(v18, false)? {
 Some(true) => {
 let v20 = eo__24str_5fre_5fconsume_5funion(s, a0, v11, a2)?;
@@ -105879,12 +105879,12 @@ let v22 = eo__24str_5fmembership_5fre(s, v21)?;
 let v23 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v24 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v25 = s.apply(v23, v24)?;
-let v26 = s.operator("eq", &[v22, v25])?;
+let v26 = s.builtin(EvalOp::Eq, &[v22, v25])?;
 let v27 = match s.boolean_value(v26, false)? {
 Some(true) => {
 let v28 = eo__24str_5fre_5fconsume_5funion(s, a0, v11, a2)?;
 let v29 = s.literal(Lit::Bool(false))?;
-let v30 = s.operator("is_eq", &[v28, v29])?;
+let v30 = s.builtin(EvalOp::IsEq, &[v28, v29])?;
 let v31 = match s.boolean_value(v30, false)? {
 Some(true) => {
 let v32 = eo__24str_5fre_5fconsume_5frec(s, a0, v14, a2)?;
@@ -105892,7 +105892,7 @@ v32
 }, Some(false) => {
 let v33 = eo__24str_5fre_5fconsume_5frec(s, a0, v14, a2)?;
 let v34 = eo__24str_5fre_5fconsume_5funion(s, a0, v11, a2)?;
-let v35 = s.operator("eq", &[v33, v34])?;
+let v35 = s.builtin(EvalOp::Eq, &[v33, v34])?;
 let v36 = match s.boolean_value(v35, false)? {
 Some(true) => {
 let v37 = eo__24str_5fre_5fconsume_5frec(s, a0, v14, a2)?;
@@ -105951,11 +105951,11 @@ let v1 = f;
 let v2 = a;
 let v3 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v1 != v3 { break 'case0; }
-let v4 = s.operator("is_str", &[v2])?;
+let v4 = s.builtin(EvalOp::IsStr, &[v2])?;
 let v5 = s.literal(Lit::Bool(true))?;
 let v6 = if v4 == v5 && !s.is_stuck(v4)? {
 let v7 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v8 = s.operator("list_singleton_intro", &[v7, v2])?;
+let v8 = s.builtin(EvalOp::ListSingletonIntro, &[v7, v2])?;
 let v9 = eo__24str_5fflatten(s, v8)?;
 let v10 = eo__24str_5feval_5fstr_5fin_5fre_5frec(s, v9, a0)?;
 v10
@@ -105998,81 +105998,81 @@ let v27 = f;
 let v28 = a;
 let v29 = s.construct(Constructor::eo_re_2erange, &[])?;
 if v27 != v29 { break 'case2; }
-let v30 = s.operator("to_z", &[v21])?;
-let v31 = s.operator("is_neg", &[v30])?;
+let v30 = s.builtin(EvalOp::ToInt, &[v21])?;
+let v31 = s.builtin(EvalOp::IsNeg, &[v30])?;
 let v32 = s.literal(Lit::Bool(false))?;
 let v33 = if v31 == v32 && !s.is_stuck(v31)? {
-let v34 = s.operator("to_z", &[v18])?;
-let v35 = s.operator("is_neg", &[v34])?;
+let v34 = s.builtin(EvalOp::ToInt, &[v18])?;
+let v35 = s.builtin(EvalOp::IsNeg, &[v34])?;
 let v36 = s.literal(Lit::Bool(false))?;
 let v37 = if v35 == v36 && !s.is_stuck(v35)? {
-let v38 = s.operator("to_z", &[v28])?;
-let v39 = s.operator("is_neg", &[v38])?;
+let v38 = s.builtin(EvalOp::ToInt, &[v28])?;
+let v39 = s.builtin(EvalOp::IsNeg, &[v38])?;
 let v40 = s.literal(Lit::Bool(false))?;
 let v41 = if v39 == v40 && !s.is_stuck(v39)? {
-let v42 = s.operator("to_z", &[v25])?;
-let v43 = s.operator("is_neg", &[v42])?;
+let v42 = s.builtin(EvalOp::ToInt, &[v25])?;
+let v43 = s.builtin(EvalOp::IsNeg, &[v42])?;
 let v44 = s.literal(Lit::Bool(false))?;
 let v45 = if v43 == v44 && !s.is_stuck(v43)? {
-let v46 = s.operator("to_z", &[v18])?;
-let v47 = s.operator("to_z", &[v28])?;
-let v48 = s.operator("eq", &[v46, v47])?;
+let v46 = s.builtin(EvalOp::ToInt, &[v18])?;
+let v47 = s.builtin(EvalOp::ToInt, &[v28])?;
+let v48 = s.builtin(EvalOp::Eq, &[v46, v47])?;
 let v49 = match s.boolean_value(v48, false)? {
 Some(true) => {
 let v50 = s.literal(Lit::Bool(true))?;
 v50
 }, Some(false) => {
-let v51 = s.operator("to_z", &[v18])?;
-let v52 = s.operator("to_z", &[v28])?;
-let v53 = s.operator("gt", &[v51, v52])?;
+let v51 = s.builtin(EvalOp::ToInt, &[v18])?;
+let v52 = s.builtin(EvalOp::ToInt, &[v28])?;
+let v53 = s.builtin(EvalOp::Gt, &[v51, v52])?;
 v53
 }, None => s.stuck(),
 };
-let v54 = s.operator("to_z", &[v28])?;
-let v55 = s.operator("to_z", &[v21])?;
-let v56 = s.operator("eq", &[v54, v55])?;
+let v54 = s.builtin(EvalOp::ToInt, &[v28])?;
+let v55 = s.builtin(EvalOp::ToInt, &[v21])?;
+let v56 = s.builtin(EvalOp::Eq, &[v54, v55])?;
 let v57 = match s.boolean_value(v56, false)? {
 Some(true) => {
 let v58 = s.literal(Lit::Bool(true))?;
 v58
 }, Some(false) => {
-let v59 = s.operator("to_z", &[v28])?;
-let v60 = s.operator("to_z", &[v21])?;
-let v61 = s.operator("gt", &[v59, v60])?;
+let v59 = s.builtin(EvalOp::ToInt, &[v28])?;
+let v60 = s.builtin(EvalOp::ToInt, &[v21])?;
+let v61 = s.builtin(EvalOp::Gt, &[v59, v60])?;
 v61
 }, None => s.stuck(),
 };
-let v62 = s.operator("and", &[v49, v57])?;
-let v63 = s.operator("to_z", &[v18])?;
-let v64 = s.operator("to_z", &[v25])?;
-let v65 = s.operator("eq", &[v63, v64])?;
+let v62 = s.builtin(EvalOp::And, &[v49, v57])?;
+let v63 = s.builtin(EvalOp::ToInt, &[v18])?;
+let v64 = s.builtin(EvalOp::ToInt, &[v25])?;
+let v65 = s.builtin(EvalOp::Eq, &[v63, v64])?;
 let v66 = match s.boolean_value(v65, false)? {
 Some(true) => {
 let v67 = s.literal(Lit::Bool(true))?;
 v67
 }, Some(false) => {
-let v68 = s.operator("to_z", &[v18])?;
-let v69 = s.operator("to_z", &[v25])?;
-let v70 = s.operator("gt", &[v68, v69])?;
+let v68 = s.builtin(EvalOp::ToInt, &[v18])?;
+let v69 = s.builtin(EvalOp::ToInt, &[v25])?;
+let v70 = s.builtin(EvalOp::Gt, &[v68, v69])?;
 v70
 }, None => s.stuck(),
 };
-let v71 = s.operator("and", &[v62, v66])?;
-let v72 = s.operator("to_z", &[v25])?;
-let v73 = s.operator("to_z", &[v21])?;
-let v74 = s.operator("eq", &[v72, v73])?;
+let v71 = s.builtin(EvalOp::And, &[v62, v66])?;
+let v72 = s.builtin(EvalOp::ToInt, &[v25])?;
+let v73 = s.builtin(EvalOp::ToInt, &[v21])?;
+let v74 = s.builtin(EvalOp::Eq, &[v72, v73])?;
 let v75 = match s.boolean_value(v74, false)? {
 Some(true) => {
 let v76 = s.literal(Lit::Bool(true))?;
 v76
 }, Some(false) => {
-let v77 = s.operator("to_z", &[v25])?;
-let v78 = s.operator("to_z", &[v21])?;
-let v79 = s.operator("gt", &[v77, v78])?;
+let v77 = s.builtin(EvalOp::ToInt, &[v25])?;
+let v78 = s.builtin(EvalOp::ToInt, &[v21])?;
+let v79 = s.builtin(EvalOp::Gt, &[v77, v78])?;
 v79
 }, None => s.stuck(),
 };
-let v80 = s.operator("and", &[v71, v75])?;
+let v80 = s.builtin(EvalOp::And, &[v71, v75])?;
 v80
 } else { s.stuck() };
 v45
@@ -106086,7 +106086,7 @@ return Ok(v33);
 'case3: {
 let v81 = eo__24str_5fre_5fincludes_5flhs_5funion(s, a0, a1)?;
 let v82 = s.literal(Lit::Bool(true))?;
-let v83 = s.operator("eq", &[v81, v82])?;
+let v83 = s.builtin(EvalOp::Eq, &[v81, v82])?;
 let v84 = match s.boolean_value(v83, false)? {
 Some(true) => {
 let v85 = s.literal(Lit::Bool(true))?;
@@ -106094,7 +106094,7 @@ v85
 }, Some(false) => {
 let v86 = eo__24str_5fre_5fincludes_5frhs_5finter(s, a0, a1)?;
 let v87 = s.literal(Lit::Bool(true))?;
-let v88 = s.operator("eq", &[v86, v87])?;
+let v88 = s.builtin(EvalOp::Eq, &[v86, v87])?;
 let v89 = match s.boolean_value(v88, false)? {
 Some(true) => {
 let v90 = s.literal(Lit::Bool(true))?;
@@ -106102,7 +106102,7 @@ v90
 }, Some(false) => {
 let v91 = eo__24str_5fre_5fincludes_5flhs_5fstar(s, a0, a1)?;
 let v92 = s.literal(Lit::Bool(true))?;
-let v93 = s.operator("eq", &[v91, v92])?;
+let v93 = s.builtin(EvalOp::Eq, &[v91, v92])?;
 let v94 = match s.boolean_value(v93, false)? {
 Some(true) => {
 let v95 = s.literal(Lit::Bool(true))?;
@@ -106186,7 +106186,7 @@ let v23 = f;
 let v24 = a;
 let v25 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 if v23 != v25 { break 'case1; }
-let v26 = s.operator("eq", &[v20, v24])?;
+let v26 = s.builtin(EvalOp::Eq, &[v20, v24])?;
 let v27 = match s.boolean_value(v26, false)? {
 Some(true) => {
 let v28 = s.literal(Lit::Bool(true))?;
@@ -106206,7 +106206,7 @@ let v31 = f;
 let v32 = a;
 let v33 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 if v31 != v33 { break 'case2; }
-let v34 = s.operator("eq", &[v32, a1])?;
+let v34 = s.builtin(EvalOp::Eq, &[v32, a1])?;
 let v35 = match s.boolean_value(v34, false)? {
 Some(true) => {
 let v36 = s.literal(Lit::Bool(true))?;
@@ -106252,7 +106252,7 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo_re_2eunion, &[])?;
 if v4 != v6 { break 'case0; }
-let v7 = s.operator("eq", &[v5, a1])?;
+let v7 = s.builtin(EvalOp::Eq, &[v5, a1])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
 let v9 = s.literal(Lit::Bool(true))?;
@@ -106337,7 +106337,7 @@ let v22 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v20 != v22 { break 'case0; }
 let v23 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 if v21 != v23 { break 'case0; }
-let v24 = s.operator("eq", &[v5, v17])?;
+let v24 = s.builtin(EvalOp::Eq, &[v5, v17])?;
 let v25 = match s.boolean_value(v24, false)? {
 Some(true) => {
 let v26 = s.literal(Lit::Bool(true))?;
@@ -106371,7 +106371,7 @@ let v38 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v36 != v38 { break 'case1; }
 let v39 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 if v37 != v39 { break 'case1; }
-let v40 = s.operator("eq", &[v33, a1])?;
+let v40 = s.builtin(EvalOp::Eq, &[v33, a1])?;
 let v41 = match s.boolean_value(v40, false)? {
 Some(true) => {
 let v42 = s.literal(Lit::Bool(true))?;
@@ -106405,7 +106405,7 @@ let v54 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v52 != v54 { break 'case2; }
 let v55 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 if v53 != v55 { break 'case2; }
-let v56 = s.operator("eq", &[a0, v49])?;
+let v56 = s.builtin(EvalOp::Eq, &[a0, v49])?;
 let v57 = match s.boolean_value(v56, false)? {
 Some(true) => {
 let v58 = s.literal(Lit::Bool(true))?;
@@ -106442,7 +106442,7 @@ let v71 = f;
 let v72 = a;
 let v73 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 if v71 != v73 { break 'case3; }
-let v74 = s.operator("eq", &[v65, v72])?;
+let v74 = s.builtin(EvalOp::Eq, &[v65, v72])?;
 let v75 = match s.boolean_value(v74, false)? {
 Some(true) => {
 let v76 = s.literal(Lit::Bool(true))?;
@@ -106454,7 +106454,7 @@ v77
 };
 let v78 = match s.boolean_value(v75, false)? {
 Some(true) => {
-let v79 = s.operator("eq", &[v62, v69])?;
+let v79 = s.builtin(EvalOp::Eq, &[v62, v69])?;
 let v80 = match s.boolean_value(v79, false)? {
 Some(true) => {
 let v81 = s.literal(Lit::Bool(true))?;
@@ -106484,7 +106484,7 @@ Some(true) => {
 let v91 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v92 = s.apply(v91, v65)?;
 let v93 = s.apply(v92, v62)?;
-let v94 = s.operator("eq", &[v93, v69])?;
+let v94 = s.builtin(EvalOp::Eq, &[v93, v69])?;
 let v95 = match s.boolean_value(v94, false)? {
 Some(true) => {
 let v96 = s.literal(Lit::Bool(true))?;
@@ -106493,7 +106493,7 @@ v96
 let v97 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v98 = s.apply(v97, v65)?;
 let v99 = s.apply(v98, v62)?;
-let v100 = s.operator("eq", &[v99, v69])?;
+let v100 = s.builtin(EvalOp::Eq, &[v99, v69])?;
 let v101 = match s.boolean_value(v100, false)? {
 Some(true) => {
 let v102 = s.literal(Lit::Bool(true))?;
@@ -106529,13 +106529,13 @@ let v115 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v116 = s.apply(v114, v115)?;
 let v117 = s.apply(v113, v116)?;
 let v118 = s.apply(v110, v117)?;
-let v119 = s.operator("eq", &[v65, v118])?;
+let v119 = s.builtin(EvalOp::Eq, &[v65, v118])?;
 let v120 = match s.boolean_value(v119, false)? {
 Some(true) => {
 let v121 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v122 = s.apply(v121, v72)?;
 let v123 = s.apply(v122, v69)?;
-let v124 = s.operator("eq", &[v62, v123])?;
+let v124 = s.builtin(EvalOp::Eq, &[v62, v123])?;
 let v125 = match s.boolean_value(v124, false)? {
 Some(true) => {
 let v126 = s.literal(Lit::Bool(true))?;
@@ -106602,12 +106602,12 @@ let v152 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v153 = s.apply(v151, v152)?;
 let v154 = s.apply(v150, v153)?;
 let v155 = s.apply(v147, v154)?;
-let v156 = s.operator("eq", &[v140, v155])?;
+let v156 = s.builtin(EvalOp::Eq, &[v140, v155])?;
 let v157 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v158 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v159 = s.apply(v157, v158)?;
-let v160 = s.operator("eq", &[v137, v159])?;
-let v161 = s.operator("and", &[v156, v160])?;
+let v160 = s.builtin(EvalOp::Eq, &[v137, v159])?;
+let v161 = s.builtin(EvalOp::And, &[v156, v160])?;
 return Ok(v161);
 }
 'case5: {
@@ -106644,7 +106644,7 @@ let v4 = f;
 let v5 = a;
 let v6 = s.construct(Constructor::eo_re_2einter, &[])?;
 if v4 != v6 { break 'case0; }
-let v7 = s.operator("eq", &[a0, v5])?;
+let v7 = s.builtin(EvalOp::Eq, &[a0, v5])?;
 let v8 = match s.boolean_value(v7, false)? {
 Some(true) => {
 let v9 = s.literal(Lit::Bool(true))?;
@@ -106735,7 +106735,7 @@ let v15 = s.construct(Constructor::eo_forall, &[])?;
 let v16 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v17 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v18 = s.construct(Constructor::eo_Int, &[])?;
-let v19 = s.named("$emb_Var", &[v17, v18])?;
+let v19 = s.construct(Constructor::eo__24emb_5fVar, &[v17, v18])?;
 let v20 = s.apply(v16, v19)?;
 let v21 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v22 = s.apply(v20, v21)?;
@@ -106745,7 +106745,7 @@ let v25 = s.construct(Constructor::eo_not, &[])?;
 let v26 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v27 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v28 = s.construct(Constructor::eo_Int, &[])?;
-let v29 = s.named("$emb_Var", &[v27, v28])?;
+let v29 = s.construct(Constructor::eo__24emb_5fVar, &[v27, v28])?;
 let v30 = s.apply(v26, v29)?;
 let v31 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v32 = s.apply(v30, v31)?;
@@ -106756,7 +106756,7 @@ let v36 = s.construct(Constructor::eo_not, &[])?;
 let v37 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v38 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v39 = s.construct(Constructor::eo_Int, &[])?;
-let v40 = s.named("$emb_Var", &[v38, v39])?;
+let v40 = s.construct(Constructor::eo__24emb_5fVar, &[v38, v39])?;
 let v41 = s.apply(v37, v40)?;
 let v42 = s.construct(Constructor::eo__2d, &[])?;
 let v43 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -106775,7 +106775,7 @@ let v55 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v56 = s.apply(v55, v5)?;
 let v57 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v58 = s.construct(Constructor::eo_Int, &[])?;
-let v59 = s.named("$emb_Var", &[v57, v58])?;
+let v59 = s.construct(Constructor::eo__24emb_5fVar, &[v57, v58])?;
 let v60 = s.apply(v56, v59)?;
 let v61 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v62 = s.apply(v61, v2)?;
@@ -107837,7 +107837,7 @@ let v1069 = s.construct(Constructor::eo_forall, &[])?;
 let v1070 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v1071 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1072 = s.construct(Constructor::eo_Int, &[])?;
-let v1073 = s.named("$emb_Var", &[v1071, v1072])?;
+let v1073 = s.construct(Constructor::eo__24emb_5fVar, &[v1071, v1072])?;
 let v1074 = s.apply(v1070, v1073)?;
 let v1075 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v1076 = s.apply(v1074, v1075)?;
@@ -107847,7 +107847,7 @@ let v1079 = s.construct(Constructor::eo_not, &[])?;
 let v1080 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v1081 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1082 = s.construct(Constructor::eo_Int, &[])?;
-let v1083 = s.named("$emb_Var", &[v1081, v1082])?;
+let v1083 = s.construct(Constructor::eo__24emb_5fVar, &[v1081, v1082])?;
 let v1084 = s.apply(v1080, v1083)?;
 let v1085 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1086 = s.apply(v1084, v1085)?;
@@ -107858,7 +107858,7 @@ let v1090 = s.construct(Constructor::eo_not, &[])?;
 let v1091 = s.construct(Constructor::eo__3c, &[])?;
 let v1092 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1093 = s.construct(Constructor::eo_Int, &[])?;
-let v1094 = s.named("$emb_Var", &[v1092, v1093])?;
+let v1094 = s.construct(Constructor::eo__24emb_5fVar, &[v1092, v1093])?;
 let v1095 = s.apply(v1091, v1094)?;
 let v1096 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v1097 = s.construct(Constructor::eo__40purify, &[])?;
@@ -107877,7 +107877,7 @@ let v1109 = s.apply(v1108, v1024)?;
 let v1110 = s.construct(Constructor::eo__2b, &[])?;
 let v1111 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1112 = s.construct(Constructor::eo_Int, &[])?;
-let v1113 = s.named("$emb_Var", &[v1111, v1112])?;
+let v1113 = s.construct(Constructor::eo__24emb_5fVar, &[v1111, v1112])?;
 let v1114 = s.apply(v1110, v1113)?;
 let v1115 = s.construct(Constructor::eo__2b, &[])?;
 let v1116 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -107898,7 +107898,7 @@ let v1130 = s.apply(v1127, v1129)?;
 let v1131 = s.apply(v1126, v1130)?;
 let v1132 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1133 = s.construct(Constructor::eo_Int, &[])?;
-let v1134 = s.named("$emb_Var", &[v1132, v1133])?;
+let v1134 = s.construct(Constructor::eo__24emb_5fVar, &[v1132, v1133])?;
 let v1135 = s.apply(v1131, v1134)?;
 let v1136 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1137 = s.apply(v1135, v1136)?;
@@ -107916,7 +107916,7 @@ let v1148 = s.construct(Constructor::eo__40strings_5fitos_5fresult, &[])?;
 let v1149 = s.apply(v1148, v1024)?;
 let v1150 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1151 = s.construct(Constructor::eo_Int, &[])?;
-let v1152 = s.named("$emb_Var", &[v1150, v1151])?;
+let v1152 = s.construct(Constructor::eo__24emb_5fVar, &[v1150, v1151])?;
 let v1153 = s.apply(v1149, v1152)?;
 let v1154 = s.apply(v1147, v1153)?;
 let v1155 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -107941,7 +107941,7 @@ let v1173 = s.apply(v1170, v1172)?;
 let v1174 = s.apply(v1169, v1173)?;
 let v1175 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1176 = s.construct(Constructor::eo_Int, &[])?;
-let v1177 = s.named("$emb_Var", &[v1175, v1176])?;
+let v1177 = s.construct(Constructor::eo__24emb_5fVar, &[v1175, v1176])?;
 let v1178 = s.apply(v1174, v1177)?;
 let v1179 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1180 = s.apply(v1178, v1179)?;
@@ -107955,7 +107955,7 @@ let v1187 = s.construct(Constructor::eo_and, &[])?;
 let v1188 = s.construct(Constructor::eo__3d, &[])?;
 let v1189 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1190 = s.construct(Constructor::eo_Int, &[])?;
-let v1191 = s.named("$emb_Var", &[v1189, v1190])?;
+let v1191 = s.construct(Constructor::eo__24emb_5fVar, &[v1189, v1190])?;
 let v1192 = s.apply(v1188, v1191)?;
 let v1193 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1194 = s.apply(v1192, v1193)?;
@@ -107994,7 +107994,7 @@ let v1226 = s.apply(v1223, v1225)?;
 let v1227 = s.apply(v1222, v1226)?;
 let v1228 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1229 = s.construct(Constructor::eo_Int, &[])?;
-let v1230 = s.named("$emb_Var", &[v1228, v1229])?;
+let v1230 = s.construct(Constructor::eo__24emb_5fVar, &[v1228, v1229])?;
 let v1231 = s.apply(v1227, v1230)?;
 let v1232 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1233 = s.apply(v1231, v1232)?;
@@ -108018,7 +108018,7 @@ let v1250 = s.apply(v1249, v1024)?;
 let v1251 = s.construct(Constructor::eo__2b, &[])?;
 let v1252 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1253 = s.construct(Constructor::eo_Int, &[])?;
-let v1254 = s.named("$emb_Var", &[v1252, v1253])?;
+let v1254 = s.construct(Constructor::eo__24emb_5fVar, &[v1252, v1253])?;
 let v1255 = s.apply(v1251, v1254)?;
 let v1256 = s.construct(Constructor::eo__2b, &[])?;
 let v1257 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -108206,7 +108206,7 @@ let v1429 = s.construct(Constructor::eo_forall, &[])?;
 let v1430 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v1431 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1432 = s.construct(Constructor::eo_Int, &[])?;
-let v1433 = s.named("$emb_Var", &[v1431, v1432])?;
+let v1433 = s.construct(Constructor::eo__24emb_5fVar, &[v1431, v1432])?;
 let v1434 = s.apply(v1430, v1433)?;
 let v1435 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v1436 = s.apply(v1434, v1435)?;
@@ -108216,7 +108216,7 @@ let v1439 = s.construct(Constructor::eo_not, &[])?;
 let v1440 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v1441 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1442 = s.construct(Constructor::eo_Int, &[])?;
-let v1443 = s.named("$emb_Var", &[v1441, v1442])?;
+let v1443 = s.construct(Constructor::eo__24emb_5fVar, &[v1441, v1442])?;
 let v1444 = s.apply(v1440, v1443)?;
 let v1445 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v1446 = s.apply(v1444, v1445)?;
@@ -108227,7 +108227,7 @@ let v1450 = s.construct(Constructor::eo_not, &[])?;
 let v1451 = s.construct(Constructor::eo__3c, &[])?;
 let v1452 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1453 = s.construct(Constructor::eo_Int, &[])?;
-let v1454 = s.named("$emb_Var", &[v1452, v1453])?;
+let v1454 = s.construct(Constructor::eo__24emb_5fVar, &[v1452, v1453])?;
 let v1455 = s.apply(v1451, v1454)?;
 let v1456 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v1457 = s.apply(v1456, v1293)?;
@@ -108242,7 +108242,7 @@ let v1465 = s.apply(v1464, v1293)?;
 let v1466 = s.construct(Constructor::eo__2b, &[])?;
 let v1467 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1468 = s.construct(Constructor::eo_Int, &[])?;
-let v1469 = s.named("$emb_Var", &[v1467, v1468])?;
+let v1469 = s.construct(Constructor::eo__24emb_5fVar, &[v1467, v1468])?;
 let v1470 = s.apply(v1466, v1469)?;
 let v1471 = s.construct(Constructor::eo__2b, &[])?;
 let v1472 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -108259,7 +108259,7 @@ let v1482 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v1483 = s.apply(v1482, v1293)?;
 let v1484 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1485 = s.construct(Constructor::eo_Int, &[])?;
-let v1486 = s.named("$emb_Var", &[v1484, v1485])?;
+let v1486 = s.construct(Constructor::eo__24emb_5fVar, &[v1484, v1485])?;
 let v1487 = s.apply(v1483, v1486)?;
 let v1488 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1489 = s.apply(v1487, v1488)?;
@@ -108277,7 +108277,7 @@ let v1500 = s.construct(Constructor::eo__40strings_5fstoi_5fresult, &[])?;
 let v1501 = s.apply(v1500, v1293)?;
 let v1502 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1503 = s.construct(Constructor::eo_Int, &[])?;
-let v1504 = s.named("$emb_Var", &[v1502, v1503])?;
+let v1504 = s.construct(Constructor::eo__24emb_5fVar, &[v1502, v1503])?;
 let v1505 = s.apply(v1501, v1504)?;
 let v1506 = s.apply(v1499, v1505)?;
 let v1507 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -108298,7 +108298,7 @@ let v1521 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v1522 = s.apply(v1521, v1293)?;
 let v1523 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1524 = s.construct(Constructor::eo_Int, &[])?;
-let v1525 = s.named("$emb_Var", &[v1523, v1524])?;
+let v1525 = s.construct(Constructor::eo__24emb_5fVar, &[v1523, v1524])?;
 let v1526 = s.apply(v1522, v1525)?;
 let v1527 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1528 = s.apply(v1526, v1527)?;
@@ -108318,7 +108318,7 @@ let v1541 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v1542 = s.apply(v1541, v1293)?;
 let v1543 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1544 = s.construct(Constructor::eo_Int, &[])?;
-let v1545 = s.named("$emb_Var", &[v1543, v1544])?;
+let v1545 = s.construct(Constructor::eo__24emb_5fVar, &[v1543, v1544])?;
 let v1546 = s.apply(v1542, v1545)?;
 let v1547 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v1548 = s.apply(v1546, v1547)?;
@@ -108346,7 +108346,7 @@ let v1569 = s.apply(v1568, v1293)?;
 let v1570 = s.construct(Constructor::eo__2b, &[])?;
 let v1571 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v1572 = s.construct(Constructor::eo_Int, &[])?;
-let v1573 = s.named("$emb_Var", &[v1571, v1572])?;
+let v1573 = s.construct(Constructor::eo__24emb_5fVar, &[v1571, v1572])?;
 let v1574 = s.apply(v1570, v1573)?;
 let v1575 = s.construct(Constructor::eo__2b, &[])?;
 let v1576 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -108603,7 +108603,7 @@ let v1802 = s.apply(v1794, v1801)?;
 let v1803 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v1804 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v1805 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1806 = s.operator("is_eq", &[v1804, v1805])?;
+let v1806 = s.builtin(EvalOp::IsEq, &[v1804, v1805])?;
 let v1807 = match s.boolean_value(v1806, false)? {
 Some(true) => {
 v1759
@@ -108632,7 +108632,7 @@ let v1825 = s.construct(Constructor::eo__2b, &[])?;
 let v1826 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v1827 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v1828 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1829 = s.operator("is_eq", &[v1827, v1828])?;
+let v1829 = s.builtin(EvalOp::IsEq, &[v1827, v1828])?;
 let v1830 = match s.boolean_value(v1829, false)? {
 Some(true) => {
 v1759
@@ -108666,7 +108666,7 @@ let v1853 = s.construct(Constructor::eo__2b, &[])?;
 let v1854 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v1855 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v1856 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1857 = s.operator("is_eq", &[v1855, v1856])?;
+let v1857 = s.builtin(EvalOp::IsEq, &[v1855, v1856])?;
 let v1858 = match s.boolean_value(v1857, false)? {
 Some(true) => {
 v1759
@@ -108728,7 +108728,7 @@ let v1909 = s.apply(v1908, v1762)?;
 let v1910 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v1911 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v1912 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1913 = s.operator("is_eq", &[v1911, v1912])?;
+let v1913 = s.builtin(EvalOp::IsEq, &[v1911, v1912])?;
 let v1914 = match s.boolean_value(v1913, false)? {
 Some(true) => {
 v1759
@@ -108760,7 +108760,7 @@ let v1935 = s.construct(Constructor::eo__2b, &[])?;
 let v1936 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v1937 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v1938 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1939 = s.operator("is_eq", &[v1937, v1938])?;
+let v1939 = s.builtin(EvalOp::IsEq, &[v1937, v1938])?;
 let v1940 = match s.boolean_value(v1939, false)? {
 Some(true) => {
 v1759
@@ -108794,7 +108794,7 @@ let v1963 = s.construct(Constructor::eo__2b, &[])?;
 let v1964 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v1965 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v1966 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v1967 = s.operator("is_eq", &[v1965, v1966])?;
+let v1967 = s.builtin(EvalOp::IsEq, &[v1965, v1966])?;
 let v1968 = match s.boolean_value(v1967, false)? {
 Some(true) => {
 v1759
@@ -108855,7 +108855,7 @@ let v2018 = s.construct(Constructor::eo__3d, &[])?;
 let v2019 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v2020 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v2021 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v2022 = s.operator("is_eq", &[v2020, v2021])?;
+let v2022 = s.builtin(EvalOp::IsEq, &[v2020, v2021])?;
 let v2023 = match s.boolean_value(v2022, false)? {
 Some(true) => {
 v1759
@@ -108883,7 +108883,7 @@ let v2040 = s.apply(v2039, v1762)?;
 let v2041 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v2042 = eo__24str_5fvalue_5flen(s, v1759)?;
 let v2043 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v2044 = s.operator("is_eq", &[v2042, v2043])?;
+let v2044 = s.builtin(EvalOp::IsEq, &[v2042, v2043])?;
 let v2045 = match s.boolean_value(v2044, false)? {
 Some(true) => {
 v1759
@@ -109048,7 +109048,7 @@ let v2186 = s.construct(Constructor::eo_forall, &[])?;
 let v2187 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v2188 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2189 = s.construct(Constructor::eo_Int, &[])?;
-let v2190 = s.named("$emb_Var", &[v2188, v2189])?;
+let v2190 = s.construct(Constructor::eo__24emb_5fVar, &[v2188, v2189])?;
 let v2191 = s.apply(v2187, v2190)?;
 let v2192 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v2193 = s.apply(v2191, v2192)?;
@@ -109058,7 +109058,7 @@ let v2196 = s.construct(Constructor::eo_not, &[])?;
 let v2197 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v2198 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2199 = s.construct(Constructor::eo_Int, &[])?;
-let v2200 = s.named("$emb_Var", &[v2198, v2199])?;
+let v2200 = s.construct(Constructor::eo__24emb_5fVar, &[v2198, v2199])?;
 let v2201 = s.apply(v2197, v2200)?;
 let v2202 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v2203 = s.apply(v2201, v2202)?;
@@ -109069,7 +109069,7 @@ let v2207 = s.construct(Constructor::eo_not, &[])?;
 let v2208 = s.construct(Constructor::eo__3c, &[])?;
 let v2209 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2210 = s.construct(Constructor::eo_Int, &[])?;
-let v2211 = s.named("$emb_Var", &[v2209, v2210])?;
+let v2211 = s.construct(Constructor::eo__24emb_5fVar, &[v2209, v2210])?;
 let v2212 = s.apply(v2208, v2211)?;
 let v2213 = s.construct(Constructor::eo__40strings_5fnum_5foccur, &[])?;
 let v2214 = s.apply(v2213, v2086)?;
@@ -109089,7 +109089,7 @@ let v2227 = s.apply(v2226, v2086)?;
 let v2228 = s.apply(v2227, v2083)?;
 let v2229 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2230 = s.construct(Constructor::eo_Int, &[])?;
-let v2231 = s.named("$emb_Var", &[v2229, v2230])?;
+let v2231 = s.construct(Constructor::eo__24emb_5fVar, &[v2229, v2230])?;
 let v2232 = s.apply(v2228, v2231)?;
 let v2233 = s.apply(v2225, v2232)?;
 let v2234 = s.apply(v2222, v2233)?;
@@ -109105,7 +109105,7 @@ let v2243 = s.apply(v2242, v2083)?;
 let v2244 = s.apply(v2243, v2080)?;
 let v2245 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2246 = s.construct(Constructor::eo_Int, &[])?;
-let v2247 = s.named("$emb_Var", &[v2245, v2246])?;
+let v2247 = s.construct(Constructor::eo__24emb_5fVar, &[v2245, v2246])?;
 let v2248 = s.apply(v2244, v2247)?;
 let v2249 = s.apply(v2240, v2248)?;
 let v2250 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -109116,7 +109116,7 @@ let v2254 = s.apply(v2253, v2086)?;
 let v2255 = s.apply(v2254, v2083)?;
 let v2256 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2257 = s.construct(Constructor::eo_Int, &[])?;
-let v2258 = s.named("$emb_Var", &[v2256, v2257])?;
+let v2258 = s.construct(Constructor::eo__24emb_5fVar, &[v2256, v2257])?;
 let v2259 = s.apply(v2255, v2258)?;
 let v2260 = s.apply(v2252, v2259)?;
 let v2261 = s.construct(Constructor::eo__2d, &[])?;
@@ -109128,7 +109128,7 @@ let v2266 = s.apply(v2265, v2086)?;
 let v2267 = s.apply(v2266, v2083)?;
 let v2268 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2269 = s.construct(Constructor::eo_Int, &[])?;
-let v2270 = s.named("$emb_Var", &[v2268, v2269])?;
+let v2270 = s.construct(Constructor::eo__24emb_5fVar, &[v2268, v2269])?;
 let v2271 = s.apply(v2267, v2270)?;
 let v2272 = s.apply(v2264, v2271)?;
 let v2273 = s.apply(v2261, v2272)?;
@@ -109137,7 +109137,7 @@ let v2275 = s.apply(v2274, v2086)?;
 let v2276 = s.apply(v2275, v2083)?;
 let v2277 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2278 = s.construct(Constructor::eo_Int, &[])?;
-let v2279 = s.named("$emb_Var", &[v2277, v2278])?;
+let v2279 = s.construct(Constructor::eo__24emb_5fVar, &[v2277, v2278])?;
 let v2280 = s.apply(v2276, v2279)?;
 let v2281 = s.apply(v2273, v2280)?;
 let v2282 = s.apply(v2260, v2281)?;
@@ -109152,7 +109152,7 @@ let v2290 = s.apply(v2289, v2080)?;
 let v2291 = s.construct(Constructor::eo__2b, &[])?;
 let v2292 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2293 = s.construct(Constructor::eo_Int, &[])?;
-let v2294 = s.named("$emb_Var", &[v2292, v2293])?;
+let v2294 = s.construct(Constructor::eo__24emb_5fVar, &[v2292, v2293])?;
 let v2295 = s.apply(v2291, v2294)?;
 let v2296 = s.construct(Constructor::eo__2b, &[])?;
 let v2297 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -109170,7 +109170,7 @@ let v2308 = s.apply(v2307, v2086)?;
 let v2309 = s.apply(v2308, v2083)?;
 let v2310 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2311 = s.construct(Constructor::eo_Int, &[])?;
-let v2312 = s.named("$emb_Var", &[v2310, v2311])?;
+let v2312 = s.construct(Constructor::eo__24emb_5fVar, &[v2310, v2311])?;
 let v2313 = s.apply(v2309, v2312)?;
 let v2314 = s.apply(v2306, v2313)?;
 let v2315 = s.construct(Constructor::eo__2d, &[])?;
@@ -109182,7 +109182,7 @@ let v2320 = s.apply(v2319, v2086)?;
 let v2321 = s.apply(v2320, v2083)?;
 let v2322 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2323 = s.construct(Constructor::eo_Int, &[])?;
-let v2324 = s.named("$emb_Var", &[v2322, v2323])?;
+let v2324 = s.construct(Constructor::eo__24emb_5fVar, &[v2322, v2323])?;
 let v2325 = s.apply(v2321, v2324)?;
 let v2326 = s.apply(v2318, v2325)?;
 let v2327 = s.apply(v2315, v2326)?;
@@ -109191,7 +109191,7 @@ let v2329 = s.apply(v2328, v2086)?;
 let v2330 = s.apply(v2329, v2083)?;
 let v2331 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2332 = s.construct(Constructor::eo_Int, &[])?;
-let v2333 = s.named("$emb_Var", &[v2331, v2332])?;
+let v2333 = s.construct(Constructor::eo__24emb_5fVar, &[v2331, v2332])?;
 let v2334 = s.apply(v2330, v2333)?;
 let v2335 = s.apply(v2327, v2334)?;
 let v2336 = s.apply(v2314, v2335)?;
@@ -109210,7 +109210,7 @@ let v2348 = s.apply(v2347, v2083)?;
 let v2349 = s.construct(Constructor::eo__2b, &[])?;
 let v2350 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2351 = s.construct(Constructor::eo_Int, &[])?;
-let v2352 = s.named("$emb_Var", &[v2350, v2351])?;
+let v2352 = s.construct(Constructor::eo__24emb_5fVar, &[v2350, v2351])?;
 let v2353 = s.apply(v2349, v2352)?;
 let v2354 = s.construct(Constructor::eo__2b, &[])?;
 let v2355 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -109229,7 +109229,7 @@ let v2367 = s.apply(v2366, v2086)?;
 let v2368 = s.apply(v2367, v2083)?;
 let v2369 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2370 = s.construct(Constructor::eo_Int, &[])?;
-let v2371 = s.named("$emb_Var", &[v2369, v2370])?;
+let v2371 = s.construct(Constructor::eo__24emb_5fVar, &[v2369, v2370])?;
 let v2372 = s.apply(v2368, v2371)?;
 let v2373 = s.apply(v2365, v2372)?;
 let v2374 = s.apply(v2362, v2373)?;
@@ -109429,7 +109429,7 @@ let v2554 = s.construct(Constructor::eo_forall, &[])?;
 let v2555 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v2556 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v2557 = s.construct(Constructor::eo_Int, &[])?;
-let v2558 = s.named("$emb_Var", &[v2556, v2557])?;
+let v2558 = s.construct(Constructor::eo__24emb_5fVar, &[v2556, v2557])?;
 let v2559 = s.apply(v2555, v2558)?;
 let v2560 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v2561 = s.apply(v2559, v2560)?;
@@ -109439,7 +109439,7 @@ let v2564 = s.construct(Constructor::eo_not, &[])?;
 let v2565 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v2566 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v2567 = s.construct(Constructor::eo_Int, &[])?;
-let v2568 = s.named("$emb_Var", &[v2566, v2567])?;
+let v2568 = s.construct(Constructor::eo__24emb_5fVar, &[v2566, v2567])?;
 let v2569 = s.apply(v2565, v2568)?;
 let v2570 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v2571 = s.apply(v2569, v2570)?;
@@ -109450,7 +109450,7 @@ let v2575 = s.construct(Constructor::eo_not, &[])?;
 let v2576 = s.construct(Constructor::eo__3c, &[])?;
 let v2577 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v2578 = s.construct(Constructor::eo_Int, &[])?;
-let v2579 = s.named("$emb_Var", &[v2577, v2578])?;
+let v2579 = s.construct(Constructor::eo__24emb_5fVar, &[v2577, v2578])?;
 let v2580 = s.apply(v2576, v2579)?;
 let v2581 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v2582 = s.construct(Constructor::eo__40purify, &[])?;
@@ -109514,7 +109514,7 @@ let v2639 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v2640 = s.apply(v2638, v2639)?;
 let v2641 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v2642 = s.construct(Constructor::eo_Int, &[])?;
-let v2643 = s.named("$emb_Var", &[v2641, v2642])?;
+let v2643 = s.construct(Constructor::eo__24emb_5fVar, &[v2641, v2642])?;
 let v2644 = s.apply(v2640, v2643)?;
 let v2645 = s.apply(v2612, v2644)?;
 let v2646 = s.apply(v2645, v2408)?;
@@ -109765,7 +109765,7 @@ let v2877 = s.construct(Constructor::eo_forall, &[])?;
 let v2878 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v2879 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2880 = s.construct(Constructor::eo_Int, &[])?;
-let v2881 = s.named("$emb_Var", &[v2879, v2880])?;
+let v2881 = s.construct(Constructor::eo__24emb_5fVar, &[v2879, v2880])?;
 let v2882 = s.apply(v2878, v2881)?;
 let v2883 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v2884 = s.apply(v2882, v2883)?;
@@ -109775,7 +109775,7 @@ let v2887 = s.construct(Constructor::eo_not, &[])?;
 let v2888 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v2889 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2890 = s.construct(Constructor::eo_Int, &[])?;
-let v2891 = s.named("$emb_Var", &[v2889, v2890])?;
+let v2891 = s.construct(Constructor::eo__24emb_5fVar, &[v2889, v2890])?;
 let v2892 = s.apply(v2888, v2891)?;
 let v2893 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v2894 = s.apply(v2892, v2893)?;
@@ -109786,7 +109786,7 @@ let v2898 = s.construct(Constructor::eo_not, &[])?;
 let v2899 = s.construct(Constructor::eo__3c, &[])?;
 let v2900 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2901 = s.construct(Constructor::eo_Int, &[])?;
-let v2902 = s.named("$emb_Var", &[v2900, v2901])?;
+let v2902 = s.construct(Constructor::eo__24emb_5fVar, &[v2900, v2901])?;
 let v2903 = s.apply(v2899, v2902)?;
 let v2904 = s.construct(Constructor::eo__40strings_5fnum_5foccur_5fre, &[])?;
 let v2905 = s.apply(v2904, v2754)?;
@@ -109804,7 +109804,7 @@ let v2916 = s.apply(v2915, v2751)?;
 let v2917 = s.construct(Constructor::eo__2b, &[])?;
 let v2918 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2919 = s.construct(Constructor::eo_Int, &[])?;
-let v2920 = s.named("$emb_Var", &[v2918, v2919])?;
+let v2920 = s.construct(Constructor::eo__24emb_5fVar, &[v2918, v2919])?;
 let v2921 = s.apply(v2917, v2920)?;
 let v2922 = s.construct(Constructor::eo__2b, &[])?;
 let v2923 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -109828,7 +109828,7 @@ let v2940 = s.apply(v2939, v2754)?;
 let v2941 = s.apply(v2940, v2751)?;
 let v2942 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2943 = s.construct(Constructor::eo_Int, &[])?;
-let v2944 = s.named("$emb_Var", &[v2942, v2943])?;
+let v2944 = s.construct(Constructor::eo__24emb_5fVar, &[v2942, v2943])?;
 let v2945 = s.apply(v2941, v2944)?;
 let v2946 = s.apply(v2938, v2945)?;
 let v2947 = s.apply(v2929, v2946)?;
@@ -109854,7 +109854,7 @@ let v2966 = s.apply(v2965, v2754)?;
 let v2967 = s.apply(v2966, v2751)?;
 let v2968 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2969 = s.construct(Constructor::eo_Int, &[])?;
-let v2970 = s.named("$emb_Var", &[v2968, v2969])?;
+let v2970 = s.construct(Constructor::eo__24emb_5fVar, &[v2968, v2969])?;
 let v2971 = s.apply(v2967, v2970)?;
 let v2972 = s.apply(v2964, v2971)?;
 let v2973 = s.apply(v2955, v2972)?;
@@ -109865,7 +109865,7 @@ let v2977 = s.apply(v2976, v2751)?;
 let v2978 = s.construct(Constructor::eo__2b, &[])?;
 let v2979 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v2980 = s.construct(Constructor::eo_Int, &[])?;
-let v2981 = s.named("$emb_Var", &[v2979, v2980])?;
+let v2981 = s.construct(Constructor::eo__24emb_5fVar, &[v2979, v2980])?;
 let v2982 = s.apply(v2978, v2981)?;
 let v2983 = s.construct(Constructor::eo__2b, &[])?;
 let v2984 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -109889,7 +109889,7 @@ let v3001 = s.apply(v3000, v2754)?;
 let v3002 = s.apply(v3001, v2751)?;
 let v3003 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3004 = s.construct(Constructor::eo_Int, &[])?;
-let v3005 = s.named("$emb_Var", &[v3003, v3004])?;
+let v3005 = s.construct(Constructor::eo__24emb_5fVar, &[v3003, v3004])?;
 let v3006 = s.apply(v3002, v3005)?;
 let v3007 = s.apply(v2999, v3006)?;
 let v3008 = s.apply(v2990, v3007)?;
@@ -109908,7 +109908,7 @@ let v3020 = s.construct(Constructor::eo_forall, &[])?;
 let v3021 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3022 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3023 = s.construct(Constructor::eo_Int, &[])?;
-let v3024 = s.named("$emb_Var", &[v3022, v3023])?;
+let v3024 = s.construct(Constructor::eo__24emb_5fVar, &[v3022, v3023])?;
 let v3025 = s.apply(v3021, v3024)?;
 let v3026 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v3027 = s.apply(v3025, v3026)?;
@@ -109918,7 +109918,7 @@ let v3030 = s.construct(Constructor::eo_not, &[])?;
 let v3031 = s.construct(Constructor::eo__3e, &[])?;
 let v3032 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3033 = s.construct(Constructor::eo_Int, &[])?;
-let v3034 = s.named("$emb_Var", &[v3032, v3033])?;
+let v3034 = s.construct(Constructor::eo__24emb_5fVar, &[v3032, v3033])?;
 let v3035 = s.apply(v3031, v3034)?;
 let v3036 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3037 = s.apply(v3035, v3036)?;
@@ -109929,7 +109929,7 @@ let v3041 = s.construct(Constructor::eo_not, &[])?;
 let v3042 = s.construct(Constructor::eo__3c, &[])?;
 let v3043 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3044 = s.construct(Constructor::eo_Int, &[])?;
-let v3045 = s.named("$emb_Var", &[v3043, v3044])?;
+let v3045 = s.construct(Constructor::eo__24emb_5fVar, &[v3043, v3044])?;
 let v3046 = s.apply(v3042, v3045)?;
 let v3047 = s.construct(Constructor::eo__2d, &[])?;
 let v3048 = s.construct(Constructor::eo__40strings_5foccur_5findex_5fre, &[])?;
@@ -109938,7 +109938,7 @@ let v3050 = s.apply(v3049, v2751)?;
 let v3051 = s.construct(Constructor::eo__2b, &[])?;
 let v3052 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3053 = s.construct(Constructor::eo_Int, &[])?;
-let v3054 = s.named("$emb_Var", &[v3052, v3053])?;
+let v3054 = s.construct(Constructor::eo__24emb_5fVar, &[v3052, v3053])?;
 let v3055 = s.apply(v3051, v3054)?;
 let v3056 = s.construct(Constructor::eo__2b, &[])?;
 let v3057 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -109962,7 +109962,7 @@ let v3074 = s.apply(v3073, v2754)?;
 let v3075 = s.apply(v3074, v2751)?;
 let v3076 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3077 = s.construct(Constructor::eo_Int, &[])?;
-let v3078 = s.named("$emb_Var", &[v3076, v3077])?;
+let v3078 = s.construct(Constructor::eo__24emb_5fVar, &[v3076, v3077])?;
 let v3079 = s.apply(v3075, v3078)?;
 let v3080 = s.apply(v3072, v3079)?;
 let v3081 = s.apply(v3063, v3080)?;
@@ -109988,13 +109988,13 @@ let v3100 = s.apply(v3099, v2754)?;
 let v3101 = s.apply(v3100, v2751)?;
 let v3102 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3103 = s.construct(Constructor::eo_Int, &[])?;
-let v3104 = s.named("$emb_Var", &[v3102, v3103])?;
+let v3104 = s.construct(Constructor::eo__24emb_5fVar, &[v3102, v3103])?;
 let v3105 = s.apply(v3101, v3104)?;
 let v3106 = s.apply(v3098, v3105)?;
 let v3107 = s.apply(v3089, v3106)?;
 let v3108 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3109 = s.construct(Constructor::eo_Int, &[])?;
-let v3110 = s.named("$emb_Var", &[v3108, v3109])?;
+let v3110 = s.construct(Constructor::eo__24emb_5fVar, &[v3108, v3109])?;
 let v3111 = s.apply(v3107, v3110)?;
 let v3112 = s.apply(v3087, v3111)?;
 let v3113 = s.apply(v3112, v2751)?;
@@ -110014,7 +110014,7 @@ let v3126 = s.apply(v3125, v2751)?;
 let v3127 = s.apply(v3126, v2748)?;
 let v3128 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3129 = s.construct(Constructor::eo_Int, &[])?;
-let v3130 = s.named("$emb_Var", &[v3128, v3129])?;
+let v3130 = s.construct(Constructor::eo__24emb_5fVar, &[v3128, v3129])?;
 let v3131 = s.apply(v3127, v3130)?;
 let v3132 = s.apply(v3123, v3131)?;
 let v3133 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
@@ -110025,7 +110025,7 @@ let v3137 = s.apply(v3136, v2754)?;
 let v3138 = s.apply(v3137, v2751)?;
 let v3139 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3140 = s.construct(Constructor::eo_Int, &[])?;
-let v3141 = s.named("$emb_Var", &[v3139, v3140])?;
+let v3141 = s.construct(Constructor::eo__24emb_5fVar, &[v3139, v3140])?;
 let v3142 = s.apply(v3138, v3141)?;
 let v3143 = s.apply(v3135, v3142)?;
 let v3144 = s.construct(Constructor::eo__2d, &[])?;
@@ -110043,7 +110043,7 @@ let v3155 = s.apply(v3154, v2754)?;
 let v3156 = s.apply(v3155, v2751)?;
 let v3157 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3158 = s.construct(Constructor::eo_Int, &[])?;
-let v3159 = s.named("$emb_Var", &[v3157, v3158])?;
+let v3159 = s.construct(Constructor::eo__24emb_5fVar, &[v3157, v3158])?;
 let v3160 = s.apply(v3156, v3159)?;
 let v3161 = s.apply(v3153, v3160)?;
 let v3162 = s.apply(v3144, v3161)?;
@@ -110052,7 +110052,7 @@ let v3164 = s.apply(v3163, v2754)?;
 let v3165 = s.apply(v3164, v2751)?;
 let v3166 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3167 = s.construct(Constructor::eo_Int, &[])?;
-let v3168 = s.named("$emb_Var", &[v3166, v3167])?;
+let v3168 = s.construct(Constructor::eo__24emb_5fVar, &[v3166, v3167])?;
 let v3169 = s.apply(v3165, v3168)?;
 let v3170 = s.apply(v3162, v3169)?;
 let v3171 = s.apply(v3143, v3170)?;
@@ -110067,7 +110067,7 @@ let v3179 = s.apply(v3178, v2748)?;
 let v3180 = s.construct(Constructor::eo__2b, &[])?;
 let v3181 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3182 = s.construct(Constructor::eo_Int, &[])?;
-let v3183 = s.named("$emb_Var", &[v3181, v3182])?;
+let v3183 = s.construct(Constructor::eo__24emb_5fVar, &[v3181, v3182])?;
 let v3184 = s.apply(v3180, v3183)?;
 let v3185 = s.construct(Constructor::eo__2b, &[])?;
 let v3186 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -110176,12 +110176,12 @@ let v3275 = s.construct(Constructor::eo_forall, &[])?;
 let v3276 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3277 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3278 = s.construct(Constructor::eo_Int, &[])?;
-let v3279 = s.named("$emb_Var", &[v3277, v3278])?;
+let v3279 = s.construct(Constructor::eo__24emb_5fVar, &[v3277, v3278])?;
 let v3280 = s.apply(v3276, v3279)?;
 let v3281 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3282 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3283 = s.construct(Constructor::eo_Int, &[])?;
-let v3284 = s.named("$emb_Var", &[v3282, v3283])?;
+let v3284 = s.construct(Constructor::eo__24emb_5fVar, &[v3282, v3283])?;
 let v3285 = s.apply(v3281, v3284)?;
 let v3286 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v3287 = s.apply(v3285, v3286)?;
@@ -110192,7 +110192,7 @@ let v3291 = s.construct(Constructor::eo_not, &[])?;
 let v3292 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v3293 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3294 = s.construct(Constructor::eo_Int, &[])?;
-let v3295 = s.named("$emb_Var", &[v3293, v3294])?;
+let v3295 = s.construct(Constructor::eo__24emb_5fVar, &[v3293, v3294])?;
 let v3296 = s.apply(v3292, v3295)?;
 let v3297 = s.apply(v3296, v3221)?;
 let v3298 = s.apply(v3291, v3297)?;
@@ -110202,7 +110202,7 @@ let v3301 = s.construct(Constructor::eo_not, &[])?;
 let v3302 = s.construct(Constructor::eo__3c, &[])?;
 let v3303 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3304 = s.construct(Constructor::eo_Int, &[])?;
-let v3305 = s.named("$emb_Var", &[v3303, v3304])?;
+let v3305 = s.construct(Constructor::eo__24emb_5fVar, &[v3303, v3304])?;
 let v3306 = s.apply(v3302, v3305)?;
 let v3307 = s.construct(Constructor::eo_ite, &[])?;
 let v3308 = s.construct(Constructor::eo__3d, &[])?;
@@ -110234,7 +110234,7 @@ let v3333 = s.construct(Constructor::eo_not, &[])?;
 let v3334 = s.construct(Constructor::eo__3e, &[])?;
 let v3335 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3336 = s.construct(Constructor::eo_Int, &[])?;
-let v3337 = s.named("$emb_Var", &[v3335, v3336])?;
+let v3337 = s.construct(Constructor::eo__24emb_5fVar, &[v3335, v3336])?;
 let v3338 = s.apply(v3334, v3337)?;
 let v3339 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3340 = s.apply(v3338, v3339)?;
@@ -110245,7 +110245,7 @@ let v3344 = s.construct(Constructor::eo_not, &[])?;
 let v3345 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v3346 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3347 = s.construct(Constructor::eo_Int, &[])?;
-let v3348 = s.named("$emb_Var", &[v3346, v3347])?;
+let v3348 = s.construct(Constructor::eo__24emb_5fVar, &[v3346, v3347])?;
 let v3349 = s.apply(v3345, v3348)?;
 let v3350 = s.construct(Constructor::eo__2d, &[])?;
 let v3351 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -110253,7 +110253,7 @@ let v3352 = s.apply(v3351, v3227)?;
 let v3353 = s.apply(v3350, v3352)?;
 let v3354 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3355 = s.construct(Constructor::eo_Int, &[])?;
-let v3356 = s.named("$emb_Var", &[v3354, v3355])?;
+let v3356 = s.construct(Constructor::eo__24emb_5fVar, &[v3354, v3355])?;
 let v3357 = s.apply(v3353, v3356)?;
 let v3358 = s.apply(v3349, v3357)?;
 let v3359 = s.apply(v3344, v3358)?;
@@ -110265,11 +110265,11 @@ let v3364 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3365 = s.apply(v3364, v3227)?;
 let v3366 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3367 = s.construct(Constructor::eo_Int, &[])?;
-let v3368 = s.named("$emb_Var", &[v3366, v3367])?;
+let v3368 = s.construct(Constructor::eo__24emb_5fVar, &[v3366, v3367])?;
 let v3369 = s.apply(v3365, v3368)?;
 let v3370 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3371 = s.construct(Constructor::eo_Int, &[])?;
-let v3372 = s.named("$emb_Var", &[v3370, v3371])?;
+let v3372 = s.construct(Constructor::eo__24emb_5fVar, &[v3370, v3371])?;
 let v3373 = s.apply(v3369, v3372)?;
 let v3374 = s.apply(v3363, v3373)?;
 let v3375 = s.apply(v3374, v3224)?;
@@ -110314,7 +110314,7 @@ let v3413 = s.construct(Constructor::eo_forall, &[])?;
 let v3414 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3415 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3416 = s.construct(Constructor::eo_Int, &[])?;
-let v3417 = s.named("$emb_Var", &[v3415, v3416])?;
+let v3417 = s.construct(Constructor::eo__24emb_5fVar, &[v3415, v3416])?;
 let v3418 = s.apply(v3414, v3417)?;
 let v3419 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v3420 = s.apply(v3418, v3419)?;
@@ -110324,7 +110324,7 @@ let v3423 = s.construct(Constructor::eo_not, &[])?;
 let v3424 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v3425 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3426 = s.construct(Constructor::eo_Int, &[])?;
-let v3427 = s.named("$emb_Var", &[v3425, v3426])?;
+let v3427 = s.construct(Constructor::eo__24emb_5fVar, &[v3425, v3426])?;
 let v3428 = s.apply(v3424, v3427)?;
 let v3429 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3430 = s.apply(v3428, v3429)?;
@@ -110335,7 +110335,7 @@ let v3434 = s.construct(Constructor::eo_not, &[])?;
 let v3435 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v3436 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3437 = s.construct(Constructor::eo_Int, &[])?;
-let v3438 = s.named("$emb_Var", &[v3436, v3437])?;
+let v3438 = s.construct(Constructor::eo__24emb_5fVar, &[v3436, v3437])?;
 let v3439 = s.apply(v3435, v3438)?;
 let v3440 = s.construct(Constructor::eo__2d, &[])?;
 let v3441 = s.construct(Constructor::eo_str_2elen, &[])?;
@@ -110365,7 +110365,7 @@ let v3464 = s.apply(v3459, v3463)?;
 let v3465 = s.apply(v3458, v3464)?;
 let v3466 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,108,101,110,103,116,104,])))?;
 let v3467 = s.construct(Constructor::eo_Int, &[])?;
-let v3468 = s.named("$emb_Var", &[v3466, v3467])?;
+let v3468 = s.construct(Constructor::eo__24emb_5fVar, &[v3466, v3467])?;
 let v3469 = s.apply(v3465, v3468)?;
 let v3470 = s.apply(v3456, v3469)?;
 let v3471 = s.apply(v3470, v3224)?;
@@ -110425,7 +110425,7 @@ let v3513 = s.construct(Constructor::eo_forall, &[])?;
 let v3514 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3515 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3516 = s.construct(Constructor::eo_Int, &[])?;
-let v3517 = s.named("$emb_Var", &[v3515, v3516])?;
+let v3517 = s.construct(Constructor::eo__24emb_5fVar, &[v3515, v3516])?;
 let v3518 = s.apply(v3514, v3517)?;
 let v3519 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v3520 = s.apply(v3518, v3519)?;
@@ -110435,7 +110435,7 @@ let v3523 = s.construct(Constructor::eo_not, &[])?;
 let v3524 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v3525 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3526 = s.construct(Constructor::eo_Int, &[])?;
-let v3527 = s.named("$emb_Var", &[v3525, v3526])?;
+let v3527 = s.construct(Constructor::eo__24emb_5fVar, &[v3525, v3526])?;
 let v3528 = s.apply(v3524, v3527)?;
 let v3529 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3530 = s.apply(v3528, v3529)?;
@@ -110446,7 +110446,7 @@ let v3534 = s.construct(Constructor::eo_not, &[])?;
 let v3535 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v3536 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3537 = s.construct(Constructor::eo_Int, &[])?;
-let v3538 = s.named("$emb_Var", &[v3536, v3537])?;
+let v3538 = s.construct(Constructor::eo__24emb_5fVar, &[v3536, v3537])?;
 let v3539 = s.apply(v3535, v3538)?;
 let v3540 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v3541 = s.apply(v3540, v3499)?;
@@ -110458,7 +110458,7 @@ let v3546 = s.construct(Constructor::eo_not, &[])?;
 let v3547 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v3548 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3549 = s.construct(Constructor::eo_Int, &[])?;
-let v3550 = s.named("$emb_Var", &[v3548, v3549])?;
+let v3550 = s.construct(Constructor::eo__24emb_5fVar, &[v3548, v3549])?;
 let v3551 = s.apply(v3547, v3550)?;
 let v3552 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v3553 = s.apply(v3552, v3496)?;
@@ -110474,7 +110474,7 @@ let v3562 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3563 = s.apply(v3561, v3562)?;
 let v3564 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3565 = s.construct(Constructor::eo_Int, &[])?;
-let v3566 = s.named("$emb_Var", &[v3564, v3565])?;
+let v3566 = s.construct(Constructor::eo__24emb_5fVar, &[v3564, v3565])?;
 let v3567 = s.apply(v3563, v3566)?;
 let v3568 = s.apply(v3559, v3567)?;
 let v3569 = s.construct(Constructor::eo_str_2esubstr, &[])?;
@@ -110483,7 +110483,7 @@ let v3571 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3572 = s.apply(v3570, v3571)?;
 let v3573 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3574 = s.construct(Constructor::eo_Int, &[])?;
-let v3575 = s.named("$emb_Var", &[v3573, v3574])?;
+let v3575 = s.construct(Constructor::eo__24emb_5fVar, &[v3573, v3574])?;
 let v3576 = s.apply(v3572, v3575)?;
 let v3577 = s.apply(v3568, v3576)?;
 let v3578 = s.apply(v3558, v3577)?;
@@ -110502,7 +110502,7 @@ let v3590 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3591 = s.apply(v3590, v3499)?;
 let v3592 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3593 = s.construct(Constructor::eo_Int, &[])?;
-let v3594 = s.named("$emb_Var", &[v3592, v3593])?;
+let v3594 = s.construct(Constructor::eo__24emb_5fVar, &[v3592, v3593])?;
 let v3595 = s.apply(v3591, v3594)?;
 let v3596 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3597 = s.apply(v3595, v3596)?;
@@ -110513,7 +110513,7 @@ let v3601 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3602 = s.apply(v3601, v3496)?;
 let v3603 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3604 = s.construct(Constructor::eo_Int, &[])?;
-let v3605 = s.named("$emb_Var", &[v3603, v3604])?;
+let v3605 = s.construct(Constructor::eo__24emb_5fVar, &[v3603, v3604])?;
 let v3606 = s.apply(v3602, v3605)?;
 let v3607 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3608 = s.apply(v3606, v3607)?;
@@ -110526,7 +110526,7 @@ let v3614 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3615 = s.apply(v3614, v3496)?;
 let v3616 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3617 = s.construct(Constructor::eo_Int, &[])?;
-let v3618 = s.named("$emb_Var", &[v3616, v3617])?;
+let v3618 = s.construct(Constructor::eo__24emb_5fVar, &[v3616, v3617])?;
 let v3619 = s.apply(v3615, v3618)?;
 let v3620 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3621 = s.apply(v3619, v3620)?;
@@ -110537,7 +110537,7 @@ let v3625 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3626 = s.apply(v3625, v3499)?;
 let v3627 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3628 = s.construct(Constructor::eo_Int, &[])?;
-let v3629 = s.named("$emb_Var", &[v3627, v3628])?;
+let v3629 = s.construct(Constructor::eo__24emb_5fVar, &[v3627, v3628])?;
 let v3630 = s.apply(v3626, v3629)?;
 let v3631 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3632 = s.apply(v3630, v3631)?;
@@ -110585,7 +110585,7 @@ let v3664 = s.construct(Constructor::eo_forall, &[])?;
 let v3665 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3666 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3667 = s.construct(Constructor::eo_Int, &[])?;
-let v3668 = s.named("$emb_Var", &[v3666, v3667])?;
+let v3668 = s.construct(Constructor::eo__24emb_5fVar, &[v3666, v3667])?;
 let v3669 = s.apply(v3665, v3668)?;
 let v3670 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v3671 = s.apply(v3669, v3670)?;
@@ -110595,7 +110595,7 @@ let v3674 = s.construct(Constructor::eo_not, &[])?;
 let v3675 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v3676 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3677 = s.construct(Constructor::eo_Int, &[])?;
-let v3678 = s.named("$emb_Var", &[v3676, v3677])?;
+let v3678 = s.construct(Constructor::eo__24emb_5fVar, &[v3676, v3677])?;
 let v3679 = s.apply(v3675, v3678)?;
 let v3680 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3681 = s.apply(v3679, v3680)?;
@@ -110606,7 +110606,7 @@ let v3685 = s.construct(Constructor::eo_not, &[])?;
 let v3686 = s.construct(Constructor::eo__3c, &[])?;
 let v3687 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3688 = s.construct(Constructor::eo_Int, &[])?;
-let v3689 = s.named("$emb_Var", &[v3687, v3688])?;
+let v3689 = s.construct(Constructor::eo__24emb_5fVar, &[v3687, v3688])?;
 let v3690 = s.apply(v3686, v3689)?;
 let v3691 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v3692 = s.construct(Constructor::eo__40purify, &[])?;
@@ -110628,7 +110628,7 @@ let v3707 = s.apply(v3704, v3706)?;
 let v3708 = s.apply(v3703, v3707)?;
 let v3709 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3710 = s.construct(Constructor::eo_Int, &[])?;
-let v3711 = s.named("$emb_Var", &[v3709, v3710])?;
+let v3711 = s.construct(Constructor::eo__24emb_5fVar, &[v3709, v3710])?;
 let v3712 = s.apply(v3708, v3711)?;
 let v3713 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3714 = s.apply(v3712, v3713)?;
@@ -110644,7 +110644,7 @@ let v3723 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3724 = s.apply(v3723, v3648)?;
 let v3725 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3726 = s.construct(Constructor::eo_Int, &[])?;
-let v3727 = s.named("$emb_Var", &[v3725, v3726])?;
+let v3727 = s.construct(Constructor::eo__24emb_5fVar, &[v3725, v3726])?;
 let v3728 = s.apply(v3724, v3727)?;
 let v3729 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3730 = s.apply(v3728, v3729)?;
@@ -110658,7 +110658,7 @@ let v3737 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3738 = s.apply(v3737, v3648)?;
 let v3739 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3740 = s.construct(Constructor::eo_Int, &[])?;
-let v3741 = s.named("$emb_Var", &[v3739, v3740])?;
+let v3741 = s.construct(Constructor::eo__24emb_5fVar, &[v3739, v3740])?;
 let v3742 = s.apply(v3738, v3741)?;
 let v3743 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3744 = s.apply(v3742, v3743)?;
@@ -110677,7 +110677,7 @@ let v3756 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3757 = s.apply(v3756, v3648)?;
 let v3758 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3759 = s.construct(Constructor::eo_Int, &[])?;
-let v3760 = s.named("$emb_Var", &[v3758, v3759])?;
+let v3760 = s.construct(Constructor::eo__24emb_5fVar, &[v3758, v3759])?;
 let v3761 = s.apply(v3757, v3760)?;
 let v3762 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3763 = s.apply(v3761, v3762)?;
@@ -110695,7 +110695,7 @@ let v3774 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3775 = s.apply(v3774, v3648)?;
 let v3776 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3777 = s.construct(Constructor::eo_Int, &[])?;
-let v3778 = s.named("$emb_Var", &[v3776, v3777])?;
+let v3778 = s.construct(Constructor::eo__24emb_5fVar, &[v3776, v3777])?;
 let v3779 = s.apply(v3775, v3778)?;
 let v3780 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3781 = s.apply(v3779, v3780)?;
@@ -110743,7 +110743,7 @@ let v3813 = s.construct(Constructor::eo_forall, &[])?;
 let v3814 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3815 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3816 = s.construct(Constructor::eo_Int, &[])?;
-let v3817 = s.named("$emb_Var", &[v3815, v3816])?;
+let v3817 = s.construct(Constructor::eo__24emb_5fVar, &[v3815, v3816])?;
 let v3818 = s.apply(v3814, v3817)?;
 let v3819 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v3820 = s.apply(v3818, v3819)?;
@@ -110753,7 +110753,7 @@ let v3823 = s.construct(Constructor::eo_not, &[])?;
 let v3824 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v3825 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3826 = s.construct(Constructor::eo_Int, &[])?;
-let v3827 = s.named("$emb_Var", &[v3825, v3826])?;
+let v3827 = s.construct(Constructor::eo__24emb_5fVar, &[v3825, v3826])?;
 let v3828 = s.apply(v3824, v3827)?;
 let v3829 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3830 = s.apply(v3828, v3829)?;
@@ -110764,7 +110764,7 @@ let v3834 = s.construct(Constructor::eo_not, &[])?;
 let v3835 = s.construct(Constructor::eo__3c, &[])?;
 let v3836 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3837 = s.construct(Constructor::eo_Int, &[])?;
-let v3838 = s.named("$emb_Var", &[v3836, v3837])?;
+let v3838 = s.construct(Constructor::eo__24emb_5fVar, &[v3836, v3837])?;
 let v3839 = s.apply(v3835, v3838)?;
 let v3840 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v3841 = s.construct(Constructor::eo__40purify, &[])?;
@@ -110786,7 +110786,7 @@ let v3856 = s.apply(v3853, v3855)?;
 let v3857 = s.apply(v3852, v3856)?;
 let v3858 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3859 = s.construct(Constructor::eo_Int, &[])?;
-let v3860 = s.named("$emb_Var", &[v3858, v3859])?;
+let v3860 = s.construct(Constructor::eo__24emb_5fVar, &[v3858, v3859])?;
 let v3861 = s.apply(v3857, v3860)?;
 let v3862 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3863 = s.apply(v3861, v3862)?;
@@ -110802,7 +110802,7 @@ let v3872 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3873 = s.apply(v3872, v3797)?;
 let v3874 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3875 = s.construct(Constructor::eo_Int, &[])?;
-let v3876 = s.named("$emb_Var", &[v3874, v3875])?;
+let v3876 = s.construct(Constructor::eo__24emb_5fVar, &[v3874, v3875])?;
 let v3877 = s.apply(v3873, v3876)?;
 let v3878 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3879 = s.apply(v3877, v3878)?;
@@ -110816,7 +110816,7 @@ let v3886 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3887 = s.apply(v3886, v3797)?;
 let v3888 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3889 = s.construct(Constructor::eo_Int, &[])?;
-let v3890 = s.named("$emb_Var", &[v3888, v3889])?;
+let v3890 = s.construct(Constructor::eo__24emb_5fVar, &[v3888, v3889])?;
 let v3891 = s.apply(v3887, v3890)?;
 let v3892 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3893 = s.apply(v3891, v3892)?;
@@ -110835,7 +110835,7 @@ let v3905 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3906 = s.apply(v3905, v3797)?;
 let v3907 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3908 = s.construct(Constructor::eo_Int, &[])?;
-let v3909 = s.named("$emb_Var", &[v3907, v3908])?;
+let v3909 = s.construct(Constructor::eo__24emb_5fVar, &[v3907, v3908])?;
 let v3910 = s.apply(v3906, v3909)?;
 let v3911 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3912 = s.apply(v3910, v3911)?;
@@ -110853,7 +110853,7 @@ let v3923 = s.construct(Constructor::eo_str_2esubstr, &[])?;
 let v3924 = s.apply(v3923, v3797)?;
 let v3925 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3926 = s.construct(Constructor::eo_Int, &[])?;
-let v3927 = s.named("$emb_Var", &[v3925, v3926])?;
+let v3927 = s.construct(Constructor::eo__24emb_5fVar, &[v3925, v3926])?;
 let v3928 = s.apply(v3924, v3927)?;
 let v3929 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v3930 = s.apply(v3928, v3929)?;
@@ -110901,7 +110901,7 @@ let v3962 = s.construct(Constructor::eo_forall, &[])?;
 let v3963 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v3964 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3965 = s.construct(Constructor::eo_Int, &[])?;
-let v3966 = s.named("$emb_Var", &[v3964, v3965])?;
+let v3966 = s.construct(Constructor::eo__24emb_5fVar, &[v3964, v3965])?;
 let v3967 = s.apply(v3963, v3966)?;
 let v3968 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 let v3969 = s.apply(v3967, v3968)?;
@@ -110911,7 +110911,7 @@ let v3972 = s.construct(Constructor::eo_not, &[])?;
 let v3973 = s.construct(Constructor::eo__3e_3d, &[])?;
 let v3974 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3975 = s.construct(Constructor::eo_Int, &[])?;
-let v3976 = s.named("$emb_Var", &[v3974, v3975])?;
+let v3976 = s.construct(Constructor::eo__24emb_5fVar, &[v3974, v3975])?;
 let v3977 = s.apply(v3973, v3976)?;
 let v3978 = s.literal(Lit::Numeral(parse_int("0")?))?;
 let v3979 = s.apply(v3977, v3978)?;
@@ -110922,7 +110922,7 @@ let v3983 = s.construct(Constructor::eo_not, &[])?;
 let v3984 = s.construct(Constructor::eo__3c, &[])?;
 let v3985 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v3986 = s.construct(Constructor::eo_Int, &[])?;
-let v3987 = s.named("$emb_Var", &[v3985, v3986])?;
+let v3987 = s.construct(Constructor::eo__24emb_5fVar, &[v3985, v3986])?;
 let v3988 = s.apply(v3984, v3987)?;
 let v3989 = s.construct(Constructor::eo_str_2elen, &[])?;
 let v3990 = s.construct(Constructor::eo__40purify, &[])?;
@@ -110943,7 +110943,7 @@ let v4004 = s.apply(v4001, v4003)?;
 let v4005 = s.apply(v4000, v4004)?;
 let v4006 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v4007 = s.construct(Constructor::eo_Int, &[])?;
-let v4008 = s.named("$emb_Var", &[v4006, v4007])?;
+let v4008 = s.construct(Constructor::eo__24emb_5fVar, &[v4006, v4007])?;
 let v4009 = s.apply(v4005, v4008)?;
 let v4010 = s.literal(Lit::Numeral(parse_int("1")?))?;
 let v4011 = s.apply(v4009, v4010)?;
@@ -110957,7 +110957,7 @@ let v4018 = s.apply(v4015, v4017)?;
 let v4019 = s.construct(Constructor::eo__2b, &[])?;
 let v4020 = s.literal(Lit::String(EoString::from_code_points(vec![64,118,97,114,46,115,116,114,95,105,110,100,101,120,])))?;
 let v4021 = s.construct(Constructor::eo_Int, &[])?;
-let v4022 = s.named("$emb_Var", &[v4020, v4021])?;
+let v4022 = s.construct(Constructor::eo__24emb_5fVar, &[v4020, v4021])?;
 let v4023 = s.apply(v4019, v4022)?;
 let v4024 = s.construct(Constructor::eo__2b, &[])?;
 let v4025 = s.literal(Lit::Numeral(parse_int("1")?))?;
@@ -111067,25 +111067,25 @@ let v5 = a;
 let v6 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if v4 != v6 { break 'case0; }
 let v7 = s.literal(Lit::Numeral(parse_int("10")?))?;
-let v8 = s.operator("to_z", &[v5])?;
+let v8 = s.builtin(EvalOp::ToInt, &[v5])?;
 let v9 = s.literal(Lit::Numeral(parse_int("-48")?))?;
-let v10 = s.operator("add", &[v8, v9])?;
-let v11 = s.operator("gt", &[v7, v10])?;
-let v12 = s.operator("to_z", &[v5])?;
+let v10 = s.builtin(EvalOp::Add, &[v8, v9])?;
+let v11 = s.builtin(EvalOp::Gt, &[v7, v10])?;
+let v12 = s.builtin(EvalOp::ToInt, &[v5])?;
 let v13 = s.literal(Lit::Numeral(parse_int("-48")?))?;
-let v14 = s.operator("add", &[v12, v13])?;
-let v15 = s.operator("is_neg", &[v14])?;
-let v16 = s.operator("not", &[v15])?;
-let v17 = s.operator("and", &[v11, v16])?;
+let v14 = s.builtin(EvalOp::Add, &[v12, v13])?;
+let v15 = s.builtin(EvalOp::IsNeg, &[v14])?;
+let v16 = s.builtin(EvalOp::Not, &[v15])?;
+let v17 = s.builtin(EvalOp::And, &[v11, v16])?;
 let v18 = match s.boolean_value(v17, false)? {
 Some(true) => {
 let v19 = s.literal(Lit::Numeral(parse_int("10")?))?;
-let v20 = s.operator("mul", &[a1, v19])?;
-let v21 = s.operator("to_z", &[v5])?;
+let v20 = s.builtin(EvalOp::Mul, &[a1, v19])?;
+let v21 = s.builtin(EvalOp::ToInt, &[v5])?;
 let v22 = s.literal(Lit::Numeral(parse_int("-48")?))?;
-let v23 = s.operator("add", &[v21, v22])?;
-let v24 = s.operator("mul", &[v23, a1])?;
-let v25 = s.operator("add", &[v24, a2])?;
+let v23 = s.builtin(EvalOp::Add, &[v21, v22])?;
+let v24 = s.builtin(EvalOp::Mul, &[v23, a1])?;
+let v25 = s.builtin(EvalOp::Add, &[v24, a2])?;
 let v26 = eo__24str_5fto_5fint_5feval_5frec(s, v2, v20, v25)?;
 v26
 }, Some(false) => {
@@ -111215,17 +111215,17 @@ let v4 = s.literal(Lit::Numeral(parse_int("1")?))?;
 return Ok(v4);
 }
 'case1: {
-let v5 = s.operator("is_str", &[a0])?;
+let v5 = s.builtin(EvalOp::IsStr, &[a0])?;
 let v6 = match s.boolean_value(v5, false)? {
 Some(true) => {
-let v7 = s.operator("len", &[a0])?;
+let v7 = s.builtin(EvalOp::Length, &[a0])?;
 v7
 }, Some(false) => {
 let v8 = eo__24is_5fseq_5fconst(s, a0)?;
 let v9 = s.literal(Lit::Bool(true))?;
 let v10 = if v8 == v9 && !s.is_stuck(v8)? {
 let v11 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
-let v12 = s.operator("list_len", &[v11, a0])?;
+let v12 = s.builtin(EvalOp::ListLength, &[v11, a0])?;
 v12
 } else { s.stuck() };
 v10
@@ -111354,7 +111354,7 @@ let v32 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v33 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v34 = s.apply(v33, v11)?;
 let v35 = s.apply(v34, v8)?;
-let v36 = s.operator("list_concat", &[v32, v35, a4])?;
+let v36 = s.builtin(EvalOp::ListConcat, &[v32, v35, a4])?;
 let v37 = eo__24substitute_5fsimul_5frec(s, a0, v2, a2, a3, v36)?;
 let v38 = s.apply(v31, v37)?;
 v38
@@ -111381,31 +111381,31 @@ let Some(fields) = v45 else { break 'case2; }
 ;
 let v46 = fields;
 let v47 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v48 = s.named("$emb_Var", &[v46[0], v46[1]])?;
-let v49 = s.operator("list_find", &[v47, a4, v48])?;
-let v50 = s.operator("is_neg", &[v49])?;
+let v48 = s.construct(Constructor::eo__24emb_5fVar, &[v46[0], v46[1]])?;
+let v49 = s.builtin(EvalOp::ListFind, &[v47, a4, v48])?;
+let v50 = s.builtin(EvalOp::IsNeg, &[v49])?;
 let v51 = match s.boolean_value(v50, false)? {
 Some(true) => {
 let v52 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v53 = s.named("$emb_Var", &[v46[0], v46[1]])?;
-let v54 = s.operator("list_find", &[v52, a2, v53])?;
-let v55 = s.operator("is_neg", &[v54])?;
+let v53 = s.construct(Constructor::eo__24emb_5fVar, &[v46[0], v46[1]])?;
+let v54 = s.builtin(EvalOp::ListFind, &[v52, a2, v53])?;
+let v55 = s.builtin(EvalOp::IsNeg, &[v54])?;
 let v56 = match s.boolean_value(v55, false)? {
 Some(true) => {
-let v57 = s.named("$emb_Var", &[v46[0], v46[1]])?;
+let v57 = s.construct(Constructor::eo__24emb_5fVar, &[v46[0], v46[1]])?;
 v57
 }, Some(false) => {
 let v58 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v59 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
-let v60 = s.named("$emb_Var", &[v46[0], v46[1]])?;
-let v61 = s.operator("list_find", &[v59, a2, v60])?;
+let v60 = s.construct(Constructor::eo__24emb_5fVar, &[v46[0], v46[1]])?;
+let v61 = s.builtin(EvalOp::ListFind, &[v59, a2, v60])?;
 let v62 = eo__24assoc_5fnil_5fnth(s, v58, a3, v61)?;
 v62
 }, None => s.stuck(),
 };
 v56
 }, Some(false) => {
-let v63 = s.named("$emb_Var", &[v46[0], v46[1]])?;
+let v63 = s.construct(Constructor::eo__24emb_5fVar, &[v46[0], v46[1]])?;
 v63
 }, None => s.stuck(),
 };
@@ -111597,7 +111597,7 @@ if v15 != v17 { break 'case1; }
 let v18 = s.construct(Constructor::eo_tuple, &[])?;
 let v19 = s.apply(v18, v16)?;
 let v20 = s.literal(Lit::Numeral(parse_int("-1")?))?;
-let v21 = s.operator("add", &[a2, v20])?;
+let v21 = s.builtin(EvalOp::Add, &[a2, v20])?;
 let v22 = eo__24tuple_5fcollapse_5fupdater_5frhs(s, v13, a1, v21)?;
 let v23 = s.apply(v19, v22)?;
 return Ok(v23);
@@ -111648,7 +111648,7 @@ let v9 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v10 = s.construct(Constructor::eo_tuple_2eselect, &[a1])?;
 let v11 = s.apply(v9, v10)?;
 let v12 = s.literal(Lit::Numeral(parse_int("1")?))?;
-let v13 = s.operator("add", &[a1, v12])?;
+let v13 = s.builtin(EvalOp::Add, &[a1, v12])?;
 let v14 = eo__24tuple_5fget_5fselectors_5frec(s, v4, v13)?;
 let v15 = s.apply(v11, v14)?;
 return Ok(v15);
