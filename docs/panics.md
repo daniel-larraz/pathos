@@ -136,7 +136,7 @@ such panic.
 | 56 | `"0".repeat(size - s.len())` | Resource | Printing a binary literal of width 2^32-1 (from `eo::to_bin`) allocates about 4 GiB; the process runs out of memory without a panic. |
 | 68 | `self.size.wrapping_add(other.size)` | Safe | Wraps by design. |
 | 69 | `multiply_by_pow2(other.size)` | Resource | The shift amount is a width taken from the input; a non-zero value shifted by 2^32-1 bits takes 512 MiB. |
-| 76 | `(high - low).wrapping_add(1)` | Safe (fixed in this milestone) | The count used to be `high - low + 1`, which overflowed in a debug build for width 2^32-1; it now wraps. The `-` is safe because `lit.rs:339` returns when `v1 > v2`. |
+| 76 | `(high - low).wrapping_add(1)` | Safe (fixed in this milestone) | The count used to be `high - low + 1`, which overflowed in a debug build for width 2^32-1; it now wraps. The `-` is safe because `lit.rs:344` returns when `v1 > v2`. |
 | 110, 119 | `floor_div_quotient(&y.value)` | Safe | A zero divisor returns at `bitvec.rs:110-118`. |
 | 117 | `self.size - 1` | Safe | Width zero returns at `bitvec.rs:114`. |
 | 117 | `one_extend(1, self.size - 1)` | Resource | Builds a value of `size` one bits; 512 MiB for width 2^32-1. |
@@ -164,7 +164,7 @@ such panic.
 | 51, 54 | `chars[i]` | Safe | Line 51 tests `i >= chars.len() \|\|` first; line 54 is in its else branch. |
 | 97 | `u32::from_str_radix(&hex, 16)` | Safe | The `Result` is matched; `hex` is at most six ASCII hex digits. |
 | 135 | `self.0.windows(y.len())` | Safe | `windows(0)` would panic; an empty `y` returns at `eostring.rs:132-134`. |
-| 141 | `self.0[start..start + len]` | Safe | The only caller, `lit.rs:359-361`, passes `start = v1.min(vs)` and `len <= vs - start`. |
+| 141 | `self.0[start..start + len]` | Safe | The only caller, `lit.rs:362-364`, passes `start = v1.min(vs)` and `len <= vs - start`. |
 | 151 | `char::from_u32(c).unwrap_or('?')` | Safe | No unwrap. |
 
 ### src/kind.rs
@@ -179,7 +179,7 @@ such panic.
 
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
-| 96, 122, 131, 140, 166, 191-192, 213, 228, 241 | `args.first()?`, `args.get(n)?` | Safe | Checked access. |
+| 96, 122, 131, 140, 166, 191-192, 213, 228, 245 | `args.first()?`, `args.get(n)?` | Safe | Checked access. |
 | 122, 212 | `.filter(\|e\| e.fits_u32())?.to_u32()` | Safe | `to_u32` is `unwrap_or(0)` (`num.rs:131`) and is reached only when the value fits. |
 | 124-125 | `i.pow(exp)`, `r.pow(exp)` | Resource | The exponent of `eo::pow` may be up to 2^32-1; large bases run out of memory or time without a panic. |
 | 143-146 | `n.euclidean_qr(d)` | Safe | `d.sgn() == 0` returns `None` at `lit.rs:143`. |
@@ -188,25 +188,25 @@ such panic.
 | 173-176 | `n.div(d)` | Safe | `d.sgn() == 0` returns at `lit.rs:173`. |
 | 201 | `s.code_points()[0]` | Safe | Match guard `s.len() == 1` at `lit.rs:200`. |
 | 214-215 | `BitVec::new(size, ..)` | Safe | Cannot panic; `size` comes from the input but the value is reduced to at most `size` bits. |
-| 252-253 | `args[1..]`, `args[0]` | Safe | Private function whose only call (`lit.rs:113`) follows `args.first()?` at `lit.rs:96`. |
-| 336-338 | `i1.to_u32()`, `vs - 1`, `i2.to_u32()` | Safe | `lit.rs:333` returns when the width is zero or `i1` exceeds it; `i2.to_u32()` is used only when `i2 <= dsize`. |
-| 344 | `b.extract(v2, v1)` | Safe (fixed in this milestone) | `v2` can equal the width, so for width 2^32-1 the bit count is 2^32; `bitvec.rs:76` now wraps it. |
-| 351-360 | `vs - 1`, `v2 + 1 - v1`, `vs - v1.min(vs)`, `st.substr(..)` | Safe | `lit.rs:348` returns for an empty string; `v2 + 1 - v1` is guarded by `v2 >= v1`; the range passed to `substr` is clamped to the length. |
-| 372-380 | loop with `remaining.floor_div_quotient(base)` | Safe | `base <= 1` returns at `lit.rs:372`, so the divisor is non-zero and the loop ends. |
-| 423 | `LitKind::ALL.get(..)?` | Safe | Checked lookup. |
-| 426-431 | `Integer::parse`, `Rational::parse` on snapshot strings | Safe | Both return `None` on anything that is not a number, including non-ASCII text. |
-| 433-436 | width check, `BitVec::new(size, &value)` | Safe | A negative value or one wider than `size` is rejected at `lit.rs:433`. |
-| 444-445 | `Vec::with_capacity(n)` | Safe | `n` comes from `Reader::len(4)`, so it is at most a quarter of the remaining input. |
+| 256-257 | `args[1..]`, `args[0]` | Safe | Private function whose only call (`lit.rs:113`) follows `args.first()?` at `lit.rs:96`. |
+| 340-343 | `i1.to_u32()`, `vs - 1`, `i2.to_u32()` | Safe | `lit.rs:337` returns when the width is zero or `i1` is not below it (`i1 >= dsize`); `i2.to_u32()` is used only when `i2 < dsize`. |
+| 347 | `b.extract(v2, v1)` | Safe (fixed in this milestone) | `v2` can equal the width, so for width 2^32-1 the bit count is 2^32; `bitvec.rs:76` now wraps it. (Since milestone 29, which follows Ethos `b8d65127`, an upper index at the width is cut to the last bit, so `v2` is below the width.) |
+| 354-363 | `vs - 1`, `v2 + 1 - v1`, `vs - v1.min(vs)`, `st.substr(..)` | Safe | `lit.rs:351` returns for an empty string; `v2 + 1 - v1` is guarded by `v2 >= v1`; the range passed to `substr` is clamped to the length. |
+| 375-383 | loop with `remaining.floor_div_quotient(base)` | Safe | `base <= 1` returns at `lit.rs:375`, so the divisor is non-zero and the loop ends. |
+| 426 | `LitKind::ALL.get(..)?` | Safe | Checked lookup. |
+| 429-434 | `Integer::parse`, `Rational::parse` on snapshot strings | Safe | Both return `None` on anything that is not a number, including non-ASCII text. |
+| 436-439 | width check, `BitVec::new(size, &value)` | Safe | A negative value or one wider than `size` is rejected at `lit.rs:436`. |
+| 447-448 | `Vec::with_capacity(n)` | Safe | `n` comes from `Reader::len(4)`, so it is at most a quarter of the remaining input. |
 
 ### src/num.rs
 
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
-| 36 | `MInt::from_string_base(base, s)` | Safe | The base is always the constant 2, 10 or 16 (`bitvec.rs:32`, `num.rs:193-206`, `lit.rs:426`, `:431`, `pathos-elab/src/expr_parser.rs:292`, `:360`, `:647`); any string gives `None` or a number. |
+| 36 | `MInt::from_string_base(base, s)` | Safe | The base is always the constant 2, 10 or 16 (`bitvec.rs:32`, `num.rs:193-206`, `lit.rs:429`, `:434`, `pathos-elab/src/expr_parser.rs:292`, `:360`, `:647`); any string gives `None` or a number. |
 | 61, 245 | `pow(u64::from(exp))` | Resource | The exponent is a `u32` from the input (`lit.rs:122`); the result can exceed memory, which aborts or is killed, not a panic. |
 | 82, 99-100 | `<< u64::from(..)` | Resource | Shift amounts are bit-vector widths from the input; up to 512 MiB per value. |
 | 87, 92-94 | `mod_power_of_2`, `u64 + u64`, `>>` | Safe | The sum of two widened `u32` cannot overflow. |
-| 105, 110, 116 | `div_mod(&y.0)` | Safe | Panics on zero, and every caller excludes zero: `bitvec.rs:110`, `:124`, `lit.rs:143`, `lit.rs:372`. |
+| 105, 110, 116 | `div_mod(&y.0)` | Safe | Panics on zero, and every caller excludes zero: `bitvec.rs:110`, `:124`, `lit.rs:143`, `lit.rs:375`. |
 | 119-120 | `q += MInt::ONE`, `r -= &y.0` | Safe | Arbitrary-precision arithmetic. |
 | 126, 131 | `u32::try_from(&self.0)`, `.unwrap_or(0)` | Safe | No unwrap. |
 | 182 | `MRat::from_integers_ref(&n.0, &d.0)` | Safe | Panics on a zero denominator, which returns `None` at `num.rs:179`. |
@@ -626,27 +626,29 @@ such panic.
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
 | 194, 201, 208 | `*count += 1`, `oid + 1` | Safe | Counters of symbols that share a name. |
-| 259, 431, 656 | `.first()`, `.split_last()` with `else` | Safe | An empty child list takes the error branch. |
+| 259, 431, 671 | `.first()`, `.split_last()` with `else` | Safe | An empty child list takes the error branch. |
 | 291 | `tvars[*i]` | Safe | `tvars.len() >= *i` holds throughout: `*i` starts at 0 in each call and grows by one at desugar.rs:293, and when the two are equal the branch at :288-289 pushes instead of indexing. |
-| 505 | `n.to_u32() as usize` | Safe | Taken only when `n.fits_u32()`; each step of the loop at desugar.rs:510 is `child(ck, ct, i)?`, which stops at the first missing child. |
-| 556, 661, 699, 913, 917 | `+= 1` | Safe | Counters of arguments and parameters. |
-| 582 | `parser_term_arity -= 1` | Safe | Guarded by `parser_term_arity > 0` at desugar.rs:579. |
-| 1103 | `&types[..types.len().saturating_sub(1)]` | Safe | The end saturates at 0. |
-| 1113 | `nargs.saturating_sub(1)` | Safe | Saturating. |
-| 1125, 1158 | `nargs - i + 1`, `npremises - i + 1` | Safe | `i` ranges over `1..=nargs` and `1..=npremises`. |
-| 1070, 1071 | `ck.get_literal_type_rule(k, self_term, None)` | Stack | A literal type rule that asks for the type of `eo::self`, e.g. `(declare-consts <numeral> (eo::typeof eo::self))`, recurses without end in pathos-check (crates/pathos-check/src/typing.rs:62-86) and overflows the stack; Ethos overflows on the same input. |
+| 520 | `n.to_u32() as usize` | Safe | Taken only when `n.fits_u32()`; each step of the loop at desugar.rs:525 is `child(ck, ct, i)?`, which stops at the first missing child. |
+| 571, 676, 714, 928, 932 | `+= 1` | Safe | Counters of arguments and parameters. |
+| 597 | `parser_term_arity -= 1` | Safe | Guarded by `parser_term_arity > 0` at desugar.rs:594. |
+| 1130 | `&types[..types.len().saturating_sub(1)]` | Safe | The end saturates at 0. |
+| 1140 | `nargs.saturating_sub(1)` | Safe | Saturating. |
+| 1152, 1185 | `nargs - i + 1`, `npremises - i + 1` | Safe | `i` ranges over `1..=nargs` and `1..=npremises`. |
+| 1097, 1098 | `ck.get_literal_type_rule(k, self_term, None)` | Stack | A literal type rule that asks for the type of `eo::self`, e.g. `(declare-consts <numeral> (eo::typeof eo::self))`, recurses without end in pathos-check (crates/pathos-check/src/typing.rs:62-86) and overflows the stack; Ethos overflows on the same input. |
 | 121 (via 126, 131 and their callers) | `malformed` | Error where Ethos reads out of bounds | A term without the type or child the C++ takes for granted stops the stage with `Desugar: unexpected term: ...` (docs/ethos-differences.md:237-239). |
-| 182 | `Error::fatal` (used before it was initialized) | Error where Ethos reads out of bounds | `syms` is set by `initialize` (desugar.rs:1238) before any hook runs; the C++ has no such check. |
-| 1035 | `Error::fatal` (Boolean literal kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1362; the parser rejects `<boolean>` first. |
-| 1117 | `Error::fatal` (more than 10 arguments) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:70, same text. |
-| 1137 | `Error::fatal` (premise list without nil) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:103, same text. |
-| 1150 | `Error::fatal` (more than 8 premises) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:116, same text. |
-| 1191 | `Error::fatal` (checker template missing) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:160, same text. |
-| 1297 | `Error::fatal` (malformed exclusion directive) | Ethos's fatal error | plugins/desugar/desugar.cpp:1152, same text. |
-| 1307 | `Error::fatal` (unknown exclusion kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1169, same text. |
-| 1361 | `Error::fatal` (template missing) | Ethos's fatal error | plugins/desugar/desugar.cpp:1082, same text. |
-| 1405 | `Error::fatal` (output cannot be written) | Ethos's fatal error | plugins/desugar/desugar.cpp:1127. |
-| 262, 264, 707 | `ck.store.mk(kind, &children)` | Safe | `TermStore::mk` panics only for an atomic kind (`pathos-term/src/store.rs:443`). Line 262 passes `APPLY`, line 707 `APPLY` or `APPLY_OPAQUE`, and line 264 the kind of a term one of whose children changed, so a term with children, of a compound kind. |
+| 182 | `Error::fatal` (used before it was initialized) | Error where Ethos reads out of bounds | `syms` is set by `initialize` (desugar.rs:1265) before any hook runs; the C++ has no such check. |
+| 474 | `Error::fatal` (a `:left-assoc-nil` or `:left-assoc-non-singleton-nil` operator) | Ethos's fatal error | plugins/desugar/desugar.cpp:227, same text. |
+| 1051 | `Error::fatal` (a type rule for `<decimal>` or `<hexadecimal>`) | Ethos's fatal error | plugins/desugar/desugar.cpp:1380, same text. |
+| 1062 | `Error::fatal` (Boolean literal kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1385; the parser rejects `<boolean>` first. |
+| 1144 | `Error::fatal` (more than 10 arguments) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:70, same text. |
+| 1164 | `Error::fatal` (premise list without nil) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:103, same text. |
+| 1177 | `Error::fatal` (more than 8 premises) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:116, same text. |
+| 1218 | `Error::fatal` (checker template missing) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:160, same text. |
+| 1324 | `Error::fatal` (malformed exclusion directive) | Ethos's fatal error | plugins/desugar/desugar.cpp:1165, same text. |
+| 1334 | `Error::fatal` (unknown exclusion kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1182, same text. |
+| 1388 | `Error::fatal` (template missing) | Ethos's fatal error | plugins/desugar/desugar.cpp:1095, same text. |
+| 1432 | `Error::fatal` (output cannot be written) | Ethos's fatal error | plugins/desugar/desugar.cpp:1140. |
+| 262, 264, 722 | `ck.store.mk(kind, &children)` | Safe | `TermStore::mk` panics only for an atomic kind (`pathos-term/src/store.rs:443`). Line 262 passes `APPLY`, line 707 `APPLY` or `APPLY_OPAQUE`, and line 264 the kind of a term one of whose children changed, so a term with children, of a compound kind. |
 
 ### src/smt_meta.rs
 
@@ -661,7 +663,7 @@ such panic.
 | 792 | `&args[j - 1]` | Safe | `j >= 1` by `.skip(1)`, and smt_meta.rs:785-790 rejects a case head with more children than `nargs`, while `args.len() == nargs - 1`. |
 | 862 | `num_children(ct).saturating_sub(1)` | Safe | Saturating, and `child(ck, ct, nopq_args)?` follows at smt_meta.rs:863. |
 | 970 | `&types[..types.len().saturating_sub(1)]` | Safe | The end saturates at 0. |
-| 315 | `ck.get_literal_type_rule(k, gt, None)` | Stack | The same recursion in pathos-check as at desugar.rs:1070, reached when a constant named `$emb_Numeral`, `$emb_Rational`, `$emb_Binary` or `$emb_String` is declared under such a rule; Ethos overflows too. |
+| 315 | `ck.get_literal_type_rule(k, gt, None)` | Stack | The same recursion in pathos-check as at desugar.rs:1097, reached when a constant named `$emb_Numeral`, `$emb_Rational`, `$emb_Binary` or `$emb_String` is declared under such a rule; Ethos overflows too. |
 | 32 (via 37, 42, 456, 728, 786, 953, 960) | `malformed` | Error where Ethos reads out of bounds | The C++ guards these with `Assert`, a no-op in release (e.g. plugins/smt_meta/smt_meta_reduce.cpp:329, :927), and then reads outside the term; pathos stops with `SmtMetaReduce: unexpected term: ...` (docs/ethos-differences.md:240). |
 | 866 | `Error::fatal` (ambiguous symbol) | Ethos's fatal error | The `AlwaysAssert` at plugins/smt_meta/smt_meta_reduce.cpp:837, with pathos's own wording (docs/ethos-differences.md:240-243). |
 

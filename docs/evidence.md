@@ -5,11 +5,14 @@ checker in Rust: the `ethos` binary as `pathos-eo`, and `ethos-eoc` with its
 seven compiler stages as `pathos-eoc`. It is meant to replace the C++ if two
 things hold: it is memory safe, and it does what Ethos does. This page says
 what backs each claim and how to check it. The reference is Ethos
-`c7d3db90` (cvc5/ethos `main` with PRs #270 and #272, milestone 26), built
-in release mode. The figures on this page were measured against
-`9217112f`, two commits earlier, unless a section says otherwise; the two
-commits fix the bugs pathos used to reproduce and change `lean-meta`'s
-output, not anything the figures measure.
+`b8d65127` (cvc5/ethos `main` with PRs #270, #272, #274 and #275,
+milestones 26 and 29), built in release mode. The figures on this page were
+measured against `9217112f`, four commits earlier, unless a section says
+otherwise; those commits fix the bugs pathos used to reproduce, change
+`lean-meta`'s output, add the `rust-meta` stage, and change three corners
+of the evaluator (`eo::extract` and `eo::gt` on bit-vectors, list operators
+on arguments that did not evaluate) and what the desugaring stage accepts,
+not anything the figures measure.
 
 ## Memory safety
 
@@ -179,7 +182,7 @@ file`; the harness accepts those four cases by name.
 ## Keeping up with Ethos
 
 Everything above is about one Ethos revision, `REFERENCE_REV` in
-`difftest.env` (`c7d3db90`). Ethos keeps changing. A workflow of its own,
+`difftest.env` (`b8d65127`). Ethos keeps changing. A workflow of its own,
 `.github/workflows/drift.yml` ("Drift from Ethos main"), runs every night
 and on demand, apart from CI and blocking nothing. On Linux x86-64 it
 builds Ethos and `ethos-eoc` at the current `main` of cvc5/ethos and

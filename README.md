@@ -24,7 +24,7 @@ proof checker in Rust, meant as a drop-in replacement:
 
 pathos contains no `unsafe` code (the compiler enforces it) and no C or
 C++; its dependencies' `unsafe` code is traced and justified line by line.
-It is checked against Ethos `c7d3db90`, the current `main`, by
+It is checked against Ethos `b8d65127`, the current `main`, by
 differential testing on all six platforms Ethos's CI covers: Linux, macOS
 and Windows, each on x86-64 and arm64. On the cvc5 proofs it takes about
 44% of Ethos's time and much less memory (3.7 GiB against 24.3 GiB on

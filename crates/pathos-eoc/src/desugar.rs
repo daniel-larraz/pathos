@@ -467,6 +467,21 @@ impl Desugar {
             .get(&e)
             .copied()
             .unwrap_or((Attr::None, None));
+        if matches!(cattr, Attr::LeftAssocNil | Attr::LeftAssocNsNil) {
+            // The stage's list operators take lists apart in the right
+            // associative direction only, so these operators are refused
+            // rather than given a semantics the evaluator does not have.
+            return Err(Error::fatal(format!(
+                "Desugar: the operator {} is declared {}, which is not supported, since left \
+                 associative lists are not modelled by the semantics of the eo:: list operators",
+                ck.show(e),
+                if cattr == Attr::LeftAssocNil {
+                    ":left-assoc-nil"
+                } else {
+                    ":left-assoc-non-singleton-nil"
+                }
+            )));
+        }
         // The name is settled before any case is written, so that all of
         // them use the same overload suffix.
         let cname = self.print_name(ck, e)?;
@@ -1030,7 +1045,19 @@ impl Desugar {
             LitKind::Rational => "Rational",
             LitKind::Binary => "Binary",
             LitKind::String => "String",
-            LitKind::Decimal | LitKind::Hexadecimal => return Ok(()),
+            // The stage's semantics has one kind of rational and one kind of
+            // binary, so a signature with these literals is refused.
+            LitKind::Decimal | LitKind::Hexadecimal => {
+                return Err(Error::fatal(format!(
+                    "Desugar: {} literals are not supported, since they are not modelled by the \
+                     semantics of the eo:: operators",
+                    if k == LitKind::Decimal {
+                        "<decimal>"
+                    } else {
+                        "<hexadecimal>"
+                    }
+                )));
+            }
             LitKind::Boolean => {
                 return Err(Error::fatal(format!(
                     "Unknown literal type rule{}\n",
