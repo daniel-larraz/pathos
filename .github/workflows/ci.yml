@@ -92,6 +92,32 @@ jobs:
       - name: Tests (release)
         run: cargo test --locked --release
 
+  # generated/cpc-checker is never edited by hand: regenerate it from the
+  # Ethos and logos commits its GENERATED.md names and compare.
+  generated:
+    name: The CPC checker is what Ethos's generator writes
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install the generator's build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libgmp-dev
+
+      - name: Regenerate generated/cpc-checker and compare
+        run: scripts/generate-cpc --check --from-note
+
+      - name: Keep the difference
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generate-cpc-difference
+          path: |
+            target/generate-cpc/check.diff
+            target/generate-cpc/driver.log
+          if-no-files-found: ignore
+
   regressions:
     name: Agreement with Ethos on its regressions, the fuzzing findings and the command line
     runs-on: ubuntu-24.04

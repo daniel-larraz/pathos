@@ -42,7 +42,12 @@ how deep the checker's functions may nest (the checker's own default,
 that the script names and from logos's CPC at `LOGOS_REV`
 (`install/defs/Cpc.cached.eo`); `generated/cpc-checker/GENERATED.md` records
 both, and `scripts/generate-cpc --check` says whether the directory is what
-those revisions generate. It is a Cargo workspace of its own, so pathos's
+those revisions generate. CI runs `scripts/generate-cpc --check --from-note`,
+which regenerates the crate from the two commits `GENERATED.md` names (the
+Ethos one looked for in cvc5/ethos, then in the harness's fork, where work
+not yet merged upstream lives) and fails on any difference: every change to
+the checker is a change to Ethos's generator or runtime, so it can go
+upstream as it is. It is a Cargo workspace of its own, so pathos's
 lints, formatting and tests do not apply to it; its dependencies are the
 three `malachite` crates at the versions pathos pins.
 
