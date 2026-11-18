@@ -557,6 +557,12 @@ intended; everything between gates is not.
       (2..=62, not 2..=36; callers pass 2, 10 and 16 only). Milestone 30's
       unfinished audit of the generated runtime (`target/audit/` in its
       checkout) is a starting point for the later audit, not a result.
+    - **Stitching the Lean: postponed** to the proof milestone (2026-11-18).
+      The checker is translated in parts (modules by the call graph, each
+      calling only earlier ones), and each part's Lean file repeats the
+      runtime and states the other parts it calls as axioms. Each file is
+      built as it is, one by one, against Aeneas's library; joining them
+      into one development is left to the milestone that writes proofs.
     - **The measurement.** Time and peak memory of the rewritten checker
       against the baseline, `pathos-eo` (with and without a snapshot) and
       logos, on the 400 safe proofs and the 41 large safe ones, one process
