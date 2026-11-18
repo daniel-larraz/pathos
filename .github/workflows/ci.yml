@@ -23,7 +23,12 @@
 #                  scripts/platform-probe (line endings, file names, stack
 #                  depths) and scripts/unsafe-reach. Release binaries are
 #                  linked statically where Ethos's are (not on macOS) and
-#                  uploaded on pushes to main.
+#                  uploaded on pushes to main. scripts/unsafe-reach (about
+#                  ten minutes a platform) runs only when what it measures
+#                  may have changed: Cargo.lock, a Cargo.toml, the source of
+#                  pathos-eo's and pathos-eoc's crates, the script or this
+#                  file; and every week, for a new stable Rust, and on
+#                  demand (input unsafe-reach).
 #
 # The cvc5 proof gates (proofs, large, options, perf) need a cvc5 build and
 # up to 24 GB of memory, so they run locally with scripts/full-check.
@@ -35,12 +40,21 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      unsafe-reach:
+        description: Run scripts/unsafe-reach whatever changed
+        type: boolean
+        default: false
+  # weekly, so that scripts/unsafe-reach sees each new stable Rust
+  schedule:
+    - cron: "41 4 * * 1"
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  # the weekly run and a push to main do not cancel each other
+  group: ci-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 env:
@@ -417,10 +431,48 @@ jobs:
             --ref "${{ steps.pins.outputs.ref_dir }}/build/src/ethos$exe" \
             --cand "target/release/pathos-eo$exe" --work target/platform-probe
 
+      # scripts/unsafe-reach lists the dependency lines that pathos-eo and
+      # pathos-eoc reach, so its output changes only with Cargo.lock, a
+      # Cargo.toml, the source of their crates (every crate but
+      # crates/pathos), the toolchain (the weekly run), the script or this
+      # file. Compared with main for a run on demand, with the base for a
+      # pull request, and with the previous commit of main for a push; if
+      # the comparison fails or lists 300 files (GitHub's cap), it runs.
+      - name: Decide whether to list the dependency code
+        id: reach
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          FORCE: ${{ inputs.unsafe-reach }}
+          BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          run=false
+          case "$EVENT" in
+            schedule) run=true ;;
+            workflow_dispatch) [[ "$FORCE" == true ]] && run=true; base=main ;;
+            pull_request) base="$PR_BASE" ;;
+            *) base="$BEFORE" ;;
+          esac
+          if [[ "$run" == false ]]; then
+            if files="$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$GITHUB_SHA" --jq '.files[].filename')"; then
+              if [[ "$(grep -c . <<< "$files")" -ge 300 ]] ||
+                grep -qE '^(Cargo\.(lock|toml)|crates/[^/]+/Cargo\.toml|crates/pathos-[^/]+/|scripts/unsafe-reach$|\.github/workflows/ci\.yml$|rust-toolchain|\.cargo/)' <<< "$files"; then
+                run=true
+              fi
+            else
+              run=true
+            fi
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          echo "scripts/unsafe-reach: $run ($EVENT)"
+
       # LLVM's tools where binutils cannot read the binaries: Homebrew's on
       # macOS, and on Windows those of MSYS2 or of the runner's LLVM.
       - name: Find a disassembler (macOS)
-        if: ${{ !cancelled() && runner.os == 'macOS' }}
+        if: ${{ !cancelled() && runner.os == 'macOS' && steps.reach.outputs.run == 'true' }}
         run: |
           dir="$(ls -d /opt/homebrew/opt/llvm*/bin /usr/local/opt/llvm*/bin 2>/dev/null | sort | tail -1 || true)"
           if [[ -z "$dir" || ! -x "$dir/llvm-addr2line" ]]; then
@@ -431,7 +483,7 @@ jobs:
           echo "ADDR2LINE=$dir/llvm-addr2line" >> $GITHUB_ENV
 
       - name: Find a disassembler (Windows)
-        if: ${{ !cancelled() && runner.os == 'Windows' }}
+        if: ${{ !cancelled() && runner.os == 'Windows' && steps.reach.outputs.run == 'true' }}
         run: |
           pacman -S --needed --noconfirm "${MINGW_PACKAGE_PREFIX}-llvm-tools" ||
             pacman -S --needed --noconfirm "${MINGW_PACKAGE_PREFIX}-llvm" || true
@@ -444,7 +496,7 @@ jobs:
           done
 
       - name: List the dependency code in the binaries
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.reach.outputs.run == 'true' }}
         run: scripts/unsafe-reach
 
       - name: Keep the comparison reports

@@ -181,7 +181,11 @@ ordinary bounds-checked slices.
 
 CI runs `scripts/unsafe-reach` on each of the six platforms Ethos is built
 for (job `platforms`, step "List the dependency code in the binaries"),
-on the statically linked release build of that platform. Evidence 1 is
+on the statically linked release build of that platform. It runs when
+what it measures may have changed (`Cargo.lock`, a `Cargo.toml`, the
+source of the crates of `pathos-eo` and `pathos-eoc`, the script or
+`ci.yml`), every week for a new stable Rust, and on demand (input
+`unsafe-reach` of the workflow); other runs skip it. Evidence 1 is
 therefore from each platform. Evidence 2 and 3 (which function, and the
 instrumented run) were done on x86-64 Linux only; elsewhere, that the
 lines sit behind the FFT follows from the source, and that the FFT runs
