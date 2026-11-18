@@ -4,9 +4,9 @@
 #
 #   scripts/unsafe-reach [cargo build options...]
 #
-# Builds pathos-eo and pathos-eoc in release mode with debug information
-# (into target/unsafe-reach, so the normal build is left alone; only these
-# two packages, not the CPC checker `pathos`), disassembles each
+# Builds pathos-eo, pathos-eoc and pathos (the CPC checker) in release mode
+# with debug information (into target/unsafe-reach, so the normal build is
+# left alone), disassembles each
 # binary, and maps every instruction to its source lines with addr2line -i,
 # which also gives the lines of the functions inlined at that instruction.
 # The linker drops functions nothing refers to, so a dependency's source
@@ -63,9 +63,9 @@ echo "target: $(rustc -vV | sed -n 's/^host: //p'); tools: $objdump, $addr2line"
 
 CARGO_TARGET_DIR="$target" CARGO_PROFILE_RELEASE_DEBUG=2 \
   cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" \
-  -p pathos-eo -p pathos-eoc "$@"
+  -p pathos-eo -p pathos-eoc -p pathos "$@"
 
-for bin in pathos-eo pathos-eoc; do
+for bin in pathos-eo pathos-eoc pathos; do
   exe_path="$target/release/$bin$exe"
   # macOS: the tools look in <binary>.dSYM for a file with the binary's
   # name, and the one cargo leaves there for pathos-eoc is named after the
