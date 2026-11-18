@@ -9,8 +9,17 @@ error message Ethos would print (see "Memory safety" in
 
 This file lists every place in pathos's non-test code that can panic and
 says, for each, why input cannot reach it, or what reaches it. It is the
-appendix of [evidence.md](evidence.md). Line numbers are those of commit
-`cd5face` on branch `m14`. Milestone 15 added `src/thread.rs` to
+appendix of [evidence.md](evidence.md).
+
+It is two audits. The last section, "pathos (the CPC checker)", is the
+audit of `crates/pathos` at the commit that section names, and a script
+checks its rows against that commit. Everything before it is the audit of
+the other six crates at commit `cd5face` on branch `m14`, whose line
+numbers are that commit's; what later milestones changed is said in notes,
+in the rows or beside the tables, and the generated checker that `pathos`
+calls (`generated/cpc-checker`) is in neither.
+
+For the audit of `cd5face`: Milestone 15 added `src/thread.rs` to
 `pathos-elab` (two rows, with that milestone's line numbers) and moved
 lines in the two `main.rs`, `parser.rs`, `path.rs` and `lexer.rs` by a few;
 it added no other construct that can panic.
@@ -136,7 +145,7 @@ such panic.
 | 56 | `"0".repeat(size - s.len())` | Resource | Printing a binary literal of width 2^32-1 (from `eo::to_bin`) allocates about 4 GiB; the process runs out of memory without a panic. |
 | 68 | `self.size.wrapping_add(other.size)` | Safe | Wraps by design. |
 | 69 | `multiply_by_pow2(other.size)` | Resource | The shift amount is a width taken from the input; a non-zero value shifted by 2^32-1 bits takes 512 MiB. |
-| 76 | `(high - low).wrapping_add(1)` | Safe (fixed in this milestone) | The count used to be `high - low + 1`, which overflowed in a debug build for width 2^32-1; it now wraps. The `-` is safe because `lit.rs:344` returns when `v1 > v2`. |
+| 76 | `(high - low).wrapping_add(1)` | Safe (fixed in this milestone) | The count used to be `high - low + 1`, which overflowed in a debug build for width 2^32-1; it now wraps. The `-` is safe because `lit.rs:339` returns when `v1 > v2`. |
 | 110, 119 | `floor_div_quotient(&y.value)` | Safe | A zero divisor returns at `bitvec.rs:110-118`. |
 | 117 | `self.size - 1` | Safe | Width zero returns at `bitvec.rs:114`. |
 | 117 | `one_extend(1, self.size - 1)` | Resource | Builds a value of `size` one bits; 512 MiB for width 2^32-1. |
@@ -164,7 +173,7 @@ such panic.
 | 51, 54 | `chars[i]` | Safe | Line 51 tests `i >= chars.len() \|\|` first; line 54 is in its else branch. |
 | 97 | `u32::from_str_radix(&hex, 16)` | Safe | The `Result` is matched; `hex` is at most six ASCII hex digits. |
 | 135 | `self.0.windows(y.len())` | Safe | `windows(0)` would panic; an empty `y` returns at `eostring.rs:132-134`. |
-| 141 | `self.0[start..start + len]` | Safe | The only caller, `lit.rs:362-364`, passes `start = v1.min(vs)` and `len <= vs - start`. |
+| 141 | `self.0[start..start + len]` | Safe | The only caller, `lit.rs:359-361`, passes `start = v1.min(vs)` and `len <= vs - start`. |
 | 151 | `char::from_u32(c).unwrap_or('?')` | Safe | No unwrap. |
 
 ### src/kind.rs
@@ -179,7 +188,7 @@ such panic.
 
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
-| 96, 122, 131, 140, 166, 191-192, 213, 228, 245 | `args.first()?`, `args.get(n)?` | Safe | Checked access. |
+| 96, 122, 131, 140, 166, 191-192, 213, 228, 241 | `args.first()?`, `args.get(n)?` | Safe | Checked access. |
 | 122, 212 | `.filter(\|e\| e.fits_u32())?.to_u32()` | Safe | `to_u32` is `unwrap_or(0)` (`num.rs:131`) and is reached only when the value fits. |
 | 124-125 | `i.pow(exp)`, `r.pow(exp)` | Resource | The exponent of `eo::pow` may be up to 2^32-1; large bases run out of memory or time without a panic. |
 | 143-146 | `n.euclidean_qr(d)` | Safe | `d.sgn() == 0` returns `None` at `lit.rs:143`. |
@@ -188,25 +197,25 @@ such panic.
 | 173-176 | `n.div(d)` | Safe | `d.sgn() == 0` returns at `lit.rs:173`. |
 | 201 | `s.code_points()[0]` | Safe | Match guard `s.len() == 1` at `lit.rs:200`. |
 | 214-215 | `BitVec::new(size, ..)` | Safe | Cannot panic; `size` comes from the input but the value is reduced to at most `size` bits. |
-| 256-257 | `args[1..]`, `args[0]` | Safe | Private function whose only call (`lit.rs:113`) follows `args.first()?` at `lit.rs:96`. |
-| 340-343 | `i1.to_u32()`, `vs - 1`, `i2.to_u32()` | Safe | `lit.rs:337` returns when the width is zero or `i1` is not below it (`i1 >= dsize`); `i2.to_u32()` is used only when `i2 < dsize`. |
-| 347 | `b.extract(v2, v1)` | Safe (fixed in this milestone) | `v2` can equal the width, so for width 2^32-1 the bit count is 2^32; `bitvec.rs:76` now wraps it. (Since milestone 29, which follows Ethos `b8d65127`, an upper index at the width is cut to the last bit, so `v2` is below the width.) |
-| 354-363 | `vs - 1`, `v2 + 1 - v1`, `vs - v1.min(vs)`, `st.substr(..)` | Safe | `lit.rs:351` returns for an empty string; `v2 + 1 - v1` is guarded by `v2 >= v1`; the range passed to `substr` is clamped to the length. |
-| 375-383 | loop with `remaining.floor_div_quotient(base)` | Safe | `base <= 1` returns at `lit.rs:375`, so the divisor is non-zero and the loop ends. |
-| 426 | `LitKind::ALL.get(..)?` | Safe | Checked lookup. |
-| 429-434 | `Integer::parse`, `Rational::parse` on snapshot strings | Safe | Both return `None` on anything that is not a number, including non-ASCII text. |
-| 436-439 | width check, `BitVec::new(size, &value)` | Safe | A negative value or one wider than `size` is rejected at `lit.rs:436`. |
-| 447-448 | `Vec::with_capacity(n)` | Safe | `n` comes from `Reader::len(4)`, so it is at most a quarter of the remaining input. |
+| 252-253 | `args[1..]`, `args[0]` | Safe | Private function whose only call (`lit.rs:113`) follows `args.first()?` at `lit.rs:96`. |
+| 336-338 | `i1.to_u32()`, `vs - 1`, `i2.to_u32()` | Safe | `lit.rs:333` returns when the width is zero or `i1` exceeds it; `i2.to_u32()` is used only when `i2 <= dsize`. (Since milestone 29, which follows Ethos `b8d65127`, the first returns when `i1` is not below the width, `i1 >= dsize`, and `i2.to_u32()` is used only when `i2 < dsize`.) |
+| 344 | `b.extract(v2, v1)` | Safe (fixed in this milestone) | `v2` can equal the width, so for width 2^32-1 the bit count is 2^32; `bitvec.rs:76` now wraps it. (Since milestone 29 an upper index at the width is cut to the last bit, so `v2` is below the width.) |
+| 351-360 | `vs - 1`, `v2 + 1 - v1`, `vs - v1.min(vs)`, `st.substr(..)` | Safe | `lit.rs:348` returns for an empty string; `v2 + 1 - v1` is guarded by `v2 >= v1`; the range passed to `substr` is clamped to the length. |
+| 372-380 | loop with `remaining.floor_div_quotient(base)` | Safe | `base <= 1` returns at `lit.rs:372`, so the divisor is non-zero and the loop ends. |
+| 423 | `LitKind::ALL.get(..)?` | Safe | Checked lookup. |
+| 426-431 | `Integer::parse`, `Rational::parse` on snapshot strings | Safe | Both return `None` on anything that is not a number, including non-ASCII text. |
+| 433-436 | width check, `BitVec::new(size, &value)` | Safe | A negative value or one wider than `size` is rejected at `lit.rs:433`. |
+| 444-445 | `Vec::with_capacity(n)` | Safe | `n` comes from `Reader::len(4)`, so it is at most a quarter of the remaining input. |
 
 ### src/num.rs
 
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
-| 36 | `MInt::from_string_base(base, s)` | Safe | The base is always the constant 2, 10 or 16 (`bitvec.rs:32`, `num.rs:193-206`, `lit.rs:429`, `:434`, `pathos-elab/src/expr_parser.rs:292`, `:360`, `:647`); any string gives `None` or a number. |
+| 36 | `MInt::from_string_base(base, s)` | Safe | The base is always the constant 2, 10 or 16 (`bitvec.rs:32`, `num.rs:193-206`, `lit.rs:426`, `:431`, `pathos-elab/src/expr_parser.rs:292`, `:360`, `:647`); any string gives `None` or a number. |
 | 61, 245 | `pow(u64::from(exp))` | Resource | The exponent is a `u32` from the input (`lit.rs:122`); the result can exceed memory, which aborts or is killed, not a panic. |
 | 82, 99-100 | `<< u64::from(..)` | Resource | Shift amounts are bit-vector widths from the input; up to 512 MiB per value. |
 | 87, 92-94 | `mod_power_of_2`, `u64 + u64`, `>>` | Safe | The sum of two widened `u32` cannot overflow. |
-| 105, 110, 116 | `div_mod(&y.0)` | Safe | Panics on zero, and every caller excludes zero: `bitvec.rs:110`, `:124`, `lit.rs:143`, `lit.rs:375`. |
+| 105, 110, 116 | `div_mod(&y.0)` | Safe | Panics on zero, and every caller excludes zero: `bitvec.rs:110`, `:124`, `lit.rs:143`, `lit.rs:372`. |
 | 119-120 | `q += MInt::ONE`, `r -= &y.0` | Safe | Arbitrary-precision arithmetic. |
 | 126, 131 | `u32::try_from(&self.0)`, `.unwrap_or(0)` | Safe | No unwrap. |
 | 182 | `MRat::from_integers_ref(&n.0, &d.0)` | Safe | Panics on a zero denominator, which returns `None` at `num.rs:179`. |
@@ -626,29 +635,29 @@ such panic.
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
 | 194, 201, 208 | `*count += 1`, `oid + 1` | Safe | Counters of symbols that share a name. |
-| 259, 431, 671 | `.first()`, `.split_last()` with `else` | Safe | An empty child list takes the error branch. |
+| 259, 431, 656 | `.first()`, `.split_last()` with `else` | Safe | An empty child list takes the error branch. |
 | 291 | `tvars[*i]` | Safe | `tvars.len() >= *i` holds throughout: `*i` starts at 0 in each call and grows by one at desugar.rs:293, and when the two are equal the branch at :288-289 pushes instead of indexing. |
-| 520 | `n.to_u32() as usize` | Safe | Taken only when `n.fits_u32()`; each step of the loop at desugar.rs:525 is `child(ck, ct, i)?`, which stops at the first missing child. |
-| 571, 676, 714, 928, 932 | `+= 1` | Safe | Counters of arguments and parameters. |
-| 597 | `parser_term_arity -= 1` | Safe | Guarded by `parser_term_arity > 0` at desugar.rs:594. |
-| 1130 | `&types[..types.len().saturating_sub(1)]` | Safe | The end saturates at 0. |
-| 1140 | `nargs.saturating_sub(1)` | Safe | Saturating. |
-| 1152, 1185 | `nargs - i + 1`, `npremises - i + 1` | Safe | `i` ranges over `1..=nargs` and `1..=npremises`. |
-| 1097, 1098 | `ck.get_literal_type_rule(k, self_term, None)` | Stack | A literal type rule that asks for the type of `eo::self`, e.g. `(declare-consts <numeral> (eo::typeof eo::self))`, recurses without end in pathos-check (crates/pathos-check/src/typing.rs:62-86) and overflows the stack; Ethos overflows on the same input. |
+| 505 | `n.to_u32() as usize` | Safe | Taken only when `n.fits_u32()`; each step of the loop at desugar.rs:510 is `child(ck, ct, i)?`, which stops at the first missing child. |
+| 556, 661, 699, 913, 917 | `+= 1` | Safe | Counters of arguments and parameters. |
+| 582 | `parser_term_arity -= 1` | Safe | Guarded by `parser_term_arity > 0` at desugar.rs:579. |
+| 1103 | `&types[..types.len().saturating_sub(1)]` | Safe | The end saturates at 0. |
+| 1113 | `nargs.saturating_sub(1)` | Safe | Saturating. |
+| 1125, 1158 | `nargs - i + 1`, `npremises - i + 1` | Safe | `i` ranges over `1..=nargs` and `1..=npremises`. |
+| 1070, 1071 | `ck.get_literal_type_rule(k, self_term, None)` | Stack | A literal type rule that asks for the type of `eo::self`, e.g. `(declare-consts <numeral> (eo::typeof eo::self))`, recurses without end in pathos-check (crates/pathos-check/src/typing.rs:62-86) and overflows the stack; Ethos overflows on the same input. |
 | 121 (via 126, 131 and their callers) | `malformed` | Error where Ethos reads out of bounds | A term without the type or child the C++ takes for granted stops the stage with `Desugar: unexpected term: ...` (docs/ethos-differences.md:237-239). |
-| 182 | `Error::fatal` (used before it was initialized) | Error where Ethos reads out of bounds | `syms` is set by `initialize` (desugar.rs:1265) before any hook runs; the C++ has no such check. |
-| 474 | `Error::fatal` (a `:left-assoc-nil` or `:left-assoc-non-singleton-nil` operator) | Ethos's fatal error | plugins/desugar/desugar.cpp:227, same text. |
-| 1051 | `Error::fatal` (a type rule for `<decimal>` or `<hexadecimal>`) | Ethos's fatal error | plugins/desugar/desugar.cpp:1380, same text. |
-| 1062 | `Error::fatal` (Boolean literal kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1385; the parser rejects `<boolean>` first. |
-| 1144 | `Error::fatal` (more than 10 arguments) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:70, same text. |
-| 1164 | `Error::fatal` (premise list without nil) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:103, same text. |
-| 1177 | `Error::fatal` (more than 8 premises) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:116, same text. |
-| 1218 | `Error::fatal` (checker template missing) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:160, same text. |
-| 1324 | `Error::fatal` (malformed exclusion directive) | Ethos's fatal error | plugins/desugar/desugar.cpp:1165, same text. |
-| 1334 | `Error::fatal` (unknown exclusion kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1182, same text. |
-| 1388 | `Error::fatal` (template missing) | Ethos's fatal error | plugins/desugar/desugar.cpp:1095, same text. |
-| 1432 | `Error::fatal` (output cannot be written) | Ethos's fatal error | plugins/desugar/desugar.cpp:1140. |
-| 262, 264, 722 | `ck.store.mk(kind, &children)` | Safe | `TermStore::mk` panics only for an atomic kind (`pathos-term/src/store.rs:443`). Line 262 passes `APPLY`, line 707 `APPLY` or `APPLY_OPAQUE`, and line 264 the kind of a term one of whose children changed, so a term with children, of a compound kind. |
+| 182 | `Error::fatal` (used before it was initialized) | Error where Ethos reads out of bounds | `syms` is set by `initialize` (desugar.rs:1238) before any hook runs; the C++ has no such check. |
+| 1035 | `Error::fatal` (Boolean literal kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1362; the parser rejects `<boolean>` first. |
+| 1117 | `Error::fatal` (more than 10 arguments) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:70, same text. |
+| 1137 | `Error::fatal` (premise list without nil) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:103, same text. |
+| 1150 | `Error::fatal` (more than 8 premises) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:116, same text. |
+| 1191 | `Error::fatal` (checker template missing) | Ethos's fatal error | plugins/desugar/desugar_checker.cpp:160, same text. |
+| 1297 | `Error::fatal` (malformed exclusion directive) | Ethos's fatal error | plugins/desugar/desugar.cpp:1152, same text. |
+| 1307 | `Error::fatal` (unknown exclusion kind) | Ethos's fatal error | plugins/desugar/desugar.cpp:1169, same text. |
+| 1361 | `Error::fatal` (template missing) | Ethos's fatal error | plugins/desugar/desugar.cpp:1082, same text. |
+| 1405 | `Error::fatal` (output cannot be written) | Ethos's fatal error | plugins/desugar/desugar.cpp:1127. |
+
+(Milestone 29, which follows Ethos `b8d65127`, added two fatal errors to this file, at the places where the C++ now calls `EO_FATAL`: for an operator declared `:left-assoc-nil` or `:left-assoc-non-singleton-nil`, in `finalize_declaration`, and for a type rule for `<decimal>` or `<hexadecimal>` literals, in `literal_type_rule`. Each returns an error with Ethos's text. They have no line at the audited commit and are not counted in the table of results.)
+| 262, 264, 707 | `ck.store.mk(kind, &children)` | Safe | `TermStore::mk` panics only for an atomic kind (`pathos-term/src/store.rs:443`). Line 262 passes `APPLY`, line 707 `APPLY` or `APPLY_OPAQUE`, and line 264 the kind of a term one of whose children changed, so a term with children, of a compound kind. |
 
 ### src/smt_meta.rs
 
@@ -663,7 +672,7 @@ such panic.
 | 792 | `&args[j - 1]` | Safe | `j >= 1` by `.skip(1)`, and smt_meta.rs:785-790 rejects a case head with more children than `nargs`, while `args.len() == nargs - 1`. |
 | 862 | `num_children(ct).saturating_sub(1)` | Safe | Saturating, and `child(ck, ct, nopq_args)?` follows at smt_meta.rs:863. |
 | 970 | `&types[..types.len().saturating_sub(1)]` | Safe | The end saturates at 0. |
-| 315 | `ck.get_literal_type_rule(k, gt, None)` | Stack | The same recursion in pathos-check as at desugar.rs:1097, reached when a constant named `$emb_Numeral`, `$emb_Rational`, `$emb_Binary` or `$emb_String` is declared under such a rule; Ethos overflows too. |
+| 315 | `ck.get_literal_type_rule(k, gt, None)` | Stack | The same recursion in pathos-check as at desugar.rs:1070, reached when a constant named `$emb_Numeral`, `$emb_Rational`, `$emb_Binary` or `$emb_String` is declared under such a rule; Ethos overflows too. |
 | 32 (via 37, 42, 456, 728, 786, 953, 960) | `malformed` | Error where Ethos reads out of bounds | The C++ guards these with `Assert`, a no-op in release (e.g. plugins/smt_meta/smt_meta_reduce.cpp:329, :927), and then reads outside the term; pathos stops with `SmtMetaReduce: unexpected term: ...` (docs/ethos-differences.md:240). |
 | 866 | `Error::fatal` (ambiguous symbol) | Ethos's fatal error | The `AlwaysAssert` at plugins/smt_meta/smt_meta_reduce.cpp:837, with pathos's own wording (docs/ethos-differences.md:240-243). |
 
@@ -699,3 +708,200 @@ such panic.
 | 1193 | `check_failure` (ambiguous symbol) | Ethos's fatal error | `AlwaysAssert` at plugins/lean_meta/lean_meta_reduce.cpp:1291. |
 | 1985 | `Error::fatal` (program not found) | Ethos's fatal error | plugins/lean_meta/lean_meta_reduce.cpp:2195, same text. |
 | 1994 | `Error::fatal` (malformed program name) | Ethos's fatal error | plugins/lean_meta/lean_meta_reduce.cpp:2205, same text. |
+
+## pathos (the CPC checker)
+
+`crates/pathos`, the binary that checks CPC proofs on the compiled checker
+([pathos-cpc.md](pathos-cpc.md)), audited as the crates above were, for
+everything "What was looked for" lists, outside `#[cfg(test)]`. Line numbers
+are those of commit `cee75db0b4b188116e140897a7790b716c569db8` (`cee75db`, the commit milestone 30 branched
+from), and `scripts/check-panics` checks every row against that commit: the
+lines exist and hold the code the row names. CI runs it.
+
+The input is the proof, any text at all, and the command line. The proof is
+read by pathos's front end, which the sections above cover; the rows below
+are the adapter's own code, from the hooks the front end calls
+(`adapter.rs:1280-1340`) to the calls into the compiled checker. Two things
+about that path matter in many rows: the arguments of a step reach the
+adapter without having been typed (`pathos-elab/src/cmd_parser.rs:943-959`),
+so it sees terms the front end would refuse elsewhere; and the compiled
+checker's store (`generated/cpc-checker/src/lib.rs`) returns an error for a
+wrong constructor, arity or handle instead of panicking, which the rows cite
+by line. The generated crate itself is not audited here: its runtime is to
+be rewritten (milestone 28), and audited then.
+
+Reading was backed by runs, each under a memory cap, on release and debug
+builds:
+
+- **Mutated proofs** (`scripts/fuzz-cpc`): the 340 proofs of the safe
+  corpus of at most 100 kB, mutated with the mutations of the harness's
+  `fuzz.py`. 200,000 mutants on the release build of the audited commit
+  (`--seed 1`): 13 panicked, all at `adapter.rs:303`, the `(as f)` row
+  below, and one, holding `(declare-sort Index 4294967295)`, asked for
+  16 GiB and stopped at the limit (the front end's `Resource` rows above).
+  The same 200,000 on the fixed code: no panic, the one mutant at the
+  memory limit. 60,000 more on the debug build of the fixed code
+  (`--seed 2`): every run ends in a verdict or an error.
+- **Deep terms**: proofs whose step holds an `or` nested 3,000, 30,000 and
+  300,000 deep to the right and to the left, one `or` with that many
+  arguments, and that many nested `not`. Each ends in `correct` or in the
+  error `the compiled checker stopped without a verdict: Limit`, on both
+  builds, the deepest in under a second (release). The two large proofs
+  that need more than the default depth
+  (`regress3__friedman_n4_i5.smtv1`,
+  `regress4__C880mul.miter.shuffled-as.sat03-348.smtv1`): `Limit` at the
+  default, `correct` with `--depth=16384` and with `--depth=1000000`, on
+  the debug build too.
+- **Includes, snapshots, options**: `pathos` skips `include` commands and
+  reads no snapshot file (the signature is built in, `main.rs:25-28`), so
+  there is no file of either kind to malform. An `include` without a
+  string, with a number, or with a control character in its string is the
+  front end's error; an unknown option, a `--depth` that is not a number, no
+  file or two files give the usage text; a file that does not exist, or a
+  directory, the error `cannot include file`.
+- **By hand**: an input for every `Fixed`, `Stack` and `Resource` row
+  below, given in the row.
+
+### Result
+
+67 rows.
+
+| Verdict | Rows | Meaning |
+| --- | --- | --- |
+| Safe | 52 | No input reaches it; the row says why. |
+| Fixed | 7 | Input reached it at the audited commit: a panic. The commit after it gives an error or ignores the failed write; the row says what reached it and what holds now. See below. |
+| Stack | 3 | Recursion whose depth the input or an option controls; the process aborts with `has overflowed its stack`. |
+| Resource | 5 | Memory or time the input can make arbitrarily large; the process is killed or does not end. |
+
+#### Fixed
+
+Found by this audit, and one of them (`(as f)`) also by the mutated proofs.
+Each panicked in release and debug builds with exit status 101, and each
+has a test in `crates/pathos/src/main.rs`
+(`a_malformed_annotation_in_a_step_is_an_error`,
+`a_member_at_an_instance_of_another_datatype_is_an_error`), except the two
+about a failed write, which were tried by hand.
+
+| Input | At the audited commit | Now |
+| --- | --- | --- |
+| A step with the argument `(as)` or `(as is)`: `(step @p2 (= false false) :rule refl :args ((as)))` | Panic, index out of bounds (`adapter.rs:299`, `:303`) | Error `pathos does not read this proof: a type annotation the checker for CPC has no operator for: ...` |
+| With `(declare-datatypes ((List 1) (Box 1)) ((par (X) ((cons (head X) (tail (List X))) (nil))) (par (Y) ((box (unbox Y))))))` and `(declare-const b (Box Int))`: a step with the argument `(as nil (Box Int))`, `(head b)` or `(tail b)` | Panic, index out of bounds (`adapter.rs:1040`, `:1063`) | Error `pathos does not read this proof: nil is used at the type (Box Int), which is not an instance of its datatype` |
+| The same datatypes: `(assume @p1 ((_ is cons) b))`, `(assume @p1 (= b ((_ update tail) b b)))`. These terms are well typed: CPC's `is` and `update` do not relate the constructor or selector to the type of the term | Panic, index out of bounds (`adapter.rs:1101`, `:1102`) | The same error, naming `cons` or `tail` |
+| `pathos --help > /dev/full`, `pathos --help \| true`, `pathos 2> /dev/full` | Panic, `failed printing to stdout` or `to stderr` (`main.rs:134`, `:138`) | Exit status 0 for `--help`, 1 for the usage error; the failed write is ignored, as for the verdict |
+
+Where the index was in range, the adapter took the member of the other
+datatype at that position: with `nil` declared first, `(as nil (Box Int))`
+and `((_ is nil) b)` were read as `box` and `(_ is box)`, and a proof with
+`((_ is nil) b)` was checked without an error. That was not a panic but
+another term than the proof's given to the checker; the same check now
+makes it the error above. Whether a proof could get `correct` that way
+where Ethos refuses it was not tried. With the fix, `pathos` gives the same
+verdict as before on each of the 400 proofs of the safe corpus and the 41
+large ones.
+
+#### Open
+
+Nothing in the list panics on a proof or a command line after the fixes.
+What remains is not a panic:
+
+1. **Stack** (3 rows). The adapter declares the instances of parametric
+   datatypes by a recursion that nests once per block in a chain of blocks
+   (`adapter.rs:946`, `:1024`): 5,000 chained `declare-datatypes` commands
+   overflow the stack of a debug build, 100,000 that of a release build.
+   The other two rows are the compiled checker's recursion when `--depth`
+   is set beyond what its 64 MiB stack holds; at the default depth it stops
+   with the error `Limit`.
+2. **Resource** (5 rows). `pathos` sets no limit of its own on the
+   checker's terms and calls; an application with n arguments is converted
+   in time quadratic in n; a datatype with a field that is a larger
+   instance of itself (`(N (N T))`) does cubic work before the limit of
+   10,000 instances stops it; and `--explain` prints a bit-vector digit by
+   digit, whatever its width.
+
+
+### crates/pathos/build.rs
+
+| Line | Construct | Verdict | Why |
+|---|---|---|---|
+| 9-16 | `println!(`, `.expect("generated/cpc-checker/Cpc.cached.eo is read")`, `.expect("pathos reads CPC")`, `.expect("cargo sets OUT_DIR")`, `.expect("the image is written")` | Safe | The build script runs when pathos is built, on the repository's own `generated/cpc-checker/Cpc.cached.eo` and on Cargo's `OUT_DIR`; no proof and no command line of a run reaches it. A failure here stops the build, not a run of `pathos`. |
+
+### crates/pathos/src/adapter.rs
+
+| Line | Construct | Verdict | Why |
+|---|---|---|---|
+| 140-142 | `terms: u32::MAX`, `calls: u64::MAX` | Resource | The store is made without the generated checker's limits on terms and calls (also at 1127-1131), so the memory and the time of a check grow with the proof without a bound of pathos's own; only the nesting depth is limited. The run ends by the system's memory limit or not at all, not by a panic. |
+| 175 | `self.store.named(name, args)` | Safe | `Store::named` returns `InvalidConstructor` for an unknown name (generated/cpc-checker/src/lib.rs:306) and `Store::construct` for a wrong number of fields (generated/cpc-checker/src/lib.rs:310) or `InvalidHandle` for a term not of the store (generated/cpc-checker/src/lib.rs:182, 313-315); all become the error of `refused` (37-39). |
+| 179-181, 196-198 | `.raw(cc::Lit::Numeral(cc::Integer::from(n)))`, `.raw(cc::Lit::String(cc::EoString::from_code_points(points)))` | Safe | `Store::raw` only interns (generated/cpc-checker/src/lib.rs:267, 187-199): a full store is `CheckError::Limit`, returned. `from_code_points` wraps the vector (generated/cpc-checker/src/eostring.rs:27). |
+| 207-208 | `self.next_sort += 1`, `self.next_sort as usize` | Safe | Counts the distinct sort terms of the proof converted so far (one per miss of `declared`, 204); the front end's terms have 32-bit identifiers, so there are fewer than 2^32 of them. |
+| 223 | `i + 1` | Safe | `i` is a position in the overloads of one name, a vector held in memory. |
+| 234 | `while st.ck.store.kind(t) == Kind::APPLY` | Resource | `head` walks the whole spine of a curried application, and `shape` calls it (267) for every application node; `spine` (1211) does the same from `parametric` (1027) and `instance_key` (796) once a parametric datatype is declared. An application of one head to n arguments has n nested application nodes, so its conversion takes n^2/2 steps: `:args ((a a ... a))` with 20,000, 40,000 and 80,000 arguments takes 0.7 s, 2.7 s and 10.6 s (release). Time only, no panic. |
+| 235 | `st.ck.store.child(t, 0)` | Safe | `t` has kind `APPLY` (234), and an application has at least its head: `TermStore::mk` refuses other counts (pathos-term/src/store.rs:452-455 with pathos-term/src/kind.rs:105). |
+| 266, 275 | `children[0]`, `children.len() - 1` | Safe | `t` is an `Apply` or `ApplyOpaque` node (265), which has at least one child (pathos-term/src/kind.rs:105, enforced by `TermStore::mk`, pathos-term/src/store.rs:452-455). |
+| 284-285 | `children[1..=n]`, `children[n + 1..]` | Safe | Line 275 returns an error unless `children.len() - 1 >= n`, so `n + 1 <= children.len()`. |
+| 299 | `children[0]` | Fixed | Reached at the audited commit; now a pattern on the two children, and any other number is the error at 306. What reached it: an `AsReturn` node may have any number of children (pathos-term/src/kind.rs:106), and `(as)` builds one with none (pathos-check/src/build.rs:184-193). Such a term has no type, but the arguments of a step are given to the plugin without being typed (pathos-elab/src/cmd_parser.rs:943-959). `(assume @p1 false) (step @p2 (= false false) :rule refl :args ((as)))` panics: index out of bounds, the len is 0 but the index is 0 (release and debug, status 101). |
+| 303 | `children[1]` | Fixed | Reached at the audited commit; now the same pattern as 299. What reached it: same path as 299 with one child: `(step @p2 (= false false) :rule refl :args ((as is)))`. `is` is a symbol of CPC whose constructor has arity 1 (302), and the node has only the child 0. Panics: the len is 1 but the index is 1 (release and debug, status 101). |
+| 313 | `children[0]`, `children[1]` | Safe | The guard of the arm at 312 is `children.len() == 2`. |
+| 353, 369 | `self.store.boolean(*b)`, `self.store.literal(lit)` | Safe | Both only intern (generated/cpc-checker/src/lib.rs:258-272, 187-199) and return `Limit` as an error. |
+| 354-362 | `integer(n)?`, `cc::Rational::parse(&q.to_string())`, `cc::BitVec::new(b.size(), &integer(b.value())?)` | Safe | `Integer::parse` and `Rational::parse` return `None` for text they do not read, a zero denominator included (generated/cpc-checker/src/num.rs:32-37, 178-181, 190-197), and the `None` is an error here (358, 1196). `BitVec::new` reduces the value modulo 2^size and allocates nothing of that size (generated/cpc-checker/src/bitvec.rs:14-19); the value comes from a front-end literal and is already below 2^size. |
+| 379, 449, 474, 589 | `self.store.construct(c, &[])`, `self.store.construct(c, &[index])`, `self.store.construct(c, &fields)`, `self.store.construct(rule, &[])` | Safe | `Store::construct` returns `InvalidConstructor` when the number of fields is not the constructor's arity (generated/cpc-checker/src/lib.rs:310-312) and `InvalidHandle` for a foreign term (313-315). `Self::constructor` (227-229) only gives user constructors and the `$eo_List` ones, so the `$emb_UOp`, `$emb_Binary` and literal branches (316-351), which also return errors, are not taken. A rule constructor with fields gives the error at 589. |
+| 444, 451, 458, 467-468, 476 | `self.store.apply(acc, get(a)?)`, `self.store.apply(fun, get(a)?)`, `self.store.apply(partial, acc)` | Safe | `Store::apply` checks both handles with `view` and interns (generated/cpc-checker/src/lib.rs:287-292); every failure is a returned `CheckError`. A part missing from `memo` is the error of `get` (433-437), not an index. |
+| 456-457 | `ts[0]`, `ts[1..]` | Safe | `Shape::Apply` is only made at 296 from the children of an `Apply` node, which has at least one (pathos-term/src/kind.rs:105). |
+| 487-488 | `self.next_const += 1`, `self.next_const as usize` | Safe | Counts the distinct constants of the proof converted so far (one per miss of `declared`, 484); fewer than 2^32, as the front end's terms. |
+| 590, 595 | `Vec::with_capacity(args.len())`, `Vec::with_capacity(premises.len())` | Safe | The lengths of slices the parser already holds in memory. |
+| 605 | `st.ck.store.child(p, 0)` | Safe | `p` has kind `Proof` (599), and a proof node has exactly one child (pathos-term/src/kind.rs:104, enforced at pathos-term/src/store.rs:452-455). |
+| 616 | `self.stack.len() - pos - 1` | Safe | `positions` holds, for each formula, exactly the indices at which it stands in `stack`, ascending: `push` (518-524) records `stack.len()` before pushing, and `truncate` (526-534) removes the last index of the formula it pops, which is the top of the stack. These two are the only writers, so `pos < stack.len()`. |
+| 667 | `self.next_block += 1` | Safe | A `usize` counting `declare-datatypes` commands read. |
+| 717, 728 | `Vec::with_capacity(datatypes.len())` | Safe | The length of a slice the parser holds. |
+| 750 | `names[i]`, `bodies[i]` | Safe | `i` comes from `productive_order(&refs)` (747), a permutation of `0..refs.len()` (1244-1262). `refs`, `shapes`, `names` and `bodies` each get one entry per element of `datatypes` (699-710, 718-723, 729-744); an error in between returns before this line. |
+| 753-759 | `shapes[i]`, `names[i]`, `inst.constructors[k]`, `shapes[i][k]`, `inst.selectors[k][j]` | Safe | `i` enumerates `datatypes`, and `shapes[i]` has one entry per constructor in `conses` (702-708), which `k` enumerates. `declared_terms` (769-787) returns one constructor and one selector vector per entry of `arities`, taken from `shapes[i]` at 753, with `arities[k]` selectors, the length of `shapes[i][k]` that `j` enumerates. |
+| 806 | `self.templates[&key.0]` | Safe | Every `InstanceKey` comes from `instance_key`, which returns one only after `self.templates.get(&head)?` found the head (797). The callers pass `nodes[i]` (872), made of the root (from 1020 or 993) and of keys from `mentioned_instances` (843). Templates are never removed. |
+| 846 | `self.templates[&key.0]` | Safe | `key` is what `instance_key` returned at 843; see 806. |
+| 864 | `self.templates[&root.0]` | Safe | `root` comes from `instance_key` at 993 (via 1000) or 1020 (via 1024); see 806. |
+| 871, 894 | `while i < nodes.len()`, `vec![vec![false; n]; n]` | Resource | A datatype whose field is a larger instance of itself needs instances without end: `(declare-datatypes ((N 1)) ((par (T) ((z) (s (p (N (N T))))))))`, `(declare-const x (N Int))`, `(assume @p1 (= x x))`. The loop stops with an error at 10,000 instances (879-883), but before that each round walks a type one level deeper and compares keys linearly (878, and `found.contains` at 846), which is cubic: the run above is still going after 60 s at about 1 GiB (release). The table at 894 and the search at 911-913 are quadratic and cubic in the same n, at most 10,000. No panic. |
+| 872 | `&nodes[i]` | Safe | The loop condition at 871 is `i < nodes.len()`. |
+| 898-900 | `uses[x]`, `row[b]` | Safe | `uses` gets one entry per node (888), so it has `n` entries; `x` is `a` (from `0..n`, 895) or a `b` given by `index`, a position in `nodes` (892). `row` has `n` entries (894). |
+| 912, 919 | `done[a]`, `reach[a][b]`, `reach[b][a]`, `reach[first][b]`, `reach[b][first]` | Safe | `a`, `b` and `first` range over `0..n`, and `done` and `reach` have `n` entries and rows (894, 907). |
+| 922 | `self.next_instance += 1` | Safe | A `usize` counting instances declared, each of which costs far more than one unit of memory. |
+| 925-930 | `self.templates[&nodes[m].0]`, `names[m]`, `nodes[m]` | Safe | `m` is an element of `group`, a subset of `0..n` (918-920); `nodes` and `names` have `n` entries (891, 906). The key of a node is in `templates`; see 806. |
+| 941 | `fields[m]` | Safe | `fields` gets one entry per node in the loop at 871-890 (887), so `n` entries; `m < n`. |
+| 946, 1024 | `self.convert_with(st, ty, &mut memo)`, `self.ensure_instance(st, &key)?` | Stack | `ensure_instance` converts the field types of an instance (946), `convert_with` asks `parametric` for each term (411), and `parametric` calls `ensure_instance` for an instance of another block that is not declared yet (1024). The nesting is as deep as the chain of blocks: 5,000 commands `(declare-datatypes ((Di 1)) ((par (X) ((ci (si (D(i-1) X)))))))` and then `(declare-const x (D4999 Int))`, `(assume @p1 (= x x))` overflow the 64 MiB stack in the debug build; 100,000 of them overflow it in the release build too (status 134, `has overflowed its stack`). |
+| 968 | `nodes[m]` | Safe | `m` is an element of `group`; see 925-930. |
+| 977-978 | `names[group[g]]`, `bodies[g]` | Safe | `g` comes from `productive_order(&refs)` (973), a permutation of `0..refs.len()`. `refs` and `bodies` get one entry per member of `group` (964-965); a failed conversion leaves the loop early, and then 970-972 returns before this line. So `g < group.len()`. |
+| 981-985 | `fields[m]`, `names[m]`, `nodes[m]`, `done[m]` | Safe | `m` is an element of `group`, below `n`; all four have `n` entries. |
+| 1025 | `self.instances[&key]` | Safe | `ensure_instance` returned `Ok` at 1024: either the key was there (861), or the loop at 908-987 ended, which it does only when every node, the root first among them (867), is `done`, and a node is `done` only after its instance is inserted (984-985). Instances are never removed. |
+| 1032-1038 | `c[0]`, `c[1]` | Safe | `annotated` is `Some` only if the filter at 1031-1033 holds, which tests `c.len() == 2` before `c[0]`. |
+| 1040 | `self.instances[&key].constructors[k]` | Fixed | Reached at the audited commit; now `member` looks the constructor up in the instance only if the instance's template is the constructor's own, and gives the error `... is used at the type ..., which is not an instance of its datatype` otherwise. What reached it: `k` is the constructor's position in its own datatype, but the instance is the one of the annotation's type, which nothing here ties to that datatype; the front end would refuse the term when typing it, and a step's arguments are not typed (pathos-elab/src/cmd_parser.rs:943-959). With `(declare-datatypes ((List 1) (Box 1)) ((par (X) ((cons (head X) (tail (List X))) (nil))) (par (Y) ((box (unbox Y))))))`, `(assume @p1 false)`, `(step @p2 (= false false) :rule refl :args ((as nil (Box Int))))`: panics, the len is 1 but the index is 1 (release and debug, status 101). `self.instances[&key]` itself is safe as at 1025 (`instance_of_type` returns after `ensure_instance`, 1000). |
+| 1049 | `self.instances[&key].constructors[k]` | Safe | The instance is the one of the type that `type_of` computes for `t` (1046), an application whose head is the constructor. A constructor's type is a function to its own datatype applied to its parameters (pathos-elab/src/cmd_parser.rs:551), so a type with a template at its head has the constructor's own template there, and `k` is below that template's number of constructors: an instance has one constructor per constructor of its template (814, 981-983, 773-775). A partial application has a function type, for which `instance_key` gives nothing and 993-998 an error; an ambiguous constructor has a type that does not reduce without its annotation, and with it takes the path of 1034. |
+| 1063 | `self.instances[&key].selectors[k][j]` | Fixed | Reached at the audited commit; now through `member`, as 1040. What reached it: the instance is the one of the operand's type, and the operand of a selector in a step's argument is not checked against the selector's type (arguments are not typed, pathos-elab/src/cmd_parser.rs:943-959). With `(declare-datatypes ((List 1) (Box 1)) ((par (X) ((nil) (cons (head X) (tail (List X))))) (par (Y) ((box (unbox Y))))))`, `(declare-const b (Box Int))`, `(assume @p1 false)`, `(step @p2 (= false false) :rule refl :args ((head b)))`: panics, the len is 1 but the index is 1 (release and debug, status 101). With `cons` declared first, `(tail b)` panics on the second index. |
+| 1075 | `c[0]`, `c[1]` | Safe | Line 1072 returns unless `c.len() == 2`. |
+| 1077 | `args[0]`, `args[1..]` | Safe | The branch is taken only if `args.len() >= 2` (1076). |
+| 1099 | `self.instances[&key]` | Safe | `instance_of_type` returned `Ok` at 1098, after `ensure_instance` (1000); see 1025. |
+| 1101-1102 | `inst.constructors[k]`, `inst.selectors[k][j]` | Fixed | Reached at the audited commit; now through `member`, as 1040. What reached it: a tester or an updater names a constructor or selector of one datatype and is applied to a term of any type: in CPC `is` and `update` do not relate the two (`(declare-parameterized-const is ((C Type :implicit) (D Type :implicit) (c C :opaque)) (-> D Bool))`), so the term is well typed, in an assumption too. With the datatypes and `b` of 1063: `(assume @p1 ((_ is cons) b))` panics at 1101, and `(assume @p1 (= b ((_ update tail) b b)))` at 1102, both with the len is 1 but the index is 1 (release and debug, status 101). |
+| 1119, 1155, 1186 | `cc::with_checker_stack(`, `self.store.check_proof(assumptions, commands)` | Stack | The generated functions recurse over the terms, on a thread of 64 MiB (generated/cpc-checker/src/lib.rs:121, 1150-1158), and stop with `CheckError::Limit` at `Limits::depth`. The default depth (144) is sized for that stack and gives the error; `--depth=N` (main.rs:74, 105, and 1125-1131 here) raises the limit without the stack. An assumption of 300,000 nested `not` gives `Limit` by default and, with `--depth=4000000000`, a stack overflow (status 134; release and debug; also with `--profile`). A panic on that thread would come back as `CheckError::Worker` (generated/cpc-checker/src/lib.rs:1156-1157), an error and not status 101. |
+| 1162 | `label[i + 1..]` | Safe | `i` is where `find` saw `"(rule "`, so the byte at `i` is the ASCII `(` and `i + 1` is inside the string and on a character boundary. |
+| 1168-1169 | `e.0 += t`, `e.1 += 1` | Safe | A sum of `f64` and a count of labels, which are in memory. |
+| 1211 | `while st.ck.store.kind(t) == Kind::APPLY` | Resource | `spine` walks and copies the whole spine for each node `parametric` (1027) and `instance_key` (796) are asked about; quadratic in the number of arguments of one application, as `head` at 234. |
+| 1213-1214 | `children[1..]`, `children[0]` | Safe | `t` has kind `APPLY` (1211), so it has at least one child (pathos-term/src/kind.rs:105). |
+| 1250 | `refs[d]` | Safe | `d` is an element of `remaining`, which starts as `0..refs.len()` (1246) and only loses elements. |
+| 1258 | `order.splice(0..0, ready)` | Safe | The empty range at the start is in bounds for any vector. |
+| 1288, 1307, 1318, 1338 | `self.built.borrow_mut()`, `.borrow_mut()` | Safe | Each hook borrows `built` for its own duration only, and hooks do not nest: `State::with_plugin` takes the plugin out of the state while a hook runs (pathos-elab/src/plugin.rs:186-190), so nothing the hook does to the state calls a hook, and the `Adapter` has no evaluation hooks. `Built`'s methods get the state but not the `Rc`. The only other borrows are `main.rs:105-118`, made before and after `include_file`, not during it. |
+| 1294 | `st.ck.store.child(e, 0)` | Safe | `e` has kind `Proof` (1291), which has exactly one child (pathos-term/src/kind.rs:104). |
+
+### crates/pathos/src/explain.rs
+
+| Line | Construct | Verdict | Why |
+|---|---|---|---|
+| 28 | `b.to_string_base(2)` | Resource | The text of a bit-vector has as many digits as its width (generated/cpc-checker/src/bitvec.rs:53-60), and the front end computes literals of any width: `(assume @p1 false)`, `(step @p2 (= (eo::to_bin 3000000000 1) (eo::to_bin 3000000000 1)) :rule refl :args (false))` is `incorrect` in 0.02 s and 8 MB without `--explain`, and with it is killed at the 4 GiB cap (status 143). No panic. |
+| 33, 40 | `depth - 1` | Safe | Line 21 returns when `depth == 0`. The recursion is at most 12 deep: both callers pass 12 (68, 77). |
+| 58, 63, 84, 104, 111 | `g::eo__24eo_5finvoke_5fassume_5flist(s, nil, assumptions)`, `g::eo__24eo_5finvoke_5fcmd(s, state, cmd)`, `g::eo__24eo_5fstate_5fis_5frefutation(s, state)` | Stack | The generated functions, run on the checker's 64 MiB thread (adapter.rs:1119, 1155): their recursion is bounded by `Limits::depth`, which `--depth=N` can set beyond what the stack holds. See adapter.rs:1186. |
+| 77 | `fields[0]` | Safe | `destruct` gives the fields of a `$emb_s.cons` node (generated/cpc-checker/src/lib.rs:386), and a node is only made by `construct` with as many fields as its arity (generated/cpc-checker/src/lib.rs:310), which is 2 for `$emb_s.cons` (generated/cpc-checker/src/schema.rs:4031). |
+| 105 | `Vec::with_capacity(commands.len())` | Safe | The length of the command list the adapter holds. |
+
+### crates/pathos/src/main.rs
+
+| Line | Construct | Verdict | Why |
+|---|---|---|---|
+| 74 | `a["--depth=".len()..]` | Safe | The guard on the same line is `a.starts_with("--depth=")`, so the prefix is in the string and ends on a character boundary; an unreadable number is `None` (`.ok()?`), the usage text. |
+| 105, 110, 113, 115, 118 | `built.borrow_mut()`, `built.borrow()` | Safe | Each borrow is a temporary of its statement, and none is alive during `include_file` (107), the only time the adapter's hooks borrow (adapter.rs:1288-1338). |
+| 134 | `print!("{USAGE}")` | Fixed | Reached at the audited commit; now written as the verdict is, ignoring a failed write. What reached it: `print!` panics when the write fails: `pathos --help > /dev/full` (failed printing to stdout: No space left on device) and `pathos --help \| true` (Broken pipe) end with status 101, release and debug. A closed standard output (`>&-`) is ignored by the standard library, status 0. The verdict and the errors go through `write_line` (48-52), which ignores a failed write. |
+| 138 | `eprint!("{USAGE}")` | Fixed | Reached at the audited commit; now written as the errors are, ignoring a failed write. What reached it: `eprint!` panics when the write fails: `pathos 2> /dev/full` (no file given, so the usage text is printed) ends with status 101, release and debug. |
