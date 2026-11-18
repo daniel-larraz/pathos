@@ -542,6 +542,61 @@ intended; everything between gates is not.
     repository); `pathos` gives the same verdicts as in milestone 27; the
     table compares it with the baseline, and the report says where any
     slowdown comes from. The reviewer pushes and starts the runs.
+29. **Follow Ethos to `b8d65127`.** On `main`, branched from it, after the
+    move of `generated/cpc-checker`'s pin to `b8d65127`. Like milestone 26.
+    Ethos `main` is two commits past `REFERENCE_REV`: cvc5/ethos#274
+    (`e1541101`, the rust-meta stage, which `pathos` already uses and which
+    changes nothing `pathos-eo` compares) and **cvc5/ethos#275, "Fix
+    discrepancies between emitted EO compilation and ethos binary"**
+    (`b8d65127`, fixes cvc5/ethos#273). The drift job (run 44222704085, on
+    `b8d65127`; its reports are the run's artifact) shows what #275
+    changes:
+    - **The evaluator** (`src/literal.cpp`, `src/type_checker.cpp`).
+      `tests/eval-issue-273.eo`, the PR's new regression, differs, alone
+      and under the 5 `--stats` options; Ethos's other 262 `tests/`, the
+      command-line cases, `bignum` and the fuzz replay all agree. Three
+      changes:
+      - `eo::extract` on a binary: a lower index equal to the width now
+        gives the empty bit-vector (it was `i1 > width`, now
+        `i1 >= width`), and an upper index equal to the width is cut to
+        the last bit, as for strings.
+      - `eo::gt` on two binaries of different widths no longer evaluates.
+      - The list operators (`eo::list_find`, `eo::list_len`,
+        `eo::list_erase`, `eo::cons`, …) no longer evaluate when an
+        argument still contains an operator or program that failed to
+        evaluate (`isEvaluatable()` in the C++).
+    - **eoc's desugaring stage** (`plugins/desugar/desugar.cpp`,
+      `eo_desugar.eo`, `eo_desugar_native.eo`, `natives.eos`). 39 of the
+      1,079 `eoc` cases differ, in 8 test signatures:
+      - The stage now rejects what the semantics do not model, with
+        `EO_FATAL`: operators declared `:left-assoc-nil` or
+        `:left-assoc-non-singleton-nil`, and type rules for `<decimal>`
+        and `<hexadecimal>` literals (`setLiteralTypeRule`). Ethos stops
+        with e.g. `Desugar: the operator and is declared :left-assoc-nil,
+        which is not supported, …`, where `pathos-eoc` goes on
+        (`rare-example.eo`, `list-non-singleton-left.eo`,
+        `or-list-null-term.eo`, `substitution.eo`,
+        `substitution-binary-only.eo`, `typeof.eo`).
+      - The generated definitions change (`trim_gen.eo` for
+        `arith-eval.eo` and `mixed-arith.eo`): the desugared semantics now
+        model the evaluator changes above.
+    Read the PR's C++ and `.eo` changes, not only its description, and
+    port them all, messages included. Update `docs/ethos-differences.md`
+    where a row is affected, and keep `docs/evidence.md`'s figures unless a
+    gate is rerun. The changes are in code the paused Verus proofs cover
+    (the evaluator): say in the report which functions changed, for
+    whoever resumes it, and do not touch the verus branch.
+
+    Do not touch `difftest.env` (the reviewer moves `REFERENCE_REV` to
+    `b8d65127`; `HARNESS_COMMIT` stays, since the fuzz replay has nothing
+    still differing and nothing new to accept). Nothing changes for
+    `pathos` and `generated/cpc-checker`: the crate generated from
+    `b8d65127` is the one from `e1541101`, byte for byte.
+
+    The gate: an on-demand run of the drift job on the branch is green
+    against `b8d65127` (all five comparisons agree), and, after the
+    reviewer moves the pin, `scripts/full-check` and `scripts/difftest eoc`
+    agree on CI. The reviewer pushes and starts the runs.
 
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
