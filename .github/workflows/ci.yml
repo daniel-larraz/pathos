@@ -26,8 +26,8 @@
 #                  uploaded on pushes to main. scripts/unsafe-reach (about
 #                  ten minutes a platform) runs only when what it measures
 #                  may have changed: Cargo.lock, a Cargo.toml, the source of
-#                  pathos-eo's and pathos-eoc's crates, the script or this
-#                  file; and every week, for a new stable Rust, and on
+#                  the crates or of the generated CPC checker, the script
+#                  or this file; and every week, for a new stable Rust, and on
 #                  demand (input unsafe-reach).
 #
 # The cvc5 proof gates (proofs, large, options, perf) need a cvc5 build and
@@ -431,11 +431,11 @@ jobs:
             --ref "${{ steps.pins.outputs.ref_dir }}/build/src/ethos$exe" \
             --cand "target/release/pathos-eo$exe" --work target/platform-probe
 
-      # scripts/unsafe-reach lists the dependency lines that pathos-eo and
-      # pathos-eoc reach, so its output changes only with Cargo.lock, a
-      # Cargo.toml, the source of their crates (every crate but
-      # crates/pathos), the toolchain (the weekly run), the script or this
-      # file. Compared with main for a run on demand, with the base for a
+      # scripts/unsafe-reach lists the dependency lines that pathos-eo,
+      # pathos-eoc and pathos reach, so its output changes only with
+      # Cargo.lock, a Cargo.toml, the source of the crates or of the
+      # generated CPC checker, the toolchain (the weekly run), the script
+      # or this file. Compared with main for a run on demand, with the base for a
       # pull request, and with the previous commit of main for a push; if
       # the comparison fails or lists 300 files (GitHub's cap), it runs.
       - name: Decide whether to list the dependency code
@@ -459,7 +459,7 @@ jobs:
           if [[ "$run" == false ]]; then
             if files="$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$GITHUB_SHA" --jq '.files[].filename')"; then
               if [[ "$(grep -c . <<< "$files")" -ge 300 ]] ||
-                grep -qE '^(Cargo\.(lock|toml)|crates/[^/]+/Cargo\.toml|crates/pathos-[^/]+/|scripts/unsafe-reach$|\.github/workflows/ci\.yml$|rust-toolchain|\.cargo/)' <<< "$files"; then
+                grep -qE '^(Cargo\.(lock|toml)|crates/|generated/cpc-checker/|scripts/unsafe-reach$|\.github/workflows/ci\.yml$|rust-toolchain|\.cargo/)' <<< "$files"; then
                 run=true
               fi
             else

@@ -53,7 +53,11 @@ versions, so it adds no crate to the build. Its runtime files (`num.rs`,
 `pathos-term`'s, and `num.rs` is again the only file that names
 `malachite`. The other binaries do not link it. The analysis below of what
 the binaries reach in the dependencies (`scripts/unsafe-reach`) was made for
-`pathos-eo` and `pathos-eoc`; it has not been repeated for `pathos`.
+`pathos-eo` and `pathos-eoc`, and repeated for `pathos` on 2026-11-18
+(commit `e52f1b6`, x86-64 Linux): `pathos` reaches the same `unsafe` lines,
+all of them again only in `malachite_nz::natural::arithmetic::mul::fft`,
+and three more lines of `malachite-nz` that are not `unsafe`
+(`shr_round.rs:360` and `:380`, `general_digits.rs:1639`).
 
 | Crate | Version | `unsafe` code | Where, and why acceptable |
 | --- | --- | --- | --- |
@@ -93,8 +97,10 @@ same on rationals. All the calls are in `crates/pathos-term/src/num.rs`.
 
 Three kinds of evidence, each rerunnable.
 
-1. **What is in the binaries.** `scripts/unsafe-reach` builds `pathos-eo` and
-   `pathos-eoc` in release mode with debug information, disassembles them,
+1. **What is in the binaries.** `scripts/unsafe-reach` builds `pathos-eo`,
+   `pathos-eoc` and `pathos` in release mode with debug information (the
+   numbers below are from the first two; for `pathos`, see above),
+   disassembles them,
    and maps every instruction to its source lines, including the lines of
    the functions inlined there (`addr2line -i`). The linker drops every
    function nothing refers to. So a source line of a dependency that has no
@@ -183,7 +189,7 @@ CI runs `scripts/unsafe-reach` on each of the six platforms Ethos is built
 for (job `platforms`, step "List the dependency code in the binaries"),
 on the statically linked release build of that platform. It runs when
 what it measures may have changed (`Cargo.lock`, a `Cargo.toml`, the
-source of the crates of `pathos-eo` and `pathos-eoc`, the script or
+source of the crates or of the generated CPC checker, the script or
 `ci.yml`), every week for a new stable Rust, and on demand (input
 `unsafe-reach` of the workflow); other runs skip it. Evidence 1 is
 therefore from each platform. Evidence 2 and 3 (which function, and the
