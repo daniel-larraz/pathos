@@ -5,8 +5,10 @@ checker in Rust: the `ethos` binary as `pathos-eo`, and `ethos-eoc` with its
 seven compiler stages as `pathos-eoc`. It is meant to replace the C++ if two
 things hold: it is memory safe, and it does what Ethos does. This page says
 what backs each claim and how to check it. The reference is Ethos
-`b8d65127` (cvc5/ethos `main` with PRs #270, #272, #274 and #275,
-milestones 26 and 29), built in release mode. The figures on this page were
+`d83d2ab6` (cvc5/ethos `main` with PRs #270, #272, #274 and #275,
+milestones 26 and 29, and #276, which changes only the `rust-meta` runtime,
+so that what pathos is compared with is that of `b8d65127`), built in
+release mode. The figures on this page were
 measured against `9217112f`, four commits earlier, unless a section says
 otherwise; those commits fix the bugs pathos used to reproduce, change
 `lean-meta`'s output, add the `rust-meta` stage, and change three corners
@@ -185,7 +187,7 @@ file`; the harness accepts those four cases by name.
 ## Keeping up with Ethos
 
 Everything above is about one Ethos revision, `REFERENCE_REV` in
-`difftest.env` (`b8d65127`). Ethos keeps changing. A workflow of its own,
+`difftest.env` (`d83d2ab6`). Ethos keeps changing. A workflow of its own,
 `.github/workflows/drift.yml` ("Drift from Ethos main"), runs every night
 and on demand, apart from CI and blocking nothing. On Linux x86-64 it
 builds Ethos and `ethos-eoc` at the current `main` of cvc5/ethos and

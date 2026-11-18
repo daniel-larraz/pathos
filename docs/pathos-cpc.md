@@ -27,7 +27,7 @@ pathos [--explain] [--profile] [--no-cache] [--cache-stats] [--depth=N] <proof.c
 accept, `--profile` which rules its time goes to; `--no-cache` and
 `--cache-stats` are for measuring the checker's caches; `--depth` sets
 how deep the checker's functions may nest (the checker's own default,
-4096, unless given).
+16,384, unless given).
 
 ## The parts
 
@@ -184,7 +184,19 @@ On the development machine (Linux x86-64), with the checker generated from
 Ethos's main branch at `b8d65127` and logos at `LOGOS_REV`. Each run under
 an 8 GiB cap, one process at a time.
 
-Only `pathos` was run for this pin (`scripts/compare-logos --perf --only
+The checker is now generated from `d83d2ab6`, which is `b8d65127` with a
+checker stack of 256 MiB where it was 64 MiB, and so a default depth of
+16,384 where it was 4096; nothing else in the generated crate differs. With
+it `pathos` was run again on the 400 and the 41 (reports in
+`target/compare-logos/*-pathos-d83d2ab6.json`): every verdict is the same
+except those of the two large proofs that needed more depth, which are now
+`correct` (see "Errors" below), and the peak memory of every other run is
+within 1% of what it was (the largest still 6.21 GiB, on `bug143`). The
+times below are those of `b8d65127`: the machine was busy during the new
+runs, and on one proof timed with both checkers side by side
+(`regress0__bv__bv-options4`) the two take the same time.
+
+Only `pathos` was run for the pin `b8d65127` (`scripts/compare-logos --perf --only
 pathos`, and the same with `--large --timeout 300`). The rows of logos,
 `pathos-eo` and Ethos (`c7d3db90`) are **the reviewer's runs of
 2026-11-17, not rerun**: the same binaries, proofs, cap and time limit, but
@@ -229,9 +241,9 @@ formulas as assumptions; Ethos has no such condition and accepts the proof.
 
 ### The 41 large proofs of the safe corpus (300 s per run for `pathos`)
 
-| Checker | correct | timeout | error | over the 8 GiB cap | Time on the 37 proofs both decided | Largest peak under the cap |
+| Checker | correct | timeout | error | over the 8 GiB cap | Time on the 37 proofs both decided at `b8d65127` | Largest peak under the cap |
 | --- | --- | --- | --- | --- | --- | --- |
-| `pathos` | 37 | 0 | 3 | 1 | 110.2 s | 6.21 GiB |
+| `pathos` | 39 | 0 | 1 | 1 | 110.2 s | 6.21 GiB |
 | Ethos (not rerun) | 40 | 0 | 0 | 1 | 281.0 s | 2.51 GiB |
 
 `pathos` says `correct` on no proof that Ethos does not accept, and gives
@@ -248,14 +260,14 @@ proofs it then ran out of 300 s on now take between 1.8 s and 18.0 s.
   largest proofs (`bug143` 6.21 GiB against 2.51 GiB, `comb2` 5.70 against
   2.15, `hole9` 5.61 against 2.47), so it is closer to the cap.
 - **Errors**: `regress1__arith__issue9427-cdiv-def` uses `lambda`.
-  `regress3__friedman_n4_i5.smtv1` and
-  `regress4__C880mul.miter.shuffled-as.sat03-348.smtv1` end in `the
-  compiled checker stopped without a verdict: Limit` at the default depth
-  of 4096: they need `--depth=11493` and `--depth=9381` at least, and are
-  `correct` with those (and with `--depth=1000000`, without overflowing
-  the stack). Each has a single assumption; which function nests that deep
-  was not looked into. With the limit of 100,000 that `pathos` set before
-  this pin, both were `correct`.
+  It is the only error. `regress3__friedman_n4_i5.smtv1` and
+  `regress4__C880mul.miter.shuffled-as.sat03-348.smtv1` need a depth of
+  11,493 and 9,381 at least: at `b8d65127`, whose default depth was 4096,
+  they ended in `the compiled checker stopped without a verdict: Limit`;
+  at `d83d2ab6`, whose default is 16,384, they are `correct` (2.2 s with a
+  peak of 0.20 GiB and 2.5 s with 0.39 GiB, on the busy machine; the time
+  column of the table is still that of the other 37). Each has a single
+  assumption; which function nests that deep was not looked into.
 - **`regress3__hole10.cvc`** (475 MB) fits under 8 GiB for neither. It was
   not run again under a larger cap; with the checker of milestone 27, alone
   under a 32 GiB cap with ten minutes, Ethos was `correct` in 435 s with a

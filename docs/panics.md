@@ -751,7 +751,10 @@ builds:
   (`regress3__friedman_n4_i5.smtv1`,
   `regress4__C880mul.miter.shuffled-as.sat03-348.smtv1`): `Limit` at the
   default, `correct` with `--depth=16384` and with `--depth=1000000`, on
-  the debug build too.
+  the debug build too. (That default was 4096, on a stack of 64 MiB. Since
+  the checker is generated from Ethos `d83d2ab6`, the stack is 256 MiB and
+  the default depth 16,384, and both proofs are `correct` without the
+  option.)
 - **Includes, snapshots, options**: `pathos` skips `include` commands and
   reads no snapshot file (the signature is built in, `main.rs:25-28`), so
   there is no file of either kind to malform. An `include` without a
@@ -809,8 +812,9 @@ What remains is not a panic:
    (`adapter.rs:946`, `:1024`): 5,000 chained `declare-datatypes` commands
    overflow the stack of a debug build, 100,000 that of a release build.
    The other two rows are the compiled checker's recursion when `--depth`
-   is set beyond what its 64 MiB stack holds; at the default depth it stops
-   with the error `Limit`.
+   is set beyond what its stack holds (64 MiB at the audited commit, 256 MiB
+   since the checker is generated from Ethos `d83d2ab6`); at the default
+   depth it stops with the error `Limit`.
 2. **Resource** (5 rows). `pathos` sets no limit of its own on the
    checker's terms and calls; an application with n arguments is converted
    in time quadratic in n; a datatype with a field that is a larger
@@ -877,7 +881,7 @@ What remains is not a panic:
 | 1077 | `args[0]`, `args[1..]` | Safe | The branch is taken only if `args.len() >= 2` (1076). |
 | 1099 | `self.instances[&key]` | Safe | `instance_of_type` returned `Ok` at 1098, after `ensure_instance` (1000); see 1025. |
 | 1101-1102 | `inst.constructors[k]`, `inst.selectors[k][j]` | Fixed | Reached at the audited commit; now through `member`, as 1040. What reached it: a tester or an updater names a constructor or selector of one datatype and is applied to a term of any type: in CPC `is` and `update` do not relate the two (`(declare-parameterized-const is ((C Type :implicit) (D Type :implicit) (c C :opaque)) (-> D Bool))`), so the term is well typed, in an assumption too. With the datatypes and `b` of 1063: `(assume @p1 ((_ is cons) b))` panics at 1101, and `(assume @p1 (= b ((_ update tail) b b)))` at 1102, both with the len is 1 but the index is 1 (release and debug, status 101). |
-| 1119, 1155, 1186 | `cc::with_checker_stack(`, `self.store.check_proof(assumptions, commands)` | Stack | The generated functions recurse over the terms, on a thread of 64 MiB (generated/cpc-checker/src/lib.rs:121, 1150-1158), and stop with `CheckError::Limit` at `Limits::depth`. The default depth (144) is sized for that stack and gives the error; `--depth=N` (main.rs:74, 105, and 1125-1131 here) raises the limit without the stack. An assumption of 300,000 nested `not` gives `Limit` by default and, with `--depth=4000000000`, a stack overflow (status 134; release and debug; also with `--profile`). A panic on that thread would come back as `CheckError::Worker` (generated/cpc-checker/src/lib.rs:1156-1157), an error and not status 101. |
+| 1119, 1155, 1186 | `cc::with_checker_stack(`, `self.store.check_proof(assumptions, commands)` | Stack | The generated functions recurse over the terms, on a thread of 64 MiB (generated/cpc-checker/src/lib.rs:121, 1150-1158; 256 MiB since the checker is generated from Ethos `d83d2ab6`, with a default depth of 16,384 where it was 4096), and stop with `CheckError::Limit` at `Limits::depth`. The default depth (144) is sized for that stack and gives the error; `--depth=N` (main.rs:74, 105, and 1125-1131 here) raises the limit without the stack. An assumption of 300,000 nested `not` gives `Limit` by default and, with `--depth=4000000000`, a stack overflow (status 134; release and debug; also with `--profile`). A panic on that thread would come back as `CheckError::Worker` (generated/cpc-checker/src/lib.rs:1156-1157), an error and not status 101. |
 | 1162 | `label[i + 1..]` | Safe | `i` is where `find` saw `"(rule "`, so the byte at `i` is the ASCII `(` and `i + 1` is inside the string and on a character boundary. |
 | 1168-1169 | `e.0 += t`, `e.1 += 1` | Safe | A sum of `f64` and a count of labels, which are in memory. |
 | 1211 | `while st.ck.store.kind(t) == Kind::APPLY` | Resource | `spine` walks and copies the whole spine for each node `parametric` (1027) and `instance_key` (796) are asked about; quadratic in the number of arguments of one application, as `head` at 234. |
@@ -893,7 +897,7 @@ What remains is not a panic:
 |---|---|---|---|
 | 28 | `b.to_string_base(2)` | Resource | The text of a bit-vector has as many digits as its width (generated/cpc-checker/src/bitvec.rs:53-60), and the front end computes literals of any width: `(assume @p1 false)`, `(step @p2 (= (eo::to_bin 3000000000 1) (eo::to_bin 3000000000 1)) :rule refl :args (false))` is `incorrect` in 0.02 s and 8 MB without `--explain`, and with it is killed at the 4 GiB cap (status 143). No panic. |
 | 33, 40 | `depth - 1` | Safe | Line 21 returns when `depth == 0`. The recursion is at most 12 deep: both callers pass 12 (68, 77). |
-| 58, 63, 84, 104, 111 | `g::eo__24eo_5finvoke_5fassume_5flist(s, nil, assumptions)`, `g::eo__24eo_5finvoke_5fcmd(s, state, cmd)`, `g::eo__24eo_5fstate_5fis_5frefutation(s, state)` | Stack | The generated functions, run on the checker's 64 MiB thread (adapter.rs:1119, 1155): their recursion is bounded by `Limits::depth`, which `--depth=N` can set beyond what the stack holds. See adapter.rs:1186. |
+| 58, 63, 84, 104, 111 | `g::eo__24eo_5finvoke_5fassume_5flist(s, nil, assumptions)`, `g::eo__24eo_5finvoke_5fcmd(s, state, cmd)`, `g::eo__24eo_5fstate_5fis_5frefutation(s, state)` | Stack | The generated functions, run on the checker's thread (adapter.rs:1119, 1155; 64 MiB at the audited commit, 256 MiB since Ethos `d83d2ab6`): their recursion is bounded by `Limits::depth`, which `--depth=N` can set beyond what the stack holds. See adapter.rs:1186. |
 | 77 | `fields[0]` | Safe | `destruct` gives the fields of a `$emb_s.cons` node (generated/cpc-checker/src/lib.rs:386), and a node is only made by `construct` with as many fields as its arity (generated/cpc-checker/src/lib.rs:310), which is 2 for `$emb_s.cons` (generated/cpc-checker/src/schema.rs:4031). |
 | 105 | `Vec::with_capacity(commands.len())` | Safe | The length of the command list the adapter holds. |
 
