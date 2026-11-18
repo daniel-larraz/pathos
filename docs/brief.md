@@ -493,55 +493,73 @@ intended; everything between gates is not.
     keep the adapter to the interface the PR's README documents, and say in
     the report what would break if the PR changed. The reviewer pushes and
     starts the runs.
-28. **The compiled checker in Aeneas's subset, measured.** After milestone
-    27, whose performance table is the baseline. Not before the reviewer
-    says that the author of cvc5/ethos#274 has been told, so that this does
-    not become a second version of his runtime without his knowing.
+28. **The compiled checker in Aeneas's subset, measured.** On `main`,
+    branched from it, after milestone 30. The author of cvc5/ethos#274
+    knows about this work. The baseline is `pathos` at the pin of
+    `generated/cpc-checker` (Ethos `b8d65127`, logos `a3232131`), whose
+    measurements are in `docs/pathos-cpc.md`.
 
     *Why.* The plan is to prove with Charon/Aeneas that the compiled
     checker computes what logos's checker computes. Aeneas translates only
     a subset of Rust, so the code that is proved may have to differ from
-    cvc5/ethos#274's baseline, and could be slower. This milestone finds
+    today's generated checker, and could be slower. This milestone finds
     out, before any proof is written. Nothing in it is proved.
 
-    - **What Charon/Aeneas reject.** Install Charon and Aeneas (pin their
-      versions, and note which Lean version Aeneas's library needs against
-      logos's `lean-toolchain`). Run them on `generated/cpc-checker` as
-      milestone 27 left it, and list everything they reject, by file and
-      construct.
+    - **What Charon/Aeneas reject.** Install Charon and Aeneas in a place of
+      your own (not the harness's `work/` directory), pin their versions,
+      and note which Lean version Aeneas's library needs against logos's
+      `lean-toolchain` (an earlier test found v4.36.0-rc2 against 4.34.0).
+      Run them on `generated/cpc-checker` and list everything they reject,
+      by file and construct. Known from that test, at Charon `454586e9`:
+      Charon ran out of memory on the whole crate at 12 and 32 GB; it
+      panics on the `(|| { … })()` wrapper around each generated function
+      body, and on `Constructor::from_name`'s 1,055-arm string match.
+      Find out whether the memory comes from the size of `generated.rs`
+      (one function is 14,782 lines) or from something else, e.g. by
+      running Charon on a small signature through the same generator.
     - **The rewrite.** Change the compiled checker until Charon and Aeneas
       translate all of it to Lean without errors:
-      - the runtime: an interning table of our own over `Vec` in place of
-        `std::collections::HashMap`, explicit loops in place of iterators
-        and closures, and whatever else they reject;
-      - the generated code: through the generator, never by editing the
-        output. Generator changes go on a branch of the reviewer's Ethos
-        fork (`daniel-larraz/ethos`) on top of cvc5/ethos#274, so that
-        they can be offered upstream; `generated/cpc-checker` is
-        regenerated from it, and its note says from which commit;
-      - caches: if milestone 27 found proofs where the compiled checker
-        walks shared terms once per occurrence, add the type cache and the
-        cache of program applications here, in the subset, since they are
-        part of what would be proved;
+      - the generated code and the runtime, both through the generator
+        (the runtime is `plugins/rust_meta/runtime` in Ethos), never by
+        editing `generated/cpc-checker`. Work in a clone of the reviewer's
+        Ethos fork of your own (not the reviewer's checkout), on a branch
+        `m28-aeneas` from Ethos `main`, and regenerate with
+        `scripts/generate-cpc --ethos <your clone> --rev <commit>`. The
+        reviewer pushes the branch and offers the changes upstream. If
+        cvc5/ethos#276 (the checker's stack) is merged by then, start from
+        a `main` that has it;
+      - in the runtime: whatever they reject, e.g. explicit loops in place
+        of iterators and closures, and `std::collections::HashMap` (the
+        intern table) replaced by a table of our own over `Vec`. The
+        caches of types and program results are already tables over `Vec`;
+        keep them, in the subset, since they are part of what would be
+        proved;
       - big numbers: keep `malachite`, behind a small set of functions
         that Aeneas treats as external (their behaviour would be stated as
         axioms in Lean). List those functions in the report: they are what
         the eventual theorem would trust.
+    - **The panic audit of the runtime.** The rewritten runtime and the
+      constructs the generator emits get their rows in the "pathos (the
+      CPC checker)" section of `docs/panics.md` (milestone 30), at this
+      milestone's commit, checked by `scripts/check-panics`.
     - **The measurement.** Time and peak memory of the rewritten checker
-      against milestone 27's baseline, `pathos-eo` (with and without a
-      snapshot) and logos, on the 400 proofs and the 43 large ones, one
-      process at a time on an idle machine, every run under the memory cap
-      (`systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0`) and
-      a time limit. The verdicts must not change.
+      against the baseline, `pathos-eo` (with and without a snapshot) and
+      logos, on the 400 safe proofs and the 41 large safe ones, one process
+      at a time on an idle machine, every run under the memory cap
+      (`systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0`;
+      Charon and Aeneas themselves may need more: raise it deliberately,
+      to at most 16G, and say so) and a time limit. The verdicts must not
+      change.
 
-    Out of scope: proofs; changes to cvc5/ethos#274 itself (the reviewer
-    offers them upstream); proving big numbers of our own.
+    Out of scope: proofs; changes upstream (the reviewer offers them);
+    proving big numbers of our own.
 
     The gate: Charon and Aeneas translate the whole compiled checker without
     errors (the generated Lean is part of the report, not of the
-    repository); `pathos` gives the same verdicts as in milestone 27; the
+    repository); `pathos` gives the same verdicts as at the baseline; the
     table compares it with the baseline, and the report says where any
-    slowdown comes from. The reviewer pushes and starts the runs.
+    slowdown comes from; the runtime's panic rows pass
+    `scripts/check-panics`. The reviewer pushes and starts the runs.
 29. **Follow Ethos to `b8d65127`.** On `main`, branched from it, after the
     move of `generated/cpc-checker`'s pin to `b8d65127`. Like milestone 26.
     Ethos `main` is two commits past `REFERENCE_REV`: cvc5/ethos#274
@@ -601,20 +619,14 @@ intended; everything between gates is not.
 30. **The panic audit of `pathos`.** On `main`, branched from it.
     `docs/panics.md` lists every place that can panic at commit `cd5face`
     (milestone 14), with that commit's line numbers. `crates/pathos`, the
-    CPC front end and adapter that read untrusted proofs, and the runtime
-    of `generated/cpc-checker` came later and were never audited. The other
-    crates changed less since, and differential testing and fuzzing check
-    them on every push; this milestone leaves their audit as it is.
+    CPC front end and adapter that read untrusted proofs, came later and
+    was never audited. The other crates changed less since, and
+    differential testing and fuzzing check them on every push; this
+    milestone leaves their audit as it is.
 
     - **Scope.** `crates/pathos`, outside `#[cfg(test)]` and `tests/`, for
-      everything "What was looked for" lists; the runtime files of
-      `generated/cpc-checker` (`lib.rs` and the copied `num.rs`,
-      `bitvec.rs`, `lit.rs`, `eostring.rs`, `kind.rs`, `codec.rs`) row by
-      row; and `generated.rs` and `schema.rs`, not line by line, but by the
-      constructs the generator emits (find them with `grep`), one row per
-      construct with the argument that covers every instance. A panic site
-      found in generated code is reported to the reviewer, to be fixed
-      upstream in Ethos's rust-meta; never edit the generated crate.
+      everything "What was looked for" lists. Not `generated/cpc-checker`:
+      milestone 28 rewrites its runtime and audits the result.
     - **Where it goes.** A new section of `docs/panics.md`, "pathos (the
       CPC checker)", with its own `Result` table, whose line numbers are
       those of the commit this milestone branches from, named at its top.
@@ -640,12 +652,12 @@ intended; everything between gates is not.
     - **Fixes.** A site that input reaches is a bug: fix it in `crates/pathos`
       with a regression test.
 
-    Out of scope: re-auditing the other crates; the verus branch; the
-    generated crate's code (report, don't edit); dependencies
+    Out of scope: re-auditing the other crates; the verus branch;
+    `generated/cpc-checker` (milestone 28); dependencies
     (`docs/dependencies.md` covers them).
 
-    The gate: the new section audits every site of `crates/pathos` and the
-    runtime at the named commit, `scripts/check-panics` passes on it, the
+    The gate: the new section audits every site of `crates/pathos` at the
+    named commit, `scripts/check-panics` passes on it, the
     `cd5face` rows are back to one convention, and any fix comes with a
     test. CI is green. The reviewer pushes and starts the runs.
 
