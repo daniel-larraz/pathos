@@ -598,6 +598,64 @@ intended; everything between gates is not.
     reviewer moves the pin, `scripts/full-check` and `scripts/difftest eoc`
     agree on CI. The reviewer pushes and starts the runs.
 
+30. **The panic audit, redone at today's code.** On `main`, branched from
+    it. `docs/panics.md` lists every place that can panic, but at commit
+    `cd5face` (milestone 14): its line numbers are that commit's, and code
+    written since was never audited row by row. That covers milestones
+    15 to 29, `pathos-eoc`'s later stages, and all of `crates/pathos`, the
+    CPC front end and adapter, which read untrusted proofs. Milestone 29
+    then updated the `lit.rs` and `desugar.rs` rows to newer line numbers,
+    so the file now mixes two conventions. Redo the audit at the commit
+    this milestone branches from, so that the appendix of `evidence.md`
+    describes the code that ships.
+
+    - **Scope.** Every crate under `crates/` (now seven, `crates/pathos`
+      included), outside `#[cfg(test)]` and `tests/`, for everything "What
+      was looked for" lists. For `generated/cpc-checker`: its runtime files
+      (`lib.rs` and the copied `num.rs`, `bitvec.rs`, `lit.rs`,
+      `eostring.rs`, `kind.rs`, `codec.rs`) row by row; for `generated.rs`
+      and `schema.rs`, not line by line, but by the constructs the
+      generator emits (find them with `grep`), one row per construct with
+      the argument that covers every instance. A panic site found in
+      generated code is reported to the reviewer, to be fixed upstream in
+      Ethos's rust-meta; never edit the generated crate.
+    - **Every row anew.** For each site, read it back to where input enters,
+      as "How" says, and give the invariant with the line that establishes
+      it. Keep a row's verdict only if its reason still holds in today's
+      code; rows whose code is gone are removed. New sites get new rows.
+    - **One convention.** Every line number is that of the audited commit,
+      which the header names. Drop the per-milestone history ("fixed in
+      this milestone", "since milestone 26", the notes on `cd5face`); the
+      `Result` table counts today's rows. Where a past fix still matters
+      (the crafted-snapshot rows), say what protects the site now, not
+      when it changed.
+    - **Keeping it true.** Add `scripts/check-panics`: for every row, check
+      that the cited file and line exist at the audited commit and contain
+      the construct the row names (the text in its second column), and
+      report the rows that do not. Run it in CI's `rust` job only to check
+      the file against the commit it names (`git show <commit>:<path>`),
+      so a later change to the code does not make CI red; the next audit
+      moves the commit.
+    - **Runs.** Repeat the runs "How" lists where the code they exercise has
+      changed, and add them for `crates/pathos`: mutated CPC proofs (the
+      safe corpus mutated with `fuzz.py`'s mutations), the deep-term
+      proofs (an `or` nested 30,000 deep, the two large proofs that need
+      depth 9,381 and 11,493), and malformed snapshot and include cases
+      if `pathos` reads any. Every run under the memory cap.
+    - **Fixes.** A site that input reaches is a bug: fix it in pathos's
+      own code (an error with Ethos's message where Ethos has one), with a
+      regression test, as milestone 14 did. If a fix changes behaviour that
+      the harness compares, the drift job and CI must still agree with
+      `REFERENCE_REV`.
+
+    Out of scope: the verus branch; the generated crate's code (report,
+    don't edit); dependencies (`docs/dependencies.md` covers them).
+
+    The gate: `docs/panics.md` audits every site of the audited commit with
+    one convention, `scripts/check-panics` passes on it, the report lists
+    the rows added, removed and changed in verdict, and any fix comes with
+    a test. CI is green. The reviewer pushes and starts the runs.
+
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
 
