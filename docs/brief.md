@@ -542,6 +542,17 @@ intended; everything between gates is not.
       constructs the generator emits get their rows in the "pathos (the
       CPC checker)" section of `docs/panics.md` (milestone 30), at this
       milestone's commit, checked by `scripts/check-panics`.
+    - **Two items from milestone 30.** The adapter converts an application
+      with n arguments in quadratic time (80,000 arguments: 10.6 s): make
+      it linear, with a test, and update its Resource row in the "pathos
+      (the CPC checker)" section. And correct two rows of the `cd5face`
+      audit that milestone 30 found inaccurate: `pathos-term`'s
+      `bitvec.rs:17` (a negative value reduced modulo 2^size allocates
+      `size` bits, e.g. 512 MiB for `eo::to_bin 4294967295 -1`: a Resource
+      row, not Safe), and the radix range of malachite's conversion
+      (2..=62, not 2..=36; callers pass 2, 10 and 16 only). Milestone 30's
+      unfinished audit of the generated runtime (`target/audit/` in its
+      checkout) is a starting point for the runtime's rows, not a result.
     - **The measurement.** Time and peak memory of the rewritten checker
       against the baseline, `pathos-eo` (with and without a snapshot) and
       logos, on the 400 safe proofs and the 41 large safe ones, one process
