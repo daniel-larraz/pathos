@@ -49,7 +49,7 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$root/difftest.env"
 
 # The commit of Ethos's main branch the checker is generated from.
-default_rev=d83d2ab6b5fa63f6b129afa2d8a991bcb1b5aef2
+default_rev=e51f527cd496e46b86793057a2a15000cbaedf36
 
 fail() { echo "scripts/generate-cpc: $*" >&2; exit 2; }
 
