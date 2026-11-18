@@ -475,6 +475,17 @@ jobs:
           echo "run=$run" >> "$GITHUB_OUTPUT"
           echo "scripts/unsafe-reach: $run ($EVENT)"
 
+      # LLVM's addr2line on Linux: binutils 2.38's, on these runners, is far
+      # slower on pathos's debug information. scripts/unsafe-reach finds a
+      # versioned one (llvm-addr2line-<n>) by itself.
+      - name: Find LLVM's addr2line (Linux)
+        if: ${{ !cancelled() && runner.os == 'Linux' && steps.reach.outputs.run == 'true' }}
+        run: |
+          if ! ls /usr/bin/llvm-addr2line* /usr/lib/llvm-*/bin/llvm-addr2line > /dev/null 2>&1; then
+            sudo apt-get update -q && sudo apt-get install -y llvm
+          fi
+          ls /usr/bin/llvm-addr2line* /usr/lib/llvm-*/bin/llvm-addr2line 2>/dev/null || true
+
       # LLVM's tools where binutils cannot read the binaries: Homebrew's on
       # macOS, and on Windows those of MSYS2 or of the runner's LLVM.
       - name: Find a disassembler (macOS)
