@@ -1,7 +1,7 @@
 //! Arbitrary-precision integers and rationals.
 //!
 //! From `crates/pathos-term/src/num.rs` of pathos (as of its commit
-//! 09fdaef), without what the compiled checker does not use
+//! acae6aa), without what the compiled checker does not use
 //! (`Integer::length`, `Rational::from_decimal`, `Rational::is_integral`),
 //! and with `hash_code` added.
 //!

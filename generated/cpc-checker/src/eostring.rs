@@ -1,7 +1,7 @@
 //! Strings of Unicode code points, as `util/string.cpp` in Ethos.
 //!
 //! From `crates/pathos-term/src/eostring.rs` of pathos (as of its commit
-//! 09fdaef). The reading of a string from text (`parse`) and its printing
+//! acae6aa). The reading of a string from text (`parse`) and its printing
 //! are in front.rs; the operations here are written with loops over the
 //! code points.
 

@@ -1,7 +1,7 @@
 //! The kinds of literals and the builtin `eo::` operators.
 //!
 //! A subset of `crates/pathos-term/src/kind.rs` of pathos (as of its commit
-//! 09fdaef): the two enums the compiled checker uses, and the two
+//! acae6aa): the two enums the compiled checker uses, and the two
 //! predicates on operators. The kinds of symbols and of compound terms, the
 //! flat `Kind`, the tables of names and the snapshot codes are left out; a
 //! later sync with pathos copies only what is here.

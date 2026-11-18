@@ -94,6 +94,21 @@ pub enum Embedding {
     Data,
 }
 
+/// What a round of a generated loop gives: the result, or the arguments of
+/// the next round. (A program that calls itself last is compiled to a loop.)
+pub enum Next<T> {
+    Done(Term),
+    Again(T),
+}
+
+/// What a step down the list of assumptions gives (the generated
+/// `$eo_invoke_assume_list`): the state the list ends in, or a guard and a
+/// term to push on the way back, with the rest of the list.
+pub enum FoldStep {
+    Done(Term),
+    Push(Term, Term, Term),
+}
+
 /// An arena-local handle. Obtain handles through Store's constructors.
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Term(u32);
@@ -140,6 +155,29 @@ enum Hit {
     Done(Option<Vec<Term>>),
     Raw(Lit),
     Binary(Integer, Integer),
+}
+
+/// The Logos verdict, including its translation side conditions. Returning
+/// Correct is an executable result; formal Rust refinement remains separate.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Verdict {
+    Correct,
+    Incorrect,
+    Incomplete,
+}
+
+/// What a translation mask asks of an argument (Logos's
+/// `ArgTranslationKind`). `Unknown` is a word of the table of masks that
+/// is none of them.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[allow(dead_code)] // A signature without masks builds none.
+pub(crate) enum ArgKind {
+    Term,
+    Type,
+    WfTerm,
+    WfElem,
+    List,
+    Unknown,
 }
 
 /// Monotonically growing, hash-consed arena. Hashes only say where a search
@@ -763,7 +801,7 @@ impl Store {
             _ => Err(CheckError::InvalidNative),
         }
     }
-    fn object_index(&self, t: Term) -> CheckResult<Option<u32>> {
+    pub(crate) fn object_index(&self, t: Term) -> CheckResult<Option<u32>> {
         Ok(match self.view(t)? {
             TermData::Literal(Lit::Numeral(n)) if n.fits_u32() => Some(n.to_u32()),
             _ => None,
@@ -894,44 +932,11 @@ impl Store {
 
     /// Ethos-style primitive evaluation over already evaluated values.
     /// Stuck is explicit; recognizers and IsOk/IsEq return false on it.
-    pub fn builtin(&mut self, op: EvalOp, args: &[Term]) -> CheckResult<Term> {
-        let arity = match op {
-            EvalOp::IsOk
-            | EvalOp::Hash
-            | EvalOp::TypeOf
-            | EvalOp::NameOf
-            | EvalOp::Not
-            | EvalOp::Neg
-            | EvalOp::IsNeg
-            | EvalOp::Length
-            | EvalOp::ToInt
-            | EvalOp::ToRat
-            | EvalOp::ToString
-            | EvalOp::IsZ
-            | EvalOp::IsQ
-            | EvalOp::IsBin
-            | EvalOp::IsStr
-            | EvalOp::IsBool
-            | EvalOp::IsVar
-            | EvalOp::DtConstructors
-            | EvalOp::DtSelectors => 1,
-            EvalOp::IfThenElse
-            | EvalOp::Requires
-            | EvalOp::Cons
-            | EvalOp::ListConcat
-            | EvalOp::ListNth
-            | EvalOp::ListFind
-            | EvalOp::ListErase
-            | EvalOp::ListEraseAll
-            | EvalOp::ListMinclude
-            | EvalOp::ListMeq
-            | EvalOp::ListDiff
-            | EvalOp::ListInter
-            | EvalOp::ListRepeat
-            | EvalOp::Extract => 3,
-            _ => 2,
-        };
-        if (op.is_nary() && args.len() < 2) || (!op.is_nary() && args.len() != arity) {
+    /// (The list operators are not here: they call generated functions,
+    /// and are in lists.rs, above what they call. `builtin` there takes
+    /// any operator.)
+    pub(crate) fn builtin_core(&mut self, op: EvalOp, args: &[Term]) -> CheckResult<Term> {
+        if !Self::takes(op, args.len()) {
             return Ok(self.stuck());
         }
         self.check_handles(args)?;
@@ -975,6 +980,46 @@ impl Store {
             _ => self.builtin_strict(op, args),
         }
     }
+    /// Whether an operator takes this number of arguments.
+    pub(crate) fn takes(op: EvalOp, count: usize) -> bool {
+        let arity = match op {
+            EvalOp::IsOk
+            | EvalOp::Hash
+            | EvalOp::TypeOf
+            | EvalOp::NameOf
+            | EvalOp::Not
+            | EvalOp::Neg
+            | EvalOp::IsNeg
+            | EvalOp::Length
+            | EvalOp::ToInt
+            | EvalOp::ToRat
+            | EvalOp::ToString
+            | EvalOp::IsZ
+            | EvalOp::IsQ
+            | EvalOp::IsBin
+            | EvalOp::IsStr
+            | EvalOp::IsBool
+            | EvalOp::IsVar
+            | EvalOp::DtConstructors
+            | EvalOp::DtSelectors => 1,
+            EvalOp::IfThenElse
+            | EvalOp::Requires
+            | EvalOp::Cons
+            | EvalOp::ListConcat
+            | EvalOp::ListNth
+            | EvalOp::ListFind
+            | EvalOp::ListErase
+            | EvalOp::ListEraseAll
+            | EvalOp::ListMinclude
+            | EvalOp::ListMeq
+            | EvalOp::ListDiff
+            | EvalOp::ListInter
+            | EvalOp::ListRepeat
+            | EvalOp::Extract => 3,
+            _ => 2,
+        };
+        if op.is_nary() { count >= 2 } else { count == arity }
+    }
     /// The operators that are stuck when an argument is.
     fn builtin_strict(&mut self, op: EvalOp, args: &[Term]) -> CheckResult<Term> {
         if self.any_stuck(args) {
@@ -988,7 +1033,8 @@ impl Store {
             }
             _ => {
                 if op.is_list_op() {
-                    self.list_builtin(op, args)
+                    // not an operator of this function
+                    Err(CheckError::InvalidNative)
                 } else {
                     self.builtin_literal(op, args)
                 }
@@ -1017,7 +1063,7 @@ impl Store {
         }
     }
     /// Refuses a handle that is not of this store.
-    fn check_handles(&self, args: &[Term]) -> CheckResult<()> {
+    pub(crate) fn check_handles(&self, args: &[Term]) -> CheckResult<()> {
         let mut i = 0;
         while i < args.len() {
             self.view(args[i])?;
@@ -1026,7 +1072,7 @@ impl Store {
         Ok(())
     }
     /// Whether one of the terms is stuck (or not of this store).
-    fn any_stuck(&self, args: &[Term]) -> bool {
+    pub(crate) fn any_stuck(&self, args: &[Term]) -> bool {
         let mut any = false;
         let mut i = 0;
         while i < args.len() {
@@ -1082,237 +1128,6 @@ impl Store {
             i += 1;
         }
         if all { Some(lits) } else { None }
-    }
-
-    /// Whether the list constructor `f` nests to the left.
-    fn is_left_assoc(&self, f: Term) -> CheckResult<bool> {
-        Ok(match self.view(f)? {
-            TermData::Node(c, _) => c.is_left_assoc(),
-            _ => false,
-        })
-    }
-    /// The next element of a list of `f` and the rest of the list, or
-    /// `None` where the list of applications of `f` ends. `count` is the
-    /// number of elements taken so far.
-    fn list_step(
-        &self,
-        f: Term,
-        left: bool,
-        list: Term,
-        count: usize,
-    ) -> CheckResult<Option<(Term, Term)>> {
-        let Some((g, b)) = self.unapply(list)? else {
-            return Ok(None);
-        };
-        let Some((head, a)) = self.unapply(g)? else {
-            return Ok(None);
-        };
-        if f != head {
-            return Ok(None);
-        }
-        if count as u64 >= self.limits.calls {
-            return Err(CheckError::Limit);
-        }
-        Ok(Some(if left { (b, a) } else { (a, b) }))
-    }
-    /// The elements of a list of `f`, and where its applications of `f` end.
-    fn list_elements(&self, f: Term, left: bool, list: Term) -> CheckResult<(Vec<Term>, Term)> {
-        let mut out = Vec::new();
-        let mut list = list;
-        let mut more = true;
-        while more {
-            match self.list_step(f, left, list, out.len())? {
-                Some((element, rest)) => {
-                    out.push(element);
-                    list = rest;
-                }
-                None => more = false,
-            }
-        }
-        Ok((out, list))
-    }
-    fn list_parts(&mut self, f: Term, list: Term) -> CheckResult<Option<(Vec<Term>, Term)>> {
-        let left = self.is_left_assoc(f)?;
-        let (out, list) = self.list_elements(f, left, list)?;
-        let is_nil = generated::eo__24eo_5fis_5flist_5fnil(self, f, list)?;
-        match self.boolean_value(is_nil, false)? {
-            Some(true) => {}
-            _ => return Ok(None),
-        }
-        Ok(Some((out, list)))
-    }
-    /// The list of `f` with the element `e` before `tail`.
-    fn list_cons(&mut self, f: Term, left: bool, e: Term, tail: Term) -> CheckResult<Term> {
-        let first = self.apply(f, if left { tail } else { e })?;
-        self.apply(first, if left { e } else { tail })
-    }
-    fn list_build(&mut self, f: Term, elems: &[Term], nil: Term) -> CheckResult<Term> {
-        let left = self.is_left_assoc(f)?;
-        let mut list = nil;
-        let mut i = elems.len();
-        while i > 0 {
-            i -= 1;
-            list = self.list_cons(f, left, elems[i], list)?;
-        }
-        Ok(list)
-    }
-    fn list_builtin(&mut self, op: EvalOp, a: &[Term]) -> CheckResult<Term> {
-        let f = a[0];
-        match op {
-            EvalOp::Nil => generated::eo__24eo_5fnil(self, f, a[1]),
-            EvalOp::ListRepeat => self.list_repeat(f, a[1], a[2]),
-            EvalOp::Cons => self.list_cons_op(f, a[1], a[2]),
-            EvalOp::ListConcat => self.list_concat(f, a[1], a[2]),
-            EvalOp::ListMinclude | EvalOp::ListMeq => self.list_inclusion(op, f, a[1], a[2]),
-            EvalOp::ListDiff | EvalOp::ListInter => self.list_selection(op, f, a[1], a[2]),
-            _ => self.list_of_one(op, f, a),
-        }
-    }
-    /// The list of `f` that is empty for elements of the type of `x`.
-    fn list_nil_for(&mut self, f: Term, x: Term) -> CheckResult<Term> {
-        let ty = generated::eo__24eo_5ftypeof(self, x)?;
-        generated::eo__24eo_5fnil(self, f, ty)
-    }
-    fn list_repeat(&mut self, f: Term, x: Term, count: Term) -> CheckResult<Term> {
-        let Some(n) = self.object_index(count)? else {
-            return Ok(self.stuck());
-        };
-        if u64::from(n) > self.limits.calls {
-            return Err(CheckError::Limit);
-        }
-        let nil = self.list_nil_for(f, x)?;
-        let elems = vec![x; n as usize];
-        self.list_build(f, &elems, nil)
-    }
-    fn list_cons_op(&mut self, f: Term, x: Term, list: Term) -> CheckResult<Term> {
-        let Some((tail, nil)) = self.list_parts(f, list)? else {
-            return Ok(self.stuck());
-        };
-        let mut elems = Vec::with_capacity(tail.len() + 1);
-        elems.push(x);
-        append_terms(&mut elems, &tail);
-        self.list_build(f, &elems, nil)
-    }
-    /// The elements of two lists of `f` that end in the same nil, with
-    /// that nil; `None` if one is not a list or the ends differ.
-    #[allow(clippy::type_complexity)]
-    fn list_pair(
-        &mut self,
-        f: Term,
-        x: Term,
-        y: Term,
-    ) -> CheckResult<Option<(Vec<Term>, Vec<Term>, Term)>> {
-        let Some((xs, nil)) = self.list_parts(f, x)? else {
-            return Ok(None);
-        };
-        let Some((ys, other_nil)) = self.list_parts(f, y)? else {
-            return Ok(None);
-        };
-        if other_nil != nil {
-            return Ok(None);
-        }
-        Ok(Some((xs, ys, nil)))
-    }
-    fn list_concat(&mut self, f: Term, x: Term, y: Term) -> CheckResult<Term> {
-        let Some((xs, ys, nil)) = self.list_pair(f, x, y)? else {
-            return Ok(self.stuck());
-        };
-        let left = self.is_left_assoc(f)?;
-        let mut both = Vec::with_capacity(xs.len() + ys.len());
-        if left {
-            append_terms(&mut both, &ys);
-            append_terms(&mut both, &xs);
-        } else {
-            append_terms(&mut both, &xs);
-            append_terms(&mut both, &ys);
-        }
-        self.list_build(f, &both, nil)
-    }
-    /// `list_minclude` and `list_meq`: whether the second list is included
-    /// in the first as a multiset, or equal to it.
-    fn list_inclusion(&mut self, op: EvalOp, f: Term, x: Term, y: Term) -> CheckResult<Term> {
-        let Some((xs, ys, _)) = self.list_pair(f, x, y)? else {
-            return Ok(self.stuck());
-        };
-        let (foreign, contained) = multiset_inclusion(&xs, &ys);
-        let equality = match op {
-            EvalOp::ListMeq => true,
-            _ => false,
-        };
-        if !equality {
-            return self.boolean(contained);
-        }
-        if foreign {
-            return self.boolean(false);
-        }
-        if !contained {
-            return self.boolean(false);
-        }
-        let ys = match self.list_parts(f, y)? {
-            Some((ys, _)) => ys,
-            None => return Err(CheckError::InvalidConstructor),
-        };
-        self.boolean(xs.len() == ys.len())
-    }
-    /// `list_inter` and `list_diff`.
-    fn list_selection(&mut self, op: EvalOp, f: Term, x: Term, y: Term) -> CheckResult<Term> {
-        let Some((xs, ys, nil)) = self.list_pair(f, x, y)? else {
-            return Ok(self.stuck());
-        };
-        let paired = match op {
-            EvalOp::ListInter => true,
-            _ => false,
-        };
-        let kept = multiset_select(&xs, &ys, paired);
-        self.list_build(f, &kept, nil)
-    }
-    /// The list operators on one list, `a[1]`.
-    fn list_of_one(&mut self, op: EvalOp, f: Term, a: &[Term]) -> CheckResult<Term> {
-        let Some((xs, nil)) = self.list_parts(f, a[1])? else {
-            return match op {
-                EvalOp::ListSingletonIntro => {
-                    let nil = self.list_nil_for(f, a[1])?;
-                    self.list_build(f, &[a[1]], nil)
-                }
-                _ => Ok(self.stuck()),
-            };
-        };
-        match op {
-            EvalOp::ListLength => self.numeral(Integer::from(xs.len())),
-            EvalOp::ListNth => self.list_nth(&xs, a[2]),
-            EvalOp::ListFind => self.numeral(match position(&xs, a[2]) {
-                Some(i) => Integer::from(i),
-                None => Integer::one().neg(),
-            }),
-            EvalOp::ListRev => self.list_build(f, &reversed(&xs), nil),
-            EvalOp::ListSingletonElim => Ok(if xs.len() == 1 { xs[0] } else { a[1] }),
-            EvalOp::ListSingletonIntro => Ok(a[1]),
-            EvalOp::ListErase => self.list_build(f, &without_first(&xs, a[2]), nil),
-            EvalOp::ListEraseAll => self.list_build(f, &without(&xs, a[2]), nil),
-            EvalOp::ListSetof => self.list_build(f, &first_occurrences(&xs), nil),
-            _ => Ok(self.stuck()),
-        }
-    }
-    fn list_nth(&mut self, xs: &[Term], index: Term) -> CheckResult<Term> {
-        Ok(match self.object_index(index)? {
-            Some(n) => {
-                if (n as usize) < xs.len() {
-                    xs[n as usize]
-                } else {
-                    self.stuck()
-                }
-            }
-            None => self.stuck(),
-        })
-    }
-
-    /// Check the entire proof state machine, including typing, assumptions,
-    /// step-pop, premise lookup and the final closed refutation test. To be
-    /// called on the checker's stack: see `Store::check_refutation`.
-    pub(crate) fn check_refutation_inner(&mut self, assumptions: Term, commands: Term) -> CheckResult<bool> {
-        self.calls = 0;
-        let answer = generated::eo__24eo_5fchecker_5fis_5frefutation(self, assumptions, commands)?;
-        self.is_native_true(answer)
     }
 }
 
@@ -1378,7 +1193,7 @@ fn code_points_cmp(a: &[u32], b: &[u32]) -> std::cmp::Ordering {
     order
 }
 /// Adds the terms of `from` to `to`.
-fn append_terms(to: &mut Vec<Term>, from: &[Term]) {
+pub(crate) fn append_terms(to: &mut Vec<Term>, from: &[Term]) {
     let mut i = 0;
     while i < from.len() {
         to.push(from[i]);
@@ -1386,7 +1201,7 @@ fn append_terms(to: &mut Vec<Term>, from: &[Term]) {
     }
 }
 /// The first place of `x` in `xs`.
-fn position(xs: &[Term], x: Term) -> Option<usize> {
+pub(crate) fn position(xs: &[Term], x: Term) -> Option<usize> {
     let mut found = None;
     let mut i = xs.len();
     while i > 0 {
@@ -1398,7 +1213,7 @@ fn position(xs: &[Term], x: Term) -> Option<usize> {
     found
 }
 /// The terms in the opposite order.
-fn reversed(xs: &[Term]) -> Vec<Term> {
+pub(crate) fn reversed(xs: &[Term]) -> Vec<Term> {
     let mut out = Vec::with_capacity(xs.len());
     let mut i = xs.len();
     while i > 0 {
@@ -1408,7 +1223,7 @@ fn reversed(xs: &[Term]) -> Vec<Term> {
     out
 }
 /// The terms without the first occurrence of `x`.
-fn without_first(xs: &[Term], x: Term) -> Vec<Term> {
+pub(crate) fn without_first(xs: &[Term], x: Term) -> Vec<Term> {
     let mut out = Vec::with_capacity(xs.len());
     let mut erased = false;
     let mut i = 0;
@@ -1423,7 +1238,7 @@ fn without_first(xs: &[Term], x: Term) -> Vec<Term> {
     out
 }
 /// The terms without any occurrence of `x`.
-fn without(xs: &[Term], x: Term) -> Vec<Term> {
+pub(crate) fn without(xs: &[Term], x: Term) -> Vec<Term> {
     let mut out = Vec::with_capacity(xs.len());
     let mut i = 0;
     while i < xs.len() {
@@ -1435,7 +1250,7 @@ fn without(xs: &[Term], x: Term) -> Vec<Term> {
     out
 }
 /// The first occurrence of each term, in order.
-fn first_occurrences(xs: &[Term]) -> Vec<Term> {
+pub(crate) fn first_occurrences(xs: &[Term]) -> Vec<Term> {
     let mut seen = TermCounts::new(xs.len());
     let mut out = Vec::new();
     let mut i = 0;
@@ -1461,7 +1276,7 @@ fn multiset(ys: &[Term]) -> TermCounts {
 /// Takes each term of `xs` out of the multiset of `ys`. First: whether a
 /// term of `xs` is not in `ys` at all. Second: whether nothing of `ys` is
 /// left, that is, `ys` is included in `xs` as a multiset.
-fn multiset_inclusion(xs: &[Term], ys: &[Term]) -> (bool, bool) {
+pub(crate) fn multiset_inclusion(xs: &[Term], ys: &[Term]) -> (bool, bool) {
     let mut counts = multiset(ys);
     let mut foreign = false;
     let mut i = 0;
@@ -1476,7 +1291,7 @@ fn multiset_inclusion(xs: &[Term], ys: &[Term]) -> (bool, bool) {
 }
 /// The terms of `xs` that pair off with a term of `ys` (`paired`), each
 /// term of `ys` pairing once, or those that do not.
-fn multiset_select(xs: &[Term], ys: &[Term], paired: bool) -> Vec<Term> {
+pub(crate) fn multiset_select(xs: &[Term], ys: &[Term], paired: bool) -> Vec<Term> {
     let mut counts = multiset(ys);
     let mut out = Vec::new();
     let mut i = 0;
@@ -1550,393 +1365,5 @@ mod cache_tests {
         assert_eq!(generated::eo__24eo_5ftypeof(&mut s, stuck), Ok(stuck));
         assert_eq!(s.cache_stats().type_hits, hits + 1);
         assert_eq!(s.depth, 0);
-    }
-}
-/// The Logos verdict, including its translation side conditions. Returning
-/// Correct is an executable result; formal Rust refinement remains separate.
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Verdict {
-    Correct,
-    Incorrect,
-    Incomplete,
-}
-
-/// What a translation mask asks of an argument (Logos's
-/// `ArgTranslationKind`). `Unknown` is a word of the table of masks that
-/// is none of them.
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-#[allow(dead_code)] // A signature without masks builds none.
-enum ArgKind {
-    Term,
-    Type,
-    WfTerm,
-    WfElem,
-    List,
-    Unknown,
-}
-
-impl Store {
-    /// The verdict on a proof. To be called on the checker's stack: see
-    /// `Store::check_proof`.
-    pub(crate) fn check_proof_inner(&mut self, assumptions: Term, commands: Term) -> CheckResult<Verdict> {
-        if !self.check_refutation_inner(assumptions, commands)? {
-            return Ok(Verdict::Incorrect);
-        }
-        if !true {
-            return Ok(Verdict::Incomplete);
-        }
-        if !self.arguments_translate(assumptions, None)? {
-            return Ok(Verdict::Incomplete);
-        }
-        let mut list = commands;
-        loop {
-            if self.is_node(list, Some(Constructor::eo__24emb_5fcmdl_2enil))? {
-                return Ok(Verdict::Correct);
-            }
-            let Some(cs) = self.node_fields(list, Some(Constructor::eo__24emb_5fcmdl_2econs))? else {
-                return Ok(Verdict::Incorrect);
-            };
-            let c = cs[0];
-            if let Some(fs) = self.node_fields(c, Some(Constructor::eo__24emb_5fcmd_2eassume_5fpush))? {
-                if !self.has_translation(fs[0])? {
-                    return Ok(Verdict::Incomplete);
-                }
-            } else if let Some(fs) = self.node_fields(c, Some(Constructor::eo__24emb_5fcmd_2estep))? {
-                let rule = match self.view(fs[0])? {
-                    TermData::Node(rule, _) => *rule,
-                    _ => return Ok(Verdict::Incorrect),
-                };
-                if !self.arguments_translate(fs[1], Some(rule))? {
-                    return Ok(Verdict::Incomplete);
-                }
-            }
-            list = cs[1];
-        }
-    }
-
-    /// The number of arguments of a rule whose arguments have a mask.
-    #[allow(clippy::match_single_binding)]
-    fn mask_len(rule: Constructor) -> Option<usize> {
-        match rule {
-            Constructor::eo__24emb_5fr_2echain_5fresolution => Some(2),
-Constructor::eo__24emb_5fr_2echain_5fm_5fresolution => Some(3),
-Constructor::eo__24emb_5fr_2einstantiate => Some(1),
-Constructor::eo__24emb_5fr_2ealpha_5fequiv => Some(3),
-Constructor::eo__24emb_5fr_2edistinct_5fbinary_5felim => Some(2),
-Constructor::eo__24emb_5fr_2eexists_5fstring_5flength => Some(3),
-Constructor::eo__24emb_5fr_2esets_5feq_5fsingleton_5femp => Some(3),
-Constructor::eo__24emb_5fr_2esets_5fmember_5femp => Some(3),
-Constructor::eo__24emb_5fr_2esets_5finter_5femp1 => Some(3),
-Constructor::eo__24emb_5fr_2esets_5finter_5femp2 => Some(3),
-Constructor::eo__24emb_5fr_2esets_5fminus_5femp1 => Some(3),
-Constructor::eo__24emb_5fr_2esets_5fminus_5femp2 => Some(3),
-Constructor::eo__24emb_5fr_2esets_5funion_5femp1 => Some(3),
-Constructor::eo__24emb_5fr_2esets_5funion_5femp2 => Some(3),
-Constructor::eo__24emb_5fr_2esets_5fminus_5fself => Some(2),
-Constructor::eo__24emb_5fr_2esets_5fis_5fempty_5felim => Some(2),
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5frange => Some(4),
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart => Some(4),
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart_5fneg => Some(4),
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fsubstr_5fstart_5fgeq_5flen => Some(6),
-Constructor::eo__24emb_5fr_2estr_5fconcat_5funify_5fbase => Some(4),
-Constructor::eo__24emb_5fr_2estr_5fconcat_5funify_5fbase_5frev => Some(4),
-Constructor::eo__24emb_5fr_2estr_5fcontains_5fchar => Some(3),
-Constructor::eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fconcat_5frec => Some(4),
-Constructor::eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fbase => Some(2),
-Constructor::eo__24emb_5fr_2estr_5findexof_5fself => Some(3),
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fchar_5fstart_5feq_5flen => Some(3),
-Constructor::eo__24emb_5fr_2esets_5fmember_5fsingleton => Some(2),
-Constructor::eo__24emb_5fr_2esets_5fchoose_5fsingleton => Some(1),
-Constructor::eo__24emb_5fr_2eseq_5flen_5funit => Some(1),
-Constructor::eo__24emb_5fr_2eseq_5frev_5funit => Some(1),
-Constructor::eo__24emb_5fr_2eseq_5fnth_5funit => Some(1),
-
-            _ => None,
-        }
-    }
-    /// What the mask of `rule` asks of its `i`-th argument.
-    #[allow(clippy::match_single_binding)]
-    fn mask_kind(rule: Constructor, i: usize) -> Option<ArgKind> {
-        match rule {
-            Constructor::eo__24emb_5fr_2echain_5fresolution => match i {
-0 => Some(ArgKind::List),
-1 => Some(ArgKind::List),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2echain_5fm_5fresolution => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::List),
-2 => Some(ArgKind::List),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2einstantiate => match i {
-0 => Some(ArgKind::List),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2ealpha_5fequiv => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::List),
-2 => Some(ArgKind::List),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2edistinct_5fbinary_5felim => match i {
-0 => Some(ArgKind::WfTerm),
-1 => Some(ArgKind::Term),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2eexists_5fstring_5flength => match i {
-0 => Some(ArgKind::Type),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5feq_5fsingleton_5femp => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5fmember_5femp => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5finter_5femp1 => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5finter_5femp2 => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5fminus_5femp1 => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5fminus_5femp2 => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5funion_5femp1 => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5funion_5femp2 => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5fminus_5fself => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5fis_5fempty_5felim => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5frange => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-3 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-3 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart_5fneg => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-3 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fsubstr_5fstart_5fgeq_5flen => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-3 => Some(ArgKind::Term),
-4 => Some(ArgKind::Term),
-5 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fconcat_5funify_5fbase => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-3 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fconcat_5funify_5fbase_5frev => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-3 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fcontains_5fchar => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fconcat_5frec => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Term),
-3 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fbase => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5findexof_5fself => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2estr_5fsubstr_5fchar_5fstart_5feq_5flen => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::Term),
-2 => Some(ArgKind::Type),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5fmember_5fsingleton => match i {
-0 => Some(ArgKind::Term),
-1 => Some(ArgKind::WfElem),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2esets_5fchoose_5fsingleton => match i {
-0 => Some(ArgKind::WfElem),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2eseq_5flen_5funit => match i {
-0 => Some(ArgKind::WfElem),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2eseq_5frev_5funit => match i {
-0 => Some(ArgKind::WfElem),
-_ => None,
-},
-Constructor::eo__24emb_5fr_2eseq_5fnth_5funit => match i {
-0 => Some(ArgKind::WfElem),
-_ => None,
-},
-
-            _ => None,
-        }
-    }
-
-    fn translation_type(&mut self, t: Term) -> CheckResult<Term> {
-        let t = generated::eo__24eo_5fto_5fsmt(self, t)?; generated::eo__24smtx_5ftypeof(self, t)
-    }
-    fn translation_sort(&mut self, t: Term) -> CheckResult<Term> {
-        generated::eo__24eo_5fto_5fsmt_5ftype(self, t)
-    }
-    fn translation_type_wf(&mut self, t: Term, component: bool) -> CheckResult<bool> {
-        let b = if component { generated::eo__24smtx_5ftype_5fwf_5fcomponent(self, t)? } else { generated::eo__24smtx_5ftype_5fwf(self, t)? }; self.is_native_true(b)
-    }
-    fn has_translation(&mut self, t: Term) -> CheckResult<bool> {
-        let ty = self.translation_type(t)?;
-        Ok(!self.is_stuck(ty)? && !self.is_node(ty, Some(Constructor::eo__24emb_5ftsm_2eNone))?)
-    }
-    fn argument_translates(&mut self, t: Term, kind: ArgKind) -> CheckResult<bool> {
-        match kind {
-            ArgKind::Term => self.has_translation(t),
-            ArgKind::Type => {
-                let ty = self.translation_sort(t)?;
-                self.translation_type_wf(ty, false)
-            }
-            ArgKind::WfTerm => {
-                if !self.has_translation(t)? {
-                    return Ok(false);
-                }
-                let ty = self.translation_type(t)?;
-                self.translation_type_wf(ty, false)
-            }
-            ArgKind::WfElem => {
-                let ty = self.translation_type(t)?;
-                self.translation_type_wf(ty, true)
-            }
-            ArgKind::List => {
-                let mut list = t;
-                loop {
-                    if self.is_node(list, Some(Constructor::eo__24eo_5fList_5fnil))? {
-                        return Ok(true);
-                    }
-                    let Some((fx, tail)) = self.unapply(list)? else {
-                        return Ok(false);
-                    };
-                    let Some((f, x)) = self.unapply(fx)? else {
-                        return Ok(false);
-                    };
-                    if !self.is_node(f, Some(Constructor::eo__24eo_5fList_5fcons))? || !self.has_translation(x)? {
-                        return Ok(false);
-                    }
-                    list = tail;
-                }
-            }
-            ArgKind::Unknown => Err(CheckError::InvalidConstructor),
-        }
-    }
-    /// Whether the arguments translate: each as a term, or, for a rule
-    /// with a mask, as its mask says.
-    fn arguments_translate(
-        &mut self,
-        mut args: Term,
-        rule: Option<Constructor>,
-    ) -> CheckResult<bool> {
-        let mask = match rule {
-            Some(rule) => match Self::mask_len(rule) {
-                Some(len) => Some((rule, len)),
-                None => None,
-            },
-            None => None,
-        };
-        let mut i = 0;
-        loop {
-            if self.is_node(args, Some(Constructor::eo__24emb_5fal_2enil))? {
-                return Ok(match mask {
-                    Some((_, len)) => i == len,
-                    None => true,
-                });
-            }
-            let Some(fs) = self.node_fields(args, Some(Constructor::eo__24emb_5fal_2econs))? else {
-                return Ok(false);
-            };
-            let kind = match mask {
-                Some((rule, _)) => match Self::mask_kind(rule, i) {
-                    Some(k) => k,
-                    None => return Ok(false),
-                },
-                None => ArgKind::Term,
-            };
-            if !self.argument_translates(fs[0], kind)? {
-                return Ok(false);
-            }
-            args = fs[1];
-            i += 1;
-        }
     }
 }

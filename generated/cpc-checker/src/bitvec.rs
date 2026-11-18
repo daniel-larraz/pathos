@@ -1,7 +1,7 @@
 //! Fixed-width bit-vectors, as `util/bitvector.cpp` in Ethos.
 //!
 //! From `crates/pathos-term/src/bitvec.rs` of pathos (as of its commit
-//! 09fdaef); `parse` is kept for tests only.
+//! acae6aa); `parse` is kept for tests only.
 
 use crate::num::Integer;
 
