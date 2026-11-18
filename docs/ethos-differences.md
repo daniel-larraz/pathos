@@ -5,7 +5,7 @@ pathos reproduces, because pathos must behave exactly like the reference
 (see [brief.md](brief.md)). The second is where pathos does not behave like
 Ethos.
 
-The reference is Ethos `c7d3db90`. "Probed" means the behaviour was compared
+The reference is Ethos `b8d65127`. "Probed" means the behaviour was compared
 with the reference binary on a small input; the others follow from reading
 the C++.
 

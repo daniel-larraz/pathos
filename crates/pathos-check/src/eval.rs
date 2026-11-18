@@ -605,6 +605,11 @@ impl Checker {
         if !k.is_list_op() {
             return None;
         }
+        // List operators only evaluate on values: no argument may contain an
+        // operator or program that failed to evaluate.
+        if args.iter().any(|&a| is_eval(self, a)) {
+            return None;
+        }
         self.evaluate_list_op(k, args)
     }
 
