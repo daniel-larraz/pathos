@@ -1,4 +1,4 @@
-//! Generated functions, module 0 of 12.
+//! Generated functions, module 0 of 13.
 #[allow(unused_imports)]
 use super::*;
 use crate::*;
@@ -57,6 +57,14 @@ let v11 = match s.construct(Constructor::eo__3e_3d, &[]) { Ok(v) => v, Err(e) =>
 let v12 = match s.construct(Constructor::eo_mod_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.apply(v12, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24abconv_5fint_5fto_5fbv_5felim(s, v11, v14, a2, v10, v9, a0, v2)
+}
+pub(super) fn more_1_eo__24abconv_5fint_5fto_5fbv_5felim(s: &mut Store, a0: Term, v2: Term, v30: Term, v27: Term) -> CheckResult<Option<Term>> {
+let v31 = match eo__24abconv_5fint_5fto_5fbv_5felim(s, a0, v2, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.apply(v27, v31) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v32))
+}
+pub(super) fn more_0_eo__24abconv_5fint_5fto_5fbv_5felim(s: &mut Store, v11: Term, v14: Term, a2: Term, v10: Term, v9: Term, a0: Term, v2: Term) -> CheckResult<Option<Term>> {
 let v15 = match s.apply(v11, v14) { Ok(v) => v, Err(e) => return Err(e) };
 let v16 = match parse_int("2") { Ok(v) => v, Err(e) => return Err(e) };
 let v17 = match s.literal(Lit::Numeral(v16)) { Ok(v) => v, Err(e) => return Err(e) };
@@ -73,12 +81,7 @@ let v27 = match s.apply(v9, v26) { Ok(v) => v, Err(e) => return Err(e) };
 let v28 = match parse_int("2") { Ok(v) => v, Err(e) => return Err(e) };
 let v29 = match s.literal(Lit::Numeral(v28)) { Ok(v) => v, Err(e) => return Err(e) };
 let v30 = match s.builtin_core(EvalOp::IntDiv, &[a2, v29]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24abconv_5fint_5fto_5fbv_5felim(s, a0, v2, v30, v27)
-}
-pub(super) fn more_0_eo__24abconv_5fint_5fto_5fbv_5felim(s: &mut Store, a0: Term, v2: Term, v30: Term, v27: Term) -> CheckResult<Option<Term>> {
-let v31 = match eo__24abconv_5fint_5fto_5fbv_5felim(s, a0, v2, v30) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.apply(v27, v31) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v32))
+more_1_eo__24abconv_5fint_5fto_5fbv_5felim(s, a0, v2, v30, v27)
 }
 pub(super) fn case_0_eo__24abconv_5fubv_5fto_5fint_5felim(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a1) { Ok(v) => v, Err(e) => return Err(e) };
@@ -135,6 +138,9 @@ let v12 = match s.apply(v9, v11) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.literal(Lit::Binary(BitVec::new(1, &v13))) { Ok(v) => v, Err(e) => return Err(e) };
 let v15 = match s.apply(v12, v14) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24abconv_5fubv_5fto_5fint_5felim(s, v8, v15, a2, v7, a0, v2)
+}
+pub(super) fn more_0_eo__24abconv_5fubv_5fto_5fint_5felim(s: &mut Store, v8: Term, v15: Term, a2: Term, v7: Term, a0: Term, v2: Term) -> CheckResult<Option<Term>> {
 let v16 = match s.apply(v8, v15) { Ok(v) => v, Err(e) => return Err(e) };
 let v17 = match s.apply(v16, a2) { Ok(v) => v, Err(e) => return Err(e) };
 let v18 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
@@ -150,7 +156,7 @@ Ok(Some(v26))
 }
 pub(super) fn case_0_eo__24aci_5fnorm_5feq(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if a1 != a0 { return Ok(None); }
-let v0 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v0 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v0))
 }
 pub(super) fn case_1_eo__24aci_5fnorm_5feq(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -163,7 +169,7 @@ let Some((v4, v5)) = v3 else { return Ok(None); }
 let v6 = match s.construct(Constructor::eo__40_40aci_5fsorted, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v4 != v6 { return Ok(None); }
 if a1 != v2 { return Ok(None); }
-let v7 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v7))
 }
 pub(super) fn case_0_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -172,7 +178,7 @@ let Some((v1, v2)) = v0 else { return Ok(None); }
 ;
 let v3 = match s.construct(Constructor::eo__40_40TypedList_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v1 != v3 { return Ok(None); }
-let v4 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v4))
 }
 pub(super) fn body_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -197,17 +203,17 @@ Ok(Some(v1))
 pub(super) fn case_1_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a0 != v0 { return Ok(None); }
-let v1 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
 pub(super) fn case_2_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a0 != v0 { return Ok(None); }
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
 pub(super) fn case_0_eo__24eo_5fis_5flist_5fnil_5f_2b(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -235,6 +241,13 @@ let v0 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => ret
 if a0 != v0 { return Ok(None); }
 let v1 = match eo__24eo_5fis_5flist_5fnil_5f_2b(s, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
+}
+pub(super) fn cases_0_0_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_0_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_1_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_2_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_3_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn case_0_eo__24eo_5fis_5flist_5fnil_5f_2a(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.builtin_core(EvalOp::ToRat, &[a0]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -268,7 +281,7 @@ if a0 != v0 { return Ok(None); }
 let v1 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.literal(Lit::Binary(BitVec::new(0, &v1))) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v2 { return Ok(None); }
-let v3 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v3 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v3))
 }
 pub(super) fn case_0_eo__24eo_5fis_5flist_5fnil_5fbvand(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -324,11 +337,7 @@ if a0 != v0 { return Ok(None); }
 let v1 = match eo__24eo_5fis_5flist_5fnil_5fbvor(s, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
-pub(super) fn cases_0_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_0_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_1_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_2_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_3_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+pub(super) fn cases_0_1_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_4_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_5_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_6_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
@@ -419,19 +428,26 @@ if a0 != v0 { return Ok(None); }
 let v1 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.literal(Lit::Binary(BitVec::new(0, &v1))) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v2 { return Ok(None); }
-let v3 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v3 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v3))
+}
+pub(super) fn cases_0_2_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_8_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_9_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_10_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_11_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn case_0_eo__24eo_5fis_5flist_5fnil_5fstr_2e_2b_2b(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo_seq_2eempty, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let Some(fields) = v0 else { return Ok(None); }
 ;
 let v1 = fields[0];
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
 pub(super) fn case_1_eo__24eo_5fis_5flist_5fnil_5fstr_2e_2b_2b(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.literal(Lit::String(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
+let v0 = match s.literal(Lit::Str(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.builtin_core(EvalOp::Eq, &[a0, v0]) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
@@ -463,9 +479,9 @@ let Some((v2, v3)) = v1 else { return Ok(None); }
 ;
 let v4 = match s.construct(Constructor::eo_str_2eto_5fre, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v2 != v4 { return Ok(None); }
-let v5 = match s.literal(Lit::String(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.literal(Lit::Str(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
 if v3 != v5 { return Ok(None); }
-let v6 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v6))
 }
 pub(super) fn case_14_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -473,7 +489,7 @@ let v0 = match s.construct(Constructor::eo_re_2einter, &[]) { Ok(v) => v, Err(e)
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo_re_2eall, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
 pub(super) fn case_15_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -481,18 +497,21 @@ let v0 = match s.construct(Constructor::eo_re_2eunion, &[]) { Ok(v) => v, Err(e)
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo_re_2enone, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
-pub(super) fn cases_1_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_8_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_9_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_10_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_11_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+pub(super) fn cases_0_3_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_12_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_13_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_14_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_15_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_0_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_0_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_1_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_2_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_3_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
 pub(super) fn case_16_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -500,7 +519,7 @@ let v0 = match s.construct(Constructor::eo_Tuple, &[]) { Ok(v) => v, Err(e) => r
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo_UnitTuple, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
 pub(super) fn case_17_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -508,7 +527,7 @@ let v0 = match s.construct(Constructor::eo_tuple, &[]) { Ok(v) => v, Err(e) => r
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo_tuple_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
 pub(super) fn case_18_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -516,7 +535,7 @@ let v0 = match s.construct(Constructor::eo__40_40poly, &[]) { Ok(v) => v, Err(e)
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo__40_40poly_2ezero, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
 pub(super) fn case_19_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -524,19 +543,27 @@ let v0 = match s.construct(Constructor::eo__24eo_5fList_5fcons, &[]) { Ok(v) => 
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo__24eo_5fList_5fnil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a1 != v1 { return Ok(None); }
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
-pub(super) fn case_20_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v0))
-}
-pub(super) fn cases_2_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_4_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_16_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_17_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_18_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_19_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn case_20_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v0))
+}
+pub(super) fn cases_0_5_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_20_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_1_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_4_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_5_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
 pub(super) fn body_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
@@ -544,9 +571,8 @@ let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck0 { return Ok(s.stuck()); }
 let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match cases_0_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_1_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_2_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_1_0_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_1_1_eo__24eo_5fis_5flist_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
 Ok(s.stuck())
 }
 // EO program "$eo_is_list_nil"
@@ -583,13 +609,13 @@ Ok(Some(v1))
 pub(super) fn case_1_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a0 != v0 { return Ok(None); }
-let v1 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
 pub(super) fn case_2_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a0 != v0 { return Ok(None); }
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
 pub(super) fn case_0_eo__24arith_5fmk_5fzero(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -642,6 +668,13 @@ let v0 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => ret
 if a0 != v0 { return Ok(None); }
 let v1 = match eo__24eo_5fnil_5f_2b(s, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
+}
+pub(super) fn cases_0_0_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_0_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_1_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_2_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_3_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn case_0_eo__24arith_5fmk_5fone(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -762,11 +795,7 @@ if a0 != v0 { return Ok(None); }
 let v1 = match eo__24eo_5fnil_5fbvor(s, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
-pub(super) fn cases_0_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_0_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_1_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_2_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_3_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+pub(super) fn cases_0_1_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_4_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_5_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_6_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
@@ -870,6 +899,13 @@ let v1 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.literal(Lit::Binary(BitVec::new(0, &v1))) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
+pub(super) fn cases_0_2_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_8_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_9_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_10_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_11_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
 pub(super) fn case_0_eo__24seq_5fempty(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v1, v2)) = v0 else { return Ok(None); }
@@ -878,7 +914,7 @@ let v3 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => ret
 if v1 != v3 { return Ok(None); }
 let v4 = match s.construct(Constructor::eo_Char, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v2 != v4 { return Ok(None); }
-let v5 = match s.literal(Lit::String(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.literal(Lit::Str(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v5))
 }
 pub(super) fn case_1_eo__24seq_5fempty(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -933,7 +969,7 @@ pub(super) fn case_13_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> Check
 let v0 = match s.construct(Constructor::eo_re_2e_2b_2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo_str_2eto_5fre, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.literal(Lit::String(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Str(EoString::from_code_points(vec![]))) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.apply(v1, v2) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v3))
 }
@@ -949,15 +985,18 @@ if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo_re_2enone, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
-pub(super) fn cases_1_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_8_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_9_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_10_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_11_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+pub(super) fn cases_0_3_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_12_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_13_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_14_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_15_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_0_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_0_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_1_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_2_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_3_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
 pub(super) fn case_16_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
@@ -986,11 +1025,15 @@ if a1 != v1 { return Ok(None); }
 let v2 = match s.construct(Constructor::eo__24eo_5fList_5fnil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
-pub(super) fn cases_2_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_4_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_16_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_17_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_18_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_19_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_1_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_4_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
 pub(super) fn body_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
@@ -998,9 +1041,8 @@ let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck0 { return Ok(s.stuck()); }
 let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match cases_0_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_1_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_2_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_1_0_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_1_1_eo__24eo_5fnil(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
 Ok(s.stuck())
 }
 // EO program "$eo_nil"
@@ -1097,6 +1139,13 @@ let v1 = fields[0];
 let v2 = match s.construct(Constructor::eo__24emb_5fString, &[v1]) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match eo__24eo_5flit_5ftype_5fString(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v3))
+}
+pub(super) fn cases_0_0_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_0_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_1_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_2_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_3_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn case_0_eo__24eo_5flit_5ftype_5fBinary(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_BitVec, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1393,11 +1442,7 @@ let v5 = match eo__24eo_5fdd_5fresolve(s, v1, v2) { Ok(v) => v, Err(e) => return
 let v6 = match eo__24eo_5ftypeof_5fdt_5fcons_5frec(s, v4, v5, v3) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v6))
 }
-pub(super) fn cases_0_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_0_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_1_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_2_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_3_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+pub(super) fn cases_0_1_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_4_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_5_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_6_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
@@ -1528,6 +1573,13 @@ let v0 = match s.construct(Constructor::eo__24emb_5fType, &[]) { Ok(v) => v, Err
 if a0 != v0 { return Ok(None); }
 let v1 = match s.construct(Constructor::eo__24emb_5fType, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
+}
+pub(super) fn cases_0_2_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_8_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_9_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_10_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_11_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn case_0_eo__24eo_5ftypeof_5ffun_5ftype(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__24emb_5fType, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1863,13 +1915,13 @@ Ok(a0)
 pub(super) fn case_0_eo__24is_5farith_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a0 != v0 { return Ok(None); }
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
 pub(super) fn case_1_eo__24is_5farith_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_Real, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a0 != v0 { return Ok(None); }
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
 pub(super) fn body_eo__24is_5farith_5ftype(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -1889,7 +1941,7 @@ result
 pub(super) fn case_0_eo__24eo_5ftypeof_5f_2b(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if a1 != a0 { return Ok(None); }
 let v0 = match eo__24is_5farith_5ftype(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match requires_0_eo__24eo_5ftypeof_5f_2b(s, v0, v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
@@ -1918,7 +1970,7 @@ Ok(v2)
 pub(super) fn case_0_eo__24eo_5ftypeof_5f_3c(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if a1 != a0 { return Ok(None); }
 let v0 = match eo__24is_5farith_5ftype(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match requires_0_eo__24eo_5ftypeof_5f_3c(s, v0, v1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v3))
 }
@@ -2002,7 +2054,7 @@ Ok(a0)
 }
 pub(super) fn case_0_eo__24eo_5ftypeof_5fabs(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match eo__24is_5farith_5ftype(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match requires_0_eo__24eo_5ftypeof_5fabs(s, v0, v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v2))
 }
@@ -2275,7 +2327,7 @@ let v17 = match s.builtin_core(EvalOp::Add, &[v14, v16]) { Ok(v) => v, Err(e) =>
 let v18 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v19 = match s.literal(Lit::Numeral(v18)) { Ok(v) => v, Err(e) => return Err(e) };
 let v20 = match s.builtin_core(EvalOp::Gt, &[v17, v19]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v27 = match requires_0_eo__24eo_5ftypeof_5fextract(s, v20, v21, a3, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v27)
 }
@@ -2284,9 +2336,13 @@ if v9 != v10 { return Ok(s.stuck()); }
 let stuck = match s.is_stuck(v9) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck { return Ok(s.stuck()); }
 let v11 = match s.builtin_core(EvalOp::Gt, &[v4, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v12 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v28 = match requires_1_eo__24eo_5ftypeof_5fextract(s, v11, v12, a3, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v28)
+}
+pub(super) fn more_3_eo__24eo_5ftypeof_5fextract(s: &mut Store, v6: Term, v29: Term) -> CheckResult<Option<Term>> {
+let v30 = match s.apply(v6, v29) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v30))
 }
 pub(super) fn case_0_eo__24eo_5ftypeof_5fextract(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -2302,10 +2358,9 @@ let v6 = match s.construct(Constructor::eo_BitVec, &[]) { Ok(v) => v, Err(e) => 
 let v7 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
 let v8 = match s.literal(Lit::Numeral(v7)) { Ok(v) => v, Err(e) => return Err(e) };
 let v9 = match s.builtin_core(EvalOp::Gt, &[a3, v8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v29 = match requires_2_eo__24eo_5ftypeof_5fextract(s, v9, v10, v4, a1, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v30 = match s.apply(v6, v29) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v30))
+more_3_eo__24eo_5ftypeof_5fextract(s, v6, v29)
 }
 pub(super) fn body_eo__24eo_5ftypeof_5fextract(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -2348,7 +2403,7 @@ if v2 != v4 { return Ok(None); }
 let v5 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v6 = match s.literal(Lit::Numeral(v5)) { Ok(v) => v, Err(e) => return Err(e) };
 let v7 = match s.builtin_core(EvalOp::Gt, &[a1, v6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match requires_0_eo__24eo_5ftypeof_5frepeat(s, v7, v8, a1, v3) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v12))
 }
@@ -2506,7 +2561,7 @@ if v2 != v4 { return Ok(None); }
 let v5 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
 let v6 = match s.literal(Lit::Numeral(v5)) { Ok(v) => v, Err(e) => return Err(e) };
 let v7 = match s.builtin_core(EvalOp::Gt, &[a1, v6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match requires_0_eo__24eo_5ftypeof_5fzero_5fextend(s, v7, v8, v3, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v12))
 }
@@ -2546,7 +2601,7 @@ if v2 != v4 { return Ok(None); }
 let v5 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
 let v6 = match s.literal(Lit::Numeral(v5)) { Ok(v) => v, Err(e) => return Err(e) };
 let v7 = match s.builtin_core(EvalOp::Gt, &[a1, v6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v11 = match requires_0_eo__24eo_5ftypeof_5frotate_5fleft(s, v7, v8, v3) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v11))
 }
@@ -2863,6 +2918,10 @@ let result = body_eo__24eo_5ftypeof_5fstr_2econtains(s, a0, a1);
 s.leave();
 result
 }
+pub(super) fn more_0_eo__24eo_5ftypeof_5fstr_2ereplace(s: &mut Store, v12: Term, v2: Term) -> CheckResult<Option<Term>> {
+let v13 = match s.apply(v12, v2) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v13))
+}
 pub(super) fn case_0_eo__24eo_5ftypeof_5fstr_2ereplace(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v1, v2)) = v0 else { return Ok(None); }
@@ -2882,8 +2941,7 @@ let v11 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => re
 if v9 != v11 { return Ok(None); }
 if v10 != v2 { return Ok(None); }
 let v12 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.apply(v12, v2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v13))
+more_0_eo__24eo_5ftypeof_5fstr_2ereplace(s, v12, v2)
 }
 pub(super) fn body_eo__24eo_5ftypeof_5fstr_2ereplace(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3149,6 +3207,12 @@ let result = body_eo__24eo_5ftypeof_5fstr_2e_3c(s, a0, a1);
 s.leave();
 result
 }
+pub(super) fn more_0_eo__24eo_5ftypeof_5fstr_2ereplace_5fre(s: &mut Store) -> CheckResult<Option<Term>> {
+let v11 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v12 = match s.construct(Constructor::eo_Char, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v13 = match s.apply(v11, v12) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v13))
+}
 pub(super) fn case_0_eo__24eo_5ftypeof_5fstr_2ereplace_5fre(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v1, v2)) = v0 else { return Ok(None); }
@@ -3166,10 +3230,7 @@ let v9 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => ret
 if v7 != v9 { return Ok(None); }
 let v10 = match s.construct(Constructor::eo_Char, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v8 != v10 { return Ok(None); }
-let v11 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match s.construct(Constructor::eo_Char, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.apply(v11, v12) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v13))
+more_0_eo__24eo_5ftypeof_5fstr_2ereplace_5fre(s)
 }
 pub(super) fn body_eo__24eo_5ftypeof_5fstr_2ereplace_5fre(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3296,7 +3357,7 @@ if a2 != v1 { return Ok(None); }
 let v2 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.literal(Lit::Numeral(v2)) { Ok(v) => v, Err(e) => return Err(e) };
 let v4 = match s.builtin_core(EvalOp::Gt, &[a1, v3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v7 = match requires_0_eo__24eo_5ftypeof_5fre_2e_5e(s, v4, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v7))
 }
@@ -3387,7 +3448,7 @@ if stuck { return Ok(s.stuck()); }
 let v7 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
 let v8 = match s.literal(Lit::Numeral(v7)) { Ok(v) => v, Err(e) => return Err(e) };
 let v9 = match s.builtin_core(EvalOp::Gt, &[a3, v8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match requires_0_eo__24eo_5ftypeof_5fre_2eloop(s, v9, v10) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v12)
 }
@@ -3401,7 +3462,7 @@ if a4 != v2 { return Ok(None); }
 let v3 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
 let v4 = match s.literal(Lit::Numeral(v3)) { Ok(v) => v, Err(e) => return Err(e) };
 let v5 = match s.builtin_core(EvalOp::Gt, &[a1, v4]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match requires_1_eo__24eo_5ftypeof_5fre_2eloop(s, v5, v6, a3) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v13))
 }
@@ -3617,6 +3678,12 @@ let result = body_eo__24eo_5ftypeof_5f_40strings_5fnum_5foccur_5fre(s, a0, a1);
 s.leave();
 result
 }
+pub(super) fn more_0_eo__24eo_5ftypeof_5f_40strings_5freplace_5fall_5fresult(s: &mut Store, a3: Term, v12: Term, v2: Term) -> CheckResult<Option<Term>> {
+if a3 != v12 { return Ok(None); }
+let v13 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v13, v2) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v14))
+}
 pub(super) fn case_0_eo__24eo_5ftypeof_5f_40strings_5freplace_5fall_5fresult(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v1, v2)) = v0 else { return Ok(None); }
@@ -3636,10 +3703,7 @@ let v11 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => re
 if v9 != v11 { return Ok(None); }
 if v10 != v2 { return Ok(None); }
 let v12 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v12 { return Ok(None); }
-let v13 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v13, v2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v14))
+more_0_eo__24eo_5ftypeof_5f_40strings_5freplace_5fall_5fresult(s, a3, v12, v2)
 }
 pub(super) fn body_eo__24eo_5ftypeof_5f_40strings_5freplace_5fall_5fresult(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3660,6 +3724,14 @@ let result = body_eo__24eo_5ftypeof_5f_40strings_5freplace_5fall_5fresult(s, a0,
 s.leave();
 result
 }
+pub(super) fn more_0_eo__24eo_5ftypeof_5f_40strings_5freplace_5fre_5fall_5fresult(s: &mut Store, a3: Term) -> CheckResult<Option<Term>> {
+let v11 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if a3 != v11 { return Ok(None); }
+let v12 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v13 = match s.construct(Constructor::eo_Char, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v12, v13) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v14))
+}
 pub(super) fn case_0_eo__24eo_5ftypeof_5f_40strings_5freplace_5fre_5fall_5fresult(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v1, v2)) = v0 else { return Ok(None); }
@@ -3677,12 +3749,7 @@ let v9 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => ret
 if v7 != v9 { return Ok(None); }
 let v10 = match s.construct(Constructor::eo_Char, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v8 != v10 { return Ok(None); }
-let v11 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v11 { return Ok(None); }
-let v12 = match s.construct(Constructor::eo_Seq, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.construct(Constructor::eo_Char, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v12, v13) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v14))
+more_0_eo__24eo_5ftypeof_5f_40strings_5freplace_5fre_5fall_5fresult(s, a3)
 }
 pub(super) fn body_eo__24eo_5ftypeof_5f_40strings_5freplace_5fre_5fall_5fresult(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4053,7 +4120,7 @@ Ok(v2)
 pub(super) fn case_0_eo__24eo_5ftypeof_5f_2f(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 if a1 != a0 { return Ok(None); }
 let v0 = match eo__24is_5farith_5ftype(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v1 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match requires_0_eo__24eo_5ftypeof_5f_2f(s, v0, v1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v3))
 }
@@ -4215,7 +4282,7 @@ if a2 != v1 { return Ok(None); }
 let v2 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.literal(Lit::Numeral(v2)) { Ok(v) => v, Err(e) => return Err(e) };
 let v4 = match s.builtin_core(EvalOp::Gt, &[a1, v3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v8 = match requires_0_eo__24eo_5ftypeof_5fint_5fto_5fbv(s, v4, v5, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v8))
 }
@@ -4344,32 +4411,10 @@ result
 pub(super) fn body_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck0 { return Ok(s.stuck()); }
-if let Some(found) = match cases_0_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_1_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_2_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_3_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_4_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_5_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_6_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_7_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_8_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_9_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_10_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_11_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_12_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_13_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_14_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_15_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_16_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_17_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_18_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_19_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_20_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_21_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_22_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_23_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_24_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_25_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_2_0_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_2_1_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_2_2_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_2_3_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
 Ok(s.stuck())
 }
 pub(super) fn case_12_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -6733,278 +6778,462 @@ let v4 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v5 = match eo__24eo_5ftypeof_5fapply(s, v3, v4) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v5))
 }
-pub(super) fn cases_1_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_8_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_9_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_10_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_11_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+pub(super) fn cases_0_3_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_12_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_13_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_14_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_15_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_2_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_4_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_16_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_17_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_18_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_19_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_5_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_20_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_21_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_22_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_23_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_3_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_6_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_24_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_25_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_26_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_27_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_7_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_28_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_29_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_30_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_31_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_4_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_8_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_32_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_33_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_34_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_35_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_9_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_36_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_37_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_38_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_39_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_5_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_10_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_40_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_41_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_42_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_43_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_11_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_44_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_45_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_46_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_47_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_6_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_12_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_48_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_49_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_50_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_51_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_13_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_52_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_53_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_54_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_55_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_7_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_14_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_56_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_57_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_58_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_59_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_15_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_60_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_61_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_62_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_63_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_8_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_16_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_64_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_65_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_66_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_67_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_17_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_68_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_69_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_70_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_71_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_9_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_18_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_72_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_73_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_74_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_75_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_19_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_76_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_77_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_78_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_79_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_10_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_20_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_80_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_81_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_82_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_83_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_21_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_84_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_85_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_86_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_87_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_11_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_22_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_88_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_89_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_90_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_91_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_23_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_92_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_93_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_94_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_95_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_12_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_24_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_96_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_97_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_98_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_99_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_25_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_100_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_101_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_102_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_103_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_13_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_26_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_104_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_105_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_106_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_107_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_27_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_108_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_109_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_110_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_111_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_14_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_28_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_112_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_113_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_114_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_115_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_29_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_116_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_117_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_118_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_119_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_15_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_30_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_120_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_121_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_122_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_123_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_31_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_124_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_125_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_126_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_127_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_16_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_32_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_128_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_129_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_130_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_131_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_33_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_132_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_133_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_134_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_135_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_17_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_34_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_136_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_137_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_138_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_139_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_35_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_140_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_141_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_142_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_143_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_18_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_36_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_144_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_145_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_146_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_147_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_37_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_148_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_149_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_150_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_151_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_19_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_38_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_152_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_153_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_154_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_155_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_39_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_156_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_157_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_158_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_159_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_20_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_40_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_160_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_161_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_162_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_163_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_41_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_164_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_165_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_166_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_167_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_21_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_42_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_168_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_169_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_170_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_171_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_43_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_172_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_173_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_174_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_175_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_22_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_44_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_176_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_177_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_178_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_179_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_45_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_180_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_181_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_182_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_183_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_23_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_46_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_184_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_185_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_186_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_187_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_47_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_188_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_189_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_190_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_191_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_24_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_48_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_192_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_193_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_194_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_195_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_49_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_196_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_197_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_198_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_199_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn cases_25_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+pub(super) fn cases_0_50_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_200_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_201_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_202_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_203_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_51_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_204_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_205_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_206_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_0_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_0_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_1_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_2_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_3_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_1_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_4_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_5_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_6_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_7_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_2_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_8_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_9_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_10_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_11_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_3_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_12_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_13_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_14_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_15_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_4_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_16_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_17_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_18_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_19_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_5_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_20_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_21_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_22_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_23_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_6_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_24_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_25_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_26_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_27_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_7_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_28_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_29_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_30_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_31_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_8_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_32_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_33_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_34_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_35_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_9_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_36_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_37_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_38_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_39_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_10_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_40_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_41_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_42_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_43_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_11_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_44_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_45_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_46_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_47_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_1_12_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_0_48_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_49_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_50_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_0_51_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_2_0_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_1_0_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_1_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_2_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_3_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_2_1_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_1_4_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_5_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_6_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_7_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_2_2_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_1_8_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_9_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_10_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match cases_1_11_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_2_3_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match cases_1_12_eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
 // EO program "$eo_typeof_@quantifiers_skolemize"
@@ -7067,7 +7296,7 @@ pub(super) fn case_0_eo__24eo_5ftypeof_5ftuple(s: &mut Store, a0: Term, a1: Term
 let v0 = match s.construct(Constructor::eo_Tuple, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.builtin_list(EvalOp::ListLength, &[v0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.builtin_core(EvalOp::IsOk, &[v1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v3 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v7 = match requires_0_eo__24eo_5ftypeof_5ftuple(s, v2, v3, a0, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v7))
 }
@@ -7441,7 +7670,7 @@ let v14 = match s.builtin_list(EvalOp::ListMeq, &[v5, v2, v9]) { Ok(v) => v, Err
 Ok(Some(v14))
 }
 pub(super) fn case_3_eo__24aci_5fnorm_5feq(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v0 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v0))
 }
 pub(super) fn body_eo__24aci_5fnorm_5feq(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
@@ -7469,7 +7698,7 @@ let Some((v1, v2)) = v0 else { return Ok(None); }
 let v3 = match s.construct(Constructor::eo__40_40TypedList_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v1 != v3 { return Ok(None); }
 if a1 != v2 { return Ok(None); }
-let v4 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v4))
 }
 pub(super) fn case_0_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
@@ -7512,6 +7741,13 @@ let v5 = match s.builtin_core(EvalOp::IsBin, &[a1]) { Ok(v) => v, Err(e) => retu
 let v6 = match s.builtin_core(EvalOp::And, &[v4, v5]) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v6))
 }
+pub(super) fn cases_0_0_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_0_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_1_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_2_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_3_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
 pub(super) fn case_4_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__24emb_5fBool, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if a2 != v0 { return Ok(None); }
@@ -7530,7 +7766,7 @@ let Some((v3, v4)) = v2 else { return Ok(None); }
 ;
 let v5 = match s.construct(Constructor::eo_Set, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v3 != v5 { return Ok(None); }
-let v6 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v6))
 }
 pub(super) fn case_1_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
@@ -7548,7 +7784,7 @@ let Some((v7, v8)) = v6 else { return Ok(None); }
 ;
 let v9 = match s.construct(Constructor::eo_Set, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v7 != v9 { return Ok(None); }
-let v10 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v10))
 }
 pub(super) fn case_0_eo__24seq_5fis_5fnon_5fempty(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -7565,7 +7801,7 @@ let Some((v8, v9)) = v7 else { return Ok(None); }
 ;
 let v10 = match s.construct(Constructor::eo_seq_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v8 != v10 { return Ok(None); }
-let v11 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v11 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v11))
 }
 pub(super) fn case_1_eo__24seq_5fis_5fnon_5fempty(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
@@ -7574,11 +7810,11 @@ let Some((v1, v2)) = v0 else { return Ok(None); }
 ;
 let v3 = match s.construct(Constructor::eo_seq_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v1 != v3 { return Ok(None); }
-let v4 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v4))
 }
 pub(super) fn case_2_eo__24seq_5fis_5fnon_5fempty(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v0 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v0))
 }
 pub(super) fn body_eo__24seq_5fis_5fnon_5fempty(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -7596,11 +7832,11 @@ let result = body_eo__24seq_5fis_5fnon_5fempty(s, a0);
 s.leave();
 result
 }
-pub(super) fn if_4_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
+pub(super) fn if_5_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v19 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v19)
 }
 Some(false) => {
@@ -7610,11 +7846,15 @@ Ok(v20)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_6_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v6: Term) -> CheckResult<Term> {
+pub(super) fn more_6_eo__24seq_5fdistinct_5fterms(s: &mut Store, v18: Term, v2: Term) -> CheckResult<Option<Term>> {
+let v21 = match if_5_eo__24seq_5fdistinct_5fterms(s, v18, v2) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v21))
+}
+pub(super) fn if_8_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v6: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v19 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v19)
 }
 Some(false) => {
@@ -7623,6 +7863,10 @@ Ok(v20)
 }
 None => Ok(s.stuck()),
 }
+}
+pub(super) fn more_9_eo__24seq_5fdistinct_5fterms(s: &mut Store, v18: Term, v6: Term) -> CheckResult<Option<Term>> {
+let v21 = match if_8_eo__24seq_5fdistinct_5fterms(s, v18, v6) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v21))
 }
 pub(super) fn case_4_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo_seq_2eempty, a1) { Ok(v) => v, Err(e) => return Err(e) };
@@ -7651,8 +7895,14 @@ let v6 = match eo__24seq_5fis_5fnon_5fempty(s, a1) { Ok(v) => v, Err(e) => retur
 Ok(Some(v6))
 }
 pub(super) fn case_6_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v0 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v0))
+}
+pub(super) fn cases_0_1_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_4_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_5_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_6_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn case_1_eo__24dt_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Next<[Term; 2]>>> {
 let v0 = match s.unapply(a1) { Ok(v) => v, Err(e) => return Err(e) };
@@ -7799,7 +8049,7 @@ pub(super) fn if_2_eo__24dt_5fdistinct_5fterms(s: &mut Store, condition: Term, a
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v5 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v5)
 }
 Some(false) => {
@@ -7814,7 +8064,7 @@ pub(super) fn if_3_eo__24dt_5fdistinct_5fterms(s: &mut Store, condition: Term, a
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v2 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v2 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v2)
 }
 Some(false) => {
@@ -7830,7 +8080,7 @@ pub(super) fn if_4_eo__24dt_5fdistinct_5fterms(s: &mut Store, condition: Term, a
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v15 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v15 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v15)
 }
 Some(false) => {
@@ -7845,7 +8095,7 @@ pub(super) fn if_5_eo__24dt_5fdistinct_5fterms(s: &mut Store, condition: Term, a
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v12 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v12 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v12)
 }
 Some(false) => {
@@ -7873,7 +8123,7 @@ let v10 = match s.construct(Constructor::eo_tuple, &[]) { Ok(v) => v, Err(e) => 
 let v11 = match s.builtin_core(EvalOp::IsEq, &[a1, v10]) { Ok(v) => v, Err(e) => return Err(e) };
 let v19 = match if_5_eo__24dt_5fdistinct_5fterms(s, v11, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v20 = match s.builtin_core(EvalOp::And, &[v9, v19]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v24 = match requires_6_eo__24dt_5fdistinct_5fterms(s, v20, v21, a0, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(Next::Done(v24)))
 }
@@ -7898,14 +8148,8 @@ let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck1 { return Ok(s.stuck()); }
 let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck2 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_1_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_2_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_3_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_4_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_5_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_6_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_7_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_0_0_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_0_1_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
 Ok(s.stuck())
 }
 pub(super) fn case_5_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
@@ -7934,6 +8178,13 @@ let v1 = match s.builtin_core(EvalOp::IsOk, &[v0]) { Ok(v) => v, Err(e) => retur
 let v4 = match if_0_eo__24are_5fdistinct_5fterms_5ftype(s, v1, a0, a1) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v4))
 }
+pub(super) fn cases_0_1_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_4_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_5_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_6_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_7_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
 pub(super) fn if_0_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, condition: Term, a0: Term, a1: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
@@ -7942,7 +8193,7 @@ let v2 = match eo__24dt_5fdistinct_5fterms(s, a0, a1) { Ok(v) => v, Err(e) => re
 Ok(v2)
 }
 Some(false) => {
-let v3 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v3 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v3)
 }
 None => Ok(s.stuck()),
@@ -8001,7 +8252,7 @@ pub(super) fn if_0_eo__24dt_5fdistinct_5fterms(s: &mut Store, condition: Term, v
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v9 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v9)
 }
 Some(false) => {
@@ -8016,7 +8267,7 @@ pub(super) fn if_1_eo__24dt_5fdistinct_5fterms(s: &mut Store, condition: Term, v
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v7 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v7)
 }
 Some(false) => {
@@ -8048,13 +8299,8 @@ let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck1 { return Ok(s.stuck()); }
 let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck2 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_1_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_2_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_3_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_4_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_5_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_6_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_0_0_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_0_1_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
 Ok(s.stuck())
 }
 pub(super) fn case_0_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
@@ -8082,12 +8328,7 @@ if v15 != v17 { return Ok(None); }
 let v18 = match s.unapply(v16) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v19, v20)) = v18 else { return Ok(None); }
 ;
-let v21 = match s.construct(Constructor::eo_seq_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v19 != v21 { return Ok(None); }
-let v22 = match s.builtin_core(EvalOp::Eq, &[v9, v20]) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match if_0_eo__24seq_5fdistinct_5fterms(s, v22, v9, v20, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match if_1_eo__24seq_5fdistinct_5fterms(s, v25, v2, v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v28))
+more_2_eo__24seq_5fdistinct_5fterms(s, v19, v9, v20, a2, v2, v13)
 }
 pub(super) fn case_1_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8101,7 +8342,7 @@ let Some((v5, v6)) = v4 else { return Ok(None); }
 let v7 = match s.construct(Constructor::eo_seq_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v5 != v7 { return Ok(None); }
 let v8 = match s.builtin_core(EvalOp::Eq, &[v2, v6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match if_2_eo__24seq_5fdistinct_5fterms(s, v8, v2, v6, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v11 = match if_3_eo__24seq_5fdistinct_5fterms(s, v8, v2, v6, a2) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v11))
 }
 pub(super) fn case_2_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
@@ -8124,9 +8365,8 @@ let Some((v12, v13)) = v11 else { return Ok(None); }
 let v14 = match s.construct(Constructor::eo_seq_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v12 != v14 { return Ok(None); }
 let v15 = match s.builtin_core(EvalOp::Eq, &[v9, v13]) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match if_3_eo__24seq_5fdistinct_5fterms(s, v15, v9, v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match if_4_eo__24seq_5fdistinct_5fterms(s, v18, v2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v21))
+let v18 = match if_4_eo__24seq_5fdistinct_5fterms(s, v15, v9, v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24seq_5fdistinct_5fterms(s, v18, v2)
 }
 pub(super) fn case_3_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8148,15 +8388,21 @@ let Some((v12, v13)) = v11 else { return Ok(None); }
 let v14 = match s.construct(Constructor::eo_seq_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v12 != v14 { return Ok(None); }
 let v15 = match s.builtin_core(EvalOp::Eq, &[v2, v13]) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match if_5_eo__24seq_5fdistinct_5fterms(s, v15, v2, v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match if_6_eo__24seq_5fdistinct_5fterms(s, v18, v6) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v21))
+let v18 = match if_7_eo__24seq_5fdistinct_5fterms(s, v15, v2, v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24seq_5fdistinct_5fterms(s, v18, v6)
+}
+pub(super) fn cases_0_0_eo__24seq_5fdistinct_5fterms(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_0_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_1_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_2_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_3_eo__24seq_5fdistinct_5fterms(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn if_0_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v9: Term, v20: Term, a2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v23 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v23)
 }
 Some(false) => {
@@ -8170,7 +8416,7 @@ pub(super) fn if_1_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, 
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v26 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v26)
 }
 Some(false) => {
@@ -8180,11 +8426,19 @@ Ok(v27)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_2_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v2: Term, v6: Term, a2: Term) -> CheckResult<Term> {
+pub(super) fn more_2_eo__24seq_5fdistinct_5fterms(s: &mut Store, v19: Term, v9: Term, v20: Term, a2: Term, v2: Term, v13: Term) -> CheckResult<Option<Term>> {
+let v21 = match s.construct(Constructor::eo_seq_2eunit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v19 != v21 { return Ok(None); }
+let v22 = match s.builtin_core(EvalOp::Eq, &[v9, v20]) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match if_0_eo__24seq_5fdistinct_5fterms(s, v22, v9, v20, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match if_1_eo__24seq_5fdistinct_5fterms(s, v25, v2, v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v28))
+}
+pub(super) fn if_3_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v2: Term, v6: Term, a2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v9 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v9)
 }
 Some(false) => {
@@ -8194,11 +8448,11 @@ Ok(v10)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_3_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v9: Term, v13: Term, a2: Term) -> CheckResult<Term> {
+pub(super) fn if_4_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v9: Term, v13: Term, a2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v16 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v16)
 }
 Some(false) => {
@@ -8208,11 +8462,11 @@ Ok(v17)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_5_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v2: Term, v13: Term, a2: Term) -> CheckResult<Term> {
+pub(super) fn if_7_eo__24seq_5fdistinct_5fterms(s: &mut Store, condition: Term, v2: Term, v13: Term, a2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v16 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v16)
 }
 Some(false) => {
@@ -8243,11 +8497,8 @@ let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck1 { return Ok(s.stuck()); }
 let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck2 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_1_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_2_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_3_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_4_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_0_0_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match cases_0_1_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
 Ok(s.stuck())
 }
 pub(super) fn case_2_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
@@ -8286,8 +8537,7 @@ let v14 = match s.construct(Constructor::eo_set_2esingleton, &[]) { Ok(v) => v, 
 if v12 != v14 { return Ok(None); }
 let v15 = match s.builtin_core(EvalOp::Eq, &[v2, v13]) { Ok(v) => v, Err(e) => return Err(e) };
 let v18 = match if_1_eo__24set_5fis_5fnot_5fsubset(s, v15, v2, v13, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match if_2_eo__24set_5fis_5fnot_5fsubset(s, v18, v2, v6, a2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v23))
+more_3_eo__24set_5fis_5fnot_5fsubset(s, v18, v2, v6, a2)
 }
 pub(super) fn case_4_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8306,14 +8556,25 @@ if v8 != v10 { return Ok(None); }
 let v11 = match s.construct(Constructor::eo_set_2esingleton, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.apply(v11, v9) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match eo__24set_5fis_5fnot_5fsubset(s, v12, a1, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match if_3_eo__24set_5fis_5fnot_5fsubset(s, v13, v2, a1, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match if_4_eo__24set_5fis_5fnot_5fsubset(s, v13, v2, a1, a2) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v16))
+}
+pub(super) fn cases_0_0_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_0_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_1_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_2_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_3_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn cases_0_1_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_4_eo__24set_5fis_5fnot_5fsubset(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
 }
 pub(super) fn if_0_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, condition: Term, v2: Term, v6: Term, a2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v9 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v9)
 }
 Some(false) => {
@@ -8327,7 +8588,7 @@ pub(super) fn if_1_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, condition: Term,
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v16 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v16)
 }
 Some(false) => {
@@ -8347,17 +8608,21 @@ let v21 = match eo__24set_5fis_5fnot_5fsubset(s, v20, v6, a2) { Ok(v) => v, Err(
 Ok(v21)
 }
 Some(false) => {
-let v22 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v22)
 }
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_3_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, condition: Term, v2: Term, a1: Term, a2: Term) -> CheckResult<Term> {
+pub(super) fn more_3_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, v18: Term, v2: Term, v6: Term, a2: Term) -> CheckResult<Option<Term>> {
+let v23 = match if_2_eo__24set_5fis_5fnot_5fsubset(s, v18, v2, v6, a2) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v23))
+}
+pub(super) fn if_4_eo__24set_5fis_5fnot_5fsubset(s: &mut Store, condition: Term, v2: Term, a1: Term, a2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v14 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v14)
 }
 Some(false) => {
@@ -8371,7 +8636,7 @@ pub(super) fn if_0_eo__24are_5fdistinct_5fterms_5flist_5frec(s: &mut Store, cond
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v8 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v8)
 }
 Some(false) => {
@@ -8388,7 +8653,7 @@ let Some((v1, v2)) = v0 else { return Ok(None); }
 let v3 = match s.construct(Constructor::eo__40_40TypedList_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v1 != v3 { return Ok(None); }
 if a2 != v2 { return Ok(None); }
-let v4 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v4))
 }
 // EO program "$are_distinct_terms_list_rec"
@@ -8438,7 +8703,7 @@ let v11 = match eo__24are_5fdistinct_5fterms_5flist_5frec(s, a0, v2, a2) { Ok(v)
 Ok(v11)
 }
 Some(false) => {
-let v12 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v12 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v12)
 }
 None => Ok(s.stuck()),
@@ -8488,7 +8753,7 @@ let v8 = match eo__24are_5fdistinct_5fterms_5flist(s, v2, a1) { Ok(v) => v, Err(
 Ok(v8)
 }
 Some(false) => {
-let v9 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v9)
 }
 None => Ok(s.stuck()),
@@ -8608,31 +8873,19 @@ let result = body_eo__24arith_5fnormalize_5flit(s, a0);
 s.leave();
 result
 }
-pub(super) fn more_1_eo__24arith_5freduction_5fpred(s: &mut Store, v48: Term, v50: Term, v37: Term, v36: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_3_eo__24arith_5freduction_5fpred(s: &mut Store, v48: Term, v50: Term, v37: Term, v36: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
 let v51 = match s.apply(v48, v50) { Ok(v) => v, Err(e) => return Err(e) };
 let v52 = match s.apply(v37, v51) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v54 = match s.apply(v52, v53) { Ok(v) => v, Err(e) => return Err(e) };
 let v55 = match s.apply(v36, v54) { Ok(v) => v, Err(e) => return Err(e) };
 let v56 = match s.apply(v20, v55) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v58 = match s.apply(v56, v57) { Ok(v) => v, Err(e) => return Err(e) };
 let v59 = match s.apply(v19, v58) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v59))
 }
-pub(super) fn more_0_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v25: Term, v21: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
-let v26 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.apply(v26, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.construct(Constructor::eo_to_5freal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v30 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.apply(v30, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.apply(v29, v31) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.apply(v28, v32) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.apply(v27, v33) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.apply(v25, v34) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.apply(v21, v35) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_2_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v37: Term, v36: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
 let v38 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v39 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v40 = match s.apply(v39, v2) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8646,7 +8899,38 @@ let v47 = match s.apply(v40, v46) { Ok(v) => v, Err(e) => return Err(e) };
 let v48 = match s.apply(v38, v47) { Ok(v) => v, Err(e) => return Err(e) };
 let v49 = match parse_rat("1/1") { Ok(v) => v, Err(e) => return Err(e) };
 let v50 = match s.literal(Lit::Rational(v49)) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24arith_5freduction_5fpred(s, v48, v50, v37, v36, v20, v19)
+more_3_eo__24arith_5freduction_5fpred(s, v48, v50, v37, v36, v20, v19)
+}
+pub(super) fn more_1_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v25: Term, v21: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
+let v26 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.apply(v26, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.construct(Constructor::eo_to_5freal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v29 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.apply(v30, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.apply(v29, v31) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.apply(v28, v32) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.apply(v27, v33) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.apply(v25, v34) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v21, v35) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24arith_5freduction_5fpred(s, v2, v37, v36, v20, v19)
+}
+pub(super) fn more_0_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v12: Term, v11: Term, v10: Term, v8: Term, v4: Term) -> CheckResult<Option<Term>> {
+let v13 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v13, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v15 = match s.apply(v12, v14) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v11, v15) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.apply(v10, v16) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v8, v17) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.apply(v4, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match parse_rat("0/1") { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.literal(Lit::Rational(v23)) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v22, v24) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24arith_5freduction_5fpred(s, v2, v25, v21, v20, v19)
 }
 pub(super) fn case_0_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8663,29 +8947,32 @@ let v9 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => ret
 let v10 = match s.apply(v9, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v11 = match s.construct(Constructor::eo_to_5freal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v13, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v12, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v11, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v10, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v8, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v4, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match parse_rat("0/1") { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.literal(Lit::Rational(v23)) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v22, v24) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24arith_5freduction_5fpred(s, v2, v25, v21, v20, v19)
+more_0_eo__24arith_5freduction_5fpred(s, v2, v12, v11, v10, v8, v4)
 }
-pub(super) fn more_3_eo__24arith_5freduction_5fpred(s: &mut Store, v15: Term, v50: Term, v14: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_7_eo__24arith_5freduction_5fpred(s: &mut Store, v15: Term, v50: Term, v14: Term) -> CheckResult<Option<Term>> {
 let v51 = match s.apply(v15, v50) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v53 = match s.apply(v51, v52) { Ok(v) => v, Err(e) => return Err(e) };
 let v54 = match s.apply(v14, v53) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v54))
 }
-pub(super) fn more_2_eo__24arith_5freduction_5fpred(s: &mut Store, v25: Term, v2: Term, v24: Term, v23: Term, v22: Term, v20: Term, v16: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_6_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v37: Term, v36: Term, v35: Term, v33: Term, v32: Term, v31: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
+let v38 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.apply(v38, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.apply(v37, v39) { Ok(v) => v, Err(e) => return Err(e) };
+let v41 = match s.apply(v36, v40) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.apply(v35, v41) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.apply(v33, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match parse_rat("1/1") { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.literal(Lit::Rational(v44)) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.apply(v43, v45) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v32, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.apply(v47, v48) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.apply(v31, v49) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24arith_5freduction_5fpred(s, v15, v50, v14)
+}
+pub(super) fn more_5_eo__24arith_5freduction_5fpred(s: &mut Store, v25: Term, v2: Term, v24: Term, v23: Term, v22: Term, v20: Term, v16: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
 let v26 = match s.apply(v25, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v27 = match s.apply(v24, v26) { Ok(v) => v, Err(e) => return Err(e) };
 let v28 = match s.apply(v23, v27) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8698,20 +8985,23 @@ let v34 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => re
 let v35 = match s.apply(v34, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v36 = match s.construct(Constructor::eo_to_5freal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v37 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v38, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.apply(v37, v39) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.apply(v36, v40) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.apply(v35, v41) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.apply(v33, v42) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match parse_rat("1/1") { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.literal(Lit::Rational(v44)) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.apply(v43, v45) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match s.apply(v32, v46) { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.apply(v47, v48) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.apply(v31, v49) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24arith_5freduction_5fpred(s, v15, v50, v14)
+more_6_eo__24arith_5freduction_5fpred(s, v2, v37, v36, v35, v33, v32, v31, v15, v14)
+}
+pub(super) fn more_4_eo__24arith_5freduction_5fpred(s: &mut Store, v8: Term, v12: Term, v4: Term, v2: Term) -> CheckResult<Option<Term>> {
+let v13 = match s.apply(v8, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v4, v13) { Ok(v) => v, Err(e) => return Err(e) };
+let v15 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match parse_rat("0/1") { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.literal(Lit::Rational(v18)) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.apply(v17, v19) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.apply(v21, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.construct(Constructor::eo_to_5freal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24arith_5freduction_5fpred(s, v25, v2, v24, v23, v22, v20, v16, v15, v14)
 }
 pub(super) fn case_1_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8728,22 +9018,9 @@ let v9 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) 
 let v10 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v11 = match s.apply(v10, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.apply(v9, v11) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.apply(v8, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v4, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match parse_rat("0/1") { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.literal(Lit::Rational(v18)) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v17, v19) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v21, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_to_5freal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.construct(Constructor::eo_to_5fint, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24arith_5freduction_5fpred(s, v25, v2, v24, v23, v22, v20, v16, v15, v14)
+more_4_eo__24arith_5freduction_5fpred(s, v8, v12, v4, v2)
 }
-pub(super) fn if_4_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v5: Term) -> CheckResult<Term> {
+pub(super) fn if_8_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v5: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
@@ -8757,12 +9034,27 @@ Ok(v5)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn more_5_eo__24arith_5freduction_5fpred(s: &mut Store, v28: Term, v5: Term, v2: Term, v27: Term, v11: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_10_eo__24arith_5freduction_5fpred(s: &mut Store, v28: Term, v5: Term, v2: Term, v27: Term, v11: Term) -> CheckResult<Option<Term>> {
 let v29 = match s.apply(v28, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v30 = match s.apply(v29, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v31 = match s.apply(v27, v30) { Ok(v) => v, Err(e) => return Err(e) };
 let v32 = match s.apply(v11, v31) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v32))
+}
+pub(super) fn more_9_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v14: Term, v12: Term, v5: Term, v11: Term) -> CheckResult<Option<Term>> {
+let v15 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match eo__24arith_5fmk_5fzero(s, v15) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.apply(v14, v16) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.construct(Constructor::eo__40div_5fby_5fzero, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match eo__24eo_5ftypeof(s, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.builtin_core(EvalOp::Eq, &[v20, v21]) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match if_8_eo__24arith_5freduction_5fpred(s, v22, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.apply(v19, v25) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.apply(v18, v26) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.construct(Constructor::eo__2f_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24arith_5freduction_5fpred(s, v28, v5, v2, v27, v11)
 }
 pub(super) fn case_2_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8781,19 +9073,22 @@ let v11 = match s.apply(v7, v10) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v13, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match eo__24arith_5fmk_5fzero(s, v15) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24arith_5freduction_5fpred(s, v2, v14, v12, v5, v11)
+}
+pub(super) fn more_11_eo__24arith_5freduction_5fpred(s: &mut Store, v14: Term, v12: Term, v5: Term, v2: Term, v11: Term) -> CheckResult<Option<Term>> {
+let v15 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.literal(Lit::Numeral(v15)) { Ok(v) => v, Err(e) => return Err(e) };
 let v17 = match s.apply(v14, v16) { Ok(v) => v, Err(e) => return Err(e) };
 let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.construct(Constructor::eo__40div_5fby_5fzero, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match eo__24eo_5ftypeof(s, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.builtin_core(EvalOp::Eq, &[v20, v21]) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match if_4_eo__24arith_5freduction_5fpred(s, v22, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v19, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.apply(v18, v26) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.construct(Constructor::eo__2f_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24arith_5freduction_5fpred(s, v28, v5, v2, v27, v11)
+let v19 = match s.construct(Constructor::eo__40int_5fdiv_5fby_5fzero, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.apply(v19, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.apply(v18, v20) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.apply(v23, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v21, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.apply(v11, v25) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v26))
 }
 pub(super) fn case_3_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8812,14 +9107,24 @@ let v11 = match s.apply(v7, v10) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v13, v2) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24arith_5freduction_5fpred(s, v14, v12, v5, v2, v11)
+}
+pub(super) fn cases_0_0_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_0_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_1_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_2_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_3_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn more_12_eo__24arith_5freduction_5fpred(s: &mut Store, v14: Term, v12: Term, v5: Term, v2: Term, v11: Term) -> CheckResult<Option<Term>> {
 let v15 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v16 = match s.literal(Lit::Numeral(v15)) { Ok(v) => v, Err(e) => return Err(e) };
 let v17 = match s.apply(v14, v16) { Ok(v) => v, Err(e) => return Err(e) };
 let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.construct(Constructor::eo__40int_5fdiv_5fby_5fzero, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.construct(Constructor::eo__40mod_5fby_5fzero, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v20 = match s.apply(v19, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v21 = match s.apply(v18, v20) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_mod_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v23 = match s.apply(v22, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v24 = match s.apply(v23, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v25 = match s.apply(v21, v24) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8843,21 +9148,9 @@ let v11 = match s.apply(v7, v10) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v13, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.literal(Lit::Numeral(v15)) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v14, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.construct(Constructor::eo__40mod_5fby_5fzero, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v19, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.apply(v18, v20) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.construct(Constructor::eo_mod_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v22, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v21, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v11, v25) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v26))
+more_12_eo__24arith_5freduction_5fpred(s, v14, v12, v5, v2, v11)
 }
-pub(super) fn if_6_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
+pub(super) fn if_13_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
@@ -8871,7 +9164,7 @@ Ok(v2)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_7_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
+pub(super) fn if_14_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
@@ -8885,7 +9178,7 @@ Ok(v2)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_8_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
+pub(super) fn if_15_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
@@ -8899,7 +9192,7 @@ Ok(v2)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn if_9_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v5: Term) -> CheckResult<Term> {
+pub(super) fn if_16_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v5: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
@@ -8913,8 +9206,15 @@ Ok(v5)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn more_11_eo__24arith_5freduction_5fpred(s: &mut Store, v55: Term, v2: Term, v52: Term, v51: Term, v44: Term, v36: Term, v5: Term, v35: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
-let v58 = match if_8_eo__24arith_5freduction_5fpred(s, v55, v2) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_21_eo__24arith_5freduction_5fpred(s: &mut Store, v20: Term, v71: Term, v19: Term) -> CheckResult<Option<Term>> {
+let v72 = match s.apply(v20, v71) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.apply(v72, v73) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.apply(v19, v74) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v75))
+}
+pub(super) fn more_20_eo__24arith_5freduction_5fpred(s: &mut Store, v55: Term, v2: Term, v52: Term, v51: Term, v44: Term, v36: Term, v5: Term, v35: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
+let v58 = match if_15_eo__24arith_5freduction_5fpred(s, v55, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v59 = match eo__24eo_5ftypeof(s, v58) { Ok(v) => v, Err(e) => return Err(e) };
 let v60 = match eo__24eo_5fnil(s, v52, v59) { Ok(v) => v, Err(e) => return Err(e) };
 let v61 = match s.apply(v51, v60) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8923,29 +9223,12 @@ let v63 = match s.apply(v36, v62) { Ok(v) => v, Err(e) => return Err(e) };
 let v64 = match eo__24eo_5ftypeof(s, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v65 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v66 = match s.builtin_core(EvalOp::Eq, &[v64, v65]) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match if_9_eo__24arith_5freduction_5fpred(s, v66, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match if_16_eo__24arith_5freduction_5fpred(s, v66, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v70 = match s.apply(v63, v69) { Ok(v) => v, Err(e) => return Err(e) };
 let v71 = match s.apply(v35, v70) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.apply(v20, v71) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.apply(v72, v73) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.apply(v19, v74) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v75))
+more_21_eo__24arith_5freduction_5fpred(s, v20, v71, v19)
 }
-pub(super) fn more_10_eo__24arith_5freduction_5fpred(s: &mut Store, v26: Term, v2: Term, v23: Term, v22: Term, v21: Term, v5: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
-let v29 = match if_6_eo__24arith_5freduction_5fpred(s, v26, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v30 = match s.apply(v23, v29) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match parse_rat("0/1") { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.literal(Lit::Rational(v31)) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.apply(v30, v32) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.apply(v22, v33) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.apply(v21, v34) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.builtin_core(EvalOp::Eq, &[v38, v39]) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match if_7_eo__24arith_5freduction_5fpred(s, v40, v2) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_19_eo__24arith_5freduction_5fpred(s: &mut Store, v37: Term, v43: Term, v5: Term, v2: Term, v36: Term, v35: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
 let v44 = match s.apply(v37, v43) { Ok(v) => v, Err(e) => return Err(e) };
 let v45 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v46 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8958,7 +9241,38 @@ let v52 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => re
 let v53 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v54 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v55 = match s.builtin_core(EvalOp::Eq, &[v53, v54]) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24arith_5freduction_5fpred(s, v55, v2, v52, v51, v44, v36, v5, v35, v20, v19)
+more_20_eo__24arith_5freduction_5fpred(s, v55, v2, v52, v51, v44, v36, v5, v35, v20, v19)
+}
+pub(super) fn more_18_eo__24arith_5freduction_5fpred(s: &mut Store, v26: Term, v2: Term, v23: Term, v22: Term, v21: Term, v5: Term, v20: Term, v19: Term) -> CheckResult<Option<Term>> {
+let v29 = match if_13_eo__24arith_5freduction_5fpred(s, v26, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.apply(v23, v29) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match parse_rat("0/1") { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.literal(Lit::Rational(v31)) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.apply(v30, v32) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.apply(v22, v33) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.apply(v21, v34) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.builtin_core(EvalOp::Eq, &[v38, v39]) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match if_14_eo__24arith_5freduction_5fpred(s, v40, v2) { Ok(v) => v, Err(e) => return Err(e) };
+more_19_eo__24arith_5freduction_5fpred(s, v37, v43, v5, v2, v36, v35, v20, v19)
+}
+pub(super) fn more_17_eo__24arith_5freduction_5fpred(s: &mut Store, v14: Term, v5: Term, v2: Term, v13: Term, v12: Term, v7: Term) -> CheckResult<Option<Term>> {
+let v15 = match s.apply(v14, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.apply(v13, v16) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.apply(v7, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_not, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.builtin_core(EvalOp::Eq, &[v24, v25]) { Ok(v) => v, Err(e) => return Err(e) };
+more_18_eo__24arith_5freduction_5fpred(s, v26, v2, v23, v22, v21, v5, v20, v19)
 }
 pub(super) fn case_5_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8977,21 +9291,9 @@ let v11 = match s.apply(v10, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.apply(v8, v11) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.construct(Constructor::eo__2f_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v14, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v13, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v7, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.construct(Constructor::eo_not, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.construct(Constructor::eo_Int, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.builtin_core(EvalOp::Eq, &[v24, v25]) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24arith_5freduction_5fpred(s, v26, v2, v23, v22, v21, v5, v20, v19)
+more_17_eo__24arith_5freduction_5fpred(s, v14, v5, v2, v13, v12, v7)
 }
-pub(super) fn if_12_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term) -> CheckResult<Term> {
+pub(super) fn if_22_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
@@ -9007,20 +9309,7 @@ Ok(v62)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn more_13_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v50: Term, v49: Term, v48: Term, v46: Term, v44: Term, v43: Term) -> CheckResult<Term> {
-let v51 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v52, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v53, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.apply(v51, v54) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.apply(v50, v55) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.builtin_core(EvalOp::IsNeg, &[v2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match if_12_eo__24arith_5freduction_5fpred(s, v58) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v57, v63) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.literal(Lit::Numeral(v65)) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.apply(v64, v66) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_25_eo__24arith_5freduction_5fpred(s: &mut Store, v56: Term, v67: Term, v49: Term, v48: Term, v46: Term, v44: Term, v43: Term) -> CheckResult<Term> {
 let v68 = match s.apply(v56, v67) { Ok(v) => v, Err(e) => return Err(e) };
 let v69 = match s.apply(v49, v68) { Ok(v) => v, Err(e) => return Err(e) };
 let v70 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
@@ -9029,12 +9318,43 @@ let v72 = match s.apply(v69, v71) { Ok(v) => v, Err(e) => return Err(e) };
 let v73 = match s.apply(v48, v72) { Ok(v) => v, Err(e) => return Err(e) };
 let v74 = match s.apply(v46, v73) { Ok(v) => v, Err(e) => return Err(e) };
 let v75 = match s.apply(v44, v74) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v77 = match s.apply(v75, v76) { Ok(v) => v, Err(e) => return Err(e) };
 let v78 = match s.apply(v43, v77) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v78)
 }
-pub(super) fn requires_14_eo__24arith_5freduction_5fpred(s: &mut Store, v24: Term, v25: Term, v2: Term, v5: Term) -> CheckResult<Term> {
+pub(super) fn more_24_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v50: Term, v49: Term, v48: Term, v46: Term, v44: Term, v43: Term) -> CheckResult<Term> {
+let v51 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.apply(v52, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.apply(v53, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.apply(v51, v54) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.apply(v50, v55) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.builtin_core(EvalOp::IsNeg, &[v2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match if_22_eo__24arith_5freduction_5fpred(s, v58) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v57, v63) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.literal(Lit::Numeral(v65)) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v64, v66) { Ok(v) => v, Err(e) => return Err(e) };
+more_25_eo__24arith_5freduction_5fpred(s, v56, v67, v49, v48, v46, v44, v43)
+}
+pub(super) fn more_23_eo__24arith_5freduction_5fpred(s: &mut Store, v36: Term, v38: Term, v29: Term, v27: Term, v5: Term, v26: Term, v2: Term) -> CheckResult<Term> {
+let v39 = match s.apply(v36, v38) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.apply(v29, v39) { Ok(v) => v, Err(e) => return Err(e) };
+let v41 = match s.apply(v27, v40) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.apply(v41, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.apply(v26, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.apply(v45, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.apply(v47, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_24_eo__24arith_5freduction_5fpred(s, v5, v2, v50, v49, v48, v46, v44, v43)
+}
+pub(super) fn requires_26_eo__24arith_5freduction_5fpred(s: &mut Store, v24: Term, v25: Term, v2: Term, v5: Term) -> CheckResult<Term> {
 if v24 != v25 { return Ok(s.stuck()); }
 let stuck = match s.is_stuck(v24) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck { return Ok(s.stuck()); }
@@ -9051,21 +9371,15 @@ let v35 = match s.apply(v31, v34) { Ok(v) => v, Err(e) => return Err(e) };
 let v36 = match s.apply(v30, v35) { Ok(v) => v, Err(e) => return Err(e) };
 let v37 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
 let v38 = match s.literal(Lit::Numeral(v37)) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v36, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.apply(v29, v39) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.apply(v27, v40) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.apply(v41, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.apply(v26, v42) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.apply(v45, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.apply(v47, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_13_eo__24arith_5freduction_5fpred(s, v5, v2, v50, v49, v48, v46, v44, v43)
+more_23_eo__24arith_5freduction_5fpred(s, v36, v38, v29, v27, v5, v26, v2)
 }
-pub(super) fn more_18_eo__24arith_5freduction_5fpred(s: &mut Store, v177: Term, v184: Term, v170: Term, v169: Term, v167: Term, v165: Term, v164: Term, v146: Term, v139: Term, v138: Term) -> CheckResult<Term> {
+pub(super) fn more_35_eo__24arith_5freduction_5fpred(s: &mut Store, v197: Term, v138: Term) -> CheckResult<Term> {
+let v198 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v199 = match s.apply(v197, v198) { Ok(v) => v, Err(e) => return Err(e) };
+let v200 = match s.apply(v138, v199) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(v200)
+}
+pub(super) fn more_34_eo__24arith_5freduction_5fpred(s: &mut Store, v177: Term, v184: Term, v170: Term, v169: Term, v167: Term, v165: Term, v164: Term, v146: Term, v139: Term, v138: Term) -> CheckResult<Term> {
 let v185 = match s.apply(v177, v184) { Ok(v) => v, Err(e) => return Err(e) };
 let v186 = match s.apply(v170, v185) { Ok(v) => v, Err(e) => return Err(e) };
 let v187 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
@@ -9074,30 +9388,14 @@ let v189 = match s.apply(v186, v188) { Ok(v) => v, Err(e) => return Err(e) };
 let v190 = match s.apply(v169, v189) { Ok(v) => v, Err(e) => return Err(e) };
 let v191 = match s.apply(v167, v190) { Ok(v) => v, Err(e) => return Err(e) };
 let v192 = match s.apply(v165, v191) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v193 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v194 = match s.apply(v192, v193) { Ok(v) => v, Err(e) => return Err(e) };
 let v195 = match s.apply(v164, v194) { Ok(v) => v, Err(e) => return Err(e) };
 let v196 = match s.apply(v146, v195) { Ok(v) => v, Err(e) => return Err(e) };
 let v197 = match s.apply(v139, v196) { Ok(v) => v, Err(e) => return Err(e) };
-let v198 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v199 = match s.apply(v197, v198) { Ok(v) => v, Err(e) => return Err(e) };
-let v200 = match s.apply(v138, v199) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(v200)
+more_35_eo__24arith_5freduction_5fpred(s, v197, v138)
 }
-pub(super) fn more_17_eo__24arith_5freduction_5fpred(s: &mut Store, v157: Term, v150: Term, v148: Term, v5: Term, v147: Term, v2: Term, v146: Term, v139: Term, v138: Term) -> CheckResult<Term> {
-let v158 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v159 = match s.literal(Lit::Numeral(v158)) { Ok(v) => v, Err(e) => return Err(e) };
-let v160 = match s.apply(v157, v159) { Ok(v) => v, Err(e) => return Err(e) };
-let v161 = match s.apply(v150, v160) { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.apply(v148, v161) { Ok(v) => v, Err(e) => return Err(e) };
-let v163 = match s.apply(v162, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match s.apply(v147, v163) { Ok(v) => v, Err(e) => return Err(e) };
-let v165 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v166 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v166, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v168 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.apply(v168, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_33_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v170: Term, v169: Term, v167: Term, v165: Term, v164: Term, v146: Term, v139: Term, v138: Term) -> CheckResult<Term> {
 let v171 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v172 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v173 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9112,22 +9410,25 @@ let v181 = match s.apply(v178, v180) { Ok(v) => v, Err(e) => return Err(e) };
 let v182 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v183 = match s.literal(Lit::Numeral(v182)) { Ok(v) => v, Err(e) => return Err(e) };
 let v184 = match s.apply(v181, v183) { Ok(v) => v, Err(e) => return Err(e) };
-more_18_eo__24arith_5freduction_5fpred(s, v177, v184, v170, v169, v167, v165, v164, v146, v139, v138)
+more_34_eo__24arith_5freduction_5fpred(s, v177, v184, v170, v169, v167, v165, v164, v146, v139, v138)
 }
-pub(super) fn more_16_eo__24arith_5freduction_5fpred(s: &mut Store, v106: Term, v132: Term, v105: Term, v87: Term, v80: Term, v2: Term, v5: Term) -> CheckResult<Term> {
-let v133 = match s.apply(v106, v132) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v135 = match s.apply(v133, v134) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.apply(v105, v135) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.apply(v87, v136) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.apply(v80, v137) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v141 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match s.apply(v141, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v143 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.literal(Lit::Numeral(v143)) { Ok(v) => v, Err(e) => return Err(e) };
-let v145 = match s.apply(v142, v144) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_32_eo__24arith_5freduction_5fpred(s: &mut Store, v157: Term, v150: Term, v148: Term, v5: Term, v147: Term, v2: Term, v146: Term, v139: Term, v138: Term) -> CheckResult<Term> {
+let v158 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
+let v159 = match s.literal(Lit::Numeral(v158)) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.apply(v157, v159) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.apply(v150, v160) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.apply(v148, v161) { Ok(v) => v, Err(e) => return Err(e) };
+let v163 = match s.apply(v162, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v164 = match s.apply(v147, v163) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.apply(v166, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v168, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_33_eo__24arith_5freduction_5fpred(s, v5, v2, v170, v169, v167, v165, v164, v146, v139, v138)
+}
+pub(super) fn more_31_eo__24arith_5freduction_5fpred(s: &mut Store, v140: Term, v145: Term, v2: Term, v5: Term, v139: Term, v138: Term) -> CheckResult<Term> {
 let v146 = match s.apply(v140, v145) { Ok(v) => v, Err(e) => return Err(e) };
 let v147 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v148 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9140,21 +9441,25 @@ let v154 = match s.apply(v153, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v155 = match s.apply(v154, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v156 = match s.apply(v152, v155) { Ok(v) => v, Err(e) => return Err(e) };
 let v157 = match s.apply(v151, v156) { Ok(v) => v, Err(e) => return Err(e) };
-more_17_eo__24arith_5freduction_5fpred(s, v157, v150, v148, v5, v147, v2, v146, v139, v138)
+more_32_eo__24arith_5freduction_5fpred(s, v157, v150, v148, v5, v147, v2, v146, v139, v138)
 }
-pub(super) fn more_15_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v105: Term, v87: Term, v80: Term) -> CheckResult<Term> {
-let v106 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.apply(v107, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.apply(v109, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v112 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match s.apply(v114, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.apply(v115, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v117 = match s.apply(v113, v116) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_30_eo__24arith_5freduction_5fpred(s: &mut Store, v106: Term, v132: Term, v105: Term, v87: Term, v80: Term, v2: Term, v5: Term) -> CheckResult<Term> {
+let v133 = match s.apply(v106, v132) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v135 = match s.apply(v133, v134) { Ok(v) => v, Err(e) => return Err(e) };
+let v136 = match s.apply(v105, v135) { Ok(v) => v, Err(e) => return Err(e) };
+let v137 = match s.apply(v87, v136) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.apply(v80, v137) { Ok(v) => v, Err(e) => return Err(e) };
+let v139 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v140 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.apply(v141, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v143 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.literal(Lit::Numeral(v143)) { Ok(v) => v, Err(e) => return Err(e) };
+let v145 = match s.apply(v142, v144) { Ok(v) => v, Err(e) => return Err(e) };
+more_31_eo__24arith_5freduction_5fpred(s, v140, v145, v2, v5, v139, v138)
+}
+pub(super) fn more_29_eo__24arith_5freduction_5fpred(s: &mut Store, v112: Term, v117: Term, v111: Term, v110: Term, v108: Term, v106: Term, v105: Term, v87: Term, v80: Term, v2: Term, v5: Term) -> CheckResult<Term> {
 let v118 = match s.apply(v112, v117) { Ok(v) => v, Err(e) => return Err(e) };
 let v119 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v120 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
@@ -9170,17 +9475,48 @@ let v129 = match s.literal(Lit::Numeral(v128)) { Ok(v) => v, Err(e) => return Er
 let v130 = match s.apply(v127, v129) { Ok(v) => v, Err(e) => return Err(e) };
 let v131 = match s.apply(v110, v130) { Ok(v) => v, Err(e) => return Err(e) };
 let v132 = match s.apply(v108, v131) { Ok(v) => v, Err(e) => return Err(e) };
-more_16_eo__24arith_5freduction_5fpred(s, v106, v132, v105, v87, v80, v2, v5)
+more_30_eo__24arith_5freduction_5fpred(s, v106, v132, v105, v87, v80, v2, v5)
 }
-pub(super) fn if_19_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term, v5: Term) -> CheckResult<Term> {
+pub(super) fn more_28_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v105: Term, v87: Term, v80: Term) -> CheckResult<Term> {
+let v106 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.apply(v107, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.apply(v109, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.apply(v114, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.apply(v115, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.apply(v113, v116) { Ok(v) => v, Err(e) => return Err(e) };
+more_29_eo__24arith_5freduction_5fpred(s, v112, v117, v111, v110, v108, v106, v105, v87, v80, v2, v5)
+}
+pub(super) fn more_27_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v92: Term, v91: Term, v89: Term, v88: Term, v87: Term, v80: Term) -> CheckResult<Term> {
+let v93 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.apply(v94, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.apply(v95, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.apply(v93, v96) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.apply(v92, v97) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.literal(Lit::Numeral(v99)) { Ok(v) => v, Err(e) => return Err(e) };
+let v101 = match s.apply(v98, v100) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.apply(v91, v101) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.apply(v89, v102) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.apply(v103, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.apply(v88, v104) { Ok(v) => v, Err(e) => return Err(e) };
+more_28_eo__24arith_5freduction_5fpred(s, v5, v2, v105, v87, v80)
+}
+pub(super) fn if_36_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term, v5: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
 let v22 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v23 = match s.literal(Lit::Numeral(v22)) { Ok(v) => v, Err(e) => return Err(e) };
 let v24 = match s.builtin_core(EvalOp::Eq, &[v2, v23]) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match requires_14_eo__24arith_5freduction_5fpred(s, v24, v25, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match requires_26_eo__24arith_5freduction_5fpred(s, v24, v25, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v79)
 }
 Some(false) => {
@@ -9197,23 +9533,25 @@ let v89 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) =>
 let v90 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v91 = match s.apply(v90, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v92 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match s.apply(v94, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.apply(v95, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.apply(v93, v96) { Ok(v) => v, Err(e) => return Err(e) };
-let v98 = match s.apply(v92, v97) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.literal(Lit::Numeral(v99)) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.apply(v98, v100) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match s.apply(v91, v101) { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.apply(v89, v102) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v103, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match s.apply(v88, v104) { Ok(v) => v, Err(e) => return Err(e) };
-more_15_eo__24arith_5freduction_5fpred(s, v5, v2, v105, v87, v80)
+more_27_eo__24arith_5freduction_5fpred(s, v5, v2, v92, v91, v89, v88, v87, v80)
 }
 None => Ok(s.stuck()),
 }
+}
+pub(super) fn more_37_eo__24arith_5freduction_5fpred(s: &mut Store, v14: Term, v5: Term, v2: Term, v13: Term, v12: Term, v7: Term) -> CheckResult<Option<Term>> {
+let v15 = match s.apply(v14, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.apply(v13, v16) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.apply(v7, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.builtin_core(EvalOp::IsZ, &[v2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v201 = match if_36_eo__24arith_5freduction_5fpred(s, v21, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v202 = match s.apply(v20, v201) { Ok(v) => v, Err(e) => return Err(e) };
+let v203 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v204 = match s.apply(v202, v203) { Ok(v) => v, Err(e) => return Err(e) };
+let v205 = match s.apply(v19, v204) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v205))
 }
 pub(super) fn case_6_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9232,21 +9570,9 @@ let v11 = match s.apply(v10, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.apply(v8, v11) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v14, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v13, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v7, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.builtin_core(EvalOp::IsZ, &[v2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v201 = match if_19_eo__24arith_5freduction_5fpred(s, v21, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v202 = match s.apply(v20, v201) { Ok(v) => v, Err(e) => return Err(e) };
-let v203 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v204 = match s.apply(v202, v203) { Ok(v) => v, Err(e) => return Err(e) };
-let v205 = match s.apply(v19, v204) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v205))
+more_37_eo__24arith_5freduction_5fpred(s, v14, v5, v2, v13, v12, v7)
 }
-pub(super) fn if_20_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term) -> CheckResult<Term> {
+pub(super) fn if_38_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
@@ -9262,20 +9588,7 @@ Ok(v73)
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn more_21_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v61: Term, v60: Term, v59: Term, v57: Term, v55: Term, v54: Term) -> CheckResult<Term> {
-let v62 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v63, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v64, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.apply(v62, v65) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.apply(v61, v66) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.builtin_core(EvalOp::IsNeg, &[v2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match if_20_eo__24arith_5freduction_5fpred(s, v69) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.apply(v68, v74) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.literal(Lit::Numeral(v76)) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v75, v77) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_41_eo__24arith_5freduction_5fpred(s: &mut Store, v67: Term, v78: Term, v60: Term, v59: Term, v57: Term, v55: Term, v54: Term) -> CheckResult<Term> {
 let v79 = match s.apply(v67, v78) { Ok(v) => v, Err(e) => return Err(e) };
 let v80 = match s.apply(v60, v79) { Ok(v) => v, Err(e) => return Err(e) };
 let v81 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
@@ -9284,12 +9597,43 @@ let v83 = match s.apply(v80, v82) { Ok(v) => v, Err(e) => return Err(e) };
 let v84 = match s.apply(v59, v83) { Ok(v) => v, Err(e) => return Err(e) };
 let v85 = match s.apply(v57, v84) { Ok(v) => v, Err(e) => return Err(e) };
 let v86 = match s.apply(v55, v85) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v88 = match s.apply(v86, v87) { Ok(v) => v, Err(e) => return Err(e) };
 let v89 = match s.apply(v54, v88) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v89)
 }
-pub(super) fn requires_22_eo__24arith_5freduction_5fpred(s: &mut Store, v35: Term, v36: Term, v2: Term, v5: Term) -> CheckResult<Term> {
+pub(super) fn more_40_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v61: Term, v60: Term, v59: Term, v57: Term, v55: Term, v54: Term) -> CheckResult<Term> {
+let v62 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v63, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match s.apply(v64, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v62, v65) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v61, v66) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.builtin_core(EvalOp::IsNeg, &[v2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match if_38_eo__24arith_5freduction_5fpred(s, v69) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.apply(v68, v74) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
+let v77 = match s.literal(Lit::Numeral(v76)) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v75, v77) { Ok(v) => v, Err(e) => return Err(e) };
+more_41_eo__24arith_5freduction_5fpred(s, v67, v78, v60, v59, v57, v55, v54)
+}
+pub(super) fn more_39_eo__24arith_5freduction_5fpred(s: &mut Store, v47: Term, v49: Term, v40: Term, v38: Term, v5: Term, v37: Term, v2: Term) -> CheckResult<Term> {
+let v50 = match s.apply(v47, v49) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.apply(v40, v50) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v38, v51) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.apply(v52, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.apply(v37, v53) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.apply(v56, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.apply(v58, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_40_eo__24arith_5freduction_5fpred(s, v5, v2, v61, v60, v59, v57, v55, v54)
+}
+pub(super) fn requires_42_eo__24arith_5freduction_5fpred(s: &mut Store, v35: Term, v36: Term, v2: Term, v5: Term) -> CheckResult<Term> {
 if v35 != v36 { return Ok(s.stuck()); }
 let stuck = match s.is_stuck(v35) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck { return Ok(s.stuck()); }
@@ -9306,21 +9650,15 @@ let v46 = match s.apply(v42, v45) { Ok(v) => v, Err(e) => return Err(e) };
 let v47 = match s.apply(v41, v46) { Ok(v) => v, Err(e) => return Err(e) };
 let v48 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
 let v49 = match s.literal(Lit::Numeral(v48)) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.apply(v47, v49) { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.apply(v40, v50) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.apply(v38, v51) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v52, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v37, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.apply(v56, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.apply(v58, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_21_eo__24arith_5freduction_5fpred(s, v5, v2, v61, v60, v59, v57, v55, v54)
+more_39_eo__24arith_5freduction_5fpred(s, v47, v49, v40, v38, v5, v37, v2)
 }
-pub(super) fn more_26_eo__24arith_5freduction_5fpred(s: &mut Store, v188: Term, v195: Term, v181: Term, v180: Term, v178: Term, v176: Term, v175: Term, v157: Term, v150: Term, v149: Term) -> CheckResult<Term> {
+pub(super) fn more_51_eo__24arith_5freduction_5fpred(s: &mut Store, v208: Term, v149: Term) -> CheckResult<Term> {
+let v209 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v210 = match s.apply(v208, v209) { Ok(v) => v, Err(e) => return Err(e) };
+let v211 = match s.apply(v149, v210) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(v211)
+}
+pub(super) fn more_50_eo__24arith_5freduction_5fpred(s: &mut Store, v188: Term, v195: Term, v181: Term, v180: Term, v178: Term, v176: Term, v175: Term, v157: Term, v150: Term, v149: Term) -> CheckResult<Term> {
 let v196 = match s.apply(v188, v195) { Ok(v) => v, Err(e) => return Err(e) };
 let v197 = match s.apply(v181, v196) { Ok(v) => v, Err(e) => return Err(e) };
 let v198 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
@@ -9329,30 +9667,14 @@ let v200 = match s.apply(v197, v199) { Ok(v) => v, Err(e) => return Err(e) };
 let v201 = match s.apply(v180, v200) { Ok(v) => v, Err(e) => return Err(e) };
 let v202 = match s.apply(v178, v201) { Ok(v) => v, Err(e) => return Err(e) };
 let v203 = match s.apply(v176, v202) { Ok(v) => v, Err(e) => return Err(e) };
-let v204 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v204 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v205 = match s.apply(v203, v204) { Ok(v) => v, Err(e) => return Err(e) };
 let v206 = match s.apply(v175, v205) { Ok(v) => v, Err(e) => return Err(e) };
 let v207 = match s.apply(v157, v206) { Ok(v) => v, Err(e) => return Err(e) };
 let v208 = match s.apply(v150, v207) { Ok(v) => v, Err(e) => return Err(e) };
-let v209 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v210 = match s.apply(v208, v209) { Ok(v) => v, Err(e) => return Err(e) };
-let v211 = match s.apply(v149, v210) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(v211)
+more_51_eo__24arith_5freduction_5fpred(s, v208, v149)
 }
-pub(super) fn more_25_eo__24arith_5freduction_5fpred(s: &mut Store, v168: Term, v161: Term, v159: Term, v5: Term, v158: Term, v2: Term, v157: Term, v150: Term, v149: Term) -> CheckResult<Term> {
-let v169 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.literal(Lit::Numeral(v169)) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v168, v170) { Ok(v) => v, Err(e) => return Err(e) };
-let v172 = match s.apply(v161, v171) { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.apply(v159, v172) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.apply(v173, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v175 = match s.apply(v158, v174) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v178 = match s.apply(v177, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v179 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.apply(v179, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v181 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_49_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v181: Term, v180: Term, v178: Term, v176: Term, v175: Term, v157: Term, v150: Term, v149: Term) -> CheckResult<Term> {
 let v182 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v183 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v184 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9367,22 +9689,25 @@ let v192 = match s.apply(v189, v191) { Ok(v) => v, Err(e) => return Err(e) };
 let v193 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v194 = match s.literal(Lit::Numeral(v193)) { Ok(v) => v, Err(e) => return Err(e) };
 let v195 = match s.apply(v192, v194) { Ok(v) => v, Err(e) => return Err(e) };
-more_26_eo__24arith_5freduction_5fpred(s, v188, v195, v181, v180, v178, v176, v175, v157, v150, v149)
+more_50_eo__24arith_5freduction_5fpred(s, v188, v195, v181, v180, v178, v176, v175, v157, v150, v149)
 }
-pub(super) fn more_24_eo__24arith_5freduction_5fpred(s: &mut Store, v117: Term, v143: Term, v116: Term, v98: Term, v91: Term, v2: Term, v5: Term) -> CheckResult<Term> {
-let v144 = match s.apply(v117, v143) { Ok(v) => v, Err(e) => return Err(e) };
-let v145 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.apply(v144, v145) { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match s.apply(v116, v146) { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.apply(v98, v147) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.apply(v91, v148) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v152 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v153 = match s.apply(v152, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v154 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v155 = match s.literal(Lit::Numeral(v154)) { Ok(v) => v, Err(e) => return Err(e) };
-let v156 = match s.apply(v153, v155) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_48_eo__24arith_5freduction_5fpred(s: &mut Store, v168: Term, v161: Term, v159: Term, v5: Term, v158: Term, v2: Term, v157: Term, v150: Term, v149: Term) -> CheckResult<Term> {
+let v169 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.literal(Lit::Numeral(v169)) { Ok(v) => v, Err(e) => return Err(e) };
+let v171 = match s.apply(v168, v170) { Ok(v) => v, Err(e) => return Err(e) };
+let v172 = match s.apply(v161, v171) { Ok(v) => v, Err(e) => return Err(e) };
+let v173 = match s.apply(v159, v172) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.apply(v173, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v175 = match s.apply(v158, v174) { Ok(v) => v, Err(e) => return Err(e) };
+let v176 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.apply(v177, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match s.apply(v179, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_49_eo__24arith_5freduction_5fpred(s, v5, v2, v181, v180, v178, v176, v175, v157, v150, v149)
+}
+pub(super) fn more_47_eo__24arith_5freduction_5fpred(s: &mut Store, v151: Term, v156: Term, v2: Term, v5: Term, v150: Term, v149: Term) -> CheckResult<Term> {
 let v157 = match s.apply(v151, v156) { Ok(v) => v, Err(e) => return Err(e) };
 let v158 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v159 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9395,21 +9720,25 @@ let v165 = match s.apply(v164, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v166 = match s.apply(v165, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v167 = match s.apply(v163, v166) { Ok(v) => v, Err(e) => return Err(e) };
 let v168 = match s.apply(v162, v167) { Ok(v) => v, Err(e) => return Err(e) };
-more_25_eo__24arith_5freduction_5fpred(s, v168, v161, v159, v5, v158, v2, v157, v150, v149)
+more_48_eo__24arith_5freduction_5fpred(s, v168, v161, v159, v5, v158, v2, v157, v150, v149)
 }
-pub(super) fn more_23_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v116: Term, v98: Term, v91: Term) -> CheckResult<Term> {
-let v117 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.apply(v118, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match s.apply(v120, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v124 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v126 = match s.apply(v125, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.apply(v126, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v124, v127) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_46_eo__24arith_5freduction_5fpred(s: &mut Store, v117: Term, v143: Term, v116: Term, v98: Term, v91: Term, v2: Term, v5: Term) -> CheckResult<Term> {
+let v144 = match s.apply(v117, v143) { Ok(v) => v, Err(e) => return Err(e) };
+let v145 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v146 = match s.apply(v144, v145) { Ok(v) => v, Err(e) => return Err(e) };
+let v147 = match s.apply(v116, v146) { Ok(v) => v, Err(e) => return Err(e) };
+let v148 = match s.apply(v98, v147) { Ok(v) => v, Err(e) => return Err(e) };
+let v149 = match s.apply(v91, v148) { Ok(v) => v, Err(e) => return Err(e) };
+let v150 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v151 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v152 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v153 = match s.apply(v152, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v154 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
+let v155 = match s.literal(Lit::Numeral(v154)) { Ok(v) => v, Err(e) => return Err(e) };
+let v156 = match s.apply(v153, v155) { Ok(v) => v, Err(e) => return Err(e) };
+more_47_eo__24arith_5freduction_5fpred(s, v151, v156, v2, v5, v150, v149)
+}
+pub(super) fn more_45_eo__24arith_5freduction_5fpred(s: &mut Store, v123: Term, v128: Term, v122: Term, v121: Term, v119: Term, v117: Term, v116: Term, v98: Term, v91: Term, v2: Term, v5: Term) -> CheckResult<Term> {
 let v129 = match s.apply(v123, v128) { Ok(v) => v, Err(e) => return Err(e) };
 let v130 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v131 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
@@ -9425,17 +9754,48 @@ let v140 = match s.literal(Lit::Numeral(v139)) { Ok(v) => v, Err(e) => return Er
 let v141 = match s.apply(v138, v140) { Ok(v) => v, Err(e) => return Err(e) };
 let v142 = match s.apply(v121, v141) { Ok(v) => v, Err(e) => return Err(e) };
 let v143 = match s.apply(v119, v142) { Ok(v) => v, Err(e) => return Err(e) };
-more_24_eo__24arith_5freduction_5fpred(s, v117, v143, v116, v98, v91, v2, v5)
+more_46_eo__24arith_5freduction_5fpred(s, v117, v143, v116, v98, v91, v2, v5)
 }
-pub(super) fn if_27_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term, v5: Term) -> CheckResult<Term> {
+pub(super) fn more_44_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v116: Term, v98: Term, v91: Term) -> CheckResult<Term> {
+let v117 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v118 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.apply(v118, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.apply(v120, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v124 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v125 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v126 = match s.apply(v125, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v127 = match s.apply(v126, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.apply(v124, v127) { Ok(v) => v, Err(e) => return Err(e) };
+more_45_eo__24arith_5freduction_5fpred(s, v123, v128, v122, v121, v119, v117, v116, v98, v91, v2, v5)
+}
+pub(super) fn more_43_eo__24arith_5freduction_5fpred(s: &mut Store, v5: Term, v2: Term, v103: Term, v102: Term, v100: Term, v99: Term, v98: Term, v91: Term) -> CheckResult<Term> {
+let v104 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.apply(v105, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.apply(v106, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.apply(v104, v107) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.apply(v103, v108) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.literal(Lit::Numeral(v110)) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.apply(v109, v111) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.apply(v102, v112) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.apply(v100, v113) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.apply(v114, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.apply(v99, v115) { Ok(v) => v, Err(e) => return Err(e) };
+more_44_eo__24arith_5freduction_5fpred(s, v5, v2, v116, v98, v91)
+}
+pub(super) fn if_52_eo__24arith_5freduction_5fpred(s: &mut Store, condition: Term, v2: Term, v5: Term) -> CheckResult<Term> {
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
 let v33 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v34 = match s.literal(Lit::Numeral(v33)) { Ok(v) => v, Err(e) => return Err(e) };
 let v35 = match s.builtin_core(EvalOp::Eq, &[v2, v34]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.literal(Lit::Bool(false)) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match requires_22_eo__24arith_5freduction_5fpred(s, v35, v36, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match requires_42_eo__24arith_5freduction_5fpred(s, v35, v36, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v90)
 }
 Some(false) => {
@@ -9452,36 +9812,39 @@ let v100 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) =
 let v101 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v102 = match s.apply(v101, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v103 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.apply(v105, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.apply(v106, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.apply(v104, v107) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.apply(v103, v108) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.literal(Lit::Numeral(v110)) { Ok(v) => v, Err(e) => return Err(e) };
-let v112 = match s.apply(v109, v111) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.apply(v102, v112) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.apply(v100, v113) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match s.apply(v114, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.apply(v99, v115) { Ok(v) => v, Err(e) => return Err(e) };
-more_23_eo__24arith_5freduction_5fpred(s, v5, v2, v116, v98, v91)
+more_43_eo__24arith_5freduction_5fpred(s, v5, v2, v103, v102, v100, v99, v98, v91)
 }
 None => Ok(s.stuck()),
 }
 }
-pub(super) fn more_28_eo__24arith_5freduction_5fpred(s: &mut Store, v14: Term, v27: Term, v12: Term, v7: Term, v2: Term, v5: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_54_eo__24arith_5freduction_5fpred(s: &mut Store, v14: Term, v27: Term, v12: Term, v7: Term, v2: Term, v5: Term) -> CheckResult<Option<Term>> {
 let v28 = match s.apply(v14, v27) { Ok(v) => v, Err(e) => return Err(e) };
 let v29 = match s.apply(v12, v28) { Ok(v) => v, Err(e) => return Err(e) };
 let v30 = match s.apply(v7, v29) { Ok(v) => v, Err(e) => return Err(e) };
 let v31 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v32 = match s.builtin_core(EvalOp::IsZ, &[v2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v212 = match if_27_eo__24arith_5freduction_5fpred(s, v32, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v212 = match if_52_eo__24arith_5freduction_5fpred(s, v32, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
 let v213 = match s.apply(v31, v212) { Ok(v) => v, Err(e) => return Err(e) };
-let v214 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v214 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v215 = match s.apply(v213, v214) { Ok(v) => v, Err(e) => return Err(e) };
 let v216 = match s.apply(v30, v215) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v216))
+}
+pub(super) fn more_53_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v5: Term, v14: Term, v12: Term, v7: Term) -> CheckResult<Option<Term>> {
+let v15 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.apply(v19, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.apply(v20, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.apply(v18, v21) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v17, v22) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.literal(Lit::Numeral(v24)) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.apply(v23, v25) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.apply(v16, v26) { Ok(v) => v, Err(e) => return Err(e) };
+more_54_eo__24arith_5freduction_5fpred(s, v14, v27, v12, v7, v2, v5)
 }
 pub(super) fn case_7_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9500,31 +9863,24 @@ let v11 = match s.apply(v10, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match s.apply(v8, v11) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v13, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.construct(Constructor::eo_div_5ftotal, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v19, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.apply(v20, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v18, v21) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v17, v22) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.literal(Lit::Numeral(v24)) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v23, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.apply(v16, v26) { Ok(v) => v, Err(e) => return Err(e) };
-more_28_eo__24arith_5freduction_5fpred(s, v14, v27, v12, v7, v2, v5)
+more_53_eo__24arith_5freduction_5fpred(s, v2, v5, v14, v12, v7)
 }
-pub(super) fn cases_0_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_0_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_1_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_2_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_3_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+pub(super) fn cases_0_1_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 if let Some(found) = match case_4_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_5_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_6_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 if let Some(found) = match case_7_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
+}
+pub(super) fn more_55_eo__24arith_5freduction_5fpred(s: &mut Store, v10: Term, v12: Term, v8: Term, v2: Term, v7: Term) -> CheckResult<Option<Term>> {
+let v13 = match s.apply(v10, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v8, v13) { Ok(v) => v, Err(e) => return Err(e) };
+let v15 = match s.construct(Constructor::eo__24eoo_5f_2d_2e2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.apply(v14, v16) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v17, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.apply(v7, v18) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v19))
 }
 pub(super) fn case_8_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9541,43 +9897,24 @@ let v9 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => ret
 let v10 = match s.apply(v9, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v11 = match eo__24eo_5ftypeof(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v12 = match eo__24arith_5fmk_5fzero(s, v11) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.apply(v10, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v8, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.construct(Constructor::eo__24eoo_5f_2d_2e2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v15, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v14, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v17, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v7, v18) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v19))
+more_55_eo__24arith_5freduction_5fpred(s, v10, v12, v8, v2, v7)
 }
-pub(super) fn more_31_eo__24arith_5freduction_5fpred(s: &mut Store, v76: Term, v70: Term, v61: Term, v60: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_61_eo__24arith_5freduction_5fpred(s: &mut Store, v76: Term, v70: Term, v61: Term, v60: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
 let v77 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v78 = match s.literal(Lit::Numeral(v77)) { Ok(v) => v, Err(e) => return Err(e) };
 let v79 = match s.apply(v76, v78) { Ok(v) => v, Err(e) => return Err(e) };
 let v80 = match s.apply(v70, v79) { Ok(v) => v, Err(e) => return Err(e) };
 let v81 = match s.apply(v61, v80) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v83 = match s.apply(v81, v82) { Ok(v) => v, Err(e) => return Err(e) };
 let v84 = match s.apply(v60, v83) { Ok(v) => v, Err(e) => return Err(e) };
 let v85 = match s.apply(v15, v84) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 let v87 = match s.apply(v85, v86) { Ok(v) => v, Err(e) => return Err(e) };
 let v88 = match s.apply(v14, v87) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v88))
 }
-pub(super) fn more_30_eo__24arith_5freduction_5fpred(s: &mut Store, v44: Term, v51: Term, v38: Term, v37: Term, v35: Term, v34: Term, v23: Term, v16: Term, v2: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
-let v52 = match s.apply(v44, v51) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v38, v52) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v37, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.apply(v35, v54) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.literal(Lit::Bool(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.apply(v55, v56) { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.apply(v34, v57) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.apply(v23, v58) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.apply(v16, v59) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.construct(Constructor::eo_not, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_60_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v63: Term, v62: Term, v61: Term, v60: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
 let v64 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v65 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v66 = match s.literal(Lit::Numeral(v65)) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9591,21 +9928,24 @@ let v73 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e
 let v74 = match s.apply(v73, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v75 = match s.apply(v72, v74) { Ok(v) => v, Err(e) => return Err(e) };
 let v76 = match s.apply(v71, v75) { Ok(v) => v, Err(e) => return Err(e) };
-more_31_eo__24arith_5freduction_5fpred(s, v76, v70, v61, v60, v15, v14)
+more_61_eo__24arith_5freduction_5fpred(s, v76, v70, v61, v60, v15, v14)
 }
-pub(super) fn more_29_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v25: Term, v24: Term, v23: Term, v16: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
-let v26 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match s.apply(v28, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v30 = match s.apply(v27, v29) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.apply(v26, v30) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.apply(v25, v31) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.apply(v32, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.apply(v24, v33) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.apply(v36, v2) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_59_eo__24arith_5freduction_5fpred(s: &mut Store, v44: Term, v51: Term, v38: Term, v37: Term, v35: Term, v34: Term, v23: Term, v16: Term, v2: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
+let v52 = match s.apply(v44, v51) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.apply(v38, v52) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.apply(v37, v53) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.apply(v35, v54) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.apply(v55, v56) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.apply(v34, v57) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.apply(v23, v58) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v16, v59) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.construct(Constructor::eo_not, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_60_eo__24arith_5freduction_5fpred(s, v2, v63, v62, v61, v60, v15, v14)
+}
+pub(super) fn more_58_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v37: Term, v35: Term, v34: Term, v23: Term, v16: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
 let v38 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v39 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v40 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9620,23 +9960,24 @@ let v48 = match s.apply(v45, v47) { Ok(v) => v, Err(e) => return Err(e) };
 let v49 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
 let v50 = match s.literal(Lit::Numeral(v49)) { Ok(v) => v, Err(e) => return Err(e) };
 let v51 = match s.apply(v48, v50) { Ok(v) => v, Err(e) => return Err(e) };
-more_30_eo__24arith_5freduction_5fpred(s, v44, v51, v38, v37, v35, v34, v23, v16, v2, v15, v14)
+more_59_eo__24arith_5freduction_5fpred(s, v44, v51, v38, v37, v35, v34, v23, v16, v2, v15, v14)
 }
-pub(super) fn case_9_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.unapply(a0) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v1, v2)) = v0 else { return Ok(None); }
-;
-let v3 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v1 != v3 { return Ok(None); }
-let v4 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v5, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match s.apply(v10, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match s.apply(v9, v11) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_57_eo__24arith_5freduction_5fpred(s: &mut Store, v2: Term, v25: Term, v24: Term, v23: Term, v16: Term, v15: Term, v14: Term) -> CheckResult<Option<Term>> {
+let v26 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.construct(Constructor::eo__40purify, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v29 = match s.apply(v28, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.apply(v27, v29) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.apply(v26, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.apply(v25, v31) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.apply(v32, v2) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.apply(v24, v33) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.apply(v36, v2) { Ok(v) => v, Err(e) => return Err(e) };
+more_58_eo__24arith_5freduction_5fpred(s, v2, v37, v35, v34, v23, v16, v15, v14)
+}
+pub(super) fn more_56_eo__24arith_5freduction_5fpred(s: &mut Store, v8: Term, v12: Term, v4: Term, v2: Term) -> CheckResult<Option<Term>> {
 let v13 = match s.apply(v8, v12) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v4, v13) { Ok(v) => v, Err(e) => return Err(e) };
 let v15 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9650,345 +9991,5 @@ let v22 = match s.apply(v21, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v23 = match s.apply(v17, v22) { Ok(v) => v, Err(e) => return Err(e) };
 let v24 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v25 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_29_eo__24arith_5freduction_5fpred(s, v2, v25, v24, v23, v16, v15, v14)
-}
-pub(super) fn cases_1_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_8_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_9_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-Ok(None)
-}
-pub(super) fn body_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-if let Some(found) = match cases_0_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_1_eo__24arith_5freduction_5fpred(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$arith_reduction_pred"
-pub fn eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24arith_5freduction_5fpred(s, a0);
-s.leave();
-result
-}
-pub(super) fn case_0_eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v3))
-}
-pub(super) fn case_1_eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v3))
-}
-pub(super) fn case_2_eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3e_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v3))
-}
-pub(super) fn case_3_eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v3))
-}
-pub(super) fn case_4_eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3e_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v3))
-}
-pub(super) fn body_eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck2 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24arith_5frel_5finv(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_1_eo__24arith_5frel_5finv(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_2_eo__24arith_5frel_5finv(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_3_eo__24arith_5frel_5finv(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_4_eo__24arith_5frel_5finv(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$arith_rel_inv"
-pub fn eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24arith_5frel_5finv(s, a0, a1, a2);
-s.leave();
-result
-}
-pub(super) fn case_0_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_1_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_2_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_3_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_4_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_5_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_6_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_7_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn cases_0_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_0_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_1_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_2_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_3_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_4_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_5_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_6_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_7_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-Ok(None)
-}
-pub(super) fn case_8_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn cases_1_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_8_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-Ok(None)
-}
-pub(super) fn body_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck2 { return Ok(s.stuck()); }
-let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck3 { return Ok(s.stuck()); }
-if let Some(found) = match cases_0_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match cases_1_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$arith_rel_sum"
-pub fn eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3);
-s.leave();
-result
-}
-pub(super) fn case_0_eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_1_eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_2_eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_3_eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_4_eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn case_5_eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a0 != v0 { return Ok(None); }
-let v1 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v1 { return Ok(None); }
-let v2 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v3, a3) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v4))
-}
-pub(super) fn body_eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck2 { return Ok(s.stuck()); }
-let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck3 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24arith_5frel_5ftrichotomy(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_1_eo__24arith_5frel_5ftrichotomy(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_2_eo__24arith_5frel_5ftrichotomy(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_3_eo__24arith_5frel_5ftrichotomy(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_4_eo__24arith_5frel_5ftrichotomy(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_5_eo__24arith_5frel_5ftrichotomy(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$arith_rel_trichotomy"
-pub fn eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24arith_5frel_5ftrichotomy(s, a0, a1, a2, a3);
-s.leave();
-result
-}
-pub(super) fn case_0_eo__24assoc_5fnil_5fnth(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Next<[Term; 3]>>> {
-let v0 = match s.unapply(a1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v1, v2)) = v0 else { return Ok(None); }
-;
-let v3 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v4, v5)) = v3 else { return Ok(None); }
-;
-if v4 != a0 { return Ok(None); }
-let v6 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.literal(Lit::Numeral(v6)) { Ok(v) => v, Err(e) => return Err(e) };
-if a2 != v7 { return Ok(None); }
-Ok(Some(Next::Done(v5)))
-}
-pub(super) fn case_1_eo__24assoc_5fnil_5fnth(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Next<[Term; 3]>>> {
-let v0 = match s.unapply(a1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v1, v2)) = v0 else { return Ok(None); }
-;
-let v3 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v4, v5)) = v3 else { return Ok(None); }
-;
-if v4 != a0 { return Ok(None); }
-let v6 = match parse_int("-1") { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.literal(Lit::Numeral(v6)) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.builtin_core(EvalOp::Add, &[a2, v7]) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(Next::Again([a0, v2, v8])))
-}
-pub(super) fn step_eo__24assoc_5fnil_5fnth(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Next<[Term; 3]>> {
-match s.tick() { Ok(v) => v, Err(e) => return Err(e) };
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(Next::Done(s.stuck())); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(Next::Done(s.stuck())); }
-let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck2 { return Ok(Next::Done(s.stuck())); }
-if let Some(found) = match case_0_eo__24assoc_5fnil_5fnth(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-if let Some(found) = match case_1_eo__24assoc_5fnil_5fnth(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(Next::Done(s.stuck()))
-}
-pub(super) fn body_eo__24assoc_5fnil_5fnth(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term) -> CheckResult<Term> {
-loop {
-match step_eo__24assoc_5fnil_5fnth(s, a0, a1, a2) {
-Ok(Next::Done(value)) => return Ok(value),
-Ok(Next::Again(next)) => {
-a0 = next[0];
-a1 = next[1];
-a2 = next[2];
-}
-Err(e) => return Err(e),
-}
-}
+more_57_eo__24arith_5freduction_5fpred(s, v2, v25, v24, v23, v16, v15, v14)
 }

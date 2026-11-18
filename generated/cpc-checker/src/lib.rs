@@ -83,7 +83,7 @@ pub enum Embedding {
     Boolean,
     Numeral,
     Rational,
-    String,
+    Str,
     Binary,
     /// `$emb_UOp`, `$emb_UOp1`, ...: the view of a user operator with its
     /// indices as an operator applied to them.
@@ -266,8 +266,8 @@ impl Store {
     fn data_hash(data: &TermData) -> u32 {
         let h = match data {
             TermData::Stuck => 0,
-            TermData::Literal(lit) => mix(1, lit.hash_code()),
-            TermData::Native(lit) => mix(2, lit.hash_code()),
+            TermData::Literal(literal) => mix(1, literal.hash_code()),
+            TermData::Native(literal) => mix(2, literal.hash_code()),
             TermData::UserOp(c) => mix(3, u64::from(c.code())),
             TermData::Apply(f, a) => mix(mix(4, u64::from(f.0)), u64::from(a.0)),
             TermData::Node(c, fields) => {
@@ -378,21 +378,21 @@ impl Store {
     }
     pub(crate) fn cached_type(
         &mut self,
-        kind: TypeCacheKind,
+        which: TypeCacheKind,
         term: Term,
     ) -> CheckResult<Option<Term>> {
         self.view(term)?;
-        Ok(self.caches.type_get(kind, term))
+        Ok(self.caches.type_get(which, term))
     }
     pub(crate) fn cache_type(
         &mut self,
-        kind: TypeCacheKind,
+        which: TypeCacheKind,
         term: Term,
         result: Term,
     ) -> CheckResult<()> {
         self.view(term)?;
         self.view(result)?;
-        self.caches.type_insert(kind, term, result);
+        self.caches.type_insert(which, term, result);
         Ok(())
     }
     pub(crate) fn cached_program(
@@ -422,20 +422,20 @@ impl Store {
         self.caches.program_insert(program, args, result);
         Ok(())
     }
-    pub fn literal(&mut self, lit: Lit) -> CheckResult<Term> {
+    pub fn literal(&mut self, literal: Lit) -> CheckResult<Term> {
         // Logos has one rational and one binary constructor.
-        let lit = match lit {
+        let literal = match literal {
             Lit::Decimal(q) => Lit::Rational(q),
             Lit::Hex(b) => Lit::Binary(b),
             l => l,
         };
-        self.intern(TermData::Literal(lit))
+        self.intern(TermData::Literal(literal))
     }
-    pub fn raw(&mut self, lit: Lit) -> CheckResult<Term> {
-        self.intern(TermData::Native(lit))
+    pub fn raw(&mut self, literal: Lit) -> CheckResult<Term> {
+        self.intern(TermData::Native(literal))
     }
     pub fn boolean(&mut self, b: bool) -> CheckResult<Term> {
-        self.literal(Lit::Bool(b))
+        self.literal(Lit::Boolean(b))
     }
     pub fn numeral(&mut self, n: Integer) -> CheckResult<Term> {
         self.literal(Lit::Numeral(n))
@@ -445,7 +445,7 @@ impl Store {
     }
     pub fn boolean_value(&self, t: Term, native: bool) -> CheckResult<Option<bool>> {
         Ok(match (native, self.view(t)?) {
-            (false, TermData::Literal(Lit::Bool(b))) | (true, TermData::Native(Lit::Bool(b))) => {
+            (false, TermData::Literal(Lit::Boolean(b))) | (true, TermData::Native(Lit::Boolean(b))) => {
                 Some(*b)
             }
             _ => None,
@@ -503,15 +503,16 @@ impl Store {
         if c.arity() != args.len() {
             return Err(CheckError::InvalidConstructor);
         }
-        for &t in args {
-            self.view(t)?;
-        }
+        // (not a loop here: `construct` calls itself through
+        // `construct_user`, and Aeneas's Lean does not take a loop whose
+        // function is called again from inside it)
+        self.check_handles(args)?;
         let e = c.embedding();
         match e {
             Embedding::UOp => self.construct_user(args),
             Embedding::Stuck if args.is_empty() => Ok(self.stuck()),
             Embedding::Apply if args.len() == 2 => self.apply(args[0], args[1]),
-            Embedding::Boolean | Embedding::Numeral | Embedding::Rational | Embedding::String
+            Embedding::Boolean | Embedding::Numeral | Embedding::Rational | Embedding::Str
                 if args.len() == 1 =>
             {
                 self.construct_literal(e, args[0])
@@ -534,26 +535,26 @@ impl Store {
     }
     /// An object literal from the native value `v` of its kind.
     fn construct_literal(&mut self, e: Embedding, v: Term) -> CheckResult<Term> {
-        let lit = match self.view(v)? {
-            TermData::Native(lit) => lit,
+        let literal = match self.view(v)? {
+            TermData::Native(literal) => literal,
             _ => return Err(CheckError::InvalidNative),
         };
-        let kind = match lit {
-            Lit::Bool(_) => Embedding::Boolean,
+        let which = match literal {
+            Lit::Boolean(_) => Embedding::Boolean,
             Lit::Numeral(_) => Embedding::Numeral,
             Lit::Rational(_) => Embedding::Rational,
-            Lit::String(_) => Embedding::String,
+            Lit::Str(_) => Embedding::Str,
             _ => Embedding::Data,
         };
         let valid = match e {
             Embedding::Data => false,
-            _ => e == kind,
+            _ => e == which,
         };
         if !valid {
             return Err(CheckError::InvalidNative);
         }
-        let lit = lit.clone();
-        self.literal(lit)
+        let literal = literal.clone();
+        self.literal(literal)
     }
     /// A binary literal from its native width and value.
     fn construct_binary(&mut self, w: Term, v: Term) -> CheckResult<Term> {
@@ -579,14 +580,14 @@ impl Store {
                 Embedding::Apply => Hit::Done(Some(vec![*f, *a])),
                 _ => Hit::Done(None),
             },
-            TermData::Literal(lit) => Self::destruct_literal(e, lit),
+            TermData::Literal(literal) => Self::destruct_literal(e, literal),
             TermData::Node(d, fields) if c.code() == d.code() => Hit::Done(Some(fields.clone())),
             _ => Hit::Done(None),
         };
         match hit {
             Hit::Done(r) => Ok(r),
-            Hit::Raw(lit) => {
-                let v = self.raw(lit)?;
+            Hit::Raw(literal) => {
+                let v = self.raw(literal)?;
                 Ok(Some(vec![v]))
             }
             Hit::Binary(size, value) => {
@@ -597,25 +598,25 @@ impl Store {
         }
     }
     /// The native fields of an object literal, if `e` is its kind.
-    fn destruct_literal(e: Embedding, lit: &Lit) -> Hit {
-        let kind = match lit {
-            Lit::Bool(_) => Embedding::Boolean,
+    fn destruct_literal(e: Embedding, literal: &Lit) -> Hit {
+        let which = match literal {
+            Lit::Boolean(_) => Embedding::Boolean,
             Lit::Numeral(_) => Embedding::Numeral,
             Lit::Rational(_) => Embedding::Rational,
-            Lit::String(_) => Embedding::String,
+            Lit::Str(_) => Embedding::Str,
             Lit::Binary(_) => Embedding::Binary,
             _ => Embedding::Data,
         };
         let hit = match e {
             Embedding::Data => false,
-            _ => e == kind,
+            _ => e == which,
         };
         if !hit {
             return Hit::Done(None);
         }
-        match lit {
+        match literal {
             Lit::Binary(b) => Hit::Binary(Integer::from(b.size()), b.value().clone()),
-            _ => Hit::Raw(lit.clone()),
+            _ => Hit::Raw(literal.clone()),
         }
     }
     /// The wrapper view of a user operator: the operator, then its fields.
@@ -812,10 +813,10 @@ impl Store {
         let e = match d {
             TermData::Stuck => Embedding::Stuck,
             TermData::Apply(..) => Embedding::Apply,
-            TermData::Literal(Lit::Bool(_)) => Embedding::Boolean,
+            TermData::Literal(Lit::Boolean(_)) => Embedding::Boolean,
             TermData::Literal(Lit::Numeral(_)) => Embedding::Numeral,
             TermData::Literal(Lit::Rational(_) | Lit::Decimal(_)) => Embedding::Rational,
-            TermData::Literal(Lit::String(_)) => Embedding::String,
+            TermData::Literal(Lit::Str(_)) => Embedding::Str,
             TermData::Literal(Lit::Binary(_) | Lit::Hex(_)) => Embedding::Binary,
             TermData::Node(c, _) => return Ok(c.order_key()),
             TermData::Native(_) => return Ok((0, 0)),
@@ -1058,7 +1059,7 @@ impl Store {
             None => return Ok(self.stuck()),
         };
         match Lit::evaluate(op, &lits) {
-            Some(lit) => self.literal(lit),
+            Some(literal) => self.literal(literal),
             None => Ok(self.stuck()),
         }
     }
@@ -1094,7 +1095,7 @@ impl Store {
     /// The literal that the term is, if it is an object literal.
     fn literal_of(&self, t: Term) -> Option<Lit> {
         match self.view(t) {
-            Ok(TermData::Literal(lit)) => Some(lit.clone()),
+            Ok(TermData::Literal(literal)) => Some(literal.clone()),
             _ => None,
         }
     }
@@ -1104,12 +1105,12 @@ impl Store {
             return self.is_variable(x);
         }
         Ok(match self.view(x)? {
-            TermData::Literal(lit) => match lit {
+            TermData::Literal(literal) => match literal {
                 Lit::Numeral(_) => op == EvalOp::IsZ,
                 Lit::Rational(_) => op == EvalOp::IsQ,
                 Lit::Binary(_) => op == EvalOp::IsBin,
-                Lit::String(_) => op == EvalOp::IsStr,
-                Lit::Bool(_) => op == EvalOp::IsBool,
+                Lit::Str(_) => op == EvalOp::IsStr,
+                Lit::Boolean(_) => op == EvalOp::IsBool,
                 _ => false,
             },
             _ => false,
@@ -1122,7 +1123,7 @@ impl Store {
         let mut i = 0;
         while i < args.len() {
             match self.literal_of(args[i]) {
-                Some(lit) => lits.push(lit),
+                Some(literal) => lits.push(literal),
                 None => all = false,
             }
             i += 1;
@@ -1137,8 +1138,8 @@ impl Store {
 fn literal_cmp(a: &Lit, b: &Lit) -> CheckResult<std::cmp::Ordering> {
     use std::cmp::Ordering;
     match a {
-        Lit::Bool(a) => match b {
-            Lit::Bool(b) => Ok(if *a == *b {
+        Lit::Boolean(a) => match b {
+            Lit::Boolean(b) => Ok(if *a == *b {
                 Ordering::Equal
             } else if *b {
                 Ordering::Less
@@ -1158,8 +1159,8 @@ fn literal_cmp(a: &Lit, b: &Lit) -> CheckResult<std::cmp::Ordering> {
             }),
             _ => Err(CheckError::InvalidNative),
         },
-        Lit::String(a) => match b {
-            Lit::String(b) => Ok(code_points_cmp(a.code_points(), b.code_points())),
+        Lit::Str(a) => match b {
+            Lit::Str(b) => Ok(code_points_cmp(a.code_points(), b.code_points())),
             _ => Err(CheckError::InvalidNative),
         },
         Lit::Binary(a) => match b {
@@ -1322,21 +1323,21 @@ mod cache_tests {
         let slots = s.slots.len();
         let mut terms = Vec::new();
         for n in 0..5000u32 {
-            let lit = s.numeral(Integer::from(n)).unwrap();
+            let literal = s.numeral(Integer::from(n)).unwrap();
             let raw = s.raw(Lit::Numeral(Integer::from(n))).unwrap();
-            let app = s.apply(lit, raw).unwrap();
-            terms.push((lit, raw, app));
+            let app = s.apply(literal, raw).unwrap();
+            terms.push((literal, raw, app));
         }
         assert!(s.slots.len() > slots);
         assert!(s.slots.len() >= 2 * s.nodes.len());
         assert_eq!(s.nodes.len(), s.hashes.len());
         let nodes = s.nodes.len();
-        for (n, &(lit, raw, app)) in terms.iter().enumerate() {
+        for (n, &(literal, raw, app)) in terms.iter().enumerate() {
             let n = n as u32;
-            assert_eq!(s.numeral(Integer::from(n)), Ok(lit));
+            assert_eq!(s.numeral(Integer::from(n)), Ok(literal));
             assert_eq!(s.raw(Lit::Numeral(Integer::from(n))), Ok(raw));
-            assert_eq!(s.apply(lit, raw), Ok(app));
-            assert_ne!(lit, raw);
+            assert_eq!(s.apply(literal, raw), Ok(app));
+            assert_ne!(literal, raw);
         }
         assert_eq!(s.nodes.len(), nodes);
         // every handle is in exactly one slot

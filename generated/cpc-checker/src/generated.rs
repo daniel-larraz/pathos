@@ -1,4 +1,4 @@
-//! The generated functions, in 12 modules. A module's functions call only that module, earlier
+//! The generated functions, in 13 modules. A module's functions call only that module, earlier
 //! modules and the runtime, and functions that call each other are
 //! in one module.
 #[path = "generated_part0.rs"]
@@ -37,3 +37,6 @@ pub use part10::*;
 #[path = "generated_part11.rs"]
 mod part11;
 pub use part11::*;
+#[path = "generated_part12.rs"]
+mod part12;
+pub use part12::*;

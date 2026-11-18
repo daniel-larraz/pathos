@@ -101,7 +101,7 @@ impl Store {
     }
     /// The native boolean `b`.
     pub(crate) fn native_bool(&mut self, b: bool) -> CheckResult<Term> {
-        self.raw(Lit::Bool(b))
+        self.raw(Lit::Boolean(b))
     }
     /// The native natural number zero.
     pub(crate) fn native_nat_zero(&mut self) -> CheckResult<Term> {
@@ -111,8 +111,8 @@ impl Store {
     /// numeral or a string literal. `text` stands for what is written (see
     /// `CheckError`).
     pub(crate) fn native_constant(&mut self, text: u32) -> CheckResult<Term> {
-        let lit = crate::front::native_literal(text)?;
-        self.raw(lit)
+        let literal = crate::front::native_literal(text)?;
+        self.raw(literal)
     }
 
     /// Match the only native algebraic constructors (Nat.zero/succ), or
@@ -373,11 +373,11 @@ impl Store {
             return Err(CheckError::InvalidNative);
         }
         let name = crate::front::constant_name(op == NativeOp::UconstId, &n);
-        self.raw(Lit::String(name))
+        self.raw(Lit::Str(name))
     }
     fn native_string(&self, x: Term) -> CheckResult<&EoString> {
         match self.view(x)? {
-            TermData::Native(Lit::String(s)) => Ok(s),
+            TermData::Native(Lit::Str(s)) => Ok(s),
             _ => Err(CheckError::InvalidNative),
         }
     }

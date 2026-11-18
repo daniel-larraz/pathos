@@ -198,7 +198,7 @@ impl Built {
     fn raw_string(&mut self, name: &str) -> Result<CTerm> {
         let points = name.chars().map(u32::from).collect();
         self.store
-            .raw(cc::Lit::String(cc::EoString::from_code_points(points)))
+            .raw(cc::Lit::Str(cc::EoString::from_code_points(points)))
             .map_err(refused)
     }
 
@@ -389,7 +389,7 @@ impl Built {
                         cc::Lit::Binary(cc::BitVec::new(b.size(), &integer(b.value())?))
                     }
                     Some(Lit::String(s)) => {
-                        cc::Lit::String(cc::EoString::from_code_points(s.code_points().to_vec()))
+                        cc::Lit::Str(cc::EoString::from_code_points(s.code_points().to_vec()))
                     }
                     None => return Err(unsupported("a literal without a value")),
                 };
