@@ -6,6 +6,7 @@
 #
 #   scripts/generate-cpc [--ethos REPO] [--rev COMMIT] [--logos REPO]
 #                        [--logos-rev REV] [--work DIR] [--check]
+#                        [--from-note]
 #
 #   --ethos      the Ethos repository holding the commit, a URL or a local
 #                clone (default: https://github.com/cvc5/ethos)
@@ -19,6 +20,12 @@
 #   --check      do not write generated/cpc-checker: generate, and say
 #                whether the result is what the repository holds (exit 1 if
 #                it is not)
+#   --from-note  take the Ethos commit and the logos revision from
+#                generated/cpc-checker/GENERATED.md, the ones the crate says
+#                it was generated from (with --check: is it?). Without
+#                --ethos, the Ethos commit is looked for in cvc5/ethos and
+#                then in HARNESS_REPO of difftest.env, which holds the
+#                branches of work not yet merged upstream
 #
 # It builds ethos-eoc at that commit and runs, as the stage's README says,
 #
@@ -47,19 +54,22 @@ default_rev=d83d2ab6b5fa63f6b129afa2d8a991bcb1b5aef2
 fail() { echo "scripts/generate-cpc: $*" >&2; exit 2; }
 
 ethos_repo=https://github.com/cvc5/ethos
+ethos_given=false
 rev="$default_rev"
 logos_repo="$LOGOS_REPO"
 logos_rev="$LOGOS_REV"
 work="$root/target/generate-cpc"
 check=false
+from_note=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --ethos) ethos_repo="$2"; shift 2 ;;
+    --ethos) ethos_repo="$2"; ethos_given=true; shift 2 ;;
     --rev) rev="$2"; shift 2 ;;
     --logos) logos_repo="$2"; shift 2 ;;
     --logos-rev) logos_rev="$2"; shift 2 ;;
     --work) work="$2"; shift 2 ;;
     --check) check=true; shift ;;
+    --from-note) from_note=true; shift ;;
     *) fail "unknown argument: $1 (see the header of this script)" ;;
   esac
 done
@@ -71,6 +81,21 @@ capped() {
     "$@"
   fi
 }
+
+ethos_repos=("$ethos_repo")
+if $from_note; then
+  note="$root/generated/cpc-checker/GENERATED.md"
+  [[ -f "$note" ]] || fail "--from-note: there is no $note"
+  # The table rows `| Ethos (...) | `<commit>` |` and `| logos (...) | `<commit>` |`.
+  rev="$(sed -n 's/^| Ethos (.*| `\([0-9a-f]\{40\}\)` |$/\1/p' "$note")"
+  logos_rev="$(sed -n 's/^| logos (.*| `\([0-9a-f]\{40\}\)` |$/\1/p' "$note")"
+  [[ -n "$rev" && -n "$logos_rev" ]] || fail "--from-note: no Ethos and logos commits in $note"
+  $ethos_given || ethos_repos+=("$HARNESS_REPO")
+  [[ "$rev" == "$default_rev" ]] ||
+    echo "generate-cpc: note: the crate is generated from Ethos $rev, not this script's default $default_rev"
+  [[ "$logos_rev" == "$LOGOS_REV" ]] ||
+    echo "generate-cpc: note: the crate is generated from logos $logos_rev, not LOGOS_REV $LOGOS_REV"
+fi
 
 mkdir -p "$work"
 work="$(cd "$work" && pwd)"
@@ -98,8 +123,12 @@ checkout() {
   echo "$commit"
 }
 
-ethos_commit="$(checkout "$ethos_repo" "$work/ethos" "$rev")" ||
-  fail "cannot get commit $rev of $ethos_repo"
+ethos_commit=""
+for ethos_repo in "${ethos_repos[@]}"; do
+  ethos_commit="$(checkout "$ethos_repo" "$work/ethos" "$rev")" && break
+  ethos_commit=""
+done
+[[ -n "$ethos_commit" ]] || fail "cannot get commit $rev of ${ethos_repos[*]}"
 logos_commit="$(checkout "$logos_repo" "$work/logos" "$logos_rev")" ||
   fail "cannot get revision $logos_rev of $logos_repo"
 defs="$work/logos/install/defs"
