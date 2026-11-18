@@ -194,7 +194,7 @@ def main():
             fail(f"--only names no checker of this run: {', '.join(sorted(unknown))}")
         checkers = {n: c for n, c in checkers.items() if n in wanted}
     # what pathos's verdicts are compared with
-    other = "logos" if "logos" in checkers else "ethos"
+    other = "logos" if "logos" in checkers else "ethos" if "ethos" in checkers else None
     jobs = 1 if args.perf else max(1, args.jobs)
 
     earlier = json.loads(Path(args.reuse).read_text()) if args.reuse else {}
@@ -232,8 +232,11 @@ def main():
     for name in checkers:
         print(f"  {name}: {tally(name)}")
 
-    differ = [(n, r) for n, r in results.items() if r["pathos"]["verdict"] != r[other]["verdict"]]
-    print(f"\npathos and {other} differ on {len(differ)} proofs")
+    # with pathos alone there is nothing to compare its verdicts with
+    differ = [(n, r) for n, r in results.items()
+              if other and r["pathos"]["verdict"] != r[other]["verdict"]]
+    if other:
+        print(f"\npathos and {other} differ on {len(differ)} proofs")
     kinds = {}
     for n, r in differ:
         key = (r["pathos"]["verdict"], r[other]["verdict"])
@@ -251,6 +254,11 @@ def main():
         print(f"\npathos says correct where Ethos does not: {len(unsound)}")
         for n in unsound:
             print(f"    {n} (Ethos: {results[n]['ethos']['verdict']})")
+    if args.perf and "ethos" not in checkers:
+        total = sum(r["pathos"]["seconds"] or 0 for r in results.values())
+        peak = max((r["pathos"]["peak_kib"] or 0 for r in results.values()), default=0)
+        print(f"\npathos: {total:.1f} s over all runs, largest peak {peak / 1048576:.2f} GiB")
+    if "ethos" in checkers:
 
         print("\ntime and peak memory, over the proofs every checker gave a verdict on "
               "(and over all runs):")

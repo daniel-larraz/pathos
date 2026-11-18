@@ -37,10 +37,10 @@ correct, incorrect or incomplete (exit status 0, 1 or 2).
   --no-cache     run the checker without its caches of types and of
                  program results
   --cache-stats  print the caches' hits, misses and sizes on standard error
-  --depth=N      let the checker's functions nest N deep (default 100000).
-                 The checker goes one level down for each assumption, among
-                 others. Beyond what its 64 MiB stack holds, the run ends
-                 with a stack overflow instead of an error
+  --depth=N      let the checker's functions nest N deep (default 4096).
+                 The default is what the checker's 64 MiB stack is sized
+                 for; far beyond it, the run ends with a stack overflow
+                 instead of an error
   --profile      print on standard error the checker's time by rule (it
                  runs the checker once more for that)
 ";
