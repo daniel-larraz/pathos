@@ -196,7 +196,11 @@ it `pathos` was run again on the 400 and the 41 (reports in
 `target/compare-logos/*-pathos-d83d2ab6.json`): every verdict is the same
 except those of the two large proofs that needed more depth, which are now
 `correct` (see "Errors" below), and the peak memory of every other run is
-within 1% of what it was (the largest still 6.21 GiB, on `bug143`). The
+within 1% of what it was (the largest still 6.21 GiB, on `bug143`). Since
+then it is generated from `e51f527c` (cvc5/ethos#277), whose runtime
+evaluates `eo::gt` on bit-vectors of different widths and `eo::extract` with
+an index at the width as Ethos does since #275; the 400 give the same
+verdicts with it. The
 times below are those of `b8d65127`: the machine was busy during the new
 runs, and on one proof timed with both checkers side by side
 (`regress0__bv__bv-options4`) the two take the same time.
