@@ -104,6 +104,9 @@ pub struct Built {
     /// constructors and selectors are.
     templates: HashMap<Term, Template>,
     roles: HashMap<Term, Role>,
+    /// The head and the first argument of the applications asked about
+    /// (see `head`).
+    heads: HashMap<Term, (Term, Option<Term>)>,
     next_block: usize,
     /// The instances built so far, numbered as logos numbers them.
     instances: HashMap<InstanceKey, Instance>,
@@ -159,6 +162,7 @@ impl Built {
             next_instance: 0,
             building: HashMap::new(),
             refused_symbols: HashMap::new(),
+            heads: HashMap::new(),
             next_const: 0,
             next_sort: 0,
             assumptions: Vec::new(),
@@ -229,12 +233,31 @@ impl Built {
             .ok_or_else(|| unsupported(format!("the checker for CPC has no symbol {name}")))
     }
 
-    /// The symbol at the head of a curried application.
-    fn head(st: &State, mut t: Term) -> Term {
-        while st.ck.store.kind(t) == Kind::APPLY {
-            t = st.ck.store.child(t, 0);
+    /// The symbol at the head of a curried application, and the first
+    /// argument it is applied to. An application of a head to n arguments
+    /// is n nested applications, and the conversion asks this of each of
+    /// them: the answer is kept for every application passed on the way
+    /// down, so that the n questions take n steps together, not n squared.
+    fn head(&mut self, st: &State, t: Term) -> (Term, Option<Term>) {
+        let store = &st.ck.store;
+        let mut passed = Vec::new();
+        let mut x = t;
+        let mut first = None;
+        let found = loop {
+            if let Some(&known) = self.heads.get(&x) {
+                break known;
+            }
+            if store.kind(x) != Kind::APPLY {
+                break (x, first);
+            }
+            passed.push(x);
+            first = store.children(x).get(1).copied();
+            x = store.child(x, 0);
+        };
+        for x in passed {
+            self.heads.insert(x, found);
         }
-        t
+        found
     }
 
     fn is_signature_symbol(&self, st: &State, t: Term) -> bool {
@@ -258,13 +281,14 @@ impl Built {
             })
     }
 
-    fn shape(&self, st: &State, t: Term) -> Result<Shape> {
+    fn shape(&mut self, st: &State, t: Term) -> Result<Shape> {
+        let head = self.head(st, t).0;
         let store = &st.ck.store;
         let children = store.children(t);
         Ok(match store.kind(t) {
             Kind::Node(NodeKind::Apply | NodeKind::ApplyOpaque) => {
                 let f = children[0];
-                if store.kind(t) == Kind::APPLY && self.is_sort_constructor(st, Self::head(st, t)) {
+                if store.kind(t) == Kind::APPLY && self.is_sort_constructor(st, head) {
                     // an application of a sort constructor is a sort of its own
                     return Ok(Shape::Leaf);
                 }
@@ -1055,6 +1079,20 @@ impl Built {
     /// they are applied to.
     fn parametric(&mut self, st: &mut State, t: Term) -> Result<Option<Shape>> {
         if self.templates.is_empty() {
+            return Ok(None);
+        }
+        // Only an application of one of these can be such a use: a
+        // parametric datatype, one of its constructors or selectors, an
+        // annotated constructor or an indexed operator (both opaque
+        // applications), or an operator whose first argument is a
+        // constructor or selector, as in (is cons x). Anything else is
+        // told from its head, without going through its arguments.
+        let (head, first) = self.head(st, t);
+        if !self.templates.contains_key(&head)
+            && !self.roles.contains_key(&head)
+            && st.ck.store.kind(head) != Kind::Node(NodeKind::ApplyOpaque)
+            && !first.is_some_and(|a| self.roles.contains_key(&a))
+        {
             return Ok(None);
         }
         if let Some(key) = self.instance_key(st, t) {
