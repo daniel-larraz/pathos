@@ -538,10 +538,14 @@ intended; everything between gates is not.
         that Aeneas treats as external (their behaviour would be stated as
         axioms in Lean). List those functions in the report: they are what
         the eventual theorem would trust.
-    - **The panic audit of the runtime.** The rewritten runtime and the
-      constructs the generator emits get their rows in the "pathos (the
-      CPC checker)" section of `docs/panics.md` (milestone 30), at this
-      milestone's commit, checked by `scripts/check-panics`.
+    - **The panic audit of the runtime: postponed** (Daniel, 2026-11-18).
+      Not needed for the verification goal: in the Lean that Aeneas
+      writes, every possible panic is an explicit failure the proofs must
+      rule out, which is stronger than an audit by hand. It is a later
+      milestone, for the claim that the binary does not crash independent
+      of a proof, once the runtime and the generated shapes stop changing.
+      The "pathos (the CPC checker)" section of `docs/panics.md` stays as
+      it is, checked against its own commit.
     - **Two items from milestone 30.** The adapter converts an application
       with n arguments in quadratic time (80,000 arguments: 10.6 s): make
       it linear, with a test, and update its Resource row in the "pathos
@@ -552,7 +556,7 @@ intended; everything between gates is not.
       row, not Safe), and the radix range of malachite's conversion
       (2..=62, not 2..=36; callers pass 2, 10 and 16 only). Milestone 30's
       unfinished audit of the generated runtime (`target/audit/` in its
-      checkout) is a starting point for the runtime's rows, not a result.
+      checkout) is a starting point for the later audit, not a result.
     - **The measurement.** Time and peak memory of the rewritten checker
       against the baseline, `pathos-eo` (with and without a snapshot) and
       logos, on the 400 safe proofs and the 41 large safe ones, one process
@@ -569,8 +573,7 @@ intended; everything between gates is not.
     errors (the generated Lean is part of the report, not of the
     repository); `pathos` gives the same verdicts as at the baseline; the
     table compares it with the baseline, and the report says where any
-    slowdown comes from; the runtime's panic rows pass
-    `scripts/check-panics`. The reviewer pushes and starts the runs.
+    slowdown comes from. The reviewer pushes and starts the runs.
 29. **Follow Ethos to `b8d65127`.** On `main`, branched from it, after the
     move of `generated/cpc-checker`'s pin to `b8d65127`. Like milestone 26.
     Ethos `main` is two commits past `REFERENCE_REV`: cvc5/ethos#274
