@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""Checks the section "pathos (the CPC checker)" of docs/panics.md against
+the commit it audits. (The rest of that file audits an older commit, in a
+looser form, and is not checked.)
+
+  scripts/check-panics [--commit COMMIT] [--no-counts] [--fetch] [FILE]
+
+  FILE        the audit (default: docs/panics.md)
+  --commit    the audited commit, for a file that does not name it (a part
+              of the audit being written); otherwise it is read from the
+              section's sentence "Line numbers are those of commit `...`"
+  --no-counts do not compare the "Result" table with the rows
+  --fetch     if the commit is not in the repository (a shallow clone, as
+              in CI), fetch it from `origin` by its full hash first
+
+The section runs from the heading "## pathos (the CPC checker)" to the next
+heading of that level. In it, a table follows the heading of each source
+file, and "### Result" counts the rows by verdict:
+
+  ### crates/pathos/src/adapter.rs      a file of the repository
+  | Line | Construct | Verdict | Why |
+  |---|---|---|---|
+  | 96, 122-125 | `args.first()?`, `i.pow(exp)` | Safe | ... |
+
+(A file without that section is read as a part of the audit being written:
+"## crates/pathos" for a directory and "### src/adapter.rs" for a file in
+it.)
+
+For every row this checks, in the file as it is at the audited commit
+(`git show COMMIT:PATH`, so later changes to the code do not matter):
+
+  - every line and range of the first column exists in the file;
+  - every piece of code of the second column (the text between backticks)
+    occurs in the lines the row cites, spaces aside, where `..` in the
+    piece stands for any text;
+  - every line or range the row cites contains at least one of the pieces;
+  - the verdict is one the "Result" table lists, and that table's counts
+    and total are those of the rows.
+
+A first column may begin with "e.g." for a row about a construct that
+generated code repeats: the lines are then examples, checked the same way.
+
+Exits 0 if every row passes, 1 with the list of rows that do not, 2 if the
+file cannot be checked at all (no commit named, commit not in the
+repository). Needs git and Python 3.
+"""
+
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def fail(msg):
+    print(f"scripts/check-panics: {msg}", file=sys.stderr)
+    sys.exit(2)
+
+
+def cells_of(row):
+    """The cells of a table row: split at `|`, except inside backticks and
+    after a backslash."""
+    cells, cur, in_code, i = [], [], False, 0
+    while i < len(row):
+        c = row[i]
+        if c == "\\" and i + 1 < len(row) and row[i + 1] == "|":
+            cur.append("\\|")
+            i += 2
+            continue
+        if c == "`":
+            in_code = not in_code
+        if c == "|" and not in_code:
+            cells.append("".join(cur).strip())
+            cur = []
+        else:
+            cur.append(c)
+        i += 1
+    cells.append("".join(cur).strip())
+    # a row starts and ends with a bar
+    return cells[1:-1]
+
+
+def squeeze(text):
+    return re.sub(r"\s+", "", text)
+
+
+def piece_pattern(piece):
+    """A piece of code as a pattern over text without spaces."""
+    piece = piece.replace("\\|", "|")
+    parts = [re.escape(squeeze(p)) for p in piece.split("..")]
+    return re.compile(".*?".join(parts))
+
+
+def main():
+    args = sys.argv[1:]
+    commit, counts, fetch, path = None, True, False, ROOT / "docs/panics.md"
+    while args:
+        a = args.pop(0)
+        if a == "--commit" and args:
+            commit = args.pop(0)
+        elif a == "--no-counts":
+            counts = False
+        elif a == "--fetch":
+            fetch = True
+        elif a.startswith("-"):
+            fail(f"unknown argument: {a} (see the header of this script)")
+        else:
+            path = Path(a)
+    text = path.read_text()
+    section = "## pathos (the CPC checker)"
+    first_line = 1
+    if f"\n{section}\n" in text:
+        before, _, rest = text.partition(f"\n{section}\n")
+        first_line = before.count("\n") + 3
+        text = re.split(r"\n## ", rest, maxsplit=1)[0]
+        whole = True
+    else:
+        whole = False
+    if commit is None:
+        m = re.search(r"Line\s+numbers\s+are\s+those\s+of\s+commit\s+`([0-9a-f]{7,40})`", text)
+        if not m:
+            fail(f"{path}: the section does not say "
+                 "\"Line numbers are those of commit `...`\"")
+        commit = m.group(1)
+    def known():
+        return subprocess.run(
+            ["git", "-C", str(ROOT), "cat-file", "-e", f"{commit}^{{commit}}"],
+            capture_output=True).returncode == 0
+
+    if not known() and fetch:
+        subprocess.run(
+            ["git", "-C", str(ROOT), "fetch", "--quiet", "--depth", "1", "origin", commit])
+    if not known():
+        fail(f"commit {commit} is not in this repository (a shallow clone? fetch it first)")
+
+    sources = {}
+
+    def source(rel):
+        if rel not in sources:
+            shown = subprocess.run(
+                ["git", "-C", str(ROOT), "show", f"{commit}:{rel}"], capture_output=True)
+            sources[rel] = (
+                shown.stdout.decode("utf-8", "replace").split("\n")
+                if shown.returncode == 0 else None)
+        return sources[rel]
+
+    problems, tally, rows = [], {}, 0
+    directory = file = None
+    in_result, listed = False, {}
+    total_stated = None
+    for number, line in enumerate(text.split("\n"), first_line):
+        if line.startswith("## "):
+            title = line[3:].strip()
+            directory = title if (ROOT / title).is_dir() and "/" in title else None
+            file = None
+            in_result = False
+            continue
+        if line.startswith("### "):
+            title = line[4:].strip()
+            in_result = title == "Result"
+            if whole:
+                directory, file = (None, None) if in_result else (".", title)
+            else:
+                file = title if directory else None
+            continue
+        if in_result:
+            m = re.fullmatch(r"(\d+) rows\.", line.strip())
+            if m:
+                total_stated = int(m.group(1))
+            if line.startswith("|"):
+                cells = cells_of(line)
+                if len(cells) >= 2 and cells[1].isdigit():
+                    listed[cells[0]] = int(cells[1])
+            continue
+        if not (file and line.startswith("|")):
+            continue
+        cells = cells_of(line)
+        if cells and (cells[0] == "Line" or set(cells[0]) <= set("-: ")):
+            continue
+        rel = file if directory == "." else f"{directory}/{file}"
+        where = f"{path.name}:{number} ({rel})"
+        if len(cells) != 4:
+            problems.append(f"{where}: {len(cells)} cells, not 4")
+            continue
+        rows += 1
+        lines_cell, construct, verdict, why = cells
+        tally[verdict] = tally.get(verdict, 0) + 1
+        if not why:
+            problems.append(f"{where}: no reason")
+        src = source(rel)
+        if src is None:
+            problems.append(f"{where}: no such file at {commit}")
+            continue
+        spans = []
+        cited = lines_cell.removeprefix("e.g.").strip()
+        for item in cited.split(","):
+            m = re.fullmatch(r"(\d+)(?:-(\d+))?", item.strip())
+            if not m:
+                problems.append(f"{where}: cannot read the lines `{lines_cell}`")
+                spans = None
+                break
+            lo, hi = int(m.group(1)), int(m.group(2) or m.group(1))
+            if lo < 1 or hi < lo or hi > len(src):
+                problems.append(f"{where}: lines {item.strip()} are not in the file "
+                                f"({len(src)} lines)")
+                spans = None
+                break
+            spans.append((item.strip(), squeeze(" ".join(src[lo - 1:hi]))))
+        if spans is None:
+            continue
+        pieces = re.findall(r"`([^`]+)`", construct)
+        if not pieces:
+            problems.append(f"{where}: lines {lines_cell}: the second column names no code")
+            continue
+        patterns = [(p, piece_pattern(p)) for p in pieces]
+        everything = " ".join(t for _, t in spans)
+        for piece, pattern in patterns:
+            if not pattern.search(everything):
+                problems.append(f"{where}: `{piece}` is not on lines {cited}")
+        for item, span in spans:
+            if not any(pattern.search(span) for _, pattern in patterns):
+                problems.append(f"{where}: lines {item} hold none of the row's code")
+
+    if rows == 0:
+        problems.append("no rows found")
+    if counts:
+        if total_stated != rows:
+            problems.append(f"Result says {total_stated} rows; there are {rows}")
+        for verdict in sorted(set(tally) | set(listed)):
+            if tally.get(verdict, 0) != listed.get(verdict, 0):
+                problems.append(
+                    f"verdict `{verdict}`: Result lists {listed.get(verdict, 0)}, "
+                    f"the tables have {tally.get(verdict, 0)}")
+    for p in problems:
+        print(p)
+    print(f"check-panics: {rows} rows against {commit[:12]}: "
+          + ("all pass" if not problems else f"{len(problems)} problems"))
+    return 1 if problems else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -296,11 +296,14 @@ impl Built {
                 Shape::Apply(children.to_vec())
             }
             Kind::Node(NodeKind::AsReturn) => {
-                let f = children[0];
-                if self.is_signature_symbol(st, f) {
+                // (as f T); a step's arguments are not typed, so (as) and
+                // (as f) get here too
+                if let &[f, ty] = children
+                    && self.is_signature_symbol(st, f)
+                {
                     let c = Self::constructor(st, f)?;
                     if c.arity() == 1 {
-                        return Ok(Shape::Indexed(c, vec![children[1]], Vec::new()));
+                        return Ok(Shape::Indexed(c, vec![ty], Vec::new()));
                     }
                 }
                 return Err(unsupported(format!(
@@ -1001,6 +1004,43 @@ impl Built {
         Ok(key)
     }
 
+    /// The constructor or selector `what`, which has the role `role` in its
+    /// own datatype, in the instance `key` that the type `ty` is. An error
+    /// if that is an instance of another datatype: the types do not say
+    /// so for a tester or an updater, nor for an argument of a step, which
+    /// is not typed.
+    fn member(
+        &self,
+        st: &State,
+        key: &InstanceKey,
+        role: Role,
+        what: Term,
+        ty: Term,
+    ) -> Result<CTerm> {
+        let own = self.templates.get(&key.0).and_then(|tmpl| match role {
+            Role::Constructor(k) => tmpl.constructors.get(k).map(|(c, _)| *c),
+            Role::Selector(k, j) => tmpl
+                .constructors
+                .get(k)
+                .and_then(|(_, sels)| sels.get(j))
+                .copied(),
+        });
+        let found = (own == Some(what))
+            .then(|| self.instances.get(key))
+            .flatten()
+            .and_then(|inst| match role {
+                Role::Constructor(k) => inst.constructors.get(k).copied(),
+                Role::Selector(k, j) => inst.selectors.get(k).and_then(|s| s.get(j)).copied(),
+            });
+        found.ok_or_else(|| {
+            unsupported(format!(
+                "{} is used at the type {}, which is not an instance of its datatype",
+                st.ck.show(what),
+                st.ck.show(ty)
+            ))
+        })
+    }
+
     fn type_of(st: &mut State, t: Term) -> Result<Term> {
         st.ck
             .get_type(t, None)
@@ -1032,25 +1072,21 @@ impl Built {
                 c.len() == 2 && matches!(self.roles.get(&c[0]), Some(Role::Constructor(_)))
             });
         if let Some(c) = annotated {
-            let Some(&Role::Constructor(k)) = self.roles.get(&c[0]) else {
+            let Some(&role) = self.roles.get(&c[0]) else {
                 return Ok(None);
             };
             let key = self.instance_of_type(st, c[1], c[0])?;
-            return Ok(Some(Shape::Headed(
-                self.instances[&key].constructors[k],
-                args,
-            )));
+            let cons = self.member(st, &key, role, c[0], c[1])?;
+            return Ok(Some(Shape::Headed(cons, args)));
         }
         match self.roles.get(&head).copied() {
-            Some(Role::Constructor(k)) => {
+            Some(role @ Role::Constructor(_)) => {
                 let ty = Self::type_of(st, t)?;
                 let key = self.instance_of_type(st, ty, head)?;
-                return Ok(Some(Shape::Headed(
-                    self.instances[&key].constructors[k],
-                    args,
-                )));
+                let cons = self.member(st, &key, role, head, ty)?;
+                return Ok(Some(Shape::Headed(cons, args)));
             }
-            Some(Role::Selector(k, j)) => {
+            Some(role @ Role::Selector(..)) => {
                 let Some(&operand) = args.first() else {
                     return Err(unsupported(format!(
                         "the selector {} without the term it selects from",
@@ -1059,10 +1095,8 @@ impl Built {
                 };
                 let ty = Self::type_of(st, operand)?;
                 let key = self.instance_of_type(st, ty, head)?;
-                return Ok(Some(Shape::Headed(
-                    self.instances[&key].selectors[k][j],
-                    args,
-                )));
+                let sel = self.member(st, &key, role, head, ty)?;
+                return Ok(Some(Shape::Headed(sel, args)));
             }
             None => {}
         }
@@ -1096,11 +1130,7 @@ impl Built {
         }
         let ty = Self::type_of(st, operand)?;
         let key = self.instance_of_type(st, ty, indexed)?;
-        let inst = &self.instances[&key];
-        let index = match role {
-            Role::Constructor(k) => inst.constructors[k],
-            Role::Selector(k, j) => inst.selectors[k][j],
-        };
+        let index = self.member(st, &key, role, indexed, ty)?;
         Ok(Some(Shape::IndexedDone(c, index, rest)))
     }
 

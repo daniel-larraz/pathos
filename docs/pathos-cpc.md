@@ -153,6 +153,24 @@ one command at a time, to say which command the checker does not accept. It
 is kept in `explain.rs`, apart from the adapter, and never decides a
 verdict.
 
+## Proofs that are not proofs
+
+A proof is untrusted text, and `pathos` must answer any of it with a
+verdict or an error. [panics.md](panics.md), in its section "pathos (the
+CPC checker)", lists every place in `crates/pathos` that could panic and
+why no proof or command line reaches it; `scripts/check-panics` keeps that
+list tied to the commit it was made at. `scripts/fuzz-cpc` runs `pathos` on
+mutated proofs of the harness's safe corpus and reports every run that ends
+otherwise than in a verdict or an error. The generated checker is not part
+of that audit.
+
+One consequence for what `pathos` reads: a constructor, selector, tester or
+updater of a parametric datatype used at an instance of another datatype,
+such as `((_ is cons) b)` for `b` of type `(Box Int)`, is an error
+(`... is used at the type ..., which is not an instance of its datatype`),
+although CPC types it and Ethos accepts it: the checker's datatypes are
+declared instance by instance, and that instance has no such member.
+
 ## Comparing with logos
 
 `scripts/compare-logos` runs `pathos` and logos on the harness's proofs

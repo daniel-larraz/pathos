@@ -51,6 +51,13 @@ fn write_line(mut w: impl Write + IsTerminal, line: &str) {
     let _ = textmode::write(&mut w, &format!("{line}\n"), utf8_only);
 }
 
+/// Writes `text` as it is. Not `print!`, which panics when the write fails
+/// (a full disk, a closed pipe).
+fn write_text(mut w: impl Write + IsTerminal, text: &str) {
+    let utf8_only = textmode::wants_utf8(&w);
+    let _ = textmode::write(&mut w, text, utf8_only);
+}
+
 /// What the command line asks for.
 #[derive(Default)]
 struct Invocation {
@@ -131,11 +138,11 @@ fn check() -> ExitCode {
         .map(|a| latin1::from_os(&a))
         .collect();
     if args.iter().any(|a| a == "--help") {
-        print!("{USAGE}");
+        write_text(std::io::stdout().lock(), USAGE);
         return ExitCode::SUCCESS;
     }
     let Some(inv) = parse_args(&args) else {
-        eprint!("{USAGE}");
+        write_text(std::io::stderr().lock(), USAGE);
         return ExitCode::FAILURE;
     };
     match run(&inv) {
@@ -330,6 +337,81 @@ mod tests {
 (step @p2 false :rule contra :premises (@p1 @a))
 ";
         assert_eq!(verdict(proof), Ok(Verdict::Correct));
+    }
+
+    /// A step's arguments are not typed, so a type annotation with too few
+    /// parts reaches the adapter: an error, not an index out of range.
+    #[test]
+    fn a_malformed_annotation_in_a_step_is_an_error() {
+        for args in ["(as)", "(as is)"] {
+            let proof = format!(
+                "(assume @p1 false)\n(step @p2 (= false false) :rule refl :args ({args}))\n"
+            );
+            let e = verdict(&proof).expect_err(args);
+            assert!(e.contains("pathos does not read this proof"), "{args}: {e}");
+        }
+    }
+
+    /// A constructor, selector, tester or updater of one parametric
+    /// datatype used at an instance of another: the types do not rule it
+    /// out for `is` and `update`, nor for a step's untyped arguments. Each
+    /// is an error that names the symbol, whichever datatype has more
+    /// constructors or selectors.
+    #[test]
+    fn a_member_at_an_instance_of_another_datatype_is_an_error() {
+        let block = |list: &str| {
+            format!(
+                "(declare-datatypes ((List 1) (Box 1)) ((par (X) ({list})) \
+                 (par (Y) ((box (unbox Y))))))\n(declare-const b (Box Int))\n"
+            )
+        };
+        let nil_first = block("(nil) (cons (head X) (tail (List X)))");
+        let cons_first = block("(cons (head X) (tail (List X))) (nil)");
+        let step = |arg: &str| {
+            format!("(assume @p1 false)\n(step @p2 (= false false) :rule refl :args ({arg}))\n")
+        };
+        let cases = [
+            (&cons_first, step("(as nil (Box Int))"), "nil"),
+            // the same where `nil` is the first constructor, as `box` is
+            (&nil_first, step("(as nil (Box Int))"), "nil"),
+            (&nil_first, step("(head b)"), "head"),
+            (&cons_first, step("(tail b)"), "tail"),
+            (&cons_first, step("(head b)"), "head"),
+            (
+                &nil_first,
+                "(assume @p1 ((_ is cons) b))\n".to_string(),
+                "cons",
+            ),
+            (
+                &cons_first,
+                "(assume @p1 ((_ is cons) b))\n".to_string(),
+                "cons",
+            ),
+            (
+                &nil_first,
+                "(assume @p1 (= b ((_ update tail) b b)))\n".to_string(),
+                "tail",
+            ),
+        ];
+        for (block, rest, name) in cases {
+            let proof = format!("{block}{rest}");
+            let e = verdict(&proof).expect_err(&proof);
+            assert!(
+                e.contains(&format!(
+                    "{name} is used at the type (Box Int), which is not an instance of its \
+                     datatype"
+                )),
+                "{proof}: {e}"
+            );
+        }
+        // the members of the datatype itself are still found
+        let own = format!(
+            "{nil_first}(declare-const l (List Int))\n\
+             (assume @a (not (= (tail l) (tail l))))\n\
+             (step @p1 (= (tail l) (tail l)) :rule refl :args ((tail l)))\n\
+             (step @p2 false :rule contra :premises (@p1 @a))\n"
+        );
+        assert_eq!(verdict(&own), Ok(Verdict::Correct));
     }
 
     /// The compiler writes the hyphens of a rule's name as underscores. No

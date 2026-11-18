@@ -44,7 +44,10 @@ not anything the figures measure.
   mistake in pathos can do is stop the program with a message (a "panic").
   [panics.md](panics.md) goes through all 366 places that could panic and
   says why input does not reach each; the ones a signature or proof did
-  reach were found by that review and fixed.
+  reach were found by that review and fixed. A section of its own does the
+  same for the 67 places of `pathos`, the checker for CPC, at a later
+  commit (seven were reached and are fixed); the generated checker it calls
+  is not covered.
 - **Iteration instead of recursion.** Parsing, typing a term, evaluating
   programs, matching and printing use explicit stacks, so a term a million
   levels deep, or a program a million calls deep, does not overflow the

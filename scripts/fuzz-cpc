@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""Runs `pathos` (the checker for CPC) on mutated cvc5 proofs and reports
+every run that does not end in a verdict or an error message: a panic, a
+stack overflow, a crash.
+
+  scripts/fuzz-cpc [--iterations N] [--seed S] [--jobs N] [--max-size BYTES]
+                   [--timeout SECONDS] [--memory SIZE] [--pathos BIN]
+                   [--corpus DIR] [--work DIR]
+
+  --iterations  mutants to run (default 10000)
+  --seed        the random seed; a run is repeated exactly by its seed and
+                number of iterations (default 0)
+  --jobs        processes at a time (default 4)
+  --max-size    only proofs up to this size are seeds (default 100000)
+  --timeout     seconds per run (default 20)
+  --memory      the cap on the whole run, all jobs together (default 8G);
+                each run is also limited to 4 GiB of address space
+  --pathos      the binary (default: target/release/pathos; use
+                target/debug/pathos for the overflow checks of a debug build)
+  --corpus      a directory with proofs/ (default: the harness's
+                work/corpus-safe)
+  --work        where mutants and findings go (default: target/fuzz-cpc)
+
+The seeds are the proofs of the harness's safe corpus, and the mutations
+are those of the harness's fuzz.py (tokens and subexpressions deleted,
+duplicated, swapped, replaced, wrapped; parentheses unbalanced; the file
+truncated; odd bytes inserted; two proofs spliced), read from
+ETHOS_HARNESS (.difftest.local or the environment) and not changed.
+
+A run that ends with exit status 0, 1 or 2 is as it should be: `pathos`
+gave a verdict or an error. Anything else is a finding, kept in
+<work>/findings with its output: `panic` (exit status 101), `stack` (a
+stack overflow), `memory` (an allocation failed under the limit), `signal`
+or `status` (another signal or exit status), `timeout`. Exits 1 if there
+is a `panic`, `stack`, `signal` or `status` finding, else 0.
+
+The whole run is under a memory cap (systemd-run --user --scope -p
+MemoryMax=... -p MemorySwapMax=0). Needs Python 3 and systemd-run.
+"""
+
+import argparse
+import concurrent.futures
+import os
+import random
+import resource
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def fail(msg):
+    print(f"scripts/fuzz-cpc: {msg}", file=sys.stderr)
+    sys.exit(2)
+
+
+def harness():
+    path = os.environ.get("ETHOS_HARNESS")
+    local = ROOT / ".difftest.local"
+    if not path and local.exists():
+        for line in local.read_text().splitlines():
+            if line.startswith("ETHOS_HARNESS="):
+                path = line.split("=", 1)[1].strip().strip('"')
+    if not path:
+        fail("ETHOS_HARNESS is not set (see scripts/difftest)")
+    return Path(path) / "tools/difftest"
+
+
+def limit_child():
+    resource.setrlimit(resource.RLIMIT_AS, (4 << 30, 4 << 30))
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+
+
+def classify(code, err):
+    if code in (0, 1, 2):
+        return None
+    if code == 101 or "panicked at" in err:
+        return "panic"
+    if "overflowed its stack" in err:
+        return "stack"
+    if "memory allocation" in err or "out of memory" in err.lower():
+        return "memory"
+    return "signal" if code < 0 else "status"
+
+
+def main():
+    ap = argparse.ArgumentParser(add_help=False)
+    ap.add_argument("--iterations", type=int, default=10000)
+    ap.add_argument("--seed", default="0")
+    ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--max-size", type=int, default=100000)
+    ap.add_argument("--timeout", type=float, default=20)
+    ap.add_argument("--memory", default="8G")
+    ap.add_argument("--pathos", default=str(ROOT / "target/release/pathos"))
+    ap.add_argument("--corpus")
+    ap.add_argument("--work", default=str(ROOT / "target/fuzz-cpc"))
+    ap.add_argument("--inside", action="store_true")
+    args = ap.parse_args()
+    tools = harness()
+    if not args.inside:
+        # the whole run, under the cap
+        if shutil.which("systemd-run") is None:
+            fail("systemd-run is needed for the memory cap")
+        return subprocess.run(
+            ["systemd-run", "--user", "--scope", "-q", "-p", f"MemoryMax={args.memory}",
+             "-p", "MemorySwapMax=0", sys.executable, "-B", __file__, "--inside"]
+            + sys.argv[1:]).returncode
+
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(tools))
+    import fuzz  # the harness's mutations
+
+    pathos = Path(args.pathos).resolve()
+    if not pathos.exists():
+        fail(f"no binary at {pathos}")
+    corpus = Path(args.corpus).resolve() if args.corpus else tools / "work/corpus-safe"
+    files = sorted(p for p in (corpus / "proofs").glob("*.cpc")
+                   if p.stat().st_size <= args.max_size)
+    if not files:
+        fail(f"no proofs of at most {args.max_size} bytes in {corpus}/proofs")
+    seeds = [fuzz.tokenize(p.read_bytes().decode("latin-1")) for p in files]
+    mutator = fuzz.Mutator(seeds)
+    work = Path(args.work).resolve()
+    found = work / "findings"
+    found.mkdir(parents=True, exist_ok=True)
+
+    def one(i):
+        rng = random.Random(f"{args.seed}:{i}")
+        k = rng.randrange(len(seeds))
+        tokens = mutator.mutate(rng, seeds[k], rng.choice(seeds))
+        text = fuzz.untokenize(tokens).encode("latin-1", "replace")
+        mutant = work / f"job-{i % args.jobs}.cpc"
+        mutant.write_bytes(text)
+        try:
+            run = subprocess.run([str(pathos), mutant.name], cwd=work, capture_output=True,
+                                 timeout=args.timeout, preexec_fn=limit_child)
+            kind = classify(run.returncode, run.stderr.decode("latin-1"))
+            out = run.stdout + run.stderr
+            code = run.returncode
+        except subprocess.TimeoutExpired:
+            kind, out, code = "timeout", b"", None
+        if kind:
+            name = f"{kind}-{args.seed}-{i}"
+            (found / f"{name}.cpc").write_bytes(text)
+            (found / f"{name}.txt").write_bytes(
+                f"seed {files[k].name}, exit status {code}\n".encode() + out[-4000:])
+        return kind
+
+    counts = {}
+    # one mutant file per job: a job runs its mutants one after another
+    def worker(j):
+        return [one(i) for i in range(j, args.iterations, args.jobs)]
+
+    with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
+        for kinds in pool.map(worker, range(args.jobs)):
+            for kind in kinds:
+                counts[kind or "ok"] = counts.get(kind or "ok", 0) + 1
+    print(f"fuzz-cpc: {args.iterations} mutants of {len(files)} proofs, seed {args.seed}, "
+          f"{pathos.parent.name} build: "
+          + ", ".join(f"{k} {counts[k]}" for k in sorted(counts)))
+    bad = sum(counts.get(k, 0) for k in ("panic", "stack", "signal", "status"))
+    if bad or counts.get("memory") or counts.get("timeout"):
+        print(f"findings are in {found}")
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

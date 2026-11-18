@@ -1,6 +1,7 @@
 # Checks on every push to main and every pull request:
-#   - rust:        formatting, Clippy (warnings are errors), tests in debug
-#                  and release builds
+#   - rust:        formatting, docs/panics.md against the commit it audits
+#                  (scripts/check-panics), Clippy (warnings are errors),
+#                  tests in debug and release builds
 #   - regressions: pathos against the reference Ethos on Ethos's 230
 #                  regressions, on the saved fuzzing findings (those from
 #                  proofs are skipped: there is no corpus here), and on the
@@ -76,6 +77,11 @@ jobs:
 
       - name: Formatting
         run: cargo fmt --check
+
+      # docs/panics.md against the commit it audits (not against this one:
+      # a later change to the code does not fail this step).
+      - name: The panic audit names real lines
+        run: scripts/check-panics --fetch
 
       - name: Clippy
         run: cargo clippy --locked --all-targets -- -D warnings
