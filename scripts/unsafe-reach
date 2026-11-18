@@ -19,10 +19,15 @@
 # block, function or impl.
 #
 # Needs a disassembler and an address-to-line tool, and Python 3. On Linux
-# these are objdump and addr2line (binutils). Elsewhere, or when those are
-# missing, llvm-objdump and llvm-addr2line (LLVM), which read ELF, Mach-O
-# with a .dSYM bundle, and PE with a .pdb file. OBJDUMP and ADDR2LINE name
-# other ones. Extra options go to cargo build, e.g. --config or --offline;
+# these are objdump (binutils) and llvm-addr2line (LLVM, also as
+# llvm-addr2line-<version>), or addr2line (binutils) where LLVM's is
+# missing. On the Ubuntu 22.04 runners (binutils 2.38), objdump and
+# addr2line took 18 minutes for pathos, which addr2line 2.46 and
+# llvm-addr2line do in seconds; the two give the same lines, apart from
+# the line 0 that LLVM's prints where binutils' prints ?.
+# Elsewhere llvm-objdump and llvm-addr2line, which read ELF, Mach-O with a
+# .dSYM bundle, and PE with a .pdb file. OBJDUMP and ADDR2LINE name other
+# ones. Extra options go to cargo build, e.g. --config or --offline;
 # RUSTFLAGS is honoured as usual.
 
 set -euo pipefail
@@ -51,9 +56,18 @@ find_tool() {
   echo "scripts/unsafe-reach: none of these is in PATH: $*" >&2
   exit 2
 }
+# LLVM's tool by its plain name, else the newest llvm-<tool>-<version>
+llvm_tool() {
+  local t
+  for t in "$1" $(ls -d /usr/bin/"$1"-[0-9]* /usr/lib/llvm-*/bin/"$1" 2>/dev/null | sort -V -r); do
+    if command -v "$t" > /dev/null 2>&1; then echo "$t"; return; fi
+  done
+  return 0
+}
 if [[ "$(uname -s)" == Linux ]]; then
   objdump="${OBJDUMP:-$(find_tool objdump llvm-objdump)}"
-  addr2line="${ADDR2LINE:-$(find_tool addr2line llvm-addr2line)}"
+  addr2line="${ADDR2LINE:-$(llvm_tool llvm-addr2line)}"
+  addr2line="${addr2line:-$(find_tool addr2line)}"
 else
   objdump="${OBJDUMP:-$(find_tool llvm-objdump)}"
   addr2line="${ADDR2LINE:-$(find_tool llvm-addr2line)}"
@@ -118,7 +132,8 @@ lines = collections.defaultdict(set)      # crate -> {(file, line)}
 paths = {}
 for l in open(sys.argv[1]):
     m = re.search(r"^(.*/registry/src/[^/]+/([^/]+)/)(.*?):(\d+)", l)
-    if m:
+    # line 0 is no line: LLVM's addr2line prints it where binutils' prints ?
+    if m and m.group(4) != "0":
         lines[m.group(2)].add((m.group(3), int(m.group(4))))
         paths[m.group(2)] = m.group(1)
 if not lines:
