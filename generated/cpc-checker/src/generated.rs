@@ -69958,10 +69958,14 @@ Ok(s.stuck())
 s.leave();
 result
 }
-// EO program "$eo_state_proven_nth", compiled to Store::state_proven_nth
+// EO program "$eo_state_proven_nth", compiled to Store::state_nth
 pub fn eo__24eo_5fstate_5fproven_5fnth(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
-let result = s.state_proven_nth(Constructor::eo__24emb_5fs_2econs, a0, a1, eo__24eo_5fStateObj_5fproven);
+let result = match s.state_nth(Constructor::eo__24emb_5fs_2econs, a0, a1) {
+Ok(Some(element)) => eo__24eo_5fStateObj_5fproven(s, element),
+Ok(None) => s.boolean(true),
+Err(e) => Err(e),
+};
 s.leave();
 result
 }

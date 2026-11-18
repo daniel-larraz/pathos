@@ -9,11 +9,16 @@
 // The checking functions are written in the plain subset of Rust that the
 // verification tools translate: explicit matches and loops, not macros,
 // closures or iterator adaptors.
-#![allow(clippy::match_like_matches_macro, clippy::manual_map)]
+#![allow(
+    clippy::match_like_matches_macro,
+    clippy::manual_map,
+    clippy::question_mark,
+    clippy::collapsible_if,
+    clippy::collapsible_else_if
+)]
 
 mod bitvec;
 mod cache;
-pub mod codec;
 mod eostring;
 mod front;
 #[allow(unreachable_code, unused_labels, unused_variables)]
@@ -38,12 +43,15 @@ pub use bitvec::BitVec;
 pub use cache::CacheStats;
 use cache::{Caches, ProgramId, TypeCacheKind};
 pub use eostring::{EoString, NUM_CODES};
+pub(crate) use front::parse_int;
+pub use front::{parse_rat, with_checker_stack};
 pub use kind::{EvalOp, LitKind};
 pub use lit::Lit;
 pub use native::NativeOp;
 pub use num::{Integer, Rational};
 pub use schema::Constructor;
-use table::{TermCounts, fold, mix, slots_for};
+use native::is_less;
+use table::{PairStack, TermCounts, fold, mix, slots_for};
 
 #[derive(Clone, PartialEq, Eq)]
 pub enum CheckError {
@@ -87,13 +95,13 @@ pub enum Embedding {
 }
 
 /// An arena-local handle. Obtain handles through Store's constructors.
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Term(u32);
 
 /// The structural embedding. Native fields have a separate representation
 /// from object-language literals. Nodes carry the generated constructor tag;
 /// their child count is checked against the generated schema on construction.
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TermData {
     Stuck,
     Literal(Lit),
@@ -110,7 +118,7 @@ pub struct Limits {
     pub depth: u32,
 }
 
-const CHECKER_STACK_SIZE: usize = 256 * 1024 * 1024;
+pub(crate) const CHECKER_STACK_SIZE: usize = 256 * 1024 * 1024;
 // A conservative space budget for each generated call, including its case
 // helper and runtime calls. This is a default, not a static frame-size bound.
 const DEFAULT_DEPTH: u32 = (CHECKER_STACK_SIZE / (16 * 1024)) as u32;
@@ -150,7 +158,7 @@ pub struct Store {
     limits: Limits,
     calls: u64,
     depth: u32,
-    /// Jump pointers over state lists, for `state_proven_nth`, indexed by
+    /// Jump pointers over state lists, for `state_nth`, indexed by
     /// term handle. The entry of a `cons` node, once computed, is its depth
     /// and one node further down the same list; the depth is the number of
     /// `cons` nodes from the node to the end of its list, so it is never 0,
@@ -222,10 +230,10 @@ impl Store {
             TermData::Stuck => 0,
             TermData::Literal(lit) => mix(1, lit.hash_code()),
             TermData::Native(lit) => mix(2, lit.hash_code()),
-            TermData::UserOp(c) => mix(3, *c as u64),
+            TermData::UserOp(c) => mix(3, u64::from(c.code())),
             TermData::Apply(f, a) => mix(mix(4, u64::from(f.0)), u64::from(a.0)),
             TermData::Node(c, fields) => {
-                let mut h = mix(5, *c as u64);
+                let mut h = mix(5, u64::from(c.code()));
                 let mut i = 0;
                 while i < fields.len() {
                     h = mix(h, u64::from(fields[i].0));
@@ -252,7 +260,7 @@ impl Store {
                 _ => false,
             },
             TermData::UserOp(c) => match b {
-                TermData::UserOp(d) => *c as u32 == *d as u32,
+                TermData::UserOp(d) => c.code() == d.code(),
                 _ => false,
             },
             TermData::Apply(f, x) => match b {
@@ -260,7 +268,7 @@ impl Store {
                 _ => false,
             },
             TermData::Node(c, xs) => match b {
-                TermData::Node(d, ys) => *c as u32 == *d as u32 && Self::same_terms(xs, ys),
+                TermData::Node(d, ys) => c.code() == d.code() && Self::same_terms(xs, ys),
                 _ => false,
             },
         }
@@ -405,6 +413,13 @@ impl Store {
             _ => None,
         })
     }
+    /// Whether `t` is the native boolean `true`.
+    pub(crate) fn is_native_true(&self, t: Term) -> CheckResult<bool> {
+        Ok(match self.boolean_value(t, true)? {
+            Some(true) => true,
+            _ => false,
+        })
+    }
     pub fn apply(&mut self, f: Term, a: Term) -> CheckResult<Term> {
         if self.is_stuck(f)? || self.is_stuck(a)? {
             return Ok(self.stuck());
@@ -421,7 +436,7 @@ impl Store {
     /// constructor the signature does not have.
     pub(crate) fn is_node(&self, t: Term, c: Option<Constructor>) -> CheckResult<bool> {
         Ok(match (self.view(t)?, c) {
-            (TermData::Node(d, _), Some(c)) => *d == c,
+            (TermData::Node(d, _), Some(c)) => d.code() == c.code(),
             _ => false,
         })
     }
@@ -432,7 +447,7 @@ impl Store {
         c: Option<Constructor>,
     ) -> CheckResult<Option<Vec<Term>>> {
         Ok(match (self.view(t)?, c) {
-            (TermData::Node(d, fs), Some(c)) if *d == c => Some(fs.clone()),
+            (TermData::Node(d, fs), Some(c)) if d.code() == c.code() => Some(fs.clone()),
             _ => None,
         })
     }
@@ -527,7 +542,7 @@ impl Store {
                 _ => Hit::Done(None),
             },
             TermData::Literal(lit) => Self::destruct_literal(e, lit),
-            TermData::Node(d, fields) if c == *d => Hit::Done(Some(fields.clone())),
+            TermData::Node(d, fields) if c.code() == d.code() => Hit::Done(Some(fields.clone())),
             _ => Hit::Done(None),
         };
         match hit {
@@ -579,31 +594,31 @@ impl Store {
         args.extend_from_slice(&fields);
         Ok(Some(args))
     }
-    /// `$eo_state_proven_nth` of the checking loop (eo_desugar_checker.eo),
-    /// which the generator compiles to this call. The program walks the
+    /// The element lookup of `$eo_state_proven_nth` of the checking loop
+    /// (eo_desugar_checker.eo), which the generator compiles to a call of
+    /// this and, for an element, of the program's `proven`. The program walks the
     /// state list one element at a time, creating and interning a native
     /// numeral at each; on long proofs that walk dominates. This finds the
     /// same element in O(log n) steps with jump pointers, and charges the
     /// same budget as the walk (one `tick` per element visited, failing with
-    /// `Limit` exactly when the walk would). Results, as the program's:
-    /// - the index-th element (from 0) of a list with more elements gives
-    ///   `proven(element)`;
-    /// - a negative index, or one past the end, gives the object literal
-    ///   `true` after walking the whole list;
-    /// - a state that is not a `cons` gives `true`;
+    /// `Limit` exactly when the walk would). Results:
+    /// - the index-th element (from 0) of a list with more elements is
+    ///   `Some(element)`, of which the program gives `proven(element)`;
+    /// - a negative index, or one past the end, is `None` after walking the
+    ///   whole list, for which the program gives the object literal `true`;
+    /// - a state that is not a `cons` is `None` too;
     /// - an index that is not a native numeral, on a `cons`, is
     ///   `InvalidNative`.
-    pub(crate) fn state_proven_nth(
+    pub(crate) fn state_nth(
         &mut self,
         cons: Constructor,
         state: Term,
         index: Term,
-        proven: fn(&mut Store, Term) -> CheckResult<Term>,
-    ) -> CheckResult<Term> {
+    ) -> CheckResult<Option<Term>> {
         let depth = self.state_depth(cons, state)?;
         if depth == 0 {
             self.charge(1)?;
-            return self.literal(Lit::Bool(true));
+            return Ok(None);
         }
         // None: not a native numeral; Some(None): never reaches 0.
         let n: Option<Option<u64>> = match self.view(index)? {
@@ -622,15 +637,14 @@ impl Store {
             Some(Some(k)) if k < u64::from(depth) => {
                 self.charge(k + 1)?;
                 let node = self.state_ancestor(cons, state, depth - k as u32)?;
-                let element = match self.view(node)? {
-                    TermData::Node(_, fields) => fields[0],
-                    _ => return Err(CheckError::InvalidNative),
-                };
-                proven(self, element)
+                match self.view(node)? {
+                    TermData::Node(_, fields) => Ok(Some(fields[0])),
+                    _ => Err(CheckError::InvalidNative),
+                }
             }
             Some(_) => {
                 self.charge(u64::from(depth) + 1)?;
-                self.literal(Lit::Bool(true))
+                Ok(None)
             }
         }
     }
@@ -647,16 +661,28 @@ impl Store {
     /// The tail of a `cons` node, or None if `t` is not one.
     fn state_tail(&self, cons: Constructor, t: Term) -> CheckResult<Option<Term>> {
         Ok(match self.view(t)? {
-            TermData::Node(c, fields) if *c == cons && fields.len() == 2 => Some(fields[1]),
+            TermData::Node(c, fields) if c.code() == cons.code() && fields.len() == 2 => {
+                Some(fields[1])
+            }
             _ => None,
         })
     }
     /// The jump-pointer entry of `t`, if computed.
     fn state_jump(&self, t: Term) -> Option<(u32, Term)> {
-        self.state_jumps
-            .get(t.0 as usize)
-            .copied()
-            .filter(|&(d, _)| d > 0)
+        let i = t.0 as usize;
+        if i < self.state_jumps.len() {
+            let entry = self.state_jumps[i];
+            if entry.0 > 0 { Some(entry) } else { None }
+        } else {
+            None
+        }
+    }
+    /// The depth in the jump-pointer entry of `t`, or 0 if it has none.
+    fn state_jump_depth(&self, t: Term) -> u32 {
+        match self.state_jump(t) {
+            Some((d, _)) => d,
+            None => 0,
+        }
     }
     fn set_state_jump(&mut self, t: Term, entry: (u32, Term)) {
         let i = t.0 as usize;
@@ -669,7 +695,7 @@ impl Store {
     /// is not a `cons`), computing jump pointers for the nodes on the way
     /// that have none yet, from the bottom up.
     fn state_depth(&mut self, cons: Constructor, t: Term) -> CheckResult<u32> {
-        let mut pending = Vec::new();
+        let mut pending = PairStack::new();
         let mut x = t;
         let mut base = loop {
             if let Some((d, _)) = self.state_jump(x) {
@@ -692,7 +718,7 @@ impl Store {
             let jump = match self.state_jump(tail) {
                 Some((dt, jt)) => match self.state_jump(jt) {
                     Some((dj, jj)) => {
-                        let djj = self.state_jump(jj).map_or(0, |e| e.0);
+                        let djj = self.state_jump_depth(jj);
                         if dt - dj == dj - djj { jj } else { tail }
                     }
                     None => tail,
@@ -714,7 +740,7 @@ impl Store {
             if d == target {
                 return Ok(x);
             }
-            let dj = self.state_jump(jump).map_or(0, |e| e.0);
+            let dj = self.state_jump_depth(jump);
             x = if dj >= target {
                 jump
             } else {
@@ -766,55 +792,86 @@ impl Store {
     /// It does not depend on insertion order in the arena or hash values.
     pub fn compare(&self, a: Term, b: Term) -> CheckResult<std::cmp::Ordering> {
         use std::cmp::Ordering;
-        let literal_cmp = |a: &Lit, b: &Lit| -> CheckResult<Ordering> {
-            Ok(match (a, b) {
-                (Lit::Bool(a), Lit::Bool(b)) => a.cmp(b),
-                (Lit::Numeral(a), Lit::Numeral(b)) => a.cmp(b),
-                (Lit::Rational(a), Lit::Rational(b)) => {
-                    let (a, b) = (a.to_string(), b.to_string());
-                    let (an, ad) = a.split_once('/').ok_or(CheckError::InvalidNative)?;
-                    let (bn, bd) = b.split_once('/').ok_or(CheckError::InvalidNative)?;
-                    parse_int(an)?
-                        .cmp(&parse_int(bn)?)
-                        .then(parse_int(ad)?.cmp(&parse_int(bd)?))
-                }
-                (Lit::String(a), Lit::String(b)) => a.code_points().cmp(b.code_points()),
-                (Lit::Binary(a), Lit::Binary(b)) => {
-                    a.size().cmp(&b.size()).then(a.value().cmp(b.value()))
-                }
-                _ => return Err(CheckError::InvalidNative),
-            })
-        };
-        let mut todo = vec![(a, b)];
-        while let Some((a, b)) = todo.pop() {
-            if a == b {
-                continue;
-            }
-            let (a, b) = (self.view(a)?, self.view(b)?);
-            let tags = Self::order_key(a)?.cmp(&Self::order_key(b)?);
-            if tags != Ordering::Equal {
-                return Ok(tags);
-            }
-            match (a, b) {
-                (TermData::Literal(a), TermData::Literal(b))
-                | (TermData::Native(a), TermData::Native(b)) => {
-                    let order = literal_cmp(a, b)?;
-                    if order != Ordering::Equal {
-                        return Ok(order);
+        // the pairs still to compare, the next one last
+        let mut todo = PairStack::new();
+        todo.push((a, b));
+        let mut result = Ordering::Equal;
+        let mut more = true;
+        while more {
+            match todo.pop() {
+                None => more = false,
+                Some((a, b)) => match self.compare_step(a, b, &mut todo)? {
+                    Ordering::Equal => {}
+                    order => {
+                        result = order;
+                        more = false;
                     }
-                }
-                (TermData::Apply(af, aa), TermData::Apply(bf, ba)) => {
-                    todo.push((*aa, *ba));
-                    todo.push((*af, *bf));
-                }
-                (TermData::UserOp(_), TermData::UserOp(_)) => {}
-                (TermData::Node(_, a), TermData::Node(_, b)) if a.len() == b.len() => {
-                    todo.extend(a.iter().zip(b).rev().map(|(&a, &b)| (a, b)))
-                }
-                _ => return Err(CheckError::InvalidConstructor),
+                },
             }
         }
-        Ok(Ordering::Equal)
+        Ok(result)
+    }
+    /// Compares the constructors of two terms and, if they are the same,
+    /// their literals, or adds their fields to the pairs to compare.
+    fn compare_step(
+        &self,
+        a: Term,
+        b: Term,
+        todo: &mut PairStack,
+    ) -> CheckResult<std::cmp::Ordering> {
+        use std::cmp::Ordering;
+        if a == b {
+            return Ok(Ordering::Equal);
+        }
+        let a = self.view(a)?;
+        let b = self.view(b)?;
+        let ka = Self::order_key(a)?;
+        let kb = Self::order_key(b)?;
+        let tags = match ka.0.cmp(&kb.0) {
+            Ordering::Equal => ka.1.cmp(&kb.1),
+            order => order,
+        };
+        match tags {
+            Ordering::Equal => {}
+            _ => return Ok(tags),
+        }
+        match a {
+            TermData::Literal(x) => match b {
+                TermData::Literal(y) => literal_cmp(x, y),
+                _ => Err(CheckError::InvalidConstructor),
+            },
+            TermData::Native(x) => match b {
+                TermData::Native(y) => literal_cmp(x, y),
+                _ => Err(CheckError::InvalidConstructor),
+            },
+            TermData::Apply(af, aa) => match b {
+                TermData::Apply(bf, ba) => {
+                    todo.push((*aa, *ba));
+                    todo.push((*af, *bf));
+                    Ok(Ordering::Equal)
+                }
+                _ => Err(CheckError::InvalidConstructor),
+            },
+            TermData::UserOp(_) => match b {
+                TermData::UserOp(_) => Ok(Ordering::Equal),
+                _ => Err(CheckError::InvalidConstructor),
+            },
+            TermData::Node(_, xs) => match b {
+                TermData::Node(_, ys) => {
+                    if xs.len() != ys.len() {
+                        return Err(CheckError::InvalidConstructor);
+                    }
+                    let mut i = xs.len();
+                    while i > 0 {
+                        i -= 1;
+                        todo.push((xs[i], ys[i]));
+                    }
+                    Ok(Ordering::Equal)
+                }
+                _ => Err(CheckError::InvalidConstructor),
+            },
+            TermData::Stuck => Err(CheckError::InvalidConstructor),
+        }
     }
     pub(crate) fn enter(&mut self) -> CheckResult<()> {
         if self.depth >= self.limits.depth || self.calls >= self.limits.calls {
@@ -877,309 +934,567 @@ impl Store {
         if (op.is_nary() && args.len() < 2) || (!op.is_nary() && args.len() != arity) {
             return Ok(self.stuck());
         }
-        for &t in args {
-            self.view(t)?;
-        }
+        self.check_handles(args)?;
         let x = args[0];
-        if op == EvalOp::IsOk {
-            return self.boolean(!self.is_stuck(x)?);
-        }
-        if op == EvalOp::IsEq {
-            return self.boolean(!self.is_stuck(x)? && !self.is_stuck(args[1])? && x == args[1]);
-        }
-        if op == EvalOp::Eq {
-            return if args.iter().any(|&a| self.is_stuck(a).unwrap_or(true)) {
-                Ok(self.stuck())
-            } else {
-                self.boolean(x == args[1])
-            };
-        }
-        if op == EvalOp::IfThenElse {
-            return Ok(match self.boolean_value(x, false)? {
+        match op {
+            EvalOp::IsOk => {
+                let stuck = self.is_stuck(x)?;
+                self.boolean(!stuck)
+            }
+            EvalOp::IsEq => {
+                let equal = !self.is_stuck(x)? && !self.is_stuck(args[1])? && x == args[1];
+                self.boolean(equal)
+            }
+            EvalOp::Eq => {
+                if self.any_stuck(args) {
+                    Ok(self.stuck())
+                } else {
+                    self.boolean(x == args[1])
+                }
+            }
+            EvalOp::IfThenElse => Ok(match self.boolean_value(x, false)? {
                 Some(true) => args[1],
                 Some(false) => args[2],
-                _ => self.stuck(),
-            });
-        }
-        if op == EvalOp::Requires {
-            return Ok(if x == args[1] && !self.is_stuck(x)? {
+                None => self.stuck(),
+            }),
+            EvalOp::Requires => Ok(if x == args[1] && !self.is_stuck(x)? {
                 args[2]
             } else {
                 self.stuck()
-            });
-        }
-        // Logos's recognizers are total predicates, including on Stuck.
-        if matches!(
-            op,
+            }),
+            // Logos's recognizers are total predicates, including on Stuck.
             EvalOp::IsZ
-                | EvalOp::IsQ
-                | EvalOp::IsBin
-                | EvalOp::IsStr
-                | EvalOp::IsBool
-                | EvalOp::IsVar
-        ) {
-            let b = matches!(
-                (op, self.view(x)?),
-                (EvalOp::IsZ, TermData::Literal(Lit::Numeral(_)))
-                    | (EvalOp::IsQ, TermData::Literal(Lit::Rational(_)))
-                    | (EvalOp::IsBin, TermData::Literal(Lit::Binary(_)))
-                    | (EvalOp::IsStr, TermData::Literal(Lit::String(_)))
-                    | (EvalOp::IsBool, TermData::Literal(Lit::Bool(_)))
-            ) || (op == EvalOp::IsVar && self.is_variable(x)?);
-            return self.boolean(b);
-        }
-        if args.iter().any(|&a| self.is_stuck(a).unwrap_or(true)) {
-            return Ok(self.stuck());
-        }
-        if op == EvalOp::NameOf {
-            if !self.is_variable(x)? {
-                return Ok(self.stuck());
+            | EvalOp::IsQ
+            | EvalOp::IsBin
+            | EvalOp::IsStr
+            | EvalOp::IsBool
+            | EvalOp::IsVar => {
+                let b = self.recognizes(op, x)?;
+                self.boolean(b)
             }
-            return Ok(match self.view(x)? {
-                TermData::Node(_, fields) => fields[0],
-                _ => self.stuck(),
-            });
+            _ => self.builtin_strict(op, args),
         }
-        if op == EvalOp::Compare {
-            return self.boolean(self.compare(x, args[1])?.is_lt());
-        }
-        if op.is_list_op() {
-            return self.list_builtin(op, args);
-        }
-        let lits: Option<Vec<_>> = args
-            .iter()
-            .map(|&t| match self.view(t).ok()? {
-                TermData::Literal(l) => Some(l.clone()),
-                _ => None,
-            })
-            .collect();
-        let Some(lits) = lits else {
+    }
+    /// The operators that are stuck when an argument is.
+    fn builtin_strict(&mut self, op: EvalOp, args: &[Term]) -> CheckResult<Term> {
+        if self.any_stuck(args) {
             return Ok(self.stuck());
+        }
+        match op {
+            EvalOp::NameOf => self.name_of(args[0]),
+            EvalOp::Compare => {
+                let order = self.compare(args[0], args[1])?;
+                self.boolean(is_less(order))
+            }
+            _ => {
+                if op.is_list_op() {
+                    self.list_builtin(op, args)
+                } else {
+                    self.builtin_literal(op, args)
+                }
+            }
+        }
+    }
+    /// The name of a variable, which is its first field.
+    fn name_of(&mut self, x: Term) -> CheckResult<Term> {
+        if !self.is_variable(x)? {
+            return Ok(self.stuck());
+        }
+        Ok(match self.view(x)? {
+            TermData::Node(_, fields) => fields[0],
+            _ => self.stuck(),
+        })
+    }
+    /// An operator on literals.
+    fn builtin_literal(&mut self, op: EvalOp, args: &[Term]) -> CheckResult<Term> {
+        let lits = match self.literals(args) {
+            Some(lits) => lits,
+            None => return Ok(self.stuck()),
         };
-        let refs: Vec<_> = lits.iter().collect();
-        match Lit::evaluate(op, &refs) {
+        match Lit::evaluate(op, &lits) {
             Some(lit) => self.literal(lit),
             None => Ok(self.stuck()),
         }
     }
+    /// Refuses a handle that is not of this store.
+    fn check_handles(&self, args: &[Term]) -> CheckResult<()> {
+        let mut i = 0;
+        while i < args.len() {
+            self.view(args[i])?;
+            i += 1;
+        }
+        Ok(())
+    }
+    /// Whether one of the terms is stuck (or not of this store).
+    fn any_stuck(&self, args: &[Term]) -> bool {
+        let mut any = false;
+        let mut i = 0;
+        while i < args.len() {
+            if self.stuck_or_foreign(args[i]) {
+                any = true;
+            }
+            i += 1;
+        }
+        any
+    }
+    /// Whether the term is stuck (or not of this store).
+    fn stuck_or_foreign(&self, t: Term) -> bool {
+        match self.view(t) {
+            Ok(TermData::Stuck) => true,
+            Ok(_) => false,
+            Err(_) => true,
+        }
+    }
+    /// The literal that the term is, if it is an object literal.
+    fn literal_of(&self, t: Term) -> Option<Lit> {
+        match self.view(t) {
+            Ok(TermData::Literal(lit)) => Some(lit.clone()),
+            _ => None,
+        }
+    }
+    /// Whether `x` is what the recognizer `op` recognizes.
+    fn recognizes(&self, op: EvalOp, x: Term) -> CheckResult<bool> {
+        if op == EvalOp::IsVar {
+            return self.is_variable(x);
+        }
+        Ok(match self.view(x)? {
+            TermData::Literal(lit) => match lit {
+                Lit::Numeral(_) => op == EvalOp::IsZ,
+                Lit::Rational(_) => op == EvalOp::IsQ,
+                Lit::Binary(_) => op == EvalOp::IsBin,
+                Lit::String(_) => op == EvalOp::IsStr,
+                Lit::Bool(_) => op == EvalOp::IsBool,
+                _ => false,
+            },
+            _ => false,
+        })
+    }
+    /// The literals that the terms are, if they all are object literals.
+    fn literals(&self, args: &[Term]) -> Option<Vec<Lit>> {
+        let mut lits = Vec::with_capacity(args.len());
+        let mut all = true;
+        let mut i = 0;
+        while i < args.len() {
+            match self.literal_of(args[i]) {
+                Some(lit) => lits.push(lit),
+                None => all = false,
+            }
+            i += 1;
+        }
+        if all { Some(lits) } else { None }
+    }
 
-    fn list_parts(&mut self, f: Term, mut list: Term) -> CheckResult<Option<(Vec<Term>, Term)>> {
-        let left = match self.view(f)? {
+    /// Whether the list constructor `f` nests to the left.
+    fn is_left_assoc(&self, f: Term) -> CheckResult<bool> {
+        Ok(match self.view(f)? {
             TermData::Node(c, _) => c.is_left_assoc(),
             _ => false,
-        };
-        let mut out = Vec::new();
-        while let Some((g, b)) = self.unapply(list)? {
-            let Some((head, a)) = self.unapply(g)? else {
-                break;
-            };
-            if f != head {
-                break;
-            }
-            if out.len() as u64 >= self.limits.calls {
-                return Err(CheckError::Limit);
-            }
-            out.push(if left { b } else { a });
-            list = if left { a } else { b };
-        }
-        let is_nil = generated::eo__24eo_5fis_5flist_5fnil(self, f, list)?;
-        if self.boolean_value(is_nil, false)? != Some(true) {
+        })
+    }
+    /// The next element of a list of `f` and the rest of the list, or
+    /// `None` where the list of applications of `f` ends. `count` is the
+    /// number of elements taken so far.
+    fn list_step(
+        &self,
+        f: Term,
+        left: bool,
+        list: Term,
+        count: usize,
+    ) -> CheckResult<Option<(Term, Term)>> {
+        let Some((g, b)) = self.unapply(list)? else {
             return Ok(None);
+        };
+        let Some((head, a)) = self.unapply(g)? else {
+            return Ok(None);
+        };
+        if f != head {
+            return Ok(None);
+        }
+        if count as u64 >= self.limits.calls {
+            return Err(CheckError::Limit);
+        }
+        Ok(Some(if left { (b, a) } else { (a, b) }))
+    }
+    /// The elements of a list of `f`, and where its applications of `f` end.
+    fn list_elements(&self, f: Term, left: bool, list: Term) -> CheckResult<(Vec<Term>, Term)> {
+        let mut out = Vec::new();
+        let mut list = list;
+        let mut more = true;
+        while more {
+            match self.list_step(f, left, list, out.len())? {
+                Some((element, rest)) => {
+                    out.push(element);
+                    list = rest;
+                }
+                None => more = false,
+            }
+        }
+        Ok((out, list))
+    }
+    fn list_parts(&mut self, f: Term, list: Term) -> CheckResult<Option<(Vec<Term>, Term)>> {
+        let left = self.is_left_assoc(f)?;
+        let (out, list) = self.list_elements(f, left, list)?;
+        let is_nil = generated::eo__24eo_5fis_5flist_5fnil(self, f, list)?;
+        match self.boolean_value(is_nil, false)? {
+            Some(true) => {}
+            _ => return Ok(None),
         }
         Ok(Some((out, list)))
     }
-    fn list_build(&mut self, f: Term, elems: &[Term], mut nil: Term) -> CheckResult<Term> {
-        let left = match self.view(f)? {
-            TermData::Node(c, _) => c.is_left_assoc(),
-            _ => false,
-        };
-        for &e in elems.iter().rev() {
-            let first = self.apply(f, if left { nil } else { e })?;
-            nil = self.apply(first, if left { e } else { nil })?;
+    /// The list of `f` with the element `e` before `tail`.
+    fn list_cons(&mut self, f: Term, left: bool, e: Term, tail: Term) -> CheckResult<Term> {
+        let first = self.apply(f, if left { tail } else { e })?;
+        self.apply(first, if left { e } else { tail })
+    }
+    fn list_build(&mut self, f: Term, elems: &[Term], nil: Term) -> CheckResult<Term> {
+        let left = self.is_left_assoc(f)?;
+        let mut list = nil;
+        let mut i = elems.len();
+        while i > 0 {
+            i -= 1;
+            list = self.list_cons(f, left, elems[i], list)?;
         }
-        Ok(nil)
+        Ok(list)
     }
     fn list_builtin(&mut self, op: EvalOp, a: &[Term]) -> CheckResult<Term> {
         let f = a[0];
-        if op == EvalOp::Nil {
-            return generated::eo__24eo_5fnil(self, f, a[1]);
+        match op {
+            EvalOp::Nil => generated::eo__24eo_5fnil(self, f, a[1]),
+            EvalOp::ListRepeat => self.list_repeat(f, a[1], a[2]),
+            EvalOp::Cons => self.list_cons_op(f, a[1], a[2]),
+            EvalOp::ListConcat => self.list_concat(f, a[1], a[2]),
+            EvalOp::ListMinclude | EvalOp::ListMeq => self.list_inclusion(op, f, a[1], a[2]),
+            EvalOp::ListDiff | EvalOp::ListInter => self.list_selection(op, f, a[1], a[2]),
+            _ => self.list_of_one(op, f, a),
         }
-        if op == EvalOp::ListRepeat {
-            let Some(n) = self.object_index(a[2])? else {
-                return Ok(self.stuck());
-            };
-            if u64::from(n) > self.limits.calls {
-                return Err(CheckError::Limit);
-            }
-            let ty = generated::eo__24eo_5ftypeof(self, a[1])?;
-            let nil = generated::eo__24eo_5fnil(self, f, ty)?;
-            return self.list_build(f, &vec![a[1]; n as usize], nil);
-        }
-        if op == EvalOp::Cons {
-            let Some((mut tail, nil)) = self.list_parts(f, a[2])? else {
-                return Ok(self.stuck());
-            };
-            tail.insert(0, a[1]);
-            return self.list_build(f, &tail, nil);
-        }
-        let Some((mut xs, nil)) = self.list_parts(f, a[1])? else {
-            if op == EvalOp::ListSingletonIntro {
-                let ty = generated::eo__24eo_5ftypeof(self, a[1])?;
-                let nil = generated::eo__24eo_5fnil(self, f, ty)?;
-                return self.list_build(f, &[a[1]], nil);
-            }
+    }
+    /// The list of `f` that is empty for elements of the type of `x`.
+    fn list_nil_for(&mut self, f: Term, x: Term) -> CheckResult<Term> {
+        let ty = generated::eo__24eo_5ftypeof(self, x)?;
+        generated::eo__24eo_5fnil(self, f, ty)
+    }
+    fn list_repeat(&mut self, f: Term, x: Term, count: Term) -> CheckResult<Term> {
+        let Some(n) = self.object_index(count)? else {
             return Ok(self.stuck());
         };
-        match op {
-            EvalOp::ListLength => return self.numeral(Integer::from(xs.len())),
-            EvalOp::ListNth => {
-                return Ok(self
-                    .object_index(a[2])?
-                    .and_then(|n| xs.get(n as usize).copied())
-                    .unwrap_or(self.stuck()));
-            }
-            EvalOp::ListFind => {
-                return self.numeral(
-                    xs.iter()
-                        .position(|&x| x == a[2])
-                        .map(Integer::from)
-                        .unwrap_or_else(|| Integer::one().neg()),
-                );
-            }
-            EvalOp::ListRev => xs.reverse(),
-            EvalOp::ListSingletonElim => return Ok(if xs.len() == 1 { xs[0] } else { a[1] }),
-            EvalOp::ListSingletonIntro => return Ok(a[1]),
-            EvalOp::ListErase => {
-                if let Some(i) = xs.iter().position(|&x| x == a[2]) {
-                    xs.remove(i);
-                }
-            }
-            EvalOp::ListEraseAll => xs.retain(|&x| x != a[2]),
-            EvalOp::ListSetof => {
-                // the first occurrence of each element, in order
-                let mut seen = TermCounts::new(xs.len());
-                let mut kept = Vec::new();
-                let mut i = 0;
-                while i < xs.len() {
-                    if seen.entry(xs[i]).is_none() {
-                        seen.add(xs[i]);
-                        kept.push(xs[i]);
-                    }
-                    i += 1;
-                }
-                xs = kept;
-            }
-            EvalOp::ListConcat
-            | EvalOp::ListMinclude
-            | EvalOp::ListMeq
-            | EvalOp::ListDiff
-            | EvalOp::ListInter => {
-                let Some((ys, other_nil)) = self.list_parts(f, a[2])? else {
-                    return Ok(self.stuck());
-                };
-                if other_nil != nil {
-                    return Ok(self.stuck());
-                }
-                if op == EvalOp::ListConcat {
-                    let left = match self.view(f)? {
-                        TermData::Node(c, _) => c.is_left_assoc(),
-                        _ => false,
-                    };
-                    if left {
-                        let mut ys = ys;
-                        ys.extend(xs);
-                        xs = ys;
-                    } else {
-                        xs.extend(ys);
-                    }
-                } else {
-                    // the elements of the second list, as a multiset
-                    let mut counts = TermCounts::new(ys.len());
-                    let mut i = 0;
-                    while i < ys.len() {
-                        counts.add(ys[i]);
-                        i += 1;
-                    }
-                    if op == EvalOp::ListMinclude || op == EvalOp::ListMeq {
-                        // take each element of the first list out of it
-                        let mut foreign = false;
-                        let mut i = 0;
-                        while i < xs.len() {
-                            match counts.entry(xs[i]) {
-                                Some(place) => counts.remove_one(place),
-                                None => foreign = true,
-                            }
-                            i += 1;
-                        }
-                        if foreign && op == EvalOp::ListMeq {
-                            return self.boolean(false);
-                        }
-                        let contained = counts.all_zero();
-                        if op == EvalOp::ListMeq && contained {
-                            let ys = self
-                                .list_parts(f, a[2])?
-                                .ok_or(CheckError::InvalidConstructor)?
-                                .0;
-                            return self.boolean(xs.len() == ys.len());
-                        }
-                        return self.boolean(contained);
-                    }
-                    // the first list's elements that pair off with one of
-                    // the second (the intersection), or the others
-                    let mut kept = Vec::new();
-                    let mut i = 0;
-                    while i < xs.len() {
-                        let found = match counts.entry(xs[i]) {
-                            Some(place) => {
-                                let left = counts.count(place) > 0;
-                                counts.remove_one(place);
-                                left
-                            }
-                            None => false,
-                        };
-                        if found == (op == EvalOp::ListInter) {
-                            kept.push(xs[i]);
-                        }
-                        i += 1;
-                    }
-                    xs = kept;
-                }
-            }
-            _ => return Ok(self.stuck()),
+        if u64::from(n) > self.limits.calls {
+            return Err(CheckError::Limit);
         }
-        self.list_build(f, &xs, nil)
+        let nil = self.list_nil_for(f, x)?;
+        let elems = vec![x; n as usize];
+        self.list_build(f, &elems, nil)
+    }
+    fn list_cons_op(&mut self, f: Term, x: Term, list: Term) -> CheckResult<Term> {
+        let Some((tail, nil)) = self.list_parts(f, list)? else {
+            return Ok(self.stuck());
+        };
+        let mut elems = Vec::with_capacity(tail.len() + 1);
+        elems.push(x);
+        append_terms(&mut elems, &tail);
+        self.list_build(f, &elems, nil)
+    }
+    /// The elements of two lists of `f` that end in the same nil, with
+    /// that nil; `None` if one is not a list or the ends differ.
+    #[allow(clippy::type_complexity)]
+    fn list_pair(
+        &mut self,
+        f: Term,
+        x: Term,
+        y: Term,
+    ) -> CheckResult<Option<(Vec<Term>, Vec<Term>, Term)>> {
+        let Some((xs, nil)) = self.list_parts(f, x)? else {
+            return Ok(None);
+        };
+        let Some((ys, other_nil)) = self.list_parts(f, y)? else {
+            return Ok(None);
+        };
+        if other_nil != nil {
+            return Ok(None);
+        }
+        Ok(Some((xs, ys, nil)))
+    }
+    fn list_concat(&mut self, f: Term, x: Term, y: Term) -> CheckResult<Term> {
+        let Some((xs, ys, nil)) = self.list_pair(f, x, y)? else {
+            return Ok(self.stuck());
+        };
+        let left = self.is_left_assoc(f)?;
+        let mut both = Vec::with_capacity(xs.len() + ys.len());
+        if left {
+            append_terms(&mut both, &ys);
+            append_terms(&mut both, &xs);
+        } else {
+            append_terms(&mut both, &xs);
+            append_terms(&mut both, &ys);
+        }
+        self.list_build(f, &both, nil)
+    }
+    /// `list_minclude` and `list_meq`: whether the second list is included
+    /// in the first as a multiset, or equal to it.
+    fn list_inclusion(&mut self, op: EvalOp, f: Term, x: Term, y: Term) -> CheckResult<Term> {
+        let Some((xs, ys, _)) = self.list_pair(f, x, y)? else {
+            return Ok(self.stuck());
+        };
+        let (foreign, contained) = multiset_inclusion(&xs, &ys);
+        let equality = match op {
+            EvalOp::ListMeq => true,
+            _ => false,
+        };
+        if !equality {
+            return self.boolean(contained);
+        }
+        if foreign {
+            return self.boolean(false);
+        }
+        if !contained {
+            return self.boolean(false);
+        }
+        let ys = match self.list_parts(f, y)? {
+            Some((ys, _)) => ys,
+            None => return Err(CheckError::InvalidConstructor),
+        };
+        self.boolean(xs.len() == ys.len())
+    }
+    /// `list_inter` and `list_diff`.
+    fn list_selection(&mut self, op: EvalOp, f: Term, x: Term, y: Term) -> CheckResult<Term> {
+        let Some((xs, ys, nil)) = self.list_pair(f, x, y)? else {
+            return Ok(self.stuck());
+        };
+        let paired = match op {
+            EvalOp::ListInter => true,
+            _ => false,
+        };
+        let kept = multiset_select(&xs, &ys, paired);
+        self.list_build(f, &kept, nil)
+    }
+    /// The list operators on one list, `a[1]`.
+    fn list_of_one(&mut self, op: EvalOp, f: Term, a: &[Term]) -> CheckResult<Term> {
+        let Some((xs, nil)) = self.list_parts(f, a[1])? else {
+            return match op {
+                EvalOp::ListSingletonIntro => {
+                    let nil = self.list_nil_for(f, a[1])?;
+                    self.list_build(f, &[a[1]], nil)
+                }
+                _ => Ok(self.stuck()),
+            };
+        };
+        match op {
+            EvalOp::ListLength => self.numeral(Integer::from(xs.len())),
+            EvalOp::ListNth => self.list_nth(&xs, a[2]),
+            EvalOp::ListFind => self.numeral(match position(&xs, a[2]) {
+                Some(i) => Integer::from(i),
+                None => Integer::one().neg(),
+            }),
+            EvalOp::ListRev => self.list_build(f, &reversed(&xs), nil),
+            EvalOp::ListSingletonElim => Ok(if xs.len() == 1 { xs[0] } else { a[1] }),
+            EvalOp::ListSingletonIntro => Ok(a[1]),
+            EvalOp::ListErase => self.list_build(f, &without_first(&xs, a[2]), nil),
+            EvalOp::ListEraseAll => self.list_build(f, &without(&xs, a[2]), nil),
+            EvalOp::ListSetof => self.list_build(f, &first_occurrences(&xs), nil),
+            _ => Ok(self.stuck()),
+        }
+    }
+    fn list_nth(&mut self, xs: &[Term], index: Term) -> CheckResult<Term> {
+        Ok(match self.object_index(index)? {
+            Some(n) => {
+                if (n as usize) < xs.len() {
+                    xs[n as usize]
+                } else {
+                    self.stuck()
+                }
+            }
+            None => self.stuck(),
+        })
     }
 
     /// Check the entire proof state machine, including typing, assumptions,
-    /// step-pop, premise lookup and the final closed refutation test.
-    pub fn check_refutation(&mut self, assumptions: Term, commands: Term) -> CheckResult<bool> {
-        with_checker_stack(|| self.check_refutation_inner(assumptions, commands))
-    }
-    fn check_refutation_inner(&mut self, assumptions: Term, commands: Term) -> CheckResult<bool> {
+    /// step-pop, premise lookup and the final closed refutation test. To be
+    /// called on the checker's stack: see `Store::check_refutation`.
+    pub(crate) fn check_refutation_inner(&mut self, assumptions: Term, commands: Term) -> CheckResult<bool> {
         self.calls = 0;
         let answer = generated::eo__24eo_5fchecker_5fis_5frefutation(self, assumptions, commands)?;
-        Ok(self.boolean_value(answer, true)? == Some(true))
+        self.is_native_true(answer)
     }
 }
 
-/// Keep recursive rule code on a deliberately sized stack. Errors and worker
-/// failures remain values. Resource limits are checked before recursive calls.
-pub fn with_checker_stack<T: Send>(f: impl FnOnce() -> CheckResult<T> + Send) -> CheckResult<T> {
-    std::thread::scope(|scope| {
-        std::thread::Builder::new()
-            .stack_size(CHECKER_STACK_SIZE)
-            .spawn_scoped(scope, f)
-            .map_err(|_| CheckError::Worker)?
-            .join()
-            .map_err(|_| CheckError::Worker)?
-    })
+/// The order of two literals of one kind: booleans, numbers, rationals by
+/// numerator and then denominator, strings by code points, bit-vectors by
+/// width and then value.
+fn literal_cmp(a: &Lit, b: &Lit) -> CheckResult<std::cmp::Ordering> {
+    use std::cmp::Ordering;
+    match a {
+        Lit::Bool(a) => match b {
+            Lit::Bool(b) => Ok(if *a == *b {
+                Ordering::Equal
+            } else if *b {
+                Ordering::Less
+            } else {
+                Ordering::Greater
+            }),
+            _ => Err(CheckError::InvalidNative),
+        },
+        Lit::Numeral(a) => match b {
+            Lit::Numeral(b) => Ok(a.cmp(b)),
+            _ => Err(CheckError::InvalidNative),
+        },
+        Lit::Rational(a) => match b {
+            Lit::Rational(b) => Ok(match a.numerator().cmp(&b.numerator()) {
+                Ordering::Equal => a.denominator().cmp(&b.denominator()),
+                order => order,
+            }),
+            _ => Err(CheckError::InvalidNative),
+        },
+        Lit::String(a) => match b {
+            Lit::String(b) => Ok(code_points_cmp(a.code_points(), b.code_points())),
+            _ => Err(CheckError::InvalidNative),
+        },
+        Lit::Binary(a) => match b {
+            Lit::Binary(b) => Ok(match a.size().cmp(&b.size()) {
+                Ordering::Equal => a.value().cmp(b.value()),
+                order => order,
+            }),
+            _ => Err(CheckError::InvalidNative),
+        },
+        _ => Err(CheckError::InvalidNative),
+    }
 }
-
-fn parse_int(s: &str) -> CheckResult<Integer> {
-    Integer::parse(s, 10).ok_or(CheckError::InvalidNative)
+/// The order of two sequences of code points: by the first place where
+/// they differ, a proper prefix first.
+fn code_points_cmp(a: &[u32], b: &[u32]) -> std::cmp::Ordering {
+    use std::cmp::Ordering;
+    let mut order = Ordering::Equal;
+    let mut i = 0;
+    let mut more = true;
+    while more {
+        if i == a.len() || i == b.len() {
+            order = a.len().cmp(&b.len());
+            more = false;
+        } else if a[i] != b[i] {
+            order = a[i].cmp(&b[i]);
+            more = false;
+        } else {
+            i += 1;
+        }
+    }
+    order
 }
-pub fn parse_rat(s: &str) -> CheckResult<Rational> {
-    Rational::parse(s).ok_or(CheckError::InvalidNative)
+/// Adds the terms of `from` to `to`.
+fn append_terms(to: &mut Vec<Term>, from: &[Term]) {
+    let mut i = 0;
+    while i < from.len() {
+        to.push(from[i]);
+        i += 1;
+    }
+}
+/// The first place of `x` in `xs`.
+fn position(xs: &[Term], x: Term) -> Option<usize> {
+    let mut found = None;
+    let mut i = xs.len();
+    while i > 0 {
+        i -= 1;
+        if xs[i] == x {
+            found = Some(i);
+        }
+    }
+    found
+}
+/// The terms in the opposite order.
+fn reversed(xs: &[Term]) -> Vec<Term> {
+    let mut out = Vec::with_capacity(xs.len());
+    let mut i = xs.len();
+    while i > 0 {
+        i -= 1;
+        out.push(xs[i]);
+    }
+    out
+}
+/// The terms without the first occurrence of `x`.
+fn without_first(xs: &[Term], x: Term) -> Vec<Term> {
+    let mut out = Vec::with_capacity(xs.len());
+    let mut erased = false;
+    let mut i = 0;
+    while i < xs.len() {
+        if !erased && xs[i] == x {
+            erased = true;
+        } else {
+            out.push(xs[i]);
+        }
+        i += 1;
+    }
+    out
+}
+/// The terms without any occurrence of `x`.
+fn without(xs: &[Term], x: Term) -> Vec<Term> {
+    let mut out = Vec::with_capacity(xs.len());
+    let mut i = 0;
+    while i < xs.len() {
+        if xs[i] != x {
+            out.push(xs[i]);
+        }
+        i += 1;
+    }
+    out
+}
+/// The first occurrence of each term, in order.
+fn first_occurrences(xs: &[Term]) -> Vec<Term> {
+    let mut seen = TermCounts::new(xs.len());
+    let mut out = Vec::new();
+    let mut i = 0;
+    while i < xs.len() {
+        if seen.entry(xs[i]).is_none() {
+            seen.add(xs[i]);
+            out.push(xs[i]);
+        }
+        i += 1;
+    }
+    out
+}
+/// The terms of `ys` counted, as a multiset.
+fn multiset(ys: &[Term]) -> TermCounts {
+    let mut counts = TermCounts::new(ys.len());
+    let mut i = 0;
+    while i < ys.len() {
+        counts.add(ys[i]);
+        i += 1;
+    }
+    counts
+}
+/// Takes each term of `xs` out of the multiset of `ys`. First: whether a
+/// term of `xs` is not in `ys` at all. Second: whether nothing of `ys` is
+/// left, that is, `ys` is included in `xs` as a multiset.
+fn multiset_inclusion(xs: &[Term], ys: &[Term]) -> (bool, bool) {
+    let mut counts = multiset(ys);
+    let mut foreign = false;
+    let mut i = 0;
+    while i < xs.len() {
+        match counts.entry(xs[i]) {
+            Some(place) => counts.remove_one(place),
+            None => foreign = true,
+        }
+        i += 1;
+    }
+    (foreign, counts.all_zero())
+}
+/// The terms of `xs` that pair off with a term of `ys` (`paired`), each
+/// term of `ys` pairing once, or those that do not.
+fn multiset_select(xs: &[Term], ys: &[Term], paired: bool) -> Vec<Term> {
+    let mut counts = multiset(ys);
+    let mut out = Vec::new();
+    let mut i = 0;
+    while i < xs.len() {
+        let found = match counts.entry(xs[i]) {
+            Some(place) => {
+                let left = counts.count(place) > 0;
+                counts.remove_one(place);
+                left
+            }
+            None => false,
+        };
+        if found == paired {
+            out.push(xs[i]);
+        }
+        i += 1;
+    }
+    out
 }
 
 #[cfg(test)]
@@ -1261,10 +1576,9 @@ enum ArgKind {
 }
 
 impl Store {
-    pub fn check_proof(&mut self, assumptions: Term, commands: Term) -> CheckResult<Verdict> {
-        with_checker_stack(|| self.check_proof_inner(assumptions, commands))
-    }
-    fn check_proof_inner(&mut self, assumptions: Term, commands: Term) -> CheckResult<Verdict> {
+    /// The verdict on a proof. To be called on the checker's stack: see
+    /// `Store::check_proof`.
+    pub(crate) fn check_proof_inner(&mut self, assumptions: Term, commands: Term) -> CheckResult<Verdict> {
         if !self.check_refutation_inner(assumptions, commands)? {
             return Ok(Verdict::Incorrect);
         }
@@ -1541,7 +1855,7 @@ _ => None,
         generated::eo__24eo_5fto_5fsmt_5ftype(self, t)
     }
     fn translation_type_wf(&mut self, t: Term, component: bool) -> CheckResult<bool> {
-        let b = if component { generated::eo__24smtx_5ftype_5fwf_5fcomponent(self, t)? } else { generated::eo__24smtx_5ftype_5fwf(self, t)? }; Ok(self.boolean_value(b, true)? == Some(true))
+        let b = if component { generated::eo__24smtx_5ftype_5fwf_5fcomponent(self, t)? } else { generated::eo__24smtx_5ftype_5fwf(self, t)? }; self.is_native_true(b)
     }
     fn has_translation(&mut self, t: Term) -> CheckResult<bool> {
         let ty = self.translation_type(t)?;
