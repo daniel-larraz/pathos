@@ -140,7 +140,8 @@ impl Built {
         let limits = Limits {
             terms: u32::MAX,
             calls: u64::MAX,
-            depth: 100_000,
+            // the checker's own default: what its stack is sized for
+            depth: Limits::default().depth,
         };
         let mut store = Store::new(limits);
         store.set_caching(caching);

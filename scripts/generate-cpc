@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Regenerates generated/cpc-checker, the checker for CPC that Ethos's
-# rust-meta stage compiles from logos's signature (cvc5/ethos#274). The
+# rust-meta stage (cvc5/ethos#274, merged) compiles from logos's signature. The
 # crate is generated code: it is never edited by hand, and this script is
 # the only thing that writes it.
 #
@@ -10,8 +10,7 @@
 #   --ethos      the Ethos repository holding the commit, a URL or a local
 #                clone (default: https://github.com/cvc5/ethos)
 #   --rev        the Ethos commit with the rust-meta stage (default: the
-#                one below; it is a commit of pull request 274, which is
-#                fetched by its hash or through refs/pull/274/head)
+#                one below, a commit of Ethos's main branch)
 #   --logos      the logos repository (default: LOGOS_REPO of difftest.env)
 #   --logos-rev  the logos revision whose install/defs is compiled
 #                (default: LOGOS_REV of difftest.env)
@@ -42,9 +41,8 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=../difftest.env
 source "$root/difftest.env"
 
-# The commit of cvc5/ethos#274 the checker is generated from.
-default_rev=8d7f7c681a9f502ee0885522c68840d3883cc4e3
-pull_request=274
+# The commit of Ethos's main branch the checker is generated from.
+default_rev=b8d651276c9efa0edcdce4ace7ed702ba74e49a3
 
 fail() { echo "scripts/generate-cpc: $*" >&2; exit 2; }
 
@@ -80,7 +78,7 @@ work="$(cd "$work" && pwd)"
 # A clone of `repo` in `dir` at `rev`; prints the commit. `dir` is used only
 # if git says it is the top of a repository of its own (see scripts/drift).
 checkout() {
-  local repo="$1" dir="$2" rev="$3" pull="${4:-}"
+  local repo="$1" dir="$2" rev="$3"
   local top
   top="$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)" || top=""
   if [[ ! -d "$dir" || "$(cd "$dir" && pwd -P)" != "$top" ]]; then
@@ -92,17 +90,15 @@ checkout() {
   local commit
   if ! commit="$(git -C "$dir" rev-parse --verify --quiet "origin/$rev^{commit}" ||
     git -C "$dir" rev-parse --verify --quiet "$rev^{commit}")"; then
-    # a commit of a pull request is on no branch
-    git -C "$dir" fetch --quiet origin "$rev" 2>/dev/null ||
-      { [[ -n "$pull" ]] && git -C "$dir" fetch --quiet origin "refs/pull/$pull/head"; } ||
-      return 1
+    # a commit that is on no branch
+    git -C "$dir" fetch --quiet origin "$rev" 2>/dev/null || return 1
     commit="$(git -C "$dir" rev-parse --verify --quiet "$rev^{commit}")" || return 1
   fi
   git -C "$dir" checkout --quiet --detach "$commit" || return 1
   echo "$commit"
 }
 
-ethos_commit="$(checkout "$ethos_repo" "$work/ethos" "$rev" "$pull_request")" ||
+ethos_commit="$(checkout "$ethos_repo" "$work/ethos" "$rev")" ||
   fail "cannot get commit $rev of $ethos_repo"
 logos_commit="$(checkout "$logos_repo" "$work/logos" "$logos_rev")" ||
   fail "cannot get revision $logos_rev of $logos_repo"
@@ -141,7 +137,7 @@ Generated code. Do not edit it: change what it is generated from and run
 \`scripts/generate-cpc\`, which wrote every file here, this one included.
 
 It is the crate \`pathos-compiled-checker\`: the checker for CPC that the
-\`rust-meta\` stage of \`ethos-eoc\` (cvc5/ethos#$pull_request) compiles from
+\`rust-meta\` stage of \`ethos-eoc\` (cvc5/ethos#274) compiles from
 logos's signature. \`crates/pathos\` builds its input and calls it.
 
 | Generated from | |

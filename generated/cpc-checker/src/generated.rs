@@ -321,22 +321,51 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 8 {
+let matched = match case_index {
+0 => case_0_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+1 => case_1_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+2 => case_2_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+3 => case_3_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+4 => case_4_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+5 => case_5_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+6 => case_6_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+7 => case_7_eo__24are_5fdistinct_5fterms_5ftype(s, a0, a1, a2),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(5), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo_Int, &[])?;
 if a2 != v0 { break 'case0; }
 let v1 = s.operator("is_z", &[a0])?;
 let v2 = s.operator("is_z", &[a1])?;
 let v3 = s.operator("and", &[v1, v2])?;
-return Ok(v3);
+return Ok(Some(v3));
 }
+Ok(None)
+}
+fn case_1_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v4 = s.construct(Constructor::eo_Real, &[])?;
 if a2 != v4 { break 'case1; }
 let v5 = s.operator("is_q", &[a0])?;
 let v6 = s.operator("is_q", &[a1])?;
 let v7 = s.operator("and", &[v5, v6])?;
-return Ok(v7);
+return Ok(Some(v7));
 }
+Ok(None)
+}
+fn case_2_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v8 = s.unapply(a2)?;
 let Some((f, a)) = v8 else { break 'case2; }
@@ -350,8 +379,11 @@ if v10 != v12 { break 'case2; }
 let v13 = s.operator("is_str", &[a0])?;
 let v14 = s.operator("is_str", &[a1])?;
 let v15 = s.operator("and", &[v13, v14])?;
-return Ok(v15);
+return Ok(Some(v15));
 }
+Ok(None)
+}
+fn case_3_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v16 = s.unapply(a2)?;
 let Some((f, a)) = v16 else { break 'case3; }
@@ -363,16 +395,22 @@ if v17 != v19 { break 'case3; }
 let v20 = s.operator("is_bin", &[a0])?;
 let v21 = s.operator("is_bin", &[a1])?;
 let v22 = s.operator("and", &[v20, v21])?;
-return Ok(v22);
+return Ok(Some(v22));
 }
+Ok(None)
+}
+fn case_4_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v23 = s.construct(Constructor::eo__24emb_5fBool, &[])?;
 if a2 != v23 { break 'case4; }
 let v24 = s.operator("is_bool", &[a0])?;
 let v25 = s.operator("is_bool", &[a1])?;
 let v26 = s.operator("and", &[v24, v25])?;
-return Ok(v26);
+return Ok(Some(v26));
 }
+Ok(None)
+}
+fn case_5_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v27 = s.unapply(a2)?;
 let Some((f, a)) = v27 else { break 'case5; }
@@ -384,8 +422,11 @@ if v28 != v30 { break 'case5; }
 let v31 = eo__24set_5fis_5fnot_5fsubset(s, a0, a1, v29)?;
 let v32 = eo__24set_5fis_5fnot_5fsubset(s, a1, a0, v29)?;
 let v33 = s.operator("or", &[v31, v32])?;
-return Ok(v33);
+return Ok(Some(v33));
 }
+Ok(None)
+}
+fn case_6_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v34 = s.unapply(a2)?;
 let Some((f, a)) = v34 else { break 'case6; }
@@ -395,8 +436,11 @@ let v36 = a;
 let v37 = s.construct(Constructor::eo_Seq, &[])?;
 if v35 != v37 { break 'case6; }
 let v38 = eo__24seq_5fdistinct_5fterms(s, a0, a1, v36)?;
-return Ok(v38);
+return Ok(Some(v38));
 }
+Ok(None)
+}
+fn case_7_eo__24are_5fdistinct_5fterms_5ftype(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v39 = eo__24dt_5fdistinct_5fterms(s, a0, a1)?;
 let v40 = s.operator("is_ok", &[v39])?;
@@ -409,13 +453,9 @@ let v43 = s.literal(Lit::Bool(false))?;
 v43
 }, None => s.stuck(),
 };
-return Ok(v41);
+return Ok(Some(v41));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(5), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$arith_mk_one"
 pub fn eo__24arith_5fmk_5fone(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -541,6 +581,30 @@ pub fn eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Te
 s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 10 {
+let matched = match case_index {
+0 => case_0_eo__24arith_5freduction_5fpred(s, a0),
+1 => case_1_eo__24arith_5freduction_5fpred(s, a0),
+2 => case_2_eo__24arith_5freduction_5fpred(s, a0),
+3 => case_3_eo__24arith_5freduction_5fpred(s, a0),
+4 => case_4_eo__24arith_5freduction_5fpred(s, a0),
+5 => case_5_eo__24arith_5freduction_5fpred(s, a0),
+6 => case_6_eo__24arith_5freduction_5fpred(s, a0),
+7 => case_7_eo__24arith_5freduction_5fpred(s, a0),
+8 => case_8_eo__24arith_5freduction_5fpred(s, a0),
+9 => case_9_eo__24arith_5freduction_5fpred(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -603,8 +667,11 @@ let v54 = s.apply(v20, v53)?;
 let v55 = s.literal(Lit::Bool(true))?;
 let v56 = s.apply(v54, v55)?;
 let v57 = s.apply(v19, v56)?;
-return Ok(v57);
+return Ok(Some(v57));
 }
+Ok(None)
+}
+fn case_1_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v58 = s.unapply(a0)?;
 let Some((f, a)) = v58 else { break 'case1; }
@@ -662,8 +729,11 @@ let v107 = s.apply(v73, v106)?;
 let v108 = s.literal(Lit::Bool(true))?;
 let v109 = s.apply(v107, v108)?;
 let v110 = s.apply(v72, v109)?;
-return Ok(v110);
+return Ok(Some(v110));
 }
+Ok(None)
+}
+fn case_2_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v111 = s.unapply(a0)?;
 let Some((f, a)) = v111 else { break 'case2; }
@@ -709,8 +779,11 @@ let v140 = s.apply(v139, v116)?;
 let v141 = s.apply(v140, v113)?;
 let v142 = s.apply(v138, v141)?;
 let v143 = s.apply(v122, v142)?;
-return Ok(v143);
+return Ok(Some(v143));
 }
+Ok(None)
+}
+fn case_3_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v144 = s.unapply(a0)?;
 let Some((f, a)) = v144 else { break 'case3; }
@@ -743,8 +816,11 @@ let v166 = s.apply(v165, v149)?;
 let v167 = s.apply(v166, v146)?;
 let v168 = s.apply(v164, v167)?;
 let v169 = s.apply(v155, v168)?;
-return Ok(v169);
+return Ok(Some(v169));
 }
+Ok(None)
+}
+fn case_4_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v170 = s.unapply(a0)?;
 let Some((f, a)) = v170 else { break 'case4; }
@@ -777,8 +853,11 @@ let v192 = s.apply(v191, v175)?;
 let v193 = s.apply(v192, v172)?;
 let v194 = s.apply(v190, v193)?;
 let v195 = s.apply(v181, v194)?;
-return Ok(v195);
+return Ok(Some(v195));
 }
+Ok(None)
+}
+fn case_5_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v196 = s.unapply(a0)?;
 let Some((f, a)) = v196 else { break 'case5; }
@@ -884,8 +963,11 @@ let v267 = s.apply(v216, v266)?;
 let v268 = s.literal(Lit::Bool(true))?;
 let v269 = s.apply(v267, v268)?;
 let v270 = s.apply(v215, v269)?;
-return Ok(v270);
+return Ok(Some(v270));
 }
+Ok(None)
+}
+fn case_6_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v271 = s.unapply(a0)?;
 let Some((f, a)) = v271 else { break 'case6; }
@@ -1096,8 +1178,11 @@ let v457 = s.apply(v291, v293)?;
 let v458 = s.literal(Lit::Bool(true))?;
 let v459 = s.apply(v457, v458)?;
 let v460 = s.apply(v290, v459)?;
-return Ok(v460);
+return Ok(Some(v460));
 }
+Ok(None)
+}
+fn case_7_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v461 = s.unapply(a0)?;
 let Some((f, a)) = v461 else { break 'case7; }
@@ -1318,8 +1403,11 @@ let v657 = s.apply(v491, v493)?;
 let v658 = s.literal(Lit::Bool(true))?;
 let v659 = s.apply(v657, v658)?;
 let v660 = s.apply(v490, v659)?;
-return Ok(v660);
+return Ok(Some(v660));
 }
+Ok(None)
+}
+fn case_8_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v661 = s.unapply(a0)?;
 let Some((f, a)) = v661 else { break 'case8; }
@@ -1344,8 +1432,11 @@ let v677 = s.apply(v676, v663)?;
 let v678 = s.apply(v675, v677)?;
 let v679 = s.apply(v678, v663)?;
 let v680 = s.apply(v668, v679)?;
-return Ok(v680);
+return Ok(Some(v680));
 }
+Ok(None)
+}
+fn case_9_eo__24arith_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v681 = s.unapply(a0)?;
 let Some((f, a)) = v681 else { break 'case9; }
@@ -1434,12 +1525,9 @@ let v761 = s.apply(v696, v760)?;
 let v762 = s.literal(Lit::Bool(true))?;
 let v763 = s.apply(v761, v762)?;
 let v764 = s.apply(v695, v763)?;
-return Ok(v764);
+return Ok(Some(v764));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$arith_rel_inv"
 pub fn eo__24arith_5frel_5finv(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
@@ -1538,6 +1626,29 @@ pub fn eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: 
 s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? || s.is_stuck(a3)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 9 {
+let matched = match case_index {
+0 => case_0_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+1 => case_1_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+2 => case_2_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+3 => case_3_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+4 => case_4_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+5 => case_5_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+6 => case_6_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+7 => case_7_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+8 => case_8_eo__24arith_5frel_5fsum(s, a0, a1, a2, a3),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo__3c, &[])?;
 if a0 != v0 { break 'case0; }
@@ -1546,8 +1657,11 @@ if a1 != v1 { break 'case0; }
 let v2 = s.construct(Constructor::eo__3c, &[])?;
 let v3 = s.apply(v2, a2)?;
 let v4 = s.apply(v3, a3)?;
-return Ok(v4);
+return Ok(Some(v4));
 }
+Ok(None)
+}
+fn case_1_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v5 = s.construct(Constructor::eo__3c, &[])?;
 if a0 != v5 { break 'case1; }
@@ -1556,8 +1670,11 @@ if a1 != v6 { break 'case1; }
 let v7 = s.construct(Constructor::eo__3c, &[])?;
 let v8 = s.apply(v7, a2)?;
 let v9 = s.apply(v8, a3)?;
-return Ok(v9);
+return Ok(Some(v9));
 }
+Ok(None)
+}
+fn case_2_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v10 = s.construct(Constructor::eo__3c, &[])?;
 if a0 != v10 { break 'case2; }
@@ -1566,8 +1683,11 @@ if a1 != v11 { break 'case2; }
 let v12 = s.construct(Constructor::eo__3c, &[])?;
 let v13 = s.apply(v12, a2)?;
 let v14 = s.apply(v13, a3)?;
-return Ok(v14);
+return Ok(Some(v14));
 }
+Ok(None)
+}
+fn case_3_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v15 = s.construct(Constructor::eo__3c_3d, &[])?;
 if a0 != v15 { break 'case3; }
@@ -1576,8 +1696,11 @@ if a1 != v16 { break 'case3; }
 let v17 = s.construct(Constructor::eo__3c, &[])?;
 let v18 = s.apply(v17, a2)?;
 let v19 = s.apply(v18, a3)?;
-return Ok(v19);
+return Ok(Some(v19));
 }
+Ok(None)
+}
+fn case_4_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v20 = s.construct(Constructor::eo__3c_3d, &[])?;
 if a0 != v20 { break 'case4; }
@@ -1586,8 +1709,11 @@ if a1 != v21 { break 'case4; }
 let v22 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v23 = s.apply(v22, a2)?;
 let v24 = s.apply(v23, a3)?;
-return Ok(v24);
+return Ok(Some(v24));
 }
+Ok(None)
+}
+fn case_5_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v25 = s.construct(Constructor::eo__3c_3d, &[])?;
 if a0 != v25 { break 'case5; }
@@ -1596,8 +1722,11 @@ if a1 != v26 { break 'case5; }
 let v27 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v28 = s.apply(v27, a2)?;
 let v29 = s.apply(v28, a3)?;
-return Ok(v29);
+return Ok(Some(v29));
 }
+Ok(None)
+}
+fn case_6_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v30 = s.construct(Constructor::eo__3d, &[])?;
 if a0 != v30 { break 'case6; }
@@ -1606,8 +1735,11 @@ if a1 != v31 { break 'case6; }
 let v32 = s.construct(Constructor::eo__3c, &[])?;
 let v33 = s.apply(v32, a2)?;
 let v34 = s.apply(v33, a3)?;
-return Ok(v34);
+return Ok(Some(v34));
 }
+Ok(None)
+}
+fn case_7_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v35 = s.construct(Constructor::eo__3d, &[])?;
 if a0 != v35 { break 'case7; }
@@ -1616,8 +1748,11 @@ if a1 != v36 { break 'case7; }
 let v37 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v38 = s.apply(v37, a2)?;
 let v39 = s.apply(v38, a3)?;
-return Ok(v39);
+return Ok(Some(v39));
 }
+Ok(None)
+}
+fn case_8_eo__24arith_5frel_5fsum(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v40 = s.construct(Constructor::eo__3d, &[])?;
 if a0 != v40 { break 'case8; }
@@ -1626,12 +1761,9 @@ if a1 != v41 { break 'case8; }
 let v42 = s.construct(Constructor::eo__3c_3d, &[])?;
 let v43 = s.apply(v42, a2)?;
 let v44 = s.apply(v43, a3)?;
-return Ok(v44);
+return Ok(Some(v44));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$arith_rel_trichotomy"
 pub fn eo__24arith_5frel_5ftrichotomy(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
@@ -3071,6 +3203,47 @@ pub fn eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<T
 s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 27 {
+let matched = match case_index {
+0 => case_0_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+1 => case_1_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+2 => case_2_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+3 => case_3_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+4 => case_4_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+5 => case_5_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+6 => case_6_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+7 => case_7_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+8 => case_8_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+9 => case_9_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+10 => case_10_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+11 => case_11_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+12 => case_12_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+13 => case_13_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+14 => case_14_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+15 => case_15_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+16 => case_16_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+17 => case_17_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+18 => case_18_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+19 => case_19_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+20 => case_20_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+21 => case_21_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+22 => case_22_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+23 => case_23_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+24 => case_24_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+25 => case_25_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+26 => case_26_eo__24bv_5fmk_5fbitblast_5fstep(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -3081,8 +3254,11 @@ let v3 = s.construct(Constructor::eo_bvnot, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = s.construct(Constructor::eo_not, &[])?;
 let v5 = eo__24bv_5fbitblast_5fapply_5funary(s, v4, v2)?;
-return Ok(v5);
+return Ok(Some(v5));
 }
+Ok(None)
+}
+fn case_1_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v6 = s.unapply(a0)?;
 let Some((f, a)) = v6 else { break 'case1; }
@@ -3099,8 +3275,11 @@ if v10 != v12 { break 'case1; }
 let v13 = s.construct(Constructor::eo_and, &[])?;
 let v14 = eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec(s, v11, v8)?;
 let v15 = s.operator("list_singleton_elim", &[v13, v14])?;
-return Ok(v15);
+return Ok(Some(v15));
 }
+Ok(None)
+}
+fn case_2_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v16 = s.unapply(a0)?;
 let Some((f, a)) = v16 else { break 'case2; }
@@ -3116,8 +3295,11 @@ let v22 = s.construct(Constructor::eo_bvult, &[])?;
 if v20 != v22 { break 'case2; }
 let v23 = s.literal(Lit::Bool(false))?;
 let v24 = eo__24bv_5fbitblast_5fult(s, v21, v18, v23)?;
-return Ok(v24);
+return Ok(Some(v24));
 }
+Ok(None)
+}
+fn case_3_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v25 = s.unapply(a0)?;
 let Some((f, a)) = v25 else { break 'case3; }
@@ -3133,8 +3315,11 @@ let v31 = s.construct(Constructor::eo_bvule, &[])?;
 if v29 != v31 { break 'case3; }
 let v32 = s.literal(Lit::Bool(true))?;
 let v33 = eo__24bv_5fbitblast_5fult(s, v30, v27, v32)?;
-return Ok(v33);
+return Ok(Some(v33));
 }
+Ok(None)
+}
+fn case_4_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v34 = s.unapply(a0)?;
 let Some((f, a)) = v34 else { break 'case4; }
@@ -3154,8 +3339,11 @@ let v43 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v44 = s.operator("list_rev", &[v43, v36])?;
 let v45 = s.literal(Lit::Bool(false))?;
 let v46 = eo__24bv_5fbitblast_5fslt_5fimpl(s, v42, v44, v45)?;
-return Ok(v46);
+return Ok(Some(v46));
 }
+Ok(None)
+}
+fn case_5_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v47 = s.unapply(a0)?;
 let Some((f, a)) = v47 else { break 'case5; }
@@ -3175,8 +3363,11 @@ let v56 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 let v57 = s.operator("list_rev", &[v56, v49])?;
 let v58 = s.literal(Lit::Bool(true))?;
 let v59 = eo__24bv_5fbitblast_5fslt_5fimpl(s, v55, v57, v58)?;
-return Ok(v59);
+return Ok(Some(v59));
 }
+Ok(None)
+}
+fn case_6_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v60 = s.unapply(a0)?;
 let Some((f, a)) = v60 else { break 'case6; }
@@ -3188,8 +3379,11 @@ let Some(fields) = v63 else { break 'case6; }
 ;
 let v64 = fields;
 let v65 = eo__24bv_5fbitblast_5fsubsequence(s, v64[1], v64[0], v62)?;
-return Ok(v65);
+return Ok(Some(v65));
 }
+Ok(None)
+}
+fn case_7_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v66 = s.unapply(a0)?;
 let Some((f, a)) = v66 else { break 'case7; }
@@ -3207,8 +3401,11 @@ let v73 = s.construct(Constructor::eo_concat, &[])?;
 let v74 = s.apply(v73, v71)?;
 let v75 = s.apply(v74, v68)?;
 let v76 = eo__24bv_5fmk_5fbitblast_5fstep_5fconcat(s, v75)?;
-return Ok(v76);
+return Ok(Some(v76));
 }
+Ok(None)
+}
+fn case_8_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v77 = s.unapply(a0)?;
 let Some((f, a)) = v77 else { break 'case8; }
@@ -3225,8 +3422,11 @@ if v81 != v83 { break 'case8; }
 let v84 = s.construct(Constructor::eo_bvor, &[])?;
 let v85 = s.construct(Constructor::eo_or, &[])?;
 let v86 = eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise(s, v84, v85, v79, v82)?;
-return Ok(v86);
+return Ok(Some(v86));
 }
+Ok(None)
+}
+fn case_9_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v87 = s.unapply(a0)?;
 let Some((f, a)) = v87 else { break 'case9; }
@@ -3243,8 +3443,11 @@ if v91 != v93 { break 'case9; }
 let v94 = s.construct(Constructor::eo_bvand, &[])?;
 let v95 = s.construct(Constructor::eo_and, &[])?;
 let v96 = eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise(s, v94, v95, v89, v92)?;
-return Ok(v96);
+return Ok(Some(v96));
 }
+Ok(None)
+}
+fn case_10_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v97 = s.unapply(a0)?;
 let Some((f, a)) = v97 else { break 'case10; }
@@ -3261,8 +3464,11 @@ if v101 != v103 { break 'case10; }
 let v104 = s.construct(Constructor::eo_bvxor, &[])?;
 let v105 = s.construct(Constructor::eo_xor, &[])?;
 let v106 = eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise(s, v104, v105, v99, v102)?;
-return Ok(v106);
+return Ok(Some(v106));
 }
+Ok(None)
+}
+fn case_11_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v107 = s.unapply(a0)?;
 let Some((f, a)) = v107 else { break 'case11; }
@@ -3278,8 +3484,11 @@ let v113 = s.construct(Constructor::eo_bvxnor, &[])?;
 if v111 != v113 { break 'case11; }
 let v114 = s.construct(Constructor::eo__3d, &[])?;
 let v115 = eo__24bv_5fbitblast_5fapply_5fbinary(s, v114, v112, v109)?;
-return Ok(v115);
+return Ok(Some(v115));
 }
+Ok(None)
+}
+fn case_12_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v116 = s.unapply(a0)?;
 let Some((f, a)) = v116 else { break 'case12; }
@@ -3294,8 +3503,11 @@ let v121 = a;
 let v122 = s.construct(Constructor::eo_bvadd, &[])?;
 if v120 != v122 { break 'case12; }
 let v123 = eo__24bv_5fmk_5fbitblast_5fstep_5fadd(s, v118, v121)?;
-return Ok(v123);
+return Ok(Some(v123));
 }
+Ok(None)
+}
+fn case_13_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v124 = s.unapply(a0)?;
 let Some((f, a)) = v124 else { break 'case13; }
@@ -3310,8 +3522,11 @@ let v129 = a;
 let v130 = s.construct(Constructor::eo_bvmul, &[])?;
 if v128 != v130 { break 'case13; }
 let v131 = eo__24bv_5fmk_5fbitblast_5fstep_5fmul(s, v126, v129)?;
-return Ok(v131);
+return Ok(Some(v131));
 }
+Ok(None)
+}
+fn case_14_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v132 = s.unapply(a0)?;
 let Some((f, a)) = v132 else { break 'case14; }
@@ -3360,8 +3575,11 @@ v168
 let v169 = eo__24bv_5fdiv_5fmod_5fimpl(s, v137, v134, v156, v161)?;
 let v170 = eo__24pair_5ffirst(s, v169)?;
 let v171 = eo__24bv_5fbitblast_5fapply_5fite(s, v146, v151, v170)?;
-return Ok(v171);
+return Ok(Some(v171));
 }
+Ok(None)
+}
+fn case_15_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v172 = s.unapply(a0)?;
 let Some((f, a)) = v172 else { break 'case15; }
@@ -3405,8 +3623,11 @@ v203
 let v204 = eo__24bv_5fdiv_5fmod_5fimpl(s, v177, v174, v191, v196)?;
 let v205 = eo__24pair_5fsecond(s, v204)?;
 let v206 = eo__24bv_5fbitblast_5fapply_5fite(s, v186, v177, v205)?;
-return Ok(v206);
+return Ok(Some(v206));
 }
+Ok(None)
+}
+fn case_16_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v207 = s.unapply(a0)?;
 let Some((f, a)) = v207 else { break 'case16; }
@@ -3426,8 +3647,11 @@ let v216 = s.literal(Lit::Bool(true))?;
 let v217 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v218 = eo__24bv_5fripple_5fcarry_5fadder_5f2(s, v212, v215, v216, v217)?;
 let v219 = eo__24pair_5fsecond(s, v218)?;
-return Ok(v219);
+return Ok(Some(v219));
 }
+Ok(None)
+}
+fn case_17_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case17: {
 let v220 = s.unapply(a0)?;
 let Some((f, a)) = v220 else { break 'case17; }
@@ -3447,8 +3671,11 @@ let v231 = s.literal(Lit::Bool(true))?;
 let v232 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v233 = eo__24bv_5fripple_5fcarry_5fadder_5f2(s, v225, v230, v231, v232)?;
 let v234 = eo__24pair_5fsecond(s, v233)?;
-return Ok(v234);
+return Ok(Some(v234));
 }
+Ok(None)
+}
+fn case_18_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case18: {
 let v235 = s.unapply(a0)?;
 let Some((f, a)) = v235 else { break 'case18; }
@@ -3468,8 +3695,11 @@ let v243 = a;
 let v244 = s.construct(Constructor::eo_bvite, &[])?;
 if v242 != v244 { break 'case18; }
 let v245 = eo__24bv_5fmk_5fbitblast_5fstep_5fite(s, v243, v240, v237)?;
-return Ok(v245);
+return Ok(Some(v245));
 }
+Ok(None)
+}
+fn case_19_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case19: {
 let v246 = s.unapply(a0)?;
 let Some((f, a)) = v246 else { break 'case19; }
@@ -3652,8 +3882,11 @@ let v362 = eo__24eo_5ftypeof(s, v251)?;
 let v363 = eo__24bv_5fbitwidth(s, v362)?;
 let v364 = s.operator("list_repeat", &[v358, v361, v363])?;
 let v365 = eo__24bv_5fbitblast_5fapply_5fite(s, v280, v357, v364)?;
-return Ok(v365);
+return Ok(Some(v365));
 }
+Ok(None)
+}
+fn case_20_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case20: {
 let v366 = s.unapply(a0)?;
 let Some((f, a)) = v366 else { break 'case20; }
@@ -3832,8 +4065,11 @@ let v478 = eo__24eo_5ftypeof(s, v371)?;
 let v479 = eo__24bv_5fbitwidth(s, v478)?;
 let v480 = s.operator("list_repeat", &[v476, v477, v479])?;
 let v481 = eo__24bv_5fbitblast_5fapply_5fite(s, v400, v475, v480)?;
-return Ok(v481);
+return Ok(Some(v481));
 }
+Ok(None)
+}
+fn case_21_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case21: {
 let v482 = s.unapply(a0)?;
 let Some((f, a)) = v482 else { break 'case21; }
@@ -4011,8 +4247,11 @@ let v593 = eo__24eo_5ftypeof(s, v487)?;
 let v594 = eo__24bv_5fbitwidth(s, v593)?;
 let v595 = s.operator("list_repeat", &[v591, v592, v594])?;
 let v596 = eo__24bv_5fbitblast_5fapply_5fite(s, v516, v590, v595)?;
-return Ok(v596);
+return Ok(Some(v596));
 }
+Ok(None)
+}
+fn case_22_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case22: {
 let v597 = s.unapply(a0)?;
 let Some((f, a)) = v597 else { break 'case22; }
@@ -4033,8 +4272,11 @@ let v607 = s.operator("list_singleton_elim", &[v605, v606])?;
 let v608 = s.apply(v604, v607)?;
 let v609 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v610 = s.apply(v608, v609)?;
-return Ok(v610);
+return Ok(Some(v610));
 }
+Ok(None)
+}
+fn case_23_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case23: {
 let v611 = s.unapply(a0)?;
 let Some((f, a)) = v611 else { break 'case23; }
@@ -4054,8 +4296,11 @@ let v620 = eo__24bv_5fbitblast_5fult(s, v616, v613, v619)?;
 let v621 = s.apply(v618, v620)?;
 let v622 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v623 = s.apply(v621, v622)?;
-return Ok(v623);
+return Ok(Some(v623));
 }
+Ok(None)
+}
+fn case_24_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case24: {
 let v624 = s.unapply(a0)?;
 let Some((f, a)) = v624 else { break 'case24; }
@@ -4079,8 +4324,11 @@ let v637 = eo__24bv_5fbitblast_5fslt_5fimpl(s, v633, v635, v636)?;
 let v638 = s.apply(v631, v637)?;
 let v639 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 let v640 = s.apply(v638, v639)?;
-return Ok(v640);
+return Ok(Some(v640));
 }
+Ok(None)
+}
+fn case_25_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case25: {
 let v641 = s.unapply(a0)?;
 let Some((f, a)) = v641 else { break 'case25; }
@@ -4097,8 +4345,11 @@ let v648 = s.operator("list_rev", &[v647, v643])?;
 let v649 = eo__24bv_5fbitblast_5fhead(s, v648)?;
 let v650 = s.operator("list_repeat", &[v646, v649, v645[0]])?;
 let v651 = eo__24bv_5fbitblast_5fconcat(s, v643, v650)?;
-return Ok(v651);
+return Ok(Some(v651));
 }
+Ok(None)
+}
+fn case_26_eo__24bv_5fmk_5fbitblast_5fstep(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case26: {
 let v652 = s.operator("is_bin", &[a0])?;
 let v653 = match s.boolean_value(v652, false)? {
@@ -4136,12 +4387,9 @@ let v677 = eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec(s, a0, v669)?;
 v677
 }, None => s.stuck(),
 };
-return Ok(v653);
+return Ok(Some(v653));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$bv_mk_bitblast_step_add"
 pub fn eo__24bv_5fmk_5fbitblast_5fstep_5fadd(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
@@ -6023,6 +6271,32 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 11 {
+let matched = match case_index {
+0 => case_0_eo__24derivative(s, a0, a1),
+1 => case_1_eo__24derivative(s, a0, a1),
+2 => case_2_eo__24derivative(s, a0, a1),
+3 => case_3_eo__24derivative(s, a0, a1),
+4 => case_4_eo__24derivative(s, a0, a1),
+5 => case_5_eo__24derivative(s, a0, a1),
+6 => case_6_eo__24derivative(s, a0, a1),
+7 => case_7_eo__24derivative(s, a0, a1),
+8 => case_8_eo__24derivative(s, a0, a1),
+9 => case_9_eo__24derivative(s, a0, a1),
+10 => case_10_eo__24derivative(s, a0, a1),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(59), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.unapply(a1)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -6040,8 +6314,11 @@ let v7 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v8 = eo__24derivative(s, a0, v5)?;
 let v9 = eo__24derivative(s, a0, v2)?;
 let v10 = eo__24re_5fac_5fmerge(s, v7, v8, v9)?;
-return Ok(v10);
+return Ok(Some(v10));
 }
+Ok(None)
+}
+fn case_1_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v11 = s.unapply(a1)?;
 let Some((f, a)) = v11 else { break 'case1; }
@@ -6070,8 +6347,11 @@ let v26 = eo__24re_5fconcat_5fmerge(s, v25, v13)?;
 v26
 }, None => s.stuck(),
 };
-return Ok(v19);
+return Ok(Some(v19));
 }
+Ok(None)
+}
+fn case_2_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v27 = s.unapply(a1)?;
 let Some((f, a)) = v27 else { break 'case2; }
@@ -6089,8 +6369,11 @@ let v34 = s.construct(Constructor::eo_re_2einter, &[])?;
 let v35 = eo__24derivative(s, a0, v32)?;
 let v36 = eo__24derivative(s, a0, v29)?;
 let v37 = eo__24re_5fac_5fmerge(s, v34, v35, v36)?;
-return Ok(v37);
+return Ok(Some(v37));
 }
+Ok(None)
+}
+fn case_3_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v38 = s.unapply(a1)?;
 let Some((f, a)) = v38 else { break 'case3; }
@@ -6102,8 +6385,11 @@ if v39 != v41 { break 'case3; }
 let v42 = s.construct(Constructor::eo_re_2ecomp, &[])?;
 let v43 = eo__24derivative(s, a0, v40)?;
 let v44 = s.apply(v42, v43)?;
-return Ok(v44);
+return Ok(Some(v44));
 }
+Ok(None)
+}
+fn case_4_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v45 = s.unapply(a1)?;
 let Some((f, a)) = v45 else { break 'case4; }
@@ -6116,8 +6402,11 @@ let v49 = eo__24derivative(s, a0, v47)?;
 let v50 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 let v51 = s.apply(v50, v47)?;
 let v52 = eo__24re_5fconcat_5fmerge(s, v49, v51)?;
-return Ok(v52);
+return Ok(Some(v52));
 }
+Ok(None)
+}
+fn case_5_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v53 = s.unapply(a1)?;
 let Some((f, a)) = v53 else { break 'case5; }
@@ -6129,8 +6418,11 @@ if v54 != v56 { break 'case5; }
 let v57 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 if v55 != v57 { break 'case5; }
 let v58 = s.construct(Constructor::eo_re_2enone, &[])?;
-return Ok(v58);
+return Ok(Some(v58));
 }
+Ok(None)
+}
+fn case_6_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v59 = s.unapply(a1)?;
 let Some((f, a)) = v59 else { break 'case6; }
@@ -6158,8 +6450,11 @@ let v75 = s.construct(Constructor::eo_re_2enone, &[])?;
 v75
 }, None => s.stuck(),
 };
-return Ok(v67);
+return Ok(Some(v67));
 }
+Ok(None)
+}
+fn case_7_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v76 = s.unapply(a1)?;
 let Some((f, a)) = v76 else { break 'case7; }
@@ -6213,33 +6508,38 @@ let v104 = s.construct(Constructor::eo_re_2enone, &[])?;
 v104
 }, None => s.stuck(),
 };
-return Ok(v100);
+return Ok(Some(v100));
 }
+Ok(None)
+}
+fn case_8_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v105 = s.construct(Constructor::eo_re_2enone, &[])?;
 if a1 != v105 { break 'case8; }
 let v106 = s.construct(Constructor::eo_re_2enone, &[])?;
-return Ok(v106);
+return Ok(Some(v106));
 }
+Ok(None)
+}
+fn case_9_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v107 = s.construct(Constructor::eo_re_2eall, &[])?;
 if a1 != v107 { break 'case9; }
 let v108 = s.construct(Constructor::eo_re_2eall, &[])?;
-return Ok(v108);
+return Ok(Some(v108));
 }
+Ok(None)
+}
+fn case_10_eo__24derivative(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v109 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 if a1 != v109 { break 'case10; }
 let v110 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v111 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v112 = s.apply(v110, v111)?;
-return Ok(v112);
+return Ok(Some(v112));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(59), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$dt_arg_list"
 pub fn eo__24dt_5farg_5flist(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -6945,6 +7245,631 @@ result
 pub fn eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
 s.enter()?;
 let result = (|| {
+let mut case_index = 0_usize;
+while case_index < 611 {
+let matched = match case_index {
+0 => case_0_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+1 => case_1_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+2 => case_2_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+3 => case_3_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+4 => case_4_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+5 => case_5_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+6 => case_6_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+7 => case_7_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+8 => case_8_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+9 => case_9_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+10 => case_10_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+11 => case_11_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+12 => case_12_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+13 => case_13_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+14 => case_14_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+15 => case_15_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+16 => case_16_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+17 => case_17_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+18 => case_18_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+19 => case_19_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+20 => case_20_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+21 => case_21_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+22 => case_22_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+23 => case_23_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+24 => case_24_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+25 => case_25_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+26 => case_26_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+27 => case_27_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+28 => case_28_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+29 => case_29_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+30 => case_30_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+31 => case_31_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+32 => case_32_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+33 => case_33_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+34 => case_34_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+35 => case_35_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+36 => case_36_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+37 => case_37_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+38 => case_38_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+39 => case_39_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+40 => case_40_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+41 => case_41_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+42 => case_42_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+43 => case_43_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+44 => case_44_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+45 => case_45_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+46 => case_46_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+47 => case_47_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+48 => case_48_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+49 => case_49_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+50 => case_50_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+51 => case_51_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+52 => case_52_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+53 => case_53_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+54 => case_54_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+55 => case_55_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+56 => case_56_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+57 => case_57_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+58 => case_58_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+59 => case_59_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+60 => case_60_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+61 => case_61_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+62 => case_62_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+63 => case_63_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+64 => case_64_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+65 => case_65_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+66 => case_66_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+67 => case_67_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+68 => case_68_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+69 => case_69_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+70 => case_70_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+71 => case_71_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+72 => case_72_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+73 => case_73_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+74 => case_74_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+75 => case_75_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+76 => case_76_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+77 => case_77_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+78 => case_78_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+79 => case_79_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+80 => case_80_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+81 => case_81_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+82 => case_82_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+83 => case_83_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+84 => case_84_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+85 => case_85_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+86 => case_86_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+87 => case_87_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+88 => case_88_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+89 => case_89_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+90 => case_90_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+91 => case_91_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+92 => case_92_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+93 => case_93_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+94 => case_94_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+95 => case_95_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+96 => case_96_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+97 => case_97_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+98 => case_98_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+99 => case_99_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+100 => case_100_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+101 => case_101_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+102 => case_102_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+103 => case_103_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+104 => case_104_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+105 => case_105_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+106 => case_106_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+107 => case_107_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+108 => case_108_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+109 => case_109_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+110 => case_110_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+111 => case_111_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+112 => case_112_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+113 => case_113_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+114 => case_114_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+115 => case_115_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+116 => case_116_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+117 => case_117_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+118 => case_118_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+119 => case_119_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+120 => case_120_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+121 => case_121_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+122 => case_122_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+123 => case_123_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+124 => case_124_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+125 => case_125_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+126 => case_126_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+127 => case_127_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+128 => case_128_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+129 => case_129_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+130 => case_130_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+131 => case_131_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+132 => case_132_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+133 => case_133_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+134 => case_134_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+135 => case_135_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+136 => case_136_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+137 => case_137_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+138 => case_138_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+139 => case_139_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+140 => case_140_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+141 => case_141_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+142 => case_142_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+143 => case_143_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+144 => case_144_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+145 => case_145_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+146 => case_146_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+147 => case_147_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+148 => case_148_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+149 => case_149_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+150 => case_150_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+151 => case_151_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+152 => case_152_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+153 => case_153_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+154 => case_154_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+155 => case_155_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+156 => case_156_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+157 => case_157_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+158 => case_158_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+159 => case_159_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+160 => case_160_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+161 => case_161_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+162 => case_162_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+163 => case_163_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+164 => case_164_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+165 => case_165_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+166 => case_166_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+167 => case_167_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+168 => case_168_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+169 => case_169_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+170 => case_170_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+171 => case_171_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+172 => case_172_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+173 => case_173_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+174 => case_174_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+175 => case_175_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+176 => case_176_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+177 => case_177_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+178 => case_178_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+179 => case_179_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+180 => case_180_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+181 => case_181_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+182 => case_182_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+183 => case_183_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+184 => case_184_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+185 => case_185_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+186 => case_186_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+187 => case_187_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+188 => case_188_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+189 => case_189_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+190 => case_190_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+191 => case_191_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+192 => case_192_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+193 => case_193_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+194 => case_194_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+195 => case_195_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+196 => case_196_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+197 => case_197_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+198 => case_198_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+199 => case_199_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+200 => case_200_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+201 => case_201_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+202 => case_202_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+203 => case_203_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+204 => case_204_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+205 => case_205_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+206 => case_206_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+207 => case_207_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+208 => case_208_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+209 => case_209_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+210 => case_210_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+211 => case_211_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+212 => case_212_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+213 => case_213_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+214 => case_214_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+215 => case_215_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+216 => case_216_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+217 => case_217_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+218 => case_218_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+219 => case_219_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+220 => case_220_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+221 => case_221_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+222 => case_222_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+223 => case_223_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+224 => case_224_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+225 => case_225_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+226 => case_226_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+227 => case_227_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+228 => case_228_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+229 => case_229_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+230 => case_230_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+231 => case_231_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+232 => case_232_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+233 => case_233_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+234 => case_234_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+235 => case_235_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+236 => case_236_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+237 => case_237_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+238 => case_238_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+239 => case_239_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+240 => case_240_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+241 => case_241_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+242 => case_242_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+243 => case_243_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+244 => case_244_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+245 => case_245_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+246 => case_246_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+247 => case_247_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+248 => case_248_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+249 => case_249_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+250 => case_250_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+251 => case_251_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+252 => case_252_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+253 => case_253_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+254 => case_254_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+255 => case_255_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+256 => case_256_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+257 => case_257_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+258 => case_258_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+259 => case_259_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+260 => case_260_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+261 => case_261_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+262 => case_262_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+263 => case_263_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+264 => case_264_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+265 => case_265_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+266 => case_266_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+267 => case_267_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+268 => case_268_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+269 => case_269_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+270 => case_270_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+271 => case_271_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+272 => case_272_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+273 => case_273_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+274 => case_274_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+275 => case_275_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+276 => case_276_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+277 => case_277_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+278 => case_278_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+279 => case_279_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+280 => case_280_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+281 => case_281_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+282 => case_282_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+283 => case_283_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+284 => case_284_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+285 => case_285_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+286 => case_286_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+287 => case_287_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+288 => case_288_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+289 => case_289_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+290 => case_290_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+291 => case_291_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+292 => case_292_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+293 => case_293_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+294 => case_294_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+295 => case_295_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+296 => case_296_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+297 => case_297_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+298 => case_298_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+299 => case_299_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+300 => case_300_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+301 => case_301_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+302 => case_302_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+303 => case_303_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+304 => case_304_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+305 => case_305_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+306 => case_306_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+307 => case_307_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+308 => case_308_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+309 => case_309_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+310 => case_310_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+311 => case_311_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+312 => case_312_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+313 => case_313_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+314 => case_314_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+315 => case_315_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+316 => case_316_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+317 => case_317_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+318 => case_318_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+319 => case_319_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+320 => case_320_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+321 => case_321_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+322 => case_322_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+323 => case_323_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+324 => case_324_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+325 => case_325_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+326 => case_326_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+327 => case_327_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+328 => case_328_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+329 => case_329_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+330 => case_330_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+331 => case_331_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+332 => case_332_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+333 => case_333_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+334 => case_334_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+335 => case_335_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+336 => case_336_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+337 => case_337_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+338 => case_338_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+339 => case_339_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+340 => case_340_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+341 => case_341_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+342 => case_342_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+343 => case_343_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+344 => case_344_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+345 => case_345_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+346 => case_346_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+347 => case_347_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+348 => case_348_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+349 => case_349_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+350 => case_350_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+351 => case_351_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+352 => case_352_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+353 => case_353_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+354 => case_354_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+355 => case_355_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+356 => case_356_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+357 => case_357_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+358 => case_358_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+359 => case_359_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+360 => case_360_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+361 => case_361_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+362 => case_362_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+363 => case_363_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+364 => case_364_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+365 => case_365_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+366 => case_366_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+367 => case_367_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+368 => case_368_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+369 => case_369_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+370 => case_370_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+371 => case_371_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+372 => case_372_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+373 => case_373_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+374 => case_374_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+375 => case_375_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+376 => case_376_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+377 => case_377_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+378 => case_378_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+379 => case_379_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+380 => case_380_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+381 => case_381_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+382 => case_382_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+383 => case_383_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+384 => case_384_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+385 => case_385_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+386 => case_386_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+387 => case_387_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+388 => case_388_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+389 => case_389_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+390 => case_390_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+391 => case_391_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+392 => case_392_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+393 => case_393_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+394 => case_394_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+395 => case_395_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+396 => case_396_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+397 => case_397_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+398 => case_398_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+399 => case_399_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+400 => case_400_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+401 => case_401_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+402 => case_402_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+403 => case_403_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+404 => case_404_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+405 => case_405_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+406 => case_406_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+407 => case_407_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+408 => case_408_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+409 => case_409_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+410 => case_410_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+411 => case_411_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+412 => case_412_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+413 => case_413_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+414 => case_414_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+415 => case_415_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+416 => case_416_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+417 => case_417_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+418 => case_418_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+419 => case_419_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+420 => case_420_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+421 => case_421_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+422 => case_422_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+423 => case_423_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+424 => case_424_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+425 => case_425_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+426 => case_426_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+427 => case_427_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+428 => case_428_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+429 => case_429_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+430 => case_430_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+431 => case_431_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+432 => case_432_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+433 => case_433_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+434 => case_434_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+435 => case_435_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+436 => case_436_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+437 => case_437_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+438 => case_438_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+439 => case_439_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+440 => case_440_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+441 => case_441_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+442 => case_442_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+443 => case_443_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+444 => case_444_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+445 => case_445_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+446 => case_446_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+447 => case_447_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+448 => case_448_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+449 => case_449_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+450 => case_450_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+451 => case_451_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+452 => case_452_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+453 => case_453_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+454 => case_454_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+455 => case_455_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+456 => case_456_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+457 => case_457_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+458 => case_458_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+459 => case_459_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+460 => case_460_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+461 => case_461_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+462 => case_462_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+463 => case_463_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+464 => case_464_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+465 => case_465_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+466 => case_466_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+467 => case_467_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+468 => case_468_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+469 => case_469_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+470 => case_470_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+471 => case_471_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+472 => case_472_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+473 => case_473_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+474 => case_474_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+475 => case_475_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+476 => case_476_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+477 => case_477_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+478 => case_478_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+479 => case_479_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+480 => case_480_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+481 => case_481_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+482 => case_482_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+483 => case_483_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+484 => case_484_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+485 => case_485_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+486 => case_486_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+487 => case_487_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+488 => case_488_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+489 => case_489_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+490 => case_490_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+491 => case_491_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+492 => case_492_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+493 => case_493_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+494 => case_494_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+495 => case_495_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+496 => case_496_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+497 => case_497_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+498 => case_498_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+499 => case_499_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+500 => case_500_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+501 => case_501_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+502 => case_502_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+503 => case_503_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+504 => case_504_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+505 => case_505_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+506 => case_506_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+507 => case_507_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+508 => case_508_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+509 => case_509_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+510 => case_510_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+511 => case_511_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+512 => case_512_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+513 => case_513_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+514 => case_514_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+515 => case_515_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+516 => case_516_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+517 => case_517_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+518 => case_518_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+519 => case_519_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+520 => case_520_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+521 => case_521_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+522 => case_522_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+523 => case_523_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+524 => case_524_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+525 => case_525_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+526 => case_526_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+527 => case_527_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+528 => case_528_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+529 => case_529_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+530 => case_530_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+531 => case_531_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+532 => case_532_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+533 => case_533_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+534 => case_534_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+535 => case_535_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+536 => case_536_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+537 => case_537_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+538 => case_538_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+539 => case_539_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+540 => case_540_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+541 => case_541_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+542 => case_542_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+543 => case_543_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+544 => case_544_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+545 => case_545_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+546 => case_546_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+547 => case_547_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+548 => case_548_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+549 => case_549_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+550 => case_550_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+551 => case_551_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+552 => case_552_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+553 => case_553_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+554 => case_554_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+555 => case_555_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+556 => case_556_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+557 => case_557_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+558 => case_558_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+559 => case_559_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+560 => case_560_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+561 => case_561_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+562 => case_562_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+563 => case_563_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+564 => case_564_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+565 => case_565_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+566 => case_566_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+567 => case_567_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+568 => case_568_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+569 => case_569_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+570 => case_570_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+571 => case_571_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+572 => case_572_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+573 => case_573_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+574 => case_574_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+575 => case_575_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+576 => case_576_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+577 => case_577_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+578 => case_578_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+579 => case_579_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+580 => case_580_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+581 => case_581_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+582 => case_582_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+583 => case_583_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+584 => case_584_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+585 => case_585_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+586 => case_586_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+587 => case_587_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+588 => case_588_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+589 => case_589_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+590 => case_590_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+591 => case_591_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+592 => case_592_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+593 => case_593_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+594 => case_594_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+595 => case_595_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+596 => case_596_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+597 => case_597_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+598 => case_598_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+599 => case_599_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+600 => case_600_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+601 => case_601_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+602 => case_602_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+603 => case_603_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+604 => case_604_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+605 => case_605_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+606 => case_606_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+607 => case_607_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+608 => case_608_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+609 => case_609_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+610 => case_610_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5fr_2eprocess_5fscope, &[])?;
 if a1 != v0 { break 'case0; }
@@ -6963,8 +7888,11 @@ if v5[1] != v6 { break 'case0; }
 let v7 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5[0])?;
 let v8 = s.construct(Constructor::eo__24eo_5fpf, &[v7])?;
 let v9 = eo__24eo_5fprog_5fprocess_5fscope(s, v2[0], v8)?;
-return Ok(v9);
+return Ok(Some(v9));
 }
+Ok(None)
+}
+fn case_1_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v10 = s.construct(Constructor::eo__24emb_5fr_2eite_5feq, &[])?;
 if a1 != v10 { break 'case1; }
@@ -6977,8 +7905,11 @@ if v12[1] != v13 { break 'case1; }
 let v14 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v14 { break 'case1; }
 let v15 = eo__24eo_5fprog_5fite_5feq(s, v12[0])?;
-return Ok(v15);
+return Ok(Some(v15));
 }
+Ok(None)
+}
+fn case_2_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v16 = s.construct(Constructor::eo__24emb_5fr_2esplit, &[])?;
 if a1 != v16 { break 'case2; }
@@ -6991,8 +7922,11 @@ if v18[1] != v19 { break 'case2; }
 let v20 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v20 { break 'case2; }
 let v21 = eo__24eo_5fprog_5fsplit(s, v18[0])?;
-return Ok(v21);
+return Ok(Some(v21));
 }
+Ok(None)
+}
+fn case_3_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v22 = s.construct(Constructor::eo__24emb_5fr_2eresolution, &[])?;
 if a1 != v22 { break 'case3; }
@@ -7021,8 +7955,11 @@ let v34 = s.construct(Constructor::eo__24eo_5fpf, &[v33])?;
 let v35 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v31[0])?;
 let v36 = s.construct(Constructor::eo__24eo_5fpf, &[v35])?;
 let v37 = eo__24eo_5fprog_5fresolution(s, v24[0], v26[0], v34, v36)?;
-return Ok(v37);
+return Ok(Some(v37));
 }
+Ok(None)
+}
+fn case_4_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v38 = s.construct(Constructor::eo__24emb_5fr_2echain_5fresolution, &[])?;
 if a1 != v38 { break 'case4; }
@@ -7040,8 +7977,11 @@ let v44 = s.construct(Constructor::eo_and, &[])?;
 let v45 = eo__24eo_5fmk_5fpremise_5flist(s, v44, a3, a0)?;
 let v46 = s.construct(Constructor::eo__24eo_5fpf, &[v45])?;
 let v47 = eo__24eo_5fprog_5fchain_5fresolution(s, v40[0], v42[0], v46)?;
-return Ok(v47);
+return Ok(Some(v47));
 }
+Ok(None)
+}
+fn case_5_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v48 = s.construct(Constructor::eo__24emb_5fr_2echain_5fm_5fresolution, &[])?;
 if a1 != v48 { break 'case5; }
@@ -7063,8 +8003,11 @@ let v56 = s.construct(Constructor::eo_and, &[])?;
 let v57 = eo__24eo_5fmk_5fpremise_5flist(s, v56, a3, a0)?;
 let v58 = s.construct(Constructor::eo__24eo_5fpf, &[v57])?;
 let v59 = eo__24eo_5fprog_5fchain_5fm_5fresolution(s, v50[0], v52[0], v54[0], v58)?;
-return Ok(v59);
+return Ok(Some(v59));
 }
+Ok(None)
+}
+fn case_6_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v60 = s.construct(Constructor::eo__24emb_5fr_2efactoring, &[])?;
 if a1 != v60 { break 'case6; }
@@ -7079,8 +8022,11 @@ if v63[1] != v64 { break 'case6; }
 let v65 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v63[0])?;
 let v66 = s.construct(Constructor::eo__24eo_5fpf, &[v65])?;
 let v67 = eo__24eo_5fprog_5ffactoring(s, v66)?;
-return Ok(v67);
+return Ok(Some(v67));
 }
+Ok(None)
+}
+fn case_7_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v68 = s.construct(Constructor::eo__24emb_5fr_2ereordering, &[])?;
 if a1 != v68 { break 'case7; }
@@ -7099,8 +8045,11 @@ if v73[1] != v74 { break 'case7; }
 let v75 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v73[0])?;
 let v76 = s.construct(Constructor::eo__24eo_5fpf, &[v75])?;
 let v77 = eo__24eo_5fprog_5freordering(s, v70[0], v76)?;
-return Ok(v77);
+return Ok(Some(v77));
 }
+Ok(None)
+}
+fn case_8_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v78 = s.construct(Constructor::eo__24emb_5fr_2eeq_5fresolve, &[])?;
 if a1 != v78 { break 'case8; }
@@ -7121,8 +8070,11 @@ let v86 = s.construct(Constructor::eo__24eo_5fpf, &[v85])?;
 let v87 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v83[0])?;
 let v88 = s.construct(Constructor::eo__24eo_5fpf, &[v87])?;
 let v89 = eo__24eo_5fprog_5feq_5fresolve(s, v86, v88)?;
-return Ok(v89);
+return Ok(Some(v89));
 }
+Ok(None)
+}
+fn case_9_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v90 = s.construct(Constructor::eo__24emb_5fr_2emodus_5fponens, &[])?;
 if a1 != v90 { break 'case9; }
@@ -7143,8 +8095,11 @@ let v98 = s.construct(Constructor::eo__24eo_5fpf, &[v97])?;
 let v99 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v95[0])?;
 let v100 = s.construct(Constructor::eo__24eo_5fpf, &[v99])?;
 let v101 = eo__24eo_5fprog_5fmodus_5fponens(s, v98, v100)?;
-return Ok(v101);
+return Ok(Some(v101));
 }
+Ok(None)
+}
+fn case_10_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v102 = s.construct(Constructor::eo__24emb_5fr_2enot_5fnot_5felim, &[])?;
 if a1 != v102 { break 'case10; }
@@ -7159,8 +8114,11 @@ if v105[1] != v106 { break 'case10; }
 let v107 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v105[0])?;
 let v108 = s.construct(Constructor::eo__24eo_5fpf, &[v107])?;
 let v109 = eo__24eo_5fprog_5fnot_5fnot_5felim(s, v108)?;
-return Ok(v109);
+return Ok(Some(v109));
 }
+Ok(None)
+}
+fn case_11_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v110 = s.construct(Constructor::eo__24emb_5fr_2econtra, &[])?;
 if a1 != v110 { break 'case11; }
@@ -7181,8 +8139,11 @@ let v118 = s.construct(Constructor::eo__24eo_5fpf, &[v117])?;
 let v119 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v115[0])?;
 let v120 = s.construct(Constructor::eo__24eo_5fpf, &[v119])?;
 let v121 = eo__24eo_5fprog_5fcontra(s, v118, v120)?;
-return Ok(v121);
+return Ok(Some(v121));
 }
+Ok(None)
+}
+fn case_12_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v122 = s.construct(Constructor::eo__24emb_5fr_2eand_5felim, &[])?;
 if a1 != v122 { break 'case12; }
@@ -7201,8 +8162,11 @@ if v127[1] != v128 { break 'case12; }
 let v129 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v127[0])?;
 let v130 = s.construct(Constructor::eo__24eo_5fpf, &[v129])?;
 let v131 = eo__24eo_5fprog_5fand_5felim(s, v124[0], v130)?;
-return Ok(v131);
+return Ok(Some(v131));
 }
+Ok(None)
+}
+fn case_13_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v132 = s.construct(Constructor::eo__24emb_5fr_2eand_5fintro, &[])?;
 if a1 != v132 { break 'case13; }
@@ -7212,8 +8176,11 @@ let v134 = s.construct(Constructor::eo_and, &[])?;
 let v135 = eo__24eo_5fmk_5fpremise_5flist(s, v134, a3, a0)?;
 let v136 = s.construct(Constructor::eo__24eo_5fpf, &[v135])?;
 let v137 = eo__24eo_5fprog_5fand_5fintro(s, v136)?;
-return Ok(v137);
+return Ok(Some(v137));
 }
+Ok(None)
+}
+fn case_14_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v138 = s.construct(Constructor::eo__24emb_5fr_2enot_5for_5felim, &[])?;
 if a1 != v138 { break 'case14; }
@@ -7232,8 +8199,11 @@ if v143[1] != v144 { break 'case14; }
 let v145 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v143[0])?;
 let v146 = s.construct(Constructor::eo__24eo_5fpf, &[v145])?;
 let v147 = eo__24eo_5fprog_5fnot_5for_5felim(s, v140[0], v146)?;
-return Ok(v147);
+return Ok(Some(v147));
 }
+Ok(None)
+}
+fn case_15_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v148 = s.construct(Constructor::eo__24emb_5fr_2eimplies_5felim, &[])?;
 if a1 != v148 { break 'case15; }
@@ -7248,8 +8218,11 @@ if v151[1] != v152 { break 'case15; }
 let v153 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v151[0])?;
 let v154 = s.construct(Constructor::eo__24eo_5fpf, &[v153])?;
 let v155 = eo__24eo_5fprog_5fimplies_5felim(s, v154)?;
-return Ok(v155);
+return Ok(Some(v155));
 }
+Ok(None)
+}
+fn case_16_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v156 = s.construct(Constructor::eo__24emb_5fr_2enot_5fimplies_5felim1, &[])?;
 if a1 != v156 { break 'case16; }
@@ -7264,8 +8237,11 @@ if v159[1] != v160 { break 'case16; }
 let v161 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v159[0])?;
 let v162 = s.construct(Constructor::eo__24eo_5fpf, &[v161])?;
 let v163 = eo__24eo_5fprog_5fnot_5fimplies_5felim1(s, v162)?;
-return Ok(v163);
+return Ok(Some(v163));
 }
+Ok(None)
+}
+fn case_17_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case17: {
 let v164 = s.construct(Constructor::eo__24emb_5fr_2enot_5fimplies_5felim2, &[])?;
 if a1 != v164 { break 'case17; }
@@ -7280,8 +8256,11 @@ if v167[1] != v168 { break 'case17; }
 let v169 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v167[0])?;
 let v170 = s.construct(Constructor::eo__24eo_5fpf, &[v169])?;
 let v171 = eo__24eo_5fprog_5fnot_5fimplies_5felim2(s, v170)?;
-return Ok(v171);
+return Ok(Some(v171));
 }
+Ok(None)
+}
+fn case_18_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case18: {
 let v172 = s.construct(Constructor::eo__24emb_5fr_2eequiv_5felim1, &[])?;
 if a1 != v172 { break 'case18; }
@@ -7296,8 +8275,11 @@ if v175[1] != v176 { break 'case18; }
 let v177 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v175[0])?;
 let v178 = s.construct(Constructor::eo__24eo_5fpf, &[v177])?;
 let v179 = eo__24eo_5fprog_5fequiv_5felim1(s, v178)?;
-return Ok(v179);
+return Ok(Some(v179));
 }
+Ok(None)
+}
+fn case_19_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case19: {
 let v180 = s.construct(Constructor::eo__24emb_5fr_2eequiv_5felim2, &[])?;
 if a1 != v180 { break 'case19; }
@@ -7312,8 +8294,11 @@ if v183[1] != v184 { break 'case19; }
 let v185 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v183[0])?;
 let v186 = s.construct(Constructor::eo__24eo_5fpf, &[v185])?;
 let v187 = eo__24eo_5fprog_5fequiv_5felim2(s, v186)?;
-return Ok(v187);
+return Ok(Some(v187));
 }
+Ok(None)
+}
+fn case_20_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case20: {
 let v188 = s.construct(Constructor::eo__24emb_5fr_2enot_5fequiv_5felim1, &[])?;
 if a1 != v188 { break 'case20; }
@@ -7328,8 +8313,11 @@ if v191[1] != v192 { break 'case20; }
 let v193 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v191[0])?;
 let v194 = s.construct(Constructor::eo__24eo_5fpf, &[v193])?;
 let v195 = eo__24eo_5fprog_5fnot_5fequiv_5felim1(s, v194)?;
-return Ok(v195);
+return Ok(Some(v195));
 }
+Ok(None)
+}
+fn case_21_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case21: {
 let v196 = s.construct(Constructor::eo__24emb_5fr_2enot_5fequiv_5felim2, &[])?;
 if a1 != v196 { break 'case21; }
@@ -7344,8 +8332,11 @@ if v199[1] != v200 { break 'case21; }
 let v201 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v199[0])?;
 let v202 = s.construct(Constructor::eo__24eo_5fpf, &[v201])?;
 let v203 = eo__24eo_5fprog_5fnot_5fequiv_5felim2(s, v202)?;
-return Ok(v203);
+return Ok(Some(v203));
 }
+Ok(None)
+}
+fn case_22_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case22: {
 let v204 = s.construct(Constructor::eo__24emb_5fr_2exor_5felim1, &[])?;
 if a1 != v204 { break 'case22; }
@@ -7360,8 +8351,11 @@ if v207[1] != v208 { break 'case22; }
 let v209 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v207[0])?;
 let v210 = s.construct(Constructor::eo__24eo_5fpf, &[v209])?;
 let v211 = eo__24eo_5fprog_5fxor_5felim1(s, v210)?;
-return Ok(v211);
+return Ok(Some(v211));
 }
+Ok(None)
+}
+fn case_23_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case23: {
 let v212 = s.construct(Constructor::eo__24emb_5fr_2exor_5felim2, &[])?;
 if a1 != v212 { break 'case23; }
@@ -7376,8 +8370,11 @@ if v215[1] != v216 { break 'case23; }
 let v217 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v215[0])?;
 let v218 = s.construct(Constructor::eo__24eo_5fpf, &[v217])?;
 let v219 = eo__24eo_5fprog_5fxor_5felim2(s, v218)?;
-return Ok(v219);
+return Ok(Some(v219));
 }
+Ok(None)
+}
+fn case_24_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case24: {
 let v220 = s.construct(Constructor::eo__24emb_5fr_2enot_5fxor_5felim1, &[])?;
 if a1 != v220 { break 'case24; }
@@ -7392,8 +8389,11 @@ if v223[1] != v224 { break 'case24; }
 let v225 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v223[0])?;
 let v226 = s.construct(Constructor::eo__24eo_5fpf, &[v225])?;
 let v227 = eo__24eo_5fprog_5fnot_5fxor_5felim1(s, v226)?;
-return Ok(v227);
+return Ok(Some(v227));
 }
+Ok(None)
+}
+fn case_25_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case25: {
 let v228 = s.construct(Constructor::eo__24emb_5fr_2enot_5fxor_5felim2, &[])?;
 if a1 != v228 { break 'case25; }
@@ -7408,8 +8408,11 @@ if v231[1] != v232 { break 'case25; }
 let v233 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v231[0])?;
 let v234 = s.construct(Constructor::eo__24eo_5fpf, &[v233])?;
 let v235 = eo__24eo_5fprog_5fnot_5fxor_5felim2(s, v234)?;
-return Ok(v235);
+return Ok(Some(v235));
 }
+Ok(None)
+}
+fn case_26_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case26: {
 let v236 = s.construct(Constructor::eo__24emb_5fr_2eite_5felim1, &[])?;
 if a1 != v236 { break 'case26; }
@@ -7424,8 +8427,11 @@ if v239[1] != v240 { break 'case26; }
 let v241 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v239[0])?;
 let v242 = s.construct(Constructor::eo__24eo_5fpf, &[v241])?;
 let v243 = eo__24eo_5fprog_5fite_5felim1(s, v242)?;
-return Ok(v243);
+return Ok(Some(v243));
 }
+Ok(None)
+}
+fn case_27_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case27: {
 let v244 = s.construct(Constructor::eo__24emb_5fr_2eite_5felim2, &[])?;
 if a1 != v244 { break 'case27; }
@@ -7440,8 +8446,11 @@ if v247[1] != v248 { break 'case27; }
 let v249 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v247[0])?;
 let v250 = s.construct(Constructor::eo__24eo_5fpf, &[v249])?;
 let v251 = eo__24eo_5fprog_5fite_5felim2(s, v250)?;
-return Ok(v251);
+return Ok(Some(v251));
 }
+Ok(None)
+}
+fn case_28_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case28: {
 let v252 = s.construct(Constructor::eo__24emb_5fr_2enot_5fite_5felim1, &[])?;
 if a1 != v252 { break 'case28; }
@@ -7456,8 +8465,11 @@ if v255[1] != v256 { break 'case28; }
 let v257 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v255[0])?;
 let v258 = s.construct(Constructor::eo__24eo_5fpf, &[v257])?;
 let v259 = eo__24eo_5fprog_5fnot_5fite_5felim1(s, v258)?;
-return Ok(v259);
+return Ok(Some(v259));
 }
+Ok(None)
+}
+fn case_29_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case29: {
 let v260 = s.construct(Constructor::eo__24emb_5fr_2enot_5fite_5felim2, &[])?;
 if a1 != v260 { break 'case29; }
@@ -7472,8 +8484,11 @@ if v263[1] != v264 { break 'case29; }
 let v265 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v263[0])?;
 let v266 = s.construct(Constructor::eo__24eo_5fpf, &[v265])?;
 let v267 = eo__24eo_5fprog_5fnot_5fite_5felim2(s, v266)?;
-return Ok(v267);
+return Ok(Some(v267));
 }
+Ok(None)
+}
+fn case_30_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case30: {
 let v268 = s.construct(Constructor::eo__24emb_5fr_2enot_5fand, &[])?;
 if a1 != v268 { break 'case30; }
@@ -7488,8 +8503,11 @@ if v271[1] != v272 { break 'case30; }
 let v273 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v271[0])?;
 let v274 = s.construct(Constructor::eo__24eo_5fpf, &[v273])?;
 let v275 = eo__24eo_5fprog_5fnot_5fand(s, v274)?;
-return Ok(v275);
+return Ok(Some(v275));
 }
+Ok(None)
+}
+fn case_31_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case31: {
 let v276 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fand_5fpos, &[])?;
 if a1 != v276 { break 'case31; }
@@ -7506,8 +8524,11 @@ if v280[1] != v281 { break 'case31; }
 let v282 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v282 { break 'case31; }
 let v283 = eo__24eo_5fprog_5fcnf_5fand_5fpos(s, v278[0], v280[0])?;
-return Ok(v283);
+return Ok(Some(v283));
 }
+Ok(None)
+}
+fn case_32_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case32: {
 let v284 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fand_5fneg, &[])?;
 if a1 != v284 { break 'case32; }
@@ -7520,8 +8541,11 @@ if v286[1] != v287 { break 'case32; }
 let v288 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v288 { break 'case32; }
 let v289 = eo__24eo_5fprog_5fcnf_5fand_5fneg(s, v286[0])?;
-return Ok(v289);
+return Ok(Some(v289));
 }
+Ok(None)
+}
+fn case_33_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case33: {
 let v290 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5for_5fpos, &[])?;
 if a1 != v290 { break 'case33; }
@@ -7534,8 +8558,11 @@ if v292[1] != v293 { break 'case33; }
 let v294 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v294 { break 'case33; }
 let v295 = eo__24eo_5fprog_5fcnf_5for_5fpos(s, v292[0])?;
-return Ok(v295);
+return Ok(Some(v295));
 }
+Ok(None)
+}
+fn case_34_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case34: {
 let v296 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5for_5fneg, &[])?;
 if a1 != v296 { break 'case34; }
@@ -7552,8 +8579,11 @@ if v300[1] != v301 { break 'case34; }
 let v302 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v302 { break 'case34; }
 let v303 = eo__24eo_5fprog_5fcnf_5for_5fneg(s, v298[0], v300[0])?;
-return Ok(v303);
+return Ok(Some(v303));
 }
+Ok(None)
+}
+fn case_35_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case35: {
 let v304 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fimplies_5fpos, &[])?;
 if a1 != v304 { break 'case35; }
@@ -7566,8 +8596,11 @@ if v306[1] != v307 { break 'case35; }
 let v308 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v308 { break 'case35; }
 let v309 = eo__24eo_5fprog_5fcnf_5fimplies_5fpos(s, v306[0])?;
-return Ok(v309);
+return Ok(Some(v309));
 }
+Ok(None)
+}
+fn case_36_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case36: {
 let v310 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fimplies_5fneg1, &[])?;
 if a1 != v310 { break 'case36; }
@@ -7580,8 +8613,11 @@ if v312[1] != v313 { break 'case36; }
 let v314 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v314 { break 'case36; }
 let v315 = eo__24eo_5fprog_5fcnf_5fimplies_5fneg1(s, v312[0])?;
-return Ok(v315);
+return Ok(Some(v315));
 }
+Ok(None)
+}
+fn case_37_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case37: {
 let v316 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fimplies_5fneg2, &[])?;
 if a1 != v316 { break 'case37; }
@@ -7594,8 +8630,11 @@ if v318[1] != v319 { break 'case37; }
 let v320 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v320 { break 'case37; }
 let v321 = eo__24eo_5fprog_5fcnf_5fimplies_5fneg2(s, v318[0])?;
-return Ok(v321);
+return Ok(Some(v321));
 }
+Ok(None)
+}
+fn case_38_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case38: {
 let v322 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fequiv_5fpos1, &[])?;
 if a1 != v322 { break 'case38; }
@@ -7608,8 +8647,11 @@ if v324[1] != v325 { break 'case38; }
 let v326 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v326 { break 'case38; }
 let v327 = eo__24eo_5fprog_5fcnf_5fequiv_5fpos1(s, v324[0])?;
-return Ok(v327);
+return Ok(Some(v327));
 }
+Ok(None)
+}
+fn case_39_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case39: {
 let v328 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fequiv_5fpos2, &[])?;
 if a1 != v328 { break 'case39; }
@@ -7622,8 +8664,11 @@ if v330[1] != v331 { break 'case39; }
 let v332 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v332 { break 'case39; }
 let v333 = eo__24eo_5fprog_5fcnf_5fequiv_5fpos2(s, v330[0])?;
-return Ok(v333);
+return Ok(Some(v333));
 }
+Ok(None)
+}
+fn case_40_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case40: {
 let v334 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fequiv_5fneg1, &[])?;
 if a1 != v334 { break 'case40; }
@@ -7636,8 +8681,11 @@ if v336[1] != v337 { break 'case40; }
 let v338 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v338 { break 'case40; }
 let v339 = eo__24eo_5fprog_5fcnf_5fequiv_5fneg1(s, v336[0])?;
-return Ok(v339);
+return Ok(Some(v339));
 }
+Ok(None)
+}
+fn case_41_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case41: {
 let v340 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fequiv_5fneg2, &[])?;
 if a1 != v340 { break 'case41; }
@@ -7650,8 +8698,11 @@ if v342[1] != v343 { break 'case41; }
 let v344 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v344 { break 'case41; }
 let v345 = eo__24eo_5fprog_5fcnf_5fequiv_5fneg2(s, v342[0])?;
-return Ok(v345);
+return Ok(Some(v345));
 }
+Ok(None)
+}
+fn case_42_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case42: {
 let v346 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fxor_5fpos1, &[])?;
 if a1 != v346 { break 'case42; }
@@ -7664,8 +8715,11 @@ if v348[1] != v349 { break 'case42; }
 let v350 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v350 { break 'case42; }
 let v351 = eo__24eo_5fprog_5fcnf_5fxor_5fpos1(s, v348[0])?;
-return Ok(v351);
+return Ok(Some(v351));
 }
+Ok(None)
+}
+fn case_43_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case43: {
 let v352 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fxor_5fpos2, &[])?;
 if a1 != v352 { break 'case43; }
@@ -7678,8 +8732,11 @@ if v354[1] != v355 { break 'case43; }
 let v356 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v356 { break 'case43; }
 let v357 = eo__24eo_5fprog_5fcnf_5fxor_5fpos2(s, v354[0])?;
-return Ok(v357);
+return Ok(Some(v357));
 }
+Ok(None)
+}
+fn case_44_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case44: {
 let v358 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fxor_5fneg1, &[])?;
 if a1 != v358 { break 'case44; }
@@ -7692,8 +8749,11 @@ if v360[1] != v361 { break 'case44; }
 let v362 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v362 { break 'case44; }
 let v363 = eo__24eo_5fprog_5fcnf_5fxor_5fneg1(s, v360[0])?;
-return Ok(v363);
+return Ok(Some(v363));
 }
+Ok(None)
+}
+fn case_45_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case45: {
 let v364 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fxor_5fneg2, &[])?;
 if a1 != v364 { break 'case45; }
@@ -7706,8 +8766,11 @@ if v366[1] != v367 { break 'case45; }
 let v368 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v368 { break 'case45; }
 let v369 = eo__24eo_5fprog_5fcnf_5fxor_5fneg2(s, v366[0])?;
-return Ok(v369);
+return Ok(Some(v369));
 }
+Ok(None)
+}
+fn case_46_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case46: {
 let v370 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fite_5fpos1, &[])?;
 if a1 != v370 { break 'case46; }
@@ -7720,8 +8783,11 @@ if v372[1] != v373 { break 'case46; }
 let v374 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v374 { break 'case46; }
 let v375 = eo__24eo_5fprog_5fcnf_5fite_5fpos1(s, v372[0])?;
-return Ok(v375);
+return Ok(Some(v375));
 }
+Ok(None)
+}
+fn case_47_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case47: {
 let v376 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fite_5fpos2, &[])?;
 if a1 != v376 { break 'case47; }
@@ -7734,8 +8800,11 @@ if v378[1] != v379 { break 'case47; }
 let v380 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v380 { break 'case47; }
 let v381 = eo__24eo_5fprog_5fcnf_5fite_5fpos2(s, v378[0])?;
-return Ok(v381);
+return Ok(Some(v381));
 }
+Ok(None)
+}
+fn case_48_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case48: {
 let v382 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fite_5fpos3, &[])?;
 if a1 != v382 { break 'case48; }
@@ -7748,8 +8817,11 @@ if v384[1] != v385 { break 'case48; }
 let v386 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v386 { break 'case48; }
 let v387 = eo__24eo_5fprog_5fcnf_5fite_5fpos3(s, v384[0])?;
-return Ok(v387);
+return Ok(Some(v387));
 }
+Ok(None)
+}
+fn case_49_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case49: {
 let v388 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fite_5fneg1, &[])?;
 if a1 != v388 { break 'case49; }
@@ -7762,8 +8834,11 @@ if v390[1] != v391 { break 'case49; }
 let v392 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v392 { break 'case49; }
 let v393 = eo__24eo_5fprog_5fcnf_5fite_5fneg1(s, v390[0])?;
-return Ok(v393);
+return Ok(Some(v393));
 }
+Ok(None)
+}
+fn case_50_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case50: {
 let v394 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fite_5fneg2, &[])?;
 if a1 != v394 { break 'case50; }
@@ -7776,8 +8851,11 @@ if v396[1] != v397 { break 'case50; }
 let v398 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v398 { break 'case50; }
 let v399 = eo__24eo_5fprog_5fcnf_5fite_5fneg2(s, v396[0])?;
-return Ok(v399);
+return Ok(Some(v399));
 }
+Ok(None)
+}
+fn case_51_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case51: {
 let v400 = s.construct(Constructor::eo__24emb_5fr_2ecnf_5fite_5fneg3, &[])?;
 if a1 != v400 { break 'case51; }
@@ -7790,8 +8868,11 @@ if v402[1] != v403 { break 'case51; }
 let v404 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v404 { break 'case51; }
 let v405 = eo__24eo_5fprog_5fcnf_5fite_5fneg3(s, v402[0])?;
-return Ok(v405);
+return Ok(Some(v405));
 }
+Ok(None)
+}
+fn case_52_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case52: {
 let v406 = s.construct(Constructor::eo__24emb_5fr_2earrays_5fread_5fover_5fwrite, &[])?;
 if a1 != v406 { break 'case52; }
@@ -7810,8 +8891,11 @@ if v411[1] != v412 { break 'case52; }
 let v413 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v411[0])?;
 let v414 = s.construct(Constructor::eo__24eo_5fpf, &[v413])?;
 let v415 = eo__24eo_5fprog_5farrays_5fread_5fover_5fwrite(s, v408[0], v414)?;
-return Ok(v415);
+return Ok(Some(v415));
 }
+Ok(None)
+}
+fn case_53_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case53: {
 let v416 = s.construct(Constructor::eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5fcontra, &[])?;
 if a1 != v416 { break 'case53; }
@@ -7826,8 +8910,11 @@ if v419[1] != v420 { break 'case53; }
 let v421 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v419[0])?;
 let v422 = s.construct(Constructor::eo__24eo_5fpf, &[v421])?;
 let v423 = eo__24eo_5fprog_5farrays_5fread_5fover_5fwrite_5fcontra(s, v422)?;
-return Ok(v423);
+return Ok(Some(v423));
 }
+Ok(None)
+}
+fn case_54_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case54: {
 let v424 = s.construct(Constructor::eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5f1, &[])?;
 if a1 != v424 { break 'case54; }
@@ -7840,8 +8927,11 @@ if v426[1] != v427 { break 'case54; }
 let v428 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v428 { break 'case54; }
 let v429 = eo__24eo_5fprog_5farrays_5fread_5fover_5fwrite_5f1(s, v426[0])?;
-return Ok(v429);
+return Ok(Some(v429));
 }
+Ok(None)
+}
+fn case_55_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case55: {
 let v430 = s.construct(Constructor::eo__24emb_5fr_2earrays_5fext, &[])?;
 if a1 != v430 { break 'case55; }
@@ -7856,8 +8946,11 @@ if v433[1] != v434 { break 'case55; }
 let v435 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v433[0])?;
 let v436 = s.construct(Constructor::eo__24eo_5fpf, &[v435])?;
 let v437 = eo__24eo_5fprog_5farrays_5fext(s, v436)?;
-return Ok(v437);
+return Ok(Some(v437));
 }
+Ok(None)
+}
+fn case_56_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case56: {
 let v438 = s.construct(Constructor::eo__24emb_5fr_2erefl, &[])?;
 if a1 != v438 { break 'case56; }
@@ -7870,8 +8963,11 @@ if v440[1] != v441 { break 'case56; }
 let v442 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v442 { break 'case56; }
 let v443 = eo__24eo_5fprog_5frefl(s, v440[0])?;
-return Ok(v443);
+return Ok(Some(v443));
 }
+Ok(None)
+}
+fn case_57_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case57: {
 let v444 = s.construct(Constructor::eo__24emb_5fr_2esymm, &[])?;
 if a1 != v444 { break 'case57; }
@@ -7886,8 +8982,11 @@ if v447[1] != v448 { break 'case57; }
 let v449 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v447[0])?;
 let v450 = s.construct(Constructor::eo__24eo_5fpf, &[v449])?;
 let v451 = eo__24eo_5fprog_5fsymm(s, v450)?;
-return Ok(v451);
+return Ok(Some(v451));
 }
+Ok(None)
+}
+fn case_58_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case58: {
 let v452 = s.construct(Constructor::eo__24emb_5fr_2etrans, &[])?;
 if a1 != v452 { break 'case58; }
@@ -7897,8 +8996,11 @@ let v454 = s.construct(Constructor::eo_and, &[])?;
 let v455 = eo__24eo_5fmk_5fpremise_5flist(s, v454, a3, a0)?;
 let v456 = s.construct(Constructor::eo__24eo_5fpf, &[v455])?;
 let v457 = eo__24eo_5fprog_5ftrans(s, v456)?;
-return Ok(v457);
+return Ok(Some(v457));
 }
+Ok(None)
+}
+fn case_59_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case59: {
 let v458 = s.construct(Constructor::eo__24emb_5fr_2econg, &[])?;
 if a1 != v458 { break 'case59; }
@@ -7912,8 +9014,11 @@ let v462 = s.construct(Constructor::eo_and, &[])?;
 let v463 = eo__24eo_5fmk_5fpremise_5flist(s, v462, a3, a0)?;
 let v464 = s.construct(Constructor::eo__24eo_5fpf, &[v463])?;
 let v465 = eo__24eo_5fprog_5fcong(s, v460[0], v464)?;
-return Ok(v465);
+return Ok(Some(v465));
 }
+Ok(None)
+}
+fn case_60_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case60: {
 let v466 = s.construct(Constructor::eo__24emb_5fr_2enary_5fcong, &[])?;
 if a1 != v466 { break 'case60; }
@@ -7927,8 +9032,11 @@ let v470 = s.construct(Constructor::eo_and, &[])?;
 let v471 = eo__24eo_5fmk_5fpremise_5flist(s, v470, a3, a0)?;
 let v472 = s.construct(Constructor::eo__24eo_5fpf, &[v471])?;
 let v473 = eo__24eo_5fprog_5fnary_5fcong(s, v468[0], v472)?;
-return Ok(v473);
+return Ok(Some(v473));
 }
+Ok(None)
+}
+fn case_61_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case61: {
 let v474 = s.construct(Constructor::eo__24emb_5fr_2epairwise_5fcong, &[])?;
 if a1 != v474 { break 'case61; }
@@ -7942,8 +9050,11 @@ let v478 = s.construct(Constructor::eo_and, &[])?;
 let v479 = eo__24eo_5fmk_5fpremise_5flist(s, v478, a3, a0)?;
 let v480 = s.construct(Constructor::eo__24eo_5fpf, &[v479])?;
 let v481 = eo__24eo_5fprog_5fpairwise_5fcong(s, v476[0], v480)?;
-return Ok(v481);
+return Ok(Some(v481));
 }
+Ok(None)
+}
+fn case_62_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case62: {
 let v482 = s.construct(Constructor::eo__24emb_5fr_2etrue_5fintro, &[])?;
 if a1 != v482 { break 'case62; }
@@ -7958,8 +9069,11 @@ if v485[1] != v486 { break 'case62; }
 let v487 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v485[0])?;
 let v488 = s.construct(Constructor::eo__24eo_5fpf, &[v487])?;
 let v489 = eo__24eo_5fprog_5ftrue_5fintro(s, v488)?;
-return Ok(v489);
+return Ok(Some(v489));
 }
+Ok(None)
+}
+fn case_63_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case63: {
 let v490 = s.construct(Constructor::eo__24emb_5fr_2etrue_5felim, &[])?;
 if a1 != v490 { break 'case63; }
@@ -7974,8 +9088,11 @@ if v493[1] != v494 { break 'case63; }
 let v495 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v493[0])?;
 let v496 = s.construct(Constructor::eo__24eo_5fpf, &[v495])?;
 let v497 = eo__24eo_5fprog_5ftrue_5felim(s, v496)?;
-return Ok(v497);
+return Ok(Some(v497));
 }
+Ok(None)
+}
+fn case_64_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case64: {
 let v498 = s.construct(Constructor::eo__24emb_5fr_2efalse_5fintro, &[])?;
 if a1 != v498 { break 'case64; }
@@ -7990,8 +9107,11 @@ if v501[1] != v502 { break 'case64; }
 let v503 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v501[0])?;
 let v504 = s.construct(Constructor::eo__24eo_5fpf, &[v503])?;
 let v505 = eo__24eo_5fprog_5ffalse_5fintro(s, v504)?;
-return Ok(v505);
+return Ok(Some(v505));
 }
+Ok(None)
+}
+fn case_65_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case65: {
 let v506 = s.construct(Constructor::eo__24emb_5fr_2efalse_5felim, &[])?;
 if a1 != v506 { break 'case65; }
@@ -8006,8 +9126,11 @@ if v509[1] != v510 { break 'case65; }
 let v511 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v509[0])?;
 let v512 = s.construct(Constructor::eo__24eo_5fpf, &[v511])?;
 let v513 = eo__24eo_5fprog_5ffalse_5felim(s, v512)?;
-return Ok(v513);
+return Ok(Some(v513));
 }
+Ok(None)
+}
+fn case_66_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case66: {
 let v514 = s.construct(Constructor::eo__24emb_5fr_2eho_5fcong, &[])?;
 if a1 != v514 { break 'case66; }
@@ -8017,8 +9140,11 @@ let v516 = s.construct(Constructor::eo_and, &[])?;
 let v517 = eo__24eo_5fmk_5fpremise_5flist(s, v516, a3, a0)?;
 let v518 = s.construct(Constructor::eo__24eo_5fpf, &[v517])?;
 let v519 = eo__24eo_5fprog_5fho_5fcong(s, v518)?;
-return Ok(v519);
+return Ok(Some(v519));
 }
+Ok(None)
+}
+fn case_67_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case67: {
 let v520 = s.construct(Constructor::eo__24emb_5fr_2edistinct_5felim, &[])?;
 if a1 != v520 { break 'case67; }
@@ -8031,8 +9157,11 @@ if v522[1] != v523 { break 'case67; }
 let v524 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v524 { break 'case67; }
 let v525 = eo__24eo_5fprog_5fdistinct_2delim(s, v522[0])?;
-return Ok(v525);
+return Ok(Some(v525));
 }
+Ok(None)
+}
+fn case_68_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case68: {
 let v526 = s.construct(Constructor::eo__24emb_5fr_2edistinct_5ftrue, &[])?;
 if a1 != v526 { break 'case68; }
@@ -8045,8 +9174,11 @@ if v528[1] != v529 { break 'case68; }
 let v530 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v530 { break 'case68; }
 let v531 = eo__24eo_5fprog_5fdistinct_2dtrue(s, v528[0])?;
-return Ok(v531);
+return Ok(Some(v531));
 }
+Ok(None)
+}
+fn case_69_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case69: {
 let v532 = s.construct(Constructor::eo__24emb_5fr_2edistinct_5ffalse, &[])?;
 if a1 != v532 { break 'case69; }
@@ -8059,8 +9191,11 @@ if v534[1] != v535 { break 'case69; }
 let v536 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v536 { break 'case69; }
 let v537 = eo__24eo_5fprog_5fdistinct_2dfalse(s, v534[0])?;
-return Ok(v537);
+return Ok(Some(v537));
 }
+Ok(None)
+}
+fn case_70_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case70: {
 let v538 = s.construct(Constructor::eo__24emb_5fr_2earith_5fsum_5fub, &[])?;
 if a1 != v538 { break 'case70; }
@@ -8070,8 +9205,11 @@ let v540 = s.construct(Constructor::eo_and, &[])?;
 let v541 = eo__24eo_5fmk_5fpremise_5flist(s, v540, a3, a0)?;
 let v542 = s.construct(Constructor::eo__24eo_5fpf, &[v541])?;
 let v543 = eo__24eo_5fprog_5farith_5fsum_5fub(s, v542)?;
-return Ok(v543);
+return Ok(Some(v543));
 }
+Ok(None)
+}
+fn case_71_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case71: {
 let v544 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmult_5fpos, &[])?;
 if a1 != v544 { break 'case71; }
@@ -8088,8 +9226,11 @@ if v548[1] != v549 { break 'case71; }
 let v550 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v550 { break 'case71; }
 let v551 = eo__24eo_5fprog_5farith_5fmult_5fpos(s, v546[0], v548[0])?;
-return Ok(v551);
+return Ok(Some(v551));
 }
+Ok(None)
+}
+fn case_72_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case72: {
 let v552 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmult_5fneg, &[])?;
 if a1 != v552 { break 'case72; }
@@ -8106,8 +9247,11 @@ if v556[1] != v557 { break 'case72; }
 let v558 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v558 { break 'case72; }
 let v559 = eo__24eo_5fprog_5farith_5fmult_5fneg(s, v554[0], v556[0])?;
-return Ok(v559);
+return Ok(Some(v559));
 }
+Ok(None)
+}
+fn case_73_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case73: {
 let v560 = s.construct(Constructor::eo__24emb_5fr_2earith_5ftrichotomy, &[])?;
 if a1 != v560 { break 'case73; }
@@ -8128,8 +9272,11 @@ let v568 = s.construct(Constructor::eo__24eo_5fpf, &[v567])?;
 let v569 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v565[0])?;
 let v570 = s.construct(Constructor::eo__24eo_5fpf, &[v569])?;
 let v571 = eo__24eo_5fprog_5farith_5ftrichotomy(s, v568, v570)?;
-return Ok(v571);
+return Ok(Some(v571));
 }
+Ok(None)
+}
+fn case_74_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case74: {
 let v572 = s.construct(Constructor::eo__24emb_5fr_2eint_5ftight_5fub, &[])?;
 if a1 != v572 { break 'case74; }
@@ -8144,8 +9291,11 @@ if v575[1] != v576 { break 'case74; }
 let v577 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v575[0])?;
 let v578 = s.construct(Constructor::eo__24eo_5fpf, &[v577])?;
 let v579 = eo__24eo_5fprog_5fint_5ftight_5fub(s, v578)?;
-return Ok(v579);
+return Ok(Some(v579));
 }
+Ok(None)
+}
+fn case_75_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case75: {
 let v580 = s.construct(Constructor::eo__24emb_5fr_2eint_5ftight_5flb, &[])?;
 if a1 != v580 { break 'case75; }
@@ -8160,8 +9310,11 @@ if v583[1] != v584 { break 'case75; }
 let v585 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v583[0])?;
 let v586 = s.construct(Constructor::eo__24eo_5fpf, &[v585])?;
 let v587 = eo__24eo_5fprog_5fint_5ftight_5flb(s, v586)?;
-return Ok(v587);
+return Ok(Some(v587));
 }
+Ok(None)
+}
+fn case_76_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case76: {
 let v588 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmult_5ftangent, &[])?;
 if a1 != v588 { break 'case76; }
@@ -8190,8 +9343,11 @@ if v598[1] != v599 { break 'case76; }
 let v600 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v600 { break 'case76; }
 let v601 = eo__24eo_5fprog_5farith_5fmult_5ftangent(s, v590[0], v592[0], v594[0], v596[0], v598[0])?;
-return Ok(v601);
+return Ok(Some(v601));
 }
+Ok(None)
+}
+fn case_77_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case77: {
 let v602 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmult_5fsign, &[])?;
 if a1 != v602 { break 'case77; }
@@ -8208,8 +9364,11 @@ if v606[1] != v607 { break 'case77; }
 let v608 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v608 { break 'case77; }
 let v609 = eo__24eo_5fprog_5farith_5fmult_5fsign(s, v604[0], v606[0])?;
-return Ok(v609);
+return Ok(Some(v609));
 }
+Ok(None)
+}
+fn case_78_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case78: {
 let v610 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmult_5fabs_5fcomparison, &[])?;
 if a1 != v610 { break 'case78; }
@@ -8219,8 +9378,11 @@ let v612 = s.construct(Constructor::eo_and, &[])?;
 let v613 = eo__24eo_5fmk_5fpremise_5flist(s, v612, a3, a0)?;
 let v614 = s.construct(Constructor::eo__24eo_5fpf, &[v613])?;
 let v615 = eo__24eo_5fprog_5farith_5fmult_5fabs_5fcomparison(s, v614)?;
-return Ok(v615);
+return Ok(Some(v615));
 }
+Ok(None)
+}
+fn case_79_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case79: {
 let v616 = s.construct(Constructor::eo__24emb_5fr_2earith_5freduction, &[])?;
 if a1 != v616 { break 'case79; }
@@ -8233,8 +9395,11 @@ if v618[1] != v619 { break 'case79; }
 let v620 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v620 { break 'case79; }
 let v621 = eo__24eo_5fprog_5farith_5freduction(s, v618[0])?;
-return Ok(v621);
+return Ok(Some(v621));
 }
+Ok(None)
+}
+fn case_80_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case80: {
 let v622 = s.construct(Constructor::eo__24emb_5fr_2earith_5fpoly_5fnorm, &[])?;
 if a1 != v622 { break 'case80; }
@@ -8247,8 +9412,11 @@ if v624[1] != v625 { break 'case80; }
 let v626 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v626 { break 'case80; }
 let v627 = eo__24eo_5fprog_5farith_5fpoly_5fnorm(s, v624[0])?;
-return Ok(v627);
+return Ok(Some(v627));
 }
+Ok(None)
+}
+fn case_81_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case81: {
 let v628 = s.construct(Constructor::eo__24emb_5fr_2earith_5fpoly_5fnorm_5frel, &[])?;
 if a1 != v628 { break 'case81; }
@@ -8267,8 +9435,11 @@ if v633[1] != v634 { break 'case81; }
 let v635 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v633[0])?;
 let v636 = s.construct(Constructor::eo__24eo_5fpf, &[v635])?;
 let v637 = eo__24eo_5fprog_5farith_5fpoly_5fnorm_5frel(s, v630[0], v636)?;
-return Ok(v637);
+return Ok(Some(v637));
 }
+Ok(None)
+}
+fn case_82_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case82: {
 let v638 = s.construct(Constructor::eo__24emb_5fr_2ebv_5frepeat_5felim, &[])?;
 if a1 != v638 { break 'case82; }
@@ -8281,8 +9452,11 @@ if v640[1] != v641 { break 'case82; }
 let v642 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v642 { break 'case82; }
 let v643 = eo__24eo_5fprog_5fbv_2drepeat_2delim(s, v640[0])?;
-return Ok(v643);
+return Ok(Some(v643));
 }
+Ok(None)
+}
+fn case_83_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case83: {
 let v644 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsmulo_5felim, &[])?;
 if a1 != v644 { break 'case83; }
@@ -8295,8 +9469,11 @@ if v646[1] != v647 { break 'case83; }
 let v648 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v648 { break 'case83; }
 let v649 = eo__24eo_5fprog_5fbv_2dsmulo_2delim(s, v646[0])?;
-return Ok(v649);
+return Ok(Some(v649));
 }
+Ok(None)
+}
+fn case_84_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case84: {
 let v650 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fumulo_5felim, &[])?;
 if a1 != v650 { break 'case84; }
@@ -8309,8 +9486,11 @@ if v652[1] != v653 { break 'case84; }
 let v654 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v654 { break 'case84; }
 let v655 = eo__24eo_5fprog_5fbv_2dumulo_2delim(s, v652[0])?;
-return Ok(v655);
+return Ok(Some(v655));
 }
+Ok(None)
+}
+fn case_85_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case85: {
 let v656 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fbitwise_5fslicing, &[])?;
 if a1 != v656 { break 'case85; }
@@ -8323,8 +9503,11 @@ if v658[1] != v659 { break 'case85; }
 let v660 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v660 { break 'case85; }
 let v661 = eo__24eo_5fprog_5fbv_2dbitwise_2dslicing(s, v658[0])?;
-return Ok(v661);
+return Ok(Some(v661));
 }
+Ok(None)
+}
+fn case_86_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case86: {
 let v662 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fbitblast_5fstep, &[])?;
 if a1 != v662 { break 'case86; }
@@ -8337,8 +9520,11 @@ if v664[1] != v665 { break 'case86; }
 let v666 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v666 { break 'case86; }
 let v667 = eo__24eo_5fprog_5fbv_5fbitblast_5fstep(s, v664[0])?;
-return Ok(v667);
+return Ok(Some(v667));
 }
+Ok(None)
+}
+fn case_87_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case87: {
 let v668 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fpoly_5fnorm, &[])?;
 if a1 != v668 { break 'case87; }
@@ -8351,8 +9537,11 @@ if v670[1] != v671 { break 'case87; }
 let v672 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v672 { break 'case87; }
 let v673 = eo__24eo_5fprog_5fbv_5fpoly_5fnorm(s, v670[0])?;
-return Ok(v673);
+return Ok(Some(v673));
 }
+Ok(None)
+}
+fn case_88_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case88: {
 let v674 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fpoly_5fnorm_5feq, &[])?;
 if a1 != v674 { break 'case88; }
@@ -8371,8 +9560,11 @@ if v679[1] != v680 { break 'case88; }
 let v681 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v679[0])?;
 let v682 = s.construct(Constructor::eo__24eo_5fpf, &[v681])?;
 let v683 = eo__24eo_5fprog_5fbv_5fpoly_5fnorm_5feq(s, v676[0], v682)?;
-return Ok(v683);
+return Ok(Some(v683));
 }
+Ok(None)
+}
+fn case_89_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case89: {
 let v684 = s.construct(Constructor::eo__24emb_5fr_2estring_5flength_5fpos, &[])?;
 if a1 != v684 { break 'case89; }
@@ -8385,8 +9577,11 @@ if v686[1] != v687 { break 'case89; }
 let v688 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v688 { break 'case89; }
 let v689 = eo__24eo_5fprog_5fstring_5flength_5fpos(s, v686[0])?;
-return Ok(v689);
+return Ok(Some(v689));
 }
+Ok(None)
+}
+fn case_90_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case90: {
 let v690 = s.construct(Constructor::eo__24emb_5fr_2estring_5flength_5fnon_5fempty, &[])?;
 if a1 != v690 { break 'case90; }
@@ -8401,8 +9596,11 @@ if v693[1] != v694 { break 'case90; }
 let v695 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v693[0])?;
 let v696 = s.construct(Constructor::eo__24eo_5fpf, &[v695])?;
 let v697 = eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty(s, v696)?;
-return Ok(v697);
+return Ok(Some(v697));
 }
+Ok(None)
+}
+fn case_91_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case91: {
 let v698 = s.construct(Constructor::eo__24emb_5fr_2econcat_5feq, &[])?;
 if a1 != v698 { break 'case91; }
@@ -8421,8 +9619,11 @@ if v703[1] != v704 { break 'case91; }
 let v705 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v703[0])?;
 let v706 = s.construct(Constructor::eo__24eo_5fpf, &[v705])?;
 let v707 = eo__24eo_5fprog_5fconcat_5feq(s, v700[0], v706)?;
-return Ok(v707);
+return Ok(Some(v707));
 }
+Ok(None)
+}
+fn case_92_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case92: {
 let v708 = s.construct(Constructor::eo__24emb_5fr_2econcat_5funify, &[])?;
 if a1 != v708 { break 'case92; }
@@ -8447,8 +9648,11 @@ let v718 = s.construct(Constructor::eo__24eo_5fpf, &[v717])?;
 let v719 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v715[0])?;
 let v720 = s.construct(Constructor::eo__24eo_5fpf, &[v719])?;
 let v721 = eo__24eo_5fprog_5fconcat_5funify(s, v710[0], v718, v720)?;
-return Ok(v721);
+return Ok(Some(v721));
 }
+Ok(None)
+}
+fn case_93_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case93: {
 let v722 = s.construct(Constructor::eo__24emb_5fr_2econcat_5fcsplit, &[])?;
 if a1 != v722 { break 'case93; }
@@ -8473,8 +9677,11 @@ let v732 = s.construct(Constructor::eo__24eo_5fpf, &[v731])?;
 let v733 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v729[0])?;
 let v734 = s.construct(Constructor::eo__24eo_5fpf, &[v733])?;
 let v735 = eo__24eo_5fprog_5fconcat_5fcsplit(s, v724[0], v732, v734)?;
-return Ok(v735);
+return Ok(Some(v735));
 }
+Ok(None)
+}
+fn case_94_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case94: {
 let v736 = s.construct(Constructor::eo__24emb_5fr_2econcat_5fsplit, &[])?;
 if a1 != v736 { break 'case94; }
@@ -8499,8 +9706,11 @@ let v746 = s.construct(Constructor::eo__24eo_5fpf, &[v745])?;
 let v747 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v743[0])?;
 let v748 = s.construct(Constructor::eo__24eo_5fpf, &[v747])?;
 let v749 = eo__24eo_5fprog_5fconcat_5fsplit(s, v738[0], v746, v748)?;
-return Ok(v749);
+return Ok(Some(v749));
 }
+Ok(None)
+}
+fn case_95_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case95: {
 let v750 = s.construct(Constructor::eo__24emb_5fr_2econcat_5flprop, &[])?;
 if a1 != v750 { break 'case95; }
@@ -8525,8 +9735,11 @@ let v760 = s.construct(Constructor::eo__24eo_5fpf, &[v759])?;
 let v761 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v757[0])?;
 let v762 = s.construct(Constructor::eo__24eo_5fpf, &[v761])?;
 let v763 = eo__24eo_5fprog_5fconcat_5flprop(s, v752[0], v760, v762)?;
-return Ok(v763);
+return Ok(Some(v763));
 }
+Ok(None)
+}
+fn case_96_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case96: {
 let v764 = s.construct(Constructor::eo__24emb_5fr_2econcat_5fcprop, &[])?;
 if a1 != v764 { break 'case96; }
@@ -8551,8 +9764,11 @@ let v774 = s.construct(Constructor::eo__24eo_5fpf, &[v773])?;
 let v775 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v771[0])?;
 let v776 = s.construct(Constructor::eo__24eo_5fpf, &[v775])?;
 let v777 = eo__24eo_5fprog_5fconcat_5fcprop(s, v766[0], v774, v776)?;
-return Ok(v777);
+return Ok(Some(v777));
 }
+Ok(None)
+}
+fn case_97_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case97: {
 let v778 = s.construct(Constructor::eo__24emb_5fr_2estring_5fdecompose, &[])?;
 if a1 != v778 { break 'case97; }
@@ -8577,8 +9793,11 @@ let v788 = s.construct(Constructor::eo__24eo_5fpf, &[v787])?;
 let v789 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v785[0])?;
 let v790 = s.construct(Constructor::eo__24eo_5fpf, &[v789])?;
 let v791 = eo__24eo_5fprog_5fstring_5fdecompose(s, v780[0], v788, v790)?;
-return Ok(v791);
+return Ok(Some(v791));
 }
+Ok(None)
+}
+fn case_98_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case98: {
 let v792 = s.construct(Constructor::eo__24emb_5fr_2eexists_5fstring_5flength, &[])?;
 if a1 != v792 { break 'case98; }
@@ -8599,8 +9818,11 @@ if v798[1] != v799 { break 'case98; }
 let v800 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v800 { break 'case98; }
 let v801 = eo__24eo_5fprog_5fexists_5fstring_5flength(s, v794[0], v796[0], v798[0])?;
-return Ok(v801);
+return Ok(Some(v801));
 }
+Ok(None)
+}
+fn case_99_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case99: {
 let v802 = s.construct(Constructor::eo__24emb_5fr_2estring_5fcode_5finj, &[])?;
 if a1 != v802 { break 'case99; }
@@ -8617,8 +9839,11 @@ if v806[1] != v807 { break 'case99; }
 let v808 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v808 { break 'case99; }
 let v809 = eo__24eo_5fprog_5fstring_5fcode_5finj(s, v804[0], v806[0])?;
-return Ok(v809);
+return Ok(Some(v809));
 }
+Ok(None)
+}
+fn case_100_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case100: {
 let v810 = s.construct(Constructor::eo__24emb_5fr_2estring_5fseq_5funit_5finj, &[])?;
 if a1 != v810 { break 'case100; }
@@ -8633,8 +9858,11 @@ if v813[1] != v814 { break 'case100; }
 let v815 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v813[0])?;
 let v816 = s.construct(Constructor::eo__24eo_5fpf, &[v815])?;
 let v817 = eo__24eo_5fprog_5fstring_5fseq_5funit_5finj(s, v816)?;
-return Ok(v817);
+return Ok(Some(v817));
 }
+Ok(None)
+}
+fn case_101_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case101: {
 let v818 = s.construct(Constructor::eo__24emb_5fr_2ere_5finter, &[])?;
 if a1 != v818 { break 'case101; }
@@ -8655,8 +9883,11 @@ let v826 = s.construct(Constructor::eo__24eo_5fpf, &[v825])?;
 let v827 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v823[0])?;
 let v828 = s.construct(Constructor::eo__24eo_5fpf, &[v827])?;
 let v829 = eo__24eo_5fprog_5fre_5finter(s, v826, v828)?;
-return Ok(v829);
+return Ok(Some(v829));
 }
+Ok(None)
+}
+fn case_102_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case102: {
 let v830 = s.construct(Constructor::eo__24emb_5fr_2ere_5fconcat, &[])?;
 if a1 != v830 { break 'case102; }
@@ -8666,8 +9897,11 @@ let v832 = s.construct(Constructor::eo_and, &[])?;
 let v833 = eo__24eo_5fmk_5fpremise_5flist(s, v832, a3, a0)?;
 let v834 = s.construct(Constructor::eo__24eo_5fpf, &[v833])?;
 let v835 = eo__24eo_5fprog_5fre_5fconcat(s, v834)?;
-return Ok(v835);
+return Ok(Some(v835));
 }
+Ok(None)
+}
+fn case_103_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case103: {
 let v836 = s.construct(Constructor::eo__24emb_5fr_2ere_5funfold_5fpos, &[])?;
 if a1 != v836 { break 'case103; }
@@ -8682,8 +9916,11 @@ if v839[1] != v840 { break 'case103; }
 let v841 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v839[0])?;
 let v842 = s.construct(Constructor::eo__24eo_5fpf, &[v841])?;
 let v843 = eo__24eo_5fprog_5fre_5funfold_5fpos(s, v842)?;
-return Ok(v843);
+return Ok(Some(v843));
 }
+Ok(None)
+}
+fn case_104_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case104: {
 let v844 = s.construct(Constructor::eo__24emb_5fr_2ere_5funfold_5fneg_5fconcat_5ffixed, &[])?;
 if a1 != v844 { break 'case104; }
@@ -8702,8 +9939,11 @@ if v849[1] != v850 { break 'case104; }
 let v851 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v849[0])?;
 let v852 = s.construct(Constructor::eo__24eo_5fpf, &[v851])?;
 let v853 = eo__24eo_5fprog_5fre_5funfold_5fneg_5fconcat_5ffixed(s, v846[0], v852)?;
-return Ok(v853);
+return Ok(Some(v853));
 }
+Ok(None)
+}
+fn case_105_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case105: {
 let v854 = s.construct(Constructor::eo__24emb_5fr_2ere_5funfold_5fneg, &[])?;
 if a1 != v854 { break 'case105; }
@@ -8718,8 +9958,11 @@ if v857[1] != v858 { break 'case105; }
 let v859 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v857[0])?;
 let v860 = s.construct(Constructor::eo__24eo_5fpf, &[v859])?;
 let v861 = eo__24eo_5fprog_5fre_5funfold_5fneg(s, v860)?;
-return Ok(v861);
+return Ok(Some(v861));
 }
+Ok(None)
+}
+fn case_106_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case106: {
 let v862 = s.construct(Constructor::eo__24emb_5fr_2estring_5fext, &[])?;
 if a1 != v862 { break 'case106; }
@@ -8734,8 +9977,11 @@ if v865[1] != v866 { break 'case106; }
 let v867 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v865[0])?;
 let v868 = s.construct(Constructor::eo__24eo_5fpf, &[v867])?;
 let v869 = eo__24eo_5fprog_5fstring_5fext(s, v868)?;
-return Ok(v869);
+return Ok(Some(v869));
 }
+Ok(None)
+}
+fn case_107_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case107: {
 let v870 = s.construct(Constructor::eo__24emb_5fr_2estring_5freduction, &[])?;
 if a1 != v870 { break 'case107; }
@@ -8748,8 +9994,11 @@ if v872[1] != v873 { break 'case107; }
 let v874 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v874 { break 'case107; }
 let v875 = eo__24eo_5fprog_5fstring_5freduction(s, v872[0])?;
-return Ok(v875);
+return Ok(Some(v875));
 }
+Ok(None)
+}
+fn case_108_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case108: {
 let v876 = s.construct(Constructor::eo__24emb_5fr_2estring_5feager_5freduction, &[])?;
 if a1 != v876 { break 'case108; }
@@ -8762,8 +10011,11 @@ if v878[1] != v879 { break 'case108; }
 let v880 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v880 { break 'case108; }
 let v881 = eo__24eo_5fprog_5fstring_5feager_5freduction(s, v878[0])?;
-return Ok(v881);
+return Ok(Some(v881));
 }
+Ok(None)
+}
+fn case_109_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case109: {
 let v882 = s.construct(Constructor::eo__24emb_5fr_2earith_5fstring_5fpred_5fentail, &[])?;
 if a1 != v882 { break 'case109; }
@@ -8776,8 +10028,11 @@ if v884[1] != v885 { break 'case109; }
 let v886 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v886 { break 'case109; }
 let v887 = eo__24eo_5fprog_5farith_2dstring_2dpred_2dentail(s, v884[0])?;
-return Ok(v887);
+return Ok(Some(v887));
 }
+Ok(None)
+}
+fn case_110_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case110: {
 let v888 = s.construct(Constructor::eo__24emb_5fr_2earith_5fstring_5fpred_5fsafe_5fapprox, &[])?;
 if a1 != v888 { break 'case110; }
@@ -8790,8 +10045,11 @@ if v890[1] != v891 { break 'case110; }
 let v892 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v892 { break 'case110; }
 let v893 = eo__24eo_5fprog_5farith_2dstring_2dpred_2dsafe_2dapprox(s, v890[0])?;
-return Ok(v893);
+return Ok(Some(v893));
 }
+Ok(None)
+}
+fn case_111_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case111: {
 let v894 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5feval, &[])?;
 if a1 != v894 { break 'case111; }
@@ -8804,8 +10062,11 @@ if v896[1] != v897 { break 'case111; }
 let v898 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v898 { break 'case111; }
 let v899 = eo__24eo_5fprog_5fstr_2din_2dre_2deval(s, v896[0])?;
-return Ok(v899);
+return Ok(Some(v899));
 }
+Ok(None)
+}
+fn case_112_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case112: {
 let v900 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5fconsume, &[])?;
 if a1 != v900 { break 'case112; }
@@ -8818,8 +10079,11 @@ if v902[1] != v903 { break 'case112; }
 let v904 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v904 { break 'case112; }
 let v905 = eo__24eo_5fprog_5fstr_2din_2dre_2dconsume(s, v902[0])?;
-return Ok(v905);
+return Ok(Some(v905));
 }
+Ok(None)
+}
+fn case_113_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case113: {
 let v906 = s.construct(Constructor::eo__24emb_5fr_2ere_5floop_5felim, &[])?;
 if a1 != v906 { break 'case113; }
@@ -8832,8 +10096,11 @@ if v908[1] != v909 { break 'case113; }
 let v910 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v910 { break 'case113; }
 let v911 = eo__24eo_5fprog_5fre_2dloop_2delim(s, v908[0])?;
-return Ok(v911);
+return Ok(Some(v911));
 }
+Ok(None)
+}
+fn case_114_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case114: {
 let v912 = s.construct(Constructor::eo__24emb_5fr_2ere_5feq_5felim, &[])?;
 if a1 != v912 { break 'case114; }
@@ -8846,8 +10113,11 @@ if v914[1] != v915 { break 'case114; }
 let v916 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v916 { break 'case114; }
 let v917 = eo__24eo_5fprog_5fre_2deq_2delim(s, v914[0])?;
-return Ok(v917);
+return Ok(Some(v917));
 }
+Ok(None)
+}
+fn case_115_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case115: {
 let v918 = s.construct(Constructor::eo__24emb_5fr_2ere_5finter_5finclusion, &[])?;
 if a1 != v918 { break 'case115; }
@@ -8860,8 +10130,11 @@ if v920[1] != v921 { break 'case115; }
 let v922 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v922 { break 'case115; }
 let v923 = eo__24eo_5fprog_5fre_2dinter_2dinclusion(s, v920[0])?;
-return Ok(v923);
+return Ok(Some(v923));
 }
+Ok(None)
+}
+fn case_116_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case116: {
 let v924 = s.construct(Constructor::eo__24emb_5fr_2ere_5funion_5finclusion, &[])?;
 if a1 != v924 { break 'case116; }
@@ -8874,8 +10147,11 @@ if v926[1] != v927 { break 'case116; }
 let v928 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v928 { break 'case116; }
 let v929 = eo__24eo_5fprog_5fre_2dunion_2dinclusion(s, v926[0])?;
-return Ok(v929);
+return Ok(Some(v929));
 }
+Ok(None)
+}
+fn case_117_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case117: {
 let v930 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5fconcat_5fstar_5fchar, &[])?;
 if a1 != v930 { break 'case117; }
@@ -8888,8 +10164,11 @@ if v932[1] != v933 { break 'case117; }
 let v934 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v934 { break 'case117; }
 let v935 = eo__24eo_5fprog_5fstr_2din_2dre_2dconcat_2dstar_2dchar(s, v932[0])?;
-return Ok(v935);
+return Ok(Some(v935));
 }
+Ok(None)
+}
+fn case_118_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case118: {
 let v936 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5fsigma, &[])?;
 if a1 != v936 { break 'case118; }
@@ -8902,8 +10181,11 @@ if v938[1] != v939 { break 'case118; }
 let v940 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v940 { break 'case118; }
 let v941 = eo__24eo_5fprog_5fstr_2din_2dre_2dsigma(s, v938[0])?;
-return Ok(v941);
+return Ok(Some(v941));
 }
+Ok(None)
+}
+fn case_119_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case119: {
 let v942 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5fsigma_5fstar, &[])?;
 if a1 != v942 { break 'case119; }
@@ -8916,8 +10198,11 @@ if v944[1] != v945 { break 'case119; }
 let v946 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v946 { break 'case119; }
 let v947 = eo__24eo_5fprog_5fstr_2din_2dre_2dsigma_2dstar(s, v944[0])?;
-return Ok(v947);
+return Ok(Some(v947));
 }
+Ok(None)
+}
+fn case_120_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case120: {
 let v948 = s.construct(Constructor::eo__24emb_5fr_2estr_5fctn_5fmultiset_5fsubset, &[])?;
 if a1 != v948 { break 'case120; }
@@ -8930,8 +10215,11 @@ if v950[1] != v951 { break 'case120; }
 let v952 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v952 { break 'case120; }
 let v953 = eo__24eo_5fprog_5fstr_2dctn_2dmultiset_2dsubset(s, v950[0])?;
-return Ok(v953);
+return Ok(Some(v953));
 }
+Ok(None)
+}
+fn case_121_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case121: {
 let v954 = s.construct(Constructor::eo__24emb_5fr_2estr_5foverlap_5fsplit_5fctn, &[])?;
 if a1 != v954 { break 'case121; }
@@ -8944,8 +10232,11 @@ if v956[1] != v957 { break 'case121; }
 let v958 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v958 { break 'case121; }
 let v959 = eo__24eo_5fprog_5fstr_2doverlap_2dsplit_2dctn(s, v956[0])?;
-return Ok(v959);
+return Ok(Some(v959));
 }
+Ok(None)
+}
+fn case_122_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case122: {
 let v960 = s.construct(Constructor::eo__24emb_5fr_2estr_5foverlap_5fendpoints_5fctn, &[])?;
 if a1 != v960 { break 'case122; }
@@ -8958,8 +10249,11 @@ if v962[1] != v963 { break 'case122; }
 let v964 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v964 { break 'case122; }
 let v965 = eo__24eo_5fprog_5fstr_2doverlap_2dendpoints_2dctn(s, v962[0])?;
-return Ok(v965);
+return Ok(Some(v965));
 }
+Ok(None)
+}
+fn case_123_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case123: {
 let v966 = s.construct(Constructor::eo__24emb_5fr_2estr_5foverlap_5fendpoints_5findexof, &[])?;
 if a1 != v966 { break 'case123; }
@@ -8972,8 +10266,11 @@ if v968[1] != v969 { break 'case123; }
 let v970 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v970 { break 'case123; }
 let v971 = eo__24eo_5fprog_5fstr_2doverlap_2dendpoints_2dindexof(s, v968[0])?;
-return Ok(v971);
+return Ok(Some(v971));
 }
+Ok(None)
+}
+fn case_124_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case124: {
 let v972 = s.construct(Constructor::eo__24emb_5fr_2estr_5foverlap_5fendpoints_5freplace, &[])?;
 if a1 != v972 { break 'case124; }
@@ -8986,8 +10283,11 @@ if v974[1] != v975 { break 'case124; }
 let v976 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v976 { break 'case124; }
 let v977 = eo__24eo_5fprog_5fstr_2doverlap_2dendpoints_2dreplace(s, v974[0])?;
-return Ok(v977);
+return Ok(Some(v977));
 }
+Ok(None)
+}
+fn case_125_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case125: {
 let v978 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fre_5feval, &[])?;
 if a1 != v978 { break 'case125; }
@@ -9000,8 +10300,11 @@ if v980[1] != v981 { break 'case125; }
 let v982 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v982 { break 'case125; }
 let v983 = eo__24eo_5fprog_5fstr_2dindexof_2dre_2deval(s, v980[0])?;
-return Ok(v983);
+return Ok(Some(v983));
 }
+Ok(None)
+}
+fn case_126_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case126: {
 let v984 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fre_5feval, &[])?;
 if a1 != v984 { break 'case126; }
@@ -9014,8 +10317,11 @@ if v986[1] != v987 { break 'case126; }
 let v988 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v988 { break 'case126; }
 let v989 = eo__24eo_5fprog_5fstr_2dreplace_2dre_2deval(s, v986[0])?;
-return Ok(v989);
+return Ok(Some(v989));
 }
+Ok(None)
+}
+fn case_127_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case127: {
 let v990 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fre_5fall_5feval, &[])?;
 if a1 != v990 { break 'case127; }
@@ -9028,8 +10334,11 @@ if v992[1] != v993 { break 'case127; }
 let v994 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v994 { break 'case127; }
 let v995 = eo__24eo_5fprog_5fstr_2dreplace_2dre_2dall_2deval(s, v992[0])?;
-return Ok(v995);
+return Ok(Some(v995));
 }
+Ok(None)
+}
+fn case_128_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case128: {
 let v996 = s.construct(Constructor::eo__24emb_5fr_2eseq_5feval_5fop, &[])?;
 if a1 != v996 { break 'case128; }
@@ -9042,8 +10351,11 @@ if v998[1] != v999 { break 'case128; }
 let v1000 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1000 { break 'case128; }
 let v1001 = eo__24eo_5fprog_5fseq_2deval_2dop(s, v998[0])?;
-return Ok(v1001);
+return Ok(Some(v1001));
 }
+Ok(None)
+}
+fn case_129_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case129: {
 let v1002 = s.construct(Constructor::eo__24emb_5fr_2esets_5fsingleton_5finj, &[])?;
 if a1 != v1002 { break 'case129; }
@@ -9058,8 +10370,11 @@ if v1005[1] != v1006 { break 'case129; }
 let v1007 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1005[0])?;
 let v1008 = s.construct(Constructor::eo__24eo_5fpf, &[v1007])?;
 let v1009 = eo__24eo_5fprog_5fsets_5fsingleton_5finj(s, v1008)?;
-return Ok(v1009);
+return Ok(Some(v1009));
 }
+Ok(None)
+}
+fn case_130_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case130: {
 let v1010 = s.construct(Constructor::eo__24emb_5fr_2esets_5fext, &[])?;
 if a1 != v1010 { break 'case130; }
@@ -9074,8 +10389,11 @@ if v1013[1] != v1014 { break 'case130; }
 let v1015 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1013[0])?;
 let v1016 = s.construct(Constructor::eo__24eo_5fpf, &[v1015])?;
 let v1017 = eo__24eo_5fprog_5fsets_5fext(s, v1016)?;
-return Ok(v1017);
+return Ok(Some(v1017));
 }
+Ok(None)
+}
+fn case_131_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case131: {
 let v1018 = s.construct(Constructor::eo__24emb_5fr_2esets_5fchoose_5fmember, &[])?;
 if a1 != v1018 { break 'case131; }
@@ -9088,8 +10406,11 @@ if v1020[1] != v1021 { break 'case131; }
 let v1022 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1022 { break 'case131; }
 let v1023 = eo__24eo_5fprog_5fsets_5fchoose_5fmember(s, v1020[0])?;
-return Ok(v1023);
+return Ok(Some(v1023));
 }
+Ok(None)
+}
+fn case_132_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case132: {
 let v1024 = s.construct(Constructor::eo__24emb_5fr_2esets_5feval_5fop, &[])?;
 if a1 != v1024 { break 'case132; }
@@ -9102,8 +10423,11 @@ if v1026[1] != v1027 { break 'case132; }
 let v1028 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1028 { break 'case132; }
 let v1029 = eo__24eo_5fprog_5fsets_2deval_2dop(s, v1026[0])?;
-return Ok(v1029);
+return Ok(Some(v1029));
 }
+Ok(None)
+}
+fn case_133_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case133: {
 let v1030 = s.construct(Constructor::eo__24emb_5fr_2eubv_5fto_5fint_5frange, &[])?;
 if a1 != v1030 { break 'case133; }
@@ -9116,8 +10440,11 @@ if v1032[1] != v1033 { break 'case133; }
 let v1034 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1034 { break 'case133; }
 let v1035 = eo__24eo_5fprog_5fubv_5fto_5fint_5frange(s, v1032[0])?;
-return Ok(v1035);
+return Ok(Some(v1035));
 }
+Ok(None)
+}
+fn case_134_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case134: {
 let v1036 = s.construct(Constructor::eo__24emb_5fr_2eubv_5fto_5fint_5felim, &[])?;
 if a1 != v1036 { break 'case134; }
@@ -9130,8 +10457,11 @@ if v1038[1] != v1039 { break 'case134; }
 let v1040 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1040 { break 'case134; }
 let v1041 = eo__24eo_5fprog_5fubv_2dto_2dint_2delim(s, v1038[0])?;
-return Ok(v1041);
+return Ok(Some(v1041));
 }
+Ok(None)
+}
+fn case_135_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case135: {
 let v1042 = s.construct(Constructor::eo__24emb_5fr_2eint_5fto_5fbv_5felim, &[])?;
 if a1 != v1042 { break 'case135; }
@@ -9144,8 +10474,11 @@ if v1044[1] != v1045 { break 'case135; }
 let v1046 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1046 { break 'case135; }
 let v1047 = eo__24eo_5fprog_5fint_2dto_2dbv_2delim(s, v1044[0])?;
-return Ok(v1047);
+return Ok(Some(v1047));
 }
+Ok(None)
+}
+fn case_136_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case136: {
 let v1048 = s.construct(Constructor::eo__24emb_5fr_2einstantiate, &[])?;
 if a1 != v1048 { break 'case136; }
@@ -9164,8 +10497,11 @@ if v1053[1] != v1054 { break 'case136; }
 let v1055 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1053[0])?;
 let v1056 = s.construct(Constructor::eo__24eo_5fpf, &[v1055])?;
 let v1057 = eo__24eo_5fprog_5finstantiate(s, v1050[0], v1056)?;
-return Ok(v1057);
+return Ok(Some(v1057));
 }
+Ok(None)
+}
+fn case_137_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case137: {
 let v1058 = s.construct(Constructor::eo__24emb_5fr_2eskolemize, &[])?;
 if a1 != v1058 { break 'case137; }
@@ -9180,8 +10516,11 @@ if v1061[1] != v1062 { break 'case137; }
 let v1063 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1061[0])?;
 let v1064 = s.construct(Constructor::eo__24eo_5fpf, &[v1063])?;
 let v1065 = eo__24eo_5fprog_5fskolemize(s, v1064)?;
-return Ok(v1065);
+return Ok(Some(v1065));
 }
+Ok(None)
+}
+fn case_138_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case138: {
 let v1066 = s.construct(Constructor::eo__24emb_5fr_2eskolem_5fintro, &[])?;
 if a1 != v1066 { break 'case138; }
@@ -9194,8 +10533,11 @@ if v1068[1] != v1069 { break 'case138; }
 let v1070 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1070 { break 'case138; }
 let v1071 = eo__24eo_5fprog_5fskolem_5fintro(s, v1068[0])?;
-return Ok(v1071);
+return Ok(Some(v1071));
 }
+Ok(None)
+}
+fn case_139_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case139: {
 let v1072 = s.construct(Constructor::eo__24emb_5fr_2ealpha_5fequiv, &[])?;
 if a1 != v1072 { break 'case139; }
@@ -9216,8 +10558,11 @@ if v1078[1] != v1079 { break 'case139; }
 let v1080 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1080 { break 'case139; }
 let v1081 = eo__24eo_5fprog_5falpha_5fequiv(s, v1074[0], v1076[0], v1078[0])?;
-return Ok(v1081);
+return Ok(Some(v1081));
 }
+Ok(None)
+}
+fn case_140_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case140: {
 let v1082 = s.construct(Constructor::eo__24emb_5fr_2equant_5fvar_5freordering, &[])?;
 if a1 != v1082 { break 'case140; }
@@ -9230,8 +10575,11 @@ if v1084[1] != v1085 { break 'case140; }
 let v1086 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1086 { break 'case140; }
 let v1087 = eo__24eo_5fprog_5fquant_5fvar_5freordering(s, v1084[0])?;
-return Ok(v1087);
+return Ok(Some(v1087));
 }
+Ok(None)
+}
+fn case_141_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case141: {
 let v1088 = s.construct(Constructor::eo__24emb_5fr_2eexists_5felim, &[])?;
 if a1 != v1088 { break 'case141; }
@@ -9244,8 +10592,11 @@ if v1090[1] != v1091 { break 'case141; }
 let v1092 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1092 { break 'case141; }
 let v1093 = eo__24eo_5fprog_5fexists_2delim(s, v1090[0])?;
-return Ok(v1093);
+return Ok(Some(v1093));
 }
+Ok(None)
+}
+fn case_142_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case142: {
 let v1094 = s.construct(Constructor::eo__24emb_5fr_2equant_5funused_5fvars, &[])?;
 if a1 != v1094 { break 'case142; }
@@ -9258,8 +10609,11 @@ if v1096[1] != v1097 { break 'case142; }
 let v1098 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1098 { break 'case142; }
 let v1099 = eo__24eo_5fprog_5fquant_2dunused_2dvars(s, v1096[0])?;
-return Ok(v1099);
+return Ok(Some(v1099));
 }
+Ok(None)
+}
+fn case_143_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case143: {
 let v1100 = s.construct(Constructor::eo__24emb_5fr_2equant_5fmerge_5fprenex, &[])?;
 if a1 != v1100 { break 'case143; }
@@ -9272,8 +10626,11 @@ if v1102[1] != v1103 { break 'case143; }
 let v1104 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1104 { break 'case143; }
 let v1105 = eo__24eo_5fprog_5fquant_2dmerge_2dprenex(s, v1102[0])?;
-return Ok(v1105);
+return Ok(Some(v1105));
 }
+Ok(None)
+}
+fn case_144_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case144: {
 let v1106 = s.construct(Constructor::eo__24emb_5fr_2equant_5fminiscope_5fand, &[])?;
 if a1 != v1106 { break 'case144; }
@@ -9286,8 +10643,11 @@ if v1108[1] != v1109 { break 'case144; }
 let v1110 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1110 { break 'case144; }
 let v1111 = eo__24eo_5fprog_5fquant_2dminiscope_2dand(s, v1108[0])?;
-return Ok(v1111);
+return Ok(Some(v1111));
 }
+Ok(None)
+}
+fn case_145_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case145: {
 let v1112 = s.construct(Constructor::eo__24emb_5fr_2equant_5fminiscope_5for, &[])?;
 if a1 != v1112 { break 'case145; }
@@ -9300,8 +10660,11 @@ if v1114[1] != v1115 { break 'case145; }
 let v1116 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1116 { break 'case145; }
 let v1117 = eo__24eo_5fprog_5fquant_2dminiscope_2dor(s, v1114[0])?;
-return Ok(v1117);
+return Ok(Some(v1117));
 }
+Ok(None)
+}
+fn case_146_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case146: {
 let v1118 = s.construct(Constructor::eo__24emb_5fr_2equant_5fminiscope_5fite, &[])?;
 if a1 != v1118 { break 'case146; }
@@ -9314,8 +10677,11 @@ if v1120[1] != v1121 { break 'case146; }
 let v1122 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1122 { break 'case146; }
 let v1123 = eo__24eo_5fprog_5fquant_2dminiscope_2dite(s, v1120[0])?;
-return Ok(v1123);
+return Ok(Some(v1123));
 }
+Ok(None)
+}
+fn case_147_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case147: {
 let v1124 = s.construct(Constructor::eo__24emb_5fr_2equant_5fvar_5felim_5feq, &[])?;
 if a1 != v1124 { break 'case147; }
@@ -9328,8 +10694,11 @@ if v1126[1] != v1127 { break 'case147; }
 let v1128 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1128 { break 'case147; }
 let v1129 = eo__24eo_5fprog_5fquant_2dvar_2delim_2deq(s, v1126[0])?;
-return Ok(v1129);
+return Ok(Some(v1129));
 }
+Ok(None)
+}
+fn case_148_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case148: {
 let v1130 = s.construct(Constructor::eo__24emb_5fr_2equant_5fdt_5fsplit, &[])?;
 if a1 != v1130 { break 'case148; }
@@ -9342,8 +10711,11 @@ if v1132[1] != v1133 { break 'case148; }
 let v1134 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1134 { break 'case148; }
 let v1135 = eo__24eo_5fprog_5fquant_2ddt_2dsplit(s, v1132[0])?;
-return Ok(v1135);
+return Ok(Some(v1135));
 }
+Ok(None)
+}
+fn case_149_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case149: {
 let v1136 = s.construct(Constructor::eo__24emb_5fr_2edt_5fsplit, &[])?;
 if a1 != v1136 { break 'case149; }
@@ -9356,8 +10728,11 @@ if v1138[1] != v1139 { break 'case149; }
 let v1140 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1140 { break 'case149; }
 let v1141 = eo__24eo_5fprog_5fdt_5fsplit(s, v1138[0])?;
-return Ok(v1141);
+return Ok(Some(v1141));
 }
+Ok(None)
+}
+fn case_150_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case150: {
 let v1142 = s.construct(Constructor::eo__24emb_5fr_2edt_5finst, &[])?;
 if a1 != v1142 { break 'case150; }
@@ -9370,8 +10745,11 @@ if v1144[1] != v1145 { break 'case150; }
 let v1146 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1146 { break 'case150; }
 let v1147 = eo__24eo_5fprog_5fdt_2dinst(s, v1144[0])?;
-return Ok(v1147);
+return Ok(Some(v1147));
 }
+Ok(None)
+}
+fn case_151_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case151: {
 let v1148 = s.construct(Constructor::eo__24emb_5fr_2edt_5fcollapse_5fselector, &[])?;
 if a1 != v1148 { break 'case151; }
@@ -9384,8 +10762,11 @@ if v1150[1] != v1151 { break 'case151; }
 let v1152 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1152 { break 'case151; }
 let v1153 = eo__24eo_5fprog_5fdt_2dcollapse_2dselector(s, v1150[0])?;
-return Ok(v1153);
+return Ok(Some(v1153));
 }
+Ok(None)
+}
+fn case_152_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case152: {
 let v1154 = s.construct(Constructor::eo__24emb_5fr_2edt_5fcollapse_5ftester, &[])?;
 if a1 != v1154 { break 'case152; }
@@ -9398,8 +10779,11 @@ if v1156[1] != v1157 { break 'case152; }
 let v1158 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1158 { break 'case152; }
 let v1159 = eo__24eo_5fprog_5fdt_2dcollapse_2dtester(s, v1156[0])?;
-return Ok(v1159);
+return Ok(Some(v1159));
 }
+Ok(None)
+}
+fn case_153_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case153: {
 let v1160 = s.construct(Constructor::eo__24emb_5fr_2edt_5fcollapse_5ftester_5fsingleton, &[])?;
 if a1 != v1160 { break 'case153; }
@@ -9412,8 +10796,11 @@ if v1162[1] != v1163 { break 'case153; }
 let v1164 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1164 { break 'case153; }
 let v1165 = eo__24eo_5fprog_5fdt_2dcollapse_2dtester_2dsingleton(s, v1162[0])?;
-return Ok(v1165);
+return Ok(Some(v1165));
 }
+Ok(None)
+}
+fn case_154_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case154: {
 let v1166 = s.construct(Constructor::eo__24emb_5fr_2edt_5fcons_5feq, &[])?;
 if a1 != v1166 { break 'case154; }
@@ -9426,8 +10813,11 @@ if v1168[1] != v1169 { break 'case154; }
 let v1170 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1170 { break 'case154; }
 let v1171 = eo__24eo_5fprog_5fdt_2dcons_2deq(s, v1168[0])?;
-return Ok(v1171);
+return Ok(Some(v1171));
 }
+Ok(None)
+}
+fn case_155_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case155: {
 let v1172 = s.construct(Constructor::eo__24emb_5fr_2edt_5fcons_5feq_5fclash, &[])?;
 if a1 != v1172 { break 'case155; }
@@ -9440,8 +10830,11 @@ if v1174[1] != v1175 { break 'case155; }
 let v1176 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1176 { break 'case155; }
 let v1177 = eo__24eo_5fprog_5fdt_2dcons_2deq_2dclash(s, v1174[0])?;
-return Ok(v1177);
+return Ok(Some(v1177));
 }
+Ok(None)
+}
+fn case_156_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case156: {
 let v1178 = s.construct(Constructor::eo__24emb_5fr_2edt_5fcycle, &[])?;
 if a1 != v1178 { break 'case156; }
@@ -9454,8 +10847,11 @@ if v1180[1] != v1181 { break 'case156; }
 let v1182 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1182 { break 'case156; }
 let v1183 = eo__24eo_5fprog_5fdt_2dcycle(s, v1180[0])?;
-return Ok(v1183);
+return Ok(Some(v1183));
 }
+Ok(None)
+}
+fn case_157_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case157: {
 let v1184 = s.construct(Constructor::eo__24emb_5fr_2edt_5fcollapse_5fupdater, &[])?;
 if a1 != v1184 { break 'case157; }
@@ -9468,8 +10864,11 @@ if v1186[1] != v1187 { break 'case157; }
 let v1188 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1188 { break 'case157; }
 let v1189 = eo__24eo_5fprog_5fdt_2dcollapse_2dupdater(s, v1186[0])?;
-return Ok(v1189);
+return Ok(Some(v1189));
 }
+Ok(None)
+}
+fn case_158_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case158: {
 let v1190 = s.construct(Constructor::eo__24emb_5fr_2edt_5fupdater_5felim, &[])?;
 if a1 != v1190 { break 'case158; }
@@ -9482,8 +10881,11 @@ if v1192[1] != v1193 { break 'case158; }
 let v1194 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1194 { break 'case158; }
 let v1195 = eo__24eo_5fprog_5fdt_2dupdater_2delim(s, v1192[0])?;
-return Ok(v1195);
+return Ok(Some(v1195));
 }
+Ok(None)
+}
+fn case_159_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case159: {
 let v1196 = s.construct(Constructor::eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5freal, &[])?;
 if a1 != v1196 { break 'case159; }
@@ -9496,8 +10898,11 @@ if v1198[1] != v1199 { break 'case159; }
 let v1200 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1200 { break 'case159; }
 let v1201 = eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dzero_2dreal(s, v1198[0])?;
-return Ok(v1201);
+return Ok(Some(v1201));
 }
+Ok(None)
+}
+fn case_160_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case160: {
 let v1202 = s.construct(Constructor::eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5fint, &[])?;
 if a1 != v1202 { break 'case160; }
@@ -9510,8 +10915,11 @@ if v1204[1] != v1205 { break 'case160; }
 let v1206 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1206 { break 'case160; }
 let v1207 = eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dzero_2dint(s, v1204[0])?;
-return Ok(v1207);
+return Ok(Some(v1207));
 }
+Ok(None)
+}
+fn case_161_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case161: {
 let v1208 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal, &[])?;
 if a1 != v1208 { break 'case161; }
@@ -9534,8 +10942,11 @@ if v1215[1] != v1216 { break 'case161; }
 let v1217 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1215[0])?;
 let v1218 = s.construct(Constructor::eo__24eo_5fpf, &[v1217])?;
 let v1219 = eo__24eo_5fprog_5farith_2dint_2ddiv_2dtotal(s, v1210[0], v1212[0], v1218)?;
-return Ok(v1219);
+return Ok(Some(v1219));
 }
+Ok(None)
+}
+fn case_162_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case162: {
 let v1220 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fone, &[])?;
 if a1 != v1220 { break 'case162; }
@@ -9548,8 +10959,11 @@ if v1222[1] != v1223 { break 'case162; }
 let v1224 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1224 { break 'case162; }
 let v1225 = eo__24eo_5fprog_5farith_2dint_2ddiv_2dtotal_2done(s, v1222[0])?;
-return Ok(v1225);
+return Ok(Some(v1225));
 }
+Ok(None)
+}
+fn case_163_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case163: {
 let v1226 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fzero, &[])?;
 if a1 != v1226 { break 'case163; }
@@ -9562,8 +10976,11 @@ if v1228[1] != v1229 { break 'case163; }
 let v1230 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1230 { break 'case163; }
 let v1231 = eo__24eo_5fprog_5farith_2dint_2ddiv_2dtotal_2dzero(s, v1228[0])?;
-return Ok(v1231);
+return Ok(Some(v1231));
 }
+Ok(None)
+}
+fn case_164_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case164: {
 let v1232 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fneg, &[])?;
 if a1 != v1232 { break 'case164; }
@@ -9586,8 +11003,11 @@ if v1239[1] != v1240 { break 'case164; }
 let v1241 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1239[0])?;
 let v1242 = s.construct(Constructor::eo__24eo_5fpf, &[v1241])?;
 let v1243 = eo__24eo_5fprog_5farith_2dint_2ddiv_2dtotal_2dneg(s, v1234[0], v1236[0], v1242)?;
-return Ok(v1243);
+return Ok(Some(v1243));
 }
+Ok(None)
+}
+fn case_165_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case165: {
 let v1244 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fmod_5ftotal, &[])?;
 if a1 != v1244 { break 'case165; }
@@ -9610,8 +11030,11 @@ if v1251[1] != v1252 { break 'case165; }
 let v1253 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1251[0])?;
 let v1254 = s.construct(Constructor::eo__24eo_5fpf, &[v1253])?;
 let v1255 = eo__24eo_5fprog_5farith_2dint_2dmod_2dtotal(s, v1246[0], v1248[0], v1254)?;
-return Ok(v1255);
+return Ok(Some(v1255));
 }
+Ok(None)
+}
+fn case_166_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case166: {
 let v1256 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fone, &[])?;
 if a1 != v1256 { break 'case166; }
@@ -9624,8 +11047,11 @@ if v1258[1] != v1259 { break 'case166; }
 let v1260 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1260 { break 'case166; }
 let v1261 = eo__24eo_5fprog_5farith_2dint_2dmod_2dtotal_2done(s, v1258[0])?;
-return Ok(v1261);
+return Ok(Some(v1261));
 }
+Ok(None)
+}
+fn case_167_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case167: {
 let v1262 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fzero, &[])?;
 if a1 != v1262 { break 'case167; }
@@ -9638,8 +11064,11 @@ if v1264[1] != v1265 { break 'case167; }
 let v1266 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1266 { break 'case167; }
 let v1267 = eo__24eo_5fprog_5farith_2dint_2dmod_2dtotal_2dzero(s, v1264[0])?;
-return Ok(v1267);
+return Ok(Some(v1267));
 }
+Ok(None)
+}
+fn case_168_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case168: {
 let v1268 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fneg, &[])?;
 if a1 != v1268 { break 'case168; }
@@ -9662,8 +11091,11 @@ if v1275[1] != v1276 { break 'case168; }
 let v1277 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1275[0])?;
 let v1278 = s.construct(Constructor::eo__24eo_5fpf, &[v1277])?;
 let v1279 = eo__24eo_5fprog_5farith_2dint_2dmod_2dtotal_2dneg(s, v1270[0], v1272[0], v1278)?;
-return Ok(v1279);
+return Ok(Some(v1279));
 }
+Ok(None)
+}
+fn case_169_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case169: {
 let v1280 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fover_5fmod, &[])?;
 if a1 != v1280 { break 'case169; }
@@ -9680,8 +11112,11 @@ if v1284[1] != v1285 { break 'case169; }
 let v1286 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1286 { break 'case169; }
 let v1287 = eo__24eo_5fprog_5farith_2dint_2ddiv_2dtotal_2dover_2dmod(s, v1282[0], v1284[0])?;
-return Ok(v1287);
+return Ok(Some(v1287));
 }
+Ok(None)
+}
+fn case_170_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case170: {
 let v1288 = s.construct(Constructor::eo__24emb_5fr_2earith_5felim_5fgt, &[])?;
 if a1 != v1288 { break 'case170; }
@@ -9698,8 +11133,11 @@ if v1292[1] != v1293 { break 'case170; }
 let v1294 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1294 { break 'case170; }
 let v1295 = eo__24eo_5fprog_5farith_2delim_2dgt(s, v1290[0], v1292[0])?;
-return Ok(v1295);
+return Ok(Some(v1295));
 }
+Ok(None)
+}
+fn case_171_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case171: {
 let v1296 = s.construct(Constructor::eo__24emb_5fr_2earith_5felim_5flt, &[])?;
 if a1 != v1296 { break 'case171; }
@@ -9716,8 +11154,11 @@ if v1300[1] != v1301 { break 'case171; }
 let v1302 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1302 { break 'case171; }
 let v1303 = eo__24eo_5fprog_5farith_2delim_2dlt(s, v1298[0], v1300[0])?;
-return Ok(v1303);
+return Ok(Some(v1303));
 }
+Ok(None)
+}
+fn case_172_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case172: {
 let v1304 = s.construct(Constructor::eo__24emb_5fr_2earith_5felim_5fint_5fgt, &[])?;
 if a1 != v1304 { break 'case172; }
@@ -9734,8 +11175,11 @@ if v1308[1] != v1309 { break 'case172; }
 let v1310 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1310 { break 'case172; }
 let v1311 = eo__24eo_5fprog_5farith_2delim_2dint_2dgt(s, v1306[0], v1308[0])?;
-return Ok(v1311);
+return Ok(Some(v1311));
 }
+Ok(None)
+}
+fn case_173_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case173: {
 let v1312 = s.construct(Constructor::eo__24emb_5fr_2earith_5felim_5fint_5flt, &[])?;
 if a1 != v1312 { break 'case173; }
@@ -9752,8 +11196,11 @@ if v1316[1] != v1317 { break 'case173; }
 let v1318 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1318 { break 'case173; }
 let v1319 = eo__24eo_5fprog_5farith_2delim_2dint_2dlt(s, v1314[0], v1316[0])?;
-return Ok(v1319);
+return Ok(Some(v1319));
 }
+Ok(None)
+}
+fn case_174_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case174: {
 let v1320 = s.construct(Constructor::eo__24emb_5fr_2earith_5felim_5fleq, &[])?;
 if a1 != v1320 { break 'case174; }
@@ -9770,8 +11217,11 @@ if v1324[1] != v1325 { break 'case174; }
 let v1326 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1326 { break 'case174; }
 let v1327 = eo__24eo_5fprog_5farith_2delim_2dleq(s, v1322[0], v1324[0])?;
-return Ok(v1327);
+return Ok(Some(v1327));
 }
+Ok(None)
+}
+fn case_175_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case175: {
 let v1328 = s.construct(Constructor::eo__24emb_5fr_2earith_5fleq_5fnorm, &[])?;
 if a1 != v1328 { break 'case175; }
@@ -9788,8 +11238,11 @@ if v1332[1] != v1333 { break 'case175; }
 let v1334 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1334 { break 'case175; }
 let v1335 = eo__24eo_5fprog_5farith_2dleq_2dnorm(s, v1330[0], v1332[0])?;
-return Ok(v1335);
+return Ok(Some(v1335));
 }
+Ok(None)
+}
+fn case_176_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case176: {
 let v1336 = s.construct(Constructor::eo__24emb_5fr_2earith_5fgeq_5ftighten, &[])?;
 if a1 != v1336 { break 'case176; }
@@ -9806,8 +11259,11 @@ if v1340[1] != v1341 { break 'case176; }
 let v1342 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1342 { break 'case176; }
 let v1343 = eo__24eo_5fprog_5farith_2dgeq_2dtighten(s, v1338[0], v1340[0])?;
-return Ok(v1343);
+return Ok(Some(v1343));
 }
+Ok(None)
+}
+fn case_177_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case177: {
 let v1344 = s.construct(Constructor::eo__24emb_5fr_2earith_5fgeq_5fnorm1_5fint, &[])?;
 if a1 != v1344 { break 'case177; }
@@ -9824,8 +11280,11 @@ if v1348[1] != v1349 { break 'case177; }
 let v1350 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1350 { break 'case177; }
 let v1351 = eo__24eo_5fprog_5farith_2dgeq_2dnorm1_2dint(s, v1346[0], v1348[0])?;
-return Ok(v1351);
+return Ok(Some(v1351));
 }
+Ok(None)
+}
+fn case_178_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case178: {
 let v1352 = s.construct(Constructor::eo__24emb_5fr_2earith_5fgeq_5fnorm1_5freal, &[])?;
 if a1 != v1352 { break 'case178; }
@@ -9842,8 +11301,11 @@ if v1356[1] != v1357 { break 'case178; }
 let v1358 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1358 { break 'case178; }
 let v1359 = eo__24eo_5fprog_5farith_2dgeq_2dnorm1_2dreal(s, v1354[0], v1356[0])?;
-return Ok(v1359);
+return Ok(Some(v1359));
 }
+Ok(None)
+}
+fn case_179_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case179: {
 let v1360 = s.construct(Constructor::eo__24emb_5fr_2earith_5feq_5felim_5freal, &[])?;
 if a1 != v1360 { break 'case179; }
@@ -9860,8 +11322,11 @@ if v1364[1] != v1365 { break 'case179; }
 let v1366 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1366 { break 'case179; }
 let v1367 = eo__24eo_5fprog_5farith_2deq_2delim_2dreal(s, v1362[0], v1364[0])?;
-return Ok(v1367);
+return Ok(Some(v1367));
 }
+Ok(None)
+}
+fn case_180_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case180: {
 let v1368 = s.construct(Constructor::eo__24emb_5fr_2earith_5feq_5felim_5fint, &[])?;
 if a1 != v1368 { break 'case180; }
@@ -9878,8 +11343,11 @@ if v1372[1] != v1373 { break 'case180; }
 let v1374 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1374 { break 'case180; }
 let v1375 = eo__24eo_5fprog_5farith_2deq_2delim_2dint(s, v1370[0], v1372[0])?;
-return Ok(v1375);
+return Ok(Some(v1375));
 }
+Ok(None)
+}
+fn case_181_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case181: {
 let v1376 = s.construct(Constructor::eo__24emb_5fr_2earith_5fto_5fint_5felim_5fto_5freal, &[])?;
 if a1 != v1376 { break 'case181; }
@@ -9892,8 +11360,11 @@ if v1378[1] != v1379 { break 'case181; }
 let v1380 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1380 { break 'case181; }
 let v1381 = eo__24eo_5fprog_5farith_2dto_2dint_2delim_2dto_2dreal(s, v1378[0])?;
-return Ok(v1381);
+return Ok(Some(v1381));
 }
+Ok(None)
+}
+fn case_182_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case182: {
 let v1382 = s.construct(Constructor::eo__24emb_5fr_2earith_5fis_5fint_5felim_5fto_5freal, &[])?;
 if a1 != v1382 { break 'case182; }
@@ -9906,8 +11377,11 @@ if v1384[1] != v1385 { break 'case182; }
 let v1386 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1386 { break 'case182; }
 let v1387 = eo__24eo_5fprog_5farith_2dis_2dint_2delim_2dto_2dreal(s, v1384[0])?;
-return Ok(v1387);
+return Ok(Some(v1387));
 }
+Ok(None)
+}
+fn case_183_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case183: {
 let v1388 = s.construct(Constructor::eo__24emb_5fr_2earith_5fdiv_5felim_5fto_5freal, &[])?;
 if a1 != v1388 { break 'case183; }
@@ -9924,8 +11398,11 @@ if v1392[1] != v1393 { break 'case183; }
 let v1394 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1394 { break 'case183; }
 let v1395 = eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal(s, v1390[0], v1392[0])?;
-return Ok(v1395);
+return Ok(Some(v1395));
 }
+Ok(None)
+}
+fn case_184_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case184: {
 let v1396 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmod_5fover_5fmod_5f1, &[])?;
 if a1 != v1396 { break 'case184; }
@@ -9948,8 +11425,11 @@ if v1403[1] != v1404 { break 'case184; }
 let v1405 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1403[0])?;
 let v1406 = s.construct(Constructor::eo__24eo_5fpf, &[v1405])?;
 let v1407 = eo__24eo_5fprog_5farith_2dmod_2dover_2dmod_2d1(s, v1398[0], v1400[0], v1406)?;
-return Ok(v1407);
+return Ok(Some(v1407));
 }
+Ok(None)
+}
+fn case_185_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case185: {
 let v1408 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmod_5fover_5fmod, &[])?;
 if a1 != v1408 { break 'case185; }
@@ -9980,8 +11460,11 @@ if v1419[1] != v1420 { break 'case185; }
 let v1421 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1419[0])?;
 let v1422 = s.construct(Constructor::eo__24eo_5fpf, &[v1421])?;
 let v1423 = eo__24eo_5fprog_5farith_2dmod_2dover_2dmod(s, v1410[0], v1412[0], v1414[0], v1416[0], v1422)?;
-return Ok(v1423);
+return Ok(Some(v1423));
 }
+Ok(None)
+}
+fn case_186_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case186: {
 let v1424 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmod_5fover_5fmod_5fmult, &[])?;
 if a1 != v1424 { break 'case186; }
@@ -10012,8 +11495,11 @@ if v1435[1] != v1436 { break 'case186; }
 let v1437 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1435[0])?;
 let v1438 = s.construct(Constructor::eo__24eo_5fpf, &[v1437])?;
 let v1439 = eo__24eo_5fprog_5farith_2dmod_2dover_2dmod_2dmult(s, v1426[0], v1428[0], v1430[0], v1432[0], v1438)?;
-return Ok(v1439);
+return Ok(Some(v1439));
 }
+Ok(None)
+}
+fn case_187_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case187: {
 let v1440 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5feq_5fconflict, &[])?;
 if a1 != v1440 { break 'case187; }
@@ -10036,8 +11522,11 @@ if v1447[1] != v1448 { break 'case187; }
 let v1449 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1447[0])?;
 let v1450 = s.construct(Constructor::eo__24eo_5fpf, &[v1449])?;
 let v1451 = eo__24eo_5fprog_5farith_2dint_2deq_2dconflict(s, v1442[0], v1444[0], v1450)?;
-return Ok(v1451);
+return Ok(Some(v1451));
 }
+Ok(None)
+}
+fn case_188_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case188: {
 let v1452 = s.construct(Constructor::eo__24emb_5fr_2earith_5fint_5fgeq_5ftighten, &[])?;
 if a1 != v1452 { break 'case188; }
@@ -10070,8 +11559,11 @@ let v1466 = s.construct(Constructor::eo__24eo_5fpf, &[v1465])?;
 let v1467 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1463[0])?;
 let v1468 = s.construct(Constructor::eo__24eo_5fpf, &[v1467])?;
 let v1469 = eo__24eo_5fprog_5farith_2dint_2dgeq_2dtighten(s, v1454[0], v1456[0], v1458[0], v1466, v1468)?;
-return Ok(v1469);
+return Ok(Some(v1469));
 }
+Ok(None)
+}
+fn case_189_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case189: {
 let v1470 = s.construct(Constructor::eo__24emb_5fr_2earith_5fdivisible_5felim, &[])?;
 if a1 != v1470 { break 'case189; }
@@ -10094,8 +11586,11 @@ if v1477[1] != v1478 { break 'case189; }
 let v1479 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1477[0])?;
 let v1480 = s.construct(Constructor::eo__24eo_5fpf, &[v1479])?;
 let v1481 = eo__24eo_5fprog_5farith_2ddivisible_2delim(s, v1472[0], v1474[0], v1480)?;
-return Ok(v1481);
+return Ok(Some(v1481));
 }
+Ok(None)
+}
+fn case_190_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case190: {
 let v1482 = s.construct(Constructor::eo__24emb_5fr_2earith_5fabs_5feq, &[])?;
 if a1 != v1482 { break 'case190; }
@@ -10112,8 +11607,11 @@ if v1486[1] != v1487 { break 'case190; }
 let v1488 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1488 { break 'case190; }
 let v1489 = eo__24eo_5fprog_5farith_2dabs_2deq(s, v1484[0], v1486[0])?;
-return Ok(v1489);
+return Ok(Some(v1489));
 }
+Ok(None)
+}
+fn case_191_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case191: {
 let v1490 = s.construct(Constructor::eo__24emb_5fr_2earith_5fabs_5fint_5fgt, &[])?;
 if a1 != v1490 { break 'case191; }
@@ -10130,8 +11628,11 @@ if v1494[1] != v1495 { break 'case191; }
 let v1496 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1496 { break 'case191; }
 let v1497 = eo__24eo_5fprog_5farith_2dabs_2dint_2dgt(s, v1492[0], v1494[0])?;
-return Ok(v1497);
+return Ok(Some(v1497));
 }
+Ok(None)
+}
+fn case_192_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case192: {
 let v1498 = s.construct(Constructor::eo__24emb_5fr_2earith_5fabs_5freal_5fgt, &[])?;
 if a1 != v1498 { break 'case192; }
@@ -10148,8 +11649,11 @@ if v1502[1] != v1503 { break 'case192; }
 let v1504 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1504 { break 'case192; }
 let v1505 = eo__24eo_5fprog_5farith_2dabs_2dreal_2dgt(s, v1500[0], v1502[0])?;
-return Ok(v1505);
+return Ok(Some(v1505));
 }
+Ok(None)
+}
+fn case_193_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case193: {
 let v1506 = s.construct(Constructor::eo__24emb_5fr_2earith_5fgeq_5fite_5flift, &[])?;
 if a1 != v1506 { break 'case193; }
@@ -10174,8 +11678,11 @@ if v1514[1] != v1515 { break 'case193; }
 let v1516 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1516 { break 'case193; }
 let v1517 = eo__24eo_5fprog_5farith_2dgeq_2dite_2dlift(s, v1508[0], v1510[0], v1512[0], v1514[0])?;
-return Ok(v1517);
+return Ok(Some(v1517));
 }
+Ok(None)
+}
+fn case_194_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case194: {
 let v1518 = s.construct(Constructor::eo__24emb_5fr_2earith_5fleq_5fite_5flift, &[])?;
 if a1 != v1518 { break 'case194; }
@@ -10200,8 +11707,11 @@ if v1526[1] != v1527 { break 'case194; }
 let v1528 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1528 { break 'case194; }
 let v1529 = eo__24eo_5fprog_5farith_2dleq_2dite_2dlift(s, v1520[0], v1522[0], v1524[0], v1526[0])?;
-return Ok(v1529);
+return Ok(Some(v1529));
 }
+Ok(None)
+}
+fn case_195_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case195: {
 let v1530 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmin_5flt1, &[])?;
 if a1 != v1530 { break 'case195; }
@@ -10218,8 +11728,11 @@ if v1534[1] != v1535 { break 'case195; }
 let v1536 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1536 { break 'case195; }
 let v1537 = eo__24eo_5fprog_5farith_2dmin_2dlt1(s, v1532[0], v1534[0])?;
-return Ok(v1537);
+return Ok(Some(v1537));
 }
+Ok(None)
+}
+fn case_196_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case196: {
 let v1538 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmin_5flt2, &[])?;
 if a1 != v1538 { break 'case196; }
@@ -10236,8 +11749,11 @@ if v1542[1] != v1543 { break 'case196; }
 let v1544 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1544 { break 'case196; }
 let v1545 = eo__24eo_5fprog_5farith_2dmin_2dlt2(s, v1540[0], v1542[0])?;
-return Ok(v1545);
+return Ok(Some(v1545));
 }
+Ok(None)
+}
+fn case_197_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case197: {
 let v1546 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmax_5fgeq1, &[])?;
 if a1 != v1546 { break 'case197; }
@@ -10254,8 +11770,11 @@ if v1550[1] != v1551 { break 'case197; }
 let v1552 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1552 { break 'case197; }
 let v1553 = eo__24eo_5fprog_5farith_2dmax_2dgeq1(s, v1548[0], v1550[0])?;
-return Ok(v1553);
+return Ok(Some(v1553));
 }
+Ok(None)
+}
+fn case_198_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case198: {
 let v1554 = s.construct(Constructor::eo__24emb_5fr_2earith_5fmax_5fgeq2, &[])?;
 if a1 != v1554 { break 'case198; }
@@ -10272,8 +11791,11 @@ if v1558[1] != v1559 { break 'case198; }
 let v1560 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1560 { break 'case198; }
 let v1561 = eo__24eo_5fprog_5farith_2dmax_2dgeq2(s, v1556[0], v1558[0])?;
-return Ok(v1561);
+return Ok(Some(v1561));
 }
+Ok(None)
+}
+fn case_199_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case199: {
 let v1562 = s.construct(Constructor::eo__24emb_5fr_2earray_5fread_5fover_5fwrite, &[])?;
 if a1 != v1562 { break 'case199; }
@@ -10294,8 +11816,11 @@ if v1568[1] != v1569 { break 'case199; }
 let v1570 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1570 { break 'case199; }
 let v1571 = eo__24eo_5fprog_5farray_2dread_2dover_2dwrite(s, v1564[0], v1566[0], v1568[0])?;
-return Ok(v1571);
+return Ok(Some(v1571));
 }
+Ok(None)
+}
+fn case_200_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case200: {
 let v1572 = s.construct(Constructor::eo__24emb_5fr_2earray_5fread_5fover_5fwrite2, &[])?;
 if a1 != v1572 { break 'case200; }
@@ -10326,8 +11851,11 @@ if v1583[1] != v1584 { break 'case200; }
 let v1585 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1583[0])?;
 let v1586 = s.construct(Constructor::eo__24eo_5fpf, &[v1585])?;
 let v1587 = eo__24eo_5fprog_5farray_2dread_2dover_2dwrite2(s, v1574[0], v1576[0], v1578[0], v1580[0], v1586)?;
-return Ok(v1587);
+return Ok(Some(v1587));
 }
+Ok(None)
+}
+fn case_201_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case201: {
 let v1588 = s.construct(Constructor::eo__24emb_5fr_2earray_5fstore_5foverwrite, &[])?;
 if a1 != v1588 { break 'case201; }
@@ -10352,8 +11880,11 @@ if v1596[1] != v1597 { break 'case201; }
 let v1598 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1598 { break 'case201; }
 let v1599 = eo__24eo_5fprog_5farray_2dstore_2doverwrite(s, v1590[0], v1592[0], v1594[0], v1596[0])?;
-return Ok(v1599);
+return Ok(Some(v1599));
 }
+Ok(None)
+}
+fn case_202_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case202: {
 let v1600 = s.construct(Constructor::eo__24emb_5fr_2earray_5fstore_5fself, &[])?;
 if a1 != v1600 { break 'case202; }
@@ -10370,8 +11901,11 @@ if v1604[1] != v1605 { break 'case202; }
 let v1606 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1606 { break 'case202; }
 let v1607 = eo__24eo_5fprog_5farray_2dstore_2dself(s, v1602[0], v1604[0])?;
-return Ok(v1607);
+return Ok(Some(v1607));
 }
+Ok(None)
+}
+fn case_203_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case203: {
 let v1608 = s.construct(Constructor::eo__24emb_5fr_2earray_5fread_5fover_5fwrite_5fsplit, &[])?;
 if a1 != v1608 { break 'case203; }
@@ -10396,8 +11930,11 @@ if v1616[1] != v1617 { break 'case203; }
 let v1618 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1618 { break 'case203; }
 let v1619 = eo__24eo_5fprog_5farray_2dread_2dover_2dwrite_2dsplit(s, v1610[0], v1612[0], v1614[0], v1616[0])?;
-return Ok(v1619);
+return Ok(Some(v1619));
 }
+Ok(None)
+}
+fn case_204_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case204: {
 let v1620 = s.construct(Constructor::eo__24emb_5fr_2earray_5fstore_5fswap, &[])?;
 if a1 != v1620 { break 'case204; }
@@ -10432,8 +11969,11 @@ if v1633[1] != v1634 { break 'case204; }
 let v1635 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1633[0])?;
 let v1636 = s.construct(Constructor::eo__24eo_5fpf, &[v1635])?;
 let v1637 = eo__24eo_5fprog_5farray_2dstore_2dswap(s, v1622[0], v1624[0], v1626[0], v1628[0], v1630[0], v1636)?;
-return Ok(v1637);
+return Ok(Some(v1637));
 }
+Ok(None)
+}
+fn case_205_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case205: {
 let v1638 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fdouble_5fnot_5felim, &[])?;
 if a1 != v1638 { break 'case205; }
@@ -10446,8 +11986,11 @@ if v1640[1] != v1641 { break 'case205; }
 let v1642 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1642 { break 'case205; }
 let v1643 = eo__24eo_5fprog_5fbool_2ddouble_2dnot_2delim(s, v1640[0])?;
-return Ok(v1643);
+return Ok(Some(v1643));
 }
+Ok(None)
+}
+fn case_206_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case206: {
 let v1644 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fnot_5ftrue, &[])?;
 if a1 != v1644 { break 'case206; }
@@ -10466,8 +12009,11 @@ if v1649[1] != v1650 { break 'case206; }
 let v1651 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1649[0])?;
 let v1652 = s.construct(Constructor::eo__24eo_5fpf, &[v1651])?;
 let v1653 = eo__24eo_5fprog_5fbool_2dnot_2dtrue(s, v1646[0], v1652)?;
-return Ok(v1653);
+return Ok(Some(v1653));
 }
+Ok(None)
+}
+fn case_207_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case207: {
 let v1654 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fnot_5ffalse, &[])?;
 if a1 != v1654 { break 'case207; }
@@ -10486,8 +12032,11 @@ if v1659[1] != v1660 { break 'case207; }
 let v1661 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1659[0])?;
 let v1662 = s.construct(Constructor::eo__24eo_5fpf, &[v1661])?;
 let v1663 = eo__24eo_5fprog_5fbool_2dnot_2dfalse(s, v1656[0], v1662)?;
-return Ok(v1663);
+return Ok(Some(v1663));
 }
+Ok(None)
+}
+fn case_208_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case208: {
 let v1664 = s.construct(Constructor::eo__24emb_5fr_2ebool_5feq_5ftrue, &[])?;
 if a1 != v1664 { break 'case208; }
@@ -10500,8 +12049,11 @@ if v1666[1] != v1667 { break 'case208; }
 let v1668 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1668 { break 'case208; }
 let v1669 = eo__24eo_5fprog_5fbool_2deq_2dtrue(s, v1666[0])?;
-return Ok(v1669);
+return Ok(Some(v1669));
 }
+Ok(None)
+}
+fn case_209_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case209: {
 let v1670 = s.construct(Constructor::eo__24emb_5fr_2ebool_5feq_5ffalse, &[])?;
 if a1 != v1670 { break 'case209; }
@@ -10514,8 +12066,11 @@ if v1672[1] != v1673 { break 'case209; }
 let v1674 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1674 { break 'case209; }
 let v1675 = eo__24eo_5fprog_5fbool_2deq_2dfalse(s, v1672[0])?;
-return Ok(v1675);
+return Ok(Some(v1675));
 }
+Ok(None)
+}
+fn case_210_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case210: {
 let v1676 = s.construct(Constructor::eo__24emb_5fr_2ebool_5feq_5fnrefl, &[])?;
 if a1 != v1676 { break 'case210; }
@@ -10528,8 +12083,11 @@ if v1678[1] != v1679 { break 'case210; }
 let v1680 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1680 { break 'case210; }
 let v1681 = eo__24eo_5fprog_5fbool_2deq_2dnrefl(s, v1678[0])?;
-return Ok(v1681);
+return Ok(Some(v1681));
 }
+Ok(None)
+}
+fn case_211_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case211: {
 let v1682 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fimpl_5ffalse1, &[])?;
 if a1 != v1682 { break 'case211; }
@@ -10542,8 +12100,11 @@ if v1684[1] != v1685 { break 'case211; }
 let v1686 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1686 { break 'case211; }
 let v1687 = eo__24eo_5fprog_5fbool_2dimpl_2dfalse1(s, v1684[0])?;
-return Ok(v1687);
+return Ok(Some(v1687));
 }
+Ok(None)
+}
+fn case_212_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case212: {
 let v1688 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fimpl_5ffalse2, &[])?;
 if a1 != v1688 { break 'case212; }
@@ -10556,8 +12117,11 @@ if v1690[1] != v1691 { break 'case212; }
 let v1692 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1692 { break 'case212; }
 let v1693 = eo__24eo_5fprog_5fbool_2dimpl_2dfalse2(s, v1690[0])?;
-return Ok(v1693);
+return Ok(Some(v1693));
 }
+Ok(None)
+}
+fn case_213_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case213: {
 let v1694 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fimpl_5ftrue1, &[])?;
 if a1 != v1694 { break 'case213; }
@@ -10570,8 +12134,11 @@ if v1696[1] != v1697 { break 'case213; }
 let v1698 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1698 { break 'case213; }
 let v1699 = eo__24eo_5fprog_5fbool_2dimpl_2dtrue1(s, v1696[0])?;
-return Ok(v1699);
+return Ok(Some(v1699));
 }
+Ok(None)
+}
+fn case_214_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case214: {
 let v1700 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fimpl_5ftrue2, &[])?;
 if a1 != v1700 { break 'case214; }
@@ -10584,8 +12151,11 @@ if v1702[1] != v1703 { break 'case214; }
 let v1704 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1704 { break 'case214; }
 let v1705 = eo__24eo_5fprog_5fbool_2dimpl_2dtrue2(s, v1702[0])?;
-return Ok(v1705);
+return Ok(Some(v1705));
 }
+Ok(None)
+}
+fn case_215_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case215: {
 let v1706 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fimpl_5felim, &[])?;
 if a1 != v1706 { break 'case215; }
@@ -10602,8 +12172,11 @@ if v1710[1] != v1711 { break 'case215; }
 let v1712 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1712 { break 'case215; }
 let v1713 = eo__24eo_5fprog_5fbool_2dimpl_2delim(s, v1708[0], v1710[0])?;
-return Ok(v1713);
+return Ok(Some(v1713));
 }
+Ok(None)
+}
+fn case_216_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case216: {
 let v1714 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fdual_5fimpl_5feq, &[])?;
 if a1 != v1714 { break 'case216; }
@@ -10620,8 +12193,11 @@ if v1718[1] != v1719 { break 'case216; }
 let v1720 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1720 { break 'case216; }
 let v1721 = eo__24eo_5fprog_5fbool_2ddual_2dimpl_2deq(s, v1716[0], v1718[0])?;
-return Ok(v1721);
+return Ok(Some(v1721));
 }
+Ok(None)
+}
+fn case_217_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case217: {
 let v1722 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fand_5fconf, &[])?;
 if a1 != v1722 { break 'case217; }
@@ -10646,8 +12222,11 @@ if v1730[1] != v1731 { break 'case217; }
 let v1732 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1732 { break 'case217; }
 let v1733 = eo__24eo_5fprog_5fbool_2dand_2dconf(s, v1724[0], v1726[0], v1728[0], v1730[0])?;
-return Ok(v1733);
+return Ok(Some(v1733));
 }
+Ok(None)
+}
+fn case_218_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case218: {
 let v1734 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fand_5fconf2, &[])?;
 if a1 != v1734 { break 'case218; }
@@ -10672,8 +12251,11 @@ if v1742[1] != v1743 { break 'case218; }
 let v1744 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1744 { break 'case218; }
 let v1745 = eo__24eo_5fprog_5fbool_2dand_2dconf2(s, v1736[0], v1738[0], v1740[0], v1742[0])?;
-return Ok(v1745);
+return Ok(Some(v1745));
 }
+Ok(None)
+}
+fn case_219_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case219: {
 let v1746 = s.construct(Constructor::eo__24emb_5fr_2ebool_5for_5ftaut, &[])?;
 if a1 != v1746 { break 'case219; }
@@ -10698,8 +12280,11 @@ if v1754[1] != v1755 { break 'case219; }
 let v1756 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1756 { break 'case219; }
 let v1757 = eo__24eo_5fprog_5fbool_2dor_2dtaut(s, v1748[0], v1750[0], v1752[0], v1754[0])?;
-return Ok(v1757);
+return Ok(Some(v1757));
 }
+Ok(None)
+}
+fn case_220_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case220: {
 let v1758 = s.construct(Constructor::eo__24emb_5fr_2ebool_5for_5ftaut2, &[])?;
 if a1 != v1758 { break 'case220; }
@@ -10724,8 +12309,11 @@ if v1766[1] != v1767 { break 'case220; }
 let v1768 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1768 { break 'case220; }
 let v1769 = eo__24eo_5fprog_5fbool_2dor_2dtaut2(s, v1760[0], v1762[0], v1764[0], v1766[0])?;
-return Ok(v1769);
+return Ok(Some(v1769));
 }
+Ok(None)
+}
+fn case_221_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case221: {
 let v1770 = s.construct(Constructor::eo__24emb_5fr_2ebool_5for_5fde_5fmorgan, &[])?;
 if a1 != v1770 { break 'case221; }
@@ -10746,8 +12334,11 @@ if v1776[1] != v1777 { break 'case221; }
 let v1778 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1778 { break 'case221; }
 let v1779 = eo__24eo_5fprog_5fbool_2dor_2dde_2dmorgan(s, v1772[0], v1774[0], v1776[0])?;
-return Ok(v1779);
+return Ok(Some(v1779));
 }
+Ok(None)
+}
+fn case_222_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case222: {
 let v1780 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fimplies_5fde_5fmorgan, &[])?;
 if a1 != v1780 { break 'case222; }
@@ -10764,8 +12355,11 @@ if v1784[1] != v1785 { break 'case222; }
 let v1786 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1786 { break 'case222; }
 let v1787 = eo__24eo_5fprog_5fbool_2dimplies_2dde_2dmorgan(s, v1782[0], v1784[0])?;
-return Ok(v1787);
+return Ok(Some(v1787));
 }
+Ok(None)
+}
+fn case_223_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case223: {
 let v1788 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fand_5fde_5fmorgan, &[])?;
 if a1 != v1788 { break 'case223; }
@@ -10786,8 +12380,11 @@ if v1794[1] != v1795 { break 'case223; }
 let v1796 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1796 { break 'case223; }
 let v1797 = eo__24eo_5fprog_5fbool_2dand_2dde_2dmorgan(s, v1790[0], v1792[0], v1794[0])?;
-return Ok(v1797);
+return Ok(Some(v1797));
 }
+Ok(None)
+}
+fn case_224_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case224: {
 let v1798 = s.construct(Constructor::eo__24emb_5fr_2ebool_5for_5fand_5fdistrib, &[])?;
 if a1 != v1798 { break 'case224; }
@@ -10816,8 +12413,11 @@ if v1808[1] != v1809 { break 'case224; }
 let v1810 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1810 { break 'case224; }
 let v1811 = eo__24eo_5fprog_5fbool_2dor_2dand_2ddistrib(s, v1800[0], v1802[0], v1804[0], v1806[0], v1808[0])?;
-return Ok(v1811);
+return Ok(Some(v1811));
 }
+Ok(None)
+}
+fn case_225_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case225: {
 let v1812 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fimplies_5for_5fdistrib, &[])?;
 if a1 != v1812 { break 'case225; }
@@ -10842,8 +12442,11 @@ if v1820[1] != v1821 { break 'case225; }
 let v1822 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1822 { break 'case225; }
 let v1823 = eo__24eo_5fprog_5fbool_2dimplies_2dor_2ddistrib(s, v1814[0], v1816[0], v1818[0], v1820[0])?;
-return Ok(v1823);
+return Ok(Some(v1823));
 }
+Ok(None)
+}
+fn case_226_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case226: {
 let v1824 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fxor_5frefl, &[])?;
 if a1 != v1824 { break 'case226; }
@@ -10856,8 +12459,11 @@ if v1826[1] != v1827 { break 'case226; }
 let v1828 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1828 { break 'case226; }
 let v1829 = eo__24eo_5fprog_5fbool_2dxor_2drefl(s, v1826[0])?;
-return Ok(v1829);
+return Ok(Some(v1829));
 }
+Ok(None)
+}
+fn case_227_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case227: {
 let v1830 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fxor_5fnrefl, &[])?;
 if a1 != v1830 { break 'case227; }
@@ -10870,8 +12476,11 @@ if v1832[1] != v1833 { break 'case227; }
 let v1834 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1834 { break 'case227; }
 let v1835 = eo__24eo_5fprog_5fbool_2dxor_2dnrefl(s, v1832[0])?;
-return Ok(v1835);
+return Ok(Some(v1835));
 }
+Ok(None)
+}
+fn case_228_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case228: {
 let v1836 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fxor_5ffalse, &[])?;
 if a1 != v1836 { break 'case228; }
@@ -10884,8 +12493,11 @@ if v1838[1] != v1839 { break 'case228; }
 let v1840 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1840 { break 'case228; }
 let v1841 = eo__24eo_5fprog_5fbool_2dxor_2dfalse(s, v1838[0])?;
-return Ok(v1841);
+return Ok(Some(v1841));
 }
+Ok(None)
+}
+fn case_229_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case229: {
 let v1842 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fxor_5ftrue, &[])?;
 if a1 != v1842 { break 'case229; }
@@ -10898,8 +12510,11 @@ if v1844[1] != v1845 { break 'case229; }
 let v1846 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1846 { break 'case229; }
 let v1847 = eo__24eo_5fprog_5fbool_2dxor_2dtrue(s, v1844[0])?;
-return Ok(v1847);
+return Ok(Some(v1847));
 }
+Ok(None)
+}
+fn case_230_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case230: {
 let v1848 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fxor_5fcomm, &[])?;
 if a1 != v1848 { break 'case230; }
@@ -10916,8 +12531,11 @@ if v1852[1] != v1853 { break 'case230; }
 let v1854 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1854 { break 'case230; }
 let v1855 = eo__24eo_5fprog_5fbool_2dxor_2dcomm(s, v1850[0], v1852[0])?;
-return Ok(v1855);
+return Ok(Some(v1855));
 }
+Ok(None)
+}
+fn case_231_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case231: {
 let v1856 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fxor_5felim, &[])?;
 if a1 != v1856 { break 'case231; }
@@ -10934,8 +12552,11 @@ if v1860[1] != v1861 { break 'case231; }
 let v1862 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1862 { break 'case231; }
 let v1863 = eo__24eo_5fprog_5fbool_2dxor_2delim(s, v1858[0], v1860[0])?;
-return Ok(v1863);
+return Ok(Some(v1863));
 }
+Ok(None)
+}
+fn case_232_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case232: {
 let v1864 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fnot_5fxor_5felim, &[])?;
 if a1 != v1864 { break 'case232; }
@@ -10952,8 +12573,11 @@ if v1868[1] != v1869 { break 'case232; }
 let v1870 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1870 { break 'case232; }
 let v1871 = eo__24eo_5fprog_5fbool_2dnot_2dxor_2delim(s, v1866[0], v1868[0])?;
-return Ok(v1871);
+return Ok(Some(v1871));
 }
+Ok(None)
+}
+fn case_233_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case233: {
 let v1872 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fnot_5feq_5felim1, &[])?;
 if a1 != v1872 { break 'case233; }
@@ -10970,8 +12594,11 @@ if v1876[1] != v1877 { break 'case233; }
 let v1878 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1878 { break 'case233; }
 let v1879 = eo__24eo_5fprog_5fbool_2dnot_2deq_2delim1(s, v1874[0], v1876[0])?;
-return Ok(v1879);
+return Ok(Some(v1879));
 }
+Ok(None)
+}
+fn case_234_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case234: {
 let v1880 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fnot_5feq_5felim2, &[])?;
 if a1 != v1880 { break 'case234; }
@@ -10988,8 +12615,11 @@ if v1884[1] != v1885 { break 'case234; }
 let v1886 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1886 { break 'case234; }
 let v1887 = eo__24eo_5fprog_5fbool_2dnot_2deq_2delim2(s, v1882[0], v1884[0])?;
-return Ok(v1887);
+return Ok(Some(v1887));
 }
+Ok(None)
+}
+fn case_235_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case235: {
 let v1888 = s.construct(Constructor::eo__24emb_5fr_2eite_5fneg_5fbranch, &[])?;
 if a1 != v1888 { break 'case235; }
@@ -11016,8 +12646,11 @@ if v1897[1] != v1898 { break 'case235; }
 let v1899 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v1897[0])?;
 let v1900 = s.construct(Constructor::eo__24eo_5fpf, &[v1899])?;
 let v1901 = eo__24eo_5fprog_5fite_2dneg_2dbranch(s, v1890[0], v1892[0], v1894[0], v1900)?;
-return Ok(v1901);
+return Ok(Some(v1901));
 }
+Ok(None)
+}
+fn case_236_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case236: {
 let v1902 = s.construct(Constructor::eo__24emb_5fr_2eite_5fthen_5ftrue, &[])?;
 if a1 != v1902 { break 'case236; }
@@ -11034,8 +12667,11 @@ if v1906[1] != v1907 { break 'case236; }
 let v1908 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1908 { break 'case236; }
 let v1909 = eo__24eo_5fprog_5fite_2dthen_2dtrue(s, v1904[0], v1906[0])?;
-return Ok(v1909);
+return Ok(Some(v1909));
 }
+Ok(None)
+}
+fn case_237_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case237: {
 let v1910 = s.construct(Constructor::eo__24emb_5fr_2eite_5felse_5ffalse, &[])?;
 if a1 != v1910 { break 'case237; }
@@ -11052,8 +12688,11 @@ if v1914[1] != v1915 { break 'case237; }
 let v1916 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1916 { break 'case237; }
 let v1917 = eo__24eo_5fprog_5fite_2delse_2dfalse(s, v1912[0], v1914[0])?;
-return Ok(v1917);
+return Ok(Some(v1917));
 }
+Ok(None)
+}
+fn case_238_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case238: {
 let v1918 = s.construct(Constructor::eo__24emb_5fr_2eite_5fthen_5ffalse, &[])?;
 if a1 != v1918 { break 'case238; }
@@ -11070,8 +12709,11 @@ if v1922[1] != v1923 { break 'case238; }
 let v1924 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1924 { break 'case238; }
 let v1925 = eo__24eo_5fprog_5fite_2dthen_2dfalse(s, v1920[0], v1922[0])?;
-return Ok(v1925);
+return Ok(Some(v1925));
 }
+Ok(None)
+}
+fn case_239_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case239: {
 let v1926 = s.construct(Constructor::eo__24emb_5fr_2eite_5felse_5ftrue, &[])?;
 if a1 != v1926 { break 'case239; }
@@ -11088,8 +12730,11 @@ if v1930[1] != v1931 { break 'case239; }
 let v1932 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1932 { break 'case239; }
 let v1933 = eo__24eo_5fprog_5fite_2delse_2dtrue(s, v1928[0], v1930[0])?;
-return Ok(v1933);
+return Ok(Some(v1933));
 }
+Ok(None)
+}
+fn case_240_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case240: {
 let v1934 = s.construct(Constructor::eo__24emb_5fr_2eite_5fthen_5flookahead_5fself, &[])?;
 if a1 != v1934 { break 'case240; }
@@ -11106,8 +12751,11 @@ if v1938[1] != v1939 { break 'case240; }
 let v1940 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1940 { break 'case240; }
 let v1941 = eo__24eo_5fprog_5fite_2dthen_2dlookahead_2dself(s, v1936[0], v1938[0])?;
-return Ok(v1941);
+return Ok(Some(v1941));
 }
+Ok(None)
+}
+fn case_241_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case241: {
 let v1942 = s.construct(Constructor::eo__24emb_5fr_2eite_5felse_5flookahead_5fself, &[])?;
 if a1 != v1942 { break 'case241; }
@@ -11124,8 +12772,11 @@ if v1946[1] != v1947 { break 'case241; }
 let v1948 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1948 { break 'case241; }
 let v1949 = eo__24eo_5fprog_5fite_2delse_2dlookahead_2dself(s, v1944[0], v1946[0])?;
-return Ok(v1949);
+return Ok(Some(v1949));
 }
+Ok(None)
+}
+fn case_242_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case242: {
 let v1950 = s.construct(Constructor::eo__24emb_5fr_2eite_5fthen_5flookahead_5fnot_5fself, &[])?;
 if a1 != v1950 { break 'case242; }
@@ -11142,8 +12793,11 @@ if v1954[1] != v1955 { break 'case242; }
 let v1956 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1956 { break 'case242; }
 let v1957 = eo__24eo_5fprog_5fite_2dthen_2dlookahead_2dnot_2dself(s, v1952[0], v1954[0])?;
-return Ok(v1957);
+return Ok(Some(v1957));
 }
+Ok(None)
+}
+fn case_243_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case243: {
 let v1958 = s.construct(Constructor::eo__24emb_5fr_2eite_5felse_5flookahead_5fnot_5fself, &[])?;
 if a1 != v1958 { break 'case243; }
@@ -11160,8 +12814,11 @@ if v1962[1] != v1963 { break 'case243; }
 let v1964 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1964 { break 'case243; }
 let v1965 = eo__24eo_5fprog_5fite_2delse_2dlookahead_2dnot_2dself(s, v1960[0], v1962[0])?;
-return Ok(v1965);
+return Ok(Some(v1965));
 }
+Ok(None)
+}
+fn case_244_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case244: {
 let v1966 = s.construct(Constructor::eo__24emb_5fr_2eite_5fexpand, &[])?;
 if a1 != v1966 { break 'case244; }
@@ -11182,8 +12839,11 @@ if v1972[1] != v1973 { break 'case244; }
 let v1974 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1974 { break 'case244; }
 let v1975 = eo__24eo_5fprog_5fite_2dexpand(s, v1968[0], v1970[0], v1972[0])?;
-return Ok(v1975);
+return Ok(Some(v1975));
 }
+Ok(None)
+}
+fn case_245_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case245: {
 let v1976 = s.construct(Constructor::eo__24emb_5fr_2ebool_5fnot_5fite_5felim, &[])?;
 if a1 != v1976 { break 'case245; }
@@ -11204,8 +12864,11 @@ if v1982[1] != v1983 { break 'case245; }
 let v1984 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1984 { break 'case245; }
 let v1985 = eo__24eo_5fprog_5fbool_2dnot_2dite_2delim(s, v1978[0], v1980[0], v1982[0])?;
-return Ok(v1985);
+return Ok(Some(v1985));
 }
+Ok(None)
+}
+fn case_246_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case246: {
 let v1986 = s.construct(Constructor::eo__24emb_5fr_2eite_5ftrue_5fcond, &[])?;
 if a1 != v1986 { break 'case246; }
@@ -11222,8 +12885,11 @@ if v1990[1] != v1991 { break 'case246; }
 let v1992 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v1992 { break 'case246; }
 let v1993 = eo__24eo_5fprog_5fite_2dtrue_2dcond(s, v1988[0], v1990[0])?;
-return Ok(v1993);
+return Ok(Some(v1993));
 }
+Ok(None)
+}
+fn case_247_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case247: {
 let v1994 = s.construct(Constructor::eo__24emb_5fr_2eite_5ffalse_5fcond, &[])?;
 if a1 != v1994 { break 'case247; }
@@ -11240,8 +12906,11 @@ if v1998[1] != v1999 { break 'case247; }
 let v2000 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2000 { break 'case247; }
 let v2001 = eo__24eo_5fprog_5fite_2dfalse_2dcond(s, v1996[0], v1998[0])?;
-return Ok(v2001);
+return Ok(Some(v2001));
 }
+Ok(None)
+}
+fn case_248_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case248: {
 let v2002 = s.construct(Constructor::eo__24emb_5fr_2eite_5fnot_5fcond, &[])?;
 if a1 != v2002 { break 'case248; }
@@ -11262,8 +12931,11 @@ if v2008[1] != v2009 { break 'case248; }
 let v2010 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2010 { break 'case248; }
 let v2011 = eo__24eo_5fprog_5fite_2dnot_2dcond(s, v2004[0], v2006[0], v2008[0])?;
-return Ok(v2011);
+return Ok(Some(v2011));
 }
+Ok(None)
+}
+fn case_249_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case249: {
 let v2012 = s.construct(Constructor::eo__24emb_5fr_2eite_5feq_5fbranch, &[])?;
 if a1 != v2012 { break 'case249; }
@@ -11280,8 +12952,11 @@ if v2016[1] != v2017 { break 'case249; }
 let v2018 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2018 { break 'case249; }
 let v2019 = eo__24eo_5fprog_5fite_2deq_2dbranch(s, v2014[0], v2016[0])?;
-return Ok(v2019);
+return Ok(Some(v2019));
 }
+Ok(None)
+}
+fn case_250_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case250: {
 let v2020 = s.construct(Constructor::eo__24emb_5fr_2eite_5fthen_5flookahead, &[])?;
 if a1 != v2020 { break 'case250; }
@@ -11306,8 +12981,11 @@ if v2028[1] != v2029 { break 'case250; }
 let v2030 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2030 { break 'case250; }
 let v2031 = eo__24eo_5fprog_5fite_2dthen_2dlookahead(s, v2022[0], v2024[0], v2026[0], v2028[0])?;
-return Ok(v2031);
+return Ok(Some(v2031));
 }
+Ok(None)
+}
+fn case_251_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case251: {
 let v2032 = s.construct(Constructor::eo__24emb_5fr_2eite_5felse_5flookahead, &[])?;
 if a1 != v2032 { break 'case251; }
@@ -11332,8 +13010,11 @@ if v2040[1] != v2041 { break 'case251; }
 let v2042 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2042 { break 'case251; }
 let v2043 = eo__24eo_5fprog_5fite_2delse_2dlookahead(s, v2034[0], v2036[0], v2038[0], v2040[0])?;
-return Ok(v2043);
+return Ok(Some(v2043));
 }
+Ok(None)
+}
+fn case_252_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case252: {
 let v2044 = s.construct(Constructor::eo__24emb_5fr_2eite_5fthen_5fneg_5flookahead, &[])?;
 if a1 != v2044 { break 'case252; }
@@ -11358,8 +13039,11 @@ if v2052[1] != v2053 { break 'case252; }
 let v2054 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2054 { break 'case252; }
 let v2055 = eo__24eo_5fprog_5fite_2dthen_2dneg_2dlookahead(s, v2046[0], v2048[0], v2050[0], v2052[0])?;
-return Ok(v2055);
+return Ok(Some(v2055));
 }
+Ok(None)
+}
+fn case_253_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case253: {
 let v2056 = s.construct(Constructor::eo__24emb_5fr_2eite_5felse_5fneg_5flookahead, &[])?;
 if a1 != v2056 { break 'case253; }
@@ -11384,8 +13068,11 @@ if v2064[1] != v2065 { break 'case253; }
 let v2066 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2066 { break 'case253; }
 let v2067 = eo__24eo_5fprog_5fite_2delse_2dneg_2dlookahead(s, v2058[0], v2060[0], v2062[0], v2064[0])?;
-return Ok(v2067);
+return Ok(Some(v2067));
 }
+Ok(None)
+}
+fn case_254_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case254: {
 let v2068 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fconcat_5fextract_5fmerge, &[])?;
 if a1 != v2068 { break 'case254; }
@@ -11428,8 +13115,11 @@ if v2085[1] != v2086 { break 'case254; }
 let v2087 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2085[0])?;
 let v2088 = s.construct(Constructor::eo__24eo_5fpf, &[v2087])?;
 let v2089 = eo__24eo_5fprog_5fbv_2dconcat_2dextract_2dmerge(s, v2070[0], v2072[0], v2074[0], v2076[0], v2078[0], v2080[0], v2082[0], v2088)?;
-return Ok(v2089);
+return Ok(Some(v2089));
 }
+Ok(None)
+}
+fn case_255_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case255: {
 let v2090 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fextract, &[])?;
 if a1 != v2090 { break 'case255; }
@@ -11478,8 +13168,11 @@ let v2112 = s.construct(Constructor::eo__24eo_5fpf, &[v2111])?;
 let v2113 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2109[0])?;
 let v2114 = s.construct(Constructor::eo__24eo_5fpf, &[v2113])?;
 let v2115 = eo__24eo_5fprog_5fbv_2dextract_2dextract(s, v2092[0], v2094[0], v2096[0], v2098[0], v2100[0], v2102[0], v2104[0], v2112, v2114)?;
-return Ok(v2115);
+return Ok(Some(v2115));
 }
+Ok(None)
+}
+fn case_256_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case256: {
 let v2116 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fwhole, &[])?;
 if a1 != v2116 { break 'case256; }
@@ -11502,8 +13195,11 @@ if v2123[1] != v2124 { break 'case256; }
 let v2125 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2123[0])?;
 let v2126 = s.construct(Constructor::eo__24eo_5fpf, &[v2125])?;
 let v2127 = eo__24eo_5fprog_5fbv_2dextract_2dwhole(s, v2118[0], v2120[0], v2126)?;
-return Ok(v2127);
+return Ok(Some(v2127));
 }
+Ok(None)
+}
+fn case_257_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case257: {
 let v2128 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fconcat_5f1, &[])?;
 if a1 != v2128 { break 'case257; }
@@ -11538,8 +13234,11 @@ if v2141[1] != v2142 { break 'case257; }
 let v2143 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2141[0])?;
 let v2144 = s.construct(Constructor::eo__24eo_5fpf, &[v2143])?;
 let v2145 = eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d1(s, v2130[0], v2132[0], v2134[0], v2136[0], v2138[0], v2144)?;
-return Ok(v2145);
+return Ok(Some(v2145));
 }
+Ok(None)
+}
+fn case_258_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case258: {
 let v2146 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fconcat_5f2, &[])?;
 if a1 != v2146 { break 'case258; }
@@ -11600,8 +13299,11 @@ let v2176 = s.construct(Constructor::eo__24eo_5fpf, &[v2175])?;
 let v2177 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2169[0])?;
 let v2178 = s.construct(Constructor::eo__24eo_5fpf, &[v2177])?;
 let v2179 = eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d2(s, v2148[0], v2150[0], v2152[0], v2154[0], v2156[0], v2158[0], v2160[0], v2172, v2174, v2176, v2178)?;
-return Ok(v2179);
+return Ok(Some(v2179));
 }
+Ok(None)
+}
+fn case_259_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case259: {
 let v2180 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fconcat_5f3, &[])?;
 if a1 != v2180 { break 'case259; }
@@ -11656,8 +13358,11 @@ let v2206 = s.construct(Constructor::eo__24eo_5fpf, &[v2205])?;
 let v2207 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2201[0])?;
 let v2208 = s.construct(Constructor::eo__24eo_5fpf, &[v2207])?;
 let v2209 = eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d3(s, v2182[0], v2184[0], v2186[0], v2188[0], v2190[0], v2192[0], v2194[0], v2204, v2206, v2208)?;
-return Ok(v2209);
+return Ok(Some(v2209));
 }
+Ok(None)
+}
+fn case_260_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case260: {
 let v2210 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fconcat_5f4, &[])?;
 if a1 != v2210 { break 'case260; }
@@ -11692,8 +13397,11 @@ if v2223[1] != v2224 { break 'case260; }
 let v2225 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2223[0])?;
 let v2226 = s.construct(Constructor::eo__24eo_5fpf, &[v2225])?;
 let v2227 = eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d4(s, v2212[0], v2214[0], v2216[0], v2218[0], v2220[0], v2226)?;
-return Ok(v2227);
+return Ok(Some(v2227));
 }
+Ok(None)
+}
+fn case_261_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case261: {
 let v2228 = s.construct(Constructor::eo__24emb_5fr_2ebv_5feq_5fextract_5felim1, &[])?;
 if a1 != v2228 { break 'case261; }
@@ -11760,8 +13468,11 @@ let v2262 = s.construct(Constructor::eo__24eo_5fpf, &[v2261])?;
 let v2263 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2253[0])?;
 let v2264 = s.construct(Constructor::eo__24eo_5fpf, &[v2263])?;
 let v2265 = eo__24eo_5fprog_5fbv_2deq_2dextract_2delim1(s, v2230[0], v2232[0], v2234[0], v2236[0], v2238[0], v2240[0], v2242[0], v2256, v2258, v2260, v2262, v2264)?;
-return Ok(v2265);
+return Ok(Some(v2265));
 }
+Ok(None)
+}
+fn case_262_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case262: {
 let v2266 = s.construct(Constructor::eo__24emb_5fr_2ebv_5feq_5fextract_5felim2, &[])?;
 if a1 != v2266 { break 'case262; }
@@ -11808,8 +13519,11 @@ let v2288 = s.construct(Constructor::eo__24eo_5fpf, &[v2287])?;
 let v2289 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2283[0])?;
 let v2290 = s.construct(Constructor::eo__24eo_5fpf, &[v2289])?;
 let v2291 = eo__24eo_5fprog_5fbv_2deq_2dextract_2delim2(s, v2268[0], v2270[0], v2272[0], v2274[0], v2276[0], v2286, v2288, v2290)?;
-return Ok(v2291);
+return Ok(Some(v2291));
 }
+Ok(None)
+}
+fn case_263_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case263: {
 let v2292 = s.construct(Constructor::eo__24emb_5fr_2ebv_5feq_5fextract_5felim3, &[])?;
 if a1 != v2292 { break 'case263; }
@@ -11856,8 +13570,11 @@ let v2314 = s.construct(Constructor::eo__24eo_5fpf, &[v2313])?;
 let v2315 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2309[0])?;
 let v2316 = s.construct(Constructor::eo__24eo_5fpf, &[v2315])?;
 let v2317 = eo__24eo_5fprog_5fbv_2deq_2dextract_2delim3(s, v2294[0], v2296[0], v2298[0], v2300[0], v2302[0], v2312, v2314, v2316)?;
-return Ok(v2317);
+return Ok(Some(v2317));
 }
+Ok(None)
+}
+fn case_264_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case264: {
 let v2318 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fnot, &[])?;
 if a1 != v2318 { break 'case264; }
@@ -11878,8 +13595,11 @@ if v2324[1] != v2325 { break 'case264; }
 let v2326 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2326 { break 'case264; }
 let v2327 = eo__24eo_5fprog_5fbv_2dextract_2dnot(s, v2320[0], v2322[0], v2324[0])?;
-return Ok(v2327);
+return Ok(Some(v2327));
 }
+Ok(None)
+}
+fn case_265_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case265: {
 let v2328 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f1, &[])?;
 if a1 != v2328 { break 'case265; }
@@ -11910,8 +13630,11 @@ if v2339[1] != v2340 { break 'case265; }
 let v2341 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2339[0])?;
 let v2342 = s.construct(Constructor::eo__24eo_5fpf, &[v2341])?;
 let v2343 = eo__24eo_5fprog_5fbv_2dextract_2dsign_2dextend_2d1(s, v2330[0], v2332[0], v2334[0], v2336[0], v2342)?;
-return Ok(v2343);
+return Ok(Some(v2343));
 }
+Ok(None)
+}
+fn case_266_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case266: {
 let v2344 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f2, &[])?;
 if a1 != v2344 { break 'case266; }
@@ -11968,8 +13691,11 @@ let v2372 = s.construct(Constructor::eo__24eo_5fpf, &[v2371])?;
 let v2373 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2365[0])?;
 let v2374 = s.construct(Constructor::eo__24eo_5fpf, &[v2373])?;
 let v2375 = eo__24eo_5fprog_5fbv_2dextract_2dsign_2dextend_2d2(s, v2346[0], v2348[0], v2350[0], v2352[0], v2354[0], v2356[0], v2368, v2370, v2372, v2374)?;
-return Ok(v2375);
+return Ok(Some(v2375));
 }
+Ok(None)
+}
+fn case_267_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case267: {
 let v2376 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f3, &[])?;
 if a1 != v2376 { break 'case267; }
@@ -12020,8 +13746,11 @@ let v2400 = s.construct(Constructor::eo__24eo_5fpf, &[v2399])?;
 let v2401 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2395[0])?;
 let v2402 = s.construct(Constructor::eo__24eo_5fpf, &[v2401])?;
 let v2403 = eo__24eo_5fprog_5fbv_2dextract_2dsign_2dextend_2d3(s, v2378[0], v2380[0], v2382[0], v2384[0], v2386[0], v2388[0], v2398, v2400, v2402)?;
-return Ok(v2403);
+return Ok(Some(v2403));
 }
+Ok(None)
+}
+fn case_268_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case268: {
 let v2404 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fnot_5fxor, &[])?;
 if a1 != v2404 { break 'case268; }
@@ -12042,8 +13771,11 @@ if v2410[1] != v2411 { break 'case268; }
 let v2412 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2412 { break 'case268; }
 let v2413 = eo__24eo_5fprog_5fbv_2dnot_2dxor(s, v2406[0], v2408[0], v2410[0])?;
-return Ok(v2413);
+return Ok(Some(v2413));
 }
+Ok(None)
+}
+fn case_269_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case269: {
 let v2414 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fand_5fsimplify_5f1, &[])?;
 if a1 != v2414 { break 'case269; }
@@ -12078,8 +13810,11 @@ if v2427[1] != v2428 { break 'case269; }
 let v2429 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2427[0])?;
 let v2430 = s.construct(Constructor::eo__24eo_5fpf, &[v2429])?;
 let v2431 = eo__24eo_5fprog_5fbv_2dand_2dsimplify_2d1(s, v2416[0], v2418[0], v2420[0], v2422[0], v2424[0], v2430)?;
-return Ok(v2431);
+return Ok(Some(v2431));
 }
+Ok(None)
+}
+fn case_270_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case270: {
 let v2432 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fand_5fsimplify_5f2, &[])?;
 if a1 != v2432 { break 'case270; }
@@ -12114,8 +13849,11 @@ if v2445[1] != v2446 { break 'case270; }
 let v2447 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2445[0])?;
 let v2448 = s.construct(Constructor::eo__24eo_5fpf, &[v2447])?;
 let v2449 = eo__24eo_5fprog_5fbv_2dand_2dsimplify_2d2(s, v2434[0], v2436[0], v2438[0], v2440[0], v2442[0], v2448)?;
-return Ok(v2449);
+return Ok(Some(v2449));
 }
+Ok(None)
+}
+fn case_271_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case271: {
 let v2450 = s.construct(Constructor::eo__24emb_5fr_2ebv_5for_5fsimplify_5f1, &[])?;
 if a1 != v2450 { break 'case271; }
@@ -12150,8 +13888,11 @@ if v2463[1] != v2464 { break 'case271; }
 let v2465 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2463[0])?;
 let v2466 = s.construct(Constructor::eo__24eo_5fpf, &[v2465])?;
 let v2467 = eo__24eo_5fprog_5fbv_2dor_2dsimplify_2d1(s, v2452[0], v2454[0], v2456[0], v2458[0], v2460[0], v2466)?;
-return Ok(v2467);
+return Ok(Some(v2467));
 }
+Ok(None)
+}
+fn case_272_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case272: {
 let v2468 = s.construct(Constructor::eo__24emb_5fr_2ebv_5for_5fsimplify_5f2, &[])?;
 if a1 != v2468 { break 'case272; }
@@ -12186,8 +13927,11 @@ if v2481[1] != v2482 { break 'case272; }
 let v2483 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2481[0])?;
 let v2484 = s.construct(Constructor::eo__24eo_5fpf, &[v2483])?;
 let v2485 = eo__24eo_5fprog_5fbv_2dor_2dsimplify_2d2(s, v2470[0], v2472[0], v2474[0], v2476[0], v2478[0], v2484)?;
-return Ok(v2485);
+return Ok(Some(v2485));
 }
+Ok(None)
+}
+fn case_273_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case273: {
 let v2486 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f1, &[])?;
 if a1 != v2486 { break 'case273; }
@@ -12212,8 +13956,11 @@ if v2494[1] != v2495 { break 'case273; }
 let v2496 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2496 { break 'case273; }
 let v2497 = eo__24eo_5fprog_5fbv_2dxor_2dsimplify_2d1(s, v2488[0], v2490[0], v2492[0], v2494[0])?;
-return Ok(v2497);
+return Ok(Some(v2497));
 }
+Ok(None)
+}
+fn case_274_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case274: {
 let v2498 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f2, &[])?;
 if a1 != v2498 { break 'case274; }
@@ -12238,8 +13985,11 @@ if v2506[1] != v2507 { break 'case274; }
 let v2508 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2508 { break 'case274; }
 let v2509 = eo__24eo_5fprog_5fbv_2dxor_2dsimplify_2d2(s, v2500[0], v2502[0], v2504[0], v2506[0])?;
-return Ok(v2509);
+return Ok(Some(v2509));
 }
+Ok(None)
+}
+fn case_275_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case275: {
 let v2510 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f3, &[])?;
 if a1 != v2510 { break 'case275; }
@@ -12264,8 +14014,11 @@ if v2518[1] != v2519 { break 'case275; }
 let v2520 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2520 { break 'case275; }
 let v2521 = eo__24eo_5fprog_5fbv_2dxor_2dsimplify_2d3(s, v2512[0], v2514[0], v2516[0], v2518[0])?;
-return Ok(v2521);
+return Ok(Some(v2521));
 }
+Ok(None)
+}
+fn case_276_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case276: {
 let v2522 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fult_5fadd_5fone, &[])?;
 if a1 != v2522 { break 'case276; }
@@ -12306,8 +14059,11 @@ let v2540 = s.construct(Constructor::eo__24eo_5fpf, &[v2539])?;
 let v2541 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2537[0])?;
 let v2542 = s.construct(Constructor::eo__24eo_5fpf, &[v2541])?;
 let v2543 = eo__24eo_5fprog_5fbv_2dult_2dadd_2done(s, v2524[0], v2526[0], v2528[0], v2530[0], v2532[0], v2540, v2542)?;
-return Ok(v2543);
+return Ok(Some(v2543));
 }
+Ok(None)
+}
+fn case_277_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case277: {
 let v2544 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fslt_5fmult_5f1, &[])?;
 if a1 != v2544 { break 'case277; }
@@ -12368,8 +14124,11 @@ let v2574 = s.construct(Constructor::eo__24eo_5fpf, &[v2573])?;
 let v2575 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2567[0])?;
 let v2576 = s.construct(Constructor::eo__24eo_5fpf, &[v2575])?;
 let v2577 = eo__24eo_5fprog_5fbv_2dmult_2dslt_2dmult_2d1(s, v2546[0], v2548[0], v2550[0], v2552[0], v2554[0], v2556[0], v2558[0], v2570, v2572, v2574, v2576)?;
-return Ok(v2577);
+return Ok(Some(v2577));
 }
+Ok(None)
+}
+fn case_278_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case278: {
 let v2578 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fslt_5fmult_5f2, &[])?;
 if a1 != v2578 { break 'case278; }
@@ -12430,8 +14189,11 @@ let v2608 = s.construct(Constructor::eo__24eo_5fpf, &[v2607])?;
 let v2609 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2601[0])?;
 let v2610 = s.construct(Constructor::eo__24eo_5fpf, &[v2609])?;
 let v2611 = eo__24eo_5fprog_5fbv_2dmult_2dslt_2dmult_2d2(s, v2580[0], v2582[0], v2584[0], v2586[0], v2588[0], v2590[0], v2592[0], v2604, v2606, v2608, v2610)?;
-return Ok(v2611);
+return Ok(Some(v2611));
 }
+Ok(None)
+}
+fn case_279_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case279: {
 let v2612 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fcommutative_5fxor, &[])?;
 if a1 != v2612 { break 'case279; }
@@ -12448,8 +14210,11 @@ if v2616[1] != v2617 { break 'case279; }
 let v2618 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2618 { break 'case279; }
 let v2619 = eo__24eo_5fprog_5fbv_2dcommutative_2dxor(s, v2614[0], v2616[0])?;
-return Ok(v2619);
+return Ok(Some(v2619));
 }
+Ok(None)
+}
+fn case_280_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case280: {
 let v2620 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fcommutative_5fcomp, &[])?;
 if a1 != v2620 { break 'case280; }
@@ -12466,8 +14231,11 @@ if v2624[1] != v2625 { break 'case280; }
 let v2626 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2626 { break 'case280; }
 let v2627 = eo__24eo_5fprog_5fbv_2dcommutative_2dcomp(s, v2622[0], v2624[0])?;
-return Ok(v2627);
+return Ok(Some(v2627));
 }
+Ok(None)
+}
+fn case_281_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case281: {
 let v2628 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fzero_5fextend_5feliminate_5f0, &[])?;
 if a1 != v2628 { break 'case281; }
@@ -12480,8 +14248,11 @@ if v2630[1] != v2631 { break 'case281; }
 let v2632 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2632 { break 'case281; }
 let v2633 = eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate_2d0(s, v2630[0])?;
-return Ok(v2633);
+return Ok(Some(v2633));
 }
+Ok(None)
+}
+fn case_282_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case282: {
 let v2634 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsign_5fextend_5feliminate_5f0, &[])?;
 if a1 != v2634 { break 'case282; }
@@ -12494,8 +14265,11 @@ if v2636[1] != v2637 { break 'case282; }
 let v2638 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2638 { break 'case282; }
 let v2639 = eo__24eo_5fprog_5fbv_2dsign_2dextend_2deliminate_2d0(s, v2636[0])?;
-return Ok(v2639);
+return Ok(Some(v2639));
 }
+Ok(None)
+}
+fn case_283_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case283: {
 let v2640 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fnot_5fneq, &[])?;
 if a1 != v2640 { break 'case283; }
@@ -12514,8 +14288,11 @@ if v2645[1] != v2646 { break 'case283; }
 let v2647 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2645[0])?;
 let v2648 = s.construct(Constructor::eo__24eo_5fpf, &[v2647])?;
 let v2649 = eo__24eo_5fprog_5fbv_2dnot_2dneq(s, v2642[0], v2648)?;
-return Ok(v2649);
+return Ok(Some(v2649));
 }
+Ok(None)
+}
+fn case_284_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case284: {
 let v2650 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fult_5fones, &[])?;
 if a1 != v2650 { break 'case284; }
@@ -12542,8 +14319,11 @@ if v2659[1] != v2660 { break 'case284; }
 let v2661 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2659[0])?;
 let v2662 = s.construct(Constructor::eo__24eo_5fpf, &[v2661])?;
 let v2663 = eo__24eo_5fprog_5fbv_2dult_2dones(s, v2652[0], v2654[0], v2656[0], v2662)?;
-return Ok(v2663);
+return Ok(Some(v2663));
 }
+Ok(None)
+}
+fn case_285_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case285: {
 let v2664 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fconcat_5fmerge_5fconst, &[])?;
 if a1 != v2664 { break 'case285; }
@@ -12586,8 +14366,11 @@ if v2681[1] != v2682 { break 'case285; }
 let v2683 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2681[0])?;
 let v2684 = s.construct(Constructor::eo__24eo_5fpf, &[v2683])?;
 let v2685 = eo__24eo_5fprog_5fbv_2dconcat_2dmerge_2dconst(s, v2666[0], v2668[0], v2670[0], v2672[0], v2674[0], v2676[0], v2678[0], v2684)?;
-return Ok(v2685);
+return Ok(Some(v2685));
 }
+Ok(None)
+}
+fn case_286_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case286: {
 let v2686 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fcommutative_5fadd, &[])?;
 if a1 != v2686 { break 'case286; }
@@ -12604,8 +14387,11 @@ if v2690[1] != v2691 { break 'case286; }
 let v2692 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2692 { break 'case286; }
 let v2693 = eo__24eo_5fprog_5fbv_2dcommutative_2dadd(s, v2688[0], v2690[0])?;
-return Ok(v2693);
+return Ok(Some(v2693));
 }
+Ok(None)
+}
+fn case_287_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case287: {
 let v2694 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsub_5feliminate, &[])?;
 if a1 != v2694 { break 'case287; }
@@ -12622,8 +14408,11 @@ if v2698[1] != v2699 { break 'case287; }
 let v2700 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2700 { break 'case287; }
 let v2701 = eo__24eo_5fprog_5fbv_2dsub_2deliminate(s, v2696[0], v2698[0])?;
-return Ok(v2701);
+return Ok(Some(v2701));
 }
+Ok(None)
+}
+fn case_288_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case288: {
 let v2702 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fwidth_5fone, &[])?;
 if a1 != v2702 { break 'case288; }
@@ -12636,8 +14425,11 @@ if v2704[1] != v2705 { break 'case288; }
 let v2706 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2706 { break 'case288; }
 let v2707 = eo__24eo_5fprog_5fbv_2dite_2dwidth_2done(s, v2704[0])?;
-return Ok(v2707);
+return Ok(Some(v2707));
 }
+Ok(None)
+}
+fn case_289_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case289: {
 let v2708 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fwidth_5fone_5fnot, &[])?;
 if a1 != v2708 { break 'case289; }
@@ -12650,8 +14442,11 @@ if v2710[1] != v2711 { break 'case289; }
 let v2712 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2712 { break 'case289; }
 let v2713 = eo__24eo_5fprog_5fbv_2dite_2dwidth_2done_2dnot(s, v2710[0])?;
-return Ok(v2713);
+return Ok(Some(v2713));
 }
+Ok(None)
+}
+fn case_290_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case290: {
 let v2714 = s.construct(Constructor::eo__24emb_5fr_2ebv_5feq_5fxor_5fsolve, &[])?;
 if a1 != v2714 { break 'case290; }
@@ -12672,8 +14467,11 @@ if v2720[1] != v2721 { break 'case290; }
 let v2722 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2722 { break 'case290; }
 let v2723 = eo__24eo_5fprog_5fbv_2deq_2dxor_2dsolve(s, v2716[0], v2718[0], v2720[0])?;
-return Ok(v2723);
+return Ok(Some(v2723));
 }
+Ok(None)
+}
+fn case_291_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case291: {
 let v2724 = s.construct(Constructor::eo__24emb_5fr_2ebv_5feq_5fnot_5fsolve, &[])?;
 if a1 != v2724 { break 'case291; }
@@ -12690,8 +14488,11 @@ if v2728[1] != v2729 { break 'case291; }
 let v2730 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2730 { break 'case291; }
 let v2731 = eo__24eo_5fprog_5fbv_2deq_2dnot_2dsolve(s, v2726[0], v2728[0])?;
-return Ok(v2731);
+return Ok(Some(v2731));
 }
+Ok(None)
+}
+fn case_292_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case292: {
 let v2732 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fugt_5feliminate, &[])?;
 if a1 != v2732 { break 'case292; }
@@ -12708,8 +14509,11 @@ if v2736[1] != v2737 { break 'case292; }
 let v2738 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2738 { break 'case292; }
 let v2739 = eo__24eo_5fprog_5fbv_2dugt_2deliminate(s, v2734[0], v2736[0])?;
-return Ok(v2739);
+return Ok(Some(v2739));
 }
+Ok(None)
+}
+fn case_293_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case293: {
 let v2740 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fuge_5feliminate, &[])?;
 if a1 != v2740 { break 'case293; }
@@ -12726,8 +14530,11 @@ if v2744[1] != v2745 { break 'case293; }
 let v2746 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2746 { break 'case293; }
 let v2747 = eo__24eo_5fprog_5fbv_2duge_2deliminate(s, v2742[0], v2744[0])?;
-return Ok(v2747);
+return Ok(Some(v2747));
 }
+Ok(None)
+}
+fn case_294_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case294: {
 let v2748 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsgt_5feliminate, &[])?;
 if a1 != v2748 { break 'case294; }
@@ -12744,8 +14551,11 @@ if v2752[1] != v2753 { break 'case294; }
 let v2754 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2754 { break 'case294; }
 let v2755 = eo__24eo_5fprog_5fbv_2dsgt_2deliminate(s, v2750[0], v2752[0])?;
-return Ok(v2755);
+return Ok(Some(v2755));
 }
+Ok(None)
+}
+fn case_295_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case295: {
 let v2756 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsge_5feliminate, &[])?;
 if a1 != v2756 { break 'case295; }
@@ -12762,8 +14572,11 @@ if v2760[1] != v2761 { break 'case295; }
 let v2762 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2762 { break 'case295; }
 let v2763 = eo__24eo_5fprog_5fbv_2dsge_2deliminate(s, v2758[0], v2760[0])?;
-return Ok(v2763);
+return Ok(Some(v2763));
 }
+Ok(None)
+}
+fn case_296_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case296: {
 let v2764 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsle_5feliminate, &[])?;
 if a1 != v2764 { break 'case296; }
@@ -12780,8 +14593,11 @@ if v2768[1] != v2769 { break 'case296; }
 let v2770 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2770 { break 'case296; }
 let v2771 = eo__24eo_5fprog_5fbv_2dsle_2deliminate(s, v2766[0], v2768[0])?;
-return Ok(v2771);
+return Ok(Some(v2771));
 }
+Ok(None)
+}
+fn case_297_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case297: {
 let v2772 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fredor_5feliminate, &[])?;
 if a1 != v2772 { break 'case297; }
@@ -12804,8 +14620,11 @@ if v2779[1] != v2780 { break 'case297; }
 let v2781 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2779[0])?;
 let v2782 = s.construct(Constructor::eo__24eo_5fpf, &[v2781])?;
 let v2783 = eo__24eo_5fprog_5fbv_2dredor_2deliminate(s, v2774[0], v2776[0], v2782)?;
-return Ok(v2783);
+return Ok(Some(v2783));
 }
+Ok(None)
+}
+fn case_298_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case298: {
 let v2784 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fredand_5feliminate, &[])?;
 if a1 != v2784 { break 'case298; }
@@ -12828,8 +14647,11 @@ if v2791[1] != v2792 { break 'case298; }
 let v2793 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2791[0])?;
 let v2794 = s.construct(Constructor::eo__24eo_5fpf, &[v2793])?;
 let v2795 = eo__24eo_5fprog_5fbv_2dredand_2deliminate(s, v2786[0], v2788[0], v2794)?;
-return Ok(v2795);
+return Ok(Some(v2795));
 }
+Ok(None)
+}
+fn case_299_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case299: {
 let v2796 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fule_5feliminate, &[])?;
 if a1 != v2796 { break 'case299; }
@@ -12846,8 +14668,11 @@ if v2800[1] != v2801 { break 'case299; }
 let v2802 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2802 { break 'case299; }
 let v2803 = eo__24eo_5fprog_5fbv_2dule_2deliminate(s, v2798[0], v2800[0])?;
-return Ok(v2803);
+return Ok(Some(v2803));
 }
+Ok(None)
+}
+fn case_300_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case300: {
 let v2804 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fcomp_5feliminate, &[])?;
 if a1 != v2804 { break 'case300; }
@@ -12864,8 +14689,11 @@ if v2808[1] != v2809 { break 'case300; }
 let v2810 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2810 { break 'case300; }
 let v2811 = eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s, v2806[0], v2808[0])?;
-return Ok(v2811);
+return Ok(Some(v2811));
 }
+Ok(None)
+}
+fn case_301_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case301: {
 let v2812 = s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f1, &[])?;
 if a1 != v2812 { break 'case301; }
@@ -12918,8 +14746,11 @@ let v2838 = s.construct(Constructor::eo__24eo_5fpf, &[v2837])?;
 let v2839 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2831[0])?;
 let v2840 = s.construct(Constructor::eo__24eo_5fpf, &[v2839])?;
 let v2841 = eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v2814[0], v2816[0], v2818[0], v2820[0], v2822[0], v2834, v2836, v2838, v2840)?;
-return Ok(v2841);
+return Ok(Some(v2841));
 }
+Ok(None)
+}
+fn case_302_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case302: {
 let v2842 = s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f2, &[])?;
 if a1 != v2842 { break 'case302; }
@@ -12942,8 +14773,11 @@ if v2849[1] != v2850 { break 'case302; }
 let v2851 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2849[0])?;
 let v2852 = s.construct(Constructor::eo__24eo_5fpf, &[v2851])?;
 let v2853 = eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s, v2844[0], v2846[0], v2852)?;
-return Ok(v2853);
+return Ok(Some(v2853));
 }
+Ok(None)
+}
+fn case_303_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case303: {
 let v2854 = s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f1, &[])?;
 if a1 != v2854 { break 'case303; }
@@ -12996,8 +14830,11 @@ let v2880 = s.construct(Constructor::eo__24eo_5fpf, &[v2879])?;
 let v2881 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2873[0])?;
 let v2882 = s.construct(Constructor::eo__24eo_5fpf, &[v2881])?;
 let v2883 = eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v2856[0], v2858[0], v2860[0], v2862[0], v2864[0], v2876, v2878, v2880, v2882)?;
-return Ok(v2883);
+return Ok(Some(v2883));
 }
+Ok(None)
+}
+fn case_304_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case304: {
 let v2884 = s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f2, &[])?;
 if a1 != v2884 { break 'case304; }
@@ -13020,8 +14857,11 @@ if v2891[1] != v2892 { break 'case304; }
 let v2893 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2891[0])?;
 let v2894 = s.construct(Constructor::eo__24eo_5fpf, &[v2893])?;
 let v2895 = eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s, v2886[0], v2888[0], v2894)?;
-return Ok(v2895);
+return Ok(Some(v2895));
 }
+Ok(None)
+}
+fn case_305_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case305: {
 let v2896 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fnand_5feliminate, &[])?;
 if a1 != v2896 { break 'case305; }
@@ -13038,8 +14878,11 @@ if v2900[1] != v2901 { break 'case305; }
 let v2902 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2902 { break 'case305; }
 let v2903 = eo__24eo_5fprog_5fbv_2dnand_2deliminate(s, v2898[0], v2900[0])?;
-return Ok(v2903);
+return Ok(Some(v2903));
 }
+Ok(None)
+}
+fn case_306_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case306: {
 let v2904 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fnor_5feliminate, &[])?;
 if a1 != v2904 { break 'case306; }
@@ -13056,8 +14899,11 @@ if v2908[1] != v2909 { break 'case306; }
 let v2910 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2910 { break 'case306; }
 let v2911 = eo__24eo_5fprog_5fbv_2dnor_2deliminate(s, v2906[0], v2908[0])?;
-return Ok(v2911);
+return Ok(Some(v2911));
 }
+Ok(None)
+}
+fn case_307_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case307: {
 let v2912 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxnor_5feliminate, &[])?;
 if a1 != v2912 { break 'case307; }
@@ -13074,8 +14920,11 @@ if v2916[1] != v2917 { break 'case307; }
 let v2918 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2918 { break 'case307; }
 let v2919 = eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s, v2914[0], v2916[0])?;
-return Ok(v2919);
+return Ok(Some(v2919));
 }
+Ok(None)
+}
+fn case_308_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case308: {
 let v2920 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsdiv_5feliminate, &[])?;
 if a1 != v2920 { break 'case308; }
@@ -13102,8 +14951,11 @@ if v2929[1] != v2930 { break 'case308; }
 let v2931 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2929[0])?;
 let v2932 = s.construct(Constructor::eo__24eo_5fpf, &[v2931])?;
 let v2933 = eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v2922[0], v2924[0], v2926[0], v2932)?;
-return Ok(v2933);
+return Ok(Some(v2933));
 }
+Ok(None)
+}
+fn case_309_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case309: {
 let v2934 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fzero_5fextend_5feliminate, &[])?;
 if a1 != v2934 { break 'case309; }
@@ -13120,8 +14972,11 @@ if v2938[1] != v2939 { break 'case309; }
 let v2940 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v2940 { break 'case309; }
 let v2941 = eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s, v2936[0], v2938[0])?;
-return Ok(v2941);
+return Ok(Some(v2941));
 }
+Ok(None)
+}
+fn case_310_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case310: {
 let v2942 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fuaddo_5feliminate, &[])?;
 if a1 != v2942 { break 'case310; }
@@ -13148,8 +15003,11 @@ if v2951[1] != v2952 { break 'case310; }
 let v2953 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2951[0])?;
 let v2954 = s.construct(Constructor::eo__24eo_5fpf, &[v2953])?;
 let v2955 = eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, v2944[0], v2946[0], v2948[0], v2954)?;
-return Ok(v2955);
+return Ok(Some(v2955));
 }
+Ok(None)
+}
+fn case_311_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case311: {
 let v2956 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsaddo_5feliminate, &[])?;
 if a1 != v2956 { break 'case311; }
@@ -13176,8 +15034,11 @@ if v2965[1] != v2966 { break 'case311; }
 let v2967 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2965[0])?;
 let v2968 = s.construct(Constructor::eo__24eo_5fpf, &[v2967])?;
 let v2969 = eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v2958[0], v2960[0], v2962[0], v2968)?;
-return Ok(v2969);
+return Ok(Some(v2969));
 }
+Ok(None)
+}
+fn case_312_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case312: {
 let v2970 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsdivo_5feliminate, &[])?;
 if a1 != v2970 { break 'case312; }
@@ -13214,8 +15075,11 @@ let v2986 = s.construct(Constructor::eo__24eo_5fpf, &[v2985])?;
 let v2987 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v2983[0])?;
 let v2988 = s.construct(Constructor::eo__24eo_5fpf, &[v2987])?;
 let v2989 = eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v2972[0], v2974[0], v2976[0], v2978[0], v2986, v2988)?;
-return Ok(v2989);
+return Ok(Some(v2989));
 }
+Ok(None)
+}
+fn case_313_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case313: {
 let v2990 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsmod_5feliminate, &[])?;
 if a1 != v2990 { break 'case313; }
@@ -13252,8 +15116,11 @@ let v3006 = s.construct(Constructor::eo__24eo_5fpf, &[v3005])?;
 let v3007 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3003[0])?;
 let v3008 = s.construct(Constructor::eo__24eo_5fpf, &[v3007])?;
 let v3009 = eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v2992[0], v2994[0], v2996[0], v2998[0], v3006, v3008)?;
-return Ok(v3009);
+return Ok(Some(v3009));
 }
+Ok(None)
+}
+fn case_314_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case314: {
 let v3010 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsrem_5feliminate, &[])?;
 if a1 != v3010 { break 'case314; }
@@ -13280,8 +15147,11 @@ if v3019[1] != v3020 { break 'case314; }
 let v3021 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3019[0])?;
 let v3022 = s.construct(Constructor::eo__24eo_5fpf, &[v3021])?;
 let v3023 = eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v3012[0], v3014[0], v3016[0], v3022)?;
-return Ok(v3023);
+return Ok(Some(v3023));
 }
+Ok(None)
+}
+fn case_315_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case315: {
 let v3024 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fusubo_5feliminate, &[])?;
 if a1 != v3024 { break 'case315; }
@@ -13308,8 +15178,11 @@ if v3033[1] != v3034 { break 'case315; }
 let v3035 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3033[0])?;
 let v3036 = s.construct(Constructor::eo__24eo_5fpf, &[v3035])?;
 let v3037 = eo__24eo_5fprog_5fbv_2dusubo_2deliminate(s, v3026[0], v3028[0], v3030[0], v3036)?;
-return Ok(v3037);
+return Ok(Some(v3037));
 }
+Ok(None)
+}
+fn case_316_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case316: {
 let v3038 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fssubo_5feliminate, &[])?;
 if a1 != v3038 { break 'case316; }
@@ -13336,8 +15209,11 @@ if v3047[1] != v3048 { break 'case316; }
 let v3049 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3047[0])?;
 let v3050 = s.construct(Constructor::eo__24eo_5fpf, &[v3049])?;
 let v3051 = eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v3040[0], v3042[0], v3044[0], v3050)?;
-return Ok(v3051);
+return Ok(Some(v3051));
 }
+Ok(None)
+}
+fn case_317_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case317: {
 let v3052 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fnego_5feliminate, &[])?;
 if a1 != v3052 { break 'case317; }
@@ -13360,8 +15236,11 @@ if v3059[1] != v3060 { break 'case317; }
 let v3061 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3059[0])?;
 let v3062 = s.construct(Constructor::eo__24eo_5fpf, &[v3061])?;
 let v3063 = eo__24eo_5fprog_5fbv_2dnego_2deliminate(s, v3054[0], v3056[0], v3062)?;
-return Ok(v3063);
+return Ok(Some(v3063));
 }
+Ok(None)
+}
+fn case_318_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case318: {
 let v3064 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fequal_5fchildren, &[])?;
 if a1 != v3064 { break 'case318; }
@@ -13378,8 +15257,11 @@ if v3068[1] != v3069 { break 'case318; }
 let v3070 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3070 { break 'case318; }
 let v3071 = eo__24eo_5fprog_5fbv_2dite_2dequal_2dchildren(s, v3066[0], v3068[0])?;
-return Ok(v3071);
+return Ok(Some(v3071));
 }
+Ok(None)
+}
+fn case_319_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case319: {
 let v3072 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f1, &[])?;
 if a1 != v3072 { break 'case319; }
@@ -13392,8 +15274,11 @@ if v3074[1] != v3075 { break 'case319; }
 let v3076 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3076 { break 'case319; }
 let v3077 = eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d1(s, v3074[0])?;
-return Ok(v3077);
+return Ok(Some(v3077));
 }
+Ok(None)
+}
+fn case_320_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case320: {
 let v3078 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f2, &[])?;
 if a1 != v3078 { break 'case320; }
@@ -13406,8 +15291,11 @@ if v3080[1] != v3081 { break 'case320; }
 let v3082 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3082 { break 'case320; }
 let v3083 = eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d2(s, v3080[0])?;
-return Ok(v3083);
+return Ok(Some(v3083));
 }
+Ok(None)
+}
+fn case_321_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case321: {
 let v3084 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f1, &[])?;
 if a1 != v3084 { break 'case321; }
@@ -13432,8 +15320,11 @@ if v3092[1] != v3093 { break 'case321; }
 let v3094 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3094 { break 'case321; }
 let v3095 = eo__24eo_5fprog_5fbv_2dite_2dequal_2dcond_2d1(s, v3086[0], v3088[0], v3090[0], v3092[0])?;
-return Ok(v3095);
+return Ok(Some(v3095));
 }
+Ok(None)
+}
+fn case_322_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case322: {
 let v3096 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f2, &[])?;
 if a1 != v3096 { break 'case322; }
@@ -13458,8 +15349,11 @@ if v3104[1] != v3105 { break 'case322; }
 let v3106 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3106 { break 'case322; }
 let v3107 = eo__24eo_5fprog_5fbv_2dite_2dequal_2dcond_2d2(s, v3098[0], v3100[0], v3102[0], v3104[0])?;
-return Ok(v3107);
+return Ok(Some(v3107));
 }
+Ok(None)
+}
+fn case_323_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case323: {
 let v3108 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f3, &[])?;
 if a1 != v3108 { break 'case323; }
@@ -13488,8 +15382,11 @@ if v3118[1] != v3119 { break 'case323; }
 let v3120 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3120 { break 'case323; }
 let v3121 = eo__24eo_5fprog_5fbv_2dite_2dequal_2dcond_2d3(s, v3110[0], v3112[0], v3114[0], v3116[0], v3118[0])?;
-return Ok(v3121);
+return Ok(Some(v3121));
 }
+Ok(None)
+}
+fn case_324_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case324: {
 let v3122 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fmerge_5fthen_5fif, &[])?;
 if a1 != v3122 { break 'case324; }
@@ -13514,8 +15411,11 @@ if v3130[1] != v3131 { break 'case324; }
 let v3132 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3132 { break 'case324; }
 let v3133 = eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2dif(s, v3124[0], v3126[0], v3128[0], v3130[0])?;
-return Ok(v3133);
+return Ok(Some(v3133));
 }
+Ok(None)
+}
+fn case_325_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case325: {
 let v3134 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fmerge_5felse_5fif, &[])?;
 if a1 != v3134 { break 'case325; }
@@ -13540,8 +15440,11 @@ if v3142[1] != v3143 { break 'case325; }
 let v3144 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3144 { break 'case325; }
 let v3145 = eo__24eo_5fprog_5fbv_2dite_2dmerge_2delse_2dif(s, v3136[0], v3138[0], v3140[0], v3142[0])?;
-return Ok(v3145);
+return Ok(Some(v3145));
 }
+Ok(None)
+}
+fn case_326_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case326: {
 let v3146 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fmerge_5fthen_5felse, &[])?;
 if a1 != v3146 { break 'case326; }
@@ -13566,8 +15469,11 @@ if v3154[1] != v3155 { break 'case326; }
 let v3156 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3156 { break 'case326; }
 let v3157 = eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2delse(s, v3148[0], v3150[0], v3152[0], v3154[0])?;
-return Ok(v3157);
+return Ok(Some(v3157));
 }
+Ok(None)
+}
+fn case_327_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case327: {
 let v3158 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fite_5fmerge_5felse_5felse, &[])?;
 if a1 != v3158 { break 'case327; }
@@ -13592,8 +15498,11 @@ if v3166[1] != v3167 { break 'case327; }
 let v3168 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3168 { break 'case327; }
 let v3169 = eo__24eo_5fprog_5fbv_2dite_2dmerge_2delse_2delse(s, v3160[0], v3162[0], v3164[0], v3166[0])?;
-return Ok(v3169);
+return Ok(Some(v3169));
 }
+Ok(None)
+}
+fn case_328_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case328: {
 let v3170 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f0, &[])?;
 if a1 != v3170 { break 'case328; }
@@ -13610,8 +15519,11 @@ if v3174[1] != v3175 { break 'case328; }
 let v3176 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3176 { break 'case328; }
 let v3177 = eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d0(s, v3172[0], v3174[0])?;
-return Ok(v3177);
+return Ok(Some(v3177));
 }
+Ok(None)
+}
+fn case_329_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case329: {
 let v3178 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f1, &[])?;
 if a1 != v3178 { break 'case329; }
@@ -13648,8 +15560,11 @@ let v3194 = s.construct(Constructor::eo__24eo_5fpf, &[v3193])?;
 let v3195 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3191[0])?;
 let v3196 = s.construct(Constructor::eo__24eo_5fpf, &[v3195])?;
 let v3197 = eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s, v3180[0], v3182[0], v3184[0], v3186[0], v3194, v3196)?;
-return Ok(v3197);
+return Ok(Some(v3197));
 }
+Ok(None)
+}
+fn case_330_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case330: {
 let v3198 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f2, &[])?;
 if a1 != v3198 { break 'case330; }
@@ -13692,8 +15607,11 @@ let v3218 = s.construct(Constructor::eo__24eo_5fpf, &[v3217])?;
 let v3219 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3213[0])?;
 let v3220 = s.construct(Constructor::eo__24eo_5fpf, &[v3219])?;
 let v3221 = eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d2(s, v3200[0], v3202[0], v3204[0], v3206[0], v3216, v3218, v3220)?;
-return Ok(v3221);
+return Ok(Some(v3221));
 }
+Ok(None)
+}
+fn case_331_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case331: {
 let v3222 = s.construct(Constructor::eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f0, &[])?;
 if a1 != v3222 { break 'case331; }
@@ -13710,8 +15628,11 @@ if v3226[1] != v3227 { break 'case331; }
 let v3228 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3228 { break 'case331; }
 let v3229 = eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d0(s, v3224[0], v3226[0])?;
-return Ok(v3229);
+return Ok(Some(v3229));
 }
+Ok(None)
+}
+fn case_332_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case332: {
 let v3230 = s.construct(Constructor::eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f1, &[])?;
 if a1 != v3230 { break 'case332; }
@@ -13748,8 +15669,11 @@ let v3246 = s.construct(Constructor::eo__24eo_5fpf, &[v3245])?;
 let v3247 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3243[0])?;
 let v3248 = s.construct(Constructor::eo__24eo_5fpf, &[v3247])?;
 let v3249 = eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s, v3232[0], v3234[0], v3236[0], v3238[0], v3246, v3248)?;
-return Ok(v3249);
+return Ok(Some(v3249));
 }
+Ok(None)
+}
+fn case_333_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case333: {
 let v3250 = s.construct(Constructor::eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f2, &[])?;
 if a1 != v3250 { break 'case333; }
@@ -13782,8 +15706,11 @@ let v3264 = s.construct(Constructor::eo__24eo_5fpf, &[v3263])?;
 let v3265 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3261[0])?;
 let v3266 = s.construct(Constructor::eo__24eo_5fpf, &[v3265])?;
 let v3267 = eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d2(s, v3252[0], v3254[0], v3256[0], v3264, v3266)?;
-return Ok(v3267);
+return Ok(Some(v3267));
 }
+Ok(None)
+}
+fn case_334_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case334: {
 let v3268 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f0, &[])?;
 if a1 != v3268 { break 'case334; }
@@ -13800,8 +15727,11 @@ if v3272[1] != v3273 { break 'case334; }
 let v3274 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3274 { break 'case334; }
 let v3275 = eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d0(s, v3270[0], v3272[0])?;
-return Ok(v3275);
+return Ok(Some(v3275));
 }
+Ok(None)
+}
+fn case_335_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case335: {
 let v3276 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f1, &[])?;
 if a1 != v3276 { break 'case335; }
@@ -13838,8 +15768,11 @@ let v3292 = s.construct(Constructor::eo__24eo_5fpf, &[v3291])?;
 let v3293 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3289[0])?;
 let v3294 = s.construct(Constructor::eo__24eo_5fpf, &[v3293])?;
 let v3295 = eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s, v3278[0], v3280[0], v3282[0], v3284[0], v3292, v3294)?;
-return Ok(v3295);
+return Ok(Some(v3295));
 }
+Ok(None)
+}
+fn case_336_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case336: {
 let v3296 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f2, &[])?;
 if a1 != v3296 { break 'case336; }
@@ -13892,8 +15825,11 @@ let v3322 = s.construct(Constructor::eo__24eo_5fpf, &[v3321])?;
 let v3323 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3315[0])?;
 let v3324 = s.construct(Constructor::eo__24eo_5fpf, &[v3323])?;
 let v3325 = eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s, v3298[0], v3300[0], v3302[0], v3304[0], v3306[0], v3318, v3320, v3322, v3324)?;
-return Ok(v3325);
+return Ok(Some(v3325));
 }
+Ok(None)
+}
+fn case_337_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case337: {
 let v3326 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup, &[])?;
 if a1 != v3326 { break 'case337; }
@@ -13952,8 +15888,11 @@ let v3354 = s.construct(Constructor::eo__24eo_5fpf, &[v3353])?;
 let v3355 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3349[0])?;
 let v3356 = s.construct(Constructor::eo__24eo_5fpf, &[v3355])?;
 let v3357 = eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v3328[0], v3330[0], v3332[0], v3334[0], v3336[0], v3338[0], v3340[0], v3342[0], v3352, v3354, v3356)?;
-return Ok(v3357);
+return Ok(Some(v3357));
 }
+Ok(None)
+}
+fn case_338_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case338: {
 let v3358 = s.construct(Constructor::eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup, &[])?;
 if a1 != v3358 { break 'case338; }
@@ -14012,8 +15951,11 @@ let v3386 = s.construct(Constructor::eo__24eo_5fpf, &[v3385])?;
 let v3387 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3381[0])?;
 let v3388 = s.construct(Constructor::eo__24eo_5fpf, &[v3387])?;
 let v3389 = eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v3360[0], v3362[0], v3364[0], v3366[0], v3368[0], v3370[0], v3372[0], v3374[0], v3384, v3386, v3388)?;
-return Ok(v3389);
+return Ok(Some(v3389));
 }
+Ok(None)
+}
+fn case_339_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case339: {
 let v3390 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup, &[])?;
 if a1 != v3390 { break 'case339; }
@@ -14072,8 +16014,11 @@ let v3418 = s.construct(Constructor::eo__24eo_5fpf, &[v3417])?;
 let v3419 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3413[0])?;
 let v3420 = s.construct(Constructor::eo__24eo_5fpf, &[v3419])?;
 let v3421 = eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v3392[0], v3394[0], v3396[0], v3398[0], v3400[0], v3402[0], v3404[0], v3406[0], v3416, v3418, v3420)?;
-return Ok(v3421);
+return Ok(Some(v3421));
 }
+Ok(None)
+}
+fn case_340_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case340: {
 let v3422 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup2, &[])?;
 if a1 != v3422 { break 'case340; }
@@ -14132,8 +16077,11 @@ let v3450 = s.construct(Constructor::eo__24eo_5fpf, &[v3449])?;
 let v3451 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3445[0])?;
 let v3452 = s.construct(Constructor::eo__24eo_5fpf, &[v3451])?;
 let v3453 = eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v3424[0], v3426[0], v3428[0], v3430[0], v3432[0], v3434[0], v3436[0], v3438[0], v3448, v3450, v3452)?;
-return Ok(v3453);
+return Ok(Some(v3453));
 }
+Ok(None)
+}
+fn case_341_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case341: {
 let v3454 = s.construct(Constructor::eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup2, &[])?;
 if a1 != v3454 { break 'case341; }
@@ -14192,8 +16140,11 @@ let v3482 = s.construct(Constructor::eo__24eo_5fpf, &[v3481])?;
 let v3483 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3477[0])?;
 let v3484 = s.construct(Constructor::eo__24eo_5fpf, &[v3483])?;
 let v3485 = eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v3456[0], v3458[0], v3460[0], v3462[0], v3464[0], v3466[0], v3468[0], v3470[0], v3480, v3482, v3484)?;
-return Ok(v3485);
+return Ok(Some(v3485));
 }
+Ok(None)
+}
+fn case_342_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case342: {
 let v3486 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup2, &[])?;
 if a1 != v3486 { break 'case342; }
@@ -14252,8 +16203,11 @@ let v3514 = s.construct(Constructor::eo__24eo_5fpf, &[v3513])?;
 let v3515 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3509[0])?;
 let v3516 = s.construct(Constructor::eo__24eo_5fpf, &[v3515])?;
 let v3517 = eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v3488[0], v3490[0], v3492[0], v3494[0], v3496[0], v3498[0], v3500[0], v3502[0], v3512, v3514, v3516)?;
-return Ok(v3517);
+return Ok(Some(v3517));
 }
+Ok(None)
+}
+fn case_343_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case343: {
 let v3518 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup3, &[])?;
 if a1 != v3518 { break 'case343; }
@@ -14332,8 +16286,11 @@ let v3558 = s.construct(Constructor::eo__24eo_5fpf, &[v3557])?;
 let v3559 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3549[0])?;
 let v3560 = s.construct(Constructor::eo__24eo_5fpf, &[v3559])?;
 let v3561 = eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v3520[0], v3522[0], v3524[0], v3526[0], v3528[0], v3530[0], v3532[0], v3534[0], v3536[0], v3538[0], v3552, v3554, v3556, v3558, v3560)?;
-return Ok(v3561);
+return Ok(Some(v3561));
 }
+Ok(None)
+}
+fn case_344_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case344: {
 let v3562 = s.construct(Constructor::eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup3, &[])?;
 if a1 != v3562 { break 'case344; }
@@ -14412,8 +16369,11 @@ let v3602 = s.construct(Constructor::eo__24eo_5fpf, &[v3601])?;
 let v3603 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3593[0])?;
 let v3604 = s.construct(Constructor::eo__24eo_5fpf, &[v3603])?;
 let v3605 = eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v3564[0], v3566[0], v3568[0], v3570[0], v3572[0], v3574[0], v3576[0], v3578[0], v3580[0], v3582[0], v3596, v3598, v3600, v3602, v3604)?;
-return Ok(v3605);
+return Ok(Some(v3605));
 }
+Ok(None)
+}
+fn case_345_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case345: {
 let v3606 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup3, &[])?;
 if a1 != v3606 { break 'case345; }
@@ -14492,8 +16452,11 @@ let v3646 = s.construct(Constructor::eo__24eo_5fpf, &[v3645])?;
 let v3647 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3637[0])?;
 let v3648 = s.construct(Constructor::eo__24eo_5fpf, &[v3647])?;
 let v3649 = eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v3608[0], v3610[0], v3612[0], v3614[0], v3616[0], v3618[0], v3620[0], v3622[0], v3624[0], v3626[0], v3640, v3642, v3644, v3646, v3648)?;
-return Ok(v3649);
+return Ok(Some(v3649));
 }
+Ok(None)
+}
+fn case_346_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case346: {
 let v3650 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fduplicate, &[])?;
 if a1 != v3650 { break 'case346; }
@@ -14516,8 +16479,11 @@ if v3657[1] != v3658 { break 'case346; }
 let v3659 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3657[0])?;
 let v3660 = s.construct(Constructor::eo__24eo_5fpf, &[v3659])?;
 let v3661 = eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s, v3652[0], v3654[0], v3660)?;
-return Ok(v3661);
+return Ok(Some(v3661));
 }
+Ok(None)
+}
+fn case_347_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case347: {
 let v3662 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fones, &[])?;
 if a1 != v3662 { break 'case347; }
@@ -14548,8 +16514,11 @@ if v3673[1] != v3674 { break 'case347; }
 let v3675 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3673[0])?;
 let v3676 = s.construct(Constructor::eo__24eo_5fpf, &[v3675])?;
 let v3677 = eo__24eo_5fprog_5fbv_2dxor_2dones(s, v3664[0], v3666[0], v3668[0], v3670[0], v3676)?;
-return Ok(v3677);
+return Ok(Some(v3677));
 }
+Ok(None)
+}
+fn case_348_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case348: {
 let v3678 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fxor_5fnot, &[])?;
 if a1 != v3678 { break 'case348; }
@@ -14566,8 +16535,11 @@ if v3682[1] != v3683 { break 'case348; }
 let v3684 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3684 { break 'case348; }
 let v3685 = eo__24eo_5fprog_5fbv_2dxor_2dnot(s, v3680[0], v3682[0])?;
-return Ok(v3685);
+return Ok(Some(v3685));
 }
+Ok(None)
+}
+fn case_349_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case349: {
 let v3686 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fnot_5fidemp, &[])?;
 if a1 != v3686 { break 'case349; }
@@ -14580,8 +16552,11 @@ if v3688[1] != v3689 { break 'case349; }
 let v3690 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3690 { break 'case349; }
 let v3691 = eo__24eo_5fprog_5fbv_2dnot_2didemp(s, v3688[0])?;
-return Ok(v3691);
+return Ok(Some(v3691));
 }
+Ok(None)
+}
+fn case_350_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case350: {
 let v3692 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fult_5fzero_5f1, &[])?;
 if a1 != v3692 { break 'case350; }
@@ -14598,8 +16573,11 @@ if v3696[1] != v3697 { break 'case350; }
 let v3698 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3698 { break 'case350; }
 let v3699 = eo__24eo_5fprog_5fbv_2dult_2dzero_2d1(s, v3694[0], v3696[0])?;
-return Ok(v3699);
+return Ok(Some(v3699));
 }
+Ok(None)
+}
+fn case_351_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case351: {
 let v3700 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fult_5fzero_5f2, &[])?;
 if a1 != v3700 { break 'case351; }
@@ -14616,8 +16594,11 @@ if v3704[1] != v3705 { break 'case351; }
 let v3706 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3706 { break 'case351; }
 let v3707 = eo__24eo_5fprog_5fbv_2dult_2dzero_2d2(s, v3702[0], v3704[0])?;
-return Ok(v3707);
+return Ok(Some(v3707));
 }
+Ok(None)
+}
+fn case_352_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case352: {
 let v3708 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fult_5fself, &[])?;
 if a1 != v3708 { break 'case352; }
@@ -14630,8 +16611,11 @@ if v3710[1] != v3711 { break 'case352; }
 let v3712 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3712 { break 'case352; }
 let v3713 = eo__24eo_5fprog_5fbv_2dult_2dself(s, v3710[0])?;
-return Ok(v3713);
+return Ok(Some(v3713));
 }
+Ok(None)
+}
+fn case_353_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case353: {
 let v3714 = s.construct(Constructor::eo__24emb_5fr_2ebv_5flt_5fself, &[])?;
 if a1 != v3714 { break 'case353; }
@@ -14644,8 +16628,11 @@ if v3716[1] != v3717 { break 'case353; }
 let v3718 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3718 { break 'case353; }
 let v3719 = eo__24eo_5fprog_5fbv_2dlt_2dself(s, v3716[0])?;
-return Ok(v3719);
+return Ok(Some(v3719));
 }
+Ok(None)
+}
+fn case_354_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case354: {
 let v3720 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fule_5fself, &[])?;
 if a1 != v3720 { break 'case354; }
@@ -14658,8 +16645,11 @@ if v3722[1] != v3723 { break 'case354; }
 let v3724 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3724 { break 'case354; }
 let v3725 = eo__24eo_5fprog_5fbv_2dule_2dself(s, v3722[0])?;
-return Ok(v3725);
+return Ok(Some(v3725));
 }
+Ok(None)
+}
+fn case_355_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case355: {
 let v3726 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fule_5fzero, &[])?;
 if a1 != v3726 { break 'case355; }
@@ -14676,8 +16666,11 @@ if v3730[1] != v3731 { break 'case355; }
 let v3732 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3732 { break 'case355; }
 let v3733 = eo__24eo_5fprog_5fbv_2dule_2dzero(s, v3728[0], v3730[0])?;
-return Ok(v3733);
+return Ok(Some(v3733));
 }
+Ok(None)
+}
+fn case_356_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case356: {
 let v3734 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fzero_5fule, &[])?;
 if a1 != v3734 { break 'case356; }
@@ -14694,8 +16687,11 @@ if v3738[1] != v3739 { break 'case356; }
 let v3740 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3740 { break 'case356; }
 let v3741 = eo__24eo_5fprog_5fbv_2dzero_2dule(s, v3736[0], v3738[0])?;
-return Ok(v3741);
+return Ok(Some(v3741));
 }
+Ok(None)
+}
+fn case_357_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case357: {
 let v3742 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsle_5fself, &[])?;
 if a1 != v3742 { break 'case357; }
@@ -14708,8 +16704,11 @@ if v3744[1] != v3745 { break 'case357; }
 let v3746 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3746 { break 'case357; }
 let v3747 = eo__24eo_5fprog_5fbv_2dsle_2dself(s, v3744[0])?;
-return Ok(v3747);
+return Ok(Some(v3747));
 }
+Ok(None)
+}
+fn case_358_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case358: {
 let v3748 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fule_5fmax, &[])?;
 if a1 != v3748 { break 'case358; }
@@ -14742,8 +16741,11 @@ let v3762 = s.construct(Constructor::eo__24eo_5fpf, &[v3761])?;
 let v3763 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3759[0])?;
 let v3764 = s.construct(Constructor::eo__24eo_5fpf, &[v3763])?;
 let v3765 = eo__24eo_5fprog_5fbv_2dule_2dmax(s, v3750[0], v3752[0], v3754[0], v3762, v3764)?;
-return Ok(v3765);
+return Ok(Some(v3765));
 }
+Ok(None)
+}
+fn case_359_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case359: {
 let v3766 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fnot_5fult, &[])?;
 if a1 != v3766 { break 'case359; }
@@ -14760,8 +16762,11 @@ if v3770[1] != v3771 { break 'case359; }
 let v3772 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3772 { break 'case359; }
 let v3773 = eo__24eo_5fprog_5fbv_2dnot_2dult(s, v3768[0], v3770[0])?;
-return Ok(v3773);
+return Ok(Some(v3773));
 }
+Ok(None)
+}
+fn case_360_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case360: {
 let v3774 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fpow2_5f1, &[])?;
 if a1 != v3774 { break 'case360; }
@@ -14816,8 +16821,11 @@ let v3800 = s.construct(Constructor::eo__24eo_5fpf, &[v3799])?;
 let v3801 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3795[0])?;
 let v3802 = s.construct(Constructor::eo__24eo_5fpf, &[v3801])?;
 let v3803 = eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v3776[0], v3778[0], v3780[0], v3782[0], v3784[0], v3786[0], v3788[0], v3798, v3800, v3802)?;
-return Ok(v3803);
+return Ok(Some(v3803));
 }
+Ok(None)
+}
+fn case_361_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case361: {
 let v3804 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2, &[])?;
 if a1 != v3804 { break 'case361; }
@@ -14872,8 +16880,11 @@ let v3830 = s.construct(Constructor::eo__24eo_5fpf, &[v3829])?;
 let v3831 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3825[0])?;
 let v3832 = s.construct(Constructor::eo__24eo_5fpf, &[v3831])?;
 let v3833 = eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v3806[0], v3808[0], v3810[0], v3812[0], v3814[0], v3816[0], v3818[0], v3828, v3830, v3832)?;
-return Ok(v3833);
+return Ok(Some(v3833));
 }
+Ok(None)
+}
+fn case_362_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case362: {
 let v3834 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2b, &[])?;
 if a1 != v3834 { break 'case362; }
@@ -14920,8 +16931,11 @@ let v3856 = s.construct(Constructor::eo__24eo_5fpf, &[v3855])?;
 let v3857 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3851[0])?;
 let v3858 = s.construct(Constructor::eo__24eo_5fpf, &[v3857])?;
 let v3859 = eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v3836[0], v3838[0], v3840[0], v3842[0], v3844[0], v3854, v3856, v3858)?;
-return Ok(v3859);
+return Ok(Some(v3859));
 }
+Ok(None)
+}
+fn case_363_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case363: {
 let v3860 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fmult_5fleading_5fbit, &[])?;
 if a1 != v3860 { break 'case363; }
@@ -15008,8 +17022,11 @@ let v3906 = s.construct(Constructor::eo__24eo_5fpf, &[v3905])?;
 let v3907 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3893[0])?;
 let v3908 = s.construct(Constructor::eo__24eo_5fpf, &[v3907])?;
 let v3909 = eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v3862[0], v3864[0], v3866[0], v3868[0], v3870[0], v3872[0], v3874[0], v3876[0], v3878[0], v3896, v3898, v3900, v3902, v3904, v3906, v3908)?;
-return Ok(v3909);
+return Ok(Some(v3909));
 }
+Ok(None)
+}
+fn case_364_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case364: {
 let v3910 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fudiv_5fpow2_5fnot_5fone, &[])?;
 if a1 != v3910 { break 'case364; }
@@ -15062,8 +17079,11 @@ let v3936 = s.construct(Constructor::eo__24eo_5fpf, &[v3935])?;
 let v3937 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3929[0])?;
 let v3938 = s.construct(Constructor::eo__24eo_5fpf, &[v3937])?;
 let v3939 = eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, v3912[0], v3914[0], v3916[0], v3918[0], v3920[0], v3932, v3934, v3936, v3938)?;
-return Ok(v3939);
+return Ok(Some(v3939));
 }
+Ok(None)
+}
+fn case_365_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case365: {
 let v3940 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fudiv_5fzero, &[])?;
 if a1 != v3940 { break 'case365; }
@@ -15080,8 +17100,11 @@ if v3944[1] != v3945 { break 'case365; }
 let v3946 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3946 { break 'case365; }
 let v3947 = eo__24eo_5fprog_5fbv_2dudiv_2dzero(s, v3942[0], v3944[0])?;
-return Ok(v3947);
+return Ok(Some(v3947));
 }
+Ok(None)
+}
+fn case_366_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case366: {
 let v3948 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fudiv_5fone, &[])?;
 if a1 != v3948 { break 'case366; }
@@ -15098,8 +17121,11 @@ if v3952[1] != v3953 { break 'case366; }
 let v3954 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3954 { break 'case366; }
 let v3955 = eo__24eo_5fprog_5fbv_2dudiv_2done(s, v3950[0], v3952[0])?;
-return Ok(v3955);
+return Ok(Some(v3955));
 }
+Ok(None)
+}
+fn case_367_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case367: {
 let v3956 = s.construct(Constructor::eo__24emb_5fr_2ebv_5furem_5fpow2_5fnot_5fone, &[])?;
 if a1 != v3956 { break 'case367; }
@@ -15152,8 +17178,11 @@ let v3982 = s.construct(Constructor::eo__24eo_5fpf, &[v3981])?;
 let v3983 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v3975[0])?;
 let v3984 = s.construct(Constructor::eo__24eo_5fpf, &[v3983])?;
 let v3985 = eo__24eo_5fprog_5fbv_2durem_2dpow2_2dnot_2done(s, v3958[0], v3960[0], v3962[0], v3964[0], v3966[0], v3978, v3980, v3982, v3984)?;
-return Ok(v3985);
+return Ok(Some(v3985));
 }
+Ok(None)
+}
+fn case_368_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case368: {
 let v3986 = s.construct(Constructor::eo__24emb_5fr_2ebv_5furem_5fone, &[])?;
 if a1 != v3986 { break 'case368; }
@@ -15170,8 +17199,11 @@ if v3990[1] != v3991 { break 'case368; }
 let v3992 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v3992 { break 'case368; }
 let v3993 = eo__24eo_5fprog_5fbv_2durem_2done(s, v3988[0], v3990[0])?;
-return Ok(v3993);
+return Ok(Some(v3993));
 }
+Ok(None)
+}
+fn case_369_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case369: {
 let v3994 = s.construct(Constructor::eo__24emb_5fr_2ebv_5furem_5fself, &[])?;
 if a1 != v3994 { break 'case369; }
@@ -15194,8 +17226,11 @@ if v4001[1] != v4002 { break 'case369; }
 let v4003 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4001[0])?;
 let v4004 = s.construct(Constructor::eo__24eo_5fpf, &[v4003])?;
 let v4005 = eo__24eo_5fprog_5fbv_2durem_2dself(s, v3996[0], v3998[0], v4004)?;
-return Ok(v4005);
+return Ok(Some(v4005));
 }
+Ok(None)
+}
+fn case_370_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case370: {
 let v4006 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fshl_5fzero, &[])?;
 if a1 != v4006 { break 'case370; }
@@ -15212,8 +17247,11 @@ if v4010[1] != v4011 { break 'case370; }
 let v4012 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4012 { break 'case370; }
 let v4013 = eo__24eo_5fprog_5fbv_2dshl_2dzero(s, v4008[0], v4010[0])?;
-return Ok(v4013);
+return Ok(Some(v4013));
 }
+Ok(None)
+}
+fn case_371_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case371: {
 let v4014 = s.construct(Constructor::eo__24emb_5fr_2ebv_5flshr_5fzero, &[])?;
 if a1 != v4014 { break 'case371; }
@@ -15230,8 +17268,11 @@ if v4018[1] != v4019 { break 'case371; }
 let v4020 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4020 { break 'case371; }
 let v4021 = eo__24eo_5fprog_5fbv_2dlshr_2dzero(s, v4016[0], v4018[0])?;
-return Ok(v4021);
+return Ok(Some(v4021));
 }
+Ok(None)
+}
+fn case_372_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case372: {
 let v4022 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fashr_5fzero, &[])?;
 if a1 != v4022 { break 'case372; }
@@ -15248,8 +17289,11 @@ if v4026[1] != v4027 { break 'case372; }
 let v4028 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4028 { break 'case372; }
 let v4029 = eo__24eo_5fprog_5fbv_2dashr_2dzero(s, v4024[0], v4026[0])?;
-return Ok(v4029);
+return Ok(Some(v4029));
 }
+Ok(None)
+}
+fn case_373_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case373: {
 let v4030 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fugt_5furem, &[])?;
 if a1 != v4030 { break 'case373; }
@@ -15276,8 +17320,11 @@ if v4039[1] != v4040 { break 'case373; }
 let v4041 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4039[0])?;
 let v4042 = s.construct(Constructor::eo__24eo_5fpf, &[v4041])?;
 let v4043 = eo__24eo_5fprog_5fbv_2dugt_2durem(s, v4032[0], v4034[0], v4036[0], v4042)?;
-return Ok(v4043);
+return Ok(Some(v4043));
 }
+Ok(None)
+}
+fn case_374_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case374: {
 let v4044 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fult_5fone, &[])?;
 if a1 != v4044 { break 'case374; }
@@ -15300,8 +17347,11 @@ if v4051[1] != v4052 { break 'case374; }
 let v4053 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4051[0])?;
 let v4054 = s.construct(Constructor::eo__24eo_5fpf, &[v4053])?;
 let v4055 = eo__24eo_5fprog_5fbv_2dult_2done(s, v4046[0], v4048[0], v4054)?;
-return Ok(v4055);
+return Ok(Some(v4055));
 }
+Ok(None)
+}
+fn case_375_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case375: {
 let v4056 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fmerge_5fsign_5fextend_5f1, &[])?;
 if a1 != v4056 { break 'case375; }
@@ -15332,8 +17382,11 @@ if v4067[1] != v4068 { break 'case375; }
 let v4069 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4067[0])?;
 let v4070 = s.construct(Constructor::eo__24eo_5fpf, &[v4069])?;
 let v4071 = eo__24eo_5fprog_5fbv_2dmerge_2dsign_2dextend_2d1(s, v4058[0], v4060[0], v4062[0], v4064[0], v4070)?;
-return Ok(v4071);
+return Ok(Some(v4071));
 }
+Ok(None)
+}
+fn case_376_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case376: {
 let v4072 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fmerge_5fsign_5fextend_5f2, &[])?;
 if a1 != v4072 { break 'case376; }
@@ -15370,8 +17423,11 @@ let v4088 = s.construct(Constructor::eo__24eo_5fpf, &[v4087])?;
 let v4089 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4085[0])?;
 let v4090 = s.construct(Constructor::eo__24eo_5fpf, &[v4089])?;
 let v4091 = eo__24eo_5fprog_5fbv_2dmerge_2dsign_2dextend_2d2(s, v4074[0], v4076[0], v4078[0], v4080[0], v4088, v4090)?;
-return Ok(v4091);
+return Ok(Some(v4091));
 }
+Ok(None)
+}
+fn case_377_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case377: {
 let v4092 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsign_5fextend_5feq_5fconst_5f1, &[])?;
 if a1 != v4092 { break 'case377; }
@@ -15426,8 +17482,11 @@ let v4118 = s.construct(Constructor::eo__24eo_5fpf, &[v4117])?;
 let v4119 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4113[0])?;
 let v4120 = s.construct(Constructor::eo__24eo_5fpf, &[v4119])?;
 let v4121 = eo__24eo_5fprog_5fbv_2dsign_2dextend_2deq_2dconst_2d1(s, v4094[0], v4096[0], v4098[0], v4100[0], v4102[0], v4104[0], v4106[0], v4116, v4118, v4120)?;
-return Ok(v4121);
+return Ok(Some(v4121));
 }
+Ok(None)
+}
+fn case_378_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case378: {
 let v4122 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsign_5fextend_5feq_5fconst_5f2, &[])?;
 if a1 != v4122 { break 'case378; }
@@ -15482,8 +17541,11 @@ let v4148 = s.construct(Constructor::eo__24eo_5fpf, &[v4147])?;
 let v4149 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4143[0])?;
 let v4150 = s.construct(Constructor::eo__24eo_5fpf, &[v4149])?;
 let v4151 = eo__24eo_5fprog_5fbv_2dsign_2dextend_2deq_2dconst_2d2(s, v4124[0], v4126[0], v4128[0], v4130[0], v4132[0], v4134[0], v4136[0], v4146, v4148, v4150)?;
-return Ok(v4151);
+return Ok(Some(v4151));
 }
+Ok(None)
+}
+fn case_379_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case379: {
 let v4152 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fzero_5fextend_5feq_5fconst_5f1, &[])?;
 if a1 != v4152 { break 'case379; }
@@ -15528,8 +17590,11 @@ let v4172 = s.construct(Constructor::eo__24eo_5fpf, &[v4171])?;
 let v4173 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4169[0])?;
 let v4174 = s.construct(Constructor::eo__24eo_5fpf, &[v4173])?;
 let v4175 = eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d1(s, v4154[0], v4156[0], v4158[0], v4160[0], v4162[0], v4164[0], v4172, v4174)?;
-return Ok(v4175);
+return Ok(Some(v4175));
 }
+Ok(None)
+}
+fn case_380_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case380: {
 let v4176 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fzero_5fextend_5feq_5fconst_5f2, &[])?;
 if a1 != v4176 { break 'case380; }
@@ -15574,8 +17639,11 @@ let v4196 = s.construct(Constructor::eo__24eo_5fpf, &[v4195])?;
 let v4197 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4193[0])?;
 let v4198 = s.construct(Constructor::eo__24eo_5fpf, &[v4197])?;
 let v4199 = eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d2(s, v4178[0], v4180[0], v4182[0], v4184[0], v4186[0], v4188[0], v4196, v4198)?;
-return Ok(v4199);
+return Ok(Some(v4199));
 }
+Ok(None)
+}
+fn case_381_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case381: {
 let v4200 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fzero_5fextend_5fult_5fconst_5f1, &[])?;
 if a1 != v4200 { break 'case381; }
@@ -15616,8 +17684,11 @@ let v4218 = s.construct(Constructor::eo__24eo_5fpf, &[v4217])?;
 let v4219 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4215[0])?;
 let v4220 = s.construct(Constructor::eo__24eo_5fpf, &[v4219])?;
 let v4221 = eo__24eo_5fprog_5fbv_2dzero_2dextend_2dult_2dconst_2d1(s, v4202[0], v4204[0], v4206[0], v4208[0], v4210[0], v4218, v4220)?;
-return Ok(v4221);
+return Ok(Some(v4221));
 }
+Ok(None)
+}
+fn case_382_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case382: {
 let v4222 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fzero_5fextend_5fult_5fconst_5f2, &[])?;
 if a1 != v4222 { break 'case382; }
@@ -15658,8 +17729,11 @@ let v4240 = s.construct(Constructor::eo__24eo_5fpf, &[v4239])?;
 let v4241 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4237[0])?;
 let v4242 = s.construct(Constructor::eo__24eo_5fpf, &[v4241])?;
 let v4243 = eo__24eo_5fprog_5fbv_2dzero_2dextend_2dult_2dconst_2d2(s, v4224[0], v4226[0], v4228[0], v4230[0], v4232[0], v4240, v4242)?;
-return Ok(v4243);
+return Ok(Some(v4243));
 }
+Ok(None)
+}
+fn case_383_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case383: {
 let v4244 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f1, &[])?;
 if a1 != v4244 { break 'case383; }
@@ -15700,8 +17774,11 @@ let v4262 = s.construct(Constructor::eo__24eo_5fpf, &[v4261])?;
 let v4263 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4259[0])?;
 let v4264 = s.construct(Constructor::eo__24eo_5fpf, &[v4263])?;
 let v4265 = eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d1(s, v4246[0], v4248[0], v4250[0], v4252[0], v4254[0], v4262, v4264)?;
-return Ok(v4265);
+return Ok(Some(v4265));
 }
+Ok(None)
+}
+fn case_384_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case384: {
 let v4266 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f2, &[])?;
 if a1 != v4266 { break 'case384; }
@@ -15748,8 +17825,11 @@ let v4288 = s.construct(Constructor::eo__24eo_5fpf, &[v4287])?;
 let v4289 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4283[0])?;
 let v4290 = s.construct(Constructor::eo__24eo_5fpf, &[v4289])?;
 let v4291 = eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d2(s, v4268[0], v4270[0], v4272[0], v4274[0], v4276[0], v4286, v4288, v4290)?;
-return Ok(v4291);
+return Ok(Some(v4291));
 }
+Ok(None)
+}
+fn case_385_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case385: {
 let v4292 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f3, &[])?;
 if a1 != v4292 { break 'case385; }
@@ -15790,8 +17870,11 @@ let v4310 = s.construct(Constructor::eo__24eo_5fpf, &[v4309])?;
 let v4311 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4307[0])?;
 let v4312 = s.construct(Constructor::eo__24eo_5fpf, &[v4311])?;
 let v4313 = eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d3(s, v4294[0], v4296[0], v4298[0], v4300[0], v4302[0], v4310, v4312)?;
-return Ok(v4313);
+return Ok(Some(v4313));
 }
+Ok(None)
+}
+fn case_386_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case386: {
 let v4314 = s.construct(Constructor::eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f4, &[])?;
 if a1 != v4314 { break 'case386; }
@@ -15838,8 +17921,11 @@ let v4336 = s.construct(Constructor::eo__24eo_5fpf, &[v4335])?;
 let v4337 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4331[0])?;
 let v4338 = s.construct(Constructor::eo__24eo_5fpf, &[v4337])?;
 let v4339 = eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d4(s, v4316[0], v4318[0], v4320[0], v4322[0], v4324[0], v4334, v4336, v4338)?;
-return Ok(v4339);
+return Ok(Some(v4339));
 }
+Ok(None)
+}
+fn case_387_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case387: {
 let v4340 = s.construct(Constructor::eo__24emb_5fr_2esets_5feq_5fsingleton_5femp, &[])?;
 if a1 != v4340 { break 'case387; }
@@ -15866,8 +17952,11 @@ if v4349[1] != v4350 { break 'case387; }
 let v4351 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4349[0])?;
 let v4352 = s.construct(Constructor::eo__24eo_5fpf, &[v4351])?;
 let v4353 = eo__24eo_5fprog_5fsets_2deq_2dsingleton_2demp(s, v4342[0], v4344[0], v4346[0], v4352)?;
-return Ok(v4353);
+return Ok(Some(v4353));
 }
+Ok(None)
+}
+fn case_388_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case388: {
 let v4354 = s.construct(Constructor::eo__24emb_5fr_2esets_5fmember_5fsingleton, &[])?;
 if a1 != v4354 { break 'case388; }
@@ -15884,8 +17973,11 @@ if v4358[1] != v4359 { break 'case388; }
 let v4360 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4360 { break 'case388; }
 let v4361 = eo__24eo_5fprog_5fsets_2dmember_2dsingleton(s, v4356[0], v4358[0])?;
-return Ok(v4361);
+return Ok(Some(v4361));
 }
+Ok(None)
+}
+fn case_389_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case389: {
 let v4362 = s.construct(Constructor::eo__24emb_5fr_2esets_5fmember_5femp, &[])?;
 if a1 != v4362 { break 'case389; }
@@ -15912,8 +18004,11 @@ if v4371[1] != v4372 { break 'case389; }
 let v4373 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4371[0])?;
 let v4374 = s.construct(Constructor::eo__24eo_5fpf, &[v4373])?;
 let v4375 = eo__24eo_5fprog_5fsets_2dmember_2demp(s, v4364[0], v4366[0], v4368[0], v4374)?;
-return Ok(v4375);
+return Ok(Some(v4375));
 }
+Ok(None)
+}
+fn case_390_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case390: {
 let v4376 = s.construct(Constructor::eo__24emb_5fr_2esets_5fsubset_5felim, &[])?;
 if a1 != v4376 { break 'case390; }
@@ -15930,8 +18025,11 @@ if v4380[1] != v4381 { break 'case390; }
 let v4382 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4382 { break 'case390; }
 let v4383 = eo__24eo_5fprog_5fsets_2dsubset_2delim(s, v4378[0], v4380[0])?;
-return Ok(v4383);
+return Ok(Some(v4383));
 }
+Ok(None)
+}
+fn case_391_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case391: {
 let v4384 = s.construct(Constructor::eo__24emb_5fr_2esets_5finsert_5felim, &[])?;
 if a1 != v4384 { break 'case391; }
@@ -15948,8 +18046,11 @@ if v4388[1] != v4389 { break 'case391; }
 let v4390 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4390 { break 'case391; }
 let v4391 = eo__24eo_5fprog_5fsets_2dinsert_2delim(s, v4386[0], v4388[0])?;
-return Ok(v4391);
+return Ok(Some(v4391));
 }
+Ok(None)
+}
+fn case_392_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case392: {
 let v4392 = s.construct(Constructor::eo__24emb_5fr_2esets_5funion_5fcomm, &[])?;
 if a1 != v4392 { break 'case392; }
@@ -15966,8 +18067,11 @@ if v4396[1] != v4397 { break 'case392; }
 let v4398 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4398 { break 'case392; }
 let v4399 = eo__24eo_5fprog_5fsets_2dunion_2dcomm(s, v4394[0], v4396[0])?;
-return Ok(v4399);
+return Ok(Some(v4399));
 }
+Ok(None)
+}
+fn case_393_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case393: {
 let v4400 = s.construct(Constructor::eo__24emb_5fr_2esets_5finter_5fcomm, &[])?;
 if a1 != v4400 { break 'case393; }
@@ -15984,8 +18088,11 @@ if v4404[1] != v4405 { break 'case393; }
 let v4406 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4406 { break 'case393; }
 let v4407 = eo__24eo_5fprog_5fsets_2dinter_2dcomm(s, v4402[0], v4404[0])?;
-return Ok(v4407);
+return Ok(Some(v4407));
 }
+Ok(None)
+}
+fn case_394_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case394: {
 let v4408 = s.construct(Constructor::eo__24emb_5fr_2esets_5finter_5femp1, &[])?;
 if a1 != v4408 { break 'case394; }
@@ -16012,8 +18119,11 @@ if v4417[1] != v4418 { break 'case394; }
 let v4419 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4417[0])?;
 let v4420 = s.construct(Constructor::eo__24eo_5fpf, &[v4419])?;
 let v4421 = eo__24eo_5fprog_5fsets_2dinter_2demp1(s, v4410[0], v4412[0], v4414[0], v4420)?;
-return Ok(v4421);
+return Ok(Some(v4421));
 }
+Ok(None)
+}
+fn case_395_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case395: {
 let v4422 = s.construct(Constructor::eo__24emb_5fr_2esets_5finter_5femp2, &[])?;
 if a1 != v4422 { break 'case395; }
@@ -16040,8 +18150,11 @@ if v4431[1] != v4432 { break 'case395; }
 let v4433 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4431[0])?;
 let v4434 = s.construct(Constructor::eo__24eo_5fpf, &[v4433])?;
 let v4435 = eo__24eo_5fprog_5fsets_2dinter_2demp2(s, v4424[0], v4426[0], v4428[0], v4434)?;
-return Ok(v4435);
+return Ok(Some(v4435));
 }
+Ok(None)
+}
+fn case_396_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case396: {
 let v4436 = s.construct(Constructor::eo__24emb_5fr_2esets_5fminus_5femp1, &[])?;
 if a1 != v4436 { break 'case396; }
@@ -16068,8 +18181,11 @@ if v4445[1] != v4446 { break 'case396; }
 let v4447 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4445[0])?;
 let v4448 = s.construct(Constructor::eo__24eo_5fpf, &[v4447])?;
 let v4449 = eo__24eo_5fprog_5fsets_2dminus_2demp1(s, v4438[0], v4440[0], v4442[0], v4448)?;
-return Ok(v4449);
+return Ok(Some(v4449));
 }
+Ok(None)
+}
+fn case_397_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case397: {
 let v4450 = s.construct(Constructor::eo__24emb_5fr_2esets_5fminus_5femp2, &[])?;
 if a1 != v4450 { break 'case397; }
@@ -16096,8 +18212,11 @@ if v4459[1] != v4460 { break 'case397; }
 let v4461 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4459[0])?;
 let v4462 = s.construct(Constructor::eo__24eo_5fpf, &[v4461])?;
 let v4463 = eo__24eo_5fprog_5fsets_2dminus_2demp2(s, v4452[0], v4454[0], v4456[0], v4462)?;
-return Ok(v4463);
+return Ok(Some(v4463));
 }
+Ok(None)
+}
+fn case_398_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case398: {
 let v4464 = s.construct(Constructor::eo__24emb_5fr_2esets_5funion_5femp1, &[])?;
 if a1 != v4464 { break 'case398; }
@@ -16124,8 +18243,11 @@ if v4473[1] != v4474 { break 'case398; }
 let v4475 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4473[0])?;
 let v4476 = s.construct(Constructor::eo__24eo_5fpf, &[v4475])?;
 let v4477 = eo__24eo_5fprog_5fsets_2dunion_2demp1(s, v4466[0], v4468[0], v4470[0], v4476)?;
-return Ok(v4477);
+return Ok(Some(v4477));
 }
+Ok(None)
+}
+fn case_399_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case399: {
 let v4478 = s.construct(Constructor::eo__24emb_5fr_2esets_5funion_5femp2, &[])?;
 if a1 != v4478 { break 'case399; }
@@ -16152,8 +18274,11 @@ if v4487[1] != v4488 { break 'case399; }
 let v4489 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4487[0])?;
 let v4490 = s.construct(Constructor::eo__24eo_5fpf, &[v4489])?;
 let v4491 = eo__24eo_5fprog_5fsets_2dunion_2demp2(s, v4480[0], v4482[0], v4484[0], v4490)?;
-return Ok(v4491);
+return Ok(Some(v4491));
 }
+Ok(None)
+}
+fn case_400_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case400: {
 let v4492 = s.construct(Constructor::eo__24emb_5fr_2esets_5finter_5fmember, &[])?;
 if a1 != v4492 { break 'case400; }
@@ -16174,8 +18299,11 @@ if v4498[1] != v4499 { break 'case400; }
 let v4500 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4500 { break 'case400; }
 let v4501 = eo__24eo_5fprog_5fsets_2dinter_2dmember(s, v4494[0], v4496[0], v4498[0])?;
-return Ok(v4501);
+return Ok(Some(v4501));
 }
+Ok(None)
+}
+fn case_401_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case401: {
 let v4502 = s.construct(Constructor::eo__24emb_5fr_2esets_5fminus_5fmember, &[])?;
 if a1 != v4502 { break 'case401; }
@@ -16196,8 +18324,11 @@ if v4508[1] != v4509 { break 'case401; }
 let v4510 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4510 { break 'case401; }
 let v4511 = eo__24eo_5fprog_5fsets_2dminus_2dmember(s, v4504[0], v4506[0], v4508[0])?;
-return Ok(v4511);
+return Ok(Some(v4511));
 }
+Ok(None)
+}
+fn case_402_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case402: {
 let v4512 = s.construct(Constructor::eo__24emb_5fr_2esets_5funion_5fmember, &[])?;
 if a1 != v4512 { break 'case402; }
@@ -16218,8 +18349,11 @@ if v4518[1] != v4519 { break 'case402; }
 let v4520 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4520 { break 'case402; }
 let v4521 = eo__24eo_5fprog_5fsets_2dunion_2dmember(s, v4514[0], v4516[0], v4518[0])?;
-return Ok(v4521);
+return Ok(Some(v4521));
 }
+Ok(None)
+}
+fn case_403_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case403: {
 let v4522 = s.construct(Constructor::eo__24emb_5fr_2esets_5fchoose_5fsingleton, &[])?;
 if a1 != v4522 { break 'case403; }
@@ -16232,8 +18366,11 @@ if v4524[1] != v4525 { break 'case403; }
 let v4526 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4526 { break 'case403; }
 let v4527 = eo__24eo_5fprog_5fsets_2dchoose_2dsingleton(s, v4524[0])?;
-return Ok(v4527);
+return Ok(Some(v4527));
 }
+Ok(None)
+}
+fn case_404_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case404: {
 let v4528 = s.construct(Constructor::eo__24emb_5fr_2esets_5fminus_5fself, &[])?;
 if a1 != v4528 { break 'case404; }
@@ -16250,8 +18387,11 @@ if v4532[1] != v4533 { break 'case404; }
 let v4534 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4534 { break 'case404; }
 let v4535 = eo__24eo_5fprog_5fsets_2dminus_2dself(s, v4530[0], v4532[0])?;
-return Ok(v4535);
+return Ok(Some(v4535));
 }
+Ok(None)
+}
+fn case_405_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case405: {
 let v4536 = s.construct(Constructor::eo__24emb_5fr_2esets_5fis_5fempty_5felim, &[])?;
 if a1 != v4536 { break 'case405; }
@@ -16268,8 +18408,11 @@ if v4540[1] != v4541 { break 'case405; }
 let v4542 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4542 { break 'case405; }
 let v4543 = eo__24eo_5fprog_5fsets_2dis_2dempty_2delim(s, v4538[0], v4540[0])?;
-return Ok(v4543);
+return Ok(Some(v4543));
 }
+Ok(None)
+}
+fn case_406_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case406: {
 let v4544 = s.construct(Constructor::eo__24emb_5fr_2esets_5fis_5fsingleton_5felim, &[])?;
 if a1 != v4544 { break 'case406; }
@@ -16282,8 +18425,11 @@ if v4546[1] != v4547 { break 'case406; }
 let v4548 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4548 { break 'case406; }
 let v4549 = eo__24eo_5fprog_5fsets_2dis_2dsingleton_2delim(s, v4546[0])?;
-return Ok(v4549);
+return Ok(Some(v4549));
 }
+Ok(None)
+}
+fn case_407_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case407: {
 let v4550 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5fctn_5ffalse, &[])?;
 if a1 != v4550 { break 'case407; }
@@ -16314,8 +18460,11 @@ if v4561[1] != v4562 { break 'case407; }
 let v4563 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4561[0])?;
 let v4564 = s.construct(Constructor::eo__24eo_5fpf, &[v4563])?;
 let v4565 = eo__24eo_5fprog_5fstr_2deq_2dctn_2dfalse(s, v4552[0], v4554[0], v4556[0], v4558[0], v4564)?;
-return Ok(v4565);
+return Ok(Some(v4565));
 }
+Ok(None)
+}
+fn case_408_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case408: {
 let v4566 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5fctn_5ffull_5ffalse1, &[])?;
 if a1 != v4566 { break 'case408; }
@@ -16338,8 +18487,11 @@ if v4573[1] != v4574 { break 'case408; }
 let v4575 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4573[0])?;
 let v4576 = s.construct(Constructor::eo__24eo_5fpf, &[v4575])?;
 let v4577 = eo__24eo_5fprog_5fstr_2deq_2dctn_2dfull_2dfalse1(s, v4568[0], v4570[0], v4576)?;
-return Ok(v4577);
+return Ok(Some(v4577));
 }
+Ok(None)
+}
+fn case_409_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case409: {
 let v4578 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5fctn_5ffull_5ffalse2, &[])?;
 if a1 != v4578 { break 'case409; }
@@ -16362,8 +18514,11 @@ if v4585[1] != v4586 { break 'case409; }
 let v4587 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4585[0])?;
 let v4588 = s.construct(Constructor::eo__24eo_5fpf, &[v4587])?;
 let v4589 = eo__24eo_5fprog_5fstr_2deq_2dctn_2dfull_2dfalse2(s, v4580[0], v4582[0], v4588)?;
-return Ok(v4589);
+return Ok(Some(v4589));
 }
+Ok(None)
+}
+fn case_410_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case410: {
 let v4590 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5flen_5ffalse, &[])?;
 if a1 != v4590 { break 'case410; }
@@ -16386,8 +18541,11 @@ if v4597[1] != v4598 { break 'case410; }
 let v4599 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4597[0])?;
 let v4600 = s.construct(Constructor::eo__24eo_5fpf, &[v4599])?;
 let v4601 = eo__24eo_5fprog_5fstr_2deq_2dlen_2dfalse(s, v4592[0], v4594[0], v4600)?;
-return Ok(v4601);
+return Ok(Some(v4601));
 }
+Ok(None)
+}
+fn case_411_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case411: {
 let v4602 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstr, &[])?;
 if a1 != v4602 { break 'case411; }
@@ -16414,8 +18572,11 @@ if v4611[1] != v4612 { break 'case411; }
 let v4613 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4611[0])?;
 let v4614 = s.construct(Constructor::eo__24eo_5fpf, &[v4613])?;
 let v4615 = eo__24eo_5fprog_5fstr_2dsubstr_2dempty_2dstr(s, v4604[0], v4606[0], v4608[0], v4614)?;
-return Ok(v4615);
+return Ok(Some(v4615));
 }
+Ok(None)
+}
+fn case_412_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case412: {
 let v4616 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5frange, &[])?;
 if a1 != v4616 { break 'case412; }
@@ -16446,8 +18607,11 @@ if v4627[1] != v4628 { break 'case412; }
 let v4629 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4627[0])?;
 let v4630 = s.construct(Constructor::eo__24eo_5fpf, &[v4629])?;
 let v4631 = eo__24eo_5fprog_5fstr_2dsubstr_2dempty_2drange(s, v4618[0], v4620[0], v4622[0], v4624[0], v4630)?;
-return Ok(v4631);
+return Ok(Some(v4631));
 }
+Ok(None)
+}
+fn case_413_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case413: {
 let v4632 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart, &[])?;
 if a1 != v4632 { break 'case413; }
@@ -16478,8 +18642,11 @@ if v4643[1] != v4644 { break 'case413; }
 let v4645 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4643[0])?;
 let v4646 = s.construct(Constructor::eo__24eo_5fpf, &[v4645])?;
 let v4647 = eo__24eo_5fprog_5fstr_2dsubstr_2dempty_2dstart(s, v4634[0], v4636[0], v4638[0], v4640[0], v4646)?;
-return Ok(v4647);
+return Ok(Some(v4647));
 }
+Ok(None)
+}
+fn case_414_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case414: {
 let v4648 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart_5fneg, &[])?;
 if a1 != v4648 { break 'case414; }
@@ -16510,8 +18677,11 @@ if v4659[1] != v4660 { break 'case414; }
 let v4661 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4659[0])?;
 let v4662 = s.construct(Constructor::eo__24eo_5fpf, &[v4661])?;
 let v4663 = eo__24eo_5fprog_5fstr_2dsubstr_2dempty_2dstart_2dneg(s, v4650[0], v4652[0], v4654[0], v4656[0], v4662)?;
-return Ok(v4663);
+return Ok(Some(v4663));
 }
+Ok(None)
+}
+fn case_415_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case415: {
 let v4664 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fsubstr_5fstart_5fgeq_5flen, &[])?;
 if a1 != v4664 { break 'case415; }
@@ -16550,8 +18720,11 @@ if v4679[1] != v4680 { break 'case415; }
 let v4681 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4679[0])?;
 let v4682 = s.construct(Constructor::eo__24eo_5fpf, &[v4681])?;
 let v4683 = eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen(s, v4666[0], v4668[0], v4670[0], v4672[0], v4674[0], v4676[0], v4682)?;
-return Ok(v4683);
+return Ok(Some(v4683));
 }
+Ok(None)
+}
+fn case_416_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case416: {
 let v4684 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5feq_5fempty, &[])?;
 if a1 != v4684 { break 'case416; }
@@ -16594,8 +18767,11 @@ let v4704 = s.construct(Constructor::eo__24eo_5fpf, &[v4703])?;
 let v4705 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4699[0])?;
 let v4706 = s.construct(Constructor::eo__24eo_5fpf, &[v4705])?;
 let v4707 = eo__24eo_5fprog_5fstr_2dsubstr_2deq_2dempty(s, v4686[0], v4688[0], v4690[0], v4692[0], v4702, v4704, v4706)?;
-return Ok(v4707);
+return Ok(Some(v4707));
 }
+Ok(None)
+}
+fn case_417_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case417: {
 let v4708 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fz_5feq_5fempty_5fleq, &[])?;
 if a1 != v4708 { break 'case417; }
@@ -16628,8 +18804,11 @@ let v4722 = s.construct(Constructor::eo__24eo_5fpf, &[v4721])?;
 let v4723 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4719[0])?;
 let v4724 = s.construct(Constructor::eo__24eo_5fpf, &[v4723])?;
 let v4725 = eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq(s, v4710[0], v4712[0], v4714[0], v4722, v4724)?;
-return Ok(v4725);
+return Ok(Some(v4725));
 }
+Ok(None)
+}
+fn case_418_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case418: {
 let v4726 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5feq_5fempty_5fleq_5flen, &[])?;
 if a1 != v4726 { break 'case418; }
@@ -16672,8 +18851,11 @@ let v4746 = s.construct(Constructor::eo__24eo_5fpf, &[v4745])?;
 let v4747 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4741[0])?;
 let v4748 = s.construct(Constructor::eo__24eo_5fpf, &[v4747])?;
 let v4749 = eo__24eo_5fprog_5fstr_2dsubstr_2deq_2dempty_2dleq_2dlen(s, v4728[0], v4730[0], v4732[0], v4734[0], v4744, v4746, v4748)?;
-return Ok(v4749);
+return Ok(Some(v4749));
 }
+Ok(None)
+}
+fn case_419_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case419: {
 let v4750 = s.construct(Constructor::eo__24emb_5fr_2estr_5flen_5freplace_5finv, &[])?;
 if a1 != v4750 { break 'case419; }
@@ -16700,8 +18882,11 @@ if v4759[1] != v4760 { break 'case419; }
 let v4761 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4759[0])?;
 let v4762 = s.construct(Constructor::eo__24eo_5fpf, &[v4761])?;
 let v4763 = eo__24eo_5fprog_5fstr_2dlen_2dreplace_2dinv(s, v4752[0], v4754[0], v4756[0], v4762)?;
-return Ok(v4763);
+return Ok(Some(v4763));
 }
+Ok(None)
+}
+fn case_420_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case420: {
 let v4764 = s.construct(Constructor::eo__24emb_5fr_2estr_5flen_5freplace_5fall_5finv, &[])?;
 if a1 != v4764 { break 'case420; }
@@ -16728,8 +18913,11 @@ if v4773[1] != v4774 { break 'case420; }
 let v4775 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4773[0])?;
 let v4776 = s.construct(Constructor::eo__24eo_5fpf, &[v4775])?;
 let v4777 = eo__24eo_5fprog_5fstr_2dlen_2dreplace_2dall_2dinv(s, v4766[0], v4768[0], v4770[0], v4776)?;
-return Ok(v4777);
+return Ok(Some(v4777));
 }
+Ok(None)
+}
+fn case_421_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case421: {
 let v4778 = s.construct(Constructor::eo__24emb_5fr_2estr_5flen_5fupdate_5finv, &[])?;
 if a1 != v4778 { break 'case421; }
@@ -16750,8 +18938,11 @@ if v4784[1] != v4785 { break 'case421; }
 let v4786 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v4786 { break 'case421; }
 let v4787 = eo__24eo_5fprog_5fstr_2dlen_2dupdate_2dinv(s, v4780[0], v4782[0], v4784[0])?;
-return Ok(v4787);
+return Ok(Some(v4787));
 }
+Ok(None)
+}
+fn case_422_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case422: {
 let v4788 = s.construct(Constructor::eo__24emb_5fr_2estr_5fupdate_5foob, &[])?;
 if a1 != v4788 { break 'case422; }
@@ -16778,8 +18969,11 @@ if v4797[1] != v4798 { break 'case422; }
 let v4799 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4797[0])?;
 let v4800 = s.construct(Constructor::eo__24eo_5fpf, &[v4799])?;
 let v4801 = eo__24eo_5fprog_5fstr_2dupdate_2doob(s, v4790[0], v4792[0], v4794[0], v4800)?;
-return Ok(v4801);
+return Ok(Some(v4801));
 }
+Ok(None)
+}
+fn case_423_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case423: {
 let v4802 = s.construct(Constructor::eo__24emb_5fr_2estr_5fupdate_5frev, &[])?;
 if a1 != v4802 { break 'case423; }
@@ -16806,8 +19000,11 @@ if v4811[1] != v4812 { break 'case423; }
 let v4813 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4811[0])?;
 let v4814 = s.construct(Constructor::eo__24eo_5fpf, &[v4813])?;
 let v4815 = eo__24eo_5fprog_5fstr_2dupdate_2drev(s, v4804[0], v4806[0], v4808[0], v4814)?;
-return Ok(v4815);
+return Ok(Some(v4815));
 }
+Ok(None)
+}
+fn case_424_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case424: {
 let v4816 = s.construct(Constructor::eo__24emb_5fr_2estr_5fupdate_5ffit, &[])?;
 if a1 != v4816 { break 'case424; }
@@ -16840,8 +19037,11 @@ let v4830 = s.construct(Constructor::eo__24eo_5fpf, &[v4829])?;
 let v4831 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4827[0])?;
 let v4832 = s.construct(Constructor::eo__24eo_5fpf, &[v4831])?;
 let v4833 = eo__24eo_5fprog_5fstr_2dupdate_2dfit(s, v4818[0], v4820[0], v4822[0], v4830, v4832)?;
-return Ok(v4833);
+return Ok(Some(v4833));
 }
+Ok(None)
+}
+fn case_425_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case425: {
 let v4834 = s.construct(Constructor::eo__24emb_5fr_2estr_5fupdate_5fconcat_5ffit0, &[])?;
 if a1 != v4834 { break 'case425; }
@@ -16878,8 +19078,11 @@ let v4850 = s.construct(Constructor::eo__24eo_5fpf, &[v4849])?;
 let v4851 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4847[0])?;
 let v4852 = s.construct(Constructor::eo__24eo_5fpf, &[v4851])?;
 let v4853 = eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0(s, v4836[0], v4838[0], v4840[0], v4842[0], v4850, v4852)?;
-return Ok(v4853);
+return Ok(Some(v4853));
 }
+Ok(None)
+}
+fn case_426_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case426: {
 let v4854 = s.construct(Constructor::eo__24emb_5fr_2estr_5fupdate_5fconcat_5ffit, &[])?;
 if a1 != v4854 { break 'case426; }
@@ -16924,8 +19127,11 @@ let v4874 = s.construct(Constructor::eo__24eo_5fpf, &[v4873])?;
 let v4875 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4871[0])?;
 let v4876 = s.construct(Constructor::eo__24eo_5fpf, &[v4875])?;
 let v4877 = eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit(s, v4856[0], v4858[0], v4860[0], v4862[0], v4864[0], v4866[0], v4874, v4876)?;
-return Ok(v4877);
+return Ok(Some(v4877));
 }
+Ok(None)
+}
+fn case_427_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case427: {
 let v4878 = s.construct(Constructor::eo__24emb_5fr_2estr_5fupdate_5fin_5ffirst_5fconcat, &[])?;
 if a1 != v4878 { break 'case427; }
@@ -16982,8 +19188,11 @@ let v4906 = s.construct(Constructor::eo__24eo_5fpf, &[v4905])?;
 let v4907 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4899[0])?;
 let v4908 = s.construct(Constructor::eo__24eo_5fpf, &[v4907])?;
 let v4909 = eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat(s, v4880[0], v4882[0], v4884[0], v4886[0], v4888[0], v4890[0], v4902, v4904, v4906, v4908)?;
-return Ok(v4909);
+return Ok(Some(v4909));
 }
+Ok(None)
+}
+fn case_428_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case428: {
 let v4910 = s.construct(Constructor::eo__24emb_5fr_2estr_5flen_5fsubstr_5fin_5frange, &[])?;
 if a1 != v4910 { break 'case428; }
@@ -17022,8 +19231,11 @@ let v4928 = s.construct(Constructor::eo__24eo_5fpf, &[v4927])?;
 let v4929 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4923[0])?;
 let v4930 = s.construct(Constructor::eo__24eo_5fpf, &[v4929])?;
 let v4931 = eo__24eo_5fprog_5fstr_2dlen_2dsubstr_2din_2drange(s, v4912[0], v4914[0], v4916[0], v4926, v4928, v4930)?;
-return Ok(v4931);
+return Ok(Some(v4931));
 }
+Ok(None)
+}
+fn case_429_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case429: {
 let v4932 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5fclash, &[])?;
 if a1 != v4932 { break 'case429; }
@@ -17060,8 +19272,11 @@ let v4948 = s.construct(Constructor::eo__24eo_5fpf, &[v4947])?;
 let v4949 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4945[0])?;
 let v4950 = s.construct(Constructor::eo__24eo_5fpf, &[v4949])?;
 let v4951 = eo__24eo_5fprog_5fstr_2dconcat_2dclash(s, v4934[0], v4936[0], v4938[0], v4940[0], v4948, v4950)?;
-return Ok(v4951);
+return Ok(Some(v4951));
 }
+Ok(None)
+}
+fn case_430_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case430: {
 let v4952 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5fclash_5frev, &[])?;
 if a1 != v4952 { break 'case430; }
@@ -17098,8 +19313,11 @@ let v4968 = s.construct(Constructor::eo__24eo_5fpf, &[v4967])?;
 let v4969 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4965[0])?;
 let v4970 = s.construct(Constructor::eo__24eo_5fpf, &[v4969])?;
 let v4971 = eo__24eo_5fprog_5fstr_2dconcat_2dclash_2drev(s, v4954[0], v4956[0], v4958[0], v4960[0], v4968, v4970)?;
-return Ok(v4971);
+return Ok(Some(v4971));
 }
+Ok(None)
+}
+fn case_431_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case431: {
 let v4972 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5fclash2, &[])?;
 if a1 != v4972 { break 'case431; }
@@ -17132,8 +19350,11 @@ let v4986 = s.construct(Constructor::eo__24eo_5fpf, &[v4985])?;
 let v4987 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v4983[0])?;
 let v4988 = s.construct(Constructor::eo__24eo_5fpf, &[v4987])?;
 let v4989 = eo__24eo_5fprog_5fstr_2dconcat_2dclash2(s, v4974[0], v4976[0], v4978[0], v4986, v4988)?;
-return Ok(v4989);
+return Ok(Some(v4989));
 }
+Ok(None)
+}
+fn case_432_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case432: {
 let v4990 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5fclash2_5frev, &[])?;
 if a1 != v4990 { break 'case432; }
@@ -17166,8 +19387,11 @@ let v5004 = s.construct(Constructor::eo__24eo_5fpf, &[v5003])?;
 let v5005 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5001[0])?;
 let v5006 = s.construct(Constructor::eo__24eo_5fpf, &[v5005])?;
 let v5007 = eo__24eo_5fprog_5fstr_2dconcat_2dclash2_2drev(s, v4992[0], v4994[0], v4996[0], v5004, v5006)?;
-return Ok(v5007);
+return Ok(Some(v5007));
 }
+Ok(None)
+}
+fn case_433_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case433: {
 let v5008 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5funify, &[])?;
 if a1 != v5008 { break 'case433; }
@@ -17196,8 +19420,11 @@ if v5018[1] != v5019 { break 'case433; }
 let v5020 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5020 { break 'case433; }
 let v5021 = eo__24eo_5fprog_5fstr_2dconcat_2dunify(s, v5010[0], v5012[0], v5014[0], v5016[0], v5018[0])?;
-return Ok(v5021);
+return Ok(Some(v5021));
 }
+Ok(None)
+}
+fn case_434_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case434: {
 let v5022 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5funify_5frev, &[])?;
 if a1 != v5022 { break 'case434; }
@@ -17226,8 +19453,11 @@ if v5032[1] != v5033 { break 'case434; }
 let v5034 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5034 { break 'case434; }
 let v5035 = eo__24eo_5fprog_5fstr_2dconcat_2dunify_2drev(s, v5024[0], v5026[0], v5028[0], v5030[0], v5032[0])?;
-return Ok(v5035);
+return Ok(Some(v5035));
 }
+Ok(None)
+}
+fn case_435_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case435: {
 let v5036 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5funify_5fbase, &[])?;
 if a1 != v5036 { break 'case435; }
@@ -17252,8 +19482,11 @@ if v5044[1] != v5045 { break 'case435; }
 let v5046 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5046 { break 'case435; }
 let v5047 = eo__24eo_5fprog_5fstr_2dconcat_2dunify_2dbase(s, v5038[0], v5040[0], v5042[0], v5044[0])?;
-return Ok(v5047);
+return Ok(Some(v5047));
 }
+Ok(None)
+}
+fn case_436_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case436: {
 let v5048 = s.construct(Constructor::eo__24emb_5fr_2estr_5fconcat_5funify_5fbase_5frev, &[])?;
 if a1 != v5048 { break 'case436; }
@@ -17278,8 +19511,11 @@ if v5056[1] != v5057 { break 'case436; }
 let v5058 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5058 { break 'case436; }
 let v5059 = eo__24eo_5fprog_5fstr_2dconcat_2dunify_2dbase_2drev(s, v5050[0], v5052[0], v5054[0], v5056[0])?;
-return Ok(v5059);
+return Ok(Some(v5059));
 }
+Ok(None)
+}
+fn case_437_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case437: {
 let v5060 = s.construct(Constructor::eo__24emb_5fr_2estr_5fprefixof_5felim, &[])?;
 if a1 != v5060 { break 'case437; }
@@ -17296,8 +19532,11 @@ if v5064[1] != v5065 { break 'case437; }
 let v5066 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5066 { break 'case437; }
 let v5067 = eo__24eo_5fprog_5fstr_2dprefixof_2delim(s, v5062[0], v5064[0])?;
-return Ok(v5067);
+return Ok(Some(v5067));
 }
+Ok(None)
+}
+fn case_438_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case438: {
 let v5068 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsuffixof_5felim, &[])?;
 if a1 != v5068 { break 'case438; }
@@ -17314,8 +19553,11 @@ if v5072[1] != v5073 { break 'case438; }
 let v5074 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5074 { break 'case438; }
 let v5075 = eo__24eo_5fprog_5fstr_2dsuffixof_2delim(s, v5070[0], v5072[0])?;
-return Ok(v5075);
+return Ok(Some(v5075));
 }
+Ok(None)
+}
+fn case_439_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case439: {
 let v5076 = s.construct(Constructor::eo__24emb_5fr_2estr_5fprefixof_5feq, &[])?;
 if a1 != v5076 { break 'case439; }
@@ -17338,8 +19580,11 @@ if v5083[1] != v5084 { break 'case439; }
 let v5085 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5083[0])?;
 let v5086 = s.construct(Constructor::eo__24eo_5fpf, &[v5085])?;
 let v5087 = eo__24eo_5fprog_5fstr_2dprefixof_2deq(s, v5078[0], v5080[0], v5086)?;
-return Ok(v5087);
+return Ok(Some(v5087));
 }
+Ok(None)
+}
+fn case_440_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case440: {
 let v5088 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsuffixof_5feq, &[])?;
 if a1 != v5088 { break 'case440; }
@@ -17362,8 +19607,11 @@ if v5095[1] != v5096 { break 'case440; }
 let v5097 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5095[0])?;
 let v5098 = s.construct(Constructor::eo__24eo_5fpf, &[v5097])?;
 let v5099 = eo__24eo_5fprog_5fstr_2dsuffixof_2deq(s, v5090[0], v5092[0], v5098)?;
-return Ok(v5099);
+return Ok(Some(v5099));
 }
+Ok(None)
+}
+fn case_441_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case441: {
 let v5100 = s.construct(Constructor::eo__24emb_5fr_2estr_5fprefixof_5fone, &[])?;
 if a1 != v5100 { break 'case441; }
@@ -17386,8 +19634,11 @@ if v5107[1] != v5108 { break 'case441; }
 let v5109 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5107[0])?;
 let v5110 = s.construct(Constructor::eo__24eo_5fpf, &[v5109])?;
 let v5111 = eo__24eo_5fprog_5fstr_2dprefixof_2done(s, v5102[0], v5104[0], v5110)?;
-return Ok(v5111);
+return Ok(Some(v5111));
 }
+Ok(None)
+}
+fn case_442_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case442: {
 let v5112 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsuffixof_5fone, &[])?;
 if a1 != v5112 { break 'case442; }
@@ -17410,8 +19661,11 @@ if v5119[1] != v5120 { break 'case442; }
 let v5121 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5119[0])?;
 let v5122 = s.construct(Constructor::eo__24eo_5fpf, &[v5121])?;
 let v5123 = eo__24eo_5fprog_5fstr_2dsuffixof_2done(s, v5114[0], v5116[0], v5122)?;
-return Ok(v5123);
+return Ok(Some(v5123));
 }
+Ok(None)
+}
+fn case_443_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case443: {
 let v5124 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fcombine1, &[])?;
 if a1 != v5124 { break 'case443; }
@@ -17458,8 +19712,11 @@ let v5146 = s.construct(Constructor::eo__24eo_5fpf, &[v5145])?;
 let v5147 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5141[0])?;
 let v5148 = s.construct(Constructor::eo__24eo_5fpf, &[v5147])?;
 let v5149 = eo__24eo_5fprog_5fstr_2dsubstr_2dcombine1(s, v5126[0], v5128[0], v5130[0], v5132[0], v5134[0], v5144, v5146, v5148)?;
-return Ok(v5149);
+return Ok(Some(v5149));
 }
+Ok(None)
+}
+fn case_444_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case444: {
 let v5150 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fcombine2, &[])?;
 if a1 != v5150 { break 'case444; }
@@ -17506,8 +19763,11 @@ let v5172 = s.construct(Constructor::eo__24eo_5fpf, &[v5171])?;
 let v5173 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5167[0])?;
 let v5174 = s.construct(Constructor::eo__24eo_5fpf, &[v5173])?;
 let v5175 = eo__24eo_5fprog_5fstr_2dsubstr_2dcombine2(s, v5152[0], v5154[0], v5156[0], v5158[0], v5160[0], v5170, v5172, v5174)?;
-return Ok(v5175);
+return Ok(Some(v5175));
 }
+Ok(None)
+}
+fn case_445_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case445: {
 let v5176 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fcombine3, &[])?;
 if a1 != v5176 { break 'case445; }
@@ -17554,8 +19814,11 @@ let v5198 = s.construct(Constructor::eo__24eo_5fpf, &[v5197])?;
 let v5199 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5193[0])?;
 let v5200 = s.construct(Constructor::eo__24eo_5fpf, &[v5199])?;
 let v5201 = eo__24eo_5fprog_5fstr_2dsubstr_2dcombine3(s, v5178[0], v5180[0], v5182[0], v5184[0], v5186[0], v5196, v5198, v5200)?;
-return Ok(v5201);
+return Ok(Some(v5201));
 }
+Ok(None)
+}
+fn case_446_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case446: {
 let v5202 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fcombine4, &[])?;
 if a1 != v5202 { break 'case446; }
@@ -17602,8 +19865,11 @@ let v5224 = s.construct(Constructor::eo__24eo_5fpf, &[v5223])?;
 let v5225 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5219[0])?;
 let v5226 = s.construct(Constructor::eo__24eo_5fpf, &[v5225])?;
 let v5227 = eo__24eo_5fprog_5fstr_2dsubstr_2dcombine4(s, v5204[0], v5206[0], v5208[0], v5210[0], v5212[0], v5222, v5224, v5226)?;
-return Ok(v5227);
+return Ok(Some(v5227));
 }
+Ok(None)
+}
+fn case_447_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case447: {
 let v5228 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fconcat1, &[])?;
 if a1 != v5228 { break 'case447; }
@@ -17640,8 +19906,11 @@ let v5244 = s.construct(Constructor::eo__24eo_5fpf, &[v5243])?;
 let v5245 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5241[0])?;
 let v5246 = s.construct(Constructor::eo__24eo_5fpf, &[v5245])?;
 let v5247 = eo__24eo_5fprog_5fstr_2dsubstr_2dconcat1(s, v5230[0], v5232[0], v5234[0], v5236[0], v5244, v5246)?;
-return Ok(v5247);
+return Ok(Some(v5247));
 }
+Ok(None)
+}
+fn case_448_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case448: {
 let v5248 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fconcat2, &[])?;
 if a1 != v5248 { break 'case448; }
@@ -17676,8 +19945,11 @@ if v5261[1] != v5262 { break 'case448; }
 let v5263 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5261[0])?;
 let v5264 = s.construct(Constructor::eo__24eo_5fpf, &[v5263])?;
 let v5265 = eo__24eo_5fprog_5fstr_2dsubstr_2dconcat2(s, v5250[0], v5252[0], v5254[0], v5256[0], v5258[0], v5264)?;
-return Ok(v5265);
+return Ok(Some(v5265));
 }
+Ok(None)
+}
+fn case_449_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case449: {
 let v5266 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5freplace, &[])?;
 if a1 != v5266 { break 'case449; }
@@ -17714,8 +19986,11 @@ let v5282 = s.construct(Constructor::eo__24eo_5fpf, &[v5281])?;
 let v5283 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5279[0])?;
 let v5284 = s.construct(Constructor::eo__24eo_5fpf, &[v5283])?;
 let v5285 = eo__24eo_5fprog_5fstr_2dsubstr_2dreplace(s, v5268[0], v5270[0], v5272[0], v5274[0], v5282, v5284)?;
-return Ok(v5285);
+return Ok(Some(v5285));
 }
+Ok(None)
+}
+fn case_450_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case450: {
 let v5286 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5ffull, &[])?;
 if a1 != v5286 { break 'case450; }
@@ -17738,8 +20013,11 @@ if v5293[1] != v5294 { break 'case450; }
 let v5295 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5293[0])?;
 let v5296 = s.construct(Constructor::eo__24eo_5fpf, &[v5295])?;
 let v5297 = eo__24eo_5fprog_5fstr_2dsubstr_2dfull(s, v5288[0], v5290[0], v5296)?;
-return Ok(v5297);
+return Ok(Some(v5297));
 }
+Ok(None)
+}
+fn case_451_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case451: {
 let v5298 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5ffull_5feq, &[])?;
 if a1 != v5298 { break 'case451; }
@@ -17762,8 +20040,11 @@ if v5305[1] != v5306 { break 'case451; }
 let v5307 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5305[0])?;
 let v5308 = s.construct(Constructor::eo__24eo_5fpf, &[v5307])?;
 let v5309 = eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq(s, v5300[0], v5302[0], v5308)?;
-return Ok(v5309);
+return Ok(Some(v5309));
 }
+Ok(None)
+}
+fn case_452_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case452: {
 let v5310 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5frefl, &[])?;
 if a1 != v5310 { break 'case452; }
@@ -17776,8 +20057,11 @@ if v5312[1] != v5313 { break 'case452; }
 let v5314 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5314 { break 'case452; }
 let v5315 = eo__24eo_5fprog_5fstr_2dcontains_2drefl(s, v5312[0])?;
-return Ok(v5315);
+return Ok(Some(v5315));
 }
+Ok(None)
+}
+fn case_453_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case453: {
 let v5316 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5fconcat_5ffind, &[])?;
 if a1 != v5316 { break 'case453; }
@@ -17808,8 +20092,11 @@ if v5327[1] != v5328 { break 'case453; }
 let v5329 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5327[0])?;
 let v5330 = s.construct(Constructor::eo__24eo_5fpf, &[v5329])?;
 let v5331 = eo__24eo_5fprog_5fstr_2dcontains_2dconcat_2dfind(s, v5318[0], v5320[0], v5322[0], v5324[0], v5330)?;
-return Ok(v5331);
+return Ok(Some(v5331));
 }
+Ok(None)
+}
+fn case_454_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case454: {
 let v5332 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5fconcat_5ffind_5fcontra, &[])?;
 if a1 != v5332 { break 'case454; }
@@ -17840,8 +20127,11 @@ if v5343[1] != v5344 { break 'case454; }
 let v5345 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5343[0])?;
 let v5346 = s.construct(Constructor::eo__24eo_5fpf, &[v5345])?;
 let v5347 = eo__24eo_5fprog_5fstr_2dcontains_2dconcat_2dfind_2dcontra(s, v5334[0], v5336[0], v5338[0], v5340[0], v5346)?;
-return Ok(v5347);
+return Ok(Some(v5347));
 }
+Ok(None)
+}
+fn case_455_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case455: {
 let v5348 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5fsplit_5fchar, &[])?;
 if a1 != v5348 { break 'case455; }
@@ -17872,8 +20162,11 @@ if v5359[1] != v5360 { break 'case455; }
 let v5361 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5359[0])?;
 let v5362 = s.construct(Constructor::eo__24eo_5fpf, &[v5361])?;
 let v5363 = eo__24eo_5fprog_5fstr_2dcontains_2dsplit_2dchar(s, v5350[0], v5352[0], v5354[0], v5356[0], v5362)?;
-return Ok(v5363);
+return Ok(Some(v5363));
 }
+Ok(None)
+}
+fn case_456_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case456: {
 let v5364 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5fleq_5flen_5feq, &[])?;
 if a1 != v5364 { break 'case456; }
@@ -17896,8 +20189,11 @@ if v5371[1] != v5372 { break 'case456; }
 let v5373 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5371[0])?;
 let v5374 = s.construct(Constructor::eo__24eo_5fpf, &[v5373])?;
 let v5375 = eo__24eo_5fprog_5fstr_2dcontains_2dleq_2dlen_2deq(s, v5366[0], v5368[0], v5374)?;
-return Ok(v5375);
+return Ok(Some(v5375));
 }
+Ok(None)
+}
+fn case_457_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case457: {
 let v5376 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5femp, &[])?;
 if a1 != v5376 { break 'case457; }
@@ -17920,8 +20216,11 @@ if v5383[1] != v5384 { break 'case457; }
 let v5385 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5383[0])?;
 let v5386 = s.construct(Constructor::eo__24eo_5fpf, &[v5385])?;
 let v5387 = eo__24eo_5fprog_5fstr_2dcontains_2demp(s, v5378[0], v5380[0], v5386)?;
-return Ok(v5387);
+return Ok(Some(v5387));
 }
+Ok(None)
+}
+fn case_458_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case458: {
 let v5388 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5fchar, &[])?;
 if a1 != v5388 { break 'case458; }
@@ -17948,8 +20247,11 @@ if v5397[1] != v5398 { break 'case458; }
 let v5399 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5397[0])?;
 let v5400 = s.construct(Constructor::eo__24eo_5fpf, &[v5399])?;
 let v5401 = eo__24eo_5fprog_5fstr_2dcontains_2dchar(s, v5390[0], v5392[0], v5394[0], v5400)?;
-return Ok(v5401);
+return Ok(Some(v5401));
 }
+Ok(None)
+}
+fn case_459_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case459: {
 let v5402 = s.construct(Constructor::eo__24emb_5fr_2estr_5fat_5felim, &[])?;
 if a1 != v5402 { break 'case459; }
@@ -17966,8 +20268,11 @@ if v5406[1] != v5407 { break 'case459; }
 let v5408 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5408 { break 'case459; }
 let v5409 = eo__24eo_5fprog_5fstr_2dat_2delim(s, v5404[0], v5406[0])?;
-return Ok(v5409);
+return Ok(Some(v5409));
 }
+Ok(None)
+}
+fn case_460_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case460: {
 let v5410 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fself, &[])?;
 if a1 != v5410 { break 'case460; }
@@ -17984,8 +20289,11 @@ if v5414[1] != v5415 { break 'case460; }
 let v5416 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5416 { break 'case460; }
 let v5417 = eo__24eo_5fprog_5fstr_2dreplace_2dself(s, v5412[0], v5414[0])?;
-return Ok(v5417);
+return Ok(Some(v5417));
 }
+Ok(None)
+}
+fn case_461_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case461: {
 let v5418 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fid, &[])?;
 if a1 != v5418 { break 'case461; }
@@ -18002,8 +20310,11 @@ if v5422[1] != v5423 { break 'case461; }
 let v5424 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5424 { break 'case461; }
 let v5425 = eo__24eo_5fprog_5fstr_2dreplace_2did(s, v5420[0], v5422[0])?;
-return Ok(v5425);
+return Ok(Some(v5425));
 }
+Ok(None)
+}
+fn case_462_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case462: {
 let v5426 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fprefix, &[])?;
 if a1 != v5426 { break 'case462; }
@@ -18028,8 +20339,11 @@ if v5434[1] != v5435 { break 'case462; }
 let v5436 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5436 { break 'case462; }
 let v5437 = eo__24eo_5fprog_5fstr_2dreplace_2dprefix(s, v5428[0], v5430[0], v5432[0], v5434[0])?;
-return Ok(v5437);
+return Ok(Some(v5437));
 }
+Ok(None)
+}
+fn case_463_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case463: {
 let v5438 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fprefix_5fconcat, &[])?;
 if a1 != v5438 { break 'case463; }
@@ -18054,8 +20368,11 @@ if v5446[1] != v5447 { break 'case463; }
 let v5448 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5448 { break 'case463; }
 let v5449 = eo__24eo_5fprog_5fstr_2dreplace_2dprefix_2dconcat(s, v5440[0], v5442[0], v5444[0], v5446[0])?;
-return Ok(v5449);
+return Ok(Some(v5449));
 }
+Ok(None)
+}
+fn case_464_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case464: {
 let v5450 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fno_5fcontains, &[])?;
 if a1 != v5450 { break 'case464; }
@@ -18082,8 +20399,11 @@ if v5459[1] != v5460 { break 'case464; }
 let v5461 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5459[0])?;
 let v5462 = s.construct(Constructor::eo__24eo_5fpf, &[v5461])?;
 let v5463 = eo__24eo_5fprog_5fstr_2dreplace_2dno_2dcontains(s, v5452[0], v5454[0], v5456[0], v5462)?;
-return Ok(v5463);
+return Ok(Some(v5463));
 }
+Ok(None)
+}
+fn case_465_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case465: {
 let v5464 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5ffind_5fbase, &[])?;
 if a1 != v5464 { break 'case465; }
@@ -18130,8 +20450,11 @@ let v5486 = s.construct(Constructor::eo__24eo_5fpf, &[v5485])?;
 let v5487 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5481[0])?;
 let v5488 = s.construct(Constructor::eo__24eo_5fpf, &[v5487])?;
 let v5489 = eo__24eo_5fprog_5fstr_2dreplace_2dfind_2dbase(s, v5466[0], v5468[0], v5470[0], v5472[0], v5474[0], v5484, v5486, v5488)?;
-return Ok(v5489);
+return Ok(Some(v5489));
 }
+Ok(None)
+}
+fn case_466_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case466: {
 let v5490 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5ffind_5ffirst_5fconcat, &[])?;
 if a1 != v5490 { break 'case466; }
@@ -18182,8 +20505,11 @@ let v5514 = s.construct(Constructor::eo__24eo_5fpf, &[v5513])?;
 let v5515 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5509[0])?;
 let v5516 = s.construct(Constructor::eo__24eo_5fpf, &[v5515])?;
 let v5517 = eo__24eo_5fprog_5fstr_2dreplace_2dfind_2dfirst_2dconcat(s, v5492[0], v5494[0], v5496[0], v5498[0], v5500[0], v5502[0], v5512, v5514, v5516)?;
-return Ok(v5517);
+return Ok(Some(v5517));
 }
+Ok(None)
+}
+fn case_467_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case467: {
 let v5518 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fempty, &[])?;
 if a1 != v5518 { break 'case467; }
@@ -18210,8 +20536,11 @@ if v5527[1] != v5528 { break 'case467; }
 let v5529 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5527[0])?;
 let v5530 = s.construct(Constructor::eo__24eo_5fpf, &[v5529])?;
 let v5531 = eo__24eo_5fprog_5fstr_2dreplace_2dempty(s, v5520[0], v5522[0], v5524[0], v5530)?;
-return Ok(v5531);
+return Ok(Some(v5531));
 }
+Ok(None)
+}
+fn case_468_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case468: {
 let v5532 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fone_5fpre, &[])?;
 if a1 != v5532 { break 'case468; }
@@ -18246,8 +20575,11 @@ if v5545[1] != v5546 { break 'case468; }
 let v5547 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5545[0])?;
 let v5548 = s.construct(Constructor::eo__24eo_5fpf, &[v5547])?;
 let v5549 = eo__24eo_5fprog_5fstr_2dreplace_2done_2dpre(s, v5534[0], v5536[0], v5538[0], v5540[0], v5542[0], v5548)?;
-return Ok(v5549);
+return Ok(Some(v5549));
 }
+Ok(None)
+}
+fn case_469_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case469: {
 let v5550 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5ffind_5fpre, &[])?;
 if a1 != v5550 { break 'case469; }
@@ -18272,8 +20604,11 @@ if v5558[1] != v5559 { break 'case469; }
 let v5560 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5560 { break 'case469; }
 let v5561 = eo__24eo_5fprog_5fstr_2dreplace_2dfind_2dpre(s, v5552[0], v5554[0], v5556[0], v5558[0])?;
-return Ok(v5561);
+return Ok(Some(v5561));
 }
+Ok(None)
+}
+fn case_470_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case470: {
 let v5562 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fall_5fno_5fcontains, &[])?;
 if a1 != v5562 { break 'case470; }
@@ -18300,8 +20635,11 @@ if v5571[1] != v5572 { break 'case470; }
 let v5573 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5571[0])?;
 let v5574 = s.construct(Constructor::eo__24eo_5fpf, &[v5573])?;
 let v5575 = eo__24eo_5fprog_5fstr_2dreplace_2dall_2dno_2dcontains(s, v5564[0], v5566[0], v5568[0], v5574)?;
-return Ok(v5575);
+return Ok(Some(v5575));
 }
+Ok(None)
+}
+fn case_471_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case471: {
 let v5576 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fall_5ffind_5fpre, &[])?;
 if a1 != v5576 { break 'case471; }
@@ -18344,8 +20682,11 @@ let v5596 = s.construct(Constructor::eo__24eo_5fpf, &[v5595])?;
 let v5597 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5591[0])?;
 let v5598 = s.construct(Constructor::eo__24eo_5fpf, &[v5597])?;
 let v5599 = eo__24eo_5fprog_5fstr_2dreplace_2dall_2dfind_2dpre(s, v5578[0], v5580[0], v5582[0], v5584[0], v5594, v5596, v5598)?;
-return Ok(v5599);
+return Ok(Some(v5599));
 }
+Ok(None)
+}
+fn case_472_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case472: {
 let v5600 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fall_5ffind, &[])?;
 if a1 != v5600 { break 'case472; }
@@ -18398,8 +20739,11 @@ let v5626 = s.construct(Constructor::eo__24eo_5fpf, &[v5625])?;
 let v5627 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5619[0])?;
 let v5628 = s.construct(Constructor::eo__24eo_5fpf, &[v5627])?;
 let v5629 = eo__24eo_5fprog_5fstr_2dreplace_2dall_2dfind(s, v5602[0], v5604[0], v5606[0], v5608[0], v5610[0], v5622, v5624, v5626, v5628)?;
-return Ok(v5629);
+return Ok(Some(v5629));
 }
+Ok(None)
+}
+fn case_473_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case473: {
 let v5630 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fall_5fempty, &[])?;
 if a1 != v5630 { break 'case473; }
@@ -18426,8 +20770,11 @@ if v5639[1] != v5640 { break 'case473; }
 let v5641 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5639[0])?;
 let v5642 = s.construct(Constructor::eo__24eo_5fpf, &[v5641])?;
 let v5643 = eo__24eo_5fprog_5fstr_2dreplace_2dall_2dempty(s, v5632[0], v5634[0], v5636[0], v5642)?;
-return Ok(v5643);
+return Ok(Some(v5643));
 }
+Ok(None)
+}
+fn case_474_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case474: {
 let v5644 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fall_5fid, &[])?;
 if a1 != v5644 { break 'case474; }
@@ -18444,8 +20791,11 @@ if v5648[1] != v5649 { break 'case474; }
 let v5650 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5650 { break 'case474; }
 let v5651 = eo__24eo_5fprog_5fstr_2dreplace_2dall_2did(s, v5646[0], v5648[0])?;
-return Ok(v5651);
+return Ok(Some(v5651));
 }
+Ok(None)
+}
+fn case_475_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case475: {
 let v5652 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fall_5fself, &[])?;
 if a1 != v5652 { break 'case475; }
@@ -18468,8 +20818,11 @@ if v5659[1] != v5660 { break 'case475; }
 let v5661 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5659[0])?;
 let v5662 = s.construct(Constructor::eo__24eo_5fpf, &[v5661])?;
 let v5663 = eo__24eo_5fprog_5fstr_2dreplace_2dall_2dself(s, v5654[0], v5656[0], v5662)?;
-return Ok(v5663);
+return Ok(Some(v5663));
 }
+Ok(None)
+}
+fn case_476_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case476: {
 let v5664 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fre_5fnone, &[])?;
 if a1 != v5664 { break 'case476; }
@@ -18486,8 +20839,11 @@ if v5668[1] != v5669 { break 'case476; }
 let v5670 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5670 { break 'case476; }
 let v5671 = eo__24eo_5fprog_5fstr_2dreplace_2dre_2dnone(s, v5666[0], v5668[0])?;
-return Ok(v5671);
+return Ok(Some(v5671));
 }
+Ok(None)
+}
+fn case_477_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case477: {
 let v5672 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fre_5fall_5fnone, &[])?;
 if a1 != v5672 { break 'case477; }
@@ -18504,8 +20860,11 @@ if v5676[1] != v5677 { break 'case477; }
 let v5678 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5678 { break 'case477; }
 let v5679 = eo__24eo_5fprog_5fstr_2dreplace_2dre_2dall_2dnone(s, v5674[0], v5676[0])?;
-return Ok(v5679);
+return Ok(Some(v5679));
 }
+Ok(None)
+}
+fn case_478_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case478: {
 let v5680 = s.construct(Constructor::eo__24emb_5fr_2estr_5flen_5fconcat_5frec, &[])?;
 if a1 != v5680 { break 'case478; }
@@ -18526,8 +20885,11 @@ if v5686[1] != v5687 { break 'case478; }
 let v5688 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5688 { break 'case478; }
 let v5689 = eo__24eo_5fprog_5fstr_2dlen_2dconcat_2drec(s, v5682[0], v5684[0], v5686[0])?;
-return Ok(v5689);
+return Ok(Some(v5689));
 }
+Ok(None)
+}
+fn case_479_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case479: {
 let v5690 = s.construct(Constructor::eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fconcat_5frec, &[])?;
 if a1 != v5690 { break 'case479; }
@@ -18552,8 +20914,11 @@ if v5698[1] != v5699 { break 'case479; }
 let v5700 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5700 { break 'case479; }
 let v5701 = eo__24eo_5fprog_5fstr_2dlen_2deq_2dzero_2dconcat_2drec(s, v5692[0], v5694[0], v5696[0], v5698[0])?;
-return Ok(v5701);
+return Ok(Some(v5701));
 }
+Ok(None)
+}
+fn case_480_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case480: {
 let v5702 = s.construct(Constructor::eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fbase, &[])?;
 if a1 != v5702 { break 'case480; }
@@ -18570,8 +20935,11 @@ if v5706[1] != v5707 { break 'case480; }
 let v5708 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5708 { break 'case480; }
 let v5709 = eo__24eo_5fprog_5fstr_2dlen_2deq_2dzero_2dbase(s, v5704[0], v5706[0])?;
-return Ok(v5709);
+return Ok(Some(v5709));
 }
+Ok(None)
+}
+fn case_481_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case481: {
 let v5710 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fself, &[])?;
 if a1 != v5710 { break 'case481; }
@@ -18592,8 +20960,11 @@ if v5716[1] != v5717 { break 'case481; }
 let v5718 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5718 { break 'case481; }
 let v5719 = eo__24eo_5fprog_5fstr_2dindexof_2dself(s, v5712[0], v5714[0], v5716[0])?;
-return Ok(v5719);
+return Ok(Some(v5719));
 }
+Ok(None)
+}
+fn case_482_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case482: {
 let v5720 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fno_5fcontains, &[])?;
 if a1 != v5720 { break 'case482; }
@@ -18620,8 +20991,11 @@ if v5729[1] != v5730 { break 'case482; }
 let v5731 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5729[0])?;
 let v5732 = s.construct(Constructor::eo__24eo_5fpf, &[v5731])?;
 let v5733 = eo__24eo_5fprog_5fstr_2dindexof_2dno_2dcontains(s, v5722[0], v5724[0], v5726[0], v5732)?;
-return Ok(v5733);
+return Ok(Some(v5733));
 }
+Ok(None)
+}
+fn case_483_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case483: {
 let v5734 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5foob, &[])?;
 if a1 != v5734 { break 'case483; }
@@ -18648,8 +21022,11 @@ if v5743[1] != v5744 { break 'case483; }
 let v5745 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5743[0])?;
 let v5746 = s.construct(Constructor::eo__24eo_5fpf, &[v5745])?;
 let v5747 = eo__24eo_5fprog_5fstr_2dindexof_2doob(s, v5736[0], v5738[0], v5740[0], v5746)?;
-return Ok(v5747);
+return Ok(Some(v5747));
 }
+Ok(None)
+}
+fn case_484_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case484: {
 let v5748 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5foob2, &[])?;
 if a1 != v5748 { break 'case484; }
@@ -18676,8 +21053,11 @@ if v5757[1] != v5758 { break 'case484; }
 let v5759 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5757[0])?;
 let v5760 = s.construct(Constructor::eo__24eo_5fpf, &[v5759])?;
 let v5761 = eo__24eo_5fprog_5fstr_2dindexof_2doob2(s, v5750[0], v5752[0], v5754[0], v5760)?;
-return Ok(v5761);
+return Ok(Some(v5761));
 }
+Ok(None)
+}
+fn case_485_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case485: {
 let v5762 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fcontains_5fpre, &[])?;
 if a1 != v5762 { break 'case485; }
@@ -18714,8 +21094,11 @@ let v5778 = s.construct(Constructor::eo__24eo_5fpf, &[v5777])?;
 let v5779 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5775[0])?;
 let v5780 = s.construct(Constructor::eo__24eo_5fpf, &[v5779])?;
 let v5781 = eo__24eo_5fprog_5fstr_2dindexof_2dcontains_2dpre(s, v5764[0], v5766[0], v5768[0], v5770[0], v5778, v5780)?;
-return Ok(v5781);
+return Ok(Some(v5781));
 }
+Ok(None)
+}
+fn case_486_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case486: {
 let v5782 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fcontains_5fconcat_5fpre, &[])?;
 if a1 != v5782 { break 'case486; }
@@ -18740,8 +21123,11 @@ if v5790[1] != v5791 { break 'case486; }
 let v5792 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5792 { break 'case486; }
 let v5793 = eo__24eo_5fprog_5fstr_2dindexof_2dcontains_2dconcat_2dpre(s, v5784[0], v5786[0], v5788[0], v5790[0])?;
-return Ok(v5793);
+return Ok(Some(v5793));
 }
+Ok(None)
+}
+fn case_487_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case487: {
 let v5794 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fprefix_5fconcat, &[])?;
 if a1 != v5794 { break 'case487; }
@@ -18762,8 +21148,11 @@ if v5800[1] != v5801 { break 'case487; }
 let v5802 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5802 { break 'case487; }
 let v5803 = eo__24eo_5fprog_5fstr_2dindexof_2dprefix_2dconcat(s, v5796[0], v5798[0], v5800[0])?;
-return Ok(v5803);
+return Ok(Some(v5803));
 }
+Ok(None)
+}
+fn case_488_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case488: {
 let v5804 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5flen_5foob, &[])?;
 if a1 != v5804 { break 'case488; }
@@ -18804,8 +21193,11 @@ let v5822 = s.construct(Constructor::eo__24eo_5fpf, &[v5821])?;
 let v5823 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5819[0])?;
 let v5824 = s.construct(Constructor::eo__24eo_5fpf, &[v5823])?;
 let v5825 = eo__24eo_5fprog_5fstr_2dindexof_2dlen_2doob(s, v5806[0], v5808[0], v5810[0], v5812[0], v5814[0], v5822, v5824)?;
-return Ok(v5825);
+return Ok(Some(v5825));
 }
+Ok(None)
+}
+fn case_489_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case489: {
 let v5826 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5flen_5foob2, &[])?;
 if a1 != v5826 { break 'case489; }
@@ -18846,8 +21238,11 @@ let v5844 = s.construct(Constructor::eo__24eo_5fpf, &[v5843])?;
 let v5845 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5841[0])?;
 let v5846 = s.construct(Constructor::eo__24eo_5fpf, &[v5845])?;
 let v5847 = eo__24eo_5fprog_5fstr_2dindexof_2dlen_2doob2(s, v5828[0], v5830[0], v5832[0], v5834[0], v5836[0], v5844, v5846)?;
-return Ok(v5847);
+return Ok(Some(v5847));
 }
+Ok(None)
+}
+fn case_490_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case490: {
 let v5848 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5ffind_5femp, &[])?;
 if a1 != v5848 { break 'case490; }
@@ -18886,8 +21281,11 @@ let v5866 = s.construct(Constructor::eo__24eo_5fpf, &[v5865])?;
 let v5867 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5861[0])?;
 let v5868 = s.construct(Constructor::eo__24eo_5fpf, &[v5867])?;
 let v5869 = eo__24eo_5fprog_5fstr_2dindexof_2dfind_2demp(s, v5850[0], v5852[0], v5854[0], v5864, v5866, v5868)?;
-return Ok(v5869);
+return Ok(Some(v5869));
 }
+Ok(None)
+}
+fn case_491_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case491: {
 let v5870 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5feq_5firr, &[])?;
 if a1 != v5870 { break 'case491; }
@@ -18930,8 +21328,11 @@ let v5890 = s.construct(Constructor::eo__24eo_5fpf, &[v5889])?;
 let v5891 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5885[0])?;
 let v5892 = s.construct(Constructor::eo__24eo_5fpf, &[v5891])?;
 let v5893 = eo__24eo_5fprog_5fstr_2dindexof_2deq_2dirr(s, v5872[0], v5874[0], v5876[0], v5878[0], v5888, v5890, v5892)?;
-return Ok(v5893);
+return Ok(Some(v5893));
 }
+Ok(None)
+}
+fn case_492_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case492: {
 let v5894 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fre_5fnone, &[])?;
 if a1 != v5894 { break 'case492; }
@@ -18948,8 +21349,11 @@ if v5898[1] != v5899 { break 'case492; }
 let v5900 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5900 { break 'case492; }
 let v5901 = eo__24eo_5fprog_5fstr_2dindexof_2dre_2dnone(s, v5896[0], v5898[0])?;
-return Ok(v5901);
+return Ok(Some(v5901));
 }
+Ok(None)
+}
+fn case_493_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case493: {
 let v5902 = s.construct(Constructor::eo__24emb_5fr_2estr_5findexof_5fre_5femp_5fre, &[])?;
 if a1 != v5902 { break 'case493; }
@@ -18988,8 +21392,11 @@ let v5920 = s.construct(Constructor::eo__24eo_5fpf, &[v5919])?;
 let v5921 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v5915[0])?;
 let v5922 = s.construct(Constructor::eo__24eo_5fpf, &[v5921])?;
 let v5923 = eo__24eo_5fprog_5fstr_2dindexof_2dre_2demp_2dre(s, v5904[0], v5906[0], v5908[0], v5918, v5920, v5922)?;
-return Ok(v5923);
+return Ok(Some(v5923));
 }
+Ok(None)
+}
+fn case_494_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case494: {
 let v5924 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5flower_5fconcat, &[])?;
 if a1 != v5924 { break 'case494; }
@@ -19010,8 +21417,11 @@ if v5930[1] != v5931 { break 'case494; }
 let v5932 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5932 { break 'case494; }
 let v5933 = eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat(s, v5926[0], v5928[0], v5930[0])?;
-return Ok(v5933);
+return Ok(Some(v5933));
 }
+Ok(None)
+}
+fn case_495_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case495: {
 let v5934 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5fupper_5fconcat, &[])?;
 if a1 != v5934 { break 'case495; }
@@ -19032,8 +21442,11 @@ if v5940[1] != v5941 { break 'case495; }
 let v5942 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5942 { break 'case495; }
 let v5943 = eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat(s, v5936[0], v5938[0], v5940[0])?;
-return Ok(v5943);
+return Ok(Some(v5943));
 }
+Ok(None)
+}
+fn case_496_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case496: {
 let v5944 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5flower_5fupper, &[])?;
 if a1 != v5944 { break 'case496; }
@@ -19046,8 +21459,11 @@ if v5946[1] != v5947 { break 'case496; }
 let v5948 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5948 { break 'case496; }
 let v5949 = eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper(s, v5946[0])?;
-return Ok(v5949);
+return Ok(Some(v5949));
 }
+Ok(None)
+}
+fn case_497_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case497: {
 let v5950 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5flower_5fidem, &[])?;
 if a1 != v5950 { break 'case497; }
@@ -19060,8 +21476,11 @@ if v5952[1] != v5953 { break 'case497; }
 let v5954 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5954 { break 'case497; }
 let v5955 = eo__24eo_5fprog_5fstr_2dto_2dlower_2didem(s, v5952[0])?;
-return Ok(v5955);
+return Ok(Some(v5955));
 }
+Ok(None)
+}
+fn case_498_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case498: {
 let v5956 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5fupper_5flower, &[])?;
 if a1 != v5956 { break 'case498; }
@@ -19074,8 +21493,11 @@ if v5958[1] != v5959 { break 'case498; }
 let v5960 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5960 { break 'case498; }
 let v5961 = eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower(s, v5958[0])?;
-return Ok(v5961);
+return Ok(Some(v5961));
 }
+Ok(None)
+}
+fn case_499_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case499: {
 let v5962 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5fupper_5fidem, &[])?;
 if a1 != v5962 { break 'case499; }
@@ -19088,8 +21510,11 @@ if v5964[1] != v5965 { break 'case499; }
 let v5966 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5966 { break 'case499; }
 let v5967 = eo__24eo_5fprog_5fstr_2dto_2dupper_2didem(s, v5964[0])?;
-return Ok(v5967);
+return Ok(Some(v5967));
 }
+Ok(None)
+}
+fn case_500_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case500: {
 let v5968 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5flower_5flen, &[])?;
 if a1 != v5968 { break 'case500; }
@@ -19102,8 +21527,11 @@ if v5970[1] != v5971 { break 'case500; }
 let v5972 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5972 { break 'case500; }
 let v5973 = eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen(s, v5970[0])?;
-return Ok(v5973);
+return Ok(Some(v5973));
 }
+Ok(None)
+}
+fn case_501_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case501: {
 let v5974 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5fupper_5flen, &[])?;
 if a1 != v5974 { break 'case501; }
@@ -19116,8 +21544,11 @@ if v5976[1] != v5977 { break 'case501; }
 let v5978 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5978 { break 'case501; }
 let v5979 = eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen(s, v5976[0])?;
-return Ok(v5979);
+return Ok(Some(v5979));
 }
+Ok(None)
+}
+fn case_502_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case502: {
 let v5980 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5flower_5ffrom_5fint, &[])?;
 if a1 != v5980 { break 'case502; }
@@ -19130,8 +21561,11 @@ if v5982[1] != v5983 { break 'case502; }
 let v5984 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5984 { break 'case502; }
 let v5985 = eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint(s, v5982[0])?;
-return Ok(v5985);
+return Ok(Some(v5985));
 }
+Ok(None)
+}
+fn case_503_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case503: {
 let v5986 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5fupper_5ffrom_5fint, &[])?;
 if a1 != v5986 { break 'case503; }
@@ -19144,8 +21578,11 @@ if v5988[1] != v5989 { break 'case503; }
 let v5990 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v5990 { break 'case503; }
 let v5991 = eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint(s, v5988[0])?;
-return Ok(v5991);
+return Ok(Some(v5991));
 }
+Ok(None)
+}
+fn case_504_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case504: {
 let v5992 = s.construct(Constructor::eo__24emb_5fr_2estr_5fto_5fint_5fconcat_5fneg_5fone, &[])?;
 if a1 != v5992 { break 'case504; }
@@ -19178,8 +21615,11 @@ let v6006 = s.construct(Constructor::eo__24eo_5fpf, &[v6005])?;
 let v6007 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6003[0])?;
 let v6008 = s.construct(Constructor::eo__24eo_5fpf, &[v6007])?;
 let v6009 = eo__24eo_5fprog_5fstr_2dto_2dint_2dconcat_2dneg_2done(s, v5994[0], v5996[0], v5998[0], v6006, v6008)?;
-return Ok(v6009);
+return Ok(Some(v6009));
 }
+Ok(None)
+}
+fn case_505_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case505: {
 let v6010 = s.construct(Constructor::eo__24emb_5fr_2estr_5fis_5fdigit_5felim, &[])?;
 if a1 != v6010 { break 'case505; }
@@ -19192,8 +21632,11 @@ if v6012[1] != v6013 { break 'case505; }
 let v6014 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6014 { break 'case505; }
 let v6015 = eo__24eo_5fprog_5fstr_2dis_2ddigit_2delim(s, v6012[0])?;
-return Ok(v6015);
+return Ok(Some(v6015));
 }
+Ok(None)
+}
+fn case_506_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case506: {
 let v6016 = s.construct(Constructor::eo__24emb_5fr_2estr_5fleq_5fempty, &[])?;
 if a1 != v6016 { break 'case506; }
@@ -19206,8 +21649,11 @@ if v6018[1] != v6019 { break 'case506; }
 let v6020 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6020 { break 'case506; }
 let v6021 = eo__24eo_5fprog_5fstr_2dleq_2dempty(s, v6018[0])?;
-return Ok(v6021);
+return Ok(Some(v6021));
 }
+Ok(None)
+}
+fn case_507_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case507: {
 let v6022 = s.construct(Constructor::eo__24emb_5fr_2estr_5fleq_5fempty_5feq, &[])?;
 if a1 != v6022 { break 'case507; }
@@ -19220,8 +21666,11 @@ if v6024[1] != v6025 { break 'case507; }
 let v6026 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6026 { break 'case507; }
 let v6027 = eo__24eo_5fprog_5fstr_2dleq_2dempty_2deq(s, v6024[0])?;
-return Ok(v6027);
+return Ok(Some(v6027));
 }
+Ok(None)
+}
+fn case_508_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case508: {
 let v6028 = s.construct(Constructor::eo__24emb_5fr_2estr_5fleq_5fconcat_5ffalse, &[])?;
 if a1 != v6028 { break 'case508; }
@@ -19262,8 +21711,11 @@ let v6046 = s.construct(Constructor::eo__24eo_5fpf, &[v6045])?;
 let v6047 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6043[0])?;
 let v6048 = s.construct(Constructor::eo__24eo_5fpf, &[v6047])?;
 let v6049 = eo__24eo_5fprog_5fstr_2dleq_2dconcat_2dfalse(s, v6030[0], v6032[0], v6034[0], v6036[0], v6038[0], v6046, v6048)?;
-return Ok(v6049);
+return Ok(Some(v6049));
 }
+Ok(None)
+}
+fn case_509_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case509: {
 let v6050 = s.construct(Constructor::eo__24emb_5fr_2estr_5fleq_5fconcat_5ftrue, &[])?;
 if a1 != v6050 { break 'case509; }
@@ -19310,8 +21762,11 @@ let v6072 = s.construct(Constructor::eo__24eo_5fpf, &[v6071])?;
 let v6073 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6067[0])?;
 let v6074 = s.construct(Constructor::eo__24eo_5fpf, &[v6073])?;
 let v6075 = eo__24eo_5fprog_5fstr_2dleq_2dconcat_2dtrue(s, v6052[0], v6054[0], v6056[0], v6058[0], v6060[0], v6070, v6072, v6074)?;
-return Ok(v6075);
+return Ok(Some(v6075));
 }
+Ok(None)
+}
+fn case_510_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case510: {
 let v6076 = s.construct(Constructor::eo__24emb_5fr_2estr_5fleq_5fconcat_5fbase_5f1, &[])?;
 if a1 != v6076 { break 'case510; }
@@ -19344,8 +21799,11 @@ let v6090 = s.construct(Constructor::eo__24eo_5fpf, &[v6089])?;
 let v6091 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6087[0])?;
 let v6092 = s.construct(Constructor::eo__24eo_5fpf, &[v6091])?;
 let v6093 = eo__24eo_5fprog_5fstr_2dleq_2dconcat_2dbase_2d1(s, v6078[0], v6080[0], v6082[0], v6090, v6092)?;
-return Ok(v6093);
+return Ok(Some(v6093));
 }
+Ok(None)
+}
+fn case_511_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case511: {
 let v6094 = s.construct(Constructor::eo__24emb_5fr_2estr_5fleq_5fconcat_5fbase_5f2, &[])?;
 if a1 != v6094 { break 'case511; }
@@ -19378,8 +21836,11 @@ let v6108 = s.construct(Constructor::eo__24eo_5fpf, &[v6107])?;
 let v6109 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6105[0])?;
 let v6110 = s.construct(Constructor::eo__24eo_5fpf, &[v6109])?;
 let v6111 = eo__24eo_5fprog_5fstr_2dleq_2dconcat_2dbase_2d2(s, v6096[0], v6098[0], v6100[0], v6108, v6110)?;
-return Ok(v6111);
+return Ok(Some(v6111));
 }
+Ok(None)
+}
+fn case_512_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case512: {
 let v6112 = s.construct(Constructor::eo__24emb_5fr_2estr_5flt_5felim, &[])?;
 if a1 != v6112 { break 'case512; }
@@ -19396,8 +21857,11 @@ if v6116[1] != v6117 { break 'case512; }
 let v6118 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6118 { break 'case512; }
 let v6119 = eo__24eo_5fprog_5fstr_2dlt_2delim(s, v6114[0], v6116[0])?;
-return Ok(v6119);
+return Ok(Some(v6119));
 }
+Ok(None)
+}
+fn case_513_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case513: {
 let v6120 = s.construct(Constructor::eo__24emb_5fr_2estr_5ffrom_5fint_5fno_5fctn_5fnondigit, &[])?;
 if a1 != v6120 { break 'case513; }
@@ -19426,8 +21890,11 @@ let v6132 = s.construct(Constructor::eo__24eo_5fpf, &[v6131])?;
 let v6133 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6129[0])?;
 let v6134 = s.construct(Constructor::eo__24eo_5fpf, &[v6133])?;
 let v6135 = eo__24eo_5fprog_5fstr_2dfrom_2dint_2dno_2dctn_2dnondigit(s, v6122[0], v6124[0], v6132, v6134)?;
-return Ok(v6135);
+return Ok(Some(v6135));
 }
+Ok(None)
+}
+fn case_514_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case514: {
 let v6136 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fctn_5fcontra, &[])?;
 if a1 != v6136 { break 'case514; }
@@ -19458,8 +21925,11 @@ if v6147[1] != v6148 { break 'case514; }
 let v6149 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6147[0])?;
 let v6150 = s.construct(Constructor::eo__24eo_5fpf, &[v6149])?;
 let v6151 = eo__24eo_5fprog_5fstr_2dsubstr_2dctn_2dcontra(s, v6138[0], v6140[0], v6142[0], v6144[0], v6150)?;
-return Ok(v6151);
+return Ok(Some(v6151));
 }
+Ok(None)
+}
+fn case_515_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case515: {
 let v6152 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fctn, &[])?;
 if a1 != v6152 { break 'case515; }
@@ -19480,8 +21950,11 @@ if v6158[1] != v6159 { break 'case515; }
 let v6160 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6160 { break 'case515; }
 let v6161 = eo__24eo_5fprog_5fstr_2dsubstr_2dctn(s, v6154[0], v6156[0], v6158[0])?;
-return Ok(v6161);
+return Ok(Some(v6161));
 }
+Ok(None)
+}
+fn case_516_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case516: {
 let v6162 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fdual_5fctn, &[])?;
 if a1 != v6162 { break 'case516; }
@@ -19518,8 +21991,11 @@ let v6178 = s.construct(Constructor::eo__24eo_5fpf, &[v6177])?;
 let v6179 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6175[0])?;
 let v6180 = s.construct(Constructor::eo__24eo_5fpf, &[v6179])?;
 let v6181 = eo__24eo_5fprog_5fstr_2dreplace_2ddual_2dctn(s, v6164[0], v6166[0], v6168[0], v6170[0], v6178, v6180)?;
-return Ok(v6181);
+return Ok(Some(v6181));
 }
+Ok(None)
+}
+fn case_517_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case517: {
 let v6182 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fdual_5fctn_5ffalse, &[])?;
 if a1 != v6182 { break 'case517; }
@@ -19556,8 +22032,11 @@ let v6198 = s.construct(Constructor::eo__24eo_5fpf, &[v6197])?;
 let v6199 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6195[0])?;
 let v6200 = s.construct(Constructor::eo__24eo_5fpf, &[v6199])?;
 let v6201 = eo__24eo_5fprog_5fstr_2dreplace_2ddual_2dctn_2dfalse(s, v6184[0], v6186[0], v6188[0], v6190[0], v6198, v6200)?;
-return Ok(v6201);
+return Ok(Some(v6201));
 }
+Ok(None)
+}
+fn case_518_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case518: {
 let v6202 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5fself_5fctn_5fsimp, &[])?;
 if a1 != v6202 { break 'case518; }
@@ -19574,8 +22053,11 @@ if v6206[1] != v6207 { break 'case518; }
 let v6208 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6208 { break 'case518; }
 let v6209 = eo__24eo_5fprog_5fstr_2dreplace_2dself_2dctn_2dsimp(s, v6204[0], v6206[0])?;
-return Ok(v6209);
+return Ok(Some(v6209));
 }
+Ok(None)
+}
+fn case_519_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case519: {
 let v6210 = s.construct(Constructor::eo__24emb_5fr_2estr_5freplace_5femp_5fctn_5fsrc, &[])?;
 if a1 != v6210 { break 'case519; }
@@ -19602,8 +22084,11 @@ if v6219[1] != v6220 { break 'case519; }
 let v6221 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6219[0])?;
 let v6222 = s.construct(Constructor::eo__24eo_5fpf, &[v6221])?;
 let v6223 = eo__24eo_5fprog_5fstr_2dreplace_2demp_2dctn_2dsrc(s, v6212[0], v6214[0], v6216[0], v6222)?;
-return Ok(v6223);
+return Ok(Some(v6223));
 }
+Ok(None)
+}
+fn case_520_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case520: {
 let v6224 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5fchar_5fstart_5feq_5flen, &[])?;
 if a1 != v6224 { break 'case520; }
@@ -19630,8 +22115,11 @@ if v6233[1] != v6234 { break 'case520; }
 let v6235 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6233[0])?;
 let v6236 = s.construct(Constructor::eo__24eo_5fpf, &[v6235])?;
 let v6237 = eo__24eo_5fprog_5fstr_2dsubstr_2dchar_2dstart_2deq_2dlen(s, v6226[0], v6228[0], v6230[0], v6236)?;
-return Ok(v6237);
+return Ok(Some(v6237));
 }
+Ok(None)
+}
+fn case_521_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case521: {
 let v6238 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5frepl_5fchar, &[])?;
 if a1 != v6238 { break 'case521; }
@@ -19668,8 +22156,11 @@ let v6254 = s.construct(Constructor::eo__24eo_5fpf, &[v6253])?;
 let v6255 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6251[0])?;
 let v6256 = s.construct(Constructor::eo__24eo_5fpf, &[v6255])?;
 let v6257 = eo__24eo_5fprog_5fstr_2dcontains_2drepl_2dchar(s, v6240[0], v6242[0], v6244[0], v6246[0], v6254, v6256)?;
-return Ok(v6257);
+return Ok(Some(v6257));
 }
+Ok(None)
+}
+fn case_522_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case522: {
 let v6258 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5frepl_5fself_5ftgt_5fchar, &[])?;
 if a1 != v6258 { break 'case522; }
@@ -19696,8 +22187,11 @@ if v6267[1] != v6268 { break 'case522; }
 let v6269 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6267[0])?;
 let v6270 = s.construct(Constructor::eo__24eo_5fpf, &[v6269])?;
 let v6271 = eo__24eo_5fprog_5fstr_2dcontains_2drepl_2dself_2dtgt_2dchar(s, v6260[0], v6262[0], v6264[0], v6270)?;
-return Ok(v6271);
+return Ok(Some(v6271));
 }
+Ok(None)
+}
+fn case_523_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case523: {
 let v6272 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5frepl_5fself, &[])?;
 if a1 != v6272 { break 'case523; }
@@ -19714,8 +22208,11 @@ if v6276[1] != v6277 { break 'case523; }
 let v6278 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6278 { break 'case523; }
 let v6279 = eo__24eo_5fprog_5fstr_2dcontains_2drepl_2dself(s, v6274[0], v6276[0])?;
-return Ok(v6279);
+return Ok(Some(v6279));
 }
+Ok(None)
+}
+fn case_524_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case524: {
 let v6280 = s.construct(Constructor::eo__24emb_5fr_2estr_5fcontains_5frepl_5ftgt, &[])?;
 if a1 != v6280 { break 'case524; }
@@ -19736,8 +22233,11 @@ if v6286[1] != v6287 { break 'case524; }
 let v6288 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6288 { break 'case524; }
 let v6289 = eo__24eo_5fprog_5fstr_2dcontains_2drepl_2dtgt(s, v6282[0], v6284[0], v6286[0])?;
-return Ok(v6289);
+return Ok(Some(v6289));
 }
+Ok(None)
+}
+fn case_525_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case525: {
 let v6290 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5flen_5fid, &[])?;
 if a1 != v6290 { break 'case525; }
@@ -19760,8 +22260,11 @@ if v6297[1] != v6298 { break 'case525; }
 let v6299 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6297[0])?;
 let v6300 = s.construct(Constructor::eo__24eo_5fpf, &[v6299])?;
 let v6301 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dlen_2did(s, v6292[0], v6294[0], v6300)?;
-return Ok(v6301);
+return Ok(Some(v6301));
 }
+Ok(None)
+}
+fn case_526_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case526: {
 let v6302 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5ftgt_5fno_5fctn, &[])?;
 if a1 != v6302 { break 'case526; }
@@ -19792,8 +22295,11 @@ if v6313[1] != v6314 { break 'case526; }
 let v6315 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6313[0])?;
 let v6316 = s.construct(Constructor::eo__24eo_5fpf, &[v6315])?;
 let v6317 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dtgt_2dno_2dctn(s, v6304[0], v6306[0], v6308[0], v6310[0], v6316)?;
-return Ok(v6317);
+return Ok(Some(v6317));
 }
+Ok(None)
+}
+fn case_527_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case527: {
 let v6318 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5ftgt_5fself, &[])?;
 if a1 != v6318 { break 'case527; }
@@ -19810,8 +22316,11 @@ if v6322[1] != v6323 { break 'case527; }
 let v6324 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6324 { break 'case527; }
 let v6325 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dtgt_2dself(s, v6320[0], v6322[0])?;
-return Ok(v6325);
+return Ok(Some(v6325));
 }
+Ok(None)
+}
+fn case_528_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case528: {
 let v6326 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5ftgt_5fno_5fctn, &[])?;
 if a1 != v6326 { break 'case528; }
@@ -19842,8 +22351,11 @@ if v6337[1] != v6338 { break 'case528; }
 let v6339 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6337[0])?;
 let v6340 = s.construct(Constructor::eo__24eo_5fpf, &[v6339])?;
 let v6341 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dtgt_2dno_2dctn(s, v6328[0], v6330[0], v6332[0], v6334[0], v6340)?;
-return Ok(v6341);
+return Ok(Some(v6341));
 }
+Ok(None)
+}
+fn case_529_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case529: {
 let v6342 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5fself, &[])?;
 if a1 != v6342 { break 'case529; }
@@ -19864,8 +22376,11 @@ if v6348[1] != v6349 { break 'case529; }
 let v6350 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6350 { break 'case529; }
 let v6351 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dself(s, v6344[0], v6346[0], v6348[0])?;
-return Ok(v6351);
+return Ok(Some(v6351));
 }
+Ok(None)
+}
+fn case_530_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case530: {
 let v6352 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn1, &[])?;
 if a1 != v6352 { break 'case530; }
@@ -19892,8 +22407,11 @@ if v6361[1] != v6362 { break 'case530; }
 let v6363 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6361[0])?;
 let v6364 = s.construct(Constructor::eo__24eo_5fpf, &[v6363])?;
 let v6365 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn1(s, v6354[0], v6356[0], v6358[0], v6364)?;
-return Ok(v6365);
+return Ok(Some(v6365));
 }
+Ok(None)
+}
+fn case_531_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case531: {
 let v6366 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn2, &[])?;
 if a1 != v6366 { break 'case531; }
@@ -19920,8 +22438,11 @@ if v6375[1] != v6376 { break 'case531; }
 let v6377 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6375[0])?;
 let v6378 = s.construct(Constructor::eo__24eo_5fpf, &[v6377])?;
 let v6379 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn2(s, v6368[0], v6370[0], v6372[0], v6378)?;
-return Ok(v6379);
+return Ok(Some(v6379));
 }
+Ok(None)
+}
+fn case_532_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case532: {
 let v6380 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn3, &[])?;
 if a1 != v6380 { break 'case532; }
@@ -19962,8 +22483,11 @@ let v6398 = s.construct(Constructor::eo__24eo_5fpf, &[v6397])?;
 let v6399 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6395[0])?;
 let v6400 = s.construct(Constructor::eo__24eo_5fpf, &[v6399])?;
 let v6401 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn3(s, v6382[0], v6384[0], v6386[0], v6388[0], v6390[0], v6398, v6400)?;
-return Ok(v6401);
+return Ok(Some(v6401));
 }
+Ok(None)
+}
+fn case_533_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case533: {
 let v6402 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fself, &[])?;
 if a1 != v6402 { break 'case533; }
@@ -19980,8 +22504,11 @@ if v6406[1] != v6407 { break 'case533; }
 let v6408 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6408 { break 'case533; }
 let v6409 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dself(s, v6404[0], v6406[0])?;
-return Ok(v6409);
+return Ok(Some(v6409));
 }
+Ok(None)
+}
+fn case_534_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case534: {
 let v6410 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fite1, &[])?;
 if a1 != v6410 { break 'case534; }
@@ -20012,8 +22539,11 @@ if v6421[1] != v6422 { break 'case534; }
 let v6423 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6421[0])?;
 let v6424 = s.construct(Constructor::eo__24eo_5fpf, &[v6423])?;
 let v6425 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite1(s, v6412[0], v6414[0], v6416[0], v6418[0], v6424)?;
-return Ok(v6425);
+return Ok(Some(v6425));
 }
+Ok(None)
+}
+fn case_535_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case535: {
 let v6426 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fite2, &[])?;
 if a1 != v6426 { break 'case535; }
@@ -20050,8 +22580,11 @@ let v6442 = s.construct(Constructor::eo__24eo_5fpf, &[v6441])?;
 let v6443 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6439[0])?;
 let v6444 = s.construct(Constructor::eo__24eo_5fpf, &[v6443])?;
 let v6445 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite2(s, v6428[0], v6430[0], v6432[0], v6434[0], v6442, v6444)?;
-return Ok(v6445);
+return Ok(Some(v6445));
 }
+Ok(None)
+}
+fn case_536_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case536: {
 let v6446 = s.construct(Constructor::eo__24emb_5fr_2estr_5frepl_5frepl_5flookahead_5fid_5fsimp, &[])?;
 if a1 != v6446 { break 'case536; }
@@ -20084,8 +22617,11 @@ let v6460 = s.construct(Constructor::eo__24eo_5fpf, &[v6459])?;
 let v6461 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6457[0])?;
 let v6462 = s.construct(Constructor::eo__24eo_5fpf, &[v6461])?;
 let v6463 = eo__24eo_5fprog_5fstr_2drepl_2drepl_2dlookahead_2did_2dsimp(s, v6448[0], v6450[0], v6452[0], v6460, v6462)?;
-return Ok(v6463);
+return Ok(Some(v6463));
 }
+Ok(None)
+}
+fn case_537_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case537: {
 let v6464 = s.construct(Constructor::eo__24emb_5fr_2ere_5fall_5felim, &[])?;
 if a1 != v6464 { break 'case537; }
@@ -20100,8 +22636,11 @@ let v6470 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 let v6471 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 let v6472 = s.apply(v6470, v6471)?;
 let v6473 = s.apply(v6469, v6472)?;
-return Ok(v6473);
+return Ok(Some(v6473));
 }
+Ok(None)
+}
+fn case_538_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case538: {
 let v6474 = s.construct(Constructor::eo__24emb_5fr_2ere_5fopt_5felim, &[])?;
 if a1 != v6474 { break 'case538; }
@@ -20114,8 +22653,11 @@ if v6476[1] != v6477 { break 'case538; }
 let v6478 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6478 { break 'case538; }
 let v6479 = eo__24eo_5fprog_5fre_2dopt_2delim(s, v6476[0])?;
-return Ok(v6479);
+return Ok(Some(v6479));
 }
+Ok(None)
+}
+fn case_539_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case539: {
 let v6480 = s.construct(Constructor::eo__24emb_5fr_2ere_5fdiff_5felim, &[])?;
 if a1 != v6480 { break 'case539; }
@@ -20132,8 +22674,11 @@ if v6484[1] != v6485 { break 'case539; }
 let v6486 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6486 { break 'case539; }
 let v6487 = eo__24eo_5fprog_5fre_2ddiff_2delim(s, v6482[0], v6484[0])?;
-return Ok(v6487);
+return Ok(Some(v6487));
 }
+Ok(None)
+}
+fn case_540_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case540: {
 let v6488 = s.construct(Constructor::eo__24emb_5fr_2ere_5fplus_5felim, &[])?;
 if a1 != v6488 { break 'case540; }
@@ -20146,8 +22691,11 @@ if v6490[1] != v6491 { break 'case540; }
 let v6492 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6492 { break 'case540; }
 let v6493 = eo__24eo_5fprog_5fre_2dplus_2delim(s, v6490[0])?;
-return Ok(v6493);
+return Ok(Some(v6493));
 }
+Ok(None)
+}
+fn case_541_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case541: {
 let v6494 = s.construct(Constructor::eo__24emb_5fr_2ere_5frepeat_5felim, &[])?;
 if a1 != v6494 { break 'case541; }
@@ -20164,8 +22712,11 @@ if v6498[1] != v6499 { break 'case541; }
 let v6500 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6500 { break 'case541; }
 let v6501 = eo__24eo_5fprog_5fre_2drepeat_2delim(s, v6496[0], v6498[0])?;
-return Ok(v6501);
+return Ok(Some(v6501));
 }
+Ok(None)
+}
+fn case_542_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case542: {
 let v6502 = s.construct(Constructor::eo__24emb_5fr_2ere_5fconcat_5fstar_5fswap, &[])?;
 if a1 != v6502 { break 'case542; }
@@ -20186,8 +22737,11 @@ if v6508[1] != v6509 { break 'case542; }
 let v6510 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6510 { break 'case542; }
 let v6511 = eo__24eo_5fprog_5fre_2dconcat_2dstar_2dswap(s, v6504[0], v6506[0], v6508[0])?;
-return Ok(v6511);
+return Ok(Some(v6511));
 }
+Ok(None)
+}
+fn case_543_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case543: {
 let v6512 = s.construct(Constructor::eo__24emb_5fr_2ere_5fconcat_5fstar_5frepeat, &[])?;
 if a1 != v6512 { break 'case543; }
@@ -20208,8 +22762,11 @@ if v6518[1] != v6519 { break 'case543; }
 let v6520 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6520 { break 'case543; }
 let v6521 = eo__24eo_5fprog_5fre_2dconcat_2dstar_2drepeat(s, v6514[0], v6516[0], v6518[0])?;
-return Ok(v6521);
+return Ok(Some(v6521));
 }
+Ok(None)
+}
+fn case_544_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case544: {
 let v6522 = s.construct(Constructor::eo__24emb_5fr_2ere_5fconcat_5fstar_5fnullable1, &[])?;
 if a1 != v6522 { break 'case544; }
@@ -20236,8 +22793,11 @@ if v6531[1] != v6532 { break 'case544; }
 let v6533 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6531[0])?;
 let v6534 = s.construct(Constructor::eo__24eo_5fpf, &[v6533])?;
 let v6535 = eo__24eo_5fprog_5fre_2dconcat_2dstar_2dnullable1(s, v6524[0], v6526[0], v6528[0], v6534)?;
-return Ok(v6535);
+return Ok(Some(v6535));
 }
+Ok(None)
+}
+fn case_545_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case545: {
 let v6536 = s.construct(Constructor::eo__24emb_5fr_2ere_5fconcat_5fstar_5fnullable2, &[])?;
 if a1 != v6536 { break 'case545; }
@@ -20264,8 +22824,11 @@ if v6545[1] != v6546 { break 'case545; }
 let v6547 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6545[0])?;
 let v6548 = s.construct(Constructor::eo__24eo_5fpf, &[v6547])?;
 let v6549 = eo__24eo_5fprog_5fre_2dconcat_2dstar_2dnullable2(s, v6538[0], v6540[0], v6542[0], v6548)?;
-return Ok(v6549);
+return Ok(Some(v6549));
 }
+Ok(None)
+}
+fn case_546_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case546: {
 let v6550 = s.construct(Constructor::eo__24emb_5fr_2ere_5fconcat_5fmerge, &[])?;
 if a1 != v6550 { break 'case546; }
@@ -20290,8 +22853,11 @@ if v6558[1] != v6559 { break 'case546; }
 let v6560 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6560 { break 'case546; }
 let v6561 = eo__24eo_5fprog_5fre_2dconcat_2dmerge(s, v6552[0], v6554[0], v6556[0], v6558[0])?;
-return Ok(v6561);
+return Ok(Some(v6561));
 }
+Ok(None)
+}
+fn case_547_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case547: {
 let v6562 = s.construct(Constructor::eo__24emb_5fr_2ere_5funion_5fall, &[])?;
 if a1 != v6562 { break 'case547; }
@@ -20308,8 +22874,11 @@ if v6566[1] != v6567 { break 'case547; }
 let v6568 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6568 { break 'case547; }
 let v6569 = eo__24eo_5fprog_5fre_2dunion_2dall(s, v6564[0], v6566[0])?;
-return Ok(v6569);
+return Ok(Some(v6569));
 }
+Ok(None)
+}
+fn case_548_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case548: {
 let v6570 = s.construct(Constructor::eo__24emb_5fr_2ere_5funion_5fconst_5felim, &[])?;
 if a1 != v6570 { break 'case548; }
@@ -20332,8 +22901,11 @@ if v6577[1] != v6578 { break 'case548; }
 let v6579 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6577[0])?;
 let v6580 = s.construct(Constructor::eo__24eo_5fpf, &[v6579])?;
 let v6581 = eo__24eo_5fprog_5fre_2dunion_2dconst_2delim(s, v6572[0], v6574[0], v6580)?;
-return Ok(v6581);
+return Ok(Some(v6581));
 }
+Ok(None)
+}
+fn case_549_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case549: {
 let v6582 = s.construct(Constructor::eo__24emb_5fr_2ere_5finter_5fall, &[])?;
 if a1 != v6582 { break 'case549; }
@@ -20350,8 +22922,11 @@ if v6586[1] != v6587 { break 'case549; }
 let v6588 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6588 { break 'case549; }
 let v6589 = eo__24eo_5fprog_5fre_2dinter_2dall(s, v6584[0], v6586[0])?;
-return Ok(v6589);
+return Ok(Some(v6589));
 }
+Ok(None)
+}
+fn case_550_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case550: {
 let v6590 = s.construct(Constructor::eo__24emb_5fr_2ere_5fstar_5fnone, &[])?;
 if a1 != v6590 { break 'case550; }
@@ -20368,8 +22943,11 @@ let v6598 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v6599 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v6600 = s.apply(v6598, v6599)?;
 let v6601 = s.apply(v6597, v6600)?;
-return Ok(v6601);
+return Ok(Some(v6601));
 }
+Ok(None)
+}
+fn case_551_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case551: {
 let v6602 = s.construct(Constructor::eo__24emb_5fr_2ere_5fstar_5femp, &[])?;
 if a1 != v6602 { break 'case551; }
@@ -20388,8 +22966,11 @@ let v6612 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v6613 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v6614 = s.apply(v6612, v6613)?;
 let v6615 = s.apply(v6611, v6614)?;
-return Ok(v6615);
+return Ok(Some(v6615));
 }
+Ok(None)
+}
+fn case_552_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case552: {
 let v6616 = s.construct(Constructor::eo__24emb_5fr_2ere_5fstar_5fstar, &[])?;
 if a1 != v6616 { break 'case552; }
@@ -20402,8 +22983,11 @@ if v6618[1] != v6619 { break 'case552; }
 let v6620 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6620 { break 'case552; }
 let v6621 = eo__24eo_5fprog_5fre_2dstar_2dstar(s, v6618[0])?;
-return Ok(v6621);
+return Ok(Some(v6621));
 }
+Ok(None)
+}
+fn case_553_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case553: {
 let v6622 = s.construct(Constructor::eo__24emb_5fr_2ere_5frange_5frefl, &[])?;
 if a1 != v6622 { break 'case553; }
@@ -20422,8 +23006,11 @@ if v6627[1] != v6628 { break 'case553; }
 let v6629 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6627[0])?;
 let v6630 = s.construct(Constructor::eo__24eo_5fpf, &[v6629])?;
 let v6631 = eo__24eo_5fprog_5fre_2drange_2drefl(s, v6624[0], v6630)?;
-return Ok(v6631);
+return Ok(Some(v6631));
 }
+Ok(None)
+}
+fn case_554_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case554: {
 let v6632 = s.construct(Constructor::eo__24emb_5fr_2ere_5frange_5femp, &[])?;
 if a1 != v6632 { break 'case554; }
@@ -20458,8 +23045,11 @@ let v6648 = s.construct(Constructor::eo__24eo_5fpf, &[v6647])?;
 let v6649 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6643[0])?;
 let v6650 = s.construct(Constructor::eo__24eo_5fpf, &[v6649])?;
 let v6651 = eo__24eo_5fprog_5fre_2drange_2demp(s, v6634[0], v6636[0], v6646, v6648, v6650)?;
-return Ok(v6651);
+return Ok(Some(v6651));
 }
+Ok(None)
+}
+fn case_555_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case555: {
 let v6652 = s.construct(Constructor::eo__24emb_5fr_2ere_5frange_5fnon_5fsingleton_5f1, &[])?;
 if a1 != v6652 { break 'case555; }
@@ -20482,8 +23072,11 @@ if v6659[1] != v6660 { break 'case555; }
 let v6661 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6659[0])?;
 let v6662 = s.construct(Constructor::eo__24eo_5fpf, &[v6661])?;
 let v6663 = eo__24eo_5fprog_5fre_2drange_2dnon_2dsingleton_2d1(s, v6654[0], v6656[0], v6662)?;
-return Ok(v6663);
+return Ok(Some(v6663));
 }
+Ok(None)
+}
+fn case_556_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case556: {
 let v6664 = s.construct(Constructor::eo__24emb_5fr_2ere_5frange_5fnon_5fsingleton_5f2, &[])?;
 if a1 != v6664 { break 'case556; }
@@ -20506,8 +23099,11 @@ if v6671[1] != v6672 { break 'case556; }
 let v6673 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6671[0])?;
 let v6674 = s.construct(Constructor::eo__24eo_5fpf, &[v6673])?;
 let v6675 = eo__24eo_5fprog_5fre_2drange_2dnon_2dsingleton_2d2(s, v6666[0], v6668[0], v6674)?;
-return Ok(v6675);
+return Ok(Some(v6675));
 }
+Ok(None)
+}
+fn case_557_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case557: {
 let v6676 = s.construct(Constructor::eo__24emb_5fr_2ere_5fstar_5funion_5fchar, &[])?;
 if a1 != v6676 { break 'case557; }
@@ -20524,8 +23120,11 @@ if v6680[1] != v6681 { break 'case557; }
 let v6682 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6682 { break 'case557; }
 let v6683 = eo__24eo_5fprog_5fre_2dstar_2dunion_2dchar(s, v6678[0], v6680[0])?;
-return Ok(v6683);
+return Ok(Some(v6683));
 }
+Ok(None)
+}
+fn case_558_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case558: {
 let v6684 = s.construct(Constructor::eo__24emb_5fr_2ere_5fstar_5funion_5fdrop_5femp, &[])?;
 if a1 != v6684 { break 'case558; }
@@ -20542,8 +23141,11 @@ if v6688[1] != v6689 { break 'case558; }
 let v6690 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6690 { break 'case558; }
 let v6691 = eo__24eo_5fprog_5fre_2dstar_2dunion_2ddrop_2demp(s, v6686[0], v6688[0])?;
-return Ok(v6691);
+return Ok(Some(v6691));
 }
+Ok(None)
+}
+fn case_559_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case559: {
 let v6692 = s.construct(Constructor::eo__24emb_5fr_2ere_5floop_5fneg, &[])?;
 if a1 != v6692 { break 'case559; }
@@ -20570,8 +23172,11 @@ if v6701[1] != v6702 { break 'case559; }
 let v6703 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6701[0])?;
 let v6704 = s.construct(Constructor::eo__24eo_5fpf, &[v6703])?;
 let v6705 = eo__24eo_5fprog_5fre_2dloop_2dneg(s, v6694[0], v6696[0], v6698[0], v6704)?;
-return Ok(v6705);
+return Ok(Some(v6705));
 }
+Ok(None)
+}
+fn case_560_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case560: {
 let v6706 = s.construct(Constructor::eo__24emb_5fr_2ere_5floop_5fstar, &[])?;
 if a1 != v6706 { break 'case560; }
@@ -20604,8 +23209,11 @@ let v6720 = s.construct(Constructor::eo__24eo_5fpf, &[v6719])?;
 let v6721 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6717[0])?;
 let v6722 = s.construct(Constructor::eo__24eo_5fpf, &[v6721])?;
 let v6723 = eo__24eo_5fprog_5fre_2dloop_2dstar(s, v6708[0], v6710[0], v6712[0], v6720, v6722)?;
-return Ok(v6723);
+return Ok(Some(v6723));
 }
+Ok(None)
+}
+fn case_561_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case561: {
 let v6724 = s.construct(Constructor::eo__24emb_5fr_2ere_5finter_5fcstring, &[])?;
 if a1 != v6724 { break 'case561; }
@@ -20632,8 +23240,11 @@ if v6733[1] != v6734 { break 'case561; }
 let v6735 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6733[0])?;
 let v6736 = s.construct(Constructor::eo__24eo_5fpf, &[v6735])?;
 let v6737 = eo__24eo_5fprog_5fre_2dinter_2dcstring(s, v6726[0], v6728[0], v6730[0], v6736)?;
-return Ok(v6737);
+return Ok(Some(v6737));
 }
+Ok(None)
+}
+fn case_562_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case562: {
 let v6738 = s.construct(Constructor::eo__24emb_5fr_2ere_5finter_5fcstring_5fneg, &[])?;
 if a1 != v6738 { break 'case562; }
@@ -20660,8 +23271,11 @@ if v6747[1] != v6748 { break 'case562; }
 let v6749 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6747[0])?;
 let v6750 = s.construct(Constructor::eo__24eo_5fpf, &[v6749])?;
 let v6751 = eo__24eo_5fprog_5fre_2dinter_2dcstring_2dneg(s, v6740[0], v6742[0], v6744[0], v6750)?;
-return Ok(v6751);
+return Ok(Some(v6751));
 }
+Ok(None)
+}
+fn case_563_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case563: {
 let v6752 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5flen_5finclude, &[])?;
 if a1 != v6752 { break 'case563; }
@@ -20692,8 +23306,11 @@ if v6763[1] != v6764 { break 'case563; }
 let v6765 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6763[0])?;
 let v6766 = s.construct(Constructor::eo__24eo_5fpf, &[v6765])?;
 let v6767 = eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude(s, v6754[0], v6756[0], v6758[0], v6760[0], v6766)?;
-return Ok(v6767);
+return Ok(Some(v6767));
 }
+Ok(None)
+}
+fn case_564_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case564: {
 let v6768 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5flen_5finclude_5fpre, &[])?;
 if a1 != v6768 { break 'case564; }
@@ -20724,8 +23341,11 @@ if v6779[1] != v6780 { break 'case564; }
 let v6781 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6779[0])?;
 let v6782 = s.construct(Constructor::eo__24eo_5fpf, &[v6781])?;
 let v6783 = eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre(s, v6770[0], v6772[0], v6774[0], v6776[0], v6782)?;
-return Ok(v6783);
+return Ok(Some(v6783));
 }
+Ok(None)
+}
+fn case_565_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case565: {
 let v6784 = s.construct(Constructor::eo__24emb_5fr_2estr_5fsubstr_5flen_5fnorm, &[])?;
 if a1 != v6784 { break 'case565; }
@@ -20752,8 +23372,11 @@ if v6793[1] != v6794 { break 'case565; }
 let v6795 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6793[0])?;
 let v6796 = s.construct(Constructor::eo__24eo_5fpf, &[v6795])?;
 let v6797 = eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm(s, v6786[0], v6788[0], v6790[0], v6796)?;
-return Ok(v6797);
+return Ok(Some(v6797));
 }
+Ok(None)
+}
+fn case_566_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case566: {
 let v6798 = s.construct(Constructor::eo__24emb_5fr_2eseq_5flen_5frev, &[])?;
 if a1 != v6798 { break 'case566; }
@@ -20766,8 +23389,11 @@ if v6800[1] != v6801 { break 'case566; }
 let v6802 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6802 { break 'case566; }
 let v6803 = eo__24eo_5fprog_5fseq_2dlen_2drev(s, v6800[0])?;
-return Ok(v6803);
+return Ok(Some(v6803));
 }
+Ok(None)
+}
+fn case_567_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case567: {
 let v6804 = s.construct(Constructor::eo__24emb_5fr_2eseq_5frev_5frev, &[])?;
 if a1 != v6804 { break 'case567; }
@@ -20780,8 +23406,11 @@ if v6806[1] != v6807 { break 'case567; }
 let v6808 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6808 { break 'case567; }
 let v6809 = eo__24eo_5fprog_5fseq_2drev_2drev(s, v6806[0])?;
-return Ok(v6809);
+return Ok(Some(v6809));
 }
+Ok(None)
+}
+fn case_568_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case568: {
 let v6810 = s.construct(Constructor::eo__24emb_5fr_2eseq_5frev_5fconcat, &[])?;
 if a1 != v6810 { break 'case568; }
@@ -20802,8 +23431,11 @@ if v6816[1] != v6817 { break 'case568; }
 let v6818 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6818 { break 'case568; }
 let v6819 = eo__24eo_5fprog_5fseq_2drev_2dconcat(s, v6812[0], v6814[0], v6816[0])?;
-return Ok(v6819);
+return Ok(Some(v6819));
 }
+Ok(None)
+}
+fn case_569_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case569: {
 let v6820 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5frepl_5fself_5femp, &[])?;
 if a1 != v6820 { break 'case569; }
@@ -20830,8 +23462,11 @@ if v6829[1] != v6830 { break 'case569; }
 let v6831 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6829[0])?;
 let v6832 = s.construct(Constructor::eo__24eo_5fpf, &[v6831])?;
 let v6833 = eo__24eo_5fprog_5fstr_2deq_2drepl_2dself_2demp(s, v6822[0], v6824[0], v6826[0], v6832)?;
-return Ok(v6833);
+return Ok(Some(v6833));
 }
+Ok(None)
+}
+fn case_570_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case570: {
 let v6834 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5frepl_5fno_5fchange, &[])?;
 if a1 != v6834 { break 'case570; }
@@ -20858,8 +23493,11 @@ if v6843[1] != v6844 { break 'case570; }
 let v6845 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6843[0])?;
 let v6846 = s.construct(Constructor::eo__24eo_5fpf, &[v6845])?;
 let v6847 = eo__24eo_5fprog_5fstr_2deq_2drepl_2dno_2dchange(s, v6836[0], v6838[0], v6840[0], v6846)?;
-return Ok(v6847);
+return Ok(Some(v6847));
 }
+Ok(None)
+}
+fn case_571_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case571: {
 let v6848 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5frepl_5ftgt_5feq_5flen, &[])?;
 if a1 != v6848 { break 'case571; }
@@ -20886,8 +23524,11 @@ if v6857[1] != v6858 { break 'case571; }
 let v6859 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6857[0])?;
 let v6860 = s.construct(Constructor::eo__24eo_5fpf, &[v6859])?;
 let v6861 = eo__24eo_5fprog_5fstr_2deq_2drepl_2dtgt_2deq_2dlen(s, v6850[0], v6852[0], v6854[0], v6860)?;
-return Ok(v6861);
+return Ok(Some(v6861));
 }
+Ok(None)
+}
+fn case_572_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case572: {
 let v6862 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5frepl_5flen_5fone_5femp_5fprefix, &[])?;
 if a1 != v6862 { break 'case572; }
@@ -20920,8 +23561,11 @@ let v6876 = s.construct(Constructor::eo__24eo_5fpf, &[v6875])?;
 let v6877 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6873[0])?;
 let v6878 = s.construct(Constructor::eo__24eo_5fpf, &[v6877])?;
 let v6879 = eo__24eo_5fprog_5fstr_2deq_2drepl_2dlen_2done_2demp_2dprefix(s, v6864[0], v6866[0], v6868[0], v6876, v6878)?;
-return Ok(v6879);
+return Ok(Some(v6879));
 }
+Ok(None)
+}
+fn case_573_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case573: {
 let v6880 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5frepl_5femp_5ftgt_5fnemp, &[])?;
 if a1 != v6880 { break 'case573; }
@@ -20958,8 +23602,11 @@ let v6896 = s.construct(Constructor::eo__24eo_5fpf, &[v6895])?;
 let v6897 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6893[0])?;
 let v6898 = s.construct(Constructor::eo__24eo_5fpf, &[v6897])?;
 let v6899 = eo__24eo_5fprog_5fstr_2deq_2drepl_2demp_2dtgt_2dnemp(s, v6882[0], v6884[0], v6886[0], v6888[0], v6896, v6898)?;
-return Ok(v6899);
+return Ok(Some(v6899));
 }
+Ok(None)
+}
+fn case_574_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case574: {
 let v6900 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5frepl_5fnemp_5fsrc_5femp, &[])?;
 if a1 != v6900 { break 'case574; }
@@ -20996,8 +23643,11 @@ let v6916 = s.construct(Constructor::eo__24eo_5fpf, &[v6915])?;
 let v6917 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6913[0])?;
 let v6918 = s.construct(Constructor::eo__24eo_5fpf, &[v6917])?;
 let v6919 = eo__24eo_5fprog_5fstr_2deq_2drepl_2dnemp_2dsrc_2demp(s, v6902[0], v6904[0], v6906[0], v6908[0], v6916, v6918)?;
-return Ok(v6919);
+return Ok(Some(v6919));
 }
+Ok(None)
+}
+fn case_575_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case575: {
 let v6920 = s.construct(Constructor::eo__24emb_5fr_2estr_5feq_5frepl_5fself_5fsrc, &[])?;
 if a1 != v6920 { break 'case575; }
@@ -21014,8 +23664,11 @@ if v6924[1] != v6925 { break 'case575; }
 let v6926 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6926 { break 'case575; }
 let v6927 = eo__24eo_5fprog_5fstr_2deq_2drepl_2dself_2dsrc(s, v6922[0], v6924[0])?;
-return Ok(v6927);
+return Ok(Some(v6927));
 }
+Ok(None)
+}
+fn case_576_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case576: {
 let v6928 = s.construct(Constructor::eo__24emb_5fr_2eseq_5flen_5funit, &[])?;
 if a1 != v6928 { break 'case576; }
@@ -21028,8 +23681,11 @@ if v6930[1] != v6931 { break 'case576; }
 let v6932 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6932 { break 'case576; }
 let v6933 = eo__24eo_5fprog_5fseq_2dlen_2dunit(s, v6930[0])?;
-return Ok(v6933);
+return Ok(Some(v6933));
 }
+Ok(None)
+}
+fn case_577_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case577: {
 let v6934 = s.construct(Constructor::eo__24emb_5fr_2eseq_5fnth_5funit, &[])?;
 if a1 != v6934 { break 'case577; }
@@ -21042,8 +23698,11 @@ if v6936[1] != v6937 { break 'case577; }
 let v6938 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6938 { break 'case577; }
 let v6939 = eo__24eo_5fprog_5fseq_2dnth_2dunit(s, v6936[0])?;
-return Ok(v6939);
+return Ok(Some(v6939));
 }
+Ok(None)
+}
+fn case_578_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case578: {
 let v6940 = s.construct(Constructor::eo__24emb_5fr_2eseq_5fnth_5fconcat_5funit, &[])?;
 if a1 != v6940 { break 'case578; }
@@ -21060,8 +23719,11 @@ if v6944[1] != v6945 { break 'case578; }
 let v6946 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6946 { break 'case578; }
 let v6947 = eo__24eo_5fprog_5fseq_2dnth_2dconcat_2dunit(s, v6942[0], v6944[0])?;
-return Ok(v6947);
+return Ok(Some(v6947));
 }
+Ok(None)
+}
+fn case_579_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case579: {
 let v6948 = s.construct(Constructor::eo__24emb_5fr_2eseq_5fnth_5fconcat_5funit_5fgen, &[])?;
 if a1 != v6948 { break 'case579; }
@@ -21096,8 +23758,11 @@ if v6961[1] != v6962 { break 'case579; }
 let v6963 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v6961[0])?;
 let v6964 = s.construct(Constructor::eo__24eo_5fpf, &[v6963])?;
 let v6965 = eo__24eo_5fprog_5fseq_2dnth_2dconcat_2dunit_2dgen(s, v6950[0], v6952[0], v6954[0], v6956[0], v6958[0], v6964)?;
-return Ok(v6965);
+return Ok(Some(v6965));
 }
+Ok(None)
+}
+fn case_580_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case580: {
 let v6966 = s.construct(Constructor::eo__24emb_5fr_2eseq_5frev_5funit, &[])?;
 if a1 != v6966 { break 'case580; }
@@ -21110,8 +23775,11 @@ if v6968[1] != v6969 { break 'case580; }
 let v6970 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6970 { break 'case580; }
 let v6971 = eo__24eo_5fprog_5fseq_2drev_2dunit(s, v6968[0])?;
-return Ok(v6971);
+return Ok(Some(v6971));
 }
+Ok(None)
+}
+fn case_581_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case581: {
 let v6972 = s.construct(Constructor::eo__24emb_5fr_2ere_5fin_5fempty, &[])?;
 if a1 != v6972 { break 'case581; }
@@ -21124,8 +23792,11 @@ if v6974[1] != v6975 { break 'case581; }
 let v6976 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6976 { break 'case581; }
 let v6977 = eo__24eo_5fprog_5fre_2din_2dempty(s, v6974[0])?;
-return Ok(v6977);
+return Ok(Some(v6977));
 }
+Ok(None)
+}
+fn case_582_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case582: {
 let v6978 = s.construct(Constructor::eo__24emb_5fr_2ere_5fin_5fsigma, &[])?;
 if a1 != v6978 { break 'case582; }
@@ -21138,8 +23809,11 @@ if v6980[1] != v6981 { break 'case582; }
 let v6982 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6982 { break 'case582; }
 let v6983 = eo__24eo_5fprog_5fre_2din_2dsigma(s, v6980[0])?;
-return Ok(v6983);
+return Ok(Some(v6983));
 }
+Ok(None)
+}
+fn case_583_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case583: {
 let v6984 = s.construct(Constructor::eo__24emb_5fr_2ere_5fin_5fsigma_5fstar, &[])?;
 if a1 != v6984 { break 'case583; }
@@ -21152,8 +23826,11 @@ if v6986[1] != v6987 { break 'case583; }
 let v6988 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6988 { break 'case583; }
 let v6989 = eo__24eo_5fprog_5fre_2din_2dsigma_2dstar(s, v6986[0])?;
-return Ok(v6989);
+return Ok(Some(v6989));
 }
+Ok(None)
+}
+fn case_584_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case584: {
 let v6990 = s.construct(Constructor::eo__24emb_5fr_2ere_5fin_5fcstring, &[])?;
 if a1 != v6990 { break 'case584; }
@@ -21170,8 +23847,11 @@ if v6994[1] != v6995 { break 'case584; }
 let v6996 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v6996 { break 'case584; }
 let v6997 = eo__24eo_5fprog_5fre_2din_2dcstring(s, v6992[0], v6994[0])?;
-return Ok(v6997);
+return Ok(Some(v6997));
 }
+Ok(None)
+}
+fn case_585_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case585: {
 let v6998 = s.construct(Constructor::eo__24emb_5fr_2ere_5fin_5fcomp, &[])?;
 if a1 != v6998 { break 'case585; }
@@ -21188,8 +23868,11 @@ if v7002[1] != v7003 { break 'case585; }
 let v7004 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7004 { break 'case585; }
 let v7005 = eo__24eo_5fprog_5fre_2din_2dcomp(s, v7000[0], v7002[0])?;
-return Ok(v7005);
+return Ok(Some(v7005));
 }
+Ok(None)
+}
+fn case_586_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case586: {
 let v7006 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5funion_5felim, &[])?;
 if a1 != v7006 { break 'case586; }
@@ -21214,8 +23897,11 @@ if v7014[1] != v7015 { break 'case586; }
 let v7016 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7016 { break 'case586; }
 let v7017 = eo__24eo_5fprog_5fstr_2din_2dre_2dunion_2delim(s, v7008[0], v7010[0], v7012[0], v7014[0])?;
-return Ok(v7017);
+return Ok(Some(v7017));
 }
+Ok(None)
+}
+fn case_587_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case587: {
 let v7018 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5finter_5felim, &[])?;
 if a1 != v7018 { break 'case587; }
@@ -21240,8 +23926,11 @@ if v7026[1] != v7027 { break 'case587; }
 let v7028 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7028 { break 'case587; }
 let v7029 = eo__24eo_5fprog_5fstr_2din_2dre_2dinter_2delim(s, v7020[0], v7022[0], v7024[0], v7026[0])?;
-return Ok(v7029);
+return Ok(Some(v7029));
 }
+Ok(None)
+}
+fn case_588_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case588: {
 let v7030 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5frange_5felim, &[])?;
 if a1 != v7030 { break 'case588; }
@@ -21274,8 +23963,11 @@ let v7044 = s.construct(Constructor::eo__24eo_5fpf, &[v7043])?;
 let v7045 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7041[0])?;
 let v7046 = s.construct(Constructor::eo__24eo_5fpf, &[v7045])?;
 let v7047 = eo__24eo_5fprog_5fstr_2din_2dre_2drange_2delim(s, v7032[0], v7034[0], v7036[0], v7044, v7046)?;
-return Ok(v7047);
+return Ok(Some(v7047));
 }
+Ok(None)
+}
+fn case_589_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case589: {
 let v7048 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5fcontains, &[])?;
 if a1 != v7048 { break 'case589; }
@@ -21292,8 +23984,11 @@ if v7052[1] != v7053 { break 'case589; }
 let v7054 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7054 { break 'case589; }
 let v7055 = eo__24eo_5fprog_5fstr_2din_2dre_2dcontains(s, v7050[0], v7052[0])?;
-return Ok(v7055);
+return Ok(Some(v7055));
 }
+Ok(None)
+}
+fn case_590_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case590: {
 let v7056 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fnemp_5fdig_5frange, &[])?;
 if a1 != v7056 { break 'case590; }
@@ -21312,8 +24007,11 @@ if v7061[1] != v7062 { break 'case590; }
 let v7063 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7061[0])?;
 let v7064 = s.construct(Constructor::eo__24eo_5fpf, &[v7063])?;
 let v7065 = eo__24eo_5fprog_5fstr_2din_2dre_2dfrom_2dint_2dnemp_2ddig_2drange(s, v7058[0], v7064)?;
-return Ok(v7065);
+return Ok(Some(v7065));
 }
+Ok(None)
+}
+fn case_591_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case591: {
 let v7066 = s.construct(Constructor::eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fdig_5frange, &[])?;
 if a1 != v7066 { break 'case591; }
@@ -21326,8 +24024,11 @@ if v7068[1] != v7069 { break 'case591; }
 let v7070 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7070 { break 'case591; }
 let v7071 = eo__24eo_5fprog_5fstr_2din_2dre_2dfrom_2dint_2ddig_2drange(s, v7068[0])?;
-return Ok(v7071);
+return Ok(Some(v7071));
 }
+Ok(None)
+}
+fn case_592_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case592: {
 let v7072 = s.construct(Constructor::eo__24emb_5fr_2eeq_5frefl, &[])?;
 if a1 != v7072 { break 'case592; }
@@ -21340,8 +24041,11 @@ if v7074[1] != v7075 { break 'case592; }
 let v7076 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7076 { break 'case592; }
 let v7077 = eo__24eo_5fprog_5feq_2drefl(s, v7074[0])?;
-return Ok(v7077);
+return Ok(Some(v7077));
 }
+Ok(None)
+}
+fn case_593_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case593: {
 let v7078 = s.construct(Constructor::eo__24emb_5fr_2eeq_5fsymm, &[])?;
 if a1 != v7078 { break 'case593; }
@@ -21358,8 +24062,11 @@ if v7082[1] != v7083 { break 'case593; }
 let v7084 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7084 { break 'case593; }
 let v7085 = eo__24eo_5fprog_5feq_2dsymm(s, v7080[0], v7082[0])?;
-return Ok(v7085);
+return Ok(Some(v7085));
 }
+Ok(None)
+}
+fn case_594_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case594: {
 let v7086 = s.construct(Constructor::eo__24emb_5fr_2eeq_5fcond_5fdeq, &[])?;
 if a1 != v7086 { break 'case594; }
@@ -21386,8 +24093,11 @@ if v7095[1] != v7096 { break 'case594; }
 let v7097 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7095[0])?;
 let v7098 = s.construct(Constructor::eo__24eo_5fpf, &[v7097])?;
 let v7099 = eo__24eo_5fprog_5feq_2dcond_2ddeq(s, v7088[0], v7090[0], v7092[0], v7098)?;
-return Ok(v7099);
+return Ok(Some(v7099));
 }
+Ok(None)
+}
+fn case_595_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case595: {
 let v7100 = s.construct(Constructor::eo__24emb_5fr_2eeq_5fite_5flift, &[])?;
 if a1 != v7100 { break 'case595; }
@@ -21412,8 +24122,11 @@ if v7108[1] != v7109 { break 'case595; }
 let v7110 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7110 { break 'case595; }
 let v7111 = eo__24eo_5fprog_5feq_2dite_2dlift(s, v7102[0], v7104[0], v7106[0], v7108[0])?;
-return Ok(v7111);
+return Ok(Some(v7111));
 }
+Ok(None)
+}
+fn case_596_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case596: {
 let v7112 = s.construct(Constructor::eo__24emb_5fr_2edistinct_5fbinary_5felim, &[])?;
 if a1 != v7112 { break 'case596; }
@@ -21430,8 +24143,11 @@ if v7116[1] != v7117 { break 'case596; }
 let v7118 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7118 { break 'case596; }
 let v7119 = eo__24eo_5fprog_5fdistinct_2dbinary_2delim(s, v7114[0], v7116[0])?;
-return Ok(v7119);
+return Ok(Some(v7119));
 }
+Ok(None)
+}
+fn case_597_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case597: {
 let v7120 = s.construct(Constructor::eo__24emb_5fr_2euf_5fbv2nat_5fint2bv, &[])?;
 if a1 != v7120 { break 'case597; }
@@ -21454,8 +24170,11 @@ if v7127[1] != v7128 { break 'case597; }
 let v7129 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7127[0])?;
 let v7130 = s.construct(Constructor::eo__24eo_5fpf, &[v7129])?;
 let v7131 = eo__24eo_5fprog_5fuf_2dbv2nat_2dint2bv(s, v7122[0], v7124[0], v7130)?;
-return Ok(v7131);
+return Ok(Some(v7131));
 }
+Ok(None)
+}
+fn case_598_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case598: {
 let v7132 = s.construct(Constructor::eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextend, &[])?;
 if a1 != v7132 { break 'case598; }
@@ -21488,8 +24207,11 @@ let v7146 = s.construct(Constructor::eo__24eo_5fpf, &[v7145])?;
 let v7147 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7143[0])?;
 let v7148 = s.construct(Constructor::eo__24eo_5fpf, &[v7147])?;
 let v7149 = eo__24eo_5fprog_5fuf_2dbv2nat_2dint2bv_2dextend(s, v7134[0], v7136[0], v7138[0], v7146, v7148)?;
-return Ok(v7149);
+return Ok(Some(v7149));
 }
+Ok(None)
+}
+fn case_599_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case599: {
 let v7150 = s.construct(Constructor::eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextract, &[])?;
 if a1 != v7150 { break 'case599; }
@@ -21522,8 +24244,11 @@ let v7164 = s.construct(Constructor::eo__24eo_5fpf, &[v7163])?;
 let v7165 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7161[0])?;
 let v7166 = s.construct(Constructor::eo__24eo_5fpf, &[v7165])?;
 let v7167 = eo__24eo_5fprog_5fuf_2dbv2nat_2dint2bv_2dextract(s, v7152[0], v7154[0], v7156[0], v7164, v7166)?;
-return Ok(v7167);
+return Ok(Some(v7167));
 }
+Ok(None)
+}
+fn case_600_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case600: {
 let v7168 = s.construct(Constructor::eo__24emb_5fr_2euf_5fint2bv_5fbv2nat, &[])?;
 if a1 != v7168 { break 'case600; }
@@ -21540,8 +24265,11 @@ if v7172[1] != v7173 { break 'case600; }
 let v7174 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7174 { break 'case600; }
 let v7175 = eo__24eo_5fprog_5fuf_2dint2bv_2dbv2nat(s, v7170[0], v7172[0])?;
-return Ok(v7175);
+return Ok(Some(v7175));
 }
+Ok(None)
+}
+fn case_601_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case601: {
 let v7176 = s.construct(Constructor::eo__24emb_5fr_2euf_5fbv2nat_5fgeq_5felim, &[])?;
 if a1 != v7176 { break 'case601; }
@@ -21568,8 +24296,11 @@ if v7185[1] != v7186 { break 'case601; }
 let v7187 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7185[0])?;
 let v7188 = s.construct(Constructor::eo__24eo_5fpf, &[v7187])?;
 let v7189 = eo__24eo_5fprog_5fuf_2dbv2nat_2dgeq_2delim(s, v7178[0], v7180[0], v7182[0], v7188)?;
-return Ok(v7189);
+return Ok(Some(v7189));
 }
+Ok(None)
+}
+fn case_602_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case602: {
 let v7190 = s.construct(Constructor::eo__24emb_5fr_2euf_5fint2bv_5fbvult_5fequiv, &[])?;
 if a1 != v7190 { break 'case602; }
@@ -21586,8 +24317,11 @@ if v7194[1] != v7195 { break 'case602; }
 let v7196 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7196 { break 'case602; }
 let v7197 = eo__24eo_5fprog_5fuf_2dint2bv_2dbvult_2dequiv(s, v7192[0], v7194[0])?;
-return Ok(v7197);
+return Ok(Some(v7197));
 }
+Ok(None)
+}
+fn case_603_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case603: {
 let v7198 = s.construct(Constructor::eo__24emb_5fr_2euf_5fint2bv_5fbvule_5fequiv, &[])?;
 if a1 != v7198 { break 'case603; }
@@ -21604,8 +24338,11 @@ if v7202[1] != v7203 { break 'case603; }
 let v7204 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7204 { break 'case603; }
 let v7205 = eo__24eo_5fprog_5fuf_2dint2bv_2dbvule_2dequiv(s, v7200[0], v7202[0])?;
-return Ok(v7205);
+return Ok(Some(v7205));
 }
+Ok(None)
+}
+fn case_604_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case604: {
 let v7206 = s.construct(Constructor::eo__24emb_5fr_2euf_5fsbv_5fto_5fint_5felim, &[])?;
 if a1 != v7206 { break 'case604; }
@@ -21638,8 +24375,11 @@ let v7220 = s.construct(Constructor::eo__24eo_5fpf, &[v7219])?;
 let v7221 = eo__24eo_5fstate_5fproven_5fnth(s, a0, v7217[0])?;
 let v7222 = s.construct(Constructor::eo__24eo_5fpf, &[v7221])?;
 let v7223 = eo__24eo_5fprog_5fuf_2dsbv_2dto_2dint_2delim(s, v7208[0], v7210[0], v7212[0], v7220, v7222)?;
-return Ok(v7223);
+return Ok(Some(v7223));
 }
+Ok(None)
+}
+fn case_605_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case605: {
 let v7224 = s.construct(Constructor::eo__24emb_5fr_2eevaluate, &[])?;
 if a1 != v7224 { break 'case605; }
@@ -21652,8 +24392,11 @@ if v7226[1] != v7227 { break 'case605; }
 let v7228 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7228 { break 'case605; }
 let v7229 = eo__24eo_5fprog_5fevaluate(s, v7226[0])?;
-return Ok(v7229);
+return Ok(Some(v7229));
 }
+Ok(None)
+}
+fn case_606_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case606: {
 let v7230 = s.construct(Constructor::eo__24emb_5fr_2edistinct_5fvalues, &[])?;
 if a1 != v7230 { break 'case606; }
@@ -21670,8 +24413,11 @@ if v7234[1] != v7235 { break 'case606; }
 let v7236 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7236 { break 'case606; }
 let v7237 = eo__24eo_5fprog_5fdistinct_5fvalues(s, v7232[0], v7234[0])?;
-return Ok(v7237);
+return Ok(Some(v7237));
 }
+Ok(None)
+}
+fn case_607_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case607: {
 let v7238 = s.construct(Constructor::eo__24emb_5fr_2eaci_5fnorm, &[])?;
 if a1 != v7238 { break 'case607; }
@@ -21684,8 +24430,11 @@ if v7240[1] != v7241 { break 'case607; }
 let v7242 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7242 { break 'case607; }
 let v7243 = eo__24eo_5fprog_5faci_5fnorm(s, v7240[0])?;
-return Ok(v7243);
+return Ok(Some(v7243));
 }
+Ok(None)
+}
+fn case_608_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case608: {
 let v7244 = s.construct(Constructor::eo__24emb_5fr_2eabsorb, &[])?;
 if a1 != v7244 { break 'case608; }
@@ -21698,8 +24447,11 @@ if v7246[1] != v7247 { break 'case608; }
 let v7248 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7248 { break 'case608; }
 let v7249 = eo__24eo_5fprog_5fabsorb(s, v7246[0])?;
-return Ok(v7249);
+return Ok(Some(v7249));
 }
+Ok(None)
+}
+fn case_609_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case609: {
 let v7250 = s.construct(Constructor::eo__24emb_5fr_2edistinct_5fcard_5fconflict, &[])?;
 if a1 != v7250 { break 'case609; }
@@ -21712,16 +24464,16 @@ if v7252[1] != v7253 { break 'case609; }
 let v7254 = s.construct(Constructor::eo__24emb_5findl_2enil, &[])?;
 if a3 != v7254 { break 'case609; }
 let v7255 = eo__24eo_5fprog_5fdistinct_2dcard_2dconflict(s, v7252[0])?;
-return Ok(v7255);
+return Ok(Some(v7255));
 }
+Ok(None)
+}
+fn case_610_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 'case610: {
 let v7256 = s.construct(Constructor::eo__24emb_5fStuck, &[])?;
-return Ok(v7256);
+return Ok(Some(v7256));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$eo_datatype_cons_selectors_rec"
 pub fn eo__24eo_5fdatatype_5fcons_5fselectors_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term, mut a5: Term) -> CheckResult<Term> {
@@ -22076,28 +24828,37 @@ s.leave();
 if let Ok(value) = result { s.cache_program(ProgramId(84), &cache_args, value)?; }
 result
 }
-// EO program "$eo_invoke_assume_list"
+// EO program "$eo_invoke_assume_list", compiled to an iterative guarded fold
 pub fn eo__24eo_5finvoke_5fassume_5flist(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
 let result = (|| {
+let mut pending = Vec::new();
+let mut args = a1;
+let mut state = 'scan: loop {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5fal_2enil, &[])?;
-if a1 != v0 { break 'case0; }
-return Ok(a0);
+if args != v0 { break 'case0; }
+break 'scan a0;
 }
 'case1: {
-let v1 = s.destruct(Constructor::eo__24emb_5fal_2econs, a1)?;
+let v1 = s.destruct(Constructor::eo__24emb_5fal_2econs, args)?;
 let Some(fields) = v1 else { break 'case1; }
 ;
 let v2 = fields;
 let v3 = eo__24eo_5fis_5fbool_5ftype(s, v2[0])?;
 let v4 = eo__24eo_5fis_5fclosed(s, v2[0])?;
 let v5 = s.operator("and", &[v3, v4])?;
-let v6 = eo__24eo_5finvoke_5fassume_5flist(s, a0, v2[1])?;
-let v7 = eo__24eo_5fpush_5finput_5fassume_5fcheck(s, v5, v2[0], v6)?;
-return Ok(v7);
+pending.push((v5, v2[0]));
+args = v2[1];
+s.tick()?;
+continue 'scan;
 }
-Ok(s.stuck())
+break 'scan s.stuck();
+};
+while let Some((guard, term)) = pending.pop() {
+state = eo__24eo_5fpush_5finput_5fassume_5fcheck(s, guard, term, state)?;
+}
+Ok(state)
 })();
 s.leave();
 result
@@ -22298,6 +25059,41 @@ let result = (|| {
 'recur: loop {
 s.tick()?;
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 9 {
+let matched = match case_index {
+0 => case_0_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+1 => case_1_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+2 => case_2_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+3 => case_3_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+4 => case_4_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+5 => case_5_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+6 => case_6_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+7 => case_7_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+8 => case_8_eo__24eo_5fis_5fclosed_5frec(s, a0, a1),
+_ => Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch),
+}?;
+match matched {
+case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch => {},
+case_result_eo__24eo_5fis_5fclosed_5frec::Value(value) => return Ok(value),
+case_result_eo__24eo_5fis_5fclosed_5frec::Tail(next) => {
+a0 = next[0];
+a1 = next[1];
+continue 'recur;
+}
+}
+case_index += 1;
+}
+return Ok(s.stuck());
+}
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(92), &cache_args, value)?; }
+result
+}
+#[allow(dead_code)]
+enum case_result_eo__24eo_5fis_5fclosed_5frec { NoMatch, Value(Term), Tail([Term; 2]) }
+fn case_0_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fVar, a0)?;
 let Some(fields) = v0 else { break 'case0; }
@@ -22306,8 +25102,11 @@ let v1 = fields;
 let v2 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 if a1 != v2 { break 'case0; }
 let v3 = s.literal(Lit::Bool(false))?;
-return Ok(v3);
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v3));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_1_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case1: {
 let v4 = s.destruct(Constructor::eo__24emb_5fVar, a0)?;
 let Some(fields) = v4 else { break 'case1; }
@@ -22337,8 +25136,11 @@ let v18 = eo__24eo_5fis_5fclosed_5frec(s, v17, v8)?;
 v18
 }, None => s.stuck(),
 };
-return Ok(v15);
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v15));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_2_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case2: {
 let v19 = s.unapply(a0)?;
 let Some((f, a)) = v19 else { break 'case2; }
@@ -22356,10 +25158,11 @@ let v26 = v21;
 let v27 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v28 = s.operator("list_concat", &[v27, v24, a1])?;
 let v29 = v28;
-a0 = v26;
-a1 = v29;
-continue 'recur;
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Tail([v26, v29]));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_3_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case3: {
 let v30 = s.unapply(a0)?;
 let Some((f, a)) = v30 else { break 'case3; }
@@ -22377,10 +25180,11 @@ let v37 = v32;
 let v38 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 let v39 = s.operator("list_concat", &[v38, v35, a1])?;
 let v40 = v39;
-a0 = v37;
-a1 = v40;
-continue 'recur;
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Tail([v37, v40]));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_4_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case4: {
 let v41 = s.unapply(a0)?;
 let Some((f, a)) = v41 else { break 'case4; }
@@ -22390,8 +25194,11 @@ let v43 = a;
 let v44 = eo__24eo_5fis_5fclosed_5frec(s, v42, a1)?;
 let v45 = eo__24eo_5fis_5fclosed_5frec(s, v43, a1)?;
 let v46 = s.operator("and", &[v44, v45])?;
-return Ok(v46);
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v46));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_5_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case5: {
 let v47 = s.destruct(Constructor::eo__24emb_5fUOp1, a0)?;
 let Some(fields) = v47 else { break 'case5; }
@@ -22399,10 +25206,11 @@ let Some(fields) = v47 else { break 'case5; }
 let v48 = fields;
 let v49 = v48[1];
 let v50 = a1;
-a0 = v49;
-a1 = v50;
-continue 'recur;
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Tail([v49, v50]));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_6_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case6: {
 let v51 = s.destruct(Constructor::eo__24emb_5fUOp2, a0)?;
 let Some(fields) = v51 else { break 'case6; }
@@ -22411,8 +25219,11 @@ let v52 = fields;
 let v53 = eo__24eo_5fis_5fclosed_5frec(s, v52[1], a1)?;
 let v54 = eo__24eo_5fis_5fclosed_5frec(s, v52[2], a1)?;
 let v55 = s.operator("and", &[v53, v54])?;
-return Ok(v55);
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v55));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_7_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case7: {
 let v56 = s.destruct(Constructor::eo__24emb_5fUOp3, a0)?;
 let Some(fields) = v56 else { break 'case7; }
@@ -22423,110 +25234,182 @@ let v59 = eo__24eo_5fis_5fclosed_5frec(s, v57[2], a1)?;
 let v60 = s.operator("and", &[v58, v59])?;
 let v61 = eo__24eo_5fis_5fclosed_5frec(s, v57[3], a1)?;
 let v62 = s.operator("and", &[v60, v61])?;
-return Ok(v62);
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v62));
 }
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
+}
+fn case_8_eo__24eo_5fis_5fclosed_5frec(s: &mut Store, a0: Term, a1: Term) -> CheckResult<case_result_eo__24eo_5fis_5fclosed_5frec> {
 'case8: {
 let v63 = s.literal(Lit::Bool(true))?;
-return Ok(v63);
+return Ok(case_result_eo__24eo_5fis_5fclosed_5frec::Value(v63));
 }
-return Ok(s.stuck());
-}
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(92), &cache_args, value)?; }
-result
+Ok(case_result_eo__24eo_5fis_5fclosed_5frec::NoMatch)
 }
 // EO program "$eo_is_list_nil"
 pub fn eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 21 {
+let matched = match case_index {
+0 => case_0_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+1 => case_1_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+2 => case_2_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+3 => case_3_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+4 => case_4_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+5 => case_5_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+6 => case_6_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+7 => case_7_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+8 => case_8_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+9 => case_9_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+10 => case_10_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+11 => case_11_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+12 => case_12_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+13 => case_13_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+14 => case_14_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+15 => case_15_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+16 => case_16_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+17 => case_17_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+18 => case_18_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+19 => case_19_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+20 => case_20_eo__24eo_5fis_5flist_5fnil(s, a0, a1),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if a0 != v0 { break 'case0; }
 let v1 = eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs(s, a1)?;
-return Ok(v1);
+return Ok(Some(v1));
 }
+Ok(None)
+}
+fn case_1_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v2 = s.construct(Constructor::eo_or, &[])?;
 if a0 != v2 { break 'case1; }
 let v3 = s.literal(Lit::Bool(false))?;
 if a1 != v3 { break 'case1; }
 let v4 = s.literal(Lit::Bool(true))?;
-return Ok(v4);
+return Ok(Some(v4));
 }
+Ok(None)
+}
+fn case_2_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v5 = s.construct(Constructor::eo_and, &[])?;
 if a0 != v5 { break 'case2; }
 let v6 = s.literal(Lit::Bool(true))?;
 if a1 != v6 { break 'case2; }
 let v7 = s.literal(Lit::Bool(true))?;
-return Ok(v7);
+return Ok(Some(v7));
 }
+Ok(None)
+}
+fn case_3_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v8 = s.construct(Constructor::eo__2b, &[])?;
 if a0 != v8 { break 'case3; }
 let v9 = eo__24eo_5fis_5flist_5fnil_5f_2b(s, a1)?;
-return Ok(v9);
+return Ok(Some(v9));
 }
+Ok(None)
+}
+fn case_4_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v10 = s.construct(Constructor::eo__2a, &[])?;
 if a0 != v10 { break 'case4; }
 let v11 = eo__24eo_5fis_5flist_5fnil_5f_2a(s, a1)?;
-return Ok(v11);
+return Ok(Some(v11));
 }
+Ok(None)
+}
+fn case_5_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v12 = s.construct(Constructor::eo_concat, &[])?;
 if a0 != v12 { break 'case5; }
 let v13 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 if a1 != v13 { break 'case5; }
 let v14 = s.literal(Lit::Bool(true))?;
-return Ok(v14);
+return Ok(Some(v14));
 }
+Ok(None)
+}
+fn case_6_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v15 = s.construct(Constructor::eo_bvand, &[])?;
 if a0 != v15 { break 'case6; }
 let v16 = eo__24eo_5fis_5flist_5fnil_5fbvand(s, a1)?;
-return Ok(v16);
+return Ok(Some(v16));
 }
+Ok(None)
+}
+fn case_7_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v17 = s.construct(Constructor::eo_bvor, &[])?;
 if a0 != v17 { break 'case7; }
 let v18 = eo__24eo_5fis_5flist_5fnil_5fbvor(s, a1)?;
-return Ok(v18);
+return Ok(Some(v18));
 }
+Ok(None)
+}
+fn case_8_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v19 = s.construct(Constructor::eo_bvxor, &[])?;
 if a0 != v19 { break 'case8; }
 let v20 = eo__24eo_5fis_5flist_5fnil_5fbvxor(s, a1)?;
-return Ok(v20);
+return Ok(Some(v20));
 }
+Ok(None)
+}
+fn case_9_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v21 = s.construct(Constructor::eo_bvadd, &[])?;
 if a0 != v21 { break 'case9; }
 let v22 = eo__24eo_5fis_5flist_5fnil_5fbvadd(s, a1)?;
-return Ok(v22);
+return Ok(Some(v22));
 }
+Ok(None)
+}
+fn case_10_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v23 = s.construct(Constructor::eo_bvmul, &[])?;
 if a0 != v23 { break 'case10; }
 let v24 = eo__24eo_5fis_5flist_5fnil_5fbvmul(s, a1)?;
-return Ok(v24);
+return Ok(Some(v24));
 }
+Ok(None)
+}
+fn case_11_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v25 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 if a0 != v25 { break 'case11; }
 let v26 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
 if a1 != v26 { break 'case11; }
 let v27 = s.literal(Lit::Bool(true))?;
-return Ok(v27);
+return Ok(Some(v27));
 }
+Ok(None)
+}
+fn case_12_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v28 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if a0 != v28 { break 'case12; }
 let v29 = eo__24eo_5fis_5flist_5fnil_5fstr_2e_2b_2b(s, a1)?;
-return Ok(v29);
+return Ok(Some(v29));
 }
+Ok(None)
+}
+fn case_13_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v30 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 if a0 != v30 { break 'case13; }
@@ -22540,64 +25423,82 @@ if v32 != v34 { break 'case13; }
 let v35 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 if v33 != v35 { break 'case13; }
 let v36 = s.literal(Lit::Bool(true))?;
-return Ok(v36);
+return Ok(Some(v36));
 }
+Ok(None)
+}
+fn case_14_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v37 = s.construct(Constructor::eo_re_2einter, &[])?;
 if a0 != v37 { break 'case14; }
 let v38 = s.construct(Constructor::eo_re_2eall, &[])?;
 if a1 != v38 { break 'case14; }
 let v39 = s.literal(Lit::Bool(true))?;
-return Ok(v39);
+return Ok(Some(v39));
 }
+Ok(None)
+}
+fn case_15_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v40 = s.construct(Constructor::eo_re_2eunion, &[])?;
 if a0 != v40 { break 'case15; }
 let v41 = s.construct(Constructor::eo_re_2enone, &[])?;
 if a1 != v41 { break 'case15; }
 let v42 = s.literal(Lit::Bool(true))?;
-return Ok(v42);
+return Ok(Some(v42));
 }
+Ok(None)
+}
+fn case_16_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v43 = s.construct(Constructor::eo_Tuple, &[])?;
 if a0 != v43 { break 'case16; }
 let v44 = s.construct(Constructor::eo_UnitTuple, &[])?;
 if a1 != v44 { break 'case16; }
 let v45 = s.literal(Lit::Bool(true))?;
-return Ok(v45);
+return Ok(Some(v45));
 }
+Ok(None)
+}
+fn case_17_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case17: {
 let v46 = s.construct(Constructor::eo_tuple, &[])?;
 if a0 != v46 { break 'case17; }
 let v47 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
 if a1 != v47 { break 'case17; }
 let v48 = s.literal(Lit::Bool(true))?;
-return Ok(v48);
+return Ok(Some(v48));
 }
+Ok(None)
+}
+fn case_18_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case18: {
 let v49 = s.construct(Constructor::eo__40_40poly, &[])?;
 if a0 != v49 { break 'case18; }
 let v50 = s.construct(Constructor::eo__40_40poly_2ezero, &[])?;
 if a1 != v50 { break 'case18; }
 let v51 = s.literal(Lit::Bool(true))?;
-return Ok(v51);
+return Ok(Some(v51));
 }
+Ok(None)
+}
+fn case_19_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case19: {
 let v52 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if a0 != v52 { break 'case19; }
 let v53 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 if a1 != v53 { break 'case19; }
 let v54 = s.literal(Lit::Bool(true))?;
-return Ok(v54);
+return Ok(Some(v54));
 }
+Ok(None)
+}
+fn case_20_eo__24eo_5fis_5flist_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case20: {
 let v55 = s.literal(Lit::Bool(false))?;
-return Ok(v55);
+return Ok(Some(v55));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$eo_is_list_nil_*"
 pub fn eo__24eo_5fis_5flist_5fnil_5f_2a(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -22847,134 +25748,222 @@ pub fn eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 20 {
+let matched = match case_index {
+0 => case_0_eo__24eo_5fnil(s, a0, a1),
+1 => case_1_eo__24eo_5fnil(s, a0, a1),
+2 => case_2_eo__24eo_5fnil(s, a0, a1),
+3 => case_3_eo__24eo_5fnil(s, a0, a1),
+4 => case_4_eo__24eo_5fnil(s, a0, a1),
+5 => case_5_eo__24eo_5fnil(s, a0, a1),
+6 => case_6_eo__24eo_5fnil(s, a0, a1),
+7 => case_7_eo__24eo_5fnil(s, a0, a1),
+8 => case_8_eo__24eo_5fnil(s, a0, a1),
+9 => case_9_eo__24eo_5fnil(s, a0, a1),
+10 => case_10_eo__24eo_5fnil(s, a0, a1),
+11 => case_11_eo__24eo_5fnil(s, a0, a1),
+12 => case_12_eo__24eo_5fnil(s, a0, a1),
+13 => case_13_eo__24eo_5fnil(s, a0, a1),
+14 => case_14_eo__24eo_5fnil(s, a0, a1),
+15 => case_15_eo__24eo_5fnil(s, a0, a1),
+16 => case_16_eo__24eo_5fnil(s, a0, a1),
+17 => case_17_eo__24eo_5fnil(s, a0, a1),
+18 => case_18_eo__24eo_5fnil(s, a0, a1),
+19 => case_19_eo__24eo_5fnil(s, a0, a1),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo__40_40TypedList_2econs, &[])?;
 if a0 != v0 { break 'case0; }
 let v1 = eo__24eo_5fnil_5f_40_40TypedList_2econs(s, a1)?;
-return Ok(v1);
+return Ok(Some(v1));
 }
+Ok(None)
+}
+fn case_1_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v2 = s.construct(Constructor::eo_or, &[])?;
 if a0 != v2 { break 'case1; }
 let v3 = s.literal(Lit::Bool(false))?;
-return Ok(v3);
+return Ok(Some(v3));
 }
+Ok(None)
+}
+fn case_2_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v4 = s.construct(Constructor::eo_and, &[])?;
 if a0 != v4 { break 'case2; }
 let v5 = s.literal(Lit::Bool(true))?;
-return Ok(v5);
+return Ok(Some(v5));
 }
+Ok(None)
+}
+fn case_3_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v6 = s.construct(Constructor::eo__2b, &[])?;
 if a0 != v6 { break 'case3; }
 let v7 = eo__24eo_5fnil_5f_2b(s, a1)?;
-return Ok(v7);
+return Ok(Some(v7));
 }
+Ok(None)
+}
+fn case_4_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v8 = s.construct(Constructor::eo__2a, &[])?;
 if a0 != v8 { break 'case4; }
 let v9 = eo__24eo_5fnil_5f_2a(s, a1)?;
-return Ok(v9);
+return Ok(Some(v9));
 }
+Ok(None)
+}
+fn case_5_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v10 = s.construct(Constructor::eo_concat, &[])?;
 if a0 != v10 { break 'case5; }
 let v11 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
-return Ok(v11);
+return Ok(Some(v11));
 }
+Ok(None)
+}
+fn case_6_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v12 = s.construct(Constructor::eo_bvand, &[])?;
 if a0 != v12 { break 'case6; }
 let v13 = eo__24eo_5fnil_5fbvand(s, a1)?;
-return Ok(v13);
+return Ok(Some(v13));
 }
+Ok(None)
+}
+fn case_7_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v14 = s.construct(Constructor::eo_bvor, &[])?;
 if a0 != v14 { break 'case7; }
 let v15 = eo__24eo_5fnil_5fbvor(s, a1)?;
-return Ok(v15);
+return Ok(Some(v15));
 }
+Ok(None)
+}
+fn case_8_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v16 = s.construct(Constructor::eo_bvxor, &[])?;
 if a0 != v16 { break 'case8; }
 let v17 = eo__24eo_5fnil_5fbvxor(s, a1)?;
-return Ok(v17);
+return Ok(Some(v17));
 }
+Ok(None)
+}
+fn case_9_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v18 = s.construct(Constructor::eo_bvadd, &[])?;
 if a0 != v18 { break 'case9; }
 let v19 = eo__24eo_5fnil_5fbvadd(s, a1)?;
-return Ok(v19);
+return Ok(Some(v19));
 }
+Ok(None)
+}
+fn case_10_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v20 = s.construct(Constructor::eo_bvmul, &[])?;
 if a0 != v20 { break 'case10; }
 let v21 = eo__24eo_5fnil_5fbvmul(s, a1)?;
-return Ok(v21);
+return Ok(Some(v21));
 }
+Ok(None)
+}
+fn case_11_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v22 = s.construct(Constructor::eo__40from_5fbools, &[])?;
 if a0 != v22 { break 'case11; }
 let v23 = s.literal(Lit::Binary(BitVec::new(0, &parse_int("0")?)))?;
-return Ok(v23);
+return Ok(Some(v23));
 }
+Ok(None)
+}
+fn case_12_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v24 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 if a0 != v24 { break 'case12; }
 let v25 = eo__24eo_5fnil_5fstr_2e_2b_2b(s, a1)?;
-return Ok(v25);
+return Ok(Some(v25));
 }
+Ok(None)
+}
+fn case_13_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v26 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 if a0 != v26 { break 'case13; }
 let v27 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v28 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v29 = s.apply(v27, v28)?;
-return Ok(v29);
+return Ok(Some(v29));
 }
+Ok(None)
+}
+fn case_14_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v30 = s.construct(Constructor::eo_re_2einter, &[])?;
 if a0 != v30 { break 'case14; }
 let v31 = s.construct(Constructor::eo_re_2eall, &[])?;
-return Ok(v31);
+return Ok(Some(v31));
 }
+Ok(None)
+}
+fn case_15_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v32 = s.construct(Constructor::eo_re_2eunion, &[])?;
 if a0 != v32 { break 'case15; }
 let v33 = s.construct(Constructor::eo_re_2enone, &[])?;
-return Ok(v33);
+return Ok(Some(v33));
 }
+Ok(None)
+}
+fn case_16_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v34 = s.construct(Constructor::eo_Tuple, &[])?;
 if a0 != v34 { break 'case16; }
 let v35 = s.construct(Constructor::eo_UnitTuple, &[])?;
-return Ok(v35);
+return Ok(Some(v35));
 }
+Ok(None)
+}
+fn case_17_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case17: {
 let v36 = s.construct(Constructor::eo_tuple, &[])?;
 if a0 != v36 { break 'case17; }
 let v37 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
-return Ok(v37);
+return Ok(Some(v37));
 }
+Ok(None)
+}
+fn case_18_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case18: {
 let v38 = s.construct(Constructor::eo__40_40poly, &[])?;
 if a0 != v38 { break 'case18; }
 let v39 = s.construct(Constructor::eo__40_40poly_2ezero, &[])?;
-return Ok(v39);
+return Ok(Some(v39));
 }
+Ok(None)
+}
+fn case_19_eo__24eo_5fnil(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case19: {
 let v40 = s.construct(Constructor::eo__24eo_5fList_5fcons, &[])?;
 if a0 != v40 { break 'case19; }
 let v41 = s.construct(Constructor::eo__24eo_5fList, &[])?;
 if a1 != v41 { break 'case19; }
 let v42 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
-return Ok(v42);
+return Ok(Some(v42));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$eo_nil_*"
 pub fn eo__24eo_5fnil_5f_2a(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -66969,45 +69958,10 @@ Ok(s.stuck())
 s.leave();
 result
 }
-// EO program "$eo_state_proven_nth"
-pub fn eo__24eo_5fstate_5fproven_5fnth(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
+// EO program "$eo_state_proven_nth", compiled to Store::state_proven_nth
+pub fn eo__24eo_5fstate_5fproven_5fnth(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 s.enter()?;
-let result = (|| {
-'recur: loop {
-s.tick()?;
-'case0: {
-let v0 = s.destruct(Constructor::eo__24emb_5fs_2econs, a0)?;
-let Some(fields) = v0 else { break 'case0; }
-;
-let v1 = fields;
-let v2 = s.native_pattern("0", a1)?;
-let Some(fields) = v2 else { break 'case0; }
-;
-let v3 = fields;
-let v4 = eo__24eo_5fStateObj_5fproven(s, v1[0])?;
-return Ok(v4);
-}
-'case1: {
-let v5 = s.destruct(Constructor::eo__24emb_5fs_2econs, a0)?;
-let Some(fields) = v5 else { break 'case1; }
-;
-let v6 = fields;
-let v7 = v6[1];
-let v8 = s.native("1", &[])?;
-let v9 = s.native("zneg", &[v8])?;
-let v10 = s.native("zplus", &[a1, v9])?;
-let v11 = v10;
-a0 = v7;
-a1 = v11;
-continue 'recur;
-}
-'case2: {
-let v12 = s.literal(Lit::Bool(true))?;
-return Ok(v12);
-}
-return Ok(s.stuck());
-}
-})();
+let result = s.state_proven_nth(Constructor::eo__24emb_5fs_2econs, a0, a1, eo__24eo_5fStateObj_5fproven);
 s.leave();
 result
 }
@@ -67021,46 +69975,257 @@ Ok(None) => {},
 Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
+let mut case_index = 0_usize;
+while case_index < 181 {
+let matched = match case_index {
+0 => case_0_eo__24eo_5fto_5fsmt(s, a0),
+1 => case_1_eo__24eo_5fto_5fsmt(s, a0),
+2 => case_2_eo__24eo_5fto_5fsmt(s, a0),
+3 => case_3_eo__24eo_5fto_5fsmt(s, a0),
+4 => case_4_eo__24eo_5fto_5fsmt(s, a0),
+5 => case_5_eo__24eo_5fto_5fsmt(s, a0),
+6 => case_6_eo__24eo_5fto_5fsmt(s, a0),
+7 => case_7_eo__24eo_5fto_5fsmt(s, a0),
+8 => case_8_eo__24eo_5fto_5fsmt(s, a0),
+9 => case_9_eo__24eo_5fto_5fsmt(s, a0),
+10 => case_10_eo__24eo_5fto_5fsmt(s, a0),
+11 => case_11_eo__24eo_5fto_5fsmt(s, a0),
+12 => case_12_eo__24eo_5fto_5fsmt(s, a0),
+13 => case_13_eo__24eo_5fto_5fsmt(s, a0),
+14 => case_14_eo__24eo_5fto_5fsmt(s, a0),
+15 => case_15_eo__24eo_5fto_5fsmt(s, a0),
+16 => case_16_eo__24eo_5fto_5fsmt(s, a0),
+17 => case_17_eo__24eo_5fto_5fsmt(s, a0),
+18 => case_18_eo__24eo_5fto_5fsmt(s, a0),
+19 => case_19_eo__24eo_5fto_5fsmt(s, a0),
+20 => case_20_eo__24eo_5fto_5fsmt(s, a0),
+21 => case_21_eo__24eo_5fto_5fsmt(s, a0),
+22 => case_22_eo__24eo_5fto_5fsmt(s, a0),
+23 => case_23_eo__24eo_5fto_5fsmt(s, a0),
+24 => case_24_eo__24eo_5fto_5fsmt(s, a0),
+25 => case_25_eo__24eo_5fto_5fsmt(s, a0),
+26 => case_26_eo__24eo_5fto_5fsmt(s, a0),
+27 => case_27_eo__24eo_5fto_5fsmt(s, a0),
+28 => case_28_eo__24eo_5fto_5fsmt(s, a0),
+29 => case_29_eo__24eo_5fto_5fsmt(s, a0),
+30 => case_30_eo__24eo_5fto_5fsmt(s, a0),
+31 => case_31_eo__24eo_5fto_5fsmt(s, a0),
+32 => case_32_eo__24eo_5fto_5fsmt(s, a0),
+33 => case_33_eo__24eo_5fto_5fsmt(s, a0),
+34 => case_34_eo__24eo_5fto_5fsmt(s, a0),
+35 => case_35_eo__24eo_5fto_5fsmt(s, a0),
+36 => case_36_eo__24eo_5fto_5fsmt(s, a0),
+37 => case_37_eo__24eo_5fto_5fsmt(s, a0),
+38 => case_38_eo__24eo_5fto_5fsmt(s, a0),
+39 => case_39_eo__24eo_5fto_5fsmt(s, a0),
+40 => case_40_eo__24eo_5fto_5fsmt(s, a0),
+41 => case_41_eo__24eo_5fto_5fsmt(s, a0),
+42 => case_42_eo__24eo_5fto_5fsmt(s, a0),
+43 => case_43_eo__24eo_5fto_5fsmt(s, a0),
+44 => case_44_eo__24eo_5fto_5fsmt(s, a0),
+45 => case_45_eo__24eo_5fto_5fsmt(s, a0),
+46 => case_46_eo__24eo_5fto_5fsmt(s, a0),
+47 => case_47_eo__24eo_5fto_5fsmt(s, a0),
+48 => case_48_eo__24eo_5fto_5fsmt(s, a0),
+49 => case_49_eo__24eo_5fto_5fsmt(s, a0),
+50 => case_50_eo__24eo_5fto_5fsmt(s, a0),
+51 => case_51_eo__24eo_5fto_5fsmt(s, a0),
+52 => case_52_eo__24eo_5fto_5fsmt(s, a0),
+53 => case_53_eo__24eo_5fto_5fsmt(s, a0),
+54 => case_54_eo__24eo_5fto_5fsmt(s, a0),
+55 => case_55_eo__24eo_5fto_5fsmt(s, a0),
+56 => case_56_eo__24eo_5fto_5fsmt(s, a0),
+57 => case_57_eo__24eo_5fto_5fsmt(s, a0),
+58 => case_58_eo__24eo_5fto_5fsmt(s, a0),
+59 => case_59_eo__24eo_5fto_5fsmt(s, a0),
+60 => case_60_eo__24eo_5fto_5fsmt(s, a0),
+61 => case_61_eo__24eo_5fto_5fsmt(s, a0),
+62 => case_62_eo__24eo_5fto_5fsmt(s, a0),
+63 => case_63_eo__24eo_5fto_5fsmt(s, a0),
+64 => case_64_eo__24eo_5fto_5fsmt(s, a0),
+65 => case_65_eo__24eo_5fto_5fsmt(s, a0),
+66 => case_66_eo__24eo_5fto_5fsmt(s, a0),
+67 => case_67_eo__24eo_5fto_5fsmt(s, a0),
+68 => case_68_eo__24eo_5fto_5fsmt(s, a0),
+69 => case_69_eo__24eo_5fto_5fsmt(s, a0),
+70 => case_70_eo__24eo_5fto_5fsmt(s, a0),
+71 => case_71_eo__24eo_5fto_5fsmt(s, a0),
+72 => case_72_eo__24eo_5fto_5fsmt(s, a0),
+73 => case_73_eo__24eo_5fto_5fsmt(s, a0),
+74 => case_74_eo__24eo_5fto_5fsmt(s, a0),
+75 => case_75_eo__24eo_5fto_5fsmt(s, a0),
+76 => case_76_eo__24eo_5fto_5fsmt(s, a0),
+77 => case_77_eo__24eo_5fto_5fsmt(s, a0),
+78 => case_78_eo__24eo_5fto_5fsmt(s, a0),
+79 => case_79_eo__24eo_5fto_5fsmt(s, a0),
+80 => case_80_eo__24eo_5fto_5fsmt(s, a0),
+81 => case_81_eo__24eo_5fto_5fsmt(s, a0),
+82 => case_82_eo__24eo_5fto_5fsmt(s, a0),
+83 => case_83_eo__24eo_5fto_5fsmt(s, a0),
+84 => case_84_eo__24eo_5fto_5fsmt(s, a0),
+85 => case_85_eo__24eo_5fto_5fsmt(s, a0),
+86 => case_86_eo__24eo_5fto_5fsmt(s, a0),
+87 => case_87_eo__24eo_5fto_5fsmt(s, a0),
+88 => case_88_eo__24eo_5fto_5fsmt(s, a0),
+89 => case_89_eo__24eo_5fto_5fsmt(s, a0),
+90 => case_90_eo__24eo_5fto_5fsmt(s, a0),
+91 => case_91_eo__24eo_5fto_5fsmt(s, a0),
+92 => case_92_eo__24eo_5fto_5fsmt(s, a0),
+93 => case_93_eo__24eo_5fto_5fsmt(s, a0),
+94 => case_94_eo__24eo_5fto_5fsmt(s, a0),
+95 => case_95_eo__24eo_5fto_5fsmt(s, a0),
+96 => case_96_eo__24eo_5fto_5fsmt(s, a0),
+97 => case_97_eo__24eo_5fto_5fsmt(s, a0),
+98 => case_98_eo__24eo_5fto_5fsmt(s, a0),
+99 => case_99_eo__24eo_5fto_5fsmt(s, a0),
+100 => case_100_eo__24eo_5fto_5fsmt(s, a0),
+101 => case_101_eo__24eo_5fto_5fsmt(s, a0),
+102 => case_102_eo__24eo_5fto_5fsmt(s, a0),
+103 => case_103_eo__24eo_5fto_5fsmt(s, a0),
+104 => case_104_eo__24eo_5fto_5fsmt(s, a0),
+105 => case_105_eo__24eo_5fto_5fsmt(s, a0),
+106 => case_106_eo__24eo_5fto_5fsmt(s, a0),
+107 => case_107_eo__24eo_5fto_5fsmt(s, a0),
+108 => case_108_eo__24eo_5fto_5fsmt(s, a0),
+109 => case_109_eo__24eo_5fto_5fsmt(s, a0),
+110 => case_110_eo__24eo_5fto_5fsmt(s, a0),
+111 => case_111_eo__24eo_5fto_5fsmt(s, a0),
+112 => case_112_eo__24eo_5fto_5fsmt(s, a0),
+113 => case_113_eo__24eo_5fto_5fsmt(s, a0),
+114 => case_114_eo__24eo_5fto_5fsmt(s, a0),
+115 => case_115_eo__24eo_5fto_5fsmt(s, a0),
+116 => case_116_eo__24eo_5fto_5fsmt(s, a0),
+117 => case_117_eo__24eo_5fto_5fsmt(s, a0),
+118 => case_118_eo__24eo_5fto_5fsmt(s, a0),
+119 => case_119_eo__24eo_5fto_5fsmt(s, a0),
+120 => case_120_eo__24eo_5fto_5fsmt(s, a0),
+121 => case_121_eo__24eo_5fto_5fsmt(s, a0),
+122 => case_122_eo__24eo_5fto_5fsmt(s, a0),
+123 => case_123_eo__24eo_5fto_5fsmt(s, a0),
+124 => case_124_eo__24eo_5fto_5fsmt(s, a0),
+125 => case_125_eo__24eo_5fto_5fsmt(s, a0),
+126 => case_126_eo__24eo_5fto_5fsmt(s, a0),
+127 => case_127_eo__24eo_5fto_5fsmt(s, a0),
+128 => case_128_eo__24eo_5fto_5fsmt(s, a0),
+129 => case_129_eo__24eo_5fto_5fsmt(s, a0),
+130 => case_130_eo__24eo_5fto_5fsmt(s, a0),
+131 => case_131_eo__24eo_5fto_5fsmt(s, a0),
+132 => case_132_eo__24eo_5fto_5fsmt(s, a0),
+133 => case_133_eo__24eo_5fto_5fsmt(s, a0),
+134 => case_134_eo__24eo_5fto_5fsmt(s, a0),
+135 => case_135_eo__24eo_5fto_5fsmt(s, a0),
+136 => case_136_eo__24eo_5fto_5fsmt(s, a0),
+137 => case_137_eo__24eo_5fto_5fsmt(s, a0),
+138 => case_138_eo__24eo_5fto_5fsmt(s, a0),
+139 => case_139_eo__24eo_5fto_5fsmt(s, a0),
+140 => case_140_eo__24eo_5fto_5fsmt(s, a0),
+141 => case_141_eo__24eo_5fto_5fsmt(s, a0),
+142 => case_142_eo__24eo_5fto_5fsmt(s, a0),
+143 => case_143_eo__24eo_5fto_5fsmt(s, a0),
+144 => case_144_eo__24eo_5fto_5fsmt(s, a0),
+145 => case_145_eo__24eo_5fto_5fsmt(s, a0),
+146 => case_146_eo__24eo_5fto_5fsmt(s, a0),
+147 => case_147_eo__24eo_5fto_5fsmt(s, a0),
+148 => case_148_eo__24eo_5fto_5fsmt(s, a0),
+149 => case_149_eo__24eo_5fto_5fsmt(s, a0),
+150 => case_150_eo__24eo_5fto_5fsmt(s, a0),
+151 => case_151_eo__24eo_5fto_5fsmt(s, a0),
+152 => case_152_eo__24eo_5fto_5fsmt(s, a0),
+153 => case_153_eo__24eo_5fto_5fsmt(s, a0),
+154 => case_154_eo__24eo_5fto_5fsmt(s, a0),
+155 => case_155_eo__24eo_5fto_5fsmt(s, a0),
+156 => case_156_eo__24eo_5fto_5fsmt(s, a0),
+157 => case_157_eo__24eo_5fto_5fsmt(s, a0),
+158 => case_158_eo__24eo_5fto_5fsmt(s, a0),
+159 => case_159_eo__24eo_5fto_5fsmt(s, a0),
+160 => case_160_eo__24eo_5fto_5fsmt(s, a0),
+161 => case_161_eo__24eo_5fto_5fsmt(s, a0),
+162 => case_162_eo__24eo_5fto_5fsmt(s, a0),
+163 => case_163_eo__24eo_5fto_5fsmt(s, a0),
+164 => case_164_eo__24eo_5fto_5fsmt(s, a0),
+165 => case_165_eo__24eo_5fto_5fsmt(s, a0),
+166 => case_166_eo__24eo_5fto_5fsmt(s, a0),
+167 => case_167_eo__24eo_5fto_5fsmt(s, a0),
+168 => case_168_eo__24eo_5fto_5fsmt(s, a0),
+169 => case_169_eo__24eo_5fto_5fsmt(s, a0),
+170 => case_170_eo__24eo_5fto_5fsmt(s, a0),
+171 => case_171_eo__24eo_5fto_5fsmt(s, a0),
+172 => case_172_eo__24eo_5fto_5fsmt(s, a0),
+173 => case_173_eo__24eo_5fto_5fsmt(s, a0),
+174 => case_174_eo__24eo_5fto_5fsmt(s, a0),
+175 => case_175_eo__24eo_5fto_5fsmt(s, a0),
+176 => case_176_eo__24eo_5fto_5fsmt(s, a0),
+177 => case_177_eo__24eo_5fto_5fsmt(s, a0),
+178 => case_178_eo__24eo_5fto_5fsmt(s, a0),
+179 => case_179_eo__24eo_5fto_5fsmt(s, a0),
+180 => case_180_eo__24eo_5fto_5fsmt(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(737), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fBoolean, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5fsm_2eBoolean, &[v1[0]])?;
-return Ok(v2);
+return Ok(Some(v2));
 }
+Ok(None)
+}
+fn case_1_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v3 = s.destruct(Constructor::eo__24emb_5fNumeral, a0)?;
 let Some(fields) = v3 else { break 'case1; }
 ;
 let v4 = fields;
 let v5 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v4[0]])?;
-return Ok(v5);
+return Ok(Some(v5));
 }
+Ok(None)
+}
+fn case_2_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v6 = s.destruct(Constructor::eo__24emb_5fRational, a0)?;
 let Some(fields) = v6 else { break 'case2; }
 ;
 let v7 = fields;
 let v8 = s.construct(Constructor::eo__24emb_5fsm_2eRational, &[v7[0]])?;
-return Ok(v8);
+return Ok(Some(v8));
 }
+Ok(None)
+}
+fn case_3_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v9 = s.destruct(Constructor::eo__24emb_5fString, a0)?;
 let Some(fields) = v9 else { break 'case3; }
 ;
 let v10 = fields;
 let v11 = s.construct(Constructor::eo__24emb_5fsm_2eString, &[v10[0]])?;
-return Ok(v11);
+return Ok(Some(v11));
 }
+Ok(None)
+}
+fn case_4_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v12 = s.destruct(Constructor::eo__24emb_5fBinary, a0)?;
 let Some(fields) = v12 else { break 'case4; }
 ;
 let v13 = fields;
 let v14 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v13[0], v13[1]])?;
-return Ok(v14);
+return Ok(Some(v14));
 }
+Ok(None)
+}
+fn case_5_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v15 = s.destruct(Constructor::eo__24emb_5fVar, a0)?;
 let Some(fields) = v15 else { break 'case5; }
@@ -67072,8 +70237,11 @@ let Some(fields) = v17 else { break 'case5; }
 let v18 = fields;
 let v19 = eo__24eo_5fto_5fsmt_5ftype(s, v16[1])?;
 let v20 = s.construct(Constructor::eo__24emb_5fsm_2eVar, &[v18[0], v19])?;
-return Ok(v20);
+return Ok(Some(v20));
 }
+Ok(None)
+}
+fn case_6_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v21 = s.destruct(Constructor::eo__24emb_5fDtCons, a0)?;
 let Some(fields) = v21 else { break 'case6; }
@@ -67090,8 +70258,11 @@ let v27 = s.construct(Constructor::eo__24emb_5fsm_2eDtCons, &[v22[0], v26, v22[2
 v27
 }, None => s.stuck(),
 };
-return Ok(v24);
+return Ok(Some(v24));
 }
+Ok(None)
+}
+fn case_7_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v28 = s.destruct(Constructor::eo__24emb_5fDtSel, a0)?;
 let Some(fields) = v28 else { break 'case7; }
@@ -67108,8 +70279,11 @@ let v34 = s.construct(Constructor::eo__24emb_5fsm_2eDtSel, &[v29[0], v33, v29[2]
 v34
 }, None => s.stuck(),
 };
-return Ok(v31);
+return Ok(Some(v31));
 }
+Ok(None)
+}
+fn case_8_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v35 = s.destruct(Constructor::eo__24emb_5fUConst, a0)?;
 let Some(fields) = v35 else { break 'case8; }
@@ -67118,8 +70292,11 @@ let v36 = fields;
 let v37 = s.native("uconst_id", &[v36[0]])?;
 let v38 = eo__24eo_5fto_5fsmt_5ftype(s, v36[1])?;
 let v39 = s.construct(Constructor::eo__24emb_5fsm_2eUConst, &[v37, v38])?;
-return Ok(v39);
+return Ok(Some(v39));
 }
+Ok(None)
+}
+fn case_9_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v40 = s.unapply(a0)?;
 let Some((f, a)) = v40 else { break 'case9; }
@@ -67142,8 +70319,11 @@ let v50 = eo__24eo_5fto_5fsmt(s, v48)?;
 let v51 = eo__24eo_5fto_5fsmt(s, v45)?;
 let v52 = eo__24eo_5fto_5fsmt(s, v42)?;
 let v53 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v50, v51, v52])?;
-return Ok(v53);
+return Ok(Some(v53));
 }
+Ok(None)
+}
+fn case_10_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v54 = s.unapply(a0)?;
 let Some((f, a)) = v54 else { break 'case10; }
@@ -67154,8 +70334,11 @@ let v57 = s.construct(Constructor::eo_not, &[])?;
 if v55 != v57 { break 'case10; }
 let v58 = eo__24eo_5fto_5fsmt(s, v56)?;
 let v59 = s.construct(Constructor::eo__24emb_5fsm_2enot, &[v58])?;
-return Ok(v59);
+return Ok(Some(v59));
 }
+Ok(None)
+}
+fn case_11_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v60 = s.unapply(a0)?;
 let Some((f, a)) = v60 else { break 'case11; }
@@ -67172,8 +70355,11 @@ if v64 != v66 { break 'case11; }
 let v67 = eo__24eo_5fto_5fsmt(s, v65)?;
 let v68 = eo__24eo_5fto_5fsmt(s, v62)?;
 let v69 = s.construct(Constructor::eo__24emb_5fsm_2eor, &[v67, v68])?;
-return Ok(v69);
+return Ok(Some(v69));
 }
+Ok(None)
+}
+fn case_12_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v70 = s.unapply(a0)?;
 let Some((f, a)) = v70 else { break 'case12; }
@@ -67190,8 +70376,11 @@ if v74 != v76 { break 'case12; }
 let v77 = eo__24eo_5fto_5fsmt(s, v75)?;
 let v78 = eo__24eo_5fto_5fsmt(s, v72)?;
 let v79 = s.construct(Constructor::eo__24emb_5fsm_2eand, &[v77, v78])?;
-return Ok(v79);
+return Ok(Some(v79));
 }
+Ok(None)
+}
+fn case_13_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v80 = s.unapply(a0)?;
 let Some((f, a)) = v80 else { break 'case13; }
@@ -67208,8 +70397,11 @@ if v84 != v86 { break 'case13; }
 let v87 = eo__24eo_5fto_5fsmt(s, v85)?;
 let v88 = eo__24eo_5fto_5fsmt(s, v82)?;
 let v89 = s.construct(Constructor::eo__24emb_5fsm_2e_3d_3e, &[v87, v88])?;
-return Ok(v89);
+return Ok(Some(v89));
 }
+Ok(None)
+}
+fn case_14_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v90 = s.unapply(a0)?;
 let Some((f, a)) = v90 else { break 'case14; }
@@ -67226,8 +70418,11 @@ if v94 != v96 { break 'case14; }
 let v97 = eo__24eo_5fto_5fsmt(s, v95)?;
 let v98 = eo__24eo_5fto_5fsmt(s, v92)?;
 let v99 = s.construct(Constructor::eo__24emb_5fsm_2exor, &[v97, v98])?;
-return Ok(v99);
+return Ok(Some(v99));
 }
+Ok(None)
+}
+fn case_15_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v100 = s.unapply(a0)?;
 let Some((f, a)) = v100 else { break 'case15; }
@@ -67244,8 +70439,11 @@ if v104 != v106 { break 'case15; }
 let v107 = eo__24eo_5fto_5fsmt(s, v105)?;
 let v108 = eo__24eo_5fto_5fsmt(s, v102)?;
 let v109 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v107, v108])?;
-return Ok(v109);
+return Ok(Some(v109));
 }
+Ok(None)
+}
+fn case_16_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v110 = s.unapply(a0)?;
 let Some((f, a)) = v110 else { break 'case16; }
@@ -67266,8 +70464,11 @@ let v119 = eo__24eo_5fto_5fsmt_5fdistinct(s, v112)?;
 v119
 }, None => s.stuck(),
 };
-return Ok(v117);
+return Ok(Some(v117));
 }
+Ok(None)
+}
+fn case_17_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case17: {
 let v120 = s.unapply(a0)?;
 let Some((f, a)) = v120 else { break 'case17; }
@@ -67278,8 +70479,11 @@ let v123 = s.construct(Constructor::eo__40purify, &[])?;
 if v121 != v123 { break 'case17; }
 let v124 = eo__24eo_5fto_5fsmt(s, v122)?;
 let v125 = s.construct(Constructor::eo__24emb_5fsm_2e_40purify, &[v124])?;
-return Ok(v125);
+return Ok(Some(v125));
 }
+Ok(None)
+}
+fn case_18_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case18: {
 let v126 = s.unapply(a0)?;
 let Some((f, a)) = v126 else { break 'case18; }
@@ -67296,8 +70500,11 @@ if v130 != v132 { break 'case18; }
 let v133 = eo__24eo_5fto_5fsmt(s, v131)?;
 let v134 = eo__24eo_5fto_5fsmt(s, v128)?;
 let v135 = s.construct(Constructor::eo__24emb_5fsm_2e_2b, &[v133, v134])?;
-return Ok(v135);
+return Ok(Some(v135));
 }
+Ok(None)
+}
+fn case_19_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case19: {
 let v136 = s.unapply(a0)?;
 let Some((f, a)) = v136 else { break 'case19; }
@@ -67314,8 +70521,11 @@ if v140 != v142 { break 'case19; }
 let v143 = eo__24eo_5fto_5fsmt(s, v141)?;
 let v144 = eo__24eo_5fto_5fsmt(s, v138)?;
 let v145 = s.construct(Constructor::eo__24emb_5fsm_2e_2d, &[v143, v144])?;
-return Ok(v145);
+return Ok(Some(v145));
 }
+Ok(None)
+}
+fn case_20_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case20: {
 let v146 = s.unapply(a0)?;
 let Some((f, a)) = v146 else { break 'case20; }
@@ -67332,8 +70542,11 @@ if v150 != v152 { break 'case20; }
 let v153 = eo__24eo_5fto_5fsmt(s, v151)?;
 let v154 = eo__24eo_5fto_5fsmt(s, v148)?;
 let v155 = s.construct(Constructor::eo__24emb_5fsm_2e_2a, &[v153, v154])?;
-return Ok(v155);
+return Ok(Some(v155));
 }
+Ok(None)
+}
+fn case_21_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case21: {
 let v156 = s.unapply(a0)?;
 let Some((f, a)) = v156 else { break 'case21; }
@@ -67350,8 +70563,11 @@ if v160 != v162 { break 'case21; }
 let v163 = eo__24eo_5fto_5fsmt(s, v161)?;
 let v164 = eo__24eo_5fto_5fsmt(s, v158)?;
 let v165 = s.construct(Constructor::eo__24emb_5fsm_2e_3c, &[v163, v164])?;
-return Ok(v165);
+return Ok(Some(v165));
 }
+Ok(None)
+}
+fn case_22_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case22: {
 let v166 = s.unapply(a0)?;
 let Some((f, a)) = v166 else { break 'case22; }
@@ -67368,8 +70584,11 @@ if v170 != v172 { break 'case22; }
 let v173 = eo__24eo_5fto_5fsmt(s, v171)?;
 let v174 = eo__24eo_5fto_5fsmt(s, v168)?;
 let v175 = s.construct(Constructor::eo__24emb_5fsm_2e_3c_3d, &[v173, v174])?;
-return Ok(v175);
+return Ok(Some(v175));
 }
+Ok(None)
+}
+fn case_23_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case23: {
 let v176 = s.unapply(a0)?;
 let Some((f, a)) = v176 else { break 'case23; }
@@ -67386,8 +70605,11 @@ if v180 != v182 { break 'case23; }
 let v183 = eo__24eo_5fto_5fsmt(s, v181)?;
 let v184 = eo__24eo_5fto_5fsmt(s, v178)?;
 let v185 = s.construct(Constructor::eo__24emb_5fsm_2e_3e, &[v183, v184])?;
-return Ok(v185);
+return Ok(Some(v185));
 }
+Ok(None)
+}
+fn case_24_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case24: {
 let v186 = s.unapply(a0)?;
 let Some((f, a)) = v186 else { break 'case24; }
@@ -67404,8 +70626,11 @@ if v190 != v192 { break 'case24; }
 let v193 = eo__24eo_5fto_5fsmt(s, v191)?;
 let v194 = eo__24eo_5fto_5fsmt(s, v188)?;
 let v195 = s.construct(Constructor::eo__24emb_5fsm_2e_3e_3d, &[v193, v194])?;
-return Ok(v195);
+return Ok(Some(v195));
 }
+Ok(None)
+}
+fn case_25_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case25: {
 let v196 = s.unapply(a0)?;
 let Some((f, a)) = v196 else { break 'case25; }
@@ -67416,8 +70641,11 @@ let v199 = s.construct(Constructor::eo_to_5freal, &[])?;
 if v197 != v199 { break 'case25; }
 let v200 = eo__24eo_5fto_5fsmt(s, v198)?;
 let v201 = s.construct(Constructor::eo__24emb_5fsm_2eto_5freal, &[v200])?;
-return Ok(v201);
+return Ok(Some(v201));
 }
+Ok(None)
+}
+fn case_26_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case26: {
 let v202 = s.unapply(a0)?;
 let Some((f, a)) = v202 else { break 'case26; }
@@ -67428,8 +70656,11 @@ let v205 = s.construct(Constructor::eo_to_5fint, &[])?;
 if v203 != v205 { break 'case26; }
 let v206 = eo__24eo_5fto_5fsmt(s, v204)?;
 let v207 = s.construct(Constructor::eo__24emb_5fsm_2eto_5fint, &[v206])?;
-return Ok(v207);
+return Ok(Some(v207));
 }
+Ok(None)
+}
+fn case_27_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case27: {
 let v208 = s.unapply(a0)?;
 let Some((f, a)) = v208 else { break 'case27; }
@@ -67440,8 +70671,11 @@ let v211 = s.construct(Constructor::eo_is_5fint, &[])?;
 if v209 != v211 { break 'case27; }
 let v212 = eo__24eo_5fto_5fsmt(s, v210)?;
 let v213 = s.construct(Constructor::eo__24emb_5fsm_2eis_5fint, &[v212])?;
-return Ok(v213);
+return Ok(Some(v213));
 }
+Ok(None)
+}
+fn case_28_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case28: {
 let v214 = s.unapply(a0)?;
 let Some((f, a)) = v214 else { break 'case28; }
@@ -67452,8 +70686,11 @@ let v217 = s.construct(Constructor::eo_abs, &[])?;
 if v215 != v217 { break 'case28; }
 let v218 = eo__24eo_5fto_5fsmt(s, v216)?;
 let v219 = s.construct(Constructor::eo__24emb_5fsm_2eabs, &[v218])?;
-return Ok(v219);
+return Ok(Some(v219));
 }
+Ok(None)
+}
+fn case_29_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case29: {
 let v220 = s.unapply(a0)?;
 let Some((f, a)) = v220 else { break 'case29; }
@@ -67464,8 +70701,11 @@ let v223 = s.construct(Constructor::eo__24eoo_5f_2d_2e2, &[])?;
 if v221 != v223 { break 'case29; }
 let v224 = eo__24eo_5fto_5fsmt(s, v222)?;
 let v225 = s.construct(Constructor::eo__24emb_5fsm_2euneg, &[v224])?;
-return Ok(v225);
+return Ok(Some(v225));
 }
+Ok(None)
+}
+fn case_30_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case30: {
 let v226 = s.unapply(a0)?;
 let Some((f, a)) = v226 else { break 'case30; }
@@ -67482,8 +70722,11 @@ if v230 != v232 { break 'case30; }
 let v233 = eo__24eo_5fto_5fsmt(s, v231)?;
 let v234 = eo__24eo_5fto_5fsmt(s, v228)?;
 let v235 = s.construct(Constructor::eo__24emb_5fsm_2ediv, &[v233, v234])?;
-return Ok(v235);
+return Ok(Some(v235));
 }
+Ok(None)
+}
+fn case_31_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case31: {
 let v236 = s.unapply(a0)?;
 let Some((f, a)) = v236 else { break 'case31; }
@@ -67500,8 +70743,11 @@ if v240 != v242 { break 'case31; }
 let v243 = eo__24eo_5fto_5fsmt(s, v241)?;
 let v244 = eo__24eo_5fto_5fsmt(s, v238)?;
 let v245 = s.construct(Constructor::eo__24emb_5fsm_2emod, &[v243, v244])?;
-return Ok(v245);
+return Ok(Some(v245));
 }
+Ok(None)
+}
+fn case_32_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case32: {
 let v246 = s.unapply(a0)?;
 let Some((f, a)) = v246 else { break 'case32; }
@@ -67518,8 +70764,11 @@ if v250 != v252 { break 'case32; }
 let v253 = eo__24eo_5fto_5fsmt(s, v251)?;
 let v254 = eo__24eo_5fto_5fsmt(s, v248)?;
 let v255 = s.construct(Constructor::eo__24emb_5fsm_2edivisible, &[v253, v254])?;
-return Ok(v255);
+return Ok(Some(v255));
 }
+Ok(None)
+}
+fn case_33_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case33: {
 let v256 = s.unapply(a0)?;
 let Some((f, a)) = v256 else { break 'case33; }
@@ -67530,8 +70779,11 @@ let v259 = s.construct(Constructor::eo_int_2epow2, &[])?;
 if v257 != v259 { break 'case33; }
 let v260 = eo__24eo_5fto_5fsmt(s, v258)?;
 let v261 = s.construct(Constructor::eo__24emb_5fsm_2eint_2epow2, &[v260])?;
-return Ok(v261);
+return Ok(Some(v261));
 }
+Ok(None)
+}
+fn case_34_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case34: {
 let v262 = s.unapply(a0)?;
 let Some((f, a)) = v262 else { break 'case34; }
@@ -67542,8 +70794,11 @@ let v265 = s.construct(Constructor::eo_int_2elog2, &[])?;
 if v263 != v265 { break 'case34; }
 let v266 = eo__24eo_5fto_5fsmt(s, v264)?;
 let v267 = s.construct(Constructor::eo__24emb_5fsm_2eint_2elog2, &[v266])?;
-return Ok(v267);
+return Ok(Some(v267));
 }
+Ok(None)
+}
+fn case_35_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case35: {
 let v268 = s.unapply(a0)?;
 let Some((f, a)) = v268 else { break 'case35; }
@@ -67562,8 +70817,11 @@ let v278 = s.construct(Constructor::eo__24emb_5fsm_2eint_2elog2, &[v277])?;
 let v279 = s.construct(Constructor::eo__24emb_5fsm_2eint_2epow2, &[v278])?;
 let v280 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v276, v279])?;
 let v281 = s.construct(Constructor::eo__24emb_5fsm_2eand, &[v275, v280])?;
-return Ok(v281);
+return Ok(Some(v281));
 }
+Ok(None)
+}
+fn case_36_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case36: {
 let v282 = s.unapply(a0)?;
 let Some((f, a)) = v282 else { break 'case36; }
@@ -67580,8 +70838,11 @@ if v286 != v288 { break 'case36; }
 let v289 = eo__24eo_5fto_5fsmt(s, v287)?;
 let v290 = eo__24eo_5fto_5fsmt(s, v284)?;
 let v291 = s.construct(Constructor::eo__24emb_5fsm_2ediv_5ftotal, &[v289, v290])?;
-return Ok(v291);
+return Ok(Some(v291));
 }
+Ok(None)
+}
+fn case_37_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case37: {
 let v292 = s.unapply(a0)?;
 let Some((f, a)) = v292 else { break 'case37; }
@@ -67598,8 +70859,11 @@ if v296 != v298 { break 'case37; }
 let v299 = eo__24eo_5fto_5fsmt(s, v297)?;
 let v300 = eo__24eo_5fto_5fsmt(s, v294)?;
 let v301 = s.construct(Constructor::eo__24emb_5fsm_2emod_5ftotal, &[v299, v300])?;
-return Ok(v301);
+return Ok(Some(v301));
 }
+Ok(None)
+}
+fn case_38_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case38: {
 let v302 = s.unapply(a0)?;
 let Some((f, a)) = v302 else { break 'case38; }
@@ -67612,8 +70876,11 @@ let v306 = eo__24eo_5fto_5fsmt(s, v304)?;
 let v307 = s.native("0", &[])?;
 let v308 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v307])?;
 let v309 = s.construct(Constructor::eo__24emb_5fsm_2ediv, &[v306, v308])?;
-return Ok(v309);
+return Ok(Some(v309));
 }
+Ok(None)
+}
+fn case_39_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case39: {
 let v310 = s.unapply(a0)?;
 let Some((f, a)) = v310 else { break 'case39; }
@@ -67626,8 +70893,11 @@ let v314 = eo__24eo_5fto_5fsmt(s, v312)?;
 let v315 = s.native("0", &[])?;
 let v316 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v315])?;
 let v317 = s.construct(Constructor::eo__24emb_5fsm_2emod, &[v314, v316])?;
-return Ok(v317);
+return Ok(Some(v317));
 }
+Ok(None)
+}
+fn case_40_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case40: {
 let v318 = s.unapply(a0)?;
 let Some((f, a)) = v318 else { break 'case40; }
@@ -67644,8 +70914,11 @@ if v322 != v324 { break 'case40; }
 let v325 = eo__24eo_5fto_5fsmt(s, v323)?;
 let v326 = eo__24eo_5fto_5fsmt(s, v320)?;
 let v327 = s.construct(Constructor::eo__24emb_5fsm_2eselect, &[v325, v326])?;
-return Ok(v327);
+return Ok(Some(v327));
 }
+Ok(None)
+}
+fn case_41_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case41: {
 let v328 = s.unapply(a0)?;
 let Some((f, a)) = v328 else { break 'case41; }
@@ -67668,8 +70941,11 @@ let v338 = eo__24eo_5fto_5fsmt(s, v336)?;
 let v339 = eo__24eo_5fto_5fsmt(s, v333)?;
 let v340 = eo__24eo_5fto_5fsmt(s, v330)?;
 let v341 = s.construct(Constructor::eo__24emb_5fsm_2estore, &[v338, v339, v340])?;
-return Ok(v341);
+return Ok(Some(v341));
 }
+Ok(None)
+}
+fn case_42_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case42: {
 let v342 = s.unapply(a0)?;
 let Some((f, a)) = v342 else { break 'case42; }
@@ -67690,8 +70966,11 @@ let v352 = eo__24eo_5fto_5fsmt(s, v344)?;
 let v353 = eo__24eo_5fto_5fsmt(s, v344)?;
 let v354 = eo__24smtx_5ftypeof(s, v353)?;
 let v355 = eo__24eo_5fto_5fsmt_5farray_5fdeq_5fdiff(s, v349, v351, v352, v354)?;
-return Ok(v355);
+return Ok(Some(v355));
 }
+Ok(None)
+}
+fn case_43_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case43: {
 let v356 = s.unapply(a0)?;
 let Some((f, a)) = v356 else { break 'case43; }
@@ -67718,8 +70997,11 @@ let v371 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
 v371
 }, None => s.stuck(),
 };
-return Ok(v365);
+return Ok(Some(v365));
 }
+Ok(None)
+}
+fn case_44_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case44: {
 let v372 = s.unapply(a0)?;
 let Some((f, a)) = v372 else { break 'case44; }
@@ -67736,8 +71018,11 @@ if v376 != v378 { break 'case44; }
 let v379 = eo__24eo_5fto_5fsmt(s, v377)?;
 let v380 = eo__24eo_5fto_5fsmt(s, v374)?;
 let v381 = s.construct(Constructor::eo__24emb_5fsm_2econcat, &[v379, v380])?;
-return Ok(v381);
+return Ok(Some(v381));
 }
+Ok(None)
+}
+fn case_45_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case45: {
 let v382 = s.unapply(a0)?;
 let Some((f, a)) = v382 else { break 'case45; }
@@ -67752,8 +71037,11 @@ let v387 = eo__24eo_5fto_5fsmt(s, v386[0])?;
 let v388 = eo__24eo_5fto_5fsmt(s, v386[1])?;
 let v389 = eo__24eo_5fto_5fsmt(s, v384)?;
 let v390 = s.construct(Constructor::eo__24emb_5fsm_2eextract, &[v387, v388, v389])?;
-return Ok(v390);
+return Ok(Some(v390));
 }
+Ok(None)
+}
+fn case_46_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case46: {
 let v391 = s.unapply(a0)?;
 let Some((f, a)) = v391 else { break 'case46; }
@@ -67767,8 +71055,11 @@ let v395 = fields;
 let v396 = eo__24eo_5fto_5fsmt(s, v395[0])?;
 let v397 = eo__24eo_5fto_5fsmt(s, v393)?;
 let v398 = s.construct(Constructor::eo__24emb_5fsm_2erepeat, &[v396, v397])?;
-return Ok(v398);
+return Ok(Some(v398));
 }
+Ok(None)
+}
+fn case_47_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case47: {
 let v399 = s.unapply(a0)?;
 let Some((f, a)) = v399 else { break 'case47; }
@@ -67779,8 +71070,11 @@ let v402 = s.construct(Constructor::eo_bvnot, &[])?;
 if v400 != v402 { break 'case47; }
 let v403 = eo__24eo_5fto_5fsmt(s, v401)?;
 let v404 = s.construct(Constructor::eo__24emb_5fsm_2ebvnot, &[v403])?;
-return Ok(v404);
+return Ok(Some(v404));
 }
+Ok(None)
+}
+fn case_48_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case48: {
 let v405 = s.unapply(a0)?;
 let Some((f, a)) = v405 else { break 'case48; }
@@ -67797,8 +71091,11 @@ if v409 != v411 { break 'case48; }
 let v412 = eo__24eo_5fto_5fsmt(s, v410)?;
 let v413 = eo__24eo_5fto_5fsmt(s, v407)?;
 let v414 = s.construct(Constructor::eo__24emb_5fsm_2ebvand, &[v412, v413])?;
-return Ok(v414);
+return Ok(Some(v414));
 }
+Ok(None)
+}
+fn case_49_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case49: {
 let v415 = s.unapply(a0)?;
 let Some((f, a)) = v415 else { break 'case49; }
@@ -67815,8 +71112,11 @@ if v419 != v421 { break 'case49; }
 let v422 = eo__24eo_5fto_5fsmt(s, v420)?;
 let v423 = eo__24eo_5fto_5fsmt(s, v417)?;
 let v424 = s.construct(Constructor::eo__24emb_5fsm_2ebvor, &[v422, v423])?;
-return Ok(v424);
+return Ok(Some(v424));
 }
+Ok(None)
+}
+fn case_50_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case50: {
 let v425 = s.unapply(a0)?;
 let Some((f, a)) = v425 else { break 'case50; }
@@ -67833,8 +71133,11 @@ if v429 != v431 { break 'case50; }
 let v432 = eo__24eo_5fto_5fsmt(s, v430)?;
 let v433 = eo__24eo_5fto_5fsmt(s, v427)?;
 let v434 = s.construct(Constructor::eo__24emb_5fsm_2ebvnand, &[v432, v433])?;
-return Ok(v434);
+return Ok(Some(v434));
 }
+Ok(None)
+}
+fn case_51_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case51: {
 let v435 = s.unapply(a0)?;
 let Some((f, a)) = v435 else { break 'case51; }
@@ -67851,8 +71154,11 @@ if v439 != v441 { break 'case51; }
 let v442 = eo__24eo_5fto_5fsmt(s, v440)?;
 let v443 = eo__24eo_5fto_5fsmt(s, v437)?;
 let v444 = s.construct(Constructor::eo__24emb_5fsm_2ebvnor, &[v442, v443])?;
-return Ok(v444);
+return Ok(Some(v444));
 }
+Ok(None)
+}
+fn case_52_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case52: {
 let v445 = s.unapply(a0)?;
 let Some((f, a)) = v445 else { break 'case52; }
@@ -67869,8 +71175,11 @@ if v449 != v451 { break 'case52; }
 let v452 = eo__24eo_5fto_5fsmt(s, v450)?;
 let v453 = eo__24eo_5fto_5fsmt(s, v447)?;
 let v454 = s.construct(Constructor::eo__24emb_5fsm_2ebvxor, &[v452, v453])?;
-return Ok(v454);
+return Ok(Some(v454));
 }
+Ok(None)
+}
+fn case_53_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case53: {
 let v455 = s.unapply(a0)?;
 let Some((f, a)) = v455 else { break 'case53; }
@@ -67887,8 +71196,11 @@ if v459 != v461 { break 'case53; }
 let v462 = eo__24eo_5fto_5fsmt(s, v460)?;
 let v463 = eo__24eo_5fto_5fsmt(s, v457)?;
 let v464 = s.construct(Constructor::eo__24emb_5fsm_2ebvxnor, &[v462, v463])?;
-return Ok(v464);
+return Ok(Some(v464));
 }
+Ok(None)
+}
+fn case_54_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case54: {
 let v465 = s.unapply(a0)?;
 let Some((f, a)) = v465 else { break 'case54; }
@@ -67905,8 +71217,11 @@ if v469 != v471 { break 'case54; }
 let v472 = eo__24eo_5fto_5fsmt(s, v470)?;
 let v473 = eo__24eo_5fto_5fsmt(s, v467)?;
 let v474 = s.construct(Constructor::eo__24emb_5fsm_2ebvcomp, &[v472, v473])?;
-return Ok(v474);
+return Ok(Some(v474));
 }
+Ok(None)
+}
+fn case_55_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case55: {
 let v475 = s.unapply(a0)?;
 let Some((f, a)) = v475 else { break 'case55; }
@@ -67917,8 +71232,11 @@ let v478 = s.construct(Constructor::eo_bvneg, &[])?;
 if v476 != v478 { break 'case55; }
 let v479 = eo__24eo_5fto_5fsmt(s, v477)?;
 let v480 = s.construct(Constructor::eo__24emb_5fsm_2ebvneg, &[v479])?;
-return Ok(v480);
+return Ok(Some(v480));
 }
+Ok(None)
+}
+fn case_56_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case56: {
 let v481 = s.unapply(a0)?;
 let Some((f, a)) = v481 else { break 'case56; }
@@ -67935,8 +71253,11 @@ if v485 != v487 { break 'case56; }
 let v488 = eo__24eo_5fto_5fsmt(s, v486)?;
 let v489 = eo__24eo_5fto_5fsmt(s, v483)?;
 let v490 = s.construct(Constructor::eo__24emb_5fsm_2ebvadd, &[v488, v489])?;
-return Ok(v490);
+return Ok(Some(v490));
 }
+Ok(None)
+}
+fn case_57_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case57: {
 let v491 = s.unapply(a0)?;
 let Some((f, a)) = v491 else { break 'case57; }
@@ -67953,8 +71274,11 @@ if v495 != v497 { break 'case57; }
 let v498 = eo__24eo_5fto_5fsmt(s, v496)?;
 let v499 = eo__24eo_5fto_5fsmt(s, v493)?;
 let v500 = s.construct(Constructor::eo__24emb_5fsm_2ebvmul, &[v498, v499])?;
-return Ok(v500);
+return Ok(Some(v500));
 }
+Ok(None)
+}
+fn case_58_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case58: {
 let v501 = s.unapply(a0)?;
 let Some((f, a)) = v501 else { break 'case58; }
@@ -67971,8 +71295,11 @@ if v505 != v507 { break 'case58; }
 let v508 = eo__24eo_5fto_5fsmt(s, v506)?;
 let v509 = eo__24eo_5fto_5fsmt(s, v503)?;
 let v510 = s.construct(Constructor::eo__24emb_5fsm_2ebvudiv, &[v508, v509])?;
-return Ok(v510);
+return Ok(Some(v510));
 }
+Ok(None)
+}
+fn case_59_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case59: {
 let v511 = s.unapply(a0)?;
 let Some((f, a)) = v511 else { break 'case59; }
@@ -67989,8 +71316,11 @@ if v515 != v517 { break 'case59; }
 let v518 = eo__24eo_5fto_5fsmt(s, v516)?;
 let v519 = eo__24eo_5fto_5fsmt(s, v513)?;
 let v520 = s.construct(Constructor::eo__24emb_5fsm_2ebvurem, &[v518, v519])?;
-return Ok(v520);
+return Ok(Some(v520));
 }
+Ok(None)
+}
+fn case_60_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case60: {
 let v521 = s.unapply(a0)?;
 let Some((f, a)) = v521 else { break 'case60; }
@@ -68007,8 +71337,11 @@ if v525 != v527 { break 'case60; }
 let v528 = eo__24eo_5fto_5fsmt(s, v526)?;
 let v529 = eo__24eo_5fto_5fsmt(s, v523)?;
 let v530 = s.construct(Constructor::eo__24emb_5fsm_2ebvsub, &[v528, v529])?;
-return Ok(v530);
+return Ok(Some(v530));
 }
+Ok(None)
+}
+fn case_61_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case61: {
 let v531 = s.unapply(a0)?;
 let Some((f, a)) = v531 else { break 'case61; }
@@ -68025,8 +71358,11 @@ if v535 != v537 { break 'case61; }
 let v538 = eo__24eo_5fto_5fsmt(s, v536)?;
 let v539 = eo__24eo_5fto_5fsmt(s, v533)?;
 let v540 = s.construct(Constructor::eo__24emb_5fsm_2ebvsdiv, &[v538, v539])?;
-return Ok(v540);
+return Ok(Some(v540));
 }
+Ok(None)
+}
+fn case_62_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case62: {
 let v541 = s.unapply(a0)?;
 let Some((f, a)) = v541 else { break 'case62; }
@@ -68043,8 +71379,11 @@ if v545 != v547 { break 'case62; }
 let v548 = eo__24eo_5fto_5fsmt(s, v546)?;
 let v549 = eo__24eo_5fto_5fsmt(s, v543)?;
 let v550 = s.construct(Constructor::eo__24emb_5fsm_2ebvsrem, &[v548, v549])?;
-return Ok(v550);
+return Ok(Some(v550));
 }
+Ok(None)
+}
+fn case_63_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case63: {
 let v551 = s.unapply(a0)?;
 let Some((f, a)) = v551 else { break 'case63; }
@@ -68061,8 +71400,11 @@ if v555 != v557 { break 'case63; }
 let v558 = eo__24eo_5fto_5fsmt(s, v556)?;
 let v559 = eo__24eo_5fto_5fsmt(s, v553)?;
 let v560 = s.construct(Constructor::eo__24emb_5fsm_2ebvsmod, &[v558, v559])?;
-return Ok(v560);
+return Ok(Some(v560));
 }
+Ok(None)
+}
+fn case_64_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case64: {
 let v561 = s.unapply(a0)?;
 let Some((f, a)) = v561 else { break 'case64; }
@@ -68079,8 +71421,11 @@ if v565 != v567 { break 'case64; }
 let v568 = eo__24eo_5fto_5fsmt(s, v566)?;
 let v569 = eo__24eo_5fto_5fsmt(s, v563)?;
 let v570 = s.construct(Constructor::eo__24emb_5fsm_2ebvult, &[v568, v569])?;
-return Ok(v570);
+return Ok(Some(v570));
 }
+Ok(None)
+}
+fn case_65_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case65: {
 let v571 = s.unapply(a0)?;
 let Some((f, a)) = v571 else { break 'case65; }
@@ -68097,8 +71442,11 @@ if v575 != v577 { break 'case65; }
 let v578 = eo__24eo_5fto_5fsmt(s, v576)?;
 let v579 = eo__24eo_5fto_5fsmt(s, v573)?;
 let v580 = s.construct(Constructor::eo__24emb_5fsm_2ebvule, &[v578, v579])?;
-return Ok(v580);
+return Ok(Some(v580));
 }
+Ok(None)
+}
+fn case_66_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case66: {
 let v581 = s.unapply(a0)?;
 let Some((f, a)) = v581 else { break 'case66; }
@@ -68115,8 +71463,11 @@ if v585 != v587 { break 'case66; }
 let v588 = eo__24eo_5fto_5fsmt(s, v586)?;
 let v589 = eo__24eo_5fto_5fsmt(s, v583)?;
 let v590 = s.construct(Constructor::eo__24emb_5fsm_2ebvugt, &[v588, v589])?;
-return Ok(v590);
+return Ok(Some(v590));
 }
+Ok(None)
+}
+fn case_67_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case67: {
 let v591 = s.unapply(a0)?;
 let Some((f, a)) = v591 else { break 'case67; }
@@ -68133,8 +71484,11 @@ if v595 != v597 { break 'case67; }
 let v598 = eo__24eo_5fto_5fsmt(s, v596)?;
 let v599 = eo__24eo_5fto_5fsmt(s, v593)?;
 let v600 = s.construct(Constructor::eo__24emb_5fsm_2ebvuge, &[v598, v599])?;
-return Ok(v600);
+return Ok(Some(v600));
 }
+Ok(None)
+}
+fn case_68_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case68: {
 let v601 = s.unapply(a0)?;
 let Some((f, a)) = v601 else { break 'case68; }
@@ -68151,8 +71505,11 @@ if v605 != v607 { break 'case68; }
 let v608 = eo__24eo_5fto_5fsmt(s, v606)?;
 let v609 = eo__24eo_5fto_5fsmt(s, v603)?;
 let v610 = s.construct(Constructor::eo__24emb_5fsm_2ebvslt, &[v608, v609])?;
-return Ok(v610);
+return Ok(Some(v610));
 }
+Ok(None)
+}
+fn case_69_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case69: {
 let v611 = s.unapply(a0)?;
 let Some((f, a)) = v611 else { break 'case69; }
@@ -68169,8 +71526,11 @@ if v615 != v617 { break 'case69; }
 let v618 = eo__24eo_5fto_5fsmt(s, v616)?;
 let v619 = eo__24eo_5fto_5fsmt(s, v613)?;
 let v620 = s.construct(Constructor::eo__24emb_5fsm_2ebvsle, &[v618, v619])?;
-return Ok(v620);
+return Ok(Some(v620));
 }
+Ok(None)
+}
+fn case_70_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case70: {
 let v621 = s.unapply(a0)?;
 let Some((f, a)) = v621 else { break 'case70; }
@@ -68187,8 +71547,11 @@ if v625 != v627 { break 'case70; }
 let v628 = eo__24eo_5fto_5fsmt(s, v626)?;
 let v629 = eo__24eo_5fto_5fsmt(s, v623)?;
 let v630 = s.construct(Constructor::eo__24emb_5fsm_2ebvsgt, &[v628, v629])?;
-return Ok(v630);
+return Ok(Some(v630));
 }
+Ok(None)
+}
+fn case_71_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case71: {
 let v631 = s.unapply(a0)?;
 let Some((f, a)) = v631 else { break 'case71; }
@@ -68205,8 +71568,11 @@ if v635 != v637 { break 'case71; }
 let v638 = eo__24eo_5fto_5fsmt(s, v636)?;
 let v639 = eo__24eo_5fto_5fsmt(s, v633)?;
 let v640 = s.construct(Constructor::eo__24emb_5fsm_2ebvsge, &[v638, v639])?;
-return Ok(v640);
+return Ok(Some(v640));
 }
+Ok(None)
+}
+fn case_72_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case72: {
 let v641 = s.unapply(a0)?;
 let Some((f, a)) = v641 else { break 'case72; }
@@ -68223,8 +71589,11 @@ if v645 != v647 { break 'case72; }
 let v648 = eo__24eo_5fto_5fsmt(s, v646)?;
 let v649 = eo__24eo_5fto_5fsmt(s, v643)?;
 let v650 = s.construct(Constructor::eo__24emb_5fsm_2ebvshl, &[v648, v649])?;
-return Ok(v650);
+return Ok(Some(v650));
 }
+Ok(None)
+}
+fn case_73_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case73: {
 let v651 = s.unapply(a0)?;
 let Some((f, a)) = v651 else { break 'case73; }
@@ -68241,8 +71610,11 @@ if v655 != v657 { break 'case73; }
 let v658 = eo__24eo_5fto_5fsmt(s, v656)?;
 let v659 = eo__24eo_5fto_5fsmt(s, v653)?;
 let v660 = s.construct(Constructor::eo__24emb_5fsm_2ebvlshr, &[v658, v659])?;
-return Ok(v660);
+return Ok(Some(v660));
 }
+Ok(None)
+}
+fn case_74_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case74: {
 let v661 = s.unapply(a0)?;
 let Some((f, a)) = v661 else { break 'case74; }
@@ -68259,8 +71631,11 @@ if v665 != v667 { break 'case74; }
 let v668 = eo__24eo_5fto_5fsmt(s, v666)?;
 let v669 = eo__24eo_5fto_5fsmt(s, v663)?;
 let v670 = s.construct(Constructor::eo__24emb_5fsm_2ebvashr, &[v668, v669])?;
-return Ok(v670);
+return Ok(Some(v670));
 }
+Ok(None)
+}
+fn case_75_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case75: {
 let v671 = s.unapply(a0)?;
 let Some((f, a)) = v671 else { break 'case75; }
@@ -68274,8 +71649,11 @@ let v675 = fields;
 let v676 = eo__24eo_5fto_5fsmt(s, v675[0])?;
 let v677 = eo__24eo_5fto_5fsmt(s, v673)?;
 let v678 = s.construct(Constructor::eo__24emb_5fsm_2ezero_5fextend, &[v676, v677])?;
-return Ok(v678);
+return Ok(Some(v678));
 }
+Ok(None)
+}
+fn case_76_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case76: {
 let v679 = s.unapply(a0)?;
 let Some((f, a)) = v679 else { break 'case76; }
@@ -68289,8 +71667,11 @@ let v683 = fields;
 let v684 = eo__24eo_5fto_5fsmt(s, v683[0])?;
 let v685 = eo__24eo_5fto_5fsmt(s, v681)?;
 let v686 = s.construct(Constructor::eo__24emb_5fsm_2esign_5fextend, &[v684, v685])?;
-return Ok(v686);
+return Ok(Some(v686));
 }
+Ok(None)
+}
+fn case_77_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case77: {
 let v687 = s.unapply(a0)?;
 let Some((f, a)) = v687 else { break 'case77; }
@@ -68304,8 +71685,11 @@ let v691 = fields;
 let v692 = eo__24eo_5fto_5fsmt(s, v691[0])?;
 let v693 = eo__24eo_5fto_5fsmt(s, v689)?;
 let v694 = s.construct(Constructor::eo__24emb_5fsm_2erotate_5fleft, &[v692, v693])?;
-return Ok(v694);
+return Ok(Some(v694));
 }
+Ok(None)
+}
+fn case_78_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case78: {
 let v695 = s.unapply(a0)?;
 let Some((f, a)) = v695 else { break 'case78; }
@@ -68319,8 +71703,11 @@ let v699 = fields;
 let v700 = eo__24eo_5fto_5fsmt(s, v699[0])?;
 let v701 = eo__24eo_5fto_5fsmt(s, v697)?;
 let v702 = s.construct(Constructor::eo__24emb_5fsm_2erotate_5fright, &[v700, v701])?;
-return Ok(v702);
+return Ok(Some(v702));
 }
+Ok(None)
+}
+fn case_79_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case79: {
 let v703 = s.unapply(a0)?;
 let Some((f, a)) = v703 else { break 'case79; }
@@ -68347,8 +71734,11 @@ let v717 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v713, v716])?;
 let v718 = eo__24eo_5fto_5fsmt(s, v708)?;
 let v719 = eo__24eo_5fto_5fsmt(s, v705)?;
 let v720 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v717, v718, v719])?;
-return Ok(v720);
+return Ok(Some(v720));
 }
+Ok(None)
+}
+fn case_80_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case80: {
 let v721 = s.unapply(a0)?;
 let Some((f, a)) = v721 else { break 'case80; }
@@ -68365,8 +71755,11 @@ if v725 != v727 { break 'case80; }
 let v728 = eo__24eo_5fto_5fsmt(s, v726)?;
 let v729 = eo__24eo_5fto_5fsmt(s, v723)?;
 let v730 = s.construct(Constructor::eo__24emb_5fsm_2ebvuaddo, &[v728, v729])?;
-return Ok(v730);
+return Ok(Some(v730));
 }
+Ok(None)
+}
+fn case_81_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case81: {
 let v731 = s.unapply(a0)?;
 let Some((f, a)) = v731 else { break 'case81; }
@@ -68377,8 +71770,11 @@ let v734 = s.construct(Constructor::eo_bvnego, &[])?;
 if v732 != v734 { break 'case81; }
 let v735 = eo__24eo_5fto_5fsmt(s, v733)?;
 let v736 = s.construct(Constructor::eo__24emb_5fsm_2ebvnego, &[v735])?;
-return Ok(v736);
+return Ok(Some(v736));
 }
+Ok(None)
+}
+fn case_82_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case82: {
 let v737 = s.unapply(a0)?;
 let Some((f, a)) = v737 else { break 'case82; }
@@ -68395,8 +71791,11 @@ if v741 != v743 { break 'case82; }
 let v744 = eo__24eo_5fto_5fsmt(s, v742)?;
 let v745 = eo__24eo_5fto_5fsmt(s, v739)?;
 let v746 = s.construct(Constructor::eo__24emb_5fsm_2ebvsaddo, &[v744, v745])?;
-return Ok(v746);
+return Ok(Some(v746));
 }
+Ok(None)
+}
+fn case_83_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case83: {
 let v747 = s.unapply(a0)?;
 let Some((f, a)) = v747 else { break 'case83; }
@@ -68413,8 +71812,11 @@ if v751 != v753 { break 'case83; }
 let v754 = eo__24eo_5fto_5fsmt(s, v752)?;
 let v755 = eo__24eo_5fto_5fsmt(s, v749)?;
 let v756 = s.construct(Constructor::eo__24emb_5fsm_2ebvumulo, &[v754, v755])?;
-return Ok(v756);
+return Ok(Some(v756));
 }
+Ok(None)
+}
+fn case_84_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case84: {
 let v757 = s.unapply(a0)?;
 let Some((f, a)) = v757 else { break 'case84; }
@@ -68431,8 +71833,11 @@ if v761 != v763 { break 'case84; }
 let v764 = eo__24eo_5fto_5fsmt(s, v762)?;
 let v765 = eo__24eo_5fto_5fsmt(s, v759)?;
 let v766 = s.construct(Constructor::eo__24emb_5fsm_2ebvsmulo, &[v764, v765])?;
-return Ok(v766);
+return Ok(Some(v766));
 }
+Ok(None)
+}
+fn case_85_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case85: {
 let v767 = s.unapply(a0)?;
 let Some((f, a)) = v767 else { break 'case85; }
@@ -68449,8 +71854,11 @@ if v771 != v773 { break 'case85; }
 let v774 = eo__24eo_5fto_5fsmt(s, v772)?;
 let v775 = eo__24eo_5fto_5fsmt(s, v769)?;
 let v776 = s.construct(Constructor::eo__24emb_5fsm_2ebvusubo, &[v774, v775])?;
-return Ok(v776);
+return Ok(Some(v776));
 }
+Ok(None)
+}
+fn case_86_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case86: {
 let v777 = s.unapply(a0)?;
 let Some((f, a)) = v777 else { break 'case86; }
@@ -68467,8 +71875,11 @@ if v781 != v783 { break 'case86; }
 let v784 = eo__24eo_5fto_5fsmt(s, v782)?;
 let v785 = eo__24eo_5fto_5fsmt(s, v779)?;
 let v786 = s.construct(Constructor::eo__24emb_5fsm_2ebvssubo, &[v784, v785])?;
-return Ok(v786);
+return Ok(Some(v786));
 }
+Ok(None)
+}
+fn case_87_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case87: {
 let v787 = s.unapply(a0)?;
 let Some((f, a)) = v787 else { break 'case87; }
@@ -68485,8 +71896,11 @@ if v791 != v793 { break 'case87; }
 let v794 = eo__24eo_5fto_5fsmt(s, v792)?;
 let v795 = eo__24eo_5fto_5fsmt(s, v789)?;
 let v796 = s.construct(Constructor::eo__24emb_5fsm_2ebvsdivo, &[v794, v795])?;
-return Ok(v796);
+return Ok(Some(v796));
 }
+Ok(None)
+}
+fn case_88_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case88: {
 let v797 = s.unapply(a0)?;
 let Some((f, a)) = v797 else { break 'case88; }
@@ -68510,8 +71924,11 @@ let v810 = s.native("1", &[])?;
 let v811 = s.native("0", &[])?;
 let v812 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v810, v811])?;
 let v813 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v806, v809, v812])?;
-return Ok(v813);
+return Ok(Some(v813));
 }
+Ok(None)
+}
+fn case_89_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case89: {
 let v814 = s.unapply(a0)?;
 let Some((f, a)) = v814 else { break 'case89; }
@@ -68535,8 +71952,11 @@ let v827 = s.native("1", &[])?;
 let v828 = s.native("0", &[])?;
 let v829 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v827, v828])?;
 let v830 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v823, v826, v829])?;
-return Ok(v830);
+return Ok(Some(v830));
 }
+Ok(None)
+}
+fn case_90_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case90: {
 let v831 = s.unapply(a0)?;
 let Some((f, a)) = v831 else { break 'case90; }
@@ -68553,8 +71973,11 @@ let v839 = s.native("0", &[])?;
 let v840 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v838, v839])?;
 let v841 = s.construct(Constructor::eo__24emb_5fsm_2ebvnot, &[v840])?;
 let v842 = s.construct(Constructor::eo__24emb_5fsm_2ebvcomp, &[v835, v841])?;
-return Ok(v842);
+return Ok(Some(v842));
 }
+Ok(None)
+}
+fn case_91_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case91: {
 let v843 = s.unapply(a0)?;
 let Some((f, a)) = v843 else { break 'case91; }
@@ -68571,8 +71994,11 @@ let v851 = s.native("0", &[])?;
 let v852 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v850, v851])?;
 let v853 = s.construct(Constructor::eo__24emb_5fsm_2ebvcomp, &[v847, v852])?;
 let v854 = s.construct(Constructor::eo__24emb_5fsm_2ebvnot, &[v853])?;
-return Ok(v854);
+return Ok(Some(v854));
 }
+Ok(None)
+}
+fn case_92_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case92: {
 let v855 = s.unapply(a0)?;
 let Some((f, a)) = v855 else { break 'case92; }
@@ -68591,8 +72017,11 @@ let v864 = s.native("1", &[])?;
 let v865 = s.native("1", &[])?;
 let v866 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v864, v865])?;
 let v867 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v863, v866])?;
-return Ok(v867);
+return Ok(Some(v867));
 }
+Ok(None)
+}
+fn case_93_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case93: {
 let v868 = s.unapply(a0)?;
 let Some((f, a)) = v868 else { break 'case93; }
@@ -68616,8 +72045,11 @@ let v881 = s.native("0", &[])?;
 let v882 = s.construct(Constructor::eo__24emb_5fsm_2eBinary, &[v880, v881])?;
 let v883 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v876, v879, v882])?;
 let v884 = s.construct(Constructor::eo__24emb_5fsm_2econcat, &[v875, v883])?;
-return Ok(v884);
+return Ok(Some(v884));
 }
+Ok(None)
+}
+fn case_94_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case94: {
 let v885 = s.destruct(Constructor::eo_seq_2eempty, a0)?;
 let Some(fields) = v885 else { break 'case94; }
@@ -68625,8 +72057,11 @@ let Some(fields) = v885 else { break 'case94; }
 let v886 = fields;
 let v887 = eo__24eo_5fto_5fsmt_5ftype(s, v886[0])?;
 let v888 = eo__24eo_5fto_5fsmt_5fseq_2eempty(s, v887)?;
-return Ok(v888);
+return Ok(Some(v888));
 }
+Ok(None)
+}
+fn case_95_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case95: {
 let v889 = s.unapply(a0)?;
 let Some((f, a)) = v889 else { break 'case95; }
@@ -68637,8 +72072,11 @@ let v892 = s.construct(Constructor::eo_str_2elen, &[])?;
 if v890 != v892 { break 'case95; }
 let v893 = eo__24eo_5fto_5fsmt(s, v891)?;
 let v894 = s.construct(Constructor::eo__24emb_5fsm_2estr_2elen, &[v893])?;
-return Ok(v894);
+return Ok(Some(v894));
 }
+Ok(None)
+}
+fn case_96_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case96: {
 let v895 = s.unapply(a0)?;
 let Some((f, a)) = v895 else { break 'case96; }
@@ -68655,8 +72093,11 @@ if v899 != v901 { break 'case96; }
 let v902 = eo__24eo_5fto_5fsmt(s, v900)?;
 let v903 = eo__24eo_5fto_5fsmt(s, v897)?;
 let v904 = s.construct(Constructor::eo__24emb_5fsm_2estr_2e_2b_2b, &[v902, v903])?;
-return Ok(v904);
+return Ok(Some(v904));
 }
+Ok(None)
+}
+fn case_97_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case97: {
 let v905 = s.unapply(a0)?;
 let Some((f, a)) = v905 else { break 'case97; }
@@ -68679,8 +72120,11 @@ let v915 = eo__24eo_5fto_5fsmt(s, v913)?;
 let v916 = eo__24eo_5fto_5fsmt(s, v910)?;
 let v917 = eo__24eo_5fto_5fsmt(s, v907)?;
 let v918 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v915, v916, v917])?;
-return Ok(v918);
+return Ok(Some(v918));
 }
+Ok(None)
+}
+fn case_98_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case98: {
 let v919 = s.unapply(a0)?;
 let Some((f, a)) = v919 else { break 'case98; }
@@ -68697,8 +72141,11 @@ if v923 != v925 { break 'case98; }
 let v926 = eo__24eo_5fto_5fsmt(s, v924)?;
 let v927 = eo__24eo_5fto_5fsmt(s, v921)?;
 let v928 = s.construct(Constructor::eo__24emb_5fsm_2estr_2econtains, &[v926, v927])?;
-return Ok(v928);
+return Ok(Some(v928));
 }
+Ok(None)
+}
+fn case_99_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case99: {
 let v929 = s.unapply(a0)?;
 let Some((f, a)) = v929 else { break 'case99; }
@@ -68721,8 +72168,11 @@ let v939 = eo__24eo_5fto_5fsmt(s, v937)?;
 let v940 = eo__24eo_5fto_5fsmt(s, v934)?;
 let v941 = eo__24eo_5fto_5fsmt(s, v931)?;
 let v942 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace, &[v939, v940, v941])?;
-return Ok(v942);
+return Ok(Some(v942));
 }
+Ok(None)
+}
+fn case_100_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case100: {
 let v943 = s.unapply(a0)?;
 let Some((f, a)) = v943 else { break 'case100; }
@@ -68745,8 +72195,11 @@ let v953 = eo__24eo_5fto_5fsmt(s, v951)?;
 let v954 = eo__24eo_5fto_5fsmt(s, v948)?;
 let v955 = eo__24eo_5fto_5fsmt(s, v945)?;
 let v956 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eindexof, &[v953, v954, v955])?;
-return Ok(v956);
+return Ok(Some(v956));
 }
+Ok(None)
+}
+fn case_101_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case101: {
 let v957 = s.unapply(a0)?;
 let Some((f, a)) = v957 else { break 'case101; }
@@ -68763,8 +72216,11 @@ if v961 != v963 { break 'case101; }
 let v964 = eo__24eo_5fto_5fsmt(s, v962)?;
 let v965 = eo__24eo_5fto_5fsmt(s, v959)?;
 let v966 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eat, &[v964, v965])?;
-return Ok(v966);
+return Ok(Some(v966));
 }
+Ok(None)
+}
+fn case_102_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case102: {
 let v967 = s.unapply(a0)?;
 let Some((f, a)) = v967 else { break 'case102; }
@@ -68781,8 +72237,11 @@ if v971 != v973 { break 'case102; }
 let v974 = eo__24eo_5fto_5fsmt(s, v972)?;
 let v975 = eo__24eo_5fto_5fsmt(s, v969)?;
 let v976 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eprefixof, &[v974, v975])?;
-return Ok(v976);
+return Ok(Some(v976));
 }
+Ok(None)
+}
+fn case_103_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case103: {
 let v977 = s.unapply(a0)?;
 let Some((f, a)) = v977 else { break 'case103; }
@@ -68799,8 +72258,11 @@ if v981 != v983 { break 'case103; }
 let v984 = eo__24eo_5fto_5fsmt(s, v982)?;
 let v985 = eo__24eo_5fto_5fsmt(s, v979)?;
 let v986 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esuffixof, &[v984, v985])?;
-return Ok(v986);
+return Ok(Some(v986));
 }
+Ok(None)
+}
+fn case_104_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case104: {
 let v987 = s.unapply(a0)?;
 let Some((f, a)) = v987 else { break 'case104; }
@@ -68811,8 +72273,11 @@ let v990 = s.construct(Constructor::eo_str_2erev, &[])?;
 if v988 != v990 { break 'case104; }
 let v991 = eo__24eo_5fto_5fsmt(s, v989)?;
 let v992 = s.construct(Constructor::eo__24emb_5fsm_2estr_2erev, &[v991])?;
-return Ok(v992);
+return Ok(Some(v992));
 }
+Ok(None)
+}
+fn case_105_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case105: {
 let v993 = s.unapply(a0)?;
 let Some((f, a)) = v993 else { break 'case105; }
@@ -68835,8 +72300,11 @@ let v1003 = eo__24eo_5fto_5fsmt(s, v1001)?;
 let v1004 = eo__24eo_5fto_5fsmt(s, v998)?;
 let v1005 = eo__24eo_5fto_5fsmt(s, v995)?;
 let v1006 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eupdate, &[v1003, v1004, v1005])?;
-return Ok(v1006);
+return Ok(Some(v1006));
 }
+Ok(None)
+}
+fn case_106_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case106: {
 let v1007 = s.unapply(a0)?;
 let Some((f, a)) = v1007 else { break 'case106; }
@@ -68847,8 +72315,11 @@ let v1010 = s.construct(Constructor::eo_str_2eto_5flower, &[])?;
 if v1008 != v1010 { break 'case106; }
 let v1011 = eo__24eo_5fto_5fsmt(s, v1009)?;
 let v1012 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eto_5flower, &[v1011])?;
-return Ok(v1012);
+return Ok(Some(v1012));
 }
+Ok(None)
+}
+fn case_107_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case107: {
 let v1013 = s.unapply(a0)?;
 let Some((f, a)) = v1013 else { break 'case107; }
@@ -68859,8 +72330,11 @@ let v1016 = s.construct(Constructor::eo_str_2eto_5fupper, &[])?;
 if v1014 != v1016 { break 'case107; }
 let v1017 = eo__24eo_5fto_5fsmt(s, v1015)?;
 let v1018 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eto_5fupper, &[v1017])?;
-return Ok(v1018);
+return Ok(Some(v1018));
 }
+Ok(None)
+}
+fn case_108_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case108: {
 let v1019 = s.unapply(a0)?;
 let Some((f, a)) = v1019 else { break 'case108; }
@@ -68871,8 +72345,11 @@ let v1022 = s.construct(Constructor::eo_str_2eto_5fcode, &[])?;
 if v1020 != v1022 { break 'case108; }
 let v1023 = eo__24eo_5fto_5fsmt(s, v1021)?;
 let v1024 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eto_5fcode, &[v1023])?;
-return Ok(v1024);
+return Ok(Some(v1024));
 }
+Ok(None)
+}
+fn case_109_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case109: {
 let v1025 = s.unapply(a0)?;
 let Some((f, a)) = v1025 else { break 'case109; }
@@ -68883,8 +72360,11 @@ let v1028 = s.construct(Constructor::eo_str_2efrom_5fcode, &[])?;
 if v1026 != v1028 { break 'case109; }
 let v1029 = eo__24eo_5fto_5fsmt(s, v1027)?;
 let v1030 = s.construct(Constructor::eo__24emb_5fsm_2estr_2efrom_5fcode, &[v1029])?;
-return Ok(v1030);
+return Ok(Some(v1030));
 }
+Ok(None)
+}
+fn case_110_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case110: {
 let v1031 = s.unapply(a0)?;
 let Some((f, a)) = v1031 else { break 'case110; }
@@ -68895,8 +72375,11 @@ let v1034 = s.construct(Constructor::eo_str_2eis_5fdigit, &[])?;
 if v1032 != v1034 { break 'case110; }
 let v1035 = eo__24eo_5fto_5fsmt(s, v1033)?;
 let v1036 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eis_5fdigit, &[v1035])?;
-return Ok(v1036);
+return Ok(Some(v1036));
 }
+Ok(None)
+}
+fn case_111_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case111: {
 let v1037 = s.unapply(a0)?;
 let Some((f, a)) = v1037 else { break 'case111; }
@@ -68907,8 +72390,11 @@ let v1040 = s.construct(Constructor::eo_str_2eto_5fint, &[])?;
 if v1038 != v1040 { break 'case111; }
 let v1041 = eo__24eo_5fto_5fsmt(s, v1039)?;
 let v1042 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eto_5fint, &[v1041])?;
-return Ok(v1042);
+return Ok(Some(v1042));
 }
+Ok(None)
+}
+fn case_112_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case112: {
 let v1043 = s.unapply(a0)?;
 let Some((f, a)) = v1043 else { break 'case112; }
@@ -68919,8 +72405,11 @@ let v1046 = s.construct(Constructor::eo_str_2efrom_5fint, &[])?;
 if v1044 != v1046 { break 'case112; }
 let v1047 = eo__24eo_5fto_5fsmt(s, v1045)?;
 let v1048 = s.construct(Constructor::eo__24emb_5fsm_2estr_2efrom_5fint, &[v1047])?;
-return Ok(v1048);
+return Ok(Some(v1048));
 }
+Ok(None)
+}
+fn case_113_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case113: {
 let v1049 = s.unapply(a0)?;
 let Some((f, a)) = v1049 else { break 'case113; }
@@ -68937,8 +72426,11 @@ if v1053 != v1055 { break 'case113; }
 let v1056 = eo__24eo_5fto_5fsmt(s, v1054)?;
 let v1057 = eo__24eo_5fto_5fsmt(s, v1051)?;
 let v1058 = s.construct(Constructor::eo__24emb_5fsm_2estr_2e_3c, &[v1056, v1057])?;
-return Ok(v1058);
+return Ok(Some(v1058));
 }
+Ok(None)
+}
+fn case_114_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case114: {
 let v1059 = s.unapply(a0)?;
 let Some((f, a)) = v1059 else { break 'case114; }
@@ -68955,8 +72447,11 @@ if v1063 != v1065 { break 'case114; }
 let v1066 = eo__24eo_5fto_5fsmt(s, v1064)?;
 let v1067 = eo__24eo_5fto_5fsmt(s, v1061)?;
 let v1068 = s.construct(Constructor::eo__24emb_5fsm_2estr_2e_3c_3d, &[v1066, v1067])?;
-return Ok(v1068);
+return Ok(Some(v1068));
 }
+Ok(None)
+}
+fn case_115_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case115: {
 let v1069 = s.unapply(a0)?;
 let Some((f, a)) = v1069 else { break 'case115; }
@@ -68979,8 +72474,11 @@ let v1079 = eo__24eo_5fto_5fsmt(s, v1077)?;
 let v1080 = eo__24eo_5fto_5fsmt(s, v1074)?;
 let v1081 = eo__24eo_5fto_5fsmt(s, v1071)?;
 let v1082 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fall, &[v1079, v1080, v1081])?;
-return Ok(v1082);
+return Ok(Some(v1082));
 }
+Ok(None)
+}
+fn case_116_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case116: {
 let v1083 = s.unapply(a0)?;
 let Some((f, a)) = v1083 else { break 'case116; }
@@ -69003,8 +72501,11 @@ let v1093 = eo__24eo_5fto_5fsmt(s, v1091)?;
 let v1094 = eo__24eo_5fto_5fsmt(s, v1088)?;
 let v1095 = eo__24eo_5fto_5fsmt(s, v1085)?;
 let v1096 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre, &[v1093, v1094, v1095])?;
-return Ok(v1096);
+return Ok(Some(v1096));
 }
+Ok(None)
+}
+fn case_117_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case117: {
 let v1097 = s.unapply(a0)?;
 let Some((f, a)) = v1097 else { break 'case117; }
@@ -69027,8 +72528,11 @@ let v1107 = eo__24eo_5fto_5fsmt(s, v1105)?;
 let v1108 = eo__24eo_5fto_5fsmt(s, v1102)?;
 let v1109 = eo__24eo_5fto_5fsmt(s, v1099)?;
 let v1110 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre_5fall, &[v1107, v1108, v1109])?;
-return Ok(v1110);
+return Ok(Some(v1110));
 }
+Ok(None)
+}
+fn case_118_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case118: {
 let v1111 = s.unapply(a0)?;
 let Some((f, a)) = v1111 else { break 'case118; }
@@ -69051,26 +72555,38 @@ let v1121 = eo__24eo_5fto_5fsmt(s, v1119)?;
 let v1122 = eo__24eo_5fto_5fsmt(s, v1116)?;
 let v1123 = eo__24eo_5fto_5fsmt(s, v1113)?;
 let v1124 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eindexof_5fre, &[v1121, v1122, v1123])?;
-return Ok(v1124);
+return Ok(Some(v1124));
 }
+Ok(None)
+}
+fn case_119_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case119: {
 let v1125 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 if a0 != v1125 { break 'case119; }
 let v1126 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eallchar, &[])?;
-return Ok(v1126);
+return Ok(Some(v1126));
 }
+Ok(None)
+}
+fn case_120_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case120: {
 let v1127 = s.construct(Constructor::eo_re_2enone, &[])?;
 if a0 != v1127 { break 'case120; }
 let v1128 = s.construct(Constructor::eo__24emb_5fsm_2ere_2enone, &[])?;
-return Ok(v1128);
+return Ok(Some(v1128));
 }
+Ok(None)
+}
+fn case_121_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case121: {
 let v1129 = s.construct(Constructor::eo_re_2eall, &[])?;
 if a0 != v1129 { break 'case121; }
 let v1130 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eall, &[])?;
-return Ok(v1130);
+return Ok(Some(v1130));
 }
+Ok(None)
+}
+fn case_122_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case122: {
 let v1131 = s.unapply(a0)?;
 let Some((f, a)) = v1131 else { break 'case122; }
@@ -69081,8 +72597,11 @@ let v1134 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v1132 != v1134 { break 'case122; }
 let v1135 = eo__24eo_5fto_5fsmt(s, v1133)?;
 let v1136 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eto_5fre, &[v1135])?;
-return Ok(v1136);
+return Ok(Some(v1136));
 }
+Ok(None)
+}
+fn case_123_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case123: {
 let v1137 = s.unapply(a0)?;
 let Some((f, a)) = v1137 else { break 'case123; }
@@ -69093,8 +72612,11 @@ let v1140 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 if v1138 != v1140 { break 'case123; }
 let v1141 = eo__24eo_5fto_5fsmt(s, v1139)?;
 let v1142 = s.construct(Constructor::eo__24emb_5fsm_2ere_2e_2a, &[v1141])?;
-return Ok(v1142);
+return Ok(Some(v1142));
 }
+Ok(None)
+}
+fn case_124_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case124: {
 let v1143 = s.unapply(a0)?;
 let Some((f, a)) = v1143 else { break 'case124; }
@@ -69105,8 +72627,11 @@ let v1146 = s.construct(Constructor::eo_re_2e_2b, &[])?;
 if v1144 != v1146 { break 'case124; }
 let v1147 = eo__24eo_5fto_5fsmt(s, v1145)?;
 let v1148 = s.construct(Constructor::eo__24emb_5fsm_2ere_2e_2b, &[v1147])?;
-return Ok(v1148);
+return Ok(Some(v1148));
 }
+Ok(None)
+}
+fn case_125_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case125: {
 let v1149 = s.unapply(a0)?;
 let Some((f, a)) = v1149 else { break 'case125; }
@@ -69120,8 +72645,11 @@ let v1153 = fields;
 let v1154 = eo__24eo_5fto_5fsmt(s, v1153[0])?;
 let v1155 = eo__24eo_5fto_5fsmt(s, v1151)?;
 let v1156 = s.construct(Constructor::eo__24emb_5fsm_2ere_2e_5e, &[v1154, v1155])?;
-return Ok(v1156);
+return Ok(Some(v1156));
 }
+Ok(None)
+}
+fn case_126_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case126: {
 let v1157 = s.unapply(a0)?;
 let Some((f, a)) = v1157 else { break 'case126; }
@@ -69132,8 +72660,11 @@ let v1160 = s.construct(Constructor::eo_re_2eopt, &[])?;
 if v1158 != v1160 { break 'case126; }
 let v1161 = eo__24eo_5fto_5fsmt(s, v1159)?;
 let v1162 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eopt, &[v1161])?;
-return Ok(v1162);
+return Ok(Some(v1162));
 }
+Ok(None)
+}
+fn case_127_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case127: {
 let v1163 = s.unapply(a0)?;
 let Some((f, a)) = v1163 else { break 'case127; }
@@ -69144,8 +72675,11 @@ let v1166 = s.construct(Constructor::eo_re_2ecomp, &[])?;
 if v1164 != v1166 { break 'case127; }
 let v1167 = eo__24eo_5fto_5fsmt(s, v1165)?;
 let v1168 = s.construct(Constructor::eo__24emb_5fsm_2ere_2ecomp, &[v1167])?;
-return Ok(v1168);
+return Ok(Some(v1168));
 }
+Ok(None)
+}
+fn case_128_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case128: {
 let v1169 = s.unapply(a0)?;
 let Some((f, a)) = v1169 else { break 'case128; }
@@ -69162,8 +72696,11 @@ if v1173 != v1175 { break 'case128; }
 let v1176 = eo__24eo_5fto_5fsmt(s, v1174)?;
 let v1177 = eo__24eo_5fto_5fsmt(s, v1171)?;
 let v1178 = s.construct(Constructor::eo__24emb_5fsm_2ere_2erange, &[v1176, v1177])?;
-return Ok(v1178);
+return Ok(Some(v1178));
 }
+Ok(None)
+}
+fn case_129_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case129: {
 let v1179 = s.unapply(a0)?;
 let Some((f, a)) = v1179 else { break 'case129; }
@@ -69180,8 +72717,11 @@ if v1183 != v1185 { break 'case129; }
 let v1186 = eo__24eo_5fto_5fsmt(s, v1184)?;
 let v1187 = eo__24eo_5fto_5fsmt(s, v1181)?;
 let v1188 = s.construct(Constructor::eo__24emb_5fsm_2ere_2e_2b_2b, &[v1186, v1187])?;
-return Ok(v1188);
+return Ok(Some(v1188));
 }
+Ok(None)
+}
+fn case_130_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case130: {
 let v1189 = s.unapply(a0)?;
 let Some((f, a)) = v1189 else { break 'case130; }
@@ -69198,8 +72738,11 @@ if v1193 != v1195 { break 'case130; }
 let v1196 = eo__24eo_5fto_5fsmt(s, v1194)?;
 let v1197 = eo__24eo_5fto_5fsmt(s, v1191)?;
 let v1198 = s.construct(Constructor::eo__24emb_5fsm_2ere_2einter, &[v1196, v1197])?;
-return Ok(v1198);
+return Ok(Some(v1198));
 }
+Ok(None)
+}
+fn case_131_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case131: {
 let v1199 = s.unapply(a0)?;
 let Some((f, a)) = v1199 else { break 'case131; }
@@ -69216,8 +72759,11 @@ if v1203 != v1205 { break 'case131; }
 let v1206 = eo__24eo_5fto_5fsmt(s, v1204)?;
 let v1207 = eo__24eo_5fto_5fsmt(s, v1201)?;
 let v1208 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eunion, &[v1206, v1207])?;
-return Ok(v1208);
+return Ok(Some(v1208));
 }
+Ok(None)
+}
+fn case_132_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case132: {
 let v1209 = s.unapply(a0)?;
 let Some((f, a)) = v1209 else { break 'case132; }
@@ -69234,8 +72780,11 @@ if v1213 != v1215 { break 'case132; }
 let v1216 = eo__24eo_5fto_5fsmt(s, v1214)?;
 let v1217 = eo__24eo_5fto_5fsmt(s, v1211)?;
 let v1218 = s.construct(Constructor::eo__24emb_5fsm_2ere_2ediff, &[v1216, v1217])?;
-return Ok(v1218);
+return Ok(Some(v1218));
 }
+Ok(None)
+}
+fn case_133_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case133: {
 let v1219 = s.unapply(a0)?;
 let Some((f, a)) = v1219 else { break 'case133; }
@@ -69250,8 +72799,11 @@ let v1224 = eo__24eo_5fto_5fsmt(s, v1223[0])?;
 let v1225 = eo__24eo_5fto_5fsmt(s, v1223[1])?;
 let v1226 = eo__24eo_5fto_5fsmt(s, v1221)?;
 let v1227 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eloop, &[v1224, v1225, v1226])?;
-return Ok(v1227);
+return Ok(Some(v1227));
 }
+Ok(None)
+}
+fn case_134_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case134: {
 let v1228 = s.unapply(a0)?;
 let Some((f, a)) = v1228 else { break 'case134; }
@@ -69268,8 +72820,11 @@ if v1232 != v1234 { break 'case134; }
 let v1235 = eo__24eo_5fto_5fsmt(s, v1233)?;
 let v1236 = eo__24eo_5fto_5fsmt(s, v1230)?;
 let v1237 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ein_5fre, &[v1235, v1236])?;
-return Ok(v1237);
+return Ok(Some(v1237));
 }
+Ok(None)
+}
+fn case_135_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case135: {
 let v1238 = s.unapply(a0)?;
 let Some((f, a)) = v1238 else { break 'case135; }
@@ -69280,8 +72835,11 @@ let v1241 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v1239 != v1241 { break 'case135; }
 let v1242 = eo__24eo_5fto_5fsmt(s, v1240)?;
 let v1243 = s.construct(Constructor::eo__24emb_5fsm_2eseq_2eunit, &[v1242])?;
-return Ok(v1243);
+return Ok(Some(v1243));
 }
+Ok(None)
+}
+fn case_136_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case136: {
 let v1244 = s.unapply(a0)?;
 let Some((f, a)) = v1244 else { break 'case136; }
@@ -69298,8 +72856,11 @@ if v1248 != v1250 { break 'case136; }
 let v1251 = eo__24eo_5fto_5fsmt(s, v1249)?;
 let v1252 = eo__24eo_5fto_5fsmt(s, v1246)?;
 let v1253 = s.construct(Constructor::eo__24emb_5fsm_2eseq_2enth, &[v1251, v1252])?;
-return Ok(v1253);
+return Ok(Some(v1253));
 }
+Ok(None)
+}
+fn case_137_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case137: {
 let v1254 = s.destruct(Constructor::eo__40re_5funfold_5fpos_5fcomponent, a0)?;
 let Some(fields) = v1254 else { break 'case137; }
@@ -69318,8 +72879,11 @@ let v1262 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
 v1262
 }, None => s.stuck(),
 };
-return Ok(v1257);
+return Ok(Some(v1257));
 }
+Ok(None)
+}
+fn case_138_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case138: {
 let v1263 = s.unapply(a0)?;
 let Some((f, a)) = v1263 else { break 'case138; }
@@ -69336,8 +72900,11 @@ if v1267 != v1269 { break 'case138; }
 let v1270 = eo__24eo_5fto_5fsmt(s, v1268)?;
 let v1271 = eo__24eo_5fto_5fsmt(s, v1265)?;
 let v1272 = s.construct(Constructor::eo__24emb_5fsm_2eseq_5fdiff, &[v1270, v1271])?;
-return Ok(v1272);
+return Ok(Some(v1272));
 }
+Ok(None)
+}
+fn case_139_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case139: {
 let v1273 = s.unapply(a0)?;
 let Some((f, a)) = v1273 else { break 'case139; }
@@ -69364,8 +72931,11 @@ let v1289 = eo__24eo_5fto_5fsmt(s, v1275)?;
 let v1290 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1286, v1288, v1289])?;
 let v1291 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eto_5fint, &[v1290])?;
 let v1292 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v1283, v1285, v1291])?;
-return Ok(v1292);
+return Ok(Some(v1292));
 }
+Ok(None)
+}
+fn case_140_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case140: {
 let v1293 = s.unapply(a0)?;
 let Some((f, a)) = v1293 else { break 'case140; }
@@ -69386,8 +72956,11 @@ let v1305 = s.construct(Constructor::eo__24emb_5fsm_2ere_2einter, &[v1298, v1304
 let v1306 = s.native("0", &[])?;
 let v1307 = s.construct(Constructor::eo__24emb_5fsm_2eNumeral, &[v1306])?;
 let v1308 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eindexof_5fre, &[v1297, v1305, v1307])?;
-return Ok(v1308);
+return Ok(Some(v1308));
 }
+Ok(None)
+}
+fn case_141_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case141: {
 let v1309 = s.unapply(a0)?;
 let Some((f, a)) = v1309 else { break 'case141; }
@@ -69415,8 +72988,11 @@ let v1326 = eo__24eo_5fto_5fsmt(s, v1311)?;
 let v1327 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1323, v1325, v1326])?;
 let v1328 = s.construct(Constructor::eo__24emb_5fsm_2estr_2eto_5fint, &[v1327])?;
 let v1329 = s.construct(Constructor::eo__24emb_5fsm_2eite, &[v1319, v1321, v1328])?;
-return Ok(v1329);
+return Ok(Some(v1329));
 }
+Ok(None)
+}
+fn case_142_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case142: {
 let v1330 = s.unapply(a0)?;
 let Some((f, a)) = v1330 else { break 'case142; }
@@ -69451,8 +73027,11 @@ let v1354 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1349, v13
 let v1355 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fall, &[v1347, v1348, v1354])?;
 let v1356 = s.construct(Constructor::eo__24emb_5fsm_2estr_2elen, &[v1355])?;
 let v1357 = s.construct(Constructor::eo__24emb_5fsm_2e_2d, &[v1346, v1356])?;
-return Ok(v1357);
+return Ok(Some(v1357));
 }
+Ok(None)
+}
+fn case_143_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case143: {
 let v1358 = s.unapply(a0)?;
 let Some((f, a)) = v1358 else { break 'case143; }
@@ -69487,8 +73066,11 @@ let v1382 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1377, v13
 let v1383 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre_5fall, &[v1375, v1376, v1382])?;
 let v1384 = s.construct(Constructor::eo__24emb_5fsm_2estr_2elen, &[v1383])?;
 let v1385 = s.construct(Constructor::eo__24emb_5fsm_2e_2d, &[v1374, v1384])?;
-return Ok(v1385);
+return Ok(Some(v1385));
 }
+Ok(None)
+}
+fn case_144_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case144: {
 let v1386 = s.unapply(a0)?;
 let Some((f, a)) = v1386 else { break 'case144; }
@@ -69511,8 +73093,11 @@ let v1396 = eo__24eo_5fto_5fsmt(s, v1394)?;
 let v1397 = eo__24eo_5fto_5fsmt(s, v1391)?;
 let v1398 = eo__24eo_5fto_5fsmt(s, v1388)?;
 let v1399 = s.construct(Constructor::eo__24emb_5fsm_2e_40strings_5foccur_5findex, &[v1396, v1397, v1398])?;
-return Ok(v1399);
+return Ok(Some(v1399));
 }
+Ok(None)
+}
+fn case_145_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case145: {
 let v1400 = s.unapply(a0)?;
 let Some((f, a)) = v1400 else { break 'case145; }
@@ -69535,8 +73120,11 @@ let v1410 = eo__24eo_5fto_5fsmt(s, v1408)?;
 let v1411 = eo__24eo_5fto_5fsmt(s, v1405)?;
 let v1412 = eo__24eo_5fto_5fsmt(s, v1402)?;
 let v1413 = s.construct(Constructor::eo__24emb_5fsm_2e_40strings_5foccur_5findex_5fre, &[v1410, v1411, v1412])?;
-return Ok(v1413);
+return Ok(Some(v1413));
 }
+Ok(None)
+}
+fn case_146_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case146: {
 let v1414 = s.unapply(a0)?;
 let Some((f, a)) = v1414 else { break 'case146; }
@@ -69571,8 +73159,11 @@ let v1434 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1427, v14
 let v1435 = eo__24eo_5fto_5fsmt(s, v1422)?;
 let v1436 = eo__24eo_5fto_5fsmt(s, v1419)?;
 let v1437 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fall, &[v1434, v1435, v1436])?;
-return Ok(v1437);
+return Ok(Some(v1437));
 }
+Ok(None)
+}
+fn case_147_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case147: {
 let v1438 = s.unapply(a0)?;
 let Some((f, a)) = v1438 else { break 'case147; }
@@ -69607,8 +73198,11 @@ let v1458 = s.construct(Constructor::eo__24emb_5fsm_2estr_2esubstr, &[v1451, v14
 let v1459 = eo__24eo_5fto_5fsmt(s, v1446)?;
 let v1460 = eo__24eo_5fto_5fsmt(s, v1443)?;
 let v1461 = s.construct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre_5fall, &[v1458, v1459, v1460])?;
-return Ok(v1461);
+return Ok(Some(v1461));
 }
+Ok(None)
+}
+fn case_148_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case148: {
 let v1462 = s.destruct(Constructor::eo__40witness_5fstring_5flength, a0)?;
 let Some(fields) = v1462 else { break 'case148; }
@@ -69641,8 +73235,11 @@ let v1478 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
 v1478
 }, None => s.stuck(),
 };
-return Ok(v1465);
+return Ok(Some(v1465));
 }
+Ok(None)
+}
+fn case_149_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case149: {
 let v1479 = s.unapply(a0)?;
 let Some((f, a)) = v1479 else { break 'case149; }
@@ -69657,8 +73254,11 @@ let v1484 = eo__24eo_5fto_5fsmt(s, v1483[0])?;
 let v1485 = eo__24eo_5fto_5fsmt_5ftester(s, v1484)?;
 let v1486 = eo__24eo_5fto_5fsmt(s, v1481)?;
 let v1487 = s.construct(Constructor::eo__24emb_5fsm_2eApply, &[v1485, v1486])?;
-return Ok(v1487);
+return Ok(Some(v1487));
 }
+Ok(None)
+}
+fn case_150_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case150: {
 let v1488 = s.unapply(a0)?;
 let Some((f, a)) = v1488 else { break 'case150; }
@@ -69678,8 +73278,11 @@ let v1496 = eo__24eo_5fto_5fsmt(s, v1495[0])?;
 let v1497 = eo__24eo_5fto_5fsmt(s, v1493)?;
 let v1498 = eo__24eo_5fto_5fsmt(s, v1490)?;
 let v1499 = eo__24eo_5fto_5fsmt_5fupdater(s, v1496, v1497, v1498)?;
-return Ok(v1499);
+return Ok(Some(v1499));
 }
+Ok(None)
+}
+fn case_151_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case151: {
 let v1500 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
 if a0 != v1500 { break 'case151; }
@@ -69692,8 +73295,11 @@ let v1506 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 let v1507 = s.construct(Constructor::eo__24emb_5fdd_2econs, &[v1502, v1505, v1506])?;
 let v1508 = s.native("nat.zero", &[])?;
 let v1509 = s.construct(Constructor::eo__24emb_5fsm_2eDtCons, &[v1501, v1507, v1508])?;
-return Ok(v1509);
+return Ok(Some(v1509));
 }
+Ok(None)
+}
+fn case_152_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case152: {
 let v1510 = s.unapply(a0)?;
 let Some((f, a)) = v1510 else { break 'case152; }
@@ -69712,8 +73318,11 @@ let v1518 = eo__24eo_5fto_5fsmt(s, v1515)?;
 let v1519 = eo__24smtx_5ftypeof(s, v1518)?;
 let v1520 = eo__24eo_5fto_5fsmt(s, v1512)?;
 let v1521 = eo__24eo_5fto_5fsmt_5ftuple_5fprepend(s, v1517, v1519, v1520)?;
-return Ok(v1521);
+return Ok(Some(v1521));
 }
+Ok(None)
+}
+fn case_153_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case153: {
 let v1522 = s.unapply(a0)?;
 let Some((f, a)) = v1522 else { break 'case153; }
@@ -69729,8 +73338,11 @@ let v1528 = eo__24smtx_5ftypeof(s, v1527)?;
 let v1529 = eo__24eo_5fto_5fsmt(s, v1526[0])?;
 let v1530 = eo__24eo_5fto_5fsmt(s, v1524)?;
 let v1531 = eo__24eo_5fto_5fsmt_5ftuple_5fselect(s, v1528, v1529, v1530)?;
-return Ok(v1531);
+return Ok(Some(v1531));
 }
+Ok(None)
+}
+fn case_154_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case154: {
 let v1532 = s.unapply(a0)?;
 let Some((f, a)) = v1532 else { break 'case154; }
@@ -69752,8 +73364,11 @@ let v1542 = eo__24eo_5fto_5fsmt(s, v1539[0])?;
 let v1543 = eo__24eo_5fto_5fsmt(s, v1537)?;
 let v1544 = eo__24eo_5fto_5fsmt(s, v1534)?;
 let v1545 = eo__24eo_5fto_5fsmt_5ftuple_5fupdate(s, v1541, v1542, v1543, v1544)?;
-return Ok(v1545);
+return Ok(Some(v1545));
 }
+Ok(None)
+}
+fn case_155_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case155: {
 let v1546 = s.destruct(Constructor::eo_set_2eempty, a0)?;
 let Some(fields) = v1546 else { break 'case155; }
@@ -69761,8 +73376,11 @@ let Some(fields) = v1546 else { break 'case155; }
 let v1547 = fields;
 let v1548 = eo__24eo_5fto_5fsmt_5ftype(s, v1547[0])?;
 let v1549 = eo__24eo_5fto_5fsmt_5fset_2eempty(s, v1548)?;
-return Ok(v1549);
+return Ok(Some(v1549));
 }
+Ok(None)
+}
+fn case_156_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case156: {
 let v1550 = s.unapply(a0)?;
 let Some((f, a)) = v1550 else { break 'case156; }
@@ -69773,8 +73391,11 @@ let v1553 = s.construct(Constructor::eo_set_2esingleton, &[])?;
 if v1551 != v1553 { break 'case156; }
 let v1554 = eo__24eo_5fto_5fsmt(s, v1552)?;
 let v1555 = s.construct(Constructor::eo__24emb_5fsm_2eset_2esingleton, &[v1554])?;
-return Ok(v1555);
+return Ok(Some(v1555));
 }
+Ok(None)
+}
+fn case_157_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case157: {
 let v1556 = s.unapply(a0)?;
 let Some((f, a)) = v1556 else { break 'case157; }
@@ -69791,8 +73412,11 @@ if v1560 != v1562 { break 'case157; }
 let v1563 = eo__24eo_5fto_5fsmt(s, v1561)?;
 let v1564 = eo__24eo_5fto_5fsmt(s, v1558)?;
 let v1565 = s.construct(Constructor::eo__24emb_5fsm_2eset_2eunion, &[v1563, v1564])?;
-return Ok(v1565);
+return Ok(Some(v1565));
 }
+Ok(None)
+}
+fn case_158_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case158: {
 let v1566 = s.unapply(a0)?;
 let Some((f, a)) = v1566 else { break 'case158; }
@@ -69809,8 +73433,11 @@ if v1570 != v1572 { break 'case158; }
 let v1573 = eo__24eo_5fto_5fsmt(s, v1571)?;
 let v1574 = eo__24eo_5fto_5fsmt(s, v1568)?;
 let v1575 = s.construct(Constructor::eo__24emb_5fsm_2eset_2einter, &[v1573, v1574])?;
-return Ok(v1575);
+return Ok(Some(v1575));
 }
+Ok(None)
+}
+fn case_159_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case159: {
 let v1576 = s.unapply(a0)?;
 let Some((f, a)) = v1576 else { break 'case159; }
@@ -69827,8 +73454,11 @@ if v1580 != v1582 { break 'case159; }
 let v1583 = eo__24eo_5fto_5fsmt(s, v1581)?;
 let v1584 = eo__24eo_5fto_5fsmt(s, v1578)?;
 let v1585 = s.construct(Constructor::eo__24emb_5fsm_2eset_2eminus, &[v1583, v1584])?;
-return Ok(v1585);
+return Ok(Some(v1585));
 }
+Ok(None)
+}
+fn case_160_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case160: {
 let v1586 = s.unapply(a0)?;
 let Some((f, a)) = v1586 else { break 'case160; }
@@ -69845,8 +73475,11 @@ if v1590 != v1592 { break 'case160; }
 let v1593 = eo__24eo_5fto_5fsmt(s, v1591)?;
 let v1594 = eo__24eo_5fto_5fsmt(s, v1588)?;
 let v1595 = s.construct(Constructor::eo__24emb_5fsm_2eset_2emember, &[v1593, v1594])?;
-return Ok(v1595);
+return Ok(Some(v1595));
 }
+Ok(None)
+}
+fn case_161_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case161: {
 let v1596 = s.unapply(a0)?;
 let Some((f, a)) = v1596 else { break 'case161; }
@@ -69863,8 +73496,11 @@ if v1600 != v1602 { break 'case161; }
 let v1603 = eo__24eo_5fto_5fsmt(s, v1601)?;
 let v1604 = eo__24eo_5fto_5fsmt(s, v1598)?;
 let v1605 = s.construct(Constructor::eo__24emb_5fsm_2eset_2esubset, &[v1603, v1604])?;
-return Ok(v1605);
+return Ok(Some(v1605));
 }
+Ok(None)
+}
+fn case_162_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case162: {
 let v1606 = s.unapply(a0)?;
 let Some((f, a)) = v1606 else { break 'case162; }
@@ -69879,8 +73515,11 @@ let v1612 = eo__24smtx_5ftypeof(s, v1611)?;
 let v1613 = eo__24eo_5fto_5fsmt_5fset_5felem_5ftype(s, v1612)?;
 let v1614 = s.construct(Constructor::eo__24emb_5fsm_2eset_2eempty, &[v1613])?;
 let v1615 = s.construct(Constructor::eo__24emb_5fsm_2emap_5fdiff, &[v1610, v1614])?;
-return Ok(v1615);
+return Ok(Some(v1615));
 }
+Ok(None)
+}
+fn case_163_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case163: {
 let v1616 = s.unapply(a0)?;
 let Some((f, a)) = v1616 else { break 'case163; }
@@ -69895,8 +73534,11 @@ let v1622 = eo__24smtx_5ftypeof(s, v1621)?;
 let v1623 = eo__24eo_5fto_5fsmt_5fset_5felem_5ftype(s, v1622)?;
 let v1624 = s.construct(Constructor::eo__24emb_5fsm_2eset_2eempty, &[v1623])?;
 let v1625 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v1620, v1624])?;
-return Ok(v1625);
+return Ok(Some(v1625));
 }
+Ok(None)
+}
+fn case_164_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case164: {
 let v1626 = s.unapply(a0)?;
 let Some((f, a)) = v1626 else { break 'case164; }
@@ -69914,8 +73556,11 @@ let v1635 = s.construct(Constructor::eo__24emb_5fsm_2eset_2eempty, &[v1634])?;
 let v1636 = s.construct(Constructor::eo__24emb_5fsm_2emap_5fdiff, &[v1631, v1635])?;
 let v1637 = s.construct(Constructor::eo__24emb_5fsm_2eset_2esingleton, &[v1636])?;
 let v1638 = s.construct(Constructor::eo__24emb_5fsm_2e_3d, &[v1630, v1637])?;
-return Ok(v1638);
+return Ok(Some(v1638));
 }
+Ok(None)
+}
+fn case_165_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case165: {
 let v1639 = s.unapply(a0)?;
 let Some((f, a)) = v1639 else { break 'case165; }
@@ -69933,8 +73578,11 @@ let v1646 = eo__24eo_5fto_5fsmt(s, v1644)?;
 let v1647 = s.construct(Constructor::eo__24emb_5fsm_2eset_2esingleton, &[v1646])?;
 let v1648 = eo__24eo_5fto_5fsmt(s, v1641)?;
 let v1649 = s.construct(Constructor::eo__24emb_5fsm_2eset_2eunion, &[v1647, v1648])?;
-return Ok(v1649);
+return Ok(Some(v1649));
 }
+Ok(None)
+}
+fn case_166_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case166: {
 let v1650 = s.unapply(a0)?;
 let Some((f, a)) = v1650 else { break 'case166; }
@@ -69955,8 +73603,11 @@ let v1660 = eo__24eo_5fto_5fsmt(s, v1652)?;
 let v1661 = eo__24eo_5fto_5fsmt(s, v1652)?;
 let v1662 = eo__24smtx_5ftypeof(s, v1661)?;
 let v1663 = eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff(s, v1657, v1659, v1660, v1662)?;
-return Ok(v1663);
+return Ok(Some(v1663));
 }
+Ok(None)
+}
+fn case_167_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case167: {
 let v1664 = s.unapply(a0)?;
 let Some((f, a)) = v1664 else { break 'case167; }
@@ -69973,8 +73624,11 @@ if v1668 != v1670 { break 'case167; }
 let v1671 = eo__24eo_5fto_5fsmt(s, v1669)?;
 let v1672 = eo__24eo_5fto_5fsmt(s, v1666)?;
 let v1673 = s.construct(Constructor::eo__24emb_5fsm_2e_2f, &[v1671, v1672])?;
-return Ok(v1673);
+return Ok(Some(v1673));
 }
+Ok(None)
+}
+fn case_168_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case168: {
 let v1674 = s.unapply(a0)?;
 let Some((f, a)) = v1674 else { break 'case168; }
@@ -69991,8 +73645,11 @@ if v1678 != v1680 { break 'case168; }
 let v1681 = eo__24eo_5fto_5fsmt(s, v1679)?;
 let v1682 = eo__24eo_5fto_5fsmt(s, v1676)?;
 let v1683 = s.construct(Constructor::eo__24emb_5fsm_2e_2f_5ftotal, &[v1681, v1682])?;
-return Ok(v1683);
+return Ok(Some(v1683));
 }
+Ok(None)
+}
+fn case_169_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case169: {
 let v1684 = s.unapply(a0)?;
 let Some((f, a)) = v1684 else { break 'case169; }
@@ -70007,8 +73664,11 @@ let v1690 = s.native("1", &[])?;
 let v1691 = s.native("mk_rational", &[v1689, v1690])?;
 let v1692 = s.construct(Constructor::eo__24emb_5fsm_2eRational, &[v1691])?;
 let v1693 = s.construct(Constructor::eo__24emb_5fsm_2e_2f, &[v1688, v1692])?;
-return Ok(v1693);
+return Ok(Some(v1693));
 }
+Ok(None)
+}
+fn case_170_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case170: {
 let v1694 = s.unapply(a0)?;
 let Some((f, a)) = v1694 else { break 'case170; }
@@ -70025,8 +73685,11 @@ if v1698 != v1700 { break 'case170; }
 let v1701 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 if v1699 != v1701 { break 'case170; }
 let v1702 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
-return Ok(v1702);
+return Ok(Some(v1702));
 }
+Ok(None)
+}
+fn case_171_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case171: {
 let v1703 = s.unapply(a0)?;
 let Some((f, a)) = v1703 else { break 'case171; }
@@ -70044,8 +73707,11 @@ let v1710 = eo__24eo_5fto_5fsmt(s, v1705)?;
 let v1711 = s.construct(Constructor::eo__24emb_5fsm_2enot, &[v1710])?;
 let v1712 = eo__24eo_5fto_5fsmt_5fexists(s, v1708, v1711)?;
 let v1713 = s.construct(Constructor::eo__24emb_5fsm_2enot, &[v1712])?;
-return Ok(v1713);
+return Ok(Some(v1713));
 }
+Ok(None)
+}
+fn case_172_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case172: {
 let v1714 = s.unapply(a0)?;
 let Some((f, a)) = v1714 else { break 'case172; }
@@ -70062,8 +73728,11 @@ if v1718 != v1720 { break 'case172; }
 let v1721 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 if v1719 != v1721 { break 'case172; }
 let v1722 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
-return Ok(v1722);
+return Ok(Some(v1722));
 }
+Ok(None)
+}
+fn case_173_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case173: {
 let v1723 = s.unapply(a0)?;
 let Some((f, a)) = v1723 else { break 'case173; }
@@ -70079,8 +73748,11 @@ let v1729 = s.construct(Constructor::eo_exists, &[])?;
 if v1727 != v1729 { break 'case173; }
 let v1730 = eo__24eo_5fto_5fsmt(s, v1725)?;
 let v1731 = eo__24eo_5fto_5fsmt_5fexists(s, v1728, v1730)?;
-return Ok(v1731);
+return Ok(Some(v1731));
 }
+Ok(None)
+}
+fn case_174_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case174: {
 let v1732 = s.destruct(Constructor::eo__40quantifiers_5fskolemize, a0)?;
 let Some(fields) = v1732 else { break 'case174; }
@@ -70111,8 +73783,11 @@ let v1747 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
 v1747
 }, None => s.stuck(),
 };
-return Ok(v1742);
+return Ok(Some(v1742));
 }
+Ok(None)
+}
+fn case_175_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case175: {
 let v1748 = s.unapply(a0)?;
 let Some((f, a)) = v1748 else { break 'case175; }
@@ -70126,8 +73801,11 @@ let v1752 = fields;
 let v1753 = eo__24eo_5fto_5fsmt(s, v1752[0])?;
 let v1754 = eo__24eo_5fto_5fsmt(s, v1750)?;
 let v1755 = s.construct(Constructor::eo__24emb_5fsm_2eint_5fto_5fbv, &[v1753, v1754])?;
-return Ok(v1755);
+return Ok(Some(v1755));
 }
+Ok(None)
+}
+fn case_176_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case176: {
 let v1756 = s.unapply(a0)?;
 let Some((f, a)) = v1756 else { break 'case176; }
@@ -70138,8 +73816,11 @@ let v1759 = s.construct(Constructor::eo_ubv_5fto_5fint, &[])?;
 if v1757 != v1759 { break 'case176; }
 let v1760 = eo__24eo_5fto_5fsmt(s, v1758)?;
 let v1761 = s.construct(Constructor::eo__24emb_5fsm_2eubv_5fto_5fint, &[v1760])?;
-return Ok(v1761);
+return Ok(Some(v1761));
 }
+Ok(None)
+}
+fn case_177_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case177: {
 let v1762 = s.unapply(a0)?;
 let Some((f, a)) = v1762 else { break 'case177; }
@@ -70150,8 +73831,11 @@ let v1765 = s.construct(Constructor::eo_sbv_5fto_5fint, &[])?;
 if v1763 != v1765 { break 'case177; }
 let v1766 = eo__24eo_5fto_5fsmt(s, v1764)?;
 let v1767 = s.construct(Constructor::eo__24emb_5fsm_2esbv_5fto_5fint, &[v1766])?;
-return Ok(v1767);
+return Ok(Some(v1767));
 }
+Ok(None)
+}
+fn case_178_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case178: {
 let v1768 = s.destruct(Constructor::eo__40const, a0)?;
 let Some(fields) = v1768 else { break 'case178; }
@@ -70170,8 +73854,11 @@ let v1776 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
 v1776
 }, None => s.stuck(),
 };
-return Ok(v1771);
+return Ok(Some(v1771));
 }
+Ok(None)
+}
+fn case_179_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case179: {
 let v1777 = s.unapply(a0)?;
 let Some((f, a)) = v1777 else { break 'case179; }
@@ -70181,17 +73868,16 @@ let v1779 = a;
 let v1780 = eo__24eo_5fto_5fsmt(s, v1778)?;
 let v1781 = eo__24eo_5fto_5fsmt(s, v1779)?;
 let v1782 = s.construct(Constructor::eo__24emb_5fsm_2eApply, &[v1780, v1781])?;
-return Ok(v1782);
+return Ok(Some(v1782));
 }
+Ok(None)
+}
+fn case_180_eo__24eo_5fto_5fsmt(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case180: {
 let v1783 = s.construct(Constructor::eo__24emb_5fsm_2eNone, &[])?;
-return Ok(v1783);
+return Ok(Some(v1783));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(737), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$eo_to_smt_array_deq_diff"
 pub fn eo__24eo_5fto_5fsmt_5farray_5fdeq_5fdiff(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Term> {
@@ -71056,12 +74742,47 @@ Ok(None) => {},
 Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
+let mut case_index = 0_usize;
+while case_index < 17 {
+let matched = match case_index {
+0 => case_0_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+1 => case_1_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+2 => case_2_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+3 => case_3_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+4 => case_4_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+5 => case_5_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+6 => case_6_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+7 => case_7_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+8 => case_8_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+9 => case_9_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+10 => case_10_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+11 => case_11_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+12 => case_12_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+13 => case_13_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+14 => case_14_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+15 => case_15_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+16 => case_16_eo__24eo_5fto_5fsmt_5ftype(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(762), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5fBool, &[])?;
 if a0 != v0 { break 'case0; }
 let v1 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-return Ok(v1);
+return Ok(Some(v1));
 }
+Ok(None)
+}
+fn case_1_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v2 = s.destruct(Constructor::eo__24emb_5fDatatypeType, a0)?;
 let Some(fields) = v2 else { break 'case1; }
@@ -71078,8 +74799,11 @@ let v8 = s.construct(Constructor::eo__24emb_5ftsm_2eDatatype, &[v3[0], v7])?;
 v8
 }, None => s.stuck(),
 };
-return Ok(v5);
+return Ok(Some(v5));
 }
+Ok(None)
+}
+fn case_2_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v9 = s.destruct(Constructor::eo__24emb_5fDatatypeTypeRef, a0)?;
 let Some(fields) = v9 else { break 'case2; }
@@ -71095,8 +74819,11 @@ let v14 = s.construct(Constructor::eo__24emb_5ftsm_2eTypeRef, &[v10[0]])?;
 v14
 }, None => s.stuck(),
 };
-return Ok(v12);
+return Ok(Some(v12));
 }
+Ok(None)
+}
+fn case_3_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v15 = s.destruct(Constructor::eo__24emb_5fDtcAppType, a0)?;
 let Some(fields) = v15 else { break 'case3; }
@@ -71109,16 +74836,22 @@ let v20 = eo__24eo_5fto_5fsmt_5ftype(s, v16[1])?;
 let v21 = s.construct(Constructor::eo__24emb_5ftsm_2eDtcAppType, &[v19, v20])?;
 let v22 = eo__24smtx_5ftypeof_5fguard(s, v18, v21)?;
 let v23 = eo__24smtx_5ftypeof_5fguard(s, v17, v22)?;
-return Ok(v23);
+return Ok(Some(v23));
 }
+Ok(None)
+}
+fn case_4_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v24 = s.destruct(Constructor::eo__24emb_5fUSort, a0)?;
 let Some(fields) = v24 else { break 'case4; }
 ;
 let v25 = fields;
 let v26 = s.construct(Constructor::eo__24emb_5ftsm_2eUSort, &[v25[0]])?;
-return Ok(v26);
+return Ok(Some(v26));
 }
+Ok(None)
+}
+fn case_5_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v27 = s.unapply(a0)?;
 let Some((f, r)) = v27 else { break 'case5; }
@@ -71136,20 +74869,29 @@ let v34 = eo__24eo_5fto_5fsmt_5ftype(s, v28)?;
 let v35 = s.construct(Constructor::eo__24emb_5ftsm_2eFunType, &[v33, v34])?;
 let v36 = eo__24smtx_5ftypeof_5fguard(s, v32, v35)?;
 let v37 = eo__24smtx_5ftypeof_5fguard(s, v31, v36)?;
-return Ok(v37);
+return Ok(Some(v37));
 }
+Ok(None)
+}
+fn case_6_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v38 = s.construct(Constructor::eo_Int, &[])?;
 if a0 != v38 { break 'case6; }
 let v39 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-return Ok(v39);
+return Ok(Some(v39));
 }
+Ok(None)
+}
+fn case_7_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v40 = s.construct(Constructor::eo_Real, &[])?;
 if a0 != v40 { break 'case7; }
 let v41 = s.construct(Constructor::eo__24emb_5ftsm_2eReal, &[])?;
-return Ok(v41);
+return Ok(Some(v41));
 }
+Ok(None)
+}
+fn case_8_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v42 = s.unapply(a0)?;
 let Some((f, a)) = v42 else { break 'case8; }
@@ -71174,14 +74916,20 @@ let v53 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v53
 }, None => s.stuck(),
 };
-return Ok(v50);
+return Ok(Some(v50));
 }
+Ok(None)
+}
+fn case_9_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v54 = s.construct(Constructor::eo_Char, &[])?;
 if a0 != v54 { break 'case9; }
 let v55 = s.construct(Constructor::eo__24emb_5ftsm_2eChar, &[])?;
-return Ok(v55);
+return Ok(Some(v55));
 }
+Ok(None)
+}
+fn case_10_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v56 = s.unapply(a0)?;
 let Some((f, a)) = v56 else { break 'case10; }
@@ -71194,8 +74942,11 @@ let v60 = eo__24eo_5fto_5fsmt_5ftype(s, v58)?;
 let v61 = eo__24eo_5fto_5fsmt_5ftype(s, v58)?;
 let v62 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v61])?;
 let v63 = eo__24smtx_5ftypeof_5fguard(s, v60, v62)?;
-return Ok(v63);
+return Ok(Some(v63));
 }
+Ok(None)
+}
+fn case_11_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v64 = s.unapply(a0)?;
 let Some((f, a)) = v64 else { break 'case11; }
@@ -71216,14 +74967,20 @@ let v74 = eo__24eo_5fto_5fsmt_5ftype(s, v66)?;
 let v75 = s.construct(Constructor::eo__24emb_5ftsm_2eMap, &[v73, v74])?;
 let v76 = eo__24smtx_5ftypeof_5fguard(s, v72, v75)?;
 let v77 = eo__24smtx_5ftypeof_5fguard(s, v71, v76)?;
-return Ok(v77);
+return Ok(Some(v77));
 }
+Ok(None)
+}
+fn case_12_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v78 = s.construct(Constructor::eo_RegLan, &[])?;
 if a0 != v78 { break 'case12; }
 let v79 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-return Ok(v79);
+return Ok(Some(v79));
 }
+Ok(None)
+}
+fn case_13_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v80 = s.construct(Constructor::eo_UnitTuple, &[])?;
 if a0 != v80 { break 'case13; }
@@ -71235,8 +74992,11 @@ let v85 = s.construct(Constructor::eo__24emb_5fdt_2esum, &[v83, v84])?;
 let v86 = s.construct(Constructor::eo__24emb_5fdd_2enil, &[])?;
 let v87 = s.construct(Constructor::eo__24emb_5fdd_2econs, &[v82, v85, v86])?;
 let v88 = s.construct(Constructor::eo__24emb_5ftsm_2eDatatype, &[v81, v87])?;
-return Ok(v88);
+return Ok(Some(v88));
 }
+Ok(None)
+}
+fn case_14_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v89 = s.unapply(a0)?;
 let Some((f, a)) = v89 else { break 'case14; }
@@ -71265,8 +75025,11 @@ let v104 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v104
 }, None => s.stuck(),
 };
-return Ok(v100);
+return Ok(Some(v100));
 }
+Ok(None)
+}
+fn case_15_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v105 = s.unapply(a0)?;
 let Some((f, a)) = v105 else { break 'case15; }
@@ -71279,17 +75042,16 @@ let v109 = eo__24eo_5fto_5fsmt_5ftype(s, v107)?;
 let v110 = eo__24eo_5fto_5fsmt_5ftype(s, v107)?;
 let v111 = s.construct(Constructor::eo__24emb_5ftsm_2eSet, &[v110])?;
 let v112 = eo__24smtx_5ftypeof_5fguard(s, v109, v111)?;
-return Ok(v112);
+return Ok(Some(v112));
 }
+Ok(None)
+}
+fn case_16_eo__24eo_5fto_5fsmt_5ftype(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v113 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
-return Ok(v113);
+return Ok(Some(v113));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(762), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$eo_to_smt_type_tuple"
 pub fn eo__24eo_5fto_5fsmt_5ftype_5ftuple(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
@@ -71521,14 +75283,239 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 207 {
+let matched = match case_index {
+0 => case_0_eo__24eo_5ftypeof(s, a0),
+1 => case_1_eo__24eo_5ftypeof(s, a0),
+2 => case_2_eo__24eo_5ftypeof(s, a0),
+3 => case_3_eo__24eo_5ftypeof(s, a0),
+4 => case_4_eo__24eo_5ftypeof(s, a0),
+5 => case_5_eo__24eo_5ftypeof(s, a0),
+6 => case_6_eo__24eo_5ftypeof(s, a0),
+7 => case_7_eo__24eo_5ftypeof(s, a0),
+8 => case_8_eo__24eo_5ftypeof(s, a0),
+9 => case_9_eo__24eo_5ftypeof(s, a0),
+10 => case_10_eo__24eo_5ftypeof(s, a0),
+11 => case_11_eo__24eo_5ftypeof(s, a0),
+12 => case_12_eo__24eo_5ftypeof(s, a0),
+13 => case_13_eo__24eo_5ftypeof(s, a0),
+14 => case_14_eo__24eo_5ftypeof(s, a0),
+15 => case_15_eo__24eo_5ftypeof(s, a0),
+16 => case_16_eo__24eo_5ftypeof(s, a0),
+17 => case_17_eo__24eo_5ftypeof(s, a0),
+18 => case_18_eo__24eo_5ftypeof(s, a0),
+19 => case_19_eo__24eo_5ftypeof(s, a0),
+20 => case_20_eo__24eo_5ftypeof(s, a0),
+21 => case_21_eo__24eo_5ftypeof(s, a0),
+22 => case_22_eo__24eo_5ftypeof(s, a0),
+23 => case_23_eo__24eo_5ftypeof(s, a0),
+24 => case_24_eo__24eo_5ftypeof(s, a0),
+25 => case_25_eo__24eo_5ftypeof(s, a0),
+26 => case_26_eo__24eo_5ftypeof(s, a0),
+27 => case_27_eo__24eo_5ftypeof(s, a0),
+28 => case_28_eo__24eo_5ftypeof(s, a0),
+29 => case_29_eo__24eo_5ftypeof(s, a0),
+30 => case_30_eo__24eo_5ftypeof(s, a0),
+31 => case_31_eo__24eo_5ftypeof(s, a0),
+32 => case_32_eo__24eo_5ftypeof(s, a0),
+33 => case_33_eo__24eo_5ftypeof(s, a0),
+34 => case_34_eo__24eo_5ftypeof(s, a0),
+35 => case_35_eo__24eo_5ftypeof(s, a0),
+36 => case_36_eo__24eo_5ftypeof(s, a0),
+37 => case_37_eo__24eo_5ftypeof(s, a0),
+38 => case_38_eo__24eo_5ftypeof(s, a0),
+39 => case_39_eo__24eo_5ftypeof(s, a0),
+40 => case_40_eo__24eo_5ftypeof(s, a0),
+41 => case_41_eo__24eo_5ftypeof(s, a0),
+42 => case_42_eo__24eo_5ftypeof(s, a0),
+43 => case_43_eo__24eo_5ftypeof(s, a0),
+44 => case_44_eo__24eo_5ftypeof(s, a0),
+45 => case_45_eo__24eo_5ftypeof(s, a0),
+46 => case_46_eo__24eo_5ftypeof(s, a0),
+47 => case_47_eo__24eo_5ftypeof(s, a0),
+48 => case_48_eo__24eo_5ftypeof(s, a0),
+49 => case_49_eo__24eo_5ftypeof(s, a0),
+50 => case_50_eo__24eo_5ftypeof(s, a0),
+51 => case_51_eo__24eo_5ftypeof(s, a0),
+52 => case_52_eo__24eo_5ftypeof(s, a0),
+53 => case_53_eo__24eo_5ftypeof(s, a0),
+54 => case_54_eo__24eo_5ftypeof(s, a0),
+55 => case_55_eo__24eo_5ftypeof(s, a0),
+56 => case_56_eo__24eo_5ftypeof(s, a0),
+57 => case_57_eo__24eo_5ftypeof(s, a0),
+58 => case_58_eo__24eo_5ftypeof(s, a0),
+59 => case_59_eo__24eo_5ftypeof(s, a0),
+60 => case_60_eo__24eo_5ftypeof(s, a0),
+61 => case_61_eo__24eo_5ftypeof(s, a0),
+62 => case_62_eo__24eo_5ftypeof(s, a0),
+63 => case_63_eo__24eo_5ftypeof(s, a0),
+64 => case_64_eo__24eo_5ftypeof(s, a0),
+65 => case_65_eo__24eo_5ftypeof(s, a0),
+66 => case_66_eo__24eo_5ftypeof(s, a0),
+67 => case_67_eo__24eo_5ftypeof(s, a0),
+68 => case_68_eo__24eo_5ftypeof(s, a0),
+69 => case_69_eo__24eo_5ftypeof(s, a0),
+70 => case_70_eo__24eo_5ftypeof(s, a0),
+71 => case_71_eo__24eo_5ftypeof(s, a0),
+72 => case_72_eo__24eo_5ftypeof(s, a0),
+73 => case_73_eo__24eo_5ftypeof(s, a0),
+74 => case_74_eo__24eo_5ftypeof(s, a0),
+75 => case_75_eo__24eo_5ftypeof(s, a0),
+76 => case_76_eo__24eo_5ftypeof(s, a0),
+77 => case_77_eo__24eo_5ftypeof(s, a0),
+78 => case_78_eo__24eo_5ftypeof(s, a0),
+79 => case_79_eo__24eo_5ftypeof(s, a0),
+80 => case_80_eo__24eo_5ftypeof(s, a0),
+81 => case_81_eo__24eo_5ftypeof(s, a0),
+82 => case_82_eo__24eo_5ftypeof(s, a0),
+83 => case_83_eo__24eo_5ftypeof(s, a0),
+84 => case_84_eo__24eo_5ftypeof(s, a0),
+85 => case_85_eo__24eo_5ftypeof(s, a0),
+86 => case_86_eo__24eo_5ftypeof(s, a0),
+87 => case_87_eo__24eo_5ftypeof(s, a0),
+88 => case_88_eo__24eo_5ftypeof(s, a0),
+89 => case_89_eo__24eo_5ftypeof(s, a0),
+90 => case_90_eo__24eo_5ftypeof(s, a0),
+91 => case_91_eo__24eo_5ftypeof(s, a0),
+92 => case_92_eo__24eo_5ftypeof(s, a0),
+93 => case_93_eo__24eo_5ftypeof(s, a0),
+94 => case_94_eo__24eo_5ftypeof(s, a0),
+95 => case_95_eo__24eo_5ftypeof(s, a0),
+96 => case_96_eo__24eo_5ftypeof(s, a0),
+97 => case_97_eo__24eo_5ftypeof(s, a0),
+98 => case_98_eo__24eo_5ftypeof(s, a0),
+99 => case_99_eo__24eo_5ftypeof(s, a0),
+100 => case_100_eo__24eo_5ftypeof(s, a0),
+101 => case_101_eo__24eo_5ftypeof(s, a0),
+102 => case_102_eo__24eo_5ftypeof(s, a0),
+103 => case_103_eo__24eo_5ftypeof(s, a0),
+104 => case_104_eo__24eo_5ftypeof(s, a0),
+105 => case_105_eo__24eo_5ftypeof(s, a0),
+106 => case_106_eo__24eo_5ftypeof(s, a0),
+107 => case_107_eo__24eo_5ftypeof(s, a0),
+108 => case_108_eo__24eo_5ftypeof(s, a0),
+109 => case_109_eo__24eo_5ftypeof(s, a0),
+110 => case_110_eo__24eo_5ftypeof(s, a0),
+111 => case_111_eo__24eo_5ftypeof(s, a0),
+112 => case_112_eo__24eo_5ftypeof(s, a0),
+113 => case_113_eo__24eo_5ftypeof(s, a0),
+114 => case_114_eo__24eo_5ftypeof(s, a0),
+115 => case_115_eo__24eo_5ftypeof(s, a0),
+116 => case_116_eo__24eo_5ftypeof(s, a0),
+117 => case_117_eo__24eo_5ftypeof(s, a0),
+118 => case_118_eo__24eo_5ftypeof(s, a0),
+119 => case_119_eo__24eo_5ftypeof(s, a0),
+120 => case_120_eo__24eo_5ftypeof(s, a0),
+121 => case_121_eo__24eo_5ftypeof(s, a0),
+122 => case_122_eo__24eo_5ftypeof(s, a0),
+123 => case_123_eo__24eo_5ftypeof(s, a0),
+124 => case_124_eo__24eo_5ftypeof(s, a0),
+125 => case_125_eo__24eo_5ftypeof(s, a0),
+126 => case_126_eo__24eo_5ftypeof(s, a0),
+127 => case_127_eo__24eo_5ftypeof(s, a0),
+128 => case_128_eo__24eo_5ftypeof(s, a0),
+129 => case_129_eo__24eo_5ftypeof(s, a0),
+130 => case_130_eo__24eo_5ftypeof(s, a0),
+131 => case_131_eo__24eo_5ftypeof(s, a0),
+132 => case_132_eo__24eo_5ftypeof(s, a0),
+133 => case_133_eo__24eo_5ftypeof(s, a0),
+134 => case_134_eo__24eo_5ftypeof(s, a0),
+135 => case_135_eo__24eo_5ftypeof(s, a0),
+136 => case_136_eo__24eo_5ftypeof(s, a0),
+137 => case_137_eo__24eo_5ftypeof(s, a0),
+138 => case_138_eo__24eo_5ftypeof(s, a0),
+139 => case_139_eo__24eo_5ftypeof(s, a0),
+140 => case_140_eo__24eo_5ftypeof(s, a0),
+141 => case_141_eo__24eo_5ftypeof(s, a0),
+142 => case_142_eo__24eo_5ftypeof(s, a0),
+143 => case_143_eo__24eo_5ftypeof(s, a0),
+144 => case_144_eo__24eo_5ftypeof(s, a0),
+145 => case_145_eo__24eo_5ftypeof(s, a0),
+146 => case_146_eo__24eo_5ftypeof(s, a0),
+147 => case_147_eo__24eo_5ftypeof(s, a0),
+148 => case_148_eo__24eo_5ftypeof(s, a0),
+149 => case_149_eo__24eo_5ftypeof(s, a0),
+150 => case_150_eo__24eo_5ftypeof(s, a0),
+151 => case_151_eo__24eo_5ftypeof(s, a0),
+152 => case_152_eo__24eo_5ftypeof(s, a0),
+153 => case_153_eo__24eo_5ftypeof(s, a0),
+154 => case_154_eo__24eo_5ftypeof(s, a0),
+155 => case_155_eo__24eo_5ftypeof(s, a0),
+156 => case_156_eo__24eo_5ftypeof(s, a0),
+157 => case_157_eo__24eo_5ftypeof(s, a0),
+158 => case_158_eo__24eo_5ftypeof(s, a0),
+159 => case_159_eo__24eo_5ftypeof(s, a0),
+160 => case_160_eo__24eo_5ftypeof(s, a0),
+161 => case_161_eo__24eo_5ftypeof(s, a0),
+162 => case_162_eo__24eo_5ftypeof(s, a0),
+163 => case_163_eo__24eo_5ftypeof(s, a0),
+164 => case_164_eo__24eo_5ftypeof(s, a0),
+165 => case_165_eo__24eo_5ftypeof(s, a0),
+166 => case_166_eo__24eo_5ftypeof(s, a0),
+167 => case_167_eo__24eo_5ftypeof(s, a0),
+168 => case_168_eo__24eo_5ftypeof(s, a0),
+169 => case_169_eo__24eo_5ftypeof(s, a0),
+170 => case_170_eo__24eo_5ftypeof(s, a0),
+171 => case_171_eo__24eo_5ftypeof(s, a0),
+172 => case_172_eo__24eo_5ftypeof(s, a0),
+173 => case_173_eo__24eo_5ftypeof(s, a0),
+174 => case_174_eo__24eo_5ftypeof(s, a0),
+175 => case_175_eo__24eo_5ftypeof(s, a0),
+176 => case_176_eo__24eo_5ftypeof(s, a0),
+177 => case_177_eo__24eo_5ftypeof(s, a0),
+178 => case_178_eo__24eo_5ftypeof(s, a0),
+179 => case_179_eo__24eo_5ftypeof(s, a0),
+180 => case_180_eo__24eo_5ftypeof(s, a0),
+181 => case_181_eo__24eo_5ftypeof(s, a0),
+182 => case_182_eo__24eo_5ftypeof(s, a0),
+183 => case_183_eo__24eo_5ftypeof(s, a0),
+184 => case_184_eo__24eo_5ftypeof(s, a0),
+185 => case_185_eo__24eo_5ftypeof(s, a0),
+186 => case_186_eo__24eo_5ftypeof(s, a0),
+187 => case_187_eo__24eo_5ftypeof(s, a0),
+188 => case_188_eo__24eo_5ftypeof(s, a0),
+189 => case_189_eo__24eo_5ftypeof(s, a0),
+190 => case_190_eo__24eo_5ftypeof(s, a0),
+191 => case_191_eo__24eo_5ftypeof(s, a0),
+192 => case_192_eo__24eo_5ftypeof(s, a0),
+193 => case_193_eo__24eo_5ftypeof(s, a0),
+194 => case_194_eo__24eo_5ftypeof(s, a0),
+195 => case_195_eo__24eo_5ftypeof(s, a0),
+196 => case_196_eo__24eo_5ftypeof(s, a0),
+197 => case_197_eo__24eo_5ftypeof(s, a0),
+198 => case_198_eo__24eo_5ftypeof(s, a0),
+199 => case_199_eo__24eo_5ftypeof(s, a0),
+200 => case_200_eo__24eo_5ftypeof(s, a0),
+201 => case_201_eo__24eo_5ftypeof(s, a0),
+202 => case_202_eo__24eo_5ftypeof(s, a0),
+203 => case_203_eo__24eo_5ftypeof(s, a0),
+204 => case_204_eo__24eo_5ftypeof(s, a0),
+205 => case_205_eo__24eo_5ftypeof(s, a0),
+206 => case_206_eo__24eo_5ftypeof(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_type(TypeCacheKind::Eunoia, cache_args[0], value)?; }
+result
+}
+fn case_0_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fBoolean, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5fBool, &[])?;
-return Ok(v2);
+return Ok(Some(v2));
 }
+Ok(None)
+}
+fn case_1_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v3 = s.destruct(Constructor::eo__24emb_5fNumeral, a0)?;
 let Some(fields) = v3 else { break 'case1; }
@@ -71536,8 +75523,11 @@ let Some(fields) = v3 else { break 'case1; }
 let v4 = fields;
 let v5 = s.construct(Constructor::eo__24emb_5fNumeral, &[v4[0]])?;
 let v6 = eo__24eo_5flit_5ftype_5fNumeral(s, v5)?;
-return Ok(v6);
+return Ok(Some(v6));
 }
+Ok(None)
+}
+fn case_2_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v7 = s.destruct(Constructor::eo__24emb_5fRational, a0)?;
 let Some(fields) = v7 else { break 'case2; }
@@ -71545,8 +75535,11 @@ let Some(fields) = v7 else { break 'case2; }
 let v8 = fields;
 let v9 = s.construct(Constructor::eo__24emb_5fRational, &[v8[0]])?;
 let v10 = eo__24eo_5flit_5ftype_5fRational(s, v9)?;
-return Ok(v10);
+return Ok(Some(v10));
 }
+Ok(None)
+}
+fn case_3_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v11 = s.destruct(Constructor::eo__24emb_5fString, a0)?;
 let Some(fields) = v11 else { break 'case3; }
@@ -71554,8 +75547,11 @@ let Some(fields) = v11 else { break 'case3; }
 let v12 = fields;
 let v13 = s.construct(Constructor::eo__24emb_5fString, &[v12[0]])?;
 let v14 = eo__24eo_5flit_5ftype_5fString(s, v13)?;
-return Ok(v14);
+return Ok(Some(v14));
 }
+Ok(None)
+}
+fn case_4_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v15 = s.destruct(Constructor::eo__24emb_5fBinary, a0)?;
 let Some(fields) = v15 else { break 'case4; }
@@ -71563,8 +75559,11 @@ let Some(fields) = v15 else { break 'case4; }
 let v16 = fields;
 let v17 = s.construct(Constructor::eo__24emb_5fBinary, &[v16[0], v16[1]])?;
 let v18 = eo__24eo_5flit_5ftype_5fBinary(s, v17)?;
-return Ok(v18);
+return Ok(Some(v18));
 }
+Ok(None)
+}
+fn case_5_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v19 = s.destruct(Constructor::eo__24emb_5fVar, a0)?;
 let Some(fields) = v19 else { break 'case5; }
@@ -71574,16 +75573,22 @@ let v21 = s.destruct(Constructor::eo__24emb_5fString, v20[0])?;
 let Some(fields) = v21 else { break 'case5; }
 ;
 let v22 = fields;
-return Ok(v20[1]);
+return Ok(Some(v20[1]));
 }
+Ok(None)
+}
+fn case_6_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v23 = s.destruct(Constructor::eo__24emb_5fDatatypeType, a0)?;
 let Some(fields) = v23 else { break 'case6; }
 ;
 let v24 = fields;
 let v25 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v25);
+return Ok(Some(v25));
 }
+Ok(None)
+}
+fn case_7_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v26 = s.destruct(Constructor::eo__24emb_5fDtCons, a0)?;
 let Some(fields) = v26 else { break 'case7; }
@@ -71592,8 +75597,11 @@ let v27 = fields;
 let v28 = s.construct(Constructor::eo__24emb_5fDatatypeType, &[v27[0], v27[1]])?;
 let v29 = eo__24eo_5fdd_5fresolve(s, v27[0], v27[1])?;
 let v30 = eo__24eo_5ftypeof_5fdt_5fcons_5frec(s, v28, v29, v27[2])?;
-return Ok(v30);
+return Ok(Some(v30));
 }
+Ok(None)
+}
+fn case_8_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v31 = s.destruct(Constructor::eo__24emb_5fDtSel, a0)?;
 let Some(fields) = v31 else { break 'case8; }
@@ -71605,29 +75613,41 @@ let v35 = s.construct(Constructor::eo__24emb_5fDatatypeType, &[v32[0], v32[1]])?
 let v36 = s.named("$emb_FunType", &[])?;
 let v37 = s.apply(v36, v35)?;
 let v38 = s.apply(v37, v34)?;
-return Ok(v38);
+return Ok(Some(v38));
 }
+Ok(None)
+}
+fn case_9_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v39 = s.destruct(Constructor::eo__24emb_5fUSort, a0)?;
 let Some(fields) = v39 else { break 'case9; }
 ;
 let v40 = fields;
 let v41 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v41);
+return Ok(Some(v41));
 }
+Ok(None)
+}
+fn case_10_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v42 = s.destruct(Constructor::eo__24emb_5fUConst, a0)?;
 let Some(fields) = v42 else { break 'case10; }
 ;
 let v43 = fields;
-return Ok(v43[1]);
+return Ok(Some(v43[1]));
 }
+Ok(None)
+}
+fn case_11_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v44 = s.construct(Constructor::eo__24emb_5fType, &[])?;
 if a0 != v44 { break 'case11; }
 let v45 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v45);
+return Ok(Some(v45));
 }
+Ok(None)
+}
+fn case_12_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v46 = s.unapply(a0)?;
 let Some((f, r)) = v46 else { break 'case12; }
@@ -71641,26 +75661,38 @@ let v49 = l;
 let v50 = eo__24eo_5ftypeof(s, v49)?;
 let v51 = eo__24eo_5ftypeof(s, v47)?;
 let v52 = eo__24eo_5ftypeof_5ffun_5ftype(s, v50, v51)?;
-return Ok(v52);
+return Ok(Some(v52));
 }
+Ok(None)
+}
+fn case_13_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v53 = s.construct(Constructor::eo__24emb_5fBool, &[])?;
 if a0 != v53 { break 'case13; }
 let v54 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v54);
+return Ok(Some(v54));
 }
+Ok(None)
+}
+fn case_14_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v55 = s.construct(Constructor::eo__24eo_5fList, &[])?;
 if a0 != v55 { break 'case14; }
 let v56 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v56);
+return Ok(Some(v56));
 }
+Ok(None)
+}
+fn case_15_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v57 = s.construct(Constructor::eo__24eo_5fList_5fnil, &[])?;
 if a0 != v57 { break 'case15; }
 let v58 = s.construct(Constructor::eo__24eo_5fList, &[])?;
-return Ok(v58);
+return Ok(Some(v58));
 }
+Ok(None)
+}
+fn case_16_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v59 = s.unapply(a0)?;
 let Some((f, a)) = v59 else { break 'case16; }
@@ -71674,20 +75706,29 @@ let v64 = s.construct(Constructor::eo__24eo_5fList, &[])?;
 let v65 = s.named("$emb_FunType", &[])?;
 let v66 = s.apply(v65, v64)?;
 let v67 = s.apply(v66, v63)?;
-return Ok(v67);
+return Ok(Some(v67));
 }
+Ok(None)
+}
+fn case_17_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case17: {
 let v68 = s.construct(Constructor::eo_Int, &[])?;
 if a0 != v68 { break 'case17; }
 let v69 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v69);
+return Ok(Some(v69));
 }
+Ok(None)
+}
+fn case_18_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case18: {
 let v70 = s.construct(Constructor::eo_Real, &[])?;
 if a0 != v70 { break 'case18; }
 let v71 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v71);
+return Ok(Some(v71));
 }
+Ok(None)
+}
+fn case_19_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case19: {
 let v72 = s.unapply(a0)?;
 let Some((f, a)) = v72 else { break 'case19; }
@@ -71698,14 +75739,20 @@ let v75 = s.construct(Constructor::eo_BitVec, &[])?;
 if v73 != v75 { break 'case19; }
 let v76 = eo__24eo_5ftypeof(s, v74)?;
 let v77 = eo__24eo_5ftypeof_5fBitVec(s, v76)?;
-return Ok(v77);
+return Ok(Some(v77));
 }
+Ok(None)
+}
+fn case_20_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case20: {
 let v78 = s.construct(Constructor::eo_Char, &[])?;
 if a0 != v78 { break 'case20; }
 let v79 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v79);
+return Ok(Some(v79));
 }
+Ok(None)
+}
+fn case_21_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case21: {
 let v80 = s.unapply(a0)?;
 let Some((f, a)) = v80 else { break 'case21; }
@@ -71716,8 +75763,11 @@ let v83 = s.construct(Constructor::eo_Seq, &[])?;
 if v81 != v83 { break 'case21; }
 let v84 = eo__24eo_5ftypeof(s, v82)?;
 let v85 = eo__24eo_5ftypeof_5fSeq(s, v84)?;
-return Ok(v85);
+return Ok(Some(v85));
 }
+Ok(None)
+}
+fn case_22_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case22: {
 let v86 = s.unapply(a0)?;
 let Some((f, a)) = v86 else { break 'case22; }
@@ -71734,8 +75784,11 @@ if v90 != v92 { break 'case22; }
 let v93 = eo__24eo_5ftypeof(s, v91)?;
 let v94 = eo__24eo_5ftypeof(s, v88)?;
 let v95 = eo__24eo_5ftypeof_5f_40_40Pair(s, v93, v94)?;
-return Ok(v95);
+return Ok(Some(v95));
 }
+Ok(None)
+}
+fn case_23_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case23: {
 let v96 = s.unapply(a0)?;
 let Some((f, a)) = v96 else { break 'case23; }
@@ -71752,8 +75805,11 @@ if v100 != v102 { break 'case23; }
 let v103 = eo__24eo_5ftypeof(s, v101)?;
 let v104 = eo__24eo_5ftypeof(s, v98)?;
 let v105 = eo__24eo_5ftypeof_5f_40_40pair(s, v103, v104)?;
-return Ok(v105);
+return Ok(Some(v105));
 }
+Ok(None)
+}
+fn case_24_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case24: {
 let v106 = s.unapply(a0)?;
 let Some((f, a)) = v106 else { break 'case24; }
@@ -71764,8 +75820,11 @@ let v109 = s.construct(Constructor::eo__40_40TypedList, &[])?;
 if v107 != v109 { break 'case24; }
 let v110 = eo__24eo_5ftypeof(s, v108)?;
 let v111 = eo__24eo_5ftypeof_5fSeq(s, v110)?;
-return Ok(v111);
+return Ok(Some(v111));
 }
+Ok(None)
+}
+fn case_25_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case25: {
 let v112 = s.unapply(a0)?;
 let Some((f, a)) = v112 else { break 'case25; }
@@ -71776,8 +75835,11 @@ let v115 = s.construct(Constructor::eo__40_40TypedList_2enil, &[])?;
 if v113 != v115 { break 'case25; }
 let v116 = eo__24eo_5ftypeof(s, v114)?;
 let v117 = eo__24eo_5ftypeof_5f_40_40TypedList_2enil(s, v116, v114)?;
-return Ok(v117);
+return Ok(Some(v117));
 }
+Ok(None)
+}
+fn case_26_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case26: {
 let v118 = s.unapply(a0)?;
 let Some((f, a)) = v118 else { break 'case26; }
@@ -71794,8 +75856,11 @@ if v122 != v124 { break 'case26; }
 let v125 = eo__24eo_5ftypeof(s, v123)?;
 let v126 = eo__24eo_5ftypeof(s, v120)?;
 let v127 = eo__24eo_5ftypeof_5f_40_40TypedList_2econs(s, v125, v126)?;
-return Ok(v127);
+return Ok(Some(v127));
 }
+Ok(None)
+}
+fn case_27_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case27: {
 let v128 = s.unapply(a0)?;
 let Some((f, a)) = v128 else { break 'case27; }
@@ -71818,8 +75883,11 @@ let v138 = eo__24eo_5ftypeof(s, v136)?;
 let v139 = eo__24eo_5ftypeof(s, v133)?;
 let v140 = eo__24eo_5ftypeof(s, v130)?;
 let v141 = eo__24eo_5ftypeof_5fite(s, v138, v139, v140)?;
-return Ok(v141);
+return Ok(Some(v141));
 }
+Ok(None)
+}
+fn case_28_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case28: {
 let v142 = s.unapply(a0)?;
 let Some((f, a)) = v142 else { break 'case28; }
@@ -71830,8 +75898,11 @@ let v145 = s.construct(Constructor::eo_not, &[])?;
 if v143 != v145 { break 'case28; }
 let v146 = eo__24eo_5ftypeof(s, v144)?;
 let v147 = eo__24eo_5ftypeof_5fnot(s, v146)?;
-return Ok(v147);
+return Ok(Some(v147));
 }
+Ok(None)
+}
+fn case_29_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case29: {
 let v148 = s.unapply(a0)?;
 let Some((f, a)) = v148 else { break 'case29; }
@@ -71848,8 +75919,11 @@ if v152 != v154 { break 'case29; }
 let v155 = eo__24eo_5ftypeof(s, v153)?;
 let v156 = eo__24eo_5ftypeof(s, v150)?;
 let v157 = eo__24eo_5ftypeof_5for(s, v155, v156)?;
-return Ok(v157);
+return Ok(Some(v157));
 }
+Ok(None)
+}
+fn case_30_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case30: {
 let v158 = s.unapply(a0)?;
 let Some((f, a)) = v158 else { break 'case30; }
@@ -71866,8 +75940,11 @@ if v162 != v164 { break 'case30; }
 let v165 = eo__24eo_5ftypeof(s, v163)?;
 let v166 = eo__24eo_5ftypeof(s, v160)?;
 let v167 = eo__24eo_5ftypeof_5for(s, v165, v166)?;
-return Ok(v167);
+return Ok(Some(v167));
 }
+Ok(None)
+}
+fn case_31_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case31: {
 let v168 = s.unapply(a0)?;
 let Some((f, a)) = v168 else { break 'case31; }
@@ -71884,8 +75961,11 @@ if v172 != v174 { break 'case31; }
 let v175 = eo__24eo_5ftypeof(s, v173)?;
 let v176 = eo__24eo_5ftypeof(s, v170)?;
 let v177 = eo__24eo_5ftypeof_5for(s, v175, v176)?;
-return Ok(v177);
+return Ok(Some(v177));
 }
+Ok(None)
+}
+fn case_32_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case32: {
 let v178 = s.unapply(a0)?;
 let Some((f, a)) = v178 else { break 'case32; }
@@ -71902,8 +75982,11 @@ if v182 != v184 { break 'case32; }
 let v185 = eo__24eo_5ftypeof(s, v183)?;
 let v186 = eo__24eo_5ftypeof(s, v180)?;
 let v187 = eo__24eo_5ftypeof_5for(s, v185, v186)?;
-return Ok(v187);
+return Ok(Some(v187));
 }
+Ok(None)
+}
+fn case_33_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case33: {
 let v188 = s.unapply(a0)?;
 let Some((f, a)) = v188 else { break 'case33; }
@@ -71920,8 +76003,11 @@ if v192 != v194 { break 'case33; }
 let v195 = eo__24eo_5ftypeof(s, v193)?;
 let v196 = eo__24eo_5ftypeof(s, v190)?;
 let v197 = eo__24eo_5ftypeof_5f_3d(s, v195, v196)?;
-return Ok(v197);
+return Ok(Some(v197));
 }
+Ok(None)
+}
+fn case_34_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case34: {
 let v198 = s.unapply(a0)?;
 let Some((f, a)) = v198 else { break 'case34; }
@@ -71932,8 +76018,11 @@ let v201 = s.construct(Constructor::eo_distinct, &[])?;
 if v199 != v201 { break 'case34; }
 let v202 = eo__24eo_5ftypeof(s, v200)?;
 let v203 = eo__24eo_5ftypeof_5fdistinct(s, v202)?;
-return Ok(v203);
+return Ok(Some(v203));
 }
+Ok(None)
+}
+fn case_35_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case35: {
 let v204 = s.unapply(a0)?;
 let Some((f, a)) = v204 else { break 'case35; }
@@ -71944,8 +76033,11 @@ let v207 = s.construct(Constructor::eo__40purify, &[])?;
 if v205 != v207 { break 'case35; }
 let v208 = eo__24eo_5ftypeof(s, v206)?;
 let v209 = eo__24eo_5ftypeof_5f_40purify(s, v208)?;
-return Ok(v209);
+return Ok(Some(v209));
 }
+Ok(None)
+}
+fn case_36_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case36: {
 let v210 = s.unapply(a0)?;
 let Some((f, a)) = v210 else { break 'case36; }
@@ -71962,8 +76054,11 @@ if v214 != v216 { break 'case36; }
 let v217 = eo__24eo_5ftypeof(s, v215)?;
 let v218 = eo__24eo_5ftypeof(s, v212)?;
 let v219 = eo__24eo_5ftypeof_5f_2b(s, v217, v218)?;
-return Ok(v219);
+return Ok(Some(v219));
 }
+Ok(None)
+}
+fn case_37_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case37: {
 let v220 = s.unapply(a0)?;
 let Some((f, a)) = v220 else { break 'case37; }
@@ -71980,8 +76075,11 @@ if v224 != v226 { break 'case37; }
 let v227 = eo__24eo_5ftypeof(s, v225)?;
 let v228 = eo__24eo_5ftypeof(s, v222)?;
 let v229 = eo__24eo_5ftypeof_5f_2b(s, v227, v228)?;
-return Ok(v229);
+return Ok(Some(v229));
 }
+Ok(None)
+}
+fn case_38_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case38: {
 let v230 = s.unapply(a0)?;
 let Some((f, a)) = v230 else { break 'case38; }
@@ -71998,8 +76096,11 @@ if v234 != v236 { break 'case38; }
 let v237 = eo__24eo_5ftypeof(s, v235)?;
 let v238 = eo__24eo_5ftypeof(s, v232)?;
 let v239 = eo__24eo_5ftypeof_5f_2b(s, v237, v238)?;
-return Ok(v239);
+return Ok(Some(v239));
 }
+Ok(None)
+}
+fn case_39_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case39: {
 let v240 = s.unapply(a0)?;
 let Some((f, a)) = v240 else { break 'case39; }
@@ -72016,8 +76117,11 @@ if v244 != v246 { break 'case39; }
 let v247 = eo__24eo_5ftypeof(s, v245)?;
 let v248 = eo__24eo_5ftypeof(s, v242)?;
 let v249 = eo__24eo_5ftypeof_5f_3c(s, v247, v248)?;
-return Ok(v249);
+return Ok(Some(v249));
 }
+Ok(None)
+}
+fn case_40_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case40: {
 let v250 = s.unapply(a0)?;
 let Some((f, a)) = v250 else { break 'case40; }
@@ -72034,8 +76138,11 @@ if v254 != v256 { break 'case40; }
 let v257 = eo__24eo_5ftypeof(s, v255)?;
 let v258 = eo__24eo_5ftypeof(s, v252)?;
 let v259 = eo__24eo_5ftypeof_5f_3c(s, v257, v258)?;
-return Ok(v259);
+return Ok(Some(v259));
 }
+Ok(None)
+}
+fn case_41_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case41: {
 let v260 = s.unapply(a0)?;
 let Some((f, a)) = v260 else { break 'case41; }
@@ -72052,8 +76159,11 @@ if v264 != v266 { break 'case41; }
 let v267 = eo__24eo_5ftypeof(s, v265)?;
 let v268 = eo__24eo_5ftypeof(s, v262)?;
 let v269 = eo__24eo_5ftypeof_5f_3c(s, v267, v268)?;
-return Ok(v269);
+return Ok(Some(v269));
 }
+Ok(None)
+}
+fn case_42_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case42: {
 let v270 = s.unapply(a0)?;
 let Some((f, a)) = v270 else { break 'case42; }
@@ -72070,8 +76180,11 @@ if v274 != v276 { break 'case42; }
 let v277 = eo__24eo_5ftypeof(s, v275)?;
 let v278 = eo__24eo_5ftypeof(s, v272)?;
 let v279 = eo__24eo_5ftypeof_5f_3c(s, v277, v278)?;
-return Ok(v279);
+return Ok(Some(v279));
 }
+Ok(None)
+}
+fn case_43_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case43: {
 let v280 = s.unapply(a0)?;
 let Some((f, a)) = v280 else { break 'case43; }
@@ -72082,8 +76195,11 @@ let v283 = s.construct(Constructor::eo_to_5freal, &[])?;
 if v281 != v283 { break 'case43; }
 let v284 = eo__24eo_5ftypeof(s, v282)?;
 let v285 = eo__24eo_5ftypeof_5fto_5freal(s, v284)?;
-return Ok(v285);
+return Ok(Some(v285));
 }
+Ok(None)
+}
+fn case_44_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case44: {
 let v286 = s.unapply(a0)?;
 let Some((f, a)) = v286 else { break 'case44; }
@@ -72094,8 +76210,11 @@ let v289 = s.construct(Constructor::eo_to_5fint, &[])?;
 if v287 != v289 { break 'case44; }
 let v290 = eo__24eo_5ftypeof(s, v288)?;
 let v291 = eo__24eo_5ftypeof_5fto_5fint(s, v290)?;
-return Ok(v291);
+return Ok(Some(v291));
 }
+Ok(None)
+}
+fn case_45_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case45: {
 let v292 = s.unapply(a0)?;
 let Some((f, a)) = v292 else { break 'case45; }
@@ -72106,8 +76225,11 @@ let v295 = s.construct(Constructor::eo_is_5fint, &[])?;
 if v293 != v295 { break 'case45; }
 let v296 = eo__24eo_5ftypeof(s, v294)?;
 let v297 = eo__24eo_5ftypeof_5fis_5fint(s, v296)?;
-return Ok(v297);
+return Ok(Some(v297));
 }
+Ok(None)
+}
+fn case_46_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case46: {
 let v298 = s.unapply(a0)?;
 let Some((f, a)) = v298 else { break 'case46; }
@@ -72118,8 +76240,11 @@ let v301 = s.construct(Constructor::eo_abs, &[])?;
 if v299 != v301 { break 'case46; }
 let v302 = eo__24eo_5ftypeof(s, v300)?;
 let v303 = eo__24eo_5ftypeof_5fabs(s, v302)?;
-return Ok(v303);
+return Ok(Some(v303));
 }
+Ok(None)
+}
+fn case_47_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case47: {
 let v304 = s.unapply(a0)?;
 let Some((f, a)) = v304 else { break 'case47; }
@@ -72130,8 +76255,11 @@ let v307 = s.construct(Constructor::eo__24eoo_5f_2d_2e2, &[])?;
 if v305 != v307 { break 'case47; }
 let v308 = eo__24eo_5ftypeof(s, v306)?;
 let v309 = eo__24eo_5ftypeof_5fabs(s, v308)?;
-return Ok(v309);
+return Ok(Some(v309));
 }
+Ok(None)
+}
+fn case_48_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case48: {
 let v310 = s.unapply(a0)?;
 let Some((f, a)) = v310 else { break 'case48; }
@@ -72148,8 +76276,11 @@ if v314 != v316 { break 'case48; }
 let v317 = eo__24eo_5ftypeof(s, v315)?;
 let v318 = eo__24eo_5ftypeof(s, v312)?;
 let v319 = eo__24eo_5ftypeof_5fdiv(s, v317, v318)?;
-return Ok(v319);
+return Ok(Some(v319));
 }
+Ok(None)
+}
+fn case_49_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case49: {
 let v320 = s.unapply(a0)?;
 let Some((f, a)) = v320 else { break 'case49; }
@@ -72166,8 +76297,11 @@ if v324 != v326 { break 'case49; }
 let v327 = eo__24eo_5ftypeof(s, v325)?;
 let v328 = eo__24eo_5ftypeof(s, v322)?;
 let v329 = eo__24eo_5ftypeof_5fdiv(s, v327, v328)?;
-return Ok(v329);
+return Ok(Some(v329));
 }
+Ok(None)
+}
+fn case_50_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case50: {
 let v330 = s.unapply(a0)?;
 let Some((f, a)) = v330 else { break 'case50; }
@@ -72184,8 +76318,11 @@ if v334 != v336 { break 'case50; }
 let v337 = eo__24eo_5ftypeof(s, v335)?;
 let v338 = eo__24eo_5ftypeof(s, v332)?;
 let v339 = eo__24eo_5ftypeof_5fdivisible(s, v337, v338)?;
-return Ok(v339);
+return Ok(Some(v339));
 }
+Ok(None)
+}
+fn case_51_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case51: {
 let v340 = s.unapply(a0)?;
 let Some((f, a)) = v340 else { break 'case51; }
@@ -72196,8 +76333,11 @@ let v343 = s.construct(Constructor::eo_int_2epow2, &[])?;
 if v341 != v343 { break 'case51; }
 let v344 = eo__24eo_5ftypeof(s, v342)?;
 let v345 = eo__24eo_5ftypeof_5fint_2epow2(s, v344)?;
-return Ok(v345);
+return Ok(Some(v345));
 }
+Ok(None)
+}
+fn case_52_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case52: {
 let v346 = s.unapply(a0)?;
 let Some((f, a)) = v346 else { break 'case52; }
@@ -72208,8 +76348,11 @@ let v349 = s.construct(Constructor::eo_int_2elog2, &[])?;
 if v347 != v349 { break 'case52; }
 let v350 = eo__24eo_5ftypeof(s, v348)?;
 let v351 = eo__24eo_5ftypeof_5fint_2epow2(s, v350)?;
-return Ok(v351);
+return Ok(Some(v351));
 }
+Ok(None)
+}
+fn case_53_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case53: {
 let v352 = s.unapply(a0)?;
 let Some((f, a)) = v352 else { break 'case53; }
@@ -72220,8 +76363,11 @@ let v355 = s.construct(Constructor::eo_int_2eispow2, &[])?;
 if v353 != v355 { break 'case53; }
 let v356 = eo__24eo_5ftypeof(s, v354)?;
 let v357 = eo__24eo_5ftypeof_5fint_2eispow2(s, v356)?;
-return Ok(v357);
+return Ok(Some(v357));
 }
+Ok(None)
+}
+fn case_54_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case54: {
 let v358 = s.unapply(a0)?;
 let Some((f, a)) = v358 else { break 'case54; }
@@ -72238,8 +76384,11 @@ if v362 != v364 { break 'case54; }
 let v365 = eo__24eo_5ftypeof(s, v363)?;
 let v366 = eo__24eo_5ftypeof(s, v360)?;
 let v367 = eo__24eo_5ftypeof_5fdiv(s, v365, v366)?;
-return Ok(v367);
+return Ok(Some(v367));
 }
+Ok(None)
+}
+fn case_55_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case55: {
 let v368 = s.unapply(a0)?;
 let Some((f, a)) = v368 else { break 'case55; }
@@ -72256,8 +76405,11 @@ if v372 != v374 { break 'case55; }
 let v375 = eo__24eo_5ftypeof(s, v373)?;
 let v376 = eo__24eo_5ftypeof(s, v370)?;
 let v377 = eo__24eo_5ftypeof_5fdiv(s, v375, v376)?;
-return Ok(v377);
+return Ok(Some(v377));
 }
+Ok(None)
+}
+fn case_56_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case56: {
 let v378 = s.unapply(a0)?;
 let Some((f, a)) = v378 else { break 'case56; }
@@ -72268,8 +76420,11 @@ let v381 = s.construct(Constructor::eo__40int_5fdiv_5fby_5fzero, &[])?;
 if v379 != v381 { break 'case56; }
 let v382 = eo__24eo_5ftypeof(s, v380)?;
 let v383 = eo__24eo_5ftypeof_5fint_2epow2(s, v382)?;
-return Ok(v383);
+return Ok(Some(v383));
 }
+Ok(None)
+}
+fn case_57_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case57: {
 let v384 = s.unapply(a0)?;
 let Some((f, a)) = v384 else { break 'case57; }
@@ -72280,8 +76435,11 @@ let v387 = s.construct(Constructor::eo__40mod_5fby_5fzero, &[])?;
 if v385 != v387 { break 'case57; }
 let v388 = eo__24eo_5ftypeof(s, v386)?;
 let v389 = eo__24eo_5ftypeof_5fint_2epow2(s, v388)?;
-return Ok(v389);
+return Ok(Some(v389));
 }
+Ok(None)
+}
+fn case_58_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case58: {
 let v390 = s.unapply(a0)?;
 let Some((f, a)) = v390 else { break 'case58; }
@@ -72298,8 +76456,11 @@ if v394 != v396 { break 'case58; }
 let v397 = eo__24eo_5ftypeof(s, v395)?;
 let v398 = eo__24eo_5ftypeof(s, v392)?;
 let v399 = eo__24eo_5ftypeof_5f_40_40Pair(s, v397, v398)?;
-return Ok(v399);
+return Ok(Some(v399));
 }
+Ok(None)
+}
+fn case_59_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case59: {
 let v400 = s.unapply(a0)?;
 let Some((f, a)) = v400 else { break 'case59; }
@@ -72316,8 +76477,11 @@ if v404 != v406 { break 'case59; }
 let v407 = eo__24eo_5ftypeof(s, v405)?;
 let v408 = eo__24eo_5ftypeof(s, v402)?;
 let v409 = eo__24eo_5ftypeof_5fselect(s, v407, v408)?;
-return Ok(v409);
+return Ok(Some(v409));
 }
+Ok(None)
+}
+fn case_60_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case60: {
 let v410 = s.unapply(a0)?;
 let Some((f, a)) = v410 else { break 'case60; }
@@ -72340,8 +76504,11 @@ let v420 = eo__24eo_5ftypeof(s, v418)?;
 let v421 = eo__24eo_5ftypeof(s, v415)?;
 let v422 = eo__24eo_5ftypeof(s, v412)?;
 let v423 = eo__24eo_5ftypeof_5fstore(s, v420, v421, v422)?;
-return Ok(v423);
+return Ok(Some(v423));
 }
+Ok(None)
+}
+fn case_61_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case61: {
 let v424 = s.unapply(a0)?;
 let Some((f, a)) = v424 else { break 'case61; }
@@ -72358,8 +76525,11 @@ if v428 != v430 { break 'case61; }
 let v431 = eo__24eo_5ftypeof(s, v429)?;
 let v432 = eo__24eo_5ftypeof(s, v426)?;
 let v433 = eo__24eo_5ftypeof_5f_40array_5fdeq_5fdiff(s, v431, v432)?;
-return Ok(v433);
+return Ok(Some(v433));
 }
+Ok(None)
+}
+fn case_62_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case62: {
 let v434 = s.unapply(a0)?;
 let Some((f, a)) = v434 else { break 'case62; }
@@ -72370,8 +76540,11 @@ let v437 = s.construct(Constructor::eo__40bvsize, &[])?;
 if v435 != v437 { break 'case62; }
 let v438 = eo__24eo_5ftypeof(s, v436)?;
 let v439 = eo__24eo_5ftypeof_5f_40bvsize(s, v438)?;
-return Ok(v439);
+return Ok(Some(v439));
 }
+Ok(None)
+}
+fn case_63_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case63: {
 let v440 = s.unapply(a0)?;
 let Some((f, a)) = v440 else { break 'case63; }
@@ -72388,8 +76561,11 @@ if v444 != v446 { break 'case63; }
 let v447 = eo__24eo_5ftypeof(s, v445)?;
 let v448 = eo__24eo_5ftypeof(s, v442)?;
 let v449 = eo__24eo_5ftypeof_5fconcat(s, v447, v448)?;
-return Ok(v449);
+return Ok(Some(v449));
 }
+Ok(None)
+}
+fn case_64_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case64: {
 let v450 = s.unapply(a0)?;
 let Some((f, a)) = v450 else { break 'case64; }
@@ -72404,8 +76580,11 @@ let v455 = eo__24eo_5ftypeof(s, v454[0])?;
 let v456 = eo__24eo_5ftypeof(s, v454[1])?;
 let v457 = eo__24eo_5ftypeof(s, v452)?;
 let v458 = eo__24eo_5ftypeof_5fextract(s, v455, v454[0], v456, v454[1], v457)?;
-return Ok(v458);
+return Ok(Some(v458));
 }
+Ok(None)
+}
+fn case_65_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case65: {
 let v459 = s.unapply(a0)?;
 let Some((f, a)) = v459 else { break 'case65; }
@@ -72419,8 +76598,11 @@ let v463 = fields;
 let v464 = eo__24eo_5ftypeof(s, v463[0])?;
 let v465 = eo__24eo_5ftypeof(s, v461)?;
 let v466 = eo__24eo_5ftypeof_5frepeat(s, v464, v463[0], v465)?;
-return Ok(v466);
+return Ok(Some(v466));
 }
+Ok(None)
+}
+fn case_66_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case66: {
 let v467 = s.unapply(a0)?;
 let Some((f, a)) = v467 else { break 'case66; }
@@ -72431,8 +76613,11 @@ let v470 = s.construct(Constructor::eo_bvnot, &[])?;
 if v468 != v470 { break 'case66; }
 let v471 = eo__24eo_5ftypeof(s, v469)?;
 let v472 = eo__24eo_5ftypeof_5fbvnot(s, v471)?;
-return Ok(v472);
+return Ok(Some(v472));
 }
+Ok(None)
+}
+fn case_67_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case67: {
 let v473 = s.unapply(a0)?;
 let Some((f, a)) = v473 else { break 'case67; }
@@ -72449,8 +76634,11 @@ if v477 != v479 { break 'case67; }
 let v480 = eo__24eo_5ftypeof(s, v478)?;
 let v481 = eo__24eo_5ftypeof(s, v475)?;
 let v482 = eo__24eo_5ftypeof_5fbvand(s, v480, v481)?;
-return Ok(v482);
+return Ok(Some(v482));
 }
+Ok(None)
+}
+fn case_68_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case68: {
 let v483 = s.unapply(a0)?;
 let Some((f, a)) = v483 else { break 'case68; }
@@ -72467,8 +76655,11 @@ if v487 != v489 { break 'case68; }
 let v490 = eo__24eo_5ftypeof(s, v488)?;
 let v491 = eo__24eo_5ftypeof(s, v485)?;
 let v492 = eo__24eo_5ftypeof_5fbvand(s, v490, v491)?;
-return Ok(v492);
+return Ok(Some(v492));
 }
+Ok(None)
+}
+fn case_69_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case69: {
 let v493 = s.unapply(a0)?;
 let Some((f, a)) = v493 else { break 'case69; }
@@ -72485,8 +76676,11 @@ if v497 != v499 { break 'case69; }
 let v500 = eo__24eo_5ftypeof(s, v498)?;
 let v501 = eo__24eo_5ftypeof(s, v495)?;
 let v502 = eo__24eo_5ftypeof_5fbvand(s, v500, v501)?;
-return Ok(v502);
+return Ok(Some(v502));
 }
+Ok(None)
+}
+fn case_70_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case70: {
 let v503 = s.unapply(a0)?;
 let Some((f, a)) = v503 else { break 'case70; }
@@ -72503,8 +76697,11 @@ if v507 != v509 { break 'case70; }
 let v510 = eo__24eo_5ftypeof(s, v508)?;
 let v511 = eo__24eo_5ftypeof(s, v505)?;
 let v512 = eo__24eo_5ftypeof_5fbvand(s, v510, v511)?;
-return Ok(v512);
+return Ok(Some(v512));
 }
+Ok(None)
+}
+fn case_71_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case71: {
 let v513 = s.unapply(a0)?;
 let Some((f, a)) = v513 else { break 'case71; }
@@ -72521,8 +76718,11 @@ if v517 != v519 { break 'case71; }
 let v520 = eo__24eo_5ftypeof(s, v518)?;
 let v521 = eo__24eo_5ftypeof(s, v515)?;
 let v522 = eo__24eo_5ftypeof_5fbvand(s, v520, v521)?;
-return Ok(v522);
+return Ok(Some(v522));
 }
+Ok(None)
+}
+fn case_72_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case72: {
 let v523 = s.unapply(a0)?;
 let Some((f, a)) = v523 else { break 'case72; }
@@ -72539,8 +76739,11 @@ if v527 != v529 { break 'case72; }
 let v530 = eo__24eo_5ftypeof(s, v528)?;
 let v531 = eo__24eo_5ftypeof(s, v525)?;
 let v532 = eo__24eo_5ftypeof_5fbvand(s, v530, v531)?;
-return Ok(v532);
+return Ok(Some(v532));
 }
+Ok(None)
+}
+fn case_73_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case73: {
 let v533 = s.unapply(a0)?;
 let Some((f, a)) = v533 else { break 'case73; }
@@ -72557,8 +76760,11 @@ if v537 != v539 { break 'case73; }
 let v540 = eo__24eo_5ftypeof(s, v538)?;
 let v541 = eo__24eo_5ftypeof(s, v535)?;
 let v542 = eo__24eo_5ftypeof_5fbvcomp(s, v540, v541)?;
-return Ok(v542);
+return Ok(Some(v542));
 }
+Ok(None)
+}
+fn case_74_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case74: {
 let v543 = s.unapply(a0)?;
 let Some((f, a)) = v543 else { break 'case74; }
@@ -72569,8 +76775,11 @@ let v546 = s.construct(Constructor::eo_bvneg, &[])?;
 if v544 != v546 { break 'case74; }
 let v547 = eo__24eo_5ftypeof(s, v545)?;
 let v548 = eo__24eo_5ftypeof_5fbvnot(s, v547)?;
-return Ok(v548);
+return Ok(Some(v548));
 }
+Ok(None)
+}
+fn case_75_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case75: {
 let v549 = s.unapply(a0)?;
 let Some((f, a)) = v549 else { break 'case75; }
@@ -72587,8 +76796,11 @@ if v553 != v555 { break 'case75; }
 let v556 = eo__24eo_5ftypeof(s, v554)?;
 let v557 = eo__24eo_5ftypeof(s, v551)?;
 let v558 = eo__24eo_5ftypeof_5fbvand(s, v556, v557)?;
-return Ok(v558);
+return Ok(Some(v558));
 }
+Ok(None)
+}
+fn case_76_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case76: {
 let v559 = s.unapply(a0)?;
 let Some((f, a)) = v559 else { break 'case76; }
@@ -72605,8 +76817,11 @@ if v563 != v565 { break 'case76; }
 let v566 = eo__24eo_5ftypeof(s, v564)?;
 let v567 = eo__24eo_5ftypeof(s, v561)?;
 let v568 = eo__24eo_5ftypeof_5fbvand(s, v566, v567)?;
-return Ok(v568);
+return Ok(Some(v568));
 }
+Ok(None)
+}
+fn case_77_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case77: {
 let v569 = s.unapply(a0)?;
 let Some((f, a)) = v569 else { break 'case77; }
@@ -72623,8 +76838,11 @@ if v573 != v575 { break 'case77; }
 let v576 = eo__24eo_5ftypeof(s, v574)?;
 let v577 = eo__24eo_5ftypeof(s, v571)?;
 let v578 = eo__24eo_5ftypeof_5fbvand(s, v576, v577)?;
-return Ok(v578);
+return Ok(Some(v578));
 }
+Ok(None)
+}
+fn case_78_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case78: {
 let v579 = s.unapply(a0)?;
 let Some((f, a)) = v579 else { break 'case78; }
@@ -72641,8 +76859,11 @@ if v583 != v585 { break 'case78; }
 let v586 = eo__24eo_5ftypeof(s, v584)?;
 let v587 = eo__24eo_5ftypeof(s, v581)?;
 let v588 = eo__24eo_5ftypeof_5fbvand(s, v586, v587)?;
-return Ok(v588);
+return Ok(Some(v588));
 }
+Ok(None)
+}
+fn case_79_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case79: {
 let v589 = s.unapply(a0)?;
 let Some((f, a)) = v589 else { break 'case79; }
@@ -72659,8 +76880,11 @@ if v593 != v595 { break 'case79; }
 let v596 = eo__24eo_5ftypeof(s, v594)?;
 let v597 = eo__24eo_5ftypeof(s, v591)?;
 let v598 = eo__24eo_5ftypeof_5fbvand(s, v596, v597)?;
-return Ok(v598);
+return Ok(Some(v598));
 }
+Ok(None)
+}
+fn case_80_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case80: {
 let v599 = s.unapply(a0)?;
 let Some((f, a)) = v599 else { break 'case80; }
@@ -72677,8 +76901,11 @@ if v603 != v605 { break 'case80; }
 let v606 = eo__24eo_5ftypeof(s, v604)?;
 let v607 = eo__24eo_5ftypeof(s, v601)?;
 let v608 = eo__24eo_5ftypeof_5fbvand(s, v606, v607)?;
-return Ok(v608);
+return Ok(Some(v608));
 }
+Ok(None)
+}
+fn case_81_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case81: {
 let v609 = s.unapply(a0)?;
 let Some((f, a)) = v609 else { break 'case81; }
@@ -72695,8 +76922,11 @@ if v613 != v615 { break 'case81; }
 let v616 = eo__24eo_5ftypeof(s, v614)?;
 let v617 = eo__24eo_5ftypeof(s, v611)?;
 let v618 = eo__24eo_5ftypeof_5fbvand(s, v616, v617)?;
-return Ok(v618);
+return Ok(Some(v618));
 }
+Ok(None)
+}
+fn case_82_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case82: {
 let v619 = s.unapply(a0)?;
 let Some((f, a)) = v619 else { break 'case82; }
@@ -72713,8 +76943,11 @@ if v623 != v625 { break 'case82; }
 let v626 = eo__24eo_5ftypeof(s, v624)?;
 let v627 = eo__24eo_5ftypeof(s, v621)?;
 let v628 = eo__24eo_5ftypeof_5fbvand(s, v626, v627)?;
-return Ok(v628);
+return Ok(Some(v628));
 }
+Ok(None)
+}
+fn case_83_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case83: {
 let v629 = s.unapply(a0)?;
 let Some((f, a)) = v629 else { break 'case83; }
@@ -72731,8 +76964,11 @@ if v633 != v635 { break 'case83; }
 let v636 = eo__24eo_5ftypeof(s, v634)?;
 let v637 = eo__24eo_5ftypeof(s, v631)?;
 let v638 = eo__24eo_5ftypeof_5fbvult(s, v636, v637)?;
-return Ok(v638);
+return Ok(Some(v638));
 }
+Ok(None)
+}
+fn case_84_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case84: {
 let v639 = s.unapply(a0)?;
 let Some((f, a)) = v639 else { break 'case84; }
@@ -72749,8 +76985,11 @@ if v643 != v645 { break 'case84; }
 let v646 = eo__24eo_5ftypeof(s, v644)?;
 let v647 = eo__24eo_5ftypeof(s, v641)?;
 let v648 = eo__24eo_5ftypeof_5fbvult(s, v646, v647)?;
-return Ok(v648);
+return Ok(Some(v648));
 }
+Ok(None)
+}
+fn case_85_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case85: {
 let v649 = s.unapply(a0)?;
 let Some((f, a)) = v649 else { break 'case85; }
@@ -72767,8 +77006,11 @@ if v653 != v655 { break 'case85; }
 let v656 = eo__24eo_5ftypeof(s, v654)?;
 let v657 = eo__24eo_5ftypeof(s, v651)?;
 let v658 = eo__24eo_5ftypeof_5fbvult(s, v656, v657)?;
-return Ok(v658);
+return Ok(Some(v658));
 }
+Ok(None)
+}
+fn case_86_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case86: {
 let v659 = s.unapply(a0)?;
 let Some((f, a)) = v659 else { break 'case86; }
@@ -72785,8 +77027,11 @@ if v663 != v665 { break 'case86; }
 let v666 = eo__24eo_5ftypeof(s, v664)?;
 let v667 = eo__24eo_5ftypeof(s, v661)?;
 let v668 = eo__24eo_5ftypeof_5fbvult(s, v666, v667)?;
-return Ok(v668);
+return Ok(Some(v668));
 }
+Ok(None)
+}
+fn case_87_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case87: {
 let v669 = s.unapply(a0)?;
 let Some((f, a)) = v669 else { break 'case87; }
@@ -72803,8 +77048,11 @@ if v673 != v675 { break 'case87; }
 let v676 = eo__24eo_5ftypeof(s, v674)?;
 let v677 = eo__24eo_5ftypeof(s, v671)?;
 let v678 = eo__24eo_5ftypeof_5fbvult(s, v676, v677)?;
-return Ok(v678);
+return Ok(Some(v678));
 }
+Ok(None)
+}
+fn case_88_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case88: {
 let v679 = s.unapply(a0)?;
 let Some((f, a)) = v679 else { break 'case88; }
@@ -72821,8 +77069,11 @@ if v683 != v685 { break 'case88; }
 let v686 = eo__24eo_5ftypeof(s, v684)?;
 let v687 = eo__24eo_5ftypeof(s, v681)?;
 let v688 = eo__24eo_5ftypeof_5fbvult(s, v686, v687)?;
-return Ok(v688);
+return Ok(Some(v688));
 }
+Ok(None)
+}
+fn case_89_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case89: {
 let v689 = s.unapply(a0)?;
 let Some((f, a)) = v689 else { break 'case89; }
@@ -72839,8 +77090,11 @@ if v693 != v695 { break 'case89; }
 let v696 = eo__24eo_5ftypeof(s, v694)?;
 let v697 = eo__24eo_5ftypeof(s, v691)?;
 let v698 = eo__24eo_5ftypeof_5fbvult(s, v696, v697)?;
-return Ok(v698);
+return Ok(Some(v698));
 }
+Ok(None)
+}
+fn case_90_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case90: {
 let v699 = s.unapply(a0)?;
 let Some((f, a)) = v699 else { break 'case90; }
@@ -72857,8 +77111,11 @@ if v703 != v705 { break 'case90; }
 let v706 = eo__24eo_5ftypeof(s, v704)?;
 let v707 = eo__24eo_5ftypeof(s, v701)?;
 let v708 = eo__24eo_5ftypeof_5fbvult(s, v706, v707)?;
-return Ok(v708);
+return Ok(Some(v708));
 }
+Ok(None)
+}
+fn case_91_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case91: {
 let v709 = s.unapply(a0)?;
 let Some((f, a)) = v709 else { break 'case91; }
@@ -72875,8 +77132,11 @@ if v713 != v715 { break 'case91; }
 let v716 = eo__24eo_5ftypeof(s, v714)?;
 let v717 = eo__24eo_5ftypeof(s, v711)?;
 let v718 = eo__24eo_5ftypeof_5fbvand(s, v716, v717)?;
-return Ok(v718);
+return Ok(Some(v718));
 }
+Ok(None)
+}
+fn case_92_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case92: {
 let v719 = s.unapply(a0)?;
 let Some((f, a)) = v719 else { break 'case92; }
@@ -72893,8 +77153,11 @@ if v723 != v725 { break 'case92; }
 let v726 = eo__24eo_5ftypeof(s, v724)?;
 let v727 = eo__24eo_5ftypeof(s, v721)?;
 let v728 = eo__24eo_5ftypeof_5fbvand(s, v726, v727)?;
-return Ok(v728);
+return Ok(Some(v728));
 }
+Ok(None)
+}
+fn case_93_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case93: {
 let v729 = s.unapply(a0)?;
 let Some((f, a)) = v729 else { break 'case93; }
@@ -72911,8 +77174,11 @@ if v733 != v735 { break 'case93; }
 let v736 = eo__24eo_5ftypeof(s, v734)?;
 let v737 = eo__24eo_5ftypeof(s, v731)?;
 let v738 = eo__24eo_5ftypeof_5fbvand(s, v736, v737)?;
-return Ok(v738);
+return Ok(Some(v738));
 }
+Ok(None)
+}
+fn case_94_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case94: {
 let v739 = s.unapply(a0)?;
 let Some((f, a)) = v739 else { break 'case94; }
@@ -72926,8 +77192,11 @@ let v743 = fields;
 let v744 = eo__24eo_5ftypeof(s, v743[0])?;
 let v745 = eo__24eo_5ftypeof(s, v741)?;
 let v746 = eo__24eo_5ftypeof_5fzero_5fextend(s, v744, v743[0], v745)?;
-return Ok(v746);
+return Ok(Some(v746));
 }
+Ok(None)
+}
+fn case_95_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case95: {
 let v747 = s.unapply(a0)?;
 let Some((f, a)) = v747 else { break 'case95; }
@@ -72941,8 +77210,11 @@ let v751 = fields;
 let v752 = eo__24eo_5ftypeof(s, v751[0])?;
 let v753 = eo__24eo_5ftypeof(s, v749)?;
 let v754 = eo__24eo_5ftypeof_5fzero_5fextend(s, v752, v751[0], v753)?;
-return Ok(v754);
+return Ok(Some(v754));
 }
+Ok(None)
+}
+fn case_96_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case96: {
 let v755 = s.unapply(a0)?;
 let Some((f, a)) = v755 else { break 'case96; }
@@ -72956,8 +77228,11 @@ let v759 = fields;
 let v760 = eo__24eo_5ftypeof(s, v759[0])?;
 let v761 = eo__24eo_5ftypeof(s, v757)?;
 let v762 = eo__24eo_5ftypeof_5frotate_5fleft(s, v760, v759[0], v761)?;
-return Ok(v762);
+return Ok(Some(v762));
 }
+Ok(None)
+}
+fn case_97_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case97: {
 let v763 = s.unapply(a0)?;
 let Some((f, a)) = v763 else { break 'case97; }
@@ -72971,8 +77246,11 @@ let v767 = fields;
 let v768 = eo__24eo_5ftypeof(s, v767[0])?;
 let v769 = eo__24eo_5ftypeof(s, v765)?;
 let v770 = eo__24eo_5ftypeof_5frotate_5fleft(s, v768, v767[0], v769)?;
-return Ok(v770);
+return Ok(Some(v770));
 }
+Ok(None)
+}
+fn case_98_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case98: {
 let v771 = s.unapply(a0)?;
 let Some((f, a)) = v771 else { break 'case98; }
@@ -72995,8 +77273,11 @@ let v781 = eo__24eo_5ftypeof(s, v779)?;
 let v782 = eo__24eo_5ftypeof(s, v776)?;
 let v783 = eo__24eo_5ftypeof(s, v773)?;
 let v784 = eo__24eo_5ftypeof_5fbvite(s, v781, v782, v783)?;
-return Ok(v784);
+return Ok(Some(v784));
 }
+Ok(None)
+}
+fn case_99_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case99: {
 let v785 = s.unapply(a0)?;
 let Some((f, a)) = v785 else { break 'case99; }
@@ -73013,8 +77294,11 @@ if v789 != v791 { break 'case99; }
 let v792 = eo__24eo_5ftypeof(s, v790)?;
 let v793 = eo__24eo_5ftypeof(s, v787)?;
 let v794 = eo__24eo_5ftypeof_5fbvult(s, v792, v793)?;
-return Ok(v794);
+return Ok(Some(v794));
 }
+Ok(None)
+}
+fn case_100_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case100: {
 let v795 = s.unapply(a0)?;
 let Some((f, a)) = v795 else { break 'case100; }
@@ -73025,8 +77309,11 @@ let v798 = s.construct(Constructor::eo_bvnego, &[])?;
 if v796 != v798 { break 'case100; }
 let v799 = eo__24eo_5ftypeof(s, v797)?;
 let v800 = eo__24eo_5ftypeof_5fbvnego(s, v799)?;
-return Ok(v800);
+return Ok(Some(v800));
 }
+Ok(None)
+}
+fn case_101_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case101: {
 let v801 = s.unapply(a0)?;
 let Some((f, a)) = v801 else { break 'case101; }
@@ -73043,8 +77330,11 @@ if v805 != v807 { break 'case101; }
 let v808 = eo__24eo_5ftypeof(s, v806)?;
 let v809 = eo__24eo_5ftypeof(s, v803)?;
 let v810 = eo__24eo_5ftypeof_5fbvult(s, v808, v809)?;
-return Ok(v810);
+return Ok(Some(v810));
 }
+Ok(None)
+}
+fn case_102_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case102: {
 let v811 = s.unapply(a0)?;
 let Some((f, a)) = v811 else { break 'case102; }
@@ -73061,8 +77351,11 @@ if v815 != v817 { break 'case102; }
 let v818 = eo__24eo_5ftypeof(s, v816)?;
 let v819 = eo__24eo_5ftypeof(s, v813)?;
 let v820 = eo__24eo_5ftypeof_5fbvult(s, v818, v819)?;
-return Ok(v820);
+return Ok(Some(v820));
 }
+Ok(None)
+}
+fn case_103_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case103: {
 let v821 = s.unapply(a0)?;
 let Some((f, a)) = v821 else { break 'case103; }
@@ -73079,8 +77372,11 @@ if v825 != v827 { break 'case103; }
 let v828 = eo__24eo_5ftypeof(s, v826)?;
 let v829 = eo__24eo_5ftypeof(s, v823)?;
 let v830 = eo__24eo_5ftypeof_5fbvult(s, v828, v829)?;
-return Ok(v830);
+return Ok(Some(v830));
 }
+Ok(None)
+}
+fn case_104_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case104: {
 let v831 = s.unapply(a0)?;
 let Some((f, a)) = v831 else { break 'case104; }
@@ -73097,8 +77393,11 @@ if v835 != v837 { break 'case104; }
 let v838 = eo__24eo_5ftypeof(s, v836)?;
 let v839 = eo__24eo_5ftypeof(s, v833)?;
 let v840 = eo__24eo_5ftypeof_5fbvult(s, v838, v839)?;
-return Ok(v840);
+return Ok(Some(v840));
 }
+Ok(None)
+}
+fn case_105_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case105: {
 let v841 = s.unapply(a0)?;
 let Some((f, a)) = v841 else { break 'case105; }
@@ -73115,8 +77414,11 @@ if v845 != v847 { break 'case105; }
 let v848 = eo__24eo_5ftypeof(s, v846)?;
 let v849 = eo__24eo_5ftypeof(s, v843)?;
 let v850 = eo__24eo_5ftypeof_5fbvult(s, v848, v849)?;
-return Ok(v850);
+return Ok(Some(v850));
 }
+Ok(None)
+}
+fn case_106_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case106: {
 let v851 = s.unapply(a0)?;
 let Some((f, a)) = v851 else { break 'case106; }
@@ -73133,8 +77435,11 @@ if v855 != v857 { break 'case106; }
 let v858 = eo__24eo_5ftypeof(s, v856)?;
 let v859 = eo__24eo_5ftypeof(s, v853)?;
 let v860 = eo__24eo_5ftypeof_5fbvult(s, v858, v859)?;
-return Ok(v860);
+return Ok(Some(v860));
 }
+Ok(None)
+}
+fn case_107_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case107: {
 let v861 = s.unapply(a0)?;
 let Some((f, a)) = v861 else { break 'case107; }
@@ -73151,8 +77456,11 @@ if v865 != v867 { break 'case107; }
 let v868 = eo__24eo_5ftypeof(s, v866)?;
 let v869 = eo__24eo_5ftypeof(s, v863)?;
 let v870 = eo__24eo_5ftypeof_5fbvcomp(s, v868, v869)?;
-return Ok(v870);
+return Ok(Some(v870));
 }
+Ok(None)
+}
+fn case_108_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case108: {
 let v871 = s.unapply(a0)?;
 let Some((f, a)) = v871 else { break 'case108; }
@@ -73169,8 +77477,11 @@ if v875 != v877 { break 'case108; }
 let v878 = eo__24eo_5ftypeof(s, v876)?;
 let v879 = eo__24eo_5ftypeof(s, v873)?;
 let v880 = eo__24eo_5ftypeof_5fbvcomp(s, v878, v879)?;
-return Ok(v880);
+return Ok(Some(v880));
 }
+Ok(None)
+}
+fn case_109_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case109: {
 let v881 = s.unapply(a0)?;
 let Some((f, a)) = v881 else { break 'case109; }
@@ -73181,8 +77492,11 @@ let v884 = s.construct(Constructor::eo_bvredand, &[])?;
 if v882 != v884 { break 'case109; }
 let v885 = eo__24eo_5ftypeof(s, v883)?;
 let v886 = eo__24eo_5ftypeof_5fbvredand(s, v885)?;
-return Ok(v886);
+return Ok(Some(v886));
 }
+Ok(None)
+}
+fn case_110_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case110: {
 let v887 = s.unapply(a0)?;
 let Some((f, a)) = v887 else { break 'case110; }
@@ -73193,8 +77507,11 @@ let v890 = s.construct(Constructor::eo_bvredor, &[])?;
 if v888 != v890 { break 'case110; }
 let v891 = eo__24eo_5ftypeof(s, v889)?;
 let v892 = eo__24eo_5ftypeof_5fbvredand(s, v891)?;
-return Ok(v892);
+return Ok(Some(v892));
 }
+Ok(None)
+}
+fn case_111_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case111: {
 let v893 = s.unapply(a0)?;
 let Some((f, a)) = v893 else { break 'case111; }
@@ -73208,8 +77525,11 @@ let v897 = fields;
 let v898 = eo__24eo_5ftypeof(s, v897[0])?;
 let v899 = eo__24eo_5ftypeof(s, v895)?;
 let v900 = eo__24eo_5ftypeof_5f_40bit(s, v898, v899)?;
-return Ok(v900);
+return Ok(Some(v900));
 }
+Ok(None)
+}
+fn case_112_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case112: {
 let v901 = s.unapply(a0)?;
 let Some((f, a)) = v901 else { break 'case112; }
@@ -73226,14 +77546,20 @@ if v905 != v907 { break 'case112; }
 let v908 = eo__24eo_5ftypeof(s, v906)?;
 let v909 = eo__24eo_5ftypeof(s, v903)?;
 let v910 = eo__24eo_5ftypeof_5f_40from_5fbools(s, v908, v909)?;
-return Ok(v910);
+return Ok(Some(v910));
 }
+Ok(None)
+}
+fn case_113_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case113: {
 let v911 = s.construct(Constructor::eo_RegLan, &[])?;
 if a0 != v911 { break 'case113; }
 let v912 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v912);
+return Ok(Some(v912));
 }
+Ok(None)
+}
+fn case_114_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case114: {
 let v913 = s.destruct(Constructor::eo_seq_2eempty, a0)?;
 let Some(fields) = v913 else { break 'case114; }
@@ -73241,8 +77567,11 @@ let Some(fields) = v913 else { break 'case114; }
 let v914 = fields;
 let v915 = eo__24eo_5ftypeof(s, v914[0])?;
 let v916 = eo__24eo_5ftypeof_5fseq_2eempty(s, v915, v914[0])?;
-return Ok(v916);
+return Ok(Some(v916));
 }
+Ok(None)
+}
+fn case_115_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case115: {
 let v917 = s.unapply(a0)?;
 let Some((f, a)) = v917 else { break 'case115; }
@@ -73253,8 +77582,11 @@ let v920 = s.construct(Constructor::eo_str_2elen, &[])?;
 if v918 != v920 { break 'case115; }
 let v921 = eo__24eo_5ftypeof(s, v919)?;
 let v922 = eo__24eo_5ftypeof_5fstr_2elen(s, v921)?;
-return Ok(v922);
+return Ok(Some(v922));
 }
+Ok(None)
+}
+fn case_116_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case116: {
 let v923 = s.unapply(a0)?;
 let Some((f, a)) = v923 else { break 'case116; }
@@ -73271,8 +77603,11 @@ if v927 != v929 { break 'case116; }
 let v930 = eo__24eo_5ftypeof(s, v928)?;
 let v931 = eo__24eo_5ftypeof(s, v925)?;
 let v932 = eo__24eo_5ftypeof_5fstr_2e_2b_2b(s, v930, v931)?;
-return Ok(v932);
+return Ok(Some(v932));
 }
+Ok(None)
+}
+fn case_117_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case117: {
 let v933 = s.unapply(a0)?;
 let Some((f, a)) = v933 else { break 'case117; }
@@ -73295,8 +77630,11 @@ let v943 = eo__24eo_5ftypeof(s, v941)?;
 let v944 = eo__24eo_5ftypeof(s, v938)?;
 let v945 = eo__24eo_5ftypeof(s, v935)?;
 let v946 = eo__24eo_5ftypeof_5fstr_2esubstr(s, v943, v944, v945)?;
-return Ok(v946);
+return Ok(Some(v946));
 }
+Ok(None)
+}
+fn case_118_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case118: {
 let v947 = s.unapply(a0)?;
 let Some((f, a)) = v947 else { break 'case118; }
@@ -73313,8 +77651,11 @@ if v951 != v953 { break 'case118; }
 let v954 = eo__24eo_5ftypeof(s, v952)?;
 let v955 = eo__24eo_5ftypeof(s, v949)?;
 let v956 = eo__24eo_5ftypeof_5fstr_2econtains(s, v954, v955)?;
-return Ok(v956);
+return Ok(Some(v956));
 }
+Ok(None)
+}
+fn case_119_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case119: {
 let v957 = s.unapply(a0)?;
 let Some((f, a)) = v957 else { break 'case119; }
@@ -73337,8 +77678,11 @@ let v967 = eo__24eo_5ftypeof(s, v965)?;
 let v968 = eo__24eo_5ftypeof(s, v962)?;
 let v969 = eo__24eo_5ftypeof(s, v959)?;
 let v970 = eo__24eo_5ftypeof_5fstr_2ereplace(s, v967, v968, v969)?;
-return Ok(v970);
+return Ok(Some(v970));
 }
+Ok(None)
+}
+fn case_120_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case120: {
 let v971 = s.unapply(a0)?;
 let Some((f, a)) = v971 else { break 'case120; }
@@ -73361,8 +77705,11 @@ let v981 = eo__24eo_5ftypeof(s, v979)?;
 let v982 = eo__24eo_5ftypeof(s, v976)?;
 let v983 = eo__24eo_5ftypeof(s, v973)?;
 let v984 = eo__24eo_5ftypeof_5fstr_2eindexof(s, v981, v982, v983)?;
-return Ok(v984);
+return Ok(Some(v984));
 }
+Ok(None)
+}
+fn case_121_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case121: {
 let v985 = s.unapply(a0)?;
 let Some((f, a)) = v985 else { break 'case121; }
@@ -73379,8 +77726,11 @@ if v989 != v991 { break 'case121; }
 let v992 = eo__24eo_5ftypeof(s, v990)?;
 let v993 = eo__24eo_5ftypeof(s, v987)?;
 let v994 = eo__24eo_5ftypeof_5fstr_2eat(s, v992, v993)?;
-return Ok(v994);
+return Ok(Some(v994));
 }
+Ok(None)
+}
+fn case_122_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case122: {
 let v995 = s.unapply(a0)?;
 let Some((f, a)) = v995 else { break 'case122; }
@@ -73397,8 +77747,11 @@ if v999 != v1001 { break 'case122; }
 let v1002 = eo__24eo_5ftypeof(s, v1000)?;
 let v1003 = eo__24eo_5ftypeof(s, v997)?;
 let v1004 = eo__24eo_5ftypeof_5fstr_2econtains(s, v1002, v1003)?;
-return Ok(v1004);
+return Ok(Some(v1004));
 }
+Ok(None)
+}
+fn case_123_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case123: {
 let v1005 = s.unapply(a0)?;
 let Some((f, a)) = v1005 else { break 'case123; }
@@ -73415,8 +77768,11 @@ if v1009 != v1011 { break 'case123; }
 let v1012 = eo__24eo_5ftypeof(s, v1010)?;
 let v1013 = eo__24eo_5ftypeof(s, v1007)?;
 let v1014 = eo__24eo_5ftypeof_5fstr_2econtains(s, v1012, v1013)?;
-return Ok(v1014);
+return Ok(Some(v1014));
 }
+Ok(None)
+}
+fn case_124_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case124: {
 let v1015 = s.unapply(a0)?;
 let Some((f, a)) = v1015 else { break 'case124; }
@@ -73427,8 +77783,11 @@ let v1018 = s.construct(Constructor::eo_str_2erev, &[])?;
 if v1016 != v1018 { break 'case124; }
 let v1019 = eo__24eo_5ftypeof(s, v1017)?;
 let v1020 = eo__24eo_5ftypeof_5fstr_2erev(s, v1019)?;
-return Ok(v1020);
+return Ok(Some(v1020));
 }
+Ok(None)
+}
+fn case_125_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case125: {
 let v1021 = s.unapply(a0)?;
 let Some((f, a)) = v1021 else { break 'case125; }
@@ -73451,8 +77810,11 @@ let v1031 = eo__24eo_5ftypeof(s, v1029)?;
 let v1032 = eo__24eo_5ftypeof(s, v1026)?;
 let v1033 = eo__24eo_5ftypeof(s, v1023)?;
 let v1034 = eo__24eo_5ftypeof_5fstr_2eupdate(s, v1031, v1032, v1033)?;
-return Ok(v1034);
+return Ok(Some(v1034));
 }
+Ok(None)
+}
+fn case_126_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case126: {
 let v1035 = s.unapply(a0)?;
 let Some((f, a)) = v1035 else { break 'case126; }
@@ -73463,8 +77825,11 @@ let v1038 = s.construct(Constructor::eo_str_2eto_5flower, &[])?;
 if v1036 != v1038 { break 'case126; }
 let v1039 = eo__24eo_5ftypeof(s, v1037)?;
 let v1040 = eo__24eo_5ftypeof_5fstr_2eto_5flower(s, v1039)?;
-return Ok(v1040);
+return Ok(Some(v1040));
 }
+Ok(None)
+}
+fn case_127_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case127: {
 let v1041 = s.unapply(a0)?;
 let Some((f, a)) = v1041 else { break 'case127; }
@@ -73475,8 +77840,11 @@ let v1044 = s.construct(Constructor::eo_str_2eto_5fupper, &[])?;
 if v1042 != v1044 { break 'case127; }
 let v1045 = eo__24eo_5ftypeof(s, v1043)?;
 let v1046 = eo__24eo_5ftypeof_5fstr_2eto_5flower(s, v1045)?;
-return Ok(v1046);
+return Ok(Some(v1046));
 }
+Ok(None)
+}
+fn case_128_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case128: {
 let v1047 = s.unapply(a0)?;
 let Some((f, a)) = v1047 else { break 'case128; }
@@ -73487,8 +77855,11 @@ let v1050 = s.construct(Constructor::eo_str_2eto_5fcode, &[])?;
 if v1048 != v1050 { break 'case128; }
 let v1051 = eo__24eo_5ftypeof(s, v1049)?;
 let v1052 = eo__24eo_5ftypeof_5fstr_2eto_5fcode(s, v1051)?;
-return Ok(v1052);
+return Ok(Some(v1052));
 }
+Ok(None)
+}
+fn case_129_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case129: {
 let v1053 = s.unapply(a0)?;
 let Some((f, a)) = v1053 else { break 'case129; }
@@ -73499,8 +77870,11 @@ let v1056 = s.construct(Constructor::eo_str_2efrom_5fcode, &[])?;
 if v1054 != v1056 { break 'case129; }
 let v1057 = eo__24eo_5ftypeof(s, v1055)?;
 let v1058 = eo__24eo_5ftypeof_5fstr_2efrom_5fcode(s, v1057)?;
-return Ok(v1058);
+return Ok(Some(v1058));
 }
+Ok(None)
+}
+fn case_130_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case130: {
 let v1059 = s.unapply(a0)?;
 let Some((f, a)) = v1059 else { break 'case130; }
@@ -73511,8 +77885,11 @@ let v1062 = s.construct(Constructor::eo_str_2eis_5fdigit, &[])?;
 if v1060 != v1062 { break 'case130; }
 let v1063 = eo__24eo_5ftypeof(s, v1061)?;
 let v1064 = eo__24eo_5ftypeof_5fstr_2eis_5fdigit(s, v1063)?;
-return Ok(v1064);
+return Ok(Some(v1064));
 }
+Ok(None)
+}
+fn case_131_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case131: {
 let v1065 = s.unapply(a0)?;
 let Some((f, a)) = v1065 else { break 'case131; }
@@ -73523,8 +77900,11 @@ let v1068 = s.construct(Constructor::eo_str_2eto_5fint, &[])?;
 if v1066 != v1068 { break 'case131; }
 let v1069 = eo__24eo_5ftypeof(s, v1067)?;
 let v1070 = eo__24eo_5ftypeof_5fstr_2eto_5fcode(s, v1069)?;
-return Ok(v1070);
+return Ok(Some(v1070));
 }
+Ok(None)
+}
+fn case_132_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case132: {
 let v1071 = s.unapply(a0)?;
 let Some((f, a)) = v1071 else { break 'case132; }
@@ -73535,8 +77915,11 @@ let v1074 = s.construct(Constructor::eo_str_2efrom_5fint, &[])?;
 if v1072 != v1074 { break 'case132; }
 let v1075 = eo__24eo_5ftypeof(s, v1073)?;
 let v1076 = eo__24eo_5ftypeof_5fstr_2efrom_5fcode(s, v1075)?;
-return Ok(v1076);
+return Ok(Some(v1076));
 }
+Ok(None)
+}
+fn case_133_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case133: {
 let v1077 = s.unapply(a0)?;
 let Some((f, a)) = v1077 else { break 'case133; }
@@ -73553,8 +77936,11 @@ if v1081 != v1083 { break 'case133; }
 let v1084 = eo__24eo_5ftypeof(s, v1082)?;
 let v1085 = eo__24eo_5ftypeof(s, v1079)?;
 let v1086 = eo__24eo_5ftypeof_5fstr_2e_3c(s, v1084, v1085)?;
-return Ok(v1086);
+return Ok(Some(v1086));
 }
+Ok(None)
+}
+fn case_134_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case134: {
 let v1087 = s.unapply(a0)?;
 let Some((f, a)) = v1087 else { break 'case134; }
@@ -73571,8 +77957,11 @@ if v1091 != v1093 { break 'case134; }
 let v1094 = eo__24eo_5ftypeof(s, v1092)?;
 let v1095 = eo__24eo_5ftypeof(s, v1089)?;
 let v1096 = eo__24eo_5ftypeof_5fstr_2e_3c(s, v1094, v1095)?;
-return Ok(v1096);
+return Ok(Some(v1096));
 }
+Ok(None)
+}
+fn case_135_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case135: {
 let v1097 = s.unapply(a0)?;
 let Some((f, a)) = v1097 else { break 'case135; }
@@ -73595,8 +77984,11 @@ let v1107 = eo__24eo_5ftypeof(s, v1105)?;
 let v1108 = eo__24eo_5ftypeof(s, v1102)?;
 let v1109 = eo__24eo_5ftypeof(s, v1099)?;
 let v1110 = eo__24eo_5ftypeof_5fstr_2ereplace(s, v1107, v1108, v1109)?;
-return Ok(v1110);
+return Ok(Some(v1110));
 }
+Ok(None)
+}
+fn case_136_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case136: {
 let v1111 = s.unapply(a0)?;
 let Some((f, a)) = v1111 else { break 'case136; }
@@ -73619,8 +78011,11 @@ let v1121 = eo__24eo_5ftypeof(s, v1119)?;
 let v1122 = eo__24eo_5ftypeof(s, v1116)?;
 let v1123 = eo__24eo_5ftypeof(s, v1113)?;
 let v1124 = eo__24eo_5ftypeof_5fstr_2ereplace_5fre(s, v1121, v1122, v1123)?;
-return Ok(v1124);
+return Ok(Some(v1124));
 }
+Ok(None)
+}
+fn case_137_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case137: {
 let v1125 = s.unapply(a0)?;
 let Some((f, a)) = v1125 else { break 'case137; }
@@ -73643,8 +78038,11 @@ let v1135 = eo__24eo_5ftypeof(s, v1133)?;
 let v1136 = eo__24eo_5ftypeof(s, v1130)?;
 let v1137 = eo__24eo_5ftypeof(s, v1127)?;
 let v1138 = eo__24eo_5ftypeof_5fstr_2ereplace_5fre(s, v1135, v1136, v1137)?;
-return Ok(v1138);
+return Ok(Some(v1138));
 }
+Ok(None)
+}
+fn case_138_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case138: {
 let v1139 = s.unapply(a0)?;
 let Some((f, a)) = v1139 else { break 'case138; }
@@ -73667,26 +78065,38 @@ let v1149 = eo__24eo_5ftypeof(s, v1147)?;
 let v1150 = eo__24eo_5ftypeof(s, v1144)?;
 let v1151 = eo__24eo_5ftypeof(s, v1141)?;
 let v1152 = eo__24eo_5ftypeof_5fstr_2eindexof_5fre(s, v1149, v1150, v1151)?;
-return Ok(v1152);
+return Ok(Some(v1152));
 }
+Ok(None)
+}
+fn case_139_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case139: {
 let v1153 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 if a0 != v1153 { break 'case139; }
 let v1154 = s.construct(Constructor::eo_RegLan, &[])?;
-return Ok(v1154);
+return Ok(Some(v1154));
 }
+Ok(None)
+}
+fn case_140_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case140: {
 let v1155 = s.construct(Constructor::eo_re_2enone, &[])?;
 if a0 != v1155 { break 'case140; }
 let v1156 = s.construct(Constructor::eo_RegLan, &[])?;
-return Ok(v1156);
+return Ok(Some(v1156));
 }
+Ok(None)
+}
+fn case_141_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case141: {
 let v1157 = s.construct(Constructor::eo_re_2eall, &[])?;
 if a0 != v1157 { break 'case141; }
 let v1158 = s.construct(Constructor::eo_RegLan, &[])?;
-return Ok(v1158);
+return Ok(Some(v1158));
 }
+Ok(None)
+}
+fn case_142_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case142: {
 let v1159 = s.unapply(a0)?;
 let Some((f, a)) = v1159 else { break 'case142; }
@@ -73697,8 +78107,11 @@ let v1162 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 if v1160 != v1162 { break 'case142; }
 let v1163 = eo__24eo_5ftypeof(s, v1161)?;
 let v1164 = eo__24eo_5ftypeof_5fstr_2eto_5fre(s, v1163)?;
-return Ok(v1164);
+return Ok(Some(v1164));
 }
+Ok(None)
+}
+fn case_143_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case143: {
 let v1165 = s.unapply(a0)?;
 let Some((f, a)) = v1165 else { break 'case143; }
@@ -73709,8 +78122,11 @@ let v1168 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 if v1166 != v1168 { break 'case143; }
 let v1169 = eo__24eo_5ftypeof(s, v1167)?;
 let v1170 = eo__24eo_5ftypeof_5fre_2e_2a(s, v1169)?;
-return Ok(v1170);
+return Ok(Some(v1170));
 }
+Ok(None)
+}
+fn case_144_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case144: {
 let v1171 = s.unapply(a0)?;
 let Some((f, a)) = v1171 else { break 'case144; }
@@ -73721,8 +78137,11 @@ let v1174 = s.construct(Constructor::eo_re_2e_2b, &[])?;
 if v1172 != v1174 { break 'case144; }
 let v1175 = eo__24eo_5ftypeof(s, v1173)?;
 let v1176 = eo__24eo_5ftypeof_5fre_2e_2a(s, v1175)?;
-return Ok(v1176);
+return Ok(Some(v1176));
 }
+Ok(None)
+}
+fn case_145_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case145: {
 let v1177 = s.unapply(a0)?;
 let Some((f, a)) = v1177 else { break 'case145; }
@@ -73736,8 +78155,11 @@ let v1181 = fields;
 let v1182 = eo__24eo_5ftypeof(s, v1181[0])?;
 let v1183 = eo__24eo_5ftypeof(s, v1179)?;
 let v1184 = eo__24eo_5ftypeof_5fre_2e_5e(s, v1182, v1181[0], v1183)?;
-return Ok(v1184);
+return Ok(Some(v1184));
 }
+Ok(None)
+}
+fn case_146_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case146: {
 let v1185 = s.unapply(a0)?;
 let Some((f, a)) = v1185 else { break 'case146; }
@@ -73748,8 +78170,11 @@ let v1188 = s.construct(Constructor::eo_re_2eopt, &[])?;
 if v1186 != v1188 { break 'case146; }
 let v1189 = eo__24eo_5ftypeof(s, v1187)?;
 let v1190 = eo__24eo_5ftypeof_5fre_2e_2a(s, v1189)?;
-return Ok(v1190);
+return Ok(Some(v1190));
 }
+Ok(None)
+}
+fn case_147_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case147: {
 let v1191 = s.unapply(a0)?;
 let Some((f, a)) = v1191 else { break 'case147; }
@@ -73760,8 +78185,11 @@ let v1194 = s.construct(Constructor::eo_re_2ecomp, &[])?;
 if v1192 != v1194 { break 'case147; }
 let v1195 = eo__24eo_5ftypeof(s, v1193)?;
 let v1196 = eo__24eo_5ftypeof_5fre_2e_2a(s, v1195)?;
-return Ok(v1196);
+return Ok(Some(v1196));
 }
+Ok(None)
+}
+fn case_148_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case148: {
 let v1197 = s.unapply(a0)?;
 let Some((f, a)) = v1197 else { break 'case148; }
@@ -73778,8 +78206,11 @@ if v1201 != v1203 { break 'case148; }
 let v1204 = eo__24eo_5ftypeof(s, v1202)?;
 let v1205 = eo__24eo_5ftypeof(s, v1199)?;
 let v1206 = eo__24eo_5ftypeof_5fre_2erange(s, v1204, v1205)?;
-return Ok(v1206);
+return Ok(Some(v1206));
 }
+Ok(None)
+}
+fn case_149_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case149: {
 let v1207 = s.unapply(a0)?;
 let Some((f, a)) = v1207 else { break 'case149; }
@@ -73796,8 +78227,11 @@ if v1211 != v1213 { break 'case149; }
 let v1214 = eo__24eo_5ftypeof(s, v1212)?;
 let v1215 = eo__24eo_5ftypeof(s, v1209)?;
 let v1216 = eo__24eo_5ftypeof_5fre_2e_2b_2b(s, v1214, v1215)?;
-return Ok(v1216);
+return Ok(Some(v1216));
 }
+Ok(None)
+}
+fn case_150_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case150: {
 let v1217 = s.unapply(a0)?;
 let Some((f, a)) = v1217 else { break 'case150; }
@@ -73814,8 +78248,11 @@ if v1221 != v1223 { break 'case150; }
 let v1224 = eo__24eo_5ftypeof(s, v1222)?;
 let v1225 = eo__24eo_5ftypeof(s, v1219)?;
 let v1226 = eo__24eo_5ftypeof_5fre_2e_2b_2b(s, v1224, v1225)?;
-return Ok(v1226);
+return Ok(Some(v1226));
 }
+Ok(None)
+}
+fn case_151_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case151: {
 let v1227 = s.unapply(a0)?;
 let Some((f, a)) = v1227 else { break 'case151; }
@@ -73832,8 +78269,11 @@ if v1231 != v1233 { break 'case151; }
 let v1234 = eo__24eo_5ftypeof(s, v1232)?;
 let v1235 = eo__24eo_5ftypeof(s, v1229)?;
 let v1236 = eo__24eo_5ftypeof_5fre_2e_2b_2b(s, v1234, v1235)?;
-return Ok(v1236);
+return Ok(Some(v1236));
 }
+Ok(None)
+}
+fn case_152_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case152: {
 let v1237 = s.unapply(a0)?;
 let Some((f, a)) = v1237 else { break 'case152; }
@@ -73850,8 +78290,11 @@ if v1241 != v1243 { break 'case152; }
 let v1244 = eo__24eo_5ftypeof(s, v1242)?;
 let v1245 = eo__24eo_5ftypeof(s, v1239)?;
 let v1246 = eo__24eo_5ftypeof_5fre_2e_2b_2b(s, v1244, v1245)?;
-return Ok(v1246);
+return Ok(Some(v1246));
 }
+Ok(None)
+}
+fn case_153_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case153: {
 let v1247 = s.unapply(a0)?;
 let Some((f, a)) = v1247 else { break 'case153; }
@@ -73866,8 +78309,11 @@ let v1252 = eo__24eo_5ftypeof(s, v1251[0])?;
 let v1253 = eo__24eo_5ftypeof(s, v1251[1])?;
 let v1254 = eo__24eo_5ftypeof(s, v1249)?;
 let v1255 = eo__24eo_5ftypeof_5fre_2eloop(s, v1252, v1251[0], v1253, v1251[1], v1254)?;
-return Ok(v1255);
+return Ok(Some(v1255));
 }
+Ok(None)
+}
+fn case_154_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case154: {
 let v1256 = s.unapply(a0)?;
 let Some((f, a)) = v1256 else { break 'case154; }
@@ -73884,8 +78330,11 @@ if v1260 != v1262 { break 'case154; }
 let v1263 = eo__24eo_5ftypeof(s, v1261)?;
 let v1264 = eo__24eo_5ftypeof(s, v1258)?;
 let v1265 = eo__24eo_5ftypeof_5fstr_2ein_5fre(s, v1263, v1264)?;
-return Ok(v1265);
+return Ok(Some(v1265));
 }
+Ok(None)
+}
+fn case_155_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case155: {
 let v1266 = s.unapply(a0)?;
 let Some((f, a)) = v1266 else { break 'case155; }
@@ -73896,8 +78345,11 @@ let v1269 = s.construct(Constructor::eo_seq_2eunit, &[])?;
 if v1267 != v1269 { break 'case155; }
 let v1270 = eo__24eo_5ftypeof(s, v1268)?;
 let v1271 = eo__24eo_5ftypeof_5fseq_2eunit(s, v1270)?;
-return Ok(v1271);
+return Ok(Some(v1271));
 }
+Ok(None)
+}
+fn case_156_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case156: {
 let v1272 = s.unapply(a0)?;
 let Some((f, a)) = v1272 else { break 'case156; }
@@ -73914,8 +78366,11 @@ if v1276 != v1278 { break 'case156; }
 let v1279 = eo__24eo_5ftypeof(s, v1277)?;
 let v1280 = eo__24eo_5ftypeof(s, v1274)?;
 let v1281 = eo__24eo_5ftypeof_5fseq_2enth(s, v1279, v1280)?;
-return Ok(v1281);
+return Ok(Some(v1281));
 }
+Ok(None)
+}
+fn case_157_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case157: {
 let v1282 = s.destruct(Constructor::eo__40re_5funfold_5fpos_5fcomponent, a0)?;
 let Some(fields) = v1282 else { break 'case157; }
@@ -73925,8 +78380,11 @@ let v1284 = eo__24eo_5ftypeof(s, v1283[0])?;
 let v1285 = eo__24eo_5ftypeof(s, v1283[1])?;
 let v1286 = eo__24eo_5ftypeof(s, v1283[2])?;
 let v1287 = eo__24eo_5ftypeof_5f_40re_5funfold_5fpos_5fcomponent(s, v1284, v1285, v1286)?;
-return Ok(v1287);
+return Ok(Some(v1287));
 }
+Ok(None)
+}
+fn case_158_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case158: {
 let v1288 = s.unapply(a0)?;
 let Some((f, a)) = v1288 else { break 'case158; }
@@ -73943,8 +78401,11 @@ if v1292 != v1294 { break 'case158; }
 let v1295 = eo__24eo_5ftypeof(s, v1293)?;
 let v1296 = eo__24eo_5ftypeof(s, v1290)?;
 let v1297 = eo__24eo_5ftypeof_5f_40strings_5fdeq_5fdiff(s, v1295, v1296)?;
-return Ok(v1297);
+return Ok(Some(v1297));
 }
+Ok(None)
+}
+fn case_159_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case159: {
 let v1298 = s.unapply(a0)?;
 let Some((f, a)) = v1298 else { break 'case159; }
@@ -73961,8 +78422,11 @@ if v1302 != v1304 { break 'case159; }
 let v1305 = eo__24eo_5ftypeof(s, v1303)?;
 let v1306 = eo__24eo_5ftypeof(s, v1300)?;
 let v1307 = eo__24eo_5ftypeof_5f_40strings_5fstoi_5fresult(s, v1305, v1306)?;
-return Ok(v1307);
+return Ok(Some(v1307));
 }
+Ok(None)
+}
+fn case_160_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case160: {
 let v1308 = s.unapply(a0)?;
 let Some((f, a)) = v1308 else { break 'case160; }
@@ -73973,8 +78437,11 @@ let v1311 = s.construct(Constructor::eo__40strings_5fstoi_5fnon_5fdigit, &[])?;
 if v1309 != v1311 { break 'case160; }
 let v1312 = eo__24eo_5ftypeof(s, v1310)?;
 let v1313 = eo__24eo_5ftypeof_5fstr_2eto_5fcode(s, v1312)?;
-return Ok(v1313);
+return Ok(Some(v1313));
 }
+Ok(None)
+}
+fn case_161_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case161: {
 let v1314 = s.unapply(a0)?;
 let Some((f, a)) = v1314 else { break 'case161; }
@@ -73991,8 +78458,11 @@ if v1318 != v1320 { break 'case161; }
 let v1321 = eo__24eo_5ftypeof(s, v1319)?;
 let v1322 = eo__24eo_5ftypeof(s, v1316)?;
 let v1323 = eo__24eo_5ftypeof_5fdiv(s, v1321, v1322)?;
-return Ok(v1323);
+return Ok(Some(v1323));
 }
+Ok(None)
+}
+fn case_162_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case162: {
 let v1324 = s.unapply(a0)?;
 let Some((f, a)) = v1324 else { break 'case162; }
@@ -74009,8 +78479,11 @@ if v1328 != v1330 { break 'case162; }
 let v1331 = eo__24eo_5ftypeof(s, v1329)?;
 let v1332 = eo__24eo_5ftypeof(s, v1326)?;
 let v1333 = eo__24eo_5ftypeof_5f_40strings_5fdeq_5fdiff(s, v1331, v1332)?;
-return Ok(v1333);
+return Ok(Some(v1333));
 }
+Ok(None)
+}
+fn case_163_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case163: {
 let v1334 = s.unapply(a0)?;
 let Some((f, a)) = v1334 else { break 'case163; }
@@ -74027,8 +78500,11 @@ if v1338 != v1340 { break 'case163; }
 let v1341 = eo__24eo_5ftypeof(s, v1339)?;
 let v1342 = eo__24eo_5ftypeof(s, v1336)?;
 let v1343 = eo__24eo_5ftypeof_5f_40strings_5fnum_5foccur_5fre(s, v1341, v1342)?;
-return Ok(v1343);
+return Ok(Some(v1343));
 }
+Ok(None)
+}
+fn case_164_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case164: {
 let v1344 = s.unapply(a0)?;
 let Some((f, a)) = v1344 else { break 'case164; }
@@ -74051,8 +78527,11 @@ let v1354 = eo__24eo_5ftypeof(s, v1352)?;
 let v1355 = eo__24eo_5ftypeof(s, v1349)?;
 let v1356 = eo__24eo_5ftypeof(s, v1346)?;
 let v1357 = eo__24eo_5ftypeof_5fstr_2eindexof(s, v1354, v1355, v1356)?;
-return Ok(v1357);
+return Ok(Some(v1357));
 }
+Ok(None)
+}
+fn case_165_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case165: {
 let v1358 = s.unapply(a0)?;
 let Some((f, a)) = v1358 else { break 'case165; }
@@ -74075,8 +78554,11 @@ let v1368 = eo__24eo_5ftypeof(s, v1366)?;
 let v1369 = eo__24eo_5ftypeof(s, v1363)?;
 let v1370 = eo__24eo_5ftypeof(s, v1360)?;
 let v1371 = eo__24eo_5ftypeof_5fstr_2eindexof_5fre(s, v1368, v1369, v1370)?;
-return Ok(v1371);
+return Ok(Some(v1371));
 }
+Ok(None)
+}
+fn case_166_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case166: {
 let v1372 = s.unapply(a0)?;
 let Some((f, a)) = v1372 else { break 'case166; }
@@ -74105,8 +78587,11 @@ let v1386 = eo__24eo_5ftypeof(s, v1380)?;
 let v1387 = eo__24eo_5ftypeof(s, v1377)?;
 let v1388 = eo__24eo_5ftypeof(s, v1374)?;
 let v1389 = eo__24eo_5ftypeof_5f_40strings_5freplace_5fall_5fresult(s, v1385, v1386, v1387, v1388)?;
-return Ok(v1389);
+return Ok(Some(v1389));
 }
+Ok(None)
+}
+fn case_167_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case167: {
 let v1390 = s.unapply(a0)?;
 let Some((f, a)) = v1390 else { break 'case167; }
@@ -74135,8 +78620,11 @@ let v1404 = eo__24eo_5ftypeof(s, v1398)?;
 let v1405 = eo__24eo_5ftypeof(s, v1395)?;
 let v1406 = eo__24eo_5ftypeof(s, v1392)?;
 let v1407 = eo__24eo_5ftypeof_5f_40strings_5freplace_5fre_5fall_5fresult(s, v1403, v1404, v1405, v1406)?;
-return Ok(v1407);
+return Ok(Some(v1407));
 }
+Ok(None)
+}
+fn case_168_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case168: {
 let v1408 = s.destruct(Constructor::eo__40witness_5fstring_5flength, a0)?;
 let Some(fields) = v1408 else { break 'case168; }
@@ -74146,8 +78634,11 @@ let v1410 = eo__24eo_5ftypeof(s, v1409[0])?;
 let v1411 = eo__24eo_5ftypeof(s, v1409[1])?;
 let v1412 = eo__24eo_5ftypeof(s, v1409[2])?;
 let v1413 = eo__24eo_5ftypeof_5f_40witness_5fstring_5flength(s, v1410, v1409[0], v1411, v1412)?;
-return Ok(v1413);
+return Ok(Some(v1413));
 }
+Ok(None)
+}
+fn case_169_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case169: {
 let v1414 = s.unapply(a0)?;
 let Some((f, a)) = v1414 else { break 'case169; }
@@ -74161,8 +78652,11 @@ let v1418 = fields;
 let v1419 = eo__24eo_5ftypeof(s, v1418[0])?;
 let v1420 = eo__24eo_5ftypeof(s, v1416)?;
 let v1421 = eo__24eo_5ftypeof_5fis(s, v1419, v1420)?;
-return Ok(v1421);
+return Ok(Some(v1421));
 }
+Ok(None)
+}
+fn case_170_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case170: {
 let v1422 = s.unapply(a0)?;
 let Some((f, a)) = v1422 else { break 'case170; }
@@ -74182,14 +78676,20 @@ let v1430 = eo__24eo_5ftypeof(s, v1429[0])?;
 let v1431 = eo__24eo_5ftypeof(s, v1427)?;
 let v1432 = eo__24eo_5ftypeof(s, v1424)?;
 let v1433 = eo__24eo_5ftypeof_5fupdate(s, v1430, v1431, v1432)?;
-return Ok(v1433);
+return Ok(Some(v1433));
 }
+Ok(None)
+}
+fn case_171_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case171: {
 let v1434 = s.construct(Constructor::eo_UnitTuple, &[])?;
 if a0 != v1434 { break 'case171; }
 let v1435 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v1435);
+return Ok(Some(v1435));
 }
+Ok(None)
+}
+fn case_172_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case172: {
 let v1436 = s.unapply(a0)?;
 let Some((f, a)) = v1436 else { break 'case172; }
@@ -74206,14 +78706,20 @@ if v1440 != v1442 { break 'case172; }
 let v1443 = eo__24eo_5ftypeof(s, v1441)?;
 let v1444 = eo__24eo_5ftypeof(s, v1438)?;
 let v1445 = eo__24eo_5ftypeof_5f_40_40Pair(s, v1443, v1444)?;
-return Ok(v1445);
+return Ok(Some(v1445));
 }
+Ok(None)
+}
+fn case_173_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case173: {
 let v1446 = s.construct(Constructor::eo_tuple_2eunit, &[])?;
 if a0 != v1446 { break 'case173; }
 let v1447 = s.construct(Constructor::eo_UnitTuple, &[])?;
-return Ok(v1447);
+return Ok(Some(v1447));
 }
+Ok(None)
+}
+fn case_174_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case174: {
 let v1448 = s.unapply(a0)?;
 let Some((f, a)) = v1448 else { break 'case174; }
@@ -74230,8 +78736,11 @@ if v1452 != v1454 { break 'case174; }
 let v1455 = eo__24eo_5ftypeof(s, v1453)?;
 let v1456 = eo__24eo_5ftypeof(s, v1450)?;
 let v1457 = eo__24eo_5ftypeof_5ftuple(s, v1455, v1456)?;
-return Ok(v1457);
+return Ok(Some(v1457));
 }
+Ok(None)
+}
+fn case_175_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case175: {
 let v1458 = s.unapply(a0)?;
 let Some((f, a)) = v1458 else { break 'case175; }
@@ -74245,8 +78754,11 @@ let v1462 = fields;
 let v1463 = eo__24eo_5ftypeof(s, v1462[0])?;
 let v1464 = eo__24eo_5ftypeof(s, v1460)?;
 let v1465 = eo__24eo_5ftypeof_5ftuple_2eselect(s, v1463, v1462[0], v1464)?;
-return Ok(v1465);
+return Ok(Some(v1465));
 }
+Ok(None)
+}
+fn case_176_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case176: {
 let v1466 = s.unapply(a0)?;
 let Some((f, a)) = v1466 else { break 'case176; }
@@ -74266,8 +78778,11 @@ let v1474 = eo__24eo_5ftypeof(s, v1473[0])?;
 let v1475 = eo__24eo_5ftypeof(s, v1471)?;
 let v1476 = eo__24eo_5ftypeof(s, v1468)?;
 let v1477 = eo__24eo_5ftypeof_5ftuple_2eupdate(s, v1474, v1473[0], v1475, v1476)?;
-return Ok(v1477);
+return Ok(Some(v1477));
 }
+Ok(None)
+}
+fn case_177_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case177: {
 let v1478 = s.unapply(a0)?;
 let Some((f, a)) = v1478 else { break 'case177; }
@@ -74278,8 +78793,11 @@ let v1481 = s.construct(Constructor::eo_Set, &[])?;
 if v1479 != v1481 { break 'case177; }
 let v1482 = eo__24eo_5ftypeof(s, v1480)?;
 let v1483 = eo__24eo_5ftypeof_5fSeq(s, v1482)?;
-return Ok(v1483);
+return Ok(Some(v1483));
 }
+Ok(None)
+}
+fn case_178_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case178: {
 let v1484 = s.destruct(Constructor::eo_set_2eempty, a0)?;
 let Some(fields) = v1484 else { break 'case178; }
@@ -74287,8 +78805,11 @@ let Some(fields) = v1484 else { break 'case178; }
 let v1485 = fields;
 let v1486 = eo__24eo_5ftypeof(s, v1485[0])?;
 let v1487 = eo__24eo_5ftypeof_5fset_2eempty(s, v1486, v1485[0])?;
-return Ok(v1487);
+return Ok(Some(v1487));
 }
+Ok(None)
+}
+fn case_179_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case179: {
 let v1488 = s.unapply(a0)?;
 let Some((f, a)) = v1488 else { break 'case179; }
@@ -74299,8 +78820,11 @@ let v1491 = s.construct(Constructor::eo_set_2esingleton, &[])?;
 if v1489 != v1491 { break 'case179; }
 let v1492 = eo__24eo_5ftypeof(s, v1490)?;
 let v1493 = eo__24eo_5ftypeof_5fset_2esingleton(s, v1492)?;
-return Ok(v1493);
+return Ok(Some(v1493));
 }
+Ok(None)
+}
+fn case_180_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case180: {
 let v1494 = s.unapply(a0)?;
 let Some((f, a)) = v1494 else { break 'case180; }
@@ -74317,8 +78841,11 @@ if v1498 != v1500 { break 'case180; }
 let v1501 = eo__24eo_5ftypeof(s, v1499)?;
 let v1502 = eo__24eo_5ftypeof(s, v1496)?;
 let v1503 = eo__24eo_5ftypeof_5fset_2eunion(s, v1501, v1502)?;
-return Ok(v1503);
+return Ok(Some(v1503));
 }
+Ok(None)
+}
+fn case_181_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case181: {
 let v1504 = s.unapply(a0)?;
 let Some((f, a)) = v1504 else { break 'case181; }
@@ -74335,8 +78862,11 @@ if v1508 != v1510 { break 'case181; }
 let v1511 = eo__24eo_5ftypeof(s, v1509)?;
 let v1512 = eo__24eo_5ftypeof(s, v1506)?;
 let v1513 = eo__24eo_5ftypeof_5fset_2eunion(s, v1511, v1512)?;
-return Ok(v1513);
+return Ok(Some(v1513));
 }
+Ok(None)
+}
+fn case_182_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case182: {
 let v1514 = s.unapply(a0)?;
 let Some((f, a)) = v1514 else { break 'case182; }
@@ -74353,8 +78883,11 @@ if v1518 != v1520 { break 'case182; }
 let v1521 = eo__24eo_5ftypeof(s, v1519)?;
 let v1522 = eo__24eo_5ftypeof(s, v1516)?;
 let v1523 = eo__24eo_5ftypeof_5fset_2eunion(s, v1521, v1522)?;
-return Ok(v1523);
+return Ok(Some(v1523));
 }
+Ok(None)
+}
+fn case_183_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case183: {
 let v1524 = s.unapply(a0)?;
 let Some((f, a)) = v1524 else { break 'case183; }
@@ -74371,8 +78904,11 @@ if v1528 != v1530 { break 'case183; }
 let v1531 = eo__24eo_5ftypeof(s, v1529)?;
 let v1532 = eo__24eo_5ftypeof(s, v1526)?;
 let v1533 = eo__24eo_5ftypeof_5fset_2emember(s, v1531, v1532)?;
-return Ok(v1533);
+return Ok(Some(v1533));
 }
+Ok(None)
+}
+fn case_184_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case184: {
 let v1534 = s.unapply(a0)?;
 let Some((f, a)) = v1534 else { break 'case184; }
@@ -74389,8 +78925,11 @@ if v1538 != v1540 { break 'case184; }
 let v1541 = eo__24eo_5ftypeof(s, v1539)?;
 let v1542 = eo__24eo_5ftypeof(s, v1536)?;
 let v1543 = eo__24eo_5ftypeof_5fset_2esubset(s, v1541, v1542)?;
-return Ok(v1543);
+return Ok(Some(v1543));
 }
+Ok(None)
+}
+fn case_185_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case185: {
 let v1544 = s.unapply(a0)?;
 let Some((f, a)) = v1544 else { break 'case185; }
@@ -74401,8 +78940,11 @@ let v1547 = s.construct(Constructor::eo_set_2echoose, &[])?;
 if v1545 != v1547 { break 'case185; }
 let v1548 = eo__24eo_5ftypeof(s, v1546)?;
 let v1549 = eo__24eo_5ftypeof_5fset_2echoose(s, v1548)?;
-return Ok(v1549);
+return Ok(Some(v1549));
 }
+Ok(None)
+}
+fn case_186_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case186: {
 let v1550 = s.unapply(a0)?;
 let Some((f, a)) = v1550 else { break 'case186; }
@@ -74413,8 +78955,11 @@ let v1553 = s.construct(Constructor::eo_set_2eis_5fempty, &[])?;
 if v1551 != v1553 { break 'case186; }
 let v1554 = eo__24eo_5ftypeof(s, v1552)?;
 let v1555 = eo__24eo_5ftypeof_5fset_2eis_5fempty(s, v1554)?;
-return Ok(v1555);
+return Ok(Some(v1555));
 }
+Ok(None)
+}
+fn case_187_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case187: {
 let v1556 = s.unapply(a0)?;
 let Some((f, a)) = v1556 else { break 'case187; }
@@ -74425,8 +78970,11 @@ let v1559 = s.construct(Constructor::eo_set_2eis_5fsingleton, &[])?;
 if v1557 != v1559 { break 'case187; }
 let v1560 = eo__24eo_5ftypeof(s, v1558)?;
 let v1561 = eo__24eo_5ftypeof_5fset_2eis_5fempty(s, v1560)?;
-return Ok(v1561);
+return Ok(Some(v1561));
 }
+Ok(None)
+}
+fn case_188_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case188: {
 let v1562 = s.unapply(a0)?;
 let Some((f, a)) = v1562 else { break 'case188; }
@@ -74443,8 +78991,11 @@ if v1566 != v1568 { break 'case188; }
 let v1569 = eo__24eo_5ftypeof(s, v1567)?;
 let v1570 = eo__24eo_5ftypeof(s, v1564)?;
 let v1571 = eo__24eo_5ftypeof_5fset_2einsert(s, v1569, v1570)?;
-return Ok(v1571);
+return Ok(Some(v1571));
 }
+Ok(None)
+}
+fn case_189_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case189: {
 let v1572 = s.unapply(a0)?;
 let Some((f, a)) = v1572 else { break 'case189; }
@@ -74461,8 +79012,11 @@ if v1576 != v1578 { break 'case189; }
 let v1579 = eo__24eo_5ftypeof(s, v1577)?;
 let v1580 = eo__24eo_5ftypeof(s, v1574)?;
 let v1581 = eo__24eo_5ftypeof_5f_40sets_5fdeq_5fdiff(s, v1579, v1580)?;
-return Ok(v1581);
+return Ok(Some(v1581));
 }
+Ok(None)
+}
+fn case_190_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case190: {
 let v1582 = s.unapply(a0)?;
 let Some((f, a)) = v1582 else { break 'case190; }
@@ -74479,8 +79033,11 @@ if v1586 != v1588 { break 'case190; }
 let v1589 = eo__24eo_5ftypeof(s, v1587)?;
 let v1590 = eo__24eo_5ftypeof(s, v1584)?;
 let v1591 = eo__24eo_5ftypeof_5f_2f(s, v1589, v1590)?;
-return Ok(v1591);
+return Ok(Some(v1591));
 }
+Ok(None)
+}
+fn case_191_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case191: {
 let v1592 = s.unapply(a0)?;
 let Some((f, a)) = v1592 else { break 'case191; }
@@ -74497,8 +79054,11 @@ if v1596 != v1598 { break 'case191; }
 let v1599 = eo__24eo_5ftypeof(s, v1597)?;
 let v1600 = eo__24eo_5ftypeof(s, v1594)?;
 let v1601 = eo__24eo_5ftypeof_5f_2f(s, v1599, v1600)?;
-return Ok(v1601);
+return Ok(Some(v1601));
 }
+Ok(None)
+}
+fn case_192_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case192: {
 let v1602 = s.unapply(a0)?;
 let Some((f, a)) = v1602 else { break 'case192; }
@@ -74509,14 +79069,20 @@ let v1605 = s.construct(Constructor::eo__40div_5fby_5fzero, &[])?;
 if v1603 != v1605 { break 'case192; }
 let v1606 = eo__24eo_5ftypeof(s, v1604)?;
 let v1607 = eo__24eo_5ftypeof_5f_40div_5fby_5fzero(s, v1606)?;
-return Ok(v1607);
+return Ok(Some(v1607));
 }
+Ok(None)
+}
+fn case_193_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case193: {
 let v1608 = s.construct(Constructor::eo__40_40Monomial, &[])?;
 if a0 != v1608 { break 'case193; }
 let v1609 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v1609);
+return Ok(Some(v1609));
 }
+Ok(None)
+}
+fn case_194_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case194: {
 let v1610 = s.unapply(a0)?;
 let Some((f, a)) = v1610 else { break 'case194; }
@@ -74533,20 +79099,29 @@ if v1614 != v1616 { break 'case194; }
 let v1617 = eo__24eo_5ftypeof(s, v1615)?;
 let v1618 = eo__24eo_5ftypeof(s, v1612)?;
 let v1619 = eo__24eo_5ftypeof_5f_40_40mon(s, v1617, v1618)?;
-return Ok(v1619);
+return Ok(Some(v1619));
 }
+Ok(None)
+}
+fn case_195_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case195: {
 let v1620 = s.construct(Constructor::eo__40_40Polynomial, &[])?;
 if a0 != v1620 { break 'case195; }
 let v1621 = s.construct(Constructor::eo__24emb_5fType, &[])?;
-return Ok(v1621);
+return Ok(Some(v1621));
 }
+Ok(None)
+}
+fn case_196_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case196: {
 let v1622 = s.construct(Constructor::eo__40_40poly_2ezero, &[])?;
 if a0 != v1622 { break 'case196; }
 let v1623 = s.construct(Constructor::eo__40_40Polynomial, &[])?;
-return Ok(v1623);
+return Ok(Some(v1623));
 }
+Ok(None)
+}
+fn case_197_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case197: {
 let v1624 = s.unapply(a0)?;
 let Some((f, a)) = v1624 else { break 'case197; }
@@ -74563,8 +79138,11 @@ if v1628 != v1630 { break 'case197; }
 let v1631 = eo__24eo_5ftypeof(s, v1629)?;
 let v1632 = eo__24eo_5ftypeof(s, v1626)?;
 let v1633 = eo__24eo_5ftypeof_5f_40_40poly(s, v1631, v1632)?;
-return Ok(v1633);
+return Ok(Some(v1633));
 }
+Ok(None)
+}
+fn case_198_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case198: {
 let v1634 = s.unapply(a0)?;
 let Some((f, a)) = v1634 else { break 'case198; }
@@ -74581,8 +79159,11 @@ if v1638 != v1640 { break 'case198; }
 let v1641 = eo__24eo_5ftypeof(s, v1639)?;
 let v1642 = eo__24eo_5ftypeof(s, v1636)?;
 let v1643 = eo__24eo_5ftypeof_5fforall(s, v1641, v1642)?;
-return Ok(v1643);
+return Ok(Some(v1643));
 }
+Ok(None)
+}
+fn case_199_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case199: {
 let v1644 = s.unapply(a0)?;
 let Some((f, a)) = v1644 else { break 'case199; }
@@ -74599,8 +79180,11 @@ if v1648 != v1650 { break 'case199; }
 let v1651 = eo__24eo_5ftypeof(s, v1649)?;
 let v1652 = eo__24eo_5ftypeof(s, v1646)?;
 let v1653 = eo__24eo_5ftypeof_5fforall(s, v1651, v1652)?;
-return Ok(v1653);
+return Ok(Some(v1653));
 }
+Ok(None)
+}
+fn case_200_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case200: {
 let v1654 = s.destruct(Constructor::eo__40quantifiers_5fskolemize, a0)?;
 let Some(fields) = v1654 else { break 'case200; }
@@ -74609,8 +79193,11 @@ let v1655 = fields;
 let v1656 = eo__24eo_5ftypeof(s, v1655[0])?;
 let v1657 = eo__24eo_5ftypeof(s, v1655[1])?;
 let v1658 = eo__24eo_5ftypeof_5f_40quantifiers_5fskolemize(s, v1656, v1655[0], v1657, v1655[1])?;
-return Ok(v1658);
+return Ok(Some(v1658));
 }
+Ok(None)
+}
+fn case_201_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case201: {
 let v1659 = s.unapply(a0)?;
 let Some((f, a)) = v1659 else { break 'case201; }
@@ -74624,8 +79211,11 @@ let v1663 = fields;
 let v1664 = eo__24eo_5ftypeof(s, v1663[0])?;
 let v1665 = eo__24eo_5ftypeof(s, v1661)?;
 let v1666 = eo__24eo_5ftypeof_5fint_5fto_5fbv(s, v1664, v1663[0], v1665)?;
-return Ok(v1666);
+return Ok(Some(v1666));
 }
+Ok(None)
+}
+fn case_202_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case202: {
 let v1667 = s.unapply(a0)?;
 let Some((f, a)) = v1667 else { break 'case202; }
@@ -74636,8 +79226,11 @@ let v1670 = s.construct(Constructor::eo_ubv_5fto_5fint, &[])?;
 if v1668 != v1670 { break 'case202; }
 let v1671 = eo__24eo_5ftypeof(s, v1669)?;
 let v1672 = eo__24eo_5ftypeof_5f_40bvsize(s, v1671)?;
-return Ok(v1672);
+return Ok(Some(v1672));
 }
+Ok(None)
+}
+fn case_203_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case203: {
 let v1673 = s.unapply(a0)?;
 let Some((f, a)) = v1673 else { break 'case203; }
@@ -74648,8 +79241,11 @@ let v1676 = s.construct(Constructor::eo_sbv_5fto_5fint, &[])?;
 if v1674 != v1676 { break 'case203; }
 let v1677 = eo__24eo_5ftypeof(s, v1675)?;
 let v1678 = eo__24eo_5ftypeof_5f_40bvsize(s, v1677)?;
-return Ok(v1678);
+return Ok(Some(v1678));
 }
+Ok(None)
+}
+fn case_204_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case204: {
 let v1679 = s.unapply(a0)?;
 let Some((f, a)) = v1679 else { break 'case204; }
@@ -74666,8 +79262,11 @@ if v1683 != v1685 { break 'case204; }
 let v1686 = eo__24eo_5ftypeof(s, v1684)?;
 let v1687 = eo__24eo_5ftypeof(s, v1681)?;
 let v1688 = eo__24eo_5ftypeof_5f_40_40aci_5fsorted(s, v1686, v1687)?;
-return Ok(v1688);
+return Ok(Some(v1688));
 }
+Ok(None)
+}
+fn case_205_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case205: {
 let v1689 = s.destruct(Constructor::eo__40const, a0)?;
 let Some(fields) = v1689 else { break 'case205; }
@@ -74676,8 +79275,11 @@ let v1690 = fields;
 let v1691 = eo__24eo_5ftypeof(s, v1690[0])?;
 let v1692 = eo__24eo_5ftypeof(s, v1690[1])?;
 let v1693 = eo__24eo_5ftypeof_5f_40const(s, v1691, v1692, v1690[1])?;
-return Ok(v1693);
+return Ok(Some(v1693));
 }
+Ok(None)
+}
+fn case_206_eo__24eo_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case206: {
 let v1694 = s.unapply(a0)?;
 let Some((f, a)) = v1694 else { break 'case206; }
@@ -74687,13 +79289,9 @@ let v1696 = a;
 let v1697 = eo__24eo_5ftypeof(s, v1695)?;
 let v1698 = eo__24eo_5ftypeof(s, v1696)?;
 let v1699 = eo__24eo_5ftypeof_5fapply(s, v1697, v1698)?;
-return Ok(v1699);
+return Ok(Some(v1699));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_type(TypeCacheKind::Eunoia, cache_args[0], value)?; }
-result
+Ok(None)
 }
 // EO program "$eo_typeof_+"
 pub fn eo__24eo_5ftypeof_5f_2b(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
@@ -77526,6 +82124,31 @@ pub fn eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<T
 s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 11 {
+let matched = match case_index {
+0 => case_0_eo__24get_5faci_5fnormal_5fform(s, a0),
+1 => case_1_eo__24get_5faci_5fnormal_5fform(s, a0),
+2 => case_2_eo__24get_5faci_5fnormal_5fform(s, a0),
+3 => case_3_eo__24get_5faci_5fnormal_5fform(s, a0),
+4 => case_4_eo__24get_5faci_5fnormal_5fform(s, a0),
+5 => case_5_eo__24get_5faci_5fnormal_5fform(s, a0),
+6 => case_6_eo__24get_5faci_5fnormal_5fform(s, a0),
+7 => case_7_eo__24get_5faci_5fnormal_5fform(s, a0),
+8 => case_8_eo__24get_5faci_5fnormal_5fform(s, a0),
+9 => case_9_eo__24get_5faci_5fnormal_5fform(s, a0),
+10 => case_10_eo__24get_5faci_5fnormal_5fform(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -77547,8 +82170,11 @@ let v11 = s.apply(v10, v5)?;
 let v12 = s.apply(v11, v2)?;
 let v13 = eo__24get_5fai_5fnorm(s, v12)?;
 let v14 = s.apply(v9, v13)?;
-return Ok(v14);
+return Ok(Some(v14));
 }
+Ok(None)
+}
+fn case_1_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v15 = s.unapply(a0)?;
 let Some((f, a)) = v15 else { break 'case1; }
@@ -77570,8 +82196,11 @@ let v26 = s.apply(v25, v20)?;
 let v27 = s.apply(v26, v17)?;
 let v28 = eo__24get_5fai_5fnorm(s, v27)?;
 let v29 = s.apply(v24, v28)?;
-return Ok(v29);
+return Ok(Some(v29));
 }
+Ok(None)
+}
+fn case_2_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v30 = s.unapply(a0)?;
 let Some((f, a)) = v30 else { break 'case2; }
@@ -77593,8 +82222,11 @@ let v41 = s.apply(v40, v35)?;
 let v42 = s.apply(v41, v32)?;
 let v43 = eo__24get_5fai_5fnorm(s, v42)?;
 let v44 = s.apply(v39, v43)?;
-return Ok(v44);
+return Ok(Some(v44));
 }
+Ok(None)
+}
+fn case_3_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v45 = s.unapply(a0)?;
 let Some((f, a)) = v45 else { break 'case3; }
@@ -77616,8 +82248,11 @@ let v56 = s.apply(v55, v50)?;
 let v57 = s.apply(v56, v47)?;
 let v58 = eo__24get_5fai_5fnorm(s, v57)?;
 let v59 = s.apply(v54, v58)?;
-return Ok(v59);
+return Ok(Some(v59));
 }
+Ok(None)
+}
+fn case_4_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v60 = s.unapply(a0)?;
 let Some((f, a)) = v60 else { break 'case4; }
@@ -77639,8 +82274,11 @@ let v71 = s.apply(v70, v65)?;
 let v72 = s.apply(v71, v62)?;
 let v73 = eo__24get_5fai_5fnorm(s, v72)?;
 let v74 = s.apply(v69, v73)?;
-return Ok(v74);
+return Ok(Some(v74));
 }
+Ok(None)
+}
+fn case_5_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v75 = s.unapply(a0)?;
 let Some((f, a)) = v75 else { break 'case5; }
@@ -77662,8 +82300,11 @@ let v86 = s.apply(v85, v80)?;
 let v87 = s.apply(v86, v77)?;
 let v88 = eo__24get_5fai_5fnorm(s, v87)?;
 let v89 = s.apply(v84, v88)?;
-return Ok(v89);
+return Ok(Some(v89));
 }
+Ok(None)
+}
+fn case_6_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v90 = s.unapply(a0)?;
 let Some((f, a)) = v90 else { break 'case6; }
@@ -77685,8 +82326,11 @@ let v101 = s.apply(v100, v95)?;
 let v102 = s.apply(v101, v92)?;
 let v103 = eo__24get_5fa_5fnorm(s, v102)?;
 let v104 = s.apply(v99, v103)?;
-return Ok(v104);
+return Ok(Some(v104));
 }
+Ok(None)
+}
+fn case_7_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v105 = s.unapply(a0)?;
 let Some((f, a)) = v105 else { break 'case7; }
@@ -77704,8 +82348,11 @@ let v112 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v113 = s.apply(v112, v110)?;
 let v114 = s.apply(v113, v107)?;
 let v115 = eo__24get_5fa_5fnorm(s, v114)?;
-return Ok(v115);
+return Ok(Some(v115));
 }
+Ok(None)
+}
+fn case_8_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v116 = s.unapply(a0)?;
 let Some((f, a)) = v116 else { break 'case8; }
@@ -77723,8 +82370,11 @@ let v123 = s.construct(Constructor::eo_re_2e_2b_2b, &[])?;
 let v124 = s.apply(v123, v121)?;
 let v125 = s.apply(v124, v118)?;
 let v126 = eo__24get_5fa_5fnorm(s, v125)?;
-return Ok(v126);
+return Ok(Some(v126));
 }
+Ok(None)
+}
+fn case_9_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v127 = s.unapply(a0)?;
 let Some((f, a)) = v127 else { break 'case9; }
@@ -77742,15 +82392,15 @@ let v134 = s.construct(Constructor::eo_concat, &[])?;
 let v135 = s.apply(v134, v132)?;
 let v136 = s.apply(v135, v129)?;
 let v137 = eo__24get_5fa_5fnorm(s, v136)?;
-return Ok(v137);
+return Ok(Some(v137));
 }
+Ok(None)
+}
+fn case_10_eo__24get_5faci_5fnormal_5fform(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
-return Ok(a0);
+return Ok(Some(a0));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$get_ai_norm"
 pub fn eo__24get_5fai_5fnorm(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -77878,6 +82528,39 @@ let result = (|| {
 'recur: loop {
 s.tick()?;
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 8 {
+let matched = match case_index {
+0 => case_0_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+1 => case_1_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+2 => case_2_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+3 => case_3_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+4 => case_4_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+5 => case_5_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+6 => case_6_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+7 => case_7_eo__24get_5farith_5fpoly_5fnorm(s, a0),
+_ => Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch),
+}?;
+match matched {
+case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch => {},
+case_result_eo__24get_5farith_5fpoly_5fnorm::Value(value) => return Ok(value),
+case_result_eo__24get_5farith_5fpoly_5fnorm::Tail(next) => {
+a0 = next[0];
+continue 'recur;
+}
+}
+case_index += 1;
+}
+return Ok(s.stuck());
+}
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(880), &cache_args, value)?; }
+result
+}
+#[allow(dead_code)]
+enum case_result_eo__24get_5farith_5fpoly_5fnorm { NoMatch, Value(Term), Tail([Term; 1]) }
+fn case_0_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -77888,8 +82571,11 @@ let v3 = s.construct(Constructor::eo__24eoo_5f_2d_2e2, &[])?;
 if v1 != v3 { break 'case0; }
 let v4 = eo__24get_5farith_5fpoly_5fnorm(s, v2)?;
 let v5 = eo__24poly_5fneg(s, v4)?;
-return Ok(v5);
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Value(v5));
 }
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
+}
+fn case_1_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case1: {
 let v6 = s.unapply(a0)?;
 let Some((f, a)) = v6 else { break 'case1; }
@@ -77906,8 +82592,11 @@ if v10 != v12 { break 'case1; }
 let v13 = eo__24get_5farith_5fpoly_5fnorm(s, v11)?;
 let v14 = eo__24get_5farith_5fpoly_5fnorm(s, v8)?;
 let v15 = eo__24poly_5fadd(s, v13, v14)?;
-return Ok(v15);
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Value(v15));
 }
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
+}
+fn case_2_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case2: {
 let v16 = s.unapply(a0)?;
 let Some((f, a)) = v16 else { break 'case2; }
@@ -77925,8 +82614,11 @@ let v23 = eo__24get_5farith_5fpoly_5fnorm(s, v21)?;
 let v24 = eo__24get_5farith_5fpoly_5fnorm(s, v18)?;
 let v25 = eo__24poly_5fneg(s, v24)?;
 let v26 = eo__24poly_5fadd(s, v23, v25)?;
-return Ok(v26);
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Value(v26));
 }
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
+}
+fn case_3_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case3: {
 let v27 = s.unapply(a0)?;
 let Some((f, a)) = v27 else { break 'case3; }
@@ -77943,8 +82635,11 @@ if v31 != v33 { break 'case3; }
 let v34 = eo__24get_5farith_5fpoly_5fnorm(s, v32)?;
 let v35 = eo__24get_5farith_5fpoly_5fnorm(s, v29)?;
 let v36 = eo__24poly_5fmul(s, v34, v35)?;
-return Ok(v36);
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Value(v36));
 }
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
+}
+fn case_4_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case4: {
 let v37 = s.unapply(a0)?;
 let Some((f, a)) = v37 else { break 'case4; }
@@ -78003,8 +82698,11 @@ let v76 = s.apply(v74, v75)?;
 v76
 }, None => s.stuck(),
 };
-return Ok(v52);
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Value(v52));
 }
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
+}
+fn case_5_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case5: {
 let v77 = s.unapply(a0)?;
 let Some((f, a)) = v77 else { break 'case5; }
@@ -78063,8 +82761,11 @@ let v116 = s.apply(v114, v115)?;
 v116
 }, None => s.stuck(),
 };
-return Ok(v92);
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Value(v92));
 }
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
+}
+fn case_6_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case6: {
 let v117 = s.unapply(a0)?;
 let Some((f, a)) = v117 else { break 'case6; }
@@ -78074,9 +82775,11 @@ let v119 = a;
 let v120 = s.construct(Constructor::eo_to_5freal, &[])?;
 if v118 != v120 { break 'case6; }
 let v121 = v119;
-a0 = v121;
-continue 'recur;
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Tail([v121]));
 }
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
+}
+fn case_7_eo__24get_5farith_5fpoly_5fnorm(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24get_5farith_5fpoly_5fnorm> {
 'case7: {
 let v122 = s.operator("to_q", &[a0])?;
 let v123 = s.operator("is_q", &[v122])?;
@@ -78119,14 +82822,9 @@ let v150 = s.apply(v148, v149)?;
 v150
 }, None => s.stuck(),
 };
-return Ok(v124);
+return Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::Value(v124));
 }
-return Ok(s.stuck());
-}
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(880), &cache_args, value)?; }
-result
+Ok(case_result_eo__24get_5farith_5fpoly_5fnorm::NoMatch)
 }
 // EO program "$get_bv_poly_norm_rec"
 pub fn eo__24get_5fbv_5fpoly_5fnorm_5frec(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -83786,6 +88484,33 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 if s.is_stuck(a0)? || s.is_stuck(a1)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 12 {
+let matched = match case_index {
+0 => case_0_eo__24re_5fflatten(s, a0, a1),
+1 => case_1_eo__24re_5fflatten(s, a0, a1),
+2 => case_2_eo__24re_5fflatten(s, a0, a1),
+3 => case_3_eo__24re_5fflatten(s, a0, a1),
+4 => case_4_eo__24re_5fflatten(s, a0, a1),
+5 => case_5_eo__24re_5fflatten(s, a0, a1),
+6 => case_6_eo__24re_5fflatten(s, a0, a1),
+7 => case_7_eo__24re_5fflatten(s, a0, a1),
+8 => case_8_eo__24re_5fflatten(s, a0, a1),
+9 => case_9_eo__24re_5fflatten(s, a0, a1),
+10 => case_10_eo__24re_5fflatten(s, a0, a1),
+11 => case_11_eo__24re_5fflatten(s, a0, a1),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(949), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.literal(Lit::Bool(true))?;
 if a0 != v0 { break 'case0; }
@@ -83801,8 +88526,11 @@ if v3 != v5 { break 'case0; }
 let v6 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v7 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v8 = s.apply(v6, v7)?;
-return Ok(v8);
+return Ok(Some(v8));
 }
+Ok(None)
+}
+fn case_1_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v9 = s.literal(Lit::Bool(true))?;
 if a0 != v9 { break 'case1; }
@@ -83831,8 +88559,11 @@ let v23 = eo__24str_5fflatten(s, v22)?;
 let v24 = s.literal(Lit::Bool(true))?;
 let v25 = eo__24re_5fflatten(s, v24, v12)?;
 let v26 = eo__24re_5fsplit_5fstr_5fto_5fre(s, v23, v25)?;
-return Ok(v26);
+return Ok(Some(v26));
 }
+Ok(None)
+}
+fn case_2_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v27 = s.literal(Lit::Bool(true))?;
 if a0 != v27 { break 'case2; }
@@ -83869,8 +88600,11 @@ let v47 = eo__24re_5fflatten(s, v43, v46)?;
 let v48 = s.literal(Lit::Bool(true))?;
 let v49 = eo__24re_5fflatten(s, v48, v30)?;
 let v50 = s.operator("list_concat", &[v42, v47, v49])?;
-return Ok(v50);
+return Ok(Some(v50));
 }
+Ok(None)
+}
+fn case_3_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v51 = s.literal(Lit::Bool(true))?;
 if a0 != v51 { break 'case3; }
@@ -83893,8 +88627,11 @@ let v62 = s.apply(v59, v61)?;
 let v63 = s.literal(Lit::Bool(true))?;
 let v64 = eo__24re_5fflatten(s, v63, v54)?;
 let v65 = s.apply(v62, v64)?;
-return Ok(v65);
+return Ok(Some(v65));
 }
+Ok(None)
+}
+fn case_4_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v66 = s.literal(Lit::Bool(true))?;
 if a0 != v66 { break 'case4; }
@@ -83912,8 +88649,11 @@ let v74 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v75 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v76 = s.apply(v74, v75)?;
 let v77 = eo__24re_5fsplit_5fstr_5fto_5fre(s, v73, v76)?;
-return Ok(v77);
+return Ok(Some(v77));
 }
+Ok(None)
+}
+fn case_5_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v78 = s.literal(Lit::Bool(true))?;
 if a0 != v78 { break 'case5; }
@@ -83925,24 +88665,33 @@ let v83 = s.construct(Constructor::eo_str_2eto_5fre, &[])?;
 let v84 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v85 = s.apply(v83, v84)?;
 let v86 = s.apply(v82, v85)?;
-return Ok(v86);
+return Ok(Some(v86));
 }
+Ok(None)
+}
+fn case_6_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v87 = s.literal(Lit::Bool(false))?;
 if a0 != v87 { break 'case6; }
 let v88 = s.construct(Constructor::eo_re_2eall, &[])?;
 if a1 != v88 { break 'case6; }
 let v89 = s.construct(Constructor::eo_re_2eall, &[])?;
-return Ok(v89);
+return Ok(Some(v89));
 }
+Ok(None)
+}
+fn case_7_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v90 = s.literal(Lit::Bool(false))?;
 if a0 != v90 { break 'case7; }
 let v91 = s.construct(Constructor::eo_re_2enone, &[])?;
 if a1 != v91 { break 'case7; }
 let v92 = s.construct(Constructor::eo_re_2enone, &[])?;
-return Ok(v92);
+return Ok(Some(v92));
 }
+Ok(None)
+}
+fn case_8_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v93 = s.literal(Lit::Bool(false))?;
 if a0 != v93 { break 'case8; }
@@ -83957,8 +88706,11 @@ let v98 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 let v99 = s.literal(Lit::Bool(true))?;
 let v100 = eo__24re_5fflatten(s, v99, v96)?;
 let v101 = s.apply(v98, v100)?;
-return Ok(v101);
+return Ok(Some(v101));
 }
+Ok(None)
+}
+fn case_9_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v102 = s.literal(Lit::Bool(false))?;
 if a0 != v102 { break 'case9; }
@@ -83981,8 +88733,11 @@ let v113 = s.apply(v110, v112)?;
 let v114 = s.literal(Lit::Bool(false))?;
 let v115 = eo__24re_5fflatten(s, v114, v105)?;
 let v116 = s.apply(v113, v115)?;
-return Ok(v116);
+return Ok(Some(v116));
 }
+Ok(None)
+}
+fn case_10_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v117 = s.literal(Lit::Bool(false))?;
 if a0 != v117 { break 'case10; }
@@ -84005,18 +88760,17 @@ let v128 = s.apply(v125, v127)?;
 let v129 = s.literal(Lit::Bool(false))?;
 let v130 = eo__24re_5fflatten(s, v129, v120)?;
 let v131 = s.apply(v128, v130)?;
-return Ok(v131);
+return Ok(Some(v131));
 }
+Ok(None)
+}
+fn case_11_eo__24re_5fflatten(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v132 = s.literal(Lit::Bool(false))?;
 if a0 != v132 { break 'case11; }
-return Ok(a1);
+return Ok(Some(a1));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(949), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$re_is_unbound_wildcard"
 pub fn eo__24re_5fis_5funbound_5fwildcard(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
@@ -84118,24 +88872,58 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 10 {
+let matched = match case_index {
+0 => case_0_eo__24re_5fnullable(s, a0),
+1 => case_1_eo__24re_5fnullable(s, a0),
+2 => case_2_eo__24re_5fnullable(s, a0),
+3 => case_3_eo__24re_5fnullable(s, a0),
+4 => case_4_eo__24re_5fnullable(s, a0),
+5 => case_5_eo__24re_5fnullable(s, a0),
+6 => case_6_eo__24re_5fnullable(s, a0),
+7 => case_7_eo__24re_5fnullable(s, a0),
+8 => case_8_eo__24re_5fnullable(s, a0),
+9 => case_9_eo__24re_5fnullable(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(951), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo_re_2eall, &[])?;
 if a0 != v0 { break 'case0; }
 let v1 = s.literal(Lit::Bool(true))?;
-return Ok(v1);
+return Ok(Some(v1));
 }
+Ok(None)
+}
+fn case_1_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v2 = s.construct(Constructor::eo_re_2enone, &[])?;
 if a0 != v2 { break 'case1; }
 let v3 = s.literal(Lit::Bool(false))?;
-return Ok(v3);
+return Ok(Some(v3));
 }
+Ok(None)
+}
+fn case_2_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v4 = s.construct(Constructor::eo_re_2eallchar, &[])?;
 if a0 != v4 { break 'case2; }
 let v5 = s.literal(Lit::Bool(false))?;
-return Ok(v5);
+return Ok(Some(v5));
 }
+Ok(None)
+}
+fn case_3_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v6 = s.unapply(a0)?;
 let Some((f, a)) = v6 else { break 'case3; }
@@ -84151,8 +88939,11 @@ let v13 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v14 = s.operator("eq", &[v8, v13])?;
 v14
 } else { s.stuck() };
-return Ok(v12);
+return Ok(Some(v12));
 }
+Ok(None)
+}
+fn case_4_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v15 = s.unapply(a0)?;
 let Some((f, a)) = v15 else { break 'case4; }
@@ -84162,8 +88953,11 @@ let v17 = a;
 let v18 = s.construct(Constructor::eo_re_2e_2a, &[])?;
 if v16 != v18 { break 'case4; }
 let v19 = s.literal(Lit::Bool(true))?;
-return Ok(v19);
+return Ok(Some(v19));
 }
+Ok(None)
+}
+fn case_5_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v20 = s.unapply(a0)?;
 let Some((f, a)) = v20 else { break 'case5; }
@@ -84178,8 +88972,11 @@ let v25 = a;
 let v26 = s.construct(Constructor::eo_re_2erange, &[])?;
 if v24 != v26 { break 'case5; }
 let v27 = s.literal(Lit::Bool(false))?;
-return Ok(v27);
+return Ok(Some(v27));
 }
+Ok(None)
+}
+fn case_6_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v28 = s.unapply(a0)?;
 let Some((f, a)) = v28 else { break 'case6; }
@@ -84196,8 +88993,11 @@ if v32 != v34 { break 'case6; }
 let v35 = eo__24re_5fnullable(s, v33)?;
 let v36 = eo__24re_5fnullable(s, v30)?;
 let v37 = s.operator("or", &[v35, v36])?;
-return Ok(v37);
+return Ok(Some(v37));
 }
+Ok(None)
+}
+fn case_7_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v38 = s.unapply(a0)?;
 let Some((f, a)) = v38 else { break 'case7; }
@@ -84214,8 +89014,11 @@ if v42 != v44 { break 'case7; }
 let v45 = eo__24re_5fnullable(s, v43)?;
 let v46 = eo__24re_5fnullable(s, v40)?;
 let v47 = s.operator("and", &[v45, v46])?;
-return Ok(v47);
+return Ok(Some(v47));
 }
+Ok(None)
+}
+fn case_8_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v48 = s.unapply(a0)?;
 let Some((f, a)) = v48 else { break 'case8; }
@@ -84232,8 +89035,11 @@ if v52 != v54 { break 'case8; }
 let v55 = eo__24re_5fnullable(s, v53)?;
 let v56 = eo__24re_5fnullable(s, v50)?;
 let v57 = s.operator("and", &[v55, v56])?;
-return Ok(v57);
+return Ok(Some(v57));
 }
+Ok(None)
+}
+fn case_9_eo__24re_5fnullable(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v58 = s.unapply(a0)?;
 let Some((f, a)) = v58 else { break 'case9; }
@@ -84244,13 +89050,9 @@ let v61 = s.construct(Constructor::eo_re_2ecomp, &[])?;
 if v59 != v61 { break 'case9; }
 let v62 = eo__24re_5fnullable(s, v60)?;
 let v63 = s.operator("not", &[v62])?;
-return Ok(v63);
+return Ok(Some(v63));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(951), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$re_rev_comp"
 pub fn eo__24re_5frev_5fcomp(s: &mut Store, a0: Term) -> CheckResult<Term> {
@@ -84771,6 +89573,99 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 78 {
+let matched = match case_index {
+0 => case_0_eo__24run_5fevaluate(s, a0),
+1 => case_1_eo__24run_5fevaluate(s, a0),
+2 => case_2_eo__24run_5fevaluate(s, a0),
+3 => case_3_eo__24run_5fevaluate(s, a0),
+4 => case_4_eo__24run_5fevaluate(s, a0),
+5 => case_5_eo__24run_5fevaluate(s, a0),
+6 => case_6_eo__24run_5fevaluate(s, a0),
+7 => case_7_eo__24run_5fevaluate(s, a0),
+8 => case_8_eo__24run_5fevaluate(s, a0),
+9 => case_9_eo__24run_5fevaluate(s, a0),
+10 => case_10_eo__24run_5fevaluate(s, a0),
+11 => case_11_eo__24run_5fevaluate(s, a0),
+12 => case_12_eo__24run_5fevaluate(s, a0),
+13 => case_13_eo__24run_5fevaluate(s, a0),
+14 => case_14_eo__24run_5fevaluate(s, a0),
+15 => case_15_eo__24run_5fevaluate(s, a0),
+16 => case_16_eo__24run_5fevaluate(s, a0),
+17 => case_17_eo__24run_5fevaluate(s, a0),
+18 => case_18_eo__24run_5fevaluate(s, a0),
+19 => case_19_eo__24run_5fevaluate(s, a0),
+20 => case_20_eo__24run_5fevaluate(s, a0),
+21 => case_21_eo__24run_5fevaluate(s, a0),
+22 => case_22_eo__24run_5fevaluate(s, a0),
+23 => case_23_eo__24run_5fevaluate(s, a0),
+24 => case_24_eo__24run_5fevaluate(s, a0),
+25 => case_25_eo__24run_5fevaluate(s, a0),
+26 => case_26_eo__24run_5fevaluate(s, a0),
+27 => case_27_eo__24run_5fevaluate(s, a0),
+28 => case_28_eo__24run_5fevaluate(s, a0),
+29 => case_29_eo__24run_5fevaluate(s, a0),
+30 => case_30_eo__24run_5fevaluate(s, a0),
+31 => case_31_eo__24run_5fevaluate(s, a0),
+32 => case_32_eo__24run_5fevaluate(s, a0),
+33 => case_33_eo__24run_5fevaluate(s, a0),
+34 => case_34_eo__24run_5fevaluate(s, a0),
+35 => case_35_eo__24run_5fevaluate(s, a0),
+36 => case_36_eo__24run_5fevaluate(s, a0),
+37 => case_37_eo__24run_5fevaluate(s, a0),
+38 => case_38_eo__24run_5fevaluate(s, a0),
+39 => case_39_eo__24run_5fevaluate(s, a0),
+40 => case_40_eo__24run_5fevaluate(s, a0),
+41 => case_41_eo__24run_5fevaluate(s, a0),
+42 => case_42_eo__24run_5fevaluate(s, a0),
+43 => case_43_eo__24run_5fevaluate(s, a0),
+44 => case_44_eo__24run_5fevaluate(s, a0),
+45 => case_45_eo__24run_5fevaluate(s, a0),
+46 => case_46_eo__24run_5fevaluate(s, a0),
+47 => case_47_eo__24run_5fevaluate(s, a0),
+48 => case_48_eo__24run_5fevaluate(s, a0),
+49 => case_49_eo__24run_5fevaluate(s, a0),
+50 => case_50_eo__24run_5fevaluate(s, a0),
+51 => case_51_eo__24run_5fevaluate(s, a0),
+52 => case_52_eo__24run_5fevaluate(s, a0),
+53 => case_53_eo__24run_5fevaluate(s, a0),
+54 => case_54_eo__24run_5fevaluate(s, a0),
+55 => case_55_eo__24run_5fevaluate(s, a0),
+56 => case_56_eo__24run_5fevaluate(s, a0),
+57 => case_57_eo__24run_5fevaluate(s, a0),
+58 => case_58_eo__24run_5fevaluate(s, a0),
+59 => case_59_eo__24run_5fevaluate(s, a0),
+60 => case_60_eo__24run_5fevaluate(s, a0),
+61 => case_61_eo__24run_5fevaluate(s, a0),
+62 => case_62_eo__24run_5fevaluate(s, a0),
+63 => case_63_eo__24run_5fevaluate(s, a0),
+64 => case_64_eo__24run_5fevaluate(s, a0),
+65 => case_65_eo__24run_5fevaluate(s, a0),
+66 => case_66_eo__24run_5fevaluate(s, a0),
+67 => case_67_eo__24run_5fevaluate(s, a0),
+68 => case_68_eo__24run_5fevaluate(s, a0),
+69 => case_69_eo__24run_5fevaluate(s, a0),
+70 => case_70_eo__24run_5fevaluate(s, a0),
+71 => case_71_eo__24run_5fevaluate(s, a0),
+72 => case_72_eo__24run_5fevaluate(s, a0),
+73 => case_73_eo__24run_5fevaluate(s, a0),
+74 => case_74_eo__24run_5fevaluate(s, a0),
+75 => case_75_eo__24run_5fevaluate(s, a0),
+76 => case_76_eo__24run_5fevaluate(s, a0),
+77 => case_77_eo__24run_5fevaluate(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(958), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -84864,8 +89759,11 @@ v30
 v21
 }, None => s.stuck(),
 };
-return Ok(v12);
+return Ok(Some(v12));
 }
+Ok(None)
+}
+fn case_1_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v57 = s.unapply(a0)?;
 let Some((f, a)) = v57 else { break 'case1; }
@@ -84876,8 +89774,11 @@ let v60 = s.construct(Constructor::eo_not, &[])?;
 if v58 != v60 { break 'case1; }
 let v61 = eo__24run_5fevaluate(s, v59)?;
 let v62 = s.operator("not", &[v61])?;
-return Ok(v62);
+return Ok(Some(v62));
 }
+Ok(None)
+}
+fn case_2_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v63 = s.unapply(a0)?;
 let Some((f, a)) = v63 else { break 'case2; }
@@ -84906,8 +89807,11 @@ let v76 = eo__24run_5fevaluate(s, v65)?;
 v76
 }, None => s.stuck(),
 };
-return Ok(v74);
+return Ok(Some(v74));
 }
+Ok(None)
+}
+fn case_3_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v77 = s.unapply(a0)?;
 let Some((f, a)) = v77 else { break 'case3; }
@@ -84924,8 +89828,11 @@ if v81 != v83 { break 'case3; }
 let v84 = eo__24run_5fevaluate(s, v82)?;
 let v85 = eo__24run_5fevaluate(s, v79)?;
 let v86 = s.operator("or", &[v84, v85])?;
-return Ok(v86);
+return Ok(Some(v86));
 }
+Ok(None)
+}
+fn case_4_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v87 = s.unapply(a0)?;
 let Some((f, a)) = v87 else { break 'case4; }
@@ -84943,8 +89850,11 @@ let v94 = eo__24run_5fevaluate(s, v92)?;
 let v95 = s.operator("not", &[v94])?;
 let v96 = eo__24run_5fevaluate(s, v89)?;
 let v97 = s.operator("or", &[v95, v96])?;
-return Ok(v97);
+return Ok(Some(v97));
 }
+Ok(None)
+}
+fn case_5_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v98 = s.unapply(a0)?;
 let Some((f, a)) = v98 else { break 'case5; }
@@ -84961,8 +89871,11 @@ if v102 != v104 { break 'case5; }
 let v105 = eo__24run_5fevaluate(s, v103)?;
 let v106 = eo__24run_5fevaluate(s, v100)?;
 let v107 = s.operator("and", &[v105, v106])?;
-return Ok(v107);
+return Ok(Some(v107));
 }
+Ok(None)
+}
+fn case_6_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v108 = s.unapply(a0)?;
 let Some((f, a)) = v108 else { break 'case6; }
@@ -84979,8 +89892,11 @@ if v112 != v114 { break 'case6; }
 let v115 = eo__24run_5fevaluate(s, v113)?;
 let v116 = eo__24run_5fevaluate(s, v110)?;
 let v117 = s.operator("xor", &[v115, v116])?;
-return Ok(v117);
+return Ok(Some(v117));
 }
+Ok(None)
+}
+fn case_7_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v118 = s.unapply(a0)?;
 let Some((f, a)) = v118 else { break 'case7; }
@@ -84999,8 +89915,11 @@ let v126 = eo__24run_5fevaluate(s, v120)?;
 let v127 = s.operator("neg", &[v126])?;
 let v128 = s.operator("add", &[v125, v127])?;
 let v129 = s.operator("is_neg", &[v128])?;
-return Ok(v129);
+return Ok(Some(v129));
 }
+Ok(None)
+}
+fn case_8_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v130 = s.unapply(a0)?;
 let Some((f, a)) = v130 else { break 'case8; }
@@ -85027,8 +89946,11 @@ let v146 = s.operator("to_q", &[v145])?;
 let v147 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
 let v148 = s.operator("eq", &[v146, v147])?;
 let v149 = s.operator("or", &[v141, v148])?;
-return Ok(v149);
+return Ok(Some(v149));
 }
+Ok(None)
+}
+fn case_9_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v150 = s.unapply(a0)?;
 let Some((f, a)) = v150 else { break 'case9; }
@@ -85047,8 +89969,11 @@ let v158 = eo__24run_5fevaluate(s, v155)?;
 let v159 = s.operator("neg", &[v158])?;
 let v160 = s.operator("add", &[v157, v159])?;
 let v161 = s.operator("is_neg", &[v160])?;
-return Ok(v161);
+return Ok(Some(v161));
 }
+Ok(None)
+}
+fn case_10_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v162 = s.unapply(a0)?;
 let Some((f, a)) = v162 else { break 'case10; }
@@ -85075,8 +90000,11 @@ let v178 = s.operator("to_q", &[v177])?;
 let v179 = s.literal(Lit::Rational(parse_rat("0/1")?))?;
 let v180 = s.operator("eq", &[v178, v179])?;
 let v181 = s.operator("or", &[v173, v180])?;
-return Ok(v181);
+return Ok(Some(v181));
 }
+Ok(None)
+}
+fn case_11_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v182 = s.unapply(a0)?;
 let Some((f, a)) = v182 else { break 'case11; }
@@ -85093,8 +90021,11 @@ if v186 != v188 { break 'case11; }
 let v189 = eo__24run_5fevaluate(s, v187)?;
 let v190 = eo__24run_5fevaluate(s, v184)?;
 let v191 = s.operator("add", &[v189, v190])?;
-return Ok(v191);
+return Ok(Some(v191));
 }
+Ok(None)
+}
+fn case_12_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v192 = s.unapply(a0)?;
 let Some((f, a)) = v192 else { break 'case12; }
@@ -85112,8 +90043,11 @@ let v199 = eo__24run_5fevaluate(s, v197)?;
 let v200 = eo__24run_5fevaluate(s, v194)?;
 let v201 = s.operator("neg", &[v200])?;
 let v202 = s.operator("add", &[v199, v201])?;
-return Ok(v202);
+return Ok(Some(v202));
 }
+Ok(None)
+}
+fn case_13_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v203 = s.unapply(a0)?;
 let Some((f, a)) = v203 else { break 'case13; }
@@ -85130,8 +90064,11 @@ if v207 != v209 { break 'case13; }
 let v210 = eo__24run_5fevaluate(s, v208)?;
 let v211 = eo__24run_5fevaluate(s, v205)?;
 let v212 = s.operator("mul", &[v210, v211])?;
-return Ok(v212);
+return Ok(Some(v212));
 }
+Ok(None)
+}
+fn case_14_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v213 = s.unapply(a0)?;
 let Some((f, a)) = v213 else { break 'case14; }
@@ -85142,8 +90079,11 @@ let v216 = s.construct(Constructor::eo__24eoo_5f_2d_2e2, &[])?;
 if v214 != v216 { break 'case14; }
 let v217 = eo__24run_5fevaluate(s, v215)?;
 let v218 = s.operator("neg", &[v217])?;
-return Ok(v218);
+return Ok(Some(v218));
 }
+Ok(None)
+}
+fn case_15_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v219 = s.unapply(a0)?;
 let Some((f, a)) = v219 else { break 'case15; }
@@ -85162,8 +90102,11 @@ let v227 = s.operator("to_q", &[v226])?;
 let v228 = eo__24run_5fevaluate(s, v221)?;
 let v229 = s.operator("to_q", &[v228])?;
 let v230 = s.operator("qdiv", &[v227, v229])?;
-return Ok(v230);
+return Ok(Some(v230));
 }
+Ok(None)
+}
+fn case_16_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case16: {
 let v231 = s.unapply(a0)?;
 let Some((f, a)) = v231 else { break 'case16; }
@@ -85194,8 +90137,11 @@ let v248 = s.operator("qdiv", &[v245, v247])?;
 v248
 }, None => s.stuck(),
 };
-return Ok(v242);
+return Ok(Some(v242));
 }
+Ok(None)
+}
+fn case_17_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case17: {
 let v249 = s.unapply(a0)?;
 let Some((f, a)) = v249 else { break 'case17; }
@@ -85212,8 +90158,11 @@ if v253 != v255 { break 'case17; }
 let v256 = eo__24run_5fevaluate(s, v254)?;
 let v257 = eo__24run_5fevaluate(s, v251)?;
 let v258 = s.operator("zdiv", &[v256, v257])?;
-return Ok(v258);
+return Ok(Some(v258));
 }
+Ok(None)
+}
+fn case_18_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case18: {
 let v259 = s.unapply(a0)?;
 let Some((f, a)) = v259 else { break 'case18; }
@@ -85241,8 +90190,11 @@ let v273 = s.operator("zdiv", &[v271, v272])?;
 v273
 }, None => s.stuck(),
 };
-return Ok(v269);
+return Ok(Some(v269));
 }
+Ok(None)
+}
+fn case_19_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case19: {
 let v274 = s.unapply(a0)?;
 let Some((f, a)) = v274 else { break 'case19; }
@@ -85259,8 +90211,11 @@ if v278 != v280 { break 'case19; }
 let v281 = eo__24run_5fevaluate(s, v279)?;
 let v282 = eo__24run_5fevaluate(s, v276)?;
 let v283 = s.operator("zmod", &[v281, v282])?;
-return Ok(v283);
+return Ok(Some(v283));
 }
+Ok(None)
+}
+fn case_20_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case20: {
 let v284 = s.unapply(a0)?;
 let Some((f, a)) = v284 else { break 'case20; }
@@ -85288,8 +90243,11 @@ let v298 = s.operator("zmod", &[v296, v297])?;
 v298
 }, None => s.stuck(),
 };
-return Ok(v294);
+return Ok(Some(v294));
 }
+Ok(None)
+}
+fn case_21_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case21: {
 let v299 = s.unapply(a0)?;
 let Some((f, a)) = v299 else { break 'case21; }
@@ -85300,8 +90258,11 @@ let v302 = s.construct(Constructor::eo_to_5freal, &[])?;
 if v300 != v302 { break 'case21; }
 let v303 = eo__24run_5fevaluate(s, v301)?;
 let v304 = s.operator("to_q", &[v303])?;
-return Ok(v304);
+return Ok(Some(v304));
 }
+Ok(None)
+}
+fn case_22_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case22: {
 let v305 = s.unapply(a0)?;
 let Some((f, a)) = v305 else { break 'case22; }
@@ -85312,8 +90273,11 @@ let v308 = s.construct(Constructor::eo_to_5fint, &[])?;
 if v306 != v308 { break 'case22; }
 let v309 = eo__24run_5fevaluate(s, v307)?;
 let v310 = s.operator("to_z", &[v309])?;
-return Ok(v310);
+return Ok(Some(v310));
 }
+Ok(None)
+}
+fn case_23_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case23: {
 let v311 = s.unapply(a0)?;
 let Some((f, a)) = v311 else { break 'case23; }
@@ -85328,8 +90292,11 @@ let v317 = s.operator("to_q", &[v316])?;
 let v318 = eo__24run_5fevaluate(s, v313)?;
 let v319 = s.operator("to_q", &[v318])?;
 let v320 = s.operator("eq", &[v317, v319])?;
-return Ok(v320);
+return Ok(Some(v320));
 }
+Ok(None)
+}
+fn case_24_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case24: {
 let v321 = s.unapply(a0)?;
 let Some((f, a)) = v321 else { break 'case24; }
@@ -85350,8 +90317,11 @@ let v330 = eo__24run_5fevaluate(s, v323)?;
 v330
 }, None => s.stuck(),
 };
-return Ok(v327);
+return Ok(Some(v327));
 }
+Ok(None)
+}
+fn case_25_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case25: {
 let v331 = s.unapply(a0)?;
 let Some((f, a)) = v331 else { break 'case25; }
@@ -85385,8 +90355,11 @@ let v347 = s.apply(v345, v346)?;
 v347
 }, None => s.stuck(),
 };
-return Ok(v337);
+return Ok(Some(v337));
 }
+Ok(None)
+}
+fn case_26_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case26: {
 let v348 = s.unapply(a0)?;
 let Some((f, a)) = v348 else { break 'case26; }
@@ -85420,8 +90393,11 @@ let v364 = s.apply(v362, v363)?;
 v364
 }, None => s.stuck(),
 };
-return Ok(v354);
+return Ok(Some(v354));
 }
+Ok(None)
+}
+fn case_27_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case27: {
 let v365 = s.unapply(a0)?;
 let Some((f, a)) = v365 else { break 'case27; }
@@ -85481,8 +90457,11 @@ let v395 = s.apply(v393, v394)?;
 v395
 }, None => s.stuck(),
 };
-return Ok(v371);
+return Ok(Some(v371));
 }
+Ok(None)
+}
+fn case_28_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case28: {
 let v396 = s.unapply(a0)?;
 let Some((f, a)) = v396 else { break 'case28; }
@@ -85499,8 +90478,11 @@ if v400 != v402 { break 'case28; }
 let v403 = eo__24run_5fevaluate(s, v401)?;
 let v404 = eo__24run_5fevaluate(s, v398)?;
 let v405 = s.operator("concat", &[v403, v404])?;
-return Ok(v405);
+return Ok(Some(v405));
 }
+Ok(None)
+}
+fn case_29_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case29: {
 let v406 = s.unapply(a0)?;
 let Some((f, a)) = v406 else { break 'case29; }
@@ -85511,8 +90493,11 @@ let v409 = s.construct(Constructor::eo_str_2elen, &[])?;
 if v407 != v409 { break 'case29; }
 let v410 = eo__24run_5fevaluate(s, v408)?;
 let v411 = s.operator("len", &[v410])?;
-return Ok(v411);
+return Ok(Some(v411));
 }
+Ok(None)
+}
+fn case_30_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case30: {
 let v412 = s.unapply(a0)?;
 let Some((f, a)) = v412 else { break 'case30; }
@@ -85539,8 +90524,11 @@ let v426 = s.operator("add", &[v424, v425])?;
 let v427 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v428 = s.operator("add", &[v426, v427])?;
 let v429 = s.operator("extract", &[v422, v423, v428])?;
-return Ok(v429);
+return Ok(Some(v429));
 }
+Ok(None)
+}
+fn case_31_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case31: {
 let v430 = s.unapply(a0)?;
 let Some((f, a)) = v430 else { break 'case31; }
@@ -85558,8 +90546,11 @@ let v437 = eo__24run_5fevaluate(s, v435)?;
 let v438 = eo__24run_5fevaluate(s, v432)?;
 let v439 = eo__24run_5fevaluate(s, v432)?;
 let v440 = s.operator("extract", &[v437, v438, v439])?;
-return Ok(v440);
+return Ok(Some(v440));
 }
+Ok(None)
+}
+fn case_32_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case32: {
 let v441 = s.unapply(a0)?;
 let Some((f, a)) = v441 else { break 'case32; }
@@ -85578,8 +90569,11 @@ let v449 = eo__24run_5fevaluate(s, v443)?;
 let v450 = s.operator("find", &[v448, v449])?;
 let v451 = s.operator("is_neg", &[v450])?;
 let v452 = s.operator("not", &[v451])?;
-return Ok(v452);
+return Ok(Some(v452));
 }
+Ok(None)
+}
+fn case_33_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case33: {
 let v453 = s.unapply(a0)?;
 let Some((f, a)) = v453 else { break 'case33; }
@@ -85637,8 +90631,11 @@ let v495 = s.operator("concat", &[v482, v494])?;
 v495
 }, None => s.stuck(),
 };
-return Ok(v469);
+return Ok(Some(v469));
 }
+Ok(None)
+}
+fn case_34_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case34: {
 let v496 = s.unapply(a0)?;
 let Some((f, a)) = v496 else { break 'case34; }
@@ -85691,8 +90688,11 @@ let v527 = s.apply(v526, v498)?;
 v527
 }, None => s.stuck(),
 };
-return Ok(v511);
+return Ok(Some(v511));
 }
+Ok(None)
+}
+fn case_35_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case35: {
 let v528 = s.unapply(a0)?;
 let Some((f, a)) = v528 else { break 'case35; }
@@ -85715,8 +90715,11 @@ let v540 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v541 = s.operator("add", &[v539, v540])?;
 let v542 = s.operator("extract", &[v536, v537, v541])?;
 let v543 = s.operator("eq", &[v535, v542])?;
-return Ok(v543);
+return Ok(Some(v543));
 }
+Ok(None)
+}
+fn case_36_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case36: {
 let v544 = s.unapply(a0)?;
 let Some((f, a)) = v544 else { break 'case36; }
@@ -85744,8 +90747,11 @@ let v561 = s.literal(Lit::Numeral(parse_int("-1")?))?;
 let v562 = s.operator("add", &[v560, v561])?;
 let v563 = s.operator("extract", &[v552, v558, v562])?;
 let v564 = s.operator("eq", &[v551, v563])?;
-return Ok(v564);
+return Ok(Some(v564));
 }
+Ok(None)
+}
+fn case_37_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case37: {
 let v565 = s.unapply(a0)?;
 let Some((f, a)) = v565 else { break 'case37; }
@@ -85819,8 +90825,11 @@ v594
 v583
 }, None => s.stuck(),
 };
-return Ok(v577);
+return Ok(Some(v577));
 }
+Ok(None)
+}
+fn case_38_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case38: {
 let v612 = s.unapply(a0)?;
 let Some((f, a)) = v612 else { break 'case38; }
@@ -85856,8 +90865,11 @@ v630
 v626
 }, None => s.stuck(),
 };
-return Ok(v620);
+return Ok(Some(v620));
 }
+Ok(None)
+}
+fn case_39_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case39: {
 let v631 = s.unapply(a0)?;
 let Some((f, a)) = v631 else { break 'case39; }
@@ -85921,8 +90933,11 @@ let v659 = s.apply(v658, v633)?;
 v659
 }, None => s.stuck(),
 };
-return Ok(v637);
+return Ok(Some(v637));
 }
+Ok(None)
+}
+fn case_40_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case40: {
 let v660 = s.unapply(a0)?;
 let Some((f, a)) = v660 else { break 'case40; }
@@ -85963,8 +90978,11 @@ let v683 = s.apply(v681, v682)?;
 v683
 }, None => s.stuck(),
 };
-return Ok(v666);
+return Ok(Some(v666));
 }
+Ok(None)
+}
+fn case_41_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case41: {
 let v684 = s.unapply(a0)?;
 let Some((f, a)) = v684 else { break 'case41; }
@@ -86018,8 +91036,11 @@ let v718 = s.apply(v716, v717)?;
 v718
 }, None => s.stuck(),
 };
-return Ok(v690);
+return Ok(Some(v690));
 }
+Ok(None)
+}
+fn case_42_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case42: {
 let v719 = s.unapply(a0)?;
 let Some((f, a)) = v719 else { break 'case42; }
@@ -86059,8 +91080,11 @@ let v745 = s.apply(v743, v744)?;
 v745
 }, None => s.stuck(),
 };
-return Ok(v731);
+return Ok(Some(v731));
 }
+Ok(None)
+}
+fn case_43_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case43: {
 let v746 = s.unapply(a0)?;
 let Some((f, a)) = v746 else { break 'case43; }
@@ -86087,8 +91111,11 @@ let v761 = s.apply(v759, v760)?;
 v761
 }, None => s.stuck(),
 };
-return Ok(v752);
+return Ok(Some(v752));
 }
+Ok(None)
+}
+fn case_44_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case44: {
 let v762 = s.unapply(a0)?;
 let Some((f, a)) = v762 else { break 'case44; }
@@ -86115,8 +91142,11 @@ let v777 = s.apply(v775, v776)?;
 v777
 }, None => s.stuck(),
 };
-return Ok(v768);
+return Ok(Some(v768));
 }
+Ok(None)
+}
+fn case_45_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case45: {
 let v778 = s.unapply(a0)?;
 let Some((f, a)) = v778 else { break 'case45; }
@@ -86146,8 +91176,11 @@ let v796 = s.apply(v794, v795)?;
 v796
 }, None => s.stuck(),
 };
-return Ok(v784);
+return Ok(Some(v784));
 }
+Ok(None)
+}
+fn case_46_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case46: {
 let v797 = s.unapply(a0)?;
 let Some((f, a)) = v797 else { break 'case46; }
@@ -86208,8 +91241,11 @@ let v842 = s.operator("concat", &[v833, v841])?;
 v842
 }, None => s.stuck(),
 };
-return Ok(v815);
+return Ok(Some(v815));
 }
+Ok(None)
+}
+fn case_47_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case47: {
 let v843 = s.unapply(a0)?;
 let Some((f, a)) = v843 else { break 'case47; }
@@ -86220,8 +91256,11 @@ let v846 = s.construct(Constructor::eo_bvnot, &[])?;
 if v844 != v846 { break 'case47; }
 let v847 = eo__24run_5fevaluate(s, v845)?;
 let v848 = s.operator("not", &[v847])?;
-return Ok(v848);
+return Ok(Some(v848));
 }
+Ok(None)
+}
+fn case_48_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case48: {
 let v849 = s.unapply(a0)?;
 let Some((f, a)) = v849 else { break 'case48; }
@@ -86232,8 +91271,11 @@ let v852 = s.construct(Constructor::eo_bvneg, &[])?;
 if v850 != v852 { break 'case48; }
 let v853 = eo__24run_5fevaluate(s, v851)?;
 let v854 = s.operator("neg", &[v853])?;
-return Ok(v854);
+return Ok(Some(v854));
 }
+Ok(None)
+}
+fn case_49_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case49: {
 let v855 = s.unapply(a0)?;
 let Some((f, a)) = v855 else { break 'case49; }
@@ -86250,8 +91292,11 @@ if v859 != v861 { break 'case49; }
 let v862 = eo__24run_5fevaluate(s, v860)?;
 let v863 = eo__24run_5fevaluate(s, v857)?;
 let v864 = s.operator("add", &[v862, v863])?;
-return Ok(v864);
+return Ok(Some(v864));
 }
+Ok(None)
+}
+fn case_50_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case50: {
 let v865 = s.unapply(a0)?;
 let Some((f, a)) = v865 else { break 'case50; }
@@ -86268,8 +91313,11 @@ if v869 != v871 { break 'case50; }
 let v872 = eo__24run_5fevaluate(s, v870)?;
 let v873 = eo__24run_5fevaluate(s, v867)?;
 let v874 = s.operator("mul", &[v872, v873])?;
-return Ok(v874);
+return Ok(Some(v874));
 }
+Ok(None)
+}
+fn case_51_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case51: {
 let v875 = s.unapply(a0)?;
 let Some((f, a)) = v875 else { break 'case51; }
@@ -86331,8 +91379,11 @@ let v911 = s.operator("zdiv", &[v909, v910])?;
 v911
 }, None => s.stuck(),
 };
-return Ok(v886);
+return Ok(Some(v886));
 }
+Ok(None)
+}
+fn case_52_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case52: {
 let v912 = s.unapply(a0)?;
 let Some((f, a)) = v912 else { break 'case52; }
@@ -86361,8 +91412,11 @@ let v927 = s.operator("zmod", &[v925, v926])?;
 v927
 }, None => s.stuck(),
 };
-return Ok(v923);
+return Ok(Some(v923));
 }
+Ok(None)
+}
+fn case_53_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case53: {
 let v928 = s.unapply(a0)?;
 let Some((f, a)) = v928 else { break 'case53; }
@@ -86379,8 +91433,11 @@ if v932 != v934 { break 'case53; }
 let v935 = eo__24run_5fevaluate(s, v933)?;
 let v936 = eo__24run_5fevaluate(s, v930)?;
 let v937 = s.operator("and", &[v935, v936])?;
-return Ok(v937);
+return Ok(Some(v937));
 }
+Ok(None)
+}
+fn case_54_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case54: {
 let v938 = s.unapply(a0)?;
 let Some((f, a)) = v938 else { break 'case54; }
@@ -86397,8 +91454,11 @@ if v942 != v944 { break 'case54; }
 let v945 = eo__24run_5fevaluate(s, v943)?;
 let v946 = eo__24run_5fevaluate(s, v940)?;
 let v947 = s.operator("or", &[v945, v946])?;
-return Ok(v947);
+return Ok(Some(v947));
 }
+Ok(None)
+}
+fn case_55_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case55: {
 let v948 = s.unapply(a0)?;
 let Some((f, a)) = v948 else { break 'case55; }
@@ -86415,8 +91475,11 @@ if v952 != v954 { break 'case55; }
 let v955 = eo__24run_5fevaluate(s, v953)?;
 let v956 = eo__24run_5fevaluate(s, v950)?;
 let v957 = s.operator("xor", &[v955, v956])?;
-return Ok(v957);
+return Ok(Some(v957));
 }
+Ok(None)
+}
+fn case_56_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case56: {
 let v958 = s.unapply(a0)?;
 let Some((f, a)) = v958 else { break 'case56; }
@@ -86433,8 +91496,11 @@ if v962 != v964 { break 'case56; }
 let v965 = eo__24run_5fevaluate(s, v963)?;
 let v966 = eo__24run_5fevaluate(s, v960)?;
 let v967 = s.operator("concat", &[v965, v966])?;
-return Ok(v967);
+return Ok(Some(v967));
 }
+Ok(None)
+}
+fn case_57_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case57: {
 let v968 = s.unapply(a0)?;
 let Some((f, a)) = v968 else { break 'case57; }
@@ -86452,8 +91518,11 @@ let v975 = eo__24run_5fevaluate(s, v973)?;
 let v976 = eo__24run_5fevaluate(s, v970)?;
 let v977 = s.operator("neg", &[v976])?;
 let v978 = s.operator("add", &[v975, v977])?;
-return Ok(v978);
+return Ok(Some(v978));
 }
+Ok(None)
+}
+fn case_58_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case58: {
 let v979 = s.unapply(a0)?;
 let Some((f, a)) = v979 else { break 'case58; }
@@ -86466,8 +91535,11 @@ let Some(fields) = v982 else { break 'case58; }
 let v983 = fields;
 let v984 = eo__24run_5fevaluate(s, v981)?;
 let v985 = s.operator("extract", &[v984, v983[1], v983[0]])?;
-return Ok(v985);
+return Ok(Some(v985));
 }
+Ok(None)
+}
+fn case_59_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case59: {
 let v986 = s.unapply(a0)?;
 let Some((f, a)) = v986 else { break 'case59; }
@@ -86486,8 +91558,11 @@ let v994 = s.operator("to_z", &[v993])?;
 let v995 = eo__24run_5fevaluate(s, v991)?;
 let v996 = s.operator("to_z", &[v995])?;
 let v997 = s.operator("gt", &[v994, v996])?;
-return Ok(v997);
+return Ok(Some(v997));
 }
+Ok(None)
+}
+fn case_60_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case60: {
 let v998 = s.unapply(a0)?;
 let Some((f, a)) = v998 else { break 'case60; }
@@ -86508,8 +91583,11 @@ let v1008 = eo__24run_5fevaluate(s, v1003)?;
 let v1009 = eo__24run_5fevaluate(s, v1000)?;
 let v1010 = s.operator("eq", &[v1008, v1009])?;
 let v1011 = s.operator("or", &[v1007, v1010])?;
-return Ok(v1011);
+return Ok(Some(v1011));
 }
+Ok(None)
+}
+fn case_61_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case61: {
 let v1012 = s.unapply(a0)?;
 let Some((f, a)) = v1012 else { break 'case61; }
@@ -86528,8 +91606,11 @@ let v1020 = s.operator("to_z", &[v1019])?;
 let v1021 = eo__24run_5fevaluate(s, v1014)?;
 let v1022 = s.operator("to_z", &[v1021])?;
 let v1023 = s.operator("gt", &[v1020, v1022])?;
-return Ok(v1023);
+return Ok(Some(v1023));
 }
+Ok(None)
+}
+fn case_62_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case62: {
 let v1024 = s.unapply(a0)?;
 let Some((f, a)) = v1024 else { break 'case62; }
@@ -86550,8 +91631,11 @@ let v1034 = eo__24run_5fevaluate(s, v1029)?;
 let v1035 = eo__24run_5fevaluate(s, v1026)?;
 let v1036 = s.operator("eq", &[v1034, v1035])?;
 let v1037 = s.operator("or", &[v1033, v1036])?;
-return Ok(v1037);
+return Ok(Some(v1037));
 }
+Ok(None)
+}
+fn case_63_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case63: {
 let v1038 = s.unapply(a0)?;
 let Some((f, a)) = v1038 else { break 'case63; }
@@ -86730,8 +91814,11 @@ v1172
 }, None => s.stuck(),
 };
 let v1173 = s.operator("gt", &[v1059, v1123])?;
-return Ok(v1173);
+return Ok(Some(v1173));
 }
+Ok(None)
+}
+fn case_64_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case64: {
 let v1174 = s.unapply(a0)?;
 let Some((f, a)) = v1174 else { break 'case64; }
@@ -87076,8 +92163,11 @@ v1437
 };
 let v1438 = s.operator("eq", &[v1324, v1388])?;
 let v1439 = s.operator("or", &[v1309, v1438])?;
-return Ok(v1439);
+return Ok(Some(v1439));
 }
+Ok(None)
+}
+fn case_65_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case65: {
 let v1440 = s.unapply(a0)?;
 let Some((f, a)) = v1440 else { break 'case65; }
@@ -87256,8 +92346,11 @@ v1574
 }, None => s.stuck(),
 };
 let v1575 = s.operator("gt", &[v1461, v1525])?;
-return Ok(v1575);
+return Ok(Some(v1575));
 }
+Ok(None)
+}
+fn case_66_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case66: {
 let v1576 = s.unapply(a0)?;
 let Some((f, a)) = v1576 else { break 'case66; }
@@ -87602,8 +92695,11 @@ v1839
 };
 let v1840 = s.operator("eq", &[v1726, v1790])?;
 let v1841 = s.operator("or", &[v1711, v1840])?;
-return Ok(v1841);
+return Ok(Some(v1841));
 }
+Ok(None)
+}
+fn case_67_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case67: {
 let v1842 = s.unapply(a0)?;
 let Some((f, a)) = v1842 else { break 'case67; }
@@ -87668,8 +92764,11 @@ let v1881 = s.operator("to_bin", &[v1860, v1880])?;
 v1881
 }, None => s.stuck(),
 };
-return Ok(v1854);
+return Ok(Some(v1854));
 }
+Ok(None)
+}
+fn case_68_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case68: {
 let v1882 = s.unapply(a0)?;
 let Some((f, a)) = v1882 else { break 'case68; }
@@ -87734,8 +92833,11 @@ let v1921 = s.operator("to_bin", &[v1900, v1920])?;
 v1921
 }, None => s.stuck(),
 };
-return Ok(v1894);
+return Ok(Some(v1894));
 }
+Ok(None)
+}
+fn case_69_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case69: {
 let v1922 = s.unapply(a0)?;
 let Some((f, a)) = v1922 else { break 'case69; }
@@ -87864,8 +92966,11 @@ v2011
 };
 let v2012 = s.operator("zdiv", &[v1945, v1998])?;
 let v2013 = s.operator("to_bin", &[v1930, v2012])?;
-return Ok(v2013);
+return Ok(Some(v2013));
 }
+Ok(None)
+}
+fn case_70_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case70: {
 let v2014 = s.unapply(a0)?;
 let Some((f, a)) = v2014 else { break 'case70; }
@@ -87898,8 +93003,11 @@ let v2034 = s.apply(v2032, v2033)?;
 v2034
 }, None => s.stuck(),
 };
-return Ok(v2025);
+return Ok(Some(v2025));
 }
+Ok(None)
+}
+fn case_71_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case71: {
 let v2035 = s.unapply(a0)?;
 let Some((f, a)) = v2035 else { break 'case71; }
@@ -87998,8 +93106,11 @@ v2108
 }, None => s.stuck(),
 };
 let v2109 = s.operator("to_bin", &[v2044, v2059])?;
-return Ok(v2109);
+return Ok(Some(v2109));
 }
+Ok(None)
+}
+fn case_72_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case72: {
 let v2110 = s.unapply(a0)?;
 let Some((f, a)) = v2110 else { break 'case72; }
@@ -88018,8 +93129,11 @@ let v2119 = s.operator("add", &[v2117, v2118])?;
 let v2120 = eo__24run_5fevaluate(s, v2112)?;
 let v2121 = s.operator("to_z", &[v2120])?;
 let v2122 = s.operator("to_bin", &[v2119, v2121])?;
-return Ok(v2122);
+return Ok(Some(v2122));
 }
+Ok(None)
+}
+fn case_73_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case73: {
 let v2123 = s.unapply(a0)?;
 let Some((f, a)) = v2123 else { break 'case73; }
@@ -88030,8 +93144,11 @@ let v2126 = s.construct(Constructor::eo__40bvsize, &[])?;
 if v2124 != v2126 { break 'case73; }
 let v2127 = eo__24eo_5ftypeof(s, v2125)?;
 let v2128 = eo__24bv_5fbitwidth(s, v2127)?;
-return Ok(v2128);
+return Ok(Some(v2128));
 }
+Ok(None)
+}
+fn case_74_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case74: {
 let v2129 = s.unapply(a0)?;
 let Some((f, a)) = v2129 else { break 'case74; }
@@ -88045,8 +93162,11 @@ let v2133 = fields;
 let v2134 = eo__24run_5fevaluate(s, v2133[0])?;
 let v2135 = eo__24run_5fevaluate(s, v2131)?;
 let v2136 = s.operator("to_bin", &[v2134, v2135])?;
-return Ok(v2136);
+return Ok(Some(v2136));
 }
+Ok(None)
+}
+fn case_75_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case75: {
 let v2137 = s.unapply(a0)?;
 let Some((f, a)) = v2137 else { break 'case75; }
@@ -88057,8 +93177,11 @@ let v2140 = s.construct(Constructor::eo_ubv_5fto_5fint, &[])?;
 if v2138 != v2140 { break 'case75; }
 let v2141 = eo__24run_5fevaluate(s, v2139)?;
 let v2142 = s.operator("to_z", &[v2141])?;
-return Ok(v2142);
+return Ok(Some(v2142));
 }
+Ok(None)
+}
+fn case_76_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case76: {
 let v2143 = s.unapply(a0)?;
 let Some((f, a)) = v2143 else { break 'case76; }
@@ -88137,16 +93260,15 @@ v2192
 v2165
 }, None => s.stuck(),
 };
-return Ok(v2152);
+return Ok(Some(v2152));
 }
+Ok(None)
+}
+fn case_77_eo__24run_5fevaluate(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case77: {
-return Ok(a0);
+return Ok(Some(a0));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(958), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$run_process_scope"
 pub fn eo__24run_5fprocess_5fscope(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
@@ -88466,6 +93588,34 @@ Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 13 {
+let matched = match case_index {
+0 => case_0_eo__24seq_5feval(s, a0),
+1 => case_1_eo__24seq_5feval(s, a0),
+2 => case_2_eo__24seq_5feval(s, a0),
+3 => case_3_eo__24seq_5feval(s, a0),
+4 => case_4_eo__24seq_5feval(s, a0),
+5 => case_5_eo__24seq_5feval(s, a0),
+6 => case_6_eo__24seq_5feval(s, a0),
+7 => case_7_eo__24seq_5feval(s, a0),
+8 => case_8_eo__24seq_5feval(s, a0),
+9 => case_9_eo__24seq_5feval(s, a0),
+10 => case_10_eo__24seq_5feval(s, a0),
+11 => case_11_eo__24seq_5feval(s, a0),
+12 => case_12_eo__24seq_5feval(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(963), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -88489,8 +93639,11 @@ let v13 = s.operator("list_nth", &[v10, v12, v2])?;
 let v14 = eo__24seq_5felement_5fof_5funit(s, v13)?;
 v14
 } else { s.stuck() };
-return Ok(v9);
+return Ok(Some(v9));
 }
+Ok(None)
+}
+fn case_1_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v15 = s.unapply(a0)?;
 let Some((f, a)) = v15 else { break 'case1; }
@@ -88502,8 +93655,11 @@ if v16 != v18 { break 'case1; }
 let v19 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v20 = s.operator("list_singleton_intro", &[v19, v17])?;
 let v21 = eo__24str_5fvalue_5flen(s, v20)?;
-return Ok(v21);
+return Ok(Some(v21));
 }
+Ok(None)
+}
+fn case_2_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v22 = s.unapply(a0)?;
 let Some((f, a)) = v22 else { break 'case2; }
@@ -88526,8 +93682,11 @@ let v34 = eo__24seq_5feval(s, v24)?;
 let v35 = s.operator("list_singleton_intro", &[v33, v34])?;
 let v36 = s.operator("list_concat", &[v30, v32, v35])?;
 let v37 = s.operator("list_singleton_elim", &[v29, v36])?;
-return Ok(v37);
+return Ok(Some(v37));
 }
+Ok(None)
+}
+fn case_3_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v38 = s.unapply(a0)?;
 let Some((f, a)) = v38 else { break 'case3; }
@@ -88565,8 +93724,11 @@ v59
 }, None => s.stuck(),
 };
 let v60 = s.operator("list_singleton_elim", &[v48, v51])?;
-return Ok(v60);
+return Ok(Some(v60));
 }
+Ok(None)
+}
+fn case_4_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v61 = s.unapply(a0)?;
 let Some((f, a)) = v61 else { break 'case4; }
@@ -88598,8 +93760,11 @@ v81
 } else { s.stuck() };
 v73
 } else { s.stuck() };
-return Ok(v70);
+return Ok(Some(v70));
 }
+Ok(None)
+}
+fn case_5_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v82 = s.unapply(a0)?;
 let Some((f, a)) = v82 else { break 'case5; }
@@ -88703,8 +93868,11 @@ v105
 } else { s.stuck() };
 v97
 } else { s.stuck() };
-return Ok(v94);
+return Ok(Some(v94));
 }
+Ok(None)
+}
+fn case_6_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v155 = s.unapply(a0)?;
 let Some((f, a)) = v155 else { break 'case6; }
@@ -88749,8 +93917,11 @@ v182
 };
 v171
 } else { s.stuck() };
-return Ok(v167);
+return Ok(Some(v167));
 }
+Ok(None)
+}
+fn case_7_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v183 = s.unapply(a0)?;
 let Some((f, a)) = v183 else { break 'case7; }
@@ -88813,8 +93984,11 @@ v201
 };
 v197
 } else { s.stuck() };
-return Ok(v195);
+return Ok(Some(v195));
 }
+Ok(None)
+}
+fn case_8_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v217 = s.unapply(a0)?;
 let Some((f, a)) = v217 else { break 'case8; }
@@ -88833,8 +94007,11 @@ let v225 = s.operator("list_singleton_intro", &[v224, v222])?;
 let v226 = s.construct(Constructor::eo_str_2e_2b_2b, &[])?;
 let v227 = s.operator("list_singleton_intro", &[v226, v219])?;
 let v228 = eo__24seq_5fis_5fprefix(s, v225, v227)?;
-return Ok(v228);
+return Ok(Some(v228));
 }
+Ok(None)
+}
+fn case_9_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v229 = s.unapply(a0)?;
 let Some((f, a)) = v229 else { break 'case9; }
@@ -88867,8 +94044,11 @@ v250
 } else { s.stuck() };
 v241
 } else { s.stuck() };
-return Ok(v238);
+return Ok(Some(v238));
 }
+Ok(None)
+}
+fn case_10_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v251 = s.unapply(a0)?;
 let Some((f, a)) = v251 else { break 'case10; }
@@ -88903,8 +94083,11 @@ v271
 }, None => s.stuck(),
 };
 let v272 = s.operator("list_singleton_elim", &[v258, v262])?;
-return Ok(v272);
+return Ok(Some(v272));
 }
+Ok(None)
+}
+fn case_11_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v273 = s.unapply(a0)?;
 let Some((f, a)) = v273 else { break 'case11; }
@@ -88924,16 +94107,15 @@ let v284 = s.operator("list_rev", &[v281, v283])?;
 let v285 = s.operator("list_singleton_elim", &[v280, v284])?;
 v285
 } else { s.stuck() };
-return Ok(v279);
+return Ok(Some(v279));
 }
+Ok(None)
+}
+fn case_12_eo__24seq_5feval(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case12: {
-return Ok(a0);
+return Ok(Some(a0));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(963), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$seq_eval_replace_all_rec"
 pub fn eo__24seq_5feval_5freplace_5fall_5frec(s: &mut Store, mut a0: Term, mut a1: Term, mut a2: Term, mut a3: Term, mut a4: Term) -> CheckResult<Term> {
@@ -90350,18 +95532,49 @@ Ok(None) => {},
 Err(error) => { s.leave(); return Err(error); },
 }
 let result = (|| {
+let mut case_index = 0_usize;
+while case_index < 10 {
+let matched = match case_index {
+0 => case_0_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+1 => case_1_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+2 => case_2_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+3 => case_3_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+4 => case_4_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+5 => case_5_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+6 => case_6_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+7 => case_7_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+8 => case_8_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+9 => case_9_eo__24smtx_5ftype_5fwf_5frec(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(988), &cache_args, value)?; }
+result
+}
+fn case_0_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 if a0 != v0 { break 'case0; }
 let v1 = s.native("false", &[])?;
-return Ok(v1);
+return Ok(Some(v1));
 }
+Ok(None)
+}
+fn case_1_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v2 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
 if a0 != v2 { break 'case1; }
 let v3 = s.native("false", &[])?;
-return Ok(v3);
+return Ok(Some(v3));
 }
+Ok(None)
+}
+fn case_2_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v4 = s.destruct(Constructor::eo__24emb_5ftsm_2eMap, a0)?;
 let Some(fields) = v4 else { break 'case2; }
@@ -90374,8 +95587,11 @@ let v9 = eo__24smtx_5finhabited_5ftype(s, v5[1])?;
 let v10 = eo__24smtx_5ftype_5fwf_5frec(s, v5[1])?;
 let v11 = s.native("and", &[v9, v10])?;
 let v12 = s.native("and", &[v8, v11])?;
-return Ok(v12);
+return Ok(Some(v12));
 }
+Ok(None)
+}
+fn case_3_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v13 = s.destruct(Constructor::eo__24emb_5ftsm_2eSet, a0)?;
 let Some(fields) = v13 else { break 'case3; }
@@ -90384,8 +95600,11 @@ let v14 = fields;
 let v15 = eo__24smtx_5finhabited_5ftype(s, v14[0])?;
 let v16 = eo__24smtx_5ftype_5fwf_5frec(s, v14[0])?;
 let v17 = s.native("and", &[v15, v16])?;
-return Ok(v17);
+return Ok(Some(v17));
 }
+Ok(None)
+}
+fn case_4_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v18 = s.destruct(Constructor::eo__24emb_5ftsm_2eSeq, a0)?;
 let Some(fields) = v18 else { break 'case4; }
@@ -90394,8 +95613,11 @@ let v19 = fields;
 let v20 = eo__24smtx_5finhabited_5ftype(s, v19[0])?;
 let v21 = eo__24smtx_5ftype_5fwf_5frec(s, v19[0])?;
 let v22 = s.native("and", &[v20, v21])?;
-return Ok(v22);
+return Ok(Some(v22));
 }
+Ok(None)
+}
+fn case_5_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v23 = s.destruct(Constructor::eo__24emb_5ftsm_2eDatatype, a0)?;
 let Some(fields) = v23 else { break 'case5; }
@@ -90404,41 +95626,49 @@ let v24 = fields;
 let v25 = eo__24smtx_5fdd_5fhas_5fdt(s, v24[0], v24[1])?;
 let v26 = eo__24smtx_5fdecl_5fwf_5frec(s, v24[1], v24[1])?;
 let v27 = s.native("and", &[v25, v26])?;
-return Ok(v27);
+return Ok(Some(v27));
 }
+Ok(None)
+}
+fn case_6_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v28 = s.destruct(Constructor::eo__24emb_5ftsm_2eTypeRef, a0)?;
 let Some(fields) = v28 else { break 'case6; }
 ;
 let v29 = fields;
 let v30 = s.native("false", &[])?;
-return Ok(v30);
+return Ok(Some(v30));
 }
+Ok(None)
+}
+fn case_7_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v31 = s.destruct(Constructor::eo__24emb_5ftsm_2eFunType, a0)?;
 let Some(fields) = v31 else { break 'case7; }
 ;
 let v32 = fields;
 let v33 = s.native("false", &[])?;
-return Ok(v33);
+return Ok(Some(v33));
 }
+Ok(None)
+}
+fn case_8_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v34 = s.destruct(Constructor::eo__24emb_5ftsm_2eDtcAppType, a0)?;
 let Some(fields) = v34 else { break 'case8; }
 ;
 let v35 = fields;
 let v36 = s.native("false", &[])?;
-return Ok(v36);
+return Ok(Some(v36));
 }
+Ok(None)
+}
+fn case_9_eo__24smtx_5ftype_5fwf_5frec(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v37 = s.native("true", &[])?;
-return Ok(v37);
+return Ok(Some(v37));
 }
-Ok(s.stuck())
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(988), &cache_args, value)?; }
-result
+Ok(None)
 }
 // EO program "$smtx_typeof"
 pub fn eo__24smtx_5ftypeof(s: &mut Store, mut a0: Term) -> CheckResult<Term> {
@@ -90452,30 +95682,212 @@ Err(error) => { s.leave(); return Err(error); },
 let result = (|| {
 'recur: loop {
 s.tick()?;
+let mut case_index = 0_usize;
+while case_index < 148 {
+let matched = match case_index {
+0 => case_0_eo__24smtx_5ftypeof(s, a0),
+1 => case_1_eo__24smtx_5ftypeof(s, a0),
+2 => case_2_eo__24smtx_5ftypeof(s, a0),
+3 => case_3_eo__24smtx_5ftypeof(s, a0),
+4 => case_4_eo__24smtx_5ftypeof(s, a0),
+5 => case_5_eo__24smtx_5ftypeof(s, a0),
+6 => case_6_eo__24smtx_5ftypeof(s, a0),
+7 => case_7_eo__24smtx_5ftypeof(s, a0),
+8 => case_8_eo__24smtx_5ftypeof(s, a0),
+9 => case_9_eo__24smtx_5ftypeof(s, a0),
+10 => case_10_eo__24smtx_5ftypeof(s, a0),
+11 => case_11_eo__24smtx_5ftypeof(s, a0),
+12 => case_12_eo__24smtx_5ftypeof(s, a0),
+13 => case_13_eo__24smtx_5ftypeof(s, a0),
+14 => case_14_eo__24smtx_5ftypeof(s, a0),
+15 => case_15_eo__24smtx_5ftypeof(s, a0),
+16 => case_16_eo__24smtx_5ftypeof(s, a0),
+17 => case_17_eo__24smtx_5ftypeof(s, a0),
+18 => case_18_eo__24smtx_5ftypeof(s, a0),
+19 => case_19_eo__24smtx_5ftypeof(s, a0),
+20 => case_20_eo__24smtx_5ftypeof(s, a0),
+21 => case_21_eo__24smtx_5ftypeof(s, a0),
+22 => case_22_eo__24smtx_5ftypeof(s, a0),
+23 => case_23_eo__24smtx_5ftypeof(s, a0),
+24 => case_24_eo__24smtx_5ftypeof(s, a0),
+25 => case_25_eo__24smtx_5ftypeof(s, a0),
+26 => case_26_eo__24smtx_5ftypeof(s, a0),
+27 => case_27_eo__24smtx_5ftypeof(s, a0),
+28 => case_28_eo__24smtx_5ftypeof(s, a0),
+29 => case_29_eo__24smtx_5ftypeof(s, a0),
+30 => case_30_eo__24smtx_5ftypeof(s, a0),
+31 => case_31_eo__24smtx_5ftypeof(s, a0),
+32 => case_32_eo__24smtx_5ftypeof(s, a0),
+33 => case_33_eo__24smtx_5ftypeof(s, a0),
+34 => case_34_eo__24smtx_5ftypeof(s, a0),
+35 => case_35_eo__24smtx_5ftypeof(s, a0),
+36 => case_36_eo__24smtx_5ftypeof(s, a0),
+37 => case_37_eo__24smtx_5ftypeof(s, a0),
+38 => case_38_eo__24smtx_5ftypeof(s, a0),
+39 => case_39_eo__24smtx_5ftypeof(s, a0),
+40 => case_40_eo__24smtx_5ftypeof(s, a0),
+41 => case_41_eo__24smtx_5ftypeof(s, a0),
+42 => case_42_eo__24smtx_5ftypeof(s, a0),
+43 => case_43_eo__24smtx_5ftypeof(s, a0),
+44 => case_44_eo__24smtx_5ftypeof(s, a0),
+45 => case_45_eo__24smtx_5ftypeof(s, a0),
+46 => case_46_eo__24smtx_5ftypeof(s, a0),
+47 => case_47_eo__24smtx_5ftypeof(s, a0),
+48 => case_48_eo__24smtx_5ftypeof(s, a0),
+49 => case_49_eo__24smtx_5ftypeof(s, a0),
+50 => case_50_eo__24smtx_5ftypeof(s, a0),
+51 => case_51_eo__24smtx_5ftypeof(s, a0),
+52 => case_52_eo__24smtx_5ftypeof(s, a0),
+53 => case_53_eo__24smtx_5ftypeof(s, a0),
+54 => case_54_eo__24smtx_5ftypeof(s, a0),
+55 => case_55_eo__24smtx_5ftypeof(s, a0),
+56 => case_56_eo__24smtx_5ftypeof(s, a0),
+57 => case_57_eo__24smtx_5ftypeof(s, a0),
+58 => case_58_eo__24smtx_5ftypeof(s, a0),
+59 => case_59_eo__24smtx_5ftypeof(s, a0),
+60 => case_60_eo__24smtx_5ftypeof(s, a0),
+61 => case_61_eo__24smtx_5ftypeof(s, a0),
+62 => case_62_eo__24smtx_5ftypeof(s, a0),
+63 => case_63_eo__24smtx_5ftypeof(s, a0),
+64 => case_64_eo__24smtx_5ftypeof(s, a0),
+65 => case_65_eo__24smtx_5ftypeof(s, a0),
+66 => case_66_eo__24smtx_5ftypeof(s, a0),
+67 => case_67_eo__24smtx_5ftypeof(s, a0),
+68 => case_68_eo__24smtx_5ftypeof(s, a0),
+69 => case_69_eo__24smtx_5ftypeof(s, a0),
+70 => case_70_eo__24smtx_5ftypeof(s, a0),
+71 => case_71_eo__24smtx_5ftypeof(s, a0),
+72 => case_72_eo__24smtx_5ftypeof(s, a0),
+73 => case_73_eo__24smtx_5ftypeof(s, a0),
+74 => case_74_eo__24smtx_5ftypeof(s, a0),
+75 => case_75_eo__24smtx_5ftypeof(s, a0),
+76 => case_76_eo__24smtx_5ftypeof(s, a0),
+77 => case_77_eo__24smtx_5ftypeof(s, a0),
+78 => case_78_eo__24smtx_5ftypeof(s, a0),
+79 => case_79_eo__24smtx_5ftypeof(s, a0),
+80 => case_80_eo__24smtx_5ftypeof(s, a0),
+81 => case_81_eo__24smtx_5ftypeof(s, a0),
+82 => case_82_eo__24smtx_5ftypeof(s, a0),
+83 => case_83_eo__24smtx_5ftypeof(s, a0),
+84 => case_84_eo__24smtx_5ftypeof(s, a0),
+85 => case_85_eo__24smtx_5ftypeof(s, a0),
+86 => case_86_eo__24smtx_5ftypeof(s, a0),
+87 => case_87_eo__24smtx_5ftypeof(s, a0),
+88 => case_88_eo__24smtx_5ftypeof(s, a0),
+89 => case_89_eo__24smtx_5ftypeof(s, a0),
+90 => case_90_eo__24smtx_5ftypeof(s, a0),
+91 => case_91_eo__24smtx_5ftypeof(s, a0),
+92 => case_92_eo__24smtx_5ftypeof(s, a0),
+93 => case_93_eo__24smtx_5ftypeof(s, a0),
+94 => case_94_eo__24smtx_5ftypeof(s, a0),
+95 => case_95_eo__24smtx_5ftypeof(s, a0),
+96 => case_96_eo__24smtx_5ftypeof(s, a0),
+97 => case_97_eo__24smtx_5ftypeof(s, a0),
+98 => case_98_eo__24smtx_5ftypeof(s, a0),
+99 => case_99_eo__24smtx_5ftypeof(s, a0),
+100 => case_100_eo__24smtx_5ftypeof(s, a0),
+101 => case_101_eo__24smtx_5ftypeof(s, a0),
+102 => case_102_eo__24smtx_5ftypeof(s, a0),
+103 => case_103_eo__24smtx_5ftypeof(s, a0),
+104 => case_104_eo__24smtx_5ftypeof(s, a0),
+105 => case_105_eo__24smtx_5ftypeof(s, a0),
+106 => case_106_eo__24smtx_5ftypeof(s, a0),
+107 => case_107_eo__24smtx_5ftypeof(s, a0),
+108 => case_108_eo__24smtx_5ftypeof(s, a0),
+109 => case_109_eo__24smtx_5ftypeof(s, a0),
+110 => case_110_eo__24smtx_5ftypeof(s, a0),
+111 => case_111_eo__24smtx_5ftypeof(s, a0),
+112 => case_112_eo__24smtx_5ftypeof(s, a0),
+113 => case_113_eo__24smtx_5ftypeof(s, a0),
+114 => case_114_eo__24smtx_5ftypeof(s, a0),
+115 => case_115_eo__24smtx_5ftypeof(s, a0),
+116 => case_116_eo__24smtx_5ftypeof(s, a0),
+117 => case_117_eo__24smtx_5ftypeof(s, a0),
+118 => case_118_eo__24smtx_5ftypeof(s, a0),
+119 => case_119_eo__24smtx_5ftypeof(s, a0),
+120 => case_120_eo__24smtx_5ftypeof(s, a0),
+121 => case_121_eo__24smtx_5ftypeof(s, a0),
+122 => case_122_eo__24smtx_5ftypeof(s, a0),
+123 => case_123_eo__24smtx_5ftypeof(s, a0),
+124 => case_124_eo__24smtx_5ftypeof(s, a0),
+125 => case_125_eo__24smtx_5ftypeof(s, a0),
+126 => case_126_eo__24smtx_5ftypeof(s, a0),
+127 => case_127_eo__24smtx_5ftypeof(s, a0),
+128 => case_128_eo__24smtx_5ftypeof(s, a0),
+129 => case_129_eo__24smtx_5ftypeof(s, a0),
+130 => case_130_eo__24smtx_5ftypeof(s, a0),
+131 => case_131_eo__24smtx_5ftypeof(s, a0),
+132 => case_132_eo__24smtx_5ftypeof(s, a0),
+133 => case_133_eo__24smtx_5ftypeof(s, a0),
+134 => case_134_eo__24smtx_5ftypeof(s, a0),
+135 => case_135_eo__24smtx_5ftypeof(s, a0),
+136 => case_136_eo__24smtx_5ftypeof(s, a0),
+137 => case_137_eo__24smtx_5ftypeof(s, a0),
+138 => case_138_eo__24smtx_5ftypeof(s, a0),
+139 => case_139_eo__24smtx_5ftypeof(s, a0),
+140 => case_140_eo__24smtx_5ftypeof(s, a0),
+141 => case_141_eo__24smtx_5ftypeof(s, a0),
+142 => case_142_eo__24smtx_5ftypeof(s, a0),
+143 => case_143_eo__24smtx_5ftypeof(s, a0),
+144 => case_144_eo__24smtx_5ftypeof(s, a0),
+145 => case_145_eo__24smtx_5ftypeof(s, a0),
+146 => case_146_eo__24smtx_5ftypeof(s, a0),
+147 => case_147_eo__24smtx_5ftypeof(s, a0),
+_ => Ok(case_result_eo__24smtx_5ftypeof::NoMatch),
+}?;
+match matched {
+case_result_eo__24smtx_5ftypeof::NoMatch => {},
+case_result_eo__24smtx_5ftypeof::Value(value) => return Ok(value),
+case_result_eo__24smtx_5ftypeof::Tail(next) => {
+a0 = next[0];
+continue 'recur;
+}
+}
+case_index += 1;
+}
+return Ok(s.stuck());
+}
+})();
+s.leave();
+if let Ok(value) = result { s.cache_type(TypeCacheKind::Smt, cache_args[0], value)?; }
+result
+}
+#[allow(dead_code)]
+enum case_result_eo__24smtx_5ftypeof { NoMatch, Value(Term), Tail([Term; 1]) }
+fn case_0_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case0: {
 let v0 = s.destruct(Constructor::eo__24emb_5fsm_2eBoolean, a0)?;
 let Some(fields) = v0 else { break 'case0; }
 ;
 let v1 = fields;
 let v2 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
-return Ok(v2);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v2));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_1_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case1: {
 let v3 = s.destruct(Constructor::eo__24emb_5fsm_2eNumeral, a0)?;
 let Some(fields) = v3 else { break 'case1; }
 ;
 let v4 = fields;
 let v5 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
-return Ok(v5);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v5));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_2_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case2: {
 let v6 = s.destruct(Constructor::eo__24emb_5fsm_2eRational, a0)?;
 let Some(fields) = v6 else { break 'case2; }
 ;
 let v7 = fields;
 let v8 = s.construct(Constructor::eo__24emb_5ftsm_2eReal, &[])?;
-return Ok(v8);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v8));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_3_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case3: {
 let v9 = s.destruct(Constructor::eo__24emb_5fsm_2eString, a0)?;
 let Some(fields) = v9 else { break 'case3; }
@@ -90492,8 +95904,11 @@ let v15 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v15
 }, None => s.stuck(),
 };
-return Ok(v12);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v12));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_4_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case4: {
 let v16 = s.destruct(Constructor::eo__24emb_5fsm_2eBinary, a0)?;
 let Some(fields) = v16 else { break 'case4; }
@@ -90515,8 +95930,11 @@ let v27 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v27
 }, None => s.stuck(),
 };
-return Ok(v24);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v24));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_5_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case5: {
 let v28 = s.destruct(Constructor::eo__24emb_5fsm_2eite, a0)?;
 let Some(fields) = v28 else { break 'case5; }
@@ -90526,8 +95944,11 @@ let v30 = eo__24smtx_5ftypeof(s, v29[0])?;
 let v31 = eo__24smtx_5ftypeof(s, v29[1])?;
 let v32 = eo__24smtx_5ftypeof(s, v29[2])?;
 let v33 = eo__24smtx_5ftypeof_5fite(s, v30, v31, v32)?;
-return Ok(v33);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v33));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_6_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case6: {
 let v34 = s.destruct(Constructor::eo__24emb_5fsm_2enot, a0)?;
 let Some(fields) = v34 else { break 'case6; }
@@ -90545,8 +95966,11 @@ let v41 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v41
 }, None => s.stuck(),
 };
-return Ok(v39);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v39));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_7_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case7: {
 let v42 = s.destruct(Constructor::eo__24emb_5fsm_2eor, a0)?;
 let Some(fields) = v42 else { break 'case7; }
@@ -90575,8 +95999,11 @@ let v54 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v54
 }, None => s.stuck(),
 };
-return Ok(v47);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v47));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_8_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case8: {
 let v55 = s.destruct(Constructor::eo__24emb_5fsm_2eand, a0)?;
 let Some(fields) = v55 else { break 'case8; }
@@ -90605,8 +96032,11 @@ let v67 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v67
 }, None => s.stuck(),
 };
-return Ok(v60);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v60));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_9_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case9: {
 let v68 = s.destruct(Constructor::eo__24emb_5fsm_2e_3d_3e, a0)?;
 let Some(fields) = v68 else { break 'case9; }
@@ -90635,8 +96065,11 @@ let v80 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v80
 }, None => s.stuck(),
 };
-return Ok(v73);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v73));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_10_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case10: {
 let v81 = s.destruct(Constructor::eo__24emb_5fsm_2exor, a0)?;
 let Some(fields) = v81 else { break 'case10; }
@@ -90665,8 +96098,11 @@ let v93 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v93
 }, None => s.stuck(),
 };
-return Ok(v86);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v86));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_11_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case11: {
 let v94 = s.destruct(Constructor::eo__24emb_5fsm_2e_3d, a0)?;
 let Some(fields) = v94 else { break 'case11; }
@@ -90675,17 +96111,22 @@ let v95 = fields;
 let v96 = eo__24smtx_5ftypeof(s, v95[0])?;
 let v97 = eo__24smtx_5ftypeof(s, v95[1])?;
 let v98 = eo__24smtx_5ftypeof_5f_3d(s, v96, v97)?;
-return Ok(v98);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v98));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_12_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case12: {
 let v99 = s.destruct(Constructor::eo__24emb_5fsm_2e_40purify, a0)?;
 let Some(fields) = v99 else { break 'case12; }
 ;
 let v100 = fields;
 let v101 = v100[0];
-a0 = v101;
-continue 'recur;
+return Ok(case_result_eo__24smtx_5ftypeof::Tail([v101]));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_13_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case13: {
 let v102 = s.destruct(Constructor::eo__24emb_5fsm_2e_2b, a0)?;
 let Some(fields) = v102 else { break 'case13; }
@@ -90694,8 +96135,11 @@ let v103 = fields;
 let v104 = eo__24smtx_5ftypeof(s, v103[0])?;
 let v105 = eo__24smtx_5ftypeof(s, v103[1])?;
 let v106 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2(s, v104, v105)?;
-return Ok(v106);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v106));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_14_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case14: {
 let v107 = s.destruct(Constructor::eo__24emb_5fsm_2e_2d, a0)?;
 let Some(fields) = v107 else { break 'case14; }
@@ -90704,8 +96148,11 @@ let v108 = fields;
 let v109 = eo__24smtx_5ftypeof(s, v108[0])?;
 let v110 = eo__24smtx_5ftypeof(s, v108[1])?;
 let v111 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2(s, v109, v110)?;
-return Ok(v111);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v111));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_15_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case15: {
 let v112 = s.destruct(Constructor::eo__24emb_5fsm_2e_2a, a0)?;
 let Some(fields) = v112 else { break 'case15; }
@@ -90714,8 +96161,11 @@ let v113 = fields;
 let v114 = eo__24smtx_5ftypeof(s, v113[0])?;
 let v115 = eo__24smtx_5ftypeof(s, v113[1])?;
 let v116 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2(s, v114, v115)?;
-return Ok(v116);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v116));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_16_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case16: {
 let v117 = s.destruct(Constructor::eo__24emb_5fsm_2e_3c, a0)?;
 let Some(fields) = v117 else { break 'case16; }
@@ -90725,8 +96175,11 @@ let v119 = eo__24smtx_5ftypeof(s, v118[0])?;
 let v120 = eo__24smtx_5ftypeof(s, v118[1])?;
 let v121 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v122 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_5fret(s, v119, v120, v121)?;
-return Ok(v122);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v122));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_17_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case17: {
 let v123 = s.destruct(Constructor::eo__24emb_5fsm_2e_3c_3d, a0)?;
 let Some(fields) = v123 else { break 'case17; }
@@ -90736,8 +96189,11 @@ let v125 = eo__24smtx_5ftypeof(s, v124[0])?;
 let v126 = eo__24smtx_5ftypeof(s, v124[1])?;
 let v127 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v128 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_5fret(s, v125, v126, v127)?;
-return Ok(v128);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v128));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_18_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case18: {
 let v129 = s.destruct(Constructor::eo__24emb_5fsm_2e_3e, a0)?;
 let Some(fields) = v129 else { break 'case18; }
@@ -90747,8 +96203,11 @@ let v131 = eo__24smtx_5ftypeof(s, v130[0])?;
 let v132 = eo__24smtx_5ftypeof(s, v130[1])?;
 let v133 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v134 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_5fret(s, v131, v132, v133)?;
-return Ok(v134);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v134));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_19_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case19: {
 let v135 = s.destruct(Constructor::eo__24emb_5fsm_2e_3e_3d, a0)?;
 let Some(fields) = v135 else { break 'case19; }
@@ -90758,8 +96217,11 @@ let v137 = eo__24smtx_5ftypeof(s, v136[0])?;
 let v138 = eo__24smtx_5ftypeof(s, v136[1])?;
 let v139 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v140 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_5fret(s, v137, v138, v139)?;
-return Ok(v140);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v140));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_20_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case20: {
 let v141 = s.destruct(Constructor::eo__24emb_5fsm_2eto_5freal, a0)?;
 let Some(fields) = v141 else { break 'case20; }
@@ -90777,8 +96239,11 @@ let v148 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v148
 }, None => s.stuck(),
 };
-return Ok(v146);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v146));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_21_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case21: {
 let v149 = s.destruct(Constructor::eo__24emb_5fsm_2eto_5fint, a0)?;
 let Some(fields) = v149 else { break 'case21; }
@@ -90796,8 +96261,11 @@ let v156 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v156
 }, None => s.stuck(),
 };
-return Ok(v154);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v154));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_22_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case22: {
 let v157 = s.destruct(Constructor::eo__24emb_5fsm_2eis_5fint, a0)?;
 let Some(fields) = v157 else { break 'case22; }
@@ -90815,8 +96283,11 @@ let v164 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v164
 }, None => s.stuck(),
 };
-return Ok(v162);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v162));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_23_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case23: {
 let v165 = s.destruct(Constructor::eo__24emb_5fsm_2eabs, a0)?;
 let Some(fields) = v165 else { break 'case23; }
@@ -90824,8 +96295,11 @@ let Some(fields) = v165 else { break 'case23; }
 let v166 = fields;
 let v167 = eo__24smtx_5ftypeof(s, v166[0])?;
 let v168 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f1(s, v167)?;
-return Ok(v168);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v168));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_24_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case24: {
 let v169 = s.destruct(Constructor::eo__24emb_5fsm_2euneg, a0)?;
 let Some(fields) = v169 else { break 'case24; }
@@ -90833,8 +96307,11 @@ let Some(fields) = v169 else { break 'case24; }
 let v170 = fields;
 let v171 = eo__24smtx_5ftypeof(s, v170[0])?;
 let v172 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f1(s, v171)?;
-return Ok(v172);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v172));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_25_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case25: {
 let v173 = s.destruct(Constructor::eo__24emb_5fsm_2ediv, a0)?;
 let Some(fields) = v173 else { break 'case25; }
@@ -90863,8 +96340,11 @@ let v185 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v185
 }, None => s.stuck(),
 };
-return Ok(v178);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v178));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_26_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case26: {
 let v186 = s.destruct(Constructor::eo__24emb_5fsm_2emod, a0)?;
 let Some(fields) = v186 else { break 'case26; }
@@ -90893,8 +96373,11 @@ let v198 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v198
 }, None => s.stuck(),
 };
-return Ok(v191);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v191));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_27_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case27: {
 let v199 = s.destruct(Constructor::eo__24emb_5fsm_2edivisible, a0)?;
 let Some(fields) = v199 else { break 'case27; }
@@ -90923,8 +96406,11 @@ let v211 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v211
 }, None => s.stuck(),
 };
-return Ok(v204);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v204));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_28_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case28: {
 let v212 = s.destruct(Constructor::eo__24emb_5fsm_2eint_2epow2, a0)?;
 let Some(fields) = v212 else { break 'case28; }
@@ -90942,8 +96428,11 @@ let v219 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v219
 }, None => s.stuck(),
 };
-return Ok(v217);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v217));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_29_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case29: {
 let v220 = s.destruct(Constructor::eo__24emb_5fsm_2eint_2elog2, a0)?;
 let Some(fields) = v220 else { break 'case29; }
@@ -90961,8 +96450,11 @@ let v227 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v227
 }, None => s.stuck(),
 };
-return Ok(v225);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v225));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_30_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case30: {
 let v228 = s.destruct(Constructor::eo__24emb_5fsm_2ediv_5ftotal, a0)?;
 let Some(fields) = v228 else { break 'case30; }
@@ -90991,8 +96483,11 @@ let v240 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v240
 }, None => s.stuck(),
 };
-return Ok(v233);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v233));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_31_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case31: {
 let v241 = s.destruct(Constructor::eo__24emb_5fsm_2emod_5ftotal, a0)?;
 let Some(fields) = v241 else { break 'case31; }
@@ -91021,8 +96516,11 @@ let v253 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v253
 }, None => s.stuck(),
 };
-return Ok(v246);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v246));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_32_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case32: {
 let v254 = s.destruct(Constructor::eo__24emb_5fsm_2eselect, a0)?;
 let Some(fields) = v254 else { break 'case32; }
@@ -91031,8 +96529,11 @@ let v255 = fields;
 let v256 = eo__24smtx_5ftypeof(s, v255[0])?;
 let v257 = eo__24smtx_5ftypeof(s, v255[1])?;
 let v258 = eo__24smtx_5ftypeof_5fselect(s, v256, v257)?;
-return Ok(v258);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v258));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_33_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case33: {
 let v259 = s.destruct(Constructor::eo__24emb_5fsm_2estore, a0)?;
 let Some(fields) = v259 else { break 'case33; }
@@ -91042,8 +96543,11 @@ let v261 = eo__24smtx_5ftypeof(s, v260[0])?;
 let v262 = eo__24smtx_5ftypeof(s, v260[1])?;
 let v263 = eo__24smtx_5ftypeof(s, v260[2])?;
 let v264 = eo__24smtx_5ftypeof_5fstore(s, v261, v262, v263)?;
-return Ok(v264);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v264));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_34_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case34: {
 let v265 = s.destruct(Constructor::eo__24emb_5fsm_2emap_5fdiff, a0)?;
 let Some(fields) = v265 else { break 'case34; }
@@ -91052,8 +96556,11 @@ let v266 = fields;
 let v267 = eo__24smtx_5ftypeof(s, v266[0])?;
 let v268 = eo__24smtx_5ftypeof(s, v266[1])?;
 let v269 = eo__24smtx_5ftypeof_5fmap_5fdiff(s, v267, v268)?;
-return Ok(v269);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v269));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_35_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case35: {
 let v270 = s.destruct(Constructor::eo__24emb_5fsm_2econcat, a0)?;
 let Some(fields) = v270 else { break 'case35; }
@@ -91062,8 +96569,11 @@ let v271 = fields;
 let v272 = eo__24smtx_5ftypeof(s, v271[0])?;
 let v273 = eo__24smtx_5ftypeof(s, v271[1])?;
 let v274 = eo__24smtx_5ftypeof_5fconcat(s, v272, v273)?;
-return Ok(v274);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v274));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_36_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case36: {
 let v275 = s.destruct(Constructor::eo__24emb_5fsm_2eextract, a0)?;
 let Some(fields) = v275 else { break 'case36; }
@@ -91071,8 +96581,11 @@ let Some(fields) = v275 else { break 'case36; }
 let v276 = fields;
 let v277 = eo__24smtx_5ftypeof(s, v276[2])?;
 let v278 = eo__24smtx_5ftypeof_5fextract(s, v276[0], v276[1], v277)?;
-return Ok(v278);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v278));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_37_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case37: {
 let v279 = s.destruct(Constructor::eo__24emb_5fsm_2erepeat, a0)?;
 let Some(fields) = v279 else { break 'case37; }
@@ -91080,8 +96593,11 @@ let Some(fields) = v279 else { break 'case37; }
 let v280 = fields;
 let v281 = eo__24smtx_5ftypeof(s, v280[1])?;
 let v282 = eo__24smtx_5ftypeof_5frepeat(s, v280[0], v281)?;
-return Ok(v282);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v282));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_38_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case38: {
 let v283 = s.destruct(Constructor::eo__24emb_5fsm_2ebvnot, a0)?;
 let Some(fields) = v283 else { break 'case38; }
@@ -91089,8 +96605,11 @@ let Some(fields) = v283 else { break 'case38; }
 let v284 = fields;
 let v285 = eo__24smtx_5ftypeof(s, v284[0])?;
 let v286 = eo__24smtx_5ftypeof_5fbv_5fop_5f1(s, v285)?;
-return Ok(v286);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v286));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_39_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case39: {
 let v287 = s.destruct(Constructor::eo__24emb_5fsm_2ebvand, a0)?;
 let Some(fields) = v287 else { break 'case39; }
@@ -91099,8 +96618,11 @@ let v288 = fields;
 let v289 = eo__24smtx_5ftypeof(s, v288[0])?;
 let v290 = eo__24smtx_5ftypeof(s, v288[1])?;
 let v291 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v289, v290)?;
-return Ok(v291);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v291));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_40_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case40: {
 let v292 = s.destruct(Constructor::eo__24emb_5fsm_2ebvor, a0)?;
 let Some(fields) = v292 else { break 'case40; }
@@ -91109,8 +96631,11 @@ let v293 = fields;
 let v294 = eo__24smtx_5ftypeof(s, v293[0])?;
 let v295 = eo__24smtx_5ftypeof(s, v293[1])?;
 let v296 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v294, v295)?;
-return Ok(v296);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v296));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_41_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case41: {
 let v297 = s.destruct(Constructor::eo__24emb_5fsm_2ebvnand, a0)?;
 let Some(fields) = v297 else { break 'case41; }
@@ -91119,8 +96644,11 @@ let v298 = fields;
 let v299 = eo__24smtx_5ftypeof(s, v298[0])?;
 let v300 = eo__24smtx_5ftypeof(s, v298[1])?;
 let v301 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v299, v300)?;
-return Ok(v301);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v301));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_42_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case42: {
 let v302 = s.destruct(Constructor::eo__24emb_5fsm_2ebvnor, a0)?;
 let Some(fields) = v302 else { break 'case42; }
@@ -91129,8 +96657,11 @@ let v303 = fields;
 let v304 = eo__24smtx_5ftypeof(s, v303[0])?;
 let v305 = eo__24smtx_5ftypeof(s, v303[1])?;
 let v306 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v304, v305)?;
-return Ok(v306);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v306));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_43_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case43: {
 let v307 = s.destruct(Constructor::eo__24emb_5fsm_2ebvxor, a0)?;
 let Some(fields) = v307 else { break 'case43; }
@@ -91139,8 +96670,11 @@ let v308 = fields;
 let v309 = eo__24smtx_5ftypeof(s, v308[0])?;
 let v310 = eo__24smtx_5ftypeof(s, v308[1])?;
 let v311 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v309, v310)?;
-return Ok(v311);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v311));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_44_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case44: {
 let v312 = s.destruct(Constructor::eo__24emb_5fsm_2ebvxnor, a0)?;
 let Some(fields) = v312 else { break 'case44; }
@@ -91149,8 +96683,11 @@ let v313 = fields;
 let v314 = eo__24smtx_5ftypeof(s, v313[0])?;
 let v315 = eo__24smtx_5ftypeof(s, v313[1])?;
 let v316 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v314, v315)?;
-return Ok(v316);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v316));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_45_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case45: {
 let v317 = s.destruct(Constructor::eo__24emb_5fsm_2ebvcomp, a0)?;
 let Some(fields) = v317 else { break 'case45; }
@@ -91162,8 +96699,11 @@ let v321 = s.native("nat.zero", &[])?;
 let v322 = s.native("nat.succ", &[v321])?;
 let v323 = s.construct(Constructor::eo__24emb_5ftsm_2eBitVec, &[v322])?;
 let v324 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v319, v320, v323)?;
-return Ok(v324);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v324));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_46_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case46: {
 let v325 = s.destruct(Constructor::eo__24emb_5fsm_2ebvneg, a0)?;
 let Some(fields) = v325 else { break 'case46; }
@@ -91171,8 +96711,11 @@ let Some(fields) = v325 else { break 'case46; }
 let v326 = fields;
 let v327 = eo__24smtx_5ftypeof(s, v326[0])?;
 let v328 = eo__24smtx_5ftypeof_5fbv_5fop_5f1(s, v327)?;
-return Ok(v328);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v328));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_47_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case47: {
 let v329 = s.destruct(Constructor::eo__24emb_5fsm_2ebvadd, a0)?;
 let Some(fields) = v329 else { break 'case47; }
@@ -91181,8 +96724,11 @@ let v330 = fields;
 let v331 = eo__24smtx_5ftypeof(s, v330[0])?;
 let v332 = eo__24smtx_5ftypeof(s, v330[1])?;
 let v333 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v331, v332)?;
-return Ok(v333);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v333));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_48_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case48: {
 let v334 = s.destruct(Constructor::eo__24emb_5fsm_2ebvmul, a0)?;
 let Some(fields) = v334 else { break 'case48; }
@@ -91191,8 +96737,11 @@ let v335 = fields;
 let v336 = eo__24smtx_5ftypeof(s, v335[0])?;
 let v337 = eo__24smtx_5ftypeof(s, v335[1])?;
 let v338 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v336, v337)?;
-return Ok(v338);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v338));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_49_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case49: {
 let v339 = s.destruct(Constructor::eo__24emb_5fsm_2ebvudiv, a0)?;
 let Some(fields) = v339 else { break 'case49; }
@@ -91201,8 +96750,11 @@ let v340 = fields;
 let v341 = eo__24smtx_5ftypeof(s, v340[0])?;
 let v342 = eo__24smtx_5ftypeof(s, v340[1])?;
 let v343 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v341, v342)?;
-return Ok(v343);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v343));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_50_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case50: {
 let v344 = s.destruct(Constructor::eo__24emb_5fsm_2ebvurem, a0)?;
 let Some(fields) = v344 else { break 'case50; }
@@ -91211,8 +96763,11 @@ let v345 = fields;
 let v346 = eo__24smtx_5ftypeof(s, v345[0])?;
 let v347 = eo__24smtx_5ftypeof(s, v345[1])?;
 let v348 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v346, v347)?;
-return Ok(v348);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v348));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_51_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case51: {
 let v349 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsub, a0)?;
 let Some(fields) = v349 else { break 'case51; }
@@ -91221,8 +96776,11 @@ let v350 = fields;
 let v351 = eo__24smtx_5ftypeof(s, v350[0])?;
 let v352 = eo__24smtx_5ftypeof(s, v350[1])?;
 let v353 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v351, v352)?;
-return Ok(v353);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v353));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_52_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case52: {
 let v354 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsdiv, a0)?;
 let Some(fields) = v354 else { break 'case52; }
@@ -91231,8 +96789,11 @@ let v355 = fields;
 let v356 = eo__24smtx_5ftypeof(s, v355[0])?;
 let v357 = eo__24smtx_5ftypeof(s, v355[1])?;
 let v358 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v356, v357)?;
-return Ok(v358);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v358));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_53_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case53: {
 let v359 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsrem, a0)?;
 let Some(fields) = v359 else { break 'case53; }
@@ -91241,8 +96802,11 @@ let v360 = fields;
 let v361 = eo__24smtx_5ftypeof(s, v360[0])?;
 let v362 = eo__24smtx_5ftypeof(s, v360[1])?;
 let v363 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v361, v362)?;
-return Ok(v363);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v363));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_54_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case54: {
 let v364 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsmod, a0)?;
 let Some(fields) = v364 else { break 'case54; }
@@ -91251,8 +96815,11 @@ let v365 = fields;
 let v366 = eo__24smtx_5ftypeof(s, v365[0])?;
 let v367 = eo__24smtx_5ftypeof(s, v365[1])?;
 let v368 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v366, v367)?;
-return Ok(v368);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v368));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_55_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case55: {
 let v369 = s.destruct(Constructor::eo__24emb_5fsm_2ebvult, a0)?;
 let Some(fields) = v369 else { break 'case55; }
@@ -91262,8 +96829,11 @@ let v371 = eo__24smtx_5ftypeof(s, v370[0])?;
 let v372 = eo__24smtx_5ftypeof(s, v370[1])?;
 let v373 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v374 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v371, v372, v373)?;
-return Ok(v374);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v374));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_56_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case56: {
 let v375 = s.destruct(Constructor::eo__24emb_5fsm_2ebvule, a0)?;
 let Some(fields) = v375 else { break 'case56; }
@@ -91273,8 +96843,11 @@ let v377 = eo__24smtx_5ftypeof(s, v376[0])?;
 let v378 = eo__24smtx_5ftypeof(s, v376[1])?;
 let v379 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v380 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v377, v378, v379)?;
-return Ok(v380);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v380));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_57_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case57: {
 let v381 = s.destruct(Constructor::eo__24emb_5fsm_2ebvugt, a0)?;
 let Some(fields) = v381 else { break 'case57; }
@@ -91284,8 +96857,11 @@ let v383 = eo__24smtx_5ftypeof(s, v382[0])?;
 let v384 = eo__24smtx_5ftypeof(s, v382[1])?;
 let v385 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v386 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v383, v384, v385)?;
-return Ok(v386);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v386));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_58_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case58: {
 let v387 = s.destruct(Constructor::eo__24emb_5fsm_2ebvuge, a0)?;
 let Some(fields) = v387 else { break 'case58; }
@@ -91295,8 +96871,11 @@ let v389 = eo__24smtx_5ftypeof(s, v388[0])?;
 let v390 = eo__24smtx_5ftypeof(s, v388[1])?;
 let v391 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v392 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v389, v390, v391)?;
-return Ok(v392);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v392));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_59_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case59: {
 let v393 = s.destruct(Constructor::eo__24emb_5fsm_2ebvslt, a0)?;
 let Some(fields) = v393 else { break 'case59; }
@@ -91306,8 +96885,11 @@ let v395 = eo__24smtx_5ftypeof(s, v394[0])?;
 let v396 = eo__24smtx_5ftypeof(s, v394[1])?;
 let v397 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v398 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v395, v396, v397)?;
-return Ok(v398);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v398));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_60_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case60: {
 let v399 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsle, a0)?;
 let Some(fields) = v399 else { break 'case60; }
@@ -91317,8 +96899,11 @@ let v401 = eo__24smtx_5ftypeof(s, v400[0])?;
 let v402 = eo__24smtx_5ftypeof(s, v400[1])?;
 let v403 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v404 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v401, v402, v403)?;
-return Ok(v404);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v404));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_61_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case61: {
 let v405 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsgt, a0)?;
 let Some(fields) = v405 else { break 'case61; }
@@ -91328,8 +96913,11 @@ let v407 = eo__24smtx_5ftypeof(s, v406[0])?;
 let v408 = eo__24smtx_5ftypeof(s, v406[1])?;
 let v409 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v410 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v407, v408, v409)?;
-return Ok(v410);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v410));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_62_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case62: {
 let v411 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsge, a0)?;
 let Some(fields) = v411 else { break 'case62; }
@@ -91339,8 +96927,11 @@ let v413 = eo__24smtx_5ftypeof(s, v412[0])?;
 let v414 = eo__24smtx_5ftypeof(s, v412[1])?;
 let v415 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v416 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v413, v414, v415)?;
-return Ok(v416);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v416));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_63_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case63: {
 let v417 = s.destruct(Constructor::eo__24emb_5fsm_2ebvshl, a0)?;
 let Some(fields) = v417 else { break 'case63; }
@@ -91349,8 +96940,11 @@ let v418 = fields;
 let v419 = eo__24smtx_5ftypeof(s, v418[0])?;
 let v420 = eo__24smtx_5ftypeof(s, v418[1])?;
 let v421 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v419, v420)?;
-return Ok(v421);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v421));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_64_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case64: {
 let v422 = s.destruct(Constructor::eo__24emb_5fsm_2ebvlshr, a0)?;
 let Some(fields) = v422 else { break 'case64; }
@@ -91359,8 +96953,11 @@ let v423 = fields;
 let v424 = eo__24smtx_5ftypeof(s, v423[0])?;
 let v425 = eo__24smtx_5ftypeof(s, v423[1])?;
 let v426 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v424, v425)?;
-return Ok(v426);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v426));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_65_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case65: {
 let v427 = s.destruct(Constructor::eo__24emb_5fsm_2ebvashr, a0)?;
 let Some(fields) = v427 else { break 'case65; }
@@ -91369,8 +96966,11 @@ let v428 = fields;
 let v429 = eo__24smtx_5ftypeof(s, v428[0])?;
 let v430 = eo__24smtx_5ftypeof(s, v428[1])?;
 let v431 = eo__24smtx_5ftypeof_5fbv_5fop_5f2(s, v429, v430)?;
-return Ok(v431);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v431));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_66_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case66: {
 let v432 = s.destruct(Constructor::eo__24emb_5fsm_2ezero_5fextend, a0)?;
 let Some(fields) = v432 else { break 'case66; }
@@ -91378,8 +96978,11 @@ let Some(fields) = v432 else { break 'case66; }
 let v433 = fields;
 let v434 = eo__24smtx_5ftypeof(s, v433[1])?;
 let v435 = eo__24smtx_5ftypeof_5fzero_5fextend(s, v433[0], v434)?;
-return Ok(v435);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v435));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_67_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case67: {
 let v436 = s.destruct(Constructor::eo__24emb_5fsm_2esign_5fextend, a0)?;
 let Some(fields) = v436 else { break 'case67; }
@@ -91387,8 +96990,11 @@ let Some(fields) = v436 else { break 'case67; }
 let v437 = fields;
 let v438 = eo__24smtx_5ftypeof(s, v437[1])?;
 let v439 = eo__24smtx_5ftypeof_5fsign_5fextend(s, v437[0], v438)?;
-return Ok(v439);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v439));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_68_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case68: {
 let v440 = s.destruct(Constructor::eo__24emb_5fsm_2erotate_5fleft, a0)?;
 let Some(fields) = v440 else { break 'case68; }
@@ -91396,8 +97002,11 @@ let Some(fields) = v440 else { break 'case68; }
 let v441 = fields;
 let v442 = eo__24smtx_5ftypeof(s, v441[1])?;
 let v443 = eo__24smtx_5ftypeof_5frotate_5fleft(s, v441[0], v442)?;
-return Ok(v443);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v443));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_69_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case69: {
 let v444 = s.destruct(Constructor::eo__24emb_5fsm_2erotate_5fright, a0)?;
 let Some(fields) = v444 else { break 'case69; }
@@ -91405,8 +97014,11 @@ let Some(fields) = v444 else { break 'case69; }
 let v445 = fields;
 let v446 = eo__24smtx_5ftypeof(s, v445[1])?;
 let v447 = eo__24smtx_5ftypeof_5frotate_5fright(s, v445[0], v446)?;
-return Ok(v447);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v447));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_70_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case70: {
 let v448 = s.destruct(Constructor::eo__24emb_5fsm_2ebvuaddo, a0)?;
 let Some(fields) = v448 else { break 'case70; }
@@ -91416,8 +97028,11 @@ let v450 = eo__24smtx_5ftypeof(s, v449[0])?;
 let v451 = eo__24smtx_5ftypeof(s, v449[1])?;
 let v452 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v453 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v450, v451, v452)?;
-return Ok(v453);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v453));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_71_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case71: {
 let v454 = s.destruct(Constructor::eo__24emb_5fsm_2ebvnego, a0)?;
 let Some(fields) = v454 else { break 'case71; }
@@ -91426,8 +97041,11 @@ let v455 = fields;
 let v456 = eo__24smtx_5ftypeof(s, v455[0])?;
 let v457 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v458 = eo__24smtx_5ftypeof_5fbv_5fop_5f1_5fret(s, v456, v457)?;
-return Ok(v458);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v458));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_72_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case72: {
 let v459 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsaddo, a0)?;
 let Some(fields) = v459 else { break 'case72; }
@@ -91437,8 +97055,11 @@ let v461 = eo__24smtx_5ftypeof(s, v460[0])?;
 let v462 = eo__24smtx_5ftypeof(s, v460[1])?;
 let v463 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v464 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v461, v462, v463)?;
-return Ok(v464);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v464));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_73_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case73: {
 let v465 = s.destruct(Constructor::eo__24emb_5fsm_2ebvumulo, a0)?;
 let Some(fields) = v465 else { break 'case73; }
@@ -91448,8 +97069,11 @@ let v467 = eo__24smtx_5ftypeof(s, v466[0])?;
 let v468 = eo__24smtx_5ftypeof(s, v466[1])?;
 let v469 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v470 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v467, v468, v469)?;
-return Ok(v470);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v470));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_74_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case74: {
 let v471 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsmulo, a0)?;
 let Some(fields) = v471 else { break 'case74; }
@@ -91459,8 +97083,11 @@ let v473 = eo__24smtx_5ftypeof(s, v472[0])?;
 let v474 = eo__24smtx_5ftypeof(s, v472[1])?;
 let v475 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v476 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v473, v474, v475)?;
-return Ok(v476);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v476));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_75_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case75: {
 let v477 = s.destruct(Constructor::eo__24emb_5fsm_2ebvusubo, a0)?;
 let Some(fields) = v477 else { break 'case75; }
@@ -91470,8 +97097,11 @@ let v479 = eo__24smtx_5ftypeof(s, v478[0])?;
 let v480 = eo__24smtx_5ftypeof(s, v478[1])?;
 let v481 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v482 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v479, v480, v481)?;
-return Ok(v482);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v482));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_76_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case76: {
 let v483 = s.destruct(Constructor::eo__24emb_5fsm_2ebvssubo, a0)?;
 let Some(fields) = v483 else { break 'case76; }
@@ -91481,8 +97111,11 @@ let v485 = eo__24smtx_5ftypeof(s, v484[0])?;
 let v486 = eo__24smtx_5ftypeof(s, v484[1])?;
 let v487 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v488 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v485, v486, v487)?;
-return Ok(v488);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v488));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_77_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case77: {
 let v489 = s.destruct(Constructor::eo__24emb_5fsm_2ebvsdivo, a0)?;
 let Some(fields) = v489 else { break 'case77; }
@@ -91492,8 +97125,11 @@ let v491 = eo__24smtx_5ftypeof(s, v490[0])?;
 let v492 = eo__24smtx_5ftypeof(s, v490[1])?;
 let v493 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v494 = eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret(s, v491, v492, v493)?;
-return Ok(v494);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v494));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_78_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case78: {
 let v495 = s.destruct(Constructor::eo__24emb_5fsm_2eseq_2eempty, a0)?;
 let Some(fields) = v495 else { break 'case78; }
@@ -91502,8 +97138,11 @@ let v496 = fields;
 let v497 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v496[0]])?;
 let v498 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v496[0]])?;
 let v499 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v497, v498)?;
-return Ok(v499);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v499));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_79_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case79: {
 let v500 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2elen, a0)?;
 let Some(fields) = v500 else { break 'case79; }
@@ -91512,8 +97151,11 @@ let v501 = fields;
 let v502 = eo__24smtx_5ftypeof(s, v501[0])?;
 let v503 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
 let v504 = eo__24smtx_5ftypeof_5fseq_5fop_5f1_5fret(s, v502, v503)?;
-return Ok(v504);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v504));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_80_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case80: {
 let v505 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2e_2b_2b, a0)?;
 let Some(fields) = v505 else { break 'case80; }
@@ -91522,8 +97164,11 @@ let v506 = fields;
 let v507 = eo__24smtx_5ftypeof(s, v506[0])?;
 let v508 = eo__24smtx_5ftypeof(s, v506[1])?;
 let v509 = eo__24smtx_5ftypeof_5fseq_5fop_5f2(s, v507, v508)?;
-return Ok(v509);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v509));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_81_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case81: {
 let v510 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2esubstr, a0)?;
 let Some(fields) = v510 else { break 'case81; }
@@ -91533,8 +97178,11 @@ let v512 = eo__24smtx_5ftypeof(s, v511[0])?;
 let v513 = eo__24smtx_5ftypeof(s, v511[1])?;
 let v514 = eo__24smtx_5ftypeof(s, v511[2])?;
 let v515 = eo__24smtx_5ftypeof_5fstr_2esubstr(s, v512, v513, v514)?;
-return Ok(v515);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v515));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_82_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case82: {
 let v516 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2econtains, a0)?;
 let Some(fields) = v516 else { break 'case82; }
@@ -91544,8 +97192,11 @@ let v518 = eo__24smtx_5ftypeof(s, v517[0])?;
 let v519 = eo__24smtx_5ftypeof(s, v517[1])?;
 let v520 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v521 = eo__24smtx_5ftypeof_5fseq_5fop_5f2_5fret(s, v518, v519, v520)?;
-return Ok(v521);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v521));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_83_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case83: {
 let v522 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2ereplace, a0)?;
 let Some(fields) = v522 else { break 'case83; }
@@ -91555,8 +97206,11 @@ let v524 = eo__24smtx_5ftypeof(s, v523[0])?;
 let v525 = eo__24smtx_5ftypeof(s, v523[1])?;
 let v526 = eo__24smtx_5ftypeof(s, v523[2])?;
 let v527 = eo__24smtx_5ftypeof_5fseq_5fop_5f3(s, v524, v525, v526)?;
-return Ok(v527);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v527));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_84_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case84: {
 let v528 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eindexof, a0)?;
 let Some(fields) = v528 else { break 'case84; }
@@ -91566,8 +97220,11 @@ let v530 = eo__24smtx_5ftypeof(s, v529[0])?;
 let v531 = eo__24smtx_5ftypeof(s, v529[1])?;
 let v532 = eo__24smtx_5ftypeof(s, v529[2])?;
 let v533 = eo__24smtx_5ftypeof_5fstr_2eindexof(s, v530, v531, v532)?;
-return Ok(v533);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v533));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_85_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case85: {
 let v534 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eat, a0)?;
 let Some(fields) = v534 else { break 'case85; }
@@ -91576,8 +97233,11 @@ let v535 = fields;
 let v536 = eo__24smtx_5ftypeof(s, v535[0])?;
 let v537 = eo__24smtx_5ftypeof(s, v535[1])?;
 let v538 = eo__24smtx_5ftypeof_5fstr_2eat(s, v536, v537)?;
-return Ok(v538);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v538));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_86_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case86: {
 let v539 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eprefixof, a0)?;
 let Some(fields) = v539 else { break 'case86; }
@@ -91587,8 +97247,11 @@ let v541 = eo__24smtx_5ftypeof(s, v540[0])?;
 let v542 = eo__24smtx_5ftypeof(s, v540[1])?;
 let v543 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v544 = eo__24smtx_5ftypeof_5fseq_5fop_5f2_5fret(s, v541, v542, v543)?;
-return Ok(v544);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v544));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_87_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case87: {
 let v545 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2esuffixof, a0)?;
 let Some(fields) = v545 else { break 'case87; }
@@ -91598,8 +97261,11 @@ let v547 = eo__24smtx_5ftypeof(s, v546[0])?;
 let v548 = eo__24smtx_5ftypeof(s, v546[1])?;
 let v549 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v550 = eo__24smtx_5ftypeof_5fseq_5fop_5f2_5fret(s, v547, v548, v549)?;
-return Ok(v550);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v550));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_88_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case88: {
 let v551 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2erev, a0)?;
 let Some(fields) = v551 else { break 'case88; }
@@ -91607,8 +97273,11 @@ let Some(fields) = v551 else { break 'case88; }
 let v552 = fields;
 let v553 = eo__24smtx_5ftypeof(s, v552[0])?;
 let v554 = eo__24smtx_5ftypeof_5fseq_5fop_5f1(s, v553)?;
-return Ok(v554);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v554));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_89_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case89: {
 let v555 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eupdate, a0)?;
 let Some(fields) = v555 else { break 'case89; }
@@ -91618,8 +97287,11 @@ let v557 = eo__24smtx_5ftypeof(s, v556[0])?;
 let v558 = eo__24smtx_5ftypeof(s, v556[1])?;
 let v559 = eo__24smtx_5ftypeof(s, v556[2])?;
 let v560 = eo__24smtx_5ftypeof_5fstr_2eupdate(s, v557, v558, v559)?;
-return Ok(v560);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v560));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_90_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case90: {
 let v561 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eto_5flower, a0)?;
 let Some(fields) = v561 else { break 'case90; }
@@ -91639,8 +97311,11 @@ let v570 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v570
 }, None => s.stuck(),
 };
-return Ok(v567);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v567));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_91_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case91: {
 let v571 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eto_5fupper, a0)?;
 let Some(fields) = v571 else { break 'case91; }
@@ -91660,8 +97335,11 @@ let v580 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v580
 }, None => s.stuck(),
 };
-return Ok(v577);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v577));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_92_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case92: {
 let v581 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eto_5fcode, a0)?;
 let Some(fields) = v581 else { break 'case92; }
@@ -91680,8 +97358,11 @@ let v589 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v589
 }, None => s.stuck(),
 };
-return Ok(v587);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v587));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_93_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case93: {
 let v590 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2efrom_5fcode, a0)?;
 let Some(fields) = v590 else { break 'case93; }
@@ -91700,8 +97381,11 @@ let v598 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v598
 }, None => s.stuck(),
 };
-return Ok(v595);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v595));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_94_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case94: {
 let v599 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eis_5fdigit, a0)?;
 let Some(fields) = v599 else { break 'case94; }
@@ -91720,8 +97404,11 @@ let v607 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v607
 }, None => s.stuck(),
 };
-return Ok(v605);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v605));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_95_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case95: {
 let v608 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eto_5fint, a0)?;
 let Some(fields) = v608 else { break 'case95; }
@@ -91740,8 +97427,11 @@ let v616 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v616
 }, None => s.stuck(),
 };
-return Ok(v614);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v614));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_96_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case96: {
 let v617 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2efrom_5fint, a0)?;
 let Some(fields) = v617 else { break 'case96; }
@@ -91760,8 +97450,11 @@ let v625 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v625
 }, None => s.stuck(),
 };
-return Ok(v622);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v622));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_97_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case97: {
 let v626 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2e_3c, a0)?;
 let Some(fields) = v626 else { break 'case97; }
@@ -91792,8 +97485,11 @@ let v640 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v640
 }, None => s.stuck(),
 };
-return Ok(v632);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v632));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_98_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case98: {
 let v641 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2e_3c_3d, a0)?;
 let Some(fields) = v641 else { break 'case98; }
@@ -91824,8 +97520,11 @@ let v655 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v655
 }, None => s.stuck(),
 };
-return Ok(v647);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v647));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_99_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case99: {
 let v656 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fall, a0)?;
 let Some(fields) = v656 else { break 'case99; }
@@ -91835,8 +97534,11 @@ let v658 = eo__24smtx_5ftypeof(s, v657[0])?;
 let v659 = eo__24smtx_5ftypeof(s, v657[1])?;
 let v660 = eo__24smtx_5ftypeof(s, v657[2])?;
 let v661 = eo__24smtx_5ftypeof_5fseq_5fop_5f3(s, v658, v659, v660)?;
-return Ok(v661);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v661));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_100_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case100: {
 let v662 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre, a0)?;
 let Some(fields) = v662 else { break 'case100; }
@@ -91879,8 +97581,11 @@ let v682 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v682
 }, None => s.stuck(),
 };
-return Ok(v668);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v668));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_101_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case101: {
 let v683 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2ereplace_5fre_5fall, a0)?;
 let Some(fields) = v683 else { break 'case101; }
@@ -91923,8 +97628,11 @@ let v703 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v703
 }, None => s.stuck(),
 };
-return Ok(v689);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v689));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_102_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case102: {
 let v704 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eindexof_5fre, a0)?;
 let Some(fields) = v704 else { break 'case102; }
@@ -91965,26 +97673,38 @@ let v722 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v722
 }, None => s.stuck(),
 };
-return Ok(v710);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v710));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_103_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case103: {
 let v723 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eallchar, &[])?;
 if a0 != v723 { break 'case103; }
 let v724 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-return Ok(v724);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v724));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_104_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case104: {
 let v725 = s.construct(Constructor::eo__24emb_5fsm_2ere_2enone, &[])?;
 if a0 != v725 { break 'case104; }
 let v726 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-return Ok(v726);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v726));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_105_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case105: {
 let v727 = s.construct(Constructor::eo__24emb_5fsm_2ere_2eall, &[])?;
 if a0 != v727 { break 'case105; }
 let v728 = s.construct(Constructor::eo__24emb_5ftsm_2eRegLan, &[])?;
-return Ok(v728);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v728));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_106_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case106: {
 let v729 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eto_5fre, a0)?;
 let Some(fields) = v729 else { break 'case106; }
@@ -92003,8 +97723,11 @@ let v737 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v737
 }, None => s.stuck(),
 };
-return Ok(v735);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v735));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_107_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case107: {
 let v738 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2e_2a, a0)?;
 let Some(fields) = v738 else { break 'case107; }
@@ -92022,8 +97745,11 @@ let v745 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v745
 }, None => s.stuck(),
 };
-return Ok(v743);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v743));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_108_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case108: {
 let v746 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2e_2b, a0)?;
 let Some(fields) = v746 else { break 'case108; }
@@ -92041,8 +97767,11 @@ let v753 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v753
 }, None => s.stuck(),
 };
-return Ok(v751);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v751));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_109_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case109: {
 let v754 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2e_5e, a0)?;
 let Some(fields) = v754 else { break 'case109; }
@@ -92050,8 +97779,11 @@ let Some(fields) = v754 else { break 'case109; }
 let v755 = fields;
 let v756 = eo__24smtx_5ftypeof(s, v755[1])?;
 let v757 = eo__24smtx_5ftypeof_5fre_2e_5e(s, v755[0], v756)?;
-return Ok(v757);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v757));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_110_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case110: {
 let v758 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2eopt, a0)?;
 let Some(fields) = v758 else { break 'case110; }
@@ -92069,8 +97801,11 @@ let v765 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v765
 }, None => s.stuck(),
 };
-return Ok(v763);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v763));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_111_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case111: {
 let v766 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2ecomp, a0)?;
 let Some(fields) = v766 else { break 'case111; }
@@ -92088,8 +97823,11 @@ let v773 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v773
 }, None => s.stuck(),
 };
-return Ok(v771);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v771));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_112_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case112: {
 let v774 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2erange, a0)?;
 let Some(fields) = v774 else { break 'case112; }
@@ -92120,8 +97858,11 @@ let v788 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v788
 }, None => s.stuck(),
 };
-return Ok(v780);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v780));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_113_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case113: {
 let v789 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2e_2b_2b, a0)?;
 let Some(fields) = v789 else { break 'case113; }
@@ -92150,8 +97891,11 @@ let v801 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v801
 }, None => s.stuck(),
 };
-return Ok(v794);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v794));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_114_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case114: {
 let v802 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2einter, a0)?;
 let Some(fields) = v802 else { break 'case114; }
@@ -92180,8 +97924,11 @@ let v814 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v814
 }, None => s.stuck(),
 };
-return Ok(v807);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v807));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_115_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case115: {
 let v815 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2eunion, a0)?;
 let Some(fields) = v815 else { break 'case115; }
@@ -92210,8 +97957,11 @@ let v827 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v827
 }, None => s.stuck(),
 };
-return Ok(v820);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v820));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_116_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case116: {
 let v828 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2ediff, a0)?;
 let Some(fields) = v828 else { break 'case116; }
@@ -92240,8 +97990,11 @@ let v840 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v840
 }, None => s.stuck(),
 };
-return Ok(v833);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v833));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_117_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case117: {
 let v841 = s.destruct(Constructor::eo__24emb_5fsm_2ere_2eloop, a0)?;
 let Some(fields) = v841 else { break 'case117; }
@@ -92249,8 +98002,11 @@ let Some(fields) = v841 else { break 'case117; }
 let v842 = fields;
 let v843 = eo__24smtx_5ftypeof(s, v842[2])?;
 let v844 = eo__24smtx_5ftypeof_5fre_2eloop(s, v842[0], v842[1], v843)?;
-return Ok(v844);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v844));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_118_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case118: {
 let v845 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2ein_5fre, a0)?;
 let Some(fields) = v845 else { break 'case118; }
@@ -92280,8 +98036,11 @@ let v858 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v858
 }, None => s.stuck(),
 };
-return Ok(v851);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v851));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_119_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case119: {
 let v859 = s.destruct(Constructor::eo__24emb_5fsm_2eseq_2eunit, a0)?;
 let Some(fields) = v859 else { break 'case119; }
@@ -92292,8 +98051,11 @@ let v862 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v861])?;
 let v863 = eo__24smtx_5ftypeof(s, v860[0])?;
 let v864 = s.construct(Constructor::eo__24emb_5ftsm_2eSeq, &[v863])?;
 let v865 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v862, v864)?;
-return Ok(v865);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v865));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_120_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case120: {
 let v866 = s.destruct(Constructor::eo__24emb_5fsm_2eseq_2enth, a0)?;
 let Some(fields) = v866 else { break 'case120; }
@@ -92302,8 +98064,11 @@ let v867 = fields;
 let v868 = eo__24smtx_5ftypeof(s, v867[0])?;
 let v869 = eo__24smtx_5ftypeof(s, v867[1])?;
 let v870 = eo__24smtx_5ftypeof_5fseq_2enth(s, v868, v869)?;
-return Ok(v870);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v870));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_121_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case121: {
 let v871 = s.destruct(Constructor::eo__24emb_5fsm_2estr_2eindexof_5fre_5fsplit, a0)?;
 let Some(fields) = v871 else { break 'case121; }
@@ -92344,8 +98109,11 @@ let v889 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v889
 }, None => s.stuck(),
 };
-return Ok(v877);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v877));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_122_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case122: {
 let v890 = s.destruct(Constructor::eo__24emb_5fsm_2eseq_5fdiff, a0)?;
 let Some(fields) = v890 else { break 'case122; }
@@ -92354,8 +98122,11 @@ let v891 = fields;
 let v892 = eo__24smtx_5ftypeof(s, v891[0])?;
 let v893 = eo__24smtx_5ftypeof(s, v891[1])?;
 let v894 = eo__24smtx_5ftypeof_5fseq_5fdiff(s, v892, v893)?;
-return Ok(v894);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v894));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_123_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case123: {
 let v895 = s.destruct(Constructor::eo__24emb_5fsm_2e_40strings_5foccur_5findex, a0)?;
 let Some(fields) = v895 else { break 'case123; }
@@ -92365,8 +98136,11 @@ let v897 = eo__24smtx_5ftypeof(s, v896[0])?;
 let v898 = eo__24smtx_5ftypeof(s, v896[1])?;
 let v899 = eo__24smtx_5ftypeof(s, v896[2])?;
 let v900 = eo__24smtx_5ftypeof_5fstr_2eindexof(s, v897, v898, v899)?;
-return Ok(v900);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v900));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_124_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case124: {
 let v901 = s.destruct(Constructor::eo__24emb_5fsm_2e_40strings_5foccur_5findex_5fre, a0)?;
 let Some(fields) = v901 else { break 'case124; }
@@ -92407,8 +98181,11 @@ let v919 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v919
 }, None => s.stuck(),
 };
-return Ok(v907);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v907));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_125_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case125: {
 let v920 = s.destruct(Constructor::eo__24emb_5fsm_2echoice, a0)?;
 let Some(fields) = v920 else { break 'case125; }
@@ -92426,8 +98203,11 @@ let v927 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v927
 }, None => s.stuck(),
 };
-return Ok(v925);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v925));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_126_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case126: {
 let v928 = s.destruct(Constructor::eo__24emb_5fsm_2eset_2eempty, a0)?;
 let Some(fields) = v928 else { break 'case126; }
@@ -92436,8 +98216,11 @@ let v929 = fields;
 let v930 = s.construct(Constructor::eo__24emb_5ftsm_2eSet, &[v929[0]])?;
 let v931 = s.construct(Constructor::eo__24emb_5ftsm_2eSet, &[v929[0]])?;
 let v932 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v930, v931)?;
-return Ok(v932);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v932));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_127_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case127: {
 let v933 = s.destruct(Constructor::eo__24emb_5fsm_2eset_2esingleton, a0)?;
 let Some(fields) = v933 else { break 'case127; }
@@ -92448,8 +98231,11 @@ let v936 = s.construct(Constructor::eo__24emb_5ftsm_2eSet, &[v935])?;
 let v937 = eo__24smtx_5ftypeof(s, v934[0])?;
 let v938 = s.construct(Constructor::eo__24emb_5ftsm_2eSet, &[v937])?;
 let v939 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v936, v938)?;
-return Ok(v939);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v939));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_128_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case128: {
 let v940 = s.destruct(Constructor::eo__24emb_5fsm_2eset_2eunion, a0)?;
 let Some(fields) = v940 else { break 'case128; }
@@ -92458,8 +98244,11 @@ let v941 = fields;
 let v942 = eo__24smtx_5ftypeof(s, v941[0])?;
 let v943 = eo__24smtx_5ftypeof(s, v941[1])?;
 let v944 = eo__24smtx_5ftypeof_5fsets_5fop_5f2(s, v942, v943)?;
-return Ok(v944);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v944));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_129_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case129: {
 let v945 = s.destruct(Constructor::eo__24emb_5fsm_2eset_2einter, a0)?;
 let Some(fields) = v945 else { break 'case129; }
@@ -92468,8 +98257,11 @@ let v946 = fields;
 let v947 = eo__24smtx_5ftypeof(s, v946[0])?;
 let v948 = eo__24smtx_5ftypeof(s, v946[1])?;
 let v949 = eo__24smtx_5ftypeof_5fsets_5fop_5f2(s, v947, v948)?;
-return Ok(v949);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v949));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_130_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case130: {
 let v950 = s.destruct(Constructor::eo__24emb_5fsm_2eset_2eminus, a0)?;
 let Some(fields) = v950 else { break 'case130; }
@@ -92478,8 +98270,11 @@ let v951 = fields;
 let v952 = eo__24smtx_5ftypeof(s, v951[0])?;
 let v953 = eo__24smtx_5ftypeof(s, v951[1])?;
 let v954 = eo__24smtx_5ftypeof_5fsets_5fop_5f2(s, v952, v953)?;
-return Ok(v954);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v954));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_131_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case131: {
 let v955 = s.destruct(Constructor::eo__24emb_5fsm_2eset_2emember, a0)?;
 let Some(fields) = v955 else { break 'case131; }
@@ -92488,8 +98283,11 @@ let v956 = fields;
 let v957 = eo__24smtx_5ftypeof(s, v956[0])?;
 let v958 = eo__24smtx_5ftypeof(s, v956[1])?;
 let v959 = eo__24smtx_5ftypeof_5fset_2emember(s, v957, v958)?;
-return Ok(v959);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v959));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_132_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case132: {
 let v960 = s.destruct(Constructor::eo__24emb_5fsm_2eset_2esubset, a0)?;
 let Some(fields) = v960 else { break 'case132; }
@@ -92499,8 +98297,11 @@ let v962 = eo__24smtx_5ftypeof(s, v961[0])?;
 let v963 = eo__24smtx_5ftypeof(s, v961[1])?;
 let v964 = s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[])?;
 let v965 = eo__24smtx_5ftypeof_5fsets_5fop_5f2_5fret(s, v962, v963, v964)?;
-return Ok(v965);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v965));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_133_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case133: {
 let v966 = s.destruct(Constructor::eo__24emb_5fsm_2e_2f, a0)?;
 let Some(fields) = v966 else { break 'case133; }
@@ -92510,8 +98311,11 @@ let v968 = eo__24smtx_5ftypeof(s, v967[0])?;
 let v969 = eo__24smtx_5ftypeof(s, v967[1])?;
 let v970 = s.construct(Constructor::eo__24emb_5ftsm_2eReal, &[])?;
 let v971 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_5fret(s, v968, v969, v970)?;
-return Ok(v971);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v971));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_134_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case134: {
 let v972 = s.destruct(Constructor::eo__24emb_5fsm_2e_2f_5ftotal, a0)?;
 let Some(fields) = v972 else { break 'case134; }
@@ -92521,8 +98325,11 @@ let v974 = eo__24smtx_5ftypeof(s, v973[0])?;
 let v975 = eo__24smtx_5ftypeof(s, v973[1])?;
 let v976 = s.construct(Constructor::eo__24emb_5ftsm_2eReal, &[])?;
 let v977 = eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_5fret(s, v974, v975, v976)?;
-return Ok(v977);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v977));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_135_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case135: {
 let v978 = s.destruct(Constructor::eo__24emb_5fsm_2eforall, a0)?;
 let Some(fields) = v978 else { break 'case135; }
@@ -92541,8 +98348,11 @@ let v986 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v986
 }, None => s.stuck(),
 };
-return Ok(v983);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v983));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_136_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case136: {
 let v987 = s.destruct(Constructor::eo__24emb_5fsm_2eexists, a0)?;
 let Some(fields) = v987 else { break 'case136; }
@@ -92561,8 +98371,11 @@ let v995 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v995
 }, None => s.stuck(),
 };
-return Ok(v992);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v992));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_137_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case137: {
 let v996 = s.destruct(Constructor::eo__24emb_5fsm_2ebind, a0)?;
 let Some(fields) = v996 else { break 'case137; }
@@ -92580,8 +98393,11 @@ let v1003 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
 v1003
 }, None => s.stuck(),
 };
-return Ok(v1000);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1000));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_138_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case138: {
 let v1004 = s.destruct(Constructor::eo__24emb_5fsm_2eint_5fto_5fbv, a0)?;
 let Some(fields) = v1004 else { break 'case138; }
@@ -92589,8 +98405,11 @@ let Some(fields) = v1004 else { break 'case138; }
 let v1005 = fields;
 let v1006 = eo__24smtx_5ftypeof(s, v1005[1])?;
 let v1007 = eo__24smtx_5ftypeof_5fint_5fto_5fbv(s, v1005[0], v1006)?;
-return Ok(v1007);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1007));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_139_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case139: {
 let v1008 = s.destruct(Constructor::eo__24emb_5fsm_2eubv_5fto_5fint, a0)?;
 let Some(fields) = v1008 else { break 'case139; }
@@ -92599,8 +98418,11 @@ let v1009 = fields;
 let v1010 = eo__24smtx_5ftypeof(s, v1009[0])?;
 let v1011 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
 let v1012 = eo__24smtx_5ftypeof_5fbv_5fop_5f1_5fret(s, v1010, v1011)?;
-return Ok(v1012);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1012));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_140_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case140: {
 let v1013 = s.destruct(Constructor::eo__24emb_5fsm_2esbv_5fto_5fint, a0)?;
 let Some(fields) = v1013 else { break 'case140; }
@@ -92609,8 +98431,11 @@ let v1014 = fields;
 let v1015 = eo__24smtx_5ftypeof(s, v1014[0])?;
 let v1016 = s.construct(Constructor::eo__24emb_5ftsm_2eInt, &[])?;
 let v1017 = eo__24smtx_5ftypeof_5fbv_5fop_5f1_5fret(s, v1015, v1016)?;
-return Ok(v1017);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1017));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_141_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case141: {
 let v1018 = s.destruct(Constructor::eo__24emb_5fsm_2eDtCons, a0)?;
 let Some(fields) = v1018 else { break 'case141; }
@@ -92622,8 +98447,11 @@ let v1022 = eo__24smtx_5fdd_5flookup(s, v1019[0], v1019[1])?;
 let v1023 = eo__24smtx_5fdt_5fresolve(s, v1022, v1019[1])?;
 let v1024 = eo__24smtx_5ftypeof_5fdt_5fcons_5frec(s, v1021, v1023, v1019[2])?;
 let v1025 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v1020, v1024)?;
-return Ok(v1025);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1025));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_142_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case142: {
 let v1026 = s.destruct(Constructor::eo__24emb_5fsm_2eApply, a0)?;
 let Some(fields) = v1026 else { break 'case142; }
@@ -92640,8 +98468,11 @@ let v1033 = s.construct(Constructor::eo__24emb_5ftsm_2eFunType, &[v1031, v1032])
 let v1034 = eo__24smtx_5ftypeof(s, v1027[1])?;
 let v1035 = eo__24smtx_5ftypeof_5fapply(s, v1033, v1034)?;
 let v1036 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v1030, v1035)?;
-return Ok(v1036);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1036));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_143_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case143: {
 let v1037 = s.destruct(Constructor::eo__24emb_5fsm_2eApply, a0)?;
 let Some(fields) = v1037 else { break 'case143; }
@@ -92661,8 +98492,11 @@ let v1047 = s.construct(Constructor::eo__24emb_5ftsm_2eFunType, &[v1045, v1046])
 let v1048 = eo__24smtx_5ftypeof(s, v1038[1])?;
 let v1049 = eo__24smtx_5ftypeof_5fapply(s, v1047, v1048)?;
 let v1050 = eo__24smtx_5ftypeof_5fguard(s, v1044, v1049)?;
-return Ok(v1050);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1050));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_144_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case144: {
 let v1051 = s.destruct(Constructor::eo__24emb_5fsm_2eApply, a0)?;
 let Some(fields) = v1051 else { break 'case144; }
@@ -92671,34 +98505,38 @@ let v1052 = fields;
 let v1053 = eo__24smtx_5ftypeof(s, v1052[0])?;
 let v1054 = eo__24smtx_5ftypeof(s, v1052[1])?;
 let v1055 = eo__24smtx_5ftypeof_5fapply(s, v1053, v1054)?;
-return Ok(v1055);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1055));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_145_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case145: {
 let v1056 = s.destruct(Constructor::eo__24emb_5fsm_2eVar, a0)?;
 let Some(fields) = v1056 else { break 'case145; }
 ;
 let v1057 = fields;
 let v1058 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v1057[1], v1057[1])?;
-return Ok(v1058);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1058));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_146_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case146: {
 let v1059 = s.destruct(Constructor::eo__24emb_5fsm_2eUConst, a0)?;
 let Some(fields) = v1059 else { break 'case146; }
 ;
 let v1060 = fields;
 let v1061 = eo__24smtx_5ftypeof_5fguard_5fwf(s, v1060[1], v1060[1])?;
-return Ok(v1061);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1061));
 }
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
+}
+fn case_147_eo__24smtx_5ftypeof(s: &mut Store, a0: Term) -> CheckResult<case_result_eo__24smtx_5ftypeof> {
 'case147: {
 let v1062 = s.construct(Constructor::eo__24emb_5ftsm_2eNone, &[])?;
-return Ok(v1062);
+return Ok(case_result_eo__24smtx_5ftypeof::Value(v1062));
 }
-return Ok(s.stuck());
-}
-})();
-s.leave();
-if let Ok(value) = result { s.cache_type(TypeCacheKind::Smt, cache_args[0], value)?; }
-result
+Ok(case_result_eo__24smtx_5ftypeof::NoMatch)
 }
 // EO program "$smtx_typeof_="
 pub fn eo__24smtx_5ftypeof_5f_3d(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
@@ -99307,6 +105145,44 @@ let result = (|| {
 'recur: loop {
 s.tick()?;
 if s.is_stuck(a0)? || s.is_stuck(a1)? || s.is_stuck(a2)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 11 {
+let matched = match case_index {
+0 => case_0_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+1 => case_1_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+2 => case_2_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+3 => case_3_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+4 => case_4_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+5 => case_5_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+6 => case_6_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+7 => case_7_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+8 => case_8_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+9 => case_9_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+10 => case_10_eo__24str_5fre_5fconsume_5frec(s, a0, a1, a2),
+_ => Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch),
+}?;
+match matched {
+case_result_eo__24str_5fre_5fconsume_5frec::NoMatch => {},
+case_result_eo__24str_5fre_5fconsume_5frec::Value(value) => return Ok(value),
+case_result_eo__24str_5fre_5fconsume_5frec::Tail(next) => {
+a0 = next[0];
+a1 = next[1];
+a2 = next[2];
+continue 'recur;
+}
+}
+case_index += 1;
+}
+return Ok(s.stuck());
+}
+})();
+s.leave();
+if let Ok(value) = result { s.cache_program(ProgramId(1065), &cache_args, value)?; }
+result
+}
+#[allow(dead_code)]
+enum case_result_eo__24str_5fre_5fconsume_5frec { NoMatch, Value(Term), Tail([Term; 3]) }
+fn case_0_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -99347,11 +105223,11 @@ let v21 = s.apply(v20, v2)?;
 let v22 = v21;
 let v23 = v9;
 let v24 = a2;
-a0 = v22;
-a1 = v23;
-a2 = v24;
-continue 'recur;
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Tail([v22, v23, v24]));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_1_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case1: {
 let v25 = s.unapply(a0)?;
 let Some((f, a)) = v25 else { break 'case1; }
@@ -99419,8 +105295,11 @@ v65
 v53
 }, None => s.stuck(),
 };
-return Ok(v44);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v44));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_2_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case2: {
 let v66 = s.unapply(a0)?;
 let Some((f, a)) = v66 else { break 'case2; }
@@ -99509,8 +105388,11 @@ let v123 = s.apply(v116, v122)?;
 v123
 }, None => s.stuck(),
 };
-return Ok(v98);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v98));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_3_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case3: {
 let v124 = s.unapply(a0)?;
 let Some((f, a)) = v124 else { break 'case3; }
@@ -99559,8 +105441,11 @@ let v153 = s.apply(v148, v152)?;
 v153
 }, None => s.stuck(),
 };
-return Ok(v142);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v142));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_4_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case4: {
 let v154 = s.unapply(a0)?;
 let Some((f, a)) = v154 else { break 'case4; }
@@ -99729,8 +105614,11 @@ v278
 v208
 }, None => s.stuck(),
 };
-return Ok(v188);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v188));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_5_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case5: {
 let v279 = s.unapply(a0)?;
 let Some((f, a)) = v279 else { break 'case5; }
@@ -99774,8 +105662,11 @@ let v304 = s.apply(v303, v295)?;
 let v305 = s.apply(v302, v304)?;
 let v306 = s.apply(v305, v288)?;
 let v307 = s.apply(v301, v306)?;
-return Ok(v307);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v307));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_6_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case6: {
 let v308 = s.unapply(a0)?;
 let Some((f, a)) = v308 else { break 'case6; }
@@ -99846,8 +105737,11 @@ v354
 v339
 }, None => s.stuck(),
 };
-return Ok(v328);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v328));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_7_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case7: {
 let v355 = s.unapply(a1)?;
 let Some((f, a)) = v355 else { break 'case7; }
@@ -99873,11 +105767,11 @@ if v364 != v366 { break 'case7; }
 let v367 = a0;
 let v368 = v357;
 let v369 = a2;
-a0 = v367;
-a1 = v368;
-a2 = v369;
-continue 'recur;
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Tail([v367, v368, v369]));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_8_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case8: {
 let v370 = s.unapply(a1)?;
 let Some((f, a)) = v370 else { break 'case8; }
@@ -99895,8 +105789,11 @@ let v377 = s.construct(Constructor::eo_re_2einter, &[])?;
 let v378 = s.apply(v377, v375)?;
 let v379 = s.apply(v378, v372)?;
 let v380 = eo__24str_5fre_5fconsume_5finter(s, a0, v379, a2)?;
-return Ok(v380);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v380));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_9_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case9: {
 let v381 = s.unapply(a1)?;
 let Some((f, a)) = v381 else { break 'case9; }
@@ -99914,20 +105811,18 @@ let v388 = s.construct(Constructor::eo_re_2eunion, &[])?;
 let v389 = s.apply(v388, v386)?;
 let v390 = s.apply(v389, v383)?;
 let v391 = eo__24str_5fre_5fconsume_5funion(s, a0, v390, a2)?;
-return Ok(v391);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v391));
 }
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
+}
+fn case_10_eo__24str_5fre_5fconsume_5frec(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<case_result_eo__24str_5fre_5fconsume_5frec> {
 'case10: {
 let v392 = s.construct(Constructor::eo_str_2ein_5fre, &[])?;
 let v393 = s.apply(v392, a0)?;
 let v394 = s.apply(v393, a1)?;
-return Ok(v394);
+return Ok(case_result_eo__24str_5fre_5fconsume_5frec::Value(v394));
 }
-return Ok(s.stuck());
-}
-})();
-s.leave();
-if let Ok(value) = result { s.cache_program(ProgramId(1065), &cache_args, value)?; }
-result
+Ok(case_result_eo__24str_5fre_5fconsume_5frec::NoMatch)
 }
 // EO program "$str_re_consume_union"
 pub fn eo__24str_5fre_5fconsume_5funion(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
@@ -100785,6 +106680,36 @@ pub fn eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Term
 s.enter()?;
 let result = (|| {
 if s.is_stuck(a0)? { return Ok(s.stuck()); }
+let mut case_index = 0_usize;
+while case_index < 16 {
+let matched = match case_index {
+0 => case_0_eo__24str_5freduction_5fpred(s, a0),
+1 => case_1_eo__24str_5freduction_5fpred(s, a0),
+2 => case_2_eo__24str_5freduction_5fpred(s, a0),
+3 => case_3_eo__24str_5freduction_5fpred(s, a0),
+4 => case_4_eo__24str_5freduction_5fpred(s, a0),
+5 => case_5_eo__24str_5freduction_5fpred(s, a0),
+6 => case_6_eo__24str_5freduction_5fpred(s, a0),
+7 => case_7_eo__24str_5freduction_5fpred(s, a0),
+8 => case_8_eo__24str_5freduction_5fpred(s, a0),
+9 => case_9_eo__24str_5freduction_5fpred(s, a0),
+10 => case_10_eo__24str_5freduction_5fpred(s, a0),
+11 => case_11_eo__24str_5freduction_5fpred(s, a0),
+12 => case_12_eo__24str_5freduction_5fpred(s, a0),
+13 => case_13_eo__24str_5freduction_5fpred(s, a0),
+14 => case_14_eo__24str_5freduction_5fpred(s, a0),
+15 => case_15_eo__24str_5freduction_5fpred(s, a0),
+_ => Ok(None),
+}?;
+if let Some(value) = matched { return Ok(value); }
+case_index += 1;
+}
+Ok(s.stuck())
+})();
+s.leave();
+result
+}
+fn case_0_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case0: {
 let v0 = s.unapply(a0)?;
 let Some((f, a)) = v0 else { break 'case0; }
@@ -100866,8 +106791,11 @@ let v71 = s.apply(v34, v70)?;
 let v72 = s.apply(v23, v71)?;
 let v73 = s.apply(v14, v72)?;
 let v74 = s.apply(v13, v73)?;
-return Ok(v74);
+return Ok(Some(v74));
 }
+Ok(None)
+}
+fn case_1_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case1: {
 let v75 = s.unapply(a0)?;
 let Some((f, a)) = v75 else { break 'case1; }
@@ -101100,8 +107028,11 @@ let v295 = eo__24eo_5ftypeof(s, v83)?;
 let v296 = eo__24seq_5fempty(s, v295)?;
 let v297 = s.apply(v294, v296)?;
 let v298 = s.apply(v286, v297)?;
-return Ok(v298);
+return Ok(Some(v298));
 }
+Ok(None)
+}
+fn case_2_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case2: {
 let v299 = s.unapply(a0)?;
 let Some((f, a)) = v299 else { break 'case2; }
@@ -101523,8 +107454,11 @@ let v708 = s.apply(v655, v707)?;
 let v709 = s.apply(v568, v708)?;
 let v710 = s.apply(v371, v709)?;
 let v711 = s.apply(v354, v710)?;
-return Ok(v711);
+return Ok(Some(v711));
 }
+Ok(None)
+}
+fn case_3_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case3: {
 let v712 = s.unapply(a0)?;
 let Some((f, a)) = v712 else { break 'case3; }
@@ -101843,8 +107777,11 @@ let v1018 = s.apply(v1011, v1017)?;
 let v1019 = s.apply(v1018, v720)?;
 let v1020 = s.apply(v1010, v1019)?;
 let v1021 = s.apply(v747, v1020)?;
-return Ok(v1021);
+return Ok(Some(v1021));
 }
+Ok(None)
+}
+fn case_4_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case4: {
 let v1022 = s.unapply(a0)?;
 let Some((f, a)) = v1022 else { break 'case4; }
@@ -102118,8 +108055,11 @@ let v1287 = s.apply(v1282, v1286)?;
 let v1288 = s.literal(Lit::String(EoString::from_code_points(vec![])))?;
 let v1289 = s.apply(v1287, v1288)?;
 let v1290 = s.apply(v1281, v1289)?;
-return Ok(v1290);
+return Ok(Some(v1290));
 }
+Ok(None)
+}
+fn case_5_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case5: {
 let v1291 = s.unapply(a0)?;
 let Some((f, a)) = v1291 else { break 'case5; }
@@ -102434,8 +108374,11 @@ let v1597 = s.apply(v1427, v1596)?;
 let v1598 = s.apply(v1419, v1597)?;
 let v1599 = s.apply(v1409, v1598)?;
 let v1600 = s.apply(v1395, v1599)?;
-return Ok(v1600);
+return Ok(Some(v1600));
 }
+Ok(None)
+}
+fn case_6_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case6: {
 let v1601 = s.unapply(a0)?;
 let Some((f, a)) = v1601 else { break 'case6; }
@@ -102598,8 +108541,11 @@ let v1753 = s.apply(v1751, v1752)?;
 let v1754 = s.apply(v1704, v1753)?;
 let v1755 = s.apply(v1690, v1754)?;
 let v1756 = s.apply(v1625, v1755)?;
-return Ok(v1756);
+return Ok(Some(v1756));
 }
+Ok(None)
+}
+fn case_7_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case7: {
 let v1757 = s.unapply(a0)?;
 let Some((f, a)) = v1757 else { break 'case7; }
@@ -102977,8 +108923,11 @@ let v2074 = s.apply(v2069, v2073)?;
 let v2075 = s.apply(v2068, v2074)?;
 let v2076 = s.apply(v2075, v1765)?;
 let v2077 = s.apply(v2067, v2076)?;
-return Ok(v2077);
+return Ok(Some(v2077));
 }
+Ok(None)
+}
+fn case_8_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case8: {
 let v2078 = s.unapply(a0)?;
 let Some((f, a)) = v2078 else { break 'case8; }
@@ -103312,8 +109261,11 @@ let v2399 = s.apply(v2156, v2398)?;
 let v2400 = s.apply(v2130, v2399)?;
 let v2401 = s.apply(v2113, v2400)?;
 let v2402 = s.apply(v2104, v2401)?;
-return Ok(v2402);
+return Ok(Some(v2402));
 }
+Ok(None)
+}
+fn case_9_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case9: {
 let v2403 = s.unapply(a0)?;
 let Some((f, a)) = v2403 else { break 'case9; }
@@ -103665,8 +109617,11 @@ let v2742 = s.apply(v2552, v2741)?;
 let v2743 = s.apply(v2528, v2742)?;
 let v2744 = s.apply(v2456, v2743)?;
 let v2745 = s.apply(v2435, v2744)?;
-return Ok(v2745);
+return Ok(Some(v2745));
 }
+Ok(None)
+}
+fn case_10_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case10: {
 let v2746 = s.unapply(a0)?;
 let Some((f, a)) = v2746 else { break 'case10; }
@@ -104148,8 +110103,11 @@ let v3215 = s.apply(v2834, v3214)?;
 let v3216 = s.apply(v2808, v3215)?;
 let v3217 = s.apply(v2791, v3216)?;
 let v3218 = s.apply(v2782, v3217)?;
-return Ok(v3218);
+return Ok(Some(v3218));
 }
+Ok(None)
+}
+fn case_11_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case11: {
 let v3219 = s.unapply(a0)?;
 let Some((f, a)) = v3219 else { break 'case11; }
@@ -104433,8 +110391,11 @@ let v3490 = s.apply(v3488, v3489)?;
 let v3491 = s.apply(v3385, v3490)?;
 let v3492 = s.apply(v3273, v3491)?;
 let v3493 = s.apply(v3257, v3492)?;
-return Ok(v3493);
+return Ok(Some(v3493));
 }
+Ok(None)
+}
+fn case_12_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case12: {
 let v3494 = s.unapply(a0)?;
 let Some((f, a)) = v3494 else { break 'case12; }
@@ -104593,8 +110554,11 @@ let v3642 = s.apply(v3532, v3641)?;
 let v3643 = s.apply(v3521, v3642)?;
 let v3644 = s.apply(v3512, v3643)?;
 let v3645 = s.apply(v3511, v3644)?;
-return Ok(v3645);
+return Ok(Some(v3645));
 }
+Ok(None)
+}
+fn case_13_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case13: {
 let v3646 = s.unapply(a0)?;
 let Some((f, a)) = v3646 else { break 'case13; }
@@ -104748,8 +110712,11 @@ let v3791 = s.apply(v3663, v3790)?;
 let v3792 = s.literal(Lit::Bool(true))?;
 let v3793 = s.apply(v3791, v3792)?;
 let v3794 = s.apply(v3662, v3793)?;
-return Ok(v3794);
+return Ok(Some(v3794));
 }
+Ok(None)
+}
+fn case_14_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case14: {
 let v3795 = s.unapply(a0)?;
 let Some((f, a)) = v3795 else { break 'case14; }
@@ -104903,8 +110870,11 @@ let v3940 = s.apply(v3812, v3939)?;
 let v3941 = s.literal(Lit::Bool(true))?;
 let v3942 = s.apply(v3940, v3941)?;
 let v3943 = s.apply(v3811, v3942)?;
-return Ok(v3943);
+return Ok(Some(v3943));
 }
+Ok(None)
+}
+fn case_15_eo__24str_5freduction_5fpred(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 'case15: {
 let v3944 = s.unapply(a0)?;
 let Some((f, a)) = v3944 else { break 'case15; }
@@ -105010,12 +110980,9 @@ let v4041 = s.apply(v3961, v4040)?;
 let v4042 = s.literal(Lit::Bool(true))?;
 let v4043 = s.apply(v4041, v4042)?;
 let v4044 = s.apply(v3960, v4043)?;
-return Ok(v4044);
+return Ok(Some(v4044));
 }
-Ok(s.stuck())
-})();
-s.leave();
-result
+Ok(None)
 }
 // EO program "$str_strip_prefix"
 pub fn eo__24str_5fstrip_5fprefix(s: &mut Store, mut a0: Term, mut a1: Term) -> CheckResult<Term> {
