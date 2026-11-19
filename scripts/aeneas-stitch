@@ -1,0 +1,211 @@
+#!/usr/bin/env python3
+"""Makes one Lean development of the Lean files that scripts/aeneas-translate
+writes, one per module of generated functions.
+
+  scripts/aeneas-stitch IN OUT [--name NAME]
+
+  IN      the output directory of scripts/aeneas-translate: it has
+          part<k>/lean/<file>.lean for every part k of the crate
+  OUT     where the Lean modules go (a source directory of a Lake project)
+  --name  the name of the root module (default: Checker)
+
+Each file of IN holds the whole runtime (the same in every file) and the
+functions of one part, with an axiom for each function of an earlier part
+that the part calls. This writes
+
+  OUT/NAME/Runtime.lean   the runtime, once
+  OUT/NAME/Part<k>.lean   the functions of part k; it imports Runtime and
+                          every earlier part, whose definitions stand where
+                          the file had axioms
+  OUT/NAME.lean           imports all of them
+
+without changing a declaration: every line of a declaration is as Aeneas
+wrote it. What is left out is each repeated copy of the runtime and the
+axioms for the functions of other parts.
+
+A declaration is told apart by the `Source:` line of the comment Aeneas
+puts before it: `src/generated_part<k>.rs` is part k, anything else is the
+runtime. Checked, and the script stops if one fails:
+  - every part's file has the runtime declarations of the first part's,
+    with the same text. The only others it may have are axioms, for
+    functions left opaque that the first part does not call (Aeneas writes
+    an axiom only where it is used); they go at the end of Runtime;
+  - a group of declarations that Aeneas made one `mutual` block is of one
+    part, or all of the runtime;
+  - every axiom left out names a function that an earlier part defines,
+    with the same name.
+That the type of each such axiom is the type of the definition that
+replaces it is not checked here: the Lean build fails if they differ in a
+way that matters to a use.
+
+Needs Python 3.
+"""
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+
+def fail(msg):
+    print(f"scripts/aeneas-stitch: {msg}", file=sys.stderr)
+    sys.exit(2)
+
+
+SOURCE = re.compile(r"Source: '([^']*)'")
+PART = re.compile(r"^src/generated_part(\d+)\.rs$")
+DECL = re.compile(
+    r"^(?:noncomputable\s+)?(?:private\s+)?"
+    r"(axiom|def|structure|inductive|instance|abbrev|theorem|opaque)\s+(\S+)", re.M)
+
+
+class Block:
+    """One declaration with its comment, or one `mutual` block."""
+
+    def __init__(self, lines):
+        self.text = "\n".join(lines).rstrip("\n")
+        owners = set()
+        for source in SOURCE.findall(self.text):
+            m = PART.match(source)
+            owners.add(int(m.group(1)) if m else None)
+        self.owners = owners
+        self.decls = DECL.findall(self.text)
+
+    @property
+    def names(self):
+        return [name for _, name in self.decls]
+
+
+def read(path):
+    """The header of a file, its declarations and the name of its namespace."""
+    lines = path.read_text().split("\n")
+    start = next((i for i, l in enumerate(lines) if l.startswith("namespace ")), None)
+    if start is None:
+        fail(f"{path}: no namespace line")
+    namespace = lines[start].split()[1]
+    end = max(i for i, l in enumerate(lines) if l.strip() == f"end {namespace}")
+    header = lines[:start]
+    blocks, current, in_mutual = [], [], False
+    for line in lines[start + 1:end]:
+        if in_mutual:
+            current.append(line)
+            if line == "end":
+                in_mutual = False
+                blocks.append(Block(current))
+                current = []
+            continue
+        if line == "mutual" or line.startswith("/-- "):
+            if any(l.strip() for l in current):
+                blocks.append(Block(current))
+            current = [line]
+            in_mutual = line == "mutual"
+            continue
+        current.append(line)
+    if any(l.strip() for l in current):
+        blocks.append(Block(current))
+    return header, blocks, namespace
+
+
+def main():
+    ap = argparse.ArgumentParser(add_help=False)
+    ap.add_argument("inp")
+    ap.add_argument("out")
+    ap.add_argument("--name", default="Checker")
+    args = ap.parse_args()
+    inp, out, root = Path(args.inp), Path(args.out), args.name
+    parts = {}
+    for d in inp.glob("part*"):
+        m = re.fullmatch(r"part(\d+)", d.name)
+        files = sorted((d / "lean").glob("*.lean")) if m else []
+        if files:
+            if len(files) != 1:
+                fail(f"{d}/lean has {len(files)} Lean files, not one")
+            parts[int(m.group(1))] = files[0]
+    if not parts:
+        fail(f"{inp} has no part<k>/lean/<file>.lean")
+    if sorted(parts) != list(range(len(parts))):
+        fail(f"{inp} has parts {sorted(parts)}: some are missing")
+
+    runtime, header, namespace = None, None, None
+    own, defined = {}, {}
+    dropped = 0
+    for k in sorted(parts):
+        head, blocks, ns = read(parts[k])
+        if namespace not in (None, ns):
+            fail(f"{parts[k]}: namespace {ns}, not {namespace}")
+        namespace = ns
+        mine, common = [], []
+        for b in blocks:
+            if len(b.owners) != 1:
+                what = b.names[:3] or b.text[:80]
+                fail(f"{parts[k]}: a declaration with sources of {len(b.owners)} kinds: {what}")
+            owner = next(iter(b.owners))
+            if owner is None:
+                common.append(b)
+            elif owner == k:
+                mine.append(b)
+            else:
+                # An axiom for a function of another part.
+                kinds = {kind for kind, _ in b.decls}
+                if kinds != {"axiom"}:
+                    fail(f"{parts[k]}: {b.names[:3]} of part {owner} is not an axiom")
+                for name in b.names:
+                    if owner >= k:
+                        fail(f"{parts[k]}: axiom {name} is of part {owner}, not an earlier one")
+                    if name not in defined.get(owner, ()):
+                        fail(f"{parts[k]}: axiom {name}, which part {owner} does not define")
+                    dropped += 1
+        if runtime is None:
+            runtime, header = common, head
+            known = {b.text for b in runtime}
+        else:
+            theirs = {b.text for b in common}
+            missing = [b for b in runtime if b.text not in theirs and b.text in first]
+            if missing:
+                fail(f"{parts[k]}: no runtime declaration like part 0's {missing[0].names[:3]}")
+            for b in common:
+                if b.text in known:
+                    continue
+                # An opaque function that the first part does not call.
+                if {kind for kind, _ in b.decls} != {"axiom"}:
+                    fail(f"{parts[k]}: runtime declaration {b.names[:3]} is not as in "
+                         "the parts before, and is not an axiom")
+                if any(name in runtime_names for name in b.names):
+                    fail(f"{parts[k]}: axiom {b.names[:3]} differs from the parts before")
+                runtime.append(b)
+                known.add(b.text)
+        if k == min(parts):
+            first = {b.text for b in runtime if {kind for kind, _ in b.decls} != {"axiom"}}
+        runtime_names = {name for b in runtime for name in b.names}
+        own[k] = (head, mine)
+        defined[k] = {name for b in mine for name in b.names}
+
+    def imports(head, extra):
+        """The header with further imports after Aeneas's."""
+        at = max(i for i, l in enumerate(head) if l.startswith(("public import ", "import ")))
+        return head[:at + 1] + [f"public import {m}" for m in extra] + head[at + 1:]
+
+    def write(module, head, extra, blocks):
+        path = out / root / f"{module}.lean"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        body = "\n\n".join(b.text for b in blocks)
+        path.write_text("\n".join(imports(head, extra)) + f"\nnamespace {namespace}\n\n"
+                        + body + f"\n\nend {namespace}\n")
+        return len(path.read_text().split("\n")) - 1
+
+    lines = write("Runtime", header, [], runtime)
+    print(f"{root}.Runtime: {len(runtime)} declarations, {lines} lines")
+    for k in sorted(own):
+        head, mine = own[k]
+        earlier = [f"{root}.Runtime"] + [f"{root}.Part{j}" for j in sorted(own) if j < k]
+        lines = write(f"Part{k}", head, earlier, mine)
+        print(f"{root}.Part{k}: {len(mine)} declarations, {lines} lines")
+    top = ["module", f"public import {root}.Runtime"]
+    top += [f"public import {root}.Part{k}" for k in sorted(own)]
+    (out / f"{root}.lean").write_text("\n".join(top) + "\n")
+    print(f"aeneas-stitch: {len(own)} parts and the runtime in {out}/{root}; "
+          f"{dropped} axioms for functions of other parts replaced by imports")
+
+
+if __name__ == "__main__":
+    main()
