@@ -19,3 +19,13 @@ unsafe_code = "forbid"
 # The methods listed in clippy.toml treat bytes 0x80 to 0xFF by Unicode
 # rules, unlike Ethos; using one is an error, not a warning.
 disallowed_methods = "deny"
+
+# The compiled checker for CPC is built with overflow checks, in release
+# builds too: an arithmetic overflow in it panics instead of wrapping. The
+# Lean that Aeneas writes for the crate, which the proofs of proofs/ are
+# about, fails on overflow, so without this the proofs would be about a
+# program that differs from the binary exactly there. The setting is for
+# this one package: pathos's own crates and malachite are as before.
+# (scripts/proofs-build checks that it is here.)
+[profile.release.package.pathos-compiled-checker]
+overflow-checks = true

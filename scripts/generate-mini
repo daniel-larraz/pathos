@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Regenerates generated/cpcmini-checker, the checker for CpcMini (logos's
+# calculus of a few rules) that the proofs of proofs/ are about. It is
+# scripts/generate-cpc --mini: see that script's header for what it does and
+# for the options, which are the same (--check, --from-note, --work, ...).
+exec "$(dirname "${BASH_SOURCE[0]}")/generate-cpc" --mini "$@"

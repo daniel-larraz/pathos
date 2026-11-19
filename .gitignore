@@ -1,3 +1,4 @@
 /target
 /.difftest.local
 __pycache__/
+/proofs/.lake

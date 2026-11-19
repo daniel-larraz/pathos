@@ -1,0 +1,36 @@
+name = "PathosProofs"
+version = "0.1.0"
+defaultTargets = ["MiniChecker", "PathosProofs"]
+# The generated files have Rust's names, not Mathlib's. (No `-j1` here: with
+# it Lean needs more than 8 GiB for CPC's largest group of functions that
+# call each other, and under 4 GiB without.)
+weakLeanArgs = ["-Dweak.linter.style.nameCheck=false"]
+
+# The revisions are those of pins.env; scripts/proofs-build checks that.
+[[require]]
+name = "aeneas"
+git = "https://github.com/AeneasVerif/aeneas"
+rev = "1dc8ad31b1b062a77c50e29144a6c7bba955fa09"
+subDir = "backends/lean"
+
+[[require]]
+name = "LogosVerification"
+git = "https://github.com/daniel-larraz/logos"
+rev = "cf18742973861b3718d04c5f25775448098ff474"
+subDir = "verification"
+
+# Mathlib comes last, as Lake asks: logos and Aeneas's library each name a
+# Mathlib of their own (v4.34.0, v4.36.0-rc2) and bring its dependencies,
+# and the last requirement is the one whose versions are used.
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.36.0"
+
+# The Lean that Charon and Aeneas write for generated/cpcmini-checker,
+# stitched by scripts/aeneas-stitch. Generated: never edited.
+[[lean_lib]]
+name = "MiniChecker"
+
+[[lean_lib]]
+name = "PathosProofs"

@@ -83,6 +83,12 @@ jobs:
       - name: The panic audit names real lines
         run: scripts/check-panics --fetch
 
+      # What the proofs of proofs/ rest on outside Lean: the pins, and that
+      # the checker crate is built with overflow checks in release (the
+      # Lean the proofs are about fails on overflow). No Lean is needed.
+      - name: The proofs' pins and the overflow checks
+        run: scripts/proofs-build --no-build
+
       - name: Clippy
         run: cargo clippy --locked --all-targets -- -D warnings
 
@@ -92,10 +98,11 @@ jobs:
       - name: Tests (release)
         run: cargo test --locked --release
 
-  # generated/cpc-checker is never edited by hand: regenerate it from the
-  # Ethos and logos commits its GENERATED.md names and compare.
+  # generated/cpc-checker and generated/cpcmini-checker are never edited by
+  # hand: regenerate each from the Ethos and logos commits its GENERATED.md
+  # names and compare.
   generated:
-    name: The CPC checker is what Ethos's generator writes
+    name: The generated checkers are what Ethos's generator writes
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -108,6 +115,13 @@ jobs:
       - name: Regenerate generated/cpc-checker and compare
         run: scripts/generate-cpc --check --from-note
 
+      # The same for the checker for CpcMini, which the proofs of proofs/
+      # are about. It also compares the Lean the generator writes with
+      # logos's CpcMini at the pinned revision.
+      - name: Regenerate generated/cpcmini-checker and compare
+        if: ${{ !cancelled() }}
+        run: scripts/generate-mini --check --from-note
+
       - name: Keep the difference
         if: failure()
         uses: actions/upload-artifact@v7
@@ -116,6 +130,9 @@ jobs:
           path: |
             target/generate-cpc/check.diff
             target/generate-cpc/driver.log
+            target/generate-mini/check.diff
+            target/generate-mini/lean.diff
+            target/generate-mini/driver.log
           if-no-files-found: ignore
 
   regressions:

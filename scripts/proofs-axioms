@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+"""Checks what the theorems of proofs/PathosProofs rest on.
+
+  scripts/proofs-axioms
+
+Runs proofs/audit/Axioms.lean in the built project (`lake lean`), which
+collects the axioms of every theorem of the modules PathosProofs.* other
+than Trusted, and compares them with proofs/axioms-allowed.txt. Exits 1 if
+
+  - a theorem uses an axiom that the file does not list (`sorryAx`, which
+    a `sorry` leaves, is never listed);
+  - the file's [MiniChecker] section is not exactly the axioms that
+    proofs/MiniChecker declares, or its [Trusted] section not exactly those
+    of proofs/PathosProofs/Trusted.lean: the file is the statement of what
+    is trusted, so it must not fall behind either.
+
+Prints the number of theorems and the axioms in use, by section. The
+project must be built (scripts/proofs-build does that, and runs this).
+Needs elan (lake) and Python 3.
+"""
+
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+PROOFS = ROOT / "proofs"
+NS = "pathos_compiled_checker"
+
+
+def fail(msg):
+    print(f"scripts/proofs-axioms: {msg}", file=sys.stderr)
+    sys.exit(2)
+
+
+def allowed():
+    sections, current = {}, None
+    for line in (PROOFS / "axioms-allowed.txt").read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        m = re.fullmatch(r"\[(\w+)\]", line)
+        if m:
+            current = sections.setdefault(m.group(1), [])
+        elif current is None:
+            fail(f"axioms-allowed.txt: {line} is in no section")
+        else:
+            current.append(line)
+    return sections
+
+
+def declared(paths, namespace):
+    """The axioms that Lean files declare, with the namespaces they are in."""
+    names = set()
+    for path in paths:
+        stack = [namespace] if namespace else []
+        for line in path.read_text().splitlines():
+            m = re.match(r"namespace\s+(\S+)", line)
+            if m:
+                stack.append(m.group(1))
+                continue
+            m = re.match(r"end\s+(\S+)\s*$", line)
+            if m and stack and stack[-1] == m.group(1):
+                stack.pop()
+                continue
+            m = re.match(r"axiom\s+(\S+)", line)
+            if m:
+                names.add(".".join(stack + [m.group(1)]))
+    return names
+
+
+def main():
+    sections = allowed()
+    problems = []
+    mini = declared(sorted((PROOFS / "MiniChecker").glob("*.lean")), None)
+    trusted = declared([PROOFS / "PathosProofs" / "Trusted.lean"], None)
+    for name, have in (("MiniChecker", mini), ("Trusted", trusted)):
+        listed = set(sections.get(name, []))
+        for a in sorted(have - listed):
+            problems.append(f"[{name}] does not list {a}, which is declared")
+        for a in sorted(listed - have):
+            problems.append(f"[{name}] lists {a}, which is not declared")
+    env = dict(os.environ)
+    if not any((Path(p) / "lake").exists() for p in env.get("PATH", "").split(":")):
+        env["PATH"] = f"{Path.home()}/.elan/bin:" + env.get("PATH", "")
+    run = subprocess.run(["lake", "lean", "audit/Axioms.lean"], cwd=PROOFS, env=env,
+                         capture_output=True, text=True)
+    if run.returncode != 0:
+        sys.stderr.write(run.stdout[-2000:] + run.stderr[-2000:])
+        fail("proofs/audit/Axioms.lean failed (is the project built?)")
+    used = re.findall(r"^axiom (\S+)$", run.stdout, re.M)
+    count = re.search(r"^theorems (\d+)$", run.stdout, re.M)
+    if not count:
+        fail("proofs/audit/Axioms.lean printed no count of theorems")
+    where = {a: s for s, names in sections.items() for a in names}
+    by_section = {}
+    for a in used:
+        if a not in where:
+            problems.append(f"a theorem uses the axiom {a}, which axioms-allowed.txt does not list")
+        else:
+            by_section.setdefault(where[a], []).append(a)
+    print(f"proofs-axioms: {count.group(1)} theorems of PathosProofs; they use {len(used)} axioms")
+    for s in sections:
+        names = by_section.get(s, [])
+        print(f"  [{s}] {len(names)} of {len(sections[s])} listed"
+              + (": " + ", ".join(n.removeprefix(NS + ".") for n in names) if names else ""))
+    for p in problems:
+        print(f"proofs-axioms: {p}", file=sys.stderr)
+    if problems:
+        return 1
+    print("proofs-axioms: no sorry, and no axiom outside proofs/axioms-allowed.txt")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

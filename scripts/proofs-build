@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+# Builds proofs/, the Lean project of the proofs about the compiled checker,
+# after checking that it is pinned as proofs/pins.env says.
+#
+#   scripts/proofs-build [--translate TOOLS] [--no-build] [TARGET...]
+#
+#   --translate TOOLS  first make proofs/MiniChecker again from
+#                      generated/cpcmini-checker (scripts/aeneas-translate
+#                      with the Charon and Aeneas that scripts/aeneas-setup
+#                      installed in TOOLS, then scripts/aeneas-stitch), and
+#                      fail if it is not what the repository holds
+#   --no-build         only the checks
+#   TARGET...          what to build (default: the project's default targets)
+#
+# The checks: lean-toolchain, lakefile.toml and lake-manifest.json name the
+# Lean, Mathlib, Aeneas and logos of proofs/pins.env; scripts/aeneas-setup
+# installs that Aeneas and Charon; generated/cpcmini-checker was generated
+# from that logos; Cargo.toml builds the checker crate with overflow checks
+# in release, which the proofs assume. Then, in the built project, that no proof uses `sorry`
+# or an axiom beyond Lean's own and those of the trusted file
+# (scripts/proofs-axioms, when the project has theorems to check).
+#
+# The build runs under a memory cap (PROOFS_MEMORY_MAX, default 8G) where
+# systemd-run is available. The first build fetches Mathlib's cache (`lake exe cache get`) and
+# builds Aeneas's library and logos's CpcMini proofs.
+#
+# Needs elan (lake), git and Python 3.
+
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+proofs="$root/proofs"
+# shellcheck source=../proofs/pins.env
+source "$proofs/pins.env"
+
+fail() { echo "scripts/proofs-build: $*" >&2; exit 2; }
+
+tools=""
+build=true
+targets=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --translate) tools="$2"; shift 2 ;;
+    --no-build) build=false; shift ;;
+    -*) fail "unknown argument: $1 (see the header of this script)" ;;
+    *) targets+=("$1"); shift ;;
+  esac
+done
+
+capped() {
+  if command -v systemd-run >/dev/null 2>&1 && systemd-run --user --scope -q true 2>/dev/null; then
+    systemd-run --user --scope -q -p "MemoryMax=${PROOFS_MEMORY_MAX:-8G}" -p MemorySwapMax=0 "$@"
+  else
+    "$@"
+  fi
+}
+
+# The pins.
+problems=0
+differs() { echo "proofs-build: $*" >&2; problems=$((problems + 1)); }
+[[ "$(cat "$proofs/lean-toolchain")" == "leanprover/lean4:$LEAN_VERSION" ]] ||
+  differs "proofs/lean-toolchain is not Lean $LEAN_VERSION"
+python3 - "$proofs" "$LEAN_VERSION" "$MATHLIB_REV" "$AENEAS_REV" "$LOGOS_PROOFS_REV" \
+  "$AENEAS_REPO" "$LOGOS_PROOFS_REPO" <<'EOF' || problems=$((problems + 1))
+import json, re, sys
+proofs, lean, mathlib, aeneas, logos, aeneas_repo, logos_repo = sys.argv[1:]
+bad = []
+manifest = {p["name"]: p for p in json.load(open(f"{proofs}/lake-manifest.json"))["packages"]}
+for name, rev, repo in (("mathlib", mathlib, None), ("aeneas", aeneas, aeneas_repo),
+                        ("LogosVerification", logos, logos_repo)):
+    have = manifest.get(name, {})
+    if have.get("rev") != rev:
+        bad.append(f"lake-manifest.json has {name} at {have.get('rev')}, not {rev}")
+    if repo and have.get("url") != repo:
+        bad.append(f"lake-manifest.json takes {name} from {have.get('url')}, not {repo}")
+lakefile = open(f"{proofs}/lakefile.toml").read()
+requires = dict(re.findall(r'name = "([^"]+)"\ngit = "[^"]+"\nrev = "([^"]+)"', lakefile))
+for name, rev in (("mathlib", lean), ("aeneas", aeneas), ("LogosVerification", logos)):
+    if requires.get(name) != rev:
+        bad.append(f"lakefile.toml requires {name} at {requires.get(name)}, not {rev}")
+for b in bad:
+    print(f"proofs-build: {b}", file=sys.stderr)
+sys.exit(1 if bad else 0)
+EOF
+grep -q "^aeneas_commit=$AENEAS_REV\$" "$root/scripts/aeneas-setup" ||
+  differs "scripts/aeneas-setup does not install Aeneas $AENEAS_REV"
+grep -q "^charon_commit=$CHARON_REV\$" "$root/scripts/aeneas-setup" ||
+  differs "scripts/aeneas-setup does not install Charon $CHARON_REV"
+grep -q "^| logos (.*| \`$LOGOS_PROOFS_REV\` |\$" "$root/generated/cpcmini-checker/GENERATED.md" ||
+  differs "generated/cpcmini-checker is not generated from logos $LOGOS_PROOFS_REV"
+# The proofs are about a checker that panics on arithmetic overflow, as the
+# Lean that Aeneas writes fails on it: the release profile must say so.
+python3 - "$root/Cargo.toml" <<'EOF' || differs "Cargo.toml does not set overflow-checks = true for the release build of pathos-compiled-checker"
+import re, sys
+text = re.sub(r"#.*", "", open(sys.argv[1]).read())
+m = re.search(r"^\[profile\.release\.package\.pathos-compiled-checker\]\n((?:(?!\[).*\n?)*)", text, re.M)
+sys.exit(0 if m and re.search(r"^\s*overflow-checks\s*=\s*true\s*$", m.group(1), re.M) else 1)
+EOF
+[[ "$problems" -eq 0 ]] || fail "$problems places disagree with proofs/pins.env or with what the proofs assume"
+echo "proofs-build: Lean $LEAN_VERSION, Mathlib ${MATHLIB_REV:0:12}, Aeneas ${AENEAS_REV:0:12}, logos ${LOGOS_PROOFS_REV:0:12}: as pinned"
+
+# The Lean of the checker, from the crate.
+if [[ -n "$tools" ]]; then
+  work="$root/target/proofs-build"
+  rm -rf "$work"
+  mkdir -p "$work"
+  "$root/scripts/aeneas-translate" "$tools" --crate "$root/generated/cpcmini-checker" \
+    --out "$work/aeneas" > "$work/translate.log" 2>&1 ||
+    { tail -n 5 "$work/translate.log" >&2; fail "the translation failed; see $work/translate.log"; }
+  "$root/scripts/aeneas-stitch" "$work/aeneas" "$work/stitched" --name MiniChecker > "$work/stitch.log" ||
+    fail "the stitching failed; see $work/stitch.log"
+  if diff -r "$work/stitched/MiniChecker" "$proofs/MiniChecker" > "$work/check.diff" &&
+    diff "$work/stitched/MiniChecker.lean" "$proofs/MiniChecker.lean" >> "$work/check.diff"; then
+    echo "proofs-build: proofs/MiniChecker is what Charon and Aeneas write for generated/cpcmini-checker"
+  else
+    head -n 20 "$work/check.diff"
+    fail "proofs/MiniChecker differs (the whole difference: $work/check.diff)"
+  fi
+fi
+
+$build || exit 0
+command -v lake >/dev/null 2>&1 || export PATH="$HOME/.elan/bin:$PATH"
+command -v lake >/dev/null 2>&1 || fail "lake is needed (install elan)"
+cd "$proofs"
+# Mathlib's compiled files, if they are not there yet.
+[[ -d .lake/packages/mathlib/.lake/build/lib ]] || lake exe cache get
+capped lake build "${targets[@]}"
+if [[ -x "$root/scripts/proofs-axioms" ]]; then
+  capped "$root/scripts/proofs-axioms"
+fi
+echo "proofs-build: built"
