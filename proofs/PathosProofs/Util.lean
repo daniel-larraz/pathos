@@ -30,6 +30,12 @@ theorem dspec_admissible4 {α β γ δ ε} (a : α) (b : β) (c : γ) (d : δ) (
   admissible_apply (fun _ (g : β → γ → δ → Result ε) => WP.dspec (g b c d) p) a
     (dspec_admissible3 b c d p)
 
+/-- The platform has a `usize` of at least 40 bits: in practice, of 64.
+The store's table of terms doubles with `len * 2`; with up to 2^32 terms
+that is up to 2^35 slots, which a 32-bit `usize` cannot count. Every
+theorem that reaches `Store.intern` has this as a hypothesis. -/
+def Platform64 : Prop := 2 ^ 40 ≤ Usize.max
+
 theorem getElem!_eq {α} [Inhabited α] (l : List α) (i : Nat) (h : i < l.length) :
     l[i]! = l[i] := by simp [h]
 

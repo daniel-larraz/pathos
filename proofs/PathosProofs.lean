@@ -9,3 +9,4 @@ public import PathosProofs.Store.Intern
 public import PathosProofs.Store.Ops
 public import PathosProofs.Store.Rep
 public import PathosProofs.Store.New
+public import PathosProofs.Store.Sem

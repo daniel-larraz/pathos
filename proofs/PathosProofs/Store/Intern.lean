@@ -73,7 +73,7 @@ theorem Store.Extends.refl (s : Store) : s.Extends s :=
 answers a handle whose data is the data it was given; the store is as it
 was, or has that data as one more term. -/
 theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
-    (h64 : 2 ^ 40 ≤ Usize.max) :
+    (h64 : Platform64) :
     Store.intern s data ⦃ r s' =>
       StoreInv s' ∧ s.Extends s' ∧
       match r with
@@ -81,6 +81,7 @@ theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
           (s'.nodes.val = s.nodes.val ∨ s'.nodes.val = s.nodes.val ++ [data])
       | core.result.Result.Err _ => s' = s ⦄div := by
   unfold Store.intern
+  have h64' : 2 ^ 40 ≤ Usize.max := h64
   have hdh := dspec_self (Store.data_hash_spec data)
   step with hdh as ⟨hash, hhash⟩
   step with Store.find_spec s data hash (fun td => Store.same_data_spec td data)

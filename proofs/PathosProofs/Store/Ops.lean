@@ -108,7 +108,7 @@ theorem Store.Wf.data {s : Store} (h : s.Wf) (t : Nat) (ht : t < s.nodes.length)
 
 /-- `intern` of well-formed data keeps the store's invariant. -/
 theorem Store.intern_inv (s : Store) (data : TermData) (hinv : s.Inv)
-    (hd : data.Wf s.nodes.val) (h64 : 2 ^ 40 ≤ Usize.max) :
+    (hd : data.Wf s.nodes.val) (h64 : Platform64) :
     Store.intern s data ⦃ r s' =>
       s'.Inv ∧ s.Extends s' ∧
       match r with
@@ -152,7 +152,7 @@ theorem Store.intern_inv (s : Store) (data : TermData) (hinv : s.Inv)
 
 /-- `apply` gives the application of two terms as a term, or the stuck
 term when one of them is stuck. -/
-theorem Store.apply_spec (s : Store) (f a : Term) (hinv : s.Inv) (h64 : 2 ^ 40 ≤ Usize.max) :
+theorem Store.apply_spec (s : Store) (f a : Term) (hinv : s.Inv) (h64 : Platform64) :
     Store.apply s f a ⦃ r s' =>
       s'.Inv ∧ s.Extends s' ∧
       match r with
@@ -235,7 +235,7 @@ theorem schema.Constructor.arity_ok (c : schema.Constructor) : ∃ n, c.arity = 
 /-- `construct` with a constructor that is plain data: the node of that
 constructor with the arguments as its fields. -/
 theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : Slice Term)
-    (hinv : s.Inv) (h64 : 2 ^ 40 ≤ Usize.max) (hemb : c.embedding = ok Embedding.Data) :
+    (hinv : s.Inv) (h64 : Platform64) (hemb : c.embedding = ok Embedding.Data) :
     Store.construct s c args ⦃ r s' =>
       s'.Inv ∧ s.Extends s' ∧
       match r with

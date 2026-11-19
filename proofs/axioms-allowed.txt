@@ -13,9 +13,15 @@ Quot.sound
 Classical.choice
 
 [Aeneas]
-# Axioms of Aeneas's Lean library (backends/lean) that a theorem uses.
-# None so far. (The library declares a few: opaque types such as
-# core.pin.Pin, and core.slice.Slice.get_unchecked_SliceIndexUsizeSlice_spec.)
+# Axioms of Aeneas's Lean library (backends/lean). It declares these; no
+# theorem uses one so far ("declared, not in use"), and they are listed so
+# that one coming into use shows in what the script prints.
+Aeneas.Std.core.pin.Pin
+Aeneas.Std.core.pin.helper.PinHelper
+Aeneas.Std.core.sync.atomic.AtomicBool
+Aeneas.Std.core.sync.atomic.AtomicU32
+Aeneas.Std.core.panic.panic_info.PanicInfo
+Aeneas.Std.core.slice.Slice.get_unchecked_SliceIndexUsizeSlice_spec
 
 [logos]
 # Axioms of logos that a theorem uses. None so far.
