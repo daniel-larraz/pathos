@@ -6,8 +6,11 @@
 #
 #   scripts/generate-cpc [--ethos REPO] [--rev COMMIT] [--logos REPO]
 #                        [--logos-rev REV] [--work DIR] [--check]
-#                        [--from-note]
+#                        [--from-note] [--mini]
 #
+#   --mini       generate generated/cpcmini-checker instead: the checker for
+#                CpcMini, logos's reduced calculus (see below; this is what
+#                scripts/generate-mini runs)
 #   --ethos      the Ethos repository holding the commit, a URL or a local
 #                clone (default: https://github.com/cvc5/ethos)
 #   --rev        the Ethos commit with the rust-meta stage (default: the
@@ -38,6 +41,23 @@
 # in), and records in generated/cpc-checker/GENERATED.md what it was
 # generated from.
 #
+# With --mini it generates the checker for CpcMini, the calculus of five
+# rules that logos develops its proofs on, for the proofs of proofs/. logos
+# has no signature file for CpcMini: its install/install-sig.sh --mini
+# compiles Cpc.cached.eo with
+#
+#   tools/eoc/driver.py lean ... --no-parser --calc-name CpcMini \
+#     Cpc.cached.eo <the rules>
+#
+# whose first stage (trim-defs) writes the signature reduced to those rules.
+# This script runs that command with the rules install-sig.sh names, checks
+# that the Lean it writes is logos's CpcMini at that revision (so that the
+# Rust and the Lean the proofs relate come from one signature and one
+# compiler), and then runs `driver.py rust` on the reduced signature. The
+# defaults differ: Ethos and logos at the revisions below (MINI_...), the
+# crate in generated/cpcmini-checker with the reduced signature beside it as
+# CpcMini.eo, the work in target/generate-mini.
+#
 # Needs git, cmake, a C++ compiler, GMP and Python 3. Every step that can
 # use much memory runs under a cap (CPC_MEMORY_MAX, default 8G) where
 # systemd-run is available.
@@ -51,28 +71,53 @@ source "$root/difftest.env"
 # The commit of Ethos's main branch the checker is generated from.
 default_rev=e51f527cd496e46b86793057a2a15000cbaedf36
 
-fail() { echo "scripts/generate-cpc: $*" >&2; exit 2; }
+# The same for --mini: a commit of the fork (the generator that Charon and
+# Aeneas translate; cvc5/ethos#280), and the logos revision whose CpcMini
+# the proofs are about. proofs/ pins the same logos revision.
+mini_default_rev=35944fd10ac48df8ed7b6229d3ab6d5b4816ea4a
+mini_logos_rev=cf18742973861b3718d04c5f25775448098ff474
+
+me=generate-cpc
+fail() { echo "scripts/$me: $*" >&2; exit 2; }
 
 ethos_repo=https://github.com/cvc5/ethos
 ethos_given=false
 rev="$default_rev"
 logos_repo="$LOGOS_REPO"
 logos_rev="$LOGOS_REV"
-work="$root/target/generate-cpc"
+work=""
 check=false
 from_note=false
+mini=false
+rev_given=false
+logos_rev_given=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --ethos) ethos_repo="$2"; ethos_given=true; shift 2 ;;
-    --rev) rev="$2"; shift 2 ;;
+    --rev) rev="$2"; rev_given=true; shift 2 ;;
     --logos) logos_repo="$2"; shift 2 ;;
-    --logos-rev) logos_rev="$2"; shift 2 ;;
+    --logos-rev) logos_rev="$2"; logos_rev_given=true; shift 2 ;;
     --work) work="$2"; shift 2 ;;
     --check) check=true; shift ;;
     --from-note) from_note=true; shift ;;
+    --mini) mini=true; shift ;;
     *) fail "unknown argument: $1 (see the header of this script)" ;;
   esac
 done
+name=cpc-checker
+if $mini; then
+  me=generate-mini
+  name=cpcmini-checker
+  default_rev="$mini_default_rev"
+  $rev_given || rev="$mini_default_rev"
+  $logos_rev_given || logos_rev="$mini_logos_rev"
+  # The default Ethos commit is on the fork, not yet upstream.
+  $ethos_given || ethos_repo="$HARNESS_REPO"
+  default_logos_rev="$mini_logos_rev"
+else
+  default_logos_rev="$LOGOS_REV"
+fi
+[[ -n "$work" ]] || work="$root/target/$me"
 
 capped() {
   if command -v systemd-run >/dev/null 2>&1 && systemd-run --user --scope -q true 2>/dev/null; then
@@ -84,7 +129,7 @@ capped() {
 
 ethos_repos=("$ethos_repo")
 if $from_note; then
-  note="$root/generated/cpc-checker/GENERATED.md"
+  note="$root/generated/$name/GENERATED.md"
   [[ -f "$note" ]] || fail "--from-note: there is no $note"
   # The table rows `| Ethos (...) | `<commit>` |` and `| logos (...) | `<commit>` |`.
   rev="$(sed -n 's/^| Ethos (.*| `\([0-9a-f]\{40\}\)` |$/\1/p' "$note")"
@@ -92,9 +137,9 @@ if $from_note; then
   [[ -n "$rev" && -n "$logos_rev" ]] || fail "--from-note: no Ethos and logos commits in $note"
   $ethos_given || ethos_repos+=("$HARNESS_REPO")
   [[ "$rev" == "$default_rev" ]] ||
-    echo "generate-cpc: note: the crate is generated from Ethos $rev, not this script's default $default_rev"
-  [[ "$logos_rev" == "$LOGOS_REV" ]] ||
-    echo "generate-cpc: note: the crate is generated from logos $logos_rev, not LOGOS_REV $LOGOS_REV"
+    echo "$me: note: the crate is generated from Ethos $rev, not this script's default $default_rev"
+  [[ "$logos_rev" == "$default_logos_rev" ]] ||
+    echo "$me: note: the crate is generated from logos $logos_rev, not $default_logos_rev"
 fi
 
 mkdir -p "$work"
@@ -138,11 +183,47 @@ done
 
 out="$work/out"
 rm -rf "$out"
-echo "generate-cpc: Ethos $ethos_commit, logos $logos_commit"
+echo "$me: Ethos $ethos_commit, logos $logos_commit"
+signature="$defs/Cpc.cached.eo"
+: > "$work/driver.log"
+if $mini; then
+  # The rules of install-sig.sh --mini, read from that script.
+  sig_script="$work/logos/install/install-sig.sh"
+  rules="$(sed -n 's/^ *RULES=(\([a-z_ ]*\))$/\1/p' "$sig_script" 2>/dev/null)"
+  [[ -n "$rules" && "$(wc -l <<< "$rules")" -eq 1 ]] ||
+    fail "cannot read the rules of --mini from logos's install/install-sig.sh"
+  lean_out="$work/lean-out"
+  rm -rf "$lean_out"
+  # shellcheck disable=SC2086  # the rules are separate arguments
+  (cd "$work/ethos" && capped python3 tools/eoc/driver.py lean \
+    --build-dir "$work/build-eoc" --final-out-dir "$lean_out" \
+    --semantics "$defs/Cpc.eos" --smt-semantics "$defs/smt.eos" \
+    --skip-cvc5 --no-parser --calc-name CpcMini \
+    "$defs/Cpc.cached.eo" $rules) >> "$work/driver.log" 2>&1 ||
+    { tail -n 30 "$work/driver.log" >&2; fail "the driver failed; see $work/driver.log"; }
+  signature="$lean_out/lean-cpc-trim.eo"
+  [[ -f "$signature" ]] || fail "the driver wrote no reduced signature $signature"
+  # The Lean of this run against logos's CpcMini: logos's files have a
+  # header of comment lines before `module` and `def` for `partial def`.
+  compared=0
+  : > "$work/lean.diff"
+  for f in "$lean_out"/lean/*.lean; do
+    theirs="$work/logos/CpcMini/$(basename "$f")"
+    [[ -f "$theirs" ]] || fail "logos at $logos_commit has no CpcMini/$(basename "$f")"
+    diff <(sed 's/partial def /def /g' "$f") <(awk 'NR==1 && /^--/ {h=1} h && /^--/ {next} h && /^$/ {h=0; next} {h=0; print}' "$theirs") \
+      >> "$work/lean.diff" || true
+    compared=$((compared + 1))
+  done
+  if [[ -s "$work/lean.diff" || "$compared" -eq 0 ]]; then
+    head -n 20 "$work/lean.diff" >&2
+    fail "the Lean this Ethos writes for CpcMini is not logos's CpcMini at $logos_commit ($work/lean.diff)"
+  fi
+  echo "$me: rules $rules; the $compared Lean files are logos's CpcMini"
+fi
 (cd "$work/ethos" && capped python3 tools/eoc/driver.py rust \
   --build-dir "$work/build-eoc" --final-out-dir "$out" \
   --semantics "$defs/Cpc.eos" --smt-semantics "$defs/smt.eos" \
-  "$defs/Cpc.cached.eo") > "$work/driver.log" 2>&1 ||
+  "$signature") >> "$work/driver.log" 2>&1 ||
   { tail -n 30 "$work/driver.log" >&2; fail "the driver failed; see $work/driver.log"; }
 [[ -f "$out/rust/Cargo.toml" && -f "$out/rust/src/generated.rs" ]] ||
   fail "the driver wrote no crate in $out/rust; see $work/driver.log"
@@ -158,6 +239,37 @@ mkdir -p "$staged"
   done)
 # The signature the crate was compiled from: the front end of crates/pathos
 # reads proofs against it.
+if $mini; then
+cp "$signature" "$staged/CpcMini.eo"
+cat > "$staged/GENERATED.md" <<EOF
+# generated/cpcmini-checker
+
+Generated code. Do not edit it: change what it is generated from and run
+\`scripts/generate-mini\`, which wrote every file here, this one included.
+
+It is the checker for CpcMini, the calculus of a few rules that logos
+develops its proofs on, compiled by the \`rust-meta\` stage of
+\`ethos-eoc\` as \`generated/cpc-checker\` is for CPC. Nothing in pathos
+links it: it is what the proofs of \`proofs/\` are about, through the Lean
+that Charon and Aeneas write for it.
+
+| Generated from | |
+| --- | --- |
+| Ethos (\`ethos-eoc\`, \`tools/eoc/driver.py\`, the runtime in \`plugins/rust_meta/runtime\`) | \`$ethos_commit\` |
+| logos (\`install/defs/Cpc.cached.eo\`, with \`Cpc.eos\` as \`--semantics\` and \`smt.eos\` as \`--smt-semantics\`) | \`$logos_commit\` |
+| Rules (those of logos's \`install/install-sig.sh --mini\`) | \`$rules\` |
+
+\`CpcMini.eo\` is the signature reduced to those rules, as the first stage
+of \`driver.py lean ... Cpc.cached.eo $rules\` writes it; the crate is
+\`driver.py rust\` on that file. When it was generated, the Lean that the
+same command writes was compared with logos's \`CpcMini/\` at that
+revision and found the same, so the crate and logos's CpcMini are compiled
+from one signature by one compiler.
+
+It is a workspace of its own (see its \`Cargo.toml\`), outside pathos's
+workspace, so pathos's lints, formatting and tests do not apply to it.
+EOF
+else
 cp "$defs/Cpc.cached.eo" "$staged/Cpc.cached.eo"
 cat > "$staged/GENERATED.md" <<EOF
 # generated/cpc-checker
@@ -181,18 +293,19 @@ names the checker was compiled with.
 It is a workspace of its own (see its \`Cargo.toml\`), outside pathos's
 workspace, so pathos's lints, formatting and tests do not apply to it.
 EOF
+fi
 
-dest="$root/generated/cpc-checker"
+dest="$root/generated/$name"
 if $check; then
   if diff -r "$staged" "$dest" > "$work/check.diff" 2>&1; then
-    echo "generate-cpc: generated/cpc-checker is what these revisions generate"
+    echo "$me: generated/$name is what these revisions generate"
     exit 0
   fi
   head -n 20 "$work/check.diff"
-  echo "generate-cpc: generated/cpc-checker differs (the whole difference: $work/check.diff)"
+  echo "$me: generated/$name differs (the whole difference: $work/check.diff)"
   exit 1
 fi
 rm -rf "$dest"
 mkdir -p "$(dirname "$dest")"
 cp -r "$staged" "$dest"
-echo "generate-cpc: wrote generated/cpc-checker ($(cat "$dest"/src/*.rs | wc -l) lines of Rust)"
+echo "$me: wrote generated/$name ($(cat "$dest"/src/*.rs | wc -l) lines of Rust)"
