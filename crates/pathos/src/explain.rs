@@ -24,7 +24,7 @@ pub fn show(s: &Store, t: cc::Term, depth: usize) -> String {
     match data {
         TermData::Stuck => "<stuck>".into(),
         TermData::Literal(l) | TermData::Native(l) => match l {
-            cc::Lit::String(_) => format!("\"{l}\""),
+            cc::Lit::Str(_) => format!("\"{l}\""),
             cc::Lit::Binary(b) => format!("#b{}", b.to_string_base(2)),
             _ => l.to_string(),
         },

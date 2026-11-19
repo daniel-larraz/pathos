@@ -48,16 +48,24 @@ Only `pathos-term` has external dependencies, and only
 [pathos-cpc.md](pathos-cpc.md)). It is in this repository, forbids `unsafe`
 code itself (`#![forbid(unsafe_code)]`, and the lint in its `Cargo.toml`),
 binds no C code, and has the same three direct dependencies at the same
-versions, so it adds no crate to the build. Its runtime files (`num.rs`,
-`bitvec.rs`, `lit.rs`, `eostring.rs`, `kind.rs`, `codec.rs`) are copies of
-`pathos-term`'s, and `num.rs` is again the only file that names
-`malachite`. The other binaries do not link it. The analysis below of what
+versions, so it adds no crate to the build. Its runtime files `num.rs`,
+`bitvec.rs`, `lit.rs`, `eostring.rs` and `kind.rs` come from
+`pathos-term`'s (since milestone 28 without what the checker does not use,
+and rewritten for Charon and Aeneas; see [aeneas.md](aeneas.md)), and
+`num.rs` is again the only file that names `malachite`. Milestone 28 added
+four functions to it (`Integer::hash_code`, `Rational::hash_code`,
+`Rational::numerator`, `Rational::denominator`). The other binaries do not
+link it. The analysis below of what
 the binaries reach in the dependencies (`scripts/unsafe-reach`) was made for
 `pathos-eo` and `pathos-eoc`, and repeated for `pathos` on 2026-11-18
 (commit `e52f1b6`, x86-64 Linux): `pathos` reaches the same `unsafe` lines,
 all of them again only in `malachite_nz::natural::arithmetic::mul::fft`,
 and three more lines of `malachite-nz` that are not `unsafe`
-(`shr_round.rs:360` and `:380`, `general_digits.rs:1639`).
+(`shr_round.rs:360` and `:380`, `general_digits.rs:1639`). It was run
+again the same day with the checker of milestone 28 (Ethos `cc027fc`): the
+`unsafe` lines are the same for the three binaries, and `pathos` has six
+lines of `malachite-nz` that `pathos-eo` does not (9,123 against 9,117),
+none of them `unsafe`.
 
 | Crate | Version | `unsafe` code | Where, and why acceptable |
 | --- | --- | --- | --- |

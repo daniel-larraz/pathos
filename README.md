@@ -17,7 +17,9 @@ proof checker in Rust, meant as a drop-in replacement:
   ([cvc5/ethos#274](https://github.com/cvc5/ethos/pull/274)), behind
   pathos's own front end. It answers `correct`, `incorrect` or
   `incomplete`, as logos does. It is new and unverified; see
-  [docs/pathos-cpc.md](docs/pathos-cpc.md).
+  [docs/pathos-cpc.md](docs/pathos-cpc.md). The compiled checker is
+  written so that Charon and Aeneas translate all of it to Lean, for the
+  proofs to come: [docs/aeneas.md](docs/aeneas.md).
 
 (Until 2026-11-16 `pathos` was the name of the binary that is now
 `pathos-eo`.)

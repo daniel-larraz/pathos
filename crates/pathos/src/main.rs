@@ -352,6 +352,32 @@ mod tests {
         }
     }
 
+    /// An application of one head to n arguments is n nested applications
+    /// for the front end, and the adapter asks each of them for its head.
+    /// It keeps the answers, so the conversion takes time linear in n: with
+    /// a walk down the whole application at each of them, as it was, these
+    /// 200,000 arguments would take minutes, and with a parametric datatype
+    /// declared (when the arguments were also collected at each) longer.
+    #[test]
+    fn an_application_with_very_many_arguments_is_converted_in_linear_time() {
+        let args = vec!["a"; 200_000].join(" ");
+        let step = format!(
+            "(declare-const a Bool)\n(assume @p1 false)\n\
+             (step @p2 (= false false) :rule refl :args (({args})))\n"
+        );
+        let datatype = "(declare-datatypes ((List 1)) \
+                        ((par (X) ((nil) (cons (head X) (tail (List X)))))))\n";
+        let started = std::time::Instant::now();
+        let plain = verdict(&step);
+        let with_datatype = verdict(&format!("{datatype}{step}"));
+        // the checker refuses a term this deep, and says so either way
+        assert_eq!(plain, with_datatype);
+        assert!(plain.is_err(), "{plain:?}");
+        // far above what it takes (well under a second in a release build)
+        // and far below what it took
+        assert!(started.elapsed() < std::time::Duration::from_secs(60));
+    }
+
     /// A constructor, selector, tester or updater of one parametric
     /// datatype used at an instance of another: the types do not rule it
     /// out for `is` and `update`, nor for a step's untyped arguments. Each

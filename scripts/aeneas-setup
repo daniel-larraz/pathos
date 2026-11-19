@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+# Installs Charon and Aeneas, at pinned commits, in a directory of their
+# own, for milestone 28: translating the compiled checker for CPC
+# (generated/cpc-checker) to Lean.
+#
+#   scripts/aeneas-setup DIR [--jobs N]
+#
+#   DIR      where everything goes (kept between runs; a second run only
+#            does what is missing). Choose a directory outside the
+#            repository's target/, which `cargo clean` removes.
+#   --jobs   build jobs (default 4)
+#
+# It makes
+#
+#   DIR/aeneas           Aeneas at the commit below
+#   DIR/aeneas/charon    Charon at the commit Aeneas's charon-pin names,
+#                        which must be the one below
+#   DIR/switch           an opam switch of its own (OCaml as below) with
+#                        what the two need; no other switch is touched
+#   DIR/bin/charon, DIR/bin/aeneas    links to the two programs
+#   DIR/versions.txt     what was installed
+#
+# Charon is a driver of the Rust compiler and needs the nightly toolchain
+# its rust-toolchain file names; rustup installs it, with its components,
+# when Charon is first built, if it is not there. That only adds to
+# ~/.rustup: the default toolchain does not change.
+#
+# Needs git, opam, rustup, make and a C compiler. The builds run under a
+# memory cap (AENEAS_MEMORY_MAX, default 8G) where systemd-run is available.
+
+set -euo pipefail
+
+# The pins. Aeneas names the Charon commit it works with (charon-pin); it
+# is repeated here so that a change of either is seen.
+aeneas_repo=https://github.com/AeneasVerif/aeneas
+aeneas_commit=1dc8ad31b1b062a77c50e29144a6c7bba955fa09
+charon_repo=https://github.com/AeneasVerif/charon
+charon_commit=454586e9b770231e66d2062993e632dfc06463e2
+ocaml=ocaml-base-compiler.5.5.1
+
+fail() { echo "scripts/aeneas-setup: $*" >&2; exit 2; }
+
+dir=""
+jobs=4
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --jobs) jobs="$2"; shift 2 ;;
+    -*) fail "unknown argument: $1 (see the header of this script)" ;;
+    *) [[ -z "$dir" ]] || fail "one directory, please"; dir="$1"; shift ;;
+  esac
+done
+[[ -n "$dir" ]] || fail "give the directory to install in (see the header of this script)"
+for tool in git opam rustup make; do
+  command -v "$tool" >/dev/null 2>&1 || fail "$tool is needed"
+done
+mkdir -p "$dir"
+dir="$(cd "$dir" && pwd)"
+
+capped() {
+  if command -v systemd-run >/dev/null 2>&1 && systemd-run --user --scope -q true 2>/dev/null; then
+    systemd-run --user --scope -q -p "MemoryMax=${AENEAS_MEMORY_MAX:-8G}" -p MemorySwapMax=0 "$@"
+  else
+    "$@"
+  fi
+}
+
+# A clone of `repo` in `at`, at `commit`.
+checkout() {
+  local repo="$1" at="$2" commit="$3"
+  [[ -d "$at/.git" ]] || git clone --quiet "$repo" "$at"
+  if [[ "$(git -C "$at" rev-parse HEAD)" != "$commit" ]]; then
+    git -C "$at" fetch --quiet origin
+    git -C "$at" checkout --quiet --detach "$commit"
+  fi
+}
+
+checkout "$aeneas_repo" "$dir/aeneas" "$aeneas_commit"
+pinned="$(tail -n 1 "$dir/aeneas/charon-pin")"
+[[ "$pinned" == "$charon_commit" ]] ||
+  fail "Aeneas $aeneas_commit pins Charon $pinned, not $charon_commit: update the pins of this script together"
+checkout "$charon_repo" "$dir/aeneas/charon" "$charon_commit"
+
+# The OCaml side: a switch in DIR, never the default one.
+if [[ ! -d "$dir/switch/_opam" ]]; then
+  mkdir -p "$dir/switch"
+  capped opam switch create "$dir/switch" "$ocaml" --no-switch --yes --jobs "$jobs"
+fi
+in_switch() { capped opam exec --switch="$dir/switch" -- "$@"; }
+capped opam install --switch="$dir/switch" --yes --jobs "$jobs" --deps-only \
+  "$dir/aeneas/charon" "$dir/aeneas/src"
+
+# Charon: the Rust program (rustup reads its rust-toolchain file) and the
+# OCaml library Aeneas reads its output with.
+# (Not `make build`, which also formats the OCaml sources and builds their
+# documentation, and needs ocamlformat and odoc for that. Aeneas builds the
+# OCaml library itself, from the sources.)
+(cd "$dir/aeneas/charon" &&
+  CARGO_BUILD_JOBS="$jobs" in_switch make build-charon-rust charon-ml/src/CharonVersion.ml)
+# Aeneas: the program only, not its test runner.
+(cd "$dir/aeneas" && in_switch make build-bin &&
+  mkdir -p bin && cp -f src/_build/default/main.exe bin/aeneas)
+
+mkdir -p "$dir/bin"
+ln -sf "$dir/aeneas/charon/bin/charon" "$dir/bin/charon"
+ln -sf "$dir/aeneas/bin/aeneas" "$dir/bin/aeneas"
+[[ -x "$dir/bin/charon" ]] || fail "Charon was not built: no $dir/aeneas/charon/bin/charon"
+[[ -x "$dir/bin/aeneas" ]] || fail "Aeneas was not built: no $dir/aeneas/bin/aeneas"
+
+{
+  echo "Aeneas  $aeneas_commit"
+  echo "Charon  $charon_commit"
+  echo "OCaml   $ocaml"
+  echo "Rust    $(sed -n 's/^channel = "\(.*\)"/\1/p' "$dir/aeneas/charon/charon/rust-toolchain")"
+  echo "Lean    $(cat "$dir/aeneas/backends/lean/lean-toolchain") (what Aeneas's Lean library needs)"
+} > "$dir/versions.txt"
+cat "$dir/versions.txt"
+echo "aeneas-setup: $dir/bin/charon and $dir/bin/aeneas are ready"

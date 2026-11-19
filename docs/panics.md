@@ -75,14 +75,14 @@ Reading was backed by runs, on release and debug builds:
 
 | Verdict | Rows | Meaning |
 | --- | --- | --- |
-| Safe | 257 | No input reaches it; the row says why. |
+| Safe | 256 | No input reaches it; the row says why. |
 | Safe (fixed in this milestone) | 9 | Input reached it; now an error or a defined result. See below. |
 | Ethos's fatal error | 51 | `pathos-eoc` only: the place where the C++ stage calls `EO_FATAL` or fails an `AlwaysAssert`. It returns an error with Ethos's text, not a panic. |
 | Error where Ethos reads out of bounds | 5 | `pathos-eoc` only: an error with pathos's own text where the C++ would index past a term's children. |
 | Safe (was: crafted snapshot) | 16 | Was reached only through a snapshot file made on purpose, with a checksum that fits, holding a state no signature gives. The reader now rejects such a file, or the place cannot fail; each row says which. |
 | Safe (was: crafted snapshot, debug build only) | 7 | The same, where only a debug build panicked (a counter read from the snapshot overflowed, or a character above 255 reached the output). |
 | Stack | 8 | Recursion whose depth the input controls; the process aborts with `has overflowed its stack`. Ethos crashes on the same inputs. |
-| Resource | 13 | Memory or time the input can make arbitrarily large; the process aborts when an allocation fails, or is killed. Ethos behaves alike. |
+| Resource | 14 | Memory or time the input can make arbitrarily large; the process aborts when an allocation fails, or is killed. Ethos behaves alike. |
 
 ### Fixed in this milestone
 
@@ -123,13 +123,15 @@ none of them a panic from text input, and one was closed:
    pathos gets deeper than Ethos before the stack ends
    ([ethos-differences.md](ethos-differences.md), "Recursion deeper than
    the stack").
-3. **Resource** (12 rows). `(declare-sort S 4294967295)`, printing a
-   bit-vector of width 2^32 - 1, `(eo::pow 3 4294967295)`, `eo::list_repeat`
+3. **Resource** (14 rows). `(declare-sort S 4294967295)`, printing a
+   bit-vector of width 2^32 - 1, making one of that width from a negative
+   number (`(eo::to_bin 4294967295 -1)`), `(eo::pow 3 4294967295)`, `eo::list_repeat`
    with such a count. Ethos has no limit there either.
 
 The `malachite` functions pathos calls panic on a zero divisor and on a
-radix outside 2 to 36; the rows for `num.rs` show that every caller rules
-those out. Whether `malachite` can panic inside an operation on a very
+radix outside 2 to 62 (corrected in milestone 28: this said 2 to 36); the
+rows for `num.rs` show that every caller rules those out, the callers
+passing 2, 10 and 16 only. Whether `malachite` can panic inside an operation on a very
 large number was not established by reading it; the runs above found no
 such panic.
 
@@ -139,7 +141,7 @@ such panic.
 
 | Line | Construct | Verdict | Why |
 |---|---|---|---|
-| 17 | `value.mod_by_pow2(size)` | Safe | Cannot panic; the result has at most `size` bits. |
+| 17 | `value.mod_by_pow2(size)` | Resource | Cannot panic, and the result has at most `size` bits; but a negative value reduced modulo `2^size` has about `size` bits whatever its own size, so `(eo::to_bin 4294967295 -1)` allocates 512 MiB for one literal. Memory only. (Corrected in milestone 28: this row said Safe.) |
 | 32-35 | `Integer::parse`, `u32::try_from(..).ok()?`, `checked_mul(4)?` | Safe | Every step is checked; callers pass base 2 or 16 only (`pathos-elab/src/expr_parser.rs:381`, `:388`). |
 | 54-56 | `size as usize`, `size - s.len()` | Safe | The subtraction is guarded by `size > s.len()` at `bitvec.rs:55`. |
 | 56 | `"0".repeat(size - s.len())` | Resource | Printing a binary literal of width 2^32-1 (from `eo::to_bin`) allocates about 4 GiB; the process runs out of memory without a panic. |
@@ -817,7 +819,10 @@ What remains is not a panic:
    depth it stops with the error `Limit`.
 2. **Resource** (5 rows). `pathos` sets no limit of its own on the
    checker's terms and calls; an application with n arguments is converted
-   in time quadratic in n; a datatype with a field that is a larger
+   in time quadratic in n (at the audited commit; linear since milestone
+   28, where the adapter keeps the head of each application it has asked
+   about, so the two rows on `head` and `spine` go when this section moves
+   to that milestone's commit); a datatype with a field that is a larger
    instance of itself (`(N (N T))`) does cubic work before the limit of
    10,000 instances stops it; and `--explain` prints a bit-vector digit by
    digit, whatever its width.

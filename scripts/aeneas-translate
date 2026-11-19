@@ -1,0 +1,235 @@
+#!/usr/bin/env python3
+"""Translates the compiled checker for CPC (generated/cpc-checker) to Lean
+with Charon and Aeneas, one module of generated functions at a time, and
+checks the result. This is the gate of milestone 28.
+
+  scripts/aeneas-translate TOOLS [--out DIR] [--crate DIR] [--parts LIST]
+                           [--cores LIST] [--memory SIZE] [--timeout SECONDS]
+
+  TOOLS      the directory scripts/aeneas-setup installed Charon and Aeneas
+             in (it has bin/charon and bin/aeneas)
+  --out      where the results go (default: target/aeneas); one directory
+             per part, with charon.log, aeneas.log and lean/, and
+             cargo/ for what Charon's build of the crate leaves
+  --crate    the crate to translate (default: generated/cpc-checker)
+  --parts    the parts to run, e.g. 0,3,11 (default: all)
+  --cores    the cores Aeneas may use, as `taskset -c` takes them
+             (default: 0-3; see below)
+  --memory   the cap on each run (default: 8G)
+  --timeout  seconds per run (default: 3600)
+
+The crate's generated functions are in modules `generated::part0`,
+`part1`, ... (src/generated_part<k>.rs), which the generator makes from
+the call graph: functions that call each other are in one module, and a
+module calls only itself, earlier modules and the runtime. For each part
+this runs
+
+  charon cargo --preset=aeneas --opaque <crate>::front --opaque <crate>::num
+               --opaque <crate>::generated::part<j> (for every other part j)
+  aeneas -backend lean -loops-to-rec -max-heartbeats 20000000
+
+so that one run translates the runtime and one part. `front` (what works
+on text) and `num` (the numbers, over malachite) are never translated:
+their functions are axioms of the Lean. The functions of other parts that
+a part calls are axioms of its Lean file too, under the names they have
+in their own part's file.
+
+`-loops-to-rec` makes Aeneas write a loop as a recursive function. As a
+use of its `loop` combinator, which is its default, a loop does not
+compile in Lean when the function it is in is called again from inside
+it (Lean cannot show the definition monotone), and 21 of the 65 programs
+of CPC that are compiled to a loop are like that.
+
+`-max-heartbeats` is the limit on Lean's work for one definition that
+Aeneas writes into the file. With its default of 1,000,000 the three
+largest groups of functions that call each other (`$eo_typeof`,
+`$run_evaluate` and `$eo_to_smt` with what they call back: 220 to 270
+functions each) do not compile; they do with twenty times that.
+
+Why one part at a time, and why few cores: Aeneas translates the
+functions of its input in parallel on every core but one and has no
+option for that number, and what it holds in memory is what its workers
+hold at once. On 20 cores three of the parts of CPC needed more than
+8 GiB; on 4 cores the largest needs 2. `taskset` is how the number is
+set. Charon is run on all cores (a part needs under 2 GiB).
+
+Checked for each part, and the script exits 1 if one fails:
+  - Charon and Aeneas end without an error, and Aeneas writes a Lean file;
+  - in Charon's output no function of `front`, of `num` or of another part
+    has a body (Charon accepts a pattern that matches nothing without a
+    word, so the options above are not taken on trust);
+  - every axiom of the Lean file for a generated function names an
+    earlier part. This is what shows that the parts can be put together
+    in their order without a circle. The generator checks the same from
+    the calls it sees in its own text; a use it does not see as a call
+    would show here.
+
+Prints a line per part (lines of Rust, time and peak memory of both
+tools, errors, lines of Lean, axioms by kind) and writes the same as
+<out>/parts.tsv. Needs Python 3, systemd-run, taskset and GNU time.
+"""
+
+import argparse
+import collections
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def fail(msg):
+    print(f"scripts/aeneas-translate: {msg}", file=sys.stderr)
+    sys.exit(2)
+
+
+def capped(memory, timeout, command, cwd=None, log=None, env=None):
+    """Runs under the memory cap and GNU time; (exit status, seconds, peak GiB)."""
+    full = [
+        "systemd-run", "--user", "--scope", "-q", "-p", f"MemoryMax={memory}",
+        "-p", "MemorySwapMax=0", "timeout", str(timeout),
+        "/usr/bin/time", "-f", "TIME %e %M",
+    ] + command
+    run = subprocess.run(full, cwd=cwd, capture_output=True, text=True, env=env)
+    text = re.sub(r"\x1b\[[0-9;]*m", "", run.stdout + run.stderr)
+    if log:
+        log.write_text(text)
+    m = re.search(r"^TIME ([0-9.]+) ([0-9]+)$", text, re.M)
+    seconds, peak = (float(m.group(1)), int(m.group(2)) / 1048576) if m else (None, None)
+    return run.returncode, seconds, peak, text
+
+
+def bodies(llbc, crate):
+    """For each module of the crate, the functions that have a body in the LLBC."""
+    data = json.loads(llbc.read_text())["translated"]
+    have = collections.defaultdict(list)
+    for f in data["fun_decls"]:
+        if not f:
+            continue
+        path = []
+        for e in f["item_meta"]["name"]:
+            path.append(e["Ident"][0] if "Ident" in e else "{impl}")
+        if path[0] != crate or len(path) < 3 or path[1].startswith("{"):
+            continue
+        module = path[1]
+        if module == "generated" and len(path) > 3:
+            module = path[2]
+        body = f.get("body")
+        if isinstance(body, dict) and any(k in body for k in ("Structured", "Unstructured", "Ok")):
+            have[module].append("::".join(path))
+    return have
+
+
+def axioms(lean):
+    """The names of the axioms of a Lean file."""
+    return re.findall(r"^axiom\s+(\S+)", lean.read_text(), re.M)
+
+
+def main():
+    ap = argparse.ArgumentParser(add_help=False)
+    ap.add_argument("tools")
+    ap.add_argument("--out", default=str(ROOT / "target/aeneas"))
+    ap.add_argument("--crate", default=str(ROOT / "generated/cpc-checker"))
+    ap.add_argument("--parts")
+    ap.add_argument("--cores", default="0-3")
+    ap.add_argument("--memory", default="8G")
+    ap.add_argument("--timeout", type=int, default=3600)
+    args = ap.parse_args()
+    tools = Path(args.tools).resolve()
+    charon, aeneas = tools / "bin/charon", tools / "bin/aeneas"
+    for tool in (charon, aeneas):
+        if not tool.exists():
+            fail(f"no {tool} (see scripts/aeneas-setup)")
+    for tool in ("systemd-run", "taskset"):
+        if shutil.which(tool) is None:
+            fail(f"{tool} is needed")
+    crate_dir = Path(args.crate).resolve()
+    manifest = (crate_dir / "Cargo.toml").read_text()
+    crate = re.search(r'^name = "([^"]+)"', manifest, re.M).group(1).replace("-", "_")
+    count = len(list((crate_dir / "src").glob("generated_part*.rs")))
+    if count == 0:
+        fail(f"{crate_dir} has no src/generated_part<k>.rs")
+    parts = [int(p) for p in args.parts.split(",")] if args.parts else list(range(count))
+    out = Path(args.out).resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    rows, failed = [], False
+    header = ["part", "rust_lines", "charon_s", "charon_gib", "llbc_mib", "aeneas_s",
+              "aeneas_gib", "errors", "lean_lines", "axioms", "num", "front",
+              "other_parts", "problems"]
+    for k in parts:
+        work = out / f"part{k}"
+        shutil.rmtree(work, ignore_errors=True)
+        work.mkdir(parents=True)
+        llbc = work / "part.llbc"
+        opaque = ["--opaque", f"{crate}::front", "--opaque", f"{crate}::num"]
+        for j in range(count):
+            if j != k:
+                opaque += ["--opaque", f"{crate}::generated::part{j}"]
+        problems = []
+        status, charon_s, charon_gib, _ = capped(
+            args.memory, args.timeout,
+            [str(charon), "cargo", "--preset=aeneas"] + opaque + ["--dest-file", str(llbc)],
+            cwd=crate_dir, log=work / "charon.log",
+            env=dict(os.environ, CARGO_TARGET_DIR=str(out / "cargo")))
+        if status != 0 or not llbc.exists():
+            problems.append(f"Charon ended with status {status}")
+            rows.append([k] + [""] * 12 + ["; ".join(problems)])
+            failed = True
+            continue
+        llbc_mib = llbc.stat().st_size / 1048576
+        have = bodies(llbc, crate)
+        for module, names in sorted(have.items()):
+            other_part = module.startswith("part") and module != f"part{k}"
+            if module in ("front", "num") or other_part:
+                problems.append(f"{len(names)} functions of {module} have a body, e.g. {names[0]}")
+        status, aeneas_s, aeneas_gib, text = capped(
+            args.memory, args.timeout,
+            ["taskset", "-c", args.cores, str(aeneas), "-backend", "lean", "-loops-to-rec",
+             "-max-heartbeats", "20000000",
+             "-no-progress-bar", "-dest", str(work / "lean"), str(llbc)],
+            log=work / "aeneas.log")
+        errors = len(re.findall(r"^\[Error\]", text, re.M)) + len(re.findall(r"^Fatal error", text, re.M))
+        lean = sorted((work / "lean").glob("*.lean")) if (work / "lean").exists() else []
+        if status != 0:
+            problems.append(f"Aeneas ended with status {status}")
+        if errors:
+            problems.append(f"{errors} errors of Aeneas")
+        if not lean:
+            problems.append("Aeneas wrote no Lean file")
+        names = [a for f in lean for a in axioms(f)]
+        num = sum(1 for a in names if a.startswith("num."))
+        front = sum(1 for a in names if a.startswith("front."))
+        others = [a for a in names if a.startswith("generated.part")]
+        later = [a for a in others if int(re.match(r"generated\.part(\d+)", a).group(1)) >= k]
+        if later:
+            problems.append(f"{len(later)} axioms for functions of this part or a later one, e.g. {later[0]}")
+        llbc.unlink()
+        lean_lines = sum(len(f.read_text().splitlines()) for f in lean)
+        rust_lines = len((crate_dir / f"src/generated_part{k}.rs").read_text().splitlines())
+        row = [k, rust_lines, f"{charon_s:.0f}", f"{charon_gib:.1f}", f"{llbc_mib:.0f}",
+               f"{aeneas_s:.0f}" if aeneas_s is not None else "",
+               f"{aeneas_gib:.1f}" if aeneas_gib is not None else "",
+               errors, lean_lines, len(names), num, front, len(others), "; ".join(problems)]
+        rows.append(row)
+        failed |= bool(problems)
+        print(f"part{k}: {rust_lines} lines; Charon {row[2]} s, {row[3]} GiB, LLBC {row[4]} MiB; "
+              f"Aeneas {row[5]} s, {row[6]} GiB, {errors} errors; Lean {lean_lines} lines, "
+              f"{len(names)} axioms (num {num}, front {front}, other parts {len(others)})"
+              + (f"; PROBLEMS: {row[-1]}" if problems else ""), flush=True)
+    (out / "parts.tsv").write_text(
+        "\n".join("\t".join(str(c) for c in r) for r in [header] + rows) + "\n")
+    done = [r for r in rows if r[5] != ""]
+    if done:
+        print(f"aeneas-translate: {len(done)} of {count} parts; Aeneas "
+              f"{sum(float(r[5]) for r in done):.0f} s in all, at most "
+              f"{max(float(r[6]) for r in done):.1f} GiB; "
+              + ("all checks pass" if not failed else "SOME CHECKS FAIL"))
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
