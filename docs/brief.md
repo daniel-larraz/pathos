@@ -744,6 +744,99 @@ intended; everything between gates is not.
     pilot programs are proved with no `sorry` and no axioms beyond the
     trusted file; the report. The reviewer pushes and starts the runs.
 
+32. **The CPC theorem.** On `main`, branched from it (`m32`), after
+    milestone 31 is merged. The theorem: on a 64-bit platform
+    (`Platform64`), if the Lean that Aeneas writes for
+    `generated/cpc-checker` returns `Verdict::Correct` from `check_proof`
+    on a store with the invariant and handles that stand for `assums` and
+    `cmds`, then `logos_verdict assums cmds = Verdict.correct`; composed
+    with `correct___logos_verdict` (logos, `Cpc/ApiCorrect.lean`), the
+    assumptions are unsatisfiable. It rests only on the axioms of
+    `proofs/axioms-allowed.txt`, and, beyond Lean, on Charon, Aeneas and
+    rustc translating and compiling faithfully. The front end stays
+    outside, as logos's parser does. Milestone 31's report
+    (`docs/proofs.md`) is the starting point: what is proved, what is
+    missing, the estimate.
+
+    The work is too large for one gate, so it has **five stages, each with
+    a gate of its own**. Report at each and wait for the reviewer before
+    starting the next; the order of the later stages may change with what
+    the earlier ones find.
+
+    - **Stage 1: logos's CPC proofs at Lean `v4.36.0`.** Milestone 31
+      found that `Cpc.ApiCorrect` does not build under 8 GiB at `v4.36.0`,
+      even one module at a time. Find the module (or modules); build them
+      at logos's own `v4.34.0` with the same settings and compare memory;
+      find out whether logos's `-j1` is the cause, as it was for the
+      generated code. A cap above 8 GiB is allowed here, deliberately, up
+      to 16 GiB, and said so. If a source change to logos is needed, make
+      it on a branch of our fork and say what; the reviewer offers it
+      upstream. Gate: `Cpc.ApiCorrect` builds within `proofs/` at the
+      pinned versions, with its time and peak.
+    - **Stage 2: generated proofs, on all of CpcMini.** The generator
+      (`rust_meta` in Ethos; branch `m32-proofs` of the fork, from
+      `m28-aeneas`, rebased when cvc5/ethos#280 changes or is merged)
+      writes, beside the crate, a Lean file with a specification and a
+      proof for every function it generates: each case function (its
+      answer when the pattern matches and when it does not), each body
+      ("the first case that matches"), each loop (one induction), each
+      recursive group (one induction, a statement per function) and each
+      cached program (the cache lemmas, and the program's meaning in the
+      cache's table). It also writes the Lean tables the proofs need:
+      `NATIVE_TEXTS`, the cache's meanings, `Rep` for every constructor of
+      the signature. Write first, by hand in `proofs/`, the tactic that does
+      the step after a store operation (milestone 31's six to ten repeated
+      lines), so the generated proofs are short. `scripts/generate-cpc`
+      copies the Lean file with the crate; it is never edited by hand.
+      Then prove CpcMini's theorem end to end: `check_refutation` returning
+      `true` gives `__eo_checker_is_refutation F pf = true`, composed with
+      CpcMini's `correct___eo_is_refutation`. Gate: that theorem, with no
+      `sorry`, every one of CpcMini's 82 functions proved by generated
+      proofs; the time to elaborate them; how many needed a person, and
+      why.
+    - **Stage 3: the rest of the runtime, by hand.** What milestone 31's
+      report lists as not proved: the other embeddings of `construct` and
+      `destruct`, the builtin operators of `lit.rs` (arithmetic, strings,
+      bit-vectors, over the trusted numbers, against logos's natives), the
+      list operators, `state_nth`, term comparison and its order, the type
+      caches, `native_literal`'s specification (in `Trusted.lean`, against
+      the generated table), and `Rep` for all of `Eo.Term` and the other
+      embedded types. Gate: each with its theorem; the trusted file grown
+      only by what is listed and said why.
+    - **Stage 4: logos's side.** The `norm` formulation of milestone 31's
+      finding: for every logos function the checker calls, that it gives
+      the same result, up to `norm`, on a term and on its `norm`. Generate
+      these where they are trivial (every pattern that looks under an
+      application sends `Stuck` there to `Stuck`) and prove the rest by
+      hand. Answer whether logos builds a stuck argument under an
+      application from inputs without one. Where a function does not
+      respect `norm`, stop and report: the Rust and logos differ there,
+      and which one changes is a decision for Daniel and the logos
+      developers. Gate: every lemma, or the list of the exceptions with a
+      proof or an example for each.
+    - **Stage 5: CPC.** The generated proofs for all of CPC's 1,086
+      programs, on the stitched Lean of its 13 parts (generated by
+      `scripts/proofs-build --translate`, not committed); the translation
+      checks of `check_proof` against logos's `ApiChecks`; the top
+      theorem. Measure the build of everything (time, peak; under 8 GiB
+      if it can be done, otherwise say what needs more). Gate: the
+      theorem, `scripts/proofs-axioms` passing on it, and
+      `scripts/proofs-build` from a clean checkout.
+
+    Throughout: every change to the Rust code goes through the generator
+    or the runtime in Ethos, as in milestone 28, and is measured (the 400
+    and the large proofs, before and after); the verdicts must not change.
+    `docs/proofs.md` is kept up to date at each stage, with the trust as
+    `proofs/axioms-allowed.txt` states it. Lean builds under the memory
+    cap, one at a time, except where stage 1 raises it.
+
+    Out of scope: a proof of the front end (`crates/pathos`'s reading of
+    the proof and its adapter); a proof of the numbers of `malachite`
+    (they stay trusted); changes upstream (the reviewer offers them);
+    putting the Lean build into CI (later, once its time is known).
+
+    The reviewer pushes and starts the runs at every stage.
+
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
 
