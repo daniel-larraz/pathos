@@ -50,6 +50,8 @@ theorem Store.leave_spec (s : Store) (h : 0 < s.depth.val) :
   unfold Store.leave
   step*
 
+theorem u32_eq_of_val {a b : Std.U32} (h : a.val = b.val) : a = b := by scalar_tac
+
 /-- `!=` on two handles. -/
 theorem Term.ne_eq (a b : Term) :
     core.cmp.PartialEq.ne.trait_default Term.Insts.CoreCmpPartialEqTerm a b

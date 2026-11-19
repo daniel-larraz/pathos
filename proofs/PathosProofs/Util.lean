@@ -88,6 +88,12 @@ theorem spec_returns {α} {m : Result α} {p : WP.Post α} (h : WP.spec m p) :
     subst this
     simp at h
 
+theorem dspec_admissible5 {α β γ δ ε ζ} (a : α) (b : β) (c : γ) (d : δ) (e : ε)
+    (p : WP.Post ζ) :
+    admissible (fun f : α → β → γ → δ → ε → Result ζ => WP.dspec (f a b c d e) p) :=
+  admissible_apply (fun _ (g : β → γ → δ → ε → Result ζ) => WP.dspec (g b c d e) p) a
+    (dspec_admissible4 b c d e p)
+
 /-- Proves that a statement `∀ args, hypotheses → f args ⦃ post ⦄div` about
 `f` is admissible. -/
 macro "prove_adm" : tactic =>
@@ -97,6 +103,7 @@ macro "prove_adm" : tactic =>
         | apply WP.dspec_func_admissible
         | apply dspec_admissible2
         | apply dspec_admissible3
-        | apply dspec_admissible4))
+        | apply dspec_admissible4
+        | apply dspec_admissible5))
 
 end pathos_compiled_checker
