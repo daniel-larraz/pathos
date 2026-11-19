@@ -73,7 +73,29 @@ and no fork of either is needed for the build.
 | logos, `CpcMini.Proofs.Checker` (Mathlib from its cache) | 95 s | 1.4 GiB |
 | `proofs/`, first build of everything | 196 s | 4.3 GiB |
 | `proofs/` from a clean checkout: the translation, the build, the axioms | 335 s | |
-| logos, `Cpc.ApiCorrect` and what it imports | LOGOS_PENDING | |
+| logos, `Cpc.ApiCorrect` and what it imports | not built: over 8 GiB (below) | |
+
+**logos's verification of CPC is not yet built at `v4.36.0`**; it is the
+first step of the CPC milestone. `lake build Cpc.ApiCorrect` in logos's
+`verification` project, with the pins moved and nothing else changed, was
+stopped by the 8 GiB cap three times, each run going on from the last, and
+never by an error of Lean:
+
+| Run | Cores | Ended after | Modules of `Cpc` built by then |
+| --- | --- | --- | --- |
+| 1 | all 20 | 22.5 min | 151 |
+| 2 | 2 (`taskset`) | 3 min | 12 more |
+| 3 | 1 | 3.5 min | 1 more |
+
+Lake runs as many Lean processes as there are cores, so the first two say
+little. The third had one process at a time: **one module of logos's CPC
+proofs needs more than 8 GiB at `v4.36.0`**, as logos builds it (its
+lakefile passes `-j1`). Not found out: which module (the last built before
+it was `Cpc.Proofs.Rules.Arrays_read_over_write_1`); whether it needs as
+much at `v4.34.0`; and whether `-j1` is the cause, as it was for our own
+generated code (next paragraph). Finding these out is the first thing for
+the CPC milestone, with a higher cap on purpose (up to 16 GiB). `CpcMini`'s
+proofs, which the pilot uses, build in 95 s at 1.4 GiB.
 
 **`-j1` must not be among the Lean arguments** (logos's lakefile has it):
 with it CPC's largest group of mutually recursive functions needs more
@@ -251,6 +273,26 @@ evaluate is an error there, so no stuck value goes on to a later step, and
 Ethos agrees literally with neither logos nor the Rust, which carry
 `Stuck` on and reject at the end. All four reject the proof. A selector
 whose return type is stuck cannot be written in a proof.
+
+The proof that was run, beside cvc5's CPC signature (`../cpc/Cpc.eo` as in
+the harness's corpus):
+
+```
+(include "../cpc/Cpc.eo")
+(declare-const a Bool) (declare-const b Bool)
+(declare-const c Bool) (declare-const d Bool)
+(assume @p1 (= a b))
+(assume @p2 (= c d))
+(assume @p6 (not (= a d)))
+(step @p3 :rule trans :premises (@p1 @p2))
+(step @p7 false :rule contra :premises (@p3 @p6))
+```
+
+Ethos and `pathos-eo`: `Evaluation failed: (eo::requires b c (_ (_ = a)
+d))`. `pathos`: `A step of rule trans failed to check`, with the same
+line. logos: `incorrect`, naming the `trans` step. The same with the last
+line left out, and with `(assume-push @p4 e)` before the `trans` step and
+`(step-pop @p5 :rule scope :premises (@p3))` after it.
 
 ### The generator
 
