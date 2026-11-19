@@ -775,7 +775,7 @@ intended; everything between gates is not.
       pinned versions, with its time and peak.
     - **Stage 2: generated proofs, on all of CpcMini.** The generator
       (`rust_meta` in Ethos; branch `m32-proofs` of the fork, from
-      `m28-aeneas`, rebased when cvc5/ethos#280 changes or is merged)
+      `m28-aeneas`; since cvc5/ethos#280 merged, on Ethos main `b02afbe6`)
       writes, beside the crate, a Lean file with a specification and a
       proof for every function it generates: each case function (its
       answer when the pattern matches and when it does not), each body
@@ -791,9 +791,17 @@ intended; everything between gates is not.
       Then prove CpcMini's theorem end to end: `check_refutation` returning
       `true` gives `__eo_checker_is_refutation F pf = true`, composed with
       CpcMini's `correct___eo_is_refutation`. Gate: that theorem, with no
-      `sorry`, every one of CpcMini's 82 functions proved by generated
-      proofs; the time to elaborate them; how many needed a person, and
-      why.
+      `sorry`, every one of CpcMini's 76 functions that logos defines
+      proved by generated proofs; the time to elaborate them; how many
+      needed a person, and why. (The other six of the 82,
+      `$eo_dt_constructors`, `$eo_dt_selectors` and the four they call,
+      are compiled for the runtime's `eo::dt_constructors` and
+      `eo::dt_selectors`, which no CpcMini program uses; logos has no
+      function for them, and they are not counted. Daniel, 2026-11-19.)
+      The runtime lemmas these proofs need are written by hand in stage 2,
+      when they are first needed, in their own files under
+      `proofs/PathosProofs/Runtime/`; the gate lists them with their
+      lengths. Stage 3 is what remains.
     - **Stage 3: the rest of the runtime, by hand.** What milestone 31's
       report lists as not proved: the other embeddings of `construct` and
       `destruct`, the builtin operators of `lit.rs` (arithmetic, strings,
