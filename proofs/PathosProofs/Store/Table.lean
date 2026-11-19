@@ -227,7 +227,7 @@ def Ahead (nodes : List TermData) (hashes slots : List Std.U32) (data : TermData
 theorem Store.find_loop_spec (nodes : alloc.vec.Vec TermData)
     (hashes slots : alloc.vec.Vec Std.U32) (data : TermData) (hash : Std.U32)
     (mask : Std.Usize)
-    (hsd : ∀ td, Store.same_data td data ⦃ b => (b = true ↔ td = data) ⦄)
+    (hsd : ∀ td, Store.same_data td data ⦃ b => (b = true ↔ td = data) ⦄div)
     (hmask : mask.val < slots.length) (hlen : hashes.length = nodes.length)
     (hvalid : ∀ p : Nat, slots.val[p]! ≠ 0#u32 → (slots.val[p]! : Std.U32).val ≤ nodes.length)
     (i : Std.Usize) (found : Option Term) (searching : Bool)
@@ -337,7 +337,7 @@ theorem Store.find_loop_spec (nodes : alloc.vec.Vec TermData)
 /-- `find` gives a term with the data, or `none` when no term with that
 hash has the data. -/
 theorem Store.find_spec (s : Store) (data : TermData) (hash : Std.U32)
-    (hsd : ∀ td, Store.same_data td data ⦃ b => (b = true ↔ td = data) ⦄)
+    (hsd : ∀ td, Store.same_data td data ⦃ b => (b = true ↔ td = data) ⦄div)
     (hslots : 0 < s.slots.length) (hlen : s.hashes.length = s.nodes.length)
     (hp : Placed s.hashes.val s.slots.val s.nodes.length) :
     Store.find s data hash ⦃ r => Found s.nodes.val s.hashes.val data hash r ⦄div := by
