@@ -405,7 +405,7 @@ to be proved of every program (`Specs n`) for stores that can enter at
 most `n` more calls; the theorem about a program proves it for `n` from
 all smaller numbers; `specs` closes all programs together by one induction
 on `n`. So programs that call each other need no induction of their own,
-and the generator does not need to know which do. (The pilot's proof of
+and the generator does not need to know which do. (Where `enter` refuses, at the limit, the program returns an error, of which the theorems say nothing: they are about runs that return, and an error is a return with nothing claimed.) (The pilot's proof of
 `$mk_trans` was an induction over its four functions with a statement for
 each.) Loops are not calls: each has the induction over its loop function.
 
