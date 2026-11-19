@@ -16,7 +16,8 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | --- | --- |
 | `generated/cpcmini-checker/` | The checker for **CpcMini**, logos's calculus of five rules (`symm contra refl scope trans`), compiled by `rust-meta` as the CPC checker is. The pilot is on it. `scripts/generate-mini` writes it. |
 | `proofs/MiniChecker/` | The Lean that Charon and Aeneas write for that crate, stitched: the runtime once (`Runtime.lean`, 13,531 lines) and the generated functions (`Part0.lean`, 15,937 lines). Generated, never edited. |
-| `proofs/PathosProofs/` | The proofs: 4,400 lines, 1,120 theorems (Lean counts the auxiliary ones). |
+| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,150 lines. |
+| `proofs/MiniCases.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
 | `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `cf187429`. |
@@ -167,24 +168,22 @@ cheap so far.
   is slower, not wrong. `CacheInv`, part of the store's invariant: every
   entry is its program's result on what its arguments stand for.
 
-### Four programs (`Programs/`)
+### The programs (`MiniProofs.lean`, generated)
 
-| Program | Shape | Theorem | Lines |
-| --- | --- | --- | --- |
-| `$mk_symm` | not recursive, two cases | `eo__24mk_5fsymm_spec` | 331 |
-| `$eo_prog_contra` | nonlinear pattern: proofs of `F` and `(not F)` | `eo__24eo_5fprog_5fcontra_spec` | 252 |
-| `$mk_trans` | recursive, cached (and nonlinear) | `eo__24mk_5ftrans_spec` | 483 |
-| `$eo_state_is_closed` | compiled to a loop | `eo__24eo_5fstate_5fis_5fclosed_spec` | 471 |
-
-Each says: on a store with the invariant and handles that stand for the
-arguments, the generated program, if it returns, has not panicked, leaves a
-store with the invariant in which every earlier handle stands for what it
-did, and returns a handle of what logos's definition gives (or an error).
+Milestone 31 proved four programs by hand (`$mk_symm`, `$eo_prog_contra`,
+`$mk_trans`, `$eo_state_is_closed`: 1,537 lines). Those proofs are gone:
+the generator writes them now, with the crate (see "Generated proofs"
+below). Of each program with a generated proof, `specs` says: on a store
+with the invariant and handles that stand for the arguments, the generated
+program, if it returns, has not panicked, leaves a store with the
+invariant in which every earlier handle stands for what it did, and
+returns a handle of what logos's function of the same name gives (or an
+error).
 
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
-it. In use today, by 1,120 theorems, are 25 axioms:
+it. In use today, by 1,266 theorems, are 25 axioms:
 
 - Lean's three (`propext`, `Quot.sound`, `Classical.choice`).
 - 12 of the 54 declarations that Aeneas leaves without a body in the Lean
@@ -367,6 +366,114 @@ cache changed two files by six lines. The program proofs only ever use
 "the invariant holds" and "the store grew", so what the invariant says can
 change under them.
 
+## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
+
+`rust-meta` writes the proofs with the Rust (Ethos branch `m32-proofs`).
+Seven of CpcMini's 82 programs have one so far, the four of the pilot
+among them; `generated/cpcmini-checker/proofs.tsv` lists every program
+with `generated` or the first thing in it that the emitter has no line of
+proof for yet. `proofs/MiniProofs.lean` (650 lines, 35 theorems) elaborates
+in 4 seconds.
+
+**Three generated pieces.**
+
+- *The cases as functions* (`MiniCases.lean`, by lean-meta in the same run
+  that writes logos's Lean). For each case of each program a function
+  `EoCases.<program>.case_<i>` from the arguments to `Option` of the
+  result: `some` of the right-hand side where the case's pattern matches,
+  `none` where it does not. A pattern that uses a variable twice is
+  written with fresh variables and a test that they are equal, which is
+  what the Rust does with handles.
+- *The proofs* (`MiniProofs.lean`, by rust-meta). The emitter records one
+  line of proof with each line of Rust it writes. For a case: a theorem
+  that the Rust function answers `Some` of a handle of what the case's
+  function answers, or `None` where it answers `none`. For the body: that
+  it gives logos's function, through the lemma below. For a tail-call
+  loop: a round of it, and the induction over the loop that Aeneas writes.
+  For the program: the body between `enter` and `leave`, with its cache.
+- *Lemma C*, per program: logos's function is the tests for the stuck term
+  followed by the first case that answers (`<program>.rust_eq`). It is
+  proved by unfolding both sides and splitting on the arguments
+  (`logos_eq`). **It is never assumed**: a program whose lemma does not
+  close is a program without a proof, and `scripts/proofs-axioms` checks
+  the generated files as it does the others (no `sorry`, no axiom outside
+  `axioms-allowed.txt`).
+
+**Recursion.** Every call of a program goes through `enter`, which counts
+depth against a limit. The theorems about cases and bodies assume what is
+to be proved of every program (`Specs n`) for stores that can enter at
+most `n` more calls; the theorem about a program proves it for `n` from
+all smaller numbers; `specs` closes all programs together by one induction
+on `n`. So programs that call each other need no induction of their own,
+and the generator does not need to know which do. (The pilot's proof of
+`$mk_trans` was an induction over its four functions with a statement for
+each.) Loops are not calls: each has the induction over its loop function.
+
+**Where logos and the Rust agree only on values a store can hold.**
+logos's `__eo_prog_contra` is `requires (eo_eq F F') true false` where the
+Rust compares two handles; the two differ on a proof of `(not Stuck)`,
+which is a value of logos's type and of no store (`apply` never builds an
+application of or to the stuck term). Lemma C therefore takes, for each
+argument, that it is `Valid` (for a term: no application in it is of or to
+the stuck term), and the body's proof gets that from the handle
+(`Store.Rep.valid`). This is the same boundary as the first finding below,
+met from the other side.
+
+**Order of the stuck tests.** The Rust tests the arguments for the stuck
+term in order, before any case; logos's function has a first match arm for
+each. Lemma C states the Rust's order explicitly (`if x0 = Stuck then …
+else if x1 = Stuck then … else firstSome […]`) and is proved against
+logos's definition, so if the two orders could give different results the
+lemma would not close. Inside a requirement the order is `a ≠ b` first,
+then `a` stuck; both give the stuck term, and `requires_ite` (in
+`Runtime/Ops.lean`) is where that is shown.
+
+**What is written by hand** (`proofs/PathosProofs/`):
+
+| File | Lines | |
+| --- | --- | --- |
+| `Tactic.lean` | 504 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop). |
+| `Runtime/Frame.lean` | 134 | `enter`, `leave`, the measure of the induction, a program around its body. |
+| `Runtime/Embed.lean` | 378 | The relations between handles and logos's proofs, states, state objects and native Booleans; that equal handles are equal values for each; `Valid`. |
+| `Runtime/Ops.lean` | 246 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
+| `Runtime/Ctors.lean` | 123 | `construct` and `destruct` for seven constructors. |
+
+No generated proof has a line written by hand, and no program needed a
+person. What needed a person is the above: a tactic for each kind of line,
+and a lemma for each runtime operation and constructor a line names.
+
+**What limits the seven** (the reasons of `proofs.tsv`, for the other 75):
+constructors whose lemmas are not written (the emitter has the list of
+those that are; the lemmas are to be generated with `Rep` for every
+constructor), conditionals, native operations and patterns, the builtin
+operators, programs with more than four cases (tried in groups), the cache
+of types, caches over values that are not terms, and programs that call
+one of those.
+
+**Six programs have no function in logos's Lean**: the datatype operators
+(`$eo_dt_constructors`, `$eo_dt_selectors` and the four they call). The
+runtime calls them for `eo::dt_constructors` and `eo::dt_selectors`, so
+rust-meta always compiles them; no program of CpcMini uses either
+operator, and lean-meta leaves them out. There is nothing to prove them
+against. For the gate they need a decision: count 76 programs, or show
+that the checker never reaches them.
+
+**The alternative not taken: have rust-meta compile the linearized
+program.** lean-meta makes a pattern linear before it prints (a variable
+used twice becomes two and a `requires`, or an `ite` with a continuation
+program where a later case could still apply), and rust-meta compiles the
+pattern as written, with a comparison of handles. If rust-meta compiled
+lean-meta's linear form, each Rust case would be a logos match arm, and
+lemma C would be the identity. It would also change the Rust of every
+program with such a pattern: a comparison that answers "no match" would
+become the evaluation of `eo::requires` or `eo::ite` on terms, with a
+program call for each continuation, so the change would have to be
+measured on the 400 and the large proofs, and Ethos's rust-meta would
+depend on the linearization pass. Reasoned, not measured: with the case
+functions the Rust stays byte for byte what it is (checked:
+`scripts/generate-mini` writes the same crate), and the difference is
+confined to lemma C, which Lean proves per program.
+
 ## What is missing for the theorem
 
 1. **The rest of the runtime.** Proved: the table, `intern`, the cache,
@@ -381,8 +488,8 @@ change under them.
 2. **`Rep` for all of `Eo.Term`** and for the other embedded types
    (datatype declarations, the SMT terms, types and values of
    `$eo_to_smt`), with `norm` (above).
-3. **Every program**, by generated proofs: CpcMini has 82 functions with
-   233 case functions; CPC has 1,086 with 2,975 case functions, 66 loops
+3. **Every program**, by generated proofs (7 of CpcMini's 82 so far, see
+   above): CpcMini has 82 functions with 233 case functions; CPC has 1,086 with 2,975 case functions, 66 loops
    and 190 cached programs.
 4. **The specification of `native_literal`** and the table it needs.
 5. **The top**: `check_refutation` and, for CPC, `check_proof` with the

@@ -1,7 +1,7 @@
 import PathosProofs
 /-!
-Prints, for the theorems of the modules `PathosProofs.*`, the axioms they
-rest on: one line `axiom <name>` for each, and a line `theorems <count>`.
+Prints, for the theorems of the modules `PathosProofs.*` and of the
+generated `MiniProofs` and `MiniCacheSem`, the axioms they rest on: one line `axiom <name>` for each, and a line `theorems <count>`.
 `scripts/proofs-axioms` runs this and compares the names with
 `proofs/axioms-allowed.txt`.
 -/
@@ -17,7 +17,8 @@ run_cmd do
     | none => pure ()
     | some idx =>
       let m := names[idx.toNat]!
-      if (`PathosProofs).isPrefixOf m && m != `PathosProofs.Trusted then
+      if ((`PathosProofs).isPrefixOf m && m != `PathosProofs.Trusted) || m == `MiniProofs ||
+          m == `MiniCacheSem then
         if ci matches .thmInfo _ then
           count := count + 1
           let used ← liftCoreM (collectAxioms n)

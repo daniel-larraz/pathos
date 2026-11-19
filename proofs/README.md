@@ -11,7 +11,9 @@ is missing for a theorem about `pathos` are in
 | `MiniChecker/`, `MiniChecker.lean` | Generated: the Lean of `generated/cpcmini-checker`. Never edited (`scripts/proofs-build --translate DIR` writes it again and compares). |
 | `PathosProofs/Trusted.lean` | The axioms about the Rust that is not translated. |
 | `PathosProofs/Store/` | The store: its table of terms, its invariant, its operations, the cache of program results, and the relation between handles and logos's terms. |
-| `PathosProofs/Programs/` | Four generated programs proved against logos's definitions. |
+| `PathosProofs/Runtime/` | Written by hand: what the runtime's operations and the signature's constructors do, in the form generated proofs use, and the relations between handles and logos's values. |
+| `PathosProofs/Tactic.lean` | Written by hand: the tactics that the lines of generated proofs are written in. |
+| `MiniCases.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with `generated/cpcmini-checker` (`scripts/generate-mini`): the cases of logos's programs as functions, what the cache of results holds, and the proofs that the generated programs compute what logos's functions do. Never edited. |
 | `axioms-allowed.txt` | Every axiom a theorem may rest on. |
 | `audit/Axioms.lean` | Collects the axioms in use, for `scripts/proofs-axioms`. |
 | `pins.env` | The versions of Lean, Mathlib, Aeneas, Charon and logos. |

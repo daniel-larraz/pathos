@@ -1,6 +1,6 @@
 name = "PathosProofs"
 version = "0.1.0"
-defaultTargets = ["MiniChecker", "PathosProofs"]
+defaultTargets = ["MiniChecker", "MiniCases", "MiniCacheSem", "MiniProofs", "PathosProofs"]
 # The generated files have Rust's names, not Mathlib's. (No `-j1` here: with
 # it Lean needs more than 8 GiB for CPC's largest group of functions that
 # call each other, and under 4 GiB without.)
@@ -37,6 +37,15 @@ name = "MiniChecker"
 # Generated: never edited.
 [[lean_lib]]
 name = "MiniCases"
+
+# What the cache of program results holds, and the proofs about the
+# generated functions: written by rust-meta with the crate. Generated: never
+# edited.
+[[lean_lib]]
+name = "MiniCacheSem"
+
+[[lean_lib]]
+name = "MiniProofs"
 
 [[lean_lib]]
 name = "PathosProofs"

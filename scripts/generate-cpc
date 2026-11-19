@@ -71,10 +71,11 @@ source "$root/difftest.env"
 # The commit of Ethos's main branch the checker is generated from.
 default_rev=e51f527cd496e46b86793057a2a15000cbaedf36
 
-# The same for --mini: a commit of the fork (the generator that Charon and
-# Aeneas translate; cvc5/ethos#280), and the logos revision whose CpcMini
-# the proofs are about. proofs/ pins the same logos revision.
-mini_default_rev=35944fd10ac48df8ed7b6229d3ab6d5b4816ea4a
+# The same for --mini: a commit of the fork (branch m32-proofs: the
+# generator that Charon and Aeneas translate, cvc5/ethos#280, and on it the
+# one that writes the proofs), and the logos revision whose CpcMini the
+# proofs are about. proofs/ pins the same logos revision.
+mini_default_rev=4274d2b07e61ea38207543d6ba9a1a4bbc43a771
 mini_logos_rev=cf18742973861b3718d04c5f25775448098ff474
 
 me=generate-cpc
@@ -219,6 +220,12 @@ if $mini; then
     fail "the Lean this Ethos writes for CpcMini is not logos's CpcMini at $logos_commit ($work/lean.diff)"
   fi
   echo "$me: rules $rules; the $compared Lean files are logos's CpcMini"
+  # The cases of the programs as functions (lean-meta writes the file with
+  # the others; the driver leaves it in its build directory), before the
+  # next run of the driver writes there.
+  case_defs="$work/build-eoc/out/plugins/lean_meta/lean_meta_case_defs_gen.lean"
+  [[ -f "$case_defs" ]] || fail "the driver wrote no $case_defs"
+  cp "$case_defs" "$work/case_defs.lean"
 fi
 (cd "$work/ethos" && capped python3 tools/eoc/driver.py rust \
   --build-dir "$work/build-eoc" --final-out-dir "$out" \
@@ -295,17 +302,48 @@ workspace, so pathos's lints, formatting and tests do not apply to it.
 EOF
 fi
 
+# The Lean that is generated with the crate, for proofs/: the cases of the
+# programs (lean-meta), and what the cache of results holds and the proofs
+# about the generated functions (rust-meta, beside the crate). They name the
+# modules they import by placeholders, which are filled in here.
+lean_files=()
+if $mini; then
+  lean_staged="$work/staged-lean"
+  rm -rf "$lean_staged"
+  mkdir -p "$lean_staged"
+  fill() { sed -e 's/\$CHECKER\$/MiniChecker/g; s/\$EO_CALC\$/CpcMini/g; s/\$CALC\$/CpcMini/g; s/\$CASES\$/MiniCases/g' "$1" > "$2"; }
+  for f in proofs.lean cache_sem.lean proofs.tsv; do
+    [[ -f "$out/rust/$f" ]] || fail "the driver wrote no $f beside the crate"
+  done
+  fill "$work/case_defs.lean" "$lean_staged/MiniCases.lean"
+  fill "$out/rust/proofs.lean" "$lean_staged/MiniProofs.lean"
+  fill "$out/rust/cache_sem.lean" "$lean_staged/MiniCacheSem.lean"
+  lean_files=(MiniCases.lean MiniProofs.lean MiniCacheSem.lean)
+fi
+
 dest="$root/generated/$name"
 if $check; then
-  if diff -r "$staged" "$dest" > "$work/check.diff" 2>&1; then
-    echo "$me: generated/$name is what these revisions generate"
+  : > "$work/check.diff"
+  same=true
+  diff -r "$staged" "$dest" >> "$work/check.diff" 2>&1 || same=false
+  for f in "${lean_files[@]}"; do
+    diff "$lean_staged/$f" "$root/proofs/$f" >> "$work/check.diff" 2>&1 || same=false
+  done
+  if $same; then
+    echo "$me: generated/$name${lean_files:+ and proofs/{${lean_files[*]}\}} are what these revisions generate"
     exit 0
   fi
   head -n 20 "$work/check.diff"
-  echo "$me: generated/$name differs (the whole difference: $work/check.diff)"
+  echo "$me: generated/$name${lean_files:+ or its Lean in proofs/} differs (the whole difference: $work/check.diff)"
   exit 1
 fi
 rm -rf "$dest"
 mkdir -p "$(dirname "$dest")"
 cp -r "$staged" "$dest"
+for f in "${lean_files[@]}"; do
+  cp "$lean_staged/$f" "$root/proofs/$f"
+done
 echo "$me: wrote generated/$name ($(cat "$dest"/src/*.rs | wc -l) lines of Rust)"
+if $mini; then
+  echo "$me: wrote proofs/{${lean_files[*]}}: $(awk -F'\t' '$2 == "generated"' "$dest/proofs.tsv" | wc -l) of $(($(wc -l < "$dest/proofs.tsv") - 1)) programs have a generated proof (generated/$name/proofs.tsv)"
+fi

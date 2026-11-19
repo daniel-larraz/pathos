@@ -11,7 +11,7 @@ that Charon and Aeneas write for it.
 
 | Generated from | |
 | --- | --- |
-| Ethos (`ethos-eoc`, `tools/eoc/driver.py`, the runtime in `plugins/rust_meta/runtime`) | `35944fd10ac48df8ed7b6229d3ab6d5b4816ea4a` |
+| Ethos (`ethos-eoc`, `tools/eoc/driver.py`, the runtime in `plugins/rust_meta/runtime`) | `4274d2b07e61ea38207543d6ba9a1a4bbc43a771` |
 | logos (`install/defs/Cpc.cached.eo`, with `Cpc.eos` as `--semantics` and `smt.eos` as `--smt-semantics`) | `cf18742973861b3718d04c5f25775448098ff474` |
 | Rules (those of logos's `install/install-sig.sh --mini`) | `symm contra refl scope trans` |
 

@@ -33,7 +33,8 @@ theorem Store.enter_spec (s : Store) :
       s'.nodes = s.nodes ∧ s'.hashes = s.hashes ∧ s'.slots = s.slots ∧
       s'.caches = s.caches ∧ s'.limits = s.limits ∧
       match r with
-      | core.result.Result.Ok _ => s'.depth.val = s.depth.val + 1
+      | core.result.Result.Ok _ =>
+        s'.depth.val = s.depth.val + 1 ∧ s.depth.val < s.limits.depth.val
       | core.result.Result.Err _ => s'.depth = s.depth ⦄ := by
   unfold Store.enter
   split
@@ -41,6 +42,17 @@ theorem Store.enter_spec (s : Store) :
   · split
     · simp
     · step*
+
+/-- How many more calls a store can enter: what the proofs about programs
+that call each other are an induction on. -/
+def Store.remaining (s : Store) : Nat := s.limits.depth.val - s.depth.val
+
+theorem Store.Grows.remaining {s s' : Store} (h : s.Grows s') : s'.remaining = s.remaining := by
+  unfold Store.remaining; rw [h.limits, h.depth]
+
+theorem Store.Grows.rem {s s' : Store} {n : Nat} (h : s.Grows s') (hr : s.remaining ≤ n) :
+    s'.remaining ≤ n := by
+  rw [h.remaining]; exact hr
 
 /-- `leave` gives the depth back. -/
 theorem Store.leave_spec (s : Store) (h : 0 < s.depth.val) :
@@ -71,12 +83,13 @@ theorem Store.Rep.congr {s s' : Store} {t : Term} {x : Eo.Term} (h : s.Rep t x)
   rw [hn]; exact h
 
 /-- A generated program is `enter`, its body and `leave`: what holds of the
-body holds of the program. -/
-theorem Store.framed {α : Type} (s : Store) (hinv : s.Inv)
+body, on a store that can enter fewer calls, holds of the program. -/
+theorem Store.framed {α : Type} (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remaining ≤ n)
     (body : Store → Result ((core.result.Result α CheckError) × Store))
     (post : Store → α → Prop)
     (hpost : ∀ (s1 s2 : Store) (a : α), s2.nodes = s1.nodes → post s1 a → post s2 a)
-    (hbody : ∀ s1 : Store, s1.Inv → s1.nodes = s.nodes →
+    (hbody : ∀ (s1 : Store) (m : Nat), s1.Inv → s1.nodes = s.nodes → m < n →
+      s1.remaining ≤ m →
       body s1 ⦃ r s2 => s2.Inv ∧ s1.Grows s2 ∧
         match r with
         | core.result.Result.Ok a => post s2 a
@@ -101,7 +114,11 @@ theorem Store.framed {α : Type} (s : Store) (hinv : s.Inv)
     exact ⟨hinv1, ⟨by rw [hn], hl, hd⟩, trivial⟩
   | Ok u =>
     simp only at hd ⊢
-    step with hbody s1 hinv1 hn as ⟨result, s2, hinv2, hg2, hres⟩
+    obtain ⟨hd, hlim⟩ := hd
+    have hrem1 : s1.remaining ≤ n - 1 := by
+      unfold Store.remaining at hrem ⊢; rw [hl, hd]; omega
+    have hn0 : n - 1 < n := by unfold Store.remaining at hrem; omega
+    step with hbody s1 (n - 1) hinv1 hn hn0 hrem1 as ⟨result, s2, hinv2, hg2, hres⟩
     have hdepth : 0 < s2.depth.val := by rw [hg2.depth, hd]; omega
     step with Store.leave_spec as ⟨s3, hn3, hh3, hs3, hc3, hl3, hd3⟩
     simp only [WP.dspec_ok, WP.uncurry'_pair]

@@ -1,0 +1,83 @@
+source	proof	why
+$eo_StateObj_proven	none	case 0 has the constructor $emb_so.assume in a pattern, which has no lemma yet
+$eo_checker_is_refutation	none	it calls $eo_invoke_assume_list, which has no proof
+$eo_cmd_step_pop_proven	none	case 0 has the constructor $emb_r.scope, which has no lemma yet
+$eo_cmd_step_proven	none	more than four cases
+$eo_datatype_cons_selectors_rec	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_datatype_constructors_rec	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_dd_lookup	none	case 0 has the constructor $emb_edd.cons in a pattern, which has no lemma yet
+$eo_dd_resolve	none	it calls $eo_dd_lookup, which has no proof
+$eo_dt_constructors	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_dt_constructors_main	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_dt_resolve	none	case 0 has the constructor $emb_edt.sum in a pattern, which has no lemma yet
+$eo_dt_selectors	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_dt_selectors_main	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_dtc_resolve	none	case 0 has the constructor $emb_edtc.cons in a pattern, which has no lemma yet
+$eo_invoke_assume_list	none	compiled to a function of the runtime
+$eo_invoke_cmd	none	more than four cases
+$eo_invoke_cmd_check_proven	none	case 0 has the constructor $emb_so.proven in a pattern, which has no lemma yet
+$eo_invoke_cmd_list	none	case 0 has the constructor $emb_cmdl.nil, which has no lemma yet
+$eo_invoke_cmd_step_pop	none	case 2 has the constructor $emb_s.Stuck, which has no lemma yet
+$eo_is_bool_type	none	case 0 has the builtin $eo_eq
+$eo_is_closed	none	case 0 has the constructor $eo_List_nil, which has no lemma yet
+$eo_is_closed_rec	none	case 0 has the constructor $emb_Var in a pattern, which has no lemma yet
+$eo_is_list_nil	none	case 1 has the constructor $eo_List_cons, which has no lemma yet
+$eo_lit_type_Binary	none	case 0 has the constructor BitVec, which has no lemma yet
+$eo_lit_type_Numeral	none	case 0 has the constructor Int, which has no lemma yet
+$eo_lit_type_Rational	none	case 0 has the constructor Real, which has no lemma yet
+$eo_lit_type_String	none	case 0 has the constructor Seq, which has no lemma yet
+$eo_mk_premise_list	none	case 0 has the constructor $emb_indl.nil, which has no lemma yet
+$eo_nil	none	case 1 has the constructor $eo_List_cons, which has no lemma yet
+$eo_prog_contra	generated	
+$eo_prog_refl	generated	
+$eo_prog_scope	none	case 0 has the constructor =>, which has no lemma yet
+$eo_prog_symm	generated	
+$eo_prog_trans	generated	
+$eo_push_assume_check	none	case 0 has a constructor with arguments
+$eo_push_input_assume_check	none	case 0 has a constructor with arguments
+$eo_push_proven	none	it calls $eo_is_bool_type, which has no proof
+$eo_push_proven_check	none	case 0 has a constructor with arguments
+$eo_state_is_closed	generated	
+$eo_state_is_refutation	none	it calls $eo_invoke_cmd_check_proven, which has no proof
+$eo_state_proven_nth	none	compiled to a function of the runtime
+$eo_to_smt	none	more than four cases
+$eo_to_smt_datatype	none	case 0 has the constructor $emb_edt.sum in a pattern, which has no lemma yet
+$eo_to_smt_datatype_cons	none	case 0 has the constructor $emb_edtc.unit, which has no lemma yet
+$eo_to_smt_datatype_decl	none	case 0 has the constructor $emb_edd.cons in a pattern, which has no lemma yet
+$eo_to_smt_reserved_datatype_name	none	case 0 has the native operation string_prefix_eq
+$eo_to_smt_type	none	more than four cases
+$eo_typeof	none	more than four cases
+$eo_typeof_=	none	case 0 has the constructor $emb_Bool, which has no lemma yet
+$eo_typeof_BitVec	none	case 0 has the constructor Int, which has no lemma yet
+$eo_typeof_Seq	none	case 0 has the constructor $emb_Type, which has no lemma yet
+$eo_typeof_and	none	case 0 has the constructor $emb_Bool, which has no lemma yet
+$eo_typeof_apply	none	case 0 has a function type in a pattern
+$eo_typeof_dt_cons_rec	none	case 0 has the constructor $emb_edt.sum in a pattern, which has no lemma yet
+$eo_typeof_dt_sel_return	none	case 0 has the constructor $emb_edt.sum in a pattern, which has no lemma yet
+$eo_typeof_fun_type	none	case 0 has the constructor $emb_Type, which has no lemma yet
+$eo_typeof_not	none	case 0 has the constructor $emb_Bool, which has no lemma yet
+$mk_symm	generated	
+$mk_trans	generated	
+$smtx_dd_has_dt	none	case 0 has the constructor $emb_dd.cons in a pattern, which has no lemma yet
+$smtx_dd_lookup	none	case 0 has the constructor $emb_dd.cons in a pattern, which has no lemma yet
+$smtx_decl_inhabited	none	case 0 has the constructor $emb_dd.cons in a pattern, which has no lemma yet
+$smtx_decl_wf_rec	none	case 0 has the constructor $emb_dd.cons in a pattern, which has no lemma yet
+$smtx_dt_cons_inhabited	none	case 0 has the constructor $emb_dtc.cons in a pattern, which has no lemma yet
+$smtx_dt_cons_wf_rec	none	case 0 has the constructor $emb_dtc.cons in a pattern, which has no lemma yet
+$smtx_dt_inhabited	none	case 0 has the constructor $emb_dt.sum in a pattern, which has no lemma yet
+$smtx_dt_resolve	none	case 0 has the constructor $emb_dt.sum in a pattern, which has no lemma yet
+$smtx_dt_wf_rec	none	case 0 has the constructor $emb_dt.sum in a pattern, which has no lemma yet
+$smtx_dtc_resolve	none	case 0 has the constructor $emb_dtc.cons in a pattern, which has no lemma yet
+$smtx_inhabited_type	none	more than four cases
+$smtx_ret_typeof_sel	none	it calls $smtx_dd_lookup, which has no proof
+$smtx_ret_typeof_sel_rec	none	case 0 has the constructor $emb_dt.sum in a pattern, which has no lemma yet
+$smtx_type_wf	none	case 0 has the constructor $emb_tsm.RegLan, which has no lemma yet
+$smtx_type_wf_component	none	case 0 has the native operation and
+$smtx_type_wf_rec	none	more than four cases
+$smtx_typeof	none	more than four cases
+$smtx_typeof_=	none	case 0 has a conditional
+$smtx_typeof_apply	none	case 0 has the constructor $emb_tsm.FunType in a pattern, which has no lemma yet
+$smtx_typeof_dt_cons_rec	none	case 0 has the constructor $emb_dt.sum in a pattern, which has no lemma yet
+$smtx_typeof_guard	none	case 0 has a conditional
+$smtx_typeof_guard_wf	none	case 0 has a conditional
+$smtx_typeof_ite	none	case 0 has the constructor $emb_tsm.Bool, which has no lemma yet

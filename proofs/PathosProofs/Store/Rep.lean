@@ -139,4 +139,21 @@ theorem Rep.mono {nodes nodes' : List TermData} {t : Nat} {x : Eo.Term}
     exact Rep.apply t f a x y (by omega) (by rw [hget t hlt]; exact hd) ihf iha
   | boolean t b hlt hd => exact Rep.boolean t b (by omega) (by rw [hget t hlt]; exact hd)
 
+/-- The handles of a list stand for the terms of a list, one for one: the
+arguments of a program. -/
+abbrev RepList (nodes : List TermData) : List Term → List Eo.Term → Prop :=
+  List.Forall₂ (fun a x => Rep nodes a.val x)
+
+theorem RepList.mono {nodes nodes' : List TermData} {ts : List Term} {xs : List Eo.Term}
+    (hpre : nodes <+: nodes') (h : RepList nodes ts xs) : RepList nodes' ts xs :=
+  List.Forall₂.imp (fun _ _ h => Rep.mono hpre h) h
+
+theorem RepList.functional {nodes : List TermData} {ts : List Term} {xs ys : List Eo.Term}
+    (h : RepList nodes ts xs) (h' : RepList nodes ts ys) : xs = ys := by
+  induction h generalizing ys with
+  | nil => cases h'; rfl
+  | cons h1 _ ih =>
+    cases h' with
+    | cons h1' h2' => rw [Rep.functional h1 h1', ih h2']
+
 end pathos_compiled_checker

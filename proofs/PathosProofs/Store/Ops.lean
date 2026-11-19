@@ -4,6 +4,7 @@ public import PathosProofs.Util
 public import CpcMini.Logos
 public import PathosProofs.Store.Intern
 public import PathosProofs.Store.Rep
+public import MiniCacheSem
 public import PathosProofs.Store.Cache
 
 /-!
@@ -102,23 +103,14 @@ structure Store.Wf (s : Store) : Prop where
 
 /-- What an entry of the cache of program results says, in a store whose
 terms are `nodes`: its result is a handle of the program's result on what
-its arguments stand for.
-
-Only the program of the pilot that is cached has a clause here, `$mk_trans`
-(number 58 in `caches.tsv`); an entry of any other program says nothing.
-For the whole checker this is a table from the number of a program to
-what it computes. -/
+its arguments stand for. What that is for each program is the generated
+table `ProgramSem` (`MiniCacheSem`). -/
 def EntryOK (nodes : List TermData) (e : cache.ProgramEntry) : Prop :=
-  e.program = 58#u32 →
-    ∃ (a0 a1 a2 : Term) (x y z : Eo.Term), e.args.val = [a0, a1, a2] ∧
-      Rep nodes a0.val x ∧ Rep nodes a1.val y ∧ Rep nodes a2.val z ∧
-      Rep nodes e.result.val (Eo.__mk_trans x y z)
+  ProgramSem nodes e.program.val e.args.val e.result
 
 theorem EntryOK.mono {nodes nodes' : List TermData} {e : cache.ProgramEntry}
-    (hpre : nodes <+: nodes') (h : EntryOK nodes e) : EntryOK nodes' e := by
-  intro hp
-  obtain ⟨a0, a1, a2, x, y, z, hargs, h0, h1, h2, hr⟩ := h hp
-  exact ⟨a0, a1, a2, x, y, z, hargs, h0.mono hpre, h1.mono hpre, h2.mono hpre, hr.mono hpre⟩
+    (hpre : nodes <+: nodes') (h : EntryOK nodes e) : EntryOK nodes' e :=
+  ProgramSem.mono hpre h
 
 /-- The cache of program results is well formed and every entry is right. -/
 structure CacheInv (s : Store) : Prop where
