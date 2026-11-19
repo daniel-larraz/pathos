@@ -15,7 +15,8 @@
 # The checks: lean-toolchain, lakefile.toml and lake-manifest.json name the
 # Lean, Mathlib, Aeneas and logos of proofs/pins.env; scripts/aeneas-setup
 # installs that Aeneas and Charon; generated/cpcmini-checker was generated
-# from that logos. Then, in the built project, that no proof uses `sorry`
+# from that logos; Cargo.toml builds the checker crate with overflow checks
+# in release, which the proofs assume. Then, in the built project, that no proof uses `sorry`
 # or an axiom beyond Lean's own and those of the trusted file
 # (scripts/proofs-axioms, when the project has theorems to check).
 #
@@ -87,7 +88,15 @@ grep -q "^charon_commit=$CHARON_REV\$" "$root/scripts/aeneas-setup" ||
   differs "scripts/aeneas-setup does not install Charon $CHARON_REV"
 grep -q "^| logos (.*| \`$LOGOS_PROOFS_REV\` |\$" "$root/generated/cpcmini-checker/GENERATED.md" ||
   differs "generated/cpcmini-checker is not generated from logos $LOGOS_PROOFS_REV"
-[[ "$problems" -eq 0 ]] || fail "$problems places disagree with proofs/pins.env"
+# The proofs are about a checker that panics on arithmetic overflow, as the
+# Lean that Aeneas writes fails on it: the release profile must say so.
+python3 - "$root/Cargo.toml" <<'EOF' || differs "Cargo.toml does not set overflow-checks = true for the release build of pathos-compiled-checker"
+import re, sys
+text = re.sub(r"#.*", "", open(sys.argv[1]).read())
+m = re.search(r"^\[profile\.release\.package\.pathos-compiled-checker\]\n((?:(?!\[).*\n?)*)", text, re.M)
+sys.exit(0 if m and re.search(r"^\s*overflow-checks\s*=\s*true\s*$", m.group(1), re.M) else 1)
+EOF
+[[ "$problems" -eq 0 ]] || fail "$problems places disagree with proofs/pins.env or with what the proofs assume"
 echo "proofs-build: Lean $LEAN_VERSION, Mathlib ${MATHLIB_REV:0:12}, Aeneas ${AENEAS_REV:0:12}, logos ${LOGOS_PROOFS_REV:0:12}: as pinned"
 
 # The Lean of the checker, from the crate.

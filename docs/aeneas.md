@@ -66,6 +66,22 @@ Outside the translated crate altogether, and so outside any proof: the
 front end of `crates/pathos` that reads a proof and builds the checker's
 input.
 
+### Overflow
+
+The Lean that Aeneas writes fails where Rust's arithmetic overflows, as a
+debug build panics. A release build wraps instead, unless told otherwise,
+and would then be another program than the translated one exactly there.
+So the checker crate is built with overflow checks in release builds too
+(`[profile.release.package.pathos-compiled-checker]` in `Cargo.toml`): an
+overflow in it is a panic. What is proved about the Lean
+([proofs/](../proofs/)) is about builds with that setting;
+`scripts/proofs-build --no-build`, which CI runs, fails without it. The
+setting is for that one package. It costs nothing that can be measured:
+with and without it, in turn, the 400 proofs took 9.1 s, 9.2 s, 9.2 s
+against 9.4 s, 9.2 s, 9.2 s, and the 39 large ones 137.0 s, 136.2 s
+against 136.7 s, 139.0 s (2026-11-18), every verdict the same. The two
+hash functions multiply with `wrapping_mul`, which is not an overflow.
+
 ## What the code avoids
 
 The checker was rewritten for the two tools, in the generator and the

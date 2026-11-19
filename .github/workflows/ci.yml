@@ -83,6 +83,12 @@ jobs:
       - name: The panic audit names real lines
         run: scripts/check-panics --fetch
 
+      # What the proofs of proofs/ rest on outside Lean: the pins, and that
+      # the checker crate is built with overflow checks in release (the
+      # Lean the proofs are about fails on overflow). No Lean is needed.
+      - name: The proofs' pins and the overflow checks
+        run: scripts/proofs-build --no-build
+
       - name: Clippy
         run: cargo clippy --locked --all-targets -- -D warnings
 
