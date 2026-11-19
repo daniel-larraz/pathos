@@ -69,13 +69,13 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$root/difftest.env"
 
 # The commit of Ethos's main branch the checker is generated from.
-default_rev=e51f527cd496e46b86793057a2a15000cbaedf36
+default_rev=b02afbe66a4f796043ed3c5b9790cb6e7f00b9cc
 
-# The same for --mini: a commit of the fork (branch m32-proofs: the
-# generator that Charon and Aeneas translate, cvc5/ethos#280, and on it the
-# one that writes the proofs), and the logos revision whose CpcMini the
+# The same for --mini: a commit of the fork (branch m32-proofs: Ethos main,
+# whose generator Charon and Aeneas translate since cvc5/ethos#280, and on it
+# the one that writes the proofs), and the logos revision whose CpcMini the
 # proofs are about. proofs/ pins the same logos revision.
-mini_default_rev=4274d2b07e61ea38207543d6ba9a1a4bbc43a771
+mini_default_rev=f90d6dd45b16679cbe251a8dac92558669983c4a
 mini_logos_rev=cf18742973861b3718d04c5f25775448098ff474
 
 me=generate-cpc

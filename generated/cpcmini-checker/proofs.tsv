@@ -3,15 +3,15 @@ $eo_StateObj_proven	none	case 0 has the constructor $emb_so.assume in a pattern,
 $eo_checker_is_refutation	none	it calls $eo_invoke_assume_list, which has no proof
 $eo_cmd_step_pop_proven	none	case 0 has the constructor $emb_r.scope, which has no lemma yet
 $eo_cmd_step_proven	none	more than four cases
-$eo_datatype_cons_selectors_rec	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
-$eo_datatype_constructors_rec	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
+$eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_dd_lookup	none	case 0 has the constructor $emb_edd.cons in a pattern, which has no lemma yet
 $eo_dd_resolve	none	it calls $eo_dd_lookup, which has no proof
-$eo_dt_constructors	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
-$eo_dt_constructors_main	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_resolve	none	case 0 has the constructor $emb_edt.sum in a pattern, which has no lemma yet
-$eo_dt_selectors	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
-$eo_dt_selectors_main	none	logos's Lean has no function for it: only the runtime's datatype operators reach it
+$eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	none	case 0 has the constructor $emb_edtc.cons in a pattern, which has no lemma yet
 $eo_invoke_assume_list	none	compiled to a function of the runtime
 $eo_invoke_cmd	none	more than four cases
