@@ -65,6 +65,23 @@ theorem dspec_self {α} {m : Result α} {p : WP.Post α} (h : WP.dspec m p) :
     subst this
     simp
 
+/-- A computation with a total specification returns a value. -/
+theorem spec_returns {α} {m : Result α} {p : WP.Post α} (h : WP.spec m p) :
+    ∃ v, m = ok v ∧ p v := by
+  cases hm : m.match with
+  | ok a =>
+    have := Result.match.isOk.mp hm
+    subst this
+    exact ⟨a, rfl, by simpa using h⟩
+  | vis e k =>
+    have := Result.match.isVis.mp hm
+    subst this
+    simp at h
+  | div =>
+    have := Result.match.isDiv.mp hm
+    subst this
+    simp at h
+
 /-- Proves that a statement `∀ args, hypotheses → f args ⦃ post ⦄div` about
 `f` is admissible. -/
 macro "prove_adm" : tactic =>

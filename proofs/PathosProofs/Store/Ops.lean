@@ -187,4 +187,146 @@ theorem Store.apply_spec (s : Store) (f a : Term) (hinv : s.Inv) (h64 : 2 ^ 40 �
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]
     exact ⟨hinv, Store.Extends.refl s⟩
 
+theorem Store.check_handles_loop_spec (s : Store) (args : Slice Term) (i : Std.Usize) :
+    Store.check_handles_loop s args i ⦃ r =>
+      match r with
+      | core.result.Result.Ok _ =>
+        ∀ j : Nat, i.val ≤ j → j < args.length → (args.val[j]! : Term).val < s.nodes.length
+      | core.result.Result.Err _ => True ⦄div := by
+  revert i
+  apply Store.check_handles_loop.fixpoint_induct s args
+    (motive := fun f => ∀ i : Std.Usize, f i ⦃ r =>
+      match r with
+      | core.result.Result.Ok _ =>
+        ∀ j : Nat, i.val ≤ j → j < args.length → (args.val[j]! : Term).val < s.nodes.length
+      | core.result.Result.Err _ => True ⦄div)
+  · prove_adm
+  · intro loop ih i
+    simp only
+    split
+    · rename_i hlt
+      step as ⟨t, ht⟩
+      rw [Store.view_eq]
+      have hilt : i.val < args.val.length := by scalar_tac
+      have hta : args.val[i.val]! = t := by rw [ht]; exact getElem!_eq _ _ hilt
+      by_cases hv : t.val < s.nodes.length
+      · simp only [hv, ite_true, core.result.Result.Insts.CoreOpsTry.branch]
+        step as ⟨i2, hi2⟩
+        apply WP.dspec_mono (ih i2)
+        intro r hr
+        cases r with
+        | Err e => trivial
+        | Ok u =>
+          simp only at hr ⊢
+          intro j hj hjl
+          by_cases hji : j = i.val
+          · subst hji; rw [hta]; exact hv
+          · exact hr j (by omega) hjl
+      · simp [hv, core.result.Result.Insts.CoreOpsTry.branch,
+          core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]
+    · rename_i hge
+      simp only [WP.dspec_ok]
+      intro j hj hjl
+      exfalso; scalar_tac
+
+theorem schema.Constructor.arity_ok (c : schema.Constructor) : ∃ n, c.arity = ok n := by
+  cases c <;> exact ⟨_, rfl⟩
+
+/-- `construct` with a constructor that is plain data: the node of that
+constructor with the arguments as its fields. -/
+theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : Slice Term)
+    (hinv : s.Inv) (h64 : 2 ^ 40 ≤ Usize.max) (hemb : c.embedding = ok Embedding.Data) :
+    Store.construct s c args ⦃ r s' =>
+      s'.Inv ∧ s.Extends s' ∧
+      match r with
+      | core.result.Result.Ok t =>
+        t.val < s'.nodes.length ∧
+        ∃ v : alloc.vec.Vec Term, v.val = args.val ∧ s'.data t = TermData.Node c v
+      | core.result.Result.Err _ => s' = s ⦄div := by
+  unfold Store.construct
+  obtain ⟨n, hn⟩ := schema.Constructor.arity_ok c
+  rw [hn]
+  simp only [Std.bind_ok]
+  by_cases harity : (n != args.len) = true
+  · rw [ite_eq_left_of_eq_true _ _ (eq_true harity)]
+    simp only [WP.dspec_ok, WP.uncurry'_pair]
+    exact ⟨hinv, Store.Extends.refl s, trivial⟩
+  · rw [ite_eq_right_of_eq_false _ _ (eq_false harity)]
+    step with Store.check_handles_loop_spec as ⟨r, hr⟩
+    cases r with
+    | Err e =>
+      simp [core.result.Result.Insts.CoreOpsTry.branch,
+        core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]
+      exact ⟨hinv, Store.Extends.refl s⟩
+    | Ok u =>
+      simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+      rw [hemb]
+      simp only [Std.bind_ok]
+      step with alloc.slice.Slice.to_vec_spec as ⟨v, hv⟩
+      · intro x _; rfl
+      have hvals : v.val = args.val := by rw [hv]; rfl
+      have hwf : (TermData.Node c v).Wf s.nodes.val := by
+        refine ⟨?_, n, hn, ?_⟩
+        · intro x hx
+          rw [hvals] at hx
+          obtain ⟨j, hj, rfl⟩ := List.mem_iff_getElem.mp hx
+          have := hr j (Nat.zero_le _) hj
+          rwa [getElem!_eq _ _ hj] at this
+        · have : n.val = args.val.length := by simpa using harity
+          rw [this]; simp [alloc.vec.Vec.length, hvals]
+      apply WP.dspec_mono (Store.intern_inv s (TermData.Node c v) hinv hwf h64)
+      rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
+      simp only [WP.uncurry'_pair] at hres ⊢
+      refine ⟨hinv', hext, ?_⟩
+      cases r with
+      | Err e => exact hres
+      | Ok t => exact ⟨hres.1, v, hvals, hres.2⟩
+
+theorem Store.destruct_literal_data (l : lit.Lit) :
+    Store.destruct_literal Embedding.Data l = ok (Hit.Done none) := by
+  unfold Store.destruct_literal
+  cases l <;> simp
+
+theorem alloc.vec.CloneVec.clone_terms (v : alloc.vec.Vec Term) :
+    alloc.vec.CloneVec.clone Term.Insts.CoreCloneClone v = ok v := by
+  unfold alloc.vec.CloneVec.clone
+  have h : ∀ x ∈ v.slice.val, Term.Insts.CoreCloneClone.clone x = ok x := fun _ _ => rfl
+  obtain ⟨s', hs, heq⟩ := spec_returns (Slice.clone_spec h)
+  simp only [Term.Insts.CoreCloneClone] at hs ⊢
+  rw [hs]
+  simp [← heq]
+
+/-- `destruct` with a constructor that is plain data: the fields of a node
+of that constructor, and nothing for any other term. -/
+theorem Store.destruct_data_eq (s : Store) (c : schema.Constructor) (t : Term)
+    (hemb : c.embedding = ok Embedding.Data) :
+    Store.destruct s c t = ok (
+      (if t.val < s.nodes.length then
+        core.result.Result.Ok (match s.data t with
+          | TermData.Node d fields => if d = c then some fields else none
+          | _ => none)
+      else core.result.Result.Err CheckError.InvalidHandle), s) := by
+  unfold Store.destruct
+  rw [hemb]
+  simp only [Std.bind_ok]
+  rw [Store.view_eq]
+  by_cases h : t.val < s.nodes.length
+  · simp only [h, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch, Store.data]
+    cases hd : s.nodes.val[t.val]! with
+    | Literal l => simp [Store.destruct_literal_data]
+    | Node d fields =>
+      obtain ⟨n1, h1, _⟩ := schema.Constructor.code_spec c
+      obtain ⟨n2, h2, _⟩ := schema.Constructor.code_spec d
+      simp only [h1, h2, Std.bind_ok]
+      by_cases hdc : d = c
+      · subst hdc
+        have : n1 = n2 := by rw [h1] at h2; simpa using h2
+        simp [this, alloc.vec.CloneVec.clone_terms]
+      · have : n1 ≠ n2 := by
+          intro heq; subst heq; exact hdc (schema.Constructor.code_inj h2 h1)
+        simp [this, hdc]
+    | _ => simp
+  · simp [h, core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]
+
 end pathos_compiled_checker
