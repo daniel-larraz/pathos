@@ -34,6 +34,9 @@ class Represents (α : Type) where
 
 @[reducible] instance : Represents Eo.Term := ⟨fun s t x => s.Rep t x⟩
 
+@[simp] theorem Represents.rep_term (s : Store) (t : Term) (x : Eo.Term) :
+    Represents.rep s t x = s.Rep t x := rfl
+
 /-- `carry_one h hg`: the fact `h` about a store, carried over to the store
 it has grown to (`hg`). A fact carries over when it is monotone in the
 store: what a handle stands for is. Each relation built on that adds its
@@ -146,5 +149,79 @@ macro_rules
       simp only [WP.dspec_ok, WP.uncurry'_pair]
       refine ⟨$hinv, $hG, _, ?_, $h⟩
       simp [$cd:ident]))
+
+/-- The first of the cases that answers, else `d`: what a generated body
+computes, in the terms of the functions of `MiniCases`. -/
+def firstSome {α : Type} : List (Option α) → α → α
+  | [], d => d
+  | some r :: _, _ => r
+  | none :: rest, d => firstSome rest d
+
+@[simp] theorem firstSome_nil {α : Type} (d : α) : firstSome [] d = d := rfl
+@[simp] theorem firstSome_some {α : Type} (r : α) (rest : List (Option α)) (d : α) :
+    firstSome (some r :: rest) d = r := rfl
+@[simp] theorem firstSome_none {α : Type} (rest : List (Option α)) (d : α) :
+    firstSome (none :: rest) d = firstSome rest d := rfl
+
+/-- `stuck_check h : x as hs else hinv hG`: the generated
+`if s.is_stuck(a)? { return Ok(s.stuck()) }` on a handle of the term `x`.
+Goes on with `hs : x ≠ Stuck`; for the stuck term the body ends with the
+stuck term, which the goal must then be (`simp` with the body's meaning
+`rd`). -/
+syntax "stuck_check " ident " : " term " as " ident " else " ident ppSpace ident " in " ident :
+  tactic
+macro_rules
+  | `(tactic| stuck_check $h : $x as $hs else $hinv $hG in $rd) =>
+    `(tactic| (
+      rw [Store.Rep.is_stuck $h]
+      simp only [Std.bind_ok]
+      rcases Decidable.em ($x = Eo.Term.Stuck) with $hs | $hs
+      case inl => (
+        subst $hs
+        simp only [decide_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+          WP.uncurry'_pair]
+        refine ⟨$hinv, $hG, ?_⟩
+        simpa [$rd:ident] using Store.Inv.rep_stuck $hinv)
+      simp only [$hs:ident, decide_false, Bool.false_eq_true, ite_false]))
+
+/-- `case_step with spec as ⟨found, s', hinv, hc⟩ growing hG carrying … in rd`:
+a body tries a case whose specification is `spec`. If the case answers, the
+body ends with its result, which is the body's meaning `rd` there; goes on
+where the case answered `none`, with `hc` saying that its function does. -/
+syntax "case_step " "with " term " as " "⟨" ident ", " ident ", " ident "⟩"
+  " growing " ident " carrying" (ppSpace colGt ident)* " in " ident " using" (ppSpace colGt ident)* :
+  tactic
+macro_rules
+  | `(tactic| case_step with $e as ⟨$s', $hinv, $hc⟩ growing $hG carrying $hs* in $rd
+      using $facts*) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let o := Lean.mkIdent `o
+    let hg := Lean.mkIdent `hg
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv), $(b hg), $(b hc)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      cases $r:ident
+      case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
+      rename_i $o:ident
+      cases $o:ident
+      case some => (
+        simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
+        obtain ⟨res, hres, hrep⟩ := $hc
+        refine ⟨$hinv, $hG, ?_⟩
+        simpa [$rd:ident, hres, $[$facts:ident],*] using hrep)
+      simp only at $hc:ident ⊢))
+
+/-- Ends a body where no case answered: the stuck term. -/
+syntax "body_stuck " ident ppSpace ident " in " ident " using" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| body_stuck $hinv $hG in $rd using $facts*) =>
+    `(tactic| (
+      simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨$hinv, $hG, ?_⟩
+      simpa [$rd:ident, $[$facts:ident],*] using Store.Inv.rep_stuck $hinv))
 
 end pathos_compiled_checker

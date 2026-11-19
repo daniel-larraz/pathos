@@ -42,4 +42,42 @@ theorem case_0_mk_symm_short (s : Store) (a0 : Term) (x0 : _)
     as ⟨v9, s6, hinv6, h_v9⟩ growing hG
   case_done hinv6 hG with h_v9 in EoCases.__mk_symm.case_0
 
+/-- The second case, in the same form. -/
+theorem case_1_mk_symm_short (s : Store) (a0 : Term) (x0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (h_a0 : Represents.rep s a0 x0) :
+    generated.part0.case_1_eo__24mk_5fsymm s a0 ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__mk_symm.case_1 x0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__mk_symm.case_1 x0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  sorry
+
+/-- What the generated body computes. -/
+def mk_symm.rust (x0 : Eo.Term) : Eo.Term :=
+  if x0 = Eo.Term.Stuck then Eo.Term.Stuck
+  else firstSome [EoCases.__mk_symm.case_0 x0, EoCases.__mk_symm.case_1 x0] Eo.Term.Stuck
+
+/-- It is logos's program. -/
+theorem mk_symm.rust_eq (x0 : Eo.Term) : Eo.__mk_symm x0 = mk_symm.rust x0 := by
+  unfold Eo.__mk_symm mk_symm.rust EoCases.__mk_symm.case_0 EoCases.__mk_symm.case_1
+  split <;> simp_all
+
+theorem body_mk_symm_short (s : Store) (a0 : Term) (x0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (h_a0 : Represents.rep s a0 x0) :
+    generated.part0.body_eo__24mk_5fsymm s a0 ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (mk_symm.rust x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold generated.part0.body_eo__24mk_5fsymm
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x0 as hs0 else hinv hG in mk_symm.rust
+  case_step with case_0_mk_symm_short s a0 x0 hinv h64 h_a0 as ⟨s1, hinv1, hc0⟩
+    growing hG carrying h_a0 in mk_symm.rust using hs0
+  case_step with case_1_mk_symm_short s1 a0 x0 hinv1 h64 h_a0 as ⟨s2, hinv2, hc1⟩
+    growing hG carrying h_a0 in mk_symm.rust using hs0 hc0
+  body_stuck hinv2 hG in mk_symm.rust using hs0 hc0 hc1
+
 end pathos_compiled_checker
