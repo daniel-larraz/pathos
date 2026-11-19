@@ -20,8 +20,7 @@
 # (scripts/proofs-axioms, when the project has theorems to check).
 #
 # The build runs under a memory cap (PROOFS_MEMORY_MAX, default 8G) where
-# systemd-run is available, one Lean process at a time (the lakefile says
-# -j1). The first build fetches Mathlib's cache (`lake exe cache get`) and
+# systemd-run is available. The first build fetches Mathlib's cache (`lake exe cache get`) and
 # builds Aeneas's library and logos's CpcMini proofs.
 #
 # Needs elan (lake), git and Python 3.

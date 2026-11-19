@@ -1,9 +1,10 @@
 name = "PathosProofs"
 version = "0.1.0"
 defaultTargets = ["MiniChecker", "PathosProofs"]
-# One Lean process at a time: the generated files are large. Their names
-# are Rust's, not Mathlib's.
-weakLeanArgs = ["-j1", "-Dweak.linter.style.nameCheck=false"]
+# The generated files have Rust's names, not Mathlib's. (No `-j1` here: with
+# it Lean needs more than 8 GiB for CPC's largest group of functions that
+# call each other, and under 4 GiB without.)
+weakLeanArgs = ["-Dweak.linter.style.nameCheck=false"]
 
 # The revisions are those of pins.env; scripts/proofs-build checks that.
 [[require]]
