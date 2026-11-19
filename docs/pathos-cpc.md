@@ -33,7 +33,7 @@ how deep the checker's functions may nest (the checker's own default,
 
 | Part | Where | Proved later? |
 | --- | --- | --- |
-| The compiled checker: rules, typing, the state of assumptions and steps, the final test | `generated/cpc-checker` (crate `pathos-compiled-checker`) | That is the plan |
+| The compiled checker: rules, typing, the state of assumptions and steps, the final test | `generated/cpc-checker` (crate `pathos-compiled-checker`) | That is the plan: Charon and Aeneas translate all of it to Lean that compiles ([aeneas.md](aeneas.md)); nothing is proved yet |
 | The front end: lexer, parser, elaboration | `crates/pathos-syntax`, `-term`, `-check`, `-elab`, shared with `pathos-eo` | No, as logos's parser is not |
 | The adapter: from the front end's terms and commands to the compiled checker's | `crates/pathos/src/adapter.rs` | No |
 
@@ -158,6 +158,13 @@ one command at a time, to say which command the checker does not accept. It
 is kept in `explain.rs`, apart from the adapter, and never decides a
 verdict.
 
+Since milestone 28 the crate is written for Charon and Aeneas
+([aeneas.md](aeneas.md)): its generated functions are in modules
+`generated::part0` to `part12`, still reached as `generated::f`, and the
+literal's variants are `Lit::Boolean` and `Lit::Str`. `Store::named`,
+`Constructor::from_name` and the other functions that work on names are
+in its `front.rs`, which is not translated.
+
 ## Proofs that are not proofs
 
 A proof is untrusted text, and `pathos` must answer any of it with a
@@ -185,60 +192,46 @@ snapshot, and Ethos. Every run is under a memory cap and a time limit.
 
 ## Measurements
 
-On the development machine (Linux x86-64), with the checker generated from
-Ethos's main branch at `b8d65127` and logos at `LOGOS_REV`. Each run under
-an 8 GiB cap, one process at a time.
-
-The checker is now generated from `d83d2ab6`, which is `b8d65127` with a
-checker stack of 256 MiB where it was 64 MiB, and so a default depth of
-16,384 where it was 4096; nothing else in the generated crate differs. With
-it `pathos` was run again on the 400 and the 41 (reports in
-`target/compare-logos/*-pathos-d83d2ab6.json`): every verdict is the same
-except those of the two large proofs that needed more depth, which are now
-`correct` (see "Errors" below), and the peak memory of every other run is
-within 1% of what it was (the largest still 6.21 GiB, on `bug143`). Since
-then it is generated from `e51f527c` (cvc5/ethos#277), whose runtime
-evaluates `eo::gt` on bit-vectors of different widths and `eo::extract` with
-an index at the width as Ethos does since #275; the 400 give the same
-verdicts with it. The
-times below are those of `b8d65127`: the machine was busy during the new
-runs, and on one proof timed with both checkers side by side
-(`regress0__bv__bv-options4`) the two take the same time.
-
-Only `pathos` was run for the pin `b8d65127` (`scripts/compare-logos --perf --only
-pathos`, and the same with `--large --timeout 300`). The rows of logos,
-`pathos-eo` and Ethos (`c7d3db90`) are **the reviewer's runs of
-2026-11-17, not rerun**: the same binaries, proofs, cap and time limit, but
-timed by the harness's `timeit.py` in another session, so the times of
-different rows are comparable only roughly. `pathos`'s times are sums of
-times measured to 0.01 s, and most of its runs on the 400 take less than
-that. `pathos --no-cache` was not rerun.
+On the development machine (Linux x86-64, 20 cores), on 2026-11-18, with
+the checker generated from Ethos `cc027fc` (branch `m28-aeneas` of the
+fork: Ethos's main `e51f527c` with the generator and runtime of milestone
+28) and logos at `LOGOS_REV`. One run of `scripts/compare-logos --perf`
+for each corpus (the second with `--large --timeout 300`) ran all six
+rows, each run of each checker under an 8 GiB cap, one process at a time;
+the reports are `target/compare-logos/safe-all-m28.json` and
+`large-all-m28.json`. Ethos is the harness's release build of `b8d65127`
+(there is none of the current `REFERENCE_REV`; the checker's code is the
+same). Times are sums of wall-clock times measured to 0.01 s, so within a
+table they compare. Nothing else of this work ran at the same time, but
+the times of the large proofs were about a tenth higher than in a run of
+`pathos` alone an hour before (139.5 s for the 39 it decides, 150.5 s
+here).
 
 ### The 400 proofs of the safe corpus (120 s per run)
 
-| Checker | correct | incorrect | error | timeout | Time on the 380 proofs every checker decided | Largest peak memory |
-| --- | --- | --- | --- | --- | --- | --- |
-| `pathos` | 383 | 1 | 16 | 0 | 4.2 s | 0.19 GiB |
-| logos (not rerun) | 378 | 2 | 15 | 5 | 197.0 s | 3.06 GiB |
-| `pathos-eo` (not rerun) | 400 | 0 | 0 | 0 | 14.7 s | 0.02 GiB |
-| `pathos-eo --snapshot` (not rerun) | 400 | 0 | 0 | 0 | 11.3 s | 0.02 GiB |
-| Ethos (not rerun) | 400 | 0 | 0 | 0 | 19.4 s | 0.08 GiB |
+| Checker | correct | incorrect | error | timeout | Time on the 376 proofs every checker decided | Time on all 400 | Largest peak memory |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `pathos` | 383 | 1 | 16 | 0 | 10.1 s | 10.8 s | 0.09 GiB |
+| logos | 377 | 2 | 15 | 6 | 26.8 s | 880.9 s | 3.06 GiB |
+| `pathos --no-cache` | 375 | 1 | 16 | 8 | 124.1 s | 1084.3 s | 0.08 GiB |
+| `pathos-eo` | 400 | 0 | 0 | 0 | 16.9 s | 18.7 s | 0.02 GiB |
+| `pathos-eo --snapshot` | 400 | 0 | 0 | 0 | 9.6 s | 10.9 s | 0.02 GiB |
+| Ethos | 400 | 0 | 0 | 0 | 28.7 s | 31.6 s | 0.08 GiB |
 
-`pathos`'s verdict on each of the 400 is the one it gave with the checker
-of milestone 27 (`8d7f7c68`); over all 400 it takes 4.4 s, where it took
-67.6 s on 376 of them then. Its slowest proofs are
-`regress0__bv__bv-options4` (0.74 s; 10.4 s then),
-`regress1__sets__setofsets-disequal` (0.36 s; 20.3 s then) and
-`regress1__bv__fuzz18.smtv1` (0.32 s; 15.7 s then), and on none is it now
-both twice as slow as `pathos-eo` and half a second slower. Most of logos's
-197.0 s is one proof, `regress1__fmf__with-ind-104-core` (106.7 s).
+`pathos`'s verdict on each of the 400 is the one it gave before milestone
+28 (`target/compare-logos/safe-pathos-d83d2ab6.json`). Most of its time is
+starting: a run on a small proof takes about 25 ms. Its slowest proofs are
+`regress0__bv__bv-options4` (0.86 s; `pathos-eo` 1.12 s, Ethos 1.90 s),
+`regress1__sets__setofsets-disequal` (0.52 s) and
+`regress1__bv__fuzz18.smtv1` (0.40 s), and on none is it both twice as
+slow as `pathos-eo` and half a second slower.
 
 `pathos` says `correct` on no proof that Ethos does not accept. It differs
-from logos on six proofs:
+from logos on seven proofs:
 
 | Proofs | logos | `pathos` | Why |
 | --- | --- | --- | --- |
-| `regress1__auflia__bug330`, `regress1__bvdiv2`, `regress1__bv__proj-issue438-prerewrite-fixed-point-original`, `regress1__datatypes__acyclicity-sr-ground096` | timeout | `correct`, each in under a second | The compiled checker caches types and program results; logos computes them again for each occurrence of a shared subterm. With the checker of milestone 27, `pathos --no-cache` ran out of time on these too. |
+| `regress1__auflia__bug330`, `regress1__bvdiv2`, `regress1__bv__proj-issue438-prerewrite-fixed-point-original`, `regress1__datatypes__acyclicity-sr-ground096`, `regress1__fmf__with-ind-104-core` | timeout | `correct`, each in under 0.2 s | The compiled checker caches types and program results; logos computes them again for each occurrence of a shared subterm. `pathos --no-cache` runs out of time on all five too. (`with-ind-104-core` took logos 106.7 s on 2026-11-17, under the limit.) |
 | `regress1__proofs__base-lfsc-treesize` | timeout | error | The proof uses `lambda`; logos does not get as far as refusing it. |
 | `regress1__datatypes__dt-param-card4-unsat` | `incorrect` | `correct` | logos's parser leaves a term of the block `((Pair 2) (Color 0))` stuck ([cvc5/logos#510](https://github.com/cvc5/logos/issues/510)). Ethos accepts the proof. |
 
@@ -248,46 +241,71 @@ logos shares, is `regress1__quantifiers__RND_4_16`: both stop at
 an outer quantifier free in it (`?y2`). The checker accepts only closed
 formulas as assumptions; Ethos has no such condition and accepts the proof.
 
-### The 41 large proofs of the safe corpus (300 s per run for `pathos`)
+### The 41 large proofs of the safe corpus (300 s per run)
 
-| Checker | correct | timeout | error | over the 8 GiB cap | Time on the 37 proofs both decided at `b8d65127` | Largest peak under the cap |
-| --- | --- | --- | --- | --- | --- | --- |
-| `pathos` | 39 | 0 | 1 | 1 | 110.2 s | 6.21 GiB |
-| Ethos (not rerun) | 40 | 0 | 0 | 1 | 281.0 s | 2.51 GiB |
+| Checker | correct | timeout | error | over the 8 GiB cap | Time on the 30 proofs every checker decided | Time on the 40 that `pathos`, `pathos-eo` and Ethos decide | Largest peak under the cap |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `pathos` | 39 | 0 | 1 | 1 | 28.3 s | 150.5 s | 2.74 GiB |
+| logos | 30 | 9 | 1 | 1 | 544.6 s | | 2.70 GiB |
+| `pathos --no-cache` | 33 | 6 | 1 | 1 | 468.6 s | | 2.51 GiB |
+| `pathos-eo` | 40 | 1 | 0 | 0 | 29.7 s | 255.0 s | 3.64 GiB |
+| `pathos-eo --snapshot` | 40 | 1 | 0 | 0 | 29.4 s | 255.2 s | 3.64 GiB |
+| Ethos | 40 | 0 | 0 | 1 | 60.6 s | 564.6 s | 2.52 GiB |
 
 `pathos` says `correct` on no proof that Ethos does not accept, and gives
 no other verdict on any of the 41: where it finishes, it agrees with Ethos.
-With the checker of milestone 27 it finished 31, in 957.0 s; the seven
-proofs it then ran out of 300 s on now take between 1.8 s and 18.0 s.
+(The peaks of `pathos-eo` are on `hole10`, which it does not finish; on the
+proofs it finishes its largest is 0.47 GiB.)
 
-- **Time**: more than half of Ethos's total is one proof,
-  `regress4__bug143.smtv1` (159.2 s; `pathos` 17.5 s). On the others the
-  two are close: `regress4__comb2.shuffled-as.sat03-420.smtv1`, with
-  112,463 assumptions, 37.9 s against 39.2 s; `regress3__hole9.cvc` 18.0 s
-  against 34.2 s; `regress3__bv-fuzz17.smtv1` 9.2 s against 8.9 s.
-- **Memory**: `pathos` uses two to three times what Ethos does on the
-  largest proofs (`bug143` 6.21 GiB against 2.51 GiB, `comb2` 5.70 against
-  2.15, `hole9` 5.61 against 2.47), so it is closer to the cap.
+- **Time**: half of Ethos's total is one proof, `regress4__bug143.smtv1`
+  (287.2 s; `pathos-eo` 125.4 s; `pathos` 24.3 s). On
+  `regress4__comb2.shuffled-as.sat03-420.smtv1`, with 112,463 assumptions,
+  `pathos` takes 47.0 s, `pathos-eo` 41.4 s and Ethos 91.2 s; on
+  `regress3__hole9.cvc` 24.0 s, 33.4 s and 73.3 s; on
+  `regress3__bv-fuzz17.smtv1` 10.8 s, 10.0 s and 18.3 s.
+- **logos** runs out of 300 s on nine proofs that `pathos` finishes, in
+  between 0.2 s and 47 s; `pathos --no-cache` runs out of time on six of
+  the nine.
+- **Memory**: `pathos` now uses about what Ethos does on the largest
+  proofs (`hole9` 2.74 GiB against 2.47, `comb2` 2.71 against 2.15,
+  `bug143` 2.65 against 2.52), where before milestone 28 it used two to
+  three times that (6.21 GiB on `bug143`).
 - **Errors**: `regress1__arith__issue9427-cdiv-def` uses `lambda`.
   It is the only error. `regress3__friedman_n4_i5.smtv1` and
   `regress4__C880mul.miter.shuffled-as.sat03-348.smtv1` need a depth of
-  11,493 and 9,381 at least: at `b8d65127`, whose default depth was 4096,
-  they ended in `the compiled checker stopped without a verdict: Limit`;
-  at `d83d2ab6`, whose default is 16,384, they are `correct` (2.2 s with a
-  peak of 0.20 GiB and 2.5 s with 0.39 GiB, on the busy machine; the time
-  column of the table is still that of the other 37). Each has a single
-  assumption; which function nests that deep was not looked into.
-- **`regress3__hole10.cvc`** (475 MB) fits under 8 GiB for neither. It was
+  11,493 and 9,381 at least, under the default of 16,384 (1.6 s and 2.3 s,
+  with peaks of 0.12 GiB and 0.18 GiB). Each has a single assumption;
+  which function nests that deep was not looked into.
+- **`regress3__hole10.cvc`** (475 MB) fits under 8 GiB for neither `pathos`
+  nor Ethos, and `pathos-eo` runs out of 300 s on it at 3.64 GiB. It was
   not run again under a larger cap; with the checker of milestone 27, alone
   under a 32 GiB cap with ten minutes, Ethos was `correct` in 435 s with a
   peak of 21.96 GiB and `pathos` was out of time at 12.70 GiB.
 
-### The caches, and where the time went before
+### Before and after milestone 28
 
-Measured with the checker of milestone 27 (`8d7f7c68`), not again: without
-its caches `pathos` ran out of 120 s on eight of the 400 that took under a
-second with them. What was then left, about 16 ms for each step of
-`chain_m_resolution`, went on hashing and interning terms and native
-numbers in the runtime; the runtime at `b8d65127` (case helpers, a
-logarithmic premise lookup, the assumption list checked in a loop) no
-longer shows it, as the times above say.
+Milestone 28 rewrote the generator and the runtime so that Charon and
+Aeneas translate the checker ([aeneas.md](aeneas.md)). `pathos` built
+before it (main at `565c786`, the checker from Ethos `d83d2ab6` with
+#277) and after it were timed in turn, three times each on the 400 and
+once on the large proofs, `pathos` alone on the machine
+(`scripts/compare-logos --perf --only pathos`):
+
+| | Before | After |
+| --- | --- | --- |
+| The 400, all runs | 12.5 s, 12.3 s, 12.0 s | 9.5 s, 9.3 s, 9.3 s |
+| The 39 large proofs it decides | 211 s | 139.5 s |
+| Largest peak memory under the cap | 6.21 GiB | 2.74 GiB |
+| Building `pathos` (release) | 63 s | 24 to 28 s |
+
+Every verdict is the same. The memory is mostly the runtime's own table
+of terms, which replaced a hash map of boxed terms; the build is faster
+because the generated functions are smaller and in thirteen modules.
+
+### The caches
+
+Without its caches of types and of program results `pathos` runs out of
+120 s on eight of the 400, each of which takes under a second with them,
+and out of 300 s on six of the large proofs; on the proofs every checker
+decides it takes twelve times as long on the 400 and seventeen times on
+the large ones.
