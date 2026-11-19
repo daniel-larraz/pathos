@@ -18,8 +18,11 @@ proof checker in Rust, meant as a drop-in replacement:
   pathos's own front end. It answers `correct`, `incorrect` or
   `incomplete`, as logos does. It is new and unverified; see
   [docs/pathos-cpc.md](docs/pathos-cpc.md). The compiled checker is
-  written so that Charon and Aeneas translate all of it to Lean, for the
-  proofs to come: [docs/aeneas.md](docs/aeneas.md).
+  written so that Charon and Aeneas translate all of it to Lean
+  ([docs/aeneas.md](docs/aeneas.md)), and the first proofs about that
+  Lean, against logos's definitions, are in [proofs/](proofs/)
+  ([docs/proofs.md](docs/proofs.md)): a pilot, not yet a theorem about
+  `pathos`.
 
 (Until 2026-11-16 `pathos` was the name of the binary that is now
 `pathos-eo`.)
@@ -136,6 +139,7 @@ to do then.
 - [docs/evidence.md](docs/evidence.md): the case for replacing Ethos, on one page.
 - [docs/ethos-differences.md](docs/ethos-differences.md): every known difference from Ethos, and the Ethos behaviour pathos reproduces on purpose. What looked like bugs in Ethos was reported as cvc5/ethos#257 to #268.
 - [docs/dependencies.md](docs/dependencies.md): every dependency, its `unsafe` code, what of it can run, and why that is sound, per platform.
+- [docs/proofs.md](docs/proofs.md): the Lean proofs about the compiled checker: what is proved, what is trusted, what is missing.
 - [docs/panics.md](docs/panics.md): every place pathos could panic, and why input does not reach it.
 - [docs/brief.md](docs/brief.md) and [docs/reviews/](docs/reviews/): how pathos was built.
 
