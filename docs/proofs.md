@@ -34,7 +34,7 @@ scripts/proofs-build --no-build          # the pins and the overflow setting (CI
 `scripts/proofs-build` checks that the lakefile, the manifest,
 `scripts/aeneas-setup` and the crate's note agree with `pins.env`, and that
 `Cargo.toml` builds the checker crate with overflow checks; builds under an
-8 GiB cap; and runs `scripts/proofs-axioms`, which fails on a `sorry` or on
+8 GiB cap with two Lean processes at a time (`PROOFS_JOBS`); and runs `scripts/proofs-axioms`, which fails on a `sorry` or on
 an axiom that `axioms-allowed.txt` does not list.
 
 ## CpcMini
@@ -73,33 +73,42 @@ and no fork of either is needed for the build.
 | logos, `CpcMini.Proofs.Checker` (Mathlib from its cache) | 95 s | 1.4 GiB |
 | `proofs/`, first build of everything | 196 s | 4.3 GiB |
 | `proofs/` from a clean checkout: the translation, the build, the axioms | 335 s | |
-| logos, `Cpc.ApiCorrect` and what it imports | not built: over 8 GiB (below) | |
+| logos, `Cpc.ApiCorrect` and what it imports | not built yet: stage 1 of milestone 32 | |
 
-**logos's verification of CPC is not yet built at `v4.36.0`**; it is the
-first step of the CPC milestone. `lake build Cpc.ApiCorrect` in logos's
-`verification` project, with the pins moved and nothing else changed, was
-stopped by the 8 GiB cap three times, each run going on from the last, and
-never by an error of Lean:
+**logos's verification of CPC at `v4.36.0`**: `lake build Cpc.ApiCorrect`
+in logos's `verification` project, with the pins moved and nothing else
+changed, was stopped by the 8 GiB cap three times in milestone 31, each run
+going on from the last, and never by an error of Lean:
 
-| Run | Cores | Ended after | Modules of `Cpc` built by then |
+| Run | Cores given (`taskset`) | Ended after | Modules of `Cpc` built by then |
 | --- | --- | --- | --- |
 | 1 | all 20 | 22.5 min | 151 |
-| 2 | 2 (`taskset`) | 3 min | 12 more |
+| 2 | 2 | 3 min | 12 more |
 | 3 | 1 | 3.5 min | 1 more |
 
-Lake runs as many Lean processes as there are cores, so the first two say
-little. The third had one process at a time: **one module of logos's CPC
-proofs needs more than 8 GiB at `v4.36.0`**, as logos builds it (its
-lakefile passes `-j1`). Not found out: which module (the last built before
-it was `Cpc.Proofs.Rules.Arrays_read_over_write_1`); whether it needs as
-much at `v4.34.0`; and whether `-j1` is the cause, as it was for our own
-generated code (next paragraph). Finding these out is the first thing for
-the CPC milestone, with a higher cap on purpose (up to 16 GiB). `CpcMini`'s
-proofs, which the pilot uses, build in 95 s at 1.4 GiB.
+Milestone 31 concluded from the third run that one module needs more than
+8 GiB. **That was wrong.** Lake starts as many Lean processes as the
+machine has cores whatever `taskset` allows it: a sampler in milestone 32
+found 20 of them in the "one core" run, each under 2.5 GiB, 15.4 GiB
+together. `LEAN_NUM_THREADS` is what limits Lake: with
+`LEAN_NUM_THREADS=2` there are two. The build with that setting is stage 1
+of milestone 32. `CpcMini`'s proofs, which the pilot uses, build in 95 s at
+1.4 GiB.
 
-**`-j1` must not be among the Lean arguments** (logos's lakefile has it):
-with it CPC's largest group of mutually recursive functions needs more
-than 8 GiB within half a minute, stitched or not; without it, 3.8 GiB.
+**`-j1` must not be among the Lean arguments** (logos's lakefile has it).
+Measured again in milestone 32 with a sampler, one Lean process each time
+(`lake env lean` on the stitched first part of CPC, 37,178 lines, whose
+largest group of mutually recursive functions is 12,107 lines), under the
+8 GiB cap: with `-j1` the process is at the cap after 25 s and is killed;
+without it, 169 s and a peak of 3.75 GiB. Setting `LEAN_NUM_THREADS` to 2
+or to 4 instead changes nothing for that process (168 s, 3.8 GiB): it is
+the `-j1` argument that costs the memory.
+
+**How many Lean processes run at once** is Lake's choice, and it starts as
+many as the machine has cores. `taskset` does not change that (it limits
+Aeneas's workers, which is what `scripts/aeneas-translate` uses it for);
+`LEAN_NUM_THREADS` does. `scripts/proofs-build` sets it (`PROOFS_JOBS`,
+default 2), since what fits under a cap is the sum over the processes.
 
 ## Stitching
 

@@ -21,7 +21,8 @@
 # (scripts/proofs-axioms, when the project has theorems to check).
 #
 # The build runs under a memory cap (PROOFS_MEMORY_MAX, default 8G) where
-# systemd-run is available. The first build fetches Mathlib's cache (`lake exe cache get`) and
+# systemd-run is available, with PROOFS_JOBS Lean processes at a time
+# (default 2). The first build fetches Mathlib's cache (`lake exe cache get`) and
 # builds Aeneas's library and logos's CpcMini proofs.
 #
 # Needs elan (lake), git and Python 3.
@@ -47,11 +48,16 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# Lake starts as many Lean processes as the machine has cores, and what has
+# to fit under the cap is their sum. LEAN_NUM_THREADS limits Lake (taskset
+# does not).
+jobs="${PROOFS_JOBS:-2}"
 capped() {
   if command -v systemd-run >/dev/null 2>&1 && systemd-run --user --scope -q true 2>/dev/null; then
-    systemd-run --user --scope -q -p "MemoryMax=${PROOFS_MEMORY_MAX:-8G}" -p MemorySwapMax=0 "$@"
+    systemd-run --user --scope -q -E "LEAN_NUM_THREADS=$jobs" \
+      -p "MemoryMax=${PROOFS_MEMORY_MAX:-8G}" -p MemorySwapMax=0 "$@"
   else
-    "$@"
+    LEAN_NUM_THREADS="$jobs" "$@"
   fi
 }
 
