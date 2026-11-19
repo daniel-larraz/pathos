@@ -70,13 +70,15 @@ theorem Store.Extends.refl (s : Store) : s.Extends s :=
   ⟨List.prefix_refl _, rfl, rfl, rfl, rfl⟩
 
 /-- `intern` keeps the invariant, keeps every term under its handle, and
-answers a handle whose data is the data it was given. -/
+answers a handle whose data is the data it was given; the store is as it
+was, or has that data as one more term. -/
 theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
     (h64 : 2 ^ 40 ≤ Usize.max) :
     Store.intern s data ⦃ r s' =>
       StoreInv s' ∧ s.Extends s' ∧
       match r with
-      | core.result.Result.Ok t => t.val < s'.nodes.length ∧ s'.nodes.val[t.val]! = data
+      | core.result.Result.Ok t => t.val < s'.nodes.length ∧ s'.nodes.val[t.val]! = data ∧
+          (s'.nodes.val = s.nodes.val ∨ s'.nodes.val = s.nodes.val ++ [data])
       | core.result.Result.Err _ => s' = s ⦄div := by
   unfold Store.intern
   have hdh := dspec_self (Store.data_hash_spec data)
@@ -86,7 +88,7 @@ theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
   cases o with
   | some t =>
     simp only [WP.dspec_ok]
-    exact ⟨hinv, Store.Extends.refl s, hfound.1 t rfl⟩
+    exact ⟨hinv, Store.Extends.refl s, (hfound.1 t rfl).1, (hfound.1 t rfl).2, Or.inl rfl⟩
   | none =>
     simp only
     step as ⟨i1, hi1⟩
@@ -163,7 +165,7 @@ theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
           have := hinv.hhash t ht
           rw [hd, hhash] at this
           simpa using this.symm
-        refine ⟨?_, ?_, ?_, ?_⟩
+        refine ⟨?_, ?_, ?_, ?_, ?_⟩
         · constructor
           · exact hpos
           · simp only [e1]; rw [hvlen]; exact hbnd
@@ -199,5 +201,6 @@ theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
           simp only [e1]; rw [hv]; exact List.prefix_append _ _
         · simp only [e1]; rw [hvlen, hnv]; omega
         · simp only [e1]; rw [hnv]; exact hlast
+        · simp only [e1]; exact Or.inr hv
 
 end pathos_compiled_checker

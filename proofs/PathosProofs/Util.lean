@@ -33,6 +33,10 @@ theorem dspec_admissible4 {α β γ δ ε} (a : α) (b : β) (c : γ) (d : δ) (
 theorem getElem!_eq {α} [Inhabited α] (l : List α) (i : Nat) (h : i < l.length) :
     l[i]! = l[i] := by simp [h]
 
+theorem getElem!_append_left {α} [Inhabited α] (l r : List α) (i : Nat) (h : i < l.length) :
+    (l ++ r)[i]! = l[i]! := by
+  rw [getElem!_eq _ _ (by simp; omega), getElem!_eq _ _ h, List.getElem_append_left h]
+
 /-- A pure value in a computation, where Aeneas's own lemmas do not know
 the function that made it. -/
 @[step]
