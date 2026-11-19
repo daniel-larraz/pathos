@@ -32,5 +32,11 @@ rev = "v4.36.0"
 [[lean_lib]]
 name = "MiniChecker"
 
+# The cases of CpcMini's programs, one function each, as the Rust tries
+# them: written by lean-meta in the run that scripts/generate-mini makes.
+# Generated: never edited.
+[[lean_lib]]
+name = "MiniCases"
+
 [[lean_lib]]
 name = "PathosProofs"
