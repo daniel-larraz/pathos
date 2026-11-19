@@ -6,3 +6,6 @@ public import PathosProofs.Store.Table
 public import PathosProofs.Store.SameData
 public import PathosProofs.Store.Hash
 public import PathosProofs.Store.Intern
+public import PathosProofs.Store.Ops
+public import PathosProofs.Store.Rep
+public import PathosProofs.Store.New

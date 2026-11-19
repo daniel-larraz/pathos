@@ -1,0 +1,136 @@
+# The axioms a theorem of proofs/PathosProofs may rest on: the trust of the
+# proofs. scripts/proofs-axioms fails if a theorem uses an axiom that is not
+# here (`sorryAx` is never allowed), and if the two generated sections below
+# are not exactly the axioms that proofs/MiniChecker and
+# proofs/PathosProofs/Trusted.lean declare.
+#
+# One name a line, as `#print axioms` prints it.
+
+[Lean]
+# Lean's own.
+propext
+Quot.sound
+Classical.choice
+
+[Aeneas]
+# Axioms of Aeneas's Lean library (backends/lean) that a theorem uses.
+# None so far. (The library declares a few: opaque types such as
+# core.pin.Pin, and core.slice.Slice.get_unchecked_SliceIndexUsizeSlice_spec.)
+
+[logos]
+# Axioms of logos that a theorem uses. None so far.
+
+[MiniChecker]
+# What Charon and Aeneas leave without a body in the Lean of the checker:
+# the types and functions of num.rs, the text functions of front.rs, the
+# printing functions, and two declarations Aeneas always writes. They have
+# a type and no meaning; Trusted.lean gives the ones that matter theirs.
+pathos_compiled_checker.Bool.Insts.CoreCmpPartialEqBool.ne
+pathos_compiled_checker.CheckError.Insts.CoreFmtDebug.fmt
+pathos_compiled_checker.CheckError.Insts.CoreFmtDisplay.fmt
+pathos_compiled_checker.core.fmt.Formatter.debug_tuple_field2_finish
+pathos_compiled_checker.core.mem.maybe_uninit.MaybeUninit
+pathos_compiled_checker.front.constant_name
+pathos_compiled_checker.front.native_literal
+pathos_compiled_checker.num.Integer
+pathos_compiled_checker.num.Integer.add
+pathos_compiled_checker.num.Integer.bitwise_and
+pathos_compiled_checker.num.Integer.bitwise_not
+pathos_compiled_checker.num.Integer.bitwise_or
+pathos_compiled_checker.num.Integer.bitwise_xor
+pathos_compiled_checker.num.Integer.euclidean_qr
+pathos_compiled_checker.num.Integer.extract_bit_range
+pathos_compiled_checker.num.Integer.fits_u32
+pathos_compiled_checker.num.Integer.floor_div_quotient
+pathos_compiled_checker.num.Integer.floor_div_remainder
+pathos_compiled_checker.num.Integer.hash_code
+pathos_compiled_checker.num.Integer.Insts.CoreCloneClone.clone
+pathos_compiled_checker.num.Integer.Insts.CoreCmpOrd.cmp
+pathos_compiled_checker.num.Integer.Insts.CoreCmpPartialEqInteger.eq
+pathos_compiled_checker.num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp
+pathos_compiled_checker.num.Integer.Insts.CoreConvertFromU32.from
+pathos_compiled_checker.num.Integer.Insts.CoreConvertFromUsize.from
+pathos_compiled_checker.num.Integer.Insts.CoreFmtDebug.fmt
+pathos_compiled_checker.num.Integer.mod_by_pow2
+pathos_compiled_checker.num.Integer.mul
+pathos_compiled_checker.num.Integer.multiply_by_pow2
+pathos_compiled_checker.num.Integer.neg
+pathos_compiled_checker.num.Integer.one
+pathos_compiled_checker.num.Integer.one_extend
+pathos_compiled_checker.num.Integer.pow
+pathos_compiled_checker.num.Integer.sgn
+pathos_compiled_checker.num.Integer.to_u32
+pathos_compiled_checker.num.Integer.zero
+pathos_compiled_checker.num.Rational
+pathos_compiled_checker.num.Rational.add
+pathos_compiled_checker.num.Rational.denominator
+pathos_compiled_checker.num.Rational.div
+pathos_compiled_checker.num.Rational.floor
+pathos_compiled_checker.num.Rational.from_integer
+pathos_compiled_checker.num.Rational.from_integers
+pathos_compiled_checker.num.Rational.hash_code
+pathos_compiled_checker.num.Rational.Insts.CoreCloneClone.clone
+pathos_compiled_checker.num.Rational.Insts.CoreCmpPartialEqRational.eq
+pathos_compiled_checker.num.Rational.Insts.CoreCmpPartialOrdRational.partial_cmp
+pathos_compiled_checker.num.Rational.Insts.CoreFmtDebug.fmt
+pathos_compiled_checker.num.Rational.mul
+pathos_compiled_checker.num.Rational.neg
+pathos_compiled_checker.num.Rational.numerator
+pathos_compiled_checker.num.Rational.pow
+pathos_compiled_checker.num.Rational.sgn
+pathos_compiled_checker.schema.Constructor.Insts.CoreFmtDebug.fmt
+
+[Trusted]
+# proofs/PathosProofs/Trusted.lean: what the functions above compute.
+pathos_compiled_checker.front.constant_name_spec
+pathos_compiled_checker.front.native_literal_spec
+pathos_compiled_checker.num.Integer.add_spec
+pathos_compiled_checker.num.Integer.bitwise_and_spec
+pathos_compiled_checker.num.Integer.bitwise_not_spec
+pathos_compiled_checker.num.Integer.bitwise_or_spec
+pathos_compiled_checker.num.Integer.bitwise_xor_spec
+pathos_compiled_checker.num.Integer.clone_spec
+pathos_compiled_checker.num.Integer.cmp_spec
+pathos_compiled_checker.num.Integer.eq_spec
+pathos_compiled_checker.num.Integer.euclidean_qr_spec
+pathos_compiled_checker.num.Integer.extract_bit_range_spec
+pathos_compiled_checker.num.Integer.fits_u32_spec
+pathos_compiled_checker.num.Integer.floor_div_quotient_spec
+pathos_compiled_checker.num.Integer.floor_div_remainder_spec
+pathos_compiled_checker.num.Integer.from_u32_spec
+pathos_compiled_checker.num.Integer.from_usize_spec
+pathos_compiled_checker.num.Integer.hash_code_spec
+pathos_compiled_checker.num.Integer.mod_by_pow2_spec
+pathos_compiled_checker.num.Integer.mul_spec
+pathos_compiled_checker.num.Integer.multiply_by_pow2_spec
+pathos_compiled_checker.num.Integer.neg_spec
+pathos_compiled_checker.num.Integer.ofInt
+pathos_compiled_checker.num.Integer.ofInt_toInt
+pathos_compiled_checker.num.Integer.one_extend_spec
+pathos_compiled_checker.num.Integer.one_spec
+pathos_compiled_checker.num.Integer.partial_cmp_spec
+pathos_compiled_checker.num.Integer.pow_spec
+pathos_compiled_checker.num.Integer.sgn_spec
+pathos_compiled_checker.num.Integer.toInt
+pathos_compiled_checker.num.Integer.toInt_ofInt
+pathos_compiled_checker.num.Integer.to_u32_spec
+pathos_compiled_checker.num.Integer.zero_spec
+pathos_compiled_checker.num.Rational.add_spec
+pathos_compiled_checker.num.Rational.clone_spec
+pathos_compiled_checker.num.Rational.denominator_spec
+pathos_compiled_checker.num.Rational.div_spec
+pathos_compiled_checker.num.Rational.eq_spec
+pathos_compiled_checker.num.Rational.floor_spec
+pathos_compiled_checker.num.Rational.from_integer_spec
+pathos_compiled_checker.num.Rational.from_integers_spec
+pathos_compiled_checker.num.Rational.hash_code_spec
+pathos_compiled_checker.num.Rational.mul_spec
+pathos_compiled_checker.num.Rational.neg_spec
+pathos_compiled_checker.num.Rational.numerator_spec
+pathos_compiled_checker.num.Rational.ofRat
+pathos_compiled_checker.num.Rational.ofRat_toRat
+pathos_compiled_checker.num.Rational.partial_cmp_spec
+pathos_compiled_checker.num.Rational.pow_spec
+pathos_compiled_checker.num.Rational.sgn_spec
+pathos_compiled_checker.num.Rational.toRat
+pathos_compiled_checker.num.Rational.toRat_ofRat
