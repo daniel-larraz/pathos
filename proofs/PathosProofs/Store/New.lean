@@ -18,12 +18,13 @@ theorem table.slots_for_one : table.slots_for 1#usize ⦃ r => r.val = 16 ⦄div
   step*
 
 theorem cache.Caches.new_spec (n : Std.Usize) :
-    cache.Caches.new n ⦃ c => c.types.length = 1 ⦄ := by
+    cache.Caches.new n ⦃ c =>
+      c.types.length = 1 ∧ c.programs.entries.val = [] ∧ c.programs.slots.val = [] ⦄ := by
   unfold cache.Caches.new cache.TypeEntry.empty cache.ProgramCache.new
     cache.CacheStats.Insts.CoreDefaultDefault.default
   step*
   subst y_post
-  rfl
+  exact ⟨rfl, rfl, rfl⟩
 
 /-- A new store has the invariant. -/
 theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄div := by
@@ -35,7 +36,7 @@ theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄di
   step with table.slots_for_one as ⟨i, hi⟩
   step as ⟨v, hv, hvlen⟩
   step as ⟨i1, hi1⟩
-  step with cache.Caches.new_spec as ⟨c, hc⟩
+  step with cache.Caches.new_spec as ⟨c, hc, hce, hcs⟩
   step with Store.place_spec as ⟨s, z, x, hx, hz, hfree, hpath, hslots, h1, h2, h3, h4, h5, h6, h7⟩
   have hnodes : s.nodes.val = [TermData.Stuck] := by rw [h1, hy]; rfl
   have hhashes : s.hashes.val = [hash] := by rw [h2, hy1]; rfl
@@ -67,5 +68,14 @@ theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄di
       have : t = 0 := by omega
       subst this
       rw [hnodes]; trivial
+  · constructor
+    · constructor
+      · intro p hp
+        exfalso; apply hp
+        rw [h3, hcs]; rfl
+      · rw [h3]; simp [alloc.vec.Vec.length, hce]
+    · intro e he
+      rw [h3, hce] at he
+      simp at he
 
 end pathos_compiled_checker

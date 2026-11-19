@@ -35,6 +35,9 @@ theorem Store.Grows.trans {s s' s'' : Store} (h : s.Grows s') (h' : s'.Grows s''
 theorem Store.Extends.grows {s s' : Store} (h : s.Extends s') : s.Grows s' :=
   ⟨h.1, h.2.1, h.2.2.2.1⟩
 
+theorem Store.Extends.programs {s s' : Store} (h : s.Extends s') :
+    s'.caches.programs = s.caches.programs := h.2.2.2.2.2
+
 /-- The handle `t` of the store `s` stands for the term `x`. -/
 abbrev Store.Rep (s : Store) (t : Term) (x : Eo.Term) : Prop :=
   pathos_compiled_checker.Rep s.nodes.val t.val x

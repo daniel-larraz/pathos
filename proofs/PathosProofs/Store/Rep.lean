@@ -2,7 +2,7 @@ module
 public import MiniChecker
 public import CpcMini.Logos
 public import PathosProofs.Util
-public import PathosProofs.Store.Ops
+public import PathosProofs.Store.Intern
 
 /-!
 # Handles and logos's terms

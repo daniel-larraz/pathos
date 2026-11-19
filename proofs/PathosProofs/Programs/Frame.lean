@@ -23,8 +23,9 @@ open Aeneas Aeneas.Std Result
 theorem Store.Inv.congr {s s' : Store} (h : s.Inv) (hn : s'.nodes = s.nodes)
     (hh : s'.hashes = s.hashes) (hs : s'.slots = s.slots) (hc : s'.caches = s.caches) :
     s'.Inv := by
-  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩⟩ := h
-  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩⟩ <;> simp only [hn, hh, hs, hc] <;> assumption
+  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩, ⟨c1, c2⟩⟩ := h
+  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, ⟨?_, ?_⟩⟩ <;>
+    simp only [hn, hh, hs, hc] <;> assumption
 
 /-- `enter` counts a call: the terms are as they were, the depth one more. -/
 theorem Store.enter_spec (s : Store) :

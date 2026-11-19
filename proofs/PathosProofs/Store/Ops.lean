@@ -1,7 +1,10 @@
 module
 public import MiniChecker
 public import PathosProofs.Util
+public import CpcMini.Logos
 public import PathosProofs.Store.Intern
+public import PathosProofs.Store.Rep
+public import PathosProofs.Store.Cache
 
 /-!
 # The store's operations on terms
@@ -97,10 +100,36 @@ structure Store.Wf (s : Store) : Prop where
   stuck0 : s.nodes.val[0]! = TermData.Stuck
   wf : ∀ t : Nat, t < s.nodes.length → (s.nodes.val[t]!).Wf (s.nodes.val.take t)
 
+/-- What an entry of the cache of program results says, in a store whose
+terms are `nodes`: its result is a handle of the program's result on what
+its arguments stand for.
+
+Only the program of the pilot that is cached has a clause here, `$mk_trans`
+(number 58 in `caches.tsv`); an entry of any other program says nothing.
+For the whole checker this is a table from the number of a program to
+what it computes. -/
+def EntryOK (nodes : List TermData) (e : cache.ProgramEntry) : Prop :=
+  e.program = 58#u32 →
+    ∃ (a0 a1 a2 : Term) (x y z : Eo.Term), e.args.val = [a0, a1, a2] ∧
+      Rep nodes a0.val x ∧ Rep nodes a1.val y ∧ Rep nodes a2.val z ∧
+      Rep nodes e.result.val (Eo.__mk_trans x y z)
+
+theorem EntryOK.mono {nodes nodes' : List TermData} {e : cache.ProgramEntry}
+    (hpre : nodes <+: nodes') (h : EntryOK nodes e) : EntryOK nodes' e := by
+  intro hp
+  obtain ⟨a0, a1, a2, x, y, z, hargs, h0, h1, h2, hr⟩ := h hp
+  exact ⟨a0, a1, a2, x, y, z, hargs, h0.mono hpre, h1.mono hpre, h2.mono hpre, hr.mono hpre⟩
+
+/-- The cache of program results is well formed and every entry is right. -/
+structure CacheInv (s : Store) : Prop where
+  wf : CacheWf s.caches.programs
+  entries : ∀ e ∈ s.caches.programs.entries.val, EntryOK s.nodes.val e
+
 /-- The invariant of the store. -/
 structure Store.Inv (s : Store) : Prop where
   table : StoreInv s
   terms : s.Wf
+  cache : CacheInv s
 
 theorem Store.Wf.data {s : Store} (h : s.Wf) (t : Nat) (ht : t < s.nodes.length) :
     (s.nodes.val[t]!).Wf s.nodes.val :=
@@ -122,7 +151,14 @@ theorem Store.intern_inv (s : Store) (data : TermData) (hinv : s.Inv)
   | Ok t =>
     simp only at hr ⊢
     obtain ⟨hlt, hdata, hshape⟩ := hr
-    refine ⟨⟨htable, ?_⟩, hext, hlt, hdata⟩
+    have hcache : CacheInv s' := by
+      have hp := hext.2.2.2.2.2
+      constructor
+      · rw [hp]; exact hinv.cache.wf
+      · intro e he
+        rw [hp] at he
+        exact (hinv.cache.entries e he).mono hext.1
+    refine ⟨⟨htable, ?_, hcache⟩, hext, hlt, hdata⟩
     rcases hshape with hsame | happ
     · constructor
       · simp only [alloc.vec.Vec.length, hsame]; exact hinv.terms.nonempty
