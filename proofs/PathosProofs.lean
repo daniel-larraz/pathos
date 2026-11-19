@@ -16,3 +16,4 @@ public import PathosProofs.Store.Cache
 public import PathosProofs.Store.CacheOps
 public import PathosProofs.Programs.Contra
 public import PathosProofs.Programs.Trans
+public import PathosProofs.Programs.Closed
