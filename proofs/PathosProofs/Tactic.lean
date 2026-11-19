@@ -3,6 +3,7 @@ public import MiniChecker
 public import CpcMini.Logos
 public import PathosProofs.Util
 public import PathosProofs.Store.Sem
+public import PathosProofs.Programs.Frame
 
 /-!
 # The step after a store operation
@@ -64,5 +65,57 @@ macro_rules
       clear $hg))
   | `(tactic| store_step with $e as ⟨$v, $s', $hinv, $h⟩ growing $hG) =>
     `(tactic| store_step with $e as ⟨$v, $s', $hinv, $h⟩ growing $hG carrying)
+
+/-- Ends a case at a place where its pattern does not match: the store has
+the invariant `hinv` and has grown as `hG` says, and the term is not of the
+pattern's shape. The last is found from the hypotheses in sight: what
+`unapply` said of a term that is not an application, what a comparison of
+two handles said of the terms they stand for. -/
+syntax "no_match " ident ppSpace ident : tactic
+macro_rules
+  | `(tactic| no_match $hinv $hG) =>
+    `(tactic| (
+      simp only [Std.bind_ok, uncurry_apply_pair, ite_true, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨$hinv, $hG, ?_⟩
+      first
+        | (intros; simp_all; done)
+        | (intros; intro heq; simp_all; done)
+        | (intros; intro heq; injections; simp_all; done)
+        | (intros; intro heq; injections; subst_vars; simp_all)))
+
+/-- `pat_unapply h as ⟨f, a, x, y, hf, ha⟩ else hinv hG`: the pattern takes
+the term that `h` speaks of apart as an application. Goes on with the two
+handles `f` and `a`, the two terms `x` and `y`, and what the handles stand
+for; where the term is not an application the case ends (`no_match`). -/
+syntax "pat_unapply " term " as " "⟨" ident ", " ident ", " ident ", " ident ", " ident ", "
+  ident "⟩" " else " ident ppSpace ident : tactic
+macro_rules
+  | `(tactic| pat_unapply $h as ⟨$f, $a, $x, $y, $hf, $ha⟩ else $hinv $hG) =>
+    `(tactic| (
+      rcases Store.Rep.unapply $h with ⟨$f, $a, $x, $y, heq, $hf, $ha, hu⟩ | ⟨hne, hu⟩
+      case inr => (rw [hu]; no_match $hinv $hG)
+      subst heq
+      rw [hu]
+      simp only [Std.bind_ok, uncurry_apply_pair]
+      clear hu))
+
+/-- `pat_same hv : a = b from hiff else hinv hG`: the generated
+`if a != b` on two handles, where `hiff` says that `a = b` exactly when the
+two terms are equal. Goes on with `hv : a = b`; where they differ the case
+ends. -/
+syntax "pat_same " ident " : " term:51 " = " term:51 " from " term " else " ident ppSpace ident :
+  tactic
+macro_rules
+  | `(tactic| pat_same $hv : $a = $b from $hiff else $hinv $hG) =>
+    `(tactic| (
+      rw [Term.ne_eq]
+      simp only [Std.bind_ok]
+      rcases Decidable.em ($a = $b) with $hv | $hv
+      case inr => (
+        rw [show decide ($a ≠ $b) = true from by simpa using $hv]
+        have hiff := $hiff
+        no_match $hinv $hG)
+      rw [show decide ($a ≠ $b) = false from by simp [$hv:ident]]
+      simp only [Bool.false_eq_true, ite_false]))
 
 end pathos_compiled_checker
