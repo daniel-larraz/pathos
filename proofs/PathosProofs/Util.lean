@@ -33,6 +33,34 @@ theorem dspec_admissible4 {α β γ δ ε} (a : α) (b : β) (c : γ) (d : δ) (
 theorem getElem!_eq {α} [Inhabited α] (l : List α) (i : Nat) (h : i < l.length) :
     l[i]! = l[i] := by simp [h]
 
+/-- A pure value in a computation, where Aeneas's own lemmas do not know
+the function that made it. -/
+@[step]
+theorem lift_spec {α} (x : α) : lift x ⦃ y => y = x ⦄ := by
+  simp [lift]
+
+/-- What a partial specification says of a value the computation returns. -/
+theorem dspec_of_ok {α} {m : Result α} {p : WP.Post α} {r : α}
+    (h : WP.dspec m p) (hm : m = ok r) : p r := by
+  subst hm; simpa using h
+
+/-- A computation that is specified returns the value it returns. -/
+theorem dspec_self {α} {m : Result α} {p : WP.Post α} (h : WP.dspec m p) :
+    WP.dspec m (fun r => m = ok r ∧ p r) := by
+  cases hm : m.match with
+  | ok a =>
+    have := Result.match.isOk.mp hm
+    subst this
+    simpa using h
+  | vis e k =>
+    have := Result.match.isVis.mp hm
+    subst this
+    simp at h
+  | div =>
+    have := Result.match.isDiv.mp hm
+    subst this
+    simp
+
 /-- Proves that a statement `∀ args, hypotheses → f args ⦃ post ⦄div` about
 `f` is admissible. -/
 macro "prove_adm" : tactic =>
