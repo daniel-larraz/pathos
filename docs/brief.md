@@ -681,6 +681,69 @@ intended; everything between gates is not.
     `cd5face` rows are back to one convention, and any fix comes with a
     test. CI is green. The reviewer pushes and starts the runs.
 
+31. **The proof: setup and a pilot.** On `main`, branched from it (`m31`).
+    The goal is a theorem that carries logos's soundness over to `pathos`:
+    if the Lean that Aeneas writes for the compiled checker returns
+    `Correct` on handles that denote `assums` and `cmds`, then
+    `logos_verdict assums cmds = Verdict.correct`, so that
+    `correct___logos_verdict` (logos, `Cpc/ApiCorrect.lean`) gives that the
+    assumptions are unsatisfiable. Like logos's theorem, it leaves the
+    reading of the proof (here `crates/pathos`'s front end and adapter)
+    unproved. This milestone builds what that proof needs and proves a few
+    pieces of it, to find out what the whole costs. Decisions (Daniel,
+    2026-11-18): the proofs live in pathos; logos is changed only in our
+    fork, `daniel-larraz/logos`; the pilot is on `CpcMini` if that can be
+    done (first step).
+
+    - **CpcMini or CPC.** `CpcMini` is logos's cut-down calculus with its
+      own correctness proof (`CpcMini/Proofs/Checker.lean`), much faster
+      to build than `Cpc`. Find out whether its Eunoia signature exists
+      (in logos, its history or its scripts) so that `rust-meta` can
+      compile a checker for it, and whether that checker and logos's
+      `CpcMini` functions correspond the way CPC's do (`functions.tsv`).
+      Report before going on; if it cannot be done, the pilot is on CPC.
+    - **One Lean project.** `proofs/` in pathos, a Lake project of its own,
+      outside the Rust workspace and CI to begin with. It requires logos
+      (our fork, on a branch of its own) and Aeneas's Lean library at one
+      Lean version: move both to `v4.36.0` (the stable release; Aeneas's
+      library is at `v4.36.0-rc2` with its Mathlib), and say what had to
+      change in each and how long logos's verification build takes there.
+      Pin every commit (logos, Aeneas, Charon, Mathlib) as `difftest.env`
+      pins Ethos.
+    - **Stitching.** A script that makes one development of the per-module
+      Lean files of `scripts/aeneas-translate`: the runtime once, each
+      module importing the earlier ones in place of their axioms. It
+      builds, under the memory cap.
+    - **What is trusted, stated.** Lean axioms for the functions of
+      `num.rs` that say what each computes on `Int` and `Rat` (Mathlib or
+      core), and for the four functions of `front.rs`. One file, listed in
+      the report: it is what the theorem would trust beyond logos.
+    - **The store.** A relation from handles to logos's `Term`s (and native
+      fields), and its invariant: the table of terms finds a term by its
+      data, so equal terms have equal handles and equal handles stand for
+      equal terms. Prove that `construct`/`apply`/interning preserve it.
+      Both directions matter: the generated code chooses a case by
+      comparing handles.
+    - **A few programs.** Prove, against logos's definitions, about four
+      generated programs of different shapes: one not recursive; one
+      recursive and cached (the cache's invariant: an entry is the
+      program's result); one compiled to a loop (`-loops-to-rec`); one with
+      a nonlinear pattern. Not the whole checker.
+    - **The report.** How mechanical the program proofs are, and whether
+      the generator could write each function's lemma and its proof (the
+      way it writes `functions.tsv`); what is still missing for the
+      theorem above; an estimate of the work for the whole checker.
+
+    Out of scope: the whole checker; changes to the Rust code beyond what
+    a proof shows to be needed (any goes through the generator or runtime
+    on `m28-aeneas`'s successor, as in milestone 28); changes upstream to
+    logos or Aeneas (the reviewer offers them); a proof of the front end.
+
+    The gate: `proofs/` builds from a clean checkout with the pinned
+    versions; the stitched development builds; the store invariant and the
+    pilot programs are proved with no `sorry` and no axioms beyond the
+    trusted file; the report. The reviewer pushes and starts the runs.
+
 At every gate, also run `cargo test` and `cargo clippy --all-targets` and
 report their results.
 
