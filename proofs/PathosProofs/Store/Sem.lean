@@ -96,6 +96,10 @@ theorem Store.Rep.unapply {s : Store} {t : Term} {x : Eo.Term} (h : s.Rep t x) :
   | apply _ f a x1 x2 _ hd hf ha => left; exact ⟨f, a, x1, x2, rfl, hf, ha, by simp [hd]⟩
   | boolean _ _ _ hd => right; simp [hd]
 
+/-- The first handle stands for the stuck term. -/
+theorem Store.Inv.rep_stuck {s : Store} (hinv : s.Inv) : s.Rep 0#u32 Eo.Term.Stuck :=
+  Rep.stuck 0 hinv.terms.nonempty hinv.terms.stuck0
+
 /-- The two terms of an application that a handle stands for are not
 stuck. -/
 theorem Store.Rep.apply_ne_stuck {s : Store} {t : Term} {x y : Eo.Term} (hinv : s.Inv)

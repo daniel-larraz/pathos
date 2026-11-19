@@ -27,7 +27,7 @@ namespace pathos_compiled_checker
 open Aeneas Aeneas.Std Result
 
 /-- The constructor of the checker for an operator of the signature. -/
-def uopCtor : Eo.UserOp → schema.Constructor
+@[reducible] def uopCtor : Eo.UserOp → schema.Constructor
   | Eo.UserOp.Int => schema.Constructor.eo_Int
   | Eo.UserOp.Real => schema.Constructor.eo_Real
   | Eo.UserOp.BitVec => schema.Constructor.eo_BitVec

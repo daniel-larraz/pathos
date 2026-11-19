@@ -10,3 +10,5 @@ public import PathosProofs.Store.Ops
 public import PathosProofs.Store.Rep
 public import PathosProofs.Store.New
 public import PathosProofs.Store.Sem
+public import PathosProofs.Programs.Frame
+public import PathosProofs.Programs.Symm
