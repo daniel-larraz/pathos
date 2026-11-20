@@ -9,6 +9,7 @@ public import PathosProofs.Runtime.Embed
 public import PathosProofs.Runtime.Ops
 public import MiniCtors
 public import PathosProofs.Runtime.Natives
+public import PathosProofs.Runtime.Strings
 
 /-!
 # The tactics of the generated proofs

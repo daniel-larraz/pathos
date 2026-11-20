@@ -16,7 +16,7 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | --- | --- |
 | `generated/cpcmini-checker/` | The checker for **CpcMini**, logos's calculus of five rules (`symm contra refl scope trans`), compiled by `rust-meta` as the CPC checker is. The pilot is on it. `scripts/generate-mini` writes it. |
 | `proofs/MiniChecker/` | The Lean that Charon and Aeneas write for that crate, stitched: the runtime once (`Runtime.lean`, 13,531 lines) and the generated functions (`Part0.lean`, 15,937 lines). Generated, never edited. |
-| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,594 lines. |
+| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,892 lines. |
 | `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCtors.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what `construct` and `destruct` do with each data constructor, what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 2,655 theorems, are **11**:
+  This is the trust. In use today, by 2,746 theorems, are **11**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
   `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
@@ -482,6 +482,7 @@ then `a` stuck; both give the stuck term, and `requires_ite` (in
 | `Runtime/Ops.lean` | 249 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
 | `Runtime/Node.lean` | 79 | `construct` and `destruct` of any data constructor, over trees. |
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
+| `Runtime/Strings.lean` | 297 | `not`, `string_valid` and `string_prefix_eq`: the two string operations are loops over the code points, proved by induction over the loop; a string the store can hold has code points below 2^32 (the embedding's `okStr`), so its code points are its characters. |
 
 No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,

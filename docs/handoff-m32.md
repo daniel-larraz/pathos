@@ -156,6 +156,15 @@ constructors and about 20 types. The plan:
   proofs yet (lemma C)" (it was writing a lemma C that does not elaborate),
   and that is the next reason of all of them but `$smtx_decl_inhabited`
   (a call). `$smtx_inhabited_type`'s loop over groups is still not done.
+- Step 5 (ii), strings and `not`: done (2026-11-24).
+  `Runtime/Strings.lean`: `Store.native_spec_not`, `_string_valid`,
+  `_string_prefix_eq`; the two loops by `fixpoint_induct` (invariants:
+  "the code points from `i` on are below 196608", "the rest of x is a
+  prefix of the rest of y"), and the bridge from the stored `u32` code
+  points to logos's `Nat` characters through `okStr`. The three programs
+  now stop at: the native string constant `"@"`
+  (`$eo_to_smt_reserved_datatype_name`), `Valid` (`$smtx_decl_wf_rec`),
+  `zleq` (`$smtx_typeof`).
 - Lean macro lessons from step 4: a syntax atom such as `" none "` becomes
   a keyword everywhere (it broke `| Ok none =>` in every generated file);
   `obtain ⟨h⟩ := e` on an equation case-splits the equation, so a single
