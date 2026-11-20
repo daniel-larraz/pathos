@@ -91,12 +91,21 @@ together they stop 35 programs:
 1. **`HasStuck`** (the value a body gives where no case applies): there are
    instances for terms, proofs and native Booleans (`Runtime/Embed.lean`).
    Checker states, datatype declarations and SMT types have none.
-   **Caution for checker states**: the Rust body gives the stuck *term*
-   (handle 0) where no case applies, but logos's `CState.Stuck` is a node
-   (`$emb_s.Stuck`). The programs met so far have a last case for every
-   argument, so the path is unreachable there; but `HasStuck CState :=
-   CState.Stuck` would not be true of the Rust in general. Look at what
-   the body does for each such type before adding an instance.
+   **What the bodies do (checked 2026-11-20, report in
+   `~/Projects/cvc5/pathos-m28/work/stuck-report.md`)**: logos and the
+   Rust test arguments for stuck under the same rule (only in programs
+   that return a term, only term arguments), and `CState.Stuck` is a node
+   on both sides, built and matched in the same places. The Rust differs
+   only where no case applies (it gives handle 0), and no logos value
+   reaches that path: of the 23, 13 end in a case that matches anything
+   and 10 have one case per constructor (exhaustive; the full CPC has 24
+   such programs, all exhaustive). Most of these types have no stuck value
+   in logos (the datatype types, `CCmdList`, `CArgList`, …; `SmtType.None`
+   is an ordinary value), so a stuck value per type is not the way. The
+   proposal being prototyped: lemma C takes `default` (every logos type is
+   `Inhabited`) where no case applies, and `body_stuck` closes by
+   `exfalso`, after a case split on the argument for the exhaustive
+   programs. No Rust change. Of the 23, 18 would then stop at `Valid`.
 2. **`Valid` for the other types, and folding `emb` into it.** `Valid` has
    instances for terms (`TermValid`: no application of or to the stuck
    term), proofs, `CState`, `CStateObj` (both `True`, and they should say
