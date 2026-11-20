@@ -21,6 +21,7 @@ public import PathosProofs.Runtime.Natives
 public import PathosProofs.Runtime.Strings
 public import PathosProofs.Runtime.Literals
 public import PathosProofs.Runtime.Nats
+public import PathosProofs.Runtime.Numbers
 public import PathosProofs.Tactic
 public import PathosProofs.Generated
 public import MiniProofs

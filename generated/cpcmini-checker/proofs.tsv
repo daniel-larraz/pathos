@@ -40,13 +40,13 @@ $eo_push_proven_check	generated
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	none	compiled to a function of the runtime
-$eo_to_smt	none	case 1 has the constructor $emb_Numeral in a pattern, which is not stored as a node
+$eo_to_smt	none	case 3 has the constructor $emb_String in a pattern, which is not stored as a node
 $eo_to_smt_datatype	none	it calls $eo_to_smt_datatype_cons, which has no proof
 $eo_to_smt_datatype_cons	none	it calls $eo_to_smt_type, which has no proof
 $eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
 $eo_to_smt_reserved_datatype_name	none	case 0 has the native operation "@"
-$eo_to_smt_type	none	case 8 has the constructor $emb_Numeral in a pattern, which is not stored as a node
-$eo_typeof	none	case 1 has the constructor $emb_Numeral in a pattern, which is not stored as a node
+$eo_to_smt_type	none	case 8 has the native operation zleq
+$eo_typeof	none	case 3 has the constructor $emb_String in a pattern, which is not stored as a node
 $eo_typeof_=	generated	
 $eo_typeof_BitVec	generated	
 $eo_typeof_Seq	generated	
