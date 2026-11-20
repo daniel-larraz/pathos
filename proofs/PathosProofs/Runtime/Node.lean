@@ -105,4 +105,38 @@ theorem Store.is_node_holds {s : Store} {t : Term} {x : Tree} (c : schema.Constr
   | userop _ _ _ hd => exact ⟨false, by simp [hd], by simp⟩
   | apply _ _ _ _ _ _ hd _ _ => exact ⟨false, by simp [hd], by simp⟩
 
+/-- `construct` of the stuck term (`$emb_Stuck`, without fields) gives the
+handle of the stuck term, 0, and leaves the store as it was. -/
+theorem Store.construct_stuck_spec (s : Store) (args : Slice Term)
+    (hargs : args.val = []) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo__24emb_5fStuck args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t Eo.Term.Stuck
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold Store.construct
+  obtain ⟨n, hn⟩ := schema.Constructor.arity_ok schema.Constructor.eo__24emb_5fStuck
+  rw [hn]
+  simp only [Std.bind_ok]
+  by_cases harity : (n != args.len) = true
+  · rw [ite_eq_left_of_eq_true _ _ (eq_true harity)]
+    simp only [WP.dspec_ok, WP.uncurry'_pair]
+    exact ⟨hinv, Store.Grows.refl s, trivial⟩
+  · rw [ite_eq_right_of_eq_false _ _ (eq_false harity)]
+    step with Store.check_handles_loop_spec as ⟨r, hr⟩
+    cases r with
+    | Err e =>
+      simp [core.result.Result.Insts.CoreOpsTry.branch,
+        core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]
+      exact ⟨hinv, Store.Grows.refl s⟩
+    | Ok u =>
+      simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+      have hemb : schema.Constructor.embedding schema.Constructor.eo__24emb_5fStuck =
+          ok Embedding.Stuck := rfl
+      rw [hemb]
+      have hlen : args.length = 0 := by simp [Slice.length, hargs]
+      simp only [Std.bind_ok, core.slice.Slice.is_empty, hlen, decide_true, ite_true,
+        Store.stuck_eq, WP.dspec_ok, WP.uncurry'_pair]
+      exact ⟨hinv, Store.Grows.refl s, Store.Inv.rep_stuck hinv⟩
+
 end pathos_compiled_checker

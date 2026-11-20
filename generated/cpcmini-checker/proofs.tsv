@@ -1,8 +1,8 @@
 source	proof	why
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_assume_list, which has no proof
-$eo_cmd_step_pop_proven	none	case 1 has the constructor $emb_Stuck, which is not stored as a node (no lemma yet)
-$eo_cmd_step_proven	none	case 4 has the constructor $emb_Stuck, which is not stored as a node (no lemma yet)
+$eo_cmd_step_pop_proven	none	it calls $eo_prog_scope, which has no proof
+$eo_cmd_step_proven	none	it calls $eo_mk_premise_list, which has no proof
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_dd_lookup	generated	
