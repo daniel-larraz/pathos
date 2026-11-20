@@ -15,12 +15,12 @@ subDir = "backends/lean"
 
 [[require]]
 name = "LogosVerification"
-git = "https://github.com/daniel-larraz/logos"
-rev = "cf18742973861b3718d04c5f25775448098ff474"
+git = "https://github.com/cvc5/logos"
+rev = "a9944ea7dcee950feb5e0d9b6271e83b421d206e"
 subDir = "verification"
 
 # Mathlib comes last, as Lake asks: logos and Aeneas's library each name a
-# Mathlib of their own (v4.34.0, v4.36.0-rc2) and bring its dependencies,
+# Mathlib of their own (v4.36.0, v4.36.0-rc2) and bring its dependencies,
 # and the last requirement is the one whose versions are used.
 [[require]]
 name = "mathlib"
