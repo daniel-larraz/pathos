@@ -112,10 +112,70 @@ theorem EntryOK.mono {nodes nodes' : List TermData} {e : cache.ProgramEntry}
     (hpre : nodes <+: nodes') (h : EntryOK nodes e) : EntryOK nodes' e :=
   ProgramSem.mono hpre h
 
-/-- The cache of program results is well formed and every entry is right. -/
+/-- The type caches stand in the table `ProgramSem` as programs of one
+argument, under ids that no `u32` program id can be: `$eo_typeof`'s
+(`TypeCacheKind::Eunoia`) is `2^32`, `$smtx_typeof`'s (`Smt`) `2^32 + 1`.
+The generated `MiniCacheSem` uses the same numbers. -/
+def typeSemId : cache.TypeCacheKind → Nat
+  | cache.TypeCacheKind.Eunoia => 4294967296
+  | cache.TypeCacheKind.Smt => 4294967297
+
+/-- The slot of a row of the type cache for one kind. -/
+def cache.TypeEntry.slot (e : cache.TypeEntry) : cache.TypeCacheKind → Option Term
+  | cache.TypeCacheKind.Eunoia => e.eo
+  | cache.TypeCacheKind.Smt => e.smt
+
+/-- What the type cache says, in a store whose terms are `nodes`: the row
+of a handle holds, in each slot that is filled, a handle of that program's
+result on what the handle stands for. -/
+def TypesOK (nodes : List TermData) (types : List cache.TypeEntry) : Prop :=
+  ∀ (t : Term) (e : cache.TypeEntry), types[(t.val : Nat)]? = some e →
+    ∀ k r, e.slot k = some r → ProgramSem nodes (typeSemId k) [t] r
+
+theorem TypesOK.mono {nodes nodes' : List TermData} {types : List cache.TypeEntry}
+    (hpre : nodes <+: nodes') (h : TypesOK nodes types) : TypesOK nodes' types :=
+  fun t e he k r hr => ProgramSem.mono hpre (h t e he k r hr)
+
+/-- The number of filled slots of the type cache. -/
+def typesFilled (types : List cache.TypeEntry) : Nat :=
+  (types.map (fun e => (if e.eo.isSome then 1 else 0) + (if e.smt.isSome then 1 else 0))).sum
+
+theorem typesFilled_le (types : List cache.TypeEntry) : typesFilled types ≤ 2 * types.length := by
+  unfold typesFilled
+  induction types with
+  | nil => simp
+  | cons e es ih =>
+    simp only [List.map_cons, List.sum_cons, List.length_cons]
+    split <;> split <;> omega
+
+theorem typesFilled_extend (a : List cache.TypeEntry) (k : Nat) :
+    typesFilled (a ++ List.replicate k { eo := none, smt := none }) = typesFilled a := by
+  unfold typesFilled
+  simp [List.map_replicate, List.sum_replicate]
+
+theorem TypesOK.extend {nodes : List TermData} {a b : cache.Caches}
+    (hx : TypesExtend a b) (h : TypesOK nodes a.types.val) : TypesOK nodes b.types.val := by
+  obtain ⟨⟨k, hk⟩, _⟩ := hx
+  intro t e he kk r hr
+  rw [hk] at he
+  by_cases ht : (t.val : Nat) < a.types.val.length
+  · rw [List.getElem?_append_left ht] at he
+    exact h t e he kk r hr
+  · rw [List.getElem?_append_right (by omega)] at he
+    have := List.mem_of_getElem? he
+    simp only [List.mem_replicate] at this
+    rw [this.2] at hr
+    cases kk <;> simp [cache.TypeEntry.slot] at hr
+
+/-- The cache of program results is well formed and every entry is right,
+and so is every filled slot of the type cache. -/
 structure CacheInv (s : Store) : Prop where
   wf : CacheWf s.caches.programs
   entries : ∀ e ∈ s.caches.programs.entries.val, EntryOK s.nodes.val e
+  types : TypesOK s.nodes.val s.caches.types.val
+  /-- The count of entries that `type_insert` keeps is at most the number
+  of filled slots, so it never overflows. -/
+  count : s.caches.stats.type_entries.val ≤ typesFilled s.caches.types.val
 
 /-- The invariant of the store. -/
 structure Store.Inv (s : Store) : Prop where
@@ -144,12 +204,15 @@ theorem Store.intern_inv (s : Store) (data : TermData) (hinv : s.Inv)
     simp only at hr ⊢
     obtain ⟨hlt, hdata, hshape⟩ := hr
     have hcache : CacheInv s' := by
-      have hp := hext.2.2.2.2.2
+      have hp := hext.2.2.2.2.2.1
       constructor
       · rw [hp]; exact hinv.cache.wf
       · intro e he
         rw [hp] at he
         exact (hinv.cache.entries e he).mono hext.1
+      · exact (hinv.cache.types.mono hext.1).extend hext.2.2.2.2.2.2
+      · obtain ⟨⟨k, hk⟩, hst⟩ := hext.2.2.2.2.2.2
+        rw [hst, hk, typesFilled_extend]; exact hinv.cache.count
     refine ⟨⟨htable, ?_, hcache⟩, hext, hlt, hdata⟩
     rcases hshape with hsame | happ
     · constructor

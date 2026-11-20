@@ -19,12 +19,13 @@ theorem table.slots_for_one : table.slots_for 1#usize ⦃ r => r.val = 16 ⦄div
 
 theorem cache.Caches.new_spec (n : Std.Usize) :
     cache.Caches.new n ⦃ c =>
-      c.types.length = 1 ∧ c.programs.entries.val = [] ∧ c.programs.slots.val = [] ⦄ := by
+      c.types.val = [{ eo := none, smt := none }] ∧ c.programs.entries.val = [] ∧
+        c.programs.slots.val = [] ∧ c.stats.type_entries.val = 0 ⦄ := by
   unfold cache.Caches.new cache.TypeEntry.empty cache.ProgramCache.new
     cache.CacheStats.Insts.CoreDefaultDefault.default
   step*
   subst y_post
-  exact ⟨rfl, rfl, rfl⟩
+  exact ⟨rfl, rfl, rfl, rfl⟩
 
 /-- A new store has the invariant. -/
 theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄div := by
@@ -36,7 +37,7 @@ theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄di
   step with table.slots_for_one as ⟨i, hi⟩
   step as ⟨v, hv, hvlen⟩
   step as ⟨i1, hi1⟩
-  step with cache.Caches.new_spec as ⟨c, hc, hce, hcs⟩
+  step with cache.Caches.new_spec as ⟨c, hc, hce, hcs, hcst⟩
   step with Store.place_spec as ⟨s, z, x, hx, hz, hfree, hpath, hslots, h1, h2, h3, h4, h5, h6, h7⟩
   have hnodes : s.nodes.val = [TermData.Stuck] := by rw [h1, hy]; rfl
   have hhashes : s.hashes.val = [hash] := by rw [h2, hy1]; rfl
@@ -49,7 +50,7 @@ theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄di
     · omega
     · simp [alloc.vec.Vec.length, hnodes, hhashes]
     · rw [hnl]; scalar_tac
-    · rw [h3, hc, hnl]
+    · rw [h3, hnl]; simp [alloc.vec.Vec.length, hc]
     · rw [hnl, hslots, hhashes]
       have hp0 : Placed [hash] v.val 0 := by rw [hv]; exact Placed.empty _ _
       exact hp0.set (by simpa using hx) hz hfree (by simpa using hpath)
@@ -77,5 +78,12 @@ theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄di
     · intro e he
       rw [h3, hce] at he
       simp at he
+    · intro t e he k r hr
+      rw [h3, hc] at he
+      have := List.mem_of_getElem? he
+      simp only [List.mem_singleton] at this
+      subst this
+      cases k <;> simp [cache.TypeEntry.slot] at hr
+    · rw [h3]; simp [hcst]
 
 end pathos_compiled_checker

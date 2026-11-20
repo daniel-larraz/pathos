@@ -988,7 +988,7 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	the cache of types
+$smtx_typeof	none	it calls $smtx_typeof_bv_op_2, which has no proof
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_arith_overload_op_1	generated	

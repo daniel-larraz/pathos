@@ -333,4 +333,129 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
             exact ⟨hinv7, ⟨hnodes5.trans hg7.nodes, by rw [hg7.limits, hl5'],
               by rw [hg7.depth, hd5'], le_trans hg7.budget hb5⟩, hpost s5 s7 value hn7 hval5⟩
 
+/-- A program whose results are kept in the type cache (`$eo_typeof`,
+`$smtx_typeof`): as `framed_cached`, with the row of its one argument in
+place of an entry of the cache of program results. -/
+theorem Store.framed_type_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remaining ≤ n)
+    (h64 : Platform64) (k : cache.TypeCacheKind) (a0 : Term)
+    (body : Store → Result ((core.result.Result Term CheckError) × Store))
+    (post : Store → Term → Prop)
+    (hpost : ∀ (s1 s2 : Store) (a : Term), s2.nodes = s1.nodes → post s1 a → post s2 a)
+    (hget : ∀ (s1 : Store) (res : Term), s1.nodes = s.nodes →
+      ProgramSem s1.nodes.val (typeSemId k) [a0] res → post s1 res)
+    (hput : ∀ (s1 : Store) (res : Term), s.nodes.val <+: s1.nodes.val → post s1 res →
+      ProgramSem s1.nodes.val (typeSemId k) [a0] res)
+    (hbody : ∀ (s1 : Store) (m : Nat), s1.Inv → s1.nodes = s.nodes → m < n →
+      s1.remaining ≤ m →
+      body s1 ⦃ r s2 => s2.Inv ∧ s1.Grows s2 ∧
+        match r with
+        | core.result.Result.Ok a => post s2 a
+        | core.result.Result.Err _ => True ⦄div) :
+    (do
+      let (r, s1) ← Store.enter s
+      match r with
+      | core.result.Result.Ok _ =>
+        let t ← Array.index_usize (Array.make 1#usize [ a0 ]) 0#usize
+        let (r1, s2) ← Store.cached_type s1 k t
+        match r1 with
+        | core.result.Result.Ok o =>
+          match o with
+          | none =>
+            let (result, s3) ← body s2
+            let s4 ← Store.leave s3
+            match result with
+            | core.result.Result.Ok value =>
+              let (r2, s5) ← Store.cache_type s4 k t value
+              match r2 with
+              | core.result.Result.Ok _ => ok (result, s5)
+              | core.result.Result.Err e => ok (core.result.Result.Err e, s5)
+            | core.result.Result.Err _ => ok (result, s4)
+          | some value =>
+            let s3 ← Store.leave s2
+            ok (core.result.Result.Ok value, s3)
+        | core.result.Result.Err error =>
+          let s3 ← Store.leave s2
+          ok (core.result.Result.Err error, s3)
+      | core.result.Result.Err e => ok (core.result.Result.Err e, s1)) ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok a => post s' a
+      | core.result.Result.Err _ => True ⦄div := by
+  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hl, hb, hd⟩
+  have hinv1 : s1.Inv := hinv.congr hn hh hs hc
+  cases r with
+  | Err e =>
+    simp only [WP.dspec_ok, WP.uncurry'_pair] at hd ⊢
+    exact ⟨hinv1, ⟨by rw [hn], hl, hd, hb⟩, trivial⟩
+  | Ok u =>
+    simp only at hd ⊢
+    obtain ⟨hd, hlim⟩ := hd
+    have hrem1 : s1.remaining ≤ n - 1 := by
+      unfold Store.remaining at hrem ⊢; rw [hl, hd]; omega
+    have hn0 : n - 1 < n := by unfold Store.remaining at hrem; omega
+    have hidx : Array.index_usize (Array.make 1#usize [ a0 ]) 0#usize = ok a0 := by
+      simp [Array.index_usize, Array.make]
+    simp only [hidx, Std.bind_ok]
+    step with Store.cached_type_spec s1 hinv1 k a0 as ⟨r1, s3, hinv3, hg3, hn3, hr1⟩
+    have hd3 : 0 < s3.depth.val := by rw [hg3.depth, hd]; omega
+    have hd3v : s3.depth.val = s.depth.val + 1 := by rw [hg3.depth, hd]
+    have hl3 : s3.limits = s.limits := by rw [hg3.limits, hl]
+    have hn3' : s3.nodes = s.nodes := by rw [hn3, hn]
+    have hrem3 : s3.remaining ≤ n - 1 := hg3.rem hrem1
+    cases r1 with
+    | Err error =>
+      clear hr1
+      dsimp only
+      step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
+      simp only [WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+          by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩, trivial⟩
+      exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
+    | Ok o =>
+      cases o with
+      | some value =>
+        have hsem : ProgramSem s3.nodes.val (typeSemId k) [a0] value := by
+          rw [hn3]; exact hr1
+        clear hr1
+        dsimp only
+        have hval : post s3 value := hget s3 value hn3' hsem
+        step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
+        simp only [WP.dspec_ok, WP.uncurry'_pair]
+        refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+          by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩,
+          hpost s3 s4 value hn4 hval⟩
+        exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
+      | none =>
+        clear hr1
+        simp only
+        step with hbody s3 (n - 1) hinv3 hn3' hn0 hrem3 as ⟨result, s4, hinv4, hg4, hres⟩
+        have hd4 : 0 < s4.depth.val := by rw [hg4.depth]; exact hd3
+        step with Store.leave_spec s4 hd4 as ⟨s5, hn5, hh5, hs5, hc5, hl5, hd5, hk5⟩
+        have hb5 : s5.budget ≤ s.budget := by
+          rw [Store.budget_congr hl5 hk5]; exact le_trans hg4.budget (le_trans hg3.budget hb)
+        have hinv5 : s5.Inv := hinv4.congr hn5 hh5 hs5 hc5
+        have hnodes5 : s.nodes.val <+: s5.nodes.val := by
+          rw [hn5, ← hn3']; exact hg4.nodes
+        have hl5' : s5.limits = s.limits := by rw [hl5, hg4.limits, hl3]
+        have hd5' : s5.depth = s.depth := by
+          exact u32_eq_of_val (by rw [hd5, hg4.depth, hd3v]; omega)
+        cases result with
+        | Err e =>
+          simp only [WP.dspec_ok, WP.uncurry'_pair]
+          exact ⟨hinv5, ⟨hnodes5, hl5', hd5', hb5⟩, trivial⟩
+        | Ok value =>
+          simp only at hres ⊢
+          have hval5 : post s5 value := hpost s4 s5 value hn5 hres
+          step with Store.cache_type_spec s5 hinv5 h64 k a0 value (hput s5 value hnodes5 hval5)
+            as ⟨r2, s7, hinv7, hg7, hn7⟩
+          cases r2 with
+          | Err e =>
+            simp only [WP.dspec_ok, WP.uncurry'_pair]
+            exact ⟨hinv7, ⟨hnodes5.trans hg7.nodes, by rw [hg7.limits, hl5'],
+              by rw [hg7.depth, hd5'], le_trans hg7.budget hb5⟩, trivial⟩
+          | Ok u2 =>
+            simp only [WP.dspec_ok, WP.uncurry'_pair]
+            exact ⟨hinv7, ⟨hnodes5.trans hg7.nodes, by rw [hg7.limits, hl5'],
+              by rw [hg7.depth, hd5'], le_trans hg7.budget hb5⟩, hpost s5 s7 value hn7 hval5⟩
+
 end pathos_compiled_checker

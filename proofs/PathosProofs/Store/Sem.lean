@@ -52,7 +52,7 @@ theorem Store.Extends.grows {s s' : Store} (h : s.Extends s') : s.Grows s' :=
   ⟨h.1, h.2.1, h.2.2.2.1, by unfold Store.budget; rw [h.2.1, h.2.2.1]⟩
 
 theorem Store.Extends.programs {s s' : Store} (h : s.Extends s') :
-    s'.caches.programs = s.caches.programs := h.2.2.2.2.2
+    s'.caches.programs = s.caches.programs := h.2.2.2.2.2.1
 
 /-- The handle `t` of the store `s` stands for the value `x`. The generated
 theorems are stated with it, for a value of any type: Lean finds the type

@@ -191,6 +191,19 @@ cheap so far.
   finds every entry is not proved, and not needed**: a cache that misses
   is slower, not wrong. `CacheInv`, part of the store's invariant: every
   entry is its program's result on what its arguments stand for.
+- **The type cache** (`CacheOps.lean`, `Runtime/Ops.lean`). `$eo_typeof`
+  and `$smtx_typeof` keep their results apart: a row per term, pushed
+  with the term (`push_term`), with a slot for each kind, read and written
+  by the term's handle (`cached_type`, `cache_type`); no hashing, no size
+  limit. Its meaning is the program cache's for a program of one
+  argument, so it reuses the generated table `ProgramSem`, under ids that
+  no program id can be (`typeSemId`: 2^32 and 2^32 + 1). `CacheInv`
+  gained two fields: every filled slot is right (`TypesOK`), and the count
+  of entries that `type_insert` keeps is at most the number of filled
+  slots (`count`), so its `+ 1` cannot overflow (Aeneas makes an
+  overflow a failure). `Store.Extends` says that `intern` adds only empty
+  rows and keeps the counters. The wrapper of such a program is
+  `Store.framed_type_cached`, as `framed_cached` is for the other.
 
 ### The programs (`MiniProofs.lean`, generated)
 
@@ -211,7 +224,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 5,961 theorems, are **27**:
+  This is the trust. In use today, by 6,461 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -458,11 +471,11 @@ For the full CPC it writes them too, into `generated/cpc-checker`
 checked to be what the generator writes (`scripts/generate-cpc --check`),
 but **not built**; `proofs.tsv` (452 of 1,086 marked generated) says how
 far the emitter gets.
-60 of CpcMini's 82 programs (60 of the 76 the gate counts) have one so far, the four of the pilot
+61 of CpcMini's 82 programs (61 of the 76 the gate counts) have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (6,134 lines) elaborates in 11
-seconds (2.6 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (6,829 lines) elaborates in 13
+seconds (2.7 GiB; `$smtx_typeof` adds about 2 s), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -576,7 +589,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 | `Tactic.lean` | 908 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 152 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
-| `Runtime/Ops.lean` | 336 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
+| `Runtime/Ops.lean` | 461 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body (`framed_cached`, and `framed_type_cached` for the type cache). |
 | `Runtime/Node.lean` | 143 | `construct` and `destruct` of any data constructor or variable (`$emb_Var`, which the runtime stores as a node the same way), over trees; `construct` of the stuck term (`$emb_Stuck`), which gives handle 0 (`Store.construct_stuck_spec`); `is_node`, which a function type in a pattern (`(-> T U)`, the applications `(FunType T) U`) tests its head with (`pat_is_node`). |
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
 | `Runtime/Strings.lean` | 297 | `not`, `string_valid` and `string_prefix_eq`: the two string operations are loops over the code points, proved by induction over the loop; a string the store can hold has code points below 2^32 (the embedding's `okStr`), so its code points are its characters. |
@@ -591,17 +604,14 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 60** (the reasons of `proofs.tsv`, for the other 22,
+**What limits the 61** (the reasons of `proofs.tsv`, for the other 21,
 on 2026-11-20, after the string constants): calls of programs without a
 proof (8, `$eo_invoke_cmd` among them, past `Valid` for `CCmd`); the six of the datatype operators below; a builtin operator
-(1: `eo::cons`, in `$eo_mk_premise_list`); case 8 of `$eo_typeof` (a function type in a pattern) and of
+(1: `eo::cons`, in `$eo_mk_premise_list`); case 8 of `$eo_typeof` (it builds a function type) and of
 `$eo_to_smt` (the native operation `uconst_id`), past the string and
 binary literal patterns (2); the two compiled to the runtime; two
 applications of a term that may be stuck (`$eo_prog_scope`, the first
-finding below, and `$eo_lit_type_Binary`, past `eo::len`); and the cache
-of types (`$smtx_typeof`, past `Valid` for `SmtTerm`; `$eo_typeof` will
-meet it too: the wrapper writes the cache id `type#u32`, which the
-emitter does not spell yet). The lemmas of `construct` and `destruct` are generated for
+finding below, and `$eo_lit_type_Binary`, past `eo::len`). The lemmas of `construct` and `destruct` are generated for
 every data constructor (`MiniCtors`); the literal constructors are stored
 otherwise and have none. The cache of results is stated for every
 embedded type (`MiniCacheSem`).
@@ -669,8 +679,8 @@ confined to lemma C, which Lean proves per program.
    `destruct` (literals from native fields, binaries, user operators with
    indices), the builtin operators (`lit.rs`: arithmetic, strings,
    bit-vectors, on the trusted numbers), the list operators, `state_nth`
-   with its jump pointers, term comparison and its order, the type caches
-   (`$eo_typeof`, `$smtx_typeof`), and for CPC the translation checks.
+   with its jump pointers, term comparison and its order, and for CPC the
+   translation checks. (The type cache is now proved, with `$smtx_typeof`.)
 2. **`Rep` for all of `Eo.Term`** and for the other embedded types
    (datatype declarations, the SMT terms, types and values of
    `$eo_to_smt`), with `norm` (above).

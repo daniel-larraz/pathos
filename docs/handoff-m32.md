@@ -8,12 +8,12 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **60 of CpcMini's 82 programs** have a generated proof (60 of the
+- **61 of CpcMini's 82 programs** have a generated proof (61 of the
   76 that the gate counts: the 6 datatype operators have been excluded
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 5,961 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 6,461 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
@@ -79,40 +79,38 @@ fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
 `Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (22 programs)
+## The reasons that remain (21 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
 | 8 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 1 | a builtin operator | `$eo_mk_premise_list` (`eo::cons`) |
-| 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (a function type in a pattern), `$eo_to_smt` (the native operation `uconst_id`) |
+| 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (it builds a function type), `$eo_to_smt` (the native operation `uconst_id`) |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
 | 2 | an application of a term that may be stuck | `$eo_prog_scope`, `$eo_lit_type_Binary` |
-| 1 | the cache of types (past `Valid` for `SmtTerm`) | `$smtx_typeof` |
 
 ## What's left (for Fable)
 
-60 of the 76 programs the gate counts are proved. The other 16, by what
+61 of the 76 programs the gate counts are proved. The other 15, by what
 stops them first and what it would take:
 
 **More of the same** (no decision, no trust beyond the 27):
 
 - `$eo_typeof` and `$eo_to_smt`: past cases 0–7 (string and binary
   literal patterns done, `Runtime/StringLits.lean`), both stop at case 8.
-  `$eo_typeof`'s is a function type in a pattern (`(-> T U)` as a whole
-  value, beyond the `is_node` head test the emitter has); `$eo_to_smt`'s
-  is the native operation `uconst_id` (no spec yet). Forced, case 4 of
-  both elaborates; `$eo_typeof`'s case 4 calls `$eo_lit_type_Binary`
-  (a design question, below), and `$eo_to_smt`'s lemma C needs
-  `HasStuck SmtTerm` (its default case gives an SMT term), which has no
-  instance yet. After those, `$eo_typeof` meets the cache of types.
-- `$smtx_typeof`: the cache of types. The emitter writes the cached
-  wrapper with the id `type#u32`, which is not a Lean name (seen with the
-  force patch on `$eo_typeof` and `$smtx_typeof`); it needs the type
-  cache's id spelled and its `CacheSem`, as for the program cache. Every
-  case and lemma C already elaborate when forced (11.8 s, 2.65 GiB for
-  all of MiniProofs). In the full CPC it is the 37/10/3-group loop.
+  `$eo_typeof`'s case 8 builds a function type (`FUNCTION_TYPE`, which
+  the emitter has no line for); `$eo_to_smt`'s is the native operation
+  `uconst_id` (no spec yet). Forced, case 4 of both elaborates;
+  `$eo_typeof`'s case 4 calls `$eo_lit_type_Binary` (a design question,
+  below), and `$eo_to_smt`'s lemma C needs `HasStuck SmtTerm` (its
+  default case gives an SMT term), which has no instance yet. The type
+  cache, which `$eo_typeof` keeps its results in, is done (proved with
+  `$smtx_typeof`).
+- `$smtx_typeof` is proved, with the type cache (`framed_type_cached`,
+  the `TypesOK` part of the store's invariant). In the full CPC, where it
+  is the 37/10/3-group loop, it now stops at a call of
+  `$smtx_typeof_bv_op_2`, which has no proof.
 - `$eo_is_bool_type` → `$eo_push_proven`: wait on `$eo_typeof`.
 
 **Design questions** (each needs Daniel's decision first):
@@ -194,7 +192,7 @@ values (done: proofs.md, "Literals are values").
 | --- | --- | --- | --- |
 | nat zero and succ patterns, `nat.zero` (group 3) | `native_pattern_nat_zero` (`Integer::zero`), `native_pattern_succ` (`raw_int` clone, `sgn`, `add`, `one`, `neg`) | `zero_spec`, `clone_spec`, `sgn_spec`, `add_spec`, `one_spec`, `neg_spec` | **in use**: 5 programs (`Runtime/Nats.lean`) |
 | `eo::and`/`or`/`not` (group 1) | `builtin_core And` → `builtin_literal` → `Lit::evaluate_nary`; bit-vectors through `BitVec.and` | `Integer.bitwise_*_spec`, `mod_by_pow2_spec`; `clone_spec` | **in use** for `eo::and` (`bitwise_and_spec`, `mod_by_pow2_spec`; `Runtime/Builtins.lean`): `$eo_is_closed_rec` and `$eo_is_closed` proved; `$eo_invoke_cmd` next stops at `Valid` for `CCmd`. logos's signed `BitVec.toInt`, reduced modulo `2^w`, is malachite's `and` for every width (`bv_and_toInt_emod`, proved). `eo::or` and `eo::not` are not in CpcMini; their specs stay unused. In the full CPC, `$eo_is_closed_rec` next stops at `eo::list_concat`. |
-| integer natives, `zleq`, and numeral constants (group 5) | `native_int_compare`, `native_int_binary`, `native_pow2`, `native_int_to_nat`, `native_succ`; `Integer::from(<u32>)` | `partial_cmp_spec`, `euclidean_qr_spec`, `fits_u32_spec`, `to_u32_spec`, `from_u32_spec`, `pow_spec` | **in use** (`Runtime/IntNatives.lean`); with the string constants, `$eo_to_smt_type` (through `zleq`) is proved; `$smtx_typeof` next stops at the cache of types |
+| integer natives, `zleq`, and numeral constants (group 5) | `native_int_compare`, `native_int_binary`, `native_pow2`, `native_int_to_nat`, `native_succ`; `Integer::from(<u32>)` | `partial_cmp_spec`, `euclidean_qr_spec`, `fits_u32_spec`, `to_u32_spec`, `from_u32_spec`, `pow_spec` | **in use** (`Runtime/IntNatives.lean`); with the string constants, `$eo_to_smt_type` (through `zleq`) is proved; `$smtx_typeof` is proved too (it uses `zleq`) |
 | `eo::len` (group 2) | `builtin_core` → `builtin_strict` → `builtin_literal` → `literals` → `Lit::evaluate Length`: `Integer::from(size)` / `from(len)` | `from_u32_spec`, `from_usize_spec` | **in use** (`Runtime/Builtins.lean`); no program proved: `$eo_lit_type_Binary` next stops at an application of a term that may be stuck. The line is not in an emitted proof yet (the case stops before it). |
 | numeral and rational literals in patterns and built from values (group 4) | `destruct` of a literal: `Hit::Raw` of a copy; `construct_literal` | `clone_spec`, `Rational.clone_spec` | **in use** (`Runtime/Numbers.lean`); `$eo_to_smt_type` is proved since the string constants; `$eo_to_smt` and `$eo_typeof` got past `$emb_String` (no trust, `Runtime/StringLits.lean`) and stop at `$emb_Binary` |
 
@@ -226,10 +224,8 @@ exercised, but no proved program reaches them yet:
   (`destruct_string_spec`, `construct_string_spec`): `$eo_typeof` and
   `$eo_to_smt` now stop at case 4 (`$emb_Binary`). Checked with the force
   patch on `$eo_typeof`: case 3's lines, both lemmas among them,
-  elaborate. The forced `$eo_typeof` also shows that its cached wrapper
-  writes the cache id `type#u32` ("Unknown identifier `type`"): the
-  program uses the type cache, whose id the emitter does not spell yet.
-  That will be the next thing once the cases go through.
+  elaborate. (Its cached wrapper's id, `type#u32`, is gone: the type
+  cache has its own lemma now.)
 - `not` in a generated proof: its spec compiles, but its only use comes
   after a failing call. (`string_prefix_eq` is now in a proved program,
   `$eo_to_smt_reserved_datatype_name`, behind `"@"`.)

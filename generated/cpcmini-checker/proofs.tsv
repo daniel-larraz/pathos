@@ -74,7 +74,7 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	the cache of types
+$smtx_typeof	generated	
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_dt_cons_rec	generated	
