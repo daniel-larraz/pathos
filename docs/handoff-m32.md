@@ -286,14 +286,20 @@ points at them.
 
 `~/Projects/cvc5/pathos-m28/work/cpc-proofs-measure.md` (2026-11-20): the
 full CPC's Aeneas translation works (13 parts, 12 min; it elaborates in
-7.9 min and 4 GiB), and logos's CPC Lean builds once three constructors
-of `Cpc/SmtModel.lean` are renamed (Lean 4.36 rejects them as internal
-names; logos's library build leaves that file out, but the generated
-proofs import it). What stops it: `Store/Rep.lean`, pointed at the full
+7.9 min and 4 GiB). logos's CPC Lean, as lean-meta wrote it at the
+crate's `LOGOS_REV` (`a3232131`) into a throwaway project, built only once
+three `SmtTerm` constructors of `SmtModel.lean` (`_at_purify`,
+`_at_strings_occur_index`, `_re`) were renamed: Lean 4.36 called them
+internal constructors. logos's own `Cpc/SmtModel.lean` uses the same
+names and does build under 4.36 (`Cpc.ApiCorrect` imports it, through
+`Cpc.Spec` and `Cpc.Proofs`, and was built for cvc5/logos#518), so the
+cause is in that project's setup or revision, not in logos: find it
+before stage 5 (one logos revision for the crate and the proofs is
+needed anyway). What stops it: `Store/Rep.lean`, pointed at the full
 CPC, runs out of memory at 16 GiB, because hand-written lemmas split on
 every constructor (1,062 checker constructors against CpcMini's 135),
-and some hand-written files hold CpcMini's tables. Needed: a logos
-revision where `SmtModel` builds; hand-written lemmas that don't
+and some hand-written files hold CpcMini's tables. Needed: one logos revision for the crate and the proofs, with the
+`SmtModel` error above explained; hand-written lemmas that don't
 enumerate the calculus (generated per signature, or proved without the
 split); a second Lean target for the full CPC; then the 38,409-line
 `proofs.lean`, built by part.
