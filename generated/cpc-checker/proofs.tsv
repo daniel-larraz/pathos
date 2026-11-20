@@ -736,7 +736,7 @@ $eo_push_proven_check	generated
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	none	compiled to a function of the runtime
-$eo_to_smt	none	case 3 has the constructor $emb_String in a pattern, which is not stored as a node
+$eo_to_smt	none	case 4 has the constructor $emb_Binary in a pattern, which is not stored as a node
 $eo_to_smt_array_deq_diff	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_bv_size	none	case 0 has the native operation nat.to_int
 $eo_to_smt_datatype	none	it calls $eo_to_smt_datatype_cons, which has no proof
@@ -744,10 +744,10 @@ $eo_to_smt_datatype_cons	none	it calls $eo_to_smt_type, which has no proof
 $eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
 $eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_distinct_pairs	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_exists	none	case 1 has the constructor $emb_String in a pattern, which is not stored as a node
+$eo_to_smt_exists	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_nat	generated	
 $eo_to_smt_nat_is_valid	generated	
-$eo_to_smt_quantifiers_skolemize	none	case 0 has the constructor $emb_String in a pattern, which is not stored as a node
+$eo_to_smt_quantifiers_skolemize	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_re_unfold_pos_component	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_reserved_datatype_name	none	case 0 has the native operation "@"
 $eo_to_smt_seq.empty	generated	
@@ -766,7 +766,7 @@ $eo_to_smt_type_tuple	none	case 0 has the native operation "@Tuple"
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_updater	none	case 0 has the native operation zlt
 $eo_to_smt_updater_rec	none	case 1 has the native operation nateq
-$eo_typeof	none	case 3 has the constructor $emb_String in a pattern, which is not stored as a node
+$eo_typeof	none	case 4 has the constructor $emb_Binary in a pattern, which is not stored as a node
 $eo_typeof_+	generated	
 $eo_typeof_/	generated	
 $eo_typeof_<	generated	

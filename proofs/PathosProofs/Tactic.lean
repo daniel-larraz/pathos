@@ -15,6 +15,7 @@ public import PathosProofs.Runtime.Nats
 public import PathosProofs.Runtime.Numbers
 public import PathosProofs.Runtime.IntNatives
 public import PathosProofs.Runtime.Builtins
+public import PathosProofs.Runtime.StringLits
 
 /-!
 # The tactics of the generated proofs
