@@ -84,9 +84,28 @@ constructors and about 20 types. The plan:
   `Runtime/HoldsSem.lean`. MiniCacheSem's `ProgramSem` is unchanged in
   text and now means `HoldsList`/`enc` through `Rep`. The generated
   proofs (MiniProofs) did not change.
-  (iii) next: rust-meta writes the `CtorSpec.*` one-liners for every data
-  constructor in place of `leanCtorLemmas()`, and `MiniCacheSem` over
-  `HoldsList`/`enc`.
+  (iii) done: lean-meta writes `MiniCtors.lean` with the embedding: the
+  `CtorSpec.<ident>.construct`/`.destruct` lemmas for every data
+  constructor of an embedded datatype and every user operator (169 in
+  CpcMini), from `construct_holds`/`destruct_holds` and the inversions;
+  `Runtime/Ctors.lean` is gone. rust-meta's `leanCtorLemmas()` is the rule
+  `leanHasCtorLemma` (stored as a node, of a datatype the embedding has:
+  it leaves out the model's values, maps, sequences and regular languages
+  by name prefix; a mismatch with lean-meta's list fails the Lean build,
+  never passes silently). A constructor with arguments has proof lines
+  now. Programs with a proof: 7 → 19 of 82.
+  Two reasons are new in `proofs.tsv`: "an application of a term that may
+  be stuck" (the emitter tracks which terms are known not stuck: built by
+  the code, or taken apart by `unapply`, or tested; `$eo_prog_scope`
+  applies the formula of a proof, which may be stuck: the milestone 31
+  finding, lemma C's business), and "no stuck value in the proofs
+  (HasStuck)" for 15 programs that return checker states, datatype
+  declarations or SMT types. For checker states beware: the Rust body
+  gives the stuck *term* (handle 0) where no case applies, but logos's
+  `CState.Stuck` is a node (`$emb_s.Stuck`); the programs met so far have
+  a last case for every argument, so it is unreachable there, but a
+  `HasStuck CState := CState.Stuck` would not be true of the Rust in
+  general.
 - `Represents.rep` carries `emb_T x` beside `Holds` (a conjunction).
   Folding `emb` into `Valid` is left for lemma C, with `Valid`, which this
   work does not touch.

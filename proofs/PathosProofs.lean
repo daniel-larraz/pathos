@@ -16,9 +16,9 @@ public import PathosProofs.Store.CacheOps
 public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Embed
 public import PathosProofs.Runtime.Ops
-public import PathosProofs.Runtime.Ctors
 public import PathosProofs.Runtime.Node
 public import PathosProofs.Tactic
 public import PathosProofs.Generated
 public import MiniProofs
 public import MiniEmbed
+public import MiniCtors

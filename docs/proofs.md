@@ -16,8 +16,8 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | --- | --- |
 | `generated/cpcmini-checker/` | The checker for **CpcMini**, logos's calculus of five rules (`symm contra refl scope trans`), compiled by `rust-meta` as the CPC checker is. The pilot is on it. `scripts/generate-mini` writes it. |
 | `proofs/MiniChecker/` | The Lean that Charon and Aeneas write for that crate, stitched: the runtime once (`Runtime.lean`, 13,531 lines) and the generated functions (`Part0.lean`, 15,937 lines). Generated, never edited. |
-| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,274 lines. |
-| `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what the cache of results holds, and the proofs about the generated functions. Never edited. |
+| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,139 lines. |
+| `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCtors.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what `construct` and `destruct` do with each data constructor, what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
 | `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `a9944ea7` (cvc5/logos main, at Lean `v4.36.0` since cvc5/logos#518). |
@@ -207,7 +207,7 @@ error).
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
-it. In use today, by 1,802 theorems, are 27 axioms:
+it. In use today, by 2,448 theorems, are 27 axioms:
 
 - Lean's three (`propext`, `Quot.sound`, `Classical.choice`).
 - 12 of the 54 declarations that Aeneas leaves without a body in the Lean
@@ -394,11 +394,11 @@ change under them.
 ## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
 
 `rust-meta` writes the proofs with the Rust (Ethos branch `m32-proofs`).
-Seven of CpcMini's 82 programs have one so far, the four of the pilot
+19 of CpcMini's 82 programs have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (650 lines, 35 theorems) elaborates
-in 4 seconds.
+proof for yet. `proofs/MiniProofs.lean` (1,480 lines) elaborates in 3
+seconds, `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -462,19 +462,22 @@ then `a` stuck; both give the stuck term, and `requires_ite` (in
 | `Runtime/Embed.lean` | 119 | The stuck value of a type, `Valid`, and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 249 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
 | `Runtime/Node.lean` | 79 | `construct` and `destruct` of any data constructor, over trees. |
-| `Runtime/Ctors.lean` | 146 | `construct` and `destruct` for the seven constructors the proofs use so far, from `Node.lean` and the generated inversions. |
 
 No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the seven** (the reasons of `proofs.tsv`, for the other 75):
-constructors whose lemmas are not written (the emitter has the list of
-those that are; the lemmas are to be generated with `Rep` for every
-constructor), conditionals, native operations and patterns, the builtin
-operators, programs with more than four cases (tried in groups), the cache
-of types, caches over values that are not terms, and programs that call
-one of those.
+**What limits the 19** (the reasons of `proofs.tsv`, for the other 63, on
+2026-11-23): a return type without a stuck value in the proofs (`HasStuck`:
+checker states, datatype declarations, SMT types; 15), native operations
+(9), more than four cases (8), conditionals (8), the six of the datatype
+operators below, native patterns (4), builtin operators (4), calls of
+programs without a proof (3), the two compiled to the runtime, a variable
+in a pattern and the stuck term built as a constructor (one each), an
+application of a term that may be stuck (`$eo_prog_scope`, the first
+finding below), and a function type in a pattern. The lemmas of `construct`
+and `destruct` are generated for every data constructor (`MiniCtors`); the
+literal constructors and variables are stored otherwise and have none.
 
 **Six programs have no function in logos's Lean**: the datatype operators
 (`$eo_dt_constructors`, `$eo_dt_selectors` and the four they call). The

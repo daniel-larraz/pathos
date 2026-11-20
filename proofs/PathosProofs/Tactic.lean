@@ -7,7 +7,7 @@ public import PathosProofs.Store.Sem
 public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Embed
 public import PathosProofs.Runtime.Ops
-public import PathosProofs.Runtime.Ctors
+public import MiniCtors
 
 /-!
 # The tactics of the generated proofs

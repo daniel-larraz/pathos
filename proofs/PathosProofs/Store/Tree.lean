@@ -296,6 +296,17 @@ theorem dec_encStr (s : List Nat) (h : okStr s) : decStr (encStr s) = some s := 
   simp [decStr, encStr, strTo_strOf s h]
 
 instance : Embedded Bool := ⟨encBool, decBool, okBool, dec_encBool⟩
+instance : Embedded Int := ⟨encInt, decInt, okInt, dec_encInt⟩
+instance : Embedded Nat := ⟨encNat, decNat, okNat, dec_encNat⟩
+instance : Embedded ℚ := ⟨encRat, decRat, okRat, dec_encRat⟩
+/-- A native string: a list of code points. -/
+instance : Embedded (List Nat) := ⟨encStr, decStr, okStr, dec_encStr⟩
+
+@[simp] theorem embedded_enc_Bool (x : Bool) : Embedded.enc x = encBool x := rfl
+@[simp] theorem embedded_enc_Int (x : Int) : Embedded.enc x = encInt x := rfl
+@[simp] theorem embedded_enc_Nat (x : Nat) : Embedded.enc x = encNat x := rfl
+@[simp] theorem embedded_enc_Rat (x : ℚ) : Embedded.enc x = encRat x := rfl
+@[simp] theorem embedded_enc_Str (x : List Nat) : Embedded.enc x = encStr x := rfl
 
 end Tree
 
