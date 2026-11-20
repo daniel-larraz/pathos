@@ -45,13 +45,13 @@ $eo_to_smt_datatype	none	it calls $eo_to_smt_datatype_cons, which has no proof
 $eo_to_smt_datatype_cons	none	it calls $eo_to_smt_type, which has no proof
 $eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
 $eo_to_smt_reserved_datatype_name	none	case 0 has the native operation "@"
-$eo_to_smt_type	none	case 5 has a function type in a pattern
+$eo_to_smt_type	none	case 8 has the constructor $emb_Numeral in a pattern, which is not stored as a node
 $eo_typeof	none	case 1 has the constructor $emb_Numeral in a pattern, which is not stored as a node
 $eo_typeof_=	generated	
 $eo_typeof_BitVec	generated	
 $eo_typeof_Seq	generated	
 $eo_typeof_and	generated	
-$eo_typeof_apply	none	case 0 has a function type in a pattern
+$eo_typeof_apply	generated	
 $eo_typeof_dt_cons_rec	none	case 0 has a native pattern
 $eo_typeof_dt_sel_return	none	case 0 has a native pattern
 $eo_typeof_fun_type	generated	

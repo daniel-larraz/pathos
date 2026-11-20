@@ -76,4 +76,33 @@ theorem Store.destruct_holds {s : Store} {t : Term} {x : Tree} (c : schema.Const
   | userop _ _ _ hd => right; exact ⟨(fun _ he => by cases he), by simp [hd]⟩
   | apply _ _ _ _ _ _ hd _ _ => right; exact ⟨(fun _ he => by cases he), by simp [hd]⟩
 
+/-- `is_node` with a constructor, on a handle of a tree: whether the tree
+is a node of that constructor. -/
+theorem Store.is_node_holds {s : Store} {t : Term} {x : Tree} (c : schema.Constructor)
+    (h : Holds s.nodes.val t.val x) :
+    ∃ b, Store.is_node s t (some c) = ok (core.result.Result.Ok b) ∧
+      (b = true ↔ ∃ xs, x = Tree.node c xs) := by
+  unfold Store.is_node
+  rw [Store.view_eq]
+  have hlt := h.lt
+  simp only [hlt, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
+  cases h with
+  | node _ d v xs _ hd hl =>
+    simp only [hd]
+    obtain ⟨n1, h1, _⟩ := schema.Constructor.code_spec c
+    obtain ⟨n2, h2, _⟩ := schema.Constructor.code_spec d
+    simp only [h1, h2, Std.bind_ok]
+    by_cases hdc : d = c
+    · subst hdc
+      have : n2 = n1 := by rw [h1] at h2; simpa using h2.symm
+      exact ⟨_, rfl, by simp [this]⟩
+    · have : n2 ≠ n1 := by
+        intro heq; subst heq; exact hdc (schema.Constructor.code_inj h2 h1)
+      exact ⟨_, rfl, by simp [this, hdc]⟩
+  | stuck _ _ hd => exact ⟨false, by simp [hd], by simp⟩
+  | lit _ _ _ hd => exact ⟨false, by simp [hd], by simp⟩
+  | native _ _ _ hd => exact ⟨false, by simp [hd], by simp⟩
+  | userop _ _ _ hd => exact ⟨false, by simp [hd], by simp⟩
+  | apply _ _ _ _ _ _ hd _ _ => exact ⟨false, by simp [hd], by simp⟩
+
 end pathos_compiled_checker

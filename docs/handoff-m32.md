@@ -8,10 +8,12 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **47 of CpcMini's 82 programs** have a generated proof, listed in
+- **48 of CpcMini's 82 programs** have a generated proof (48 of the
+  76 that the gate counts: the 6 datatype operators have been excluded
+  since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 4,255 theorems, no `sorry`. The trust is **11
+- `scripts/proofs-build`: 4,311 theorems, no `sorry`. The trust is **11
   assumptions** (Lean's three among them), unchanged by steps 3–5; 49 declarations (axioms that declare a type or a function,
   which add no trust: see "What is trusted").
 - Loops are proved by strong induction on the budget of calls
@@ -23,8 +25,8 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 - The Rust has not changed: every step checked that CpcMini regenerates
   the same crate and that the full CPC checker's `src/`, Cargo files and
   tables are main's.
-- The generated files elaborate in seconds (MiniProofs about 8 s and
-  2.1 GiB, after the round over groups). CPC's generated proofs are not built.
+- The generated files elaborate in seconds (MiniProofs about 15 s and
+  2.2 GiB, after a function type in a pattern). CPC's generated proofs are not built.
 
 ## What steps 3–5 built
 
@@ -71,7 +73,7 @@ fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
 `Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (35 programs)
+## The reasons that remain (34 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
@@ -79,10 +81,9 @@ program, the reason. The reasons recorded after the cases, in order: no
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 4 | a native pattern (nat zero/succ) | `$eo_typeof_dt_cons_rec`, `$eo_typeof_dt_sel_return`, `$smtx_ret_typeof_sel_rec`, `$smtx_typeof_dt_cons_rec` |
 | 3 | a builtin operator | `$eo_invoke_cmd` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
-| 2 | `$emb_Numeral` in a pattern | `$eo_to_smt`, `$eo_typeof` |
+| 3 | `$emb_Numeral` in a pattern | `$eo_to_smt`, `$eo_to_smt_type`, `$eo_typeof` |
 | 2 | the stuck term built as a constructor | `$eo_cmd_step_pop_proven`, `$eo_cmd_step_proven` |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
-| 2 | a function type in a pattern | `$eo_to_smt_type`, `$eo_typeof_apply` |
 | 1 each | `zleq`; the native string constant `"@"`; `$emb_Var` in a pattern; an application of a term that may be stuck (`$eo_prog_scope`) | `$smtx_typeof`; `$eo_to_smt_reserved_datatype_name`; `$eo_is_closed_rec`; `$eo_prog_scope` |
 
 ## Lemma C: both questions resolved

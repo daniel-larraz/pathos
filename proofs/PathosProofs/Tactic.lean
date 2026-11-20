@@ -171,6 +171,34 @@ macro_rules
       clear hu
       obtain ⟨$hnf, $hna⟩ := Store.Rep.apply_ne_stuck $hi $h))
 
+/-- `pat_is_node h : x is v by inv else hinv hG in cd`: the pattern asks
+whether the term `x` that `h` speaks of is the constant `v`, a constructor
+without fields that the store keeps as a node (`is_node`); `inv` is the
+inversion of its encoding. Goes on with `x` replaced by `v`; where it is
+another term the case ends. -/
+syntax "pat_is_node " ident " : " ident " is " term " by " term " else " ident ppSpace ident
+  " in " ident : tactic
+macro_rules
+  | `(tactic| pat_is_node $h : $x is $v by $inv else $hinv $hG in $cd) =>
+    `(tactic| (
+      obtain ⟨b, hb, hbiff⟩ := Store.is_node_holds _ $h.1
+      rw [hb]
+      simp only [Std.bind_ok]
+      have hiff : b = true ↔ $x = $v := hbiff.trans
+        ⟨fun ⟨_, he⟩ => ($inv (by simpa only [Embed.embedded_enc_Term] using he)).1,
+         fun he => ⟨_, by subst he; rfl⟩⟩
+      clear hb hbiff
+      cases b
+      case false => (
+        have hv : $x ≠ $v := fun he => by simpa using hiff.mpr he
+        clear hiff
+        (try simp only [Bool.not_false, Bool.false_eq_true, ite_true, ite_false])
+        no_match $hinv $hG in $cd)
+      have hv : $x = $v := hiff.mp rfl
+      clear hiff
+      (try simp only [Bool.not_true, Bool.false_eq_true, ite_true, ite_false])
+      subst hv))
+
 /-- `pat_destruct lemma h as ⟨v, x, hv⟩ … else hinv hG in cd`: the pattern
 takes the value that `h` speaks of apart as a constructor with fields, by
 the constructor's `destruct` lemma. Goes on with a handle `v`, the value
