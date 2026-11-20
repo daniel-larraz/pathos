@@ -86,7 +86,7 @@ program, the reason. The reasons recorded after the cases, in order: no
 | 8 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 1 | a builtin operator | `$eo_mk_premise_list` (`eo::cons`) |
-| 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (it builds a function type), `$eo_to_smt` (the native operation `uconst_id`) |
+| 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
 | 2 | an application of a term that may be stuck | `$eo_prog_scope`, `$eo_lit_type_Binary` |
 
@@ -99,9 +99,18 @@ stops them first and what it would take:
 
 - `$eo_typeof` and `$eo_to_smt`: past cases 0–7 (string and binary
   literal patterns done, `Runtime/StringLits.lean`), both stop at case 8.
-  `$eo_typeof`'s case 8 builds a function type (`FUNCTION_TYPE`, which
-  the emitter has no line for); `$eo_to_smt`'s is the native operation
-  `uconst_id` (no spec yet). Forced, case 4 of both elaborates;
+  `$eo_typeof`'s case 8 builds a function type: the emitter now has its
+  lines (the constant `$emb_FunType` and two applications), but the
+  result type `__eo_typeof_dt_sel_return …` may be stuck, so it meets the
+  stuck-application design question below. `$eo_to_smt`'s is the native
+  operation `uconst_id`: `@u.` and the decimal digits of a runtime number
+  (`front::constant_name`, `format!`, trusted by `constant_name_spec`).
+  A generator change cannot make it a constant as with the literals,
+  since the number is a value at run time; the runtime could build the
+  digits with a loop over `Integer::euclidean_qr` by 10 and `to_u32`
+  (specs in use), which Aeneas translates, and a proof that the loop
+  spells `toString i` would then need no trusted spec. It also needs
+  `HasStuck SmtTerm` for lemma C. Left for Daniel and Fable. Forced, case 4 of both elaborates;
   `$eo_typeof`'s case 4 calls `$eo_lit_type_Binary` (a design question,
   below), and `$eo_to_smt`'s lemma C needs `HasStuck SmtTerm` (its
   default case gives an SMT term), which has no instance yet. The type
@@ -111,7 +120,8 @@ stops them first and what it would take:
   the `TypesOK` part of the store's invariant). In the full CPC, where it
   is the 37/10/3-group loop, it now stops at a call of
   `$smtx_typeof_bv_op_2`, which has no proof.
-- `$eo_is_bool_type` → `$eo_push_proven`: wait on `$eo_typeof`.
+- `$eo_is_bool_type` → `$eo_push_proven`: wait on `$eo_typeof`, so on
+  the stuck-application question too.
 
 **Design questions** (each needs Daniel's decision first):
 

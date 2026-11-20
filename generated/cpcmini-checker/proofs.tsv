@@ -46,7 +46,7 @@ $eo_to_smt_datatype_cons	generated
 $eo_to_smt_datatype_decl	generated	
 $eo_to_smt_reserved_datatype_name	generated	
 $eo_to_smt_type	generated	
-$eo_typeof	none	case 8 has a function type
+$eo_typeof	none	case 8 has an application of a term that may be stuck
 $eo_typeof_=	generated	
 $eo_typeof_BitVec	generated	
 $eo_typeof_Seq	generated	

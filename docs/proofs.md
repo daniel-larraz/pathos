@@ -607,7 +607,8 @@ and a lemma for each runtime operation and constructor a line names.
 **What limits the 61** (the reasons of `proofs.tsv`, for the other 21,
 on 2026-11-20, after the string constants): calls of programs without a
 proof (8, `$eo_invoke_cmd` among them, past `Valid` for `CCmd`); the six of the datatype operators below; a builtin operator
-(1: `eo::cons`, in `$eo_mk_premise_list`); case 8 of `$eo_typeof` (it builds a function type) and of
+(1: `eo::cons`, in `$eo_mk_premise_list`); case 8 of `$eo_typeof` (it builds a function type to a type that may be
+stuck: an application of a term that may be stuck) and of
 `$eo_to_smt` (the native operation `uconst_id`), past the string and
 binary literal patterns (2); the two compiled to the runtime; two
 applications of a term that may be stuck (`$eo_prog_scope`, the first
