@@ -23,19 +23,14 @@ open Smtm
 
 /-- `$mk_trans`. -/
 def ProgramSem.p58 (nodes : List TermData) (args : List Term) (res : Term) : Prop :=
-  ∃ xs : List Eo.Term, RepList nodes args xs ∧
-    match xs with
-    | [x0, x1, x2] => Rep nodes res.val (__mk_trans x0 x1 x2)
-    | _ => False
+  ∃ (a0 : Term) (a1 : Term) (a2 : Term) (x0 : _) (x1 : _) (x2 : _), args = [a0, a1, a2] ∧ Rep nodes a0.val x0 ∧ Rep nodes a1.val x1 ∧ Rep nodes a2.val x2 ∧
+    Rep nodes res.val (__mk_trans x0 x1 x2)
 
 theorem ProgramSem.p58.mono {nodes nodes' : List TermData} {args : List Term} {res : Term}
     (hpre : nodes <+: nodes') (h : ProgramSem.p58 nodes args res) :
     ProgramSem.p58 nodes' args res := by
-  obtain ⟨xs, hl, hr⟩ := h
-  refine ⟨xs, RepList.mono hpre hl, ?_⟩
-  split at hr
-  · exact Rep.mono hpre hr
-  · exact hr.elim
+  obtain ⟨a0, a1, a2, x0, x1, x2, hargs, h0, h1, h2, hr⟩ := h
+  exact ⟨a0, a1, a2, x0, x1, x2, hargs, Rep.mono hpre h0, Rep.mono hpre h1, Rep.mono hpre h2, Rep.mono hpre hr⟩
 
 /-- What an entry of the program `pid` with the arguments `args` and the result
 `res` says, in a store whose terms are `nodes`. -/

@@ -145,6 +145,17 @@ constructors and about 20 types. The plan:
   spec in this Aeneas, so a loop over a slice is stepped with `step`, not
   rewritten. Next, by the reviewer's plan: the cache table over all
   embedded types (9 programs), then strings.
+- Step 5 (c), the cache table over every embedded type: done
+  (2026-11-24). `ProgramSem.p<id>` (cache_sem.lean → MiniCacheSem) is an
+  existential per argument of the program's type through the generic
+  `Rep`; a cached program's proof reads each argument back with
+  `Rep.functional`. Checked on `$mk_trans` (terms) and by forcing
+  `$smtx_dd_has_dt` (strings and SMT datatype declarations): the table and
+  the cached frame elaborate. None of the 9 programs is proved: the
+  emitter now records "an argument of a type that has no Valid in the
+  proofs yet (lemma C)" (it was writing a lemma C that does not elaborate),
+  and that is the next reason of all of them but `$smtx_decl_inhabited`
+  (a call). `$smtx_inhabited_type`'s loop over groups is still not done.
 - Lean macro lessons from step 4: a syntax atom such as `" none "` becomes
   a keyword everywhere (it broke `| Ok none =>` in every generated file);
   `obtain ⟨h⟩ := e` on an equation case-splits the equation, so a single

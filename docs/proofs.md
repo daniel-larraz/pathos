@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 2,659 theorems, are **11**:
+  This is the trust. In use today, by 2,655 theorems, are **11**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
   `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
@@ -488,17 +488,18 @@ person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
 **What limits the 19** (the reasons of `proofs.tsv`, for the other 63, on
-2026-11-24, after step 4): native operations (18), a return type without a
+2026-11-24, after step 5 (c)): lemma C's side, a return type without a
 stuck value in the proofs (`HasStuck`: checker states, datatype
-declarations, SMT types; 16), the six of the datatype operators below,
-native patterns (4), builtin operators (5), a literal constructor or a
-variable in a pattern (3), calls of programs without a proof (3), the
-stuck term built as a constructor (2), the two compiled to the runtime, a
-function type in a pattern (2), an application of a term that may be stuck
-(`$eo_prog_scope`, the first finding below), and a cache over values that
-are not terms. The lemmas of `construct` and `destruct` are generated for
-every data constructor (`MiniCtors`); the literal constructors and
-variables are stored otherwise and have none.
+declarations, SMT types; 23) or an argument of a type without `Valid` (11);
+the six of the datatype operators below; native patterns (4); native
+operations (3); a literal constructor or a variable in a pattern (3); calls
+of programs without a proof (3); builtin operators (3); the stuck term
+built as a constructor (2); the two compiled to the runtime; a function
+type in a pattern (2); and an application of a term that may be stuck
+(`$eo_prog_scope`, the first finding below). The lemmas of `construct` and
+`destruct` are generated for every data constructor (`MiniCtors`); the
+literal constructors and variables are stored otherwise and have none. The
+cache of results is stated for every embedded type (`MiniCacheSem`).
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a

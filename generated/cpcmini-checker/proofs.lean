@@ -1448,12 +1448,16 @@ theorem eo__24mk_5ftrans_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5ft
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨xs, hl, hr⟩ := ProgramSem.of_58 hsem
-      cases RepList.functional hl (List.Forall₂.cons (Store.Rep.congr h_a0 hn) (List.Forall₂.cons (Store.Rep.congr h_a1 hn) (List.Forall₂.cons (Store.Rep.congr h_a2 hn) List.Forall₂.nil)))
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_58 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl, rfl, rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
+      obtain rfl := Rep.functional hb2 (Represents.congr h_a2 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_58 ⟨[x_a0, x_a1, x_a2], (List.Forall₂.cons (Rep.mono hpre h_a0) (List.Forall₂.cons (Rep.mono hpre h_a1) (List.Forall₂.cons (Rep.mono hpre h_a2) List.Forall₂.nil))), h⟩)
+      exact ProgramSem.to_58 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5ftrans_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
