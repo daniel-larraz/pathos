@@ -17,7 +17,8 @@
 #                  the whole gate is about four times the work.
 #
 #   - platforms:   on each of the six platforms Ethos's own CI builds on
-#                  (the same runners, GMP installed the same way): build
+#                  (the same runners, GMP installed the same way but on
+#                  macOS, where it is Homebrew's current one): build
 #                  and test pathos, build the reference Ethos there, and
 #                  compare the two on the regressions, the command line,
 #                  large-number arithmetic and the fuzzing findings; then
@@ -286,9 +287,10 @@ jobs:
       matrix:
         name: [linux-x86_64, linux-arm64, macOS-x86_64, macOS-arm64, windows-x86_64, windows-arm64]
         include:
-          # The runners, the shells and the GMP bottles are those of the
-          # `build` job of Ethos's .github/workflows/main.yml at
-          # REFERENCE_REV. crt-static is Ethos's --static: not on macOS.
+          # The runners and the shells are those of the `build` job of
+          # Ethos's .github/workflows/main.yml at REFERENCE_REV, and GMP is
+          # installed as there except on macOS (see Install Packages).
+          # crt-static is Ethos's --static: not on macOS.
           - name: linux-x86_64
             os: ubuntu-22.04
             shell: bash
@@ -299,14 +301,10 @@ jobs:
             rustflags: -C target-feature=+crt-static
           - name: macOS-x86_64
             os: macos-15-intel
-            bottle-suffix: monterey
-            gmp-sha256: b04023f65b8c79c45798a4bfd97fdbeb10f1bf9e8416e22e8eeedbd9b2a8c102
             shell: bash
             rustflags: ""
           - name: macOS-arm64
             os: macos-15
-            bottle-suffix: arm64_monterey
-            gmp-sha256: 2115b33b8b4052f91ffb85e476c7fc0388cf4e614af1ce6453b35e6d25473911
             shell: bash
             rustflags: ""
           - name: windows-x86_64
@@ -359,16 +357,15 @@ jobs:
         if: runner.os == 'macOS'
         run: echo "MACOSX_DEPLOYMENT_TARGET=12.0" >> $GITHUB_ENV
 
+      # Ethos installs Homebrew's GMP 6.3.0 bottle for macOS 12 here
+      # (`brew reinstall -f` of the downloaded file), so that its release
+      # binaries run on macOS 12. The runner images from 2026-11-11 on
+      # refuse a bottle file ("No available formula"), so pathos takes
+      # Homebrew's current GMP: only the reference Ethos links it, to be
+      # compared with, and nothing pathos ships does.
       - name: Install Packages (macOS)
         if: runner.os == 'macOS'
-        env:
-          HOMEBREW_DEVELOPER: 1
-        run: |
-          GMP_BOTTLE=gmp-6.3.0.${{ matrix.bottle-suffix }}.bottle.tar.gz
-          curl -L -H "Authorization: Bearer QQ==" -o $GMP_BOTTLE \
-            https://ghcr.io/v2/homebrew/core/gmp/blobs/sha256:${{ matrix.gmp-sha256 }}
-          brew reinstall -f $GMP_BOTTLE
-          rm $GMP_BOTTLE
+        run: brew install gmp
 
       - name: Install Packages (Linux)
         if: runner.os == 'Linux'
