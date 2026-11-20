@@ -85,7 +85,7 @@ $eo_dt_selectors	none	no logos function: only the runtime's datatype operators r
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
 $eo_invoke_assume_list	none	compiled to a function of the runtime
-$eo_invoke_cmd	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
 $eo_invoke_cmd_step_pop	none	it calls $eo_cmd_step_pop_proven, which has no proof
@@ -737,30 +737,30 @@ $eo_state_is_closed	generated
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	none	compiled to a function of the runtime
 $eo_to_smt	none	case 4 has the constructor $emb_Binary in a pattern, which is not stored as a node
-$eo_to_smt_array_deq_diff	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_to_smt_array_deq_diff	generated	
 $eo_to_smt_bv_size	none	case 0 has the native operation nat.to_int
 $eo_to_smt_datatype	generated	
 $eo_to_smt_datatype_cons	generated	
 $eo_to_smt_datatype_decl	generated	
 $eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
-$eo_to_smt_distinct_pairs	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_exists	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_to_smt_distinct_pairs	none	it calls $eo_to_smt, which has no proof
+$eo_to_smt_exists	generated	
 $eo_to_smt_nat	generated	
 $eo_to_smt_nat_is_valid	generated	
-$eo_to_smt_quantifiers_skolemize	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_re_unfold_pos_component	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_to_smt_quantifiers_skolemize	generated	
+$eo_to_smt_re_unfold_pos_component	generated	
 $eo_to_smt_reserved_datatype_name	generated	
 $eo_to_smt_seq.empty	generated	
 $eo_to_smt_set.empty	generated	
 $eo_to_smt_set_elem_type	generated	
-$eo_to_smt_sets_deq_diff	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_tester	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_to_smt_sets_deq_diff	generated	
+$eo_to_smt_tester	generated	
 $eo_to_smt_tuple_decl	generated	
-$eo_to_smt_tuple_prepend	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_tuple_prepend_of_type	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_tuple_prepend_rec	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_tuple_select	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_tuple_update	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_to_smt_tuple_prepend	none	it calls $smtx_typeof, which has no proof
+$eo_to_smt_tuple_prepend_of_type	generated	
+$eo_to_smt_tuple_prepend_rec	generated	
+$eo_to_smt_tuple_select	generated	
+$eo_to_smt_tuple_update	none	it calls $eo_to_smt_updater, which has no proof
 $eo_to_smt_type	generated	
 $eo_to_smt_type_tuple	generated	
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
@@ -988,7 +988,7 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof	none	the cache of types
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_arith_overload_op_1	generated	
@@ -1003,14 +1003,14 @@ $smtx_typeof_dt_cons_rec	generated
 $smtx_typeof_extract	none	case 0 has the native operation zlt
 $smtx_typeof_guard	generated	
 $smtx_typeof_guard_wf	generated	
-$smtx_typeof_int_to_bv	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_int_to_bv	generated	
 $smtx_typeof_ite	generated	
 $smtx_typeof_map_diff	generated	
-$smtx_typeof_re.^	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_typeof_re.loop	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_re.^	generated	
+$smtx_typeof_re.loop	generated	
 $smtx_typeof_repeat	none	case 0 has the native operation zmult
-$smtx_typeof_rotate_left	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_typeof_rotate_right	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_rotate_left	generated	
+$smtx_typeof_rotate_right	generated	
 $smtx_typeof_select	generated	
 $smtx_typeof_seq.nth	generated	
 $smtx_typeof_seq_diff	generated	

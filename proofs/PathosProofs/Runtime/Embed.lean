@@ -81,6 +81,15 @@ instance : Valid Smtm.SmtType := ⟨fun _ => True⟩
 instance : Valid Smtm.SmtDatatype := ⟨fun _ => True⟩
 instance : Valid Smtm.SmtDatatypeCons := ⟨fun _ => True⟩
 instance : Valid Smtm.SmtDatatypeDecl := ⟨fun _ => True⟩
+-- commands: their cases match the command's constructor and pass its
+-- terms and proofs on to programs over terms (lemma C closes with `True`,
+-- checked on `$eo_invoke_cmd`)
+instance : Valid Eo.CCmd := ⟨fun _ => True⟩
+-- SMT terms: `$smtx_typeof`'s cases match their constructors and treat
+-- `None` and applications as any other value, so they tell apart no
+-- terms that a store cannot hold (lemma C closes with `True`, checked on
+-- `$smtx_typeof`)
+instance : Valid Smtm.SmtTerm := ⟨fun _ => True⟩
 
 @[simp] theorem Valid.apply (f a : Eo.Term) :
     Valid.valid (Eo.Term.Apply f a) ↔

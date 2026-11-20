@@ -456,7 +456,7 @@ change under them.
 For the full CPC it writes them too, into `generated/cpc-checker`
 (`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
 checked to be what the generator writes (`scripts/generate-cpc --check`),
-but **not built**; `proofs.tsv` (438 of 1,086 marked generated) says how
+but **not built**; `proofs.tsv` (452 of 1,086 marked generated) says how
 far the emitter gets.
 60 of CpcMini's 82 programs (60 of the 76 the gate counts) have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
@@ -525,14 +525,18 @@ the stuck term), and the body's proof gets that from the handle
 (`Store.Rep.valid`). This is the same boundary as the first finding below,
 met from the other side. For the checker's other argument types (its
 states, lists of commands, arguments and indices, rules; the datatype
-declarations; the SMT types and datatypes; strings and naturals) `Valid`
+declarations; the SMT types, datatypes and terms; commands; strings and naturals) `Valid`
 is `True`: no case of a program over them tells apart values that no
 store holds (they match data constructors, compare strings, pass values
 on), and a term inside one of them is compared only as the argument of a
 program over terms, whose own lemma C takes it `Valid`. The emitter lets
 through exactly the types that have an instance (`Runtime/Embed.lean`
-says why each is enough); the full CPC's `SmtTerm` and `Int` arguments
-have none yet.
+says why each is enough). `CCmd` and `SmtTerm` were added last, by the
+same experiment (a `True` instance, the gate opened, the proofs forced):
+lemma C closes for `$eo_invoke_cmd` and `$smtx_typeof`. The full CPC's
+`Int` arguments have none yet; its programs over SMT terms pass the gate
+now, but CPC's generated proofs are not built, so lemma C is checked for
+them only through CpcMini's `$smtx_typeof`.
 
 **Order of the stuck tests.** The Rust tests the arguments for the stuck
 term in order, before any case; logos's function has a first match arm for
@@ -571,7 +575,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 | --- | --- | --- |
 | `Tactic.lean` | 861 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
-| `Runtime/Embed.lean` | 143 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
+| `Runtime/Embed.lean` | 152 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 336 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
 | `Runtime/Node.lean` | 143 | `construct` and `destruct` of any data constructor or variable (`$emb_Var`, which the runtime stores as a node the same way), over trees; `construct` of the stuck term (`$emb_Stuck`), which gives handle 0 (`Store.construct_stuck_spec`); `is_node`, which a function type in a pattern (`(-> T U)`, the applications `(FunType T) U`) tests its head with (`pat_is_node`). |
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
@@ -589,15 +593,16 @@ and a lemma for each runtime operation and constructor a line names.
 
 **What limits the 60** (the reasons of `proofs.tsv`, for the other 22,
 on 2026-11-20, after the string constants): calls of programs without a
-proof (7); the six of the datatype operators below; a builtin operator
+proof (8, `$eo_invoke_cmd` among them, past `Valid` for `CCmd`); the six of the datatype operators below; a builtin operator
 (1: `eo::cons`, in `$eo_mk_premise_list`); a binary literal in a pattern
 (2, `$emb_Binary`, past the string literal patterns of `$eo_typeof` and
 `$eo_to_smt`; the runtime stores the width and the value as two numerals,
 with specs already in use); the two compiled to the runtime; two
 applications of a term that may be stuck (`$eo_prog_scope`, the first
-finding below, and `$eo_lit_type_Binary`, past `eo::len`); and `Valid`
-for two types (`SmtTerm` for `$smtx_typeof`, `CCmd` for `$eo_invoke_cmd`;
-no trust). The lemmas of `construct` and `destruct` are generated for
+finding below, and `$eo_lit_type_Binary`, past `eo::len`); and the cache
+of types (`$smtx_typeof`, past `Valid` for `SmtTerm`; `$eo_typeof` will
+meet it too: the wrapper writes the cache id `type#u32`, which the
+emitter does not spell yet). The lemmas of `construct` and `destruct` are generated for
 every data constructor (`MiniCtors`); the literal constructors are stored
 otherwise and have none. The cache of results is stated for every
 embedded type (`MiniCacheSem`).

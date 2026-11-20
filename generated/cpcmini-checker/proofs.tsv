@@ -14,7 +14,7 @@ $eo_dt_selectors	none	no logos function: only the runtime's datatype operators r
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
 $eo_invoke_assume_list	none	compiled to a function of the runtime
-$eo_invoke_cmd	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
 $eo_invoke_cmd_step_pop	none	it calls $eo_cmd_step_pop_proven, which has no proof
@@ -74,7 +74,7 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof	none	the cache of types
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_dt_cons_rec	generated	
