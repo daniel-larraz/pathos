@@ -2,6 +2,7 @@ module
 public import MiniChecker
 public import PathosProofs.Util
 public import PathosProofs.Store.Table
+public import PathosProofs.Trusted
 
 /-!
 # What a handle unfolds to
@@ -177,5 +178,107 @@ theorem HoldsList.mono {nodes nodes' : List TermData} {hs : List Term} {xs : Lis
   | cons a l ih =>
     cases h with
     | cons _ _ x xs' h1 h2 => exact HoldsList.cons a l x xs' (Holds.mono hpre h1) (ih h2)
+
+/-! ## Natives
+
+How the runtime stores logos's native values, and how to read them back:
+for each native type an encoder to a native literal, a decoder, the
+values the store can hold (`ok…`), and that the decoder gets those back.
+The generated embedding (`MiniEmbed`) calls these for native fields, and
+the string and bit-vector ones for object literals too. Integers and
+rationals go through the trusted `num.Integer.ofInt` and
+`num.Rational.ofRat`. -/
+
+noncomputable section
+
+namespace Tree
+
+/-- A code point as the runtime's `u32`, wrapping. -/
+def u32Wrap (c : Nat) : Std.U32 := ⟨BitVec.ofNat 32 c⟩
+
+theorem u32Wrap_val (c : Nat) (h : c < 2 ^ 32) : (u32Wrap c).val = c := by
+  show (BitVec.ofNat 32 c).toNat = c
+  rw [BitVec.toNat_ofNat]
+  exact Nat.mod_eq_of_lt h
+
+/-- A native string as the runtime's (`EoString`, a vector of `u32`). -/
+def strOf (s : List Nat) : eostring.EoString :=
+  if h : s.length ≤ Usize.max then alloc.vec.Vec.from (s.map u32Wrap) (by simpa using h)
+  else alloc.vec.Vec.from [] (by simp)
+
+def strTo (v : eostring.EoString) : List Nat := v.val.map (fun c => c.val)
+
+/-- A string the store can hold: its characters fit `u32`, its length a vector. -/
+def okStr (s : List Nat) : Prop := s.length ≤ Usize.max ∧ ∀ c ∈ s, c < 2 ^ 32
+
+theorem strTo_strOf (s : List Nat) (h : okStr s) : strTo (strOf s) = s := by
+  obtain ⟨hl, hc⟩ := h
+  unfold strTo strOf
+  rw [dif_pos hl, alloc.vec.Vec.from_val, List.map_map]
+  conv => rhs; rw [← List.map_id s]
+  exact List.map_congr_left (fun c hcs => u32Wrap_val c (hc c hcs))
+
+/-- A bit-vector literal as the runtime's: the width as `u32`, the value. -/
+def bvOf (w n : Int) : bitvec.BitVec := { size := u32Wrap w.toNat, value := num.Integer.ofInt n }
+def bvW (v : bitvec.BitVec) : Int := v.size.val
+def bvV (v : bitvec.BitVec) : Int := v.value.toInt
+
+/-- A bit-vector the store can hold: a width that fits `u32`, a value in
+range for it (the runtime reduces the value). -/
+def okBv (w n : Int) : Prop := 0 ≤ w ∧ w < 2 ^ 32 ∧ 0 ≤ n ∧ n < 2 ^ w.toNat
+
+theorem bvW_bvOf (w n : Int) (h : okBv w n) : bvW (bvOf w n) = w := by
+  obtain ⟨h0, h1, _⟩ := h
+  have hlt : w.toNat < 2 ^ 32 := by omega
+  unfold bvW bvOf
+  rw [u32Wrap_val _ hlt]
+  omega
+
+theorem bvV_bvOf (w n : Int) (h : okBv w n) : bvV (bvOf w n) = n := by
+  simp [bvV, bvOf, num.Integer.toInt_ofInt]
+
+def encBool (b : Bool) : Tree := native (lit.Lit.Boolean b)
+def decBool : Tree → Option Bool
+  | native (lit.Lit.Boolean b) => some b
+  | _ => none
+def okBool (_ : Bool) : Prop := True
+theorem dec_encBool (b : Bool) (_ : okBool b) : decBool (encBool b) = some b := rfl
+
+def encInt (n : Int) : Tree := native (lit.Lit.Numeral (num.Integer.ofInt n))
+def decInt : Tree → Option Int
+  | native (lit.Lit.Numeral i) => some i.toInt
+  | _ => none
+def okInt (_ : Int) : Prop := True
+theorem dec_encInt (n : Int) (_ : okInt n) : decInt (encInt n) = some n := by
+  simp [decInt, encInt, num.Integer.toInt_ofInt]
+
+/-- A native natural number is a native numeral, as the runtime's
+`native_nat_zero` and `native_pattern_succ` have it. -/
+def encNat (n : Nat) : Tree := native (lit.Lit.Numeral (num.Integer.ofInt n))
+def decNat : Tree → Option Nat
+  | native (lit.Lit.Numeral i) => if 0 ≤ i.toInt then some i.toInt.toNat else none
+  | _ => none
+def okNat (_ : Nat) : Prop := True
+theorem dec_encNat (n : Nat) (_ : okNat n) : decNat (encNat n) = some n := by
+  simp [decNat, encNat, num.Integer.toInt_ofInt]
+
+def encRat (q : ℚ) : Tree := native (lit.Lit.Rational (num.Rational.ofRat q))
+def decRat : Tree → Option ℚ
+  | native (lit.Lit.Rational r) => some r.toRat
+  | _ => none
+def okRat (_ : ℚ) : Prop := True
+theorem dec_encRat (q : ℚ) (_ : okRat q) : decRat (encRat q) = some q := by
+  simp [decRat, encRat, num.Rational.toRat_ofRat]
+
+def encStr (s : List Nat) : Tree := native (lit.Lit.Str (strOf s))
+def decStr : Tree → Option (List Nat)
+  | native (lit.Lit.Str v) => some (strTo v)
+  | _ => none
+theorem dec_encStr (s : List Nat) (h : okStr s) : decStr (encStr s) = some s := by
+  simp [decStr, encStr, strTo_strOf s h]
+
+end Tree
+
+end
 
 end pathos_compiled_checker

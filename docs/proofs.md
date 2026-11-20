@@ -17,7 +17,7 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | `generated/cpcmini-checker/` | The checker for **CpcMini**, logos's calculus of five rules (`symm contra refl scope trans`), compiled by `rust-meta` as the CPC checker is. The pilot is on it. `scripts/generate-mini` writes it. |
 | `proofs/MiniChecker/` | The Lean that Charon and Aeneas write for that crate, stitched: the runtime once (`Runtime.lean`, 13,531 lines) and the generated functions (`Part0.lean`, 15,937 lines). Generated, never edited. |
 | `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,150 lines. |
-| `proofs/MiniCases.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, what the cache of results holds, and the proofs about the generated functions. Never edited. |
+| `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
 | `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `a9944ea7` (cvc5/logos main, at Lean `v4.36.0` since cvc5/logos#518). |
@@ -201,15 +201,16 @@ error).
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
-it. In use today, by 1,266 theorems, are 25 axioms:
+it. In use today, by 1,802 theorems, are 27 axioms:
 
 - Lean's three (`propext`, `Quot.sound`, `Classical.choice`).
 - 12 of the 54 declarations that Aeneas leaves without a body in the Lean
   of the checker (the types `num.Integer` and `num.Rational` and some of
   their functions).
-- 10 of the 52 axioms of `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ
-  (`toInt`/`ofInt`, `toRat`/`ofRat`), their `==`, and that their hash
-  returns.
+- 12 of the 52 axioms of `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ
+  (`toInt`/`ofInt`, `toRat`/`ofRat`, and that each undoes the other: the
+  embedding's `dec_enc` uses the `toInt (ofInt z) = z` direction), their
+  `==`, and that their hash returns.
 
 No axiom of Aeneas's library is reached (it declares six), and none of
 logos.

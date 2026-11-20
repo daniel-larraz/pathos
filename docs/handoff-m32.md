@@ -36,12 +36,33 @@ constructors and about 20 types. The plan:
   that are not terms. Layering: `Tree` → generated embedding → cache table
   → `Store/Ops`.
 
-**State (2026-11-23, step 1 of the reviewer's plan):** `Store/Tree.lean`
-compiles and `PathosProofs` imports it: `Tree`, `Holds`/`HoldsList`
-(mutual), and `Holds.functional`, `Holds.injective`, `Holds.mono` with
-their list versions, each proved once by the mutual recursor. Nothing uses
-it yet. Next: step 2 (lean-meta writes `enc`/`dec`), step 3 (generic
-`construct`/`destruct` over `Holds`).
+**State (2026-11-23, steps 1 and 2 of the reviewer's plan done):**
+- Step 1: `Store/Tree.lean` compiles and `PathosProofs` imports it:
+  `Tree`, `Holds`/`HoldsList` (mutual), `Holds.functional`,
+  `Holds.injective`, `Holds.mono`, each proved once.
+- Step 2: lean-meta writes `proofs/MiniEmbed.lean` (Ethos `m32-proofs`,
+  `printEmbedding` in `lean_meta_reduce.cpp`, template
+  `lean_meta_embed.lean`; the constructors are recorded in `finalizeDecl`
+  by `recordEmbedCtor`, Proof's by hand). Per datatype `enc_T`, `dec_T`,
+  `emb_T` and `dec_enc_T : emb_T x → dec_T (enc_T x) = some x`, for the 17
+  datatypes the checker uses. SmtValue (a real), and SmtMap, SmtSeq and
+  SmtRegLan, which contain it, are left out and listed in the file's head:
+  no program of the Rust checker takes or returns one. Native fields go
+  through hand-written codecs at the end of `Store/Tree.lean`
+  (`Tree.encInt`, `Tree.strOf`, ...).
+- `emb_T` is the "Embeddable" the reviewer asked for: strings of
+  characters below 2^32 and of a length a vector holds, bit-vectors with a
+  width below 2^32 and a value in range. It is standalone: **it should fold
+  into `Valid`** (Runtime/Embed.lean) when Valid is generated or extended;
+  the closure lemma (a handle only unfolds to embeddable values) is later
+  work. Why it holds: logos enforces the bounds itself (the width bound
+  `native_zlt … 4294967296`, characters below 196608), so values logos
+  builds are embeddable.
+- `rustIdent` (plugins/utils) is rust-meta's identifier mangling, moved so
+  lean-meta names the Rust constructors the same way; the Rust is
+  byte-identical (CpcMini and the full CPC checker).
+- Next: step 3 (generic `construct`/`destruct` over `Holds`, generated
+  `CtorSpec.*` one-liners replacing `leanCtorLemmas()`).
 
 ## The emitter (`plugins/rust_meta/rust_meta_reduce.cpp`)
 

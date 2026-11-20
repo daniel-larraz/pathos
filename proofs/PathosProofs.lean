@@ -20,3 +20,4 @@ public import PathosProofs.Runtime.Ctors
 public import PathosProofs.Tactic
 public import PathosProofs.Generated
 public import MiniProofs
+public import MiniEmbed
