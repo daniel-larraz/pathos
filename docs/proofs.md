@@ -19,7 +19,7 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | `proofs/PathosProofs/` | The proofs: 4,400 lines, 1,120 theorems (Lean counts the auxiliary ones). |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
-| `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `cf187429`. |
+| `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `a9944ea7` (cvc5/logos main, at Lean `v4.36.0` since cvc5/logos#518). |
 
 To build and check, from a clean checkout:
 
@@ -60,12 +60,17 @@ the translation checks of `check_proof`, is for CPC.
 
 ## One Lean project
 
-Neither logos (at Lean `v4.34.0`) nor Aeneas's Lean library (at
-`v4.36.0-rc2`) needs a change to a source file to build with Lean and
-Mathlib `v4.36.0`. Lake uses the root project's toolchain and, for a
+logos is at Lean and Mathlib `v4.36.0` itself since cvc5/logos#518, and
+Aeneas's Lean library (at `v4.36.0-rc2`) needs no change to a source file
+to build with them. Lake uses the root project's toolchain and, for a
 package required more than once, the root's requirement. So `proofs/`
-requires both at the commits already pinned, names Mathlib `v4.36.0` last,
-and no fork of either is needed for the build.
+requires both at the commits pinned, names Mathlib `v4.36.0` last, and no
+fork of either is needed for the build.
+
+Milestone 31 found the same for logos at `v4.34.0` (`cf187429`), but only
+for what `proofs/` builds, `CpcMini`'s proofs. **logos's verification of
+all of CPC did need changes to its proofs**, as stage 1 of milestone 32
+found (below): what `proofs/` pins is now logos's own move to `v4.36.0`.
 
 | Build, under 8 GiB | Time | Peak |
 | --- | --- | --- |
@@ -73,7 +78,7 @@ and no fork of either is needed for the build.
 | logos, `CpcMini.Proofs.Checker` (Mathlib from its cache) | 95 s | 1.4 GiB |
 | `proofs/`, first build of everything | 196 s | 4.3 GiB |
 | `proofs/` from a clean checkout: the translation, the build, the axioms | 335 s | |
-| logos, `Cpc.ApiCorrect` and what it imports | not built yet: stage 1 of milestone 32 | |
+| logos, `Cpc.ApiCorrect` and what it imports (stage 1 of milestone 32, at `cf187429`, `LEAN_NUM_THREADS=3`, a cap of 16 GiB, not 8) | 3 h 11 min, to the failures described below | 8.6 GiB for one module, 15.3 GiB for the three |
 
 **logos's verification of CPC at `v4.36.0`**: `lake build Cpc.ApiCorrect`
 in logos's `verification` project, with the pins moved and nothing else
@@ -94,6 +99,19 @@ together. `LEAN_NUM_THREADS` is what limits Lake: with
 `LEAN_NUM_THREADS=2` there are two. The build with that setting is stage 1
 of milestone 32. `CpcMini`'s proofs, which the pilot uses, build in 95 s at
 1.4 GiB.
+
+**Stage 1's result: logos's CPC proofs needed changes at `v4.36.0`.**
+From Lean `v4.35.0` on, Lean checks a comparison such as
+`native_zlt x 4294967296` with a symbolic `x` by evaluating `Int.decLt`,
+once per unit of the bound, and fails with "(kernel) deep recursion
+detected" or "maximum recursion depth has been reached". On logos main
+then, 14 modules of `Cpc` failed (cvc5/logos#516). The fix rewrites with
+a lemma, `SmtEval.native_zlt_eq : native_zlt x y = decide (x < y)`, where
+the proofs unfolded `native_zlt`; a few proof scripts lost lines that newer
+Lean no longer reaches. That is cvc5/logos#518 (`a9944ea7`), whose last
+commit is the patch for the 10 modules that stage 1 found still failing;
+with it `Cpc.ApiCorrect` and logos's default targets build. `CpcMini`
+needed none of it.
 
 **`-j1` must not be among the Lean arguments** (logos's lakefile has it).
 Measured again in milestone 32 with a sampler, one Lean process each time

@@ -12,7 +12,7 @@ that Charon and Aeneas write for it.
 | Generated from | |
 | --- | --- |
 | Ethos (`ethos-eoc`, `tools/eoc/driver.py`, the runtime in `plugins/rust_meta/runtime`) | `b02afbe66a4f796043ed3c5b9790cb6e7f00b9cc` |
-| logos (`install/defs/Cpc.cached.eo`, with `Cpc.eos` as `--semantics` and `smt.eos` as `--smt-semantics`) | `cf18742973861b3718d04c5f25775448098ff474` |
+| logos (`install/defs/Cpc.cached.eo`, with `Cpc.eos` as `--semantics` and `smt.eos` as `--smt-semantics`) | `a9944ea7dcee950feb5e0d9b6271e83b421d206e` |
 | Rules (those of logos's `install/install-sig.sh --mini`) | `symm contra refl scope trans` |
 
 `CpcMini.eo` is the signature reduced to those rules, as the first stage

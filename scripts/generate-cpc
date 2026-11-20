@@ -75,7 +75,7 @@ default_rev=b02afbe66a4f796043ed3c5b9790cb6e7f00b9cc
 # generator is the one Charon and Aeneas translate), and the logos revision
 # whose CpcMini the proofs are about. proofs/ pins the same logos revision.
 mini_default_rev=b02afbe66a4f796043ed3c5b9790cb6e7f00b9cc
-mini_logos_rev=cf18742973861b3718d04c5f25775448098ff474
+mini_logos_rev=a9944ea7dcee950feb5e0d9b6271e83b421d206e
 
 me=generate-cpc
 fail() { echo "scripts/$me: $*" >&2; exit 2; }
