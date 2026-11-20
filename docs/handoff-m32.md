@@ -13,7 +13,7 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 4,951 theorems, no `sorry`. The trust is **24
+- `scripts/proofs-build`: 5,130 theorems, no `sorry`. The trust is **25
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
@@ -85,11 +85,12 @@ program, the reason. The reasons recorded after the cases, in order: no
 | --- | --- | --- |
 | 12 | calls of programs without a proof | `$eo_to_smt_type` (→ `$eo_to_smt_reserved_datatype_name`), `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_is_closed` (→ `$eo_is_closed_rec`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_to_smt_datatype`, `_cons`, `_decl` (→ `$eo_to_smt_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
-| 4 | a builtin operator | `$eo_invoke_cmd` and `$eo_is_closed_rec` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
+| 3 | a builtin operator | `$eo_invoke_cmd` and `$eo_is_closed_rec` (`eo::and`), `$eo_mk_premise_list` (`eo::cons`) |
 | 2 | `$emb_String` in a pattern (no trust; no lemma yet) | `$eo_to_smt`, `$eo_typeof` |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
 | 1 | `Valid` for `SmtTerm` (no trust) | `$smtx_typeof` |
-| 1 each | the native string constant `"@"`; an application of a term that may be stuck (`$eo_prog_scope`) | `$eo_to_smt_reserved_datatype_name`; `$eo_prog_scope` |
+| 2 | an application of a term that may be stuck | `$eo_prog_scope`, `$eo_lit_type_Binary` |
+| 1 | the native string constant `"@"` | `$eo_to_smt_reserved_datatype_name` |
 
 ## Lemma C: both questions resolved
 
@@ -150,7 +151,7 @@ values (done: proofs.md, "Literals are values").
 | nat zero and succ patterns, `nat.zero` (group 3) | `native_pattern_nat_zero` (`Integer::zero`), `native_pattern_succ` (`raw_int` clone, `sgn`, `add`, `one`, `neg`) | `zero_spec`, `clone_spec`, `sgn_spec`, `add_spec`, `one_spec`, `neg_spec` | **in use**: 5 programs (`Runtime/Nats.lean`) |
 | `eo::and`/`or`/`not` (group 1) | `builtin_core And` → `builtin_literal` → `Lit::evaluate_nary`; bit-vectors through `BitVec.and` | `Integer.bitwise_*_spec`, `mod_by_pow2_spec`; `clone_spec` | next |
 | integer natives, `zleq`, and numeral constants (group 5) | `native_int_compare`, `native_int_binary`, `native_pow2`, `native_int_to_nat`, `native_succ`; `Integer::from(<u32>)` | `partial_cmp_spec`, `euclidean_qr_spec`, `fits_u32_spec`, `to_u32_spec`, `from_u32_spec`, `pow_spec` | **in use** (`Runtime/IntNatives.lean`); no program proved yet: `$smtx_typeof` next stops at `Valid` for `SmtTerm`, `$eo_to_smt_type` at the `"@"` program |
-| `eo::len` (group 2) | `Lit::evaluate Length`: `Integer::from(size)` / `from(len)` | `from_u32_spec`, `from_usize_spec` | next |
+| `eo::len` (group 2) | `builtin_core` → `builtin_strict` → `builtin_literal` → `literals` → `Lit::evaluate Length`: `Integer::from(size)` / `from(len)` | `from_u32_spec`, `from_usize_spec` | **in use** (`Runtime/Builtins.lean`); no program proved: `$eo_lit_type_Binary` next stops at an application of a term that may be stuck. The line is not in an emitted proof yet (the case stops before it). |
 | numeral and rational literals in patterns and built from values (group 4) | `destruct` of a literal: `Hit::Raw` of a copy; `construct_literal` | `clone_spec`, `Rational.clone_spec` | **in use** (`Runtime/Numbers.lean`); no program proved yet: `$eo_to_smt` and `$eo_typeof` next stop at `$emb_String`, `$eo_to_smt_type` at `zleq` |
 
 Three more that are not about trust:

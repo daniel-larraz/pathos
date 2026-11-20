@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 4,951 theorems, are **24**:
+  This is the trust. In use today, by 5,130 theorems, are **25**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -235,7 +235,9 @@ step 5):
     code (`Runtime/IntNatives.lean`): `Integer.partial_cmp_spec`,
     `euclidean_qr_spec`, `fits_u32_spec`, `to_u32_spec`, `from_u32_spec`,
     `pow_spec` (and `eq_spec`, `sgn_spec`, `zero_spec`, `one_spec`,
-    `add_spec`, `neg_spec`, `clone_spec`, already in use).
+    `add_spec`, `neg_spec`, `clone_spec`, already in use);
+  - `eo::len` (`Runtime/Builtins.lean`): `Integer.from_usize_spec` (and
+    `from_u32_spec`, already in use).
 - **Declarations**: axioms that declare a type or a function and say
   nothing of it: 45 of the 54 that Aeneas leaves without a body in the
   Lean of the checker (the types `num.Integer` and `num.Rational`, their
@@ -568,6 +570,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
 | `Runtime/Strings.lean` | 297 | `not`, `string_valid` and `string_prefix_eq`: the two string operations are loops over the code points, proved by induction over the loop; a string the store can hold has code points below 2^32 (the embedding's `okStr`), so its code points are its characters. |
 | `Runtime/Nats.lean` | 153 | The natural numbers: the constant `nat.zero`, and the patterns `nat.zero` (`pat_native_zero`) and `(nat.succ m)` (`pat_destruct_lit`), which store a numeral; from the trusted specs of `zero`, `one`, `clone`, `sgn`, `add` and `neg`. |
+| `Runtime/Builtins.lean` | 285 | Builtin operators on literals: what every one needs (a literal's clone, `literal_of`, `literals` on one argument, `any_stuck` on one) and `eo::len` (`builtin_spec_len`): the width of a binary, the length of a string, through `Lit::evaluate`. |
 | `Runtime/IntNatives.lean` | 283 | The native operations on integers (`zeq`, `zleq` through `partial_cmp`, `mod_total`, `int.pow2`, `int.to_nat`, `nat.succ`) and the numeral constants of the generated code (`Integer::from(<u32>)`, negated); from the trusted specs of the integer functions. |
 | `Runtime/Numbers.lean` | 399 | Numeral and rational literals: a pattern on one stores a copy of its value (`destruct_numeral_spec`, `destruct_rational_spec`, with `pat_destruct_lit`), and `construct` from a native value gives the literal (`construct_numeral_spec`, `construct_rational_spec`); from the trusted specs of `clone`. |
 | `Runtime/Literals.lean` | 122 | `destruct` with the Boolean literal's constructor, which stores a native copy of the Boolean: a pattern that changes the store (`pat_destruct_lit`). |
@@ -577,17 +580,18 @@ person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
 **What limits the 53** (the reasons of `proofs.tsv`, for the other 29,
-on 2026-11-20, after numeral and rational literals): calls of programs
-without a proof (12; three wait on `$eo_to_smt_type`, which calls the
-`"@"` program); the six of the datatype operators below; builtin
-operators (4);
-a string literal in a pattern (2, `$emb_String`: no trust, no lemma
-yet); the two compiled to the runtime; `Valid` for `SmtTerm` (`$smtx_typeof`,
-no trust); the native string constant `"@"`; and an application of a term that may be stuck
-(`$eo_prog_scope`, the first finding below). The lemmas of `construct`
-and `destruct` are generated for every data constructor (`MiniCtors`);
-the literal constructors are stored otherwise and have none. The cache of
-results is stated for every embedded type (`MiniCacheSem`).
+on 2026-11-20, after `eo::len`): calls of programs without a proof (12;
+three wait on `$eo_to_smt_type`, which calls the `"@"` program); the six
+of the datatype operators below; builtin operators (3: `eo::and` twice,
+`eo::cons`); a string literal in a pattern (2, `$emb_String`: no trust, no
+lemma yet); the two compiled to the runtime; two applications of a term
+that may be stuck (`$eo_prog_scope`, the first finding below, and
+`$eo_lit_type_Binary`, past `eo::len`); `Valid` for `SmtTerm`
+(`$smtx_typeof`, no trust); and the native string constant `"@"`. The
+lemmas of `construct` and `destruct` are generated for every data
+constructor (`MiniCtors`); the literal constructors are stored otherwise
+and have none. The cache of results is stated for every embedded type
+(`MiniCacheSem`).
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a

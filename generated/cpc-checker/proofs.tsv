@@ -102,7 +102,7 @@ $eo_is_list_nil_bvmul	none	case 0 has a builtin operator
 $eo_is_list_nil_bvor	none	case 0 has a builtin operator
 $eo_is_list_nil_bvxor	none	case 0 has a builtin operator
 $eo_is_list_nil_str.++	none	case 1 has a literal that is not a Boolean
-$eo_lit_type_Binary	none	case 0 has a builtin operator
+$eo_lit_type_Binary	none	case 0 has an application of a term that may be stuck
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
