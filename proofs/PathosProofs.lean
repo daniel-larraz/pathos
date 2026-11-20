@@ -18,6 +18,7 @@ public import PathosProofs.Runtime.Embed
 public import PathosProofs.Runtime.Ops
 public import PathosProofs.Runtime.Ctors
 public import PathosProofs.Runtime.Node
+public import PathosProofs.Runtime.HoldsSem
 public import PathosProofs.Tactic
 public import PathosProofs.Generated
 public import MiniProofs

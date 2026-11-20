@@ -61,15 +61,30 @@ constructors and about 20 types. The plan:
 - `rustIdent` (plugins/utils) is rust-meta's identifier mangling, moved so
   lean-meta names the Rust constructors the same way; the Rust is
   byte-identical (CpcMini and the full CPC checker).
-- Step 3, begun: `Runtime/Node.lean` has the generic lemmas,
-  `Store.construct_holds` and `Store.destruct_holds`, for every data
-  constructor. Stopped there on a design question (asked of the reviewer
-  on 2026-11-23): the `CtorSpec.*` lemmas that generated proofs name state
-  their fields with the old relations (`Rep`, `RepProof`, `RepState`,
-  `RepObj`, `NativeBool`), and a one-liner from `destruct_holds` cannot
-  give those back without `Holds … (enc x)` implying them, which holds
-  only for the constructors the old relations cover. So the one-liners
-  need `Represents.rep` switched to `Holds … (enc x)` first.
+- Step 3 is the switch of `Represents.rep` to trees (decided by the
+  reviewer and Daniel on 2026-11-23), in three sub-checkpoints:
+  (i) done: lean-meta's inversion lemmas of `enc` (`Embed.inv_T_<C>`, 86
+  in CpcMini), and `Runtime/HoldsSem.lean`, which re-proves over
+  `Store.HRep` (= `Holds … (enc_Term x) ∧ emb_Term x`) and `Store.HBool`
+  what `Store/Sem.lean` and `Runtime/Ops.lean` prove of `Rep`: `eq_iff`,
+  `stuck_iff`, `is_stuck`, `unapply`, `rep_stuck`, `apply_ne_stuck`,
+  `apply`, `construct` of an operator, the Boolean literal, `native_bool`,
+  and the link to `TermValid`. `Runtime/Node.lean` has `construct_holds`
+  and `destruct_holds` for every data constructor. Nothing uses either
+  yet.
+  (ii) next: `Represents.rep` becomes `Holds … (enc x) ∧ emb x` for every
+  type, the tactics' per-type alternatives collapse, and the old relations
+  (`Rep`, `RepProof`, `RepState`, `RepObj`, `NativeBool`) go.
+  (iii) then: rust-meta writes the `CtorSpec.*` one-liners for every data
+  constructor in place of `leanCtorLemmas()`, and `MiniCacheSem` over
+  `HoldsList`/`enc`.
+- `Represents.rep` carries `emb_T x` beside `Holds` (a conjunction).
+  Folding `emb` into `Valid` is left for lemma C, with `Valid`, which this
+  work does not touch.
+- Literal constructors (`$emb_Numeral`, `$emb_String`, …) are not data
+  constructors: their `destruct` interns a native and so changes the
+  store, which `pat_destruct` does not allow. They stay on lemmas written
+  by hand, outside `construct_holds`/`destruct_holds`.
 
 ## The emitter (`plugins/rust_meta/rust_meta_reduce.cpp`)
 

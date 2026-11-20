@@ -222,6 +222,161 @@ def emb_Term : Eo.Term → Prop
   | Eo.Term.UConst x0 x1 => Tree.okNat x0 ∧ emb_Term x1
 end
 
+theorem inv_Datatype_null {x : Eo.Datatype} {ts : List Tree}
+    (h : enc_Datatype x = Tree.node schema.Constructor.eo__24emb_5fedt_2enull ts) :
+    x = Eo.Datatype.null ∧ ts = [] := by
+  cases x <;> simp_all [enc_Datatype]
+
+theorem inv_Datatype_sum {x : Eo.Datatype} {ts : List Tree}
+    (h : enc_Datatype x = Tree.node schema.Constructor.eo__24emb_5fedt_2esum ts) :
+    ∃ x0 x1, x = Eo.Datatype.sum x0 x1 ∧ ts = [(enc_DatatypeCons x0), (enc_Datatype x1)] := by
+  cases x <;> simp_all [enc_Datatype]
+
+theorem inv_DatatypeCons_unit {x : Eo.DatatypeCons} {ts : List Tree}
+    (h : enc_DatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fedtc_2eunit ts) :
+    x = Eo.DatatypeCons.unit ∧ ts = [] := by
+  cases x <;> simp_all [enc_DatatypeCons]
+
+theorem inv_DatatypeCons_cons {x : Eo.DatatypeCons} {ts : List Tree}
+    (h : enc_DatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fedtc_2econs ts) :
+    ∃ x0 x1, x = Eo.DatatypeCons.cons x0 x1 ∧ ts = [(enc_Term x0), (enc_DatatypeCons x1)] := by
+  cases x <;> simp_all [enc_DatatypeCons]
+
+theorem inv_DatatypeDecl_nil {x : Eo.DatatypeDecl} {ts : List Tree}
+    (h : enc_DatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fedd_2enil ts) :
+    x = Eo.DatatypeDecl.nil ∧ ts = [] := by
+  cases x <;> simp_all [enc_DatatypeDecl]
+
+theorem inv_DatatypeDecl_cons {x : Eo.DatatypeDecl} {ts : List Tree}
+    (h : enc_DatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fedd_2econs ts) :
+    ∃ x0 x1 x2, x = Eo.DatatypeDecl.cons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_Datatype x1), (enc_DatatypeDecl x2)] := by
+  cases x <;> simp_all [enc_DatatypeDecl]
+
+theorem inv_Term_UOp {x : Eo.Term} {op : Eo.UserOp} {ts : List Tree}
+    (h : enc_Term x = Tree.node (uop op) ts) : x = Eo.Term.UOp op ∧ ts = [] := by
+  cases x
+  case UOp y => cases y <;> cases op <;> simp_all [enc_Term, uop]
+  all_goals cases op <;> simp_all [enc_Term, uop]
+
+theorem inv_Term___eo_List {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList ts) :
+    x = Eo.Term.__eo_List ∧ ts = [] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term___eo_List_nil {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList_5fnil ts) :
+    x = Eo.Term.__eo_List_nil ∧ ts = [] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term___eo_List_cons {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList_5fcons ts) :
+    x = Eo.Term.__eo_List_cons ∧ ts = [] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_Bool {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fBool ts) :
+    x = Eo.Term.Bool ∧ ts = [] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_Type {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fType ts) :
+    x = Eo.Term.Type ∧ ts = [] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_Stuck {x : Eo.Term} (h : enc_Term x = Tree.stuck) : x = Eo.Term.Stuck := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_Apply {x : Eo.Term} {a b : Tree} (h : enc_Term x = Tree.apply a b) :
+    ∃ x0 x1, x = Eo.Term.Apply x0 x1 ∧ a = (enc_Term x0) ∧ b = (enc_Term x1) := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_FunType {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fFunType ts) :
+    x = Eo.Term.FunType ∧ ts = [] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_Var {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fVar ts) :
+    ∃ x0 x1, x = Eo.Term.Var x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_DatatypeType {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDatatypeType ts) :
+    ∃ x0 x1, x = Eo.Term.DatatypeType x0 x1 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_DatatypeTypeRef {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDatatypeTypeRef ts) :
+    ∃ x0, x = Eo.Term.DatatypeTypeRef x0 ∧ ts = [(Tree.encStr x0)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_DtcAppType {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtcAppType ts) :
+    ∃ x0 x1, x = Eo.Term.DtcAppType x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_DtCons {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtCons ts) :
+    ∃ x0 x1 x2, x = Eo.Term.DtCons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1), (Tree.encNat x2)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_DtSel {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtSel ts) :
+    ∃ x0 x1 x2 x3, x = Eo.Term.DtSel x0 x1 x2 x3 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1), (Tree.encNat x2), (Tree.encNat x3)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_USort {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fUSort ts) :
+    ∃ x0, x = Eo.Term.USort x0 ∧ ts = [(Tree.encNat x0)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_UConst {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fUConst ts) :
+    ∃ x0 x1, x = Eo.Term.UConst x0 x1 ∧ ts = [(Tree.encNat x0), (enc_Term x1)] := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
+theorem inv_Term_lit {x : Eo.Term} {l : lit.Lit} (h : enc_Term x = Tree.lit l) :
+    (∃ x0, x = Eo.Term.Boolean x0 ∧ l = lit.Lit.Boolean x0) ∨
+      (∃ x0, x = Eo.Term.Numeral x0 ∧ l = lit.Lit.Numeral (num.Integer.ofInt x0)) ∨
+      (∃ x0, x = Eo.Term.Rational x0 ∧ l = lit.Lit.Rational (num.Rational.ofRat x0)) ∨
+      (∃ x0, x = Eo.Term.String x0 ∧ l = lit.Lit.Str (Tree.strOf x0)) ∨
+      (∃ x0 x1, x = Eo.Term.Binary x0 x1 ∧ l = lit.Lit.Binary (Tree.bvOf x0 x1)) := by
+  cases x
+  case UOp y => cases y <;> simp_all [enc_Term, uop]
+  all_goals simp_all [enc_Term]
+
 mutual
 theorem dec_enc_Datatype : (x : Eo.Datatype) → emb_Datatype x → dec_Datatype (enc_Datatype x) = some x
   | Eo.Datatype.null, h => by
@@ -334,6 +489,16 @@ def emb_CArgList : Eo.CArgList → Prop
   | Eo.CArgList.cons x0 x1 => emb_Term x0 ∧ emb_CArgList x1
 end
 
+theorem inv_CArgList_nil {x : Eo.CArgList} {ts : List Tree}
+    (h : enc_CArgList x = Tree.node schema.Constructor.eo__24emb_5fal_2enil ts) :
+    x = Eo.CArgList.nil ∧ ts = [] := by
+  cases x <;> simp_all [enc_CArgList]
+
+theorem inv_CArgList_cons {x : Eo.CArgList} {ts : List Tree}
+    (h : enc_CArgList x = Tree.node schema.Constructor.eo__24emb_5fal_2econs ts) :
+    ∃ x0 x1, x = Eo.CArgList.cons x0 x1 ∧ ts = [(enc_Term x0), (enc_CArgList x1)] := by
+  cases x <;> simp_all [enc_CArgList]
+
 mutual
 theorem dec_enc_CArgList : (x : Eo.CArgList) → emb_CArgList x → dec_CArgList (enc_CArgList x) = some x
   | Eo.CArgList.nil, h => by
@@ -368,6 +533,16 @@ def emb_CIndexList : Eo.CIndexList → Prop
   | Eo.CIndexList.nil => True
   | Eo.CIndexList.cons x0 x1 => Tree.okInt x0 ∧ emb_CIndexList x1
 end
+
+theorem inv_CIndexList_nil {x : Eo.CIndexList} {ts : List Tree}
+    (h : enc_CIndexList x = Tree.node schema.Constructor.eo__24emb_5findl_2enil ts) :
+    x = Eo.CIndexList.nil ∧ ts = [] := by
+  cases x <;> simp_all [enc_CIndexList]
+
+theorem inv_CIndexList_cons {x : Eo.CIndexList} {ts : List Tree}
+    (h : enc_CIndexList x = Tree.node schema.Constructor.eo__24emb_5findl_2econs ts) :
+    ∃ x0 x1, x = Eo.CIndexList.cons x0 x1 ∧ ts = [(Tree.encInt x0), (enc_CIndexList x1)] := by
+  cases x <;> simp_all [enc_CIndexList]
 
 mutual
 theorem dec_enc_CIndexList : (x : Eo.CIndexList) → emb_CIndexList x → dec_CIndexList (enc_CIndexList x) = some x
@@ -409,6 +584,31 @@ def emb_CRule : Eo.CRule → Prop
   | Eo.CRule.symm => True
   | Eo.CRule.trans => True
 end
+
+theorem inv_CRule_scope {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2escope ts) :
+    x = Eo.CRule.scope ∧ ts = [] := by
+  cases x <;> simp_all [enc_CRule]
+
+theorem inv_CRule_contra {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2econtra ts) :
+    x = Eo.CRule.contra ∧ ts = [] := by
+  cases x <;> simp_all [enc_CRule]
+
+theorem inv_CRule_refl {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2erefl ts) :
+    x = Eo.CRule.refl ∧ ts = [] := by
+  cases x <;> simp_all [enc_CRule]
+
+theorem inv_CRule_symm {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2esymm ts) :
+    x = Eo.CRule.symm ∧ ts = [] := by
+  cases x <;> simp_all [enc_CRule]
+
+theorem inv_CRule_trans {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2etrans ts) :
+    x = Eo.CRule.trans ∧ ts = [] := by
+  cases x <;> simp_all [enc_CRule]
 
 mutual
 theorem dec_enc_CRule : (x : Eo.CRule) → emb_CRule x → dec_CRule (enc_CRule x) = some x
@@ -464,6 +664,26 @@ def emb_CCmd : Eo.CCmd → Prop
   | Eo.CCmd.step_pop x0 x1 x2 => emb_CRule x0 ∧ emb_CArgList x1 ∧ emb_CIndexList x2
 end
 
+theorem inv_CCmd_assume_push {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush ts) :
+    ∃ x0, x = Eo.CCmd.assume_push x0 ∧ ts = [(enc_Term x0)] := by
+  cases x <;> simp_all [enc_CCmd]
+
+theorem inv_CCmd_check_proven {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven ts) :
+    ∃ x0, x = Eo.CCmd.check_proven x0 ∧ ts = [(enc_Term x0)] := by
+  cases x <;> simp_all [enc_CCmd]
+
+theorem inv_CCmd_step {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2estep ts) :
+    ∃ x0 x1 x2, x = Eo.CCmd.step x0 x1 x2 ∧ ts = [(enc_CRule x0), (enc_CArgList x1), (enc_CIndexList x2)] := by
+  cases x <;> simp_all [enc_CCmd]
+
+theorem inv_CCmd_step_pop {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2estep_5fpop ts) :
+    ∃ x0 x1 x2, x = Eo.CCmd.step_pop x0 x1 x2 ∧ ts = [(enc_CRule x0), (enc_CArgList x1), (enc_CIndexList x2)] := by
+  cases x <;> simp_all [enc_CCmd]
+
 mutual
 theorem dec_enc_CCmd : (x : Eo.CCmd) → emb_CCmd x → dec_CCmd (enc_CCmd x) = some x
   | Eo.CCmd.assume_push x0, h => by
@@ -509,6 +729,16 @@ def emb_CCmdList : Eo.CCmdList → Prop
   | Eo.CCmdList.cons x0 x1 => emb_CCmd x0 ∧ emb_CCmdList x1
 end
 
+theorem inv_CCmdList_nil {x : Eo.CCmdList} {ts : List Tree}
+    (h : enc_CCmdList x = Tree.node schema.Constructor.eo__24emb_5fcmdl_2enil ts) :
+    x = Eo.CCmdList.nil ∧ ts = [] := by
+  cases x <;> simp_all [enc_CCmdList]
+
+theorem inv_CCmdList_cons {x : Eo.CCmdList} {ts : List Tree}
+    (h : enc_CCmdList x = Tree.node schema.Constructor.eo__24emb_5fcmdl_2econs ts) :
+    ∃ x0 x1, x = Eo.CCmdList.cons x0 x1 ∧ ts = [(enc_CCmd x0), (enc_CCmdList x1)] := by
+  cases x <;> simp_all [enc_CCmdList]
+
 mutual
 theorem dec_enc_CCmdList : (x : Eo.CCmdList) → emb_CCmdList x → dec_CCmdList (enc_CCmdList x) = some x
   | Eo.CCmdList.nil, h => by
@@ -549,6 +779,21 @@ def emb_CStateObj : Eo.CStateObj → Prop
   | Eo.CStateObj.assume_push x0 => emb_Term x0
   | Eo.CStateObj.proven x0 => emb_Term x0
 end
+
+theorem inv_CStateObj_assume {x : Eo.CStateObj} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eassume ts) :
+    ∃ x0, x = Eo.CStateObj.assume x0 ∧ ts = [(enc_Term x0)] := by
+  cases x <;> simp_all [enc_CStateObj]
+
+theorem inv_CStateObj_assume_push {x : Eo.CStateObj} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eassume_5fpush ts) :
+    ∃ x0, x = Eo.CStateObj.assume_push x0 ∧ ts = [(enc_Term x0)] := by
+  cases x <;> simp_all [enc_CStateObj]
+
+theorem inv_CStateObj_proven {x : Eo.CStateObj} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eproven ts) :
+    ∃ x0, x = Eo.CStateObj.proven x0 ∧ ts = [(enc_Term x0)] := by
+  cases x <;> simp_all [enc_CStateObj]
 
 mutual
 theorem dec_enc_CStateObj : (x : Eo.CStateObj) → emb_CStateObj x → dec_CStateObj (enc_CStateObj x) = some x
@@ -594,6 +839,21 @@ def emb_CState : Eo.CState → Prop
   | Eo.CState.cons x0 x1 => emb_CStateObj x0 ∧ emb_CState x1
 end
 
+theorem inv_CState_nil {x : Eo.CState} {ts : List Tree}
+    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2enil ts) :
+    x = Eo.CState.nil ∧ ts = [] := by
+  cases x <;> simp_all [enc_CState]
+
+theorem inv_CState_Stuck {x : Eo.CState} {ts : List Tree}
+    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2eStuck ts) :
+    x = Eo.CState.Stuck ∧ ts = [] := by
+  cases x <;> simp_all [enc_CState]
+
+theorem inv_CState_cons {x : Eo.CState} {ts : List Tree}
+    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2econs ts) :
+    ∃ x0 x1, x = Eo.CState.cons x0 x1 ∧ ts = [(enc_CStateObj x0), (enc_CState x1)] := by
+  cases x <;> simp_all [enc_CState]
+
 mutual
 theorem dec_enc_CState : (x : Eo.CState) → emb_CState x → dec_CState (enc_CState x) = some x
   | Eo.CState.nil, h => by
@@ -629,6 +889,14 @@ def emb_Proof : Eo.Proof → Prop
   | Eo.Proof.pf x0 => emb_Term x0
   | Eo.Proof.Stuck => True
 end
+
+theorem inv_Proof_pf {x : Eo.Proof} {ts : List Tree}
+    (h : enc_Proof x = Tree.node schema.Constructor.eo__24eo_5fpf ts) :
+    ∃ x0, x = Eo.Proof.pf x0 ∧ ts = [(enc_Term x0)] := by
+  cases x <;> simp_all [enc_Proof]
+
+theorem inv_Proof_Stuck {x : Eo.Proof} (h : enc_Proof x = Tree.stuck) : x = Eo.Proof.Stuck := by
+  cases x <;> simp_all [enc_Proof]
 
 mutual
 theorem dec_enc_Proof : (x : Eo.Proof) → emb_Proof x → dec_Proof (enc_Proof x) = some x
@@ -771,6 +1039,111 @@ def emb_SmtType : Smtm.SmtType → Prop
   | Smtm.SmtType.FunType x0 x1 => emb_SmtType x0 ∧ emb_SmtType x1
   | Smtm.SmtType.DtcAppType x0 x1 => emb_SmtType x0 ∧ emb_SmtType x1
 end
+
+theorem inv_SmtDatatype_null {x : Smtm.SmtDatatype} {ts : List Tree}
+    (h : enc_SmtDatatype x = Tree.node schema.Constructor.eo__24emb_5fdt_2enull ts) :
+    x = Smtm.SmtDatatype.null ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtDatatype]
+
+theorem inv_SmtDatatype_sum {x : Smtm.SmtDatatype} {ts : List Tree}
+    (h : enc_SmtDatatype x = Tree.node schema.Constructor.eo__24emb_5fdt_2esum ts) :
+    ∃ x0 x1, x = Smtm.SmtDatatype.sum x0 x1 ∧ ts = [(enc_SmtDatatypeCons x0), (enc_SmtDatatype x1)] := by
+  cases x <;> simp_all [enc_SmtDatatype]
+
+theorem inv_SmtDatatypeCons_unit {x : Smtm.SmtDatatypeCons} {ts : List Tree}
+    (h : enc_SmtDatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fdtc_2eunit ts) :
+    x = Smtm.SmtDatatypeCons.unit ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtDatatypeCons]
+
+theorem inv_SmtDatatypeCons_cons {x : Smtm.SmtDatatypeCons} {ts : List Tree}
+    (h : enc_SmtDatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fdtc_2econs ts) :
+    ∃ x0 x1, x = Smtm.SmtDatatypeCons.cons x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtDatatypeCons x1)] := by
+  cases x <;> simp_all [enc_SmtDatatypeCons]
+
+theorem inv_SmtDatatypeDecl_nil {x : Smtm.SmtDatatypeDecl} {ts : List Tree}
+    (h : enc_SmtDatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fdd_2enil ts) :
+    x = Smtm.SmtDatatypeDecl.nil ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtDatatypeDecl]
+
+theorem inv_SmtDatatypeDecl_cons {x : Smtm.SmtDatatypeDecl} {ts : List Tree}
+    (h : enc_SmtDatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fdd_2econs ts) :
+    ∃ x0 x1 x2, x = Smtm.SmtDatatypeDecl.cons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatype x1), (enc_SmtDatatypeDecl x2)] := by
+  cases x <;> simp_all [enc_SmtDatatypeDecl]
+
+theorem inv_SmtType_None {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eNone ts) :
+    x = Smtm.SmtType.None ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Bool {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eBool ts) :
+    x = Smtm.SmtType.Bool ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Int {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eInt ts) :
+    x = Smtm.SmtType.Int ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Real {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eReal ts) :
+    x = Smtm.SmtType.Real ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_RegLan {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eRegLan ts) :
+    x = Smtm.SmtType.RegLan ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_BitVec {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eBitVec ts) :
+    ∃ x0, x = Smtm.SmtType.BitVec x0 ∧ ts = [(Tree.encNat x0)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Map {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eMap ts) :
+    ∃ x0 x1, x = Smtm.SmtType.Map x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Set {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eSet ts) :
+    ∃ x0, x = Smtm.SmtType.Set x0 ∧ ts = [(enc_SmtType x0)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Seq {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eSeq ts) :
+    ∃ x0, x = Smtm.SmtType.Seq x0 ∧ ts = [(enc_SmtType x0)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Char {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eChar ts) :
+    x = Smtm.SmtType.Char ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_Datatype {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eDatatype ts) :
+    ∃ x0 x1, x = Smtm.SmtType.Datatype x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_TypeRef {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eTypeRef ts) :
+    ∃ x0, x = Smtm.SmtType.TypeRef x0 ∧ ts = [(Tree.encStr x0)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_USort {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eUSort ts) :
+    ∃ x0, x = Smtm.SmtType.USort x0 ∧ ts = [(Tree.encNat x0)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_FunType {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eFunType ts) :
+    ∃ x0 x1, x = Smtm.SmtType.FunType x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
+  cases x <;> simp_all [enc_SmtType]
+
+theorem inv_SmtType_DtcAppType {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eDtcAppType ts) :
+    ∃ x0 x1, x = Smtm.SmtType.DtcAppType x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
+  cases x <;> simp_all [enc_SmtType]
 
 mutual
 theorem dec_enc_SmtDatatype : (x : Smtm.SmtDatatype) → emb_SmtDatatype x → dec_SmtDatatype (enc_SmtDatatype x) = some x
@@ -965,6 +1338,96 @@ def emb_SmtTerm : Smtm.SmtTerm → Prop
   | Smtm.SmtTerm.eq x0 x1 => emb_SmtTerm x0 ∧ emb_SmtTerm x1
   | Smtm.SmtTerm.ite x0 x1 x2 => emb_SmtTerm x0 ∧ emb_SmtTerm x1 ∧ emb_SmtTerm x2
 end
+
+theorem inv_SmtTerm_None {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eNone ts) :
+    x = Smtm.SmtTerm.None ∧ ts = [] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_Boolean {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eBoolean ts) :
+    ∃ x0, x = Smtm.SmtTerm.Boolean x0 ∧ ts = [(Tree.encBool x0)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_Numeral {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eNumeral ts) :
+    ∃ x0, x = Smtm.SmtTerm.Numeral x0 ∧ ts = [(Tree.encInt x0)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_Rational {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eRational ts) :
+    ∃ x0, x = Smtm.SmtTerm.Rational x0 ∧ ts = [(Tree.encRat x0)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_String {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eString ts) :
+    ∃ x0, x = Smtm.SmtTerm.String x0 ∧ ts = [(Tree.encStr x0)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_Binary {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eBinary ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.Binary x0 x1 ∧ ts = [(Tree.encInt x0), (Tree.encInt x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_Apply {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eApply ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.Apply x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_Var {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eVar ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.Var x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtType x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_DtCons {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtCons ts) :
+    ∃ x0 x1 x2, x = Smtm.SmtTerm.DtCons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_DtSel {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtSel ts) :
+    ∃ x0 x1 x2 x3, x = Smtm.SmtTerm.DtSel x0 x1 x2 x3 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2), (Tree.encNat x3)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_DtTester {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtTester ts) :
+    ∃ x0 x1 x2, x = Smtm.SmtTerm.DtTester x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_UConst {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eUConst ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.UConst x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtType x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_not {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2enot ts) :
+    ∃ x0, x = Smtm.SmtTerm.not x0 ∧ ts = [(enc_SmtTerm x0)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_and {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eand ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.and x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_or {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eor ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.or x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_imp {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2e_3d_3e ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.imp x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_eq {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2e_3d ts) :
+    ∃ x0 x1, x = Smtm.SmtTerm.eq x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  cases x <;> simp_all [enc_SmtTerm]
+
+theorem inv_SmtTerm_ite {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eite ts) :
+    ∃ x0 x1 x2, x = Smtm.SmtTerm.ite x0 x1 x2 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1), (enc_SmtTerm x2)] := by
+  cases x <;> simp_all [enc_SmtTerm]
 
 mutual
 theorem dec_enc_SmtTerm : (x : Smtm.SmtTerm) → emb_SmtTerm x → dec_SmtTerm (enc_SmtTerm x) = some x
