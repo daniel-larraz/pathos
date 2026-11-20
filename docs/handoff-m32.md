@@ -1,252 +1,207 @@
-# Milestone 32: where the work stopped
+# Milestone 32: where the work stands
 
-Written on 2026-11-19 for whoever continues. The state of the proofs is in
-[proofs.md](proofs.md), section "Generated proofs"; this is what is not
-there. pathos `m32` and the Ethos clone
-`~/Projects/cvc5/pathos-m28/ethos` (`m32-proofs`) hold everything.
+Written on 2026-11-19 for whoever continues (Fable, the week after). Start
+here; [proofs.md](proofs.md), "Generated proofs" and "What is trusted",
+has the report. Everything is on pathos `m32` and the Ethos fork's
+`m32-proofs` (local clone `~/Projects/cvc5/pathos-m28/ethos`); pathos pins
+the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
-## Stage 2: what `Store/Tree.lean` was going to be
+## The state
 
-Today each logos type has a hand-written relation to handles (`Rep`,
-`RepProof`, `RepState`, `RepObj`, `NativeBool`), each with its own
-"functional", "injective" and "mono" proofs. That does not scale to 135
-constructors and about 20 types. The plan:
+- **19 of CpcMini's 82 programs** have a generated proof, listed in `generated/cpcmini-checker/proofs.tsv` with
+  `generated`; every other program has the first thing that stops it.
+- `scripts/proofs-build`: 2,814 theorems, no `sorry`. The trust is **11
+  assumptions** (Lean's three among them), unchanged by steps 3–5; 49 declarations (axioms that declare a type or a function,
+  which add no trust: see "What is trusted").
+- The Rust has not changed: every step checked that CpcMini regenerates
+  the same crate and that the full CPC checker's `src/`, Cargo files and
+  tables are main's.
+- The generated files elaborate in seconds (MiniProofs about 4.4 s and
+  1.7 GiB at 5 (iii)). CPC's generated proofs are not built.
 
-- `Tree`: a handle's data with its handles unfolded. `Holds nodes t x`:
-  the handle `t` unfolds to the tree `x`. Functional, injective (from "no
-  two handles have the same data") and monotone are proved **once**, there.
-- Per logos type a generated function `enc : T → Tree` (a data constructor
-  is `Tree.node c [enc fields…]`; the seven special ones follow
-  `Constructor::embedding` in the runtime: stuck, apply, the four literals,
-  binary; a native field is `Tree.native`). `Represents.rep s t x` becomes
-  `Holds s.nodes.val t.val (enc x)` for every type, so `carry_one`,
-  `congr_one` and `pat_same` lose their per-type alternatives. `eq_iff`
-  needs `enc` injective: generate a left inverse `dec` and prove
-  `dec (enc x) = some x` by induction and `simp`.
-- `construct`/`destruct` of a data constructor are then one generic lemma
-  each over `Holds`; the per-constructor `CtorSpec.*` lemmas keep their
-  shape (the tactics read it) and become one-liners, generated.
-- lean-meta should write this file: `finalizeDecl`
-  (`lean_meta_reduce.cpp`, about line 1275) has the EO name, the Lean
-  constructor, its type and its field types in hand. It needs
-  `RustMetaReduce::ident` for the Rust names.
-- `destruct` of a literal constructor (`$emb_Numeral`…) interns a native
-  handle, so it changes the store: `pat_destruct` assumes it does not.
-- `MiniCacheSem` then uses `Holds`/`enc` and can cover caches over values
-  that are not terms. Layering: `Tree` → generated embedding → cache table
-  → `Store/Ops`.
+## What steps 3–5 built
 
-**State (2026-11-23, steps 1 and 2 of the reviewer's plan done):**
-- Step 1: `Store/Tree.lean` compiles and `PathosProofs` imports it:
-  `Tree`, `Holds`/`HoldsList` (mutual), `Holds.functional`,
-  `Holds.injective`, `Holds.mono`, each proved once.
-- Step 2: lean-meta writes `proofs/MiniEmbed.lean` (Ethos `m32-proofs`,
-  `printEmbedding` in `lean_meta_reduce.cpp`, template
-  `lean_meta_embed.lean`; the constructors are recorded in `finalizeDecl`
-  by `recordEmbedCtor`, Proof's by hand). Per datatype `enc_T`, `dec_T`,
-  `emb_T` and `dec_enc_T : emb_T x → dec_T (enc_T x) = some x`, for the 17
-  datatypes the checker uses. SmtValue (a real), and SmtMap, SmtSeq and
-  SmtRegLan, which contain it, are left out and listed in the file's head:
-  no program of the Rust checker takes or returns one. Native fields go
-  through hand-written codecs at the end of `Store/Tree.lean`
-  (`Tree.encInt`, `Tree.strOf`, ...).
-- `emb_T` is the "Embeddable" the reviewer asked for: strings of
-  characters below 2^32 and of a length a vector holds, bit-vectors with a
-  width below 2^32 and a value in range. It is standalone: **it should fold
-  into `Valid`** (Runtime/Embed.lean) when Valid is generated or extended;
-  the closure lemma (a handle only unfolds to embeddable values) is later
-  work. Why it holds: logos enforces the bounds itself (the width bound
-  `native_zlt … 4294967296`, characters below 196608), so values logos
-  builds are embeddable.
-- `rustIdent` (plugins/utils) is rust-meta's identifier mangling, moved so
-  lean-meta names the Rust constructors the same way; the Rust is
-  byte-identical (CpcMini and the full CPC checker).
-- Step 3 is the switch of `Represents.rep` to trees (decided by the
-  reviewer and Daniel on 2026-11-23), in three sub-checkpoints:
-  (i) done: lean-meta's inversion lemmas of `enc` (`Embed.inv_T_<C>`, 86
-  in CpcMini), and `Runtime/HoldsSem.lean`, which re-proves over
-  `Store.HRep` (= `Holds … (enc_Term x) ∧ emb_Term x`) and `Store.HBool`
-  what `Store/Sem.lean` and `Runtime/Ops.lean` prove of `Rep`: `eq_iff`,
-  `stuck_iff`, `is_stuck`, `unapply`, `rep_stuck`, `apply_ne_stuck`,
-  `apply`, `construct` of an operator, the Boolean literal, `native_bool`,
-  and the link to `TermValid`. `Runtime/Node.lean` has `construct_holds`
-  and `destruct_holds` for every data constructor. Nothing uses either
-  yet.
-  (ii) done: `Rep nodes t x` (Store/Rep.lean) is `Holds nodes t
-  (Embedded.enc x) ∧ Embedded.emb x` for any type with an `Embedded`
-  instance (class in Store/Tree.lean, instances generated in MiniEmbed,
-  Bool's by hand); `Represents.rep s t x` and `Store.Rep` (terms) are it
-  for a store (Store/Sem.lean). The lemmas kept their names
-  (`Store.Rep.eq_iff`, `Store.apply_rep`, `Store.literal_boolean_spec`,
-  ...), with generic `Represents.grows`, `.congr`, `.eq_iff`; the tactics'
-  per-type alternatives are one each; `RepProof`, `RepState`, `RepObj`,
-  `NativeBool` and their lemmas are gone, and so is the interim
-  `Runtime/HoldsSem.lean`. MiniCacheSem's `ProgramSem` is unchanged in
-  text and now means `HoldsList`/`enc` through `Rep`. The generated
-  proofs (MiniProofs) did not change.
-  (iii) done: lean-meta writes `MiniCtors.lean` with the embedding: the
-  `CtorSpec.<ident>.construct`/`.destruct` lemmas for every data
-  constructor of an embedded datatype and every user operator (169 in
-  CpcMini), from `construct_holds`/`destruct_holds` and the inversions;
-  `Runtime/Ctors.lean` is gone. rust-meta's `leanCtorLemmas()` is the rule
-  `leanHasCtorLemma` (stored as a node, of a datatype the embedding has:
-  it leaves out the model's values, maps, sequences and regular languages
-  by name prefix; a mismatch with lean-meta's list fails the Lean build,
-  never passes silently). A constructor with arguments has proof lines
-  now. Programs with a proof: 7 → 19 of 82.
-  Two reasons are new in `proofs.tsv`: "an application of a term that may
-  be stuck" (the emitter tracks which terms are known not stuck: built by
-  the code, or taken apart by `unapply`, or tested; `$eo_prog_scope`
-  applies the formula of a proof, which may be stuck: the milestone 31
-  finding, lemma C's business), and "no stuck value in the proofs
-  (HasStuck)" for 15 programs that return checker states, datatype
-  declarations or SMT types. For checker states beware: the Rust body
-  gives the stuck *term* (handle 0) where no case applies, but logos's
-  `CState.Stuck` is a node (`$emb_s.Stuck`); the programs met so far have
-  a last case for every argument, so it is unreachable there, but a
-  `HasStuck CState := CState.Stuck` would not be true of the Rust in
-  general.
-- Step 4 (i), groups of cases: done (2026-11-24). rust-meta records the
-  group tree (`LeanProof::groups`, `top`) and writes a theorem per group;
-  the tactics are `group_step`, `body_group_step`, `group_none` and the
-  lemma `firstSome_append` in Tactic.lean. None of the 8 grouped programs
-  is proved (each has another reason now), so the group proofs were
-  tested by forcing `$eo_typeof` and `$eo_cmd_step_proven` with `sorry`
-  for unsupported cases: `~/Projects/cvc5/pathos-m28/work/patches/
-  rust-meta-force-proof.patch` adds `LEAN_PROOF_FORCE=<program>` to
-  rust-meta for that (never commit it). Not done: the round of a loop
-  whose cases are in groups (recorded as the reason only when nothing
-  else stops the program). `more_k` helpers: the only one in CpcMini is
-  in `$eo_cmd_step_proven`'s case 0, and its `unfold` is accepted, but
-  the rest of that case calls a program without a proof; no requirement
-  in CpcMini is cut into a `more_k`, so that path is still untested.
-- Step 4 (ii), conditionals: done (2026-11-24). `conditional()` writes a
-  `have h_ite_v := (show if_k … ⦃ … __eo_ite _ _ _ … ⦄div from by …)`
-  block with a bullet per branch (`ite_branch`, `ite_done`, `ite_stuck`
-  in Tactic.lean); the branches start from the same store. `more_k`
-  helpers made in a branch or a requirement are unfolded in its block.
-  Logos's functions are now named without `Eo.` (`open Eo hiding Term`,
-  `open Smtm`, and the SMT modules imported): `$eo_to_smt_type` and the
-  other functions of logos's SmtTranslate are in no namespace. Tested by
-  forcing `$eo_to_smt_type` (native `ite`); `eo::ite` and `ite_stuck` are
-  untested on real code. Next reasons of the 10: native operations (8:
-  `streq`, `Teq`, `string_valid`), a function type in a pattern
-  (`$eo_to_smt_type`), HasStuck (`$smtx_typeof_guard_wf`).
-- Step 5 (i), Booleans and equality: done (2026-11-24).
-  `Runtime/Natives.lean` (hand-written) has `Store.native_spec_<name>` for
-  `teq`, `Teq`, `streq`, `and`, `or` and `Store.builtin_spec_eq`; rust-meta
-  names them for those operations (`leanArgsStep`). Every equality of the
-  runtime compares handles (`Teq`, `streq` after reading both, builtin
-  `Eq` after the stuck scan), so `Represents.eq_iff` is all they need.
-  The audit now sorts axioms in use into assumptions (propositions, and
-  Lean's three) and declarations (types and functions); the dispatchers'
-  equations bring in declarations whenever a spec unfolds them, which adds
-  no trust (Daniel's decision, 2026-11-24). `usize` addition has only a
-  spec in this Aeneas, so a loop over a slice is stepped with `step`, not
-  rewritten. Next, by the reviewer's plan: the cache table over all
-  embedded types (9 programs), then strings.
-- Step 5 (c), the cache table over every embedded type: done
-  (2026-11-24). `ProgramSem.p<id>` (cache_sem.lean → MiniCacheSem) is an
-  existential per argument of the program's type through the generic
-  `Rep`; a cached program's proof reads each argument back with
-  `Rep.functional`. Checked on `$mk_trans` (terms) and by forcing
-  `$smtx_dd_has_dt` (strings and SMT datatype declarations): the table and
-  the cached frame elaborate. None of the 9 programs is proved: the
-  emitter now records "an argument of a type that has no Valid in the
-  proofs yet (lemma C)" (it was writing a lemma C that does not elaborate),
-  and that is the next reason of all of them but `$smtx_decl_inhabited`
-  (a call). `$smtx_inhabited_type`'s loop over groups is still not done.
-- Step 5 (ii), strings and `not`: done (2026-11-24).
-  `Runtime/Strings.lean`: `Store.native_spec_not`, `_string_valid`,
-  `_string_prefix_eq`; the two loops by `fixpoint_induct` (invariants:
-  "the code points from `i` on are below 196608", "the rest of x is a
-  prefix of the rest of y"), and the bridge from the stored `u32` code
-  points to logos's `Nat` characters through `okStr`. The three programs
-  now stop at: the native string constant `"@"`
-  (`$eo_to_smt_reserved_datatype_name`), `Valid` (`$smtx_decl_wf_rec`),
-  `zleq` (`$smtx_typeof`).
-- Lean macro lessons from step 4: a syntax atom such as `" none "` becomes
-  a keyword everywhere (it broke `| Ok none =>` in every generated file);
-  `obtain ⟨h⟩ := e` on an equation case-splits the equation, so a single
-  name is bound with `have`.
-- `Represents.rep` carries `emb_T x` beside `Holds` (a conjunction).
-  Folding `emb` into `Valid` is left for lemma C, with `Valid`, which this
-  work does not touch.
-- Literal constructors (`$emb_Numeral`, `$emb_String`, …) are not data
-  constructors: their `destruct` interns a native and so changes the
-  store, which `pat_destruct` does not allow. They stay on lemmas written
-  by hand, outside `construct_holds`/`destruct_holds`.
+The generated Lean, all written by `scripts/generate-mini` into `proofs/`:
 
-## The emitter (`plugins/rust_meta/rust_meta_reduce.cpp`)
+| File | By | What |
+| --- | --- | --- |
+| `MiniCases.lean` | lean-meta | each program case as a function to `Option` |
+| `MiniEmbed.lean` | lean-meta | per datatype `enc`, `dec`, `emb`, `dec_enc`, the inversions of `enc`, the `Embedded` instance |
+| `MiniCtors.lean` | lean-meta | `CtorSpec.<rust ident>.construct/.destruct` for every data constructor and user operator |
+| `MiniCacheSem.lean` | rust-meta | what a cache entry says (`ProgramSem`), for any embedded types |
+| `MiniProofs.lean` | rust-meta | the proofs: case, group, body, loop and program theorems, lemma C, `specs` |
 
-- `Emitter::Lean` (member `lean`) is the script being recorded: `lines`,
-  `store` (counter: `s`, `s1`, …), `facts` (carried to the next store),
-  `pure` (facts about terms), `why` (first unsupported thing), `indent`.
-- A new kind of operation: where `expr()` or `pattern()` writes the Rust,
-  call `leanStoreStep(spec, v)` for something that returns a handle
-  (`spec` is a Lean term whose statement has the standard shape: new store
-  has `Inv`, `Grows`, `Ok t => rep …`), or `leanLine(...)` with a tactic of
-  `PathosProofs/Tactic.lean`; where there is no line yet, call
-  `leanUnsupported("…")`. Every branch of `expr`/`pattern`/`op` already
-  does one of the two.
-- A helper function of the Rust (`requires_k`) is proved in place as a
-  `have … := (show … from by …)` block; see `EVAL_REQUIRES` in `op()`.
-  Conditionals (`conditional()`) should be done the same way.
-- `emitProgram` fills a `LeanProof` per program; `leanProofs()` writes
-  `proofs.lean`, `proofs.tsv`, `cache_sem.lean`. `leanCtorLemmas()` is the
-  stopgap list of constructors with lemmas.
-- Not done: groups of cases (`cases_<d>_<g>`, more than four cases) need a
-  theorem per group; helpers cut by `close()` (`more_k`) are unfolded at
-  the start of the case, untested inside a requirement.
-- Iterating: `~/Projects/cvc5/pathos-m28/work/gen-mini.sh` (generate into
-  `proofs/`), `le.sh TARGET` (errors with goals), `ll.sh FILE`.
+The hand-written pieces (`proofs/PathosProofs/`):
 
-## Lemma C with repeated variables
+- `Store/Tree.lean`: `Tree`, `Holds` (a handle unfolds to a tree), proved
+  functional, injective and monotone once; the class `Embedded` and the
+  native codecs (integers, naturals, rationals, Booleans, strings as code
+  points, bit-vector literals).
+- `Store/Rep.lean`, `Store/Sem.lean`: `Rep nodes t x := Holds nodes t
+  (enc x) ∧ emb x` for any embedded type; `Represents.rep` and `Store.Rep`
+  are it for a store. The old per-type relations are gone (step 3).
+- `Runtime/Node.lean`: `construct_holds`, `destruct_holds` for every data
+  constructor. `Runtime/Natives.lean`: `teq`, `Teq`, `streq`, `and`, `or`,
+  builtin `eo::eq`. `Runtime/Strings.lean`: `not`, `string_valid`,
+  `string_prefix_eq` (loops by `fixpoint_induct`). `Runtime/Literals.lean`:
+  the Boolean literal pattern, whose `destruct` changes the store.
+  `Runtime/Ops.lean`: Boolean literal, `native_bool`, `tick`, `boolean_value`,
+  the two `ite`s, `requires`, cached programs. `Runtime/Embed.lean`:
+  `HasStuck`, `Valid`, and that a handle stands only for valid terms.
+- `Tactic.lean`: one tactic per kind of generated line, including the
+  groups of cases (`group_step`, `body_group_step`, `group_none`),
+  conditionals (`ite_branch`, `ite_done`, `ite_stuck`) and the
+  store-changing pattern (`pat_destruct_lit`).
 
-Already how it works: the case function has fresh variables and
-`if x = x' then some … else none`; logos has `requires (eo_eq x x') true …`.
-`logos_eq` closes the difference with `requires_ite`, `eo_eq_of_ne`,
-`eo_eq_true`, given `Valid` of each argument. Untried: the other
-linearization (an `ite` with a continuation program `$eo.l.<n>.<prog>`,
-used when a later case could still apply). There lemma C must unfold the
-continuation program too; I expected to add its name to the `unfold` list
-and its `.case_i` functions to `firstSome`. `Valid` for states and state
-objects is `True` and will have to say that the terms inside are valid.
+The emitter (`plugins/rust_meta/rust_meta_reduce.cpp`): `Emitter::Lean` is
+the script being recorded (`lines`, `store`, `facts`, `pure`, `built`:
+terms known not stuck, `why`: the first unsupported thing). For a new kind
+of operation call `leanStoreStep(spec, v)` (or `leanArgsStep` for a call on
+a slice of arguments) where `expr()`/`pattern()` writes the Rust, or
+`leanUnsupported("…")`. Helpers of the Rust (`requires_k`, `if_k`) are
+proved in place as `have … := (show … from by …)` blocks. `emitProgram`
+fills a `LeanProof`; `leanProofs()` writes the files and decides, per
+program, the reason. The reasons recorded after the cases, in order: no
+`HasStuck` for the return type, no `Valid` for an argument, a loop over
+groups; then, across programs, "it calls … which has no proof".
 
-## Stage 1: the recursion failures
+## The reasons that remain (63 programs)
 
-Hypothesis, from `BvUaddoElimSupport:144` only: `simp`/`simpa` given
-`SmtEval.native_zleq` (or a sibling) unfolds it to `decide` on a
-hypothesis with a large literal (4294967296), and the kernel recurses on
-the resulting term. Rewriting with the equation and never unfolding
-(`rw [SmtEval.native_zleq] at h; exact of_decide_eq_true h`) fixed that
-line; the later `simp […native_zleq…]` calls of the same proof fail the
-same way and were not converted. So it is confirmed for one line of one
-module. `Evaluate.Prelude.StringFromInt:172` has the same kernel error and
-I did not look at it: the hypothesis is a guess there.
-`Evaluate.Prelude.StringCode:199` is a different error (the elaborator's
-"maximum recursion depth"), and the hypothesis does not cover it.
-All three, and `StrReplaceReCaseSupport`, also fail at v4.35.0 unchanged.
+| Count | Reason | Programs |
+| --- | --- | --- |
+| 23 | no stuck value of the return type (`HasStuck`) | `$eo_dd_lookup`, `$eo_dd_resolve`, `$eo_dtc_resolve`, `$eo_dt_resolve`, `$eo_invoke_cmd_check_proven`, `$eo_invoke_cmd_list`, `$eo_invoke_cmd_step_pop`, `$eo_push_assume_check`, `$eo_push_input_assume_check`, `$eo_push_proven`, `$eo_push_proven_check`, `$eo_to_smt_datatype`, `$eo_to_smt_datatype_cons`, `$eo_to_smt_datatype_decl`, `$smtx_dd_lookup`, `$smtx_dtc_resolve`, `$smtx_dt_resolve`, `$smtx_ret_typeof_sel`, `$smtx_typeof_=`, `$smtx_typeof_apply`, `$smtx_typeof_guard`, `$smtx_typeof_guard_wf`, `$smtx_typeof_ite` |
+| 12 | an argument of a type without `Valid` (lemma C) | `$eo_checker_is_refutation`, `$smtx_dd_has_dt`, `$smtx_decl_inhabited`, `$smtx_decl_wf_rec`, `$smtx_dt_cons_inhabited`, `$smtx_dt_cons_wf_rec`, `$smtx_dt_inhabited`, `$smtx_dt_wf_rec`, `$smtx_inhabited_type`, `$smtx_type_wf`, `$smtx_type_wf_component`, `$smtx_type_wf_rec` |
+| 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
+| 4 | a native pattern (nat zero/succ) | `$eo_typeof_dt_cons_rec`, `$eo_typeof_dt_sel_return`, `$smtx_ret_typeof_sel_rec`, `$smtx_typeof_dt_cons_rec` |
+| 3 | a builtin operator | `$eo_invoke_cmd` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
+| 2 | `$emb_Numeral` in a pattern | `$eo_to_smt`, `$eo_typeof` |
+| 2 | the stuck term built as a constructor | `$eo_cmd_step_pop_proven`, `$eo_cmd_step_proven` |
+| 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
+| 2 | a function type in a pattern | `$eo_to_smt_type`, `$eo_typeof_apply` |
+| 1 each | `zleq`; the native string constant `"@"`; `$emb_Var` in a pattern; an application of a term that may be stuck (`$eo_prog_scope`) | `$smtx_typeof`; `$eo_to_smt_reserved_datatype_name`; `$eo_is_closed_rec`; `$eo_prog_scope` |
+| 3 | calls of programs without a proof | `$eo_is_bool_type`, `$eo_is_closed`, `$eo_state_is_refutation` |
 
-## Not written elsewhere
+## Lemma C: the two open questions (yours)
 
-- `proofs/.lake/packages/LogosVerification` has **uncommitted local
-  edits** (the three script-drift fixes, two lines of
-  `BvUaddoElimSupport`); the patch is
-  `~/Projects/cvc5/pathos-m31/stage1/logos-v436-fixes.patch`. A fresh
-  `lake update` loses them. CpcMini does not need them.
-- The stage 1 commit is still owed: `docs/proofs.md` says neither logos
-  nor Aeneas needs a source change, which is true for CpcMini only; six
-  CPC modules fail at v4.36.0. Memory: ArithMultSupport, Translation/Full
-  and Rules/String_ext each need 8.1 to 8.9 GiB at either Lean version;
-  the full CPC build in `proofs/` took 3 h 11 min (834 modules, peak
-  15.3 GiB with 3 jobs).
-- Ethos `m32-proofs` has one commit after 4274d2b (a reason text in
-  `proofs.tsv`). pathos still pins 4274d2b, so `generate-mini --check`
-  is unaffected until the pin moves; moving it changes `proofs.tsv` only.
-- In a macro, `rfl` in an `rcases`/`obtain` pattern and names used across
-  two quotations are hygienic and silently become fresh hypotheses: use
-  `Lean.mkIdent` and `subst`. `have h : T _ := by …` does not let the
-  proof fill the hole; `have h := (show T _ from by …)` does.
+Lemma C (`<program>.rust_eq`) says logos's function is the stuck tests and
+then the first case that answers; it is proved, never assumed. It needs
+two things per type that the proofs have only for some types, and
+together they stop 35 programs:
+
+1. **`HasStuck`** (the value a body gives where no case applies): there are
+   instances for terms, proofs and native Booleans (`Runtime/Embed.lean`).
+   Checker states, datatype declarations and SMT types have none.
+   **Caution for checker states**: the Rust body gives the stuck *term*
+   (handle 0) where no case applies, but logos's `CState.Stuck` is a node
+   (`$emb_s.Stuck`). The programs met so far have a last case for every
+   argument, so the path is unreachable there; but `HasStuck CState :=
+   CState.Stuck` would not be true of the Rust in general. Look at what
+   the body does for each such type before adding an instance.
+2. **`Valid` for the other types, and folding `emb` into it.** `Valid` has
+   instances for terms (`TermValid`: no application of or to the stuck
+   term), proofs, `CState`, `CStateObj` (both `True`, and they should say
+   that the terms inside are valid), and native Booleans. The SMT types,
+   the datatype declarations, strings, `CCmdList`, `CArgList` have none.
+   `Represents.rep` carries `emb_T x` (strings with characters below 2^32,
+   bit-vectors in range) beside `Holds`; it should fold into `Valid`. Why
+   it holds of what logos builds: logos itself bounds widths
+   (`native_zlt … 4294967296`) and characters (below 196608); the closure
+   lemma (a handle unfolds only to embeddable values) is not written.
+
+Also on lemma C's side: the other linearization of repeated variables (an
+`ite` with a continuation program `$eo.l.<n>.<prog>`) is untried; lemma C
+would have to unfold the continuation program too. The application of a
+possibly stuck term (`$eo_prog_scope`) is milestone 31's first finding.
+
+## What needs trust (decided: not this week)
+
+Step 5 (iii) stopped where specs would bring `Trusted.lean` assumptions
+into use. They are declared and allowed in `axioms-allowed.txt`; bringing
+them into use is a decision to take with lemma C, when it yields proofs.
+
+| What | Runtime path | Trusted specs it would bring into use |
+| --- | --- | --- |
+| `eo::and` (`$eo_invoke_cmd`) | `builtin_core And` → `builtin_literal` → `Lit::evaluate_nary`; bit-vectors through `BitVec.and` | `Integer.bitwise_and_spec`, `mod_by_pow2_spec`; `clone_spec` (copying numerals) |
+| `eo::len` (`$eo_lit_type_Binary`) | `Lit::evaluate Length`: `Integer::from(size)` / `from(len)` | `from_u32_spec`, `from_usize_spec` |
+| nat zero and succ patterns (4 programs) | `native_pattern_nat_zero` (`Integer::zero`), `native_pattern_succ` (`raw_int` clone, `sgn`, `add`, `one`, `neg`) | `zero_spec`, `clone_spec`, `sgn_spec`, `add_spec`, `one_spec`, `neg_spec` |
+| `$emb_Numeral` patterns (`$eo_to_smt`, `$eo_typeof`) | `destruct` of a literal: `Hit::Raw` of a copy | `clone_spec` |
+
+Two more that are not about trust:
+
+- **`eo::cons`** (`$eo_mk_premise_list`): `builtin_list Cons` →
+  `list_cons_op`, which walks the list and calls generated programs
+  (`eo__24eo_5fnil`, the list helpers). Its spec would be a runtime lemma
+  that uses what is proved of generated functions: a new kind of piece.
+- **`$emb_Var`** in a pattern (`$eo_is_closed_rec`): the runtime treats it
+  as data, but its schema embedding is `Var`, not `Data`, so
+  `construct_holds`/`destruct_holds` (which require `Data`) do not apply;
+  they would need a `Var` variant.
+- **The native string constant `"@"`** (`$eo_to_smt_reserved_datatype_name`)
+  goes through `native_constant` → `front.native_literal`, which
+  `Trusted.lean` only assumes returns. It needs `native_literal`'s
+  specification, and with it the generated `NATIVE_TEXTS` as a Lean table
+  (the gap that "What is trusted" names for the final theorem).
+
+## Untested paths
+
+The emitter writes these, and they elaborate where they have been
+exercised, but no proved program reaches them yet:
+
+- `eo::ite`'s stuck branch (`ite_stuck`): CpcMini's only `eo::ite` is in
+  `$eo_is_closed_rec`, in a case blocked by `$emb_Var`. The native `ite` is
+  tested (forced `$eo_to_smt_type`).
+- `more_k` inside a requirement: no requirement of CpcMini is cut into
+  one. The only `more_k` (in `$eo_cmd_step_proven`'s case 0) is unfolded
+  fine, but that case also calls a program without a proof.
+- The round of a loop whose cases are in groups (`$smtx_inhabited_type`):
+  not written; it is recorded only when nothing else stops the program.
+- `not` and `string_prefix_eq` in a generated proof: their specs compile,
+  but their only uses come after a failing call (`not`) or behind `"@"`.
+
+## The force patch
+
+`~/Projects/cvc5/pathos-m28/work/patches/rust-meta-force-proof.patch`
+adds `LEAN_PROOF_FORCE=<program>` to rust-meta: that program's proofs are
+written even though it has a reason, with `sorry` for the cases the
+emitter cannot do. It is how the group, conditional, native and literal
+proofs were checked on real code. Never commit it:
+
+```
+cd ~/Projects/cvc5/pathos-m28/ethos
+cp plugins/rust_meta/rust_meta_reduce.cpp ../work/rmr-clean.cpp
+patch -s -p1 --no-backup-if-mismatch < ../work/patches/rust-meta-force-proof.patch
+(cd ../build-eoc && make ethos-eoc)
+LEAN_PROOF_FORCE='$eo_typeof' ../work/gen-mini.sh   # writes proofs/Mini*.lean
+~/Projects/cvc5/pathos-m28/work/le.sh MiniProofs     # errors with their goals
+cp ../work/rmr-clean.cpp plugins/rust_meta/rust_meta_reduce.cpp
+(cd ../build-eoc && make ethos-eoc); ../work/gen-mini.sh   # back to clean
+```
+
+Use `--no-backup-if-mismatch` (a `.orig` file once got into a commit),
+and check `git status` of the Ethos clone before committing. Errors left
+in a forced program are its other reasons (calls of unproved programs,
+lemma C's `Valid`/`HasStuck`); the lines under test are fine when no error
+points at them.
+
+## Working notes
+
+- Iterating: `~/Projects/cvc5/pathos-m28/work/gen-mini.sh` (run the
+  working Ethos build on CpcMini into `proofs/`), `le.sh TARGET` (errors
+  with goals), `ll.sh FILE`. The repository's way is `scripts/generate-mini
+  --ethos <clone>` then `--check`; the full CPC comparison runs in the
+  origin/main worktree `~/Projects/cvc5/pathos-m28/main-wt`
+  (`scripts/generate-cpc --ethos <clone> --rev <commit> --check`).
+- Every Ethos commit is pinned in the same pathos commit
+  (`mini_default_rev`).
+- Lean lessons: a syntax atom such as `" none "` becomes a keyword
+  everywhere; `obtain ⟨h⟩ := e` on an equation case-splits it (bind one
+  name with `have`); names made by `Lean.mkIdent` in a macro are not seen
+  by `rename_i`, so use structured `cases … with` or `rcases`; `usize`
+  addition has only a spec in this Aeneas (step through loops, don't
+  rewrite); unfold a `partial_fixpoint` with `unfold`, not `rw`;
+  `simp`ing near a literal like 2^32 can hit recursion limits (use `rw`
+  and `omega`); `have h := (show T _ from by …)` lets the proof fill the
+  holes of `T`, `have h : T _ := by …` does not.
 - Lake runs as many Lean processes as cores unless `LEAN_NUM_THREADS` is
-  set; keep the caps (4 GiB was enough for everything in `proofs/`).
+  set; keep the caps (4 GiB is enough for everything in `proofs/`; the CPC
+  logos build needs up to 8.9 GiB per module).
