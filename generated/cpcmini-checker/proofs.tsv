@@ -52,8 +52,8 @@ $eo_typeof_BitVec	generated
 $eo_typeof_Seq	generated	
 $eo_typeof_and	generated	
 $eo_typeof_apply	generated	
-$eo_typeof_dt_cons_rec	none	case 0 has a native pattern
-$eo_typeof_dt_sel_return	none	case 0 has a native pattern
+$eo_typeof_dt_cons_rec	generated	
+$eo_typeof_dt_sel_return	generated	
 $eo_typeof_fun_type	generated	
 $eo_typeof_not	generated	
 $mk_symm	generated	
@@ -69,15 +69,15 @@ $smtx_dt_resolve	generated
 $smtx_dt_wf_rec	generated	
 $smtx_dtc_resolve	generated	
 $smtx_inhabited_type	generated	
-$smtx_ret_typeof_sel	none	it calls $smtx_ret_typeof_sel_rec, which has no proof
-$smtx_ret_typeof_sel_rec	none	case 0 has a native pattern
+$smtx_ret_typeof_sel	generated	
+$smtx_ret_typeof_sel_rec	generated	
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
 $smtx_typeof	none	case 4 has the native operation zleq
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
-$smtx_typeof_dt_cons_rec	none	case 0 has a native pattern
+$smtx_typeof_dt_cons_rec	generated	
 $smtx_typeof_guard	generated	
 $smtx_typeof_guard_wf	generated	
 $smtx_typeof_ite	generated	

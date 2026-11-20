@@ -211,13 +211,22 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 4,338 theorems, are **11**:
+  This is the trust. In use today, by 4,801 theorems, are **17**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
-  function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
-  `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
-  `toInt_ofInt`, `ofRat_toRat`, `toRat_ofRat`: the embedding's `dec_enc`
-  uses `toInt (ofInt z) = z`), their `==` (`eq_spec`), and that their hash
-  returns (`hash_code_spec`).
+  function, `Nonempty α → α`, but it is the axiom of choice); 8 of
+  `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
+  `Rational` is ℚ (`ofInt_toInt`, `toInt_ofInt`, `ofRat_toRat`,
+  `toRat_ofRat`: the embedding's `dec_enc` uses `toInt (ofInt z) = z`),
+  their `==` (`eq_spec`), and that their hash returns (`hash_code_spec`);
+  and the specs of the integer functions that the proved programs reach
+  (brought into use by Daniel's decision of 2026-11-20, group by group).
+  Each states what a function of `num.rs` computes; `num.rs` wraps
+  `malachite`'s integers and rationals in a thin layer (one line a
+  function, e.g. `Integer(&self.0 + &y.0)`), which Aeneas cannot
+  translate, so these say what that library computes:
+  - the natural numbers (`nat.zero`, the patterns `nat.zero` and
+    `nat.succ`, `Runtime/Nats.lean`): `Integer.zero_spec`, `one_spec`,
+    `clone_spec`, `sgn_spec`, `add_spec`, `neg_spec`.
 - **Declarations**: axioms that declare a type or a function and say
   nothing of it: 45 of the 54 that Aeneas leaves without a body in the
   Lean of the checker (the types `num.Integer` and `num.Rational`, their
@@ -429,13 +438,13 @@ change under them.
 For the full CPC it writes them too, into `generated/cpc-checker`
 (`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
 checked to be what the generator writes (`scripts/generate-cpc --check`),
-but **not built**; `proofs.tsv` (422 of 1,086 marked generated) says how
+but **not built**; `proofs.tsv` (427 of 1,086 marked generated) says how
 far the emitter gets.
-48 of CpcMini's 82 programs have one so far, the four of the pilot
+53 of CpcMini's 82 programs have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (4,440 lines) elaborates in 15
-seconds (2.2 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (5,190 lines) elaborates in 10
+seconds (2.4 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -542,30 +551,31 @@ split over constructors is in the proofs of seven programs of CpcMini
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 812 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, and `split_none` (no case answered, which cannot be). |
+| `Tactic.lean` | 860 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 143 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 336 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
 | `Runtime/Node.lean` | 143 | `construct` and `destruct` of any data constructor or variable (`$emb_Var`, which the runtime stores as a node the same way), over trees; `construct` of the stuck term (`$emb_Stuck`), which gives handle 0 (`Store.construct_stuck_spec`); `is_node`, which a function type in a pattern (`(-> T U)`, the applications `(FunType T) U`) tests its head with (`pat_is_node`). |
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
 | `Runtime/Strings.lean` | 297 | `not`, `string_valid` and `string_prefix_eq`: the two string operations are loops over the code points, proved by induction over the loop; a string the store can hold has code points below 2^32 (the embedding's `okStr`), so its code points are its characters. |
+| `Runtime/Nats.lean` | 153 | The natural numbers: the constant `nat.zero`, and the patterns `nat.zero` (`pat_native_zero`) and `(nat.succ m)` (`pat_destruct_lit`), which store a numeral; from the trusted specs of `zero`, `one`, `clone`, `sgn`, `add` and `neg`. |
 | `Runtime/Literals.lean` | 122 | `destruct` with the Boolean literal's constructor, which stores a native copy of the Boolean: a pattern that changes the store (`pat_destruct_lit`). |
 
 No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 48** (the reasons of `proofs.tsv`, for the other 34,
-on 2026-11-20, after a variable in a pattern): calls of
-programs without a proof (12; three wait on `$eo_to_smt_type`, which now
-stops at `$emb_Numeral`); the six of the datatype operators below; native
-patterns (4); builtin operators (4, with `$eo_is_closed_rec`'s `eo::and`); a literal constructor
-in a pattern (3, `$emb_Numeral`); the two compiled to the runtime; native operations (`zleq`, the string constant `"@"`); and
-an application of a term that may be stuck (`$eo_prog_scope`, the first
-finding below). The lemmas of `construct` and `destruct` are generated
-for every data constructor (`MiniCtors`); the literal constructors and
-variables are stored otherwise and have none. The cache of results is
-stated for every embedded type (`MiniCacheSem`).
+**What limits the 53** (the reasons of `proofs.tsv`, for the other 29,
+on 2026-11-20, after the natural numbers): calls of programs without a
+proof (11; three wait on `$eo_to_smt_type`, which stops at
+`$emb_Numeral`); the six of the datatype operators below; builtin
+operators (4); a literal constructor in a pattern (3, `$emb_Numeral`);
+the two compiled to the runtime; native operations (`zleq`, the string
+constant `"@"`); and an application of a term that may be stuck
+(`$eo_prog_scope`, the first finding below). The lemmas of `construct`
+and `destruct` are generated for every data constructor (`MiniCtors`);
+the literal constructors are stored otherwise and have none. The cache of
+results is stated for every embedded type (`MiniCacheSem`).
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a

@@ -11,6 +11,7 @@ public import MiniCtors
 public import PathosProofs.Runtime.Natives
 public import PathosProofs.Runtime.Strings
 public import PathosProofs.Runtime.Literals
+public import PathosProofs.Runtime.Nats
 
 /-!
 # The tactics of the generated proofs
@@ -134,6 +135,21 @@ macro "nm_close" : tactic =>
     | (injections; subst_vars; simp_all; done)
     | (simp_all [eq_comm]; done)
     | (simp_all; exact fun h => (by assumption : ¬ _) h.symm))
+
+/-- `nat_no_match h hinv hG in cd`: as `no_match`, where `h` says that a
+natural number is not `0` (`x ≠ 0`) or not a successor (`∀ m, x ≠ m + 1`):
+each arm of the case's match either is `none` or has its own equation for
+the number, against `h`. (`simp_all` can loop on such a goal.) -/
+syntax "nat_no_match " ident ppSpace ident ppSpace ident " in " ident : tactic
+macro_rules
+  | `(tactic| nat_no_match $h $hinv $hG in $cd) =>
+    `(tactic| (
+      simp only [uncurry_apply_pair, ite_true, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨$hinv, $hG, ?_⟩
+      unfold $cd
+      split <;> first
+        | rfl
+        | (exfalso; apply $h; first | rfl | assumption)))
 
 /-- Ends a case at a place where its pattern does not match: the store has
 the invariant `hinv` and has grown as `hG` says, and the case's function
@@ -267,6 +283,7 @@ macro_rules
       rcases $r:ident with (_ | $vec:ident) | _
       all_goals first
         | (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv', $hG, trivial⟩; done)
+        | (simp only at $hres:ident; nat_no_match $hres $hinv' $hG in $cd; done)
         | (simp only at $hres:ident; no_match $hinv' $hG in $cd; done)
         | skip
       simp only at $hres:ident ⊢
@@ -277,6 +294,37 @@ macro_rules
       have hfldv : $v = $f0 := by simp [$hvi:ident, $hvec:ident]
       subst hfldv
       clear $hvi hfldlen))
+
+/-- `pat_native_zero spec storing ⟨s', hinv'⟩ growing hG carrying … in cd`:
+the pattern `nat.zero` on a natural number, which stores the numeral 0
+(`spec` says what it gives; see `Runtime/Nats.lean`). Goes on with the
+number replaced by `0` and the new store; where it is another number the
+case ends. -/
+syntax "pat_native_zero " term " storing " "⟨" ident ", " ident "⟩" " growing " ident
+  " carrying" (ppSpace colGt ident)* " in " ident : tactic
+macro_rules
+  | `(tactic| pat_native_zero $e storing ⟨$s', $hinv'⟩ growing $hG carrying $hs* in $cd) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let hg := Lean.mkIdent `hg
+    let hres := Lean.mkIdent `hres
+    let vec := Lean.mkIdent `fldvec
+    let heq := Lean.mkIdent `hfldeq
+    let hvec := Lean.mkIdent `hfldvec
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv'), $(b hg), $(b hres)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      rcases $r:ident with (_ | $vec:ident) | _
+      all_goals first
+        | (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv', $hG, trivial⟩; done)
+        | (simp only at $hres:ident ⊢
+           obtain ⟨$heq, $hvec⟩ := $hres
+           subst $heq
+           clear $hvec $vec:ident)
+        | (simp only at $hres:ident; nat_no_match $hres $hinv' $hG in $cd; done)))
 
 /-- `pat_same a b with ha hb using hi else hinv hG in cd`: the generated
 `if a != b { return Ok(None) }` on two handles. Goes on where they are

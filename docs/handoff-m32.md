@@ -8,13 +8,15 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **48 of CpcMini's 82 programs** have a generated proof (48 of the
+- **53 of CpcMini's 82 programs** have a generated proof (53 of the
   76 that the gate counts: the 6 datatype operators have been excluded
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 4,338 theorems, no `sorry`. The trust is **11
-  assumptions** (Lean's three among them), unchanged by steps 3–5; 49 declarations (axioms that declare a type or a function,
+- `scripts/proofs-build`: 4,801 theorems, no `sorry`. The trust is **17
+  assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
+  part B (Daniel's decision of 2026-11-20), the malachite specs that the
+  proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
   which add no trust: see "What is trusted").
 - Loops are proved by strong induction on the budget of calls
   (`Store.budget`, which every round's `tick` lowers), not by Lean's
@@ -29,8 +31,8 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   diff with main is the literal sites, `names.rs`, two allowances in
   `front.rs`/`lib.rs`, and functions that move between parts; every
   other step checked that the Rust is unchanged.
-- The generated files elaborate in seconds (MiniProofs about 8–15 s and
-  2.2 GiB, after a variable in a pattern). CPC's generated proofs are not built.
+- The generated files elaborate in seconds (MiniProofs about 10 s and
+  2.4 GiB, after the natural numbers). CPC's generated proofs are not built.
 
 ## What steps 3–5 built
 
@@ -77,13 +79,12 @@ fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
 `Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (34 programs)
+## The reasons that remain (29 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
-| 12 | calls of programs without a proof | `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_is_closed` (→ `$eo_is_closed_rec`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_to_smt_datatype`, `_cons`, `_decl` (→ `$eo_to_smt_type`), `$smtx_ret_typeof_sel` (→ `$smtx_ret_typeof_sel_rec`) |
+| 11 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_is_closed` (→ `$eo_is_closed_rec`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_to_smt_datatype`, `_cons`, `_decl` (→ `$eo_to_smt_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
-| 4 | a native pattern (nat zero/succ) | `$eo_typeof_dt_cons_rec`, `$eo_typeof_dt_sel_return`, `$smtx_ret_typeof_sel_rec`, `$smtx_typeof_dt_cons_rec` |
 | 4 | a builtin operator | `$eo_invoke_cmd` and `$eo_is_closed_rec` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
 | 3 | `$emb_Numeral` in a pattern | `$eo_to_smt`, `$eo_to_smt_type`, `$eo_typeof` |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
@@ -135,18 +136,21 @@ Also on lemma C's side: the other linearization of repeated variables (an
 would have to unfold the continuation program too. The application of a
 possibly stuck term (`$eo_prog_scope`) is milestone 31's first finding.
 
-## What needs trust (decided: not this week)
+## Trust: the malachite specs (part B)
 
-Step 5 (iii) stopped where specs would bring `Trusted.lean` assumptions
-into use. They are declared and allowed in `axioms-allowed.txt`; bringing
-them into use is a decision to take with lemma C, when it yields proofs.
+Daniel decided on 2026-11-20 (the trust memo,
+`~/Projects/cvc5/pathos-m28/work/trust-memo.md`) to bring the
+already-allowed malachite specs of groups 1–5 into use, one group a
+commit, and to remove the text and parse paths by building literals as
+values (done: proofs.md, "Literals are values").
 
-| What | Runtime path | Trusted specs it would bring into use |
-| --- | --- | --- |
-| `eo::and` (`$eo_invoke_cmd`) | `builtin_core And` → `builtin_literal` → `Lit::evaluate_nary`; bit-vectors through `BitVec.and` | `Integer.bitwise_and_spec`, `mod_by_pow2_spec`; `clone_spec` (copying numerals) |
-| `eo::len` (`$eo_lit_type_Binary`) | `Lit::evaluate Length`: `Integer::from(size)` / `from(len)` | `from_u32_spec`, `from_usize_spec` |
-| nat zero and succ patterns (4 programs) | `native_pattern_nat_zero` (`Integer::zero`), `native_pattern_succ` (`raw_int` clone, `sgn`, `add`, `one`, `neg`) | `zero_spec`, `clone_spec`, `sgn_spec`, `add_spec`, `one_spec`, `neg_spec` |
-| `$emb_Numeral` patterns (`$eo_to_smt`, `$eo_typeof`) | `destruct` of a literal: `Hit::Raw` of a copy | `clone_spec` |
+| What | Runtime path | Trusted specs | Status |
+| --- | --- | --- | --- |
+| nat zero and succ patterns, `nat.zero` (group 3) | `native_pattern_nat_zero` (`Integer::zero`), `native_pattern_succ` (`raw_int` clone, `sgn`, `add`, `one`, `neg`) | `zero_spec`, `clone_spec`, `sgn_spec`, `add_spec`, `one_spec`, `neg_spec` | **in use**: 5 programs (`Runtime/Nats.lean`) |
+| `eo::and`/`or`/`not` (group 1) | `builtin_core And` → `builtin_literal` → `Lit::evaluate_nary`; bit-vectors through `BitVec.and` | `Integer.bitwise_*_spec`, `mod_by_pow2_spec`; `clone_spec` | next |
+| integer natives, `zleq` (group 5) | `native_int_compare` etc. | `partial_cmp_spec`, `euclidean_qr_spec`, … | next |
+| `eo::len` (group 2) | `Lit::evaluate Length`: `Integer::from(size)` / `from(len)` | `from_u32_spec`, `from_usize_spec` | next |
+| `$emb_Numeral` patterns (group 4) | `destruct` of a literal: `Hit::Raw` of a copy | `clone_spec` | next |
 
 Three more that are not about trust:
 
