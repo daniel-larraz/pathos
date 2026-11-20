@@ -8769,7 +8769,12 @@ def generated.part0.case_0_eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
   := do
-  let (r, s1) ← native.Store.native_constant s 0#u32
+  let y ←
+    lift (Std.Array.to_slice (Array.make 1#usize [ 64#u32 ] : Array Std.U32
+      1#usize))
+  let ret := alloc.slice.Slice.into_vec y
+  let es ← eostring.EoString.from_code_points ret
+  let (r, s1) ← Store.raw s (lit.Lit.Str es)
   match r with
   | core.result.Result.Ok v =>
     let s2 ← lift (Array.to_slice (Array.make 2#usize [ v, a0 ]))
@@ -9158,7 +9163,8 @@ def generated.part0.case_8_eo__24eo_5fto_5fsmt_5ftype
               let v5 ←
                 alloc.vec.Vec.index (core.slice.index.SliceIndexUsizeSlice
                   Term) fields 0#usize
-              let (r3, s4) ← native.Store.native_constant s3 1#u32
+              let i ← num.Integer.Insts.CoreConvertFromU32.from 0#u32
+              let (r3, s4) ← Store.raw s3 (lit.Lit.Numeral i)
               match r3 with
               | core.result.Result.Ok v6 =>
                 let s5 ←
@@ -13551,7 +13557,8 @@ def generated.part0.case_4_eo__24smtx_5ftypeof
       let v2 ←
         alloc.vec.Vec.index (core.slice.index.SliceIndexUsizeSlice Term) fields
           1#usize
-      let (r1, s2) ← native.Store.native_constant s1 1#u32
+      let i ← num.Integer.Insts.CoreConvertFromU32.from 0#u32
+      let (r1, s2) ← Store.raw s1 (lit.Lit.Numeral i)
       match r1 with
       | core.result.Result.Ok v3 =>
         let s3 ← lift (Array.to_slice (Array.make 2#usize [ v3, v1 ]))

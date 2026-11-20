@@ -22,9 +22,13 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   `$smtx_inhabited_type` (a loop whose cases are tried in groups, on a
   cycle of four programs) and the ten that call it are proved. See
   proofs.md, "Loops" and "Groups of cases".
-- The Rust has not changed: every step checked that CpcMini regenerates
-  the same crate and that the full CPC checker's `src/`, Cargo files and
-  tables are main's.
+- The Rust is main's but for literals: since Ethos `db074f2` the
+  generated code builds literals as values, not from text (proofs.md,
+  "Literals are values"), and pathos m32's `generated/cpc-checker` is
+  generated from the fork (`default_rev` of `scripts/generate-cpc`). Its
+  diff with main is the literal sites, `names.rs`, two allowances in
+  `front.rs`/`lib.rs`, and functions that move between parts; every
+  other step checked that the Rust is unchanged.
 - The generated files elaborate in seconds (MiniProofs about 8–15 s and
   2.2 GiB, after a variable in a pattern). CPC's generated proofs are not built.
 
@@ -151,10 +155,9 @@ Three more that are not about trust:
   (`eo__24eo_5fnil`, the list helpers). Its spec would be a runtime lemma
   that uses what is proved of generated functions: a new kind of piece.
 - **The native string constant `"@"`** (`$eo_to_smt_reserved_datatype_name`)
-  goes through `native_constant` → `front.native_literal`, which
-  `Trusted.lean` only assumes returns. It needs `native_literal`'s
-  specification, and with it the generated `NATIVE_TEXTS` as a Lean table
-  (the gap that "What is trusted" names for the final theorem).
+  is now a value (`EoString::from_code_points`), not a text that
+  `native_literal` reads; what remains is a lemma for building it and
+  for `string_prefix_eq` on it, no trust.
 
 ## Untested paths
 

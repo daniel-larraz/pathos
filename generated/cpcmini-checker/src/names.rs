@@ -418,7 +418,5 @@ Self::eo_not => "eo_not",
 /// The names and constants that generated code passes to the
 /// runtime as numbers: their places in this list.
 pub(crate) const NATIVE_TEXTS: &[&str] = &[
-"\"@\"",
-"0",
 "SMT translation is unavailable",
 ];

@@ -3175,12 +3175,5 @@ Self::eo_zero_5fextend => "eo_zero_5fextend",
 /// The names and constants that generated code passes to the
 /// runtime as numbers: their places in this list.
 pub(crate) const NATIVE_TEXTS: &[&str] = &[
-"0",
-"1",
-"\"0\"",
-"\"9\"",
-"\"@x\"",
-"\"@Tuple\"",
-"\"@\"",
 "SMT translation is unavailable",
 ];

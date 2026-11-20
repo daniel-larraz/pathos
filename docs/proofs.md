@@ -243,12 +243,25 @@ logos.
 `Trusted.lean` gives every function of `num.rs` that the checker calls its
 meaning on ℤ and ℚ, one equation each, with the hypothesis the Rust
 documents where there is one (a non-zero divisor). Of the two functions of
-`front.rs` that CpcMini's checker calls (`native_literal`,
-`constant_name`) it assumes only that they return. **That is not enough
-for the final theorem**: a literal of the generated code must stand for
-logos's constant, so `native_literal` needs its specification, and that
-needs the generated list `NATIVE_TEXTS` as a Lean table, which the
-generator would have to write.
+`front.rs` it declares (`native_literal`, `constant_name`) it assumes only
+that they return.
+
+**Literals are values** (milestone 32, Ethos `db074f2`). The generated
+code builds every literal from a value, not from text. A numeral is
+`Integer::from(<u32>)`, negated when negative (the specs of `from_u32`
+and `neg`); a rational is `Rational::from_integers` of two such; a binary
+is `BitVec::new` over one; a numeral or string constant of the EO
+definitions is `s.raw` of such a value, or of `EoString::from_code_points`
+of the code points the generator reads from the signature. So no parse,
+no `NATIVE_TEXTS` lookup and no `native_literal` is on any path that a
+proof reaches: every numeral of CpcMini and of the full CPC fits a `u32`
+(20 distinct values in the CPC, at most 6 digits). `parse_int`,
+`parse_rat` and `native_literal` stay in the runtime, unused by generated
+code, until the specs `Trusted.lean` declares about them are retired. The
+one text path the generator can still write is `native_pattern_constant`,
+a native constant in a pattern (no signature uses one today): it reads
+its value with `native_literal`. `NATIVE_TEXTS` keeps the names that
+errors print (`UnsupportedNative`, "SMT translation is unavailable").
 
 Beyond the axioms, the theorems are about a program under these
 conditions:
@@ -350,11 +363,11 @@ line left out, and with `(assume-push @p4 e)` before the `trans` step and
 
 - Clippy with warnings as errors fails on the CpcMini crate in three
   places: the generator assumes a numeral in the generated code
-  (`parse_int` unused) and a left-associative operator
+  (`parse_int` unused, now allowed to be: literals are values) and a
+  left-associative operator
   (`is_left_assoc` with a single arm). The tests pass.
 - The Rust pipeline lacks the Lean pipeline's second trim, so six
   functions with no counterpart in logos's CpcMini stay.
-- `NATIVE_TEXTS` as a Lean table, for `native_literal` (above).
 - A cache entry's meaning (`EntryOK`) has a clause per cached program; for
   the whole checker it is a table from a program's number to what it
   computes, which the generator knows (`caches.tsv`).
@@ -620,7 +633,8 @@ confined to lemma C, which Lean proves per program.
 3. **Every program**, by generated proofs (7 of CpcMini's 82 so far, see
    above): CpcMini has 82 functions with 233 case functions; CPC has 1,086 with 2,975 case functions, 66 loops
    and 190 cached programs.
-4. **The specification of `native_literal`** and the table it needs.
+4. ~~The specification of `native_literal`~~: not needed, literals are
+   values (above).
 5. **The top**: `check_refutation` and, for CPC, `check_proof` with the
    translation checks against logos's `ApiChecks`, and the composition
    with `correct___logos_verdict`.
@@ -640,7 +654,7 @@ With generated proofs the work is in three places:
   and 12,000 more lines.
 - **The generator and the tactic**: the step tactic, the emission of a
   lemma and a proof per case, per body, per loop, per recursive group and
-  per cached program, and the Lean tables (`NATIVE_TEXTS`, the cache's
+  per cached program, and the Lean tables (the cache's
   meanings, `Rep` for every constructor). The pilot's four shapes cover
   what the generator emits; what is untried is scale: whether 3,000
   generated proofs elaborate in acceptable time (the Lean of CPC itself
