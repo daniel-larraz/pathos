@@ -1,6 +1,6 @@
 # Milestone 32: where the work stands
 
-Written on 2026-11-19 for whoever continues (Fable, the week after). Start
+Written on 2026-11-20 for whoever continues (Fable, the week after). Start
 here; [proofs.md](proofs.md), "Generated proofs" and "What is trusted",
 has the report. Everything is on pathos `m32` and the Ethos fork's
 `m32-proofs` (local clone `~/Projects/cvc5/pathos-m28/ethos`); pathos pins
@@ -126,7 +126,7 @@ them into use is a decision to take with lemma C, when it yields proofs.
 | nat zero and succ patterns (4 programs) | `native_pattern_nat_zero` (`Integer::zero`), `native_pattern_succ` (`raw_int` clone, `sgn`, `add`, `one`, `neg`) | `zero_spec`, `clone_spec`, `sgn_spec`, `add_spec`, `one_spec`, `neg_spec` |
 | `$emb_Numeral` patterns (`$eo_to_smt`, `$eo_typeof`) | `destruct` of a literal: `Hit::Raw` of a copy | `clone_spec` |
 
-Two more that are not about trust:
+Three more that are not about trust:
 
 - **`eo::cons`** (`$eo_mk_premise_list`): `builtin_list Cons` →
   `list_cons_op`, which walks the list and calls generated programs
