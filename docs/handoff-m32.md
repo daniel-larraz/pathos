@@ -61,8 +61,15 @@ constructors and about 20 types. The plan:
 - `rustIdent` (plugins/utils) is rust-meta's identifier mangling, moved so
   lean-meta names the Rust constructors the same way; the Rust is
   byte-identical (CpcMini and the full CPC checker).
-- Next: step 3 (generic `construct`/`destruct` over `Holds`, generated
-  `CtorSpec.*` one-liners replacing `leanCtorLemmas()`).
+- Step 3, begun: `Runtime/Node.lean` has the generic lemmas,
+  `Store.construct_holds` and `Store.destruct_holds`, for every data
+  constructor. Stopped there on a design question (asked of the reviewer
+  on 2026-11-23): the `CtorSpec.*` lemmas that generated proofs name state
+  their fields with the old relations (`Rep`, `RepProof`, `RepState`,
+  `RepObj`, `NativeBool`), and a one-liner from `destruct_holds` cannot
+  give those back without `Holds … (enc x)` implying them, which holds
+  only for the constructors the old relations cover. So the one-liners
+  need `Represents.rep` switched to `Holds … (enc x)` first.
 
 ## The emitter (`plugins/rust_meta/rust_meta_reduce.cpp`)
 

@@ -38,14 +38,14 @@ name = "MiniChecker"
 [[lean_lib]]
 name = "MiniCases"
 
-# What the cache of program results holds, and the proofs about the
-# generated functions: written by rust-meta with the crate. Generated: never
-# edited.
 # How the checker's values are stored (enc, dec, and that dec undoes enc):
 # written by lean-meta with MiniCases. Generated: never edited.
 [[lean_lib]]
 name = "MiniEmbed"
 
+# What the cache of program results holds, and the proofs about the
+# generated functions: written by rust-meta with the crate. Generated: never
+# edited.
 [[lean_lib]]
 name = "MiniCacheSem"
 
