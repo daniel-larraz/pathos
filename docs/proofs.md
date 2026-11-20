@@ -16,7 +16,7 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | --- | --- |
 | `generated/cpcmini-checker/` | The checker for **CpcMini**, logos's calculus of five rules (`symm contra refl scope trans`), compiled by `rust-meta` as the CPC checker is. The pilot is on it. `scripts/generate-mini` writes it. |
 | `proofs/MiniChecker/` | The Lean that Charon and Aeneas write for that crate, stitched: the runtime once (`Runtime.lean`, 13,531 lines) and the generated functions (`Part0.lean`, 15,937 lines). Generated, never edited. |
-| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,139 lines. |
+| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,594 lines. |
 | `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCtors.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what `construct` and `destruct` do with each data constructor, what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
@@ -207,16 +207,35 @@ error).
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
-it. In use today, by 2,477 theorems, are 27 axioms:
+it, and sorts every axiom in use into one of two kinds (milestone 32,
+step 5):
 
-- Lean's three (`propext`, `Quot.sound`, `Classical.choice`).
-- 12 of the 54 declarations that Aeneas leaves without a body in the Lean
-  of the checker (the types `num.Integer` and `num.Rational` and some of
-  their functions).
-- 12 of the 52 axioms of `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ
-  (`toInt`/`ofInt`, `toRat`/`ofRat`, and that each undoes the other: the
-  embedding's `dec_enc` uses the `toInt (ofInt z) = z` direction), their
-  `==`, and that their hash returns.
+- **Assumptions**: axioms whose type is a proposition, and Lean's three.
+  This is the trust. In use today, by 2,659 theorems, are **11**:
+  `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
+  function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
+  `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
+  `toInt_ofInt`, `ofRat_toRat`, `toRat_ofRat`: the embedding's `dec_enc`
+  uses `toInt (ofInt z) = z`), their `==` (`eq_spec`), and that their hash
+  returns (`hash_code_spec`).
+- **Declarations**: axioms that declare a type or a function and say
+  nothing of it: 45 of the 54 that Aeneas leaves without a body in the
+  Lean of the checker (the types `num.Integer` and `num.Rational`, their
+  functions, the text functions of `front.rs`), and `Trusted.lean`'s
+  `toInt`, `ofInt`, `toRat`, `ofRat`. In use today: 49. An axiom whose
+  type is not a proposition only says that its type has an element, and
+  `Result α` always has one (`fail`), so a declaration adds no trust.
+
+The declarations in use grow whenever a proof unfolds one of the runtime's
+dispatchers, `native_op` or `builtin_core`: each is one `match` over all
+its operations, so its equation names the functions of every operation,
+and Lean counts every constant a proof refers to. The specifications of
+step 5 take only the branch of their own operation (27 declarations in
+use before them, 49 after). The audit fails if an axiom of the
+`[MiniChecker]` or `[Aeneas]` sections is a proposition and in use: the
+Lean of the checker and Aeneas's library are to declare, not to assume.
+One of Aeneas's six is a proposition
+(`Slice.get_unchecked_SliceIndexUsizeSlice_spec`); it is not in use.
 
 No axiom of Aeneas's library is reached (it declares six), and none of
 logos.
@@ -462,6 +481,7 @@ then `a` stuck; both give the stuck term, and `requires_ite` (in
 | `Runtime/Embed.lean` | 119 | The stuck value of a type, `Valid`, and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 249 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
 | `Runtime/Node.lean` | 79 | `construct` and `destruct` of any data constructor, over trees. |
+| `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
 
 No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,

@@ -132,6 +132,19 @@ constructors and about 20 types. The plan:
   untested on real code. Next reasons of the 10: native operations (8:
   `streq`, `Teq`, `string_valid`), a function type in a pattern
   (`$eo_to_smt_type`), HasStuck (`$smtx_typeof_guard_wf`).
+- Step 5 (i), Booleans and equality: done (2026-11-24).
+  `Runtime/Natives.lean` (hand-written) has `Store.native_spec_<name>` for
+  `teq`, `Teq`, `streq`, `and`, `or` and `Store.builtin_spec_eq`; rust-meta
+  names them for those operations (`leanArgsStep`). Every equality of the
+  runtime compares handles (`Teq`, `streq` after reading both, builtin
+  `Eq` after the stuck scan), so `Represents.eq_iff` is all they need.
+  The audit now sorts axioms in use into assumptions (propositions, and
+  Lean's three) and declarations (types and functions); the dispatchers'
+  equations bring in declarations whenever a spec unfolds them, which adds
+  no trust (Daniel's decision, 2026-11-24). `usize` addition has only a
+  spec in this Aeneas, so a loop over a slice is stepped with `step`, not
+  rewritten. Next, by the reviewer's plan: the cache table over all
+  embedded types (9 programs), then strings.
 - Lean macro lessons from step 4: a syntax atom such as `" none "` becomes
   a keyword everywhere (it broke `| Ok none =>` in every generated file);
   `obtain ⟨h⟩ := e` on an equation case-splits the equation, so a single
