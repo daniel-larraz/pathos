@@ -325,6 +325,100 @@ def firstSome {α : Type} : List (Option α) → α → α
 @[simp] theorem firstSome_none {α : Type} (rest : List (Option α)) (d : α) :
     firstSome (none :: rest) d = firstSome rest d := rfl
 
+theorem firstSome_append {α : Type} (l₁ l₂ : List (Option α)) (d : α) :
+    firstSome (l₁ ++ l₂) d = firstSome l₁ (firstSome l₂ d) := by
+  induction l₁ with
+  | nil => rfl
+  | cons o l ih => cases o <;> simp [firstSome, ih]
+
+/-! ## Groups of cases
+
+A program with more than four cases tries them in groups of four, and the
+groups in groups (`cases_<d>_<g>`). A group answers what the first of its
+cases that answers does (`∀ d, firstSome [the cases] d = res`), or none of
+its cases answers. -/
+
+/-- `group_step with spec as ⟨s', hinv, hc⟩ growing hG carrying … split heq
+none pat using …`: a group or a body tries a member (a case or a group)
+whose specification is `spec`. If the member answers, so does the whole,
+with the same result: `heq` splits the whole's list of cases into those
+before the member (which answered `none`, by the facts), the member's and
+those after. Goes on where the member answered `none`, with its facts
+named by `pat`. -/
+syntax "group_step " "with " term " as " "⟨" ident ", " ident ", " ident "⟩"
+  " growing " ident " carrying" (ppSpace colGt ident)* " split " term " otherwise " "⟨" ident,* "⟩"
+  " using" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| group_step with $e as ⟨$s', $hinv, $hc⟩ growing $hG carrying $hs* split $heq
+      otherwise ⟨$ns,*⟩ using $facts*) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let o := Lean.mkIdent `o
+    let hg := Lean.mkIdent `hg
+    let ns' := ns.getElems
+    let bind ← if ns'.size == 1 then `(tactic| have $(ns'[0]!):ident := $hc)
+      else `(tactic| obtain ⟨$ns,*⟩ := $hc)
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv), $(b hg), $(b hc)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      cases $r:ident
+      case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
+      rename_i $o:ident
+      cases $o:ident
+      case some => (
+        simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
+        obtain ⟨res, hres, hrep⟩ := $hc
+        refine ⟨$hinv, $hG, ?_⟩
+        refine ⟨res, fun d => ?_, hrep⟩
+        rw [$heq:term, firstSome_append, firstSome_append]
+        simp [hres, $[$facts:ident],*])
+      simp only at $hc:ident ⊢
+      $bind))
+
+/-- The same in a body: the result is the body's. -/
+syntax "body_group_step " "with " term " as " "⟨" ident ", " ident ", " ident "⟩"
+  " growing " ident " carrying" (ppSpace colGt ident)* " split " term " otherwise " "⟨" ident,* "⟩"
+  " using" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| body_group_step with $e as ⟨$s', $hinv, $hc⟩ growing $hG carrying $hs* split $heq
+      otherwise ⟨$ns,*⟩ using $facts*) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let o := Lean.mkIdent `o
+    let hg := Lean.mkIdent `hg
+    let ns' := ns.getElems
+    let bind ← if ns'.size == 1 then `(tactic| have $(ns'[0]!):ident := $hc)
+      else `(tactic| obtain ⟨$ns,*⟩ := $hc)
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv), $(b hg), $(b hc)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      cases $r:ident
+      case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
+      rename_i $o:ident
+      cases $o:ident
+      case some => (
+        simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
+        obtain ⟨res, hres, hrep⟩ := $hc
+        refine ⟨$hinv, $hG, ?_⟩
+        rw [$heq:term, firstSome_append, firstSome_append]
+        simpa [hres, $[$facts:ident],*] using hrep)
+      simp only at $hc:ident ⊢
+      $bind))
+
+/-- Ends a group where no member answered: none of its cases does. -/
+syntax "group_none " ident ppSpace ident " with " term : tactic
+macro_rules
+  | `(tactic| group_none $hinv $hG with $h) =>
+    `(tactic| (
+      simp only [Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+      exact ⟨$hinv, $hG, $h⟩))
+
 /-- `stuck_check h : x as hs else hinv hG`: the generated
 `if s.is_stuck(a)? { return Ok(s.stuck()) }` on a handle of the term `x`.
 Goes on with `hs : x ≠ Stuck`; for the stuck term the body ends with the

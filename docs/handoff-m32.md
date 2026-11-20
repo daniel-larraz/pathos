@@ -106,6 +106,24 @@ constructors and about 20 types. The plan:
   a last case for every argument, so it is unreachable there, but a
   `HasStuck CState := CState.Stuck` would not be true of the Rust in
   general.
+- Step 4 (i), groups of cases: done (2026-11-24). rust-meta records the
+  group tree (`LeanProof::groups`, `top`) and writes a theorem per group;
+  the tactics are `group_step`, `body_group_step`, `group_none` and the
+  lemma `firstSome_append` in Tactic.lean. None of the 8 grouped programs
+  is proved (each has another reason now), so the group proofs were
+  tested by forcing `$eo_typeof` and `$eo_cmd_step_proven` with `sorry`
+  for unsupported cases: `~/Projects/cvc5/pathos-m28/work/patches/
+  rust-meta-force-proof.patch` adds `LEAN_PROOF_FORCE=<program>` to
+  rust-meta for that (never commit it). Not done: the round of a loop
+  whose cases are in groups (recorded as the reason only when nothing
+  else stops the program). `more_k` helpers: the only one in CpcMini is
+  in `$eo_cmd_step_proven`'s case 0, and its `unfold` is accepted, but
+  the rest of that case calls a program without a proof; no requirement
+  in CpcMini is cut into a `more_k`, so that path is still untested.
+- Lean macro lessons from step 4: a syntax atom such as `" none "` becomes
+  a keyword everywhere (it broke `| Ok none =>` in every generated file);
+  `obtain ⟨h⟩ := e` on an equation case-splits the equation, so a single
+  name is bound with `have`.
 - `Represents.rep` carries `emb_T x` beside `Holds` (a conjunction).
   Folding `emb` into `Valid` is left for lemma C, with `Valid`, which this
   work does not touch.

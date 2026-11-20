@@ -207,7 +207,7 @@ error).
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
-it. In use today, by 2,448 theorems, are 27 axioms:
+it. In use today, by 2,452 theorems, are 27 axioms:
 
 - Lean's three (`propext`, `Quot.sound`, `Classical.choice`).
 - 12 of the 54 declarations that Aeneas leaves without a body in the Lean
@@ -468,16 +468,30 @@ person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
 **What limits the 19** (the reasons of `proofs.tsv`, for the other 63, on
-2026-11-23): a return type without a stuck value in the proofs (`HasStuck`:
+2026-11-24): a return type without a stuck value in the proofs (`HasStuck`:
 checker states, datatype declarations, SMT types; 15), native operations
-(9), more than four cases (8), conditionals (8), the six of the datatype
-operators below, native patterns (4), builtin operators (4), calls of
-programs without a proof (3), the two compiled to the runtime, a variable
-in a pattern and the stuck term built as a constructor (one each), an
-application of a term that may be stuck (`$eo_prog_scope`, the first
-finding below), and a function type in a pattern. The lemmas of `construct`
-and `destruct` are generated for every data constructor (`MiniCtors`); the
-literal constructors and variables are stored otherwise and have none.
+(10), conditionals (10), the six of the datatype operators below, native
+patterns (4), builtin operators (5), a literal constructor or a variable in
+a pattern (3), calls of programs without a proof (3), the stuck term built
+as a constructor (2), the two compiled to the runtime, an application of a
+term that may be stuck (`$eo_prog_scope`, the first finding below), a
+function type in a pattern, and a cache over values that are not terms.
+The lemmas of `construct` and `destruct` are generated for every data
+constructor (`MiniCtors`); the literal constructors and variables are
+stored otherwise and have none.
+
+**Groups of cases** (milestone 32, step 4). A program with more than four
+cases tries them in groups (`cases_<d>_<g>`), and each group has a
+theorem: it answers what the first of its cases that answers does (`∀ d,
+firstSome [its cases] d = res`), or none of them answers. The body and
+the enclosing groups split their list of cases around each member
+(`firstSome (l₁ ++ l₂) d = firstSome l₁ (firstSome l₂ d)`). None of the 8
+such programs of CpcMini has a proof yet, each for another reason; the
+group proofs were checked by writing `$eo_typeof`'s (27 cases, groups of
+groups) and `$eo_cmd_step_proven`'s with `sorry` for the cases that the
+emitter cannot do: the groups and the body go through (4 s, 1.8 GiB). A
+loop whose cases are in groups has no proof of its round yet; no program
+of CpcMini meets that before another reason.
 
 **Six programs have no function in logos's Lean**: the datatype operators
 (`$eo_dt_constructors`, `$eo_dt_selectors` and the four they call). The
