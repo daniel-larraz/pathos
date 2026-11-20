@@ -140,7 +140,9 @@ use of freed memory under `--stats`.
 
 Ethos's CI builds and tests on Linux, macOS and Windows, each on x86-64 and
 arm64. pathos's CI (job `platforms`) uses the same six runners and the same
-GMP packages, builds the reference Ethos on each, and runs there:
+GMP packages (on macOS Homebrew's current GMP, not Ethos's bottle for
+macOS 12, which newer runner images refuse), builds the reference Ethos on
+each, and runs there:
 
 - `cargo build --release` and `cargo test`, debug and release. On Windows
   with Rust's MSVC toolchain; the release binaries are linked statically
