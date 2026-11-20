@@ -310,6 +310,39 @@ macro_rules
       rw [requires_eq _ _ $hq]
       exact $h))
 
+/-! ## A conditional
+
+`eo::ite c a b` (and the native `ite`) is a function of its own in the
+Rust, `if_k`: the Boolean of the condition, then the branch it names. The
+generated proof states what the function gives (a handle of logos's
+`__eo_ite`, or `native_ite`) and proves it in place, a bullet per
+branch. -/
+
+/-- Enters a branch of a conditional: the Boolean the condition stands for
+is the one `hbv` says. -/
+syntax "ite_branch " term : tactic
+macro_rules
+  | `(tactic| ite_branch $hbv) =>
+    `(tactic| (
+      rw [$hbv:term]
+      simp only [Std.bind_ok, Bool.false_eq_true, ite_true, ite_false, ↓reduceIte]))
+
+/-- Ends a branch: its result is the conditional's, by `h`. -/
+syntax "ite_done " ident ppSpace ident " with " term : tactic
+macro_rules
+  | `(tactic| ite_done $hinv $hG with $h) =>
+    `(tactic| (
+      simp only [WP.dspec_ok, WP.uncurry'_pair]
+      exact ⟨$hinv, $hG, $h⟩))
+
+/-- Ends a conditional whose condition is no Boolean: the stuck term. -/
+syntax "ite_stuck " ident ppSpace ident " with " term : tactic
+macro_rules
+  | `(tactic| ite_stuck $hinv $hG with $hx) =>
+    `(tactic| (
+      simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+      exact ⟨$hinv, $hG, eo_ite_stuck_rep _ _ $hx (Store.Inv.rep_stuck $hinv)⟩))
+
 /-! ## Bodies -/
 
 /-- The first of the cases that answers, else `d`: what a generated body

@@ -120,6 +120,18 @@ constructors and about 20 types. The plan:
   in `$eo_cmd_step_proven`'s case 0, and its `unfold` is accepted, but
   the rest of that case calls a program without a proof; no requirement
   in CpcMini is cut into a `more_k`, so that path is still untested.
+- Step 4 (ii), conditionals: done (2026-11-24). `conditional()` writes a
+  `have h_ite_v := (show if_k … ⦃ … __eo_ite _ _ _ … ⦄div from by …)`
+  block with a bullet per branch (`ite_branch`, `ite_done`, `ite_stuck`
+  in Tactic.lean); the branches start from the same store. `more_k`
+  helpers made in a branch or a requirement are unfolded in its block.
+  Logos's functions are now named without `Eo.` (`open Eo hiding Term`,
+  `open Smtm`, and the SMT modules imported): `$eo_to_smt_type` and the
+  other functions of logos's SmtTranslate are in no namespace. Tested by
+  forcing `$eo_to_smt_type` (native `ite`); `eo::ite` and `ite_stuck` are
+  untested on real code. Next reasons of the 10: native operations (8:
+  `streq`, `Teq`, `string_valid`), a function type in a pattern
+  (`$eo_to_smt_type`), HasStuck (`$smtx_typeof_guard_wf`).
 - Lean macro lessons from step 4: a syntax atom such as `" none "` becomes
   a keyword everywhere (it broke `| Ok none =>` in every generated file);
   `obtain ⟨h⟩ := e` on an equation case-splits the equation, so a single

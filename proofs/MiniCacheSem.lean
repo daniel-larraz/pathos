@@ -1,6 +1,8 @@
 module
 public import MiniChecker
 public import CpcMini.Logos
+public import CpcMini.SmtTranslate
+public import CpcMini.SmtModel
 public import PathosProofs.Store.Rep
 
 /-!
@@ -16,12 +18,14 @@ Do not edit.
 namespace pathos_compiled_checker
 
 open Aeneas Aeneas.Std Result
+open Eo hiding Term
+open Smtm
 
 /-- `$mk_trans`. -/
 def ProgramSem.p58 (nodes : List TermData) (args : List Term) (res : Term) : Prop :=
   ∃ xs : List Eo.Term, RepList nodes args xs ∧
     match xs with
-    | [x0, x1, x2] => Rep nodes res.val (Eo.__mk_trans x0 x1 x2)
+    | [x0, x1, x2] => Rep nodes res.val (__mk_trans x0 x1 x2)
     | _ => False
 
 theorem ProgramSem.p58.mono {nodes nodes' : List TermData} {args : List Term} {res : Term}

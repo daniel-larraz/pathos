@@ -2,6 +2,10 @@ module
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos
+public import $CALC$.SmtTranslate
+import all $CALC$.SmtTranslate
+public import $CALC$.SmtModel
+import all $CALC$.SmtModel
 public import $CASES$
 import all $CASES$
 public import PathosProofs.Generated
@@ -21,6 +25,8 @@ set_option maxRecDepth 8000
 namespace pathos_compiled_checker
 
 open Aeneas Aeneas.Std Result
+open Eo hiding Term
+open Smtm
 open generated generated.part0
 
 /-- What is proved of `$eo_StateObj_proven`. -/
@@ -29,7 +35,7 @@ def eo__24eo_5fStateObj_5fproven.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5fStateObj_5fproven s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_StateObj_proven x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_StateObj_proven x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_is_list_nil`. -/
@@ -38,7 +44,7 @@ def eo__24eo_5fis_5flist_5fnil.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
     eo__24eo_5fis_5flist_5fnil s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_is_list_nil x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_is_list_nil x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_lit_type_Numeral`. -/
@@ -47,7 +53,7 @@ def eo__24eo_5flit_5ftype_5fNumeral.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5flit_5ftype_5fNumeral s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_lit_type_Numeral x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_lit_type_Numeral x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_lit_type_Rational`. -/
@@ -56,7 +62,7 @@ def eo__24eo_5flit_5ftype_5fRational.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5flit_5ftype_5fRational s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_lit_type_Rational x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_lit_type_Rational x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_lit_type_String`. -/
@@ -65,7 +71,7 @@ def eo__24eo_5flit_5ftype_5fString.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5flit_5ftype_5fString s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_lit_type_String x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_lit_type_String x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_nil`. -/
@@ -74,7 +80,7 @@ def eo__24eo_5fnil.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
     eo__24eo_5fnil s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_nil x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_nil x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_contra`. -/
@@ -83,7 +89,7 @@ def eo__24eo_5fprog_5fcontra.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
     eo__24eo_5fprog_5fcontra s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_contra x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_contra x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_refl`. -/
@@ -92,7 +98,7 @@ def eo__24eo_5fprog_5frefl.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5fprog_5frefl s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_refl x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_refl x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_symm`. -/
@@ -101,7 +107,7 @@ def eo__24eo_5fprog_5fsymm.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5fprog_5fsymm s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_symm x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_symm x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_trans`. -/
@@ -110,7 +116,7 @@ def eo__24eo_5fprog_5ftrans.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5fprog_5ftrans s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_trans x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_trans x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_state_is_closed`. -/
@@ -119,7 +125,7 @@ def eo__24eo_5fstate_5fis_5fclosed.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5fstate_5fis_5fclosed s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_state_is_closed x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_state_is_closed x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_typeof_=`. -/
@@ -128,7 +134,7 @@ def eo__24eo_5ftypeof_5f_3d.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
     eo__24eo_5ftypeof_5f_3d s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_eq x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_eq x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_typeof_BitVec`. -/
@@ -137,7 +143,7 @@ def eo__24eo_5ftypeof_5fBitVec.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5ftypeof_5fBitVec s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_BitVec x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_BitVec x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_typeof_Seq`. -/
@@ -146,7 +152,7 @@ def eo__24eo_5ftypeof_5fSeq.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5ftypeof_5fSeq s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_Seq x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_Seq x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_typeof_and`. -/
@@ -155,7 +161,7 @@ def eo__24eo_5ftypeof_5fand.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
     eo__24eo_5ftypeof_5fand s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_and x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_and x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_typeof_fun_type`. -/
@@ -164,7 +170,7 @@ def eo__24eo_5ftypeof_5ffun_5ftype.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
     eo__24eo_5ftypeof_5ffun_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_fun_type x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_fun_type x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_typeof_not`. -/
@@ -173,7 +179,7 @@ def eo__24eo_5ftypeof_5fnot.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24eo_5ftypeof_5fnot s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_not x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_not x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$mk_symm`. -/
@@ -182,7 +188,7 @@ def eo__24mk_5fsymm.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 →
     eo__24mk_5fsymm s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__mk_symm x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__mk_symm x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$mk_trans`. -/
@@ -191,7 +197,7 @@ def eo__24mk_5ftrans.Spec (n : Nat) : Prop :=
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
     eo__24mk_5ftrans s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__mk_trans x_a0 x_a1 x_a2)
+      | core.result.Result.Ok t => Represents.rep s' t (__mk_trans x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of the programs, for stores that can enter `n` more calls. -/
@@ -258,9 +264,9 @@ theorem case_2_eo__24eo_5fStateObj_5fproven_spec (n : Nat) (ih : Specs n) (s : S
 /-- logos's `__eo_StateObj_proven` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fStateObj_5fproven.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_StateObj_proven x_a0 =
+    __eo_StateObj_proven x_a0 =
       (firstSome [EoCases.__eo_StateObj_proven.case_0 x_a0, EoCases.__eo_StateObj_proven.case_1 x_a0, EoCases.__eo_StateObj_proven.case_2 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_StateObj_proven
+  conv => lhs; unfold __eo_StateObj_proven
   unfold EoCases.__eo_StateObj_proven.case_0 EoCases.__eo_StateObj_proven.case_1 EoCases.__eo_StateObj_proven.case_2
   logos_eq
 
@@ -268,7 +274,7 @@ theorem body_eo__24eo_5fStateObj_5fproven_spec (n : Nat) (ih : Specs n) (s : Sto
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5fStateObj_5fproven s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_StateObj_proven x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_StateObj_proven x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fStateObj_5fproven.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5fStateObj_5fproven
@@ -285,7 +291,7 @@ theorem eo__24eo_5fStateObj_5fproven_spec (n : Nat) (ih : ∀ m < n, Specs m) : 
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fStateObj_5fproven
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fStateObj_5fproven s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_StateObj_proven x_a0))
+    (fun s1 => body_eo__24eo_5fStateObj_5fproven s1 a0) (fun s' t => Represents.rep s' t (__eo_StateObj_proven x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fStateObj_5fproven_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -345,9 +351,9 @@ theorem case_2_eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : Specs n) (s : Sto
 /-- logos's `__eo_is_list_nil` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fis_5flist_5fnil.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    Eo.__eo_is_list_nil x_a0 x_a1 =
+    __eo_is_list_nil x_a0 x_a1 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_is_list_nil.case_0 x_a0 x_a1, EoCases.__eo_is_list_nil.case_1 x_a0 x_a1, EoCases.__eo_is_list_nil.case_2 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_is_list_nil
+  conv => lhs; unfold __eo_is_list_nil
   unfold EoCases.__eo_is_list_nil.case_0 EoCases.__eo_is_list_nil.case_1 EoCases.__eo_is_list_nil.case_2
   logos_eq
 
@@ -355,7 +361,7 @@ theorem body_eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : Specs n) (s : Store
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
     body_eo__24eo_5fis_5flist_5fnil s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_is_list_nil x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_is_list_nil x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fis_5flist_5fnil.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
   unfold body_eo__24eo_5fis_5flist_5fnil
@@ -374,7 +380,7 @@ theorem eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5fis_5flist_5fnil
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fis_5flist_5fnil s1 a0 a1) (fun s' t => Represents.rep s' t (Eo.__eo_is_list_nil x_a0 x_a1))
+    (fun s1 => body_eo__24eo_5fis_5flist_5fnil s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_is_list_nil x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fis_5flist_5fnil_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
@@ -398,9 +404,9 @@ theorem case_0_eo__24eo_5flit_5ftype_5fNumeral_spec (n : Nat) (ih : Specs n) (s 
 /-- logos's `__eo_lit_type_Numeral` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5flit_5ftype_5fNumeral.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_lit_type_Numeral x_a0 =
+    __eo_lit_type_Numeral x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_lit_type_Numeral.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_lit_type_Numeral
+  conv => lhs; unfold __eo_lit_type_Numeral
   unfold EoCases.__eo_lit_type_Numeral.case_0
   logos_eq
 
@@ -408,7 +414,7 @@ theorem body_eo__24eo_5flit_5ftype_5fNumeral_spec (n : Nat) (ih : Specs n) (s : 
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5flit_5ftype_5fNumeral s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_lit_type_Numeral x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_lit_type_Numeral x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5flit_5ftype_5fNumeral.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5flit_5ftype_5fNumeral
@@ -422,7 +428,7 @@ theorem eo__24eo_5flit_5ftype_5fNumeral_spec (n : Nat) (ih : ∀ m < n, Specs m)
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5flit_5ftype_5fNumeral
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5flit_5ftype_5fNumeral s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_lit_type_Numeral x_a0))
+    (fun s1 => body_eo__24eo_5flit_5ftype_5fNumeral s1 a0) (fun s' t => Represents.rep s' t (__eo_lit_type_Numeral x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5flit_5ftype_5fNumeral_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -446,9 +452,9 @@ theorem case_0_eo__24eo_5flit_5ftype_5fRational_spec (n : Nat) (ih : Specs n) (s
 /-- logos's `__eo_lit_type_Rational` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5flit_5ftype_5fRational.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_lit_type_Rational x_a0 =
+    __eo_lit_type_Rational x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_lit_type_Rational.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_lit_type_Rational
+  conv => lhs; unfold __eo_lit_type_Rational
   unfold EoCases.__eo_lit_type_Rational.case_0
   logos_eq
 
@@ -456,7 +462,7 @@ theorem body_eo__24eo_5flit_5ftype_5fRational_spec (n : Nat) (ih : Specs n) (s :
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5flit_5ftype_5fRational s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_lit_type_Rational x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_lit_type_Rational x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5flit_5ftype_5fRational.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5flit_5ftype_5fRational
@@ -470,7 +476,7 @@ theorem eo__24eo_5flit_5ftype_5fRational_spec (n : Nat) (ih : ∀ m < n, Specs m
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5flit_5ftype_5fRational
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5flit_5ftype_5fRational s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_lit_type_Rational x_a0))
+    (fun s1 => body_eo__24eo_5flit_5ftype_5fRational s1 a0) (fun s' t => Represents.rep s' t (__eo_lit_type_Rational x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5flit_5ftype_5fRational_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -497,9 +503,9 @@ theorem case_0_eo__24eo_5flit_5ftype_5fString_spec (n : Nat) (ih : Specs n) (s :
 /-- logos's `__eo_lit_type_String` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5flit_5ftype_5fString.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_lit_type_String x_a0 =
+    __eo_lit_type_String x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_lit_type_String.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_lit_type_String
+  conv => lhs; unfold __eo_lit_type_String
   unfold EoCases.__eo_lit_type_String.case_0
   logos_eq
 
@@ -507,7 +513,7 @@ theorem body_eo__24eo_5flit_5ftype_5fString_spec (n : Nat) (ih : Specs n) (s : S
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5flit_5ftype_5fString s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_lit_type_String x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_lit_type_String x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5flit_5ftype_5fString.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5flit_5ftype_5fString
@@ -521,7 +527,7 @@ theorem eo__24eo_5flit_5ftype_5fString_spec (n : Nat) (ih : ∀ m < n, Specs m) 
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5flit_5ftype_5fString
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5flit_5ftype_5fString s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_lit_type_String x_a0))
+    (fun s1 => body_eo__24eo_5flit_5ftype_5fString s1 a0) (fun s' t => Represents.rep s' t (__eo_lit_type_String x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5flit_5ftype_5fString_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -567,9 +573,9 @@ theorem case_1_eo__24eo_5fnil_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 :
 /-- logos's `__eo_nil` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fnil.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    Eo.__eo_nil x_a0 x_a1 =
+    __eo_nil x_a0 x_a1 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_nil.case_0 x_a0 x_a1, EoCases.__eo_nil.case_1 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_nil
+  conv => lhs; unfold __eo_nil
   unfold EoCases.__eo_nil.case_0 EoCases.__eo_nil.case_1
   logos_eq
 
@@ -577,7 +583,7 @@ theorem body_eo__24eo_5fnil_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : T
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
     body_eo__24eo_5fnil s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_nil x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_nil x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fnil.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
   unfold body_eo__24eo_5fnil
@@ -594,7 +600,7 @@ theorem eo__24eo_5fnil_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fnil
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5fnil
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fnil s1 a0 a1) (fun s' t => Represents.rep s' t (Eo.__eo_nil x_a0 x_a1))
+    (fun s1 => body_eo__24eo_5fnil s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_nil x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fnil_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
@@ -624,9 +630,9 @@ theorem case_0_eo__24eo_5fprog_5fcontra_spec (n : Nat) (ih : Specs n) (s : Store
 /-- logos's `__eo_prog_contra` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fprog_5fcontra.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    Eo.__eo_prog_contra x_a0 x_a1 =
+    __eo_prog_contra x_a0 x_a1 =
       (firstSome [EoCases.__eo_prog_contra.case_0 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_prog_contra
+  conv => lhs; unfold __eo_prog_contra
   unfold EoCases.__eo_prog_contra.case_0
   logos_eq
 
@@ -634,7 +640,7 @@ theorem body_eo__24eo_5fprog_5fcontra_spec (n : Nat) (ih : Specs n) (s : Store) 
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
     body_eo__24eo_5fprog_5fcontra s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_contra x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_contra x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fprog_5fcontra.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
   unfold body_eo__24eo_5fprog_5fcontra
@@ -647,7 +653,7 @@ theorem eo__24eo_5fprog_5fcontra_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5fprog_5fcontra
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fcontra s1 a0 a1) (fun s' t => Represents.rep s' t (Eo.__eo_prog_contra x_a0 x_a1))
+    (fun s1 => body_eo__24eo_5fprog_5fcontra s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_prog_contra x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fprog_5fcontra_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
@@ -673,9 +679,9 @@ theorem case_0_eo__24eo_5fprog_5frefl_spec (n : Nat) (ih : Specs n) (s : Store) 
 /-- logos's `__eo_prog_refl` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fprog_5frefl.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_prog_refl x_a0 =
+    __eo_prog_refl x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_refl.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_prog_refl
+  conv => lhs; unfold __eo_prog_refl
   unfold EoCases.__eo_prog_refl.case_0
   logos_eq
 
@@ -683,7 +689,7 @@ theorem body_eo__24eo_5fprog_5frefl_spec (n : Nat) (ih : Specs n) (s : Store) (a
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5fprog_5frefl s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_refl x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_refl x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fprog_5frefl.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5fprog_5frefl
@@ -697,7 +703,7 @@ theorem eo__24eo_5fprog_5frefl_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fprog_5frefl
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5frefl s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_prog_refl x_a0))
+    (fun s1 => body_eo__24eo_5fprog_5frefl s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_refl x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fprog_5frefl_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -721,9 +727,9 @@ theorem case_0_eo__24eo_5fprog_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) 
 /-- logos's `__eo_prog_symm` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fprog_5fsymm.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_prog_symm x_a0 =
+    __eo_prog_symm x_a0 =
       (firstSome [EoCases.__eo_prog_symm.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_prog_symm
+  conv => lhs; unfold __eo_prog_symm
   unfold EoCases.__eo_prog_symm.case_0
   logos_eq
 
@@ -731,7 +737,7 @@ theorem body_eo__24eo_5fprog_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) (a
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5fprog_5fsymm s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_symm x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_symm x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fprog_5fsymm.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5fprog_5fsymm
@@ -744,7 +750,7 @@ theorem eo__24eo_5fprog_5fsymm_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fprog_5fsymm
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fsymm s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_prog_symm x_a0))
+    (fun s1 => body_eo__24eo_5fprog_5fsymm s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_symm x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fprog_5fsymm_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -778,9 +784,9 @@ theorem case_0_eo__24eo_5fprog_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store)
 /-- logos's `__eo_prog_trans` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fprog_5ftrans.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_prog_trans x_a0 =
+    __eo_prog_trans x_a0 =
       (firstSome [EoCases.__eo_prog_trans.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_prog_trans
+  conv => lhs; unfold __eo_prog_trans
   unfold EoCases.__eo_prog_trans.case_0
   logos_eq
 
@@ -788,7 +794,7 @@ theorem body_eo__24eo_5fprog_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5fprog_5ftrans s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_prog_trans x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_trans x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fprog_5ftrans.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5fprog_5ftrans
@@ -801,7 +807,7 @@ theorem eo__24eo_5fprog_5ftrans_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fprog_5ftrans
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5ftrans s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_prog_trans x_a0))
+    (fun s1 => body_eo__24eo_5fprog_5ftrans s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_trans x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fprog_5ftrans_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -816,7 +822,7 @@ theorem case_0_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
         ∃ res, EoCases.__eo_state_is_closed.case_0 x_a0 = some res ∧ Represents.rep s' t res
       | core.result.Result.Ok (some (Next.Again arr)) =>
         ∃ (u0 : Term) (y0 : _), arr.val = [u0] ∧ Represents.rep s' u0 y0 ∧
-          EoCases.__eo_state_is_closed.case_0 x_a0 = some (Eo.__eo_state_is_closed y0)
+          EoCases.__eo_state_is_closed.case_0 x_a0 = some (__eo_state_is_closed y0)
       | core.result.Result.Ok none => EoCases.__eo_state_is_closed.case_0 x_a0 = none
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fstate_5fis_5fclosed
@@ -834,7 +840,7 @@ theorem case_1_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
         ∃ res, EoCases.__eo_state_is_closed.case_1 x_a0 = some res ∧ Represents.rep s' t res
       | core.result.Result.Ok (some (Next.Again arr)) =>
         ∃ (u0 : Term) (y0 : _), arr.val = [u0] ∧ Represents.rep s' u0 y0 ∧
-          EoCases.__eo_state_is_closed.case_1 x_a0 = some (Eo.__eo_state_is_closed y0)
+          EoCases.__eo_state_is_closed.case_1 x_a0 = some (__eo_state_is_closed y0)
       | core.result.Result.Ok none => EoCases.__eo_state_is_closed.case_1 x_a0 = none
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_1_eo__24eo_5fstate_5fis_5fclosed
@@ -850,7 +856,7 @@ theorem case_2_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
         ∃ res, EoCases.__eo_state_is_closed.case_2 x_a0 = some res ∧ Represents.rep s' t res
       | core.result.Result.Ok (some (Next.Again arr)) =>
         ∃ (u0 : Term) (y0 : _), arr.val = [u0] ∧ Represents.rep s' u0 y0 ∧
-          EoCases.__eo_state_is_closed.case_2 x_a0 = some (Eo.__eo_state_is_closed y0)
+          EoCases.__eo_state_is_closed.case_2 x_a0 = some (__eo_state_is_closed y0)
       | core.result.Result.Ok none => EoCases.__eo_state_is_closed.case_2 x_a0 = none
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_2_eo__24eo_5fstate_5fis_5fclosed
@@ -869,7 +875,7 @@ theorem case_3_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
         ∃ res, EoCases.__eo_state_is_closed.case_3 x_a0 = some res ∧ Represents.rep s' t res
       | core.result.Result.Ok (some (Next.Again arr)) =>
         ∃ (u0 : Term) (y0 : _), arr.val = [u0] ∧ Represents.rep s' u0 y0 ∧
-          EoCases.__eo_state_is_closed.case_3 x_a0 = some (Eo.__eo_state_is_closed y0)
+          EoCases.__eo_state_is_closed.case_3 x_a0 = some (__eo_state_is_closed y0)
       | core.result.Result.Ok none => EoCases.__eo_state_is_closed.case_3 x_a0 = none
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_3_eo__24eo_5fstate_5fis_5fclosed
@@ -880,9 +886,9 @@ theorem case_3_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
 /-- logos's `__eo_state_is_closed` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fstate_5fis_5fclosed.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_state_is_closed x_a0 =
+    __eo_state_is_closed x_a0 =
       (firstSome [EoCases.__eo_state_is_closed.case_0 x_a0, EoCases.__eo_state_is_closed.case_1 x_a0, EoCases.__eo_state_is_closed.case_2 x_a0, EoCases.__eo_state_is_closed.case_3 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_state_is_closed
+  conv => lhs; unfold __eo_state_is_closed
   unfold EoCases.__eo_state_is_closed.case_0 EoCases.__eo_state_is_closed.case_1 EoCases.__eo_state_is_closed.case_2 EoCases.__eo_state_is_closed.case_3
   logos_eq
 
@@ -890,10 +896,10 @@ theorem step_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : S
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     step_eo__24eo_5fstate_5fis_5fclosed s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok (Next.Done t) => Represents.rep s' t (Eo.__eo_state_is_closed x_a0)
+      | core.result.Result.Ok (Next.Done t) => Represents.rep s' t (__eo_state_is_closed x_a0)
       | core.result.Result.Ok (Next.Again arr) =>
         ∃ (u0 : Term) (y0 : _), arr.val = [u0] ∧ Represents.rep s' u0 y0 ∧
-          Eo.__eo_state_is_closed x_a0 = Eo.__eo_state_is_closed y0
+          __eo_state_is_closed x_a0 = __eo_state_is_closed y0
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fstate_5fis_5fclosed.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold step_eo__24eo_5fstate_5fis_5fclosed
@@ -913,21 +919,21 @@ theorem body_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : S
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5fstate_5fis_5fclosed s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_state_is_closed x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_state_is_closed x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   unfold body_eo__24eo_5fstate_5fis_5fclosed
   refine (?_ : ∀ (a0 : Term) (s : Store) (x_a0 : _), s.Inv → s.remaining ≤ n →
       Represents.rep s a0 x_a0 →
       body_eo__24eo_5fstate_5fis_5fclosed_loop a0 s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_state_is_closed x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_state_is_closed x_a0)
       | core.result.Result.Err _ => True ⦄div) a0 s x_a0 hinv hrem h_a0
   apply body_eo__24eo_5fstate_5fis_5fclosed_loop.fixpoint_induct
     (motive := fun f => ∀ (a0 : Term) (s : Store) (x_a0 : _), s.Inv → s.remaining ≤ n →
       Represents.rep s a0 x_a0 →
       f a0 s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_state_is_closed x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_state_is_closed x_a0)
       | core.result.Result.Err _ => True ⦄div)
   · prove_adm
   · intro loop ihl a0 s x_a0 hinv hrem h_a0
@@ -953,7 +959,7 @@ theorem eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : ∀ m < n, Specs m) 
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fstate_5fis_5fclosed
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fstate_5fis_5fclosed s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_state_is_closed x_a0))
+    (fun s1 => body_eo__24eo_5fstate_5fis_5fclosed s1 a0) (fun s' t => Represents.rep s' t (__eo_state_is_closed x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fstate_5fis_5fclosed_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -978,9 +984,9 @@ theorem case_0_eo__24eo_5ftypeof_5f_3d_spec (n : Nat) (ih : Specs n) (s : Store)
 /-- logos's `__eo_typeof_eq` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5ftypeof_5f_3d.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    Eo.__eo_typeof_eq x_a0 x_a1 =
+    __eo_typeof_eq x_a0 x_a1 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_eq.case_0 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_typeof_eq
+  conv => lhs; unfold __eo_typeof_eq
   unfold EoCases.__eo_typeof_eq.case_0
   logos_eq
 
@@ -988,7 +994,7 @@ theorem body_eo__24eo_5ftypeof_5f_3d_spec (n : Nat) (ih : Specs n) (s : Store) (
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
     body_eo__24eo_5ftypeof_5f_3d s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_eq x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_eq x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5ftypeof_5f_3d.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
   unfold body_eo__24eo_5ftypeof_5f_3d
@@ -1003,7 +1009,7 @@ theorem eo__24eo_5ftypeof_5f_3d_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5ftypeof_5f_3d
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5f_3d s1 a0 a1) (fun s' t => Represents.rep s' t (Eo.__eo_typeof_eq x_a0 x_a1))
+    (fun s1 => body_eo__24eo_5ftypeof_5f_3d s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_typeof_eq x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5f_3d_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
@@ -1030,9 +1036,9 @@ theorem case_0_eo__24eo_5ftypeof_5fBitVec_spec (n : Nat) (ih : Specs n) (s : Sto
 /-- logos's `__eo_typeof_BitVec` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5ftypeof_5fBitVec.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_typeof_BitVec x_a0 =
+    __eo_typeof_BitVec x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_BitVec.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_typeof_BitVec
+  conv => lhs; unfold __eo_typeof_BitVec
   unfold EoCases.__eo_typeof_BitVec.case_0
   logos_eq
 
@@ -1040,7 +1046,7 @@ theorem body_eo__24eo_5ftypeof_5fBitVec_spec (n : Nat) (ih : Specs n) (s : Store
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5ftypeof_5fBitVec s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_BitVec x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_BitVec x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5ftypeof_5fBitVec.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5ftypeof_5fBitVec
@@ -1054,7 +1060,7 @@ theorem eo__24eo_5ftypeof_5fBitVec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5ftypeof_5fBitVec
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5fBitVec s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_typeof_BitVec x_a0))
+    (fun s1 => body_eo__24eo_5ftypeof_5fBitVec s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_BitVec x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fBitVec_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -1081,9 +1087,9 @@ theorem case_0_eo__24eo_5ftypeof_5fSeq_spec (n : Nat) (ih : Specs n) (s : Store)
 /-- logos's `__eo_typeof_Seq` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5ftypeof_5fSeq.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_typeof_Seq x_a0 =
+    __eo_typeof_Seq x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_Seq.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_typeof_Seq
+  conv => lhs; unfold __eo_typeof_Seq
   unfold EoCases.__eo_typeof_Seq.case_0
   logos_eq
 
@@ -1091,7 +1097,7 @@ theorem body_eo__24eo_5ftypeof_5fSeq_spec (n : Nat) (ih : Specs n) (s : Store) (
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5ftypeof_5fSeq s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_Seq x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_Seq x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5ftypeof_5fSeq.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5ftypeof_5fSeq
@@ -1105,7 +1111,7 @@ theorem eo__24eo_5ftypeof_5fSeq_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5ftypeof_5fSeq
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5fSeq s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_typeof_Seq x_a0))
+    (fun s1 => body_eo__24eo_5ftypeof_5fSeq s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_Seq x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fSeq_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -1135,9 +1141,9 @@ theorem case_0_eo__24eo_5ftypeof_5fand_spec (n : Nat) (ih : Specs n) (s : Store)
 /-- logos's `__eo_typeof_and` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5ftypeof_5fand.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    Eo.__eo_typeof_and x_a0 x_a1 =
+    __eo_typeof_and x_a0 x_a1 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_and.case_0 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_typeof_and
+  conv => lhs; unfold __eo_typeof_and
   unfold EoCases.__eo_typeof_and.case_0
   logos_eq
 
@@ -1145,7 +1151,7 @@ theorem body_eo__24eo_5ftypeof_5fand_spec (n : Nat) (ih : Specs n) (s : Store) (
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
     body_eo__24eo_5ftypeof_5fand s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_and x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_and x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5ftypeof_5fand.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
   unfold body_eo__24eo_5ftypeof_5fand
@@ -1160,7 +1166,7 @@ theorem eo__24eo_5ftypeof_5fand_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5ftypeof_5fand
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5fand s1 a0 a1) (fun s' t => Represents.rep s' t (Eo.__eo_typeof_and x_a0 x_a1))
+    (fun s1 => body_eo__24eo_5ftypeof_5fand s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_typeof_and x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fand_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
@@ -1190,9 +1196,9 @@ theorem case_0_eo__24eo_5ftypeof_5ffun_5ftype_spec (n : Nat) (ih : Specs n) (s :
 /-- logos's `__eo_typeof_fun_type` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5ftypeof_5ffun_5ftype.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    Eo.__eo_typeof_fun_type x_a0 x_a1 =
+    __eo_typeof_fun_type x_a0 x_a1 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_fun_type.case_0 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_typeof_fun_type
+  conv => lhs; unfold __eo_typeof_fun_type
   unfold EoCases.__eo_typeof_fun_type.case_0
   logos_eq
 
@@ -1200,7 +1206,7 @@ theorem body_eo__24eo_5ftypeof_5ffun_5ftype_spec (n : Nat) (ih : Specs n) (s : S
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
     body_eo__24eo_5ftypeof_5ffun_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_fun_type x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_fun_type x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5ftypeof_5ffun_5ftype.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
   unfold body_eo__24eo_5ftypeof_5ffun_5ftype
@@ -1215,7 +1221,7 @@ theorem eo__24eo_5ftypeof_5ffun_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) 
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5ftypeof_5ffun_5ftype
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5ffun_5ftype s1 a0 a1) (fun s' t => Represents.rep s' t (Eo.__eo_typeof_fun_type x_a0 x_a1))
+    (fun s1 => body_eo__24eo_5ftypeof_5ffun_5ftype s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_typeof_fun_type x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5ffun_5ftype_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
@@ -1242,9 +1248,9 @@ theorem case_0_eo__24eo_5ftypeof_5fnot_spec (n : Nat) (ih : Specs n) (s : Store)
 /-- logos's `__eo_typeof_not` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5ftypeof_5fnot.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__eo_typeof_not x_a0 =
+    __eo_typeof_not x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_not.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__eo_typeof_not
+  conv => lhs; unfold __eo_typeof_not
   unfold EoCases.__eo_typeof_not.case_0
   logos_eq
 
@@ -1252,7 +1258,7 @@ theorem body_eo__24eo_5ftypeof_5fnot_spec (n : Nat) (ih : Specs n) (s : Store) (
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24eo_5ftypeof_5fnot s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof_not x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_not x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5ftypeof_5fnot.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24eo_5ftypeof_5fnot
@@ -1266,7 +1272,7 @@ theorem eo__24eo_5ftypeof_5fnot_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5ftypeof_5fnot
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5fnot s1 a0) (fun s' t => Represents.rep s' t (Eo.__eo_typeof_not x_a0))
+    (fun s1 => body_eo__24eo_5ftypeof_5fnot s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_not x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fnot_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -1325,9 +1331,9 @@ theorem case_1_eo__24mk_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : T
 /-- logos's `__mk_symm` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24mk_5fsymm.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    Eo.__mk_symm x_a0 =
+    __mk_symm x_a0 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__mk_symm.case_0 x_a0, EoCases.__mk_symm.case_1 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__mk_symm
+  conv => lhs; unfold __mk_symm
   unfold EoCases.__mk_symm.case_0 EoCases.__mk_symm.case_1
   logos_eq
 
@@ -1335,7 +1341,7 @@ theorem body_eo__24mk_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Ter
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
     body_eo__24mk_5fsymm s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__mk_symm x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__mk_symm x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24mk_5fsymm.rust_eq x_a0 (by valid_tac hinv h_a0)]
   unfold body_eo__24mk_5fsymm
@@ -1351,7 +1357,7 @@ theorem eo__24mk_5fsymm_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fsy
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24mk_5fsymm
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24mk_5fsymm s1 a0) (fun s' t => Represents.rep s' t (Eo.__mk_symm x_a0))
+    (fun s1 => body_eo__24mk_5fsymm s1 a0) (fun s' t => Represents.rep s' t (__mk_symm x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fsymm_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
@@ -1410,9 +1416,9 @@ theorem case_1_eo__24mk_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1
 /-- logos's `__mk_trans` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24mk_5ftrans.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    Eo.__mk_trans x_a0 x_a1 x_a2 =
+    __mk_trans x_a0 x_a1 x_a2 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__mk_trans.case_0 x_a0 x_a1 x_a2, EoCases.__mk_trans.case_1 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold Eo.__mk_trans
+  conv => lhs; unfold __mk_trans
   unfold EoCases.__mk_trans.case_0 EoCases.__mk_trans.case_1
   logos_eq
 
@@ -1420,7 +1426,7 @@ theorem body_eo__24mk_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
     body_eo__24mk_5ftrans s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.__mk_trans x_a0 x_a1 x_a2)
+      | core.result.Result.Ok t => Represents.rep s' t (__mk_trans x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24mk_5ftrans.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
   unfold body_eo__24mk_5ftrans
@@ -1438,7 +1444,7 @@ theorem eo__24mk_5ftrans_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5ft
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24mk_5ftrans
   apply WP.dspec_mono (Store.framed_cached s hinv hrem 58#u32 _ [a0, a1, a2] rfl
-    (fun s1 => body_eo__24mk_5ftrans s1 a0 a1 a2) (fun s' t => Represents.rep s' t (Eo.__mk_trans x_a0 x_a1 x_a2))
+    (fun s1 => body_eo__24mk_5ftrans s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__mk_trans x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem

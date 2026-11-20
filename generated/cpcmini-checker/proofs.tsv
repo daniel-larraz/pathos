@@ -5,7 +5,7 @@ $eo_cmd_step_pop_proven	none	case 1 has the constructor $emb_Stuck, which is not
 $eo_cmd_step_proven	none	case 4 has the constructor $emb_Stuck, which is not stored as a node (no lemma yet)
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
-$eo_dd_lookup	none	case 0 has a conditional
+$eo_dd_lookup	none	case 0 has the native operation streq
 $eo_dd_resolve	none	it returns a value of a type that has no stuck value in the proofs yet (HasStuck)
 $eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it
@@ -45,7 +45,7 @@ $eo_to_smt_datatype	none	it returns a value of a type that has no stuck value in
 $eo_to_smt_datatype_cons	none	it returns a value of a type that has no stuck value in the proofs yet (HasStuck)
 $eo_to_smt_datatype_decl	none	it returns a value of a type that has no stuck value in the proofs yet (HasStuck)
 $eo_to_smt_reserved_datatype_name	none	case 0 has the native operation string_prefix_eq
-$eo_to_smt_type	none	case 1 has a conditional
+$eo_to_smt_type	none	case 5 has a function type in a pattern
 $eo_typeof	none	case 0 has the constructor $emb_Boolean in a pattern, which is not stored as a node
 $eo_typeof_=	generated	
 $eo_typeof_BitVec	generated	
@@ -59,8 +59,8 @@ $eo_typeof_not	generated
 $mk_symm	generated	
 $mk_trans	generated	
 $smtx_dd_has_dt	none	case 0 has the native operation or
-$smtx_dd_lookup	none	case 0 has a conditional
-$smtx_decl_inhabited	none	case 0 has a conditional
+$smtx_dd_lookup	none	case 0 has the native operation streq
+$smtx_decl_inhabited	none	case 0 has the native operation streq
 $smtx_decl_wf_rec	none	case 0 has the native operation and
 $smtx_dt_cons_inhabited	none	case 0 has the native operation and
 $smtx_dt_cons_wf_rec	none	case 0 has the native operation and
@@ -74,10 +74,10 @@ $smtx_ret_typeof_sel_rec	none	case 0 has a native pattern
 $smtx_type_wf	none	case 1 has the native operation and
 $smtx_type_wf_component	none	case 0 has the native operation and
 $smtx_type_wf_rec	none	case 2 has the native operation and
-$smtx_typeof	none	case 3 has a conditional
-$smtx_typeof_=	none	case 0 has a conditional
-$smtx_typeof_apply	none	case 0 has a conditional
+$smtx_typeof	none	case 3 has the native operation string_valid
+$smtx_typeof_=	none	case 0 has the native operation Teq
+$smtx_typeof_apply	none	case 0 has the native operation Teq
 $smtx_typeof_dt_cons_rec	none	case 0 has a native pattern
-$smtx_typeof_guard	none	case 0 has a conditional
-$smtx_typeof_guard_wf	none	case 0 has a conditional
-$smtx_typeof_ite	none	case 0 has a conditional
+$smtx_typeof_guard	none	case 0 has the native operation Teq
+$smtx_typeof_guard_wf	none	it returns a value of a type that has no stuck value in the proofs yet (HasStuck)
+$smtx_typeof_ite	none	case 0 has the native operation Teq

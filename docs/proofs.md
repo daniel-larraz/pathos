@@ -207,7 +207,7 @@ error).
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
-it. In use today, by 2,452 theorems, are 27 axioms:
+it. In use today, by 2,477 theorems, are 27 axioms:
 
 - Lean's three (`propext`, `Quot.sound`, `Classical.choice`).
 - 12 of the 54 declarations that Aeneas leaves without a body in the Lean
@@ -468,17 +468,17 @@ person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
 **What limits the 19** (the reasons of `proofs.tsv`, for the other 63, on
-2026-11-24): a return type without a stuck value in the proofs (`HasStuck`:
-checker states, datatype declarations, SMT types; 15), native operations
-(10), conditionals (10), the six of the datatype operators below, native
-patterns (4), builtin operators (5), a literal constructor or a variable in
-a pattern (3), calls of programs without a proof (3), the stuck term built
-as a constructor (2), the two compiled to the runtime, an application of a
-term that may be stuck (`$eo_prog_scope`, the first finding below), a
-function type in a pattern, and a cache over values that are not terms.
-The lemmas of `construct` and `destruct` are generated for every data
-constructor (`MiniCtors`); the literal constructors and variables are
-stored otherwise and have none.
+2026-11-24, after step 4): native operations (18), a return type without a
+stuck value in the proofs (`HasStuck`: checker states, datatype
+declarations, SMT types; 16), the six of the datatype operators below,
+native patterns (4), builtin operators (5), a literal constructor or a
+variable in a pattern (3), calls of programs without a proof (3), the
+stuck term built as a constructor (2), the two compiled to the runtime, a
+function type in a pattern (2), an application of a term that may be stuck
+(`$eo_prog_scope`, the first finding below), and a cache over values that
+are not terms. The lemmas of `construct` and `destruct` are generated for
+every data constructor (`MiniCtors`); the literal constructors and
+variables are stored otherwise and have none.
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a
@@ -492,6 +492,19 @@ groups) and `$eo_cmd_step_proven`'s with `sorry` for the cases that the
 emitter cannot do: the groups and the body go through (4 s, 1.8 GiB). A
 loop whose cases are in groups has no proof of its round yet; no program
 of CpcMini meets that before another reason.
+
+**Conditionals** (step 4). `eo::ite c a b` and the native `ite` are
+functions of their own in the Rust (`if_k`), and the proof of each is a
+statement proved in place, as a requirement's is: the function gives a
+handle of logos's `__eo_ite` (or `native_ite`) of the condition and the
+branches, with a bullet per branch (`Store.boolean_value_term`,
+`_native` and the `ite` lemmas in `Runtime/Ops.lean`). None of the 10
+programs that had a conditional has a proof yet: the condition of most is
+a native operation (`streq`, `Teq`), which the emitter has no line for.
+The proof was checked by forcing `$eo_to_smt_type`: two cases with a
+native `ite` go through. No case of CpcMini can exercise `eo::ite` (its
+one use, in `$eo_is_closed_rec`, is in a case with a variable in its
+pattern).
 
 **Six programs have no function in logos's Lean**: the datatype operators
 (`$eo_dt_constructors`, `$eo_dt_selectors` and the four they call). The

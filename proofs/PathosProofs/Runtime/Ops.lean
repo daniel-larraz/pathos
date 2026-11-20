@@ -113,6 +113,81 @@ theorem eo_eq_true (a b : Eo.Term) :
     · rw [eo_eq_of_ne a b ha hb]
       simp [ha, eq_comm]
 
+/-! ## Conditionals
+
+The generated `if_k` of `eo::ite c a b` (and of the native `ite`) asks
+`boolean_value` for the Boolean the condition's handle stands for, and
+computes the branch it names; logos's `__eo_ite` and `native_ite` give the
+same, and `__eo_ite` the stuck term on a condition that is no Boolean. -/
+
+/-- `boolean_value` on a handle of a term: its Boolean, if it is one. -/
+theorem Store.boolean_value_term {s : Store} {t : Term} {x : Eo.Term} (h : s.Rep t x) :
+    (x = Eo.Term.Boolean true ∧
+      Store.boolean_value s t false = ok (core.result.Result.Ok (some true))) ∨
+    (x = Eo.Term.Boolean false ∧
+      Store.boolean_value s t false = ok (core.result.Result.Ok (some false))) ∨
+    ((∀ b, x ≠ Eo.Term.Boolean b) ∧
+      Store.boolean_value s t false = ok (core.result.Result.Ok none)) := by
+  obtain ⟨hh, he⟩ := h
+  unfold Store.boolean_value
+  rw [Store.view_eq]
+  simp only [hh.lt, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch,
+    Bool.false_eq_true, ite_false]
+  generalize hx : Embedded.enc x = tx at hh
+  cases hh with
+  | lit _ l _ hd =>
+    rw [hd]
+    rcases Embed.inv_Term_lit hx with ⟨b, rfl, rfl⟩ | ⟨_, rfl, rfl⟩ | ⟨_, rfl, rfl⟩ |
+      ⟨_, rfl, rfl⟩ | ⟨_, _, rfl, rfl⟩
+    · cases b <;> simp
+    all_goals (right; right; exact ⟨(fun b h => by cases h), by simp⟩)
+  | _ =>
+    rename_i hd
+    first
+      | (rw [hd]; right; right
+         refine ⟨fun b h => ?_, by simp⟩
+         subst h; simp [Embed.embedded_enc_Term, Embed.enc_Term] at hx)
+      | (rename_i _ hd'; rw [hd']; right; right
+         refine ⟨fun b h => ?_, by simp⟩
+         subst h; simp [Embed.embedded_enc_Term, Embed.enc_Term] at hx)
+
+/-- `boolean_value` on a handle of a native Boolean: that Boolean. -/
+theorem Store.boolean_value_native {s : Store} {t : Term} {x : Bool} (h : Represents.rep s t x) :
+    (x = true ∧ Store.boolean_value s t true = ok (core.result.Result.Ok (some true))) ∨
+    (x = false ∧ Store.boolean_value s t true = ok (core.result.Result.Ok (some false))) := by
+  obtain ⟨hh, _⟩ := h
+  unfold Store.boolean_value
+  rw [Store.view_eq]
+  simp only [hh.lt, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
+  simp only [Tree.embedded_enc_Bool, Tree.encBool] at hh
+  cases hh with
+  | native _ _ _ hd => rw [hd]; cases x <;> simp
+
+theorem eo_ite_true_rep {s : Store} {t : Term} {c a : Eo.Term} (b : Eo.Term)
+    (hc : c = Eo.Term.Boolean true) (h : s.Rep t a) : s.Rep t (Eo.__eo_ite c a b) := by
+  subst hc; simpa [Eo.__eo_ite, SmtEval.native_ite, Eo.native_teq] using h
+
+theorem eo_ite_false_rep {s : Store} {t : Term} {c b : Eo.Term} (a : Eo.Term)
+    (hc : c = Eo.Term.Boolean false) (h : s.Rep t b) : s.Rep t (Eo.__eo_ite c a b) := by
+  subst hc; simpa [Eo.__eo_ite, SmtEval.native_ite, Eo.native_teq] using h
+
+theorem eo_ite_stuck_rep {s : Store} {t : Term} {c : Eo.Term} (a b : Eo.Term)
+    (hc : ∀ x, c ≠ Eo.Term.Boolean x) (h : s.Rep t Eo.Term.Stuck) :
+    s.Rep t (Eo.__eo_ite c a b) := by
+  have h1 : (c = Eo.Term.Boolean true) = False := by simpa using hc true
+  have h2 : (c = Eo.Term.Boolean false) = False := by simpa using hc false
+  simpa [Eo.__eo_ite, SmtEval.native_ite, Eo.native_teq, h1, h2] using h
+
+theorem native_ite_true_rep {α : Type} [Embedded α] {s : Store} {t : Term} {c : Bool} {a : α}
+    (b : α) (hc : c = true) (h : Represents.rep s t a) :
+    Represents.rep s t (SmtEval.native_ite c a b) := by
+  subst hc; simpa [SmtEval.native_ite] using h
+
+theorem native_ite_false_rep {α : Type} [Embedded α] {s : Store} {t : Term} {c : Bool} {b : α}
+    (a : α) (hc : c = false) (h : Represents.rep s t b) :
+    Represents.rep s t (SmtEval.native_ite c a b) := by
+  subst hc; simpa [SmtEval.native_ite] using h
+
 /-- A program whose results are cached: `enter`, a look in the cache, else
 the body, `leave`, and the result put in the cache. What holds of the body
 holds of the program, if what the cache says of the program (`hget`,
