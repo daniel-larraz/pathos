@@ -24,17 +24,22 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   `$smtx_inhabited_type` (a loop whose cases are tried in groups, on a
   cycle of four programs) and the ten that call it are proved. See
   proofs.md, "Loops" and "Groups of cases".
-- The Rust is main's but for literals: since Ethos `db074f2` the
-  generated code builds literals as values, not from text (proofs.md,
-  "Literals are values"), and pathos m32's `generated/cpc-checker` is
-  generated from the fork (`default_rev` of `scripts/generate-cpc`). Its
-  diff with main is the literal sites, `names.rs`, two allowances in
-  `front.rs`/`lib.rs`, and functions that move between parts; every
-  other step checked that the Rust is unchanged.
+- The Rust is main's but for literals and the runtime's text paths:
+  since Ethos `db074f2` the generated code builds literals as values, not
+  from text (proofs.md, "Literals are values"), and since `b8be4ea` the
+  runtime no longer has `native_literal`, `parse_int` or `parse_rat`
+  (with `native_literal_spec` gone from `Trusted.lean`). pathos m32's
+  `generated/cpc-checker` is generated from the fork (`default_rev` of
+  `scripts/generate-cpc`). Its diff with main is the literal sites,
+  `names.rs`, `front.rs`/`lib.rs`/`native.rs`, and functions that move
+  between parts. Both changes passed difftest (`scripts/full-check
+  --quick`); every other step checked that the Rust is unchanged. Merging
+  m32 into main means taking these rust-meta changes upstream to
+  cvc5/ethos first.
 - The generated files elaborate in seconds (MiniProofs about 11 s and
   2.6 GiB, after the string constants). CPC's generated proofs are not built.
 
-## What steps 3–5 built
+## What steps 3–5 built (and the runtime files added since)
 
 The generated Lean, all written by `scripts/generate-mini` into `proofs/`:
 
@@ -63,6 +68,14 @@ The hand-written pieces (`proofs/PathosProofs/`):
   `Runtime/Ops.lean`: Boolean literal, `native_bool`, `tick`, `boolean_value`,
   the two `ite`s, `requires`, cached programs. `Runtime/Embed.lean`:
   `HasStuck`, `Valid`, and that a handle stands only for valid terms.
+- Added after step 5 (proofs.md's runtime table has each file's length
+  and contents): `Runtime/Nats.lean` (nat patterns), `Runtime/Numbers.lean`
+  (numeral and rational literals), `Runtime/IntNatives.lean` (the integer
+  natives), `Runtime/Builtins.lean` (`eo::and`, `eo::len`, the literal
+  machinery and `bv_and_toInt_emod`), `Runtime/StringLits.lean` (string
+  and binary literals, string constants), and the type cache in
+  `Store/CacheOps.lean` and `Runtime/Ops.lean` (`framed_type_cached`,
+  `TypesOK`).
 - `Tactic.lean`: one tactic per kind of generated line, including the
   groups of cases (`group_step`, `body_group_step`, `group_none`),
   conditionals (`ite_branch`, `ite_done`, `ite_stuck`) and the
@@ -110,11 +123,11 @@ stops them first and what it would take:
   digits with a loop over `Integer::euclidean_qr` by 10 and `to_u32`
   (specs in use), which Aeneas translates, and a proof that the loop
   spells `toString i` would then need no trusted spec. It also needs
-  `HasStuck SmtTerm` for lemma C. Left for Daniel and Fable. Forced, case 4 of both elaborates;
-  `$eo_typeof`'s case 4 calls `$eo_lit_type_Binary` (a design question,
-  below), and `$eo_to_smt`'s lemma C needs `HasStuck SmtTerm` (its
-  default case gives an SMT term), which has no instance yet. The type
-  cache, which `$eo_typeof` keeps its results in, is done (proved with
+  `HasStuck SmtTerm` for lemma C (its default case gives an SMT term),
+  which has no instance yet. Left for Daniel and Fable. Forced, cases 0–7
+  of both elaborate; `$eo_typeof`'s case 4 also calls
+  `$eo_lit_type_Binary` (a design question, below). The type cache,
+  which `$eo_typeof` keeps its results in, is done (proved with
   `$smtx_typeof`).
 - `$smtx_typeof` is proved, with the type cache (`framed_type_cached`,
   the `TypesOK` part of the store's invariant). In the full CPC, where it
@@ -123,7 +136,10 @@ stops them first and what it would take:
 - `$eo_is_bool_type` → `$eo_push_proven`: wait on `$eo_typeof`, so on
   the stuck-application question too.
 
-**Design questions** (each needs Daniel's decision first):
+**Design questions** (each needs Daniel's decision first; the facts for
+all three are in `~/Projects/cvc5/pathos-m28/work/design-memo.md`, and
+proofs.md's "Stuck terms under an application" has milestone 31's
+finding):
 
 - *An application of a term that may be stuck* (milestone 31's first
   finding): `$eo_prog_scope` and `$eo_lit_type_Binary`; through calls,
@@ -201,12 +217,12 @@ values (done: proofs.md, "Literals are values").
 | What | Runtime path | Trusted specs | Status |
 | --- | --- | --- | --- |
 | nat zero and succ patterns, `nat.zero` (group 3) | `native_pattern_nat_zero` (`Integer::zero`), `native_pattern_succ` (`raw_int` clone, `sgn`, `add`, `one`, `neg`) | `zero_spec`, `clone_spec`, `sgn_spec`, `add_spec`, `one_spec`, `neg_spec` | **in use**: 5 programs (`Runtime/Nats.lean`) |
-| `eo::and`/`or`/`not` (group 1) | `builtin_core And` → `builtin_literal` → `Lit::evaluate_nary`; bit-vectors through `BitVec.and` | `Integer.bitwise_*_spec`, `mod_by_pow2_spec`; `clone_spec` | **in use** for `eo::and` (`bitwise_and_spec`, `mod_by_pow2_spec`; `Runtime/Builtins.lean`): `$eo_is_closed_rec` and `$eo_is_closed` proved; `$eo_invoke_cmd` next stops at `Valid` for `CCmd`. logos's signed `BitVec.toInt`, reduced modulo `2^w`, is malachite's `and` for every width (`bv_and_toInt_emod`, proved). `eo::or` and `eo::not` are not in CpcMini; their specs stay unused. In the full CPC, `$eo_is_closed_rec` next stops at `eo::list_concat`. |
+| `eo::and`/`or`/`not` (group 1) | `builtin_core And` → `builtin_literal` → `Lit::evaluate_nary`; bit-vectors through `BitVec.and` | `Integer.bitwise_*_spec`, `mod_by_pow2_spec`; `clone_spec` | **in use** for `eo::and` (`bitwise_and_spec`, `mod_by_pow2_spec`; `Runtime/Builtins.lean`): `$eo_is_closed_rec` and `$eo_is_closed` proved; `$eo_invoke_cmd` (past `Valid` for `CCmd` since) stops at calls. logos's signed `BitVec.toInt`, reduced modulo `2^w`, is malachite's `and` for every width (`bv_and_toInt_emod`, proved). `eo::or` and `eo::not` are not in CpcMini; their specs stay unused. In the full CPC, `$eo_is_closed_rec` next stops at `eo::list_concat`. |
 | integer natives, `zleq`, and numeral constants (group 5) | `native_int_compare`, `native_int_binary`, `native_pow2`, `native_int_to_nat`, `native_succ`; `Integer::from(<u32>)` | `partial_cmp_spec`, `euclidean_qr_spec`, `fits_u32_spec`, `to_u32_spec`, `from_u32_spec`, `pow_spec` | **in use** (`Runtime/IntNatives.lean`); with the string constants, `$eo_to_smt_type` (through `zleq`) is proved; `$smtx_typeof` is proved too (it uses `zleq`) |
 | `eo::len` (group 2) | `builtin_core` → `builtin_strict` → `builtin_literal` → `literals` → `Lit::evaluate Length`: `Integer::from(size)` / `from(len)` | `from_u32_spec`, `from_usize_spec` | **in use** (`Runtime/Builtins.lean`); no program proved: `$eo_lit_type_Binary` next stops at an application of a term that may be stuck. The line is not in an emitted proof yet (the case stops before it). |
-| numeral and rational literals in patterns and built from values (group 4) | `destruct` of a literal: `Hit::Raw` of a copy; `construct_literal` | `clone_spec`, `Rational.clone_spec` | **in use** (`Runtime/Numbers.lean`); `$eo_to_smt_type` is proved since the string constants; `$eo_to_smt` and `$eo_typeof` got past `$emb_String` (no trust, `Runtime/StringLits.lean`) and stop at `$emb_Binary` |
+| numeral and rational literals in patterns and built from values (group 4) | `destruct` of a literal: `Hit::Raw` of a copy; `construct_literal` | `clone_spec`, `Rational.clone_spec` | **in use** (`Runtime/Numbers.lean`); `$eo_to_smt_type` is proved since the string constants; `$eo_to_smt` and `$eo_typeof` got past `$emb_String` and `$emb_Binary` (no trust, `Runtime/StringLits.lean`) and stop at case 8 |
 
-Three more that are not about trust:
+Two more that are not about trust:
 
 - **`eo::cons`** (`$eo_mk_premise_list`): `builtin_list Cons` →
   `list_cons_op`, which walks the list and calls generated programs
@@ -230,12 +246,13 @@ exercised, but no proved program reaches them yet:
   (`$eo_cmd_step_pop_proven` → `$eo_prog_scope`, `$eo_cmd_step_proven` →
   `$eo_mk_premise_list`); its line was checked with the force patch on
   `$eo_cmd_step_proven`'s case 4.
-- String literals in patterns and built from values
-  (`destruct_string_spec`, `construct_string_spec`): `$eo_typeof` and
-  `$eo_to_smt` now stop at case 4 (`$emb_Binary`). Checked with the force
-  patch on `$eo_typeof`: case 3's lines, both lemmas among them,
-  elaborate. (Its cached wrapper's id, `type#u32`, is gone: the type
-  cache has its own lemma now.)
+- String and binary literals in patterns and built from values
+  (`destruct_string_spec`, `construct_string_spec`,
+  `destruct_binary_spec`, `construct_binary_spec`, `pat_destruct_lit2`):
+  `$eo_typeof` and `$eo_to_smt` are their only users and stop at case 8.
+  Checked with the force patch on `$eo_typeof`: cases 3 and 4 elaborate.
+- Building a function type (`$emb_FunType` and two applications): its
+  only user, `$eo_typeof`'s case 8, stops at the possibly stuck argument.
 - `not` in a generated proof: its spec compiles, but its only use comes
   after a failing call. (`string_prefix_eq` is now in a proved program,
   `$eo_to_smt_reserved_datatype_name`, behind `"@"`.)
@@ -265,14 +282,33 @@ in a forced program are its other reasons (calls of unproved programs,
 lemma C's `Valid`); the lines under test are fine when no error
 points at them.
 
+## Stage 5: the full CPC (measured, not started)
+
+`~/Projects/cvc5/pathos-m28/work/cpc-proofs-measure.md` (2026-11-20): the
+full CPC's Aeneas translation works (13 parts, 12 min; it elaborates in
+7.9 min and 4 GiB), and logos's CPC Lean builds once three constructors
+of `Cpc/SmtModel.lean` are renamed (Lean 4.36 rejects them as internal
+names; logos's library build leaves that file out, but the generated
+proofs import it). What stops it: `Store/Rep.lean`, pointed at the full
+CPC, runs out of memory at 16 GiB, because hand-written lemmas split on
+every constructor (1,062 checker constructors against CpcMini's 135),
+and some hand-written files hold CpcMini's tables. Needed: a logos
+revision where `SmtModel` builds; hand-written lemmas that don't
+enumerate the calculus (generated per signature, or proved without the
+split); a second Lean target for the full CPC; then the 38,409-line
+`proofs.lean`, built by part.
+
 ## Working notes
 
 - Iterating: `~/Projects/cvc5/pathos-m28/work/gen-mini.sh` (run the
   working Ethos build on CpcMini into `proofs/`), `le.sh TARGET` (errors
   with goals), `ll.sh FILE`. The repository's way is `scripts/generate-mini
-  --ethos <clone>` then `--check`; the full CPC comparison runs in the
-  origin/main worktree `~/Projects/cvc5/pathos-m28/main-wt`
-  (`scripts/generate-cpc --ethos <clone> --rev <commit> --check`).
+  --ethos <clone>` then `--check`. The full CPC is generated from the
+  fork too, so check it from the m32 checkout itself, with the work
+  directory outside it: `scripts/generate-cpc --ethos <clone> --rev
+  <commit> --work ~/Projects/cvc5/pathos-m28/<dir> --check`.
+- After a change to the generated Rust, run `scripts/full-check --quick`
+  (difftest against the reference Ethos) before pushing.
 - Every Ethos commit is pinned in the same pathos commit
   (`mini_default_rev`).
 - Lean lessons: a syntax atom such as `" none "` becomes a keyword
