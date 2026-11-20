@@ -75,12 +75,13 @@ macro_rules
 
 /-- Closes the statement that logos's function is what the generated body
 does, after both sides are unfolded: by cases on the function's
-arguments. -/
+arguments; a function of one body, by its definition. -/
 macro "logos_eq" : tactic =>
   `(tactic| first
     | (split <;> simp_all [HasStuck.stuck]; done)
     | (split <;> simp_all [HasStuck.stuck, requires_ite] <;> (try split_ifs) <;>
-        simp_all [eo_eq_of_ne, eo_eq_true]; done))
+        simp_all [eo_eq_of_ne, eo_eq_true]; done)
+    | rfl)
 
 /-- A term is not the stuck term: said by a hypothesis, or plain from its
 form. -/
@@ -556,6 +557,27 @@ macro_rules
          simpa [HasStuck.stuck, $[$facts:ident],*] using Store.Inv.rep_stuck $hinv)
       | (exfalso; simp_all [$[$cds:ident],*]; done))
 
+/-- `split_none xs in cds`: no case answered, which cannot be: closes the
+goal (after `exfalso`) from the facts that the case functions `cds` gave
+`none`, plain or after splitting one of the arguments `xs` into its
+constructors (for a program whose cases are one per constructor). -/
+syntax "split_none" (ppSpace colGt ident)* " in" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| split_none in $cds*) => `(tactic| (simp_all [$[$cds:ident],*]; done))
+  | `(tactic| split_none $x $xs* in $cds*) =>
+    `(tactic| first
+      | (simp_all [$[$cds:ident],*]; done)
+      | (cases $x:ident <;> simp_all [$[$cds:ident],*]; done)
+      | split_none $xs* in $cds*)
+
+/-- `body_stuck … splitting xs`: for a program whose lemma C gives `default`
+where no case applies, the body never gets there. -/
+syntax "body_stuck " ident ppSpace ident " using" (ppSpace colGt ident)* " in"
+  (ppSpace colGt ident)* " splitting" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| body_stuck $_hinv $_hG using $_facts* in $cds* splitting $xs*) =>
+    `(tactic| (exfalso; split_none $xs* in $cds*))
+
 /-! ## Loops -/
 
 /-- `peel_last h then tac`: the goal is `h` but for its last part, under the
@@ -640,6 +662,14 @@ macro_rules
          refine ⟨$hinv, $hG, ?_⟩
          simpa [HasStuck.stuck, $[$facts:ident],*] using Store.Inv.rep_stuck $hinv)
       | (exfalso; simp_all [$[$cds:ident],*]; done))
+
+/-- `round_stuck … splitting xs`: as `body_stuck … splitting xs`, for a
+round of a loop. -/
+syntax "round_stuck " ident ppSpace ident " using" (ppSpace colGt ident)* " in"
+  (ppSpace colGt ident)* " splitting" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| round_stuck $_hinv $_hG using $_facts* in $cds* splitting $xs*) =>
+    `(tactic| (exfalso; split_none $xs* in $cds*))
 
 /-- Ends the induction step of a loop that goes round again: the rest of
 the loop, by the induction hypothesis, on arguments with the same result

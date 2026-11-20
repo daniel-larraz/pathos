@@ -8,16 +8,17 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **19 of CpcMini's 82 programs** have a generated proof, listed in `generated/cpcmini-checker/proofs.tsv` with
-  `generated`; every other program has the first thing that stops it.
-- `scripts/proofs-build`: 2,814 theorems, no `sorry`. The trust is **11
+- **24 of CpcMini's 82 programs** have a generated proof, listed in
+  `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
+  program has the first thing that stops it.
+- `scripts/proofs-build`: 2,970 theorems, no `sorry`. The trust is **11
   assumptions** (Lean's three among them), unchanged by steps 3–5; 49 declarations (axioms that declare a type or a function,
   which add no trust: see "What is trusted").
 - The Rust has not changed: every step checked that CpcMini regenerates
   the same crate and that the full CPC checker's `src/`, Cargo files and
   tables are main's.
-- The generated files elaborate in seconds (MiniProofs about 4.4 s and
-  1.7 GiB at 5 (iii)). CPC's generated proofs are not built.
+- The generated files elaborate in seconds (MiniProofs about 4 s and
+  1.7 GiB, after the default where no case applies). CPC's generated proofs are not built.
 
 ## What steps 3–5 built
 
@@ -62,15 +63,13 @@ a slice of arguments) where `expr()`/`pattern()` writes the Rust, or
 proved in place as `have … := (show … from by …)` blocks. `emitProgram`
 fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
-`HasStuck` for the return type, no `Valid` for an argument, a loop over
-groups; then, across programs, "it calls … which has no proof".
+`Valid` for an argument, a loop over groups; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (63 programs)
+## The reasons that remain (58 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
-| 23 | no stuck value of the return type (`HasStuck`) | `$eo_dd_lookup`, `$eo_dd_resolve`, `$eo_dtc_resolve`, `$eo_dt_resolve`, `$eo_invoke_cmd_check_proven`, `$eo_invoke_cmd_list`, `$eo_invoke_cmd_step_pop`, `$eo_push_assume_check`, `$eo_push_input_assume_check`, `$eo_push_proven`, `$eo_push_proven_check`, `$eo_to_smt_datatype`, `$eo_to_smt_datatype_cons`, `$eo_to_smt_datatype_decl`, `$smtx_dd_lookup`, `$smtx_dtc_resolve`, `$smtx_dt_resolve`, `$smtx_ret_typeof_sel`, `$smtx_typeof_=`, `$smtx_typeof_apply`, `$smtx_typeof_guard`, `$smtx_typeof_guard_wf`, `$smtx_typeof_ite` |
-| 12 | an argument of a type without `Valid` (lemma C) | `$eo_checker_is_refutation`, `$smtx_dd_has_dt`, `$smtx_decl_inhabited`, `$smtx_decl_wf_rec`, `$smtx_dt_cons_inhabited`, `$smtx_dt_cons_wf_rec`, `$smtx_dt_inhabited`, `$smtx_dt_wf_rec`, `$smtx_inhabited_type`, `$smtx_type_wf`, `$smtx_type_wf_component`, `$smtx_type_wf_rec` |
+| 30 | an argument of a type without `Valid` (lemma C) | `$eo_checker_is_refutation`, `$eo_dd_lookup`, `$eo_dd_resolve`, `$eo_dtc_resolve`, `$eo_dt_resolve`, `$eo_invoke_cmd_list`, `$eo_invoke_cmd_step_pop`, `$eo_to_smt_datatype`, `$eo_to_smt_datatype_cons`, `$eo_to_smt_datatype_decl`, `$smtx_dd_has_dt`, `$smtx_dd_lookup`, `$smtx_decl_inhabited`, `$smtx_decl_wf_rec`, `$smtx_dt_cons_inhabited`, `$smtx_dt_cons_wf_rec`, `$smtx_dt_inhabited`, `$smtx_dt_resolve`, `$smtx_dt_wf_rec`, `$smtx_dtc_resolve`, `$smtx_inhabited_type`, `$smtx_ret_typeof_sel`, `$smtx_type_wf`, `$smtx_type_wf_component`, `$smtx_type_wf_rec`, `$smtx_typeof_=`, `$smtx_typeof_apply`, `$smtx_typeof_guard`, `$smtx_typeof_guard_wf`, `$smtx_typeof_ite` |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 4 | a native pattern (nat zero/succ) | `$eo_typeof_dt_cons_rec`, `$eo_typeof_dt_sel_return`, `$smtx_ret_typeof_sel_rec`, `$smtx_typeof_dt_cons_rec` |
 | 3 | a builtin operator | `$eo_invoke_cmd` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
@@ -79,33 +78,30 @@ groups; then, across programs, "it calls … which has no proof".
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
 | 2 | a function type in a pattern | `$eo_to_smt_type`, `$eo_typeof_apply` |
 | 1 each | `zleq`; the native string constant `"@"`; `$emb_Var` in a pattern; an application of a term that may be stuck (`$eo_prog_scope`) | `$smtx_typeof`; `$eo_to_smt_reserved_datatype_name`; `$eo_is_closed_rec`; `$eo_prog_scope` |
-| 3 | calls of programs without a proof | `$eo_is_bool_type`, `$eo_is_closed`, `$eo_state_is_refutation` |
+| 3 | calls of programs without a proof | `$eo_is_bool_type`, `$eo_is_closed`, `$eo_push_proven` |
 
-## Lemma C: the two open questions (yours)
+## Lemma C: the open question (yours), and one resolved
 
 Lemma C (`<program>.rust_eq`) says logos's function is the stuck tests and
 then the first case that answers; it is proved, never assumed. It needs
-two things per type that the proofs have only for some types, and
-together they stop 35 programs:
+two things per type; the first is resolved, the second stops 30 programs:
 
-1. **`HasStuck`** (the value a body gives where no case applies): there are
-   instances for terms, proofs and native Booleans (`Runtime/Embed.lean`).
-   Checker states, datatype declarations and SMT types have none.
-   **What the bodies do (checked 2026-11-20, report in
-   `~/Projects/cvc5/pathos-m28/work/stuck-report.md`)**: logos and the
-   Rust test arguments for stuck under the same rule (only in programs
-   that return a term, only term arguments), and `CState.Stuck` is a node
-   on both sides, built and matched in the same places. The Rust differs
-   only where no case applies (it gives handle 0), and no logos value
-   reaches that path: of the 23, 13 end in a case that matches anything
-   and 10 have one case per constructor (exhaustive; the full CPC has 24
-   such programs, all exhaustive). Most of these types have no stuck value
-   in logos (the datatype types, `CCmdList`, `CArgList`, …; `SmtType.None`
-   is an ordinary value), so a stuck value per type is not the way. The
-   proposal being prototyped: lemma C takes `default` (every logos type is
-   `Inhabited`) where no case applies, and `body_stuck` closes by
-   `exfalso`, after a case split on the argument for the exhaustive
-   programs. No Rust change. Of the 23, 18 would then stop at `Valid`.
+1. **Where no case applies (resolved, 2026-11-20).** Terms, proofs and
+   native Booleans keep their stuck value (`HasStuck`); for every other
+   type lemma C gives `default` (every logos type is `Inhabited`), and the
+   body's proof shows the path unreachable (`body_stuck`/`round_stuck …
+   splitting`, `split_none`). The findings behind it (report in
+   `~/Projects/cvc5/pathos-m28/work/stuck-report.md`): logos and the Rust
+   test arguments for stuck under the same rule (only in programs that
+   return a term, only term arguments), and `CState.Stuck` is a node on
+   both sides, built and matched in the same places. The Rust differs only
+   where no case applies (it gives handle 0), and no logos value reaches
+   that path: logos writes no default case for these types, so every
+   program has a case that matches anything or one case per constructor
+   (Lean checks that these are exhaustive; 10 such programs in CpcMini,
+   24 in the full CPC). Most of these types have no stuck value in logos,
+   so a stuck value per type was not the way. No Rust change; of the 23
+   programs it stopped, 5 now have proofs and 18 stop at `Valid`.
 2. **`Valid` for the other types, and folding `emb` into it.** `Valid` has
    instances for terms (`TermValid`: no application of or to the stuck
    term), proofs, `CState`, `CStateObj` (both `True`, and they should say
@@ -166,6 +162,11 @@ exercised, but no proved program reaches them yet:
   not written; it is recorded only when nothing else stops the program.
 - `not` and `string_prefix_eq` in a generated proof: their specs compile,
   but their only uses come after a failing call (`not`) or behind `"@"`.
+- The split over constructors where no case applies (`split_none` with a
+  `cases`): every program that needs it (the 10 with one case per
+  constructor) stops first at `Valid`. It was checked only outside the
+  emitted proofs, on the case functions of all 10, not yet inside a body
+  proof with the argument's `Rep` hypotheses in context.
 
 ## The force patch
 
@@ -189,7 +190,7 @@ cp ../work/rmr-clean.cpp plugins/rust_meta/rust_meta_reduce.cpp
 Use `--no-backup-if-mismatch` (a `.orig` file once got into a commit),
 and check `git status` of the Ethos clone before committing. Errors left
 in a forced program are its other reasons (calls of unproved programs,
-lemma C's `Valid`/`HasStuck`); the lines under test are fine when no error
+lemma C's `Valid`); the lines under test are fine when no error
 points at them.
 
 ## Working notes

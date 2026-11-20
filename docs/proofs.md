@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 2,814 theorems, are **11**:
+  This is the trust. In use today, by 2,970 theorems, are **11**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
   `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
@@ -413,11 +413,11 @@ change under them.
 ## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
 
 `rust-meta` writes the proofs with the Rust (Ethos branch `m32-proofs`).
-19 of CpcMini's 82 programs have one so far, the four of the pilot
+24 of CpcMini's 82 programs have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (1,480 lines) elaborates in 3
-seconds, `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (1,860 lines) elaborates in 4
+seconds (1.7 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -472,11 +472,32 @@ lemma would not close. Inside a requirement the order is `a ≠ b` first,
 then `a` stuck; both give the stuck term, and `requires_ite` (in
 `Runtime/Ops.lean`) is where that is shown.
 
+**Where no case applies.** The body then gives the stuck term (handle 0),
+whatever the program's type. For a program that returns a term, a proof
+or a native Boolean, lemma C gives the type's stuck value there
+(`HasStuck.stuck`), and the body's proof shows that handle 0 stands for
+it. For every other type (checker states, datatype declarations, SMT
+types) lemma C gives `default` (every logos type is `Inhabited`), a value
+the body never returns: logos writes no default case for such a type, so
+its cases cover every value (a last case that matches anything, or one
+case per constructor, which Lean checks), and the body's proof closes the
+path by contradiction from the facts that every case answered `none`
+(`body_stuck … splitting`, `round_stuck … splitting`; `split_none` splits
+an argument into its constructors where the cases are one per
+constructor). logos and the Rust agree on stuck tests for every type
+(only a program that returns a term tests, and only its term arguments),
+and the checker's state `CState.Stuck` is a node in the Rust as in logos
+(`$emb_s.Stuck`), built and matched where logos builds and matches it. Of
+CpcMini's programs, the five that return a checker state and take only
+terms and states have proofs this way; the per-constructor split was
+checked on the case functions of all ten such programs of CpcMini, outside
+an emitted proof, since each stops first at an argument without `Valid`.
+
 **What is written by hand** (`proofs/PathosProofs/`):
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 488 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop). |
+| `Tactic.lean` | 688 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups and conditionals, and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 132 | `enter`, `leave`, the measure of the induction, a program around its body. |
 | `Runtime/Embed.lean` | 119 | The stuck value of a type, `Valid`, and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 249 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
@@ -489,19 +510,20 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 19** (the reasons of `proofs.tsv`, for the other 63, on
-2026-11-24, after step 5 (c)): lemma C's side, a return type without a
-stuck value in the proofs (`HasStuck`: checker states, datatype
-declarations, SMT types; 23) or an argument of a type without `Valid` (11);
-the six of the datatype operators below; native patterns (4); native
-operations (3); a literal constructor or a variable in a pattern (3); calls
-of programs without a proof (3); builtin operators (3); the stuck term
-built as a constructor (2); the two compiled to the runtime; a function
-type in a pattern (2); and an application of a term that may be stuck
-(`$eo_prog_scope`, the first finding below). The lemmas of `construct` and
-`destruct` are generated for every data constructor (`MiniCtors`); the
-literal constructors and variables are stored otherwise and have none. The
-cache of results is stated for every embedded type (`MiniCacheSem`).
+**What limits the 24** (the reasons of `proofs.tsv`, for the other 58,
+on 2026-11-20, after the default where no case applies): lemma C's
+side, an argument of a type without `Valid` (30: SMT types, datatype
+declarations, strings, the checker's command and argument lists); the six
+of the datatype operators below; native patterns (4); calls of programs
+without a proof (3); builtin operators (3); a literal constructor or a
+variable in a pattern (3); the stuck term built as a constructor (2); the
+two compiled to the runtime; a function type in a pattern (2); native
+operations (`zleq`, the string constant `"@"`); and an application of a
+term that may be stuck (`$eo_prog_scope`, the first finding below). The
+lemmas of `construct` and `destruct` are generated for every data
+constructor (`MiniCtors`); the literal constructors and variables are
+stored otherwise and have none. The cache of results is stated for every
+embedded type (`MiniCacheSem`).
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a
