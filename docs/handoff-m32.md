@@ -36,11 +36,12 @@ constructors and about 20 types. The plan:
   that are not terms. Layering: `Tree` → generated embedding → cache table
   → `Store/Ops`.
 
-The file as committed **does not compile** and nothing imports it. Known
-errors: `Inhabited TermData` is needed for `nodes[t]!` (there is an
-instance in `Store/`, import it or move it to `Util`), and in `Holds.mono`
-the `refine Holds.rec … h` leaves the goal open. The proofs use the mutual
-recursor with explicit motives; that part is untested.
+**State (2026-11-23, step 1 of the reviewer's plan):** `Store/Tree.lean`
+compiles and `PathosProofs` imports it: `Tree`, `Holds`/`HoldsList`
+(mutual), and `Holds.functional`, `Holds.injective`, `Holds.mono` with
+their list versions, each proved once by the mutual recursor. Nothing uses
+it yet. Next: step 2 (lean-meta writes `enc`/`dec`), step 3 (generic
+`construct`/`destruct` over `Holds`).
 
 ## The emitter (`plugins/rust_meta/rust_meta_reduce.cpp`)
 

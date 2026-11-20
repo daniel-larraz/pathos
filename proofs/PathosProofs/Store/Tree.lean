@@ -1,12 +1,10 @@
 module
 public import MiniChecker
 public import PathosProofs.Util
+public import PathosProofs.Store.Table
 
 /-!
 # What a handle unfolds to
-
-**Work in progress: this file does not compile yet and nothing imports it.**
-See docs/handoff-m32.md.
 
 A handle of the store names data that names other handles. Unfolded all
 the way it is a tree, `Tree`, and `Holds nodes t x` says that the handle
