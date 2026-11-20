@@ -299,6 +299,50 @@ macro_rules
       subst hfldv
       clear $hvi hfldlen))
 
+/-- `pat_destruct_lit2 spec as ⟨v, x, hv⟩ ⟨w, y, hw⟩ storing ⟨s', hinv'⟩ growing hG
+carrying … in cd`: as `pat_destruct_lit`, for a literal whose `destruct`
+stores two native values (a binary literal: its width and its value; see
+`Runtime/StringLits.lean`). -/
+syntax "pat_destruct_lit2 " term " as " "⟨" ident ", " ident ", " ident "⟩" " ⟨" ident ", "
+  ident ", " ident "⟩" " storing " "⟨" ident ", " ident "⟩" " growing " ident " carrying"
+  (ppSpace colGt ident)* " in " ident : tactic
+macro_rules
+  | `(tactic| pat_destruct_lit2 $e as ⟨$v, $x, $hv⟩ ⟨$w, $y, $hw⟩ storing ⟨$s', $hinv'⟩
+      growing $hG carrying $hs* in $cd) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let hg := Lean.mkIdent `hg
+    let hres := Lean.mkIdent `hres
+    let vec := Lean.mkIdent `fldvec
+    let hvec := Lean.mkIdent `hfldvec
+    let f0 := Lean.mkIdent `fld0
+    let f1 := Lean.mkIdent `fld1
+    let heq := Lean.mkIdent `hfldeq
+    let hvi := Lean.mkIdent `hfld
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv'), $(b hg), $(b hres)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      rcases $r:ident with (_ | $vec:ident) | _
+      all_goals first
+        | (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv', $hG, trivial⟩; done)
+        | (simp only at $hres:ident; no_match $hinv' $hG in $cd; done)
+        | skip
+      simp only at $hres:ident ⊢
+      obtain ⟨$f0, $f1, $x, $y, $heq, $hvec, $hv, $hw⟩ := $hres
+      subst $heq
+      have hfldlen : ($vec).length = 2 := by simp [alloc.vec.Vec.length, $hvec:ident]
+      step as ⟨$(b v), $(b hvi)⟩
+      have hfldv : $v = $f0 := by simp [$hvi:ident, $hvec:ident]
+      subst hfldv
+      clear $hvi
+      step as ⟨$(b w), $(b hvi)⟩
+      have hfldw : $w = $f1 := by simp [$hvi:ident, $hvec:ident]
+      subst hfldw
+      clear $hvi hfldlen))
+
 /-- `pat_native_zero spec storing ⟨s', hinv'⟩ growing hG carrying … in cd`:
 the pattern `nat.zero` on a natural number, which stores the numeral 0
 (`spec` says what it gives; see `Runtime/Nats.lean`). Goes on with the

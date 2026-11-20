@@ -13,7 +13,7 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 5,933 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 5,961 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
@@ -86,7 +86,7 @@ program, the reason. The reasons recorded after the cases, in order: no
 | 8 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 1 | a builtin operator | `$eo_mk_premise_list` (`eo::cons`) |
-| 2 | `$emb_Binary` in a pattern (case 4; past `$emb_String`, `Runtime/StringLits.lean`; the runtime's `Hit::Binary` uses `from_u32` and `clone`, already in use) | `$eo_to_smt`, `$eo_typeof` |
+| 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (a function type in a pattern), `$eo_to_smt` (the native operation `uconst_id`) |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
 | 2 | an application of a term that may be stuck | `$eo_prog_scope`, `$eo_lit_type_Binary` |
 | 1 | the cache of types (past `Valid` for `SmtTerm`) | `$smtx_typeof` |
@@ -98,12 +98,15 @@ stops them first and what it would take:
 
 **More of the same** (no decision, no trust beyond the 27):
 
-- `$eo_typeof` and `$eo_to_smt`: a pattern on a binary literal
-  (`$emb_Binary`, two fields). The runtime's `destruct` gives
-  `Hit::Binary` of the width (`Integer::from(u32)`) and a clone of the
-  value, both with specs in use; a lemma like `destruct_string_spec`
-  with two raw numerals. After it, `$eo_typeof` meets the cache of types
-  (below).
+- `$eo_typeof` and `$eo_to_smt`: past cases 0–7 (string and binary
+  literal patterns done, `Runtime/StringLits.lean`), both stop at case 8.
+  `$eo_typeof`'s is a function type in a pattern (`(-> T U)` as a whole
+  value, beyond the `is_node` head test the emitter has); `$eo_to_smt`'s
+  is the native operation `uconst_id` (no spec yet). Forced, case 4 of
+  both elaborates; `$eo_typeof`'s case 4 calls `$eo_lit_type_Binary`
+  (a design question, below), and `$eo_to_smt`'s lemma C needs
+  `HasStuck SmtTerm` (its default case gives an SMT term), which has no
+  instance yet. After those, `$eo_typeof` meets the cache of types.
 - `$smtx_typeof`: the cache of types. The emitter writes the cached
   wrapper with the id `type#u32`, which is not a Lean name (seen with the
   force patch on `$eo_typeof` and `$smtx_typeof`); it needs the type

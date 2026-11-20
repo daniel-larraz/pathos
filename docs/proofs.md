@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 5,933 theorems, are **27**:
+  This is the trust. In use today, by 5,961 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -573,7 +573,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 861 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, and `split_none` (no case answered, which cannot be). |
+| `Tactic.lean` | 908 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 152 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 336 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
@@ -583,7 +583,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 | `Runtime/Nats.lean` | 153 | The natural numbers: the constant `nat.zero`, and the patterns `nat.zero` (`pat_native_zero`) and `(nat.succ m)` (`pat_destruct_lit`), which store a numeral; from the trusted specs of `zero`, `one`, `clone`, `sgn`, `add` and `neg`. |
 | `Runtime/Builtins.lean` | 730 | Builtin operators on literals: what every one needs (a literal's clone, `literal_of`, `literals` on one and two arguments, `any_stuck` on one, what a handle of a literal stands for), `eo::len` (`builtin_spec_len`: the width of a binary, the length of a string) and `eo::and` (`builtin_spec_and`: the `and` of two Booleans, of two binaries of the same width), through `Lit::evaluate`; and that logos's signed `and` of bit-vectors, reduced, is malachite's (`bv_and_toInt_emod`). |
 | `Runtime/IntNatives.lean` | 283 | The native operations on integers (`zeq`, `zleq` through `partial_cmp`, `mod_total`, `int.pow2`, `int.to_nat`, `nat.succ`) and the numeral constants of the generated code (`Integer::from(<u32>)`, negated); from the trusted specs of the integer functions. |
-| `Runtime/StringLits.lean` | 264 | String literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); a string constant of the generated code (`"@"`: `raw` of `EoString::from_code_points(vec![64])`) stands for the code points of its vector (`raw_str_vec_spec`: a vector of `u32` is always in range), rewritten to logos's `native_string_lit` once both are concrete (`Represents.rep_of_eq`). `EoString`'s clone is translated code, so no trusted spec. |
+| `Runtime/StringLits.lean` | 455 | String and binary literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); a string constant of the generated code (`"@"`: `raw` of `EoString::from_code_points(vec![64])`) stands for the code points of its vector (`raw_str_vec_spec`: a vector of `u32` is always in range), rewritten to logos's `native_string_lit` once both are concrete (`Represents.rep_of_eq`). `EoString`'s clone is translated code, so no trusted spec. A pattern on a binary literal stores its width and value as two numerals (`destruct_binary_spec`, with `pat_destruct_lit2`), and building it again from those two fields gives the literal (`construct_binary_spec`, in range by `rep_binary_okBv`), from the specs of `from_u32`, `clone`, `fits_u32`, `to_u32` and `mod_by_pow2`, already in use. |
 | `Runtime/Numbers.lean` | 399 | Numeral and rational literals: a pattern on one stores a copy of its value (`destruct_numeral_spec`, `destruct_rational_spec`, with `pat_destruct_lit`), and `construct` from a native value gives the literal (`construct_numeral_spec`, `construct_rational_spec`); from the trusted specs of `clone`. |
 | `Runtime/Literals.lean` | 122 | `destruct` with the Boolean literal's constructor, which stores a native copy of the Boolean: a pattern that changes the store (`pat_destruct_lit`). |
 
@@ -594,10 +594,9 @@ and a lemma for each runtime operation and constructor a line names.
 **What limits the 60** (the reasons of `proofs.tsv`, for the other 22,
 on 2026-11-20, after the string constants): calls of programs without a
 proof (8, `$eo_invoke_cmd` among them, past `Valid` for `CCmd`); the six of the datatype operators below; a builtin operator
-(1: `eo::cons`, in `$eo_mk_premise_list`); a binary literal in a pattern
-(2, `$emb_Binary`, past the string literal patterns of `$eo_typeof` and
-`$eo_to_smt`; the runtime stores the width and the value as two numerals,
-with specs already in use); the two compiled to the runtime; two
+(1: `eo::cons`, in `$eo_mk_premise_list`); case 8 of `$eo_typeof` (a function type in a pattern) and of
+`$eo_to_smt` (the native operation `uconst_id`), past the string and
+binary literal patterns (2); the two compiled to the runtime; two
 applications of a term that may be stuck (`$eo_prog_scope`, the first
 finding below, and `$eo_lit_type_Binary`, past `eo::len`); and the cache
 of types (`$smtx_typeof`, past `Valid` for `SmtTerm`; `$eo_typeof` will
