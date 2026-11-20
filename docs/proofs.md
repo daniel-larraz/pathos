@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 3,528 theorems, are **11**:
+  This is the trust. In use today, by 4,255 theorems, are **11**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
   `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
@@ -413,11 +413,11 @@ change under them.
 ## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
 
 `rust-meta` writes the proofs with the Rust (Ethos branch `m32-proofs`).
-36 of CpcMini's 82 programs have one so far, the four of the pilot
+47 of CpcMini's 82 programs have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (2,959 lines) elaborates in 5
-seconds (1.9 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (4,350 lines) elaborates in 8
+seconds (2.1 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -465,7 +465,8 @@ over the loop's unfolding equation. (The induction that Lean gives a
 `partial_fixpoint` does not do: where a loop's round calls programs that
 call back into the loop's program, as `$smtx_inhabited_type`'s does, Aeneas
 puts the loop in one mutual block with them, and that block's induction
-takes the programs it calls as unknown functions. The only reset of
+takes the programs it calls as unknown functions; `$smtx_inhabited_type`
+and the four programs on its cycle are proved this way. The only reset of
 `calls`, in `check_refutation_inner`, is the entry point's, before any
 generated function runs.)
 
@@ -523,7 +524,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 691 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups and conditionals, and `split_none` (no case answered, which cannot be). |
+| `Tactic.lean` | 784 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 143 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 336 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
@@ -536,21 +537,18 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 36** (the reasons of `proofs.tsv`, for the other 46,
-on 2026-11-20, after `Valid` for the other argument types): calls of
-programs without a proof (20; most wait on `$smtx_inhabited_type`, a
-loop whose cases are tried in groups, which has no proof of its round
-yet, or on `$eo_to_smt_type`); the six of the datatype operators below;
-native patterns (4); builtin operators (3); a literal constructor or a
-variable in a pattern (3); the stuck term built as a constructor (2); the
-two compiled to the runtime; a function type in a pattern (2); native
-operations (`zleq`, the string constant `"@"`); the loop over groups
-itself; and an application of a term that may be stuck
-(`$eo_prog_scope`, the first finding below). The lemmas of `construct`
-and `destruct` are generated for every data constructor (`MiniCtors`);
-the literal constructors and variables are stored otherwise and have
-none. The cache of results is stated for every embedded type
-(`MiniCacheSem`).
+**What limits the 47** (the reasons of `proofs.tsv`, for the other 35,
+on 2026-11-20, after the round over groups): calls of programs without a
+proof (10; three wait on `$eo_to_smt_type`); the six of the datatype
+operators below; native patterns (4); builtin operators (3); a literal
+constructor or a variable in a pattern (3); the stuck term built as a
+constructor (2); the two compiled to the runtime; a function type in a
+pattern (2); native operations (`zleq`, the string constant `"@"`); and
+an application of a term that may be stuck (`$eo_prog_scope`, the first
+finding below). The lemmas of `construct` and `destruct` are generated
+for every data constructor (`MiniCtors`); the literal constructors and
+variables are stored otherwise and have none. The cache of results is
+stated for every embedded type (`MiniCacheSem`).
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a
@@ -562,8 +560,12 @@ such programs of CpcMini has a proof yet, each for another reason; the
 group proofs were checked by writing `$eo_typeof`'s (27 cases, groups of
 groups) and `$eo_cmd_step_proven`'s with `sorry` for the cases that the
 emitter cannot do: the groups and the body go through (4 s, 1.8 GiB). A
-loop whose cases are in groups has no proof of its round yet; it is what
-stops `$smtx_inhabited_type`, and through it ten programs that call it.
+loop whose cases are in groups (`$smtx_inhabited_type`) has the same
+theorems with a round's result: a group ends the loop with what its first
+answering case gives, or names the next round's arguments, on which the
+program has the same result (`∀ d, firstSome [its cases] d = f ys`); its
+members are tried with `group_round_step` and, in the round,
+`body_group_round_step`.
 
 **Conditionals** (step 4). `eo::ite c a b` and the native `ite` are
 functions of their own in the Rust (`if_k`), and the proof of each is a

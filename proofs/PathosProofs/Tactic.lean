@@ -655,6 +655,99 @@ macro_rules
           peel_last $hc then simp [$hlast:ident, $[$facts:ident],*]))
       simp only at $hc:ident ⊢))
 
+/-- `group_step` in a group of a loop's cases: a member that answers either
+ends the loop with a result or names the arguments of the next round, on
+which the program has the same result. -/
+syntax "group_round_step " "with " term " as " "⟨" ident ", " ident ", " ident "⟩"
+  " growing " ident " carrying" (ppSpace colGt ident)* " split " term " otherwise " "⟨" ident,* "⟩"
+  " using" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| group_round_step with $e as ⟨$s', $hinv, $hc⟩ growing $hG carrying $hs* split $heq
+      otherwise ⟨$ns,*⟩ using $facts*) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let o := Lean.mkIdent `o
+    let nx := Lean.mkIdent `nx
+    let hlast := Lean.mkIdent `hlast
+    let hg := Lean.mkIdent `hg
+    let ns' := ns.getElems
+    let bind ← if ns'.size == 1 then `(tactic| have $(ns'[0]!):ident := $hc)
+      else `(tactic| obtain ⟨$ns,*⟩ := $hc)
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv), $(b hg), $(b hc)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      cases $r:ident
+      case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
+      rename_i $o:ident
+      cases $o:ident
+      case some => (
+        rename_i $nx:ident
+        cases $nx:ident
+        case Done => (
+          simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
+          obtain ⟨res, hres, hrep⟩ := $hc
+          refine ⟨$hinv, $hG, ?_⟩
+          refine ⟨res, fun d => ?_, hrep⟩
+          rw [$heq:term, firstSome_append, firstSome_append]
+          simp [hres, $[$facts:ident],*])
+        case Again => (
+          simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
+          refine ⟨$hinv, $hG, ?_⟩
+          peel_last $hc then (
+            intro d
+            rw [$heq:term, firstSome_append, firstSome_append]
+            simp [$hlast:ident, $[$facts:ident],*])))
+      simp only at $hc:ident ⊢
+      $bind))
+
+/-- `body_group_step` in a round of a loop: the round's result is the
+member's, the end of the loop or its next round. -/
+syntax "body_group_round_step " "with " term " as " "⟨" ident ", " ident ", " ident "⟩"
+  " growing " ident " carrying" (ppSpace colGt ident)* " split " term " otherwise " "⟨" ident,* "⟩"
+  " using" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| body_group_round_step with $e as ⟨$s', $hinv, $hc⟩ growing $hG carrying $hs*
+      split $heq otherwise ⟨$ns,*⟩ using $facts*) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let o := Lean.mkIdent `o
+    let nx := Lean.mkIdent `nx
+    let hlast := Lean.mkIdent `hlast
+    let hg := Lean.mkIdent `hg
+    let ns' := ns.getElems
+    let bind ← if ns'.size == 1 then `(tactic| have $(ns'[0]!):ident := $hc)
+      else `(tactic| obtain ⟨$ns,*⟩ := $hc)
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv), $(b hg), $(b hc)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      cases $r:ident
+      case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
+      rename_i $o:ident
+      cases $o:ident
+      case some => (
+        rename_i $nx:ident
+        cases $nx:ident
+        case Done => (
+          simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
+          obtain ⟨res, hres, hrep⟩ := $hc
+          refine ⟨$hinv, $hG, ?_⟩
+          rw [$heq:term, firstSome_append, firstSome_append]
+          simpa [hres, $[$facts:ident],*] using hrep)
+        case Again => (
+          simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
+          refine ⟨$hinv, $hG, by assumption, ?_⟩
+          peel_last $hc then (
+            rw [$heq:term, firstSome_append, firstSome_append]
+            simp [$hlast:ident, $[$facts:ident],*])))
+      simp only at $hc:ident ⊢
+      $bind))
+
 /-- Ends a round where no case answered. -/
 syntax "round_stuck " ident ppSpace ident " using" (ppSpace colGt ident)* " in"
   (ppSpace colGt ident)* : tactic

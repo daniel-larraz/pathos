@@ -8,17 +8,23 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **36 of CpcMini's 82 programs** have a generated proof, listed in
+- **47 of CpcMini's 82 programs** have a generated proof, listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 3,519 theorems, no `sorry`. The trust is **11
+- `scripts/proofs-build`: 4,255 theorems, no `sorry`. The trust is **11
   assumptions** (Lean's three among them), unchanged by steps 3–5; 49 declarations (axioms that declare a type or a function,
   which add no trust: see "What is trusted").
+- Loops are proved by strong induction on the budget of calls
+  (`Store.budget`, which every round's `tick` lowers), not by Lean's
+  fixpoint induction, so a loop in a mutual block works:
+  `$smtx_inhabited_type` (a loop whose cases are tried in groups, on a
+  cycle of four programs) and the ten that call it are proved. See
+  proofs.md, "Loops" and "Groups of cases".
 - The Rust has not changed: every step checked that CpcMini regenerates
   the same crate and that the full CPC checker's `src/`, Cargo files and
   tables are main's.
-- The generated files elaborate in seconds (MiniProofs about 5 s and
-  1.9 GiB, after `Valid` for the other argument types). CPC's generated proofs are not built.
+- The generated files elaborate in seconds (MiniProofs about 8 s and
+  2.1 GiB, after the round over groups). CPC's generated proofs are not built.
 
 ## What steps 3–5 built
 
@@ -63,13 +69,13 @@ a slice of arguments) where `expr()`/`pattern()` writes the Rust, or
 proved in place as `have … := (show … from by …)` blocks. `emitProgram`
 fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
-`Valid` for an argument, a loop over groups; then, across programs, "it calls … which has no proof".
+`Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (46 programs)
+## The reasons that remain (35 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
-| 20 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_is_closed` (→ `$eo_is_closed_rec`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_to_smt_datatype`, `_cons`, `_decl` (→ `$eo_to_smt_type`), `$smtx_ret_typeof_sel` (→ `$smtx_ret_typeof_sel_rec`), and ten that wait on `$smtx_inhabited_type`: `$smtx_decl_inhabited`, `$smtx_decl_wf_rec`, `$smtx_dt_cons_inhabited`, `$smtx_dt_cons_wf_rec`, `$smtx_dt_inhabited`, `$smtx_dt_wf_rec`, `$smtx_type_wf`, `$smtx_type_wf_component`, `$smtx_type_wf_rec`, `$smtx_typeof_guard_wf` |
+| 10 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_is_closed` (→ `$eo_is_closed_rec`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_to_smt_datatype`, `_cons`, `_decl` (→ `$eo_to_smt_type`), `$smtx_ret_typeof_sel` (→ `$smtx_ret_typeof_sel_rec`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 4 | a native pattern (nat zero/succ) | `$eo_typeof_dt_cons_rec`, `$eo_typeof_dt_sel_return`, `$smtx_ret_typeof_sel_rec`, `$smtx_typeof_dt_cons_rec` |
 | 3 | a builtin operator | `$eo_invoke_cmd` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
@@ -77,7 +83,7 @@ program, the reason. The reasons recorded after the cases, in order: no
 | 2 | the stuck term built as a constructor | `$eo_cmd_step_pop_proven`, `$eo_cmd_step_proven` |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
 | 2 | a function type in a pattern | `$eo_to_smt_type`, `$eo_typeof_apply` |
-| 1 each | `zleq`; the native string constant `"@"`; `$emb_Var` in a pattern; an application of a term that may be stuck (`$eo_prog_scope`); a loop whose cases are tried in groups | `$smtx_typeof`; `$eo_to_smt_reserved_datatype_name`; `$eo_is_closed_rec`; `$eo_prog_scope`; `$smtx_inhabited_type` |
+| 1 each | `zleq`; the native string constant `"@"`; `$emb_Var` in a pattern; an application of a term that may be stuck (`$eo_prog_scope`) | `$smtx_typeof`; `$eo_to_smt_reserved_datatype_name`; `$eo_is_closed_rec`; `$eo_prog_scope` |
 
 ## Lemma C: both questions resolved
 
@@ -165,9 +171,6 @@ exercised, but no proved program reaches them yet:
 - `more_k` inside a requirement: no requirement of CpcMini is cut into
   one. The only `more_k` (in `$eo_cmd_step_proven`'s case 0) is unfolded
   fine, but that case also calls a program without a proof.
-- The round of a loop whose cases are in groups (`$smtx_inhabited_type`):
-  not written. It is now the reason of `$smtx_inhabited_type`, and ten
-  programs wait on it: the most valuable next step for the count.
 - `not` and `string_prefix_eq` in a generated proof: their specs compile,
   but their only uses come after a failing call (`not`) or behind `"@"`.
 

@@ -60,24 +60,24 @@ $mk_symm	generated
 $mk_trans	generated	
 $smtx_dd_has_dt	generated	
 $smtx_dd_lookup	generated	
-$smtx_decl_inhabited	none	it calls $smtx_dt_inhabited, which has no proof
-$smtx_decl_wf_rec	none	it calls $smtx_inhabited_type, which has no proof
-$smtx_dt_cons_inhabited	none	it calls $smtx_inhabited_type, which has no proof
-$smtx_dt_cons_wf_rec	none	it calls $smtx_inhabited_type, which has no proof
-$smtx_dt_inhabited	none	it calls $smtx_dt_cons_inhabited, which has no proof
+$smtx_decl_inhabited	generated	
+$smtx_decl_wf_rec	generated	
+$smtx_dt_cons_inhabited	generated	
+$smtx_dt_cons_wf_rec	generated	
+$smtx_dt_inhabited	generated	
 $smtx_dt_resolve	generated	
-$smtx_dt_wf_rec	none	it calls $smtx_dt_cons_wf_rec, which has no proof
+$smtx_dt_wf_rec	generated	
 $smtx_dtc_resolve	generated	
-$smtx_inhabited_type	none	a loop whose cases are tried in groups
+$smtx_inhabited_type	generated	
 $smtx_ret_typeof_sel	none	it calls $smtx_ret_typeof_sel_rec, which has no proof
 $smtx_ret_typeof_sel_rec	none	case 0 has a native pattern
-$smtx_type_wf	none	it calls $smtx_type_wf_component, which has no proof
-$smtx_type_wf_component	none	it calls $smtx_inhabited_type, which has no proof
-$smtx_type_wf_rec	none	it calls $smtx_decl_wf_rec, which has no proof
+$smtx_type_wf	generated	
+$smtx_type_wf_component	generated	
+$smtx_type_wf_rec	generated	
 $smtx_typeof	none	case 4 has the native operation zleq
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_dt_cons_rec	none	case 0 has a native pattern
 $smtx_typeof_guard	generated	
-$smtx_typeof_guard_wf	none	it calls $smtx_type_wf, which has no proof
+$smtx_typeof_guard_wf	generated	
 $smtx_typeof_ite	generated	
