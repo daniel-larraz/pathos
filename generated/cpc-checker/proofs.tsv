@@ -85,7 +85,7 @@ $eo_dt_selectors	none	no logos function: only the runtime's datatype operators r
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
 $eo_invoke_assume_list	none	compiled to a function of the runtime
-$eo_invoke_cmd	none	case 1 has a builtin operator
+$eo_invoke_cmd	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
 $eo_invoke_cmd_step_pop	none	it calls $eo_cmd_step_pop_proven, which has no proof
@@ -1030,7 +1030,7 @@ $smtx_typeof_str.substr	generated
 $smtx_typeof_str.update	generated	
 $smtx_typeof_zero_extend	none	case 0 has the native operation zplus
 $str_arith_entail_is_approx	none	case 2 has a literal that is not a Boolean
-$str_arith_entail_is_approx_len	none	case 0 has a builtin operator
+$str_arith_entail_is_approx_len	none	case 0 has a literal that is not a Boolean
 $str_arith_entail_simple_pred	none	case 1 has a literal that is not a Boolean
 $str_arith_entail_simple_rec	none	case 2 has a builtin operator
 $str_case_conv_rec	none	case 0 has a builtin operator

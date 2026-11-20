@@ -14,13 +14,13 @@ $eo_dt_selectors	none	no logos function: only the runtime's datatype operators r
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
 $eo_invoke_assume_list	none	compiled to a function of the runtime
-$eo_invoke_cmd	none	case 1 has a builtin operator
+$eo_invoke_cmd	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
 $eo_invoke_cmd_step_pop	none	it calls $eo_cmd_step_pop_proven, which has no proof
 $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
-$eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
-$eo_is_closed_rec	none	case 2 has a builtin operator
+$eo_is_closed	generated	
+$eo_is_closed_rec	generated	
 $eo_is_list_nil	generated	
 $eo_lit_type_Binary	none	case 0 has an application of a term that may be stuck
 $eo_lit_type_Numeral	generated	
