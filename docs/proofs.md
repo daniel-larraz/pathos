@@ -426,6 +426,11 @@ change under them.
 ## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
 
 `rust-meta` writes the proofs with the Rust (Ethos branch `m32-proofs`).
+For the full CPC it writes them too, into `generated/cpc-checker`
+(`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
+checked to be what the generator writes (`scripts/generate-cpc --check`),
+but **not built**; `proofs.tsv` (422 of 1,086 marked generated) says how
+far the emitter gets.
 48 of CpcMini's 82 programs have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
