@@ -10,6 +10,7 @@ public import PathosProofs.Runtime.Ops
 public import MiniCtors
 public import PathosProofs.Runtime.Natives
 public import PathosProofs.Runtime.Strings
+public import PathosProofs.Runtime.Literals
 
 /-!
 # The tactics of the generated proofs
@@ -205,6 +206,46 @@ macro_rules
         simp [alloc.vec.Vec.length, $hvec:ident]
       $[$steps];*
       clear hfldlen))
+
+/-- `pat_destruct_lit spec as ⟨v, x, hv⟩ storing ⟨s', hinv'⟩ growing hG carrying … else in
+cd`: the pattern takes apart an object literal, by `destruct` with its
+constructor, which stores a native copy of the literal's value (`spec`
+says what it gives; see `Runtime/Literals.lean`). Goes on with the handle
+`v` of the native value `x`, the fact `hv`, and the new store; where the
+term is no such literal the case ends. -/
+syntax "pat_destruct_lit " term " as " "⟨" ident ", " ident ", " ident "⟩" " storing " "⟨" ident
+  ", " ident "⟩" " growing " ident " carrying" (ppSpace colGt ident)* " in " ident : tactic
+macro_rules
+  | `(tactic| pat_destruct_lit $e as ⟨$v, $x, $hv⟩ storing ⟨$s', $hinv'⟩ growing $hG
+      carrying $hs* in $cd) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let r := Lean.mkIdent `r
+    let hg := Lean.mkIdent `hg
+    let hres := Lean.mkIdent `hres
+    let vec := Lean.mkIdent `fldvec
+    let hvec := Lean.mkIdent `hfldvec
+    let f0 := Lean.mkIdent `fld0
+    let heq := Lean.mkIdent `hfldeq
+    let hvi := Lean.mkIdent `hfld
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv'), $(b hg), $(b hres)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      rcases $r:ident with (_ | $vec:ident) | _
+      all_goals first
+        | (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv', $hG, trivial⟩; done)
+        | (simp only at $hres:ident; no_match $hinv' $hG in $cd; done)
+        | skip
+      simp only at $hres:ident ⊢
+      obtain ⟨$f0, $x, $heq, $hvec, $hv⟩ := $hres
+      subst $heq
+      have hfldlen : ($vec).length = 1 := by simp [alloc.vec.Vec.length, $hvec:ident]
+      step as ⟨$(b v), $(b hvi)⟩
+      have hfldv : $v = $f0 := by simp [$hvi:ident, $hvec:ident]
+      subst hfldv
+      clear $hvi hfldlen))
 
 /-- `pat_same a b with ha hb using hi else hinv hG in cd`: the generated
 `if a != b { return Ok(None) }` on two handles. Goes on where they are
