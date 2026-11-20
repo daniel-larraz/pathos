@@ -259,7 +259,7 @@ step 5):
     for every width and every pair of values in range
     (`bv_and_toInt_emod`, proved, not assumed).
 - **Declarations**: axioms that declare a type or a function and say
-  nothing of it: 45 of the 54 that Aeneas leaves without a body in the
+  nothing of it: 45 of the 53 that Aeneas leaves without a body in the
   Lean of the checker (the types `num.Integer` and `num.Rational`, their
   functions, the text functions of `front.rs`), and `Trusted.lean`'s
   `toInt`, `ofInt`, `toRat`, `ofRat`. In use today: 49. An axiom whose
@@ -283,8 +283,8 @@ logos.
 `Trusted.lean` gives every function of `num.rs` that the checker calls its
 meaning on ℤ and ℚ, one equation each, with the hypothesis the Rust
 documents where there is one (a non-zero divisor). Of the two functions of
-`front.rs` it declares (`native_literal`, `constant_name`) it assumes only
-that they return.
+`front.rs`, it declares the one the checking code calls
+(`constant_name`) and assumes only that it returns.
 
 **Literals are values** (milestone 32, Ethos `db074f2`). The generated
 code builds every literal from a value, not from text. A numeral is
@@ -295,13 +295,19 @@ definitions is `s.raw` of such a value, or of `EoString::from_code_points`
 of the code points the generator reads from the signature. So no parse,
 no `NATIVE_TEXTS` lookup and no `native_literal` is on any path that a
 proof reaches: every numeral of CpcMini and of the full CPC fits a `u32`
-(20 distinct values in the CPC, at most 6 digits). `parse_int`,
-`parse_rat` and `native_literal` stay in the runtime, unused by generated
-code, until the specs `Trusted.lean` declares about them are retired. The
-one text path the generator can still write is `native_pattern_constant`,
-a native constant in a pattern (no signature uses one today): it reads
-its value with `native_literal`. `NATIVE_TEXTS` keeps the names that
-errors print (`UnsupportedNative`, "SMT translation is unavailable").
+(20 distinct values in the CPC, at most 6 digits; a numeral that did not
+fit would be built from 32-bit limbs with `mul` and `add`). The text and
+parse paths are gone (milestone 32, Ethos `b8be4ea`): `parse_int`,
+`parse_rat` and `native_literal` are removed from the runtime, and with
+them the declaration `front.native_literal` and the assumption
+`front.native_literal_spec` from `Trusted.lean` and
+`axioms-allowed.txt`. What the generator can still write for a native
+constant it cannot build as a value, `native_constant` and
+`native_pattern_constant` (no signature has one today), now refuses it
+with `UnsupportedNative`, the error `native_literal` gave for such a text.
+`NATIVE_TEXTS` keeps the names that errors print (`UnsupportedNative`,
+"SMT translation is unavailable"), so it is no gap for the final theorem:
+no value the checker computes comes from it.
 
 Beyond the axioms, the theorems are about a program under these
 conditions:
@@ -401,11 +407,10 @@ line left out, and with `(assume-push @p4 e)` before the `trans` step and
 
 ### The generator
 
-- Clippy with warnings as errors fails on the CpcMini crate in three
-  places: the generator assumes a numeral in the generated code
-  (`parse_int` unused, now allowed to be: literals are values) and a
-  left-associative operator
-  (`is_left_assoc` with a single arm). The tests pass.
+- Clippy with warnings as errors fails on the CpcMini crate in one place:
+  the generator assumes a left-associative operator (`is_left_assoc` with
+  a single arm). (The other, `parse_int` unused, went with the text
+  paths.) The tests pass.
 - The Rust pipeline lacks the Lean pipeline's second trim, so six
   functions with no counterpart in logos's CpcMini stay.
 - A cache entry's meaning (`EntryOK`) has a clause per cached program; for

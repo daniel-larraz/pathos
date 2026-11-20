@@ -37,7 +37,6 @@ pathos_compiled_checker.CheckError.Insts.CoreFmtDisplay.fmt
 pathos_compiled_checker.core.fmt.Formatter.debug_tuple_field2_finish
 pathos_compiled_checker.core.mem.maybe_uninit.MaybeUninit
 pathos_compiled_checker.front.constant_name
-pathos_compiled_checker.front.native_literal
 pathos_compiled_checker.num.Integer
 pathos_compiled_checker.num.Integer.add
 pathos_compiled_checker.num.Integer.bitwise_and
@@ -89,7 +88,6 @@ pathos_compiled_checker.schema.Constructor.Insts.CoreFmtDebug.fmt
 [Trusted]
 # proofs/PathosProofs/Trusted.lean: what the functions above compute.
 pathos_compiled_checker.front.constant_name_spec
-pathos_compiled_checker.front.native_literal_spec
 pathos_compiled_checker.num.Integer.add_spec
 pathos_compiled_checker.num.Integer.bitwise_and_spec
 pathos_compiled_checker.num.Integer.bitwise_not_spec

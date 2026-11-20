@@ -210,22 +210,15 @@ end num
 /-! ## The text functions
 
 `front.rs` holds what works on text, for the program around the checker.
-The checking code calls four of its functions. Two read the numerals
-written in the generated code (`parse_int`, `parse_rat`); the checker for
-CpcMini has none, so they are not declared here. The other two:
+The checking code calls one of its functions (the generated code builds
+its literals and numerals as values):
 
-* `native_literal code` is the constant that the EO definitions write as
-  the text number `code` of the generated list `NATIVE_TEXTS`
-  (`src/names.rs`).
 * `constant_name uninterpreted n` is the text `@u.n` or `@c.n`.
 
-Of both only this is assumed so far: they return. What each returns is a
-statement about one signature's list of texts and about the printing of
-integers; none of the proofs here needs it yet.
+Of it only this is assumed so far: it returns. What it returns is a
+statement about the printing of integers; none of the proofs here needs it
+yet.
 -/
-
-axiom front.native_literal_spec (code : Std.U32) :
-  ∃ r, front.native_literal code = ok r
 
 axiom front.constant_name_spec (uninterpreted : Bool) (n : num.Integer) :
   ∃ r, front.constant_name uninterpreted n = ok r
