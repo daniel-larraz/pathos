@@ -260,10 +260,12 @@ theorem Store.check_handles_loop_spec (s : Store) (args : Slice Term) (i : Std.U
 theorem schema.Constructor.arity_ok (c : schema.Constructor) : ∃ n, c.arity = ok n := by
   cases c <;> exact ⟨_, rfl⟩
 
-/-- `construct` with a constructor that is plain data: the node of that
-constructor with the arguments as its fields. -/
+/-- `construct` with a constructor that is plain data, or a variable (which
+the store keeps the same way): the node of that constructor with the
+arguments as its fields. -/
 theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : Slice Term)
-    (hinv : s.Inv) (h64 : Platform64) (hemb : c.embedding = ok Embedding.Data) :
+    (hinv : s.Inv) (h64 : Platform64)
+    (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var) :
     Store.construct s c args ⦃ r s' =>
       s'.Inv ∧ s.Extends s' ∧
       match r with
@@ -288,8 +290,8 @@ theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : S
       exact ⟨hinv, Store.Extends.refl s⟩
     | Ok u =>
       simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
-      rw [hemb]
-      simp only [Std.bind_ok]
+      rcases hemb with hemb | hemb <;> rw [hemb] <;> simp only [Std.bind_ok]
+      all_goals
       step with alloc.slice.Slice.to_vec_spec as ⟨v, hv⟩
       · intro x _; rfl
       have hvals : v.val = args.val := by rw [hv]; rfl
@@ -315,6 +317,11 @@ theorem Store.destruct_literal_data (l : lit.Lit) :
   unfold Store.destruct_literal
   cases l <;> simp
 
+theorem Store.destruct_literal_var (l : lit.Lit) :
+    Store.destruct_literal Embedding.Var l = ok (Hit.Done none) := by
+  unfold Store.destruct_literal
+  cases l <;> simp [Embedding.Insts.CoreCmpPartialEqEmbedding.eq, Embedding.read_discriminant]
+
 theorem alloc.vec.CloneVec.clone_terms (v : alloc.vec.Vec Term) :
     alloc.vec.CloneVec.clone Term.Insts.CoreCloneClone v = ok v := by
   unfold alloc.vec.CloneVec.clone
@@ -324,10 +331,10 @@ theorem alloc.vec.CloneVec.clone_terms (v : alloc.vec.Vec Term) :
   rw [hs]
   simp [← heq]
 
-/-- `destruct` with a constructor that is plain data: the fields of a node
-of that constructor, and nothing for any other term. -/
+/-- `destruct` with a constructor that is plain data, or a variable: the
+fields of a node of that constructor, and nothing for any other term. -/
 theorem Store.destruct_data_eq (s : Store) (c : schema.Constructor) (t : Term)
-    (hemb : c.embedding = ok Embedding.Data) :
+    (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var) :
     Store.destruct s c t = ok (
       (if t.val < s.nodes.length then
         core.result.Result.Ok (match s.data t with
@@ -335,13 +342,13 @@ theorem Store.destruct_data_eq (s : Store) (c : schema.Constructor) (t : Term)
           | _ => none)
       else core.result.Result.Err CheckError.InvalidHandle), s) := by
   unfold Store.destruct
-  rw [hemb]
-  simp only [Std.bind_ok]
+  rcases hemb with hemb | hemb <;> rw [hemb] <;> simp only [Std.bind_ok]
+  all_goals
   rw [Store.view_eq]
   by_cases h : t.val < s.nodes.length
   · simp only [h, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch, Store.data]
     cases hd : s.nodes.val[t.val]! with
-    | Literal l => simp [Store.destruct_literal_data]
+    | Literal l => simp [Store.destruct_literal_data, Store.destruct_literal_var]
     | Node d fields =>
       obtain ⟨n1, h1, _⟩ := schema.Constructor.code_spec c
       obtain ⟨n2, h2, _⟩ := schema.Constructor.code_spec d

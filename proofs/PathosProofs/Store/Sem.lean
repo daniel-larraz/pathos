@@ -233,7 +233,7 @@ theorem Store.construct_uop_spec (s : Store) (op : Eo.UserOp) (args : Slice Term
       match r with
       | core.result.Result.Ok t => s'.Rep t (Eo.Term.UOp op)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_data_spec s (uopCtor op) args hinv h64 (uopCtor_embedding op))
+  apply WP.dspec_mono (Store.construct_data_spec s (uopCtor op) args hinv h64 (Or.inl (uopCtor_embedding op)))
   rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
   simp only [WP.uncurry'_pair] at hres ⊢
   refine ⟨hinv', hext.grows, ?_⟩

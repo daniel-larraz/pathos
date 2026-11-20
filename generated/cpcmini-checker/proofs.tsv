@@ -20,7 +20,7 @@ $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
 $eo_invoke_cmd_step_pop	none	it calls $eo_cmd_step_pop_proven, which has no proof
 $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
 $eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
-$eo_is_closed_rec	none	case 0 has the constructor $emb_Var in a pattern, which is not stored as a node
+$eo_is_closed_rec	none	case 2 has a builtin operator
 $eo_is_list_nil	generated	
 $eo_lit_type_Binary	none	case 0 has a builtin operator
 $eo_lit_type_Numeral	generated	

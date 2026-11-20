@@ -8,8 +8,9 @@ public import PathosProofs.Store.Sem
 # `construct` and `destruct` of a data constructor, over trees
 
 Every constructor that the runtime stores as a node over its fields
-(`Embedding::Data`: all but the stuck term, applications, object literals
-and user operators) is built and taken apart the same way. Here once, for
+(`Embedding::Data`: all but the stuck term, applications, object literals,
+user operators and variables; and `Embedding::Var`, variables, which the
+runtime stores the same way) is built and taken apart the same way. Here once, for
 all of them, in terms of `Holds`: what `construct` gives on handles of
 some trees is a handle of the node over them, and `destruct` on a handle
 of a tree finds the handles of its fields exactly when the tree is a node
@@ -28,7 +29,7 @@ open Aeneas Aeneas.Std Result
 /-- `construct` of a data constructor on handles of the trees `xs` gives a
 handle of the node over them. -/
 theorem Store.construct_holds (s : Store) (c : schema.Constructor) (args : Slice Term)
-    (xs : List Tree) (hinv : s.Inv) (h64 : Platform64) (hemb : c.embedding = ok Embedding.Data)
+    (xs : List Tree) (hinv : s.Inv) (h64 : Platform64) (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var)
     (hargs : HoldsList s.nodes.val args.val xs) :
     Store.construct s c args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
@@ -50,7 +51,7 @@ theorem Store.construct_holds (s : Store) (c : schema.Constructor) (args : Slice
 handles of the fields of `x` if it is a node of that constructor, nothing
 otherwise; the store is the same. -/
 theorem Store.destruct_holds {s : Store} {t : Term} {x : Tree} (c : schema.Constructor)
-    (hemb : c.embedding = ok Embedding.Data) (h : Holds s.nodes.val t.val x) :
+    (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var) (h : Holds s.nodes.val t.val x) :
     (∃ (v : alloc.vec.Vec Term) (xs : List Tree), x = Tree.node c xs ∧
       HoldsList s.nodes.val v.val xs ∧
       Store.destruct s c t = ok (core.result.Result.Ok (some v), s)) ∨

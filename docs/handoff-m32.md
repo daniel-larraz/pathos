@@ -13,7 +13,7 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 4,335 theorems, no `sorry`. The trust is **11
+- `scripts/proofs-build`: 4,338 theorems, no `sorry`. The trust is **11
   assumptions** (Lean's three among them), unchanged by steps 3–5; 49 declarations (axioms that declare a type or a function,
   which add no trust: see "What is trusted").
 - Loops are proved by strong induction on the budget of calls
@@ -25,8 +25,8 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 - The Rust has not changed: every step checked that CpcMini regenerates
   the same crate and that the full CPC checker's `src/`, Cargo files and
   tables are main's.
-- The generated files elaborate in seconds (MiniProofs about 11–15 s and
-  2.2 GiB, after the stuck term built as a constructor). CPC's generated proofs are not built.
+- The generated files elaborate in seconds (MiniProofs about 8–15 s and
+  2.2 GiB, after a variable in a pattern). CPC's generated proofs are not built.
 
 ## What steps 3–5 built
 
@@ -80,10 +80,10 @@ program, the reason. The reasons recorded after the cases, in order: no
 | 12 | calls of programs without a proof | `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_is_closed` (→ `$eo_is_closed_rec`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_to_smt_datatype`, `_cons`, `_decl` (→ `$eo_to_smt_type`), `$smtx_ret_typeof_sel` (→ `$smtx_ret_typeof_sel_rec`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 4 | a native pattern (nat zero/succ) | `$eo_typeof_dt_cons_rec`, `$eo_typeof_dt_sel_return`, `$smtx_ret_typeof_sel_rec`, `$smtx_typeof_dt_cons_rec` |
-| 3 | a builtin operator | `$eo_invoke_cmd` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
+| 4 | a builtin operator | `$eo_invoke_cmd` and `$eo_is_closed_rec` (`eo::and`), `$eo_lit_type_Binary` (`eo::len`), `$eo_mk_premise_list` (`eo::cons`) |
 | 3 | `$emb_Numeral` in a pattern | `$eo_to_smt`, `$eo_to_smt_type`, `$eo_typeof` |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
-| 1 each | `zleq`; the native string constant `"@"`; `$emb_Var` in a pattern; an application of a term that may be stuck (`$eo_prog_scope`) | `$smtx_typeof`; `$eo_to_smt_reserved_datatype_name`; `$eo_is_closed_rec`; `$eo_prog_scope` |
+| 1 each | `zleq`; the native string constant `"@"`; an application of a term that may be stuck (`$eo_prog_scope`) | `$smtx_typeof`; `$eo_to_smt_reserved_datatype_name`; `$eo_prog_scope` |
 
 ## Lemma C: both questions resolved
 
@@ -150,10 +150,6 @@ Three more that are not about trust:
   `list_cons_op`, which walks the list and calls generated programs
   (`eo__24eo_5fnil`, the list helpers). Its spec would be a runtime lemma
   that uses what is proved of generated functions: a new kind of piece.
-- **`$emb_Var`** in a pattern (`$eo_is_closed_rec`): the runtime treats it
-  as data, but its schema embedding is `Var`, not `Data`, so
-  `construct_holds`/`destruct_holds` (which require `Data`) do not apply;
-  they would need a `Var` variant.
 - **The native string constant `"@"`** (`$eo_to_smt_reserved_datatype_name`)
   goes through `native_constant` → `front.native_literal`, which
   `Trusted.lean` only assumes returns. It needs `native_literal`'s
@@ -166,8 +162,13 @@ The emitter writes these, and they elaborate where they have been
 exercised, but no proved program reaches them yet:
 
 - `eo::ite`'s stuck branch (`ite_stuck`): CpcMini's only `eo::ite` is in
-  `$eo_is_closed_rec`, in a case blocked by `$emb_Var`. The native `ite` is
-  tested (forced `$eo_to_smt_type`).
+  `$eo_is_closed_rec`'s case 1, which now goes through (a variable in a
+  pattern, and `eo::ite` past the gate on builtins), but the program stops
+  at case 2's `eo::and`. Checked with the force patch on
+  `$eo_is_closed_rec`: cases 0 and 1, `ite_stuck` among them, elaborate.
+  In the full CPC, `eo::ite` past the gate proves `$from_clause`,
+  `$is_absorb_rec` and `$is_absorb`. The native `ite` is tested (forced
+  `$eo_to_smt_type`).
 - `more_k` inside a requirement: no requirement of CpcMini is cut into
   one. The only `more_k` (in `$eo_cmd_step_proven`'s case 0) is unfolded
   fine, but that case also calls a program without a proof.
