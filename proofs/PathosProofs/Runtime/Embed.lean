@@ -58,6 +58,30 @@ instance : Valid Eo.CStateObj := ⟨fun _ => True⟩
 instance : Valid Eo.CState := ⟨fun _ => True⟩
 instance : Valid Bool := ⟨fun _ => True⟩
 
+/-! The other types of the checker's arguments: `Valid` is `True`. Lemma C
+needs no more of them, because no case of a program over them tells apart
+values that no store holds. Their cases match data constructors, compare
+strings (`native_streq`) and pass values on. A term inside one of them
+(a datatype's field types, a command's terms) is compared or applied only
+as the argument of a program over terms, whose own lemma C takes it
+`Valid` and whose body has that from the term's handle
+(`Store.Rep.valid`). The bounds that a stored string or bit-vector keeps
+(`emb`) stay in `Represents.rep`, where the bodies' proofs use them. -/
+
+instance : Valid (List Nat) := ⟨fun _ => True⟩  -- strings, as code points
+instance : Valid Nat := ⟨fun _ => True⟩
+instance : Valid Eo.CArgList := ⟨fun _ => True⟩
+instance : Valid Eo.CCmdList := ⟨fun _ => True⟩
+instance : Valid Eo.CIndexList := ⟨fun _ => True⟩
+instance : Valid Eo.CRule := ⟨fun _ => True⟩
+instance : Valid Eo.Datatype := ⟨fun _ => True⟩
+instance : Valid Eo.DatatypeCons := ⟨fun _ => True⟩
+instance : Valid Eo.DatatypeDecl := ⟨fun _ => True⟩
+instance : Valid Smtm.SmtType := ⟨fun _ => True⟩
+instance : Valid Smtm.SmtDatatype := ⟨fun _ => True⟩
+instance : Valid Smtm.SmtDatatypeCons := ⟨fun _ => True⟩
+instance : Valid Smtm.SmtDatatypeDecl := ⟨fun _ => True⟩
+
 @[simp] theorem Valid.apply (f a : Eo.Term) :
     Valid.valid (Eo.Term.Apply f a) ↔
       f ≠ Eo.Term.Stuck ∧ a ≠ Eo.Term.Stuck ∧ Valid.valid f ∧ Valid.valid a := by

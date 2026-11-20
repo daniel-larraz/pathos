@@ -1,23 +1,23 @@
 source	proof	why
 $eo_StateObj_proven	generated	
-$eo_checker_is_refutation	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_checker_is_refutation	none	it calls $eo_invoke_assume_list, which has no proof
 $eo_cmd_step_pop_proven	none	case 1 has the constructor $emb_Stuck, which is not stored as a node (no lemma yet)
 $eo_cmd_step_proven	none	case 4 has the constructor $emb_Stuck, which is not stored as a node (no lemma yet)
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
-$eo_dd_lookup	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_dd_resolve	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_dd_lookup	generated	
+$eo_dd_resolve	generated	
 $eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it
-$eo_dt_resolve	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_dt_resolve	generated	
 $eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
-$eo_dtc_resolve	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_dtc_resolve	generated	
 $eo_invoke_assume_list	none	compiled to a function of the runtime
 $eo_invoke_cmd	none	case 1 has a builtin operator
 $eo_invoke_cmd_check_proven	generated	
-$eo_invoke_cmd_list	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_invoke_cmd_step_pop	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
+$eo_invoke_cmd_step_pop	none	it calls $eo_cmd_step_pop_proven, which has no proof
 $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
 $eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
 $eo_is_closed_rec	none	case 0 has the constructor $emb_Var in a pattern, which is not stored as a node
@@ -41,9 +41,9 @@ $eo_state_is_closed	generated
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	none	compiled to a function of the runtime
 $eo_to_smt	none	case 1 has the constructor $emb_Numeral in a pattern, which is not stored as a node
-$eo_to_smt_datatype	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_datatype_cons	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_datatype_decl	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_to_smt_datatype	none	it calls $eo_to_smt_datatype_cons, which has no proof
+$eo_to_smt_datatype_cons	none	it calls $eo_to_smt_type, which has no proof
+$eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
 $eo_to_smt_reserved_datatype_name	none	case 0 has the native operation "@"
 $eo_to_smt_type	none	case 5 has a function type in a pattern
 $eo_typeof	none	case 1 has the constructor $emb_Numeral in a pattern, which is not stored as a node
@@ -58,26 +58,26 @@ $eo_typeof_fun_type	generated
 $eo_typeof_not	generated	
 $mk_symm	generated	
 $mk_trans	generated	
-$smtx_dd_has_dt	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_dd_lookup	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_decl_inhabited	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_decl_wf_rec	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_dt_cons_inhabited	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_dt_cons_wf_rec	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_dt_inhabited	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_dt_resolve	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_dt_wf_rec	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_dtc_resolve	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_inhabited_type	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_ret_typeof_sel	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_dd_has_dt	generated	
+$smtx_dd_lookup	generated	
+$smtx_decl_inhabited	none	it calls $smtx_dt_inhabited, which has no proof
+$smtx_decl_wf_rec	none	it calls $smtx_inhabited_type, which has no proof
+$smtx_dt_cons_inhabited	none	it calls $smtx_inhabited_type, which has no proof
+$smtx_dt_cons_wf_rec	none	it calls $smtx_inhabited_type, which has no proof
+$smtx_dt_inhabited	none	it calls $smtx_dt_cons_inhabited, which has no proof
+$smtx_dt_resolve	generated	
+$smtx_dt_wf_rec	none	it calls $smtx_dt_cons_wf_rec, which has no proof
+$smtx_dtc_resolve	generated	
+$smtx_inhabited_type	none	a loop whose cases are tried in groups
+$smtx_ret_typeof_sel	none	it calls $smtx_ret_typeof_sel_rec, which has no proof
 $smtx_ret_typeof_sel_rec	none	case 0 has a native pattern
-$smtx_type_wf	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_type_wf_component	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_type_wf_rec	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_type_wf	none	it calls $smtx_type_wf_component, which has no proof
+$smtx_type_wf_component	none	it calls $smtx_inhabited_type, which has no proof
+$smtx_type_wf_rec	none	it calls $smtx_decl_wf_rec, which has no proof
 $smtx_typeof	none	case 4 has the native operation zleq
-$smtx_typeof_=	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_typeof_apply	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_=	generated	
+$smtx_typeof_apply	generated	
 $smtx_typeof_dt_cons_rec	none	case 0 has a native pattern
-$smtx_typeof_guard	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_typeof_guard_wf	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$smtx_typeof_ite	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_guard	generated	
+$smtx_typeof_guard_wf	none	it calls $smtx_type_wf, which has no proof
+$smtx_typeof_ite	generated	

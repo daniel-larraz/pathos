@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 2,970 theorems, are **11**:
+  This is the trust. In use today, by 3,519 theorems, are **11**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
   `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
@@ -413,11 +413,11 @@ change under them.
 ## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
 
 `rust-meta` writes the proofs with the Rust (Ethos branch `m32-proofs`).
-24 of CpcMini's 82 programs have one so far, the four of the pilot
+36 of CpcMini's 82 programs have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (1,860 lines) elaborates in 4
-seconds (1.7 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (2,965 lines) elaborates in 5
+seconds (1.9 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -461,7 +461,16 @@ application of or to the stuck term). Lemma C therefore takes, for each
 argument, that it is `Valid` (for a term: no application in it is of or to
 the stuck term), and the body's proof gets that from the handle
 (`Store.Rep.valid`). This is the same boundary as the first finding below,
-met from the other side.
+met from the other side. For the checker's other argument types (its
+states, lists of commands, arguments and indices, rules; the datatype
+declarations; the SMT types and datatypes; strings and naturals) `Valid`
+is `True`: no case of a program over them tells apart values that no
+store holds (they match data constructors, compare strings, pass values
+on), and a term inside one of them is compared only as the argument of a
+program over terms, whose own lemma C takes it `Valid`. The emitter lets
+through exactly the types that have an instance (`Runtime/Embed.lean`
+says why each is enough); the full CPC's `SmtTerm` and `Int` arguments
+have none yet.
 
 **Order of the stuck tests.** The Rust tests the arguments for the stuck
 term in order, before any case; logos's function has a first match arm for
@@ -484,14 +493,15 @@ case per constructor, which Lean checks), and the body's proof closes the
 path by contradiction from the facts that every case answered `none`
 (`body_stuck … splitting`, `round_stuck … splitting`; `split_none` splits
 an argument into its constructors where the cases are one per
-constructor). logos and the Rust agree on stuck tests for every type
+constructor). A native Boolean keeps its stuck value in lemma C, but its
+body's proof closes the path the same way: handle 0 stands for no
+Boolean. logos and the Rust agree on stuck tests for every type
 (only a program that returns a term tests, and only its term arguments),
 and the checker's state `CState.Stuck` is a node in the Rust as in logos
-(`$emb_s.Stuck`), built and matched where logos builds and matches it. Of
-CpcMini's programs, the five that return a checker state and take only
-terms and states have proofs this way; the per-constructor split was
-checked on the case functions of all ten such programs of CpcMini, outside
-an emitted proof, since each stops first at an argument without `Valid`.
+(`$emb_s.Stuck`), built and matched where logos builds and matches it. The
+split over constructors is in the proofs of seven programs of CpcMini
+(`$eo_dd_lookup`, `$eo_dt_resolve`, `$eo_dtc_resolve`, `$smtx_dd_has_dt`,
+`$smtx_dd_lookup`, `$smtx_dt_resolve`, `$smtx_dtc_resolve`).
 
 **What is written by hand** (`proofs/PathosProofs/`):
 
@@ -499,7 +509,7 @@ an emitted proof, since each stops first at an argument without `Valid`.
 | --- | --- | --- |
 | `Tactic.lean` | 688 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups and conditionals, and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 132 | `enter`, `leave`, the measure of the induction, a program around its body. |
-| `Runtime/Embed.lean` | 119 | The stuck value of a type, `Valid`, and that a handle stands only for valid terms and proofs. |
+| `Runtime/Embed.lean` | 143 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 249 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
 | `Runtime/Node.lean` | 79 | `construct` and `destruct` of any data constructor, over trees. |
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
@@ -510,20 +520,21 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 24** (the reasons of `proofs.tsv`, for the other 58,
-on 2026-11-20, after the default where no case applies): lemma C's
-side, an argument of a type without `Valid` (30: SMT types, datatype
-declarations, strings, the checker's command and argument lists); the six
-of the datatype operators below; native patterns (4); calls of programs
-without a proof (3); builtin operators (3); a literal constructor or a
+**What limits the 36** (the reasons of `proofs.tsv`, for the other 46,
+on 2026-11-20, after `Valid` for the other argument types): calls of
+programs without a proof (20; most wait on `$smtx_inhabited_type`, a
+loop whose cases are tried in groups, which has no proof of its round
+yet, or on `$eo_to_smt_type`); the six of the datatype operators below;
+native patterns (4); builtin operators (3); a literal constructor or a
 variable in a pattern (3); the stuck term built as a constructor (2); the
 two compiled to the runtime; a function type in a pattern (2); native
-operations (`zleq`, the string constant `"@"`); and an application of a
-term that may be stuck (`$eo_prog_scope`, the first finding below). The
-lemmas of `construct` and `destruct` are generated for every data
-constructor (`MiniCtors`); the literal constructors and variables are
-stored otherwise and have none. The cache of results is stated for every
-embedded type (`MiniCacheSem`).
+operations (`zleq`, the string constant `"@"`); the loop over groups
+itself; and an application of a term that may be stuck
+(`$eo_prog_scope`, the first finding below). The lemmas of `construct`
+and `destruct` are generated for every data constructor (`MiniCtors`);
+the literal constructors and variables are stored otherwise and have
+none. The cache of results is stated for every embedded type
+(`MiniCacheSem`).
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a
@@ -535,8 +546,8 @@ such programs of CpcMini has a proof yet, each for another reason; the
 group proofs were checked by writing `$eo_typeof`'s (27 cases, groups of
 groups) and `$eo_cmd_step_proven`'s with `sorry` for the cases that the
 emitter cannot do: the groups and the body go through (4 s, 1.8 GiB). A
-loop whose cases are in groups has no proof of its round yet; no program
-of CpcMini meets that before another reason.
+loop whose cases are in groups has no proof of its round yet; it is what
+stops `$smtx_inhabited_type`, and through it ten programs that call it.
 
 **Conditionals** (step 4). `eo::ite c a b` and the native `ite` are
 functions of their own in the Rust (`if_k`), and the proof of each is a
