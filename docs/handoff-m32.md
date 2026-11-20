@@ -72,10 +72,19 @@ constructors and about 20 types. The plan:
   and the link to `TermValid`. `Runtime/Node.lean` has `construct_holds`
   and `destruct_holds` for every data constructor. Nothing uses either
   yet.
-  (ii) next: `Represents.rep` becomes `Holds … (enc x) ∧ emb x` for every
-  type, the tactics' per-type alternatives collapse, and the old relations
-  (`Rep`, `RepProof`, `RepState`, `RepObj`, `NativeBool`) go.
-  (iii) then: rust-meta writes the `CtorSpec.*` one-liners for every data
+  (ii) done: `Rep nodes t x` (Store/Rep.lean) is `Holds nodes t
+  (Embedded.enc x) ∧ Embedded.emb x` for any type with an `Embedded`
+  instance (class in Store/Tree.lean, instances generated in MiniEmbed,
+  Bool's by hand); `Represents.rep s t x` and `Store.Rep` (terms) are it
+  for a store (Store/Sem.lean). The lemmas kept their names
+  (`Store.Rep.eq_iff`, `Store.apply_rep`, `Store.literal_boolean_spec`,
+  ...), with generic `Represents.grows`, `.congr`, `.eq_iff`; the tactics'
+  per-type alternatives are one each; `RepProof`, `RepState`, `RepObj`,
+  `NativeBool` and their lemmas are gone, and so is the interim
+  `Runtime/HoldsSem.lean`. MiniCacheSem's `ProgramSem` is unchanged in
+  text and now means `HoldsList`/`enc` through `Rep`. The generated
+  proofs (MiniProofs) did not change.
+  (iii) next: rust-meta writes the `CtorSpec.*` one-liners for every data
   constructor in place of `leanCtorLemmas()`, and `MiniCacheSem` over
   `HoldsList`/`enc`.
 - `Represents.rep` carries `emb_T x` beside `Holds` (a conjunction).

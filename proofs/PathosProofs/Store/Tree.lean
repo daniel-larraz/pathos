@@ -179,6 +179,24 @@ theorem HoldsList.mono {nodes nodes' : List TermData} {hs : List Term} {xs : Lis
     cases h with
     | cons _ _ x xs' h1 h2 => exact HoldsList.cons a l x xs' (Holds.mono hpre h1) (ih h2)
 
+/-- A type whose values the store holds: the tree a value is stored as,
+the value a tree stands for, the values the store can hold, and that
+reading back gives those. lean-meta writes an instance for each datatype
+of the checker (`MiniEmbed`); natives have theirs below. -/
+class Embedded (α : Type) where
+  enc : α → Tree
+  dec : Tree → Option α
+  emb : α → Prop
+  dec_enc : ∀ x, emb x → dec (enc x) = some x
+
+/-- In a store where no two handles have the same data, two embeddable
+values are equal exactly when their trees are. -/
+theorem Embedded.enc_inj {α : Type} [Embedded α] {x y : α} (hx : Embedded.emb x)
+    (hy : Embedded.emb y) (h : Embedded.enc x = Embedded.enc y) : x = y := by
+  have h1 := Embedded.dec_enc x hx
+  rw [h, Embedded.dec_enc y hy] at h1
+  exact (Option.some.inj h1).symm
+
 /-! ## Natives
 
 How the runtime stores logos's native values, and how to read them back:
@@ -276,6 +294,8 @@ def decStr : Tree → Option (List Nat)
   | _ => none
 theorem dec_encStr (s : List Nat) (h : okStr s) : decStr (encStr s) = some s := by
   simp [decStr, encStr, strTo_strOf s h]
+
+instance : Embedded Bool := ⟨encBool, decBool, okBool, dec_encBool⟩
 
 end Tree
 

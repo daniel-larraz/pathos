@@ -16,7 +16,7 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | --- | --- |
 | `generated/cpcmini-checker/` | The checker for **CpcMini**, logos's calculus of five rules (`symm contra refl scope trans`), compiled by `rust-meta` as the CPC checker is. The pilot is on it. `scripts/generate-mini` writes it. |
 | `proofs/MiniChecker/` | The Lean that Charon and Aeneas write for that crate, stitched: the runtime once (`Runtime.lean`, 13,531 lines) and the generated functions (`Part0.lean`, 15,937 lines). Generated, never edited. |
-| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,150 lines. |
+| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 4,274 lines. |
 | `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
@@ -169,15 +169,21 @@ cheap so far.
   constructors that are plain data.
 - **`Store.new_spec`** (`New.lean`): the store `Store::new` builds has the
   invariant, so the invariant is not vacuous.
-- **Handles and logos's terms** (`Rep.lean`). `Rep nodes t x`: the handle
-  `t` stands for the CpcMini term `x`. A handle stands for at most one term
-  (`Rep.functional`), a term has at most one handle (`Rep.injective`, from
-  "no two handles have the same data"), and both survive the store growing
-  (`Rep.mono`). Both directions matter: the generated code chooses a case
-  by comparing handles, and `Store.Rep.eq_iff` says that is comparing
-  terms. `Rep` covers the stuck term, the operators, applications and
-  Booleans; numerals, strings, variables and datatypes are embedded the
-  same way and are not written out.
+- **Handles and logos's values** (`Tree.lean`, `Rep.lean`, milestone 32).
+  A handle unfolds to a tree (`Holds nodes t x`: its data, with the handles
+  in it unfolded). Every value of logos the checker computes with has the
+  tree it is stored as, `Embedded.enc`, generated for each datatype
+  (`MiniEmbed`), with `Embedded.emb` the values the store can hold.
+  `Rep nodes t x`, and `Represents.rep s t x` for a store: the handle
+  unfolds to the value's tree and the value is embeddable, for a value of
+  any type. A handle stands for at most one value (`Rep.functional`, from
+  `Holds.functional` and `dec_enc`), a value has at most one handle
+  (`Rep.injective`, from "no two handles have the same data"), and both
+  survive the store growing (`Rep.mono`). Both directions matter: the
+  generated code chooses a case by comparing handles, and
+  `Represents.eq_iff` says that is comparing values. (Until milestone 32
+  there was a relation per type, written out for the stuck term, the
+  operators, applications and Booleans only.)
 - **The cache of program results** (`Cache.lean`, `CacheOps.lean`). Its
   table's operations do not panic and keep it well formed; what `get`
   answers is the result of an entry with that program and those arguments;
@@ -451,11 +457,12 @@ then `a` stuck; both give the stuck term, and `requires_ite` (in
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 504 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop). |
-| `Runtime/Frame.lean` | 134 | `enter`, `leave`, the measure of the induction, a program around its body. |
-| `Runtime/Embed.lean` | 378 | The relations between handles and logos's proofs, states, state objects and native Booleans; that equal handles are equal values for each; `Valid`. |
-| `Runtime/Ops.lean` | 246 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
-| `Runtime/Ctors.lean` | 123 | `construct` and `destruct` for seven constructors. |
+| `Tactic.lean` | 488 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop). |
+| `Runtime/Frame.lean` | 132 | `enter`, `leave`, the measure of the induction, a program around its body. |
+| `Runtime/Embed.lean` | 119 | The stuck value of a type, `Valid`, and that a handle stands only for valid terms and proofs. |
+| `Runtime/Ops.lean` | 249 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
+| `Runtime/Node.lean` | 79 | `construct` and `destruct` of any data constructor, over trees. |
+| `Runtime/Ctors.lean` | 146 | `construct` and `destruct` for the seven constructors the proofs use so far, from `Node.lean` and the generated inversions. |
 
 No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,

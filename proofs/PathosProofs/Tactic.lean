@@ -39,38 +39,25 @@ open Aeneas Aeneas.Std Result
 store that the store has grown to (`hg`). -/
 syntax "carry_one " ident ppSpace term : tactic
 macro_rules
-  | `(tactic| carry_one $h $hg) => `(tactic| first
-    | replace $h:ident := Store.Rep.grows $h $hg
-    | replace $h:ident := RepProof.mono $h (Store.Grows.nodes $hg)
-    | replace $h:ident := RepState.mono $h (Store.Grows.nodes $hg)
-    | replace $h:ident := RepObj.mono $h (Store.Grows.nodes $hg)
-    | replace $h:ident := NativeBool.mono $h (Store.Grows.nodes $hg))
+  | `(tactic| carry_one $h $hg) => `(tactic| replace $h:ident := Represents.grows $h $hg)
 
 /-- `congr_one h hn`: the fact `h` about a handle, in a store with the
 same terms (`hn`). -/
 syntax "congr_one " ident ppSpace term : tactic
 macro_rules
-  | `(tactic| congr_one $h $hn) => `(tactic| first
-    | exact Store.Rep.congr $h $hn
-    | exact RepProof.congr $h $hn
-    | exact RepState.congr $h $hn
-    | exact RepObj.congr $h $hn
-    | exact NativeBool.congr $h $hn)
+  | `(tactic| congr_one $h $hn) => `(tactic| exact Represents.congr $h $hn)
 
 /-- Two handles are equal exactly when what they stand for is. -/
 syntax "rep_iff " term:max ppSpace term:max ppSpace term:max : tactic
 macro_rules
-  | `(tactic| rep_iff $hinv $ha $hb) => `(tactic| first
-    | exact Store.Rep.eq_iff $hinv $ha $hb
-    | exact RepState.eq_iff $hinv $ha $hb
-    | exact RepObj.eq_iff $hinv $ha $hb)
+  | `(tactic| rep_iff $hinv $ha $hb) => `(tactic| exact Represents.eq_iff $hinv $ha $hb)
 
 /-- A value that a handle stands for is one that a store can hold. -/
 syntax "valid_tac " ident ppSpace ident : tactic
 macro_rules
   | `(tactic| valid_tac $hinv $h) => `(tactic| first
     | exact Store.Rep.valid $hinv $h
-    | exact RepProof.valid $hinv $h
+    | exact Represents.valid_proof $hinv $h
     | trivial)
 
 /-- What is proved of a function, where the same is wanted with the
@@ -228,10 +215,7 @@ macro_rules
     `(tactic| (
       rw [Term.ne_eq]
       simp only [Std.bind_ok]
-      first
-        | have hiff := Store.Rep.eq_iff $hi $ha $hb
-        | have hiff := RepState.eq_iff $hi $ha $hb
-        | have hiff := RepObj.eq_iff $hi $ha $hb
+      have hiff := Represents.eq_iff $hi $ha $hb
       rcases Decidable.em ($a = $b) with hv | hv
       case inr => (
         rw [show decide ($a ≠ $b) = true from by simpa using hv]
@@ -283,7 +267,7 @@ macro_rules
     `(tactic| (
       rw [Term.ne_eq]
       simp only [Std.bind_ok]
-      have hiff := Store.Rep.eq_iff $hinv $ha $hb
+      have hiff := Represents.eq_iff $hinv $ha $hb
       rcases Decidable.em ($a = $b) with hv | hv
       case inr => (
         rw [show decide ($a ≠ $b) = true from by simpa using hv]

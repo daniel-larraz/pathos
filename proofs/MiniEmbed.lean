@@ -464,6 +464,26 @@ theorem dec_enc_Term : (x : Eo.Term) → emb_Term x → dec_Term (enc_Term x) = 
     simp [enc_Term, dec_Term, Tree.dec_encNat x0 h0, dec_enc_Term x1 h1]
 end
 
+instance : Embedded Eo.Datatype := ⟨enc_Datatype, dec_Datatype, emb_Datatype, dec_enc_Datatype⟩
+
+@[simp] theorem embedded_enc_Datatype (x : Eo.Datatype) : Embedded.enc x = enc_Datatype x := rfl
+@[simp] theorem embedded_emb_Datatype (x : Eo.Datatype) : Embedded.emb x = emb_Datatype x := rfl
+
+instance : Embedded Eo.DatatypeCons := ⟨enc_DatatypeCons, dec_DatatypeCons, emb_DatatypeCons, dec_enc_DatatypeCons⟩
+
+@[simp] theorem embedded_enc_DatatypeCons (x : Eo.DatatypeCons) : Embedded.enc x = enc_DatatypeCons x := rfl
+@[simp] theorem embedded_emb_DatatypeCons (x : Eo.DatatypeCons) : Embedded.emb x = emb_DatatypeCons x := rfl
+
+instance : Embedded Eo.DatatypeDecl := ⟨enc_DatatypeDecl, dec_DatatypeDecl, emb_DatatypeDecl, dec_enc_DatatypeDecl⟩
+
+@[simp] theorem embedded_enc_DatatypeDecl (x : Eo.DatatypeDecl) : Embedded.enc x = enc_DatatypeDecl x := rfl
+@[simp] theorem embedded_emb_DatatypeDecl (x : Eo.DatatypeDecl) : Embedded.emb x = emb_DatatypeDecl x := rfl
+
+instance : Embedded Eo.Term := ⟨enc_Term, dec_Term, emb_Term, dec_enc_Term⟩
+
+@[simp] theorem embedded_enc_Term (x : Eo.Term) : Embedded.enc x = enc_Term x := rfl
+@[simp] theorem embedded_emb_Term (x : Eo.Term) : Embedded.emb x = emb_Term x := rfl
+
 mutual
 /-- The tree of the store that a `CArgList` is stored as. -/
 def enc_CArgList : Eo.CArgList → Tree
@@ -509,6 +529,11 @@ theorem dec_enc_CArgList : (x : Eo.CArgList) → emb_CArgList x → dec_CArgList
     simp [enc_CArgList, dec_CArgList, dec_enc_Term x0 h0, dec_enc_CArgList x1 h1]
 end
 
+instance : Embedded Eo.CArgList := ⟨enc_CArgList, dec_CArgList, emb_CArgList, dec_enc_CArgList⟩
+
+@[simp] theorem embedded_enc_CArgList (x : Eo.CArgList) : Embedded.enc x = enc_CArgList x := rfl
+@[simp] theorem embedded_emb_CArgList (x : Eo.CArgList) : Embedded.emb x = emb_CArgList x := rfl
+
 mutual
 /-- The tree of the store that a `CIndexList` is stored as. -/
 def enc_CIndexList : Eo.CIndexList → Tree
@@ -553,6 +578,11 @@ theorem dec_enc_CIndexList : (x : Eo.CIndexList) → emb_CIndexList x → dec_CI
     obtain ⟨h0, h1⟩ := h
     simp [enc_CIndexList, dec_CIndexList, Tree.dec_encInt x0 h0, dec_enc_CIndexList x1 h1]
 end
+
+instance : Embedded Eo.CIndexList := ⟨enc_CIndexList, dec_CIndexList, emb_CIndexList, dec_enc_CIndexList⟩
+
+@[simp] theorem embedded_enc_CIndexList (x : Eo.CIndexList) : Embedded.enc x = enc_CIndexList x := rfl
+@[simp] theorem embedded_emb_CIndexList (x : Eo.CIndexList) : Embedded.emb x = emb_CIndexList x := rfl
 
 mutual
 /-- The tree of the store that a `CRule` is stored as. -/
@@ -623,6 +653,11 @@ theorem dec_enc_CRule : (x : Eo.CRule) → emb_CRule x → dec_CRule (enc_CRule 
   | Eo.CRule.trans, h => by
     simp [enc_CRule, dec_CRule]
 end
+
+instance : Embedded Eo.CRule := ⟨enc_CRule, dec_CRule, emb_CRule, dec_enc_CRule⟩
+
+@[simp] theorem embedded_enc_CRule (x : Eo.CRule) : Embedded.enc x = enc_CRule x := rfl
+@[simp] theorem embedded_emb_CRule (x : Eo.CRule) : Embedded.emb x = emb_CRule x := rfl
 
 mutual
 /-- The tree of the store that a `CCmd` is stored as. -/
@@ -704,6 +739,11 @@ theorem dec_enc_CCmd : (x : Eo.CCmd) → emb_CCmd x → dec_CCmd (enc_CCmd x) = 
     simp [enc_CCmd, dec_CCmd, dec_enc_CRule x0 h0, dec_enc_CArgList x1 h1, dec_enc_CIndexList x2 h2]
 end
 
+instance : Embedded Eo.CCmd := ⟨enc_CCmd, dec_CCmd, emb_CCmd, dec_enc_CCmd⟩
+
+@[simp] theorem embedded_enc_CCmd (x : Eo.CCmd) : Embedded.enc x = enc_CCmd x := rfl
+@[simp] theorem embedded_emb_CCmd (x : Eo.CCmd) : Embedded.emb x = emb_CCmd x := rfl
+
 mutual
 /-- The tree of the store that a `CCmdList` is stored as. -/
 def enc_CCmdList : Eo.CCmdList → Tree
@@ -748,6 +788,11 @@ theorem dec_enc_CCmdList : (x : Eo.CCmdList) → emb_CCmdList x → dec_CCmdList
     obtain ⟨h0, h1⟩ := h
     simp [enc_CCmdList, dec_CCmdList, dec_enc_CCmd x0 h0, dec_enc_CCmdList x1 h1]
 end
+
+instance : Embedded Eo.CCmdList := ⟨enc_CCmdList, dec_CCmdList, emb_CCmdList, dec_enc_CCmdList⟩
+
+@[simp] theorem embedded_enc_CCmdList (x : Eo.CCmdList) : Embedded.enc x = enc_CCmdList x := rfl
+@[simp] theorem embedded_emb_CCmdList (x : Eo.CCmdList) : Embedded.emb x = emb_CCmdList x := rfl
 
 mutual
 /-- The tree of the store that a `CStateObj` is stored as. -/
@@ -811,6 +856,11 @@ theorem dec_enc_CStateObj : (x : Eo.CStateObj) → emb_CStateObj x → dec_CStat
     simp [enc_CStateObj, dec_CStateObj, dec_enc_Term x0 h0]
 end
 
+instance : Embedded Eo.CStateObj := ⟨enc_CStateObj, dec_CStateObj, emb_CStateObj, dec_enc_CStateObj⟩
+
+@[simp] theorem embedded_enc_CStateObj (x : Eo.CStateObj) : Embedded.enc x = enc_CStateObj x := rfl
+@[simp] theorem embedded_emb_CStateObj (x : Eo.CStateObj) : Embedded.emb x = emb_CStateObj x := rfl
+
 mutual
 /-- The tree of the store that a `CState` is stored as. -/
 def enc_CState : Eo.CState → Tree
@@ -866,6 +916,11 @@ theorem dec_enc_CState : (x : Eo.CState) → emb_CState x → dec_CState (enc_CS
     simp [enc_CState, dec_CState, dec_enc_CStateObj x0 h0, dec_enc_CState x1 h1]
 end
 
+instance : Embedded Eo.CState := ⟨enc_CState, dec_CState, emb_CState, dec_enc_CState⟩
+
+@[simp] theorem embedded_enc_CState (x : Eo.CState) : Embedded.enc x = enc_CState x := rfl
+@[simp] theorem embedded_emb_CState (x : Eo.CState) : Embedded.emb x = emb_CState x := rfl
+
 mutual
 /-- The tree of the store that a `Proof` is stored as. -/
 def enc_Proof : Eo.Proof → Tree
@@ -907,6 +962,11 @@ theorem dec_enc_Proof : (x : Eo.Proof) → emb_Proof x → dec_Proof (enc_Proof 
   | Eo.Proof.Stuck, h => by
     simp [enc_Proof, dec_Proof]
 end
+
+instance : Embedded Eo.Proof := ⟨enc_Proof, dec_Proof, emb_Proof, dec_enc_Proof⟩
+
+@[simp] theorem embedded_enc_Proof (x : Eo.Proof) : Embedded.enc x = enc_Proof x := rfl
+@[simp] theorem embedded_emb_Proof (x : Eo.Proof) : Embedded.emb x = emb_Proof x := rfl
 
 mutual
 /-- The tree of the store that a `SmtDatatype` is stored as. -/
@@ -1218,6 +1278,26 @@ theorem dec_enc_SmtType : (x : Smtm.SmtType) → emb_SmtType x → dec_SmtType (
     simp [enc_SmtType, dec_SmtType, dec_enc_SmtType x0 h0, dec_enc_SmtType x1 h1]
 end
 
+instance : Embedded Smtm.SmtDatatype := ⟨enc_SmtDatatype, dec_SmtDatatype, emb_SmtDatatype, dec_enc_SmtDatatype⟩
+
+@[simp] theorem embedded_enc_SmtDatatype (x : Smtm.SmtDatatype) : Embedded.enc x = enc_SmtDatatype x := rfl
+@[simp] theorem embedded_emb_SmtDatatype (x : Smtm.SmtDatatype) : Embedded.emb x = emb_SmtDatatype x := rfl
+
+instance : Embedded Smtm.SmtDatatypeCons := ⟨enc_SmtDatatypeCons, dec_SmtDatatypeCons, emb_SmtDatatypeCons, dec_enc_SmtDatatypeCons⟩
+
+@[simp] theorem embedded_enc_SmtDatatypeCons (x : Smtm.SmtDatatypeCons) : Embedded.enc x = enc_SmtDatatypeCons x := rfl
+@[simp] theorem embedded_emb_SmtDatatypeCons (x : Smtm.SmtDatatypeCons) : Embedded.emb x = emb_SmtDatatypeCons x := rfl
+
+instance : Embedded Smtm.SmtDatatypeDecl := ⟨enc_SmtDatatypeDecl, dec_SmtDatatypeDecl, emb_SmtDatatypeDecl, dec_enc_SmtDatatypeDecl⟩
+
+@[simp] theorem embedded_enc_SmtDatatypeDecl (x : Smtm.SmtDatatypeDecl) : Embedded.enc x = enc_SmtDatatypeDecl x := rfl
+@[simp] theorem embedded_emb_SmtDatatypeDecl (x : Smtm.SmtDatatypeDecl) : Embedded.emb x = emb_SmtDatatypeDecl x := rfl
+
+instance : Embedded Smtm.SmtType := ⟨enc_SmtType, dec_SmtType, emb_SmtType, dec_enc_SmtType⟩
+
+@[simp] theorem embedded_enc_SmtType (x : Smtm.SmtType) : Embedded.enc x = enc_SmtType x := rfl
+@[simp] theorem embedded_emb_SmtType (x : Smtm.SmtType) : Embedded.emb x = emb_SmtType x := rfl
+
 mutual
 /-- The tree of the store that a `SmtTerm` is stored as. -/
 def enc_SmtTerm : Smtm.SmtTerm → Tree
@@ -1502,6 +1582,11 @@ theorem dec_enc_SmtTerm : (x : Smtm.SmtTerm) → emb_SmtTerm x → dec_SmtTerm (
     obtain ⟨h0, h1, h2⟩ := h
     simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, dec_enc_SmtTerm x2 h2]
 end
+
+instance : Embedded Smtm.SmtTerm := ⟨enc_SmtTerm, dec_SmtTerm, emb_SmtTerm, dec_enc_SmtTerm⟩
+
+@[simp] theorem embedded_enc_SmtTerm (x : Smtm.SmtTerm) : Embedded.enc x = enc_SmtTerm x := rfl
+@[simp] theorem embedded_emb_SmtTerm (x : Smtm.SmtTerm) : Embedded.emb x = emb_SmtTerm x := rfl
 
 
 end

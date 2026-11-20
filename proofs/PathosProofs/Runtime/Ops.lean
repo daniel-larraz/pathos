@@ -42,7 +42,10 @@ theorem Store.literal_boolean_spec (s : Store) (b : Bool) (hinv : s.Inv) (h64 : 
   refine ⟨hinv', hext.grows, ?_⟩
   cases r with
   | Err e => trivial
-  | Ok t => exact Rep.boolean t.val b hres.1 hres.2
+  | Ok t =>
+    refine ⟨?_, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+    simp only [Embed.embedded_enc_Term, Embed.enc_Term]
+    exact Holds.lit t.val _ hres.1 hres.2
 
 
 /-- `tick` counts a step of a loop: the terms are as they were. -/
@@ -60,7 +63,7 @@ theorem Store.native_bool_spec (s : Store) (b : Bool) (hinv : s.Inv) (h64 : Plat
     native.Store.native_bool s b ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => NativeBool s' t b
+      | core.result.Result.Ok t => Represents.rep s' t b
       | core.result.Result.Err _ => True ⦄div := by
   unfold native.Store.native_bool Store.raw
   apply WP.dspec_mono (Store.intern_inv s (TermData.Native (lit.Lit.Boolean b)) hinv trivial h64)
@@ -69,7 +72,7 @@ theorem Store.native_bool_spec (s : Store) (b : Bool) (hinv : s.Inv) (h64 : Plat
   refine ⟨hinv', hext.grows, ?_⟩
   cases r with
   | Err e => trivial
-  | Ok t => exact hres
+  | Ok t => exact ⟨Holds.native t.val _ hres.1 hres.2, trivial⟩
 
 theorem requires_ne (y t3 r : Eo.Term) (h : y ≠ t3) : Eo.__eo_requires y t3 r = Eo.Term.Stuck := by
   simp [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, h]

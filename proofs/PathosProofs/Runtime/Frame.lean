@@ -78,9 +78,7 @@ theorem Term.ne_eq (a b : Term) :
 
 /-- A store with the same terms stands for the same terms. -/
 theorem Store.Rep.congr {s s' : Store} {t : Term} {x : Eo.Term} (h : s.Rep t x)
-    (hn : s'.nodes = s.nodes) : s'.Rep t x := by
-  unfold Store.Rep at h ⊢
-  rw [hn]; exact h
+    (hn : s'.nodes = s.nodes) : s'.Rep t x := Represents.congr h hn
 
 /-- A generated program is `enter`, its body and `leave`: what holds of the
 body, on a store that can enter fewer calls, holds of the program. -/
