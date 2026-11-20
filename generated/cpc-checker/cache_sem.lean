@@ -263,6 +263,17 @@ theorem ProgramSem.p977.mono {nodes nodes' : List TermData} {args : List Term} {
   obtain ⟨a0, a1, x0, x1, hargs, h0, h1, hr⟩ := h
   exact ⟨a0, a1, x0, x1, hargs, Rep.mono hpre h0, Rep.mono hpre h1, Rep.mono hpre hr⟩
 
+/-- `$smtx_dt_num_sels`. -/
+def ProgramSem.p978 (nodes : List TermData) (args : List Term) (res : Term) : Prop :=
+  ∃ (a0 : Term) (a1 : Term) (x0 : _) (x1 : _), args = [a0, a1] ∧ Rep nodes a0.val x0 ∧ Rep nodes a1.val x1 ∧
+    Rep nodes res.val (__smtx_dt_num_sels x0 x1)
+
+theorem ProgramSem.p978.mono {nodes nodes' : List TermData} {args : List Term} {res : Term}
+    (hpre : nodes <+: nodes') (h : ProgramSem.p978 nodes args res) :
+    ProgramSem.p978 nodes' args res := by
+  obtain ⟨a0, a1, x0, x1, hargs, h0, h1, hr⟩ := h
+  exact ⟨a0, a1, x0, x1, hargs, Rep.mono hpre h0, Rep.mono hpre h1, Rep.mono hpre hr⟩
+
 /-- `$smtx_dt_resolve`. -/
 def ProgramSem.p979 (nodes : List TermData) (args : List Term) (res : Term) : Prop :=
   ∃ (a0 : Term) (a1 : Term) (x0 : _) (x1 : _), args = [a0, a1] ∧ Rep nodes a0.val x0 ∧ Rep nodes a1.val x1 ∧
@@ -284,6 +295,17 @@ theorem ProgramSem.p980.mono {nodes nodes' : List TermData} {args : List Term} {
     ProgramSem.p980 nodes' args res := by
   obtain ⟨a0, a1, x0, x1, hargs, h0, h1, hr⟩ := h
   exact ⟨a0, a1, x0, x1, hargs, Rep.mono hpre h0, Rep.mono hpre h1, Rep.mono hpre hr⟩
+
+/-- `$smtx_dtc_num_sels`. -/
+def ProgramSem.p981 (nodes : List TermData) (args : List Term) (res : Term) : Prop :=
+  ∃ (a0 : Term) (x0 : _), args = [a0] ∧ Rep nodes a0.val x0 ∧
+    Rep nodes res.val (__smtx_dtc_num_sels x0)
+
+theorem ProgramSem.p981.mono {nodes nodes' : List TermData} {args : List Term} {res : Term}
+    (hpre : nodes <+: nodes') (h : ProgramSem.p981 nodes args res) :
+    ProgramSem.p981 nodes' args res := by
+  obtain ⟨a0, x0, hargs, h0, hr⟩ := h
+  exact ⟨a0, x0, hargs, Rep.mono hpre h0, Rep.mono hpre hr⟩
 
 /-- `$smtx_dtc_resolve`. -/
 def ProgramSem.p982 (nodes : List TermData) (args : List Term) (res : Term) : Prop :=
@@ -398,8 +420,10 @@ def ProgramSem (nodes : List TermData) (pid : Nat) (args : List Term) (res : Ter
   (pid = 975 → ProgramSem.p975 nodes args res) ∧
   (pid = 976 → ProgramSem.p976 nodes args res) ∧
   (pid = 977 → ProgramSem.p977 nodes args res) ∧
+  (pid = 978 → ProgramSem.p978 nodes args res) ∧
   (pid = 979 → ProgramSem.p979 nodes args res) ∧
   (pid = 980 → ProgramSem.p980 nodes args res) ∧
+  (pid = 981 → ProgramSem.p981 nodes args res) ∧
   (pid = 982 → ProgramSem.p982 nodes args res) ∧
   (pid = 983 → ProgramSem.p983 nodes args res) ∧
   (pid = 985 → ProgramSem.p985 nodes args res) ∧
@@ -413,7 +437,7 @@ def ProgramSem (nodes : List TermData) (pid : Nat) (args : List Term) (res : Ter
 theorem ProgramSem.mono {nodes nodes' : List TermData} {pid : Nat} {args : List Term}
     {res : Term} (hpre : nodes <+: nodes') (h : ProgramSem nodes pid args res) :
     ProgramSem nodes' pid args res :=
-  ⟨fun e => ProgramSem.p68.mono hpre (h.1 e), fun e => ProgramSem.p75.mono hpre (h.2.1 e), fun e => ProgramSem.p81.mono hpre (h.2.2.1 e), fun e => ProgramSem.p84.mono hpre (h.2.2.2.1 e), fun e => ProgramSem.p810.mono hpre (h.2.2.2.2.1 e), fun e => ProgramSem.p811.mono hpre (h.2.2.2.2.2.1 e), fun e => ProgramSem.p879.mono hpre (h.2.2.2.2.2.2.1 e), fun e => ProgramSem.p889.mono hpre (h.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p900.mono hpre (h.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p902.mono hpre (h.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p912.mono hpre (h.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p920.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p924.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p929.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p937.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p971.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p972.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p973.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p974.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p975.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p976.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p977.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p979.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p980.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p982.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p983.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p985.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p986.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p988.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p1000.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p1073.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p1077.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), trivial⟩
+  ⟨fun e => ProgramSem.p68.mono hpre (h.1 e), fun e => ProgramSem.p75.mono hpre (h.2.1 e), fun e => ProgramSem.p81.mono hpre (h.2.2.1 e), fun e => ProgramSem.p84.mono hpre (h.2.2.2.1 e), fun e => ProgramSem.p810.mono hpre (h.2.2.2.2.1 e), fun e => ProgramSem.p811.mono hpre (h.2.2.2.2.2.1 e), fun e => ProgramSem.p879.mono hpre (h.2.2.2.2.2.2.1 e), fun e => ProgramSem.p889.mono hpre (h.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p900.mono hpre (h.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p902.mono hpre (h.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p912.mono hpre (h.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p920.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p924.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p929.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p937.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p971.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p972.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p973.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p974.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p975.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p976.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p977.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p978.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p979.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p980.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p981.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p982.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p983.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p985.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p986.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p988.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p1000.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p1073.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), fun e => ProgramSem.p1077.mono hpre (h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 e), trivial⟩
 
 theorem ProgramSem.of_68 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 68 args res) : ProgramSem.p68 nodes args res :=
@@ -422,7 +446,7 @@ theorem ProgramSem.of_68 {nodes : List TermData} {args : List Term} {res : Term}
 theorem ProgramSem.to_68 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p68 nodes args res) : ProgramSem nodes 68 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_75 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 75 args res) : ProgramSem.p75 nodes args res :=
@@ -431,7 +455,7 @@ theorem ProgramSem.of_75 {nodes : List TermData} {args : List Term} {res : Term}
 theorem ProgramSem.to_75 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p75 nodes args res) : ProgramSem nodes 75 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_81 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 81 args res) : ProgramSem.p81 nodes args res :=
@@ -440,7 +464,7 @@ theorem ProgramSem.of_81 {nodes : List TermData} {args : List Term} {res : Term}
 theorem ProgramSem.to_81 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p81 nodes args res) : ProgramSem nodes 81 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_84 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 84 args res) : ProgramSem.p84 nodes args res :=
@@ -449,7 +473,7 @@ theorem ProgramSem.of_84 {nodes : List TermData} {args : List Term} {res : Term}
 theorem ProgramSem.to_84 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p84 nodes args res) : ProgramSem nodes 84 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_810 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 810 args res) : ProgramSem.p810 nodes args res :=
@@ -458,7 +482,7 @@ theorem ProgramSem.of_810 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_810 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p810 nodes args res) : ProgramSem nodes 810 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_811 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 811 args res) : ProgramSem.p811 nodes args res :=
@@ -467,7 +491,7 @@ theorem ProgramSem.of_811 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_811 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p811 nodes args res) : ProgramSem nodes 811 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_879 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 879 args res) : ProgramSem.p879 nodes args res :=
@@ -476,7 +500,7 @@ theorem ProgramSem.of_879 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_879 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p879 nodes args res) : ProgramSem nodes 879 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_889 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 889 args res) : ProgramSem.p889 nodes args res :=
@@ -485,7 +509,7 @@ theorem ProgramSem.of_889 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_889 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p889 nodes args res) : ProgramSem nodes 889 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_900 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 900 args res) : ProgramSem.p900 nodes args res :=
@@ -494,7 +518,7 @@ theorem ProgramSem.of_900 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_900 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p900 nodes args res) : ProgramSem nodes 900 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_902 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 902 args res) : ProgramSem.p902 nodes args res :=
@@ -503,7 +527,7 @@ theorem ProgramSem.of_902 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_902 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p902 nodes args res) : ProgramSem nodes 902 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_912 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 912 args res) : ProgramSem.p912 nodes args res :=
@@ -512,7 +536,7 @@ theorem ProgramSem.of_912 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_912 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p912 nodes args res) : ProgramSem nodes 912 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_920 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 920 args res) : ProgramSem.p920 nodes args res :=
@@ -521,7 +545,7 @@ theorem ProgramSem.of_920 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_920 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p920 nodes args res) : ProgramSem nodes 920 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_924 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 924 args res) : ProgramSem.p924 nodes args res :=
@@ -530,7 +554,7 @@ theorem ProgramSem.of_924 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_924 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p924 nodes args res) : ProgramSem nodes 924 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_929 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 929 args res) : ProgramSem.p929 nodes args res :=
@@ -539,7 +563,7 @@ theorem ProgramSem.of_929 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_929 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p929 nodes args res) : ProgramSem nodes 929 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_937 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 937 args res) : ProgramSem.p937 nodes args res :=
@@ -548,7 +572,7 @@ theorem ProgramSem.of_937 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_937 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p937 nodes args res) : ProgramSem nodes 937 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_971 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 971 args res) : ProgramSem.p971 nodes args res :=
@@ -557,7 +581,7 @@ theorem ProgramSem.of_971 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_971 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p971 nodes args res) : ProgramSem nodes 971 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_972 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 972 args res) : ProgramSem.p972 nodes args res :=
@@ -566,7 +590,7 @@ theorem ProgramSem.of_972 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_972 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p972 nodes args res) : ProgramSem nodes 972 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_973 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 973 args res) : ProgramSem.p973 nodes args res :=
@@ -575,7 +599,7 @@ theorem ProgramSem.of_973 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_973 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p973 nodes args res) : ProgramSem nodes 973 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_974 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 974 args res) : ProgramSem.p974 nodes args res :=
@@ -584,7 +608,7 @@ theorem ProgramSem.of_974 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_974 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p974 nodes args res) : ProgramSem nodes 974 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_975 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 975 args res) : ProgramSem.p975 nodes args res :=
@@ -593,7 +617,7 @@ theorem ProgramSem.of_975 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_975 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p975 nodes args res) : ProgramSem nodes 975 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_976 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 976 args res) : ProgramSem.p976 nodes args res :=
@@ -602,7 +626,7 @@ theorem ProgramSem.of_976 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_976 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p976 nodes args res) : ProgramSem nodes 976 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_977 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 977 args res) : ProgramSem.p977 nodes args res :=
@@ -611,96 +635,114 @@ theorem ProgramSem.of_977 {nodes : List TermData} {args : List Term} {res : Term
 theorem ProgramSem.to_977 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p977 nodes args res) : ProgramSem nodes 977 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+
+theorem ProgramSem.of_978 {nodes : List TermData} {args : List Term} {res : Term}
+    (h : ProgramSem nodes 978 args res) : ProgramSem.p978 nodes args res :=
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+
+theorem ProgramSem.to_978 {nodes : List TermData} {args : List Term} {res : Term}
+    (h : ProgramSem.p978 nodes args res) : ProgramSem nodes 978 args res := by
+  unfold ProgramSem
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_979 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 979 args res) : ProgramSem.p979 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_979 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p979 nodes args res) : ProgramSem nodes 979 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_980 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 980 args res) : ProgramSem.p980 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_980 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p980 nodes args res) : ProgramSem nodes 980 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+
+theorem ProgramSem.of_981 {nodes : List TermData} {args : List Term} {res : Term}
+    (h : ProgramSem nodes 981 args res) : ProgramSem.p981 nodes args res :=
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+
+theorem ProgramSem.to_981 {nodes : List TermData} {args : List Term} {res : Term}
+    (h : ProgramSem.p981 nodes args res) : ProgramSem nodes 981 args res := by
+  unfold ProgramSem
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_982 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 982 args res) : ProgramSem.p982 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_982 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p982 nodes args res) : ProgramSem nodes 982 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_983 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 983 args res) : ProgramSem.p983 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_983 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p983 nodes args res) : ProgramSem nodes 983 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_985 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 985 args res) : ProgramSem.p985 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_985 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p985 nodes args res) : ProgramSem nodes 985 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_986 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 986 args res) : ProgramSem.p986 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_986 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p986 nodes args res) : ProgramSem nodes 986 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_988 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 988 args res) : ProgramSem.p988 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_988 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p988 nodes args res) : ProgramSem nodes 988 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_1000 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 1000 args res) : ProgramSem.p1000 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_1000 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p1000 nodes args res) : ProgramSem nodes 1000 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_1073 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 1073 args res) : ProgramSem.p1073 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_1073 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p1073 nodes args res) : ProgramSem nodes 1073 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 theorem ProgramSem.of_1077 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem nodes 1077 args res) : ProgramSem.p1077 nodes args res :=
-  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
+  h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 rfl
 
 theorem ProgramSem.to_1077 {nodes : List TermData} {args : List Term} {res : Term}
     (h : ProgramSem.p1077 nodes args res) : ProgramSem nodes 1077 args res := by
   unfold ProgramSem
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by decide)
 
 end pathos_compiled_checker

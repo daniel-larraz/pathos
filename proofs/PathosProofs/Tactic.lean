@@ -13,6 +13,7 @@ public import PathosProofs.Runtime.Strings
 public import PathosProofs.Runtime.Literals
 public import PathosProofs.Runtime.Nats
 public import PathosProofs.Runtime.Numbers
+public import PathosProofs.Runtime.IntNatives
 
 /-!
 # The tactics of the generated proofs

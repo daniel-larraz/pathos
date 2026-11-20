@@ -45,7 +45,7 @@ $eo_to_smt_datatype	none	it calls $eo_to_smt_datatype_cons, which has no proof
 $eo_to_smt_datatype_cons	none	it calls $eo_to_smt_type, which has no proof
 $eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
 $eo_to_smt_reserved_datatype_name	none	case 0 has the native operation "@"
-$eo_to_smt_type	none	case 8 has the native operation zleq
+$eo_to_smt_type	none	it calls $eo_to_smt_reserved_datatype_name, which has no proof
 $eo_typeof	none	case 3 has the constructor $emb_String in a pattern, which is not stored as a node
 $eo_typeof_=	generated	
 $eo_typeof_BitVec	generated	
@@ -74,7 +74,7 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	case 4 has the native operation zleq
+$smtx_typeof	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_dt_cons_rec	generated	

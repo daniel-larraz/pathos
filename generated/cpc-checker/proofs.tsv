@@ -745,10 +745,10 @@ $eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
 $eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_distinct_pairs	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_exists	none	case 1 has the constructor $emb_String in a pattern, which is not stored as a node
-$eo_to_smt_nat	none	case 0 has the native operation int.to_nat
-$eo_to_smt_nat_is_valid	none	case 0 has the native operation zleq
+$eo_to_smt_nat	generated	
+$eo_to_smt_nat_is_valid	generated	
 $eo_to_smt_quantifiers_skolemize	none	case 0 has the constructor $emb_String in a pattern, which is not stored as a node
-$eo_to_smt_re_unfold_pos_component	none	case 0 has the native operation 0
+$eo_to_smt_re_unfold_pos_component	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_reserved_datatype_name	none	case 0 has the native operation "@"
 $eo_to_smt_seq.empty	generated	
 $eo_to_smt_set.empty	generated	
@@ -761,7 +761,7 @@ $eo_to_smt_tuple_prepend_of_type	none	case 0 has the native operation "@Tuple"
 $eo_to_smt_tuple_prepend_rec	none	case 1 has the native operation "@Tuple"
 $eo_to_smt_tuple_select	none	case 0 has the native operation "@Tuple"
 $eo_to_smt_tuple_update	none	case 0 has the native operation "@Tuple"
-$eo_to_smt_type	none	case 8 has the native operation zleq
+$eo_to_smt_type	none	case 13 has the native operation "@Tuple"
 $eo_to_smt_type_tuple	none	case 0 has the native operation "@Tuple"
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_updater	none	case 0 has the native operation zlt
@@ -977,10 +977,10 @@ $smtx_decl_wf_rec	generated
 $smtx_dt_cons_inhabited	generated	
 $smtx_dt_cons_wf_rec	generated	
 $smtx_dt_inhabited	generated	
-$smtx_dt_num_sels	none	it calls $smtx_dtc_num_sels, which has no proof
+$smtx_dt_num_sels	generated	
 $smtx_dt_resolve	generated	
 $smtx_dt_wf_rec	generated	
-$smtx_dtc_num_sels	none	case 0 has the native operation nat.succ
+$smtx_dtc_num_sels	generated	
 $smtx_dtc_resolve	generated	
 $smtx_inhabited_type	generated	
 $smtx_ret_typeof_sel	generated	
@@ -988,7 +988,7 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	case 4 has the native operation zleq
+$smtx_typeof	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_arith_overload_op_1	generated	
@@ -998,19 +998,19 @@ $smtx_typeof_bv_op_1	generated
 $smtx_typeof_bv_op_1_ret	generated	
 $smtx_typeof_bv_op_2	none	case 0 has the native operation nateq
 $smtx_typeof_bv_op_2_ret	none	case 0 has the native operation nateq
-$smtx_typeof_concat	none	case 0 has the native operation int.to_nat
+$smtx_typeof_concat	none	case 0 has the native operation zplus
 $smtx_typeof_dt_cons_rec	generated	
-$smtx_typeof_extract	none	case 0 has the native operation zleq
+$smtx_typeof_extract	none	case 0 has the native operation zlt
 $smtx_typeof_guard	generated	
 $smtx_typeof_guard_wf	generated	
-$smtx_typeof_int_to_bv	none	case 0 has the native operation zleq
+$smtx_typeof_int_to_bv	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $smtx_typeof_ite	generated	
 $smtx_typeof_map_diff	generated	
-$smtx_typeof_re.^	none	case 0 has the native operation zleq
-$smtx_typeof_re.loop	none	case 0 has the native operation zleq
-$smtx_typeof_repeat	none	case 0 has the native operation zleq
-$smtx_typeof_rotate_left	none	case 0 has the native operation zleq
-$smtx_typeof_rotate_right	none	case 0 has the native operation zleq
+$smtx_typeof_re.^	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_re.loop	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_repeat	none	case 0 has the native operation zmult
+$smtx_typeof_rotate_left	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_rotate_right	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $smtx_typeof_select	generated	
 $smtx_typeof_seq.nth	generated	
 $smtx_typeof_seq_diff	generated	
@@ -1022,13 +1022,13 @@ $smtx_typeof_seq_op_3	generated
 $smtx_typeof_set.member	generated	
 $smtx_typeof_sets_op_2	generated	
 $smtx_typeof_sets_op_2_ret	generated	
-$smtx_typeof_sign_extend	none	case 0 has the native operation zleq
+$smtx_typeof_sign_extend	none	case 0 has the native operation zplus
 $smtx_typeof_store	generated	
 $smtx_typeof_str.at	generated	
 $smtx_typeof_str.indexof	generated	
 $smtx_typeof_str.substr	generated	
 $smtx_typeof_str.update	generated	
-$smtx_typeof_zero_extend	none	case 0 has the native operation zleq
+$smtx_typeof_zero_extend	none	case 0 has the native operation zplus
 $str_arith_entail_is_approx	none	case 2 has a literal that is not a Boolean
 $str_arith_entail_is_approx_len	none	case 0 has a builtin operator
 $str_arith_entail_simple_pred	none	case 1 has a literal that is not a Boolean
