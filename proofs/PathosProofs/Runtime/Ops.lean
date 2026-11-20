@@ -48,15 +48,23 @@ theorem Store.literal_boolean_spec (s : Store) (b : Bool) (hinv : s.Inv) (h64 : 
     exact Holds.lit t.val _ hres.1 hres.2
 
 
-/-- `tick` counts a step of a loop: the terms are as they were. -/
+/-- `tick` counts a step of a loop: the terms are as they were, and a
+successful tick uses up some of the budget of calls (`Store.budget`). -/
 theorem Store.tick_spec (s : Store) :
     Store.tick s ⦃ r s' =>
       s'.nodes = s.nodes ∧ s'.hashes = s.hashes ∧ s'.slots = s.slots ∧
-      s'.caches = s.caches ∧ s'.limits = s.limits ∧ s'.depth = s.depth ⦄ := by
+      s'.caches = s.caches ∧ s'.limits = s.limits ∧ s'.depth = s.depth ∧
+      s'.budget ≤ s.budget ∧
+      match r with
+      | core.result.Result.Ok _ => s'.budget < s.budget
+      | core.result.Result.Err _ => True ⦄ := by
   unfold Store.tick
   split
   · simp
   · step*
+    simp only [Store.budget]
+    have : s.calls.val < s.limits.calls.val := by scalar_tac
+    omega
 
 /-- `native_bool` gives a handle of the native Boolean. -/
 theorem Store.native_bool_spec (s : Store) (b : Bool) (hinv : s.Inv) (h64 : Platform64) :
@@ -238,12 +246,12 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
       match r with
       | core.result.Result.Ok a => post s' a
       | core.result.Result.Err _ => True ⦄div := by
-  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hl, hd⟩
+  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hl, hb, hd⟩
   have hinv1 : s1.Inv := hinv.congr hn hh hs hc
   cases r with
   | Err e =>
     simp only [WP.dspec_ok, WP.uncurry'_pair] at hd ⊢
-    exact ⟨hinv1, ⟨by rw [hn], hl, hd⟩, trivial⟩
+    exact ⟨hinv1, ⟨by rw [hn], hl, hd, hb⟩, trivial⟩
   | Ok u =>
     simp only at hd ⊢
     obtain ⟨hd, hlim⟩ := hd
@@ -261,9 +269,10 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
     | Err error =>
       clear hr1
       dsimp only
-      step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4⟩
+      step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
       simp only [WP.dspec_ok, WP.uncurry'_pair]
-      refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_⟩, trivial⟩
+      refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+          by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩, trivial⟩
       exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
     | Ok o =>
       cases o with
@@ -279,9 +288,10 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
           rw [hep, hea, hsl, her] at this
           rw [hn3]; exact this
         have hval : post s3 value := hget s3 value hn3' hsem
-        step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4⟩
+        step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
         simp only [WP.dspec_ok, WP.uncurry'_pair]
-        refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_⟩,
+        refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+          by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩,
           hpost s3 s4 value hn4 hval⟩
         exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
       | none =>
@@ -289,7 +299,9 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
         simp only
         step with hbody s3 (n - 1) hinv3 hn3' hn0 hrem3 as ⟨result, s4, hinv4, hg4, hres⟩
         have hd4 : 0 < s4.depth.val := by rw [hg4.depth]; exact hd3
-        step with Store.leave_spec s4 hd4 as ⟨s5, hn5, hh5, hs5, hc5, hl5, hd5⟩
+        step with Store.leave_spec s4 hd4 as ⟨s5, hn5, hh5, hs5, hc5, hl5, hd5, hk5⟩
+        have hb5 : s5.budget ≤ s.budget := by
+          rw [Store.budget_congr hl5 hk5]; exact le_trans hg4.budget (le_trans hg3.budget hb)
         have hinv5 : s5.Inv := hinv4.congr hn5 hh5 hs5 hc5
         have hnodes5 : s.nodes.val <+: s5.nodes.val := by
           rw [hn5, ← hn3']; exact hg4.nodes
@@ -299,7 +311,7 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
         cases result with
         | Err e =>
           simp only [WP.dspec_ok, WP.uncurry'_pair]
-          exact ⟨hinv5, ⟨hnodes5, hl5', hd5'⟩, trivial⟩
+          exact ⟨hinv5, ⟨hnodes5, hl5', hd5', hb5⟩, trivial⟩
         | Ok value =>
           simp only at hres ⊢
           have hval5 : post s5 value := hpost s4 s5 value hn5 hres
@@ -315,10 +327,10 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
           | Err e =>
             simp only [WP.dspec_ok, WP.uncurry'_pair]
             exact ⟨hinv7, ⟨hnodes5.trans hg7.nodes, by rw [hg7.limits, hl5'],
-              by rw [hg7.depth, hd5']⟩, trivial⟩
+              by rw [hg7.depth, hd5'], le_trans hg7.budget hb5⟩, trivial⟩
           | Ok u2 =>
             simp only [WP.dspec_ok, WP.uncurry'_pair]
             exact ⟨hinv7, ⟨hnodes5.trans hg7.nodes, by rw [hg7.limits, hl5'],
-              by rw [hg7.depth, hd5']⟩, hpost s5 s7 value hn7 hval5⟩
+              by rw [hg7.depth, hd5'], le_trans hg7.budget hb5⟩, hpost s5 s7 value hn7 hval5⟩
 
 end pathos_compiled_checker

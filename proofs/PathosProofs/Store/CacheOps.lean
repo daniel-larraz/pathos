@@ -98,7 +98,7 @@ theorem Store.cached_program_spec (s : Store) (hinv : s.Inv) (program : cache.Pr
         exact ⟨hinv, Store.Grows.refl s⟩
     · step with cache.Caches.program_get_spec s.caches hinv.cache.wf as ⟨o, c, hct, hcp, hres⟩
       simp only [WP.dspec_ok, WP.uncurry'_pair]
-      refine ⟨hinv.congr' rfl rfl rfl hct hcp, ⟨List.prefix_refl _, rfl, rfl⟩, trivial, ?_⟩
+      refine ⟨hinv.congr' rfl rfl rfl hct hcp, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial, ?_⟩
       cases o with
       | none => trivial
       | some v => exact hres v rfl
@@ -135,7 +135,7 @@ theorem Store.cache_program_spec (s : Store) (hinv : s.Inv) (program : cache.Pro
       · simp only [hv, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
         step with cache.Caches.program_insert_spec s.caches hinv.cache.wf as ⟨c, hct, hadds⟩
         simp only [WP.dspec_ok, WP.uncurry'_pair]
-        refine ⟨hinv.with_cache rfl rfl rfl hct ?_, ⟨List.prefix_refl _, rfl, rfl⟩, trivial⟩
+        refine ⟨hinv.with_cache rfl rfl rfl hct ?_, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial⟩
         obtain ⟨hwf', _, hent⟩ := hadds
         refine ⟨hwf', ?_⟩
         intro e he

@@ -1651,7 +1651,7 @@ theorem step_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : S
       match r with
       | core.result.Result.Ok (Next.Done t) => Represents.rep s' t (__eo_state_is_closed x_a0)
       | core.result.Result.Ok (Next.Again arr) =>
-        ∃ (u0 : Term) (y0 : _), arr.val = [u0] ∧ Represents.rep s' u0 y0 ∧
+        s'.budget < s.budget ∧ ∃ (u0 : Term) (y0 : _), arr.val = [u0] ∧ Represents.rep s' u0 y0 ∧
           __eo_state_is_closed x_a0 = __eo_state_is_closed y0
       | core.result.Result.Err _ => True ⦄div := by
   rw [eo__24eo_5fstate_5fis_5fclosed.rust_eq x_a0 (by valid_tac hinv h_a0)]
@@ -1659,13 +1659,13 @@ theorem step_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : S
   have hG := Store.Grows.refl s
   tick_step as ⟨s1, hinv1⟩ growing hG carrying h_a0
   round_step with case_0_eo__24eo_5fstate_5fis_5fclosed_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
-    as ⟨s2, hinv2, hc0⟩ growing hG carrying h_a0 using
+    as ⟨s2, hinv2, hc0⟩ growing hG carrying h_a0 hbud using
   round_step with case_1_eo__24eo_5fstate_5fis_5fclosed_spec n ih s2 a0 x_a0 hinv2 h64 (hG.rem hrem) h_a0
-    as ⟨s3, hinv3, hc1⟩ growing hG carrying h_a0 using hc0
+    as ⟨s3, hinv3, hc1⟩ growing hG carrying h_a0 hbud using hc0
   round_step with case_2_eo__24eo_5fstate_5fis_5fclosed_spec n ih s3 a0 x_a0 hinv3 h64 (hG.rem hrem) h_a0
-    as ⟨s4, hinv4, hc2⟩ growing hG carrying h_a0 using hc0 hc1
+    as ⟨s4, hinv4, hc2⟩ growing hG carrying h_a0 hbud using hc0 hc1
   round_step with case_3_eo__24eo_5fstate_5fis_5fclosed_spec n ih s4 a0 x_a0 hinv4 h64 (hG.rem hrem) h_a0
-    as ⟨s5, hinv5, hc3⟩ growing hG carrying h_a0 using hc0 hc1 hc2
+    as ⟨s5, hinv5, hc3⟩ growing hG carrying h_a0 hbud using hc0 hc1 hc2
   round_stuck hinv5 hG using hc0 hc1 hc2 hc3 in EoCases.__eo_state_is_closed.case_0 EoCases.__eo_state_is_closed.case_1 EoCases.__eo_state_is_closed.case_2 EoCases.__eo_state_is_closed.case_3 splitting x_a0
 
 theorem body_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -1675,38 +1675,32 @@ theorem body_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : S
       | core.result.Result.Ok t => Represents.rep s' t (__eo_state_is_closed x_a0)
       | core.result.Result.Err _ => True ⦄div := by
   unfold body_eo__24eo_5fstate_5fis_5fclosed
-  refine (?_ : ∀ (a0 : Term) (s : Store) (x_a0 : _), s.Inv → s.remaining ≤ n →
+  refine (?_ : ∀ (k : Nat) (a0 : Term) (s : Store) (x_a0 : _), s.budget ≤ k → s.Inv → s.remaining ≤ n →
       Represents.rep s a0 x_a0 →
       body_eo__24eo_5fstate_5fis_5fclosed_loop a0 s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_state_is_closed x_a0)
-      | core.result.Result.Err _ => True ⦄div) a0 s x_a0 hinv hrem h_a0
-  apply body_eo__24eo_5fstate_5fis_5fclosed_loop.fixpoint_induct
-    (motive := fun f => ∀ (a0 : Term) (s : Store) (x_a0 : _), s.Inv → s.remaining ≤ n →
-      Represents.rep s a0 x_a0 →
-      f a0 s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_state_is_closed x_a0)
-      | core.result.Result.Err _ => True ⦄div)
-  · prove_adm
-  · intro loop ihl a0 s x_a0 hinv hrem h_a0
-    simp only
-    step with step_eo__24eo_5fstate_5fis_5fclosed_spec n ih s a0 x_a0 hinv h64 hrem h_a0 as ⟨r, s1, hinv1, hg1, hr⟩
-    cases r with
-    | Err e => simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨hinv1, hg1, trivial⟩
-    | Ok nx =>
-      cases nx with
-      | Done value =>
-        simp only [WP.dspec_ok, WP.uncurry'_pair]
-        exact ⟨hinv1, hg1, hr⟩
-      | Again next =>
-        obtain ⟨u0, y0, hnext, hrep0, heq⟩ := hr
-        simp only
-        have hlen : next.length = 1 := by simp [Array.length, hnext]
-        step as ⟨b0, hb0⟩
-        obtain rfl : b0 = u0 := by simp [hb0, hnext]
-        apply WP.dspec_mono (ihl b0 s1 y0 hinv1 (hg1.rem hrem)  hrep0)
-        loop_close hg1 heq
+      | core.result.Result.Err _ => True ⦄div) s.budget a0 s x_a0 le_rfl hinv hrem h_a0
+  intro k
+  refine Nat.strong_induction_on k ?_
+  intro k ihl a0 s x_a0 hk hinv hrem h_a0
+  unfold body_eo__24eo_5fstate_5fis_5fclosed_loop
+  step with step_eo__24eo_5fstate_5fis_5fclosed_spec n ih s a0 x_a0 hinv h64 hrem h_a0 as ⟨r, s1, hinv1, hg1, hr⟩
+  cases r with
+  | Err e => simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨hinv1, hg1, trivial⟩
+  | Ok nx =>
+    cases nx with
+    | Done value =>
+      simp only [WP.dspec_ok, WP.uncurry'_pair]
+      exact ⟨hinv1, hg1, hr⟩
+    | Again next =>
+      obtain ⟨hlt, u0, y0, hnext, hrep0, heq⟩ := hr
+      simp only
+      have hlen : next.length = 1 := by simp [Array.length, hnext]
+      step as ⟨b0, hb0⟩
+      obtain rfl : b0 = u0 := by simp [hb0, hnext]
+      apply WP.dspec_mono (ihl s1.budget (by omega) b0 s1 y0 le_rfl hinv1 (hg1.rem hrem)  hrep0)
+      loop_close hg1 heq
 
 theorem eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fstate_5fis_5fclosed.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0

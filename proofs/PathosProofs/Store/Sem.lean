@@ -24,21 +24,32 @@ namespace pathos_compiled_checker
 
 open Aeneas Aeneas.Std Result
 
+/-- The calls that a store can still make: what `enter` and `tick` count
+against its limit. Every round of a loop ticks, so a loop's rounds use it
+up (the measure of the induction over a loop). -/
+def Store.budget (s : Store) : Nat := s.limits.calls.val - s.calls.val
+
 /-- The store `s'` has the terms of `s` under the same handles, the same
-limits and the same depth of calls. -/
+limits and the same depth of calls, and no more calls left to make. -/
 structure Store.Grows (s s' : Store) : Prop where
   nodes : s.nodes.val <+: s'.nodes.val
   limits : s'.limits = s.limits
   depth : s'.depth = s.depth
+  budget : s'.budget ≤ s.budget
 
-theorem Store.Grows.refl (s : Store) : s.Grows s := ⟨List.prefix_refl _, rfl, rfl⟩
+theorem Store.budget_congr {s s' : Store} (hl : s'.limits = s.limits) (hc : s'.calls = s.calls) :
+    s'.budget = s.budget := by
+  unfold Store.budget; rw [hl, hc]
+
+theorem Store.Grows.refl (s : Store) : s.Grows s := ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩
 
 theorem Store.Grows.trans {s s' s'' : Store} (h : s.Grows s') (h' : s'.Grows s'') :
     s.Grows s'' :=
-  ⟨h.nodes.trans h'.nodes, by rw [h'.limits, h.limits], by rw [h'.depth, h.depth]⟩
+  ⟨h.nodes.trans h'.nodes, by rw [h'.limits, h.limits], by rw [h'.depth, h.depth],
+    le_trans h'.budget h.budget⟩
 
 theorem Store.Extends.grows {s s' : Store} (h : s.Extends s') : s.Grows s' :=
-  ⟨h.1, h.2.1, h.2.2.2.1⟩
+  ⟨h.1, h.2.1, h.2.2.2.1, by unfold Store.budget; rw [h.2.1, h.2.2.1]⟩
 
 theorem Store.Extends.programs {s s' : Store} (h : s.Extends s') :
     s'.caches.programs = s.caches.programs := h.2.2.2.2.2

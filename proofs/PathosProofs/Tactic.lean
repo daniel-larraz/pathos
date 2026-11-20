@@ -42,7 +42,9 @@ open Aeneas Aeneas.Std Result
 store that the store has grown to (`hg`). -/
 syntax "carry_one " ident ppSpace term : tactic
 macro_rules
-  | `(tactic| carry_one $h $hg) => `(tactic| replace $h:ident := Represents.grows $h $hg)
+  | `(tactic| carry_one $h $hg) => `(tactic| first
+    | replace $h:ident := Represents.grows $h $hg
+    | replace $h:ident := lt_of_le_of_lt (Store.Grows.budget $hg) $h)
 
 /-- `congr_one h hn`: the fact `h` about a handle, in a store with the
 same terms (`hn`). -/
@@ -603,16 +605,17 @@ macro_rules
       ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
     let r := Lean.mkIdent `r
     let hg := Lean.mkIdent `hg
+    let hbud := Lean.mkIdent `hbud
     `(tactic| (
-      step with Store.tick_spec as ⟨$(b r), $(b s'), hn, hh, hs, hc, hl, hd⟩
+      step with Store.tick_spec as ⟨$(b r), $(b s'), hn, hh, hs, hc, hl, hd, hb, $(b hbud)⟩
       have $hinv : Store.Inv $s' := Store.Inv.congr (by assumption) hn hh hs hc
-      have $hg : Store.Grows _ $s' := ⟨by rw [hn], hl, hd⟩
+      have $hg : Store.Grows _ $s' := ⟨by rw [hn], hl, hd, hb⟩
       transport $hg at $hs*
       replace $hG:ident := Store.Grows.trans $hG $hg
-      clear $hg hn hh hs hc hl hd
+      clear $hg hn hh hs hc hl hd hb
       cases $r:ident
       case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
-      simp only))
+      simp only at $hbud:ident ⊢))
 
 /-- `case_step` in a round of a loop: a case that answers either ends the
 loop with a result or names the arguments of the next round, on which the
@@ -648,7 +651,7 @@ macro_rules
           simpa [hres, $[$facts:ident],*] using hrep)
         case Again => (
           simp only [WP.dspec_ok, WP.uncurry'_pair] at $hc:ident ⊢
-          refine ⟨$hinv, $hG, ?_⟩
+          refine ⟨$hinv, $hG, by assumption, ?_⟩
           peel_last $hc then simp [$hlast:ident, $[$facts:ident],*]))
       simp only at $hc:ident ⊢))
 

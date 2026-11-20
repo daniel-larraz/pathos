@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 3,519 theorems, are **11**:
+  This is the trust. In use today, by 3,528 theorems, are **11**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice), and 8 of
   `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ (`ofInt_toInt`,
@@ -416,7 +416,7 @@ change under them.
 36 of CpcMini's 82 programs have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (2,965 lines) elaborates in 5
+proof for yet. `proofs/MiniProofs.lean` (2,959 lines) elaborates in 5
 seconds (1.9 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
@@ -433,7 +433,7 @@ seconds (1.9 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
   that the Rust function answers `Some` of a handle of what the case's
   function answers, or `None` where it answers `none`. For the body: that
   it gives logos's function, through the lemma below. For a tail-call
-  loop: a round of it, and the induction over the loop that Aeneas writes.
+  loop: a round of it, and an induction over the rounds (below).
   For the program: the body between `enter` and `leave`, with its cache.
 - *Lemma C*, per program: logos's function is the tests for the stuck term
   followed by the first case that answers (`<program>.rust_eq`). It is
@@ -451,7 +451,23 @@ all smaller numbers; `specs` closes all programs together by one induction
 on `n`. So programs that call each other need no induction of their own,
 and the generator does not need to know which do. (Where `enter` refuses, at the limit, the program returns an error, of which the theorems say nothing: they are about runs that return, and an error is a return with nothing claimed.) (The pilot's proof of
 `$mk_trans` was an induction over its four functions with a statement for
-each.) Loops are not calls: each has the induction over its loop function.
+each.)
+
+**Loops.** Loops are not calls, so `Specs n` does not cover them: each
+loop has an induction of its own, on the budget of calls
+(`Store.budget`: the limit of `calls` less the calls made, which `enter`
+and `tick` count). Every round begins with `tick`, which fails at the
+limit and otherwise uses up one call; no function raises the budget
+again (it is a field of `Store.Grows`, which every operation's theorem
+gives). So the round's theorem says, where the loop goes round again, that
+the budget went down, and the loop's theorem is a strong induction on it
+over the loop's unfolding equation. (The induction that Lean gives a
+`partial_fixpoint` does not do: where a loop's round calls programs that
+call back into the loop's program, as `$smtx_inhabited_type`'s does, Aeneas
+puts the loop in one mutual block with them, and that block's induction
+takes the programs it calls as unknown functions. The only reset of
+`calls`, in `check_refutation_inner`, is the entry point's, before any
+generated function runs.)
 
 **Where logos and the Rust agree only on values a store can hold.**
 logos's `__eo_prog_contra` is `requires (eo_eq F F') true false` where the
@@ -507,10 +523,10 @@ split over constructors is in the proofs of seven programs of CpcMini
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 688 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups and conditionals, and `split_none` (no case answered, which cannot be). |
-| `Runtime/Frame.lean` | 132 | `enter`, `leave`, the measure of the induction, a program around its body. |
+| `Tactic.lean` | 691 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups and conditionals, and `split_none` (no case answered, which cannot be). |
+| `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 143 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
-| `Runtime/Ops.lean` | 249 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
+| `Runtime/Ops.lean` | 336 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body. |
 | `Runtime/Node.lean` | 79 | `construct` and `destruct` of any data constructor, over trees. |
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
 | `Runtime/Strings.lean` | 297 | `not`, `string_valid` and `string_prefix_eq`: the two string operations are loops over the code points, proved by induction over the loop; a string the store can hold has code points below 2^32 (the embedding's `okStr`), so its code points are its characters. |
