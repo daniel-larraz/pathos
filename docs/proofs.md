@@ -211,7 +211,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 5,535 theorems, are **27**:
+  This is the trust. In use today, by 5,933 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -456,13 +456,13 @@ change under them.
 For the full CPC it writes them too, into `generated/cpc-checker`
 (`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
 checked to be what the generator writes (`scripts/generate-cpc --check`),
-but **not built**; `proofs.tsv` (431 of 1,086 marked generated) says how
+but **not built**; `proofs.tsv` (438 of 1,086 marked generated) says how
 far the emitter gets.
-55 of CpcMini's 82 programs have one so far, the four of the pilot
+60 of CpcMini's 82 programs (60 of the 76 the gate counts) have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (5,398 lines) elaborates in 10
-seconds (2.4 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (6,134 lines) elaborates in 11
+seconds (2.6 GiB), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -579,7 +579,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 | `Runtime/Nats.lean` | 153 | The natural numbers: the constant `nat.zero`, and the patterns `nat.zero` (`pat_native_zero`) and `(nat.succ m)` (`pat_destruct_lit`), which store a numeral; from the trusted specs of `zero`, `one`, `clone`, `sgn`, `add` and `neg`. |
 | `Runtime/Builtins.lean` | 730 | Builtin operators on literals: what every one needs (a literal's clone, `literal_of`, `literals` on one and two arguments, `any_stuck` on one, what a handle of a literal stands for), `eo::len` (`builtin_spec_len`: the width of a binary, the length of a string) and `eo::and` (`builtin_spec_and`: the `and` of two Booleans, of two binaries of the same width), through `Lit::evaluate`; and that logos's signed `and` of bit-vectors, reduced, is malachite's (`bv_and_toInt_emod`). |
 | `Runtime/IntNatives.lean` | 283 | The native operations on integers (`zeq`, `zleq` through `partial_cmp`, `mod_total`, `int.pow2`, `int.to_nat`, `nat.succ`) and the numeral constants of the generated code (`Integer::from(<u32>)`, negated); from the trusted specs of the integer functions. |
-| `Runtime/StringLits.lean` | 218 | String literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); `EoString`'s clone is translated code, so no trusted spec. |
+| `Runtime/StringLits.lean` | 264 | String literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); a string constant of the generated code (`"@"`: `raw` of `EoString::from_code_points(vec![64])`) stands for the code points of its vector (`raw_str_vec_spec`: a vector of `u32` is always in range), rewritten to logos's `native_string_lit` once both are concrete (`Represents.rep_of_eq`). `EoString`'s clone is translated code, so no trusted spec. |
 | `Runtime/Numbers.lean` | 399 | Numeral and rational literals: a pattern on one stores a copy of its value (`destruct_numeral_spec`, `destruct_rational_spec`, with `pat_destruct_lit`), and `construct` from a native value gives the literal (`construct_numeral_spec`, `construct_rational_spec`); from the trusted specs of `clone`. |
 | `Runtime/Literals.lean` | 122 | `destruct` with the Boolean literal's constructor, which stores a native copy of the Boolean: a pattern that changes the store (`pat_destruct_lit`). |
 
@@ -587,22 +587,20 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 55** (the reasons of `proofs.tsv`, for the other 27,
-on 2026-11-20, after `eo::and`): calls of programs without a proof (11;
-three wait on `$eo_to_smt_type`, which calls the `"@"` program); the six
-of the datatype operators below; a builtin operator (1: `eo::cons`, in
-`$eo_mk_premise_list`); a binary literal in a pattern (2, `$emb_Binary`,
-past the string literal patterns of `$eo_typeof` and `$eo_to_smt`; the
-runtime stores the width and the value as two numerals, with specs
-already in use); the two compiled to the runtime; two
+**What limits the 60** (the reasons of `proofs.tsv`, for the other 22,
+on 2026-11-20, after the string constants): calls of programs without a
+proof (7); the six of the datatype operators below; a builtin operator
+(1: `eo::cons`, in `$eo_mk_premise_list`); a binary literal in a pattern
+(2, `$emb_Binary`, past the string literal patterns of `$eo_typeof` and
+`$eo_to_smt`; the runtime stores the width and the value as two numerals,
+with specs already in use); the two compiled to the runtime; two
 applications of a term that may be stuck (`$eo_prog_scope`, the first
-finding below, and `$eo_lit_type_Binary`, past `eo::len`); `Valid` for
-two types (`SmtTerm` for `$smtx_typeof`, `CCmd` for `$eo_invoke_cmd`, which
-`eo::and` got past; no trust); and the native string constant `"@"`. The
-lemmas of `construct` and `destruct` are generated for every data
-constructor (`MiniCtors`); the literal constructors are stored otherwise
-and have none. The cache of results is stated for every embedded type
-(`MiniCacheSem`).
+finding below, and `$eo_lit_type_Binary`, past `eo::len`); and `Valid`
+for two types (`SmtTerm` for `$smtx_typeof`, `CCmd` for `$eo_invoke_cmd`;
+no trust). The lemmas of `construct` and `destruct` are generated for
+every data constructor (`MiniCtors`); the literal constructors are stored
+otherwise and have none. The cache of results is stated for every
+embedded type (`MiniCacheSem`).
 
 **Groups of cases** (milestone 32, step 4). A program with more than four
 cases tries them in groups (`cases_<d>_<g>`), and each group has a

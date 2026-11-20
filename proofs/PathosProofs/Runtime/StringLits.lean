@@ -215,4 +215,50 @@ theorem Store.construct_string_spec (s : Store) (args : Slice Term) {a0 : Term}
       simp only [Std.bind_ok, hlen, ite_true, hidx]
       exact Store.construct_literal_string_spec s h0 hinv h64
 
+/-! ## String constants -/
+
+/-- A vector of `u32` is the runtime's form of the code points it holds:
+they are below `2^32`, and their number fits a vector. -/
+theorem Tree.strOf_of_vec (v : alloc.vec.Vec Std.U32) :
+    Tree.strOf (v.val.map (fun c => c.val)) = v ∧ Tree.okStr (v.val.map (fun c => c.val)) := by
+  have hl : (v.val.map (fun c => c.val)).length ≤ Usize.max := by
+    simpa using v.property
+  refine ⟨?_, hl, ?_⟩
+  · unfold Tree.strOf
+    rw [dif_pos hl]
+    apply alloc.vec.Vec.ext
+    rw [alloc.vec.Vec.from_val, List.map_map]
+    conv => rhs; rw [← List.map_id v.val]
+    apply List.map_congr_left
+    intro c _
+    show Tree.u32Wrap c.val = c
+    unfold Tree.u32Wrap
+    cases c with
+    | mk bv => simp
+  · intro c hc
+    simp only [List.mem_map] at hc
+    obtain ⟨u, _, rfl⟩ := hc
+    exact u.hBounds
+
+/-- `raw` of a string literal built from code points (a string constant of
+the generated code, `EoString::from_code_points(vec![…])`) gives a handle
+of the string they spell. -/
+theorem Store.raw_str_vec_spec (s : Store) (v : alloc.vec.Vec Std.U32) (str : List Nat)
+    (h : v.val.map (fun c => c.val) = str) (hinv : s.Inv) (h64 : Platform64) :
+    Store.raw s (lit.Lit.Str v) ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t str
+      | core.result.Result.Err _ => True ⦄div := by
+  obtain ⟨hv, hok⟩ := Tree.strOf_of_vec v
+  subst h
+  conv => arg 1; rw [← hv]
+  exact Store.raw_str_spec s _ hok hinv h64
+
+/-- A fact about a handle carries over to an equal value (for a string
+constant: from its code points to logos's literal, once both are
+concrete). -/
+theorem Represents.rep_of_eq {α : Type} [Embedded α] {s : Store} {t : Term} {x y : α}
+    (h : Represents.rep s t x) (e : x = y) : Represents.rep s t y := e ▸ h
+
 end pathos_compiled_checker
