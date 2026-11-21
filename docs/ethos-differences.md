@@ -255,6 +255,22 @@ builds them.
 - `-t` and `-v` fail with `tracing not enabled in this build`, as a release
   build of Ethos does.
 
+### The compiled CPC checker (`pathos`)
+
+The generated CPC checker follows the CPC signature's desugared semantics
+(`plugins/desugar/eo_desugar_native.eo`), as logos's Lean does, and not
+Ethos's native checker. They differ where the desugared programs differ from
+the native checker:
+
+| Input | Ethos | `pathos` |
+| --- | --- | --- |
+| A `declare-datatypes` block that declares two datatypes of the same name, and a proof that uses a selector of the second: `(declare-datatypes ((D 0) (D 0)) (((a (s1 Bool))) ((b (s2 Bool) (s3 Bool)))))`, `(assume @p1 (s3 x))`, `(assume @p2 (not (s3 x)))`, `contra` | `correct`: each datatype is its own symbol | `incorrect`: `$eo_dd_lookup` finds a datatype in its block by name, so `s3` resolves against the first `D`, its return type is stuck, and the assumption is not of type `Bool`. logos gives the same. The same two `D`s in separate `declare-datatypes`, or distinct names, are accepted by both |
+
+Probed with the reference (2026-11-20). `pathos-eo` agrees with Ethos. It is
+a difference between Ethos's two semantics rather than a pathos bug, and is
+to be reported to Ethos (suggested fix: reject a block that repeats a name).
+The compiled checker rejects; it accepts nothing that Ethos rejects.
+
 ### pathos-eoc (the compiler stages)
 
 `pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with all its stages:
