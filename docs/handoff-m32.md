@@ -8,12 +8,12 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **63 of CpcMini's 82 programs** have a generated proof (63 of the
+- **67 of CpcMini's 82 programs** have a generated proof (67 of the
   76 that the gate counts: the 6 datatype operators have been excluded
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 7,198 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 7,423 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
@@ -97,14 +97,24 @@ fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
 `Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (19 programs)
+## The reasons that remain (15 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
-| 10 | calls of programs without a proof | `$eo_mk_premise_list`, `$eo_cmd_step_proven`, `$eo_cmd_step_pop_proven` (→ `$eo_state_proven_nth`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_checker_is_refutation` (→ `$eo_invoke_cmd_list`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
+| 7 | calls of programs without a proof, all through `$eo_is_bool_type` → `$eo_typeof` | `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_invoke_cmd_step_pop` (→ `$eo_push_proven`, now past `$eo_cmd_step_pop_proven`), `$eo_invoke_cmd` (→ `$eo_is_bool_type`, now past `$eo_cmd_step_proven`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
-| 1 | compiled to a function of the runtime | `$eo_state_proven_nth`: Daniel decided to prove the jump-pointer lookup. `Store.state_nth_spec` is proved (`Runtime/StateNth.lean`, on the new `JumpsOK` part of the store's invariant), with no hypothesis beyond the store's invariant since `charge` was fixed (below). |
+
+`$eo_state_proven_nth` is proved: Daniel decided to prove the
+jump-pointer lookup (`Store.state_nth_spec` and `state_proven_nth_spec`,
+`Runtime/StateNth.lean`, on the new `JumpsOK` part of the store's
+invariant), after `charge` was fixed (below). With it,
+`$eo_mk_premise_list`, `$eo_cmd_step_proven` and
+`$eo_cmd_step_pop_proven` are proved. In the full CPC (478 of 1,086),
+`$eo_state_proven_nth` and `$eo_cmd_step_pop_proven` are proved;
+`$eo_mk_premise_list` stops at `eo::cons` with an operator that nests to
+the left, and `$eo_cmd_step_proven` at case 550, a literal that is not a
+Boolean.
 
 No program has the state invariant's reasons ("a state that may not be
 OK", "a proof that may not be OK", "a loop whose proof argument is
@@ -112,7 +122,7 @@ assumed OK"), in CpcMini or the CPC.
 
 ## What's left (for Fable)
 
-63 of the 76 programs the gate counts are proved. The other 13, by what
+67 of the 76 programs the gate counts are proved. The other 9, by what
 stops them first and what it would take:
 
 **More of the same** (no decision, no trust beyond the 27):
@@ -142,17 +152,13 @@ stops them first and what it would take:
   `$smtx_typeof_bv_op_2`, which has no proof.
 - `$eo_is_bool_type` → `$eo_push_proven`: wait on `$eo_typeof`, so on
   the stuck-application question too.
-- *Once Daniel's `$eo_state_proven_nth` decision lands*, the state
-  invariant should carry `$eo_mk_premise_list`, `$eo_cmd_step_proven`,
-  `$eo_cmd_step_pop_proven` and `$eo_invoke_cmd_step_pop` with no new
-  work. *Once Andy's lean-meta change also lands*: `$eo_typeof`, then
+- *Once Andy's lean-meta change lands*: `$eo_typeof`, then
   `$eo_is_bool_type`, `$eo_push_proven`, `$eo_invoke_assume_list` (its
   fold already assumes its state OK), `$eo_invoke_cmd`,
-  `$eo_invoke_cmd_list` and `$eo_checker_is_refutation`, which leaves
-  only `$eo_to_smt` (75 of 76). This is expected, not checked: the lines
-  these programs need (the `$eo_state_proven_nth` fact, `ProofOK` of a
-  looked-up premise, the fold against its future spec) were checked in a
-  throwaway module, not in a proved program.
+  `$eo_invoke_cmd_step_pop`, `$eo_invoke_cmd_list` and
+  `$eo_checker_is_refutation`, which leaves only `$eo_to_smt` (75 of 76).
+  This is expected, not checked: the fold's application against its
+  future spec was checked in a throwaway module only.
 
 **Decided: `charge`'s overflow** (Daniel, 2026-11-20). `Store::charge`
 tested `self.calls.saturating_add(count) > self.limits.calls` and then
@@ -283,13 +289,10 @@ Two more that are not about trust:
 The emitter writes these, and they elaborate where they have been
 exercised, but no proved program reaches them yet:
 
-- `more_k` inside a requirement: no requirement of CpcMini is cut into
-  one. The only `more_k` (in `$eo_cmd_step_proven`'s case 0) is unfolded
-  fine, but that case also calls a program without a proof.
-- `construct` of the stuck term (`Store.construct_stuck_spec`): both
-  programs that build it call programs without a proof
-  (both → `$eo_state_proven_nth`); its line was checked with the force patch on
-  `$eo_cmd_step_proven`'s case 4.
+- (Now exercised, since `$eo_state_proven_nth` is proved: the `more_k`
+  of `$eo_cmd_step_proven`'s case 0, and `construct` of the stuck term,
+  `Store.construct_stuck_spec`, in `$eo_cmd_step_proven` and
+  `$eo_cmd_step_pop_proven`.)
 - String and binary literals in patterns and built from values
   (`destruct_string_spec`, `construct_string_spec`,
   `destruct_binary_spec`, `construct_binary_spec`, `pat_destruct_lit2`):
@@ -297,12 +300,12 @@ exercised, but no proved program reaches them yet:
   Checked with the force patch on `$eo_typeof`: cases 3 and 4 elaborate.
 - Building a function type (`$emb_FunType` and two applications): its
   only user, `$eo_typeof`'s case 8, stops at the possibly stuck argument.
-- The state invariant's lines for `$eo_state_proven_nth` (the non-stuck
-  fact after the call, `ProofOK` of `pf` of its result at a call of
-  `$eo_prog_scope`) and the fold's application against the spec it will
-  have: every program that has them waits on `$eo_state_proven_nth` or
-  `$eo_is_bool_type`. Checked in a throwaway module (the lemma and
-  `good_tac` on the goals those lines give).
+- The fold's application against the spec it will have: it waits on
+  `$eo_is_bool_type`; checked in a throwaway module. (The state
+  invariant's lines for `$eo_state_proven_nth`, the non-stuck fact after
+  the call and `ProofOK` of `pf` of its result, are now in proved
+  programs: `$eo_mk_premise_list`, `$eo_cmd_step_proven`,
+  `$eo_cmd_step_pop_proven`.)
 - `not` in a generated proof: its spec compiles, but its only use comes
   after a failing call. (`string_prefix_eq` is now in a proved program,
   `$eo_to_smt_reserved_datatype_name`, behind `"@"`.)

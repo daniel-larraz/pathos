@@ -7,6 +7,7 @@ public import PathosProofs.Store.Sem
 public import PathosProofs.Store.Jumps
 public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Ops
+public import PathosProofs.Runtime.StateInv
 public import MiniEmbed
 import all Aeneas.Data.List.List
 import all Aeneas.Std.Core.Core
@@ -1081,5 +1082,97 @@ theorem Store.state_nth_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) (stat
         refine ⟨hinv2, hG2, ?_⟩
         apply state_proven_nth_out
         omega
+
+/-! ## The program -/
+
+/-- What `$eo_StateObj_proven` is proved to compute (a field of the
+generated `Specs`). -/
+def StateObjProvenSpec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : Eo.CStateObj), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    generated.part0.eo__24eo_5fStateObj_5fproven s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_StateObj_proven x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- `$eo_state_proven_nth`, compiled to `state_nth` and `$eo_StateObj_proven`
+between `enter` and `leave`: logos's `__eo_state_proven_nth`. -/
+theorem state_proven_nth_spec (n : Nat) (hp : ∀ m < n, StateObjProvenSpec m) :
+    ∀ (s : Store) (a0 a1 : Term) (x_a0 : Eo.CState) (x_a1 : SmtEval.native_Int), s.Inv →
+      Platform64 → s.remaining ≤ n → Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+      StateOK x_a0 →
+      generated.part0.eo__24eo_5fstate_5fproven_5fnth s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+        match r with
+        | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_state_proven_nth x_a0 x_a1)
+        | core.result.Result.Err _ => True ⦄div := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 _
+  unfold generated.part0.eo__24eo_5fstate_5fproven_5fnth
+  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hj, hl, hb, hd⟩
+  have hinv1 : s1.Inv := hinv.congr hn hh hs hc hj
+  cases r with
+  | Err e =>
+    simp only [WP.dspec_ok, WP.uncurry'_pair] at hd ⊢
+    exact ⟨hinv1, ⟨by rw [hn], hl, hd, hb⟩, trivial⟩
+  | Ok u =>
+    simp only at hd ⊢
+    obtain ⟨hd, hlim⟩ := hd
+    have hrem1 : s1.remaining ≤ n - 1 := by
+      unfold Store.remaining at hrem ⊢; rw [hl, hd]; omega
+    have hn0 : n - 1 < n := by unfold Store.remaining at hrem; omega
+    -- the end: `leave`, from a store that grew from `s1`
+    have hleave : ∀ (s3 : Store) (res : core.result.Result Term CheckError), s3.Inv →
+        s1.Grows s3 →
+        (match res with
+          | core.result.Result.Ok t => Represents.rep s3 t (Eo.__eo_state_proven_nth x_a0 x_a1)
+          | core.result.Result.Err _ => True) →
+        (do
+          let s4 ← Store.leave s3
+          ok (res, s4)) ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+          match r with
+          | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_state_proven_nth x_a0 x_a1)
+          | core.result.Result.Err _ => True ⦄div := by
+      intro s3 res hinv3 hg3 hres
+      have hdepth : 0 < s3.depth.val := by rw [hg3.depth, hd]; omega
+      step with Store.leave_spec as ⟨s4, hn4, hh4, hs4, hc4, hj4, hl4, hd4, hk4⟩
+      simp only [WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv3.congr hn4 hh4 hs4 hc4 hj4, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
+      · rw [hn4, ← hn]; exact hg3.nodes
+      · rw [hl4, hg3.limits, hl]
+      · have : s4.depth.val = s.depth.val := by rw [hd4, hg3.depth, hd]; omega
+        scalar_tac
+      · rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb
+      · cases res with
+        | Ok t => exact Represents.congr hres hn4
+        | Err _ => trivial
+    step with Store.state_nth_spec s1 hinv1 h64 a0 a1 x_a0 x_a1 (Represents.congr h_a0 hn)
+      (Represents.congr h_a1 hn) as ⟨r1, s2, hpost⟩
+    obtain ⟨hinv2, hg2, hr1⟩ := hpost
+    cases r1 with
+    | Err e =>
+      simp only [Std.bind_ok]
+      exact hleave s2 _ hinv2 hg2 trivial
+    | Ok o =>
+      cases o with
+      | none =>
+        simp only at hr1 ⊢
+        unfold Store.boolean
+        step with Store.literal_boolean_spec s2 true hinv2 h64 as ⟨p3, hinv3, hg3, hr3⟩
+        obtain ⟨r3, s3⟩ := p3
+        simp only [uncurry_apply_pair, Std.bind_ok]
+        apply hleave _ _ hinv3 (hg2.trans hg3)
+        cases r3 with
+        | Ok t => simp only at hr3 ⊢; rw [hr1]; exact hr3
+        | Err _ => trivial
+      | some e =>
+        simp only at hr1 ⊢
+        obtain ⟨so, hso, hspn⟩ := hr1
+        step with hp (n - 1) hn0 s2 e so hinv2 h64 (hg2.rem hrem1) hso
+          as ⟨p3, hinv3, hg3, hr3⟩
+        obtain ⟨r3, s3⟩ := p3
+        simp only [uncurry_apply_pair, Std.bind_ok]
+        apply hleave _ _ hinv3 (hg2.trans hg3)
+        cases r3 with
+        | Ok t => simp only at hr3 ⊢; rw [hspn]; exact hr3
+        | Err _ => trivial
 
 end pathos_compiled_checker

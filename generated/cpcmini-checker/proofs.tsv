@@ -1,8 +1,8 @@
 source	proof	why
 $eo_StateObj_proven	generated	
-$eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
-$eo_cmd_step_pop_proven	none	it calls $eo_state_proven_nth, which has no proof
-$eo_cmd_step_proven	none	it calls $eo_state_proven_nth, which has no proof
+$eo_checker_is_refutation	none	it calls $eo_invoke_assume_list, which has no proof
+$eo_cmd_step_pop_proven	generated	
+$eo_cmd_step_proven	generated	
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_dd_lookup	generated	
@@ -14,10 +14,10 @@ $eo_dt_selectors	none	no logos function: only the runtime's datatype operators r
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
 $eo_invoke_assume_list	none	it calls $eo_is_bool_type, which has no proof
-$eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
+$eo_invoke_cmd	none	it calls $eo_is_bool_type, which has no proof
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
-$eo_invoke_cmd_step_pop	none	it calls $eo_cmd_step_pop_proven, which has no proof
+$eo_invoke_cmd_step_pop	none	it calls $eo_push_proven, which has no proof
 $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
 $eo_is_closed	generated	
 $eo_is_closed_rec	generated	
@@ -26,7 +26,7 @@ $eo_lit_type_Binary	generated
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
-$eo_mk_premise_list	none	it calls $eo_state_proven_nth, which has no proof
+$eo_mk_premise_list	generated	
 $eo_nil	generated	
 $eo_prog_contra	generated	
 $eo_prog_refl	generated	
@@ -39,7 +39,7 @@ $eo_push_proven	none	it calls $eo_is_bool_type, which has no proof
 $eo_push_proven_check	generated	
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
-$eo_state_proven_nth	none	compiled to a function of the runtime
+$eo_state_proven_nth	generated	
 $eo_to_smt	none	case 8 has the native operation uconst_id
 $eo_to_smt_datatype	generated	
 $eo_to_smt_datatype_cons	generated	
