@@ -96,11 +96,11 @@ program, the reason. The reasons recorded after the cases, in order: no
 
 | Count | Reason | Programs |
 | --- | --- | --- |
-| 8 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
+| 9 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_cmd_list`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 1 | `eo::cons` of an element that may be stuck (case 1, past `eo::nil` in case 0; `Store.builtin_spec_cons` is proved, `Runtime/Lists.lean`) | `$eo_mk_premise_list` |
 | 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
-| 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
+| 1 | compiled to a function of the runtime | `$eo_state_proven_nth` (Daniel's decision: prove the jump-pointer lookup or stop compiling it) |
 | 1 | an application of a term that may be stuck | `$eo_prog_scope` (a variable under a proof; `$eo_lit_type_Binary` is proved since guarded applications are matched, `apply_mk_rep`) |
 
 ## What's left (for Fable)
@@ -164,11 +164,13 @@ finding):
   `$eo_cmd_step_proven` → `$eo_invoke_cmd` → `$eo_invoke_cmd_list`
   (`$eo_invoke_cmd` also waits on `$eo_is_bool_type` and
   `$eo_invoke_cmd_step_pop`).
-- *Programs compiled to the runtime*: `$eo_invoke_assume_list` and
-  `$eo_state_proven_nth` are functions of the runtime, not generated
-  code, so they need hand-written proofs of the runtime's functions or a
-  change to what is compiled; `$eo_checker_is_refutation` waits on them
-  (and, through `$eo_invoke_cmd_list`, on the two above).
+- *Programs compiled to the runtime*: `$eo_invoke_assume_list`'s fold is
+  proved by hand (`invoke_assume_list_spec`, `Runtime/AssumeFold.lean`,
+  from the specs of the three programs it calls); it now waits only on
+  `$eo_is_bool_type` (so on `$eo_typeof`), and `$eo_checker_is_refutation`
+  has moved on to `$eo_invoke_cmd_list`. `$eo_state_proven_nth` (the
+  jump-pointer lookup) stays: Daniel decides between proving it and not
+  compiling it.
 
 **Out of the count:** the six datatype operators have no logos function
 (only the runtime's datatype operators reach them).

@@ -17,6 +17,7 @@ public import PathosProofs.Runtime.IntNatives
 public import PathosProofs.Runtime.Builtins
 public import PathosProofs.Runtime.StringLits
 public import PathosProofs.Runtime.Lists
+public import PathosProofs.Runtime.AssumeFold
 
 /-!
 # The tactics of the generated proofs

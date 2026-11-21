@@ -69,7 +69,7 @@ $dt_get_selectors	none	case 0 has a literal that is not a Boolean
 $dt_get_selectors_of_app	none	it calls $dt_get_selectors, which has no proof
 $dt_updater_elim_rhs	generated	
 $eo_StateObj_proven	generated	
-$eo_checker_is_refutation	none	it calls $eo_invoke_assume_list, which has no proof
+$eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
 $eo_cmd_step_pop_proven	none	it calls $eo_prog_scope, which has no proof
 $eo_cmd_step_proven	none	case 550 has a literal that is not a Boolean
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
@@ -84,7 +84,7 @@ $eo_dt_resolve	generated
 $eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
-$eo_invoke_assume_list	none	compiled to a function of the runtime
+$eo_invoke_assume_list	none	it calls $eo_is_bool_type, which has no proof
 $eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
