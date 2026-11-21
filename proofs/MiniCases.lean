@@ -253,7 +253,7 @@ def __eo_typeof.case_7 : Term -> Option (Term)
   | _ => none
 
 def __eo_typeof.case_8 : Term -> Option (Term)
-  | (Term.DtSel s dd i j) => some ((Term.Apply (Term.Apply Term.FunType (Term.DatatypeType s dd)) (__eo_typeof_dt_sel_return (__eo_dd_resolve s dd) i j)))
+  | (Term.DtSel s dd i j) => some ((__eo_mk_apply (__eo_mk_apply Term.FunType (Term.DatatypeType s dd)) (__eo_typeof_dt_sel_return (__eo_dd_resolve s dd) i j)))
   | _ => none
 
 def __eo_typeof.case_9 : Term -> Option (Term)

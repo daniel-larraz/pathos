@@ -60,6 +60,8 @@ $emb_rsm.union	eo__24emb_5frsm_2eunion	2
 $emb_s.Stuck	eo__24emb_5fs_2eStuck	0
 $emb_s.cons	eo__24emb_5fs_2econs	2
 $emb_s.nil	eo__24emb_5fs_2enil	0
+$emb_sbd.cons	eo__24emb_5fsbd_2econs	4
+$emb_sbd.nil	eo__24emb_5fsbd_2enil	0
 $emb_sm.=	eo__24emb_5fsm_2e_3d	2
 $emb_sm.=>	eo__24emb_5fsm_2e_3d_3e	2
 $emb_sm.Apply	eo__24emb_5fsm_2eApply	2

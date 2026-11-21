@@ -475,6 +475,20 @@ theorem check_proof_inner_spec (hchk : ∀ n, CheckerIsRefutationSpec n)
         · simp
     · simp
 
+/-- The top-level theorem, from any proof of `$eo_checker_is_refutation`'s
+spec (`hchk`); `check_proof_correct` below is it with the generated one. -/
+theorem check_proof_correct_of_spec (hchk : ∀ n, CheckerIsRefutationSpec n)
+    (s : Store) (hinv : s.Inv) (h64 : Platform64) (a c : Term)
+    (F : Eo.CArgList) (pf : Eo.CCmdList)
+    (hF : Represents.rep s a F) (hpf : Represents.rep s c pf) (s' : Store)
+    (hrun : Store.check_proof_inner s a c = ok (core.result.Result.Ok Verdict.Correct, s')) :
+    eo_satisfiability (argListAssumes F) false := by
+  have h := check_proof_inner_spec hchk s hinv h64 a c F pf hF hpf
+  rw [hrun] at h
+  simp only [WP.dspec_ok, WP.uncurry'_pair] at h
+  obtain ⟨hT, hC, hR⟩ := h trivial
+  exact correct___eo_is_refutation F pf hT hC hR
+
 /-- **The top-level theorem for CpcMini.** If the compiled checker says
 `Correct` on handles of the assumptions `F` and the proof `pf`, then `F` is
 unsatisfiable, as logos defines it (`eo_satisfiability`).
@@ -488,19 +502,14 @@ Its boundary:
   stand for some `F` and `pf`.
 - It is partial correctness: of a run that returns `Correct`. Other
   verdicts, errors and runs that do not return are not covered.
-- `Platform64` (a 64-bit `usize`) is assumed, as in every spec.
-- `hchk` is what is proved of `$eo_checker_is_refutation`. That program
-  waits on cvc5/ethos#286; once it is proved, `specs` gives `hchk`. -/
-theorem check_proof_correct (hchk : ∀ n, CheckerIsRefutationSpec n)
+- `Platform64` (a 64-bit `usize`) is assumed, as in every spec. -/
+theorem check_proof_correct
     (s : Store) (hinv : s.Inv) (h64 : Platform64) (a c : Term)
     (F : Eo.CArgList) (pf : Eo.CCmdList)
     (hF : Represents.rep s a F) (hpf : Represents.rep s c pf) (s' : Store)
     (hrun : Store.check_proof_inner s a c = ok (core.result.Result.Ok Verdict.Correct, s')) :
-    eo_satisfiability (argListAssumes F) false := by
-  have h := check_proof_inner_spec hchk s hinv h64 a c F pf hF hpf
-  rw [hrun] at h
-  simp only [WP.dspec_ok, WP.uncurry'_pair] at h
-  obtain ⟨hT, hC, hR⟩ := h trivial
-  exact correct___eo_is_refutation F pf hT hC hR
+    eo_satisfiability (argListAssumes F) false :=
+  check_proof_correct_of_spec (fun n => (specs n).eo__24eo_5fchecker_5fis_5frefutation)
+    s hinv h64 a c F pf hF hpf s' hrun
 
 end pathos_compiled_checker

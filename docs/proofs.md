@@ -20,7 +20,7 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCtors.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what `construct` and `destruct` do with each data constructor, what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
-| `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `a9944ea7` (cvc5/logos main, at Lean `v4.36.0` since cvc5/logos#518). |
+| `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `bdcbd95f` for the proofs (cvc5/logos main with #521, function types guarded; at Lean `v4.36.0` since cvc5/logos#518). The full CPC crate is still compiled from logos `a3232131`, `difftest.env`'s `LOGOS_REV`. |
 
 To build and check, from a clean checkout:
 
@@ -236,7 +236,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 7,951 theorems, are **27**:
+  This is the trust. In use today, by 8,741 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -536,7 +536,7 @@ For the full CPC it writes them too, into `generated/cpc-checker`
 checked to be what the generator writes (`scripts/generate-cpc --check`),
 but **not built**; `proofs.tsv` (478 of 1,086 marked generated) says how
 far the emitter gets.
-68 of CpcMini's 82 programs (68 of the 76 the gate counts) have one so far, the four of the pilot
+**76 of CpcMini's 82 programs (all 76 the gate counts)** have one, the four of the pilot among them; only the six datatype operators have none, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
 proof for yet. `proofs/MiniProofs.lean` (7,809 lines) elaborates in 16
@@ -774,25 +774,34 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 68** (the reasons of `proofs.tsv`, for the other 14,
-on 2026-11-20, after the names of constants):
-- calls of programs without a proof (7), all waiting on `$eo_typeof`
-  through `$eo_is_bool_type`: `$eo_is_bool_type`, `$eo_push_proven`,
-  `$eo_invoke_cmd_step_pop` (now past `$eo_cmd_step_pop_proven`),
-  `$eo_invoke_cmd`, `$eo_invoke_cmd_list`, `$eo_invoke_assume_list` (its
-  fold is proved by hand) and `$eo_checker_is_refutation`;
-- the six datatype operators below;
-- case 8 of `$eo_typeof` (it builds a function type to a type that may be
-  stuck: an application of a term that may be stuck), past the string and
-  binary literal patterns (1).
+**All 76 are proved** (2026-11-21). The last eight (`$eo_typeof`,
+`$eo_is_bool_type`, `$eo_push_proven`, `$eo_invoke_cmd_step_pop`,
+`$eo_invoke_cmd`, `$eo_invoke_cmd_list`, `$eo_invoke_assume_list` with its
+hand-written fold, and `$eo_checker_is_refutation`) waited on `$eo_typeof`'s
+selector case.
+- **The fix:** with cvc5/ethos#286 and cvc5/logos#521, a function type
+  whose parts call a program is built with logos's guarded `__eo_mk_apply`,
+  as the runtime's `apply` builds it. The emitter writes `apply_mk_rep`
+  for it (Ethos fork `2a9bd4b`).
+- **The other six** of the 82 are the datatype operators below, which
+  have no logos function.
 
-In the full CPC, `$eo_state_proven_nth` and `$eo_cmd_step_pop_proven` are
-proved; `$eo_to_smt` is past `uconst_id` and stops at case 169 (the
-native operation `mk_rational`), with `$eo_to_smt_distinct`,
-`$eo_to_smt_distinct_pairs` and `$eo_to_smt_typed_list_elem_type`
-waiting on it; `$eo_mk_premise_list` stops at `eo::cons` with an operator that
-nests to the left (the CPC has some), and `$eo_cmd_step_proven` at its
-case 550, a literal that is not a Boolean.
+In the full CPC (478 of 1,086), `$eo_state_proven_nth` and
+`$eo_cmd_step_pop_proven` are proved, and:
+- `$eo_to_smt` is past `uconst_id` and stops at case 169 (the native
+  operation `mk_rational`), with `$eo_to_smt_distinct`,
+  `$eo_to_smt_distinct_pairs` and `$eo_to_smt_typed_list_elem_type`
+  waiting on it;
+- `$eo_mk_premise_list` stops at `eo::cons` with an operator that nests to
+  the left (the CPC has some);
+- `$eo_cmd_step_proven` stops at its case 550, a literal that is not a
+  Boolean;
+- `$eo_typeof` is past its selector case and stops at a call of
+  `$eo_typeof_@from_bools`.
+
+The CPC crate's proofs are written against logos `a3232131`, which still
+prints the selector's type unguarded. They are not built, so this shows
+only once stage 5 builds them at a logos revision with #521.
 
 `$eo_prog_scope`'s application of a term that may be stuck (the first
 finding below) is proved since its proof argument is assumed OK. The lemmas of `construct` and `destruct` are generated for
@@ -859,7 +868,7 @@ confined to lemma C, which Lean proves per program.
 `proofs/PathosProofs/Top.lean` states and proves, for CpcMini:
 
 ```lean
-theorem check_proof_correct (hchk : ∀ n, CheckerIsRefutationSpec n)
+theorem check_proof_correct
     (s : Store) (hinv : s.Inv) (h64 : Platform64) (a c : Term)
     (F : Eo.CArgList) (pf : Eo.CCmdList)
     (hF : Represents.rep s a F) (hpf : Represents.rep s c pf) (s' : Store)
@@ -887,13 +896,14 @@ and the proof `pf`, then `F` is unsatisfiable as logos defines it.
 - No rule of CpcMini has an argument mask, so every argument is checked
   as a term; the full CPC's masks are not covered.
 
-**`hchk`** is what is proved of `$eo_checker_is_refutation`.
-- That program waits on cvc5/ethos#286 and logos `funTypeStuck`, which
-  prove it (prototype, 2026-11-20).
-- `CheckerIsRefutationSpec` is the `Spec` rust-meta prints for it: checked
-  equal by `rfl` against the text a forced run printed.
-- So once it is proved, `fun n => (specs n).eo__24eo_5fchecker_5fis_5frefutation`
-  is `hchk`, and the theorem holds with no hypothesis beyond the store's.
+**It is unconditional** (2026-11-21).
+- `check_proof_correct_of_spec` is the same theorem from any proof of
+  `$eo_checker_is_refutation`'s spec, `CheckerIsRefutationSpec`.
+- `check_proof_correct` gives it the generated one,
+  `fun n => (specs n).eo__24eo_5fchecker_5fis_5frefutation`. That program
+  is proved since cvc5/ethos#286 and cvc5/logos#521.
+- So the theorem has no hypothesis beyond the store's invariant, the
+  handles, the platform and the run.
 
 **Its trust base.**
 - **The 27 assumptions of "What is trusted"**, and only those:
@@ -903,7 +913,7 @@ and the proof `pf`, then `F` is unsatisfiable as logos defines it.
 - **Charon and Aeneas:** that the Lean of the checker is the Rust's
   meaning.
 - **logos's definitions** (`eo_satisfiability`, the SMT model, the
-  checker's functions) and its proofs. Its `correct___eo_is_refutation`
+  checker's functions) and its proofs, at `bdcbd95f`. Its `correct___eo_is_refutation`
   rests on Lean's three axioms only.
 - **The boundary**, unverified:
   - `Store::check_proof` runs `check_proof_inner` on a thread with a

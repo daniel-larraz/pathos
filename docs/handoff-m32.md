@@ -1,230 +1,96 @@
 # Milestone 32: where the work stands
 
-Written on 2026-11-20 for whoever continues (Fable, the week after). Start
-here; [proofs.md](proofs.md), "Generated proofs" and "What is trusted",
-has the report. Everything is on pathos `m32` and the Ethos fork's
-`m32-proofs` (local clone `~/Projects/cvc5/pathos-m28/ethos`); pathos pins
-the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
+Rewritten on 2026-11-21 for whoever continues (Fable, the week after).
+Start here; [proofs.md](proofs.md), "Generated proofs", "What is trusted"
+and "The top-level theorem", has the report. Everything is on pathos `m32`
+and the Ethos fork's `m32-proofs` (local clone
+`~/Projects/cvc5/pathos-m28/ethos`); pathos pins the Ethos commit in
+`scripts/generate-cpc` (`default_rev`, `mini_default_rev`).
 
-## The state
+## Done for CpcMini
 
-- **68 of CpcMini's 82 programs** have a generated proof (68 of the
-  76 that the gate counts: the 6 datatype operators have been excluded
-  since 2026-11-19), listed in
-  `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
-  program has the first thing that stops it.
-- `scripts/proofs-build`: 7,951 theorems, no `sorry`. The trust is **27
-  assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
-  part B (Daniel's decision of 2026-11-20), the malachite specs that the
-  proved programs reach (see the trust table below); 48 declarations (axioms that declare a type or a function,
-  which add no trust: see "What is trusted").
-- **CpcMini's top-level theorem is proved**, given
-  `$eo_checker_is_refutation`'s spec (`check_proof_correct`,
-  `proofs/PathosProofs/Top.lean`). If `check_proof_inner` says `Correct`
-  on handles of `F` and `pf`, then `F` is unsatisfiable as logos defines
-  it, through logos's `correct___eo_is_refutation`.
-  - It rests on the 27 assumptions only.
-  - Its boundary: `with_checker_stack` and `front.rs` are untranslated,
-    CpcMini has no front end, it is partial correctness, and `Platform64`
-    is assumed. See proofs.md, "The top-level theorem".
-- Loops are proved by strong induction on the budget of calls
-  (`Store.budget`, which every round's `tick` lowers), not by Lean's
-  fixpoint induction, so a loop in a mutual block works:
-  `$smtx_inhabited_type` (a loop whose cases are tried in groups, on a
-  cycle of four programs) and the ten that call it are proved. See
-  proofs.md, "Loops" and "Groups of cases".
-- The Rust is main's but for literals and the runtime's text paths:
-  since Ethos `db074f2` the generated code builds literals as values, not
-  from text (proofs.md, "Literals are values"), and since `b8be4ea` the
-  runtime no longer has `native_literal`, `parse_int` or `parse_rat`
-  (with `native_literal_spec` gone from `Trusted.lean`). pathos m32's
-  `generated/cpc-checker` is generated from the fork (`default_rev` of
-  `scripts/generate-cpc`). Its diff with main is the literal sites,
-  `names.rs`, `front.rs`/`lib.rs`/`native.rs`, and functions that move
-  between parts. Both changes passed difftest (`scripts/full-check
-  --quick`); every other step checked that the Rust is unchanged. Merging
-  m32 into main means taking these rust-meta changes upstream to
-  cvc5/ethos first.
-- The generated specs assume the checker-state invariant: `StateOK` of
-  every state argument, `ProofOK` of a proof argument whose formula is
-  applied unguarded, proved at every call by `good_tac` (proofs.md, "The
-  state invariant"; Runtime/StateInv.lean). `Specs n` and lemma C keep
-  their shape.
-- The generated files elaborate in seconds (MiniProofs about 13 s and
-  2.8 GiB, after the state invariant). CPC's generated proofs are not built.
+- **All 76 programs the gate counts have generated proofs** (76 of 82;
+  the six datatype operators have no logos function). They are listed in
+  `generated/cpcmini-checker/proofs.tsv`.
+- **The top-level theorem is proved and unconditional:**
+  `check_proof_correct`, `proofs/PathosProofs/Top.lean`.
+  - If `check_proof_inner` says `Correct` on handles of `F` and `pf`, in a
+    store with the invariant on a 64-bit platform, then `F` is
+    unsatisfiable as logos defines it, through logos's
+    `correct___eo_is_refutation`.
+  - Its boundary: it is about `check_proof_inner` (`with_checker_stack`
+    and `front.rs` are untranslated); CpcMini has no front end; it is
+    partial correctness.
+  - `check_proof_correct_of_spec` is the same from any proof of
+    `$eo_checker_is_refutation`'s spec.
+- **Trust:** 27 assumptions (Lean's three, the 24 specs of `Trusted.lean`
+  in use) and 48 declarations, which add no trust. `#print axioms
+  check_proof_correct` is the 27 and 47 declarations. Theorems: see
+  `scripts/proofs-axioms`.
+- **Revisions:**
+  - logos `bdcbd95f` for the proofs (`LOGOS_PROOFS_REV`, and
+    `mini_logos_rev` for CpcMini's crate), which is cvc5/logos#521:
+    function types guarded;
+  - Ethos fork `2a9bd4b`: cvc5/ethos main `649c364f` (#282, #283, #286)
+    merged, then the emitter's guarded function types.
+- **What got it there in milestone 32**, each with its section in
+  proofs.md:
+  - generated proofs, with groups of cases and loops by induction on the
+    budget;
+  - guarded applications;
+  - `eo::cons`;
+  - the assumption fold by hand;
+  - the state invariant (`StateOK`, `ProofOK`);
+  - the jump-pointer lookup (`JumpsOK`), with `charge` fixed;
+  - the names of constants proved (`constant_name_spec` no longer
+    trusted);
+  - function types guarded.
+- **Rust:** the generated code builds literals as values (Ethos
+  `db074f2`); the runtime has no text parsing; `charge` assigns the sum it
+  tested (`25e4ef7`); `constant_name` is built from its digits
+  (`cd4d38c`). Each passed difftest. Taking m32 to main means taking these
+  rust-meta changes upstream to cvc5/ethos first.
+- **Build:** MiniProofs and `Top.lean` elaborate in seconds (see
+  proofs.md); a clean `scripts/proofs-build` takes about 2 minutes.
 
-## What steps 3–5 built (and the runtime files added since)
+## What remains
 
-The generated Lean, all written by `scripts/generate-mini` into `proofs/`:
-
-| File | By | What |
-| --- | --- | --- |
-| `MiniCases.lean` | lean-meta | each program case as a function to `Option` |
-| `MiniEmbed.lean` | lean-meta | per datatype `enc`, `dec`, `emb`, `dec_enc`, the inversions of `enc`, the `Embedded` instance |
-| `MiniCtors.lean` | lean-meta | `CtorSpec.<rust ident>.construct/.destruct` for every data constructor and user operator |
-| `MiniCacheSem.lean` | rust-meta | what a cache entry says (`ProgramSem`), for any embedded types |
-| `MiniProofs.lean` | rust-meta | the proofs: case, group, body, loop and program theorems, lemma C, `specs` |
-
-The hand-written pieces (`proofs/PathosProofs/`):
-
-- `Store/Tree.lean`: `Tree`, `Holds` (a handle unfolds to a tree), proved
-  functional, injective and monotone once; the class `Embedded` and the
-  native codecs (integers, naturals, rationals, Booleans, strings as code
-  points, bit-vector literals).
-- `Store/Rep.lean`, `Store/Sem.lean`: `Rep nodes t x := Holds nodes t
-  (enc x) ∧ emb x` for any embedded type; `Represents.rep` and `Store.Rep`
-  are it for a store. The old per-type relations are gone (step 3).
-- `Runtime/Node.lean`: `construct_holds`, `destruct_holds` for every data
-  constructor. `Runtime/Natives.lean`: `teq`, `Teq`, `streq`, `and`, `or`,
-  builtin `eo::eq`. `Runtime/Strings.lean`: `not`, `string_valid`,
-  `string_prefix_eq` (loops by `fixpoint_induct`). `Runtime/Literals.lean`:
-  the Boolean literal pattern, whose `destruct` changes the store.
-  `Runtime/Ops.lean`: Boolean literal, `native_bool`, `tick`, `boolean_value`,
-  the two `ite`s, `requires`, cached programs. `Runtime/Embed.lean`:
-  `HasStuck`, `Valid`, and that a handle stands only for valid terms.
-- Added after step 5 (proofs.md's runtime table has each file's length
-  and contents): `Runtime/Nats.lean` (nat patterns), `Runtime/Numbers.lean`
-  (numeral and rational literals), `Runtime/IntNatives.lean` (the integer
-  natives), `Runtime/Builtins.lean` (`eo::and`, `eo::len`, the literal
-  machinery and `bv_and_toInt_emod`), `Runtime/StringLits.lean` (string
-  and binary literals, string constants), and the type cache in
-  `Store/CacheOps.lean` and `Runtime/Ops.lean` (`framed_type_cached`,
-  `TypesOK`).
-- `Tactic.lean`: one tactic per kind of generated line, including the
-  groups of cases (`group_step`, `body_group_step`, `group_none`),
-  conditionals (`ite_branch`, `ite_done`, `ite_stuck`) and the
-  store-changing pattern (`pat_destruct_lit`).
-
-The emitter (`plugins/rust_meta/rust_meta_reduce.cpp`): `Emitter::Lean` is
-the script being recorded (`lines`, `store`, `facts`, `pure`, `built`:
-terms known not stuck, `why`: the first unsupported thing). For a new kind
-of operation call `leanStoreStep(spec, v)` (or `leanArgsStep` for a call on
-a slice of arguments) where `expr()`/`pattern()` writes the Rust, or
-`leanUnsupported("…")`. Helpers of the Rust (`requires_k`, `if_k`) are
-proved in place as `have … := (show … from by …)` blocks. `emitProgram`
-fills a `LeanProof`; `leanProofs()` writes the files and decides, per
-program, the reason. The reasons recorded after the cases, in order: no
-`Valid` for an argument; then, across programs, "it calls … which has no proof".
-
-## The reasons that remain (14 programs)
-
-| Count | Reason | Programs |
-| --- | --- | --- |
-| 7 | calls of programs without a proof, all through `$eo_is_bool_type` → `$eo_typeof` | `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_invoke_cmd_step_pop` (→ `$eo_push_proven`, now past `$eo_cmd_step_pop_proven`), `$eo_invoke_cmd` (→ `$eo_is_bool_type`, now past `$eo_cmd_step_proven`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`) |
-| 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
-| 1 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one) |
-
-`$eo_state_proven_nth` is proved: Daniel decided to prove the
-jump-pointer lookup (`Store.state_nth_spec` and `state_proven_nth_spec`,
-`Runtime/StateNth.lean`, on the new `JumpsOK` part of the store's
-invariant), after `charge` was fixed (below). With it,
-`$eo_mk_premise_list`, `$eo_cmd_step_proven` and
-`$eo_cmd_step_pop_proven` are proved. In the full CPC (478 of 1,086),
-`$eo_state_proven_nth` and `$eo_cmd_step_pop_proven` are proved;
-`$eo_mk_premise_list` stops at `eo::cons` with an operator that nests to
-the left, and `$eo_cmd_step_proven` at case 550, a literal that is not a
-Boolean.
-
-No program has the state invariant's reasons ("a state that may not be
-OK", "a proof that may not be OK", "a loop whose proof argument is
-assumed OK"), in CpcMini or the CPC.
-
-## What's left (for Fable)
-
-68 of the 76 programs the gate counts are proved. The other 8, by what
-stops them first and what it would take, are below.
-
-**The top-level theorem** (`check_proof_correct`, `Top.lean`) takes
-`$eo_checker_is_refutation`'s spec as a hypothesis, `hchk`.
-- Once #286 and logos `funTypeStuck` land and the program is proved,
-  pass `fun n => (specs n).eo__24eo_5fchecker_5fis_5frefutation` (checked
-  to be the same proposition by `rfl`). A version without `hchk` is then
-  one line.
-- For the full CPC, the same theorem needs the argument masks (`ArgKind`
-  against logos's `ArgTranslationKind`), CPC's command kinds, and a
-  statement about the front end (`adapter.rs`).
-
-**More of the same** (no decision, no trust beyond the 27):
-
-- `$eo_typeof`: past cases 0–7 (string and binary literal patterns
-  done, `Runtime/StringLits.lean`), it stops at case 8, which builds a
-  function type: the emitter has its lines (the constant `$emb_FunType`
-  and two applications), but the result type `__eo_typeof_dt_sel_return
-  …` may be stuck, so it meets the stuck-application design question
-  below. Forced, cases 0–7 elaborate; case 4 calls `$eo_lit_type_Binary`,
-  proved. The type cache, which `$eo_typeof` keeps its results in, is
-  done (proved with `$smtx_typeof`).
-- `$eo_to_smt` is proved (milestone 32, Ethos `cd4d38c`): the runtime
-  builds a constant's name from its digits, proved to spell
-  `"@u." ++ toString i` (`Runtime/ConstNames.lean`), and
-  `front.constant_name_spec` is no longer trusted. Lemma C never needed
-  `HasStuck SmtTerm`, contrary to what this note said: `__eo_to_smt`'s
-  last case matches every value, so the no-case rule gives `default`. In
-  the full CPC it stops at case 169 (the native operation
-  `mk_rational`), and `$eo_to_smt_distinct`, `$eo_to_smt_distinct_pairs`
-  and `$eo_to_smt_typed_list_elem_type` wait on it.
-- `$smtx_typeof` is proved, with the type cache (`framed_type_cached`,
-  the `TypesOK` part of the store's invariant). In the full CPC, where it
-  is the 37/10/3-group loop, it now stops at a call of
-  `$smtx_typeof_bv_op_2`, which has no proof.
-- `$eo_is_bool_type` → `$eo_push_proven`: wait on `$eo_typeof`, so on
-  the stuck-application question too.
-- *Once Andy's lean-meta change lands*: `$eo_typeof`, then
-  `$eo_is_bool_type`, `$eo_push_proven`, `$eo_invoke_assume_list` (its
-  fold already assumes its state OK), `$eo_invoke_cmd`,
-  `$eo_invoke_cmd_step_pop`, `$eo_invoke_cmd_list` and
-  `$eo_checker_is_refutation`: all 76.
-  This is expected, not checked: the fold's application against its
-  future spec was checked in a throwaway module only.
-
-**Decided: `charge`'s overflow** (Daniel, 2026-11-20). `Store::charge`
-tested `self.calls.saturating_add(count) > self.limits.calls` and then
-did `self.calls += count`. With `limits.calls = u64::MAX`, which
-pathos-eoc's adapter uses, a saturated sum passed the test and the `+=`
-overflowed: a panic, since pathos builds with `overflow-checks = true` in
-release too. The proof of `state_nth` could not exclude it. The runtime
-now assigns the sum it tested (Ethos `25e4ef7`); nothing else in the
-runtime changed, and `state_nth_spec` needs no extra hypothesis.
-
-**Design questions** (each needs Daniel's decision first; the facts for
-all three are in `~/Projects/cvc5/pathos-m28/work/design-memo.md`, and
-proofs.md's "Stuck terms under an application" has milestone 31's
-finding):
-
-- *An application of a term that may be stuck* (milestone 31's first
-  finding): only `$eo_typeof`'s selector case (a function type) is left.
-  Guarded applications (`__eo_mk_apply`) are done (`Store.apply_mk_rep`),
-  and the variables under a proof (`$eo_prog_scope`, and in the full CPC
-  `$eo_prog_arith_trichotomy` and `$eo_prog_true_intro`) are proved by
-  the state invariant (`ProofOK`). Daniel has asked Andy about
-  lean-meta's function types.
-- *`eo::cons`* (`$eo_mk_premise_list`): the spec is done
-  (`Store.builtin_spec_cons`, `Runtime/Lists.lean`; it takes the generated
-  spec of `$eo_is_list_nil` through `ih : Specs n`, and its `list_parts`
-  lemma is meant for the other list builtins). The element is
-  `$eo_state_proven_nth`'s result, which logos's `__eo_cons` does not
-  guard (a stuck element gives an application, the runtime gives the
-  stuck term); the state invariant now proves it is not stuck
-  (`state_proven_nth_ne_stuck_of` after the call), so the program waits
-  only on `$eo_state_proven_nth` itself (Daniel's decision), as
-  `$eo_cmd_step_proven` and `$eo_cmd_step_pop_proven` do. The left-nested
-  operators of the full CPC (`-`, `/`, `div`, `xor`, …) have no nil in
-  logos, so neither side makes a list of them; the emitter does not write
-  the lemma for a signature that has one. Through calls:
-  `$eo_cmd_step_proven` → `$eo_invoke_cmd` → `$eo_invoke_cmd_list`
-  (`$eo_invoke_cmd` also waits on `$eo_is_bool_type` and
-  `$eo_invoke_cmd_step_pop`).
-- *Programs compiled to the runtime*: `$eo_invoke_assume_list`'s fold is
-  proved by hand (`invoke_assume_list_spec`, `Runtime/AssumeFold.lean`,
-  from the specs of the three programs it calls); it now waits only on
-  `$eo_is_bool_type` (so on `$eo_typeof`), and `$eo_checker_is_refutation`
-  has moved on to `$eo_invoke_cmd_list`. `$eo_state_proven_nth` (the
-  jump-pointer lookup): Daniel decided to prove it, and it is proved
-  (`Store.state_nth_spec`, `Runtime/StateNth.lean`), after the fix to
-  `charge` above.
-
-**Out of the count:** the six datatype operators have no logos function
-(only the runtime's datatype operators reach them).
+1. **Stage 5, the full CPC** (478 of its 1,086 programs generated; see
+   "Stage 5" below and `~/Projects/cvc5/pathos-m28/work/cpc-proofs-measure.md`).
+   - Its proofs are not built. Hand-written lemmas that enumerate the
+     calculus (`Store/Rep.lean`'s `uopCtor`, `cases op <;> rfl`) run out of
+     memory at the CPC's 1,062 constructors and must be generated or
+     reproved.
+   - Its first remaining reasons:
+     - `$eo_to_smt` at case 169 (`mk_rational`);
+     - `$eo_mk_premise_list` at `eo::cons` with a left-nested operator;
+     - `$eo_cmd_step_proven` at case 550 (a non-Boolean literal);
+     - `$eo_typeof` at a call of `$eo_typeof_@from_bools`;
+     - `$smtx_typeof` at `$smtx_typeof_bv_op_2`.
+   - A top-level theorem for CPC also needs the argument masks (`ArgKind`
+     against logos's `ArgTranslationKind`), CPC's command kinds, and a
+     statement about the front end (`crates/pathos/src/adapter.rs`).
+2. **The harness's revisions** (`difftest.env`: `LOGOS_REV a3232131`,
+   `REFERENCE_REV e51f527c`): Daniel's decision.
+   - The full CPC crate is still compiled from logos `a3232131`, whose
+     Lean prints the selector's type unguarded, while its proof lines are
+     now guarded. It doesn't matter until stage 5 builds them, which
+     needs the CPC at a logos revision with #521 anyway.
+   - Moving `LOGOS_REV` changes the CPC's signature (1,104 programs at
+     the prototype's revision against 1,087): a full difftest.
+   - Moving `REFERENCE_REV` to an Ethos with #282 and #286 means
+     pathos-eoc must mirror them first (next item).
+3. **pathos-eoc's mirror of the stages**, when the reference Ethos moves:
+   - #286: `crates/pathos-eoc/src/lean_meta.rs:816-817` and
+     `crates/pathos-eoc/src/smt_meta.rs:673`, the function-type printing
+     (`__eo_mk_apply (__eo_mk_apply Term.FunType …` when evaluatable);
+   - #282's lean-meta, model_smt and semantics-compiler changes (fallback
+     cases, parallel bind), not yet looked at.
+4. **Smaller items:**
+   - the repeated datatype name in one block (cvc5/ethos#285; pathos's
+     compiled checker and Ethos disagree on it);
+   - the selector invariant is no longer needed (A was chosen);
+   - `docs/ethos-differences.md` for #285 once it is decided.
 
 ## Lemma C: both questions resolved
 
@@ -303,29 +169,18 @@ Two more that are not about trust:
 
 ## Untested paths
 
-The emitter writes these, and they elaborate where they have been
-exercised, but no proved program reaches them yet:
+None left in CpcMini: with all 76 programs proved, every kind of line the
+emitter writes for CpcMini is in a proved program. That includes:
+- `more_k` and `construct` of the stuck term;
+- the string and binary literals (`$eo_typeof`, `$eo_to_smt`);
+- building a function type, guarded;
+- `not`;
+- the state invariant's lines;
+- the assumption fold's application (`invoke_assume_list_spec`).
 
-- (Now exercised, since `$eo_state_proven_nth` is proved: the `more_k`
-  of `$eo_cmd_step_proven`'s case 0, and `construct` of the stuck term,
-  `Store.construct_stuck_spec`, in `$eo_cmd_step_proven` and
-  `$eo_cmd_step_pop_proven`.)
-- String and binary literals in patterns and built from values
-  (`destruct_string_spec`, `construct_string_spec`,
-  `destruct_binary_spec`, `construct_binary_spec`, `pat_destruct_lit2`):
-  `$eo_typeof` and `$eo_to_smt` are their only users and stop at case 8.
-  Checked with the force patch on `$eo_typeof`: cases 3 and 4 elaborate.
-- Building a function type (`$emb_FunType` and two applications): its
-  only user, `$eo_typeof`'s case 8, stops at the possibly stuck argument.
-- The fold's application against the spec it will have: it waits on
-  `$eo_is_bool_type`; checked in a throwaway module. (The state
-  invariant's lines for `$eo_state_proven_nth`, the non-stuck fact after
-  the call and `ProofOK` of `pf` of its result, are now in proved
-  programs: `$eo_mk_premise_list`, `$eo_cmd_step_proven`,
-  `$eo_cmd_step_pop_proven`.)
-- `not` in a generated proof: its spec compiles, but its only use comes
-  after a failing call. (`string_prefix_eq` is now in a proved program,
-  `$eo_to_smt_reserved_datatype_name`, behind `"@"`.)
+The full CPC has kinds CpcMini lacks: argument masks, left-nested
+operators, and the natives its rules use. They are untested until stage 5
+builds its proofs.
 
 ## The force patch
 

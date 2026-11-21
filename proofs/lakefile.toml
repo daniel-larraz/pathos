@@ -16,7 +16,7 @@ subDir = "backends/lean"
 [[require]]
 name = "LogosVerification"
 git = "https://github.com/cvc5/logos"
-rev = "a9944ea7dcee950feb5e0d9b6271e83b421d206e"
+rev = "bdcbd95f615627b26b6ebabc0f584e5230b0bf1f"
 subDir = "verification"
 
 # Mathlib comes last, as Lake asks: logos and Aeneas's library each name a

@@ -1,6 +1,6 @@
 source	proof	why
 $eo_StateObj_proven	generated	
-$eo_checker_is_refutation	none	it calls $eo_invoke_assume_list, which has no proof
+$eo_checker_is_refutation	generated	
 $eo_cmd_step_pop_proven	generated	
 $eo_cmd_step_proven	generated	
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
@@ -13,12 +13,12 @@ $eo_dt_resolve	generated
 $eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
-$eo_invoke_assume_list	none	it calls $eo_is_bool_type, which has no proof
-$eo_invoke_cmd	none	it calls $eo_is_bool_type, which has no proof
+$eo_invoke_assume_list	generated	
+$eo_invoke_cmd	generated	
 $eo_invoke_cmd_check_proven	generated	
-$eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
-$eo_invoke_cmd_step_pop	none	it calls $eo_push_proven, which has no proof
-$eo_is_bool_type	none	it calls $eo_typeof, which has no proof
+$eo_invoke_cmd_list	generated	
+$eo_invoke_cmd_step_pop	generated	
+$eo_is_bool_type	generated	
 $eo_is_closed	generated	
 $eo_is_closed_rec	generated	
 $eo_is_list_nil	generated	
@@ -35,7 +35,7 @@ $eo_prog_symm	generated
 $eo_prog_trans	generated	
 $eo_push_assume_check	generated	
 $eo_push_input_assume_check	generated	
-$eo_push_proven	none	it calls $eo_is_bool_type, which has no proof
+$eo_push_proven	generated	
 $eo_push_proven_check	generated	
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
@@ -46,7 +46,7 @@ $eo_to_smt_datatype_cons	generated
 $eo_to_smt_datatype_decl	generated	
 $eo_to_smt_reserved_datatype_name	generated	
 $eo_to_smt_type	generated	
-$eo_typeof	none	case 8 has an application of a term that may be stuck
+$eo_typeof	generated	
 $eo_typeof_=	generated	
 $eo_typeof_BitVec	generated	
 $eo_typeof_Seq	generated	

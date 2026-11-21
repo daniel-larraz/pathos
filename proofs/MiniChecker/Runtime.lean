@@ -1490,7 +1490,7 @@ def CheckError.Insts.CoreFmtDisplay : core.fmt.Display CheckError := {
 }
 
 /-- [pathos_compiled_checker::schema::Constructor]
-    Source: 'src/schema.rs', lines 3:0-139:1
+    Source: 'src/schema.rs', lines 3:0-141:1
     Visibility: public -/
 @[discriminant isize]
 inductive schema.Constructor where
@@ -1555,6 +1555,8 @@ inductive schema.Constructor where
 | eo__24emb_5fs_2eStuck : schema.Constructor
 | eo__24emb_5fs_2econs : schema.Constructor
 | eo__24emb_5fs_2enil : schema.Constructor
+| eo__24emb_5fsbd_2econs : schema.Constructor
+| eo__24emb_5fsbd_2enil : schema.Constructor
 | eo__24emb_5fsm_2e_3d : schema.Constructor
 | eo__24emb_5fsm_2e_3d_3e : schema.Constructor
 | eo__24emb_5fsm_2eApply : schema.Constructor
@@ -1647,7 +1649,7 @@ inductive Embedding where
 | Data : Embedding
 
 /-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::embedding]:
-    Source: 'src/schema.rs', lines 570:0-580:24
+    Source: 'src/schema.rs', lines 578:0-588:24
     Visibility: public -/
 def schema.Constructor.embedding
   (self : schema.Constructor) : Result Embedding := do
@@ -1713,6 +1715,8 @@ def schema.Constructor.embedding
   | schema.Constructor.eo__24emb_5fs_2eStuck => ok Embedding.Data
   | schema.Constructor.eo__24emb_5fs_2econs => ok Embedding.Data
   | schema.Constructor.eo__24emb_5fs_2enil => ok Embedding.Data
+  | schema.Constructor.eo__24emb_5fsbd_2econs => ok Embedding.Data
+  | schema.Constructor.eo__24emb_5fsbd_2enil => ok Embedding.Data
   | schema.Constructor.eo__24emb_5fsm_2e_3d => ok Embedding.Data
   | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok Embedding.Data
   | schema.Constructor.eo__24emb_5fsm_2eApply => ok Embedding.Data
@@ -1789,7 +1793,7 @@ def schema.Constructor.embedding
   | schema.Constructor.eo_not => ok Embedding.Data
 
 /-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::code]:
-    Source: 'src/schema.rs', lines 146:0-282:2
+    Source: 'src/schema.rs', lines 148:0-286:2
     Visibility: public -/
 def schema.Constructor.code (self : schema.Constructor) : Result Std.U32 := do
   match self with
@@ -1854,80 +1858,82 @@ def schema.Constructor.code (self : schema.Constructor) : Result Std.U32 := do
   | schema.Constructor.eo__24emb_5fs_2eStuck => ok 58#u32
   | schema.Constructor.eo__24emb_5fs_2econs => ok 59#u32
   | schema.Constructor.eo__24emb_5fs_2enil => ok 60#u32
-  | schema.Constructor.eo__24emb_5fsm_2e_3d => ok 61#u32
-  | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok 62#u32
-  | schema.Constructor.eo__24emb_5fsm_2eApply => ok 63#u32
-  | schema.Constructor.eo__24emb_5fsm_2eBinary => ok 64#u32
-  | schema.Constructor.eo__24emb_5fsm_2eBoolean => ok 65#u32
-  | schema.Constructor.eo__24emb_5fsm_2eDtCons => ok 66#u32
-  | schema.Constructor.eo__24emb_5fsm_2eDtSel => ok 67#u32
-  | schema.Constructor.eo__24emb_5fsm_2eDtTester => ok 68#u32
-  | schema.Constructor.eo__24emb_5fsm_2eNone => ok 69#u32
-  | schema.Constructor.eo__24emb_5fsm_2eNumeral => ok 70#u32
-  | schema.Constructor.eo__24emb_5fsm_2eRational => ok 71#u32
-  | schema.Constructor.eo__24emb_5fsm_2eString => ok 72#u32
-  | schema.Constructor.eo__24emb_5fsm_2eUConst => ok 73#u32
-  | schema.Constructor.eo__24emb_5fsm_2eVar => ok 74#u32
-  | schema.Constructor.eo__24emb_5fsm_2eand => ok 75#u32
-  | schema.Constructor.eo__24emb_5fsm_2eite => ok 76#u32
-  | schema.Constructor.eo__24emb_5fsm_2enot => ok 77#u32
-  | schema.Constructor.eo__24emb_5fsm_2eor => ok 78#u32
-  | schema.Constructor.eo__24emb_5fso_2eassume => ok 79#u32
-  | schema.Constructor.eo__24emb_5fso_2eassume_5fpush => ok 80#u32
-  | schema.Constructor.eo__24emb_5fso_2eproven => ok 81#u32
-  | schema.Constructor.eo__24emb_5fssm_2econs => ok 82#u32
-  | schema.Constructor.eo__24emb_5fssm_2eempty => ok 83#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eBitVec => ok 84#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eBool => ok 85#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eChar => ok 86#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eDatatype => ok 87#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eDtcAppType => ok 88#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eFunType => ok 89#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eInt => ok 90#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eMap => ok 91#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eNone => ok 92#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eReal => ok 93#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eRegLan => ok 94#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eSeq => ok 95#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eSet => ok 96#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eTypeRef => ok 97#u32
-  | schema.Constructor.eo__24emb_5ftsm_2eUSort => ok 98#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eApply => ok 99#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eBinary => ok 100#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eBoolean => ok 101#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eChar => ok 102#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eDtCons => ok 103#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eFun => ok 104#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eMap => ok 105#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eNotValue => ok 106#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eNumeral => ok 107#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eReal => ok 108#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eRegLan => ok 109#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eSeq => ok 110#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eSet => ok 111#u32
-  | schema.Constructor.eo__24emb_5fvsm_2eUValue => ok 112#u32
-  | schema.Constructor.eo__24eo_5fCmd => ok 113#u32
-  | schema.Constructor.eo__24eo_5fList => ok 114#u32
-  | schema.Constructor.eo__24eo_5fList_5fcons => ok 115#u32
-  | schema.Constructor.eo__24eo_5fList_5fnil => ok 116#u32
-  | schema.Constructor.eo__24eo_5fProof => ok 117#u32
-  | schema.Constructor.eo__24eo_5fRule => ok 118#u32
-  | schema.Constructor.eo__24eo_5fTerm => ok 119#u32
-  | schema.Constructor.eo__24eo_5fpf => ok 120#u32
-  | schema.Constructor.eo__24smt_5fMap => ok 121#u32
-  | schema.Constructor.eo__24smt_5fSeq => ok 122#u32
-  | schema.Constructor.eo__24smt_5fTerm => ok 123#u32
-  | schema.Constructor.eo__24smt_5fType => ok 124#u32
-  | schema.Constructor.eo__24smt_5fValue => ok 125#u32
-  | schema.Constructor.eo__3d => ok 126#u32
-  | schema.Constructor.eo__3d_3e => ok 127#u32
-  | schema.Constructor.eo_BitVec => ok 128#u32
-  | schema.Constructor.eo_Char => ok 129#u32
-  | schema.Constructor.eo_Int => ok 130#u32
-  | schema.Constructor.eo_Real => ok 131#u32
-  | schema.Constructor.eo_Seq => ok 132#u32
-  | schema.Constructor.eo_and => ok 133#u32
-  | schema.Constructor.eo_not => ok 134#u32
+  | schema.Constructor.eo__24emb_5fsbd_2econs => ok 61#u32
+  | schema.Constructor.eo__24emb_5fsbd_2enil => ok 62#u32
+  | schema.Constructor.eo__24emb_5fsm_2e_3d => ok 63#u32
+  | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok 64#u32
+  | schema.Constructor.eo__24emb_5fsm_2eApply => ok 65#u32
+  | schema.Constructor.eo__24emb_5fsm_2eBinary => ok 66#u32
+  | schema.Constructor.eo__24emb_5fsm_2eBoolean => ok 67#u32
+  | schema.Constructor.eo__24emb_5fsm_2eDtCons => ok 68#u32
+  | schema.Constructor.eo__24emb_5fsm_2eDtSel => ok 69#u32
+  | schema.Constructor.eo__24emb_5fsm_2eDtTester => ok 70#u32
+  | schema.Constructor.eo__24emb_5fsm_2eNone => ok 71#u32
+  | schema.Constructor.eo__24emb_5fsm_2eNumeral => ok 72#u32
+  | schema.Constructor.eo__24emb_5fsm_2eRational => ok 73#u32
+  | schema.Constructor.eo__24emb_5fsm_2eString => ok 74#u32
+  | schema.Constructor.eo__24emb_5fsm_2eUConst => ok 75#u32
+  | schema.Constructor.eo__24emb_5fsm_2eVar => ok 76#u32
+  | schema.Constructor.eo__24emb_5fsm_2eand => ok 77#u32
+  | schema.Constructor.eo__24emb_5fsm_2eite => ok 78#u32
+  | schema.Constructor.eo__24emb_5fsm_2enot => ok 79#u32
+  | schema.Constructor.eo__24emb_5fsm_2eor => ok 80#u32
+  | schema.Constructor.eo__24emb_5fso_2eassume => ok 81#u32
+  | schema.Constructor.eo__24emb_5fso_2eassume_5fpush => ok 82#u32
+  | schema.Constructor.eo__24emb_5fso_2eproven => ok 83#u32
+  | schema.Constructor.eo__24emb_5fssm_2econs => ok 84#u32
+  | schema.Constructor.eo__24emb_5fssm_2eempty => ok 85#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eBitVec => ok 86#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eBool => ok 87#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eChar => ok 88#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eDatatype => ok 89#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eDtcAppType => ok 90#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eFunType => ok 91#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eInt => ok 92#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eMap => ok 93#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eNone => ok 94#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eReal => ok 95#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eRegLan => ok 96#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eSeq => ok 97#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eSet => ok 98#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eTypeRef => ok 99#u32
+  | schema.Constructor.eo__24emb_5ftsm_2eUSort => ok 100#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eApply => ok 101#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eBinary => ok 102#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eBoolean => ok 103#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eChar => ok 104#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eDtCons => ok 105#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eFun => ok 106#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eMap => ok 107#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eNotValue => ok 108#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eNumeral => ok 109#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eReal => ok 110#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eRegLan => ok 111#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eSeq => ok 112#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eSet => ok 113#u32
+  | schema.Constructor.eo__24emb_5fvsm_2eUValue => ok 114#u32
+  | schema.Constructor.eo__24eo_5fCmd => ok 115#u32
+  | schema.Constructor.eo__24eo_5fList => ok 116#u32
+  | schema.Constructor.eo__24eo_5fList_5fcons => ok 117#u32
+  | schema.Constructor.eo__24eo_5fList_5fnil => ok 118#u32
+  | schema.Constructor.eo__24eo_5fProof => ok 119#u32
+  | schema.Constructor.eo__24eo_5fRule => ok 120#u32
+  | schema.Constructor.eo__24eo_5fTerm => ok 121#u32
+  | schema.Constructor.eo__24eo_5fpf => ok 122#u32
+  | schema.Constructor.eo__24smt_5fMap => ok 123#u32
+  | schema.Constructor.eo__24smt_5fSeq => ok 124#u32
+  | schema.Constructor.eo__24smt_5fTerm => ok 125#u32
+  | schema.Constructor.eo__24smt_5fType => ok 126#u32
+  | schema.Constructor.eo__24smt_5fValue => ok 127#u32
+  | schema.Constructor.eo__3d => ok 128#u32
+  | schema.Constructor.eo__3d_3e => ok 129#u32
+  | schema.Constructor.eo_BitVec => ok 130#u32
+  | schema.Constructor.eo_Char => ok 131#u32
+  | schema.Constructor.eo_Int => ok 132#u32
+  | schema.Constructor.eo_Real => ok 133#u32
+  | schema.Constructor.eo_Seq => ok 134#u32
+  | schema.Constructor.eo_and => ok 135#u32
+  | schema.Constructor.eo_not => ok 136#u32
 
 /-- [pathos_compiled_checker::num::Rational]
     Source: 'src/num.rs', lines 215:0-215:26
@@ -1948,7 +1954,7 @@ inductive lit.Lit where
 | Str : eostring.EoString → lit.Lit
 
 /-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::arity]:
-    Source: 'src/schema.rs', lines 294:0-430:2
+    Source: 'src/schema.rs', lines 298:0-436:2
     Visibility: public -/
 def schema.Constructor.arity
   (self : schema.Constructor) : Result Std.Usize := do
@@ -2014,6 +2020,8 @@ def schema.Constructor.arity
   | schema.Constructor.eo__24emb_5fs_2eStuck => ok 0#usize
   | schema.Constructor.eo__24emb_5fs_2econs => ok 2#usize
   | schema.Constructor.eo__24emb_5fs_2enil => ok 0#usize
+  | schema.Constructor.eo__24emb_5fsbd_2econs => ok 4#usize
+  | schema.Constructor.eo__24emb_5fsbd_2enil => ok 0#usize
   | schema.Constructor.eo__24emb_5fsm_2e_3d => ok 2#usize
   | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok 2#usize
   | schema.Constructor.eo__24emb_5fsm_2eApply => ok 2#usize
@@ -2090,7 +2098,7 @@ def schema.Constructor.arity
   | schema.Constructor.eo_not => ok 0#usize
 
 /-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::is_user]:
-    Source: 'src/schema.rs', lines 283:0-293:14
+    Source: 'src/schema.rs', lines 287:0-297:14
     Visibility: public -/
 def schema.Constructor.is_user (self : schema.Constructor) : Result Bool := do
   match self with
@@ -2155,6 +2163,8 @@ def schema.Constructor.is_user (self : schema.Constructor) : Result Bool := do
   | schema.Constructor.eo__24emb_5fs_2eStuck => ok false
   | schema.Constructor.eo__24emb_5fs_2econs => ok false
   | schema.Constructor.eo__24emb_5fs_2enil => ok false
+  | schema.Constructor.eo__24emb_5fsbd_2econs => ok false
+  | schema.Constructor.eo__24emb_5fsbd_2enil => ok false
   | schema.Constructor.eo__24emb_5fsm_2e_3d => ok false
   | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok false
   | schema.Constructor.eo__24emb_5fsm_2eApply => ok false
@@ -7559,7 +7569,7 @@ def literal_cmp
       ok (core.result.Result.Ok o)
 
 /-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::of_embedding]:
-    Source: 'src/schema.rs', lines 582:0-591:13
+    Source: 'src/schema.rs', lines 590:0-599:13
     Visibility: public -/
 def schema.Constructor.of_embedding
   (e : Embedding) : Result (Option schema.Constructor) := do
@@ -7576,7 +7586,7 @@ def schema.Constructor.of_embedding
   | Embedding.Data => ok none
 
 /-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::order_key]:
-    Source: 'src/schema.rs', lines 433:0-569:2
+    Source: 'src/schema.rs', lines 439:0-577:2
     Visibility: public -/
 def schema.Constructor.order_key
   (self : schema.Constructor) : Result (Std.Usize × Std.Usize) := do
@@ -7600,16 +7610,16 @@ def schema.Constructor.order_key
   | schema.Constructor.eo__24emb_5fUOp => ok (0#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fUSort => ok (20#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fVar => ok (14#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fal_2econs => ok (107#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fal_2enil => ok (106#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fal_2econs => ok (109#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fal_2enil => ok (108#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush =>
-    ok (121#usize, 0#usize)
+    ok (123#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven =>
-    ok (122#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fcmd_2estep => ok (123#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fcmd_2estep_5fpop => ok (124#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fcmdl_2econs => ok (126#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fcmdl_2enil => ok (125#usize, 0#usize)
+    ok (124#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fcmd_2estep => ok (125#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fcmd_2estep_5fpop => ok (126#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fcmdl_2econs => ok (128#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fcmdl_2enil => ok (127#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fdd_2econs => ok (89#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fdd_2enil => ok (88#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fdt_2enull => ok (86#usize, 0#usize)
@@ -7622,15 +7632,15 @@ def schema.Constructor.order_key
   | schema.Constructor.eo__24emb_5fedt_2esum => ok (29#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fedtc_2econs => ok (27#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fedtc_2eunit => ok (26#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5findl_2econs => ok (105#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5findl_2enil => ok (104#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5findl_2econs => ok (107#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5findl_2enil => ok (106#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fmsm_2econs => ok (70#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fmsm_2edefault => ok (71#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fr_2econtra => ok (117#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fr_2erefl => ok (118#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fr_2escope => ok (116#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fr_2esymm => ok (119#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fr_2etrans => ok (120#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fr_2econtra => ok (119#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fr_2erefl => ok (120#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fr_2escope => ok (118#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fr_2esymm => ok (121#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fr_2etrans => ok (122#usize, 0#usize)
   | schema.Constructor.eo__24emb_5frsm_2eallchar => ok (78#usize, 0#usize)
   | schema.Constructor.eo__24emb_5frsm_2echar => ok (76#usize, 0#usize)
   | schema.Constructor.eo__24emb_5frsm_2ecomp => ok (83#usize, 0#usize)
@@ -7641,9 +7651,11 @@ def schema.Constructor.order_key
   | schema.Constructor.eo__24emb_5frsm_2erange => ok (77#usize, 0#usize)
   | schema.Constructor.eo__24emb_5frsm_2estar => ok (82#usize, 0#usize)
   | schema.Constructor.eo__24emb_5frsm_2eunion => ok (80#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fs_2eStuck => ok (114#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fs_2econs => ok (115#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fs_2enil => ok (113#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fs_2eStuck => ok (116#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fs_2econs => ok (117#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fs_2enil => ok (115#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fsbd_2econs => ok (105#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fsbd_2enil => ok (104#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fsm_2e_3d => ok (51#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok (50#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fsm_2eApply => ok (41#usize, 0#usize)
@@ -7662,10 +7674,10 @@ def schema.Constructor.order_key
   | schema.Constructor.eo__24emb_5fsm_2eite => ok (52#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fsm_2enot => ok (47#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fsm_2eor => ok (49#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fso_2eassume => ok (110#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fso_2eassume => ok (112#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fso_2eassume_5fpush =>
-    ok (111#usize, 0#usize)
-  | schema.Constructor.eo__24emb_5fso_2eproven => ok (112#usize, 0#usize)
+    ok (113#usize, 0#usize)
+  | schema.Constructor.eo__24emb_5fso_2eproven => ok (114#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fssm_2econs => ok (72#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fssm_2eempty => ok (73#usize, 0#usize)
   | schema.Constructor.eo__24emb_5ftsm_2eBitVec => ok (58#usize, 0#usize)
@@ -7697,12 +7709,12 @@ def schema.Constructor.order_key
   | schema.Constructor.eo__24emb_5fvsm_2eSeq => ok (98#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fvsm_2eSet => ok (97#usize, 0#usize)
   | schema.Constructor.eo__24emb_5fvsm_2eUValue => ok (100#usize, 0#usize)
-  | schema.Constructor.eo__24eo_5fCmd => ok (109#usize, 0#usize)
+  | schema.Constructor.eo__24eo_5fCmd => ok (111#usize, 0#usize)
   | schema.Constructor.eo__24eo_5fList => ok (1#usize, 0#usize)
   | schema.Constructor.eo__24eo_5fList_5fcons => ok (3#usize, 0#usize)
   | schema.Constructor.eo__24eo_5fList_5fnil => ok (2#usize, 0#usize)
   | schema.Constructor.eo__24eo_5fProof => ok (23#usize, 0#usize)
-  | schema.Constructor.eo__24eo_5fRule => ok (108#usize, 0#usize)
+  | schema.Constructor.eo__24eo_5fRule => ok (110#usize, 0#usize)
   | schema.Constructor.eo__24eo_5fTerm => ok (25#usize, 0#usize)
   | schema.Constructor.eo__24eo_5fpf => ok (24#usize, 0#usize)
   | schema.Constructor.eo__24smt_5fMap => ok (68#usize, 0#usize)
@@ -12123,7 +12135,7 @@ def Store.object_index
       (Option Std.U32) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::is_left_assoc]:
-    Source: 'src/schema.rs', lines 431:0-432:14
+    Source: 'src/schema.rs', lines 437:0-438:14
     Visibility: public -/
 def schema.Constructor.is_left_assoc
   (self : schema.Constructor) : Result Bool := do
@@ -12842,7 +12854,7 @@ def TermData.Insts.CoreCloneClone : core.clone.Clone TermData := {
 }
 
 /-- [pathos_compiled_checker::front::names::{impl core::fmt::Debug for pathos_compiled_checker::schema::Constructor}::fmt]:
-    Source: 'src/names.rs', lines 280:0-416:4
+    Source: 'src/names.rs', lines 284:0-422:4
     Visibility: public -/
 axiom schema.Constructor.Insts.CoreFmtDebug.fmt
   :
@@ -12850,7 +12862,7 @@ axiom schema.Constructor.Insts.CoreFmtDebug.fmt
     Unit core.fmt.Error) × core.fmt.Formatter)
 
 /-- Trait implementation: [pathos_compiled_checker::front::names::{impl core::fmt::Debug for pathos_compiled_checker::schema::Constructor}]
-    Source: 'src/names.rs', lines 279:0-417:1 -/
+    Source: 'src/names.rs', lines 283:0-423:1 -/
 @[reducible]
 def schema.Constructor.Insts.CoreFmtDebug : core.fmt.Debug schema.Constructor
   := {
@@ -12968,7 +12980,7 @@ def TermData.Insts.CoreMarkerStructuralPartialEq :
 }
 
 /-- [pathos_compiled_checker::schema::{impl core::cmp::PartialEq<pathos_compiled_checker::schema::Constructor> for pathos_compiled_checker::schema::Constructor}::eq]:
-    Source: 'src/schema.rs', lines 141:0-141:66
+    Source: 'src/schema.rs', lines 143:0-143:66
     Visibility: public -/
 def schema.Constructor.Insts.CoreCmpPartialEqConstructor.eq
   (self : schema.Constructor) (other : schema.Constructor) : Result Bool := do
@@ -12977,7 +12989,7 @@ def schema.Constructor.Insts.CoreCmpPartialEqConstructor.eq
   ok (i = i1)
 
 /-- Trait implementation: [pathos_compiled_checker::schema::{impl core::cmp::PartialEq<pathos_compiled_checker::schema::Constructor> for pathos_compiled_checker::schema::Constructor}]
-    Source: 'src/schema.rs', lines 140:0-142:1 -/
+    Source: 'src/schema.rs', lines 142:0-144:1 -/
 @[reducible]
 impl_def schema.Constructor.Insts.CoreCmpPartialEqConstructor :
   core.cmp.PartialEq schema.Constructor schema.Constructor := {
@@ -13597,7 +13609,7 @@ def schema.Constructor.Insts.CoreMarkerCopy : core.marker.Copy
 }
 
 /-- Trait implementation: [pathos_compiled_checker::schema::{impl core::cmp::Eq for pathos_compiled_checker::schema::Constructor}]
-    Source: 'src/schema.rs', lines 143:0-143:26 -/
+    Source: 'src/schema.rs', lines 145:0-145:26 -/
 @[reducible]
 impl_def schema.Constructor.Insts.CoreCmpEq : core.cmp.Eq schema.Constructor
   := {
