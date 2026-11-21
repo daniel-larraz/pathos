@@ -3682,13 +3682,13 @@ def Store.stuck (self : Store) : Result Term := do
   ok 0#u32
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::leave]:
-    Source: 'src/lib.rs', lines 929:4-931:5 -/
+    Source: 'src/lib.rs', lines 932:4-934:5 -/
 def Store.leave (self : Store) : Result Store := do
   let i ← self.depth - 1#u32
   ok { self with depth := i }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::enter]:
-    Source: 'src/lib.rs', lines 914:4-921:5 -/
+    Source: 'src/lib.rs', lines 917:4-924:5 -/
 def Store.enter
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.depth >= self.limits.depth
@@ -3702,7 +3702,7 @@ def Store.enter
       ok (core.result.Result.Ok (), { self with calls := i1, depth := i })
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]: loop 0:
-    Source: 'src/lib.rs', lines 1068:8-1073:5 -/
+    Source: 'src/lib.rs', lines 1071:8-1076:5 -/
 @[rust_loop]
 def Store.check_handles_loop
   (self : Store) (args : Slice Term) (i : Std.Usize) :
@@ -3725,7 +3725,7 @@ def Store.check_handles_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]:
-    Source: 'src/lib.rs', lines 1066:4-1073:5 -/
+    Source: 'src/lib.rs', lines 1069:4-1076:5 -/
 @[reducible]
 def Store.check_handles
   (self : Store) (args : Slice Term) :
@@ -3744,7 +3744,7 @@ axiom num.Integer.to_u32 : num.Integer → Result Std.U32
 axiom num.Integer.fits_u32 : num.Integer → Result Bool
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_int]:
-    Source: 'src/lib.rs', lines 792:4-797:5 -/
+    Source: 'src/lib.rs', lines 795:4-800:5 -/
 def Store.raw_int
   (self : Store) (t : Term) :
   Result (core.result.Result num.Integer CheckError)
@@ -4212,7 +4212,7 @@ def kind.EvalOp.Insts.CoreCmpPartialEqEvalOp.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::recognizes]:
-    Source: 'src/lib.rs', lines 1102:4-1117:5 -/
+    Source: 'src/lib.rs', lines 1105:4-1120:5 -/
 def Store.recognizes
   (self : Store) (op : kind.EvalOp) (x : Term) :
   Result (core.result.Result Bool CheckError)
@@ -4260,7 +4260,7 @@ def Store.recognizes
         Bool (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::stuck_or_foreign]:
-    Source: 'src/lib.rs', lines 1087:4-1093:5 -/
+    Source: 'src/lib.rs', lines 1090:4-1096:5 -/
 def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
   let r ← Store.view self t
   match r with
@@ -4275,7 +4275,7 @@ def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
   | core.result.Result.Err _ => ok true
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]: loop 0:
-    Source: 'src/lib.rs', lines 1078:8-1083:9 -/
+    Source: 'src/lib.rs', lines 1081:8-1086:9 -/
 @[rust_loop]
 def Store.any_stuck_loop
   (self : Store) (args : Slice Term) (any : Bool) (i : Std.Usize) :
@@ -4295,7 +4295,7 @@ def Store.any_stuck_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]:
-    Source: 'src/lib.rs', lines 1075:4-1085:5 -/
+    Source: 'src/lib.rs', lines 1078:4-1088:5 -/
 @[reducible]
 def Store.any_stuck (self : Store) (args : Slice Term) : Result Bool := do
   Store.any_stuck_loop self args false 0#usize
@@ -7242,7 +7242,7 @@ def lit.Lit.evaluate
       else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literal_of]:
-    Source: 'src/lib.rs', lines 1095:4-1100:5 -/
+    Source: 'src/lib.rs', lines 1098:4-1103:5 -/
 def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   let r ← Store.view self t
   match r with
@@ -7259,7 +7259,7 @@ def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   | core.result.Result.Err _ => ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]: loop 0:
-    Source: 'src/lib.rs', lines 1123:8-1129:9 -/
+    Source: 'src/lib.rs', lines 1126:8-1132:9 -/
 @[rust_loop]
 def Store.literals_loop
   (self : Store) (args : Slice Term) (lits : alloc.vec.Vec lit.Lit)
@@ -7284,7 +7284,7 @@ def Store.literals_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]:
-    Source: 'src/lib.rs', lines 1119:4-1131:5 -/
+    Source: 'src/lib.rs', lines 1122:4-1134:5 -/
 def Store.literals
   (self : Store) (args : Slice Term) :
   Result (Option (alloc.vec.Vec lit.Lit))
@@ -7297,7 +7297,7 @@ def Store.literals
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_literal]:
-    Source: 'src/lib.rs', lines 1055:4-1064:5 -/
+    Source: 'src/lib.rs', lines 1058:4-1067:5 -/
 def Store.builtin_literal
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7315,7 +7315,7 @@ def Store.builtin_literal
     | some literal => Store.literal self literal
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::name_of]:
-    Source: 'src/lib.rs', lines 1045:4-1053:5 -/
+    Source: 'src/lib.rs', lines 1048:4-1056:5 -/
 def Store.name_of
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7426,7 +7426,7 @@ axiom num.Integer.Insts.CoreCmpOrd.cmp
   : num.Integer → num.Integer → Result Ordering
 
 /-- [pathos_compiled_checker::code_points_cmp]: loop 0:
-    Source: 'src/lib.rs', lines 1182:4-1192:5 -/
+    Source: 'src/lib.rs', lines 1185:4-1195:5 -/
 @[rust_loop]
 def code_points_cmp_loop
   (a : Slice Std.U32) (b : Slice Std.U32) (order : Ordering) (i : Std.Usize)
@@ -7463,14 +7463,14 @@ def code_points_cmp_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::code_points_cmp]:
-    Source: 'src/lib.rs', lines 1177:0-1194:1 -/
+    Source: 'src/lib.rs', lines 1180:0-1197:1 -/
 @[reducible]
 def code_points_cmp
   (a : Slice Std.U32) (b : Slice Std.U32) : Result Ordering := do
   code_points_cmp_loop a b Ordering.eq 0#usize true
 
 /-- [pathos_compiled_checker::literal_cmp]:
-    Source: 'src/lib.rs', lines 1137:0-1174:1 -/
+    Source: 'src/lib.rs', lines 1140:0-1177:1 -/
 def literal_cmp
   (a : lit.Lit) (b : lit.Lit) :
   Result (core.result.Result Ordering CheckError)
@@ -7725,7 +7725,7 @@ def schema.Constructor.order_key
   | schema.Constructor.eo_not => ok (0#usize, 5#usize)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::order_key]:
-    Source: 'src/lib.rs', lines 811:4-828:5 -/
+    Source: 'src/lib.rs', lines 814:4-831:5 -/
 def Store.order_key
   (d : TermData) :
   Result (core.result.Result (Std.Usize × Std.Usize) CheckError)
@@ -7770,7 +7770,7 @@ def Store.order_key
     ok (core.result.Result.Ok p)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]: loop 0:
-    Source: 'src/lib.rs', lines 903:20-906:21 -/
+    Source: 'src/lib.rs', lines 906:20-909:21 -/
 @[rust_loop]
 def Store.compare_step_loop
   (todo : table.PairStack) (xs : alloc.vec.Vec Term) (ys : alloc.vec.Vec Term)
@@ -7790,7 +7790,7 @@ def Store.compare_step_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]:
-    Source: 'src/lib.rs', lines 854:4-913:5 -/
+    Source: 'src/lib.rs', lines 857:4-916:5 -/
 def Store.compare_step
   (self : Store) (a : Term) (b : Term) (todo : table.PairStack) :
   Result ((core.result.Result Ordering CheckError) × table.PairStack)
@@ -7959,7 +7959,7 @@ def Store.compare_step
       ok (r1, todo)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]: loop 0:
-    Source: 'src/lib.rs', lines 838:8-851:5
+    Source: 'src/lib.rs', lines 841:8-854:5
     Visibility: public -/
 @[rust_loop]
 def Store.compare_loop
@@ -7988,7 +7988,7 @@ def Store.compare_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]:
-    Source: 'src/lib.rs', lines 831:4-851:5
+    Source: 'src/lib.rs', lines 834:4-854:5
     Visibility: public -/
 def Store.compare
   (self : Store) (a : Term) (b : Term) :
@@ -8070,7 +8070,7 @@ def kind.EvalOp.is_list_op (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_strict]:
-    Source: 'src/lib.rs', lines 1024:4-1043:5 -/
+    Source: 'src/lib.rs', lines 1027:4-1046:5 -/
 def Store.builtin_strict
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8432,7 +8432,7 @@ def kind.EvalOp.is_nary (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::takes]:
-    Source: 'src/lib.rs', lines 984:4-1022:5 -/
+    Source: 'src/lib.rs', lines 987:4-1025:5 -/
 def Store.takes (op : kind.EvalOp) (count : Std.Usize) : Result Bool := do
   let arity ←
     match op with
@@ -8546,7 +8546,7 @@ def Store.boolean_value
       (Option Bool) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_core]:
-    Source: 'src/lib.rs', lines 938:4-982:5 -/
+    Source: 'src/lib.rs', lines 941:4-985:5 -/
 def Store.builtin_core
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9110,7 +9110,7 @@ def native.Store.native_to_real
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_rat]:
-    Source: 'src/lib.rs', lines 798:4-803:5 -/
+    Source: 'src/lib.rs', lines 801:4-806:5 -/
 def Store.raw_rat
   (self : Store) (t : Term) :
   Result (core.result.Result num.Rational CheckError)
@@ -11198,7 +11198,7 @@ def native.Store.native_pattern_succ
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::tick]:
-    Source: 'src/lib.rs', lines 922:4-928:5 -/
+    Source: 'src/lib.rs', lines 925:4-931:5 -/
 def Store.tick
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.calls >= self.limits.calls
@@ -11302,7 +11302,7 @@ def Store.cached_type
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump]:
-    Source: 'src/lib.rs', lines 709:4-717:5 -/
+    Source: 'src/lib.rs', lines 712:4-720:5 -/
 def Store.state_jump
   (self : Store) (t : Term) : Result (Option (Std.U32 × Term)) := do
   let i ← lift (UScalar.cast .Usize t)
@@ -11318,7 +11318,7 @@ def Store.state_jump
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump_depth]:
-    Source: 'src/lib.rs', lines 719:4-724:5 -/
+    Source: 'src/lib.rs', lines 722:4-727:5 -/
 def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
   let o ← Store.state_jump self t
   match o with
@@ -11327,7 +11327,7 @@ def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
               ok d
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_tail]:
-    Source: 'src/lib.rs', lines 700:4-707:5 -/
+    Source: 'src/lib.rs', lines 703:4-710:5 -/
 def Store.state_tail
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result (core.result.Result (Option Term) CheckError)
@@ -11361,7 +11361,7 @@ def Store.state_tail
       (Option Term) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-791:5 -/
+    Source: 'src/lib.rs', lines 1:0-794:5 -/
 @[rust_loop]
 def Store.state_ancestor_loop
   (x : Term) (self : Store) (cons : schema.Constructor) (target : Std.U32) :
@@ -11392,7 +11392,7 @@ def Store.state_ancestor_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]:
-    Source: 'src/lib.rs', lines 772:4-791:5 -/
+    Source: 'src/lib.rs', lines 775:4-794:5 -/
 @[reducible]
 def Store.state_ancestor
   (self : Store) (cons : schema.Constructor) (t : Term) (target : Std.U32) :
@@ -11401,7 +11401,7 @@ def Store.state_ancestor
   Store.state_ancestor_loop t self cons target
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::set_state_jump]:
-    Source: 'src/lib.rs', lines 725:4-731:5 -/
+    Source: 'src/lib.rs', lines 728:4-734:5 -/
 def Store.set_state_jump
   (self : Store) (t : Term) (entry : (Std.U32 × Term)) : Result Store := do
   let i ← lift (UScalar.cast .Usize t)
@@ -11421,7 +11421,7 @@ def Store.set_state_jump
   ok { self with state_jumps := v1 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 1:
-    Source: 'src/lib.rs', lines 754:8-767:9 -/
+    Source: 'src/lib.rs', lines 757:8-770:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop0
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -11457,7 +11457,7 @@ def Store.state_depth_loop0_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 2:
-    Source: 'src/lib.rs', lines 754:8-767:9 -/
+    Source: 'src/lib.rs', lines 757:8-770:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop1
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -11493,7 +11493,7 @@ def Store.state_depth_loop0_loop1
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-769:5 -/
+    Source: 'src/lib.rs', lines 1:0-772:5 -/
 @[rust_loop]
 def Store.state_depth_loop0
   (x : Term) (self : Store) (cons : schema.Constructor)
@@ -11526,7 +11526,7 @@ def Store.state_depth_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]:
-    Source: 'src/lib.rs', lines 735:4-769:5 -/
+    Source: 'src/lib.rs', lines 738:4-772:5 -/
 def Store.state_depth
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result ((core.result.Result Std.U32 CheckError) × Store)
@@ -11535,19 +11535,17 @@ def Store.state_depth
   Store.state_depth_loop0 t self cons pending
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::charge]:
-    Source: 'src/lib.rs', lines 691:4-698:5 -/
+    Source: 'src/lib.rs', lines 691:4-701:5 -/
 def Store.charge
   (self : Store) (count : Std.U64) :
   Result ((core.result.Result Unit CheckError) × Store)
   := do
-  let i ← lift (core.num.U64.saturating_add self.calls count)
-  if i > self.limits.calls
+  let sum ← lift (core.num.U64.saturating_add self.calls count)
+  if sum > self.limits.calls
   then
     ok (core.result.Result.Err CheckError.Limit,
       { self with calls := self.limits.calls })
-  else
-    let i1 ← self.calls + count
-    ok (core.result.Result.Ok (), { self with calls := i1 })
+  else ok (core.result.Result.Ok (), { self with calls := sum })
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_nth]:
     Source: 'src/lib.rs', lines 650:4-688:5 -/
@@ -11840,7 +11838,7 @@ def table.TermCounts.new (n : Std.Usize) : Result table.TermCounts := do
     }
 
 /-- [pathos_compiled_checker::first_occurrences]: loop 0:
-    Source: 'src/lib.rs', lines 1257:4-1263:5 -/
+    Source: 'src/lib.rs', lines 1260:4-1266:5 -/
 @[rust_loop]
 def first_occurrences_loop
   (xs : Slice Term) (seen : table.TermCounts) (out : alloc.vec.Vec Term)
@@ -11867,14 +11865,14 @@ def first_occurrences_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::first_occurrences]:
-    Source: 'src/lib.rs', lines 1253:0-1265:1 -/
+    Source: 'src/lib.rs', lines 1256:0-1268:1 -/
 def first_occurrences (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let seen ← table.TermCounts.new i
   first_occurrences_loop xs seen (alloc.vec.Vec.new Term) 0#usize
 
 /-- [pathos_compiled_checker::without]: loop 0:
-    Source: 'src/lib.rs', lines 1244:4-1249:5 -/
+    Source: 'src/lib.rs', lines 1247:4-1252:5 -/
 @[rust_loop]
 def without_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -11895,14 +11893,14 @@ def without_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without]:
-    Source: 'src/lib.rs', lines 1241:0-1251:1 -/
+    Source: 'src/lib.rs', lines 1244:0-1254:1 -/
 def without (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
   without_loop xs x out 0#usize
 
 /-- [pathos_compiled_checker::without_first]: loop 0:
-    Source: 'src/lib.rs', lines 1230:4-1237:5 -/
+    Source: 'src/lib.rs', lines 1233:4-1240:5 -/
 @[rust_loop]
 def without_first_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (erased : Bool)
@@ -11933,7 +11931,7 @@ def without_first_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without_first]:
-    Source: 'src/lib.rs', lines 1226:0-1239:1 -/
+    Source: 'src/lib.rs', lines 1229:0-1242:1 -/
 def without_first
   (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
@@ -11941,7 +11939,7 @@ def without_first
   without_first_loop xs x out false 0#usize
 
 /-- [pathos_compiled_checker::reversed]: loop 0:
-    Source: 'src/lib.rs', lines 1219:4-1222:5 -/
+    Source: 'src/lib.rs', lines 1222:4-1225:5 -/
 @[rust_loop]
 def reversed_loop
   (xs : Slice Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -11957,7 +11955,7 @@ def reversed_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::reversed]:
-    Source: 'src/lib.rs', lines 1216:0-1224:1 -/
+    Source: 'src/lib.rs', lines 1219:0-1227:1 -/
 def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
@@ -11965,7 +11963,7 @@ def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   reversed_loop xs out i1
 
 /-- [pathos_compiled_checker::position]: loop 0:
-    Source: 'src/lib.rs', lines 1207:4-1212:5 -/
+    Source: 'src/lib.rs', lines 1210:4-1215:5 -/
 @[rust_loop]
 def position_loop
   (xs : Slice Term) (x : Term) (found : Option Std.Usize) (i : Std.Usize) :
@@ -11983,7 +11981,7 @@ def position_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::position]:
-    Source: 'src/lib.rs', lines 1204:0-1214:1 -/
+    Source: 'src/lib.rs', lines 1207:0-1217:1 -/
 def position (xs : Slice Term) (x : Term) : Result (Option Std.Usize) := do
   let i := Slice.len xs
   position_loop xs x none i
@@ -11998,7 +11996,7 @@ def Store.numeral
   Store.literal self (lit.Lit.Numeral n)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::object_index]:
-    Source: 'src/lib.rs', lines 804:4-809:5 -/
+    Source: 'src/lib.rs', lines 807:4-812:5 -/
 def Store.object_index
   (self : Store) (t : Term) :
   Result (core.result.Result (Option Std.U32) CheckError)
@@ -12063,7 +12061,7 @@ def table.TermCounts.count
     self.counts place
 
 /-- [pathos_compiled_checker::multiset]: loop 0:
-    Source: 'src/lib.rs', lines 1270:4-1273:5 -/
+    Source: 'src/lib.rs', lines 1273:4-1276:5 -/
 @[rust_loop]
 def multiset_loop
   (ys : Slice Term) (counts : table.TermCounts) (i : Std.Usize) :
@@ -12080,14 +12078,14 @@ def multiset_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset]:
-    Source: 'src/lib.rs', lines 1267:0-1275:1 -/
+    Source: 'src/lib.rs', lines 1270:0-1278:1 -/
 def multiset (ys : Slice Term) : Result table.TermCounts := do
   let i := Slice.len ys
   let counts ← table.TermCounts.new i
   multiset_loop ys counts 0#usize
 
 /-- [pathos_compiled_checker::multiset_select]: loop 0:
-    Source: 'src/lib.rs', lines 1298:4-1311:5 -/
+    Source: 'src/lib.rs', lines 1301:4-1314:5 -/
 @[rust_loop]
 def multiset_select_loop
   (xs : Slice Term) (paired : Bool) (counts : table.TermCounts)
@@ -12116,7 +12114,7 @@ def multiset_select_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_select]:
-    Source: 'src/lib.rs', lines 1294:0-1313:1 -/
+    Source: 'src/lib.rs', lines 1297:0-1316:1 -/
 def multiset_select
   (xs : Slice Term) (ys : Slice Term) (paired : Bool) :
   Result (alloc.vec.Vec Term)
@@ -12150,7 +12148,7 @@ def table.TermCounts.all_zero (self : table.TermCounts) : Result Bool := do
   table.TermCounts.all_zero_loop self true 0#usize
 
 /-- [pathos_compiled_checker::multiset_inclusion]: loop 0:
-    Source: 'src/lib.rs', lines 1283:4-1289:5 -/
+    Source: 'src/lib.rs', lines 1286:4-1292:5 -/
 @[rust_loop]
 def multiset_inclusion_loop
   (xs : Slice Term) (counts : table.TermCounts) (foreign : Bool)
@@ -12175,7 +12173,7 @@ def multiset_inclusion_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_inclusion]:
-    Source: 'src/lib.rs', lines 1279:0-1291:1 -/
+    Source: 'src/lib.rs', lines 1282:0-1294:1 -/
 def multiset_inclusion
   (xs : Slice Term) (ys : Slice Term) : Result (Bool × Bool) := do
   let counts ← multiset ys
@@ -12184,7 +12182,7 @@ def multiset_inclusion
   ok (foreign, b)
 
 /-- [pathos_compiled_checker::append_terms]: loop 0:
-    Source: 'src/lib.rs', lines 1198:4-1201:5 -/
+    Source: 'src/lib.rs', lines 1201:4-1204:5 -/
 @[rust_loop]
 def append_terms_loop
   («to» : alloc.vec.Vec Term) («from» : Slice Term) (i : Std.Usize) :
@@ -12201,7 +12199,7 @@ def append_terms_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::append_terms]:
-    Source: 'src/lib.rs', lines 1196:0-1202:1 -/
+    Source: 'src/lib.rs', lines 1199:0-1205:1 -/
 @[reducible]
 def append_terms
   («to» : alloc.vec.Vec Term) («from» : Slice Term) :

@@ -701,16 +701,17 @@ gives `true`, or an error.
   `state_nth` charges (the runtime charges what the walk would) needs no
   proof that it equals the walk's, only that the store grows
   (`Store.Grows`, whose budget never goes up).
-- **One hypothesis is left, and it is not the invariant's:** `charge`
-  computes `self.calls + count` after a saturating test against
-  `limits.calls`. Where `limits.calls` is `u64::MAX` (pathos-eoc's adapter
-  sets that, panics.md, `adapter.rs:140-142`), the test lets a sum past
-  `u64::MAX` through, and the addition overflows: a panic in a debug build
-  and in Aeneas's model, a wrap in a release build. It takes about 2^64
-  calls to get there, but nothing in the store's invariant rules it out,
-  so `state_nth_spec` takes `s.calls + 2^33 ≤ u64::MAX`, which a program's
-  spec (`s.Inv` only) cannot give. Until that is decided (see the
-  handoff), the emitter does not write `$eo_state_proven_nth`'s theorem.
+- **`charge` and the runtime fix.** `charge` used to compute
+  `self.calls += count` after a saturating test against `limits.calls`.
+  With `limits.calls` at `u64::MAX` (what pathos-eoc's adapter sets,
+  panics.md, `adapter.rs:140-142`) the test let a sum past `u64::MAX`
+  through, and the addition overflowed. pathos builds with
+  `overflow-checks = true` (Cargo.toml), so that is a panic in release
+  too, and a failure in Aeneas's model. It takes about 2^64 calls, but the
+  store's invariant could not rule it out. Daniel's decision (2026-11-20):
+  fix the runtime. `charge` now assigns the saturating sum that it tested
+  (Ethos `25e4ef7`), and `Store.charge_spec` and `state_nth_spec` need no
+  hypothesis beyond the store's invariant.
 
 **What is written by hand** (`proofs/PathosProofs/`):
 

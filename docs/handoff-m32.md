@@ -104,7 +104,7 @@ program, the reason. The reasons recorded after the cases, in order: no
 | 10 | calls of programs without a proof | `$eo_mk_premise_list`, `$eo_cmd_step_proven`, `$eo_cmd_step_pop_proven` (→ `$eo_state_proven_nth`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_checker_is_refutation` (→ `$eo_invoke_cmd_list`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
 | 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
-| 1 | compiled to a function of the runtime | `$eo_state_proven_nth`: Daniel decided to prove the jump-pointer lookup. `Store.state_nth_spec` is proved (`Runtime/StateNth.lean`, on the new `JumpsOK` part of the store's invariant), but under one hypothesis, `s.calls + 2^33 ≤ u64::MAX`, which the program's spec cannot give (see below). So the emitter does not write the program's theorem yet. |
+| 1 | compiled to a function of the runtime | `$eo_state_proven_nth`: Daniel decided to prove the jump-pointer lookup. `Store.state_nth_spec` is proved (`Runtime/StateNth.lean`, on the new `JumpsOK` part of the store's invariant), with no hypothesis beyond the store's invariant since `charge` was fixed (below). |
 
 No program has the state invariant's reasons ("a state that may not be
 OK", "a proof that may not be OK", "a loop whose proof argument is
@@ -154,23 +154,14 @@ stops them first and what it would take:
   looked-up premise, the fold against its future spec) were checked in a
   throwaway module, not in a proved program.
 
-**Decision needed: `charge`'s overflow** (blocks `$eo_state_proven_nth`
-and the four programs that wait on it). `Store::charge` does
-`if self.calls.saturating_add(count) > self.limits.calls { … }` and then
-`self.calls += count`. With `limits.calls = u64::MAX`, which pathos-eoc's
-adapter uses, the test passes when the sum overflows, and the `+=` panics
-in a debug build and in Aeneas's model (a release build wraps). Reaching it
-takes about 2^64 calls, but the proof cannot exclude it from the store's
-invariant. `state_nth_spec` therefore assumes `s.calls + 2^33 ≤ u64::MAX`.
-The ways out:
-- a Rust change in `charge`: store the saturating sum that the test
-  already computed (`self.calls = sum`), which is at most `limits.calls`
-  on that path. The behaviour is the same wherever no overflow happens,
-  and everything else in the proof stays.
-- or a bound on the limits as part of the invariant (`limits.calls ≤
-  u64::MAX - 2^33`). Limits never change, so it is kept for free, but
-  `Store.new_spec` would assume it, and pathos-eoc's `u64::MAX` would not
-  satisfy it.
+**Decided: `charge`'s overflow** (Daniel, 2026-11-20). `Store::charge`
+tested `self.calls.saturating_add(count) > self.limits.calls` and then
+did `self.calls += count`. With `limits.calls = u64::MAX`, which
+pathos-eoc's adapter uses, a saturated sum passed the test and the `+=`
+overflowed: a panic, since pathos builds with `overflow-checks = true` in
+release too. The proof of `state_nth` could not exclude it. The runtime
+now assigns the sum it tested (Ethos `25e4ef7`); nothing else in the
+runtime changed, and `state_nth_spec` needs no extra hypothesis.
 
 **Design questions** (each needs Daniel's decision first; the facts for
 all three are in `~/Projects/cvc5/pathos-m28/work/design-memo.md`, and
@@ -206,8 +197,8 @@ finding):
   `$eo_is_bool_type` (so on `$eo_typeof`), and `$eo_checker_is_refutation`
   has moved on to `$eo_invoke_cmd_list`. `$eo_state_proven_nth` (the
   jump-pointer lookup): Daniel decided to prove it, and it is proved
-  (`Store.state_nth_spec`, `Runtime/StateNth.lean`) up to `charge`'s
-  overflow above.
+  (`Store.state_nth_spec`, `Runtime/StateNth.lean`), after the fix to
+  `charge` above.
 
 **Out of the count:** the six datatype operators have no logos function
 (only the runtime's datatype operators reach them).

@@ -797,22 +797,37 @@ theorem state_ancestor_spec (self : Store) (hinv : self.Inv) (target : Std.U32) 
               apply ih tail ⟨k + 1, d.val - 1,
                 hk.trans (StateDown.succ _ _ _ _ htl (StateDown.zero _)), hdt, by omega, by omega⟩
 
+theorem UScalar.saturating_add_val {ty : UScalarTy} (x y : UScalar ty) :
+    (UScalar.saturating_add x y).val = min (UScalar.max ty) (x.val + y.val) := by
+  unfold UScalar.saturating_add
+  show (BitVec.ofNat ty.numBits _).toNat = _
+  rw [BitVec.toNat_ofNat]
+  apply Nat.mod_eq_of_lt
+  have h := UScalar.max_def ty
+  have hp : 0 < 2 ^ ty.numBits := Nat.pos_of_ne_zero (by simp)
+  omega
+
 /-- `charge` counts calls: nothing else of the store changes, and the
-budget goes down. It panics where `calls + count` passes `u64::MAX` (the
-saturating test lets that through when `limits.calls` is `u64::MAX`), so it
-takes that the count fits. -/
-theorem Store.charge_spec (s : Store) (count : Std.U64)
-    (hroom : s.calls.val + count.val ≤ U64.max) :
+budget goes down. It stores the saturating sum that it tested, which is at
+least the calls counted before. -/
+theorem Store.charge_spec (s : Store) (count : Std.U64) :
     Store.charge s count ⦃ r s' => (∃ c, s' = { s with calls := c }) ∧ s'.budget ≤ s.budget ⦄ := by
   unfold Store.charge
-  step as ⟨i, hi⟩
+  step as ⟨sum, hsum⟩
+  have hge : s.calls.val ≤ sum.val := by
+    rw [hsum]
+    show s.calls.val ≤ (UScalar.saturating_add s.calls count).val
+    rw [UScalar.saturating_add_val]
+    have h1 := s.calls.hmax
+    have h2 := UScalar.max_def UScalarTy.U64
+    omega
   split
   · simp only [WP.spec_ok, WP.uncurry'_pair]
     refine ⟨⟨_, rfl⟩, ?_⟩
     simp [Store.budget]
-  · step as ⟨i1, hi1⟩
+  · simp only [WP.spec_ok, WP.uncurry'_pair]
     refine ⟨⟨_, rfl⟩, ?_⟩
-    simp only [Store.budget]; scalar_tac
+    simp only [Store.budget]; omega
 
 theorem Store.Inv.with_jumps {s : Store} (h : s.Inv) (v : alloc.vec.Vec (Std.U32 × Term))
     (hv : JumpsOK s.nodes.val v.val) : ({ s with state_jumps := v } : Store).Inv := by
@@ -857,7 +872,7 @@ def NthPost (s0 : Store) (S : Eo.CState) (n : Int)
 
 /-- `charge`, then the rest `K` where it succeeds and its error where not. -/
 theorem charge_then (s0 s : Store) (hinv : s.Inv) (hG : s0.Grows s) (S : Eo.CState) (n : Int)
-    (count : Std.U64) (hroom : s.calls.val + count.val ≤ U64.max)
+    (count : Std.U64)
     (K : Store → Result ((core.result.Result (Option Term) CheckError) × Store))
     (hK : ∀ c : Std.U64, ({ s with calls := c } : Store).Inv → s0.Grows { s with calls := c } →
       K { s with calls := c } ⦃ r s' => NthPost s0 S n r s' ⦄div) :
@@ -871,7 +886,7 @@ theorem charge_then (s0 s : Store) (hinv : s.Inv) (hG : s0.Grows s) (S : Eo.CSta
           core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
             (Option Term) (core.convert.FromSame CheckError) residual
         ok (r3, self2)) ⦃ r s' => NthPost s0 S n r s' ⦄div := by
-  step with Store.charge_spec s count hroom as ⟨r2, s2, c, hc, hb⟩
+  step with Store.charge_spec s count as ⟨r2, s2, c, hc, hb⟩
   subst hc
   have hinv2 := hinv.with_calls c
   have hG2 : s0.Grows { s with calls := c } := hG.trans ⟨List.prefix_refl _, rfl, rfl, hb⟩
@@ -910,7 +925,7 @@ theorem index_then (s0 : Store) (S : Eo.CState) (n : Int)
   obtain ⟨r, hr, hrv⟩ := num.Integer.sgn_spec (num.Integer.ofInt n)
   rw [num.Integer.toInt_ofInt] at hrv
   rw [hr]
-  simp only [Std.bind_ok, Std.bind_assoc_eq]
+  simp only [Std.bind_ok]
   split
   · rename_i hge
     have hn0 : 0 ≤ n := by
@@ -949,11 +964,9 @@ theorem index_then (s0 : Store) (S : Eo.CState) (n : Int)
 /-- **`state_nth` finds what logos's `__eo_state_proven_nth` looks up**: for
 handles of a state `S` and an index `n`, the handle of the `n`-th object of
 `S`, of which the program gives `__eo_StateObj_proven`; `none` where logos
-gives `true`; or an error. It takes that the calls counted so far leave room
-for the count it charges (see `Store.charge_spec`). -/
+gives `true`; or an error. -/
 theorem Store.state_nth_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) (state index : Term)
-    (S : Eo.CState) (n : Int) (hS : Represents.rep s state S) (hn : Represents.rep s index n)
-    (hroom : s.calls.val + 2 ^ 33 ≤ U64.max) :
+    (S : Eo.CState) (n : Int) (hS : Represents.rep s state S) (hn : Represents.rep s index n) :
     Store.state_nth s stateCons state index ⦃ r s' => NthPost s S n r s' ⦄div := by
   unfold Store.state_nth
   step with Store.state_depth_spec s hinv h64 state as ⟨r, s1, v, hv, hj1, hr⟩
@@ -974,7 +987,7 @@ theorem Store.state_nth_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) (stat
       omega
     split
     · rename_i hD0
-      apply charge_then s _ hinv1 hG1 S n 1#u64 (by simp; omega)
+      apply charge_then s _ hinv1 hG1 S n 1#u64
       intro c hinv2 hG2
       simp only [WP.dspec_ok, WP.uncurry'_pair]
       refine ⟨hinv2, hG2, ?_⟩
@@ -1001,7 +1014,7 @@ theorem Store.state_nth_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) (stat
         · rename_i hkD
           have hkD' : k.val < D.val := by scalar_tac
           step as ⟨i1, hi1⟩
-          apply charge_then s _ hinv1 hG1 S n _ (by simp only; scalar_tac)
+          apply charge_then s _ hinv1 hG1 S n _
           intro c hinv2 hG2
           step as ⟨k32, hk32⟩
           have hk32v : k32.val = k.val := by scalar_tac
@@ -1052,7 +1065,7 @@ theorem Store.state_nth_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) (stat
           have hkD' : D.val ≤ k.val := by scalar_tac
           step as ⟨i1, hi1⟩
           step as ⟨i2, hi2⟩
-          apply charge_then s _ hinv1 hG1 S n _ (by simp only; scalar_tac)
+          apply charge_then s _ hinv1 hG1 S n _
           intro c hinv2 hG2
           simp only [WP.dspec_ok, WP.uncurry'_pair]
           refine ⟨hinv2, hG2, ?_⟩
@@ -1062,7 +1075,7 @@ theorem Store.state_nth_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) (stat
         simp only
         step as ⟨i1, hi1⟩
         step as ⟨i2, hi2⟩
-        apply charge_then s _ hinv1 hG1 S n _ (by simp only; scalar_tac)
+        apply charge_then s _ hinv1 hG1 S n _
         intro c hinv2 hG2
         simp only [WP.dspec_ok, WP.uncurry'_pair]
         refine ⟨hinv2, hG2, ?_⟩
