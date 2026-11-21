@@ -18,6 +18,7 @@ public import PathosProofs.Runtime.Builtins
 public import PathosProofs.Runtime.StringLits
 public import PathosProofs.Runtime.Lists
 public import PathosProofs.Runtime.AssumeFold
+public import PathosProofs.Runtime.StateInv
 
 /-!
 # The tactics of the generated proofs
