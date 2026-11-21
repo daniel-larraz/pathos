@@ -53,8 +53,8 @@ successful tick uses up some of the budget of calls (`Store.budget`). -/
 theorem Store.tick_spec (s : Store) :
     Store.tick s ⦃ r s' =>
       s'.nodes = s.nodes ∧ s'.hashes = s.hashes ∧ s'.slots = s.slots ∧
-      s'.caches = s.caches ∧ s'.limits = s.limits ∧ s'.depth = s.depth ∧
-      s'.budget ≤ s.budget ∧
+      s'.caches = s.caches ∧ s'.state_jumps = s.state_jumps ∧ s'.limits = s.limits ∧
+      s'.depth = s.depth ∧ s'.budget ≤ s.budget ∧
       match r with
       | core.result.Result.Ok _ => s'.budget < s.budget
       | core.result.Result.Err _ => True ⦄ := by
@@ -299,8 +299,8 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
       match r with
       | core.result.Result.Ok a => post s' a
       | core.result.Result.Err _ => True ⦄div := by
-  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hl, hb, hd⟩
-  have hinv1 : s1.Inv := hinv.congr hn hh hs hc
+  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hj, hl, hb, hd⟩
+  have hinv1 : s1.Inv := hinv.congr hn hh hs hc hj
   cases r with
   | Err e =>
     simp only [WP.dspec_ok, WP.uncurry'_pair] at hd ⊢
@@ -322,9 +322,9 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
     | Err error =>
       clear hr1
       dsimp only
-      step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
+      step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hj4, hl4, hd4, hk4⟩
       simp only [WP.dspec_ok, WP.uncurry'_pair]
-      refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+      refine ⟨hinv3.congr hn4 hh4 hs4 hc4 hj4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
           by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩, trivial⟩
       exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
     | Ok o =>
@@ -341,9 +341,9 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
           rw [hep, hea, hsl, her] at this
           rw [hn3]; exact this
         have hval : post s3 value := hget s3 value hn3' hsem
-        step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
+        step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hj4, hl4, hd4, hk4⟩
         simp only [WP.dspec_ok, WP.uncurry'_pair]
-        refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+        refine ⟨hinv3.congr hn4 hh4 hs4 hc4 hj4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
           by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩,
           hpost s3 s4 value hn4 hval⟩
         exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
@@ -352,10 +352,10 @@ theorem Store.framed_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.remai
         simp only
         step with hbody s3 (n - 1) hinv3 hn3' hn0 hrem3 as ⟨result, s4, hinv4, hg4, hres⟩
         have hd4 : 0 < s4.depth.val := by rw [hg4.depth]; exact hd3
-        step with Store.leave_spec s4 hd4 as ⟨s5, hn5, hh5, hs5, hc5, hl5, hd5, hk5⟩
+        step with Store.leave_spec s4 hd4 as ⟨s5, hn5, hh5, hs5, hc5, hj5, hl5, hd5, hk5⟩
         have hb5 : s5.budget ≤ s.budget := by
           rw [Store.budget_congr hl5 hk5]; exact le_trans hg4.budget (le_trans hg3.budget hb)
-        have hinv5 : s5.Inv := hinv4.congr hn5 hh5 hs5 hc5
+        have hinv5 : s5.Inv := hinv4.congr hn5 hh5 hs5 hc5 hj5
         have hnodes5 : s.nodes.val <+: s5.nodes.val := by
           rw [hn5, ← hn3']; exact hg4.nodes
         have hl5' : s5.limits = s.limits := by rw [hl5, hg4.limits, hl3]
@@ -434,8 +434,8 @@ theorem Store.framed_type_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.
       match r with
       | core.result.Result.Ok a => post s' a
       | core.result.Result.Err _ => True ⦄div := by
-  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hl, hb, hd⟩
-  have hinv1 : s1.Inv := hinv.congr hn hh hs hc
+  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hj, hl, hb, hd⟩
+  have hinv1 : s1.Inv := hinv.congr hn hh hs hc hj
   cases r with
   | Err e =>
     simp only [WP.dspec_ok, WP.uncurry'_pair] at hd ⊢
@@ -459,9 +459,9 @@ theorem Store.framed_type_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.
     | Err error =>
       clear hr1
       dsimp only
-      step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
+      step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hj4, hl4, hd4, hk4⟩
       simp only [WP.dspec_ok, WP.uncurry'_pair]
-      refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+      refine ⟨hinv3.congr hn4 hh4 hs4 hc4 hj4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
           by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩, trivial⟩
       exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
     | Ok o =>
@@ -472,9 +472,9 @@ theorem Store.framed_type_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.
         clear hr1
         dsimp only
         have hval : post s3 value := hget s3 value hn3' hsem
-        step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hl4, hd4, hk4⟩
+        step with Store.leave_spec s3 hd3 as ⟨s4, hn4, hh4, hs4, hc4, hj4, hl4, hd4, hk4⟩
         simp only [WP.dspec_ok, WP.uncurry'_pair]
-        refine ⟨hinv3.congr hn4 hh4 hs4 hc4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
+        refine ⟨hinv3.congr hn4 hh4 hs4 hc4 hj4, ⟨by rw [hn4, hn3'], by rw [hl4, hl3], ?_,
           by rw [Store.budget_congr hl4 hk4]; exact le_trans hg3.budget hb⟩,
           hpost s3 s4 value hn4 hval⟩
         exact u32_eq_of_val (by rw [hd4, hd3v]; omega)
@@ -483,10 +483,10 @@ theorem Store.framed_type_cached (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.
         simp only
         step with hbody s3 (n - 1) hinv3 hn3' hn0 hrem3 as ⟨result, s4, hinv4, hg4, hres⟩
         have hd4 : 0 < s4.depth.val := by rw [hg4.depth]; exact hd3
-        step with Store.leave_spec s4 hd4 as ⟨s5, hn5, hh5, hs5, hc5, hl5, hd5, hk5⟩
+        step with Store.leave_spec s4 hd4 as ⟨s5, hn5, hh5, hs5, hc5, hj5, hl5, hd5, hk5⟩
         have hb5 : s5.budget ≤ s.budget := by
           rw [Store.budget_congr hl5 hk5]; exact le_trans hg4.budget (le_trans hg3.budget hb)
-        have hinv5 : s5.Inv := hinv4.congr hn5 hh5 hs5 hc5
+        have hinv5 : s5.Inv := hinv4.congr hn5 hh5 hs5 hc5 hj5
         have hnodes5 : s.nodes.val <+: s5.nodes.val := by
           rw [hn5, ← hn3']; exact hg4.nodes
         have hl5' : s5.limits = s.limits := by rw [hl5, hg4.limits, hl3]

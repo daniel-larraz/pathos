@@ -23,18 +23,20 @@ theorem Store.Inv.congr' {s s' : Store} (h : s.Inv) (hn : s'.nodes = s.nodes)
     (hh : s'.hashes = s.hashes) (hs : s'.slots = s.slots)
     (hct : s'.caches.types = s.caches.types)
     (hcp : s'.caches.programs = s.caches.programs)
-    (hcs : s'.caches.stats.type_entries = s.caches.stats.type_entries) : s'.Inv := by
-  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩, ⟨c1, c2, c3, c4⟩⟩ := h
-  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, ⟨?_, ?_, ?_, ?_⟩⟩ <;>
-    simp only [hn, hh, hs, hct, hcp, hcs] <;> assumption
+    (hcs : s'.caches.stats.type_entries = s.caches.stats.type_entries)
+    (hj : s'.state_jumps = s.state_jumps) : s'.Inv := by
+  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩, ⟨c1, c2, c3, c4⟩, d⟩ := h
+  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, ⟨?_, ?_, ?_, ?_⟩, ?_⟩ <;>
+    simp only [hn, hh, hs, hct, hcp, hcs, hj] <;> assumption
 
 /-- The same when the cache of program results changes, if it stays right. -/
 theorem Store.Inv.with_cache {s s' : Store} (h : s.Inv) (hn : s'.nodes = s.nodes)
     (hh : s'.hashes = s.hashes) (hs : s'.slots = s.slots)
-    (hct : s'.caches.types = s.caches.types) (hc : CacheInv s') : s'.Inv := by
-  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩, _⟩ := h
-  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, hc⟩ <;>
-    simp only [hn, hh, hs, hct] <;> assumption
+    (hct : s'.caches.types = s.caches.types) (hc : CacheInv s')
+    (hj : s'.state_jumps = s.state_jumps) : s'.Inv := by
+  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩, _, d⟩ := h
+  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, hc, ?_⟩ <;>
+    simp only [hn, hh, hs, hct, hj] <;> assumption
 
 theorem cache.Caches.program_get_spec (c : cache.Caches) (hwf : CacheWf c.programs)
     (program : cache.ProgramId) (args : Slice Term) :
@@ -101,7 +103,7 @@ theorem Store.cached_program_spec (s : Store) (hinv : s.Inv) (program : cache.Pr
         exact ⟨hinv, Store.Grows.refl s⟩
     · step with cache.Caches.program_get_spec s.caches hinv.cache.wf as ⟨o, c, hct, hcp, hcs, hres⟩
       simp only [WP.dspec_ok, WP.uncurry'_pair]
-      refine ⟨hinv.congr' rfl rfl rfl hct hcp hcs, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial, ?_⟩
+      refine ⟨hinv.congr' rfl rfl rfl hct hcp hcs rfl, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial, ?_⟩
       cases o with
       | none => trivial
       | some v => exact hres v rfl
@@ -138,7 +140,7 @@ theorem Store.cache_program_spec (s : Store) (hinv : s.Inv) (program : cache.Pro
       · simp only [hv, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
         step with cache.Caches.program_insert_spec s.caches hinv.cache.wf as ⟨c, hct, hcs, hadds⟩
         simp only [WP.dspec_ok, WP.uncurry'_pair]
-        refine ⟨hinv.with_cache rfl rfl rfl hct ?_, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial⟩
+        refine ⟨hinv.with_cache rfl rfl rfl hct ?_ rfl, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial⟩
         obtain ⟨hwf', _, hent⟩ := hadds
         refine ⟨hwf', ?_, by rw [hct]; exact hinv.cache.types,
           by rw [hct, hcs]; exact hinv.cache.count⟩
@@ -329,7 +331,7 @@ theorem Store.cached_type_spec (s : Store) (hinv : s.Inv) (k : cache.TypeCacheKi
   · simp only [hv, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
     step with cache.Caches.type_get_spec s.caches k t as ⟨o, c, hct, hcp, hcs, hres⟩
     simp only [WP.dspec_ok, WP.uncurry'_pair]
-    refine ⟨hinv.congr' rfl rfl rfl hct hcp hcs, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial, ?_⟩
+    refine ⟨hinv.congr' rfl rfl rfl hct hcp hcs rfl, ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial, ?_⟩
     cases o with
     | none => trivial
     | some v =>
@@ -362,9 +364,10 @@ theorem Store.cache_type_spec (s : Store) (hinv : s.Inv) (h64 : Platform64)
       step with cache.Caches.type_insert_spec s.caches k t result s.nodes.val hinv.cache.types
         hinv.cache.count hbound hnew as ⟨c, hcp, hcl, hct, hcc⟩
       simp only [WP.dspec_ok, WP.uncurry'_pair]
-      obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, hterms, ⟨c1, c2, _, _⟩⟩ := hinv
+      obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, hterms, ⟨c1, c2, _, _⟩, hjumps⟩ := hinv
       refine ⟨⟨⟨a1, a2, a3, a4, by simp only [alloc.vec.Vec.length] at hcl ⊢; rw [hcl]; exact a5, a6, a7, a8⟩,
-        ⟨hterms.1, hterms.2, hterms.3⟩, ⟨by rw [hcp]; exact c1, by rw [hcp]; exact c2, hct, hcc⟩⟩,
+        ⟨hterms.1, hterms.2, hterms.3⟩, ⟨by rw [hcp]; exact c1, by rw [hcp]; exact c2, hct, hcc⟩,
+        hjumps⟩,
         ⟨List.prefix_refl _, rfl, rfl, le_refl _⟩, trivial⟩
     · simp [hv2, core.result.Result.Insts.CoreOpsTry.branch,
         core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]

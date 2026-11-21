@@ -764,12 +764,12 @@ macro_rules
     let hg := Lean.mkIdent `hg
     let hbud := Lean.mkIdent `hbud
     `(tactic| (
-      step with Store.tick_spec as ⟨$(b r), $(b s'), hn, hh, hs, hc, hl, hd, hb, $(b hbud)⟩
-      have $hinv : Store.Inv $s' := Store.Inv.congr (by assumption) hn hh hs hc
+      step with Store.tick_spec as ⟨$(b r), $(b s'), hn, hh, hs, hc, hj, hl, hd, hb, $(b hbud)⟩
+      have $hinv : Store.Inv $s' := Store.Inv.congr (by assumption) hn hh hs hc hj
       have $hg : Store.Grows _ $s' := ⟨by rw [hn], hl, hd, hb⟩
       transport $hg at $hs*
       replace $hG:ident := Store.Grows.trans $hG $hg
-      clear $hg hn hh hs hc hl hd hb
+      clear $hg hn hh hs hc hj hl hd hb
       cases $r:ident
       case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
       simp only at $hbud:ident ⊢))

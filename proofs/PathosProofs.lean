@@ -7,6 +7,7 @@ public import PathosProofs.Store.SameData
 public import PathosProofs.Store.Hash
 public import PathosProofs.Store.Intern
 public import PathosProofs.Store.Ops
+public import PathosProofs.Store.Jumps
 public import PathosProofs.Store.Rep
 public import PathosProofs.Store.Tree
 public import PathosProofs.Store.New
@@ -28,6 +29,7 @@ public import PathosProofs.Runtime.StringLits
 public import PathosProofs.Runtime.Lists
 public import PathosProofs.Runtime.AssumeFold
 public import PathosProofs.Runtime.StateInv
+public import PathosProofs.Runtime.StateNth
 public import PathosProofs.Tactic
 public import PathosProofs.Generated
 public import MiniProofs

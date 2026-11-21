@@ -113,8 +113,8 @@ theorem fold_case0_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) (a0 a1 : T
 theorem Store.tick_grows (s : Store) (hinv : s.Inv) :
     Store.tick s ⦃ r s' => s'.Inv ∧ s.Grows s' ⦄ := by
   apply WP.spec_mono (Store.tick_spec s)
-  rintro ⟨r, s'⟩ ⟨hn, hh, hs, hc, hl, hd, hb, _⟩
-  exact ⟨hinv.congr hn hh hs hc, ⟨by rw [hn], hl, hd, hb⟩⟩
+  rintro ⟨r, s'⟩ ⟨hn, hh, hs, hc, hj, hl, hd, hb, _⟩
+  exact ⟨hinv.congr hn hh hs hc hj, ⟨by rw [hn], hl, hd, hb⟩⟩
 
 /-- The fields that `destruct` gives are earlier handles. -/
 theorem Store.destruct_fields_lt {s s' : Store} (hinv : s.Inv) {c : schema.Constructor}

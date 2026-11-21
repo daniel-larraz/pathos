@@ -21,17 +21,18 @@ open Aeneas Aeneas.Std Result
 
 /-- The invariant is about the terms and their table only. -/
 theorem Store.Inv.congr {s s' : Store} (h : s.Inv) (hn : s'.nodes = s.nodes)
-    (hh : s'.hashes = s.hashes) (hs : s'.slots = s.slots) (hc : s'.caches = s.caches) :
-    s'.Inv := by
-  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩, ⟨c1, c2, c3, c4⟩⟩ := h
-  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, ⟨?_, ?_, ?_, ?_⟩⟩ <;>
-    simp only [hn, hh, hs, hc] <;> assumption
+    (hh : s'.hashes = s.hashes) (hs : s'.slots = s.slots) (hc : s'.caches = s.caches)
+    (hj : s'.state_jumps = s.state_jumps) : s'.Inv := by
+  obtain ⟨⟨a1, a2, a3, a4, a5, a6, a7, a8⟩, ⟨b1, b2, b3⟩, ⟨c1, c2, c3, c4⟩, d⟩ := h
+  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, ⟨?_, ?_, ?_, ?_⟩, ?_⟩ <;>
+    simp only [hn, hh, hs, hc, hj] <;> assumption
 
 /-- `enter` counts a call: the terms are as they were, the depth one more. -/
 theorem Store.enter_spec (s : Store) :
     Store.enter s ⦃ r s' =>
       s'.nodes = s.nodes ∧ s'.hashes = s.hashes ∧ s'.slots = s.slots ∧
-      s'.caches = s.caches ∧ s'.limits = s.limits ∧ s'.budget ≤ s.budget ∧
+      s'.caches = s.caches ∧ s'.state_jumps = s.state_jumps ∧ s'.limits = s.limits ∧
+      s'.budget ≤ s.budget ∧
       match r with
       | core.result.Result.Ok _ =>
         s'.depth.val = s.depth.val + 1 ∧ s.depth.val < s.limits.depth.val
@@ -60,7 +61,8 @@ theorem Store.Grows.rem {s s' : Store} {n : Nat} (h : s.Grows s') (hr : s.remain
 theorem Store.leave_spec (s : Store) (h : 0 < s.depth.val) :
     Store.leave s ⦃ s' =>
       s'.nodes = s.nodes ∧ s'.hashes = s.hashes ∧ s'.slots = s.slots ∧
-      s'.caches = s.caches ∧ s'.limits = s.limits ∧ s'.depth.val = s.depth.val - 1 ∧
+      s'.caches = s.caches ∧ s'.state_jumps = s.state_jumps ∧ s'.limits = s.limits ∧
+      s'.depth.val = s.depth.val - 1 ∧
       s'.calls = s.calls ⦄ := by
   unfold Store.leave
   step*
@@ -107,8 +109,8 @@ theorem Store.framed {α : Type} (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.
       match r with
       | core.result.Result.Ok a => post s' a
       | core.result.Result.Err _ => True ⦄div := by
-  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hl, hb, hd⟩
-  have hinv1 : s1.Inv := hinv.congr hn hh hs hc
+  step with Store.enter_spec as ⟨r, s1, hn, hh, hs, hc, hj, hl, hb, hd⟩
+  have hinv1 : s1.Inv := hinv.congr hn hh hs hc hj
   cases r with
   | Err e =>
     simp only [WP.dspec_ok, WP.uncurry'_pair] at hd ⊢
@@ -121,9 +123,9 @@ theorem Store.framed {α : Type} (s : Store) (hinv : s.Inv) {n : Nat} (hrem : s.
     have hn0 : n - 1 < n := by unfold Store.remaining at hrem; omega
     step with hbody s1 (n - 1) hinv1 hn hn0 hrem1 as ⟨result, s2, hinv2, hg2, hres⟩
     have hdepth : 0 < s2.depth.val := by rw [hg2.depth, hd]; omega
-    step with Store.leave_spec as ⟨s3, hn3, hh3, hs3, hc3, hl3, hd3, hk3⟩
+    step with Store.leave_spec as ⟨s3, hn3, hh3, hs3, hc3, hj3, hl3, hd3, hk3⟩
     simp only [WP.dspec_ok, WP.uncurry'_pair]
-    refine ⟨hinv2.congr hn3 hh3 hs3 hc3, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
+    refine ⟨hinv2.congr hn3 hh3 hs3 hc3 hj3, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
     · rw [hn3, ← hn]; exact hg2.nodes
     · rw [hl3, hg2.limits, hl]
     · have : s3.depth.val = s.depth.val := by rw [hd3, hg2.depth, hd]; omega

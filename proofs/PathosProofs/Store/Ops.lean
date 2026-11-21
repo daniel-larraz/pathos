@@ -6,6 +6,7 @@ public import PathosProofs.Store.Intern
 public import PathosProofs.Store.Rep
 public import MiniCacheSem
 public import PathosProofs.Store.Cache
+public import PathosProofs.Store.Jumps
 
 /-!
 # The store's operations on terms
@@ -182,6 +183,9 @@ structure Store.Inv (s : Store) : Prop where
   table : StoreInv s
   terms : s.Wf
   cache : CacheInv s
+  /-- The jump pointers of `state_nth` lead where the walk down a state
+  list would (Store/Jumps.lean). -/
+  jumps : JumpsOK s.nodes.val s.state_jumps.val
 
 theorem Store.Wf.data {s : Store} (h : s.Wf) (t : Nat) (ht : t < s.nodes.length) :
     (s.nodes.val[t]!).Wf s.nodes.val :=
@@ -213,7 +217,9 @@ theorem Store.intern_inv (s : Store) (data : TermData) (hinv : s.Inv)
       · exact (hinv.cache.types.mono hext.1).extend hext.2.2.2.2.2.2
       · obtain ⟨⟨k, hk⟩, hst⟩ := hext.2.2.2.2.2.2
         rw [hst, hk, typesFilled_extend]; exact hinv.cache.count
-    refine ⟨⟨htable, ?_, hcache⟩, hext, hlt, hdata⟩
+    have hjumps : JumpsOK s'.nodes.val s'.state_jumps.val := by
+      rw [hext.2.2.2.2.1]; exact hinv.jumps.mono hext.1
+    refine ⟨⟨htable, ?_, hcache, hjumps⟩, hext, hlt, hdata⟩
     rcases hshape with hsame | happ
     · constructor
       · simp only [alloc.vec.Vec.length, hsame]; exact hinv.terms.nonempty

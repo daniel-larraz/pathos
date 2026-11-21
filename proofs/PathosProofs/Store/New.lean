@@ -85,5 +85,9 @@ theorem Store.new_spec (limits : Limits) : Store.new limits ⦃ s => s.Inv ⦄di
       subst this
       cases k <;> simp [cache.TypeEntry.slot] at hr
     · rw [h3]; simp [hcst]
+  · have hj : s.state_jumps.val = [] := by
+      first
+        | (rw [h7]; rfl) | (rw [h6]; rfl) | (rw [h5]; rfl) | (rw [h4]; rfl)
+    rw [hj]; exact JumpsOK.nil _
 
 end pathos_compiled_checker
