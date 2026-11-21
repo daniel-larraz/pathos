@@ -70,7 +70,7 @@ $dt_get_selectors_of_app	none	it calls $dt_get_selectors, which has no proof
 $dt_updater_elim_rhs	generated	
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
-$eo_cmd_step_pop_proven	none	it calls $eo_prog_scope, which has no proof
+$eo_cmd_step_pop_proven	none	it calls $eo_state_proven_nth, which has no proof
 $eo_cmd_step_proven	none	case 550 has a literal that is not a Boolean
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
@@ -173,7 +173,7 @@ $eo_prog_arith_poly_norm	none	it calls $get_arith_poly_norm, which has no proof
 $eo_prog_arith_poly_norm_rel	none	case 0 has a builtin operator
 $eo_prog_arith_reduction	none	it calls $arith_reduction_pred, which has no proof
 $eo_prog_arith_sum_ub	none	it calls $mk_arith_sum_ub, which has no proof
-$eo_prog_arith_trichotomy	none	case 0 has an application of a term that may be stuck
+$eo_prog_arith_trichotomy	generated	
 $eo_prog_array-read-over-write	generated	
 $eo_prog_array-read-over-write-split	generated	
 $eo_prog_array-read-over-write2	generated	
@@ -508,7 +508,7 @@ $eo_prog_re_unfold_pos	none	it calls $mk_re_unfold_pos, which has no proof
 $eo_prog_refl	generated	
 $eo_prog_reordering	none	case 0 has a builtin operator
 $eo_prog_resolution	none	case 0 has a builtin operator
-$eo_prog_scope	none	case 0 has an application of a term that may be stuck
+$eo_prog_scope	generated	
 $eo_prog_seq-eval-op	none	it calls $seq_eval, which has no proof
 $eo_prog_seq-len-rev	generated	
 $eo_prog_seq-len-unit	none	case 0 has a literal that is not a Boolean
@@ -715,7 +715,7 @@ $eo_prog_string_seq_unit_inj	generated
 $eo_prog_symm	generated	
 $eo_prog_trans	generated	
 $eo_prog_true_elim	generated	
-$eo_prog_true_intro	none	case 0 has an application of a term that may be stuck
+$eo_prog_true_intro	generated	
 $eo_prog_trust	generated	
 $eo_prog_ubv-to-int-elim	none	case 0 has a builtin operator
 $eo_prog_ubv_to_int_range	none	case 0 has a literal that is not a Boolean

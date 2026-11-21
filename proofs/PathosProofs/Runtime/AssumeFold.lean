@@ -9,6 +9,7 @@ public import PathosProofs.Runtime.Ops
 public import PathosProofs.Runtime.Embed
 public import PathosProofs.Runtime.Builtins
 public import PathosProofs.Runtime.Lists
+public import PathosProofs.Runtime.StateInv
 public import MiniCtors
 
 /-!
@@ -55,6 +56,7 @@ def PushInputSpec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : Eo.Term) (x_a1 : Eo.Term) (x_a2 : Eo.CState),
     s.Inv → Platform64 → s.remaining ≤ n →
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    StateOK x_a2 →
     generated.part0.eo__24eo_5fpush_5finput_5fassume_5fcheck s a0 a1 a2 ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
@@ -329,9 +331,11 @@ theorem fold_scan_loop_spec (m : Nat) (hb : IsBoolTypeSpec m) (hc : IsClosedSpec
 theorem fold_unwind_loop_spec (m : Nat) (hp : PushInputSpec m) (h64 : Platform64) (s0 : Store)
     (pending : Slice (Term × Term)) (pairs : List (Eo.Term × Eo.Term))
     (hpend : List.Forall₂ (fun p q => Represents.rep s0 p.1 q.1 ∧ Represents.rep s0 p.2 q.2)
-      pending.val pairs) :
+      pending.val pairs)
+    (hpairs : ∀ q ∈ pairs, q.1 = Eo.Term.Boolean true → q.2 ≠ Eo.Term.Stuck) :
     ∀ (s : Store) (state : Term) (i : Std.Usize) (xst : Eo.CState),
       s.Inv → s0.Grows s → s.remaining ≤ m → Represents.rep s state xst → i.val ≤ pairs.length →
+      StateOK xst →
       generated.part0.unwind_eo__24eo_5finvoke_5fassume_5flist_loop s pending state i ⦃ r s' =>
         s'.Inv ∧ s.Grows s' ∧
         match r with
@@ -342,6 +346,7 @@ theorem fold_unwind_loop_spec (m : Nat) (hp : PushInputSpec m) (h64 : Platform64
   apply generated.part0.unwind_eo__24eo_5finvoke_5fassume_5flist_loop.fixpoint_induct pending
     (motive := fun loop => ∀ (s : Store) (state : Term) (i : Std.Usize) (xst : Eo.CState),
       s.Inv → s0.Grows s → s.remaining ≤ m → Represents.rep s state xst → i.val ≤ pairs.length →
+      StateOK xst →
       loop s state i ⦃ r s' =>
         s'.Inv ∧ s.Grows s' ∧
         match r with
@@ -349,7 +354,7 @@ theorem fold_unwind_loop_spec (m : Nat) (hp : PushInputSpec m) (h64 : Platform64
             ((pairs.take i.val).foldr (fun q st => Eo.__eo_push_input_assume_check q.1 q.2 st) xst)
         | core.result.Result.Err _ => True ⦄div)
   · prove_adm
-  · intro loop ih s state i xst hinv hg hrem hst hi
+  · intro loop ih s state i xst hinv hg hrem hst hi hok
     simp only
     split
     · rename_i hpos
@@ -364,12 +369,13 @@ theorem fold_unwind_loop_spec (m : Nat) (hp : PushInputSpec m) (h64 : Platform64
       simp only [List.get_eq_getElem, hpe] at hq
       obtain ⟨hpg, hpt⟩ := hq
       step with hp s g t state _ _ xst hinv h64 hrem (Represents.grows hpg hg) (Represents.grows hpt hg) hst
-        as ⟨r, s1, hinv1, hg1, hr⟩
+        hok as ⟨r, s1, hinv1, hg1, hr⟩
       cases r with
       | Err e => simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨hinv1, hg1, trivial⟩
       | Ok v =>
         simp only
-        apply WP.dspec_mono (ih s1 v i1 _ hinv1 (hg.trans hg1) (hg1.rem hrem) hr (by scalar_tac))
+        apply WP.dspec_mono (ih s1 v i1 _ hinv1 (hg.trans hg1) (hg1.rem hrem) hr (by scalar_tac)
+          (StateOK.push_input_assume_check_of hok (hpairs _ (List.getElem_mem _))))
         rintro ⟨r2, s2⟩ ⟨hinv2, hg2, hr2⟩
         refine ⟨hinv2, hg1.trans hg2, ?_⟩
         cases r2 with
@@ -391,12 +397,12 @@ calls. -/
 theorem invoke_assume_list_spec (n : Nat) (hb : ∀ m < n, IsBoolTypeSpec m)
     (hc : ∀ m < n, IsClosedSpec m) (hp : ∀ m < n, PushInputSpec m) :
     ∀ (s : Store) (a0 a1 : Term) (x_a0 : Eo.CState) (x_a1 : Eo.CArgList), s.Inv → Platform64 →
-      s.remaining ≤ n → Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+      s.remaining ≤ n → Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → StateOK x_a0 →
       generated.part0.eo__24eo_5finvoke_5fassume_5flist s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
         match r with
         | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_invoke_assume_list x_a0 x_a1)
         | core.result.Result.Err _ => True ⦄div := by
-  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hg_a0
   unfold generated.part0.eo__24eo_5finvoke_5fassume_5flist
   apply WP.dspec_mono (Store.framed s hinv hrem
     (fun s1 => generated.part0.body_eo__24eo_5finvoke_5fassume_5flist s1 a0 a1)
@@ -425,8 +431,11 @@ theorem invoke_assume_list_spec (n : Nat) (hb : ∀ m < n, IsBoolTypeSpec m)
             ((cargs x_a1).map (fun F => (assumeGuard F, F))).length := by
           have := hpend'.length_eq; simp [Slice.len, Slice.length] at this ⊢; omega
         apply WP.dspec_mono (fold_unwind_loop_spec m (hp m hm) h64 s2 (alloc.vec.Vec.deref pending)
-          _ hpend' s2 state _ x_a0 hinv2 (Store.Grows.refl s2) (hg2.rem hrem1)
-          (Represents.grows h0 hg2) (le_of_eq hlenp))
+          _ hpend' (fun q hq => by
+            obtain ⟨F, -, rfl⟩ := List.mem_map.mp hq
+            exact fun h => ne_stuck_of_guard h)
+          s2 state _ x_a0 hinv2 (Store.Grows.refl s2) (hg2.rem hrem1)
+          (Represents.grows h0 hg2) (le_of_eq hlenp) hg_a0)
         rintro ⟨r2, s3⟩ ⟨hinv3, hg3, hr3⟩
         refine ⟨hinv3, hg2.trans hg3, ?_⟩
         cases r2 with

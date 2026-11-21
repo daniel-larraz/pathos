@@ -224,7 +224,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 6,839 theorems, are **27**:
+  This is the trust. In use today, by 6,868 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -347,8 +347,8 @@ Where logos builds an application, in CpcMini:
      but not a stuck `e`. `Store.builtin_spec_cons` therefore takes `e`
      not stuck, and the emitter writes it only where that is known; in
      CpcMini's one `eo::cons` (`$eo_mk_premise_list`) the element is a
-     result of `$eo_state_proven_nth`, which a reachable state never makes
-     stuck, but nothing proves that yet.
+     result of `$eo_state_proven_nth`, which an OK state never makes
+     stuck (`state_proven_nth_ne_stuck`, "The state invariant").
 
 So, function by function, "the Rust's result stands for logos's result" is
 false for the whole checker. The statement has to be up to this: let
@@ -368,10 +368,12 @@ hypothesis that the parts are not stuck, wherever lean-meta wrote the
 guarded form; a literal counts as not stuck. That proved
 `$eo_lit_type_Binary` and, in the full CPC, cleared 36 of the 40 programs
 that stopped there first (452 to 473 generated). What is left of this
-kind is the plain `Term.Apply` on a variable bound under a proof
-(`$eo_prog_scope`, and in the full CPC `$eo_prog_arith_trichotomy` and
-`$eo_prog_true_intro`) and the function type of `$eo_typeof`'s selector
-case; both wait on a question to lean-meta's author (see the handoff).
+kind is the function type of `$eo_typeof`'s selector case, which waits
+on a question to lean-meta's author (see the handoff). The plain
+`Term.Apply` on a variable bound under a proof (`$eo_prog_scope`, and in
+the full CPC `$eo_prog_arith_trichotomy` and `$eo_prog_true_intro`) is
+proved since the proof argument is assumed OK ("The state invariant"; 473
+to 476 generated in the full CPC).
 
 For the pilot none of this is assumed. The four programs' inputs are
 handles, so they stand for terms without a stuck argument, and each
@@ -492,13 +494,13 @@ change under them.
 For the full CPC it writes them too, into `generated/cpc-checker`
 (`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
 checked to be what the generator writes (`scripts/generate-cpc --check`),
-but **not built**; `proofs.tsv` (473 of 1,086 marked generated) says how
+but **not built**; `proofs.tsv` (476 of 1,086 marked generated) says how
 far the emitter gets.
-62 of CpcMini's 82 programs (62 of the 76 the gate counts) have one so far, the four of the pilot
+63 of CpcMini's 82 programs (63 of the 76 the gate counts) have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (6,829 lines) elaborates in 13
-seconds (2.7 GiB; `$smtx_typeof` adds about 2 s), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (6,954 lines) elaborates in 13
+seconds (2.8 GiB; `$smtx_typeof` adds about 2 s), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -605,11 +607,76 @@ split over constructors is in the proofs of seven programs of CpcMini
 (`$eo_dd_lookup`, `$eo_dt_resolve`, `$eo_dtc_resolve`, `$smtx_dd_has_dt`,
 `$smtx_dd_lookup`, `$smtx_dt_resolve`, `$smtx_dtc_resolve`).
 
+**The state invariant** (Ethos `d42bf81`). The store does not keep the
+stuck term out of a state: `construct` checks nothing, and a handle can
+stand for `pf Stuck` or for a state that holds `Stuck`. logos's functions
+can, though: no builder of the checker puts a stuck formula into a state.
+`Runtime/StateInv.lean` states that and proves it on logos's side only:
+
+- `StateOK S`: no object of `S` holds the stuck term; `ProofOK p`: if
+  `p` is `pf G`, then `G` is not stuck.
+- `state_proven_nth_ne_stuck`: a premise looked up in an OK state is not
+  stuck.
+- Every function that builds a state keeps it: `StateOK.push_proven`,
+  `.push_assume_check` and `.push_input_assume_check` in the guarded form
+  the checker calls them in, `.invoke_cmd_check_proven`,
+  `.invoke_cmd_step_pop`, `.invoke_cmd`, `.invoke_cmd_list` and
+  `.invoke_assume_list`. With `.nil`, `.stuck` and `.tail`, these are
+  enough for every state passed in CpcMini.
+
+The generated specs assume the invariant, and every call proves it:
+
+- **The spec's shape.** `<program>.Spec n` is the spec it was, with one
+  more premise after the handle facts for each argument the program
+  assumes OK: `StateOK x_ai →` for every state argument (by its type), and
+  `ProofOK x_ai →` for a proof argument whose formula a case applies
+  without logos's guard. The case, group, body and loop theorems take the
+  same facts as `hg_ai`. The facts are about values, so no store carries
+  them. `Specs n` still has one field per program, the induction is
+  unchanged, and lemma C does not mention the invariant.
+- **Which proof arguments.** The emitter decides while it writes a case's
+  lines: the formula of a `$eo_pf` pattern on the argument, used in an
+  application that logos writes as `Term.Apply`, gets
+  `have hn_v := hg_ai _ rfl`. Only `$eo_prog_scope` does this in CpcMini.
+  The rule is narrow by design: a `ProofOK` on every proof argument would
+  oblige `$eo_prog_trans`'s caller to show that `__eo_mk_premise_list`
+  is not stuck, which is not true for every operator.
+- **Calls.** A call passes `(by good_tac)` for each argument its callee
+  assumes OK. `good_tac` is `solve_by_elim` over the hypotheses and the
+  lemmas above, or `ProofOK.pf` with `ns_tac`.
+  - The callee's assumptions are known only once every program has been
+    emitted, so the line holds a marker until the printer resolves it.
+  - The emitter writes the proof only where it can name where the value
+    comes from: an argument assumed OK, the tail of an OK state, the
+    empty or stuck state, a builder applied to OK states, or `pf` of a
+    term that is not stuck. Elsewhere the program gets a reason ("a state
+    that may not be OK", "a proof that may not be OK") instead of a proof
+    that does not build. No program of CpcMini or the CPC has one.
+- **Loops.** A loop's next round assumes its states OK too: the round's
+  theorem says so of the next arguments (`case_again … goods k`, by
+  `good_tac`), and the loop's induction carries it. A loop with a
+  `ProofOK` argument gets a reason; there is none.
+- **A new non-stuck fact.** After a call of `$eo_state_proven_nth` on an
+  OK state, `have hn_v := state_proven_nth_ne_stuck_of h_v (by good_tac)`
+  says its result is not stuck, for the gate. This is what
+  `$eo_mk_premise_list`'s `eo::cons` needed, which now waits only on
+  `$eo_state_proven_nth`.
+- **The hand-written fold** (`invoke_assume_list_spec`) assumes its state
+  OK too, and carries it through every push of the unwind loop.
+
+The emitted lines for a proof argument (`$eo_prog_scope`) and for states
+(the tail in `$eo_invoke_cmd_check_proven`, a parameter and a builder's
+result in `$eo_state_is_refutation`, the next round of
+`$eo_state_is_closed`) build. The `$eo_state_proven_nth` fact, `ProofOK`
+of `pf` of a looked-up premise, and the fold's application against the
+spec it will have were checked in a throwaway module, since no program
+that uses them has a proof yet.
+
 **What is written by hand** (`proofs/PathosProofs/`):
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 908 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), and `split_none` (no case answered, which cannot be). |
+| `Tactic.lean` | 941 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again` (with `goods k` for a loop over states), the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), `split_none` (no case answered, which cannot be), and `good_tac` (an argument the callee assumes OK, see "The state invariant"). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 152 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 514 | `literal` and `native_bool` for Booleans, guarded applications (`apply_mk_rep`: `apply` is logos's `__eo_mk_apply`), `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body (`framed_cached`, and `framed_type_cached` for the type cache). |
@@ -619,8 +686,8 @@ split over constructors is in the proofs of seven programs of CpcMini
 | `Runtime/Nats.lean` | 153 | The natural numbers: the constant `nat.zero`, and the patterns `nat.zero` (`pat_native_zero`) and `(nat.succ m)` (`pat_destruct_lit`), which store a numeral; from the trusted specs of `zero`, `one`, `clone`, `sgn`, `add` and `neg`. |
 | `Runtime/Builtins.lean` | 730 | Builtin operators on literals: what every one needs (a literal's clone, `literal_of`, `literals` on one and two arguments, `any_stuck` on one, what a handle of a literal stands for), `eo::len` (`builtin_spec_len`: the width of a binary, the length of a string) and `eo::and` (`builtin_spec_and`: the `and` of two Booleans, of two binaries of the same width), through `Lit::evaluate`; and that logos's signed `and` of bit-vectors, reduced, is malachite's (`bv_and_toInt_emod`). |
 | `Runtime/IntNatives.lean` | 283 | The native operations on integers (`zeq`, `zleq` through `partial_cmp`, `mod_total`, `int.pow2`, `int.to_nat`, `nat.succ`) and the numeral constants of the generated code (`Integer::from(<u32>)`, negated); from the trusted specs of the integer functions. |
-| `Runtime/StateInv.lean` | 153 | The checker-state invariant, on logos's side only: `StateOK` (no object of a state holds `Stuck`) and `ProofOK`; a premise looked up in an OK state is not `Stuck` (`state_proven_nth_ne_stuck`); and every state builder keeps it (the three push checks, `push_proven`, `invoke_cmd_check_proven`, `invoke_cmd_step_pop`, `invoke_cmd`, `invoke_cmd_list`, `invoke_assume_list`; `StateOK.nil`, `.tail`). The generated specs take it as a precondition on state arguments (see "The state invariant"). |
-| `Runtime/AssumeFold.lean` | 442 | `$eo_invoke_assume_list`, which the generator compiles to an iterative fold (`scan`, then `unwind`): proved by hand against logos's recursive definition (`invoke_assume_list_spec`), from what is proved of `$eo_is_bool_type`, `$eo_is_closed` and `$eo_push_input_assume_check` (hypotheses in the shape of the generated specs); the emitter writes the program's theorem as that application (`handProof`). |
+| `Runtime/StateInv.lean` | 160 | The checker-state invariant, on logos's side only: `StateOK` (no object of a state holds `Stuck`) and `ProofOK`; a premise looked up in an OK state is not `Stuck` (`state_proven_nth_ne_stuck`, and `_of` a handle's fact, for the generated lines); and every state builder keeps it (the three push checks, `push_proven`, `invoke_cmd_check_proven`, `invoke_cmd_step_pop`, `invoke_cmd`, `invoke_cmd_list`, `invoke_assume_list`; `StateOK.nil`, `.stuck`, `.tail`). The generated specs take it as a precondition (see "The state invariant"). |
+| `Runtime/AssumeFold.lean` | 451 | `$eo_invoke_assume_list`, which the generator compiles to an iterative fold (`scan`, then `unwind`): proved by hand against logos's recursive definition (`invoke_assume_list_spec`), from what is proved of `$eo_is_bool_type`, `$eo_is_closed` and `$eo_push_input_assume_check` (hypotheses in the shape of the generated specs, the state assumed OK); the emitter writes the program's theorem as that application (`handProof`). |
 | `Runtime/Lists.lean` | 624 | Lists of an operator: the runtime's walk down a list (`list_step_spec`, `list_elements_loop_spec`), its parts (`list_parts_spec`, which takes what is proved of the generated `$eo_is_list_nil` as a hypothesis, `IsListNilSpec n`, from the generated `Specs n`), building one again (`list_build_loop_spec`), and `eo::cons` (`Store.builtin_spec_cons`) against logos's `__eo_cons`, for operators that nest to the right. Meant for every list builtin. |
 | `Runtime/StringLits.lean` | 455 | String and binary literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); a string constant of the generated code (`"@"`: `raw` of `EoString::from_code_points(vec![64])`) stands for the code points of its vector (`raw_str_vec_spec`: a vector of `u32` is always in range), rewritten to logos's `native_string_lit` once both are concrete (`Represents.rep_of_eq`). `EoString`'s clone is translated code, so no trusted spec. A pattern on a binary literal stores its width and value as two numerals (`destruct_binary_spec`, with `pat_destruct_lit2`), and building it again from those two fields gives the literal (`construct_binary_spec`, in range by `rep_binary_okBv`), from the specs of `from_u32`, `clone`, `fits_u32`, `to_u32` and `mod_by_pow2`, already in use. |
 | `Runtime/Numbers.lean` | 399 | Numeral and rational literals: a pattern on one stores a copy of its value (`destruct_numeral_spec`, `destruct_rational_spec`, with `pat_destruct_lit`), and `construct` from a native value gives the literal (`construct_numeral_spec`, `construct_rational_spec`); from the trusted specs of `clone`. |
@@ -630,17 +697,22 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 62** (the reasons of `proofs.tsv`, for the other 20,
-on 2026-11-20, after the string constants): calls of programs without a
-proof (8, `$eo_invoke_cmd` among them, past `Valid` for `CCmd`); the six of the datatype operators below; `eo::cons` of an element that may be stuck (1, `$eo_mk_premise_list`, past
-`eo::nil`); case 8 of `$eo_typeof` (it builds a function type to a type that may be
-stuck: an application of a term that may be stuck) and of
-`$eo_to_smt` (the native operation `uconst_id`), past the string and
-binary literal patterns (2); `$eo_state_proven_nth`, compiled to the
-runtime (1; `$eo_invoke_assume_list`'s fold is proved by hand and waits on
-`$eo_is_bool_type`); an
-application of a term that may be stuck (`$eo_prog_scope`, the first
-finding below). The lemmas of `construct` and `destruct` are generated for
+**What limits the 63** (the reasons of `proofs.tsv`, for the other 19,
+on 2026-11-20, after the state invariant):
+- calls of programs without a proof (10). Three call
+  `$eo_state_proven_nth` (`$eo_mk_premise_list`, past `eo::nil` and now
+  past `eo::cons` too; `$eo_cmd_step_proven`; `$eo_cmd_step_pop_proven`,
+  which also calls `$eo_prog_scope`, now proved). `$eo_invoke_assume_list`'s
+  fold is proved by hand and waits on `$eo_is_bool_type`.
+- the six datatype operators below;
+- case 8 of `$eo_typeof` (it builds a function type to a type that may be
+  stuck: an application of a term that may be stuck) and of `$eo_to_smt`
+  (the native operation `uconst_id`), past the string and binary literal
+  patterns (2);
+- `$eo_state_proven_nth`, compiled to the runtime (1).
+
+`$eo_prog_scope`'s application of a term that may be stuck (the first
+finding below) is proved since its proof argument is assumed OK. The lemmas of `construct` and `destruct` are generated for
 every data constructor (`MiniCtors`); the literal constructors are stored
 otherwise and have none. The cache of results is stated for every
 embedded type (`MiniCacheSem`).

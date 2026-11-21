@@ -63,6 +63,13 @@ theorem state_proven_nth_ne_stuck {S : CState} (h : StateOK S) (n : SmtEval.nati
       (try (rename_i heq; obtain ⟨rfl, rfl⟩ := heq)) <;>
       simp_all [__eo_StateObj_proven, stateObjFormula]
 
+/-- `state_proven_nth_ne_stuck`, of the premise a fact `h` speaks of (a
+handle's, in the generated proofs): the state and the index are `h`'s. -/
+theorem state_proven_nth_ne_stuck_of {α : Sort _} {R : α → Term → Prop} {a : α}
+    {S : CState} {n : SmtEval.native_Int} (_h : R a (__eo_state_proven_nth S n))
+    (hS : StateOK S) : __eo_state_proven_nth S n ≠ Term.Stuck :=
+  state_proven_nth_ne_stuck hS n
+
 /-- `__eo_is_bool_type` is `Boolean true` only on a term that is not `Stuck`. -/
 theorem ne_stuck_of_is_bool_type {F : Term} (h : __eo_is_bool_type F = Term.Boolean true) :
     F ≠ Term.Stuck := by

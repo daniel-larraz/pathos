@@ -8,12 +8,12 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **62 of CpcMini's 82 programs** have a generated proof (62 of the
+- **63 of CpcMini's 82 programs** have a generated proof (63 of the
   76 that the gate counts: the 6 datatype operators have been excluded
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 6,662 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 6,868 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
@@ -36,8 +36,13 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   --quick`); every other step checked that the Rust is unchanged. Merging
   m32 into main means taking these rust-meta changes upstream to
   cvc5/ethos first.
-- The generated files elaborate in seconds (MiniProofs about 11 s and
-  2.6 GiB, after the string constants). CPC's generated proofs are not built.
+- The generated specs assume the checker-state invariant: `StateOK` of
+  every state argument, `ProofOK` of a proof argument whose formula is
+  applied unguarded, proved at every call by `good_tac` (proofs.md, "The
+  state invariant"; Runtime/StateInv.lean). `Specs n` and lemma C keep
+  their shape.
+- The generated files elaborate in seconds (MiniProofs about 13 s and
+  2.8 GiB, after the state invariant). CPC's generated proofs are not built.
 
 ## What steps 3–5 built (and the runtime files added since)
 
@@ -92,20 +97,22 @@ fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
 `Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (20 programs)
+## The reasons that remain (19 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
-| 9 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_cmd_list`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
+| 10 | calls of programs without a proof | `$eo_mk_premise_list`, `$eo_cmd_step_proven`, `$eo_cmd_step_pop_proven` (→ `$eo_state_proven_nth`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_checker_is_refutation` (→ `$eo_invoke_cmd_list`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
-| 1 | `eo::cons` of an element that may be stuck (case 1, past `eo::nil` in case 0; `Store.builtin_spec_cons` is proved, `Runtime/Lists.lean`) | `$eo_mk_premise_list` |
 | 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
 | 1 | compiled to a function of the runtime | `$eo_state_proven_nth` (Daniel's decision: prove the jump-pointer lookup or stop compiling it) |
-| 1 | an application of a term that may be stuck | `$eo_prog_scope` (a variable under a proof; `$eo_lit_type_Binary` is proved since guarded applications are matched, `apply_mk_rep`) |
+
+No program has the state invariant's reasons ("a state that may not be
+OK", "a proof that may not be OK", "a loop whose proof argument is
+assumed OK"), in CpcMini or the CPC.
 
 ## What's left (for Fable)
 
-62 of the 76 programs the gate counts are proved. The other 14, by what
+63 of the 76 programs the gate counts are proved. The other 13, by what
 stops them first and what it would take:
 
 **More of the same** (no decision, no trust beyond the 27):
@@ -135,6 +142,17 @@ stops them first and what it would take:
   `$smtx_typeof_bv_op_2`, which has no proof.
 - `$eo_is_bool_type` → `$eo_push_proven`: wait on `$eo_typeof`, so on
   the stuck-application question too.
+- *Once Daniel's `$eo_state_proven_nth` decision lands*, the state
+  invariant should carry `$eo_mk_premise_list`, `$eo_cmd_step_proven`,
+  `$eo_cmd_step_pop_proven` and `$eo_invoke_cmd_step_pop` with no new
+  work. *Once Andy's lean-meta change also lands*: `$eo_typeof`, then
+  `$eo_is_bool_type`, `$eo_push_proven`, `$eo_invoke_assume_list` (its
+  fold already assumes its state OK), `$eo_invoke_cmd`,
+  `$eo_invoke_cmd_list` and `$eo_checker_is_refutation`, which leaves
+  only `$eo_to_smt` (75 of 76). This is expected, not checked: the lines
+  these programs need (the `$eo_state_proven_nth` fact, `ProofOK` of a
+  looked-up premise, the fold against its future spec) were checked in a
+  throwaway module, not in a proved program.
 
 **Design questions** (each needs Daniel's decision first; the facts for
 all three are in `~/Projects/cvc5/pathos-m28/work/design-memo.md`, and
@@ -142,22 +160,22 @@ proofs.md's "Stuck terms under an application" has milestone 31's
 finding):
 
 - *An application of a term that may be stuck* (milestone 31's first
-  finding): `$eo_prog_scope` (a variable under a proof) and `$eo_typeof`'s
-  selector case (a function type); through calls,
-  `$eo_cmd_step_pop_proven` → `$eo_invoke_cmd_step_pop`. Guarded
-  applications (`__eo_mk_apply`) are done (`Store.apply_mk_rep`): in the
-  full CPC 4 programs stop here first, from 40. Daniel has asked Andy
-  about lean-meta's function types; the variables under a proof
-  (`$eo_prog_scope`, `$eo_prog_arith_trichotomy`, `$eo_prog_true_intro`)
-  are the same question.
+  finding): only `$eo_typeof`'s selector case (a function type) is left.
+  Guarded applications (`__eo_mk_apply`) are done (`Store.apply_mk_rep`),
+  and the variables under a proof (`$eo_prog_scope`, and in the full CPC
+  `$eo_prog_arith_trichotomy` and `$eo_prog_true_intro`) are proved by
+  the state invariant (`ProofOK`). Daniel has asked Andy about
+  lean-meta's function types.
 - *`eo::cons`* (`$eo_mk_premise_list`): the spec is done
   (`Store.builtin_spec_cons`, `Runtime/Lists.lean`; it takes the generated
   spec of `$eo_is_list_nil` through `ih : Specs n`, and its `list_parts`
-  lemma is meant for the other list builtins). What stops the program now:
-  the element is `$eo_state_proven_nth`'s result, which logos's
-  `__eo_cons` does not guard (a stuck element gives an application, the
-  runtime gives the stuck term), and nothing yet proves it is not stuck;
-  and `$eo_state_proven_nth` itself (Daniel's decision). The left-nested
+  lemma is meant for the other list builtins). The element is
+  `$eo_state_proven_nth`'s result, which logos's `__eo_cons` does not
+  guard (a stuck element gives an application, the runtime gives the
+  stuck term); the state invariant now proves it is not stuck
+  (`state_proven_nth_ne_stuck_of` after the call), so the program waits
+  only on `$eo_state_proven_nth` itself (Daniel's decision), as
+  `$eo_cmd_step_proven` and `$eo_cmd_step_pop_proven` do. The left-nested
   operators of the full CPC (`-`, `/`, `div`, `xor`, …) have no nil in
   logos, so neither side makes a list of them; the emitter does not write
   the lemma for a signature that has one. Through calls:
@@ -220,7 +238,8 @@ two things per type, and both are now settled for every type of CpcMini:
 Also on lemma C's side: the other linearization of repeated variables (an
 `ite` with a continuation program `$eo.l.<n>.<prog>`) is untried; lemma C
 would have to unfold the continuation program too. The application of a
-possibly stuck term (`$eo_prog_scope`) is milestone 31's first finding.
+possibly stuck term (`$eo_prog_scope`, proved now by the state invariant)
+is milestone 31's first finding.
 
 ## Trust: the malachite specs (part B)
 
@@ -259,8 +278,7 @@ exercised, but no proved program reaches them yet:
   fine, but that case also calls a program without a proof.
 - `construct` of the stuck term (`Store.construct_stuck_spec`): both
   programs that build it call programs without a proof
-  (`$eo_cmd_step_pop_proven` → `$eo_prog_scope`, `$eo_cmd_step_proven` →
-  `$eo_mk_premise_list`); its line was checked with the force patch on
+  (both → `$eo_state_proven_nth`); its line was checked with the force patch on
   `$eo_cmd_step_proven`'s case 4.
 - String and binary literals in patterns and built from values
   (`destruct_string_spec`, `construct_string_spec`,
@@ -269,6 +287,12 @@ exercised, but no proved program reaches them yet:
   Checked with the force patch on `$eo_typeof`: cases 3 and 4 elaborate.
 - Building a function type (`$emb_FunType` and two applications): its
   only user, `$eo_typeof`'s case 8, stops at the possibly stuck argument.
+- The state invariant's lines for `$eo_state_proven_nth` (the non-stuck
+  fact after the call, `ProofOK` of `pf` of its result at a call of
+  `$eo_prog_scope`) and the fold's application against the spec it will
+  have: every program that has them waits on `$eo_state_proven_nth` or
+  `$eo_is_bool_type`. Checked in a throwaway module (the lemma and
+  `good_tac` on the goals those lines give).
 - `not` in a generated proof: its spec compiles, but its only use comes
   after a failing call. (`string_prefix_eq` is now in a proved program,
   `$eo_to_smt_reserved_datatype_name`, behind `"@"`.)

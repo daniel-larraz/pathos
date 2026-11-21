@@ -101,6 +101,20 @@ macro "ns_tac" : tactic =>
     | (intro h; cases h)
     | (simp; done))
 
+/-- An argument that the program called assumes OK (Runtime/StateInv.lean)
+is: an argument assumed OK, the tail of an OK state, the empty or the stuck
+state, what a function that keeps states OK builds from OK states, or the
+proof of a formula that is not stuck (one looked up in an OK state among
+them). -/
+macro "good_tac" : tactic =>
+  `(tactic| first
+    | solve_by_elim only [*, StateOK.nil, StateOK.stuck, StateOK.tail,
+        StateOK.push_proven, StateOK.push_assume_check, StateOK.push_input_assume_check,
+        StateOK.invoke_cmd_check_proven, StateOK.invoke_cmd_step_pop, StateOK.invoke_cmd,
+        StateOK.invoke_cmd_list, StateOK.invoke_assume_list, ProofOK.pf,
+        state_proven_nth_ne_stuck]
+    | (apply ProofOK.pf; ns_tac))
+
 /-- Carries the facts named over to a store that has grown. -/
 syntax "transport " term " at " (ppSpace colGt ident)* : tactic
 macro_rules
@@ -422,6 +436,22 @@ macro_rules
     `(tactic| (
       simp only [WP.dspec_ok, WP.uncurry'_pair]
       refine ⟨$hinv, $hG, $holes,*, rfl, $hs,*, ?_⟩
+      first
+        | (simp [$cd:ident, $[$facts:ident],*]; done)
+        | (unfold $cd; split <;> simp_all; done)))
+
+/-- `case_again … goods k`: as `case_again`, for a loop whose `k` state
+arguments are assumed OK (Runtime/StateInv.lean): the next round's states
+are OK too, by `good_tac`. -/
+syntax "case_again " ident ppSpace ident " with" (ppSpace colGt ident)* " goods " num " in "
+  ident " using" (ppSpace colGt ident)* : tactic
+macro_rules
+  | `(tactic| case_again $hinv $hG with $hs* goods $k in $cd using $facts*) => do
+    let holes ← (hs ++ hs).mapM fun _ => `(_)
+    let gs ← (List.range k.getNat).toArray.mapM fun _ => `(by good_tac)
+    `(tactic| (
+      simp only [WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨$hinv, $hG, $holes,*, rfl, $hs,*, $gs,*, ?_⟩
       first
         | (simp [$cd:ident, $[$facts:ident],*]; done)
         | (unfold $cd; split <;> simp_all; done)))

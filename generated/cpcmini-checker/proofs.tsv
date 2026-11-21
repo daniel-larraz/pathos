@@ -1,8 +1,8 @@
 source	proof	why
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
-$eo_cmd_step_pop_proven	none	it calls $eo_prog_scope, which has no proof
-$eo_cmd_step_proven	none	it calls $eo_mk_premise_list, which has no proof
+$eo_cmd_step_pop_proven	none	it calls $eo_state_proven_nth, which has no proof
+$eo_cmd_step_proven	none	it calls $eo_state_proven_nth, which has no proof
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_dd_lookup	generated	
@@ -26,11 +26,11 @@ $eo_lit_type_Binary	generated
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
-$eo_mk_premise_list	none	case 1 has eo::cons of an element that may be stuck
+$eo_mk_premise_list	none	it calls $eo_state_proven_nth, which has no proof
 $eo_nil	generated	
 $eo_prog_contra	generated	
 $eo_prog_refl	generated	
-$eo_prog_scope	none	case 0 has an application of a term that may be stuck
+$eo_prog_scope	generated	
 $eo_prog_symm	generated	
 $eo_prog_trans	generated	
 $eo_push_assume_check	generated	
