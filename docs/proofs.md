@@ -236,7 +236,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 7,820 theorems, are **27**:
+  This is the trust. In use today, by 7,951 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -763,6 +763,7 @@ gives `true`, or an error.
 | `Runtime/StateInv.lean` | 160 | The checker-state invariant, on logos's side only: `StateOK` (no object of a state holds `Stuck`) and `ProofOK`; a premise looked up in an OK state is not `Stuck` (`state_proven_nth_ne_stuck`, and `_of` a handle's fact, for the generated lines); and every state builder keeps it (the three push checks, `push_proven`, `invoke_cmd_check_proven`, `invoke_cmd_step_pop`, `invoke_cmd`, `invoke_cmd_list`, `invoke_assume_list`; `StateOK.nil`, `.stuck`, `.tail`). The generated specs take it as a precondition (see "The state invariant"). |
 | `Runtime/StateNth.lean` | 1178 | `Store::state_nth`, the jump-pointer lookup that `$eo_state_proven_nth` is compiled to, against logos's recursive `__eo_state_proven_nth` (`Store.state_nth_spec`): the walk down a state list and back up, which fills the entries (`state_down_spec`, `state_up_…_spec`; the two copies of the way up that Aeneas makes are proved alike), the search for the node at a depth (`state_ancestor_spec`), the read of the index, `charge`, and the program (`state_proven_nth_spec`), which the generated proofs use. See "The state lookup". |
 | `Runtime/ConstNames.lean` | 293 | The names of constants (`native::constant_name`, `uconst_id`): the runtime's digit loop and copy loop against `"@u." ++ toString i` (`digitsRev`, `toString_codes`, `native_uconst_id_codes`), and `Store.native_spec_uconst_id`, which the emitter writes the line of `uconst_id` from. See "The names of constants". |
+| `Top.lean` | 506 | CpcMini's top-level theorem (`check_proof_correct`): `check_proof_inner`'s refutation (`check_refutation_inner`, with `calls = 0`), its side-condition checks (`has_translation`, `arguments_translate` and its loop, the loop over the commands) against logos's `TranslatableAssumptionList` and `CmdListTranslationOk`, and the composition with logos's `correct___eo_is_refutation`. See "The top-level theorem". |
 | `Runtime/AssumeFold.lean` | 451 | `$eo_invoke_assume_list`, which the generator compiles to an iterative fold (`scan`, then `unwind`): proved by hand against logos's recursive definition (`invoke_assume_list_spec`), from what is proved of `$eo_is_bool_type`, `$eo_is_closed` and `$eo_push_input_assume_check` (hypotheses in the shape of the generated specs, the state assumed OK); the emitter writes the program's theorem as that application (`handProof`). |
 | `Runtime/Lists.lean` | 624 | Lists of an operator: the runtime's walk down a list (`list_step_spec`, `list_elements_loop_spec`), its parts (`list_parts_spec`, which takes what is proved of the generated `$eo_is_list_nil` as a hypothesis, `IsListNilSpec n`, from the generated `Specs n`), building one again (`list_build_loop_spec`), and `eo::cons` (`Store.builtin_spec_cons`) against logos's `__eo_cons`, for operators that nest to the right. Meant for every list builtin. |
 | `Runtime/StringLits.lean` | 455 | String and binary literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); a string constant of the generated code (`"@"`: `raw` of `EoString::from_code_points(vec![64])`) stands for the code points of its vector (`raw_str_vec_spec`: a vector of `u32` is always in range), rewritten to logos's `native_string_lit` once both are concrete (`Represents.rep_of_eq`). `EoString`'s clone is translated code, so no trusted spec. A pattern on a binary literal stores its width and value as two numerals (`destruct_binary_spec`, with `pat_destruct_lit2`), and building it again from those two fields gives the literal (`construct_binary_spec`, in range by `rep_binary_okBv`), from the specs of `from_u32`, `clone`, `fits_u32`, `to_u32` and `mod_by_pow2`, already in use. |
@@ -853,6 +854,70 @@ functions the Rust stays byte for byte what it is (checked:
 `scripts/generate-mini` writes the same crate), and the difference is
 confined to lemma C, which Lean proves per program.
 
+## The top-level theorem
+
+`proofs/PathosProofs/Top.lean` states and proves, for CpcMini:
+
+```lean
+theorem check_proof_correct (hchk : ∀ n, CheckerIsRefutationSpec n)
+    (s : Store) (hinv : s.Inv) (h64 : Platform64) (a c : Term)
+    (F : Eo.CArgList) (pf : Eo.CCmdList)
+    (hF : Represents.rep s a F) (hpf : Represents.rep s c pf) (s' : Store)
+    (hrun : Store.check_proof_inner s a c = ok (core.result.Result.Ok Verdict.Correct, s')) :
+    eo_satisfiability (argListAssumes F) false
+```
+
+If the compiled checker says `Correct` on handles of the assumptions `F`
+and the proof `pf`, then `F` is unsatisfiable as logos defines it.
+
+**How.**
+- `check_proof_inner` returns `Correct` only after three things:
+  - its refutation (`check_refutation_inner`: `calls = 0`, then
+    `$eo_checker_is_refutation`, then `is_native_true`) is true, which is
+    `eo_is_refutation F pf`;
+  - the assumptions translate (`arguments_translate`), which is
+    `TranslatableAssumptionList F`;
+  - every command passes the loop over the commands, which is
+    `CmdListTranslationOk pf`: an `assume_push` formula translates, a
+    step's arguments translate, nothing is asked of the others.
+- `has_translation` is `__smtx_typeof (__eo_to_smt t) ≠ None`, through the
+  proved `$eo_to_smt` and `$smtx_typeof`.
+- logos's `correct___eo_is_refutation` (`CpcMini/Proofs/Checker.lean:865`)
+  takes the three and concludes.
+- No rule of CpcMini has an argument mask, so every argument is checked
+  as a term; the full CPC's masks are not covered.
+
+**`hchk`** is what is proved of `$eo_checker_is_refutation`.
+- That program waits on cvc5/ethos#286 and logos `funTypeStuck`, which
+  prove it (prototype, 2026-11-20).
+- `CheckerIsRefutationSpec` is the `Spec` rust-meta prints for it: checked
+  equal by `rfl` against the text a forced run printed.
+- So once it is proved, `fun n => (specs n).eo__24eo_5fchecker_5fis_5frefutation`
+  is `hchk`, and the theorem holds with no hypothesis beyond the store's.
+
+**Its trust base.**
+- **The 27 assumptions of "What is trusted"**, and only those:
+  `#print axioms check_proof_correct` gives Lean's three and the 24 of
+  `Trusted.lean` in use. Its other 47 axioms are declarations of the
+  translation (`num`'s types and functions), which add no trust.
+- **Charon and Aeneas:** that the Lean of the checker is the Rust's
+  meaning.
+- **logos's definitions** (`eo_satisfiability`, the SMT model, the
+  checker's functions) and its proofs. Its `correct___eo_is_refutation`
+  rests on Lean's three axioms only.
+- **The boundary**, unverified:
+  - `Store::check_proof` runs `check_proof_inner` on a thread with a
+    larger stack (`with_checker_stack`); both are in `front.rs`, which is
+    not translated.
+  - CpcMini has no front end: `crates/pathos` builds the full CPC's
+    checker. So the theorem is about any store with the invariant and any
+    handles that stand for some `F` and `pf`. For CPC, the front end
+    (`crates/pathos/src/adapter.rs`) would have to give handles that stand
+    for what the input file means.
+- **Partial correctness:** a run that returns `Correct`. Other verdicts,
+  errors and runs that do not return are not covered.
+- **`Platform64`** (a 64-bit `usize`) is assumed, as in every spec.
+
 ## What is missing for the theorem
 
 1. **The rest of the runtime.** Proved: the table, `intern`, the cache,
@@ -872,7 +937,8 @@ confined to lemma C, which Lean proves per program.
    and 190 cached programs.
 4. ~~The specification of `native_literal`~~: not needed, literals are
    values (above).
-5. **The top**: `check_refutation` and, for CPC, `check_proof` with the
+5. **The top**: for CpcMini, done (above, "The top-level theorem"),
+   given `$eo_checker_is_refutation`'s spec. For CPC, `check_proof` with the
    translation checks against logos's `ApiChecks`, and the composition
    with `correct___logos_verdict`.
 6. **The "respects `norm`" lemmas** on logos's side, and the answer to

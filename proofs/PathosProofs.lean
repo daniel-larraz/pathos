@@ -36,3 +36,4 @@ public import PathosProofs.Generated
 public import MiniProofs
 public import MiniEmbed
 public import MiniCtors
+public import PathosProofs.Top

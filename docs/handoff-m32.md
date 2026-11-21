@@ -13,11 +13,20 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 7,820 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 7,951 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 48 declarations (axioms that declare a type or a function,
   which add no trust: see "What is trusted").
+- **CpcMini's top-level theorem is proved**, given
+  `$eo_checker_is_refutation`'s spec (`check_proof_correct`,
+  `proofs/PathosProofs/Top.lean`). If `check_proof_inner` says `Correct`
+  on handles of `F` and `pf`, then `F` is unsatisfiable as logos defines
+  it, through logos's `correct___eo_is_refutation`.
+  - It rests on the 27 assumptions only.
+  - Its boundary: `with_checker_stack` and `front.rs` are untranslated,
+    CpcMini has no front end, it is partial correctness, and `Platform64`
+    is assumed. See proofs.md, "The top-level theorem".
 - Loops are proved by strong induction on the budget of calls
   (`Store.budget`, which every round's `tick` lowers), not by Lean's
   fixpoint induction, so a loop in a mutual block works:
@@ -123,7 +132,17 @@ assumed OK"), in CpcMini or the CPC.
 ## What's left (for Fable)
 
 68 of the 76 programs the gate counts are proved. The other 8, by what
-stops them first and what it would take:
+stops them first and what it would take, are below.
+
+**The top-level theorem** (`check_proof_correct`, `Top.lean`) takes
+`$eo_checker_is_refutation`'s spec as a hypothesis, `hchk`.
+- Once #286 and logos `funTypeStuck` land and the program is proved,
+  pass `fun n => (specs n).eo__24eo_5fchecker_5fis_5frefutation` (checked
+  to be the same proposition by `rfl`). A version without `hchk` is then
+  one line.
+- For the full CPC, the same theorem needs the argument masks (`ArgKind`
+  against logos's `ArgTranslationKind`), CPC's command kinds, and a
+  statement about the front end (`adapter.rs`).
 
 **More of the same** (no decision, no trust beyond the 27):
 
