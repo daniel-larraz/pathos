@@ -196,6 +196,59 @@ theorem native_ite_false_rep {α : Type} [Embedded α] {s : Store} {t : Term} {c
     Represents.rep s t (SmtEval.native_ite c a b) := by
   subst hc; simpa [SmtEval.native_ite] using h
 
+/-- `apply` builds logos's guarded application `__eo_mk_apply`: the stuck
+term when either part is stuck, the application otherwise. lean-meta writes
+`__eo_mk_apply` where the application has a part that is evaluated
+(`lean_meta_reduce.cpp`), and the generated code's `apply` is this; no
+hypothesis that the parts are not stuck is needed. -/
+theorem Store.apply_mk_rep (s : Store) (f a : Term) (x y : Eo.Term) (hinv : s.Inv)
+    (h64 : Platform64) (hf : s.Rep f x) (ha : s.Rep a y) :
+    Store.apply s f a ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_mk_apply x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  by_cases hx : x = Eo.Term.Stuck
+  · subst hx
+    apply WP.dspec_mono (Store.apply_spec s f a hinv h64)
+    rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
+    simp only [WP.uncurry'_pair] at hres ⊢
+    refine ⟨hinv', hext.grows, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      simp only at hres ⊢
+      obtain ⟨_, _, hres⟩ := hres
+      have hs : (s.data f).isStuck = true := hf.stuck_iff.mpr rfl
+      simp only [hs, ite_true] at hres
+      obtain ⟨rfl, rfl⟩ := hres
+      simpa [Eo.__eo_mk_apply] using hinv.rep_stuck
+  by_cases hy : y = Eo.Term.Stuck
+  · subst hy
+    apply WP.dspec_mono (Store.apply_spec s f a hinv h64)
+    rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
+    simp only [WP.uncurry'_pair] at hres ⊢
+    refine ⟨hinv', hext.grows, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      simp only at hres ⊢
+      obtain ⟨_, _, hres⟩ := hres
+      have hfs : (s.data f).isStuck = false := by
+        cases h : (s.data f).isStuck
+        · rfl
+        · exact absurd (hf.stuck_iff.mp h) hx
+      have has : (s.data a).isStuck = true := ha.stuck_iff.mpr rfl
+      simp only [hfs, has, Bool.false_eq_true, ite_false, ite_true] at hres
+      obtain ⟨_, rfl, rfl⟩ := hres
+      have : Eo.__eo_mk_apply x Eo.Term.Stuck = Eo.Term.Stuck := by
+        unfold Eo.__eo_mk_apply; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+  have : Eo.__eo_mk_apply x y = Eo.Term.Apply x y := by
+    unfold Eo.__eo_mk_apply; split <;> simp_all
+  rw [this]
+  exact Store.apply_rep s f a x y hinv h64 hf ha hx hy
+
 /-- A program whose results are cached: `enter`, a look in the cache, else
 the body, `leave`, and the result put in the cache. What holds of the body
 holds of the program, if what the cache says of the program (`hget`,

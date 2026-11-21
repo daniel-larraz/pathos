@@ -8,12 +8,12 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **61 of CpcMini's 82 programs** have a generated proof (61 of the
+- **62 of CpcMini's 82 programs** have a generated proof (62 of the
   76 that the gate counts: the 6 datatype operators have been excluded
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 6,461 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 6,485 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
@@ -92,7 +92,7 @@ fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
 `Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (21 programs)
+## The reasons that remain (20 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
@@ -101,11 +101,11 @@ program, the reason. The reasons recorded after the cases, in order: no
 | 1 | a builtin operator | `$eo_mk_premise_list` (`eo::cons`) |
 | 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
-| 2 | an application of a term that may be stuck | `$eo_prog_scope`, `$eo_lit_type_Binary` |
+| 1 | an application of a term that may be stuck | `$eo_prog_scope` (a variable under a proof; `$eo_lit_type_Binary` is proved since guarded applications are matched, `apply_mk_rep`) |
 
 ## What's left (for Fable)
 
-61 of the 76 programs the gate counts are proved. The other 15, by what
+62 of the 76 programs the gate counts are proved. The other 14, by what
 stops them first and what it would take:
 
 **More of the same** (no decision, no trust beyond the 27):
@@ -126,7 +126,7 @@ stops them first and what it would take:
   `HasStuck SmtTerm` for lemma C (its default case gives an SMT term),
   which has no instance yet. Left for Daniel and Fable. Forced, cases 0–7
   of both elaborate; `$eo_typeof`'s case 4 also calls
-  `$eo_lit_type_Binary` (a design question, below). The type cache,
+  `$eo_lit_type_Binary`, now proved. The type cache,
   which `$eo_typeof` keeps its results in, is done (proved with
   `$smtx_typeof`).
 - `$smtx_typeof` is proved, with the type cache (`framed_type_cached`,
@@ -142,8 +142,14 @@ proofs.md's "Stuck terms under an application" has milestone 31's
 finding):
 
 - *An application of a term that may be stuck* (milestone 31's first
-  finding): `$eo_prog_scope` and `$eo_lit_type_Binary`; through calls,
-  `$eo_cmd_step_pop_proven` → `$eo_invoke_cmd_step_pop`.
+  finding): `$eo_prog_scope` (a variable under a proof) and `$eo_typeof`'s
+  selector case (a function type); through calls,
+  `$eo_cmd_step_pop_proven` → `$eo_invoke_cmd_step_pop`. Guarded
+  applications (`__eo_mk_apply`) are done (`Store.apply_mk_rep`): in the
+  full CPC 4 programs stop here first, from 40. Daniel has asked Andy
+  about lean-meta's function types; the variables under a proof
+  (`$eo_prog_scope`, `$eo_prog_arith_trichotomy`, `$eo_prog_true_intro`)
+  are the same question.
 - *`eo::cons`* (`$eo_mk_premise_list`): the runtime's `list_cons_op` calls
   generated programs, so its spec is a runtime lemma that uses what is
   proved of generated functions, a new kind of piece. Through calls:

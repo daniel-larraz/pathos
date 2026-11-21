@@ -224,7 +224,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 6,461 theorems, are **27**:
+  This is the trust. In use today, by 6,485 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -355,6 +355,20 @@ have the same `norm`). That is one more lemma per function on logos's
 side, trivial where every pattern that looks under an application sends
 `Stuck` there to `Stuck`, and a real difference where it fails.
 
+**Guarded applications are matched one for one** (milestone 32). lean-meta
+writes `__eo_mk_apply` exactly where an application is evaluatable (has a
+program or builtin call under it, `lean_meta_reduce.cpp`), and a plain
+`Term.Apply` elsewhere. The runtime's `apply` is `__eo_mk_apply`
+(`Store.apply_mk_rep`), so the emitter now writes that lemma, with no
+hypothesis that the parts are not stuck, wherever lean-meta wrote the
+guarded form; a literal counts as not stuck. That proved
+`$eo_lit_type_Binary` and, in the full CPC, cleared 36 of the 40 programs
+that stopped there first (452 to 473 generated). What is left of this
+kind is the plain `Term.Apply` on a variable bound under a proof
+(`$eo_prog_scope`, and in the full CPC `$eo_prog_arith_trichotomy` and
+`$eo_prog_true_intro`) and the function type of `$eo_typeof`'s selector
+case; both wait on a question to lean-meta's author (see the handoff).
+
 For the pilot none of this is assumed. The four programs' inputs are
 handles, so they stand for terms without a stuck argument, and each
 theorem shows that logos's result has a handle too. What is restricted is
@@ -474,9 +488,9 @@ change under them.
 For the full CPC it writes them too, into `generated/cpc-checker`
 (`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
 checked to be what the generator writes (`scripts/generate-cpc --check`),
-but **not built**; `proofs.tsv` (452 of 1,086 marked generated) says how
+but **not built**; `proofs.tsv` (473 of 1,086 marked generated) says how
 far the emitter gets.
-61 of CpcMini's 82 programs (61 of the 76 the gate counts) have one so far, the four of the pilot
+62 of CpcMini's 82 programs (62 of the 76 the gate counts) have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
 proof for yet. `proofs/MiniProofs.lean` (6,829 lines) elaborates in 13
@@ -594,7 +608,7 @@ split over constructors is in the proofs of seven programs of CpcMini
 | `Tactic.lean` | 908 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again`, the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), and `split_none` (no case answered, which cannot be). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 152 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
-| `Runtime/Ops.lean` | 461 | `literal` and `native_bool` for Booleans, `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body (`framed_cached`, and `framed_type_cached` for the type cache). |
+| `Runtime/Ops.lean` | 514 | `literal` and `native_bool` for Booleans, guarded applications (`apply_mk_rep`: `apply` is logos's `__eo_mk_apply`), `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body (`framed_cached`, and `framed_type_cached` for the type cache). |
 | `Runtime/Node.lean` | 143 | `construct` and `destruct` of any data constructor or variable (`$emb_Var`, which the runtime stores as a node the same way), over trees; `construct` of the stuck term (`$emb_Stuck`), which gives handle 0 (`Store.construct_stuck_spec`); `is_node`, which a function type in a pattern (`(-> T U)`, the applications `(FunType T) U`) tests its head with (`pat_is_node`). |
 | `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
 | `Runtime/Strings.lean` | 297 | `not`, `string_valid` and `string_prefix_eq`: the two string operations are loops over the code points, proved by induction over the loop; a string the store can hold has code points below 2^32 (the embedding's `okStr`), so its code points are its characters. |
@@ -609,15 +623,15 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 61** (the reasons of `proofs.tsv`, for the other 21,
+**What limits the 62** (the reasons of `proofs.tsv`, for the other 20,
 on 2026-11-20, after the string constants): calls of programs without a
 proof (8, `$eo_invoke_cmd` among them, past `Valid` for `CCmd`); the six of the datatype operators below; a builtin operator
 (1: `eo::cons`, in `$eo_mk_premise_list`); case 8 of `$eo_typeof` (it builds a function type to a type that may be
 stuck: an application of a term that may be stuck) and of
 `$eo_to_smt` (the native operation `uconst_id`), past the string and
-binary literal patterns (2); the two compiled to the runtime; two
-applications of a term that may be stuck (`$eo_prog_scope`, the first
-finding below, and `$eo_lit_type_Binary`, past `eo::len`). The lemmas of `construct` and `destruct` are generated for
+binary literal patterns (2); the two compiled to the runtime; an
+application of a term that may be stuck (`$eo_prog_scope`, the first
+finding below). The lemmas of `construct` and `destruct` are generated for
 every data constructor (`MiniCtors`); the literal constructors are stored
 otherwise and have none. The cache of results is stated for every
 embedded type (`MiniCacheSem`).

@@ -71,13 +71,13 @@ source "$root/difftest.env"
 # The commit of Ethos the checker is generated from: on milestone 32, a
 # commit of the fork's m32-proofs (which builds literals as values), found
 # through the harness's repository when upstream does not have it.
-default_rev=b8be4ea6a862b6ca66739a3c43d22e04de3d5256
+default_rev=91b039a2af7f90a15aeda4581171e4bbea1240ee
 
 # The same for --mini: a commit of the fork (branch m32-proofs: Ethos main,
 # whose generator Charon and Aeneas translate since cvc5/ethos#280, and on it
 # the one that writes the proofs), and the logos revision whose CpcMini the
 # proofs are about. proofs/ pins the same logos revision.
-mini_default_rev=b8be4ea6a862b6ca66739a3c43d22e04de3d5256
+mini_default_rev=91b039a2af7f90a15aeda4581171e4bbea1240ee
 mini_logos_rev=a9944ea7dcee950feb5e0d9b6271e83b421d206e
 
 me=generate-cpc

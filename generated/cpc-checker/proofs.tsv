@@ -19,7 +19,7 @@ $bv_bitblast_apply_binary	none	case 0 has a literal that is not a Boolean
 $bv_bitblast_apply_ite	none	case 0 has a literal that is not a Boolean
 $bv_bitblast_apply_unary	none	case 0 has a literal that is not a Boolean
 $bv_bitblast_binary_app	generated	
-$bv_bitblast_concat	none	case 0 has an application of a term that may be stuck
+$bv_bitblast_concat	none	case 1 has a literal that is not a Boolean
 $bv_bitblast_head	generated	
 $bv_bitblast_prefix	none	case 0 has a literal that is not a Boolean
 $bv_bitblast_slt_impl	none	case 0 has a literal that is not a Boolean
@@ -55,11 +55,11 @@ $bv_umulo_elim_rec	none	case 1 has a builtin operator
 $chain_m_resolve	none	it calls $chain_m_resolve_final, which has no proof
 $chain_m_resolve_final	none	case 0 has a builtin operator
 $chain_m_resolve_rec	none	it calls $chain_m_resolve_rec_step, which has no proof
-$chain_m_resolve_rec_step	none	case 0 has an application of a term that may be stuck
+$chain_m_resolve_rec_step	none	case 0 has a builtin operator
 $compute_card	none	case 0 has a literal that is not a Boolean
 $contains_atomic_term_list_free_rec	none	case 0 has a builtin operator
-$derivative	none	case 3 has an application of a term that may be stuck
-$dt_arg_list	none	it calls $tuple_arg_list, which has no proof
+$derivative	none	case 5 has a literal that is not a Boolean
+$dt_arg_list	generated	
 $dt_collapse_updater_rhs	none	case 0 has a literal that is not a Boolean
 $dt_distinct_terms	none	case 0 has a builtin operator
 $dt_eq_cons	none	case 2 has a builtin operator
@@ -102,7 +102,7 @@ $eo_is_list_nil_bvmul	none	case 0 has a builtin operator
 $eo_is_list_nil_bvor	none	case 0 has a builtin operator
 $eo_is_list_nil_bvxor	none	case 0 has a builtin operator
 $eo_is_list_nil_str.++	none	case 1 has a literal that is not a Boolean
-$eo_lit_type_Binary	none	case 0 has an application of a term that may be stuck
+$eo_lit_type_Binary	generated	
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
@@ -167,7 +167,7 @@ $eo_prog_arith-to-int-elim-to-real	generated
 $eo_prog_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison, which has no proof
 $eo_prog_arith_mult_neg	none	case 0 has a builtin operator
 $eo_prog_arith_mult_pos	none	case 0 has a builtin operator
-$eo_prog_arith_mult_sign	none	case 0 has an application of a term that may be stuck
+$eo_prog_arith_mult_sign	none	case 0 has a builtin operator
 $eo_prog_arith_mult_tangent	none	case 0 has a builtin operator
 $eo_prog_arith_poly_norm	none	it calls $get_arith_poly_norm, which has no proof
 $eo_prog_arith_poly_norm_rel	none	case 0 has a builtin operator
@@ -357,7 +357,7 @@ $eo_prog_bv_poly_norm	none	case 0 has a builtin operator
 $eo_prog_bv_poly_norm_eq	none	case 0 has a builtin operator
 $eo_prog_chain_m_resolution	none	case 0 has a builtin operator
 $eo_prog_chain_resolution	none	it calls $chain_m_resolve, which has no proof
-$eo_prog_cnf_and_neg	none	case 0 has an application of a term that may be stuck
+$eo_prog_cnf_and_neg	generated	
 $eo_prog_cnf_and_pos	none	case 0 has a builtin operator
 $eo_prog_cnf_equiv_neg1	generated	
 $eo_prog_cnf_equiv_neg2	generated	
@@ -409,7 +409,7 @@ $eo_prog_eq-symm	generated
 $eo_prog_eq_resolve	generated	
 $eo_prog_equiv_elim1	generated	
 $eo_prog_equiv_elim2	generated	
-$eo_prog_evaluate	none	case 0 has an application of a term that may be stuck
+$eo_prog_evaluate	none	it calls $run_evaluate, which has no proof
 $eo_prog_exists-elim	generated	
 $eo_prog_exists_string_length	none	case 0 has a builtin operator
 $eo_prog_factoring	none	case 0 has a builtin operator
@@ -419,8 +419,8 @@ $eo_prog_ho_cong	generated
 $eo_prog_implies_elim	generated	
 $eo_prog_instantiate	none	it calls $is_instantiation, which has no proof
 $eo_prog_int-to-bv-elim	none	case 0 has a builtin operator
-$eo_prog_int_tight_lb	none	case 0 has an application of a term that may be stuck
-$eo_prog_int_tight_ub	none	case 0 has an application of a term that may be stuck
+$eo_prog_int_tight_lb	none	it calls $least_int_gt, which has no proof
+$eo_prog_int_tight_ub	none	it calls $greatest_int_lt, which has no proof
 $eo_prog_ite-else-false	generated	
 $eo_prog_ite-else-lookahead	generated	
 $eo_prog_ite-else-lookahead-not-self	generated	
@@ -443,8 +443,8 @@ $eo_prog_ite_elim1	generated
 $eo_prog_ite_elim2	generated	
 $eo_prog_ite_eq	generated	
 $eo_prog_modus_ponens	generated	
-$eo_prog_nary_cong	none	case 0 has an application of a term that may be stuck
-$eo_prog_not_and	none	it calls $lower_not_and, which has no proof
+$eo_prog_nary_cong	generated	
+$eo_prog_not_and	generated	
 $eo_prog_not_equiv_elim1	generated	
 $eo_prog_not_equiv_elim2	generated	
 $eo_prog_not_implies_elim1	generated	
@@ -455,11 +455,11 @@ $eo_prog_not_not_elim	generated
 $eo_prog_not_or_elim	none	case 0 has a builtin operator
 $eo_prog_not_xor_elim1	generated	
 $eo_prog_not_xor_elim2	generated	
-$eo_prog_pairwise_cong	none	case 0 has an application of a term that may be stuck
-$eo_prog_process_scope	none	it calls $run_process_scope, which has no proof
+$eo_prog_pairwise_cong	generated	
+$eo_prog_process_scope	generated	
 $eo_prog_quant-dt-split	none	case 0 has a builtin operator
 $eo_prog_quant-merge-prenex	none	case 0 has a builtin operator
-$eo_prog_quant-miniscope-and	none	it calls $mk_quant_miniscope_and, which has no proof
+$eo_prog_quant-miniscope-and	generated	
 $eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
 $eo_prog_quant-unused-vars	none	case 0 has a builtin operator
@@ -551,7 +551,7 @@ $eo_prog_str-concat-clash-rev	none	case 0 has a builtin operator
 $eo_prog_str-concat-clash2	generated	
 $eo_prog_str-concat-clash2-rev	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify	none	case 0 has a builtin operator
-$eo_prog_str-concat-unify-base	none	case 0 has an application of a term that may be stuck
+$eo_prog_str-concat-unify-base	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify-base-rev	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify-rev	none	case 0 has a builtin operator
 $eo_prog_str-contains-char	none	case 0 has a literal that is not a Boolean
@@ -602,7 +602,7 @@ $eo_prog_str-indexof-prefix-concat	none	case 0 has a builtin operator
 $eo_prog_str-indexof-re-emp-re	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-indexof-re-eval	none	case 0 has a builtin operator
 $eo_prog_str-indexof-re-none	none	case 0 has a literal that is not a Boolean
-$eo_prog_str-indexof-self	none	case 0 has an application of a term that may be stuck
+$eo_prog_str-indexof-self	none	it calls $seq_empty, which has no proof
 $eo_prog_str-is-digit-elim	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-len-concat-rec	none	case 0 has a builtin operator
 $eo_prog_str-len-eq-zero-base	none	case 0 has a literal that is not a Boolean
@@ -671,7 +671,7 @@ $eo_prog_str-substr-concat2	none	case 0 has a builtin operator
 $eo_prog_str-substr-ctn	generated	
 $eo_prog_str-substr-ctn-contra	generated	
 $eo_prog_str-substr-empty-range	none	case 0 has a literal that is not a Boolean
-$eo_prog_str-substr-empty-start	none	case 0 has an application of a term that may be stuck
+$eo_prog_str-substr-empty-start	none	it calls $seq_empty, which has no proof
 $eo_prog_str-substr-empty-start-neg	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-substr-empty-str	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-substr-eq-empty	none	case 0 has a literal that is not a Boolean
@@ -682,7 +682,7 @@ $eo_prog_str-substr-len-include	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-substr-len-include-pre	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-substr-len-norm	generated	
 $eo_prog_str-substr-replace	none	case 0 has a literal that is not a Boolean
-$eo_prog_str-substr-substr-start-geq-len	none	case 0 has an application of a term that may be stuck
+$eo_prog_str-substr-substr-start-geq-len	none	it calls $seq_empty, which has no proof
 $eo_prog_str-substr-z-eq-empty-leq	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-suffixof-elim	generated	
 $eo_prog_str-suffixof-eq	generated	
@@ -710,7 +710,7 @@ $eo_prog_string_eager_reduction	none	it calls $mk_str_eager_reduction, which has
 $eo_prog_string_ext	none	case 0 has a builtin operator
 $eo_prog_string_length_non_empty	none	case 0 has a literal that is not a Boolean
 $eo_prog_string_length_pos	none	case 0 has a literal that is not a Boolean
-$eo_prog_string_reduction	none	case 0 has an application of a term that may be stuck
+$eo_prog_string_reduction	none	it calls $is_closed_rec, which has no proof
 $eo_prog_string_seq_unit_inj	generated	
 $eo_prog_symm	generated	
 $eo_prog_trans	generated	
@@ -870,12 +870,12 @@ $eo_typeof_zero_extend	none	case 0 has a builtin operator
 $eval_sets_inter	none	case 0 has a builtin operator
 $eval_sets_minus	none	case 0 has a builtin operator
 $eval_sets_op	none	case 0 has a builtin operator
-$extract_antec	none	it calls $extract_antec_rec, which has no proof
-$extract_antec_rec	none	case 1 has an application of a term that may be stuck
+$extract_antec	generated	
+$extract_antec_rec	generated	
 $from_clause	generated	
 $get_a_norm	none	case 0 has a builtin operator
 $get_a_norm_rec	none	case 0 has a builtin operator
-$get_aci_normal_form	none	case 0 has an application of a term that may be stuck
+$get_aci_normal_form	none	it calls $get_a_norm, which has no proof
 $get_ai_norm	none	case 0 has a builtin operator
 $get_ai_norm_rec	none	case 0 has a builtin operator
 $get_arg_list_rec	generated	
@@ -904,7 +904,7 @@ $is_seq_const	generated
 $is_seq_const_rec	generated	
 $is_var_list	none	case 0 has a builtin operator
 $least_int_gt	none	case 0 has a builtin operator
-$lower_not_and	none	case 1 has an application of a term that may be stuck
+$lower_not_and	generated	
 $mk_arith_mult_abs_comparison	none	case 0 has a builtin operator
 $mk_arith_mult_abs_comparison_rec	none	case 0 has a builtin operator
 $mk_arith_mult_neg	none	case 0 has a builtin operator
@@ -913,38 +913,38 @@ $mk_arith_mult_sign_sgn	none	case 0 has a builtin operator
 $mk_arith_sum_ub	none	case 0 has a builtin operator
 $mk_arith_sum_ub_rec	generated	
 $mk_arith_trichotomy	generated	
-$mk_cong_rhs	none	case 0 has an application of a term that may be stuck
-$mk_distinct_elim	none	it calls $mk_distinct_elim_rec, which has no proof
-$mk_distinct_elim_rec	none	case 0 has an application of a term that may be stuck
+$mk_cong_rhs	generated	
+$mk_distinct_elim	generated	
+$mk_distinct_elim_rec	generated	
 $mk_dt_collapse_updater_rhs	none	case 0 has a builtin operator
-$mk_dt_cons_eq	none	case 0 has an application of a term that may be stuck
+$mk_dt_cons_eq	none	case 1 has a builtin operator
 $mk_dt_inst	none	case 0 has a literal that is not a Boolean
 $mk_dt_inst_rec	generated	
 $mk_dt_inst_tuple_rec	none	case 1 has a builtin operator
-$mk_dt_split	none	case 1 has an application of a term that may be stuck
+$mk_dt_split	generated	
 $mk_dt_updater_elim_rhs	none	case 0 has a builtin operator
 $mk_ho_cong	generated	
-$mk_nary_cong_rhs	none	case 0 has an application of a term that may be stuck
+$mk_nary_cong_rhs	generated	
 $mk_quant_merge_prenex	none	case 0 has a builtin operator
-$mk_quant_miniscope_and	none	case 0 has an application of a term that may be stuck
+$mk_quant_miniscope_and	generated	
 $mk_quant_var_elim_eq	none	case 1 has a builtin operator
 $mk_re_concat	generated	
 $mk_re_unfold_neg	none	case 0 has a literal that is not a Boolean
-$mk_re_unfold_neg_concat_fixed	none	case 0 has an application of a term that may be stuck
+$mk_re_unfold_neg_concat_fixed	none	case 0 has a literal that is not a Boolean
 $mk_re_unfold_pos	none	case 0 has a literal that is not a Boolean
 $mk_re_unfold_pos_star	none	case 0 has a literal that is not a Boolean
 $mk_skolems	none	case 0 has a builtin operator
 $mk_str_eager_reduction	none	case 0 has a literal that is not a Boolean
 $mk_symm	generated	
 $mk_trans	generated	
-$mon_mul_mon	none	case 0 has an application of a term that may be stuck
+$mon_mul_mon	none	case 0 has a builtin operator
 $mvar_mul_mvar	none	case 0 has a builtin operator
 $pair_first	generated	
 $pair_second	generated	
 $poly_add	none	case 0 has a builtin operator
 $poly_mod_coeffs	none	case 1 has a builtin operator
 $poly_mul	none	it calls $poly_add, which has no proof
-$poly_mul_mon	none	case 0 has an application of a term that may be stuck
+$poly_mul_mon	none	it calls $mon_mul_mon, which has no proof
 $poly_neg	none	case 1 has a builtin operator
 $re_ac_merge	none	case 3 has a builtin operator
 $re_concat_merge	none	case 0 has a builtin operator
@@ -953,12 +953,12 @@ $re_is_unbound_wildcard	none	case 0 has a literal that is not a Boolean
 $re_nullable	none	case 3 has a builtin operator
 $re_rev_comp	none	case 2 has a literal that is not a Boolean
 $re_rev_map_rev	none	case 0 has a literal that is not a Boolean
-$re_split_str_to_re	none	case 0 has an application of a term that may be stuck
+$re_split_str_to_re	generated	
 $re_unflatten	none	case 0 has a builtin operator
 $re_unflatten_str	none	case 0 has a builtin operator
 $re_unfold_pos_concat_rec	none	case 0 has a literal that is not a Boolean
 $run_evaluate	none	case 0 has a builtin operator
-$run_process_scope	none	case 0 has an application of a term that may be stuck
+$run_process_scope	generated	
 $seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
 $seq_element_of_unit	generated	
 $seq_empty	none	case 0 has a literal that is not a Boolean
@@ -969,7 +969,7 @@ $seq_is_non_empty	generated
 $seq_is_prefix	none	case 2 has a builtin operator
 $seq_subsequence_rec	none	case 1 has a literal that is not a Boolean
 $set_is_not_subset	none	it calls $are_distinct_terms_type, which has no proof
-$set_union_to_list	none	case 0 has an application of a term that may be stuck
+$set_union_to_list	none	case 2 has a builtin operator
 $smtx_dd_has_dt	generated	
 $smtx_dd_lookup	generated	
 $smtx_decl_inhabited	generated	
@@ -1056,11 +1056,11 @@ $str_membership_re	generated
 $str_membership_str	generated	
 $str_mk_ext_deq	none	case 0 has a literal that is not a Boolean
 $str_mk_re_loop_elim_rec	none	case 0 has a builtin operator
-$str_mk_str_in_re_concat_star_char	none	case 0 has an application of a term that may be stuck
+$str_mk_str_in_re_concat_star_char	none	case 1 has a literal that is not a Boolean
 $str_mk_str_in_re_sigma_rec	none	case 0 has a literal that is not a Boolean
 $str_mk_str_in_re_sigma_star_rec	none	case 0 has a literal that is not a Boolean
 $str_multiset_overapprox	none	case 0 has a builtin operator
-$str_multiset_overapprox_word	none	case 0 has an application of a term that may be stuck
+$str_multiset_overapprox_word	none	case 1 has a builtin operator
 $str_overlap_rec	none	case 0 has a literal that is not a Boolean
 $str_re_consume	none	case 0 has a builtin operator
 $str_re_consume_inter	none	case 1 has a builtin operator
@@ -1077,11 +1077,11 @@ $str_to_int_eval_rec	none	case 0 has a builtin operator
 $str_unify_split	none	case 0 has a literal that is not a Boolean
 $str_value_len	none	case 0 has a literal that is not a Boolean
 $strip_even_exponent	generated	
-$substitute_simul_rec	none	case 0 has an application of a term that may be stuck
+$substitute_simul_rec	none	case 0 has a builtin operator
 $to_clause	generated	
 $to_cube	generated	
-$tuple_arg_list	none	case 0 has an application of a term that may be stuck
+$tuple_arg_list	generated	
 $tuple_collapse_updater_rhs	none	case 0 has a literal that is not a Boolean
 $tuple_get_selectors_rec	none	case 1 has a builtin operator
-$tuple_updater_elim_rhs	none	case 0 has an application of a term that may be stuck
+$tuple_updater_elim_rhs	generated	
 $typed_list_element_type	generated	

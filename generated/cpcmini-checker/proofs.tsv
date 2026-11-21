@@ -22,7 +22,7 @@ $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
 $eo_is_closed	generated	
 $eo_is_closed_rec	generated	
 $eo_is_list_nil	generated	
-$eo_lit_type_Binary	none	case 0 has an application of a term that may be stuck
+$eo_lit_type_Binary	generated	
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
