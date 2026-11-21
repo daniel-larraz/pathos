@@ -26,7 +26,7 @@ $eo_lit_type_Binary	generated
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
-$eo_mk_premise_list	none	case 0 has a builtin operator
+$eo_mk_premise_list	none	case 1 has eo::cons of an element that may be stuck
 $eo_nil	generated	
 $eo_prog_contra	generated	
 $eo_prog_refl	generated	

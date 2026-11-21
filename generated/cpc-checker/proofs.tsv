@@ -106,7 +106,7 @@ $eo_lit_type_Binary	generated
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
-$eo_mk_premise_list	none	case 0 has a builtin operator
+$eo_mk_premise_list	none	case 1 has eo::cons with an operator that nests to the left
 $eo_nil	none	case 5 has a literal that is not a Boolean
 $eo_nil_*	none	it calls $arith_mk_one, which has no proof
 $eo_nil_+	none	it calls $arith_mk_zero, which has no proof

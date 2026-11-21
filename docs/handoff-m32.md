@@ -13,7 +13,7 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 6,485 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 6,662 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
   proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
@@ -98,7 +98,7 @@ program, the reason. The reasons recorded after the cases, in order: no
 | --- | --- | --- |
 | 8 | calls of programs without a proof | `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`), `$eo_cmd_step_pop_proven` (→ `$eo_prog_scope`), `$eo_cmd_step_proven` (→ `$eo_mk_premise_list`), `$eo_invoke_cmd` (→ `$eo_cmd_step_proven`; it also calls `$eo_is_bool_type` and `$eo_invoke_cmd_step_pop`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_cmd_step_pop` (→ `$eo_cmd_step_pop_proven`), `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
-| 1 | a builtin operator | `$eo_mk_premise_list` (`eo::cons`) |
+| 1 | `eo::cons` of an element that may be stuck (case 1, past `eo::nil` in case 0; `Store.builtin_spec_cons` is proved, `Runtime/Lists.lean`) | `$eo_mk_premise_list` |
 | 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
 | 2 | compiled to a function of the runtime | `$eo_invoke_assume_list`, `$eo_state_proven_nth` |
 | 1 | an application of a term that may be stuck | `$eo_prog_scope` (a variable under a proof; `$eo_lit_type_Binary` is proved since guarded applications are matched, `apply_mk_rep`) |
@@ -150,9 +150,17 @@ finding):
   about lean-meta's function types; the variables under a proof
   (`$eo_prog_scope`, `$eo_prog_arith_trichotomy`, `$eo_prog_true_intro`)
   are the same question.
-- *`eo::cons`* (`$eo_mk_premise_list`): the runtime's `list_cons_op` calls
-  generated programs, so its spec is a runtime lemma that uses what is
-  proved of generated functions, a new kind of piece. Through calls:
+- *`eo::cons`* (`$eo_mk_premise_list`): the spec is done
+  (`Store.builtin_spec_cons`, `Runtime/Lists.lean`; it takes the generated
+  spec of `$eo_is_list_nil` through `ih : Specs n`, and its `list_parts`
+  lemma is meant for the other list builtins). What stops the program now:
+  the element is `$eo_state_proven_nth`'s result, which logos's
+  `__eo_cons` does not guard (a stuck element gives an application, the
+  runtime gives the stuck term), and nothing yet proves it is not stuck;
+  and `$eo_state_proven_nth` itself (Daniel's decision). The left-nested
+  operators of the full CPC (`-`, `/`, `div`, `xor`, …) have no nil in
+  logos, so neither side makes a list of them; the emitter does not write
+  the lemma for a signature that has one. Through calls:
   `$eo_cmd_step_proven` → `$eo_invoke_cmd` → `$eo_invoke_cmd_list`
   (`$eo_invoke_cmd` also waits on `$eo_is_bool_type` and
   `$eo_invoke_cmd_step_pop`).
