@@ -8,15 +8,15 @@ the Ethos commit in `scripts/generate-cpc` (`mini_default_rev`).
 
 ## The state
 
-- **67 of CpcMini's 82 programs** have a generated proof (67 of the
+- **68 of CpcMini's 82 programs** have a generated proof (68 of the
   76 that the gate counts: the 6 datatype operators have been excluded
   since 2026-11-19), listed in
   `generated/cpcmini-checker/proofs.tsv` with `generated`; every other
   program has the first thing that stops it.
-- `scripts/proofs-build`: 7,423 theorems, no `sorry`. The trust is **27
+- `scripts/proofs-build`: 7,820 theorems, no `sorry`. The trust is **27
   assumptions** (Lean's three among them): the 11 of steps 3–5 and, from
   part B (Daniel's decision of 2026-11-20), the malachite specs that the
-  proved programs reach (see the trust table below); 49 declarations (axioms that declare a type or a function,
+  proved programs reach (see the trust table below); 48 declarations (axioms that declare a type or a function,
   which add no trust: see "What is trusted").
 - Loops are proved by strong induction on the budget of calls
   (`Store.budget`, which every round's `tick` lowers), not by Lean's
@@ -97,13 +97,13 @@ fills a `LeanProof`; `leanProofs()` writes the files and decides, per
 program, the reason. The reasons recorded after the cases, in order: no
 `Valid` for an argument; then, across programs, "it calls … which has no proof".
 
-## The reasons that remain (15 programs)
+## The reasons that remain (14 programs)
 
 | Count | Reason | Programs |
 | --- | --- | --- |
 | 7 | calls of programs without a proof, all through `$eo_is_bool_type` → `$eo_typeof` | `$eo_is_bool_type` (→ `$eo_typeof`), `$eo_push_proven` (→ `$eo_is_bool_type`), `$eo_invoke_cmd_step_pop` (→ `$eo_push_proven`, now past `$eo_cmd_step_pop_proven`), `$eo_invoke_cmd` (→ `$eo_is_bool_type`, now past `$eo_cmd_step_proven`), `$eo_invoke_cmd_list` (→ `$eo_invoke_cmd`), `$eo_invoke_assume_list` (→ `$eo_is_bool_type`; its fold is proved by hand), `$eo_checker_is_refutation` (→ `$eo_invoke_assume_list`) |
 | 6 | no logos function (the datatype operators; the gate counts 76) | `$eo_datatype_cons_selectors_rec`, `$eo_datatype_constructors_rec`, `$eo_dt_constructors`, `$eo_dt_constructors_main`, `$eo_dt_selectors`, `$eo_dt_selectors_main` |
-| 2 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one), `$eo_to_smt` (the native operation `uconst_id`) |
+| 1 | case 8, past the string and binary literal patterns (`Runtime/StringLits.lean`) | `$eo_typeof` (an application of a term that may be stuck: the function type it builds, past the line for building one) |
 
 `$eo_state_proven_nth` is proved: Daniel decided to prove the
 jump-pointer lookup (`Store.state_nth_spec` and `state_proven_nth_spec`,
@@ -122,30 +122,28 @@ assumed OK"), in CpcMini or the CPC.
 
 ## What's left (for Fable)
 
-67 of the 76 programs the gate counts are proved. The other 9, by what
+68 of the 76 programs the gate counts are proved. The other 8, by what
 stops them first and what it would take:
 
 **More of the same** (no decision, no trust beyond the 27):
 
-- `$eo_typeof` and `$eo_to_smt`: past cases 0–7 (string and binary
-  literal patterns done, `Runtime/StringLits.lean`), both stop at case 8.
-  `$eo_typeof`'s case 8 builds a function type: the emitter now has its
-  lines (the constant `$emb_FunType` and two applications), but the
-  result type `__eo_typeof_dt_sel_return …` may be stuck, so it meets the
-  stuck-application design question below. `$eo_to_smt`'s is the native
-  operation `uconst_id`: `@u.` and the decimal digits of a runtime number
-  (`front::constant_name`, `format!`, trusted by `constant_name_spec`).
-  A generator change cannot make it a constant as with the literals,
-  since the number is a value at run time; the runtime could build the
-  digits with a loop over `Integer::euclidean_qr` by 10 and `to_u32`
-  (specs in use), which Aeneas translates, and a proof that the loop
-  spells `toString i` would then need no trusted spec. It also needs
-  `HasStuck SmtTerm` for lemma C (its default case gives an SMT term),
-  which has no instance yet. Left for Daniel and Fable. Forced, cases 0–7
-  of both elaborate; `$eo_typeof`'s case 4 also calls
-  `$eo_lit_type_Binary`, now proved. The type cache,
-  which `$eo_typeof` keeps its results in, is done (proved with
-  `$smtx_typeof`).
+- `$eo_typeof`: past cases 0–7 (string and binary literal patterns
+  done, `Runtime/StringLits.lean`), it stops at case 8, which builds a
+  function type: the emitter has its lines (the constant `$emb_FunType`
+  and two applications), but the result type `__eo_typeof_dt_sel_return
+  …` may be stuck, so it meets the stuck-application design question
+  below. Forced, cases 0–7 elaborate; case 4 calls `$eo_lit_type_Binary`,
+  proved. The type cache, which `$eo_typeof` keeps its results in, is
+  done (proved with `$smtx_typeof`).
+- `$eo_to_smt` is proved (milestone 32, Ethos `cd4d38c`): the runtime
+  builds a constant's name from its digits, proved to spell
+  `"@u." ++ toString i` (`Runtime/ConstNames.lean`), and
+  `front.constant_name_spec` is no longer trusted. Lemma C never needed
+  `HasStuck SmtTerm`, contrary to what this note said: `__eo_to_smt`'s
+  last case matches every value, so the no-case rule gives `default`. In
+  the full CPC it stops at case 169 (the native operation
+  `mk_rational`), and `$eo_to_smt_distinct`, `$eo_to_smt_distinct_pairs`
+  and `$eo_to_smt_typed_list_elem_type` wait on it.
 - `$smtx_typeof` is proved, with the type cache (`framed_type_cached`,
   the `TypesOK` part of the store's invariant). In the full CPC, where it
   is the 37/10/3-group loop, it now stops at a call of
@@ -156,7 +154,7 @@ stops them first and what it would take:
   `$eo_is_bool_type`, `$eo_push_proven`, `$eo_invoke_assume_list` (its
   fold already assumes its state OK), `$eo_invoke_cmd`,
   `$eo_invoke_cmd_step_pop`, `$eo_invoke_cmd_list` and
-  `$eo_checker_is_refutation`, which leaves only `$eo_to_smt` (75 of 76).
+  `$eo_checker_is_refutation`: all 76.
   This is expected, not checked: the fold's application against its
   future spec was checked in a throwaway module only.
 

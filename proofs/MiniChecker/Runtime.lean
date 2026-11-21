@@ -1489,10 +1489,6 @@ def CheckError.Insts.CoreFmtDisplay : core.fmt.Display CheckError := {
   fmt := CheckError.Insts.CoreFmtDisplay.fmt
 }
 
-/-- [pathos_compiled_checker::front::constant_name]:
-    Source: 'src/front.rs', lines 55:0-58:1 -/
-axiom front.constant_name : Bool → num.Integer → Result eostring.EoString
-
 /-- [pathos_compiled_checker::schema::Constructor]
     Source: 'src/schema.rs', lines 3:0-139:1
     Visibility: public -/
@@ -8950,6 +8946,95 @@ def native.Store.native_string_valid
         Term (core.convert.FromSame CheckError) residual
     ok (r1, self)
 
+/-- [pathos_compiled_checker::native::MAX_NAME_DIGITS]
+    Source: 'src/native.rs', lines 433:0-433:46 -/
+@[global_simps, irreducible]
+def native.MAX_NAME_DIGITS : Result Std.Usize := core.num.Usize.MAX - 8#usize
+
+/-- [pathos_compiled_checker::native::decimal_digits]: loop 0:
+    Source: 'src/native.rs', lines 465:4-475:5 -/
+@[rust_loop]
+def native.decimal_digits_loop
+  (ten : num.Integer) (digits : alloc.vec.Vec Std.U32) (m : num.Integer) :
+  Result (core.result.Result (alloc.vec.Vec Std.U32) CheckError)
+  := do
+  let i := alloc.vec.Vec.len digits
+  let i1 ← native.MAX_NAME_DIGITS
+  if i >= i1
+  then ok (core.result.Result.Err CheckError.Limit)
+  else
+    let (q, r) ← num.Integer.euclidean_qr m ten
+    let i2 ← num.Integer.to_u32 r
+    let i3 ← 48#u32 + i2
+    let digits1 ← alloc.vec.Vec.push digits i3
+    let i4 ← num.Integer.sgn q
+    if i4 = 0#i32
+    then ok (core.result.Result.Ok digits1)
+    else native.decimal_digits_loop ten digits1 q
+partial_fixpoint
+
+/-- [pathos_compiled_checker::native::decimal_digits]:
+    Source: 'src/native.rs', lines 461:0-476:1 -/
+def native.decimal_digits
+  (m : num.Integer) :
+  Result (core.result.Result (alloc.vec.Vec Std.U32) CheckError)
+  := do
+  let ten ← num.Integer.Insts.CoreConvertFromU32.from 10#u32
+  let m1 ← num.Integer.Insts.CoreCloneClone.clone m
+  native.decimal_digits_loop ten (alloc.vec.Vec.new Std.U32) m1
+
+/-- [pathos_compiled_checker::native::constant_name]: loop 0:
+    Source: 'src/native.rs', lines 453:4-456:5 -/
+@[rust_loop]
+def native.constant_name_loop
+  (digits : alloc.vec.Vec Std.U32) (codes : alloc.vec.Vec Std.U32)
+  (i : Std.Usize) :
+  Result (alloc.vec.Vec Std.U32)
+  := do
+  if i > 0#usize
+  then
+    let i1 ← i - 1#usize
+    let i2 ←
+      alloc.vec.Vec.index (core.slice.index.SliceIndexUsizeSlice Std.U32)
+        digits i1
+    let codes1 ← alloc.vec.Vec.push codes i2
+    native.constant_name_loop digits codes1 i1
+  else ok codes
+partial_fixpoint
+
+/-- [pathos_compiled_checker::native::constant_name]:
+    Source: 'src/native.rs', lines 440:0-458:1 -/
+def native.constant_name
+  (uninterpreted : Bool) (n : num.Integer) :
+  Result (core.result.Result eostring.EoString CheckError)
+  := do
+  let kind ← if uninterpreted
+               then ok 117#u32
+               else ok 99#u32
+  let i ← num.Integer.sgn n
+  let m ←
+    if i < 0#i32
+    then num.Integer.neg n
+    else num.Integer.Insts.CoreCloneClone.clone n
+  let r ← native.decimal_digits m
+  let cf ← core.result.Result.Insts.CoreOpsTry.branch r
+  match cf with
+  | core.ops.control_flow.ControlFlow.Continue val =>
+    let codes ← alloc.vec.Vec.push (alloc.vec.Vec.new Std.U32) 64#u32
+    let codes1 ← alloc.vec.Vec.push codes kind
+    let codes2 ← alloc.vec.Vec.push codes1 46#u32
+    let codes3 ←
+      if i < 0#i32
+      then alloc.vec.Vec.push codes2 45#u32
+      else ok codes2
+    let i1 := alloc.vec.Vec.len val
+    let codes4 ← native.constant_name_loop val codes3 i1
+    let es ← eostring.EoString.from_code_points codes4
+    ok (core.result.Result.Ok es)
+  | core.ops.control_flow.ControlFlow.Break residual =>
+    core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
+      eostring.EoString (core.convert.FromSame CheckError) residual
+
 /-- [pathos_compiled_checker::native::NativeOp]
     Source: 'src/native.rs', lines 17:0-63:1
     Visibility: public -/
@@ -9027,8 +9112,16 @@ def native.Store.native_const_id
       let b ←
         native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq op
           native.NativeOp.UconstId
-      let «name» ← front.constant_name b val
-      Store.raw self (lit.Lit.Str «name»)
+      let r1 ← native.constant_name b val
+      let cf1 ← core.result.Result.Insts.CoreOpsTry.branch r1
+      match cf1 with
+      | core.ops.control_flow.ControlFlow.Continue val1 =>
+        Store.raw self (lit.Lit.Str val1)
+      | core.ops.control_flow.ControlFlow.Break residual =>
+        let r2 ←
+          core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
+            Term (core.convert.FromSame CheckError) residual
+        ok (r2, self)
   | core.ops.control_flow.ControlFlow.Break residual =>
     let r1 ←
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual

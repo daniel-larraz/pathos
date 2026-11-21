@@ -236,7 +236,7 @@ it, and sorts every axiom in use into one of two kinds (milestone 32,
 step 5):
 
 - **Assumptions**: axioms whose type is a proposition, and Lean's three.
-  This is the trust. In use today, by 7,423 theorems, are **27**:
+  This is the trust. In use today, by 7,820 theorems, are **27**:
   `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
   function, `Nonempty α → α`, but it is the axiom of choice); 8 of
   `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
@@ -271,10 +271,10 @@ step 5):
     for every width and every pair of values in range
     (`bv_and_toInt_emod`, proved, not assumed).
 - **Declarations**: axioms that declare a type or a function and say
-  nothing of it: 45 of the 53 that Aeneas leaves without a body in the
+  nothing of it: 44 of the 52 that Aeneas leaves without a body in the
   Lean of the checker (the types `num.Integer` and `num.Rational`, their
-  functions, the text functions of `front.rs`), and `Trusted.lean`'s
-  `toInt`, `ofInt`, `toRat`, `ofRat`. In use today: 49. An axiom whose
+  functions, the printing functions), and `Trusted.lean`'s
+  `toInt`, `ofInt`, `toRat`, `ofRat`. In use today: 48. An axiom whose
   type is not a proposition only says that its type has an element, and
   `Result α` always has one (`fail`), so a declaration adds no trust.
 
@@ -294,9 +294,37 @@ logos.
 
 `Trusted.lean` gives every function of `num.rs` that the checker calls its
 meaning on ℤ and ℚ, one equation each, with the hypothesis the Rust
-documents where there is one (a non-zero divisor). Of the two functions of
-`front.rs`, it declares the one the checking code calls
-(`constant_name`) and assumes only that it returns.
+documents where there is one (a non-zero divisor). Nothing of `front.rs`
+is trusted any more: the checking code called one function of it,
+`constant_name`, trusted only to return (`front.constant_name_spec`).
+Since Ethos `cd4d38c` the name of a constant is built in `native.rs` from
+its digits and proved (below, "The names of constants"), and
+`constant_name_spec` and the declaration `front.constant_name` are gone
+from `Trusted.lean`, the translation and `axioms-allowed.txt` (Daniel's
+decision of 2026-11-20).
+
+**The names of constants** (milestone 32, `Runtime/ConstNames.lean`).
+logos's `native_uconst_id i` is `"@u." ++ toString i`.
+- **The runtime:** `native::constant_name` builds the digits by repeated
+  `euclidean_qr` by 10 and `to_u32` (`decimal_digits`, the last first),
+  then the prefix (`@u.` or `@c.`), a `-` for a negative number (which
+  the checker never asks for), and the digits back to front. A test
+  checks it against `format!` for both prefixes, 0, small, large and
+  negative numbers, so the strings are unchanged.
+- **The one new error:** `CheckError::Limit` for a number with more than
+  `usize::MAX - 8` digits. No memory holds such a number, and `format!`
+  could not write it either; the bound keeps every push in range, which
+  the proof needs (Aeneas makes a push past `usize::MAX` a failure, and
+  the store's integers are unbounded).
+- **The proof:** `digitsRev` and `toString_codes` relate the digits to
+  `Nat.repr` (`toDigitsCore`, `digitChar`); the two loops are proved by
+  fixpoint induction; `Store.native_spec_uconst_id` gives the line the
+  emitter writes. It uses the specs of `euclidean_qr`, `to_u32`, `sgn`,
+  `from_u32` and `clone`, all already in use.
+- **Lemma C needs no `HasStuck SmtTerm`:** `__eo_to_smt` ends with
+  `| y => SmtTerm.None`, a case that matches every value (the Rust has
+  it too), so the no-case rule gives `default`. Checked with the force
+  patch before the proof: lemma C and the body build.
 
 **Literals are values** (milestone 32, Ethos `db074f2`). The generated
 code builds every literal from a value, not from text. A numeral is
@@ -508,11 +536,11 @@ For the full CPC it writes them too, into `generated/cpc-checker`
 checked to be what the generator writes (`scripts/generate-cpc --check`),
 but **not built**; `proofs.tsv` (478 of 1,086 marked generated) says how
 far the emitter gets.
-67 of CpcMini's 82 programs (67 of the 76 the gate counts) have one so far, the four of the pilot
+68 of CpcMini's 82 programs (68 of the 76 the gate counts) have one so far, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
-proof for yet. `proofs/MiniProofs.lean` (7,352 lines) elaborates in 15
-seconds (2.9 GiB; `$smtx_typeof` adds about 2 s), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+proof for yet. `proofs/MiniProofs.lean` (7,809 lines) elaborates in 16
+seconds (3.0 GiB; `$smtx_typeof` adds about 2 s), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
 
 **Three generated pieces.**
 
@@ -734,6 +762,7 @@ gives `true`, or an error.
 | `Runtime/IntNatives.lean` | 283 | The native operations on integers (`zeq`, `zleq` through `partial_cmp`, `mod_total`, `int.pow2`, `int.to_nat`, `nat.succ`) and the numeral constants of the generated code (`Integer::from(<u32>)`, negated); from the trusted specs of the integer functions. |
 | `Runtime/StateInv.lean` | 160 | The checker-state invariant, on logos's side only: `StateOK` (no object of a state holds `Stuck`) and `ProofOK`; a premise looked up in an OK state is not `Stuck` (`state_proven_nth_ne_stuck`, and `_of` a handle's fact, for the generated lines); and every state builder keeps it (the three push checks, `push_proven`, `invoke_cmd_check_proven`, `invoke_cmd_step_pop`, `invoke_cmd`, `invoke_cmd_list`, `invoke_assume_list`; `StateOK.nil`, `.stuck`, `.tail`). The generated specs take it as a precondition (see "The state invariant"). |
 | `Runtime/StateNth.lean` | 1178 | `Store::state_nth`, the jump-pointer lookup that `$eo_state_proven_nth` is compiled to, against logos's recursive `__eo_state_proven_nth` (`Store.state_nth_spec`): the walk down a state list and back up, which fills the entries (`state_down_spec`, `state_up_…_spec`; the two copies of the way up that Aeneas makes are proved alike), the search for the node at a depth (`state_ancestor_spec`), the read of the index, `charge`, and the program (`state_proven_nth_spec`), which the generated proofs use. See "The state lookup". |
+| `Runtime/ConstNames.lean` | 293 | The names of constants (`native::constant_name`, `uconst_id`): the runtime's digit loop and copy loop against `"@u." ++ toString i` (`digitsRev`, `toString_codes`, `native_uconst_id_codes`), and `Store.native_spec_uconst_id`, which the emitter writes the line of `uconst_id` from. See "The names of constants". |
 | `Runtime/AssumeFold.lean` | 451 | `$eo_invoke_assume_list`, which the generator compiles to an iterative fold (`scan`, then `unwind`): proved by hand against logos's recursive definition (`invoke_assume_list_spec`), from what is proved of `$eo_is_bool_type`, `$eo_is_closed` and `$eo_push_input_assume_check` (hypotheses in the shape of the generated specs, the state assumed OK); the emitter writes the program's theorem as that application (`handProof`). |
 | `Runtime/Lists.lean` | 624 | Lists of an operator: the runtime's walk down a list (`list_step_spec`, `list_elements_loop_spec`), its parts (`list_parts_spec`, which takes what is proved of the generated `$eo_is_list_nil` as a hypothesis, `IsListNilSpec n`, from the generated `Specs n`), building one again (`list_build_loop_spec`), and `eo::cons` (`Store.builtin_spec_cons`) against logos's `__eo_cons`, for operators that nest to the right. Meant for every list builtin. |
 | `Runtime/StringLits.lean` | 455 | String and binary literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); a string constant of the generated code (`"@"`: `raw` of `EoString::from_code_points(vec![64])`) stands for the code points of its vector (`raw_str_vec_spec`: a vector of `u32` is always in range), rewritten to logos's `native_string_lit` once both are concrete (`Represents.rep_of_eq`). `EoString`'s clone is translated code, so no trusted spec. A pattern on a binary literal stores its width and value as two numerals (`destruct_binary_spec`, with `pat_destruct_lit2`), and building it again from those two fields gives the literal (`construct_binary_spec`, in range by `rep_binary_okBv`), from the specs of `from_u32`, `clone`, `fits_u32`, `to_u32` and `mod_by_pow2`, already in use. |
@@ -744,8 +773,8 @@ No generated proof has a line written by hand, and no program needed a
 person. What needed a person is the above: a tactic for each kind of line,
 and a lemma for each runtime operation and constructor a line names.
 
-**What limits the 67** (the reasons of `proofs.tsv`, for the other 15,
-on 2026-11-20, after the state lookup):
+**What limits the 68** (the reasons of `proofs.tsv`, for the other 14,
+on 2026-11-20, after the names of constants):
 - calls of programs without a proof (7), all waiting on `$eo_typeof`
   through `$eo_is_bool_type`: `$eo_is_bool_type`, `$eo_push_proven`,
   `$eo_invoke_cmd_step_pop` (now past `$eo_cmd_step_pop_proven`),
@@ -753,12 +782,14 @@ on 2026-11-20, after the state lookup):
   fold is proved by hand) and `$eo_checker_is_refutation`;
 - the six datatype operators below;
 - case 8 of `$eo_typeof` (it builds a function type to a type that may be
-  stuck: an application of a term that may be stuck) and of `$eo_to_smt`
-  (the native operation `uconst_id`), past the string and binary literal
-  patterns (2).
+  stuck: an application of a term that may be stuck), past the string and
+  binary literal patterns (1).
 
 In the full CPC, `$eo_state_proven_nth` and `$eo_cmd_step_pop_proven` are
-proved; `$eo_mk_premise_list` stops at `eo::cons` with an operator that
+proved; `$eo_to_smt` is past `uconst_id` and stops at case 169 (the
+native operation `mk_rational`), with `$eo_to_smt_distinct`,
+`$eo_to_smt_distinct_pairs` and `$eo_to_smt_typed_list_elem_type`
+waiting on it; `$eo_mk_premise_list` stops at `eo::cons` with an operator that
 nests to the left (the CPC has some), and `$eo_cmd_step_proven` at its
 case 550, a literal that is not a Boolean.
 

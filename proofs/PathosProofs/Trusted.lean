@@ -8,8 +8,10 @@ public import Mathlib.Data.Int.Bitwise
 
 Charon and Aeneas translate all of the compiled checker except two modules,
 which they leave as axioms without a meaning: `num.rs`, the integers and
-rationals over `malachite`, and the functions of `front.rs` that work on
-text. This file says what those functions compute. Every statement here is
+rationals over `malachite`, and `front.rs`, which works on text and which
+the checking functions no longer call (the names of constants are built in
+`native.rs` and proved, Runtime/ConstNames.lean). This file says what the
+functions of `num.rs` compute. Every statement here is
 an **axiom**: nothing checks it against the Rust. It is, with Lean's own
 axioms and logos's, everything that a theorem of `PathosProofs` rests on
 beyond what Charon and Aeneas did (`scripts/proofs-axioms` checks that).
@@ -206,21 +208,5 @@ axiom Rational.pow_spec (a : Rational) (n : Std.U32) :
   Rational.pow a n = ok (Rational.ofRat (a.toRat ^ n.val))
 
 end num
-
-/-! ## The text functions
-
-`front.rs` holds what works on text, for the program around the checker.
-The checking code calls one of its functions (the generated code builds
-its literals and numerals as values):
-
-* `constant_name uninterpreted n` is the text `@u.n` or `@c.n`.
-
-Of it only this is assumed so far: it returns. What it returns is a
-statement about the printing of integers; none of the proofs here needs it
-yet.
--/
-
-axiom front.constant_name_spec (uninterpreted : Bool) (n : num.Integer) :
-  ∃ r, front.constant_name uninterpreted n = ok r
 
 end pathos_compiled_checker

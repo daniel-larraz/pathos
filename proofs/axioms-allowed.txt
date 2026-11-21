@@ -28,7 +28,7 @@ Aeneas.Std.core.slice.Slice.get_unchecked_SliceIndexUsizeSlice_spec
 
 [MiniChecker]
 # What Charon and Aeneas leave without a body in the Lean of the checker:
-# the types and functions of num.rs, the text functions of front.rs, the
+# the types and functions of num.rs, the
 # printing functions, and two declarations Aeneas always writes. They have
 # a type and no meaning; Trusted.lean gives the ones that matter theirs.
 pathos_compiled_checker.Bool.Insts.CoreCmpPartialEqBool.ne
@@ -36,7 +36,6 @@ pathos_compiled_checker.CheckError.Insts.CoreFmtDebug.fmt
 pathos_compiled_checker.CheckError.Insts.CoreFmtDisplay.fmt
 pathos_compiled_checker.core.fmt.Formatter.debug_tuple_field2_finish
 pathos_compiled_checker.core.mem.maybe_uninit.MaybeUninit
-pathos_compiled_checker.front.constant_name
 pathos_compiled_checker.num.Integer
 pathos_compiled_checker.num.Integer.add
 pathos_compiled_checker.num.Integer.bitwise_and
@@ -87,7 +86,6 @@ pathos_compiled_checker.schema.Constructor.Insts.CoreFmtDebug.fmt
 
 [Trusted]
 # proofs/PathosProofs/Trusted.lean: what the functions above compute.
-pathos_compiled_checker.front.constant_name_spec
 pathos_compiled_checker.num.Integer.add_spec
 pathos_compiled_checker.num.Integer.bitwise_and_spec
 pathos_compiled_checker.num.Integer.bitwise_not_spec

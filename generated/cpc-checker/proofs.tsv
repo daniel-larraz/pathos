@@ -736,7 +736,7 @@ $eo_push_proven_check	generated
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	generated	
-$eo_to_smt	none	case 8 has the native operation uconst_id
+$eo_to_smt	none	case 169 has the native operation mk_rational
 $eo_to_smt_array_deq_diff	generated	
 $eo_to_smt_bv_size	none	case 0 has the native operation nat.to_int
 $eo_to_smt_datatype	generated	
