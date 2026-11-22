@@ -1,0 +1,79 @@
+# What scripts/proofgen knows of logos's signature: the names of the
+# checker's programs, constructors and types that the proofs of
+# proofs/PathosProofs treat specially. A change to how logos defines its
+# checker (a state-building program renamed or added, say) is a change
+# here, not in Ethos and not in the generator.
+#
+# Each entry says which lemma of PathosProofs relies on it.
+
+version = 1
+
+[state]
+# The checker's state: every argument of this type is assumed OK
+# (`StateOK`, Runtime/StateInv.lean).
+type = '($native_embed_checker "CState")'
+# The tail of an OK state is OK (`StateOK.tail`).
+cons = "$emb_s.cons"
+# The empty and the stuck state are OK (`StateOK.nil`, `StateOK.stuck`).
+ok_constants = ["$emb_s.nil", "$emb_s.Stuck"]
+# The element that this program finds in an OK state has a formula that is
+# not stuck, by this lemma (Runtime/StateNth.lean).
+lookup = "$eo_state_proven_nth"
+lookup_lemma = "state_proven_nth_ne_stuck_of"
+
+# The programs that keep states OK (Runtime/StateInv.lean): the result is
+# OK when the state arguments at these positions are.
+[state.keeps]
+"$eo_push_proven" = [1]
+"$eo_invoke_cmd_check_proven" = [0]
+"$eo_invoke_cmd_step_pop" = [1]
+"$eo_invoke_cmd" = [0]
+"$eo_invoke_cmd_list" = [0]
+"$eo_invoke_assume_list" = [0]
+
+[lists]
+# The programs that eo::nil calls and that the lemma of eo::cons takes the
+# spec of (Store.builtin_spec_cons, Runtime/Lists.lean).
+nil = "$eo_nil"
+is_nil = "$eo_is_list_nil"
+
+[valid]
+# The argument types whose `Valid` is `True` (Runtime/Embed.lean says why
+# that is enough); terms and proofs have their own.
+types = [
+  '($native_type_0 "Bool")',
+  '($native_type_0 "String")',
+  '($native_type_0 "Nat")',
+  '($native_embed_checker "CState")',
+  '($native_embed_checker "CStateObj")',
+  '($native_embed_checker "CArgList")',
+  '($native_embed_checker "CCmdList")',
+  '($native_embed_checker "CIndexList")',
+  '$eo_Rule',
+  '($native_embed_eo "Datatype")',
+  '($native_embed_eo "DatatypeCons")',
+  '($native_embed_eo "DatatypeDecl")',
+  '$smt_Type',
+  '($native_embed_smt "SmtDatatype")',
+  '($native_embed_smt "SmtDatatypeCons")',
+  '($native_embed_smt "SmtDatatypeDecl")',
+  '$eo_Cmd',
+  '$smt_Term',
+]
+
+# The programs that rust-meta compiles to functions of the runtime, whose
+# proofs are written by hand: the lemma, applied to what is proved of the
+# programs it calls, and what it assumes of the arguments.
+
+# The lookup with jump pointers (Runtime/StateNth.lean).
+[hand.state_nth]
+lemma = "state_proven_nth_spec"
+good = ["StateOK", ""]
+
+# The fold over the assumptions (Runtime/AssumeFold.lean), for this guard
+# and push.
+[hand.assume_fold]
+lemma = "invoke_assume_list_spec"
+guard_calls = ["$eo_is_bool_type", "$eo_is_closed"]
+push = "$eo_push_input_assume_check"
+good = ["StateOK", ""]
