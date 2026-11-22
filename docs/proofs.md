@@ -530,6 +530,18 @@ change under them.
 
 ## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
 
+On the branch `proofgen-prototype`, `scripts/proofgen` writes the proofs,
+and Ethos writes only a record of what it generated: rust-meta's trace of
+the generated code (per case the nodes of its patterns and body, each with
+its Rust variable, and lean-meta's decision of a guarded application) and
+lean-meta's table of the embedding's constructors (Ethos branch
+`rust-meta-trace`). What the generator knows of the checker's programs and
+types (the state, the programs that keep it OK, the types with a trivial
+`Valid`, the programs proved by hand) is in `proofs/proofgen.toml`. Its
+output is byte-identical to what rust-meta wrote before (on milestone 32,
+Ethos branch `m32-proofs`), for CpcMini and for the CPC. The rest of this
+section says "rust-meta" for the generator of the proofs, as it was.
+
 `rust-meta` writes the proofs with the Rust (Ethos branch `m32-proofs`).
 For the full CPC it writes them too, into `generated/cpc-checker`
 (`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
