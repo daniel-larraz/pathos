@@ -1,0 +1,68 @@
+# Builds the Lean proofs: CpcMini's (proofs/, the regression gate of the
+# shared library) and the full CPC's (proofs-cpc/, stage 5 of milestone 32,
+# as far as it builds), each with scripts/proofs-build, which also runs the
+# axiom audit (scripts/proofs-axioms).
+#
+# Nightly, and on pushes and pull requests that change the proofs, the
+# generator of the proofs or the CPC crate they are about: the CPC's
+# translation alone is about 500,000 lines of Lean, so this is not part of
+# ci.yml's per-push checks.
+name: Proofs
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "proofs/**"
+      - "proofs-cpc/**"
+      - "scripts/proofgen"
+      - "scripts/proofs-*"
+      - "scripts/generate-cpc"
+      - "generated/cpc-checker/**"
+      - "generated/cpcmini-checker/**"
+      - ".github/workflows/proofs.yml"
+  pull_request:
+    paths:
+      - "proofs/**"
+      - "proofs-cpc/**"
+      - "scripts/proofgen"
+      - "scripts/proofs-*"
+      - "scripts/generate-cpc"
+      - "generated/cpc-checker/**"
+      - "generated/cpcmini-checker/**"
+      - ".github/workflows/proofs.yml"
+
+jobs:
+  proofs:
+    name: Lean proofs (CpcMini, and the full CPC as far as it builds)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    env:
+      # Two Lean processes at a time: the runner has 16 GB, and the largest
+      # modules need about 4 GiB each.
+      PROOFS_JOBS: "2"
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      # Mathlib, Aeneas's library and logos, built once for both projects
+      # (proofs-cpc/ uses proofs/'s packages).
+      - name: Cache the Lean packages
+        uses: actions/cache@v6
+        with:
+          path: proofs/.lake/packages
+          key: lean-packages-${{ hashFiles('proofs/lake-manifest.json', 'proofs/lean-toolchain') }}
+
+      - name: CpcMini's proofs
+        run: scripts/proofs-build
+
+      - name: The full CPC's proofs, as far as they build
+        run: scripts/proofs-build --cpc
