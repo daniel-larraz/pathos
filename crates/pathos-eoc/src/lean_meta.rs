@@ -28,7 +28,7 @@ use crate::meta_reduce::{
 use crate::native_layer::NativeLayer;
 use crate::std_plugin::{
     PARSE_DEF_PREFIX, Replacement, is_parse_def_name, mk_parse_def_name, os_path, read_text,
-    replace_all, subterms_of_kind,
+    replace_all, subterms_of_kind, write_text,
 };
 
 /// The greatest number of indices an operator may take: the embedding
@@ -196,6 +196,43 @@ fn get_order_key_method(t: &str) -> String {
     }
 }
 
+/// A constructor of a datatype of the embedding, as `finalize_decl`
+/// records it for `print_embedding_table`: its EO name, its Lean name, the
+/// Lean name of its datatype and those of its fields. A user operator of the
+/// signature is recorded with `user_op` (the Lean constructor of UserOp);
+/// `unsupported` says why a constructor has no encoding as data.
+#[derive(Default)]
+struct EmbedCtor {
+    sname: String,
+    cname: String,
+    ty: String,
+    fields: Vec<String>,
+    user_op: bool,
+    unsupported: String,
+}
+
+/// `text` as a JSON string, as lean-meta writes one: `"` and `\\`
+/// escaped, a control character as `\u` and four hex digits, everything
+/// else as it is.
+fn json_string(text: &str) -> String {
+    let mut out = String::with_capacity(text.len() + 2);
+    out.push('"');
+    for c in text.chars() {
+        match c {
+            '"' | '\\' => {
+                out.push('\\');
+                out.push(c);
+            }
+            c if u32::from(c) < 0x20 => {
+                let _ = write!(out, "\\u{:04x}", u32::from(c));
+            }
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
+}
+
 /// The streams of the C++ that a program can be written to.
 #[derive(Copy, Clone, PartialEq, Eq)]
 enum Out {
@@ -285,6 +322,14 @@ pub struct LeanMeta {
     ordered: BTreeSet<String>,
     key: BTreeMap<String, String>,
     key_ncons: BTreeMap<String, usize>,
+    /// The programs as they were defined, in order, for `print_case_defs`;
+    /// and the cases of the programs as they are written, before their
+    /// patterns are linearized: one function per case.
+    raw_progs: Vec<(Term, Term)>,
+    case_defs: String,
+    /// The constructors of the datatypes of the embedding, as
+    /// `finalize_decl` records them for `print_embedding_table`.
+    embed_ctors: Vec<EmbedCtor>,
     /// The user operators, by their number of indices.
     embed_top_dt: [String; MAX_INDEX_ARITY + 1],
     eo_is_ref: String,
@@ -380,6 +425,9 @@ impl LeanMeta {
             ordered: BTreeSet::new(),
             key: BTreeMap::new(),
             key_ncons: BTreeMap::new(),
+            raw_progs: Vec::new(),
+            case_defs: String::new(),
+            embed_ctors: Vec::new(),
             embed_top_dt: Default::default(),
             eo_is_ref: String::new(),
             eo_checker: String::new(),
@@ -854,7 +902,215 @@ impl LeanMeta {
             };
             self.finalize_program(ck, prog, def, is_define)?;
         }
+        for (v, prog) in self.raw_progs.clone() {
+            self.print_case_defs(ck, v, prog)?;
+        }
         Ok(())
+    }
+
+    /// Writes, for the program `v` with the cases `prog` as they were
+    /// written, one function per case to `case_defs`:
+    ///
+    /// ```text
+    /// def <name>.case_<i> : T1 -> ... -> Option R
+    ///   | <pattern> => if x = x2 then some (<result>) else none
+    ///   | _ => none
+    /// ```
+    ///
+    /// where the pattern is the case's, made linear, and the `if`s are the
+    /// equalities a repeated parameter stood for: the case as a backend
+    /// that tries a program's cases in order and treats a failed equality
+    /// as "no match" computes it.
+    fn print_case_defs(&mut self, ck: &mut Checker, v: Term, prog: Term) -> Result<()> {
+        let vname = get_name(ck, v);
+        // what finalize_program writes no definition for has no cases here
+        // either
+        if ck.store.kind(prog) != Kind::PROGRAM
+            || vname == "$eo_ite"
+            || vname == "$eo_hash"
+            || vname.starts_with("$eo_model")
+            || vname == "$smtx_model_eval"
+        {
+            return Ok(());
+        }
+        let vt = type_of(ck, v)?;
+        let types = ck.store.children(vt).to_vec();
+        let nargs = types.len();
+        let Some(&ret_ty) = types.last() else {
+            return Err(malformed(&format!(
+                "the program {} has no return type",
+                ck.show(v)
+            )));
+        };
+        let mut is_checker_def = false;
+        let mut last = MetaKind::None;
+        for &t in &types {
+            last = self.type_meta_kind(ck, t);
+            is_checker_def |= last.is_checker();
+        }
+        let tmk = if !is_checker_def && last.is_smt() {
+            MetaKind::SmtType
+        } else {
+            MetaKind::Eunoia
+        };
+        // A native that a case names is named from the module its program
+        // is in, as finalize_program decides it, so that writing the cases
+        // changes nothing of where the native layer comes out.
+        let mut home = Out::DefsTotal;
+        if is_checker_def {
+            home = Out::EoChecker;
+        } else if last.is_smt() {
+            home = if self.names_model_type(ck, vt)? {
+                Out::SmtDefs
+            } else {
+                Out::SmtTypingDefs
+            };
+        }
+        if vname.starts_with("$eo_to_smt") {
+            home = Out::EoIsObjDefs;
+        }
+        self.scope = scope_of(home);
+        let mut sig = String::new();
+        for &t in &types[..nargs - 1] {
+            sig.push_str(&self.print_meta_type(ck, t)?.unwrap_or_default());
+            sig.push_str(" -> ");
+        }
+        sig.push_str("Option (");
+        sig.push_str(&self.print_meta_type(ck, ret_ty)?.unwrap_or_default());
+        sig.push(')');
+        let name = clean_id(&vname);
+        for (i, c) in ck.store.children(prog).to_vec().into_iter().enumerate() {
+            let pat = child(ck, c, 0)?;
+            let body = child(ck, c, 1)?;
+            let (hd, conds) = linear_patterns::linearize_case(ck, pat);
+            let ret = self.print_emb_term(ck, body, tmk, true)?;
+            let mut os = format!("def {name}.case_{i} : {sig}");
+            if nargs == 1 {
+                let _ = write!(os, " :=\n  some ({ret})\n\n");
+                self.case_defs.push_str(&os);
+                continue;
+            }
+            os.push_str("\n  | ");
+            let mut general = true;
+            for j in 1..nargs {
+                if j > 1 {
+                    os.push_str(", ");
+                }
+                let arg = child(ck, hd, j)?;
+                os.push_str(&self.print_emb_term(ck, arg, tmk, false)?);
+                general = general && ck.store.kind(arg) == Kind::PARAM;
+            }
+            os.push_str(" => ");
+            for &cond in &conds {
+                let (a, b) = (child(ck, cond, 0)?, child(ck, cond, 1)?);
+                os.push_str("if ");
+                os.push_str(&self.print_emb_term(ck, a, tmk, false)?);
+                os.push_str(" = ");
+                os.push_str(&self.print_emb_term(ck, b, tmk, false)?);
+                os.push_str(" then ");
+            }
+            let _ = write!(os, "some ({ret})");
+            for _ in &conds {
+                os.push_str(" else none");
+            }
+            os.push('\n');
+            if !general {
+                os.push_str("  | _");
+                for _ in 2..nargs {
+                    os.push_str(", _");
+                }
+                os.push_str(" => none\n");
+            }
+            os.push('\n');
+            self.case_defs.push_str(&os);
+        }
+        Ok(())
+    }
+
+    /// Records the constructor `e` of the embedding for
+    /// `print_embedding_table`: its EO name `sname`, its Lean name `cname`,
+    /// the Lean name of its datatype and those of its fields.
+    fn record_embed_ctor(
+        &mut self,
+        ck: &mut Checker,
+        e: Term,
+        sname: &str,
+        cnamek: &str,
+        cname: &str,
+        tk: MetaKind,
+    ) -> Result<()> {
+        if matches!(tk, MetaKind::SmtBuiltin | MetaKind::Proof | MetaKind::None) {
+            return Ok(());
+        }
+        let ct = type_of(ck, e)?;
+        let mut rec = EmbedCtor {
+            sname: sname.to_string(),
+            cname: cname.to_string(),
+            ..EmbedCtor::default()
+        };
+        if tk == MetaKind::Eunoia
+            && let Some(uarity) = self.is_atomic_eo(ck, e, cnamek)?
+        {
+            rec.user_op = true;
+            rec.ty = "UserOp".to_string();
+            if uarity > 0 {
+                rec.unsupported = "an indexed user operator".to_string();
+            }
+            self.embed_ctors.push(rec);
+            return Ok(());
+        }
+        // (an SMT theory operator, `SmtTerm` and unsupported in the C++, is
+        // never atomic: the option for it is off in Ethos, see
+        // print_emb_atomic_term)
+        let mut ret = ct;
+        let mut n = 0;
+        if ck.attribute_kind(e) == Attr::Opaque && ck.store.kind(ct) == Kind::FUNCTION_TYPE {
+            n = ck.store.num_children(ct) - 1;
+            ret = child(ck, ct, n)?;
+        }
+        rec.ty = match print_meta_type_kind(tk) {
+            Some(name) => name.to_string(),
+            None => match self.print_meta_type(ck, ret)? {
+                Some(name) => name,
+                None => return Ok(()),
+            },
+        };
+        for i in 0..n {
+            let mut typ = child(ck, ct, i)?;
+            if ck.store.kind(typ) == Kind::QUOTE_TYPE {
+                let targ = child(ck, typ, 0)?;
+                typ = type_of(ck, targ)?;
+            }
+            let field = self.print_meta_type(ck, typ)?;
+            rec.fields.push(field.unwrap_or_else(|| "Term".to_string()));
+        }
+        self.embed_ctors.push(rec);
+        Ok(())
+    }
+
+    /// The constructors of the embedding's datatypes, in the order they
+    /// were declared, as JSON (lean_meta_embedding_gen.json, version 1),
+    /// for a consumer that relates its own store of the checker's values to
+    /// this Lean.
+    fn print_embedding_table(&self) -> String {
+        let mut o = String::from("{\n  \"version\": 1,\n  \"constructors\": [");
+        for (i, c) in self.embed_ctors.iter().enumerate() {
+            let fields: Vec<String> = c.fields.iter().map(|f| json_string(f)).collect();
+            let _ = write!(
+                o,
+                "{}    {{\"eo\": {}, \"lean\": {}, \"type\": {}, \"fields\": [{}], \"user_op\": {}, \
+                 \"unsupported\": {}}}",
+                if i == 0 { "\n" } else { ",\n" },
+                json_string(&c.sname),
+                json_string(&c.cname),
+                json_string(&c.ty),
+                fields.join(", "),
+                c.user_op,
+                json_string(&c.unsupported)
+            );
+        }
+        o.push_str("\n  ]\n}\n");
+        o
     }
 
     /// Writes the program `v` with the cases `prog`, or the definition of
@@ -1133,11 +1389,27 @@ impl LeanMeta {
         if !self.base.begin_finalize_decl(e) {
             return Ok(());
         }
-        if ck.show(e) == "$eo_pf" {
+        let sname = ck.show(e);
+        if sname == "$eo_pf" {
+            // the proof of a formula: a node over it, written by hand in
+            // the templates (Proof.pf); Proof.Stuck is the stuck term
+            for (eo, lean, fields) in [
+                ("$eo_pf", "pf", vec!["Term"]),
+                ("$emb_Stuck", "Stuck", vec![]),
+            ] {
+                self.embed_ctors.push(EmbedCtor {
+                    sname: eo.to_string(),
+                    cname: lean.to_string(),
+                    ty: "Proof".to_string(),
+                    fields: fields.into_iter().map(str::to_string).collect(),
+                    ..EmbedCtor::default()
+                });
+            }
             return Ok(());
         }
         let (tk, cnamek) = self.meta_kind(ck, e);
         let cname = clean_smt_id(&cnamek);
+        self.record_embed_ctor(ck, e, &sname, &cnamek, &cname, tk)?;
         let mut out = match tk {
             MetaKind::Eunoia => Some(DeclOut::EmbedTerm),
             MetaKind::Smt => Some(DeclOut::Smt),
@@ -1883,7 +2155,25 @@ impl LeanMeta {
             "plugins/lean_meta/lean_meta_spec_gen.lean",
             &[],
             false,
-        )
+        )?;
+        self.emit(
+            ck,
+            "plugins/lean_meta/lean_meta_case_defs.lean",
+            "plugins/lean_meta/lean_meta_case_defs_gen.lean",
+            &[("$LEAN_CASE_DEFS$", self.case_defs.clone())],
+            false,
+        )?;
+        // the constructors of the embedding, as data for a consumer that
+        // relates a backend's representation of the checker's values to
+        // this Lean
+        let table_path =
+            (self.base.std).output_path("plugins/lean_meta/lean_meta_embedding_gen.json")?;
+        if !write_text(&table_path, &self.print_embedding_table()) {
+            return Err(Error::fatal(format!(
+                "lean-meta: cannot write {table_path}"
+            )));
+        }
+        Ok(())
     }
 
     fn finalize_lemmas(&self, ck: &mut Checker) -> Result<()> {
@@ -1997,6 +2287,7 @@ impl Plugin for LeanMeta {
         let Some(prog) = prog else {
             return Ok(());
         };
+        self.raw_progs.push((v, prog));
         // Lean's patterns are linear
         for (p, def) in linear_patterns::linearize(&mut st.ck, v, prog)? {
             self.prog_defs.push(p);

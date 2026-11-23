@@ -111,6 +111,18 @@ fn mk_case_pattern(ck: &mut Checker, prog: Term, pat: Term) -> Result<Term> {
     Ok(ck.store.mk(Kind::APPLY, &children))
 }
 
+/// The linear form of one case pattern, and the equalities between
+/// parameters that it stands for: each is `(eo::eq x y)`, where `y` is the
+/// fresh parameter that replaced a further occurrence of `x`. For a
+/// consumer that keeps the program's cases as they are and treats a failed
+/// equality as "this case does not match".
+pub fn linearize_case(ck: &mut Checker, pat: Term) -> (Term, Vec<Term>) {
+    let mut params = HashMap::new();
+    let mut conds = Vec::new();
+    let lpat = linearize_rec(ck, pat, &mut params, &mut conds);
+    (lpat, conds)
+}
+
 /// The linear pattern for `pat`, and the condition under which it stands
 /// for `pat`; none if `pat` is linear already.
 fn linearize_pattern(ck: &mut Checker, pat: Term) -> (Term, Option<Term>) {
