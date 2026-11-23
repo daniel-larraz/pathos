@@ -2,8 +2,13 @@
 # Builds proofs/, the Lean project of the proofs about the compiled checker,
 # after checking that it is pinned as proofs/pins.env says.
 #
-#   scripts/proofs-build [--translate TOOLS] [--no-build] [TARGET...]
+#   scripts/proofs-build [--cpc] [--translate TOOLS] [--no-build] [TARGET...]
 #
+#   --cpc              the full CPC's project, proofs-cpc/, instead of
+#                      proofs/ (CpcMini's): its checker CpcChecker is
+#                      translated from generated/cpc-checker, and its
+#                      instance of the library is written first
+#                      (scripts/proofs-instance)
 #   --translate TOOLS  first make proofs/MiniChecker again from
 #                      generated/cpcmini-checker (scripts/aeneas-translate
 #                      with the Charon and Aeneas that scripts/aeneas-setup
@@ -39,14 +44,27 @@ fail() { echo "scripts/proofs-build: $*" >&2; exit 2; }
 tools=""
 build=true
 targets=()
+cpc=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --cpc) cpc=true; shift ;;
     --translate) tools="$2"; shift 2 ;;
     --no-build) build=false; shift ;;
     -*) fail "unknown argument: $1 (see the header of this script)" ;;
     *) targets+=("$1"); shift ;;
   esac
 done
+
+# The project: CpcMini's, or with --cpc the full CPC's, whose packages are
+# proofs/'s (its lakefile's packagesDir).
+project="$proofs"
+crate=cpcmini-checker
+checker=MiniChecker
+if $cpc; then
+  project="$root/proofs-cpc"
+  crate=cpc-checker
+  checker=CpcChecker
+fi
 
 # Lake starts as many Lean processes as the machine has cores, and what has
 # to fit under the cap is their sum. LEAN_NUM_THREADS limits Lake (taskset
@@ -64,9 +82,9 @@ capped() {
 # The pins.
 problems=0
 differs() { echo "proofs-build: $*" >&2; problems=$((problems + 1)); }
-[[ "$(cat "$proofs/lean-toolchain")" == "leanprover/lean4:$LEAN_VERSION" ]] ||
-  differs "proofs/lean-toolchain is not Lean $LEAN_VERSION"
-python3 - "$proofs" "$LEAN_VERSION" "$MATHLIB_REV" "$AENEAS_REV" "$LOGOS_PROOFS_REV" \
+[[ "$(cat "$project/lean-toolchain")" == "leanprover/lean4:$LEAN_VERSION" ]] ||
+  differs "${project#"$root"/}/lean-toolchain is not Lean $LEAN_VERSION"
+python3 - "$project" "$LEAN_VERSION" "$MATHLIB_REV" "$AENEAS_REV" "$LOGOS_PROOFS_REV" \
   "$AENEAS_REPO" "$LOGOS_PROOFS_REPO" <<'EOF' || problems=$((problems + 1))
 import json, re, sys
 proofs, lean, mathlib, aeneas, logos, aeneas_repo, logos_repo = sys.argv[1:]
@@ -92,8 +110,8 @@ grep -q "^aeneas_commit=$AENEAS_REV\$" "$root/scripts/aeneas-setup" ||
   differs "scripts/aeneas-setup does not install Aeneas $AENEAS_REV"
 grep -q "^charon_commit=$CHARON_REV\$" "$root/scripts/aeneas-setup" ||
   differs "scripts/aeneas-setup does not install Charon $CHARON_REV"
-grep -q "^| logos (.*| \`$LOGOS_PROOFS_REV\` |\$" "$root/generated/cpcmini-checker/GENERATED.md" ||
-  differs "generated/cpcmini-checker is not generated from logos $LOGOS_PROOFS_REV"
+grep -q "^| logos (.*| \`$LOGOS_PROOFS_REV\` |\$" "$root/generated/$crate/GENERATED.md" ||
+  differs "generated/$crate is not generated from logos $LOGOS_PROOFS_REV"
 # The proofs are about a checker that panics on arithmetic overflow, as the
 # Lean that Aeneas writes fails on it: the release profile must say so.
 python3 - "$root/Cargo.toml" <<'EOF' || differs "Cargo.toml does not set overflow-checks = true for the release build of pathos-compiled-checker"
@@ -107,31 +125,39 @@ echo "proofs-build: Lean $LEAN_VERSION, Mathlib ${MATHLIB_REV:0:12}, Aeneas ${AE
 
 # The Lean of the checker, from the crate.
 if [[ -n "$tools" ]]; then
-  work="$root/target/proofs-build"
+  work="$root/target/proofs-build-$crate"
   rm -rf "$work"
   mkdir -p "$work"
-  "$root/scripts/aeneas-translate" "$tools" --crate "$root/generated/cpcmini-checker" \
+  "$root/scripts/aeneas-translate" "$tools" --crate "$root/generated/$crate" \
     --out "$work/aeneas" > "$work/translate.log" 2>&1 ||
     { tail -n 5 "$work/translate.log" >&2; fail "the translation failed; see $work/translate.log"; }
-  "$root/scripts/aeneas-stitch" "$work/aeneas" "$work/stitched" --name MiniChecker > "$work/stitch.log" ||
+  "$root/scripts/aeneas-stitch" "$work/aeneas" "$work/stitched" --name "$checker" > "$work/stitch.log" ||
     fail "the stitching failed; see $work/stitch.log"
-  if diff -r "$work/stitched/MiniChecker" "$proofs/MiniChecker" > "$work/check.diff" &&
-    diff "$work/stitched/MiniChecker.lean" "$proofs/MiniChecker.lean" >> "$work/check.diff"; then
-    echo "proofs-build: proofs/MiniChecker is what Charon and Aeneas write for generated/cpcmini-checker"
+  rel="${project#"$root"/}"
+  if diff -r "$work/stitched/$checker" "$project/$checker" > "$work/check.diff" &&
+    diff "$work/stitched/$checker.lean" "$project/$checker.lean" >> "$work/check.diff"; then
+    echo "proofs-build: $rel/$checker is what Charon and Aeneas write for generated/$crate"
   else
     head -n 20 "$work/check.diff"
-    fail "proofs/MiniChecker differs (the whole difference: $work/check.diff)"
+    fail "$rel/$checker differs (the whole difference: $work/check.diff)"
   fi
 fi
 
 $build || exit 0
 command -v lake >/dev/null 2>&1 || export PATH="$HOME/.elan/bin:$PATH"
 command -v lake >/dev/null 2>&1 || fail "lake is needed (install elan)"
-cd "$proofs"
-# Mathlib's compiled files, if they are not there yet.
-[[ -d .lake/packages/mathlib/.lake/build/lib ]] || lake exe cache get
+if $cpc; then
+  "$root/scripts/proofs-instance" || fail "scripts/proofs-instance failed"
+  # proofs-cpc/ uses proofs/'s packages (the same pins), through a link.
+  mkdir -p "$project/.lake" "$proofs/.lake/packages"
+  [[ -L "$project/.lake/packages" ]] || ln -s ../../proofs/.lake/packages "$project/.lake/packages"
+fi
+cd "$project"
+# Mathlib's compiled files, if they are not there yet (proofs-cpc/ shares
+# proofs/'s packages).
+[[ -d "$proofs/.lake/packages/mathlib/.lake/build/lib" ]] || lake exe cache get
 capped lake build "${targets[@]}"
 if [[ -x "$root/scripts/proofs-axioms" ]]; then
-  capped "$root/scripts/proofs-axioms"
+  if $cpc; then capped "$root/scripts/proofs-axioms" --cpc; else capped "$root/scripts/proofs-axioms"; fi
 fi
 echo "proofs-build: built"

@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Checks what the theorems of proofs/PathosProofs rest on.
 
-  scripts/proofs-axioms
+  scripts/proofs-axioms [--cpc]
+
+With --cpc, the same for proofs-cpc/ (the full CPC), whose checker is
+CpcChecker; the allowed axioms are the same list.
 
 Runs proofs/audit/Axioms.lean in the built project (`lake lean`), which
 collects the axioms of every theorem of the modules PathosProofs.* other
@@ -33,6 +36,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PROOFS = ROOT / "proofs"
+# The project audited: proofs/ (CpcMini), or with --cpc proofs-cpc/ (the full
+# CPC), whose checker is CpcChecker. The allowed axioms are one list,
+# proofs/axioms-allowed.txt, whose [MiniChecker] section is the axioms the
+# translated runtime declares, the same for both checkers.
+CPC = "--cpc" in sys.argv[1:]
+PROJECT = ROOT / "proofs-cpc" if CPC else PROOFS
+CHECKER = "CpcChecker" if CPC else "MiniChecker"
 NS = "pathos_compiled_checker"
 
 
@@ -80,7 +90,7 @@ def declared(paths, namespace):
 def main():
     sections = allowed()
     problems = []
-    mini = declared(sorted((PROOFS / "MiniChecker").glob("*.lean")), None)
+    mini = declared(sorted((PROJECT / CHECKER).glob("*.lean")), None)
     trusted = declared([PROOFS / "PathosProofs" / "Trusted.lean"], None)
     for name, have in (("MiniChecker", mini), ("Trusted", trusted)):
         listed = set(sections.get(name, []))
@@ -91,11 +101,11 @@ def main():
     env = dict(os.environ)
     if not any((Path(p) / "lake").exists() for p in env.get("PATH", "").split(":")):
         env["PATH"] = f"{Path.home()}/.elan/bin:" + env.get("PATH", "")
-    run = subprocess.run(["lake", "lean", "audit/Axioms.lean"], cwd=PROOFS, env=env,
+    run = subprocess.run(["lake", "lean", "audit/Axioms.lean"], cwd=PROJECT, env=env,
                          capture_output=True, text=True)
     if run.returncode != 0:
         sys.stderr.write(run.stdout[-2000:] + run.stderr[-2000:])
-        fail("proofs/audit/Axioms.lean failed (is the project built?)")
+        fail(f"{PROJECT.name}/audit/Axioms.lean failed (is the project built?)")
     kinds = dict(re.findall(r"^axiom (\S+) (assumption|declaration)$", run.stdout, re.M))
     used = list(kinds)
     props = set(re.findall(r"^prop (\S+)$", run.stdout, re.M))

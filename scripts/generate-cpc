@@ -42,7 +42,13 @@
 # generated from. Beside the crate it puts the proofs about it (proofs.lean,
 # proofs.tsv, cache_sem.lean), which scripts/proofgen writes from the trace
 # of the generated code that rust-meta leaves in the build directory
-# (rust_meta_trace_gen.json) and from proofs/proofgen.toml.
+# (rust_meta_trace_gen.json) and from proofs/proofgen.toml. It also runs
+#
+#   tools/eoc/driver.py lean --calc-name Cpc --all ... Cpc.cached.eo
+#
+# checks that the Lean it writes is logos's Cpc at that revision, and writes
+# the Lean the full CPC's proofs need, generated with the crate, into
+# proofs-cpc/ (CpcCases, CpcEmbed, CpcCtors, CpcCacheSem, CpcProofs).
 #
 # With --mini it generates the checker for CpcMini, the calculus of five
 # rules that logos develops its proofs on, for the proofs of proofs/. logos
@@ -109,7 +115,15 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 name=cpc-checker
+# The calculus: its name in logos, the prefix of its generated Lean modules
+# and the Lean project they go to.
+calc=Cpc
+prefix=Cpc
+lean_dest="$root/proofs-cpc"
 if $mini; then
+  calc=CpcMini
+  prefix=Mini
+  lean_dest="$root/proofs"
   me=generate-mini
   name=cpcmini-checker
   default_rev="$mini_default_rev"
@@ -192,49 +206,58 @@ rm -rf "$out"
 echo "$me: Ethos $ethos_commit, logos $logos_commit"
 signature="$defs/Cpc.cached.eo"
 : > "$work/driver.log"
+# The Lean of the calculus (lean-meta), for the proofs: for CpcMini the
+# reduced signature of install-sig.sh --mini, which the crate is then
+# compiled from; for CPC the whole signature, as install-cpc.sh compiles it.
+lean_out="$work/lean-out"
+rm -rf "$lean_out"
 if $mini; then
   # The rules of install-sig.sh --mini, read from that script.
   sig_script="$work/logos/install/install-sig.sh"
   rules="$(sed -n 's/^ *RULES=(\([a-z_ ]*\))$/\1/p' "$sig_script" 2>/dev/null)"
   [[ -n "$rules" && "$(wc -l <<< "$rules")" -eq 1 ]] ||
     fail "cannot read the rules of --mini from logos's install/install-sig.sh"
-  lean_out="$work/lean-out"
-  rm -rf "$lean_out"
-  # shellcheck disable=SC2086  # the rules are separate arguments
-  (cd "$work/ethos" && capped python3 tools/eoc/driver.py lean \
-    --build-dir "$work/build-eoc" --final-out-dir "$lean_out" \
-    --semantics "$defs/Cpc.eos" --smt-semantics "$defs/smt.eos" \
-    --skip-cvc5 --no-parser --calc-name CpcMini \
-    "$defs/Cpc.cached.eo" $rules) >> "$work/driver.log" 2>&1 ||
-    { tail -n 30 "$work/driver.log" >&2; fail "the driver failed; see $work/driver.log"; }
+  lean_args=(--calc-name CpcMini "$defs/Cpc.cached.eo")
+  # shellcheck disable=SC2206  # the rules are separate arguments
+  lean_args+=($rules)
+else
+  rules=""
+  lean_args=(--calc-name Cpc --all "$defs/Cpc.cached.eo")
+fi
+(cd "$work/ethos" && capped python3 tools/eoc/driver.py lean \
+  --build-dir "$work/build-eoc" --final-out-dir "$lean_out" \
+  --semantics "$defs/Cpc.eos" --smt-semantics "$defs/smt.eos" \
+  --skip-cvc5 --no-parser "${lean_args[@]}") >> "$work/driver.log" 2>&1 ||
+  { tail -n 30 "$work/driver.log" >&2; fail "the driver failed; see $work/driver.log"; }
+if $mini; then
   signature="$lean_out/lean-cpc-trim.eo"
   [[ -f "$signature" ]] || fail "the driver wrote no reduced signature $signature"
-  # The Lean of this run against logos's CpcMini: logos's files have a
-  # header of comment lines before `module` and `def` for `partial def`.
-  compared=0
-  : > "$work/lean.diff"
-  for f in "$lean_out"/lean/*.lean; do
-    theirs="$work/logos/CpcMini/$(basename "$f")"
-    [[ -f "$theirs" ]] || fail "logos at $logos_commit has no CpcMini/$(basename "$f")"
-    diff <(sed 's/partial def /def /g' "$f") <(awk 'NR==1 && /^--/ {h=1} h && /^--/ {next} h && /^$/ {h=0; next} {h=0; print}' "$theirs") \
-      >> "$work/lean.diff" || true
-    compared=$((compared + 1))
-  done
-  if [[ -s "$work/lean.diff" || "$compared" -eq 0 ]]; then
-    head -n 20 "$work/lean.diff" >&2
-    fail "the Lean this Ethos writes for CpcMini is not logos's CpcMini at $logos_commit ($work/lean.diff)"
-  fi
-  echo "$me: rules $rules; the $compared Lean files are logos's CpcMini"
-  # The cases of the programs as functions and the table of the
-  # embedding's constructors (lean-meta writes the files with the others;
-  # the driver leaves them in its build directory), before the next run of
-  # the driver writes there.
-  for f in case_defs_gen.lean embedding_gen.json; do
-    gen="$work/build-eoc/out/plugins/lean_meta/lean_meta_$f"
-    [[ -f "$gen" ]] || fail "the driver wrote no $gen"
-    cp "$gen" "$work/${f/_gen/}"
-  done
 fi
+# The Lean of this run against logos's: logos's files have a header of
+# comment lines before `module` and `def` for `partial def`.
+compared=0
+: > "$work/lean.diff"
+for f in "$lean_out"/lean/*.lean; do
+  theirs="$work/logos/$calc/$(basename "$f")"
+  [[ -f "$theirs" ]] || fail "logos at $logos_commit has no $calc/$(basename "$f")"
+  diff <(sed 's/partial def /def /g' "$f") <(awk 'NR==1 && /^--/ {h=1} h && /^--/ {next} h && /^$/ {h=0; next} {h=0; print}' "$theirs") \
+    >> "$work/lean.diff" || true
+  compared=$((compared + 1))
+done
+if [[ -s "$work/lean.diff" || "$compared" -eq 0 ]]; then
+  head -n 20 "$work/lean.diff" >&2
+  fail "the Lean this Ethos writes for $calc is not logos's $calc at $logos_commit ($work/lean.diff)"
+fi
+echo "$me: ${rules:+rules $rules; }the $compared Lean files are logos's $calc"
+# The cases of the programs as functions and the table of the embedding's
+# constructors (lean-meta writes the files with the others; the driver
+# leaves them in its build directory), before the next run of the driver
+# writes there.
+for f in case_defs_gen.lean embedding_gen.json; do
+  gen="$work/build-eoc/out/plugins/lean_meta/lean_meta_$f"
+  [[ -f "$gen" ]] || fail "the driver wrote no $gen"
+  cp "$gen" "$work/${f/_gen/}"
+done
 (cd "$work/ethos" && capped python3 tools/eoc/driver.py rust \
   --build-dir "$work/build-eoc" --final-out-dir "$out" \
   --semantics "$defs/Cpc.eos" --smt-semantics "$defs/smt.eos" \
@@ -248,9 +271,8 @@ trace="$work/build-eoc/out/plugins/rust_meta/rust_meta_trace_gen.json"
 [[ -f "$trace" ]] || fail "the driver wrote no $trace"
 cp "$trace" "$work/trace.json"
 rm -rf "$work/proofgen"
-proofgen_args=(--trace "$work/trace.json" --out "$work/proofgen")
-$mini && proofgen_args+=(--embedding "$work/embedding.json")
-python3 "$root/scripts/proofgen" "${proofgen_args[@]}" ||
+python3 "$root/scripts/proofgen" --trace "$work/trace.json" \
+  --embedding "$work/embedding.json" --out "$work/proofgen" ||
   fail "scripts/proofgen failed"
 
 # The crate as the repository holds it: the driver's files and the note.
@@ -323,25 +345,27 @@ workspace, so pathos's lints, formatting and tests do not apply to it.
 EOF
 fi
 
-# The Lean that is generated with the crate, for proofs/: the cases of the
+# The Lean that is generated with the crate, for proofs/ (CpcMini, as
+# Mini*.lean) or proofs-cpc/ (the full CPC, as Cpc*.lean): the cases of the
 # programs (lean-meta), the embedding of the checker's values, what
 # construct and destruct do with each data constructor, what the cache of
 # results holds and the proofs about the generated functions
 # (scripts/proofgen). They name the modules they import by placeholders,
 # which are filled in here.
-lean_files=()
-if $mini; then
-  lean_staged="$work/staged-lean"
-  rm -rf "$lean_staged"
-  mkdir -p "$lean_staged"
-  fill() { sed -e 's/\$CHECKER\$/MiniChecker/g; s/\$EO_CALC\$/CpcMini/g; s/\$CALC\$/CpcMini/g; s/\$CASES\$/MiniCases/g' "$1" > "$2"; }
-  fill "$work/case_defs.lean" "$lean_staged/MiniCases.lean"
-  fill "$work/proofgen/embed.lean" "$lean_staged/MiniEmbed.lean"
-  fill "$work/proofgen/ctors.lean" "$lean_staged/MiniCtors.lean"
-  fill "$work/proofgen/proofs.lean" "$lean_staged/MiniProofs.lean"
-  fill "$work/proofgen/cache_sem.lean" "$lean_staged/MiniCacheSem.lean"
-  lean_files=(MiniCases.lean MiniEmbed.lean MiniCtors.lean MiniProofs.lean MiniCacheSem.lean)
-fi
+lean_staged="$work/staged-lean"
+rm -rf "$lean_staged"
+mkdir -p "$lean_staged"
+fill() {
+  sed -e "s/\\\$CHECKER\\\$/${prefix}Checker/g; s/\\\$EO_CALC\\\$/$calc/g; s/\\\$CALC\\\$/$calc/g" \
+    -e "s/\\\$CASES\\\$/${prefix}Cases/g; s/\\\$EMBED\\\$/${prefix}Embed/g; s/\\\$CTORS\\\$/${prefix}Ctors/g" "$1" > "$2"
+}
+fill "$work/case_defs.lean" "$lean_staged/${prefix}Cases.lean"
+fill "$work/proofgen/embed.lean" "$lean_staged/${prefix}Embed.lean"
+fill "$work/proofgen/ctors.lean" "$lean_staged/${prefix}Ctors.lean"
+fill "$work/proofgen/proofs.lean" "$lean_staged/${prefix}Proofs.lean"
+fill "$work/proofgen/cache_sem.lean" "$lean_staged/${prefix}CacheSem.lean"
+lean_files=("${prefix}Cases.lean" "${prefix}Embed.lean" "${prefix}Ctors.lean" "${prefix}Proofs.lean" "${prefix}CacheSem.lean")
+lean_rel="${lean_dest#"$root"/}"
 
 dest="$root/generated/$name"
 if $check; then
@@ -349,23 +373,22 @@ if $check; then
   same=true
   diff -r "$staged" "$dest" >> "$work/check.diff" 2>&1 || same=false
   for f in "${lean_files[@]}"; do
-    diff "$lean_staged/$f" "$root/proofs/$f" >> "$work/check.diff" 2>&1 || same=false
+    diff "$lean_staged/$f" "$lean_dest/$f" >> "$work/check.diff" 2>&1 || same=false
   done
   if $same; then
-    echo "$me: generated/$name${lean_files:+ and proofs/{${lean_files[*]}\}} are what these revisions generate"
+    echo "$me: generated/$name and $lean_rel/{${lean_files[*]}} are what these revisions generate"
     exit 0
   fi
   head -n 20 "$work/check.diff"
-  echo "$me: generated/$name${lean_files:+ or its Lean in proofs/} differs (the whole difference: $work/check.diff)"
+  echo "$me: generated/$name or its Lean in $lean_rel/ differs (the whole difference: $work/check.diff)"
   exit 1
 fi
 rm -rf "$dest"
 mkdir -p "$(dirname "$dest")"
 cp -r "$staged" "$dest"
+mkdir -p "$lean_dest"
 for f in "${lean_files[@]}"; do
-  cp "$lean_staged/$f" "$root/proofs/$f"
+  cp "$lean_staged/$f" "$lean_dest/$f"
 done
 echo "$me: wrote generated/$name ($(cat "$dest"/src/*.rs | wc -l) lines of Rust)"
-if $mini; then
-  echo "$me: wrote proofs/{${lean_files[*]}}: $(awk -F'\t' '$2 == "generated"' "$dest/proofs.tsv" | wc -l) of $(($(wc -l < "$dest/proofs.tsv") - 1)) programs have a generated proof (generated/$name/proofs.tsv)"
-fi
+echo "$me: wrote $lean_rel/{${lean_files[*]}}: $(awk -F'\t' '$2 == "generated"' "$dest/proofs.tsv" | wc -l) of $(($(wc -l < "$dest/proofs.tsv") - 1)) programs have a generated proof (generated/$name/proofs.tsv)"

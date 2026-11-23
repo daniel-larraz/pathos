@@ -19,8 +19,8 @@ crate's functions compute what logos's Lean does:
 
 It writes into DIR `proofs.lean`, `proofs.tsv` and `cache_sem.lean`, and
 with --embedding also `embed.lean` and `ctors.lean`. They name the modules
-they import by placeholders ($CHECKER$, $CALC$, $CASES$, $EO_CALC$), which
-scripts/generate-cpc fills in.
+they import by placeholders ($CHECKER$, $CALC$, $CASES$, $EO_CALC$,
+$EMBED$, $CTORS$), which scripts/generate-cpc fills in per calculus.
 
 Everything here that names a lemma or a tactic is pathos's (proofs/
 PathosProofs); everything that names a program or a type of logos's
@@ -1219,7 +1219,7 @@ its own constructor with no fields, and every other constructor as a node
 over its fields, natives as native literals.
 
 Written by lean-meta with the case file, for pathos's proofs (its
-`MiniEmbed.lean`); `$CHECKER$` is the Lean of the compiled checker.
+`$EMBED$.lean`); `$CHECKER$` is the Lean of the compiled checker.
 Nothing in logos uses it.
 -/
 
@@ -1245,7 +1245,7 @@ CTORS_HEADER = """module
 
 public import $CHECKER$
 public import PathosProofs.Runtime.Node
-public import MiniEmbed
+public import $EMBED$
 
 /-!
 What the Rust checker's `construct` and `destruct` do with each data
@@ -1260,7 +1260,7 @@ The constructors the runtime does not store as a node over their fields
 (the stuck term, applications, object literals, variables) are not here.
 
 Written by lean-meta with the embedding, for pathos's proofs (its
-`MiniCtors.lean`); `$CHECKER$` is the Lean of the compiled checker.
+`$CTORS$.lean`); `$CHECKER$` is the Lean of the compiled checker.
 -/
 
 @[expose] public section

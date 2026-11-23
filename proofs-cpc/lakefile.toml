@@ -1,0 +1,61 @@
+name = "PathosProofsCpc"
+version = "0.1.0"
+defaultTargets = ["CpcChecker", "CpcCases", "PathosProofs"]
+# The generated files have Rust's names, not Mathlib's.
+weakLeanArgs = ["-Dweak.linter.style.nameCheck=false"]
+# The packages are proofs/'s: the same pins (proofs/pins.env), built once.
+# scripts/proofs-build --cpc makes .lake/packages a link to them (Lake's
+# packagesDir is not followed by logos's own path dependency, `Cpc`).
+
+# The revisions are those of proofs/pins.env, as for proofs/; scripts/proofs-build
+# --cpc checks that.
+[[require]]
+name = "aeneas"
+git = "https://github.com/AeneasVerif/aeneas"
+rev = "1dc8ad31b1b062a77c50e29144a6c7bba955fa09"
+subDir = "backends/lean"
+
+[[require]]
+name = "LogosVerification"
+git = "https://github.com/cvc5/logos"
+rev = "bdcbd95f615627b26b6ebabc0f584e5230b0bf1f"
+subDir = "verification"
+
+# Mathlib comes last, as in proofs/lakefile.toml (which says why).
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.36.0"
+
+# The Lean that Charon and Aeneas write for generated/cpc-checker, stitched
+# by scripts/aeneas-stitch. Generated: never edited.
+[[lean_lib]]
+name = "CpcChecker"
+
+# The cases of CPC's programs, one function each, as the Rust tries them:
+# written by lean-meta in the run that scripts/generate-cpc makes.
+# Generated: never edited.
+[[lean_lib]]
+name = "CpcCases"
+
+# The embedding of the checker's values, what construct and destruct do with
+# each data constructor, what the cache of program results holds, and the
+# proofs about the generated functions: written by scripts/proofgen in the
+# run that scripts/generate-cpc makes. Generated: never edited.
+[[lean_lib]]
+name = "CpcEmbed"
+
+[[lean_lib]]
+name = "CpcCtors"
+
+[[lean_lib]]
+name = "CpcCacheSem"
+
+[[lean_lib]]
+name = "CpcProofs"
+
+# proofs/PathosProofs for CPC: written by scripts/proofs-instance (which
+# scripts/proofs-build --cpc runs) from proofs/PathosProofs, with the modules
+# of excluded.txt left out. Not in the repository.
+[[lean_lib]]
+name = "PathosProofs"

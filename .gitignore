@@ -2,3 +2,8 @@
 /.difftest.local
 __pycache__/
 /proofs/.lake
+/proofs-cpc/.lake
+# written by scripts/proofs-instance
+/proofs-cpc/PathosProofs
+/proofs-cpc/PathosProofs.lean
+/proofs-cpc/audit

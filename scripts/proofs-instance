@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Writes proofs/PathosProofs for another calculus.
+
+  scripts/proofs-instance [--check]
+
+The hand-written library proofs/PathosProofs is about the store, the runtime
+and the generated code of a compiled checker, and names its calculus only
+by module: `MiniChecker` (the translated checker), `CpcMini.*` (logos's Lean)
+and the generated `Mini*` modules. For the full CPC, proofs-cpc/ has the same
+modules under other names (`CpcChecker`, `Cpc.*`, `Cpc*`), and this writes
+the library there with its imports renamed, as proofs-cpc/PathosProofs/,
+with proofs-cpc/PathosProofs.lean importing it and proofs-cpc/audit/
+Axioms.lean auditing it. Nothing else is changed: proofs/PathosProofs stays
+the one source, and what is written is not in the repository.
+
+The modules named in proofs-cpc/excluded.txt (one per line, `#` comments)
+are left out: those that are CpcMini's (its top-level theorem) and those
+that do not build on CPC yet, among them the generated ones (`CpcEmbed`, …),
+which the root then does not import either. A module that imports an excluded one must be
+excluded too; this says so if it is not.
+
+With --check, writes nothing and exits 1 if the written files would differ
+from what is there (scripts/proofs-build --cpc runs it without).
+"""
+
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+SRC = ROOT / "proofs"
+DST = ROOT / "proofs-cpc"
+
+# The module names of CpcMini and their CPC counterparts.
+RENAMES = [
+    (r"\bMiniChecker\b", "CpcChecker"),
+    (r"\bCpcMini\.", "Cpc."),
+    (r"\bMiniCases\b", "CpcCases"),
+    (r"\bMiniEmbed\b", "CpcEmbed"),
+    (r"\bMiniCtors\b", "CpcCtors"),
+    (r"\bMiniCacheSem\b", "CpcCacheSem"),
+    (r"\bMiniProofs\b", "CpcProofs"),
+]
+
+
+def rename(text):
+    for pat, rep in RENAMES:
+        text = re.sub(pat, rep, text)
+    return text
+
+
+def excluded():
+    names = set()
+    for line in (DST / "excluded.txt").read_text().splitlines():
+        line = line.split("#", 1)[0].strip()
+        if line:
+            names.add(line)
+    return names
+
+
+def imports(text):
+    """The modules `text` imports, under their CPC names."""
+    return re.findall(r"^(?:public )?import (?:all )?([A-Za-z0-9_.]+)", rename(text), re.M)
+
+
+def main():
+    check = "--check" in sys.argv[1:]
+    skip = excluded()
+    files = {}
+    modules = []
+    for path in sorted((SRC / "PathosProofs").rglob("*.lean")):
+        rel = path.relative_to(SRC)
+        mod = ".".join(rel.with_suffix("").parts)
+        if mod in skip:
+            continue
+        text = path.read_text()
+        bad = [m for m in imports(text) if m in skip]
+        if bad:
+            sys.exit(f"scripts/proofs-instance: {mod} imports {', '.join(bad)}, which "
+                     "proofs-cpc/excluded.txt leaves out; leave it out too")
+        files[rel] = rename(text)
+        modules.append(mod)
+    # The root: what proofs/PathosProofs.lean imports, but the excluded.
+    root = []
+    for line in (SRC / "PathosProofs.lean").read_text().splitlines(keepends=True):
+        m = re.match(r"(?:public )?import (\S+)", rename(line))
+        if m and m.group(1) in skip:
+            continue
+        root.append(line)
+    files[Path("PathosProofs.lean")] = rename("".join(root))
+    files[Path("audit/Axioms.lean")] = rename((SRC / "audit" / "Axioms.lean").read_text())
+    # What is there and should not be: a module excluded since.
+    stale = [p.relative_to(DST) for p in (DST / "PathosProofs").rglob("*.lean")
+             if p.relative_to(DST) not in files] if (DST / "PathosProofs").exists() else []
+    differs = [p for p, t in files.items() if not (DST / p).exists() or (DST / p).read_text() != t]
+    if check:
+        for p in differs + stale:
+            print(f"scripts/proofs-instance: proofs-cpc/{p} is not what this writes")
+        sys.exit(1 if differs or stale else 0)
+    for p in stale:
+        (DST / p).unlink()
+    for p, t in files.items():
+        (DST / p).parent.mkdir(parents=True, exist_ok=True)
+        if not (DST / p).exists() or (DST / p).read_text() != t:
+            (DST / p).write_text(t)
+    print(f"proofs-instance: proofs-cpc/PathosProofs: {len(modules)} modules "
+          f"({len(skip)} left out, proofs-cpc/excluded.txt)")
+
+
+if __name__ == "__main__":
+    main()
