@@ -58,7 +58,7 @@ theorem CtorSpec.eo__24emb_5fal_2enil.destruct {s : Store} {t : Term} {x : Eo.CA
       Store.destruct s schema.Constructor.eo__24emb_5fal_2enil t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fal_2enil (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CArgList_nil hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CArgList_nil hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -94,7 +94,7 @@ theorem CtorSpec.eo__24emb_5fal_2econs.destruct {s : Store} {t : Term} {x : Eo.C
       Store.destruct s schema.Constructor.eo__24emb_5fal_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fal_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CArgList_cons hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CArgList_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CArgList, Embed.emb_CArgList] at he
     generalize hvl : v.val = l at hl
@@ -136,7 +136,7 @@ theorem CtorSpec.eo__24emb_5fcmd_2eassume_5fpush.destruct {s : Store} {t : Term}
       Store.destruct s schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CCmd_assume_push hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CCmd_assume_push hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CCmd, Embed.emb_CCmd] at he
     generalize hvl : v.val = l at hl
@@ -176,7 +176,7 @@ theorem CtorSpec.eo__24emb_5fcmd_2echeck_5fproven.destruct {s : Store} {t : Term
       Store.destruct s schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CCmd_check_proven hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CCmd_check_proven hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CCmd, Embed.emb_CCmd] at he
     generalize hvl : v.val = l at hl
@@ -216,7 +216,7 @@ theorem CtorSpec.eo__24emb_5fcmd_2estep.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24emb_5fcmd_2estep t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fcmd_2estep (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_CCmd_step hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_CCmd_step hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CCmd, Embed.emb_CCmd] at he
     generalize hvl : v.val = l at hl
@@ -260,7 +260,7 @@ theorem CtorSpec.eo__24emb_5fcmd_2estep_5fpop.destruct {s : Store} {t : Term} {x
       Store.destruct s schema.Constructor.eo__24emb_5fcmd_2estep_5fpop t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fcmd_2estep_5fpop (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_CCmd_step_pop hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_CCmd_step_pop hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CCmd, Embed.emb_CCmd] at he
     generalize hvl : v.val = l at hl
@@ -303,7 +303,7 @@ theorem CtorSpec.eo__24emb_5fcmdl_2enil.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24emb_5fcmdl_2enil t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fcmdl_2enil (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CCmdList_nil hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CCmdList_nil hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -339,7 +339,7 @@ theorem CtorSpec.eo__24emb_5fcmdl_2econs.destruct {s : Store} {t : Term} {x : Eo
       Store.destruct s schema.Constructor.eo__24emb_5fcmdl_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fcmdl_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CCmdList_cons hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CCmdList_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CCmdList, Embed.emb_CCmdList] at he
     generalize hvl : v.val = l at hl
@@ -380,7 +380,7 @@ theorem CtorSpec.eo__24emb_5findl_2enil.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24emb_5findl_2enil t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5findl_2enil (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CIndexList_nil hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CIndexList_nil hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -416,7 +416,7 @@ theorem CtorSpec.eo__24emb_5findl_2econs.destruct {s : Store} {t : Term} {x : Eo
       Store.destruct s schema.Constructor.eo__24emb_5findl_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5findl_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CIndexList_cons hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CIndexList_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CIndexList, Embed.emb_CIndexList] at he
     generalize hvl : v.val = l at hl
@@ -457,7 +457,7 @@ theorem CtorSpec.eo__24emb_5fr_2escope.destruct {s : Store} {t : Term} {x : Eo.C
       Store.destruct s schema.Constructor.eo__24emb_5fr_2escope t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fr_2escope (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_scope hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_scope hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -492,7 +492,7 @@ theorem CtorSpec.eo__24emb_5fr_2econtra.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24emb_5fr_2econtra t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fr_2econtra (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_contra hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_contra hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -527,7 +527,7 @@ theorem CtorSpec.eo__24emb_5fr_2erefl.destruct {s : Store} {t : Term} {x : Eo.CR
       Store.destruct s schema.Constructor.eo__24emb_5fr_2erefl t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fr_2erefl (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_refl hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_refl hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -562,7 +562,7 @@ theorem CtorSpec.eo__24emb_5fr_2esymm.destruct {s : Store} {t : Term} {x : Eo.CR
       Store.destruct s schema.Constructor.eo__24emb_5fr_2esymm t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fr_2esymm (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_symm hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_symm hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -597,7 +597,7 @@ theorem CtorSpec.eo__24emb_5fr_2etrans.destruct {s : Store} {t : Term} {x : Eo.C
       Store.destruct s schema.Constructor.eo__24emb_5fr_2etrans t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fr_2etrans (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_trans hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CRule_trans hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -632,7 +632,7 @@ theorem CtorSpec.eo__24emb_5fs_2enil.destruct {s : Store} {t : Term} {x : Eo.CSt
       Store.destruct s schema.Constructor.eo__24emb_5fs_2enil t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fs_2enil (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CState_nil hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CState_nil hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -667,7 +667,7 @@ theorem CtorSpec.eo__24emb_5fs_2eStuck.destruct {s : Store} {t : Term} {x : Eo.C
       Store.destruct s schema.Constructor.eo__24emb_5fs_2eStuck t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fs_2eStuck (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_CState_Stuck hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_CState_Stuck hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -703,7 +703,7 @@ theorem CtorSpec.eo__24emb_5fs_2econs.destruct {s : Store} {t : Term} {x : Eo.CS
       Store.destruct s schema.Constructor.eo__24emb_5fs_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fs_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CState_cons hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_CState_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CState, Embed.emb_CState] at he
     generalize hvl : v.val = l at hl
@@ -745,7 +745,7 @@ theorem CtorSpec.eo__24emb_5fso_2eassume.destruct {s : Store} {t : Term} {x : Eo
       Store.destruct s schema.Constructor.eo__24emb_5fso_2eassume t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fso_2eassume (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CStateObj_assume hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CStateObj_assume hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CStateObj, Embed.emb_CStateObj] at he
     generalize hvl : v.val = l at hl
@@ -785,7 +785,7 @@ theorem CtorSpec.eo__24emb_5fso_2eassume_5fpush.destruct {s : Store} {t : Term} 
       Store.destruct s schema.Constructor.eo__24emb_5fso_2eassume_5fpush t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fso_2eassume_5fpush (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CStateObj_assume_push hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CStateObj_assume_push hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CStateObj, Embed.emb_CStateObj] at he
     generalize hvl : v.val = l at hl
@@ -825,7 +825,7 @@ theorem CtorSpec.eo__24emb_5fso_2eproven.destruct {s : Store} {t : Term} {x : Eo
       Store.destruct s schema.Constructor.eo__24emb_5fso_2eproven t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fso_2eproven (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CStateObj_proven hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_CStateObj_proven hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_CStateObj, Embed.emb_CStateObj] at he
     generalize hvl : v.val = l at hl
@@ -864,7 +864,7 @@ theorem CtorSpec.eo__24emb_5fedt_2enull.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24emb_5fedt_2enull t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fedt_2enull (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_Datatype_null hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_Datatype_null hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -900,7 +900,7 @@ theorem CtorSpec.eo__24emb_5fedt_2esum.destruct {s : Store} {t : Term} {x : Eo.D
       Store.destruct s schema.Constructor.eo__24emb_5fedt_2esum t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fedt_2esum (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Datatype_sum hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Datatype_sum hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Datatype, Embed.emb_Datatype] at he
     generalize hvl : v.val = l at hl
@@ -941,7 +941,7 @@ theorem CtorSpec.eo__24emb_5fedtc_2eunit.destruct {s : Store} {t : Term} {x : Eo
       Store.destruct s schema.Constructor.eo__24emb_5fedtc_2eunit t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fedtc_2eunit (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_DatatypeCons_unit hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_DatatypeCons_unit hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -977,7 +977,7 @@ theorem CtorSpec.eo__24emb_5fedtc_2econs.destruct {s : Store} {t : Term} {x : Eo
       Store.destruct s schema.Constructor.eo__24emb_5fedtc_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fedtc_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_DatatypeCons_cons hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_DatatypeCons_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_DatatypeCons, Embed.emb_DatatypeCons] at he
     generalize hvl : v.val = l at hl
@@ -1018,7 +1018,7 @@ theorem CtorSpec.eo__24emb_5fedd_2enil.destruct {s : Store} {t : Term} {x : Eo.D
       Store.destruct s schema.Constructor.eo__24emb_5fedd_2enil t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fedd_2enil (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_DatatypeDecl_nil hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_DatatypeDecl_nil hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -1054,7 +1054,7 @@ theorem CtorSpec.eo__24emb_5fedd_2econs.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24emb_5fedd_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fedd_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_DatatypeDecl_cons hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_DatatypeDecl_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_DatatypeDecl, Embed.emb_DatatypeDecl] at he
     generalize hvl : v.val = l at hl
@@ -1098,7 +1098,7 @@ theorem CtorSpec.eo__24eo_5fpf.destruct {s : Store} {t : Term} {x : Eo.Proof}
       Store.destruct s schema.Constructor.eo__24eo_5fpf t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24eo_5fpf (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Proof_pf hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Proof_pf hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Proof, Embed.emb_Proof] at he
     generalize hvl : v.val = l at hl
@@ -1137,7 +1137,7 @@ theorem CtorSpec.eo__24emb_5fdt_2enull.destruct {s : Store} {t : Term} {x : Smtm
       Store.destruct s schema.Constructor.eo__24emb_5fdt_2enull t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fdt_2enull (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtDatatype_null hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtDatatype_null hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -1173,7 +1173,7 @@ theorem CtorSpec.eo__24emb_5fdt_2esum.destruct {s : Store} {t : Term} {x : Smtm.
       Store.destruct s schema.Constructor.eo__24emb_5fdt_2esum t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fdt_2esum (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtDatatype_sum hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtDatatype_sum hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtDatatype, Embed.emb_SmtDatatype] at he
     generalize hvl : v.val = l at hl
@@ -1214,7 +1214,7 @@ theorem CtorSpec.eo__24emb_5fdtc_2eunit.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5fdtc_2eunit t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fdtc_2eunit (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtDatatypeCons_unit hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtDatatypeCons_unit hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -1250,7 +1250,7 @@ theorem CtorSpec.eo__24emb_5fdtc_2econs.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5fdtc_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fdtc_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtDatatypeCons_cons hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtDatatypeCons_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtDatatypeCons, Embed.emb_SmtDatatypeCons] at he
     generalize hvl : v.val = l at hl
@@ -1291,7 +1291,7 @@ theorem CtorSpec.eo__24emb_5fdd_2enil.destruct {s : Store} {t : Term} {x : Smtm.
       Store.destruct s schema.Constructor.eo__24emb_5fdd_2enil t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fdd_2enil (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtDatatypeDecl_nil hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtDatatypeDecl_nil hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -1327,7 +1327,7 @@ theorem CtorSpec.eo__24emb_5fdd_2econs.destruct {s : Store} {t : Term} {x : Smtm
       Store.destruct s schema.Constructor.eo__24emb_5fdd_2econs t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fdd_2econs (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtDatatypeDecl_cons hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtDatatypeDecl_cons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtDatatypeDecl, Embed.emb_SmtDatatypeDecl] at he
     generalize hvl : v.val = l at hl
@@ -1370,7 +1370,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eNone.destruct {s : Store} {t : Term} {x : Smtm
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eNone t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eNone (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtTerm_None hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtTerm_None hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -1406,7 +1406,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eBoolean.destruct {s : Store} {t : Term} {x : S
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eBoolean t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eBoolean (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_Boolean hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_Boolean hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1446,7 +1446,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eNumeral.destruct {s : Store} {t : Term} {x : S
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eNumeral t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eNumeral (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_Numeral hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_Numeral hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1486,7 +1486,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eRational.destruct {s : Store} {t : Term} {x : 
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eRational t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eRational (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_Rational hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_Rational hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1526,7 +1526,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eString.destruct {s : Store} {t : Term} {x : Sm
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eString t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eString (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_String hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_String hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1566,7 +1566,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eBinary.destruct {s : Store} {t : Term} {x : Sm
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eBinary t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eBinary (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_Binary hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_Binary hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1608,7 +1608,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eApply.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eApply t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eApply (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_Apply hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_Apply hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1650,7 +1650,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eVar.destruct {s : Store} {t : Term} {x : Smtm.
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eVar t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eVar (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_Var hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_Var hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1692,7 +1692,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eDtCons.destruct {s : Store} {t : Term} {x : Sm
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eDtCons t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eDtCons (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtTerm_DtCons hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtTerm_DtCons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1736,7 +1736,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eDtSel.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eDtSel t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eDtSel (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, x3, rfl, rfl⟩ := Embed.inv_SmtTerm_DtSel hx
+  · obtain ⟨x0, x1, x2, x3, rfl, rfl⟩ := Embed.inv_SmtTerm_DtSel hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1782,7 +1782,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eDtTester.destruct {s : Store} {t : Term} {x : 
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eDtTester t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eDtTester (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtTerm_DtTester hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtTerm_DtTester hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1826,7 +1826,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eUConst.destruct {s : Store} {t : Term} {x : Sm
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eUConst t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eUConst (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_UConst hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_UConst hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1868,7 +1868,7 @@ theorem CtorSpec.eo__24emb_5fsm_2enot.destruct {s : Store} {t : Term} {x : Smtm.
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2enot t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2enot (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_not hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtTerm_not hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1908,7 +1908,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eand.destruct {s : Store} {t : Term} {x : Smtm.
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eand t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eand (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_and hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_and hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1950,7 +1950,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eor.destruct {s : Store} {t : Term} {x : Smtm.S
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eor t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eor (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_or hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_or hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -1992,7 +1992,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3d_3e.destruct {s : Store} {t : Term} {x : Sm
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2e_3d_3e t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2e_3d_3e (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_imp hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_imp hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -2034,7 +2034,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3d.destruct {s : Store} {t : Term} {x : Smtm.
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2e_3d t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2e_3d (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_eq hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtTerm_eq hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -2076,7 +2076,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eite.destruct {s : Store} {t : Term} {x : Smtm.
       Store.destruct s schema.Constructor.eo__24emb_5fsm_2eite t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fsm_2eite (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtTerm_ite hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_SmtTerm_ite hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtTerm, Embed.emb_SmtTerm] at he
     generalize hvl : v.val = l at hl
@@ -2119,7 +2119,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eNone.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eNone t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eNone (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_None hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_None hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2154,7 +2154,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eBool.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eBool t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eBool (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Bool hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Bool hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2189,7 +2189,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eInt.destruct {s : Store} {t : Term} {x : Smtm
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eInt t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eInt (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Int hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Int hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2224,7 +2224,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eReal.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eReal t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eReal (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Real hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Real hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2259,7 +2259,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eRegLan.destruct {s : Store} {t : Term} {x : S
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eRegLan t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eRegLan (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_RegLan hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_RegLan hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2295,7 +2295,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eBitVec.destruct {s : Store} {t : Term} {x : S
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eBitVec t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eBitVec (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_BitVec hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_BitVec hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2335,7 +2335,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eMap.destruct {s : Store} {t : Term} {x : Smtm
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eMap t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eMap (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_Map hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_Map hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2377,7 +2377,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eSet.destruct {s : Store} {t : Term} {x : Smtm
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eSet t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eSet (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_Set hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_Set hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2417,7 +2417,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eSeq.destruct {s : Store} {t : Term} {x : Smtm
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eSeq t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eSeq (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_Seq hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_Seq hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2456,7 +2456,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eChar.destruct {s : Store} {t : Term} {x : Smt
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eChar t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eChar (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Char hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_SmtType_Char hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2492,7 +2492,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eDatatype.destruct {s : Store} {t : Term} {x :
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eDatatype t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eDatatype (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_Datatype hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_Datatype hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2534,7 +2534,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eTypeRef.destruct {s : Store} {t : Term} {x : 
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eTypeRef t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eTypeRef (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_TypeRef hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_TypeRef hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2574,7 +2574,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eUSort.destruct {s : Store} {t : Term} {x : Sm
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eUSort t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eUSort (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_USort hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_SmtType_USort hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2614,7 +2614,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eFunType.destruct {s : Store} {t : Term} {x : 
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eFunType t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eFunType (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_FunType hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_FunType hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2656,7 +2656,7 @@ theorem CtorSpec.eo__24emb_5ftsm_2eDtcAppType.destruct {s : Store} {t : Term} {x
       Store.destruct s schema.Constructor.eo__24emb_5ftsm_2eDtcAppType t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5ftsm_2eDtcAppType (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_DtcAppType hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_SmtType_DtcAppType hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_SmtType, Embed.emb_SmtType] at he
     generalize hvl : v.val = l at hl
@@ -2877,7 +2877,7 @@ theorem CtorSpec.eo__24eo_5fList.destruct {s : Store} {t : Term} {x : Eo.Term}
       Store.destruct s schema.Constructor.eo__24eo_5fList t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24eo_5fList (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term___eo_List hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term___eo_List hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2912,7 +2912,7 @@ theorem CtorSpec.eo__24eo_5fList_5fnil.destruct {s : Store} {t : Term} {x : Eo.T
       Store.destruct s schema.Constructor.eo__24eo_5fList_5fnil t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24eo_5fList_5fnil (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term___eo_List_nil hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term___eo_List_nil hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2947,7 +2947,7 @@ theorem CtorSpec.eo__24eo_5fList_5fcons.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24eo_5fList_5fcons t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24eo_5fList_5fcons (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term___eo_List_cons hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term___eo_List_cons hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -2982,7 +2982,7 @@ theorem CtorSpec.eo__24emb_5fBool.destruct {s : Store} {t : Term} {x : Eo.Term}
       Store.destruct s schema.Constructor.eo__24emb_5fBool t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fBool (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term_Bool hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term_Bool hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -3017,7 +3017,7 @@ theorem CtorSpec.eo__24emb_5fType.destruct {s : Store} {t : Term} {x : Eo.Term}
       Store.destruct s schema.Constructor.eo__24emb_5fType t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fType (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term_Type hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term_Type hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -3052,7 +3052,7 @@ theorem CtorSpec.eo__24emb_5fFunType.destruct {s : Store} {t : Term} {x : Eo.Ter
       Store.destruct s schema.Constructor.eo__24emb_5fFunType t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fFunType (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term_FunType hx
+  · obtain ⟨rfl, rfl⟩ := Embed.inv_Term_FunType hx h.2
     generalize hvl : v.val = l at hl
     cases hl
     exact Or.inl ⟨v, rfl, hvl, hd⟩
@@ -3088,7 +3088,7 @@ theorem CtorSpec.eo__24emb_5fVar.destruct {s : Store} {t : Term} {x : Eo.Term}
       Store.destruct s schema.Constructor.eo__24emb_5fVar t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fVar (.inr rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_Var hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_Var hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl
@@ -3130,7 +3130,7 @@ theorem CtorSpec.eo__24emb_5fDatatypeType.destruct {s : Store} {t : Term} {x : E
       Store.destruct s schema.Constructor.eo__24emb_5fDatatypeType t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fDatatypeType (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_DatatypeType hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_DatatypeType hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl
@@ -3172,7 +3172,7 @@ theorem CtorSpec.eo__24emb_5fDatatypeTypeRef.destruct {s : Store} {t : Term} {x 
       Store.destruct s schema.Constructor.eo__24emb_5fDatatypeTypeRef t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fDatatypeTypeRef (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_DatatypeTypeRef hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_DatatypeTypeRef hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl
@@ -3212,7 +3212,7 @@ theorem CtorSpec.eo__24emb_5fDtcAppType.destruct {s : Store} {t : Term} {x : Eo.
       Store.destruct s schema.Constructor.eo__24emb_5fDtcAppType t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fDtcAppType (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_DtcAppType hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_DtcAppType hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl
@@ -3254,7 +3254,7 @@ theorem CtorSpec.eo__24emb_5fDtCons.destruct {s : Store} {t : Term} {x : Eo.Term
       Store.destruct s schema.Constructor.eo__24emb_5fDtCons t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fDtCons (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_Term_DtCons hx
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_Term_DtCons hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl
@@ -3298,7 +3298,7 @@ theorem CtorSpec.eo__24emb_5fDtSel.destruct {s : Store} {t : Term} {x : Eo.Term}
       Store.destruct s schema.Constructor.eo__24emb_5fDtSel t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fDtSel (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, x2, x3, rfl, rfl⟩ := Embed.inv_Term_DtSel hx
+  · obtain ⟨x0, x1, x2, x3, rfl, rfl⟩ := Embed.inv_Term_DtSel hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl
@@ -3344,7 +3344,7 @@ theorem CtorSpec.eo__24emb_5fUSort.destruct {s : Store} {t : Term} {x : Eo.Term}
       Store.destruct s schema.Constructor.eo__24emb_5fUSort t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fUSort (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_USort hx
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_USort hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl
@@ -3384,7 +3384,7 @@ theorem CtorSpec.eo__24emb_5fUConst.destruct {s : Store} {t : Term} {x : Eo.Term
       Store.destruct s schema.Constructor.eo__24emb_5fUConst t = ok (core.result.Result.Ok none, s)) := by
   rcases Store.destruct_holds schema.Constructor.eo__24emb_5fUConst (.inl rfl) h.1 with
     ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
-  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_UConst hx
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_UConst hx h.2
     have he := h.2
     simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
     generalize hvl : v.val = l at hl

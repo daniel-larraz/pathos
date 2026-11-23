@@ -224,7 +224,7 @@ macro_rules
       rw [hb]
       simp only [Std.bind_ok]
       have hiff : b = true ↔ $x = $v := hbiff.trans
-        ⟨fun ⟨_, he⟩ => ($inv (by simpa only [Embed.embedded_enc_Term] using he)).1,
+        ⟨fun ⟨_, he⟩ => ($inv (by simpa only [Embed.embedded_enc_Term] using he) $h.2).1,
          fun he => ⟨_, by subst he; rfl⟩⟩
       clear hb hbiff
       cases b

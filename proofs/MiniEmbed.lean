@@ -222,194 +222,59 @@ def emb_Term : Eo.Term → Prop
   | Eo.Term.UConst x0 x1 => Tree.okNat x0 ∧ emb_Term x1
 end
 
-theorem inv_Datatype_null {x : Eo.Datatype} {ts : List Tree}
-    (h : enc_Datatype x = Tree.node schema.Constructor.eo__24emb_5fedt_2enull ts) :
-    x = Eo.Datatype.null ∧ ts = [] := by
-  cases x <;> simp_all [enc_Datatype]
-
-theorem inv_Datatype_sum {x : Eo.Datatype} {ts : List Tree}
-    (h : enc_Datatype x = Tree.node schema.Constructor.eo__24emb_5fedt_2esum ts) :
-    ∃ x0 x1, x = Eo.Datatype.sum x0 x1 ∧ ts = [(enc_DatatypeCons x0), (enc_Datatype x1)] := by
-  cases x <;> simp_all [enc_Datatype]
-
-theorem inv_DatatypeCons_unit {x : Eo.DatatypeCons} {ts : List Tree}
-    (h : enc_DatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fedtc_2eunit ts) :
-    x = Eo.DatatypeCons.unit ∧ ts = [] := by
-  cases x <;> simp_all [enc_DatatypeCons]
-
-theorem inv_DatatypeCons_cons {x : Eo.DatatypeCons} {ts : List Tree}
-    (h : enc_DatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fedtc_2econs ts) :
-    ∃ x0 x1, x = Eo.DatatypeCons.cons x0 x1 ∧ ts = [(enc_Term x0), (enc_DatatypeCons x1)] := by
-  cases x <;> simp_all [enc_DatatypeCons]
-
-theorem inv_DatatypeDecl_nil {x : Eo.DatatypeDecl} {ts : List Tree}
-    (h : enc_DatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fedd_2enil ts) :
-    x = Eo.DatatypeDecl.nil ∧ ts = [] := by
-  cases x <;> simp_all [enc_DatatypeDecl]
-
-theorem inv_DatatypeDecl_cons {x : Eo.DatatypeDecl} {ts : List Tree}
-    (h : enc_DatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fedd_2econs ts) :
-    ∃ x0 x1 x2, x = Eo.DatatypeDecl.cons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_Datatype x1), (enc_DatatypeDecl x2)] := by
-  cases x <;> simp_all [enc_DatatypeDecl]
-
-theorem inv_Term_UOp {x : Eo.Term} {op : Eo.UserOp} {ts : List Tree}
-    (h : enc_Term x = Tree.node (uop op) ts) : x = Eo.Term.UOp op ∧ ts = [] := by
-  cases x
-  case UOp y => cases y <;> cases op <;> simp_all [enc_Term, uop]
-  all_goals cases op <;> simp_all [enc_Term, uop]
-
-theorem inv_Term___eo_List {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList ts) :
-    x = Eo.Term.__eo_List ∧ ts = [] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term___eo_List_nil {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList_5fnil ts) :
-    x = Eo.Term.__eo_List_nil ∧ ts = [] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term___eo_List_cons {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList_5fcons ts) :
-    x = Eo.Term.__eo_List_cons ∧ ts = [] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_Bool {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fBool ts) :
-    x = Eo.Term.Bool ∧ ts = [] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_Type {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fType ts) :
-    x = Eo.Term.Type ∧ ts = [] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_Stuck {x : Eo.Term} (h : enc_Term x = Tree.stuck) : x = Eo.Term.Stuck := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_Apply {x : Eo.Term} {a b : Tree} (h : enc_Term x = Tree.apply a b) :
-    ∃ x0 x1, x = Eo.Term.Apply x0 x1 ∧ a = (enc_Term x0) ∧ b = (enc_Term x1) := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_FunType {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fFunType ts) :
-    x = Eo.Term.FunType ∧ ts = [] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_Var {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fVar ts) :
-    ∃ x0 x1, x = Eo.Term.Var x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_DatatypeType {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDatatypeType ts) :
-    ∃ x0 x1, x = Eo.Term.DatatypeType x0 x1 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_DatatypeTypeRef {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDatatypeTypeRef ts) :
-    ∃ x0, x = Eo.Term.DatatypeTypeRef x0 ∧ ts = [(Tree.encStr x0)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_DtcAppType {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtcAppType ts) :
-    ∃ x0 x1, x = Eo.Term.DtcAppType x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_DtCons {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtCons ts) :
-    ∃ x0 x1 x2, x = Eo.Term.DtCons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1), (Tree.encNat x2)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_DtSel {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtSel ts) :
-    ∃ x0 x1 x2 x3, x = Eo.Term.DtSel x0 x1 x2 x3 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1), (Tree.encNat x2), (Tree.encNat x3)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_USort {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fUSort ts) :
-    ∃ x0, x = Eo.Term.USort x0 ∧ ts = [(Tree.encNat x0)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_UConst {x : Eo.Term} {ts : List Tree}
-    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fUConst ts) :
-    ∃ x0 x1, x = Eo.Term.UConst x0 x1 ∧ ts = [(Tree.encNat x0), (enc_Term x1)] := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
-theorem inv_Term_lit {x : Eo.Term} {l : lit.Lit} (h : enc_Term x = Tree.lit l) :
-    (∃ x0, x = Eo.Term.Boolean x0 ∧ l = lit.Lit.Boolean x0) ∨
-      (∃ x0, x = Eo.Term.Numeral x0 ∧ l = lit.Lit.Numeral (num.Integer.ofInt x0)) ∨
-      (∃ x0, x = Eo.Term.Rational x0 ∧ l = lit.Lit.Rational (num.Rational.ofRat x0)) ∨
-      (∃ x0, x = Eo.Term.String x0 ∧ l = lit.Lit.Str (Tree.strOf x0)) ∨
-      (∃ x0 x1, x = Eo.Term.Binary x0 x1 ∧ l = lit.Lit.Binary (Tree.bvOf x0 x1)) := by
-  cases x
-  case UOp y => cases y <;> simp_all [enc_Term, uop]
-  all_goals simp_all [enc_Term]
-
 mutual
 theorem dec_enc_Datatype : (x : Eo.Datatype) → emb_Datatype x → dec_Datatype (enc_Datatype x) = some x
   | Eo.Datatype.null, h => by
-    simp [enc_Datatype, dec_Datatype]
+    simp only [enc_Datatype]
+    unfold dec_Datatype
+    rfl
   | Eo.Datatype.sum x0 x1, h => by
     simp only [emb_Datatype] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_Datatype, dec_Datatype, dec_enc_DatatypeCons x0 h0, dec_enc_Datatype x1 h1]
+    simp only [enc_Datatype]
+    unfold dec_Datatype
+    simp only [Option.bind_eq_bind, dec_enc_DatatypeCons x0 h0, dec_enc_Datatype x1 h1, Option.bind_some]
 theorem dec_enc_DatatypeCons : (x : Eo.DatatypeCons) → emb_DatatypeCons x → dec_DatatypeCons (enc_DatatypeCons x) = some x
   | Eo.DatatypeCons.unit, h => by
-    simp [enc_DatatypeCons, dec_DatatypeCons]
+    simp only [enc_DatatypeCons]
+    unfold dec_DatatypeCons
+    rfl
   | Eo.DatatypeCons.cons x0 x1, h => by
     simp only [emb_DatatypeCons] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_DatatypeCons, dec_DatatypeCons, dec_enc_Term x0 h0, dec_enc_DatatypeCons x1 h1]
+    simp only [enc_DatatypeCons]
+    unfold dec_DatatypeCons
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, dec_enc_DatatypeCons x1 h1, Option.bind_some]
 theorem dec_enc_DatatypeDecl : (x : Eo.DatatypeDecl) → emb_DatatypeDecl x → dec_DatatypeDecl (enc_DatatypeDecl x) = some x
   | Eo.DatatypeDecl.nil, h => by
-    simp [enc_DatatypeDecl, dec_DatatypeDecl]
+    simp only [enc_DatatypeDecl]
+    unfold dec_DatatypeDecl
+    rfl
   | Eo.DatatypeDecl.cons x0 x1 x2, h => by
     simp only [emb_DatatypeDecl] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_DatatypeDecl, dec_DatatypeDecl, Tree.dec_encStr x0 h0, dec_enc_Datatype x1 h1, dec_enc_DatatypeDecl x2 h2]
+    simp only [enc_DatatypeDecl]
+    unfold dec_DatatypeDecl
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_Datatype x1 h1, dec_enc_DatatypeDecl x2 h2, Option.bind_some]
 theorem dec_enc_Term : (x : Eo.Term) → emb_Term x → dec_Term (enc_Term x) = some x
   | Eo.Term.UOp x0, h => by
-    cases x0 <;> simp [enc_Term, dec_Term, uop]
+    cases x0 <;> (simp only [enc_Term, uop]; unfold dec_Term; rfl)
   | Eo.Term.__eo_List, h => by
-    simp [enc_Term, dec_Term]
+    simp only [enc_Term]
+    unfold dec_Term
+    rfl
   | Eo.Term.__eo_List_nil, h => by
-    simp [enc_Term, dec_Term]
+    simp only [enc_Term]
+    unfold dec_Term
+    rfl
   | Eo.Term.__eo_List_cons, h => by
-    simp [enc_Term, dec_Term]
+    simp only [enc_Term]
+    unfold dec_Term
+    rfl
   | Eo.Term.Bool, h => by
-    simp [enc_Term, dec_Term]
+    simp only [enc_Term]
+    unfold dec_Term
+    rfl
   | Eo.Term.Boolean x0, h => by
     simp [enc_Term, dec_Term]
   | Eo.Term.Numeral x0, h => by
@@ -421,7 +286,9 @@ theorem dec_enc_Term : (x : Eo.Term) → emb_Term x → dec_Term (enc_Term x) = 
   | Eo.Term.Binary x0 x1, h => by
     simp [enc_Term, dec_Term, Tree.bvW_bvOf x0 x1 h, Tree.bvV_bvOf x0 x1 h]
   | Eo.Term.Type, h => by
-    simp [enc_Term, dec_Term]
+    simp only [enc_Term]
+    unfold dec_Term
+    rfl
   | Eo.Term.Stuck, h => by
     simp [enc_Term, dec_Term]
   | Eo.Term.Apply x0 x1, h => by
@@ -429,40 +296,383 @@ theorem dec_enc_Term : (x : Eo.Term) → emb_Term x → dec_Term (enc_Term x) = 
     obtain ⟨h0, h1⟩ := h
     simp [enc_Term, dec_Term, dec_enc_Term x0 h0, dec_enc_Term x1 h1]
   | Eo.Term.FunType, h => by
-    simp [enc_Term, dec_Term]
+    simp only [enc_Term]
+    unfold dec_Term
+    rfl
   | Eo.Term.Var x0 x1, h => by
     simp only [emb_Term] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_Term, dec_Term, dec_enc_Term x0 h0, dec_enc_Term x1 h1]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, dec_enc_Term x1 h1, Option.bind_some]
   | Eo.Term.DatatypeType x0 x1, h => by
     simp only [emb_Term] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_Term, dec_Term, Tree.dec_encStr x0 h0, dec_enc_DatatypeDecl x1 h1]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_DatatypeDecl x1 h1, Option.bind_some]
   | Eo.Term.DatatypeTypeRef x0, h => by
     simp only [emb_Term] at h
     have h0 := h
-    simp [enc_Term, dec_Term, Tree.dec_encStr x0 h0]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, Option.bind_some]
   | Eo.Term.DtcAppType x0 x1, h => by
     simp only [emb_Term] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_Term, dec_Term, dec_enc_Term x0 h0, dec_enc_Term x1 h1]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, dec_enc_Term x1 h1, Option.bind_some]
   | Eo.Term.DtCons x0 x1 x2, h => by
     simp only [emb_Term] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_Term, dec_Term, Tree.dec_encStr x0 h0, dec_enc_DatatypeDecl x1 h1, Tree.dec_encNat x2 h2]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_DatatypeDecl x1 h1, Tree.dec_encNat x2 h2, Option.bind_some]
   | Eo.Term.DtSel x0 x1 x2 x3, h => by
     simp only [emb_Term] at h
     obtain ⟨h0, h1, h2, h3⟩ := h
-    simp [enc_Term, dec_Term, Tree.dec_encStr x0 h0, dec_enc_DatatypeDecl x1 h1, Tree.dec_encNat x2 h2, Tree.dec_encNat x3 h3]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_DatatypeDecl x1 h1, Tree.dec_encNat x2 h2, Tree.dec_encNat x3 h3, Option.bind_some]
   | Eo.Term.USort x0, h => by
     simp only [emb_Term] at h
     have h0 := h
-    simp [enc_Term, dec_Term, Tree.dec_encNat x0 h0]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, Tree.dec_encNat x0 h0, Option.bind_some]
   | Eo.Term.UConst x0 x1, h => by
     simp only [emb_Term] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_Term, dec_Term, Tree.dec_encNat x0 h0, dec_enc_Term x1 h1]
+    simp only [enc_Term]
+    unfold dec_Term
+    simp only [Option.bind_eq_bind, Tree.dec_encNat x0 h0, dec_enc_Term x1 h1, Option.bind_some]
 end
+
+theorem inv_Datatype_null {x : Eo.Datatype} {ts : List Tree}
+    (h : enc_Datatype x = Tree.node schema.Constructor.eo__24emb_5fedt_2enull ts) (he : emb_Datatype x) :
+    x = Eo.Datatype.null ∧ ts = [] := by
+  have hd := dec_enc_Datatype x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_Datatype at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_Datatype at hd
+    cases hd
+
+theorem inv_Datatype_sum {x : Eo.Datatype} {ts : List Tree}
+    (h : enc_Datatype x = Tree.node schema.Constructor.eo__24emb_5fedt_2esum ts) (he : emb_Datatype x) :
+    ∃ x0 x1, x = Eo.Datatype.sum x0 x1 ∧ ts = [(enc_DatatypeCons x0), (enc_Datatype x1)] := by
+  have hd := dec_enc_Datatype x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Datatype at hd
+    cases hd
+  · unfold dec_Datatype at hd
+    cases hd
+  · unfold dec_Datatype at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Datatype, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Datatype at hd
+    cases hd
+
+theorem inv_DatatypeCons_unit {x : Eo.DatatypeCons} {ts : List Tree}
+    (h : enc_DatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fedtc_2eunit ts) (he : emb_DatatypeCons x) :
+    x = Eo.DatatypeCons.unit ∧ ts = [] := by
+  have hd := dec_enc_DatatypeCons x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_DatatypeCons at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_DatatypeCons at hd
+    cases hd
+
+theorem inv_DatatypeCons_cons {x : Eo.DatatypeCons} {ts : List Tree}
+    (h : enc_DatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fedtc_2econs ts) (he : emb_DatatypeCons x) :
+    ∃ x0 x1, x = Eo.DatatypeCons.cons x0 x1 ∧ ts = [(enc_Term x0), (enc_DatatypeCons x1)] := by
+  have hd := dec_enc_DatatypeCons x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_DatatypeCons at hd
+    cases hd
+  · unfold dec_DatatypeCons at hd
+    cases hd
+  · unfold dec_DatatypeCons at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_DatatypeCons, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_DatatypeCons at hd
+    cases hd
+
+theorem inv_DatatypeDecl_nil {x : Eo.DatatypeDecl} {ts : List Tree}
+    (h : enc_DatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fedd_2enil ts) (he : emb_DatatypeDecl x) :
+    x = Eo.DatatypeDecl.nil ∧ ts = [] := by
+  have hd := dec_enc_DatatypeDecl x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_DatatypeDecl at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_DatatypeDecl at hd
+    cases hd
+
+theorem inv_DatatypeDecl_cons {x : Eo.DatatypeDecl} {ts : List Tree}
+    (h : enc_DatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fedd_2econs ts) (he : emb_DatatypeDecl x) :
+    ∃ x0 x1 x2, x = Eo.DatatypeDecl.cons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_Datatype x1), (enc_DatatypeDecl x2)] := by
+  have hd := dec_enc_DatatypeDecl x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_DatatypeDecl at hd
+    cases hd
+  · unfold dec_DatatypeDecl at hd
+    cases hd
+  · unfold dec_DatatypeDecl at hd
+    cases hd
+  · unfold dec_DatatypeDecl at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_DatatypeDecl, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_DatatypeDecl at hd
+    cases hd
+
+theorem inv_Term___eo_List {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList ts) (he : emb_Term x) :
+    x = Eo.Term.__eo_List ∧ ts = [] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_Term at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term___eo_List_nil {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList_5fnil ts) (he : emb_Term x) :
+    x = Eo.Term.__eo_List_nil ∧ ts = [] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_Term at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term___eo_List_cons {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList_5fcons ts) (he : emb_Term x) :
+    x = Eo.Term.__eo_List_cons ∧ ts = [] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_Term at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_Bool {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fBool ts) (he : emb_Term x) :
+    x = Eo.Term.Bool ∧ ts = [] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_Term at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_Type {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fType ts) (he : emb_Term x) :
+    x = Eo.Term.Type ∧ ts = [] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_Term at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_Stuck {x : Eo.Term} (h : enc_Term x = Tree.stuck) : x = Eo.Term.Stuck := by
+  cases x <;> simp_all [enc_Term]
+
+theorem inv_Term_Apply {x : Eo.Term} {a b : Tree} (h : enc_Term x = Tree.apply a b) :
+    ∃ x0 x1, x = Eo.Term.Apply x0 x1 ∧ a = (enc_Term x0) ∧ b = (enc_Term x1) := by
+  cases x <;> simp_all [enc_Term]
+
+theorem inv_Term_FunType {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fFunType ts) (he : emb_Term x) :
+    x = Eo.Term.FunType ∧ ts = [] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_Term at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_Var {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fVar ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.Var x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_DatatypeType {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDatatypeType ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.DatatypeType x0 x1 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_DatatypeTypeRef {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDatatypeTypeRef ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.DatatypeTypeRef x0 ∧ ts = [(Tree.encStr x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_DtcAppType {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtcAppType ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.DtcAppType x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_DtCons {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtCons ts) (he : emb_Term x) :
+    ∃ x0 x1 x2, x = Eo.Term.DtCons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1), (Tree.encNat x2)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_DtSel {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fDtSel ts) (he : emb_Term x) :
+    ∃ x0 x1 x2 x3, x = Eo.Term.DtSel x0 x1 x2 x3 ∧ ts = [(Tree.encStr x0), (enc_DatatypeDecl x1), (Tree.encNat x2), (Tree.encNat x3)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨t3, _ | ⟨_, _⟩⟩⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, x3, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_USort {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fUSort ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.USort x0 ∧ ts = [(Tree.encNat x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UConst {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__24emb_5fUConst ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.UConst x0 x1 ∧ ts = [(Tree.encNat x0), (enc_Term x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_lit {x : Eo.Term} {l : lit.Lit} (h : enc_Term x = Tree.lit l) :
+    (∃ x0, x = Eo.Term.Boolean x0 ∧ l = lit.Lit.Boolean x0) ∨
+      (∃ x0, x = Eo.Term.Numeral x0 ∧ l = lit.Lit.Numeral (num.Integer.ofInt x0)) ∨
+      (∃ x0, x = Eo.Term.Rational x0 ∧ l = lit.Lit.Rational (num.Rational.ofRat x0)) ∨
+      (∃ x0, x = Eo.Term.String x0 ∧ l = lit.Lit.Str (Tree.strOf x0)) ∨
+      (∃ x0 x1, x = Eo.Term.Binary x0 x1 ∧ l = lit.Lit.Binary (Tree.bvOf x0 x1)) := by
+  cases x <;> simp_all [enc_Term]
 
 instance : Embedded Eo.Datatype := ⟨enc_Datatype, dec_Datatype, emb_Datatype, dec_enc_Datatype⟩
 
@@ -509,25 +719,49 @@ def emb_CArgList : Eo.CArgList → Prop
   | Eo.CArgList.cons x0 x1 => emb_Term x0 ∧ emb_CArgList x1
 end
 
-theorem inv_CArgList_nil {x : Eo.CArgList} {ts : List Tree}
-    (h : enc_CArgList x = Tree.node schema.Constructor.eo__24emb_5fal_2enil ts) :
-    x = Eo.CArgList.nil ∧ ts = [] := by
-  cases x <;> simp_all [enc_CArgList]
-
-theorem inv_CArgList_cons {x : Eo.CArgList} {ts : List Tree}
-    (h : enc_CArgList x = Tree.node schema.Constructor.eo__24emb_5fal_2econs ts) :
-    ∃ x0 x1, x = Eo.CArgList.cons x0 x1 ∧ ts = [(enc_Term x0), (enc_CArgList x1)] := by
-  cases x <;> simp_all [enc_CArgList]
-
 mutual
 theorem dec_enc_CArgList : (x : Eo.CArgList) → emb_CArgList x → dec_CArgList (enc_CArgList x) = some x
   | Eo.CArgList.nil, h => by
-    simp [enc_CArgList, dec_CArgList]
+    simp only [enc_CArgList]
+    unfold dec_CArgList
+    rfl
   | Eo.CArgList.cons x0 x1, h => by
     simp only [emb_CArgList] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_CArgList, dec_CArgList, dec_enc_Term x0 h0, dec_enc_CArgList x1 h1]
+    simp only [enc_CArgList]
+    unfold dec_CArgList
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, dec_enc_CArgList x1 h1, Option.bind_some]
 end
+
+theorem inv_CArgList_nil {x : Eo.CArgList} {ts : List Tree}
+    (h : enc_CArgList x = Tree.node schema.Constructor.eo__24emb_5fal_2enil ts) (he : emb_CArgList x) :
+    x = Eo.CArgList.nil ∧ ts = [] := by
+  have hd := dec_enc_CArgList x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CArgList at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CArgList at hd
+    cases hd
+
+theorem inv_CArgList_cons {x : Eo.CArgList} {ts : List Tree}
+    (h : enc_CArgList x = Tree.node schema.Constructor.eo__24emb_5fal_2econs ts) (he : emb_CArgList x) :
+    ∃ x0 x1, x = Eo.CArgList.cons x0 x1 ∧ ts = [(enc_Term x0), (enc_CArgList x1)] := by
+  have hd := dec_enc_CArgList x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_CArgList at hd
+    cases hd
+  · unfold dec_CArgList at hd
+    cases hd
+  · unfold dec_CArgList at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_CArgList, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_CArgList at hd
+    cases hd
 
 instance : Embedded Eo.CArgList := ⟨enc_CArgList, dec_CArgList, emb_CArgList, dec_enc_CArgList⟩
 
@@ -559,25 +793,49 @@ def emb_CIndexList : Eo.CIndexList → Prop
   | Eo.CIndexList.cons x0 x1 => Tree.okInt x0 ∧ emb_CIndexList x1
 end
 
-theorem inv_CIndexList_nil {x : Eo.CIndexList} {ts : List Tree}
-    (h : enc_CIndexList x = Tree.node schema.Constructor.eo__24emb_5findl_2enil ts) :
-    x = Eo.CIndexList.nil ∧ ts = [] := by
-  cases x <;> simp_all [enc_CIndexList]
-
-theorem inv_CIndexList_cons {x : Eo.CIndexList} {ts : List Tree}
-    (h : enc_CIndexList x = Tree.node schema.Constructor.eo__24emb_5findl_2econs ts) :
-    ∃ x0 x1, x = Eo.CIndexList.cons x0 x1 ∧ ts = [(Tree.encInt x0), (enc_CIndexList x1)] := by
-  cases x <;> simp_all [enc_CIndexList]
-
 mutual
 theorem dec_enc_CIndexList : (x : Eo.CIndexList) → emb_CIndexList x → dec_CIndexList (enc_CIndexList x) = some x
   | Eo.CIndexList.nil, h => by
-    simp [enc_CIndexList, dec_CIndexList]
+    simp only [enc_CIndexList]
+    unfold dec_CIndexList
+    rfl
   | Eo.CIndexList.cons x0 x1, h => by
     simp only [emb_CIndexList] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_CIndexList, dec_CIndexList, Tree.dec_encInt x0 h0, dec_enc_CIndexList x1 h1]
+    simp only [enc_CIndexList]
+    unfold dec_CIndexList
+    simp only [Option.bind_eq_bind, Tree.dec_encInt x0 h0, dec_enc_CIndexList x1 h1, Option.bind_some]
 end
+
+theorem inv_CIndexList_nil {x : Eo.CIndexList} {ts : List Tree}
+    (h : enc_CIndexList x = Tree.node schema.Constructor.eo__24emb_5findl_2enil ts) (he : emb_CIndexList x) :
+    x = Eo.CIndexList.nil ∧ ts = [] := by
+  have hd := dec_enc_CIndexList x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CIndexList at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CIndexList at hd
+    cases hd
+
+theorem inv_CIndexList_cons {x : Eo.CIndexList} {ts : List Tree}
+    (h : enc_CIndexList x = Tree.node schema.Constructor.eo__24emb_5findl_2econs ts) (he : emb_CIndexList x) :
+    ∃ x0 x1, x = Eo.CIndexList.cons x0 x1 ∧ ts = [(Tree.encInt x0), (enc_CIndexList x1)] := by
+  have hd := dec_enc_CIndexList x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_CIndexList at hd
+    cases hd
+  · unfold dec_CIndexList at hd
+    cases hd
+  · unfold dec_CIndexList at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_CIndexList, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_CIndexList at hd
+    cases hd
 
 instance : Embedded Eo.CIndexList := ⟨enc_CIndexList, dec_CIndexList, emb_CIndexList, dec_enc_CIndexList⟩
 
@@ -615,44 +873,89 @@ def emb_CRule : Eo.CRule → Prop
   | Eo.CRule.trans => True
 end
 
-theorem inv_CRule_scope {x : Eo.CRule} {ts : List Tree}
-    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2escope ts) :
-    x = Eo.CRule.scope ∧ ts = [] := by
-  cases x <;> simp_all [enc_CRule]
-
-theorem inv_CRule_contra {x : Eo.CRule} {ts : List Tree}
-    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2econtra ts) :
-    x = Eo.CRule.contra ∧ ts = [] := by
-  cases x <;> simp_all [enc_CRule]
-
-theorem inv_CRule_refl {x : Eo.CRule} {ts : List Tree}
-    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2erefl ts) :
-    x = Eo.CRule.refl ∧ ts = [] := by
-  cases x <;> simp_all [enc_CRule]
-
-theorem inv_CRule_symm {x : Eo.CRule} {ts : List Tree}
-    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2esymm ts) :
-    x = Eo.CRule.symm ∧ ts = [] := by
-  cases x <;> simp_all [enc_CRule]
-
-theorem inv_CRule_trans {x : Eo.CRule} {ts : List Tree}
-    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2etrans ts) :
-    x = Eo.CRule.trans ∧ ts = [] := by
-  cases x <;> simp_all [enc_CRule]
-
 mutual
 theorem dec_enc_CRule : (x : Eo.CRule) → emb_CRule x → dec_CRule (enc_CRule x) = some x
   | Eo.CRule.scope, h => by
-    simp [enc_CRule, dec_CRule]
+    simp only [enc_CRule]
+    unfold dec_CRule
+    rfl
   | Eo.CRule.contra, h => by
-    simp [enc_CRule, dec_CRule]
+    simp only [enc_CRule]
+    unfold dec_CRule
+    rfl
   | Eo.CRule.refl, h => by
-    simp [enc_CRule, dec_CRule]
+    simp only [enc_CRule]
+    unfold dec_CRule
+    rfl
   | Eo.CRule.symm, h => by
-    simp [enc_CRule, dec_CRule]
+    simp only [enc_CRule]
+    unfold dec_CRule
+    rfl
   | Eo.CRule.trans, h => by
-    simp [enc_CRule, dec_CRule]
+    simp only [enc_CRule]
+    unfold dec_CRule
+    rfl
 end
+
+theorem inv_CRule_scope {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2escope ts) (he : emb_CRule x) :
+    x = Eo.CRule.scope ∧ ts = [] := by
+  have hd := dec_enc_CRule x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CRule at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CRule at hd
+    cases hd
+
+theorem inv_CRule_contra {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2econtra ts) (he : emb_CRule x) :
+    x = Eo.CRule.contra ∧ ts = [] := by
+  have hd := dec_enc_CRule x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CRule at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CRule at hd
+    cases hd
+
+theorem inv_CRule_refl {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2erefl ts) (he : emb_CRule x) :
+    x = Eo.CRule.refl ∧ ts = [] := by
+  have hd := dec_enc_CRule x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CRule at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CRule at hd
+    cases hd
+
+theorem inv_CRule_symm {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2esymm ts) (he : emb_CRule x) :
+    x = Eo.CRule.symm ∧ ts = [] := by
+  have hd := dec_enc_CRule x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CRule at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CRule at hd
+    cases hd
+
+theorem inv_CRule_trans {x : Eo.CRule} {ts : List Tree}
+    (h : enc_CRule x = Tree.node schema.Constructor.eo__24emb_5fr_2etrans ts) (he : emb_CRule x) :
+    x = Eo.CRule.trans ∧ ts = [] := by
+  have hd := dec_enc_CRule x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CRule at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CRule at hd
+    cases hd
 
 instance : Embedded Eo.CRule := ⟨enc_CRule, dec_CRule, emb_CRule, dec_enc_CRule⟩
 
@@ -699,45 +1002,105 @@ def emb_CCmd : Eo.CCmd → Prop
   | Eo.CCmd.step_pop x0 x1 x2 => emb_CRule x0 ∧ emb_CArgList x1 ∧ emb_CIndexList x2
 end
 
-theorem inv_CCmd_assume_push {x : Eo.CCmd} {ts : List Tree}
-    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush ts) :
-    ∃ x0, x = Eo.CCmd.assume_push x0 ∧ ts = [(enc_Term x0)] := by
-  cases x <;> simp_all [enc_CCmd]
-
-theorem inv_CCmd_check_proven {x : Eo.CCmd} {ts : List Tree}
-    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven ts) :
-    ∃ x0, x = Eo.CCmd.check_proven x0 ∧ ts = [(enc_Term x0)] := by
-  cases x <;> simp_all [enc_CCmd]
-
-theorem inv_CCmd_step {x : Eo.CCmd} {ts : List Tree}
-    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2estep ts) :
-    ∃ x0 x1 x2, x = Eo.CCmd.step x0 x1 x2 ∧ ts = [(enc_CRule x0), (enc_CArgList x1), (enc_CIndexList x2)] := by
-  cases x <;> simp_all [enc_CCmd]
-
-theorem inv_CCmd_step_pop {x : Eo.CCmd} {ts : List Tree}
-    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2estep_5fpop ts) :
-    ∃ x0 x1 x2, x = Eo.CCmd.step_pop x0 x1 x2 ∧ ts = [(enc_CRule x0), (enc_CArgList x1), (enc_CIndexList x2)] := by
-  cases x <;> simp_all [enc_CCmd]
-
 mutual
 theorem dec_enc_CCmd : (x : Eo.CCmd) → emb_CCmd x → dec_CCmd (enc_CCmd x) = some x
   | Eo.CCmd.assume_push x0, h => by
     simp only [emb_CCmd] at h
     have h0 := h
-    simp [enc_CCmd, dec_CCmd, dec_enc_Term x0 h0]
+    simp only [enc_CCmd]
+    unfold dec_CCmd
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, Option.bind_some]
   | Eo.CCmd.check_proven x0, h => by
     simp only [emb_CCmd] at h
     have h0 := h
-    simp [enc_CCmd, dec_CCmd, dec_enc_Term x0 h0]
+    simp only [enc_CCmd]
+    unfold dec_CCmd
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, Option.bind_some]
   | Eo.CCmd.step x0 x1 x2, h => by
     simp only [emb_CCmd] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_CCmd, dec_CCmd, dec_enc_CRule x0 h0, dec_enc_CArgList x1 h1, dec_enc_CIndexList x2 h2]
+    simp only [enc_CCmd]
+    unfold dec_CCmd
+    simp only [Option.bind_eq_bind, dec_enc_CRule x0 h0, dec_enc_CArgList x1 h1, dec_enc_CIndexList x2 h2, Option.bind_some]
   | Eo.CCmd.step_pop x0 x1 x2, h => by
     simp only [emb_CCmd] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_CCmd, dec_CCmd, dec_enc_CRule x0 h0, dec_enc_CArgList x1 h1, dec_enc_CIndexList x2 h2]
+    simp only [enc_CCmd]
+    unfold dec_CCmd
+    simp only [Option.bind_eq_bind, dec_enc_CRule x0 h0, dec_enc_CArgList x1 h1, dec_enc_CIndexList x2 h2, Option.bind_some]
 end
+
+theorem inv_CCmd_assume_push {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush ts) (he : emb_CCmd x) :
+    ∃ x0, x = Eo.CCmd.assume_push x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_CCmd x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_CCmd, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_CCmd at hd
+    cases hd
+
+theorem inv_CCmd_check_proven {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven ts) (he : emb_CCmd x) :
+    ∃ x0, x = Eo.CCmd.check_proven x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_CCmd x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_CCmd, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_CCmd at hd
+    cases hd
+
+theorem inv_CCmd_step {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2estep ts) (he : emb_CCmd x) :
+    ∃ x0 x1 x2, x = Eo.CCmd.step x0 x1 x2 ∧ ts = [(enc_CRule x0), (enc_CArgList x1), (enc_CIndexList x2)] := by
+  have hd := dec_enc_CCmd x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_CCmd, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_CCmd at hd
+    cases hd
+
+theorem inv_CCmd_step_pop {x : Eo.CCmd} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node schema.Constructor.eo__24emb_5fcmd_2estep_5fpop ts) (he : emb_CCmd x) :
+    ∃ x0 x1 x2, x = Eo.CCmd.step_pop x0 x1 x2 ∧ ts = [(enc_CRule x0), (enc_CArgList x1), (enc_CIndexList x2)] := by
+  have hd := dec_enc_CCmd x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    cases hd
+  · unfold dec_CCmd at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_CCmd, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_CCmd at hd
+    cases hd
 
 instance : Embedded Eo.CCmd := ⟨enc_CCmd, dec_CCmd, emb_CCmd, dec_enc_CCmd⟩
 
@@ -769,25 +1132,49 @@ def emb_CCmdList : Eo.CCmdList → Prop
   | Eo.CCmdList.cons x0 x1 => emb_CCmd x0 ∧ emb_CCmdList x1
 end
 
-theorem inv_CCmdList_nil {x : Eo.CCmdList} {ts : List Tree}
-    (h : enc_CCmdList x = Tree.node schema.Constructor.eo__24emb_5fcmdl_2enil ts) :
-    x = Eo.CCmdList.nil ∧ ts = [] := by
-  cases x <;> simp_all [enc_CCmdList]
-
-theorem inv_CCmdList_cons {x : Eo.CCmdList} {ts : List Tree}
-    (h : enc_CCmdList x = Tree.node schema.Constructor.eo__24emb_5fcmdl_2econs ts) :
-    ∃ x0 x1, x = Eo.CCmdList.cons x0 x1 ∧ ts = [(enc_CCmd x0), (enc_CCmdList x1)] := by
-  cases x <;> simp_all [enc_CCmdList]
-
 mutual
 theorem dec_enc_CCmdList : (x : Eo.CCmdList) → emb_CCmdList x → dec_CCmdList (enc_CCmdList x) = some x
   | Eo.CCmdList.nil, h => by
-    simp [enc_CCmdList, dec_CCmdList]
+    simp only [enc_CCmdList]
+    unfold dec_CCmdList
+    rfl
   | Eo.CCmdList.cons x0 x1, h => by
     simp only [emb_CCmdList] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_CCmdList, dec_CCmdList, dec_enc_CCmd x0 h0, dec_enc_CCmdList x1 h1]
+    simp only [enc_CCmdList]
+    unfold dec_CCmdList
+    simp only [Option.bind_eq_bind, dec_enc_CCmd x0 h0, dec_enc_CCmdList x1 h1, Option.bind_some]
 end
+
+theorem inv_CCmdList_nil {x : Eo.CCmdList} {ts : List Tree}
+    (h : enc_CCmdList x = Tree.node schema.Constructor.eo__24emb_5fcmdl_2enil ts) (he : emb_CCmdList x) :
+    x = Eo.CCmdList.nil ∧ ts = [] := by
+  have hd := dec_enc_CCmdList x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CCmdList at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CCmdList at hd
+    cases hd
+
+theorem inv_CCmdList_cons {x : Eo.CCmdList} {ts : List Tree}
+    (h : enc_CCmdList x = Tree.node schema.Constructor.eo__24emb_5fcmdl_2econs ts) (he : emb_CCmdList x) :
+    ∃ x0 x1, x = Eo.CCmdList.cons x0 x1 ∧ ts = [(enc_CCmd x0), (enc_CCmdList x1)] := by
+  have hd := dec_enc_CCmdList x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_CCmdList at hd
+    cases hd
+  · unfold dec_CCmdList at hd
+    cases hd
+  · unfold dec_CCmdList at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_CCmdList, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_CCmdList at hd
+    cases hd
 
 instance : Embedded Eo.CCmdList := ⟨enc_CCmdList, dec_CCmdList, emb_CCmdList, dec_enc_CCmdList⟩
 
@@ -825,36 +1212,75 @@ def emb_CStateObj : Eo.CStateObj → Prop
   | Eo.CStateObj.proven x0 => emb_Term x0
 end
 
-theorem inv_CStateObj_assume {x : Eo.CStateObj} {ts : List Tree}
-    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eassume ts) :
-    ∃ x0, x = Eo.CStateObj.assume x0 ∧ ts = [(enc_Term x0)] := by
-  cases x <;> simp_all [enc_CStateObj]
-
-theorem inv_CStateObj_assume_push {x : Eo.CStateObj} {ts : List Tree}
-    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eassume_5fpush ts) :
-    ∃ x0, x = Eo.CStateObj.assume_push x0 ∧ ts = [(enc_Term x0)] := by
-  cases x <;> simp_all [enc_CStateObj]
-
-theorem inv_CStateObj_proven {x : Eo.CStateObj} {ts : List Tree}
-    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eproven ts) :
-    ∃ x0, x = Eo.CStateObj.proven x0 ∧ ts = [(enc_Term x0)] := by
-  cases x <;> simp_all [enc_CStateObj]
-
 mutual
 theorem dec_enc_CStateObj : (x : Eo.CStateObj) → emb_CStateObj x → dec_CStateObj (enc_CStateObj x) = some x
   | Eo.CStateObj.assume x0, h => by
     simp only [emb_CStateObj] at h
     have h0 := h
-    simp [enc_CStateObj, dec_CStateObj, dec_enc_Term x0 h0]
+    simp only [enc_CStateObj]
+    unfold dec_CStateObj
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, Option.bind_some]
   | Eo.CStateObj.assume_push x0, h => by
     simp only [emb_CStateObj] at h
     have h0 := h
-    simp [enc_CStateObj, dec_CStateObj, dec_enc_Term x0 h0]
+    simp only [enc_CStateObj]
+    unfold dec_CStateObj
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, Option.bind_some]
   | Eo.CStateObj.proven x0, h => by
     simp only [emb_CStateObj] at h
     have h0 := h
-    simp [enc_CStateObj, dec_CStateObj, dec_enc_Term x0 h0]
+    simp only [enc_CStateObj]
+    unfold dec_CStateObj
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, Option.bind_some]
 end
+
+theorem inv_CStateObj_assume {x : Eo.CStateObj} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eassume ts) (he : emb_CStateObj x) :
+    ∃ x0, x = Eo.CStateObj.assume x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_CStateObj x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_CStateObj at hd
+    cases hd
+  · unfold dec_CStateObj at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_CStateObj, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_CStateObj at hd
+    cases hd
+
+theorem inv_CStateObj_assume_push {x : Eo.CStateObj} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eassume_5fpush ts) (he : emb_CStateObj x) :
+    ∃ x0, x = Eo.CStateObj.assume_push x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_CStateObj x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_CStateObj at hd
+    cases hd
+  · unfold dec_CStateObj at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_CStateObj, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_CStateObj at hd
+    cases hd
+
+theorem inv_CStateObj_proven {x : Eo.CStateObj} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node schema.Constructor.eo__24emb_5fso_2eproven ts) (he : emb_CStateObj x) :
+    ∃ x0, x = Eo.CStateObj.proven x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_CStateObj x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_CStateObj at hd
+    cases hd
+  · unfold dec_CStateObj at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_CStateObj, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_CStateObj at hd
+    cases hd
 
 instance : Embedded Eo.CStateObj := ⟨enc_CStateObj, dec_CStateObj, emb_CStateObj, dec_enc_CStateObj⟩
 
@@ -889,32 +1315,65 @@ def emb_CState : Eo.CState → Prop
   | Eo.CState.cons x0 x1 => emb_CStateObj x0 ∧ emb_CState x1
 end
 
-theorem inv_CState_nil {x : Eo.CState} {ts : List Tree}
-    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2enil ts) :
-    x = Eo.CState.nil ∧ ts = [] := by
-  cases x <;> simp_all [enc_CState]
-
-theorem inv_CState_Stuck {x : Eo.CState} {ts : List Tree}
-    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2eStuck ts) :
-    x = Eo.CState.Stuck ∧ ts = [] := by
-  cases x <;> simp_all [enc_CState]
-
-theorem inv_CState_cons {x : Eo.CState} {ts : List Tree}
-    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2econs ts) :
-    ∃ x0 x1, x = Eo.CState.cons x0 x1 ∧ ts = [(enc_CStateObj x0), (enc_CState x1)] := by
-  cases x <;> simp_all [enc_CState]
-
 mutual
 theorem dec_enc_CState : (x : Eo.CState) → emb_CState x → dec_CState (enc_CState x) = some x
   | Eo.CState.nil, h => by
-    simp [enc_CState, dec_CState]
+    simp only [enc_CState]
+    unfold dec_CState
+    rfl
   | Eo.CState.Stuck, h => by
-    simp [enc_CState, dec_CState]
+    simp only [enc_CState]
+    unfold dec_CState
+    rfl
   | Eo.CState.cons x0 x1, h => by
     simp only [emb_CState] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_CState, dec_CState, dec_enc_CStateObj x0 h0, dec_enc_CState x1 h1]
+    simp only [enc_CState]
+    unfold dec_CState
+    simp only [Option.bind_eq_bind, dec_enc_CStateObj x0 h0, dec_enc_CState x1 h1, Option.bind_some]
 end
+
+theorem inv_CState_nil {x : Eo.CState} {ts : List Tree}
+    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2enil ts) (he : emb_CState x) :
+    x = Eo.CState.nil ∧ ts = [] := by
+  have hd := dec_enc_CState x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CState at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CState at hd
+    cases hd
+
+theorem inv_CState_Stuck {x : Eo.CState} {ts : List Tree}
+    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2eStuck ts) (he : emb_CState x) :
+    x = Eo.CState.Stuck ∧ ts = [] := by
+  have hd := dec_enc_CState x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_CState at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_CState at hd
+    cases hd
+
+theorem inv_CState_cons {x : Eo.CState} {ts : List Tree}
+    (h : enc_CState x = Tree.node schema.Constructor.eo__24emb_5fs_2econs ts) (he : emb_CState x) :
+    ∃ x0 x1, x = Eo.CState.cons x0 x1 ∧ ts = [(enc_CStateObj x0), (enc_CState x1)] := by
+  have hd := dec_enc_CState x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_CState at hd
+    cases hd
+  · unfold dec_CState at hd
+    cases hd
+  · unfold dec_CState at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_CState, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_CState at hd
+    cases hd
 
 instance : Embedded Eo.CState := ⟨enc_CState, dec_CState, emb_CState, dec_enc_CState⟩
 
@@ -945,23 +1404,36 @@ def emb_Proof : Eo.Proof → Prop
   | Eo.Proof.Stuck => True
 end
 
-theorem inv_Proof_pf {x : Eo.Proof} {ts : List Tree}
-    (h : enc_Proof x = Tree.node schema.Constructor.eo__24eo_5fpf ts) :
-    ∃ x0, x = Eo.Proof.pf x0 ∧ ts = [(enc_Term x0)] := by
-  cases x <;> simp_all [enc_Proof]
-
-theorem inv_Proof_Stuck {x : Eo.Proof} (h : enc_Proof x = Tree.stuck) : x = Eo.Proof.Stuck := by
-  cases x <;> simp_all [enc_Proof]
-
 mutual
 theorem dec_enc_Proof : (x : Eo.Proof) → emb_Proof x → dec_Proof (enc_Proof x) = some x
   | Eo.Proof.pf x0, h => by
     simp only [emb_Proof] at h
     have h0 := h
-    simp [enc_Proof, dec_Proof, dec_enc_Term x0 h0]
+    simp only [enc_Proof]
+    unfold dec_Proof
+    simp only [Option.bind_eq_bind, dec_enc_Term x0 h0, Option.bind_some]
   | Eo.Proof.Stuck, h => by
     simp [enc_Proof, dec_Proof]
 end
+
+theorem inv_Proof_pf {x : Eo.Proof} {ts : List Tree}
+    (h : enc_Proof x = Tree.node schema.Constructor.eo__24eo_5fpf ts) (he : emb_Proof x) :
+    ∃ x0, x = Eo.Proof.pf x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Proof x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Proof at hd
+    cases hd
+  · unfold dec_Proof at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Proof, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Proof at hd
+    cases hd
+
+theorem inv_Proof_Stuck {x : Eo.Proof} (h : enc_Proof x = Tree.stuck) : x = Eo.Proof.Stuck := by
+  cases x <;> simp_all [enc_Proof]
 
 instance : Embedded Eo.Proof := ⟨enc_Proof, dec_Proof, emb_Proof, dec_enc_Proof⟩
 
@@ -1100,183 +1572,436 @@ def emb_SmtType : Smtm.SmtType → Prop
   | Smtm.SmtType.DtcAppType x0 x1 => emb_SmtType x0 ∧ emb_SmtType x1
 end
 
-theorem inv_SmtDatatype_null {x : Smtm.SmtDatatype} {ts : List Tree}
-    (h : enc_SmtDatatype x = Tree.node schema.Constructor.eo__24emb_5fdt_2enull ts) :
-    x = Smtm.SmtDatatype.null ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtDatatype]
-
-theorem inv_SmtDatatype_sum {x : Smtm.SmtDatatype} {ts : List Tree}
-    (h : enc_SmtDatatype x = Tree.node schema.Constructor.eo__24emb_5fdt_2esum ts) :
-    ∃ x0 x1, x = Smtm.SmtDatatype.sum x0 x1 ∧ ts = [(enc_SmtDatatypeCons x0), (enc_SmtDatatype x1)] := by
-  cases x <;> simp_all [enc_SmtDatatype]
-
-theorem inv_SmtDatatypeCons_unit {x : Smtm.SmtDatatypeCons} {ts : List Tree}
-    (h : enc_SmtDatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fdtc_2eunit ts) :
-    x = Smtm.SmtDatatypeCons.unit ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtDatatypeCons]
-
-theorem inv_SmtDatatypeCons_cons {x : Smtm.SmtDatatypeCons} {ts : List Tree}
-    (h : enc_SmtDatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fdtc_2econs ts) :
-    ∃ x0 x1, x = Smtm.SmtDatatypeCons.cons x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtDatatypeCons x1)] := by
-  cases x <;> simp_all [enc_SmtDatatypeCons]
-
-theorem inv_SmtDatatypeDecl_nil {x : Smtm.SmtDatatypeDecl} {ts : List Tree}
-    (h : enc_SmtDatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fdd_2enil ts) :
-    x = Smtm.SmtDatatypeDecl.nil ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtDatatypeDecl]
-
-theorem inv_SmtDatatypeDecl_cons {x : Smtm.SmtDatatypeDecl} {ts : List Tree}
-    (h : enc_SmtDatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fdd_2econs ts) :
-    ∃ x0 x1 x2, x = Smtm.SmtDatatypeDecl.cons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatype x1), (enc_SmtDatatypeDecl x2)] := by
-  cases x <;> simp_all [enc_SmtDatatypeDecl]
-
-theorem inv_SmtType_None {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eNone ts) :
-    x = Smtm.SmtType.None ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Bool {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eBool ts) :
-    x = Smtm.SmtType.Bool ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Int {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eInt ts) :
-    x = Smtm.SmtType.Int ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Real {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eReal ts) :
-    x = Smtm.SmtType.Real ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_RegLan {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eRegLan ts) :
-    x = Smtm.SmtType.RegLan ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_BitVec {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eBitVec ts) :
-    ∃ x0, x = Smtm.SmtType.BitVec x0 ∧ ts = [(Tree.encNat x0)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Map {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eMap ts) :
-    ∃ x0 x1, x = Smtm.SmtType.Map x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Set {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eSet ts) :
-    ∃ x0, x = Smtm.SmtType.Set x0 ∧ ts = [(enc_SmtType x0)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Seq {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eSeq ts) :
-    ∃ x0, x = Smtm.SmtType.Seq x0 ∧ ts = [(enc_SmtType x0)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Char {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eChar ts) :
-    x = Smtm.SmtType.Char ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_Datatype {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eDatatype ts) :
-    ∃ x0 x1, x = Smtm.SmtType.Datatype x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_TypeRef {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eTypeRef ts) :
-    ∃ x0, x = Smtm.SmtType.TypeRef x0 ∧ ts = [(Tree.encStr x0)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_USort {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eUSort ts) :
-    ∃ x0, x = Smtm.SmtType.USort x0 ∧ ts = [(Tree.encNat x0)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_FunType {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eFunType ts) :
-    ∃ x0 x1, x = Smtm.SmtType.FunType x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
-  cases x <;> simp_all [enc_SmtType]
-
-theorem inv_SmtType_DtcAppType {x : Smtm.SmtType} {ts : List Tree}
-    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eDtcAppType ts) :
-    ∃ x0 x1, x = Smtm.SmtType.DtcAppType x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
-  cases x <;> simp_all [enc_SmtType]
-
 mutual
 theorem dec_enc_SmtDatatype : (x : Smtm.SmtDatatype) → emb_SmtDatatype x → dec_SmtDatatype (enc_SmtDatatype x) = some x
   | Smtm.SmtDatatype.null, h => by
-    simp [enc_SmtDatatype, dec_SmtDatatype]
+    simp only [enc_SmtDatatype]
+    unfold dec_SmtDatatype
+    rfl
   | Smtm.SmtDatatype.sum x0 x1, h => by
     simp only [emb_SmtDatatype] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtDatatype, dec_SmtDatatype, dec_enc_SmtDatatypeCons x0 h0, dec_enc_SmtDatatype x1 h1]
+    simp only [enc_SmtDatatype]
+    unfold dec_SmtDatatype
+    simp only [Option.bind_eq_bind, dec_enc_SmtDatatypeCons x0 h0, dec_enc_SmtDatatype x1 h1, Option.bind_some]
 theorem dec_enc_SmtDatatypeCons : (x : Smtm.SmtDatatypeCons) → emb_SmtDatatypeCons x → dec_SmtDatatypeCons (enc_SmtDatatypeCons x) = some x
   | Smtm.SmtDatatypeCons.unit, h => by
-    simp [enc_SmtDatatypeCons, dec_SmtDatatypeCons]
+    simp only [enc_SmtDatatypeCons]
+    unfold dec_SmtDatatypeCons
+    rfl
   | Smtm.SmtDatatypeCons.cons x0 x1, h => by
     simp only [emb_SmtDatatypeCons] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtDatatypeCons, dec_SmtDatatypeCons, dec_enc_SmtType x0 h0, dec_enc_SmtDatatypeCons x1 h1]
+    simp only [enc_SmtDatatypeCons]
+    unfold dec_SmtDatatypeCons
+    simp only [Option.bind_eq_bind, dec_enc_SmtType x0 h0, dec_enc_SmtDatatypeCons x1 h1, Option.bind_some]
 theorem dec_enc_SmtDatatypeDecl : (x : Smtm.SmtDatatypeDecl) → emb_SmtDatatypeDecl x → dec_SmtDatatypeDecl (enc_SmtDatatypeDecl x) = some x
   | Smtm.SmtDatatypeDecl.nil, h => by
-    simp [enc_SmtDatatypeDecl, dec_SmtDatatypeDecl]
+    simp only [enc_SmtDatatypeDecl]
+    unfold dec_SmtDatatypeDecl
+    rfl
   | Smtm.SmtDatatypeDecl.cons x0 x1 x2, h => by
     simp only [emb_SmtDatatypeDecl] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_SmtDatatypeDecl, dec_SmtDatatypeDecl, Tree.dec_encStr x0 h0, dec_enc_SmtDatatype x1 h1, dec_enc_SmtDatatypeDecl x2 h2]
+    simp only [enc_SmtDatatypeDecl]
+    unfold dec_SmtDatatypeDecl
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_SmtDatatype x1 h1, dec_enc_SmtDatatypeDecl x2 h2, Option.bind_some]
 theorem dec_enc_SmtType : (x : Smtm.SmtType) → emb_SmtType x → dec_SmtType (enc_SmtType x) = some x
   | Smtm.SmtType.None, h => by
-    simp [enc_SmtType, dec_SmtType]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    rfl
   | Smtm.SmtType.Bool, h => by
-    simp [enc_SmtType, dec_SmtType]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    rfl
   | Smtm.SmtType.Int, h => by
-    simp [enc_SmtType, dec_SmtType]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    rfl
   | Smtm.SmtType.Real, h => by
-    simp [enc_SmtType, dec_SmtType]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    rfl
   | Smtm.SmtType.RegLan, h => by
-    simp [enc_SmtType, dec_SmtType]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    rfl
   | Smtm.SmtType.BitVec x0, h => by
     simp only [emb_SmtType] at h
     have h0 := h
-    simp [enc_SmtType, dec_SmtType, Tree.dec_encNat x0 h0]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, Tree.dec_encNat x0 h0, Option.bind_some]
   | Smtm.SmtType.Map x0 x1, h => by
     simp only [emb_SmtType] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtType, dec_SmtType, dec_enc_SmtType x0 h0, dec_enc_SmtType x1 h1]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, dec_enc_SmtType x0 h0, dec_enc_SmtType x1 h1, Option.bind_some]
   | Smtm.SmtType.Set x0, h => by
     simp only [emb_SmtType] at h
     have h0 := h
-    simp [enc_SmtType, dec_SmtType, dec_enc_SmtType x0 h0]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, dec_enc_SmtType x0 h0, Option.bind_some]
   | Smtm.SmtType.Seq x0, h => by
     simp only [emb_SmtType] at h
     have h0 := h
-    simp [enc_SmtType, dec_SmtType, dec_enc_SmtType x0 h0]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, dec_enc_SmtType x0 h0, Option.bind_some]
   | Smtm.SmtType.Char, h => by
-    simp [enc_SmtType, dec_SmtType]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    rfl
   | Smtm.SmtType.Datatype x0 x1, h => by
     simp only [emb_SmtType] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtType, dec_SmtType, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1, Option.bind_some]
   | Smtm.SmtType.TypeRef x0, h => by
     simp only [emb_SmtType] at h
     have h0 := h
-    simp [enc_SmtType, dec_SmtType, Tree.dec_encStr x0 h0]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, Option.bind_some]
   | Smtm.SmtType.USort x0, h => by
     simp only [emb_SmtType] at h
     have h0 := h
-    simp [enc_SmtType, dec_SmtType, Tree.dec_encNat x0 h0]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, Tree.dec_encNat x0 h0, Option.bind_some]
   | Smtm.SmtType.FunType x0 x1, h => by
     simp only [emb_SmtType] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtType, dec_SmtType, dec_enc_SmtType x0 h0, dec_enc_SmtType x1 h1]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, dec_enc_SmtType x0 h0, dec_enc_SmtType x1 h1, Option.bind_some]
   | Smtm.SmtType.DtcAppType x0 x1, h => by
     simp only [emb_SmtType] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtType, dec_SmtType, dec_enc_SmtType x0 h0, dec_enc_SmtType x1 h1]
+    simp only [enc_SmtType]
+    unfold dec_SmtType
+    simp only [Option.bind_eq_bind, dec_enc_SmtType x0 h0, dec_enc_SmtType x1 h1, Option.bind_some]
 end
+
+theorem inv_SmtDatatype_null {x : Smtm.SmtDatatype} {ts : List Tree}
+    (h : enc_SmtDatatype x = Tree.node schema.Constructor.eo__24emb_5fdt_2enull ts) (he : emb_SmtDatatype x) :
+    x = Smtm.SmtDatatype.null ∧ ts = [] := by
+  have hd := dec_enc_SmtDatatype x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtDatatype at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtDatatype at hd
+    cases hd
+
+theorem inv_SmtDatatype_sum {x : Smtm.SmtDatatype} {ts : List Tree}
+    (h : enc_SmtDatatype x = Tree.node schema.Constructor.eo__24emb_5fdt_2esum ts) (he : emb_SmtDatatype x) :
+    ∃ x0 x1, x = Smtm.SmtDatatype.sum x0 x1 ∧ ts = [(enc_SmtDatatypeCons x0), (enc_SmtDatatype x1)] := by
+  have hd := dec_enc_SmtDatatype x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtDatatype at hd
+    cases hd
+  · unfold dec_SmtDatatype at hd
+    cases hd
+  · unfold dec_SmtDatatype at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtDatatype, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtDatatype at hd
+    cases hd
+
+theorem inv_SmtDatatypeCons_unit {x : Smtm.SmtDatatypeCons} {ts : List Tree}
+    (h : enc_SmtDatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fdtc_2eunit ts) (he : emb_SmtDatatypeCons x) :
+    x = Smtm.SmtDatatypeCons.unit ∧ ts = [] := by
+  have hd := dec_enc_SmtDatatypeCons x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtDatatypeCons at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtDatatypeCons at hd
+    cases hd
+
+theorem inv_SmtDatatypeCons_cons {x : Smtm.SmtDatatypeCons} {ts : List Tree}
+    (h : enc_SmtDatatypeCons x = Tree.node schema.Constructor.eo__24emb_5fdtc_2econs ts) (he : emb_SmtDatatypeCons x) :
+    ∃ x0 x1, x = Smtm.SmtDatatypeCons.cons x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtDatatypeCons x1)] := by
+  have hd := dec_enc_SmtDatatypeCons x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtDatatypeCons at hd
+    cases hd
+  · unfold dec_SmtDatatypeCons at hd
+    cases hd
+  · unfold dec_SmtDatatypeCons at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtDatatypeCons, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtDatatypeCons at hd
+    cases hd
+
+theorem inv_SmtDatatypeDecl_nil {x : Smtm.SmtDatatypeDecl} {ts : List Tree}
+    (h : enc_SmtDatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fdd_2enil ts) (he : emb_SmtDatatypeDecl x) :
+    x = Smtm.SmtDatatypeDecl.nil ∧ ts = [] := by
+  have hd := dec_enc_SmtDatatypeDecl x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtDatatypeDecl at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtDatatypeDecl at hd
+    cases hd
+
+theorem inv_SmtDatatypeDecl_cons {x : Smtm.SmtDatatypeDecl} {ts : List Tree}
+    (h : enc_SmtDatatypeDecl x = Tree.node schema.Constructor.eo__24emb_5fdd_2econs ts) (he : emb_SmtDatatypeDecl x) :
+    ∃ x0 x1 x2, x = Smtm.SmtDatatypeDecl.cons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatype x1), (enc_SmtDatatypeDecl x2)] := by
+  have hd := dec_enc_SmtDatatypeDecl x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_SmtDatatypeDecl at hd
+    cases hd
+  · unfold dec_SmtDatatypeDecl at hd
+    cases hd
+  · unfold dec_SmtDatatypeDecl at hd
+    cases hd
+  · unfold dec_SmtDatatypeDecl at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_SmtDatatypeDecl, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_SmtDatatypeDecl at hd
+    cases hd
+
+theorem inv_SmtType_None {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eNone ts) (he : emb_SmtType x) :
+    x = Smtm.SmtType.None ∧ ts = [] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtType at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Bool {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eBool ts) (he : emb_SmtType x) :
+    x = Smtm.SmtType.Bool ∧ ts = [] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtType at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Int {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eInt ts) (he : emb_SmtType x) :
+    x = Smtm.SmtType.Int ∧ ts = [] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtType at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Real {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eReal ts) (he : emb_SmtType x) :
+    x = Smtm.SmtType.Real ∧ ts = [] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtType at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_RegLan {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eRegLan ts) (he : emb_SmtType x) :
+    x = Smtm.SmtType.RegLan ∧ ts = [] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtType at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_BitVec {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eBitVec ts) (he : emb_SmtType x) :
+    ∃ x0, x = Smtm.SmtType.BitVec x0 ∧ ts = [(Tree.encNat x0)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Map {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eMap ts) (he : emb_SmtType x) :
+    ∃ x0 x1, x = Smtm.SmtType.Map x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Set {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eSet ts) (he : emb_SmtType x) :
+    ∃ x0, x = Smtm.SmtType.Set x0 ∧ ts = [(enc_SmtType x0)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Seq {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eSeq ts) (he : emb_SmtType x) :
+    ∃ x0, x = Smtm.SmtType.Seq x0 ∧ ts = [(enc_SmtType x0)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Char {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eChar ts) (he : emb_SmtType x) :
+    x = Smtm.SmtType.Char ∧ ts = [] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtType at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_Datatype {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eDatatype ts) (he : emb_SmtType x) :
+    ∃ x0 x1, x = Smtm.SmtType.Datatype x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_TypeRef {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eTypeRef ts) (he : emb_SmtType x) :
+    ∃ x0, x = Smtm.SmtType.TypeRef x0 ∧ ts = [(Tree.encStr x0)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_USort {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eUSort ts) (he : emb_SmtType x) :
+    ∃ x0, x = Smtm.SmtType.USort x0 ∧ ts = [(Tree.encNat x0)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_FunType {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eFunType ts) (he : emb_SmtType x) :
+    ∃ x0 x1, x = Smtm.SmtType.FunType x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
+
+theorem inv_SmtType_DtcAppType {x : Smtm.SmtType} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node schema.Constructor.eo__24emb_5ftsm_2eDtcAppType ts) (he : emb_SmtType x) :
+    ∃ x0 x1, x = Smtm.SmtType.DtcAppType x0 x1 ∧ ts = [(enc_SmtType x0), (enc_SmtType x1)] := by
+  have hd := dec_enc_SmtType x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    cases hd
+  · unfold dec_SmtType at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtType, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtType at hd
+    cases hd
 
 instance : Embedded Smtm.SmtDatatype := ⟨enc_SmtDatatype, dec_SmtDatatype, emb_SmtDatatype, dec_enc_SmtDatatype⟩
 
@@ -1419,169 +2144,433 @@ def emb_SmtTerm : Smtm.SmtTerm → Prop
   | Smtm.SmtTerm.ite x0 x1 x2 => emb_SmtTerm x0 ∧ emb_SmtTerm x1 ∧ emb_SmtTerm x2
 end
 
-theorem inv_SmtTerm_None {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eNone ts) :
-    x = Smtm.SmtTerm.None ∧ ts = [] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_Boolean {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eBoolean ts) :
-    ∃ x0, x = Smtm.SmtTerm.Boolean x0 ∧ ts = [(Tree.encBool x0)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_Numeral {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eNumeral ts) :
-    ∃ x0, x = Smtm.SmtTerm.Numeral x0 ∧ ts = [(Tree.encInt x0)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_Rational {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eRational ts) :
-    ∃ x0, x = Smtm.SmtTerm.Rational x0 ∧ ts = [(Tree.encRat x0)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_String {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eString ts) :
-    ∃ x0, x = Smtm.SmtTerm.String x0 ∧ ts = [(Tree.encStr x0)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_Binary {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eBinary ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.Binary x0 x1 ∧ ts = [(Tree.encInt x0), (Tree.encInt x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_Apply {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eApply ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.Apply x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_Var {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eVar ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.Var x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtType x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_DtCons {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtCons ts) :
-    ∃ x0 x1 x2, x = Smtm.SmtTerm.DtCons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_DtSel {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtSel ts) :
-    ∃ x0 x1 x2 x3, x = Smtm.SmtTerm.DtSel x0 x1 x2 x3 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2), (Tree.encNat x3)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_DtTester {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtTester ts) :
-    ∃ x0 x1 x2, x = Smtm.SmtTerm.DtTester x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_UConst {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eUConst ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.UConst x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtType x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_not {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2enot ts) :
-    ∃ x0, x = Smtm.SmtTerm.not x0 ∧ ts = [(enc_SmtTerm x0)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_and {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eand ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.and x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_or {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eor ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.or x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_imp {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2e_3d_3e ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.imp x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_eq {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2e_3d ts) :
-    ∃ x0 x1, x = Smtm.SmtTerm.eq x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
-theorem inv_SmtTerm_ite {x : Smtm.SmtTerm} {ts : List Tree}
-    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eite ts) :
-    ∃ x0 x1 x2, x = Smtm.SmtTerm.ite x0 x1 x2 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1), (enc_SmtTerm x2)] := by
-  cases x <;> simp_all [enc_SmtTerm]
-
 mutual
 theorem dec_enc_SmtTerm : (x : Smtm.SmtTerm) → emb_SmtTerm x → dec_SmtTerm (enc_SmtTerm x) = some x
   | Smtm.SmtTerm.None, h => by
-    simp [enc_SmtTerm, dec_SmtTerm]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    rfl
   | Smtm.SmtTerm.Boolean x0, h => by
     simp only [emb_SmtTerm] at h
     have h0 := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encBool x0 h0]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encBool x0 h0, Option.bind_some]
   | Smtm.SmtTerm.Numeral x0, h => by
     simp only [emb_SmtTerm] at h
     have h0 := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encInt x0 h0]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encInt x0 h0, Option.bind_some]
   | Smtm.SmtTerm.Rational x0, h => by
     simp only [emb_SmtTerm] at h
     have h0 := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encRat x0 h0]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encRat x0 h0, Option.bind_some]
   | Smtm.SmtTerm.String x0, h => by
     simp only [emb_SmtTerm] at h
     have h0 := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encStr x0 h0]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, Option.bind_some]
   | Smtm.SmtTerm.Binary x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encInt x0 h0, Tree.dec_encInt x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encInt x0 h0, Tree.dec_encInt x1 h1, Option.bind_some]
   | Smtm.SmtTerm.Apply x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, Option.bind_some]
   | Smtm.SmtTerm.Var x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encStr x0 h0, dec_enc_SmtType x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_SmtType x1 h1, Option.bind_some]
   | Smtm.SmtTerm.DtCons x0 x1 x2, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1, Tree.dec_encNat x2 h2]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1, Tree.dec_encNat x2 h2, Option.bind_some]
   | Smtm.SmtTerm.DtSel x0 x1 x2 x3, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1, h2, h3⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1, Tree.dec_encNat x2 h2, Tree.dec_encNat x3 h3]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1, Tree.dec_encNat x2 h2, Tree.dec_encNat x3 h3, Option.bind_some]
   | Smtm.SmtTerm.DtTester x0 x1 x2, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1, Tree.dec_encNat x2 h2]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_SmtDatatypeDecl x1 h1, Tree.dec_encNat x2 h2, Option.bind_some]
   | Smtm.SmtTerm.UConst x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, Tree.dec_encStr x0 h0, dec_enc_SmtType x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, Tree.dec_encStr x0 h0, dec_enc_SmtType x1 h1, Option.bind_some]
   | Smtm.SmtTerm.not x0, h => by
     simp only [emb_SmtTerm] at h
     have h0 := h
-    simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, dec_enc_SmtTerm x0 h0, Option.bind_some]
   | Smtm.SmtTerm.and x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, Option.bind_some]
   | Smtm.SmtTerm.or x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, Option.bind_some]
   | Smtm.SmtTerm.imp x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, Option.bind_some]
   | Smtm.SmtTerm.eq x0 x1, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, Option.bind_some]
   | Smtm.SmtTerm.ite x0 x1 x2, h => by
     simp only [emb_SmtTerm] at h
     obtain ⟨h0, h1, h2⟩ := h
-    simp [enc_SmtTerm, dec_SmtTerm, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, dec_enc_SmtTerm x2 h2]
+    simp only [enc_SmtTerm]
+    unfold dec_SmtTerm
+    simp only [Option.bind_eq_bind, dec_enc_SmtTerm x0 h0, dec_enc_SmtTerm x1 h1, dec_enc_SmtTerm x2 h2, Option.bind_some]
 end
+
+theorem inv_SmtTerm_None {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eNone ts) (he : emb_SmtTerm x) :
+    x = Smtm.SmtTerm.None ∧ ts = [] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨_, _⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+    exact ⟨rfl, rfl⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_Boolean {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eBoolean ts) (he : emb_SmtTerm x) :
+    ∃ x0, x = Smtm.SmtTerm.Boolean x0 ∧ ts = [(Tree.encBool x0)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_Numeral {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eNumeral ts) (he : emb_SmtTerm x) :
+    ∃ x0, x = Smtm.SmtTerm.Numeral x0 ∧ ts = [(Tree.encInt x0)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_Rational {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eRational ts) (he : emb_SmtTerm x) :
+    ∃ x0, x = Smtm.SmtTerm.Rational x0 ∧ ts = [(Tree.encRat x0)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_String {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eString ts) (he : emb_SmtTerm x) :
+    ∃ x0, x = Smtm.SmtTerm.String x0 ∧ ts = [(Tree.encStr x0)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_Binary {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eBinary ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.Binary x0 x1 ∧ ts = [(Tree.encInt x0), (Tree.encInt x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_Apply {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eApply ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.Apply x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_Var {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eVar ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.Var x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtType x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_DtCons {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtCons ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1 x2, x = Smtm.SmtTerm.DtCons x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_DtSel {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtSel ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1 x2 x3, x = Smtm.SmtTerm.DtSel x0 x1 x2 x3 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2), (Tree.encNat x3)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨t3, _ | ⟨_, _⟩⟩⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, x3, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_DtTester {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eDtTester ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1 x2, x = Smtm.SmtTerm.DtTester x0 x1 x2 ∧ ts = [(Tree.encStr x0), (enc_SmtDatatypeDecl x1), (Tree.encNat x2)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_UConst {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eUConst ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.UConst x0 x1 ∧ ts = [(Tree.encStr x0), (enc_SmtType x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_not {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2enot ts) (he : emb_SmtTerm x) :
+    ∃ x0, x = Smtm.SmtTerm.not x0 ∧ ts = [(enc_SmtTerm x0)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_and {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eand ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.and x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_or {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eor ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.or x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_imp {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2e_3d_3e ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.imp x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_eq {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2e_3d ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1, x = Smtm.SmtTerm.eq x0 x1 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+
+theorem inv_SmtTerm_ite {x : Smtm.SmtTerm} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node schema.Constructor.eo__24emb_5fsm_2eite ts) (he : emb_SmtTerm x) :
+    ∃ x0 x1 x2, x = Smtm.SmtTerm.ite x0 x1 x2 ∧ ts = [(enc_SmtTerm x0), (enc_SmtTerm x1), (enc_SmtTerm x2)] := by
+  have hd := dec_enc_SmtTerm x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    cases hd
+  · unfold dec_SmtTerm at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_SmtTerm, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_SmtTerm at hd
+    cases hd
 
 instance : Embedded Smtm.SmtTerm := ⟨enc_SmtTerm, dec_SmtTerm, emb_SmtTerm, dec_enc_SmtTerm⟩
 

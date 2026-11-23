@@ -23,3 +23,9 @@ its `[MiniChecker]` section, which are the runtime's.
 scripts/generate-cpc            # the generated Lean, with the crate
 scripts/proofs-build --cpc      # the instance, the build, the axiom audit
 ```
+
+**The top-level theorem's scope** (milestone 9, decided 2026-11-23): the
+checker, `check_proof_inner`, as for CpcMini (`proofs/PathosProofs/Top.lean`).
+The front end that builds its input from a proof's text (`pathos-elab`,
+`crates/pathos/src/adapter.rs`, the untranslated `front.rs`) is tested
+against Ethos and logos, not verified.

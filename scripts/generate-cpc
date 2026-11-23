@@ -272,7 +272,7 @@ trace="$work/build-eoc/out/plugins/rust_meta/rust_meta_trace_gen.json"
 cp "$trace" "$work/trace.json"
 rm -rf "$work/proofgen"
 python3 "$root/scripts/proofgen" --trace "$work/trace.json" \
-  --embedding "$work/embedding.json" --out "$work/proofgen" ||
+  --embedding "$work/embedding.json" --calc-lean "$lean_out/lean" --out "$work/proofgen" ||
   fail "scripts/proofgen failed"
 
 # The crate as the repository holds it: the driver's files and the note.
@@ -365,6 +365,15 @@ fill "$work/proofgen/ctors.lean" "$lean_staged/${prefix}Ctors.lean"
 fill "$work/proofgen/proofs.lean" "$lean_staged/${prefix}Proofs.lean"
 fill "$work/proofgen/cache_sem.lean" "$lean_staged/${prefix}CacheSem.lean"
 lean_files=("${prefix}Cases.lean" "${prefix}Embed.lean" "${prefix}Ctors.lean" "${prefix}Proofs.lean" "${prefix}CacheSem.lean")
+# The constructor lemmas of a large calculus come in parts, which
+# ${prefix}Ctors.lean imports (see scripts/proofgen).
+if [[ -d "$work/proofgen/ctors" ]]; then
+  mkdir -p "$lean_staged/${prefix}Ctors"
+  for f in "$work/proofgen/ctors"/*.lean; do
+    fill "$f" "$lean_staged/${prefix}Ctors/$(basename "$f")"
+    lean_files+=("${prefix}Ctors/$(basename "$f")")
+  done
+fi
 lean_rel="${lean_dest#"$root"/}"
 
 dest="$root/generated/$name"
@@ -375,8 +384,12 @@ if $check; then
   for f in "${lean_files[@]}"; do
     diff "$lean_staged/$f" "$lean_dest/$f" >> "$work/check.diff" 2>&1 || same=false
   done
+  # no part the generator no longer writes
+  if [[ -d "$lean_dest/${prefix}Ctors" ]]; then
+    diff -r "$lean_staged/${prefix}Ctors" "$lean_dest/${prefix}Ctors" >> "$work/check.diff" 2>&1 || same=false
+  fi
   if $same; then
-    echo "$me: generated/$name and $lean_rel/{${lean_files[*]}} are what these revisions generate"
+    echo "$me: generated/$name and its ${#lean_files[@]} Lean files in $lean_rel/ are what these revisions generate"
     exit 0
   fi
   head -n 20 "$work/check.diff"
@@ -387,8 +400,10 @@ rm -rf "$dest"
 mkdir -p "$(dirname "$dest")"
 cp -r "$staged" "$dest"
 mkdir -p "$lean_dest"
+rm -rf "$lean_dest/${prefix}Ctors"
+[[ -d "$lean_staged/${prefix}Ctors" ]] && mkdir -p "$lean_dest/${prefix}Ctors"
 for f in "${lean_files[@]}"; do
   cp "$lean_staged/$f" "$lean_dest/$f"
 done
 echo "$me: wrote generated/$name ($(cat "$dest"/src/*.rs | wc -l) lines of Rust)"
-echo "$me: wrote $lean_rel/{${lean_files[*]}}: $(awk -F'\t' '$2 == "generated"' "$dest/proofs.tsv" | wc -l) of $(($(wc -l < "$dest/proofs.tsv") - 1)) programs have a generated proof (generated/$name/proofs.tsv)"
+echo "$me: wrote ${#lean_files[@]} Lean files in $lean_rel/: $(awk -F'\t' '$2 == "generated"' "$dest/proofs.tsv" | wc -l) of $(($(wc -l < "$dest/proofs.tsv") - 1)) programs have a generated proof (generated/$name/proofs.tsv)"

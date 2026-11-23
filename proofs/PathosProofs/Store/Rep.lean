@@ -25,20 +25,11 @@ namespace pathos_compiled_checker
 
 open Aeneas Aeneas.Std Result
 
-/-- The constructor of the checker for an operator of the signature. -/
-@[reducible] def uopCtor : Eo.UserOp → schema.Constructor
-  | Eo.UserOp.Int => schema.Constructor.eo_Int
-  | Eo.UserOp.Real => schema.Constructor.eo_Real
-  | Eo.UserOp.BitVec => schema.Constructor.eo_BitVec
-  | Eo.UserOp.Char => schema.Constructor.eo_Char
-  | Eo.UserOp.Seq => schema.Constructor.eo_Seq
-  | Eo.UserOp.not => schema.Constructor.eo_not
-  | Eo.UserOp.and => schema.Constructor.eo_and
-  | Eo.UserOp.imp => schema.Constructor.eo__3d_3e
-  | Eo.UserOp.eq => schema.Constructor.eo__3d
+/-- The constructor of the checker for an operator of the signature: the
+table that the embedding is generated with (`Embed.uop`). -/
+@[reducible] def uopCtor : Eo.UserOp → schema.Constructor := Embed.uop
 
-theorem uopCtor_eq_uop (op : Eo.UserOp) : uopCtor op = Embed.uop op := by
-  cases op <;> rfl
+theorem uopCtor_eq_uop (op : Eo.UserOp) : uopCtor op = Embed.uop op := rfl
 
 /-- The handle `t` stands for the value `x`. -/
 def Rep {α : Type} [Embedded α] (nodes : List TermData) (t : Nat) (x : α) : Prop :=

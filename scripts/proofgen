@@ -1279,6 +1279,19 @@ end pathos_compiled_checker
 """
 LITS = {"$emb_Boolean", "$emb_Numeral", "$emb_Rational", "$emb_String",
         "$emb_Binary"}
+# The constructors whose lemmas go in one module (see `embedding`).
+CTORS_PER_PART = 150
+
+
+def uop_k(sname):
+    """The number of indices of the embedding's user-operator constructor
+    `sname` (`$emb_UOp` 0, `$emb_UOp1` 1, …), or None."""
+    m = re.fullmatch(r"\$emb_UOp(\d*)", sname)
+    return None if not m else int(m.group(1) or 0)
+
+
+def uop_suffix(k):
+    return "" if k == 0 else str(k)
 
 
 def native_codec(t):
@@ -1296,7 +1309,31 @@ def rtrim_lines(text):
     return "\n".join(l.rstrip(" \t") for l in text.split("\n"))
 
 
-def embedding(table):
+def user_op_arities(calc_lean):
+    """The number of indices of each user operator, by its Lean name: from
+    the inductives `UserOp`, `UserOp1`, … of the calculus's Lean
+    (`LogosTerm.lean`), which the embedding table does not say."""
+    arity = {}
+    if not calc_lean:
+        return arity
+    path = os.path.join(calc_lean, "LogosTerm.lean")
+    if not os.path.exists(path):
+        raise SystemExit("proofgen: no " + path)
+    current = None
+    for line in open(path, encoding="utf-8"):
+        m = re.match(r"inductive UserOp(\d*) : Type where", line)
+        if m:
+            current = int(m.group(1) or 0)
+            continue
+        m = re.match(r"\s+\| (\S+) : UserOp\d*\s*$", line)
+        if m and current is not None:
+            arity[m.group(1)] = current
+        elif not line.startswith("  "):
+            current = None
+    return arity
+
+
+def embedding(table, calc_lean=None):
     """MiniEmbed's and MiniCtors's text: the encoding of each embedded
     datatype in the store's trees, and the lemmas of the constructors."""
     if table.get("version") != 1:
@@ -1310,11 +1347,16 @@ def embedding(table):
             self.unsupported = d["unsupported"]
 
     ctors = [C(d) for d in table["constructors"]]
-    by_type, user_ops, dropped, why = {}, [], set(), {}
+    arity = user_op_arities(calc_lean)
+    # the user operators, by their number of indices; an operator with
+    # indices is stored as a node of its own constructor over them
+    by_type, user_ops, dropped, why = {}, {}, set(), {}
     for c in ctors:
         if c.user_op:
-            user_ops.append(c)
-            if c.unsupported:
+            k = arity.get(c.cname, 0)
+            user_ops.setdefault(k, []).append(c)
+            if c.unsupported and not (c.unsupported == "an indexed user operator"
+                                      and c.cname in arity):
                 dropped.add("Term")
                 why["Term"] = c.unsupported
             continue
@@ -1332,7 +1374,8 @@ def embedding(table):
                 continue
             for c in by_type[ty]:
                 for f in c.fields:
-                    ok = ((c.sname == "$emb_UOp" and f == "UserOp") or native_codec(f)
+                    ok = ((uop_k(c.sname) is not None and f == "UserOp" + uop_suffix(uop_k(c.sname)))
+                          or native_codec(f)
                           or (f in by_type and f not in dropped))
                     if not ok and ty not in dropped:
                         dropped.add(ty)
@@ -1374,12 +1417,15 @@ def embedding(table):
         o.append("- `" + k + "`: " + why[k] + "\n")
     o.append("-/\n\n")
     if "Term" not in dropped:
-        o.append("/-- The constructor of the store for a user operator. -/\n"
-                 "def uop : Eo.UserOp → schema.Constructor\n")
-        for u in user_ops:
-            o.append("  | Eo.UserOp." + u.cname + " => schema.Constructor."
-                     + ident(u.sname) + "\n")
-        o.append("\n")
+        for k in sorted(user_ops):
+            sfx = uop_suffix(k)
+            o.append("/-- The constructor of the store for a user operator"
+                     + ("" if k == 0 else " with %d ind%s" % (k, "ex" if k == 1 else "ices"))
+                     + ". -/\ndef uop" + sfx + " : Eo.UserOp" + sfx + " → schema.Constructor\n")
+            for u in user_ops[k]:
+                o.append("  | Eo.UserOp" + sfx + "." + u.cname + " => schema.Constructor."
+                         + ident(u.sname) + "\n")
+            o.append("\n")
 
     def field_enc(f, x):
         n = native_codec(f)
@@ -1415,8 +1461,10 @@ def embedding(table):
                 elif s == "$emb_Apply":
                     o.append("Tree.apply " + field_enc(c.fields[0], "x0") + " "
                              + field_enc(c.fields[1], "x1"))
-                elif s == "$emb_UOp":
-                    o.append("Tree.node (uop x0) []")
+                elif uop_k(s) is not None:
+                    o.append("Tree.node (uop" + uop_suffix(uop_k(s)) + " x0) ["
+                             + ", ".join(field_enc(f, "x%d" % i)
+                                         for i, f in enumerate(c.fields) if i > 0) + "]")
                 elif s == "$emb_Boolean":
                     o.append("Tree.lit (lit.Lit.Boolean x0)")
                 elif s == "$emb_Numeral":
@@ -1447,10 +1495,19 @@ def embedding(table):
                     o.append("  | Tree.apply t0 t1 => do\n    let x0 ← "
                              + field_dec(c.fields[0]) + " t0\n    let x1 ← "
                              + field_dec(c.fields[1]) + " t1\n    some (" + k + " x0 x1)\n")
-                elif s == "$emb_UOp":
-                    for u in user_ops:
+                elif uop_k(s) is not None:
+                    n = uop_k(s)
+                    for u in user_ops.get(n, []):
                         o.append("  | Tree.node schema.Constructor." + ident(u.sname)
-                                 + " [] => some (" + k + " Eo.UserOp." + u.cname + ")\n")
+                                 + " [" + ", ".join("t%d" % i for i in range(1, n + 1)) + "] =>")
+                        if n == 0:
+                            o.append(" some (" + k + " Eo.UserOp." + u.cname + ")\n")
+                            continue
+                        o.append(" do\n")
+                        for i in range(1, n + 1):
+                            o.append("    let x%d ← " % i + field_dec(c.fields[i]) + " t%d\n" % i)
+                        o.append("    some (" + k + " Eo.UserOp" + uop_suffix(n) + "." + u.cname
+                                 + "".join(" x%d" % i for i in range(1, n + 1)) + ")\n")
                 elif s == "$emb_Boolean":
                     o.append("  | Tree.lit (lit.Lit.Boolean b) => some (" + k + " b)\n")
                 elif s == "$emb_Numeral":
@@ -1486,19 +1543,87 @@ def embedding(table):
                     o.append("Tree.okStr x0")
                 elif c.sname == "$emb_Binary":
                     o.append("Tree.okBv x0 x1")
-                elif c.sname in LITS or c.sname == "$emb_UOp" or not c.fields:
+                elif c.sname in LITS or uop_k(c.sname) == 0 or not c.fields:
                     o.append("True")
+                elif uop_k(c.sname) is not None:
+                    o.append(" ∧ ".join(field_ok(f, "x%d" % i)
+                                        for i, f in enumerate(c.fields) if i > 0))
                 else:
                     o.append(" ∧ ".join(field_ok(f, "x%d" % i)
                                         for i, f in enumerate(c.fields)))
                 o.append("\n")
         o.append("end\n\n")
+        o.append("mutual\n")
         for ty in scc:
             q = qualified(ty)
-            has_uop = any(c.sname == "$emb_UOp" for c in by_type[ty])
-            tac = ("  cases x\n  case UOp y => cases y <;> simp_all [enc_" + ty
-                   + ", uop]\n  all_goals simp_all [enc_" + ty + "]\n" if has_uop
-                   else "  cases x <;> simp_all [enc_" + ty + "]\n")
+            o.append("theorem dec_enc_" + ty + " : (x : " + q + ") → emb_" + ty
+                     + " x → dec_" + ty + " (enc_" + ty + " x) = some x\n")
+            for c in by_type[ty]:
+                o.append("  | " + head(c, q) + ", h => by\n")
+                s = c.sname
+                lemmas = ""
+                if uop_k(s) is not None:
+                    # per operator: its node, the decoder unfolded once, and
+                    # the indices' own `dec_enc`
+                    n = uop_k(s)
+                    if n == 1:
+                        o.append("    simp only [emb_" + ty + "] at h\n    have h1 := h\n")
+                    elif n > 1:
+                        o.append("    simp only [emb_" + ty + "] at h\n    obtain ⟨"
+                                 + ", ".join("h%d" % i for i in range(1, n + 1)) + "⟩ := h\n")
+                    o.append("    cases x0 <;> (simp only [enc_" + ty + ", uop" + uop_suffix(n)
+                             + "]; unfold dec_" + ty)
+                    if n == 0:
+                        o.append("; rfl)\n")
+                    else:
+                        o.append("; simp only [Option.bind_eq_bind, "
+                                 + ", ".join(field_lemma(c.fields[i], "x%d" % i, "h%d" % i)
+                                             for i in range(1, n + 1)) + ", Option.bind_some])\n")
+                    continue
+                if s == "$emb_String":
+                    lemmas = ", Tree.strTo_strOf x0 h"
+                elif s == "$emb_Binary":
+                    lemmas = ", Tree.bvW_bvOf x0 x1 h, Tree.bvV_bvOf x0 x1 h"
+                elif s == "$emb_Numeral":
+                    lemmas = ", num.Integer.toInt_ofInt"
+                elif s == "$emb_Rational":
+                    lemmas = ", num.Rational.toRat_ofRat"
+                elif s not in LITS and s not in ("$emb_Stuck", "$emb_Apply"):
+                    # a node: the decoder, unfolded once, reduced on the
+                    # constructor, and the fields' own `dec_enc`
+                    k = len(c.fields)
+                    if k > 0:
+                        o.append("    simp only [emb_" + ty + "] at h\n")
+                    if k == 1:
+                        o.append("    have h0 := h\n")
+                    elif k > 1:
+                        o.append("    obtain ⟨" + ", ".join("h%d" % i for i in range(k))
+                                 + "⟩ := h\n")
+                    o.append("    simp only [enc_" + ty + "]\n    unfold dec_" + ty + "\n")
+                    if k == 0:
+                        o.append("    rfl\n")
+                    if k > 0:
+                        o.append("    simp only [Option.bind_eq_bind, "
+                                 + ", ".join(field_lemma(f, "x%d" % i, "h%d" % i)
+                                             for i, f in enumerate(c.fields))
+                                 + ", Option.bind_some]\n")
+                    continue
+                elif s not in LITS:
+                    k = len(c.fields)
+                    if k > 0:
+                        o.append("    simp only [emb_" + ty + "] at h\n")
+                    if k == 1:
+                        o.append("    have h0 := h\n")
+                    elif k > 1:
+                        o.append("    obtain ⟨" + ", ".join("h%d" % i for i in range(k))
+                                 + "⟩ := h\n")
+                    for i, f in enumerate(c.fields):
+                        lemmas += ", " + field_lemma(f, "x%d" % i, "h%d" % i)
+                o.append("    simp [enc_" + ty + ", dec_" + ty + lemmas + "]\n")
+        o.append("end\n\n")
+        for ty in scc:
+            q = qualified(ty)
+            tac = "  cases x <;> simp_all [enc_" + ty + "]\n"
             lit_cases = ""
             for c in by_type[ty]:
                 k = q + "." + c.cname
@@ -1515,14 +1640,10 @@ def embedding(table):
                              + " x0 x1 ∧ a = " + field_enc(c.fields[0], "x0")
                              + " ∧ b = " + field_enc(c.fields[1], "x1") + " := by\n"
                              + tac + "\n")
-                elif s == "$emb_UOp":
-                    o.append("theorem inv_" + ty + "_UOp {x : " + q
-                             + "} {op : Eo.UserOp} {ts : List Tree}\n    (h : enc_" + ty
-                             + " x = Tree.node (uop op) ts) : x = " + k
-                             + " op ∧ ts = [] := by\n  cases x\n  case UOp y => cases y <;> "
-                               "cases op <;> simp_all [enc_" + ty
-                             + ", uop]\n  all_goals cases op <;> simp_all [enc_" + ty
-                             + ", uop]\n\n")
+                elif uop_k(s) is not None:
+                    # (no inversion: none is used, and it would split over
+                    # every operator)
+                    pass
                 elif s in LITS:
                     l = {"$emb_Boolean": "lit.Lit.Boolean x0",
                          "$emb_Numeral": "lit.Lit.Numeral (num.Integer.ofInt x0)",
@@ -1532,52 +1653,42 @@ def embedding(table):
                     lit_cases += (("" if not lit_cases else " ∨\n      ") + "(∃" + vs
                                   + ", x = " + k + vs + " ∧ l = " + l + ")")
                 else:
+                    # From `dec_enc`: the decoder, unfolded once and reduced on
+                    # the constructor, reads the fields back. No case split
+                    # over the datatype: linear in its constructors.
                     o.append("theorem inv_" + ty + "_" + c.cname + " {x : " + q
                              + "} {ts : List Tree}\n    (h : enc_" + ty
                              + " x = Tree.node schema.Constructor." + ident(s)
-                             + " ts) :\n    ")
+                             + " ts) (he : emb_" + ty + " x) :\n    ")
                     if not c.fields:
                         o.append("x = " + k + " ∧ ts = []")
                     else:
                         o.append("∃" + vs + ", x = " + k + vs + " ∧ ts = [" + encs + "]")
-                    o.append(" := by\n" + tac + "\n")
+                    # the fields' list, by its length: the decoder reduces
+                    # on each shape, to `none` but for the constructor's arity
+                    n = len(c.fields)
+                    shape = "_"
+                    for i in reversed(range(n + 1)):
+                        shape = "_ | ⟨" + ("t%d" % i if i < n else "_") + ", " + shape + "⟩"
+                    o.append(" := by\n  have hd := dec_enc_" + ty + " x he\n  rw [h] at hd\n"
+                             "  rcases ts with " + shape + "\n")
+                    bad = "  · unfold dec_" + ty + " at hd\n    cases hd\n"
+                    o.append(bad * n)
+                    o.append("  · unfold dec_" + ty + " at hd\n")
+                    if not c.fields:
+                        o.append("    cases hd\n    exact ⟨rfl, rfl⟩\n")
+                    else:
+                        o.append("    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, "
+                                 "Option.some.injEq] at hd\n    obtain ⟨"
+                                 + "".join("x%d, -, " % i for i in range(n))
+                                 + "rfl⟩ := hd\n    simp only [enc_" + ty
+                                 + ", Tree.node.injEq, true_and] at h\n    exact ⟨"
+                                 + "".join("_, " for _ in c.fields) + "rfl, h.symm⟩\n")
+                    o.append(bad + "\n")
             if lit_cases:
                 o.append("theorem inv_" + ty + "_lit {x : " + q + "} {l : lit.Lit} (h : enc_"
                          + ty + " x = Tree.lit l) :\n    " + lit_cases + " := by\n" + tac
                          + "\n")
-        o.append("mutual\n")
-        for ty in scc:
-            q = qualified(ty)
-            o.append("theorem dec_enc_" + ty + " : (x : " + q + ") → emb_" + ty
-                     + " x → dec_" + ty + " (enc_" + ty + " x) = some x\n")
-            for c in by_type[ty]:
-                o.append("  | " + head(c, q) + ", h => by\n")
-                s = c.sname
-                lemmas = ""
-                if s == "$emb_UOp":
-                    o.append("    cases x0 <;> simp [enc_" + ty + ", dec_" + ty + ", uop]\n")
-                    continue
-                if s == "$emb_String":
-                    lemmas = ", Tree.strTo_strOf x0 h"
-                elif s == "$emb_Binary":
-                    lemmas = ", Tree.bvW_bvOf x0 x1 h, Tree.bvV_bvOf x0 x1 h"
-                elif s == "$emb_Numeral":
-                    lemmas = ", num.Integer.toInt_ofInt"
-                elif s == "$emb_Rational":
-                    lemmas = ", num.Rational.toRat_ofRat"
-                elif s not in LITS:
-                    k = len(c.fields)
-                    if k > 0:
-                        o.append("    simp only [emb_" + ty + "] at h\n")
-                    if k == 1:
-                        o.append("    have h0 := h\n")
-                    elif k > 1:
-                        o.append("    obtain ⟨" + ", ".join("h%d" % i for i in range(k))
-                                 + "⟩ := h\n")
-                    for i, f in enumerate(c.fields):
-                        lemmas += ", " + field_lemma(f, "x%d" % i, "h%d" % i)
-                o.append("    simp [enc_" + ty + ", dec_" + ty + lemmas + "]\n")
-        o.append("end\n\n")
         for ty in scc:
             q = qualified(ty)
             o.append("instance : Embedded " + q + " := ⟨enc_" + ty + ", dec_" + ty
@@ -1630,8 +1741,8 @@ def embedding(table):
     for ty in types:
         q = qualified(ty)
         for c in by_type[ty]:
-            if c.sname == "$emb_UOp":
-                for u in user_ops:
+            if uop_k(c.sname) is not None:
+                for u in user_ops.get(uop_k(c.sname), []) if uop_k(c.sname) == 0 else []:
                     cs.append("/-- The user operator `" + u.sname + "`. -/\n")
                     emit_construct(ident(u.sname), ty, q + ".UOp Eo.UserOp." + u.cname,
                                    [], ", Embed.uop")
@@ -1663,12 +1774,12 @@ def embedding(table):
                       + " h.1 with\n    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩\n")
             if n == 0:
                 cs.append("  · obtain ⟨rfl, rfl⟩ := Embed.inv_" + ty + "_" + c.cname
-                          + " hx\n    generalize hvl : v.val = l at hl\n    cases hl\n"
+                          + " hx h.2\n    generalize hvl : v.val = l at hl\n    cases hl\n"
                             "    exact Or.inl ⟨v, rfl, hvl, hd⟩\n")
             else:
                 pat = "".join("x%d, " % i for i in range(n))
                 cs.append("  · obtain ⟨" + pat + "rfl, rfl⟩ := Embed.inv_" + ty + "_"
-                          + c.cname + " hx\n")
+                          + c.cname + " hx h.2\n")
                 cs.append("    have he := h.2\n    simp only [Embed.embedded_emb_" + ty
                           + ", Embed.emb_" + ty + "] at he\n    generalize hvl : v.val = l at hl\n")
                 indent = "    "
@@ -1688,14 +1799,35 @@ def embedding(table):
             cs.append("  · exact Or.inr ⟨fun" + ("" if n == 0 else vs) + " he => hne ["
                       + encs + "]\n      (by subst he; simp [Embed.embedded_enc_" + ty
                       + ", Embed.enc_" + ty + "]), hd⟩\n\n")
-    return {"embed.lean": rtrim_lines(EMBED_HEADER + "".join(o) + EMBED_FOOTER),
-            "ctors.lean": rtrim_lines(CTORS_HEADER + "".join(cs) + CTORS_FOOTER)}
+    files = {"embed.lean": rtrim_lines(EMBED_HEADER + "".join(o) + EMBED_FOOTER)}
+    # The constructor lemmas, one unit per constructor (each starts with its
+    # doc comment). A calculus with many constructors has them in parts of
+    # CTORS_PER_PART, each a module of its own (`ctors/Part<k>.lean`), which
+    # `ctors.lean` imports: Lean's memory grows with a module's size (one
+    # module for CPC's 1,050 constructors needs 13.5 GiB).
+    units = re.split(r"(?m)^(?=/-- (?:`|The user operator))", "".join(cs))
+    units = [u for u in units if u]
+    if len(units) <= CTORS_PER_PART:
+        files["ctors.lean"] = rtrim_lines(CTORS_HEADER + "".join(units) + CTORS_FOOTER)
+        return files
+    parts = [units[i:i + CTORS_PER_PART] for i in range(0, len(units), CTORS_PER_PART)]
+    root = ["module\n\n"]
+    for k, part in enumerate(parts):
+        files["ctors/Part%d.lean" % k] = rtrim_lines(CTORS_HEADER + "".join(part) + CTORS_FOOTER)
+        root.append("public import $CTORS$.Part%d\n" % k)
+    root.append("\n/-! The lemmas of the constructors, in %d parts (`$CTORS$/Part<k>.lean`). -/\n"
+                % len(parts))
+    files["ctors.lean"] = "".join(root)
+    return files
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--trace", required=True)
     ap.add_argument("--embedding")
+    ap.add_argument("--calc-lean",
+                    help="the calculus's Lean (lean-meta's output directory), for the "
+                         "number of indices of each user operator")
     ap.add_argument("--config",
                     default=os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                          "..", "proofs", "proofgen.toml"))
@@ -1708,9 +1840,10 @@ def main():
     files = Generator(trace, cfg).run()
     if args.embedding:
         with open(args.embedding, encoding="utf-8") as f:
-            files.update(embedding(json.load(f)))
+            files.update(embedding(json.load(f), args.calc_lean))
     os.makedirs(args.out, exist_ok=True)
     for name, text in files.items():
+        os.makedirs(os.path.dirname(os.path.join(args.out, name)), exist_ok=True)
         with open(os.path.join(args.out, name), "w", encoding="utf-8", newline="") as f:
             f.write(text)
 
