@@ -200,7 +200,11 @@ file`; the harness accepts those four cases by name.
 ## Keeping up with Ethos
 
 Everything above is about one Ethos revision, `REFERENCE_REV` in
-`difftest.env` (`bde41a79`). Ethos keeps changing. A workflow of its own,
+`difftest.env` (`bde41a79`). The `eoc` gate has pins of its own,
+`EOC_REFERENCE_REV` and `EOC_LOGOS_REV` (now `bde41a79` and `bdcbd95f`,
+the same): `pathos-eoc` is a lower priority than `pathos`, so the eoc
+gate's reference may stay behind while the checker's moves on. Ethos
+keeps changing. A workflow of its own,
 `.github/workflows/drift.yml` ("Drift from Ethos main"), runs every night
 and on demand, apart from CI and blocking nothing. On Linux x86-64 it
 builds Ethos and `ethos-eoc` at the current `main` of cvc5/ethos and
@@ -243,8 +247,11 @@ When it is red:
    first; that is the harness's owner's.
 3. Move `REFERENCE_REV` (and `HARNESS_COMMIT`, and `LOGOS_REV` if logos
    moved with it) in `difftest.env` to the new revision in that same
-   milestone, and rerun `scripts/full-check` and `scripts/difftest eoc`.
-   CI and the nightly job are then green again against the same commit.
+   milestone, and rerun `scripts/full-check`. If `pathos-eoc` follows the
+   new revision too, move `EOC_REFERENCE_REV` and `EOC_LOGOS_REV` with
+   them and rerun `scripts/difftest eoc`. Otherwise they stay where
+   `pathos-eoc` last agreed with Ethos, and the eoc comparison of the
+   nightly job stays red until it catches up.
 4. Until then the job stays red every night, on purpose; it can be
    switched off in GitHub's Actions page if the port will take long.
 

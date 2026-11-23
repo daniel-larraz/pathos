@@ -22,6 +22,8 @@
 #            broken snapshots; timings with and without     (gate 10)
 #   eoc      eoc's driver with ethos-eoc and pathos-eoc, on the
 #            test signatures and on logos's CPC     (gates 11 to 13)
+#            at the eoc gate's own pins, EOC_REFERENCE_REV and
+#            EOC_LOGOS_REV of difftest.env
 #   bignum   arithmetic on numbers of 64 bits to a million bits, past
 #            malachite's FFT threshold (docs/dependencies.md)
 #
@@ -117,7 +119,8 @@ git -C "$ETHOS_HARNESS" diff --quiet HEAD -- tools/difftest tests ||
 
 dt="$ETHOS_HARNESS/tools/difftest"
 ref="$dt/work/ref/${REFERENCE_REV:0:12}/build/src/ethos$exe"
-[[ -x "$ref" ]] ||
+# (the eoc gate compares ethos-eoc at its own reference, below)
+[[ -x "$ref" || "$gate" == eoc ]] ||
   fail "no reference binary; run: $dt/difftest.py build-ref $REFERENCE_REV"
 
 corpus="$dt/work/corpus"
@@ -172,15 +175,22 @@ cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin 
 cand="$root/target/release/pathos-eo$exe"
 
 if [[ "$gate" == eoc ]]; then
-  refsrc="$dt/work/ref/${REFERENCE_REV:0:12}/src"
-  refeoc="$dt/work/ref/${REFERENCE_REV:0:12}/build-eoc/ethos-eoc$exe"
+  # The eoc gate's own pins (difftest.env): the Ethos whose ethos-eoc
+  # pathos-eoc is compared with, and the logos whose CPC both compile; unset,
+  # the checker's. The logos checkout is the harness's work/logos while the
+  # two logos revisions agree, and one of the gate's own when they differ.
+  eoc_rev="${EOC_REFERENCE_REV:-$REFERENCE_REV}"
+  eoc_logos_rev="${EOC_LOGOS_REV:-$LOGOS_REV}"
+  refsrc="$dt/work/ref/${eoc_rev:0:12}/src"
+  refeoc="$dt/work/ref/${eoc_rev:0:12}/build-eoc/ethos-eoc$exe"
   [[ -x "$refeoc" ]] ||
-    fail "no reference ethos-eoc; run: $dt/difftest.py build-ref $REFERENCE_REV --eoc"
+    fail "no reference ethos-eoc; run: $dt/difftest.py build-ref $eoc_rev --eoc"
   logos="$dt/work/logos"
+  [[ "$eoc_logos_rev" == "$LOGOS_REV" ]] || logos="$dt/work/logos-${eoc_logos_rev:0:12}"
   [[ -d "$logos/.git" ]] ||
-    fail "no logos checkout; run: git clone $LOGOS_REPO $logos && git -C $logos checkout $LOGOS_REV"
+    fail "no logos checkout; run: git clone $LOGOS_REPO $logos && git -C $logos checkout $eoc_logos_rev"
   lhead="$(git -C "$logos" rev-parse HEAD)"
-  [[ "$lhead" == "$LOGOS_REV" ]] || fail "$logos is at $lhead, expected $LOGOS_REV"
+  [[ "$lhead" == "$eoc_logos_rev" ]] || fail "$logos is at $lhead, expected $eoc_logos_rev"
   git -C "$logos" diff --quiet HEAD || fail "$logos has local changes"
   cargo build --locked --release --quiet --manifest-path "$root/Cargo.toml" --bin pathos-eoc
   rc=0

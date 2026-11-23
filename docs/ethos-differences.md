@@ -279,8 +279,11 @@ The compiled checker rejects; it accepts nothing that Ethos rejects.
 `desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta`,
 `smt-meta-sygus` and `lean-meta`.
 
-**What it mirrors since `e51f527c`.** `pathos-eoc` follows the reference,
-`bde41a79`.
+**What it mirrors since `e51f527c`.** `pathos-eoc` follows the eoc gate's
+reference, `EOC_REFERENCE_REV` in `difftest.env` (`bde41a79`, now the same
+as `REFERENCE_REV`), with logos at `EOC_LOGOS_REV` (`bdcbd95f`). The eoc
+gate has pins of its own so that it may stay behind the checker's
+reference: `pathos-eoc` is a lower priority than `pathos`.
 - Mirrored from cvc5/ethos#282 (fallback cases, parallel bind):
   - lean-meta gives an ordering key to the datatypes the semantics
     configuration marks `:ordered` (the `-- ordered` lines of

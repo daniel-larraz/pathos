@@ -100,7 +100,8 @@ Set up once:
 
 ```sh
 git clone -b difftest-harness https://github.com/daniel-larraz/ethos
-(cd ethos/tools/difftest && ./difftest.py build-ref <REFERENCE_REV from difftest.env> --eoc)
+(cd ethos/tools/difftest && ./difftest.py build-ref <REFERENCE_REV from difftest.env>)
+(cd ethos/tools/difftest && ./difftest.py build-ref <EOC_REFERENCE_REV from difftest.env> --eoc)
 echo "ETHOS_HARNESS=$PWD/ethos" > .difftest.local
 ```
 
@@ -118,7 +119,8 @@ whole-signature runs. The cvc5 proof gates need a cvc5 build and up to
 ## Keeping up with Ethos
 
 pathos is checked against one Ethos revision, `REFERENCE_REV` in
-[difftest.env](difftest.env). A separate workflow,
+[difftest.env](difftest.env); `pathos-eoc` against `EOC_REFERENCE_REV`,
+which may stay behind it. A separate workflow,
 [drift.yml](.github/workflows/drift.yml), compares pathos's `main` with
 the current `main` of cvc5/ethos every night (and on demand, with any
 revision): Ethos's own regressions at that commit, the command-line

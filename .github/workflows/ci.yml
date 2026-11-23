@@ -223,9 +223,15 @@ jobs:
           source difftest.env
           echo "harness_repo=${HARNESS_REPO#https://github.com/}" >> "$GITHUB_OUTPUT"
           echo "harness_commit=$HARNESS_COMMIT" >> "$GITHUB_OUTPUT"
-          echo "reference_rev=$REFERENCE_REV" >> "$GITHUB_OUTPUT"
+          # the eoc gate's own pins, which may stay behind the checker's
+          # (as scripts/difftest eoc reads them)
+          eoc_logos_rev="${EOC_LOGOS_REV:-$LOGOS_REV}"
+          logos_dir=ethos/tools/difftest/work/logos
+          [[ "$eoc_logos_rev" == "$LOGOS_REV" ]] || logos_dir="$logos_dir-${eoc_logos_rev:0:12}"
+          echo "reference_rev=${EOC_REFERENCE_REV:-$REFERENCE_REV}" >> "$GITHUB_OUTPUT"
           echo "logos_repo=$LOGOS_REPO" >> "$GITHUB_OUTPUT"
-          echo "logos_rev=$LOGOS_REV" >> "$GITHUB_OUTPUT"
+          echo "logos_rev=$eoc_logos_rev" >> "$GITHUB_OUTPUT"
+          echo "logos_dir=$logos_dir" >> "$GITHUB_OUTPUT"
 
       - name: Check out the harness
         uses: actions/checkout@v7
@@ -238,8 +244,8 @@ jobs:
 
       - name: Check out logos where the harness looks for it
         run: |
-          git clone --quiet "${{ steps.pins.outputs.logos_repo }}" ethos/tools/difftest/work/logos
-          git -C ethos/tools/difftest/work/logos checkout --quiet "${{ steps.pins.outputs.logos_rev }}"
+          git clone --quiet "${{ steps.pins.outputs.logos_repo }}" "${{ steps.pins.outputs.logos_dir }}"
+          git -C "${{ steps.pins.outputs.logos_dir }}" checkout --quiet "${{ steps.pins.outputs.logos_rev }}"
 
       - name: Install the reference's build dependencies
         run: |
