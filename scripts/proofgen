@@ -1379,9 +1379,12 @@ CTORS_PER_PART = 150
 PROOFS_PER_PART = 40
 PROOFS_SPLIT_ABOVE = 100
 # The options of each part of a large calculus's proofs: its longest cases
-# (string and regular expression rewrites, with dozens of pattern steps)
-# take more than Lean's default 200,000 heartbeats.
-PART_OPTIONS = "set_option maxHeartbeats 1000000\n"
+# (string, regular expression and bit-vector rewrites, with dozens of
+# pattern steps) take more than Lean's default 200,000 heartbeats. The
+# count varies a little between builds (it built locally, and timed out
+# in the Proofs workflow, at 1,000,000 for $eo_prog_bv-srem-eliminate,
+# which needs between 900,000 and 1,000,000 locally), so with a margin.
+PART_OPTIONS = "set_option maxHeartbeats 2000000\n"
 
 
 def uop_k(sname):

@@ -18,7 +18,7 @@ Written by Ethos's rust-meta with the functions: for each program, that its
 Rust computes what logos's function of the same name does. Do not edit.
 -/
 
-set_option maxHeartbeats 1000000
+set_option maxHeartbeats 2000000
 set_option linter.unusedVariables false
 set_option maxRecDepth 8000
 
