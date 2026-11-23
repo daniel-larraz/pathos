@@ -252,6 +252,20 @@ theorem Store.raw_str_vec_spec (s : Store) (v : alloc.vec.Vec Std.U32) (str : Li
   conv => arg 1; rw [← hv]
   exact Store.raw_str_spec s _ hok hinv h64
 
+/-- `literal` with a string constant as the generated code builds it, from
+a vector of code points: a handle of the string term. -/
+theorem Store.literal_str_vec_spec (s : Store) (v : alloc.vec.Vec Std.U32) (str : List Nat)
+    (h : v.val.map (fun c => c.val) = str) (hinv : s.Inv) (h64 : Platform64) :
+    Store.literal s (lit.Lit.Str v) ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.Term.String str)
+      | core.result.Result.Err _ => True ⦄div := by
+  obtain ⟨hv, hok⟩ := Tree.strOf_of_vec v
+  subst h
+  conv => arg 1; rw [← hv]
+  exact Store.literal_string_spec s _ hok hinv h64
+
 /-- A fact about a handle carries over to an equal value (for a string
 constant: from its code points to logos's literal, once both are
 concrete). -/

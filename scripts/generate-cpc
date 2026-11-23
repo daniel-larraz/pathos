@@ -275,6 +275,7 @@ unproved=()
 [[ -f "$lean_dest/unproved.toml" ]] && unproved=(--unproved "$lean_dest/unproved.toml")
 python3 "$root/scripts/proofgen" --trace "$work/trace.json" \
   --embedding "$work/embedding.json" --calc-lean "$lean_out/lean" "${unproved[@]}" \
+  --rust-src "$out/rust/src" \
   --out "$work/proofgen" ||
   fail "scripts/proofgen failed"
 

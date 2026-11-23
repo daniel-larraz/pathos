@@ -69,13 +69,15 @@ SPECIFIED = {"teq": "teq", "Teq": "Teq", "streq": "streq", "and": "and",
              "zleq": "zleq", "mod_total": "mod_total",
              "int.pow2": "int_pow2", "int.to_nat": "int_to_nat",
              "Int.toNat": "int_to_nat", "nat.succ": "nat_succ",
-             "uconst_id": "uconst_id"}
+             "uconst_id": "uconst_id", "zplus": "zplus", "nateq": "nateq",
+             "nat.to_int": "nat_to_int"}
 # eo::eq, eo::len and eo::and, by their specs (Runtime/Builtins.lean).
 ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               "And": "Store.builtin_spec_and"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
-SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons"}
+SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
+                 "TypeOf"}
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -252,6 +254,40 @@ class Emitter:
                 self.store_step("Store.literal_boolean_spec " + st
                                 + (" true " if n["bool"] else " false ") + inv
                                 + " h64", v)
+            elif n["kind"] == "NUMERAL" and self.l.lits.get(v, ("",))[0] == "NUMERAL" \
+                    and abs(self.l.lits[v][1]) < 2 ** 32:
+                # `Integer::from(<n>u32)`, negated for a negative one: from
+                # the specs of `from` and `neg`
+                i = self.l.lits[v][1]
+                self.line("try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, "
+                          "num.Integer.toInt_ofInt, Std.bind_ok]")
+                self.store_step(("Store.literal_int_neg_u32_spec " if i < 0
+                                 else "Store.literal_int_u32_spec ") + st + " "
+                                + str(abs(i)) + "#u32 (" + str(i) + ") (by scalar_tac) "
+                                + inv + " h64", v)
+            elif n["kind"] == "STRING" and self.l.lits.get(v, ("",))[0] == "STRING":
+                # a vector of code points, given to the store as logos's
+                # string literal
+                cps = self.l.lits[v][1]
+                text = "".join(chr(c) for c in cps)
+                if not cps:
+                    lean = "[]"
+                elif all(32 <= c <= 126 for c in cps) and not any(c in text for c in '\\"'):
+                    lean = '(SmtEval.native_string_lit "' + text + '")'
+                else:
+                    lean = "[" + ", ".join(str(c) for c in cps) + "]"
+                if cps:
+                    self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+                # (an empty `vec![]` allocates nothing: no step, and the
+                # handle is of `Eo.Term.String []` already)
+                self.line("try simp only [eostring.EoString.from_code_points, Std.bind_ok]")
+                self.store_step("Store.literal_str_vec_spec " + st + " _ _ rfl " + inv
+                                + " h64", v)
+                if cps:
+                    self.line("replace h_" + v + " := Represents.rep_of_eq h_" + v
+                          + " (y := Eo.Term.String " + lean
+                          + ") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_"
+                          + v + "]; decide)")
             else:
                 self.unsupported("a literal that is not a Boolean")
             return v
@@ -439,6 +475,15 @@ class Emitter:
             self.store_step(spec + " _" * len(vs) + " " + inv + " h64 " + rem
                             + words("h_" + x for x in vs), v)
             self.l.calls.add(lists["nil"])
+            return v
+        if k == "TypeOf":
+            # eo::typeof: a call of the signature's `$eo_typeof`, by its spec
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            prog = "$eo_typeof"
+            self.store_step("ih." + ident(prog) + " " + st + words(vs) + " _" * len(vs)
+                            + " " + inv + " h64 " + rem + words("h_" + x for x in vs), v)
+            self.l.calls.add(prog)
             return v
         if k == "Cons":
             vs = [self.expr(s) for s in sub]
@@ -693,6 +738,7 @@ class Generator:
         for c, case in enumerate(p["cases"]):
             l = Lean()
             l.case_def = "EoCases." + p["lean"] + ".case_%d" % c
+            l.lits = getattr(self, "literals", {}).get((p["id"], c), {})
             l.facts = ["h_a%d" % j for j in range(proof.nargs)]
             l.pure = ["hn_a%d" % j for j in proof.stuck]
             l.ok_state = {"a%d" % j for j in range(proof.nargs)
@@ -1364,6 +1410,60 @@ def rtrim_lines(text):
     return "\n".join(l.rstrip(" \t") for l in text.split("\n"))
 
 
+def rust_literals(rust_src):
+    """The values of the literals the generated Rust builds, which the trace
+    does not give: (program id, case, variable) -> ("NUMERAL", n) or
+    ("STRING", [code points]). A case's literals are those of its function
+    `case_<k>_<id>` and of the helpers it calls (`more_`, `if_`,
+    `requires_`), transitively; a variable with two values is left out."""
+    fns, cur = {}, None
+    for path in sorted(glob.glob(os.path.join(rust_src, "*.rs"))):
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                m = re.match(r"(?:pub(?:\(\w+\))? )?fn ((?:[a-z]+_\d+_)?(eo__\w+))\(", line)
+                if m:
+                    cur = fns.setdefault(m.group(1), {"lits": {}, "calls": set()})
+                    continue
+                if cur is None:
+                    continue
+                for c in re.findall(r"\b((?:more|if|requires)_\d+_eo__\w+)\(", line):
+                    cur["calls"].add(c)
+                m = re.match(r"let (v\d+) = match s\.literal\(Lit::(Numeral|Str)\((.*?)\)\) \{", line)
+                if not m:
+                    continue
+                if m.group(2) == "Numeral":
+                    n = re.fullmatch(r"Integer::from\((\d+)u32\)(\.neg\(\))?", m.group(3))
+                    if n:
+                        cur["lits"][m.group(1)] = ("NUMERAL", -int(n.group(1)) if n.group(2)
+                                                   else int(n.group(1)))
+                else:
+                    n = re.fullmatch(r"EoString::from_code_points\(vec!\[([0-9, ]*)\]\)", m.group(3))
+                    if n:
+                        cur["lits"][m.group(1)] = ("STRING", [int(x) for x in n.group(1).split(",")
+                                                              if x.strip()])
+    out = {}
+    for name, fn in fns.items():
+        m = re.fullmatch(r"case_(\d+)_(eo__\w+)", name)
+        if not m:
+            continue
+        lits, seen, todo = {}, set(), [name]
+        bad = set()
+        while todo:
+            n = todo.pop()
+            if n in seen or n not in fns:
+                continue
+            seen.add(n)
+            for v, val in fns[n]["lits"].items():
+                if v in lits and lits[v] != val:
+                    bad.add(v)
+                lits[v] = val
+            todo.extend(fns[n]["calls"])
+        for v in bad:
+            del lits[v]
+        out[(m.group(2), int(m.group(1)))] = lits
+    return out
+
+
 def user_op_arities(calc_lean):
     """The number of indices of each user operator, by its Lean name: from
     the inductives `UserOp`, `UserOp1`, … of the calculus's Lean
@@ -1937,6 +2037,8 @@ def main():
     ap.add_argument("--unproved",
                     help="a TOML table of the calculus's programs whose generated proof "
                          "does not build, each with why: they get none")
+    ap.add_argument("--rust-src",
+                    help="the generated crate's src/, for the values of its literals")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     with open(args.trace, encoding="utf-8") as f:
@@ -1952,6 +2054,7 @@ def main():
                 for m in re.finditer(r"^def (__eo_l_\d+___(\w+))", f.read(), re.M):
                     gen.helpers.setdefault("__" + m.group(2), []).append(m.group(1))
     gen.uop_arities = set(user_op_arities(args.calc_lean).values()) if args.calc_lean else set()
+    gen.literals = rust_literals(args.rust_src) if args.rust_src else {}
     gen.unproved = {}
     if args.unproved:
         with open(args.unproved, "rb") as f:

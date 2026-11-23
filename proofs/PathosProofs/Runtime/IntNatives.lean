@@ -280,4 +280,55 @@ theorem Store.native_spec_nat_succ (s : Store) (args : Slice Term) {a : Term} {x
   push_cast at this
   exact this
 
+/-! ## More of CPC's natives -/
+
+theorem Store.native_spec_zplus (s : Store) (args : Slice Term) {a b : Term} {x y : Int}
+    (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.Zplus args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.native_zplus x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
+  simp only [slice_index_one hargs, Std.bind_ok]
+  unfold native.Store.native_int_binary
+  simp only [Store.raw_int_rep ha, Store.raw_int_rep hb, Std.bind_ok,
+    core.result.Result.Insts.CoreOpsTry.branch, num.Integer.add_spec, num.Integer.toInt_ofInt]
+  exact Store.raw_int_spec s (x + y) hinv h64
+
+theorem Store.native_spec_nateq (s : Store) (args : Slice Term) {a b : Term} {x y : Nat}
+    (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.Nateq args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Smtm.native_nateq x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
+  simp only [slice_index_one hargs, Std.bind_ok]
+  unfold native.Store.native_int_compare
+  simp only [Store.raw_int_rep_nat ha, Store.raw_int_rep_nat hb, Std.bind_ok,
+    core.result.Result.Insts.CoreOpsTry.branch, num.Integer.eq_spec, num.Integer.toInt_ofInt]
+  convert Store.native_bool_spec s (Smtm.native_nateq x y) hinv h64 using 3
+  simp [Smtm.native_nateq]
+
+/-- `nat.to_int` gives its argument's handle: a natural and an integer are
+stored alike (`encNat`, `encInt`). -/
+theorem Store.native_spec_nat_to_int (s : Store) (args : Slice Term) {a : Term} {x : Nat}
+    (hargs : args.val = [a]) (ha : Represents.rep s a x) (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.NatToInt args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Smtm.native_nat_to_int x)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 1#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  rw [native_op_n s _ args 1#usize hlen rfl h0 _ (by rw [native.Store.native_op])]
+  unfold native.Store.native_nat_to_int
+  simp only [Store.raw_int_rep_nat ha, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch,
+    WP.dspec_ok, WP.uncurry'_pair]
+  exact ⟨hinv, Store.Grows.refl s, ha.1, trivial⟩
+
 end pathos_compiled_checker

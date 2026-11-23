@@ -636,7 +636,21 @@ term; the store holds such a node as it is (`construct` does not check a
 node's fields, as `apply` does an application's, `TermData.Wf`), which is
 logos's value. So `Valid` does not exclude it, and a program whose case
 repeats a variable that is an index itself stays unproved
-(`proofs-cpc/unproved.toml`). This is the same boundary as the first finding below,
+(`proofs-cpc/unproved.toml`).
+
+**A latent hazard: repeated pattern variables on an index.** rust-meta
+tests a repeated variable of a pattern with handle equality, where logos
+uses `__eo_eq`, which is stuck if either side is. The two differ only when
+a side can be the stuck term, which today is only an operator's index
+(above). They are the same on every run now only because no logos program
+builds an `update` or `tuple_update` term with a stuck index: the
+repeated-variable tests of `$dt_updater_elim_rhs` and
+`$tuple_updater_elim_rhs` compare such an index, and both programs stay
+unproved for it (the reachability argument is in the milestone's notes,
+`updater-index.md`). A change to rust-meta, testing a repeated variable
+that can be an index as `__eo_eq` does, would make it sound by
+construction; Daniel approved it, and it is queued after milestone 5
+(not made here). This is the same boundary as the first finding below,
 met from the other side. For the checker's other argument types (its
 states, lists of commands, arguments and indices, rules; the datatype
 declarations; the SMT types, datatypes and terms; commands; strings and naturals) `Valid`

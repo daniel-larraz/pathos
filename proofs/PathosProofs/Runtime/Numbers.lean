@@ -85,6 +85,28 @@ theorem Store.literal_numeral_spec (s : Store) (i : Int) (hinv : s.Inv) (h64 : P
     simp only [Embed.embedded_enc_Term, Embed.enc_Term]
     exact Holds.lit t.val _ hres.1 hres.2
 
+/-- `literal` with a numeral constant as the generated code builds it,
+`Integer::from(<n>u32)`: after the spec of `from`, a handle of the numeral
+term. -/
+theorem Store.literal_int_u32_spec (s : Store) (n : Std.U32) (i : Int) (hi : (n.val : Int) = i)
+    (hinv : s.Inv) (h64 : Platform64) :
+    Store.literal s (lit.Lit.Numeral (num.Integer.ofInt (n.val : Int))) ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.Term.Numeral i)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [hi]; exact Store.literal_numeral_spec s i hinv h64
+
+/-- The same, negated (`Integer::from(<n>u32).neg()`). -/
+theorem Store.literal_int_neg_u32_spec (s : Store) (n : Std.U32) (i : Int)
+    (hi : -(n.val : Int) = i) (hinv : s.Inv) (h64 : Platform64) :
+    Store.literal s (lit.Lit.Numeral (num.Integer.ofInt (-(n.val : Int)))) ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.Term.Numeral i)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [hi]; exact Store.literal_numeral_spec s i hinv h64
+
 /-- `literal` with a rational gives a handle of the rational term. -/
 theorem Store.literal_rational_spec (s : Store) (q : ℚ) (hinv : s.Inv) (h64 : Platform64) :
     Store.literal s (lit.Lit.Rational (num.Rational.ofRat q)) ⦃ r s' =>
