@@ -553,10 +553,18 @@ generator of the proofs, as it was then.
 
 The generator writes the proofs for the full CPC too, into
 `generated/cpc-checker`
-(`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
-checked to be what the generator writes (`scripts/generate-cpc --check`),
-but **not built**; `proofs.tsv` (484 of 1,103 marked generated) says how
-far the generator gets. The CPC is compiled from logos `bdcbd95f`, the
+(`proofs.lean`, `proofs.tsv`, `cache_sem.lean`) and into `proofs-cpc/`,
+where they are **built** under the axiom audit (`scripts/proofs-build
+--cpc`, stage 5): **625 of 1,103** programs at the end of milestone 5,
+with the same 27 assumptions as CpcMini. `proofs.tsv` gives each other
+program the first thing it has no proof line for, or why its proof is
+held back: `proofs-cpc/unproved.toml` lists the 24 whose generated proof
+does not build, each with why. What is left is mostly arithmetic and the
+list builtins. `eo::typeof` is supported, as a call of `$eo_typeof`, but
+gains nothing yet: `$eo_typeof` calls `$eo_typeof_@from_bools`, which
+uses `eo::add`, so the programs with `eo::typeof` wait on the arithmetic
+of milestone 7 (the trust decision), not on anything cheap; the survey of
+stage 5 counted it as cheap. The CPC is compiled from logos `bdcbd95f`, the
 revision the proofs pin and the eoc gate uses (`LOGOS_REV`); before the
 reference moved to Ethos `bde41a79` it was logos `a3232131`, with 478 of
 1,086.
@@ -662,9 +670,8 @@ through exactly the types that have an instance (`Runtime/Embed.lean`
 says why each is enough). `CCmd` and `SmtTerm` were added last, by the
 same experiment (a `True` instance, the gate opened, the proofs forced):
 lemma C closes for `$eo_invoke_cmd` and `$smtx_typeof`. The full CPC's
-`Int` arguments have none yet; its programs over SMT terms pass the gate
-now, but CPC's generated proofs are not built, so lemma C is checked for
-them only through CpcMini's `$smtx_typeof`.
+`Int` arguments have none yet; its programs over SMT terms pass the gate,
+and lemma C closes for them in CPC's built proofs too (stage 5).
 
 **Order of the stuck tests.** The Rust tests the arguments for the stuck
 term in order, before any case; logos's function has a first match arm for
