@@ -3,37 +3,14 @@
 # as far as it builds), each with scripts/proofs-build, which also runs the
 # axiom audit (scripts/proofs-axioms).
 #
-# Nightly, and on pushes and pull requests that change the proofs, the
-# generator of the proofs or the CPC crate they are about: the CPC's
-# translation alone is about 500,000 lines of Lean, so this is not part of
-# ci.yml's per-push checks.
+# Nightly, and on demand: the CPC's translation alone is about 500,000
+# lines of Lean, so this is not part of ci.yml's per-push checks.
 name: Proofs
 
 on:
   schedule:
     - cron: "17 3 * * *"
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "proofs/**"
-      - "proofs-cpc/**"
-      - "scripts/proofgen"
-      - "scripts/proofs-*"
-      - "scripts/generate-cpc"
-      - "generated/cpc-checker/**"
-      - "generated/cpcmini-checker/**"
-      - ".github/workflows/proofs.yml"
-  pull_request:
-    paths:
-      - "proofs/**"
-      - "proofs-cpc/**"
-      - "scripts/proofgen"
-      - "scripts/proofs-*"
-      - "scripts/generate-cpc"
-      - "generated/cpc-checker/**"
-      - "generated/cpcmini-checker/**"
-      - ".github/workflows/proofs.yml"
 
 jobs:
   proofs:
