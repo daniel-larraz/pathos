@@ -1550,6 +1550,24 @@ def eo__24eo_5fprog_5fre_2din_2dsigma_2dstar.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_re_in_sigma_star x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_re-inter-cstring`. -/
+def eo__24eo_5fprog_5fre_2dinter_2dcstring.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+    eo__24eo_5fprog_5fre_2dinter_2dcstring s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_re_inter_cstring x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_re-inter-cstring-neg`. -/
+def eo__24eo_5fprog_5fre_2dinter_2dcstring_2dneg.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+    eo__24eo_5fprog_5fre_2dinter_2dcstring_2dneg s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_re_inter_cstring_neg x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_re-loop-neg`. -/
 def eo__24eo_5fprog_5fre_2dloop_2dneg.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -1874,6 +1892,24 @@ def eo__24eo_5fprog_5fsplit.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_split x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_str-concat-clash`. -/
+def eo__24eo_5fprog_5fstr_2dconcat_2dclash.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 a5 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 → Represents.rep s a5 x_a5 →
+    eo__24eo_5fprog_5fstr_2dconcat_2dclash s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_concat_clash x_a0 x_a1 x_a2 x_a3 x_a4 x_a5)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_str-concat-clash2`. -/
+def eo__24eo_5fprog_5fstr_2dconcat_2dclash2.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 →
+    eo__24eo_5fprog_5fstr_2dconcat_2dclash2 s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_concat_clash2 x_a0 x_a1 x_a2 x_a3 x_a4)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_str-contains-leq-len-eq`. -/
 def eo__24eo_5fprog_5fstr_2dcontains_2dleq_2dlen_2deq.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -2036,6 +2072,15 @@ def eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite1.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_repl_repl_dual_ite1 x_a0 x_a1 x_a2 x_a3 x_a4)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_str-repl-repl-dual-ite2`. -/
+def eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite2.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 a5 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 → Represents.rep s a5 x_a5 →
+    eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite2 s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_repl_repl_dual_ite2 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_str-repl-repl-dual-self`. -/
 def eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dself.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -2070,6 +2115,15 @@ def eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn2.Spec (n : Nat) :
     eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn2 s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_repl_repl_src_inv_no_ctn2 x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_str-repl-repl-src-inv-no-ctn3`. -/
+def eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn3.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 a5 a6 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 → Represents.rep s a5 x_a5 → Represents.rep s a6 x_a6 →
+    eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn3 s a0 a1 a2 a3 a4 a5 a6 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_repl_repl_src_inv_no_ctn3 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_str-repl-repl-src-self`. -/
@@ -4295,6 +4349,8 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fre_2din_2dcstring : eo__24eo_5fprog_5fre_2din_2dcstring.Spec n
   eo__24eo_5fprog_5fre_2din_2dempty : eo__24eo_5fprog_5fre_2din_2dempty.Spec n
   eo__24eo_5fprog_5fre_2din_2dsigma_2dstar : eo__24eo_5fprog_5fre_2din_2dsigma_2dstar.Spec n
+  eo__24eo_5fprog_5fre_2dinter_2dcstring : eo__24eo_5fprog_5fre_2dinter_2dcstring.Spec n
+  eo__24eo_5fprog_5fre_2dinter_2dcstring_2dneg : eo__24eo_5fprog_5fre_2dinter_2dcstring_2dneg.Spec n
   eo__24eo_5fprog_5fre_2dloop_2dneg : eo__24eo_5fprog_5fre_2dloop_2dneg.Spec n
   eo__24eo_5fprog_5fre_2drepeat_2delim : eo__24eo_5fprog_5fre_2drepeat_2delim.Spec n
   eo__24eo_5fprog_5fre_2dstar_2dstar : eo__24eo_5fprog_5fre_2dstar_2dstar.Spec n
@@ -4331,6 +4387,8 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fsets_5fsingleton_5finj : eo__24eo_5fprog_5fsets_5fsingleton_5finj.Spec n
   eo__24eo_5fprog_5fskolem_5fintro : eo__24eo_5fprog_5fskolem_5fintro.Spec n
   eo__24eo_5fprog_5fsplit : eo__24eo_5fprog_5fsplit.Spec n
+  eo__24eo_5fprog_5fstr_2dconcat_2dclash : eo__24eo_5fprog_5fstr_2dconcat_2dclash.Spec n
+  eo__24eo_5fprog_5fstr_2dconcat_2dclash2 : eo__24eo_5fprog_5fstr_2dconcat_2dclash2.Spec n
   eo__24eo_5fprog_5fstr_2dcontains_2dleq_2dlen_2deq : eo__24eo_5fprog_5fstr_2dcontains_2dleq_2dlen_2deq.Spec n
   eo__24eo_5fprog_5fstr_2dcontains_2drefl : eo__24eo_5fprog_5fstr_2dcontains_2drefl.Spec n
   eo__24eo_5fprog_5fstr_2dcontains_2drepl_2dself : eo__24eo_5fprog_5fstr_2dcontains_2drepl_2dself.Spec n
@@ -4349,10 +4407,12 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fstr_2dlt_2delim : eo__24eo_5fprog_5fstr_2dlt_2delim.Spec n
   eo__24eo_5fprog_5fstr_2dprefixof_2deq : eo__24eo_5fprog_5fstr_2dprefixof_2deq.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite1 : eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite1.Spec n
+  eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite2 : eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dite2.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dself : eo__24eo_5fprog_5fstr_2drepl_2drepl_2ddual_2dself.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2dlen_2did : eo__24eo_5fprog_5fstr_2drepl_2drepl_2dlen_2did.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn1 : eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn1.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn2 : eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn2.Spec n
+  eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn3 : eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dinv_2dno_2dctn3.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dself : eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dself.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dtgt_2dno_2dctn : eo__24eo_5fprog_5fstr_2drepl_2drepl_2dsrc_2dtgt_2dno_2dctn.Spec n
   eo__24eo_5fprog_5fstr_2drepl_2drepl_2dtgt_2dno_2dctn : eo__24eo_5fprog_5fstr_2drepl_2drepl_2dtgt_2dno_2dctn.Spec n

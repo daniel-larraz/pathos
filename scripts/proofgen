@@ -914,7 +914,7 @@ class Generator:
         for k, part in enumerate(parts):
             files["proofs/Part%d.lean" % k] = (
                 "module\npublic import $PROOFS$.Head\n" + imports + "\n"
-                + doc + pre + "".join(part) + end)
+                + doc + PART_OPTIONS + pre + "".join(part) + end)
             root.append("public import $PROOFS$.Part%d\n" % k)
         files["proofs.lean"] = ("".join(root) + imports + "\n" + doc + pre + last)
         return files
@@ -1328,6 +1328,10 @@ CTORS_PER_PART = 150
 # Programs per module of the proofs (see Generator.print_proofs).
 PROOFS_PER_PART = 40
 PROOFS_SPLIT_ABOVE = 100
+# The options of each part of a large calculus's proofs: its longest cases
+# (string and regular expression rewrites, with dozens of pattern steps)
+# take more than Lean's default 200,000 heartbeats.
+PART_OPTIONS = "set_option maxHeartbeats 1000000\n"
 
 
 def uop_k(sname):

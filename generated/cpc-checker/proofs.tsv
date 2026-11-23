@@ -484,8 +484,8 @@ $eo_prog_re-in-empty	generated
 $eo_prog_re-in-sigma	none	case 0 has a literal that is not a Boolean
 $eo_prog_re-in-sigma-star	generated	
 $eo_prog_re-inter-all	none	case 0 has a builtin operator
-$eo_prog_re-inter-cstring	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
-$eo_prog_re-inter-cstring-neg	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
+$eo_prog_re-inter-cstring	generated	
+$eo_prog_re-inter-cstring-neg	generated	
 $eo_prog_re-inter-inclusion	none	it calls $re_flatten, which has no proof
 $eo_prog_re-loop-elim	none	case 0 has a builtin operator
 $eo_prog_re-loop-neg	generated	
@@ -553,9 +553,9 @@ $eo_prog_skolem_intro	generated
 $eo_prog_skolemize	none	case 0 has a builtin operator
 $eo_prog_split	generated	
 $eo_prog_str-at-elim	none	case 0 has a literal that is not a Boolean
-$eo_prog_str-concat-clash	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
+$eo_prog_str-concat-clash	generated	
 $eo_prog_str-concat-clash-rev	none	case 0 has a builtin operator
-$eo_prog_str-concat-clash2	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
+$eo_prog_str-concat-clash2	generated	
 $eo_prog_str-concat-clash2-rev	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify-base	none	case 0 has a builtin operator
@@ -633,13 +633,13 @@ $eo_prog_str-prefixof-elim	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-prefixof-eq	generated	
 $eo_prog_str-prefixof-one	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-repl-repl-dual-ite1	generated	
-$eo_prog_str-repl-repl-dual-ite2	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
+$eo_prog_str-repl-repl-dual-ite2	generated	
 $eo_prog_str-repl-repl-dual-self	generated	
 $eo_prog_str-repl-repl-len-id	generated	
 $eo_prog_str-repl-repl-lookahead-id-simp	none	its generated proof does not build: the spec of case 0: simp fails (a nested error)
 $eo_prog_str-repl-repl-src-inv-no-ctn1	generated	
 $eo_prog_str-repl-repl-src-inv-no-ctn2	generated	
-$eo_prog_str-repl-repl-src-inv-no-ctn3	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
+$eo_prog_str-repl-repl-src-inv-no-ctn3	generated	
 $eo_prog_str-repl-repl-src-self	generated	
 $eo_prog_str-repl-repl-src-tgt-no-ctn	generated	
 $eo_prog_str-repl-repl-tgt-no-ctn	generated	
