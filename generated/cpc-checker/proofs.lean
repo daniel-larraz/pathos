@@ -281,13 +281,22 @@ def eo__24eo_5fprog_5farith_2dabs_2deq.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_arith_abs_eq x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
-/-- What is proved of `$eo_prog_arith-div-elim-to-real`. -/
-def eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal.Spec (n : Nat) : Prop :=
+/-- What is proved of `$eo_prog_arith-div-int-to-real`. -/
+def eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
     Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
-    eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+    eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_arith_div_elim_to_real x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_arith_div_int_to_real x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_arith-div-total-int-to-real`. -/
+def eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_arith_div_total_int_to_real x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_arith-elim-gt`. -/
@@ -1739,6 +1748,15 @@ def eo__24eo_5fprog_5fsets_2dinter_2dmember.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_sets_inter_member x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_sets-inter-self`. -/
+def eo__24eo_5fprog_5fsets_2dinter_2dself.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fprog_5fsets_2dinter_2dself s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_sets_inter_self x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_sets-is-empty-elim`. -/
 def eo__24eo_5fprog_5fsets_2dis_2dempty_2delim.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -1854,6 +1872,15 @@ def eo__24eo_5fprog_5fsets_2dunion_2dmember.Spec (n : Nat) : Prop :=
     eo__24eo_5fprog_5fsets_2dunion_2dmember s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_sets_union_member x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_sets-union-self`. -/
+def eo__24eo_5fprog_5fsets_2dunion_2dself.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fprog_5fsets_2dunion_2dself s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_sets_union_self x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_sets_ext`. -/
@@ -2603,6 +2630,15 @@ def eo__24eo_5fto_5fsmt_5fexists.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_exists x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_to_smt_lambda_curry`. -/
+def eo__24eo_5fto_5fsmt_5flambda_5fcurry.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24eo_5fto_5fsmt_5flambda_5fcurry s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_lambda_curry x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_to_smt_nat`. -/
 def eo__24eo_5fto_5fsmt_5fnat.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -3152,6 +3188,15 @@ def eo__24eo_5ftypeof_5fite.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_ite x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_typeof_lambda`. -/
+def eo__24eo_5ftypeof_5flambda.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24eo_5ftypeof_5flambda s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_lambda x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_typeof_not`. -/
 def eo__24eo_5ftypeof_5fnot.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -3537,6 +3582,15 @@ def eo__24get_5farg_5flist_5frec.Spec (n : Nat) : Prop :=
     eo__24get_5farg_5flist_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__get_arg_list_rec x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$get_lambda_type`. -/
+def eo__24get_5flambda_5ftype.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24get_5flambda_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__get_lambda_type x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$get_var_type`. -/
@@ -4361,7 +4415,8 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fnil_5f_40_40TypedList_2econs : eo__24eo_5fnil_5f_40_40TypedList_2econs.Spec n
   eo__24eo_5fprog_5fand_5fintro : eo__24eo_5fprog_5fand_5fintro.Spec n
   eo__24eo_5fprog_5farith_2dabs_2deq : eo__24eo_5fprog_5farith_2dabs_2deq.Spec n
-  eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal : eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal.Spec n
+  eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal : eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal.Spec n
+  eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal : eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal.Spec n
   eo__24eo_5fprog_5farith_2delim_2dgt : eo__24eo_5fprog_5farith_2delim_2dgt.Spec n
   eo__24eo_5fprog_5farith_2delim_2dleq : eo__24eo_5fprog_5farith_2delim_2dleq.Spec n
   eo__24eo_5fprog_5farith_2delim_2dlt : eo__24eo_5fprog_5farith_2delim_2dlt.Spec n
@@ -4523,6 +4578,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fsets_2dinter_2demp1 : eo__24eo_5fprog_5fsets_2dinter_2demp1.Spec n
   eo__24eo_5fprog_5fsets_2dinter_2demp2 : eo__24eo_5fprog_5fsets_2dinter_2demp2.Spec n
   eo__24eo_5fprog_5fsets_2dinter_2dmember : eo__24eo_5fprog_5fsets_2dinter_2dmember.Spec n
+  eo__24eo_5fprog_5fsets_2dinter_2dself : eo__24eo_5fprog_5fsets_2dinter_2dself.Spec n
   eo__24eo_5fprog_5fsets_2dis_2dempty_2delim : eo__24eo_5fprog_5fsets_2dis_2dempty_2delim.Spec n
   eo__24eo_5fprog_5fsets_2dis_2dsingleton_2delim : eo__24eo_5fprog_5fsets_2dis_2dsingleton_2delim.Spec n
   eo__24eo_5fprog_5fsets_2dmember_2demp : eo__24eo_5fprog_5fsets_2dmember_2demp.Spec n
@@ -4536,6 +4592,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fsets_2dunion_2demp1 : eo__24eo_5fprog_5fsets_2dunion_2demp1.Spec n
   eo__24eo_5fprog_5fsets_2dunion_2demp2 : eo__24eo_5fprog_5fsets_2dunion_2demp2.Spec n
   eo__24eo_5fprog_5fsets_2dunion_2dmember : eo__24eo_5fprog_5fsets_2dunion_2dmember.Spec n
+  eo__24eo_5fprog_5fsets_2dunion_2dself : eo__24eo_5fprog_5fsets_2dunion_2dself.Spec n
   eo__24eo_5fprog_5fsets_5fext : eo__24eo_5fprog_5fsets_5fext.Spec n
   eo__24eo_5fprog_5fsets_5fsingleton_5finj : eo__24eo_5fprog_5fsets_5fsingleton_5finj.Spec n
   eo__24eo_5fprog_5fskolem_5fintro : eo__24eo_5fprog_5fskolem_5fintro.Spec n
@@ -4619,6 +4676,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fto_5fsmt_5fdatatype_5fcons : eo__24eo_5fto_5fsmt_5fdatatype_5fcons.Spec n
   eo__24eo_5fto_5fsmt_5fdatatype_5fdecl : eo__24eo_5fto_5fsmt_5fdatatype_5fdecl.Spec n
   eo__24eo_5fto_5fsmt_5fexists : eo__24eo_5fto_5fsmt_5fexists.Spec n
+  eo__24eo_5fto_5fsmt_5flambda_5fcurry : eo__24eo_5fto_5fsmt_5flambda_5fcurry.Spec n
   eo__24eo_5fto_5fsmt_5fnat : eo__24eo_5fto_5fsmt_5fnat.Spec n
   eo__24eo_5fto_5fsmt_5fnat_5fis_5fvalid : eo__24eo_5fto_5fsmt_5fnat_5fis_5fvalid.Spec n
   eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize : eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize.Spec n
@@ -4680,6 +4738,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5ftypeof_5fis : eo__24eo_5ftypeof_5fis.Spec n
   eo__24eo_5ftypeof_5fis_5fint : eo__24eo_5ftypeof_5fis_5fint.Spec n
   eo__24eo_5ftypeof_5fite : eo__24eo_5ftypeof_5fite.Spec n
+  eo__24eo_5ftypeof_5flambda : eo__24eo_5ftypeof_5flambda.Spec n
   eo__24eo_5ftypeof_5fnot : eo__24eo_5ftypeof_5fnot.Spec n
   eo__24eo_5ftypeof_5for : eo__24eo_5ftypeof_5for.Spec n
   eo__24eo_5ftypeof_5fre_2e_2a : eo__24eo_5ftypeof_5fre_2e_2a.Spec n
@@ -4723,6 +4782,7 @@ structure Specs (n : Nat) : Prop where
   eo__24extract_5fantec_5frec : eo__24extract_5fantec_5frec.Spec n
   eo__24from_5fclause : eo__24from_5fclause.Spec n
   eo__24get_5farg_5flist_5frec : eo__24get_5farg_5flist_5frec.Spec n
+  eo__24get_5flambda_5ftype : eo__24get_5flambda_5ftype.Spec n
   eo__24get_5fvar_5ftype : eo__24get_5fvar_5ftype.Spec n
   eo__24is_5fabsorb : eo__24is_5fabsorb.Spec n
   eo__24is_5fabsorb_5frec : eo__24is_5fabsorb_5frec.Spec n
@@ -6255,12 +6315,12 @@ theorem body_eo__24dt_5fupdater_5felim_5frhs_spec (n : Nat) (ih : Specs n) (s : 
 theorem eo__24dt_5fupdater_5felim_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24dt_5fupdater_5felim_5frhs.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24dt_5fupdater_5felim_5frhs
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 68#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 69#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24dt_5fupdater_5felim_5frhs s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__dt_updater_elim_rhs x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_68 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_69 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -6269,7 +6329,7 @@ theorem eo__24dt_5fupdater_5felim_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs m)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_68 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_69 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24dt_5fupdater_5felim_5frhs_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -6497,12 +6557,12 @@ theorem body_eo__24eo_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store) (a
 theorem eo__24eo_5fdd_5flookup_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fdd_5flookup.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5fdd_5flookup
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 75#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 76#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24eo_5fdd_5flookup s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_dd_lookup x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_75 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_76 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -6510,7 +6570,7 @@ theorem eo__24eo_5fdd_5flookup_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_75 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_76 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fdd_5flookup_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -6730,12 +6790,12 @@ theorem body_eo__24eo_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) (
 theorem eo__24eo_5fdt_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fdt_5fresolve.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5fdt_5fresolve
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 81#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 82#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24eo_5fdt_5fresolve s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_dt_resolve x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_81 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_82 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -6743,7 +6803,7 @@ theorem eo__24eo_5fdt_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_81 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_82 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fdt_5fresolve_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -6830,12 +6890,12 @@ theorem body_eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) 
 theorem eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fdtc_5fresolve.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5fdtc_5fresolve
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 84#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 85#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24eo_5fdtc_5fresolve s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_dtc_resolve x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_84 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_85 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -6843,7 +6903,7 @@ theorem eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_84 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_85 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fdtc_5fresolve_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -7340,68 +7400,133 @@ theorem eo__24eo_5fprog_5farith_2dabs_2deq_spec (n : Nat) (ih : ∀ m < n, Specs
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
-theorem case_0_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+theorem case_0_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+    case_0_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_arith_div_elim_to_real.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_arith_div_elim_to_real.case_0 x_a0 x_a1 = none
+        ∃ res, EoCases.__eo_prog_arith_div_int_to_real.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_prog_arith_div_int_to_real.case_0 x_a0 x_a1 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal more_0_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal
+  unfold case_0_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal more_0_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
   store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
   step as ⟨e_v1, he_v1⟩
   store_step with CtorSpec.eo__2f.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_to_5freal.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3
+  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with Store.apply_rep s3 v2 a1 _ _ hinv3 h64 h_v2 h_a1 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2
+  store_step with Store.apply_rep s4 v0 v3 _ _ hinv4 h64 h_v0 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo_to_5freal.construct s5 e_v5 (by rw [he_v5]; exact empty_args) hinv5 h64 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4
-  store_step with Store.apply_rep s6 v5 a1 _ _ hinv6 h64 h_v5 h_a1 (by ns_tac) (by ns_tac) as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v4 v6 _ _ hinv7 h64 h_v4 h_v6 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v0 v7 _ _ hinv8 h64 h_v0 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with CtorSpec.eo__2f.construct s5 e_v5 (by rw [he_v5]; exact empty_args) hinv5 h64 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo_to_5freal.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__2f.construct s9 e_v9 (by rw [he_v9]; exact empty_args) hinv9 h64 as ⟨v9, s10, hinv10, h_v9⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
-  store_step with Store.apply_rep s10 v9 a0 _ _ hinv10 h64 h_v9 h_a0 (by ns_tac) (by ns_tac) as ⟨v10, s11, hinv11, h_v10⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
-  store_step with Store.apply_rep s11 v10 a1 _ _ hinv11 h64 h_v10 h_a1 (by ns_tac) (by ns_tac) as ⟨v11, s12, hinv12, h_v11⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
-  store_step with Store.apply_rep s12 v8 v11 _ _ hinv12 h64 h_v8 h_v11 (by ns_tac) (by ns_tac) as ⟨v12, s13, hinv13, h_v12⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
-  case_done hinv13 hG with h_v12 in EoCases.__eo_prog_arith_div_elim_to_real.case_0 using hn_a0 hn_a1
+  store_step with CtorSpec.eo_to_5freal.construct s9 e_v9 (by rw [he_v9]; exact empty_args) hinv9 h64 as ⟨v9, s10, hinv10, h_v9⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with Store.apply_rep s10 v9 a1 _ _ hinv10 h64 h_v9 h_a1 (by ns_tac) (by ns_tac) as ⟨v10, s11, hinv11, h_v10⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  store_step with Store.apply_rep s11 v8 v10 _ _ hinv11 h64 h_v8 h_v10 (by ns_tac) (by ns_tac) as ⟨v11, s12, hinv12, h_v11⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+  store_step with Store.apply_rep s12 v4 v11 _ _ hinv12 h64 h_v4 h_v11 (by ns_tac) (by ns_tac) as ⟨v12, s13, hinv13, h_v12⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
+  case_done hinv13 hG with h_v12 in EoCases.__eo_prog_arith_div_int_to_real.case_0 using hn_a0 hn_a1
 
-/-- logos's `__eo_prog_arith_div_elim_to_real` is what the generated body does: the tests for the stuck term,
+/-- logos's `__eo_prog_arith_div_int_to_real` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
-theorem eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    __eo_prog_arith_div_elim_to_real x_a0 x_a1 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_arith_div_elim_to_real.case_0 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_arith_div_elim_to_real
-  unfold EoCases.__eo_prog_arith_div_elim_to_real.case_0
+theorem eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __eo_prog_arith_div_int_to_real x_a0 x_a1 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_arith_div_int_to_real.case_0 x_a0 x_a1] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_prog_arith_div_int_to_real
+  unfold EoCases.__eo_prog_arith_div_int_to_real.case_0
   logos_eq
 
-theorem body_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+theorem body_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
-    body_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+    body_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_arith_div_elim_to_real x_a0 x_a1)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_arith_div_int_to_real x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
-  unfold body_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal
+  rw [eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal
   have hG := Store.Grows.refl s
   stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
   stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
+  case_step with case_0_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
     as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
-  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_arith_div_elim_to_real.case_0
+  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_arith_div_int_to_real.case_0
 
-theorem eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal.Spec n := by
+theorem eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
-  unfold eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal
+  unfold eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_prog_arith_div_elim_to_real x_a0 x_a1))
+    (fun s1 => body_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_prog_arith_div_int_to_real x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+      spec_exact body_eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_prog_arith_div_total_int_to_real.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_prog_arith_div_total_int_to_real.case_0 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal more_0_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__2f_5ftotal.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with Store.apply_rep s3 v2 a1 _ _ hinv3 h64 h_v2 h_a1 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2
+  store_step with Store.apply_rep s4 v0 v3 _ _ hinv4 h64 h_v0 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3
+  step as ⟨e_v5, he_v5⟩
+  store_step with CtorSpec.eo__2f_5ftotal.construct s5 e_v5 (by rw [he_v5]; exact empty_args) hinv5 h64 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo_to_5freal.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  step as ⟨e_v9, he_v9⟩
+  store_step with CtorSpec.eo_to_5freal.construct s9 e_v9 (by rw [he_v9]; exact empty_args) hinv9 h64 as ⟨v9, s10, hinv10, h_v9⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with Store.apply_rep s10 v9 a1 _ _ hinv10 h64 h_v9 h_a1 (by ns_tac) (by ns_tac) as ⟨v10, s11, hinv11, h_v10⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  store_step with Store.apply_rep s11 v8 v10 _ _ hinv11 h64 h_v8 h_v10 (by ns_tac) (by ns_tac) as ⟨v11, s12, hinv12, h_v11⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+  store_step with Store.apply_rep s12 v4 v11 _ _ hinv12 h64 h_v4 h_v11 (by ns_tac) (by ns_tac) as ⟨v12, s13, hinv13, h_v12⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
+  case_done hinv13 hG with h_v12 in EoCases.__eo_prog_arith_div_total_int_to_real.case_0 using hn_a0 hn_a1
+
+/-- logos's `__eo_prog_arith_div_total_int_to_real` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __eo_prog_arith_div_total_int_to_real x_a0 x_a1 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_arith_div_total_int_to_real.case_0 x_a0 x_a1] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_prog_arith_div_total_int_to_real
+  unfold EoCases.__eo_prog_arith_div_total_int_to_real.case_0
+  logos_eq
+
+theorem body_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    body_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_arith_div_total_int_to_real x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  case_step with case_0_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
+  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_arith_div_total_int_to_real.case_0
+
+theorem eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal.Spec n := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  unfold eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_prog_arith_div_total_int_to_real x_a0 x_a1))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
@@ -17929,6 +18054,60 @@ theorem eo__24eo_5fprog_5fsets_2dinter_2dmember_spec (n : Nat) (ih : ∀ m < n, 
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
+theorem case_0_eo__24eo_5fprog_5fsets_2dinter_2dself_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5fprog_5fsets_2dinter_2dself s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_prog_sets_inter_self.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_prog_sets_inter_self.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fprog_5fsets_2dinter_2dself
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo_set_2einter.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
+  store_step with Store.apply_rep s4 v0 v3 _ _ hinv4 h64 h_v0 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
+  store_step with Store.apply_rep s5 v4 a0 _ _ hinv5 h64 h_v4 h_a0 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
+  case_done hinv6 hG with h_v5 in EoCases.__eo_prog_sets_inter_self.case_0 using hn_a0
+
+/-- logos's `__eo_prog_sets_inter_self` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fprog_5fsets_2dinter_2dself.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_prog_sets_inter_self x_a0 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_sets_inter_self.case_0 x_a0] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_prog_sets_inter_self
+  unfold EoCases.__eo_prog_sets_inter_self.case_0
+  logos_eq
+
+theorem body_eo__24eo_5fprog_5fsets_2dinter_2dself_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24eo_5fprog_5fsets_2dinter_2dself s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_sets_inter_self x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fprog_5fsets_2dinter_2dself.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5fprog_5fsets_2dinter_2dself
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  case_step with case_0_eo__24eo_5fprog_5fsets_2dinter_2dself_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
+  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_sets_inter_self.case_0
+
+theorem eo__24eo_5fprog_5fsets_2dinter_2dself_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fsets_2dinter_2dself.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24eo_5fprog_5fsets_2dinter_2dself
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fprog_5fsets_2dinter_2dself s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_sets_inter_self x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fprog_5fsets_2dinter_2dself_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
 theorem case_0_eo__24eo_5fprog_5fsets_2dis_2dempty_2delim_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
     case_0_eo__24eo_5fprog_5fsets_2dis_2dempty_2delim s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
@@ -18827,6 +19006,60 @@ theorem eo__24eo_5fprog_5fsets_2dunion_2dmember_spec (n : Nat) (ih : ∀ m < n, 
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fprog_5fsets_2dunion_2dmember_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fprog_5fsets_2dunion_2dself_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5fprog_5fsets_2dunion_2dself s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_prog_sets_union_self.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_prog_sets_union_self.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fprog_5fsets_2dunion_2dself
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo_set_2eunion.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
+  store_step with Store.apply_rep s4 v0 v3 _ _ hinv4 h64 h_v0 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
+  store_step with Store.apply_rep s5 v4 a0 _ _ hinv5 h64 h_v4 h_a0 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
+  case_done hinv6 hG with h_v5 in EoCases.__eo_prog_sets_union_self.case_0 using hn_a0
+
+/-- logos's `__eo_prog_sets_union_self` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fprog_5fsets_2dunion_2dself.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_prog_sets_union_self x_a0 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_sets_union_self.case_0 x_a0] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_prog_sets_union_self
+  unfold EoCases.__eo_prog_sets_union_self.case_0
+  logos_eq
+
+theorem body_eo__24eo_5fprog_5fsets_2dunion_2dself_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24eo_5fprog_5fsets_2dunion_2dself s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_sets_union_self x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fprog_5fsets_2dunion_2dself.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5fprog_5fsets_2dunion_2dself
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  case_step with case_0_eo__24eo_5fprog_5fsets_2dunion_2dself_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
+  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_sets_union_self.case_0
+
+theorem eo__24eo_5fprog_5fsets_2dunion_2dself_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fsets_2dunion_2dself.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24eo_5fprog_5fsets_2dunion_2dself
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fprog_5fsets_2dunion_2dself s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_sets_union_self x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fprog_5fsets_2dunion_2dself_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
@@ -24554,19 +24787,19 @@ theorem body_eo__24eo_5fto_5fsmt_5fdatatype_spec (n : Nat) (ih : Specs n) (s : S
 theorem eo__24eo_5fto_5fsmt_5fdatatype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fdatatype.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fto_5fsmt_5fdatatype
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 740#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 749#u32 _ [a0] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5fdatatype s1 a0) (fun s' t => Represents.rep s' t (__eo_to_smt_datatype x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_740 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_749 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_740 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_749 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5fdatatype_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -24633,19 +24866,19 @@ theorem body_eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec (n : Nat) (ih : Specs n)
 theorem eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fdatatype_5fcons.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fto_5fsmt_5fdatatype_5fcons
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 741#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 750#u32 _ [a0] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5fdatatype_5fcons s1 a0) (fun s' t => Represents.rep s' t (__eo_to_smt_datatype_cons x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_741 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_750 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_741 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_750 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -24712,19 +24945,19 @@ theorem body_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec (n : Nat) (ih : Specs n)
 theorem eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fdatatype_5fdecl.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fto_5fsmt_5fdatatype_5fdecl
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 742#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 751#u32 _ [a0] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 a0) (fun s' t => Represents.rep s' t (__eo_to_smt_datatype_decl x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_742 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_751 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_742 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_751 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -24811,12 +25044,12 @@ theorem body_eo__24eo_5fto_5fsmt_5fexists_spec (n : Nat) (ih : Specs n) (s : Sto
 theorem eo__24eo_5fto_5fsmt_5fexists_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fexists.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24eo_5fto_5fsmt_5fexists
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 745#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 754#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5fexists s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_to_smt_exists x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_745 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_754 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -24824,9 +25057,123 @@ theorem eo__24eo_5fto_5fsmt_5fexists_spec (n : Nat) (ih : ∀ m < n, Specs m) : 
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_745 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_754 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5fexists_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    case_0_eo__24eo_5fto_5fsmt_5flambda_5fcurry s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_lambda_curry.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_lambda_curry.case_0 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5flambda_5fcurry
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_lambda_curry.case_0
+  case_done hinv1 hG with h_a1 in EoCases.__eo_to_smt_lambda_curry.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    case_1_eo__24eo_5fto_5fsmt_5flambda_5fcurry s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_lambda_curry.case_1 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_lambda_curry.case_1 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5flambda_5fcurry
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_lambda_curry.case_1
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt_lambda_curry.case_1
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_lambda_curry.case_1
+  pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_v5 as ⟨v8, x_v8, h_v8⟩ ⟨v9, x_v9, h_v9⟩ else hinv1 hG in EoCases.__eo_to_smt_lambda_curry.case_1
+  pat_destruct_lit Store.destruct_string_spec s1 v8 h_v8 hinv1 h64 as ⟨v11, x_v11, h_v11⟩ storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 in EoCases.__eo_to_smt_lambda_curry.case_1
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v9 _ hinv2 h64 (hG.rem hrem) h_v9 as ⟨v12, s3, hinv3, h_v12⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11
+  store_step with ih.eo__24smtx_5ftype_5fwf_5fcomponent s3 v12 _ hinv3 h64 (hG.rem hrem) h_v12 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12
+  have h_ite_v18 := (show if_0_eo__24eo_5fto_5fsmt_5flambda_5fcurry s4 v13 v9 v2 a1 v11 ⦃ r s' => s'.Inv ∧ s4.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_0_eo__24eo_5fto_5fsmt_5flambda_5fcurry
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s4
+    rcases Store.boolean_value_native h_v13 with ⟨hx_14, hbv_14⟩ | ⟨hx_14, hbv_14⟩
+    · ite_branch hbv_14
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftype s4 v9 _ hinv4 h64 (hG.rem hrem) h_v9 as ⟨v14, s5, hinv5, h_v14⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12 h_v13
+      store_step with ih.eo__24eo_5fto_5fsmt_5flambda_5fcurry s5 v2 a1 _ _ hinv5 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v15, s6, hinv6, h_v15⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12 h_v13 h_v14
+      step as ⟨e_v16, he_v16⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2elam.construct s6 e_v16 (by rw [he_v16]; rfl) h_v11 h_v14 h_v15 hinv6 h64 as ⟨v16, s7, hinv7, h_v16⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12 h_v13 h_v14 h_v15
+      ite_done hinv7 hG with (native_ite_true_rep _ hx_14 h_v16)
+    · ite_branch hbv_14
+      step as ⟨e_v17, he_v17⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s4 e_v17 (by rw [he_v17]; exact empty_args) hinv4 h64 as ⟨v17, s5, hinv5, h_v17⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12 h_v13
+      ite_done hinv5 hG with (native_ite_false_rep _ hx_14 h_v17))
+  store_step with h_ite_v18 as ⟨v18, s5, hinv5, h_v18⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12 h_v13
+  case_done hinv5 hG with h_v18 in EoCases.__eo_to_smt_lambda_curry.case_1 using hn_v1 hn_v2 hn_v4 hn_v5
+
+theorem case_2_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    case_2_eo__24eo_5fto_5fsmt_5flambda_5fcurry s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_lambda_curry.case_2 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_lambda_curry.case_2 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_2_eo__24eo_5fto_5fsmt_5flambda_5fcurry
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_lambda_curry.case_2 using
+
+/-- logos's `__eo_to_smt_lambda_curry` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5flambda_5fcurry.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __eo_to_smt_lambda_curry x_a0 x_a1 =
+      (firstSome [EoCases.__eo_to_smt_lambda_curry.case_0 x_a0 x_a1, EoCases.__eo_to_smt_lambda_curry.case_1 x_a0 x_a1, EoCases.__eo_to_smt_lambda_curry.case_2 x_a0 x_a1] default) := by
+  conv => lhs; unfold __eo_to_smt_lambda_curry
+  unfold EoCases.__eo_to_smt_lambda_curry.case_0 EoCases.__eo_to_smt_lambda_curry.case_1 EoCases.__eo_to_smt_lambda_curry.case_2
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    body_eo__24eo_5fto_5fsmt_5flambda_5fcurry s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_lambda_curry x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5flambda_5fcurry.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24eo_5fto_5fsmt_5flambda_5fcurry
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec n ih s1 a0 a1 x_a0 x_a1 hinv1 h64 (hG.rem hrem) h_a0 h_a1
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 using hc0
+  case_step with case_2_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec n ih s2 a0 a1 x_a0 x_a1 hinv2 h64 (hG.rem hrem) h_a0 h_a1
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0 h_a1 using hc0 hc1
+  body_stuck hinv3 hG using hc0 hc1 hc2 in EoCases.__eo_to_smt_lambda_curry.case_0 EoCases.__eo_to_smt_lambda_curry.case_1 EoCases.__eo_to_smt_lambda_curry.case_2 splitting x_a0 x_a1
+
+theorem eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5flambda_5fcurry.Spec n := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  unfold eo__24eo_5fto_5fsmt_5flambda_5fcurry
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 755#u32 _ [a0, a1] rfl
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5flambda_5fcurry s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_to_smt_lambda_curry x_a0 x_a1))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (by
+      intro s1 res hn hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_755 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl, rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
+      exact hr)
+    (by
+      intro s1 res hpre h
+      exact ProgramSem.to_755 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
@@ -24996,7 +25343,7 @@ theorem case_1_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec (n : Nat) (ih 
           EoCases.__eo_to_smt_quantifiers_skolemize.case_1 x_a0 x_a1 x_a2 = some (__eo_to_smt_quantifiers_skolemize y0 y1 y2)
       | core.result.Result.Ok none => EoCases.__eo_to_smt_quantifiers_skolemize.case_1 x_a0 x_a1 x_a2 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_1_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize
+  unfold case_1_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize more_0_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_quantifiers_skolemize.case_1
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt_quantifiers_skolemize.case_1
@@ -25012,8 +25359,12 @@ theorem case_1_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec (n : Nat) (ih 
   step as ⟨e_v17, he_v17⟩
   store_step with CtorSpec.eo__24emb_5fsm_2echoice.construct s6 e_v17 (by rw [he_v17]; rfl) h_v11 h_v15 h_v16 hinv6 h64 as ⟨v17, s7, hinv7, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v13 h_v14 h_v15 h_v16
   step as ⟨e_v18, he_v18⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2ebind.construct s7 e_v18 (by rw [he_v18]; rfl) h_v11 h_v14 h_v17 h_a1 hinv7 h64 as ⟨v18, s8, hinv8, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17
-  case_again hinv8 hG with h_v2 h_v18 h_v13 in EoCases.__eo_to_smt_quantifiers_skolemize.case_1 using hn_v1 hn_v2 hn_v4 hn_v5
+  store_step with CtorSpec.eo__24emb_5fsbd_2enil.construct s7 e_v18 (by rw [he_v18]; exact empty_args) hinv7 h64 as ⟨v18, s8, hinv8, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17
+  step as ⟨e_v19, he_v19⟩
+  store_step with CtorSpec.eo__24emb_5fsbd_2econs.construct s8 e_v19 (by rw [he_v19]; rfl) h_v11 h_v14 h_v17 h_v18 hinv8 h64 as ⟨v19, s9, hinv9, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+  step as ⟨e_v20, he_v20⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2ebind.construct s9 e_v20 (by rw [he_v20]; rfl) h_v19 h_a1 hinv9 h64 as ⟨v20, s10, hinv10, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
+  case_again hinv10 hG with h_v2 h_v20 h_v13 in EoCases.__eo_to_smt_quantifiers_skolemize.case_1 using hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_2_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
@@ -25104,12 +25455,12 @@ theorem body_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec (n : Nat) (ih : 
 theorem eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 748#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 758#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_to_smt_quantifiers_skolemize x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_748 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_758 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -25118,7 +25469,7 @@ theorem eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec (n : Nat) (ih : ∀ m
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_748 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_758 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -25265,12 +25616,12 @@ theorem body_eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent_spec (n : Nat) 
 theorem eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 749#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 759#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_to_smt_re_unfold_pos_component x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_749 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_759 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -25279,7 +25630,7 @@ theorem eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent_spec (n : Nat) (ih :
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_749 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_759 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5fre_5funfold_5fpos_5fcomponent_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -25917,12 +26268,12 @@ theorem body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec (n : Nat) (ih : Sp
 theorem eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec.Spec n := by
   intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
   unfold eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 759#u32 _ [a0, a1, a2, a3, a4] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 769#u32 _ [a0, a1, a2, a3, a4] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__eo_to_smt_tuple_prepend_rec x_a0 x_a1 x_a2 x_a3 x_a4))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, b3, b4, y0, y1, y2, y3, y4, hargs, hb0, hb1, hb2, hb3, hb4, hr⟩ := ProgramSem.of_759 hsem
+      obtain ⟨b0, b1, b2, b3, b4, y0, y1, y2, y3, y4, hargs, hb0, hb1, hb2, hb3, hb4, hr⟩ := ProgramSem.of_769 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -25933,7 +26284,7 @@ theorem eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec (n : Nat) (ih : ∀ m <
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_759 ⟨a0, a1, a2, a3, a4, x_a0, x_a1, x_a2, x_a3, x_a4, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, Rep.mono hpre h_a3, Rep.mono hpre h_a4, h⟩)
+      exact ProgramSem.to_769 ⟨a0, a1, a2, a3, a4, x_a0, x_a1, x_a2, x_a3, x_a4, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, Rep.mono hpre h_a3, Rep.mono hpre h_a4, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
   rintro ⟨r, s'⟩ h
@@ -26643,19 +26994,19 @@ theorem body_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store
 theorem eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftype.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24eo_5fto_5fsmt_5ftype
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 762#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 772#u32 _ [a0] rfl
     (fun s1 => body_eo__24eo_5fto_5fsmt_5ftype s1 a0) (fun s' t => Represents.rep s' t (__eo_to_smt_type x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_762 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_772 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_762 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_772 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5fto_5fsmt_5ftype_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -28944,12 +29295,12 @@ theorem body_eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n) (
 theorem eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fdt_5fcons_5frec.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24eo_5ftypeof_5fdt_5fcons_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 810#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 820#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24eo_5ftypeof_5fdt_5fcons_5frec s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_typeof_dt_cons_rec x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_810 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_820 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -28958,7 +29309,7 @@ theorem eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : ∀ m < n, Spec
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_810 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_820 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -29094,12 +29445,12 @@ theorem body_eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : Specs n)
 theorem eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fdt_5fsel_5freturn.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24eo_5ftypeof_5fdt_5fsel_5freturn
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 811#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 821#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24eo_5ftypeof_5fdt_5fsel_5freturn s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_typeof_dt_sel_return x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_811 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_821 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -29108,7 +29459,7 @@ theorem eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : ∀ m < n, Sp
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_811 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_821 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -29475,6 +29826,58 @@ theorem eo__24eo_5ftypeof_5fite_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fite_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5flambda_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5flambda s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_lambda.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_lambda.case_0 x_a0 x_a1 x_a2 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5flambda
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24eo_5fList.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_lambda.case_0
+  store_step with ih.eo__24get_5flambda_5ftype s1 a1 a2 _ _ hinv1 h64 (hG.rem hrem) h_a1 h_a2 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_lambda.case_0 using hn_a0 hn_a1 hn_a2
+
+/-- logos's `__eo_typeof_lambda` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5flambda.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
+    __eo_typeof_lambda x_a0 x_a1 x_a2 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_lambda.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_lambda
+  unfold EoCases.__eo_typeof_lambda.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5flambda_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    body_eo__24eo_5ftypeof_5flambda s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_lambda x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5flambda.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
+  unfold body_eo__24eo_5ftypeof_5flambda
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5flambda_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1 hn_a2
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1 hn_a2
+  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_typeof_lambda.case_0
+
+theorem eo__24eo_5ftypeof_5flambda_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5flambda.Spec n := by
+  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
+  unfold eo__24eo_5ftypeof_5flambda
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5flambda s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_typeof_lambda x_a0 x_a1 x_a2))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5flambda_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
@@ -31792,12 +32195,12 @@ theorem body_eo__24extract_5fantec_5frec_spec (n : Nat) (ih : Specs n) (s : Stor
 theorem eo__24extract_5fantec_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24extract_5fantec_5frec.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24extract_5fantec_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 872#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 883#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24extract_5fantec_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__extract_antec_rec x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_872 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_883 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -31805,7 +32208,7 @@ theorem eo__24extract_5fantec_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : e
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_872 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_883 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24extract_5fantec_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -32000,12 +32403,12 @@ theorem body_eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : Specs n) (s : Sto
 theorem eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24get_5farg_5flist_5frec.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24get_5farg_5flist_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 879#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 890#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24get_5farg_5flist_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__get_arg_list_rec x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_879 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_890 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -32013,9 +32416,95 @@ theorem eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : 
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_879 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_890 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24get_5farg_5flist_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24get_5flambda_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
+    case_0_eo__24get_5flambda_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__get_lambda_type.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__get_lambda_type.case_0 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24get_5flambda_5ftype
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__get_lambda_type.case_0
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__get_lambda_type.case_0
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__get_lambda_type.case_0
+  pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_v5 as ⟨v8, x_v8, h_v8⟩ ⟨v9, x_v9, h_v9⟩ else hinv1 hG in EoCases.__get_lambda_type.case_0
+  store_step with ih.eo__24get_5flambda_5ftype s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9
+  step as ⟨e_v11, he_v11⟩
+  store_step with CtorSpec.eo__24emb_5fFunType.construct s2 e_v11 (by rw [he_v11]; exact empty_args) hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10
+  store_step with Store.apply_mk_rep s3 v11 v9 _ _ hinv3 h64 h_v11 h_v9 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11
+  store_step with Store.apply_mk_rep s4 v12 v10 _ _ hinv4 h64 h_v12 h_v10 as ⟨v13, s5, hinv5, h_v13⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12
+  case_done hinv5 hG with h_v13 in EoCases.__get_lambda_type.case_0 using hn_a0 hn_a1 hn_v1 hn_v2 hn_v4 hn_v5
+
+theorem case_1_eo__24get_5flambda_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
+    case_1_eo__24get_5flambda_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__get_lambda_type.case_1 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__get_lambda_type.case_1 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24get_5flambda_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__get_lambda_type.case_1
+  case_done hinv1 hG with h_a1 in EoCases.__get_lambda_type.case_1 using hn_a0 hn_a1
+
+/-- logos's `__get_lambda_type` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24get_5flambda_5ftype.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __get_lambda_type x_a0 x_a1 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__get_lambda_type.case_0 x_a0 x_a1, EoCases.__get_lambda_type.case_1 x_a0 x_a1] HasStuck.stuck) := by
+  conv => lhs; unfold __get_lambda_type
+  unfold EoCases.__get_lambda_type.case_0 EoCases.__get_lambda_type.case_1
+  logos_eq
+
+theorem body_eo__24get_5flambda_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    body_eo__24get_5flambda_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__get_lambda_type x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24get_5flambda_5ftype.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24get_5flambda_5ftype
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  case_step with case_0_eo__24get_5flambda_5ftype_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
+  case_step with case_1_eo__24get_5flambda_5ftype_spec n ih s1 a0 a1 x_a0 x_a1 hinv1 h64 (hG.rem hrem) h_a0 h_a1 hn_a0 hn_a1
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1 hc0
+  body_stuck hinv2 hG using hn_a0 hn_a1 hc0 hc1 in EoCases.__get_lambda_type.case_0 EoCases.__get_lambda_type.case_1
+
+theorem eo__24get_5flambda_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24get_5flambda_5ftype.Spec n := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  unfold eo__24get_5flambda_5ftype
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 893#u32 _ [a0, a1] rfl
+    (fun s1 => body_eo__24get_5flambda_5ftype s1 a0 a1) (fun s' t => Represents.rep s' t (__get_lambda_type x_a0 x_a1))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (by
+      intro s1 res hn hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_893 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl, rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
+      exact hr)
+    (by
+      intro s1 res hpre h
+      exact ProgramSem.to_893 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24get_5flambda_5ftype_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
@@ -32207,12 +32696,12 @@ theorem body_eo__24is_5fabsorb_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (
 theorem eo__24is_5fabsorb_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24is_5fabsorb_5frec.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24is_5fabsorb_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 889#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 901#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24is_5fabsorb_5frec s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__is_absorb_rec x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_889 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_901 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -32221,7 +32710,7 @@ theorem eo__24is_5fabsorb_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__2
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_889 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_901 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24is_5fabsorb_5frec_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -32484,12 +32973,12 @@ theorem body_eo__24is_5frenaming_5frec_spec (n : Nat) (ih : Specs n) (s : Store)
 theorem eo__24is_5frenaming_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24is_5frenaming_5frec.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24is_5frenaming_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 900#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 912#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24is_5frenaming_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__is_renaming_rec x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_900 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_912 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -32497,7 +32986,7 @@ theorem eo__24is_5frenaming_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo_
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_900 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_912 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24is_5frenaming_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -32699,19 +33188,19 @@ theorem body_eo__24is_5fseq_5fconst_5frec_spec (n : Nat) (ih : Specs n) (s : Sto
 theorem eo__24is_5fseq_5fconst_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24is_5fseq_5fconst_5frec.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24is_5fseq_5fconst_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 902#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 914#u32 _ [a0] rfl
     (fun s1 => body_eo__24is_5fseq_5fconst_5frec s1 a0) (fun s' t => Represents.rep s' t (__is_seq_const_rec x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_902 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_914 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_902 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_914 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24is_5fseq_5fconst_5frec_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -32785,19 +33274,19 @@ theorem body_eo__24lower_5fnot_5fand_spec (n : Nat) (ih : Specs n) (s : Store) (
 theorem eo__24lower_5fnot_5fand_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24lower_5fnot_5fand.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24lower_5fnot_5fand
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 905#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 917#u32 _ [a0] rfl
     (fun s1 => body_eo__24lower_5fnot_5fand s1 a0) (fun s' t => Represents.rep s' t (__lower_not_and x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_905 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_917 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_905 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_917 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24lower_5fnot_5fand_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -32923,12 +33412,12 @@ theorem body_eo__24mk_5farith_5fsum_5fub_5frec_spec (n : Nat) (ih : Specs n) (s 
 theorem eo__24mk_5farith_5fsum_5fub_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5farith_5fsum_5fub_5frec.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24mk_5farith_5fsum_5fub_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 912#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 924#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24mk_5farith_5fsum_5fub_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__mk_arith_sum_ub_rec x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_912 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_924 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -32936,7 +33425,7 @@ theorem eo__24mk_5farith_5fsum_5fub_5frec_spec (n : Nat) (ih : ∀ m < n, Specs 
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_912 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_924 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5farith_5fsum_5fub_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -33065,12 +33554,12 @@ theorem body_eo__24mk_5fcong_5frhs_spec (n : Nat) (ih : Specs n) (s : Store) (a0
 theorem eo__24mk_5fcong_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fcong_5frhs.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24mk_5fcong_5frhs
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 914#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 926#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24mk_5fcong_5frhs s1 a0 a1) (fun s' t => Represents.rep s' t (__mk_cong_rhs x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_914 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_926 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33078,7 +33567,7 @@ theorem eo__24mk_5fcong_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24m
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_914 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_926 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fcong_5frhs_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -33155,19 +33644,19 @@ theorem body_eo__24mk_5fdistinct_5felim_spec (n : Nat) (ih : Specs n) (s : Store
 theorem eo__24mk_5fdistinct_5felim_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fdistinct_5felim.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24mk_5fdistinct_5felim
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 915#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 927#u32 _ [a0] rfl
     (fun s1 => body_eo__24mk_5fdistinct_5felim s1 a0) (fun s' t => Represents.rep s' t (__mk_distinct_elim x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_915 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_927 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_915 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_927 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fdistinct_5felim_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -33248,12 +33737,12 @@ theorem body_eo__24mk_5fdistinct_5felim_5frec_spec (n : Nat) (ih : Specs n) (s :
 theorem eo__24mk_5fdistinct_5felim_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fdistinct_5felim_5frec.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24mk_5fdistinct_5felim_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 916#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 928#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24mk_5fdistinct_5felim_5frec s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__mk_distinct_elim_rec x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_916 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_928 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33262,7 +33751,7 @@ theorem eo__24mk_5fdistinct_5felim_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_916 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_928 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fdistinct_5felim_5frec_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -33381,12 +33870,12 @@ theorem body_eo__24mk_5fdt_5finst_5frec_spec (n : Nat) (ih : Specs n) (s : Store
 theorem eo__24mk_5fdt_5finst_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fdt_5finst_5frec.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24mk_5fdt_5finst_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 920#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 933#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24mk_5fdt_5finst_5frec s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__mk_dt_inst_rec x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_920 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_933 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33395,7 +33884,7 @@ theorem eo__24mk_5fdt_5finst_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_920 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_933 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fdt_5finst_5frec_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -33471,12 +33960,12 @@ theorem body_eo__24mk_5fdt_5fsplit_spec (n : Nat) (ih : Specs n) (s : Store) (a0
 theorem eo__24mk_5fdt_5fsplit_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fdt_5fsplit.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24mk_5fdt_5fsplit
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 922#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 936#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24mk_5fdt_5fsplit s1 a0 a1) (fun s' t => Represents.rep s' t (__mk_dt_split x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_922 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_936 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33484,7 +33973,7 @@ theorem eo__24mk_5fdt_5fsplit_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24m
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_922 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_936 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fdt_5fsplit_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -33611,12 +34100,12 @@ theorem body_eo__24mk_5fho_5fcong_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
 theorem eo__24mk_5fho_5fcong_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fho_5fcong.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24mk_5fho_5fcong
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 924#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 939#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24mk_5fho_5fcong s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__mk_ho_cong x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_924 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_939 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33625,7 +34114,7 @@ theorem eo__24mk_5fho_5fcong_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_924 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_939 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fho_5fcong_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -33702,12 +34191,12 @@ theorem body_eo__24mk_5fnary_5fcong_5frhs_spec (n : Nat) (ih : Specs n) (s : Sto
 theorem eo__24mk_5fnary_5fcong_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fnary_5fcong_5frhs.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24mk_5fnary_5fcong_5frhs
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 925#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 940#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24mk_5fnary_5fcong_5frhs s1 a0 a1) (fun s' t => Represents.rep s' t (__mk_nary_cong_rhs x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_925 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_940 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33715,7 +34204,7 @@ theorem eo__24mk_5fnary_5fcong_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs m) : 
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_925 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_940 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fnary_5fcong_5frhs_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -33791,12 +34280,12 @@ theorem body_eo__24mk_5fquant_5fminiscope_5fand_spec (n : Nat) (ih : Specs n) (s
 theorem eo__24mk_5fquant_5fminiscope_5fand_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fquant_5fminiscope_5fand.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24mk_5fquant_5fminiscope_5fand
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 927#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 942#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24mk_5fquant_5fminiscope_5fand s1 a0 a1) (fun s' t => Represents.rep s' t (__mk_quant_miniscope_and x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_927 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_942 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33804,7 +34293,7 @@ theorem eo__24mk_5fquant_5fminiscope_5fand_spec (n : Nat) (ih : ∀ m < n, Specs
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_927 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_942 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fquant_5fminiscope_5fand_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -33948,12 +34437,12 @@ theorem body_eo__24mk_5fre_5fconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a
 theorem eo__24mk_5fre_5fconcat_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5fre_5fconcat.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24mk_5fre_5fconcat
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 929#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 944#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24mk_5fre_5fconcat s1 a0 a1) (fun s' t => Represents.rep s' t (__mk_re_concat x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_929 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_944 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -33961,7 +34450,7 @@ theorem eo__24mk_5fre_5fconcat_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_929 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_944 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5fre_5fconcat_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -34131,12 +34620,12 @@ theorem body_eo__24mk_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a
 theorem eo__24mk_5ftrans_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5ftrans.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24mk_5ftrans
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 937#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 952#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24mk_5ftrans s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__mk_trans x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_937 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_952 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -34145,7 +34634,7 @@ theorem eo__24mk_5ftrans_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24mk_5ft
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_937 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_952 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24mk_5ftrans_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -34319,12 +34808,12 @@ theorem body_eo__24re_5fsplit_5fstr_5fto_5fre_spec (n : Nat) (ih : Specs n) (s :
 theorem eo__24re_5fsplit_5fstr_5fto_5fre_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24re_5fsplit_5fstr_5fto_5fre.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24re_5fsplit_5fstr_5fto_5fre
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 954#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 969#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24re_5fsplit_5fstr_5fto_5fre s1 a0 a1) (fun s' t => Represents.rep s' t (__re_split_str_to_re x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_954 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_969 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -34332,7 +34821,7 @@ theorem eo__24re_5fsplit_5fstr_5fto_5fre_spec (n : Nat) (ih : ∀ m < n, Specs m
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_954 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_969 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24re_5fsplit_5fstr_5fto_5fre_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -34612,12 +35101,12 @@ theorem body_eo__24smtx_5fdd_5fhas_5fdt_spec (n : Nat) (ih : Specs n) (s : Store
 theorem eo__24smtx_5fdd_5fhas_5fdt_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdd_5fhas_5fdt.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdd_5fhas_5fdt
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 971#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 986#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdd_5fhas_5fdt s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dd_has_dt x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_971 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_986 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -34625,7 +35114,7 @@ theorem eo__24smtx_5fdd_5fhas_5fdt_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_971 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_986 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdd_5fhas_5fdt_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -34701,12 +35190,12 @@ theorem body_eo__24smtx_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store) 
 theorem eo__24smtx_5fdd_5flookup_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdd_5flookup.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdd_5flookup
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 972#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 987#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdd_5flookup s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dd_lookup x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_972 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_987 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -34714,7 +35203,7 @@ theorem eo__24smtx_5fdd_5flookup_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_972 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_987 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdd_5flookup_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -34790,12 +35279,12 @@ theorem body_eo__24smtx_5fdecl_5finhabited_spec (n : Nat) (ih : Specs n) (s : St
 theorem eo__24smtx_5fdecl_5finhabited_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdecl_5finhabited.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdecl_5finhabited
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 973#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 988#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdecl_5finhabited s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_decl_inhabited x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_973 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_988 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -34803,7 +35292,7 @@ theorem eo__24smtx_5fdecl_5finhabited_spec (n : Nat) (ih : ∀ m < n, Specs m) :
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_973 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_988 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdecl_5finhabited_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -34879,12 +35368,12 @@ theorem body_eo__24smtx_5fdecl_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Sto
 theorem eo__24smtx_5fdecl_5fwf_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdecl_5fwf_5frec.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdecl_5fwf_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 974#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 989#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdecl_5fwf_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_decl_wf_rec x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_974 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_989 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -34892,7 +35381,7 @@ theorem eo__24smtx_5fdecl_5fwf_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : 
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_974 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_989 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdecl_5fwf_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -34978,12 +35467,12 @@ theorem body_eo__24smtx_5fdt_5fcons_5finhabited_spec (n : Nat) (ih : Specs n) (s
 theorem eo__24smtx_5fdt_5fcons_5finhabited_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdt_5fcons_5finhabited.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdt_5fcons_5finhabited
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 975#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 990#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdt_5fcons_5finhabited s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dt_cons_inhabited x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_975 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_990 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -34991,7 +35480,7 @@ theorem eo__24smtx_5fdt_5fcons_5finhabited_spec (n : Nat) (ih : ∀ m < n, Specs
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_975 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_990 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdt_5fcons_5finhabited_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -35080,12 +35569,12 @@ theorem body_eo__24smtx_5fdt_5fcons_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s 
 theorem eo__24smtx_5fdt_5fcons_5fwf_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdt_5fcons_5fwf_5frec.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdt_5fcons_5fwf_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 976#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 991#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdt_5fcons_5fwf_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dt_cons_wf_rec x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_976 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_991 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -35093,7 +35582,7 @@ theorem eo__24smtx_5fdt_5fcons_5fwf_5frec_spec (n : Nat) (ih : ∀ m < n, Specs 
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_976 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_991 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdt_5fcons_5fwf_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -35159,12 +35648,12 @@ theorem body_eo__24smtx_5fdt_5finhabited_spec (n : Nat) (ih : Specs n) (s : Stor
 theorem eo__24smtx_5fdt_5finhabited_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdt_5finhabited.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdt_5finhabited
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 977#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 992#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdt_5finhabited s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dt_inhabited x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_977 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_992 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -35172,7 +35661,7 @@ theorem eo__24smtx_5fdt_5finhabited_spec (n : Nat) (ih : ∀ m < n, Specs m) : e
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_977 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_992 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdt_5finhabited_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -35302,12 +35791,12 @@ theorem body_eo__24smtx_5fdt_5fnum_5fsels_spec (n : Nat) (ih : Specs n) (s : Sto
 theorem eo__24smtx_5fdt_5fnum_5fsels_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdt_5fnum_5fsels.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdt_5fnum_5fsels
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 978#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 993#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdt_5fnum_5fsels s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dt_num_sels x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_978 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_993 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -35315,7 +35804,7 @@ theorem eo__24smtx_5fdt_5fnum_5fsels_spec (n : Nat) (ih : ∀ m < n, Specs m) : 
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_978 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_993 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdt_5fnum_5fsels_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -35382,12 +35871,12 @@ theorem body_eo__24smtx_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store)
 theorem eo__24smtx_5fdt_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdt_5fresolve.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdt_5fresolve
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 979#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 994#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdt_5fresolve s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dt_resolve x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_979 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_994 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -35395,7 +35884,7 @@ theorem eo__24smtx_5fdt_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo_
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_979 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_994 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdt_5fresolve_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -35461,12 +35950,12 @@ theorem body_eo__24smtx_5fdt_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Store
 theorem eo__24smtx_5fdt_5fwf_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdt_5fwf_5frec.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdt_5fwf_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 980#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 995#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdt_5fwf_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dt_wf_rec x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_980 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_995 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -35474,7 +35963,7 @@ theorem eo__24smtx_5fdt_5fwf_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_980 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_995 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdt_5fwf_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -35539,19 +36028,19 @@ theorem body_eo__24smtx_5fdtc_5fnum_5fsels_spec (n : Nat) (ih : Specs n) (s : St
 theorem eo__24smtx_5fdtc_5fnum_5fsels_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdtc_5fnum_5fsels.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24smtx_5fdtc_5fnum_5fsels
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 981#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 996#u32 _ [a0] rfl
     (fun s1 => body_eo__24smtx_5fdtc_5fnum_5fsels s1 a0) (fun s' t => Represents.rep s' t (__smtx_dtc_num_sels x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_981 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_996 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_981 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_996 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdtc_5fnum_5fsels_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -35638,12 +36127,12 @@ theorem body_eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store
 theorem eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fdtc_5fresolve.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24smtx_5fdtc_5fresolve
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 982#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 997#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24smtx_5fdtc_5fresolve s1 a0 a1) (fun s' t => Represents.rep s' t (__smtx_dtc_resolve x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_982 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_997 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -35651,7 +36140,7 @@ theorem eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_982 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_997 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fdtc_5fresolve_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -35883,19 +36372,19 @@ theorem body_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : St
 theorem eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5finhabited_5ftype.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24smtx_5finhabited_5ftype
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 983#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 998#u32 _ [a0] rfl
     (fun s1 => body_eo__24smtx_5finhabited_5ftype s1 a0) (fun s' t => Represents.rep s' t (__smtx_inhabited_type x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_983 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_998 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_983 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_998 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5finhabited_5ftype_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -36098,12 +36587,12 @@ theorem body_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs n)
 theorem eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5fret_5ftypeof_5fsel_5frec.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24smtx_5fret_5ftypeof_5fsel_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 985#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1000#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24smtx_5fret_5ftypeof_5fsel_5frec s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__smtx_ret_typeof_sel_rec x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_985 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_1000 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -36112,7 +36601,7 @@ theorem eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : ∀ m < n, Sp
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_985 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_1000 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -36193,19 +36682,19 @@ theorem body_eo__24smtx_5ftype_5fwf_spec (n : Nat) (ih : Specs n) (s : Store) (a
 theorem eo__24smtx_5ftype_5fwf_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5ftype_5fwf.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24smtx_5ftype_5fwf
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 986#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1001#u32 _ [a0] rfl
     (fun s1 => body_eo__24smtx_5ftype_5fwf s1 a0) (fun s' t => Represents.rep s' t (__smtx_type_wf x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_986 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_1001 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_986 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_1001 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5ftype_5fwf_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -36532,19 +37021,19 @@ theorem body_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Sto
 theorem eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5ftype_5fwf_5frec.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24smtx_5ftype_5fwf_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 988#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1003#u32 _ [a0] rfl
     (fun s1 => body_eo__24smtx_5ftype_5fwf_5frec s1 a0) (fun s' t => Represents.rep s' t (__smtx_type_wf_rec x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_988 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_1003 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_988 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_1003 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5ftype_5fwf_5frec_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -37260,12 +37749,12 @@ theorem body_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n)
 theorem eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24smtx_5ftypeof_5fdt_5fcons_5frec.Spec n := by
   intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
   unfold eo__24smtx_5ftypeof_5fdt_5fcons_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1000#u32 _ [a0, a1, a2] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1016#u32 _ [a0, a1, a2] rfl
     (fun s1 => body_eo__24smtx_5ftypeof_5fdt_5fcons_5frec s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__smtx_typeof_dt_cons_rec x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_1000 hsem
+      obtain ⟨b0, b1, b2, y0, y1, y2, hargs, hb0, hb1, hb2, hr⟩ := ProgramSem.of_1016 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -37274,7 +37763,7 @@ theorem eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : ∀ m < n, Sp
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_1000 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
+      exact ProgramSem.to_1016 ⟨a0, a1, a2, x_a0, x_a1, x_a2, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
@@ -39459,12 +39948,12 @@ theorem body_eo__24str_5fstrip_5fprefix_spec (n : Nat) (ih : Specs n) (s : Store
 theorem eo__24str_5fstrip_5fprefix_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24str_5fstrip_5fprefix.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24str_5fstrip_5fprefix
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1073#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1090#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24str_5fstrip_5fprefix s1 a0 a1) (fun s' t => Represents.rep s' t (__str_strip_prefix x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_1073 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_1090 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -39472,7 +39961,7 @@ theorem eo__24str_5fstrip_5fprefix_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_1073 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_1090 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24str_5fstrip_5fprefix_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -39590,12 +40079,12 @@ theorem body_eo__24strip_5feven_5fexponent_spec (n : Nat) (ih : Specs n) (s : St
 theorem eo__24strip_5feven_5fexponent_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24strip_5feven_5fexponent.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24strip_5feven_5fexponent
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1077#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1094#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24strip_5feven_5fexponent s1 a0 a1) (fun s' t => Represents.rep s' t (__strip_even_exponent x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_1077 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_1094 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -39603,7 +40092,7 @@ theorem eo__24strip_5feven_5fexponent_spec (n : Nat) (ih : ∀ m < n, Specs m) :
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_1077 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_1094 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24strip_5feven_5fexponent_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -39858,19 +40347,19 @@ theorem body_eo__24tuple_5farg_5flist_spec (n : Nat) (ih : Specs n) (s : Store) 
 theorem eo__24tuple_5farg_5flist_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24tuple_5farg_5flist.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
   unfold eo__24tuple_5farg_5flist
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1081#u32 _ [a0] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1098#u32 _ [a0] rfl
     (fun s1 => body_eo__24tuple_5farg_5flist s1 a0) (fun s' t => Represents.rep s' t (__tuple_arg_list x_a0))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_1081 hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_1098 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_1081 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+      exact ProgramSem.to_1098 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24tuple_5farg_5flist_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
@@ -39988,12 +40477,12 @@ theorem body_eo__24tuple_5fupdater_5felim_5frhs_spec (n : Nat) (ih : Specs n) (s
 theorem eo__24tuple_5fupdater_5felim_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24tuple_5fupdater_5felim_5frhs.Spec n := by
   intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
   unfold eo__24tuple_5fupdater_5felim_5frhs
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1084#u32 _ [a0, a1] rfl
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1101#u32 _ [a0, a1] rfl
     (fun s1 => body_eo__24tuple_5fupdater_5felim_5frhs s1 a0 a1) (fun s' t => Represents.rep s' t (__tuple_updater_elim_rhs x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (by
       intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_1084 hsem
+      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_1101 hsem
       simp only [List.cons.injEq, and_true] at hargs
       obtain ⟨rfl, rfl⟩ := hargs
       obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
@@ -40001,7 +40490,7 @@ theorem eo__24tuple_5fupdater_5felim_5frhs_spec (n : Nat) (ih : ∀ m < n, Specs
       exact hr)
     (by
       intro s1 res hpre h
-      exact ProgramSem.to_1084 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
+      exact ProgramSem.to_1101 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24tuple_5fupdater_5felim_5frhs_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
   rintro ⟨r, s'⟩ h
@@ -40089,7 +40578,8 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fnil_5f_40_40TypedList_2econs_spec n ih,
       eo__24eo_5fprog_5fand_5fintro_spec n ih,
       eo__24eo_5fprog_5farith_2dabs_2deq_spec n ih,
-      eo__24eo_5fprog_5farith_2ddiv_2delim_2dto_2dreal_spec n ih,
+      eo__24eo_5fprog_5farith_2ddiv_2dint_2dto_2dreal_spec n ih,
+      eo__24eo_5fprog_5farith_2ddiv_2dtotal_2dint_2dto_2dreal_spec n ih,
       eo__24eo_5fprog_5farith_2delim_2dgt_spec n ih,
       eo__24eo_5fprog_5farith_2delim_2dleq_spec n ih,
       eo__24eo_5fprog_5farith_2delim_2dlt_spec n ih,
@@ -40251,6 +40741,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fsets_2dinter_2demp1_spec n ih,
       eo__24eo_5fprog_5fsets_2dinter_2demp2_spec n ih,
       eo__24eo_5fprog_5fsets_2dinter_2dmember_spec n ih,
+      eo__24eo_5fprog_5fsets_2dinter_2dself_spec n ih,
       eo__24eo_5fprog_5fsets_2dis_2dempty_2delim_spec n ih,
       eo__24eo_5fprog_5fsets_2dis_2dsingleton_2delim_spec n ih,
       eo__24eo_5fprog_5fsets_2dmember_2demp_spec n ih,
@@ -40264,6 +40755,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fsets_2dunion_2demp1_spec n ih,
       eo__24eo_5fprog_5fsets_2dunion_2demp2_spec n ih,
       eo__24eo_5fprog_5fsets_2dunion_2dmember_spec n ih,
+      eo__24eo_5fprog_5fsets_2dunion_2dself_spec n ih,
       eo__24eo_5fprog_5fsets_5fext_spec n ih,
       eo__24eo_5fprog_5fsets_5fsingleton_5finj_spec n ih,
       eo__24eo_5fprog_5fskolem_5fintro_spec n ih,
@@ -40347,6 +40839,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec n ih,
       eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec n ih,
       eo__24eo_5fto_5fsmt_5fexists_spec n ih,
+      eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec n ih,
       eo__24eo_5fto_5fsmt_5fnat_spec n ih,
       eo__24eo_5fto_5fsmt_5fnat_5fis_5fvalid_spec n ih,
       eo__24eo_5fto_5fsmt_5fquantifiers_5fskolemize_spec n ih,
@@ -40408,6 +40901,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5ftypeof_5fis_spec n ih,
       eo__24eo_5ftypeof_5fis_5fint_spec n ih,
       eo__24eo_5ftypeof_5fite_spec n ih,
+      eo__24eo_5ftypeof_5flambda_spec n ih,
       eo__24eo_5ftypeof_5fnot_spec n ih,
       eo__24eo_5ftypeof_5for_spec n ih,
       eo__24eo_5ftypeof_5fre_2e_2a_spec n ih,
@@ -40451,6 +40945,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24extract_5fantec_5frec_spec n ih,
       eo__24from_5fclause_spec n ih,
       eo__24get_5farg_5flist_5frec_spec n ih,
+      eo__24get_5flambda_5ftype_spec n ih,
       eo__24get_5fvar_5ftype_spec n ih,
       eo__24is_5fabsorb_spec n ih,
       eo__24is_5fabsorb_5frec_spec n ih,

@@ -318,12 +318,21 @@ mod tests {
 
     #[test]
     fn what_the_checker_has_no_form_for_is_an_error() {
+        // a rule logos leaves out
+        let rule = "(declare-const p Bool)\n(assume @a p)\n(step @p1 p :rule trust)\n";
+        assert!(verdict(rule).is_err());
+    }
+
+    #[test]
+    fn a_lambda_is_checked() {
+        // Since logos #517 and #519 (logos bdcbd95f) the CPC translates
+        // lambda, so the checker has a form for it: this proof derives
+        // nothing, which Ethos accepts (`correct`) and the checker says is
+        // no refutation. Before, the checker had no form for it, an error.
         let lambda = "(declare-const f (-> Int Int))
 (assume @a (not (= f (lambda ((x Int)) x))))
 ";
-        assert!(verdict(lambda).unwrap_err().contains("lambda"));
-        let rule = "(declare-const p Bool)\n(assume @a p)\n(step @p1 p :rule trust)\n";
-        assert!(verdict(rule).is_err());
+        assert_eq!(verdict(lambda), Ok(Verdict::Incorrect));
     }
 
     #[test]

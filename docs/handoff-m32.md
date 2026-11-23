@@ -62,38 +62,29 @@ and upstream Ethos. pathos pins the Ethos commit in `scripts/generate-cpc`
 
 ## What remains
 
-1. **Stage 5, the full CPC** (478 of its 1,086 programs generated; see
+1. **Stage 5, the full CPC** (484 of its 1,103 programs generated, from
+   logos `bdcbd95f`; see
    "Stage 5" below and `~/Projects/cvc5/pathos-m28/work/cpc-proofs-measure.md`).
    - Its proofs are not built. Hand-written lemmas that enumerate the
      calculus (`Store/Rep.lean`'s `uopCtor`, `cases op <;> rfl`) run out of
      memory at the CPC's 1,062 constructors and must be generated or
      reproved.
    - Its first remaining reasons:
-     - `$eo_to_smt` at case 169 (`mk_rational`);
+     - `$eo_to_smt` at case 170 (`mk_rational`);
      - `$eo_mk_premise_list` at `eo::cons` with a left-nested operator;
-     - `$eo_cmd_step_proven` at case 550 (a non-Boolean literal);
+     - `$eo_cmd_step_proven` at case 556 (a non-Boolean literal);
      - `$eo_typeof` at a call of `$eo_typeof_@from_bools`;
-     - `$smtx_typeof` at `$smtx_typeof_bv_op_2`.
+     - `$smtx_typeof` at a call of `$smtx_typeof_bindings`.
    - A top-level theorem for CPC also needs the argument masks (`ArgKind`
      against logos's `ArgTranslationKind`), CPC's command kinds, and a
      statement about the front end (`crates/pathos/src/adapter.rs`).
-2. **The harness's revisions** (`difftest.env`: `LOGOS_REV a3232131`,
-   `REFERENCE_REV e51f527c`): Daniel's decision.
-   - The full CPC crate is still compiled from logos `a3232131`, whose
-     Lean prints the selector's type unguarded, while its proof lines are
-     now guarded. It doesn't matter until stage 5 builds them, which
-     needs the CPC at a logos revision with #521 anyway.
-   - Moving `LOGOS_REV` changes the CPC's signature (1,104 programs at
-     the prototype's revision against 1,087): a full difftest.
-   - Moving `REFERENCE_REV` to an Ethos with #282 and #286 means
-     pathos-eoc must mirror them first (next item).
-3. **pathos-eoc's mirror of the stages**, when the reference Ethos moves:
-   - #286: `crates/pathos-eoc/src/lean_meta.rs:816-817` and
-     `crates/pathos-eoc/src/smt_meta.rs:673`, the function-type printing
-     (`__eo_mk_apply (__eo_mk_apply Term.FunType …` when evaluatable);
-   - #282's lean-meta, model_smt and semantics-compiler changes (fallback
-     cases, parallel bind), not yet looked at.
-4. **Smaller items:**
+2. **One revision of each, done (2026-11-23).** `difftest.env` has
+   `REFERENCE_REV` Ethos `bde41a79` and `LOGOS_REV` logos `bdcbd95f`, the
+   revisions both crates and the proofs are generated from. pathos-eoc
+   mirrors #282, #286 and #289's lean-meta outputs, and the eoc gate
+   agrees on all 3,551 cases. See `docs/ethos-differences.md` and
+   `docs/evidence.md`.
+3. **Smaller items:**
    - the repeated datatype name in one block (cvc5/ethos#285; pathos's
      compiled checker and Ethos disagree on it);
    - the selector invariant is no longer needed (A was chosen);

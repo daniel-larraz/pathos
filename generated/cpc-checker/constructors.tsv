@@ -53,7 +53,8 @@ $emb_r.and_intro	eo__24emb_5fr_2eand_5fintro	0
 $emb_r.arith_abs_eq	eo__24emb_5fr_2earith_5fabs_5feq	0
 $emb_r.arith_abs_int_gt	eo__24emb_5fr_2earith_5fabs_5fint_5fgt	0
 $emb_r.arith_abs_real_gt	eo__24emb_5fr_2earith_5fabs_5freal_5fgt	0
-$emb_r.arith_div_elim_to_real	eo__24emb_5fr_2earith_5fdiv_5felim_5fto_5freal	0
+$emb_r.arith_div_int_to_real	eo__24emb_5fr_2earith_5fdiv_5fint_5fto_5freal	0
+$emb_r.arith_div_total_int_to_real	eo__24emb_5fr_2earith_5fdiv_5ftotal_5fint_5fto_5freal	0
 $emb_r.arith_div_total_zero_int	eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5fint	0
 $emb_r.arith_div_total_zero_real	eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5freal	0
 $emb_r.arith_divisible_elim	eo__24emb_5fr_2earith_5fdivisible_5felim	0
@@ -112,6 +113,7 @@ $emb_r.arrays_ext	eo__24emb_5fr_2earrays_5fext	0
 $emb_r.arrays_read_over_write	eo__24emb_5fr_2earrays_5fread_5fover_5fwrite	0
 $emb_r.arrays_read_over_write_1	eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5f1	0
 $emb_r.arrays_read_over_write_contra	eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5fcontra	0
+$emb_r.beta_reduce	eo__24emb_5fr_2ebeta_5freduce	0
 $emb_r.bool_and_conf	eo__24emb_5fr_2ebool_5fand_5fconf	0
 $emb_r.bool_and_conf2	eo__24emb_5fr_2ebool_5fand_5fconf2	0
 $emb_r.bool_and_de_morgan	eo__24emb_5fr_2ebool_5fand_5fde_5fmorgan	0
@@ -178,6 +180,8 @@ $emb_r.bv_extract_sign_extend_3	eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f3
 $emb_r.bv_extract_whole	eo__24emb_5fr_2ebv_5fextract_5fwhole	0
 $emb_r.bv_ite_const_children_1	eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f1	0
 $emb_r.bv_ite_const_children_2	eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f2	0
+$emb_r.bv_ite_const_cond_1	eo__24emb_5fr_2ebv_5fite_5fconst_5fcond_5f1	0
+$emb_r.bv_ite_const_cond_2	eo__24emb_5fr_2ebv_5fite_5fconst_5fcond_5f2	0
 $emb_r.bv_ite_equal_children	eo__24emb_5fr_2ebv_5fite_5fequal_5fchildren	0
 $emb_r.bv_ite_equal_cond_1	eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f1	0
 $emb_r.bv_ite_equal_cond_2	eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f2	0
@@ -456,6 +460,7 @@ $emb_r.sets_inter_comm	eo__24emb_5fr_2esets_5finter_5fcomm	0
 $emb_r.sets_inter_emp1	eo__24emb_5fr_2esets_5finter_5femp1	0
 $emb_r.sets_inter_emp2	eo__24emb_5fr_2esets_5finter_5femp2	0
 $emb_r.sets_inter_member	eo__24emb_5fr_2esets_5finter_5fmember	0
+$emb_r.sets_inter_self	eo__24emb_5fr_2esets_5finter_5fself	0
 $emb_r.sets_is_empty_elim	eo__24emb_5fr_2esets_5fis_5fempty_5felim	0
 $emb_r.sets_is_singleton_elim	eo__24emb_5fr_2esets_5fis_5fsingleton_5felim	0
 $emb_r.sets_member_emp	eo__24emb_5fr_2esets_5fmember_5femp	0
@@ -470,6 +475,7 @@ $emb_r.sets_union_comm	eo__24emb_5fr_2esets_5funion_5fcomm	0
 $emb_r.sets_union_emp1	eo__24emb_5fr_2esets_5funion_5femp1	0
 $emb_r.sets_union_emp2	eo__24emb_5fr_2esets_5funion_5femp2	0
 $emb_r.sets_union_member	eo__24emb_5fr_2esets_5funion_5fmember	0
+$emb_r.sets_union_self	eo__24emb_5fr_2esets_5funion_5fself	0
 $emb_r.skolem_intro	eo__24emb_5fr_2eskolem_5fintro	0
 $emb_r.skolemize	eo__24emb_5fr_2eskolemize	0
 $emb_r.split	eo__24emb_5fr_2esplit	0
@@ -669,6 +675,8 @@ $emb_rsm.union	eo__24emb_5frsm_2eunion	2
 $emb_s.Stuck	eo__24emb_5fs_2eStuck	0
 $emb_s.cons	eo__24emb_5fs_2econs	2
 $emb_s.nil	eo__24emb_5fs_2enil	0
+$emb_sbd.cons	eo__24emb_5fsbd_2econs	4
+$emb_sbd.nil	eo__24emb_5fsbd_2enil	0
 $emb_sm.*	eo__24emb_5fsm_2e_2a	2
 $emb_sm.+	eo__24emb_5fsm_2e_2b	2
 $emb_sm.-	eo__24emb_5fsm_2e_2d	2
@@ -697,7 +705,7 @@ $emb_sm.UConst	eo__24emb_5fsm_2eUConst	2
 $emb_sm.Var	eo__24emb_5fsm_2eVar	2
 $emb_sm.abs	eo__24emb_5fsm_2eabs	1
 $emb_sm.and	eo__24emb_5fsm_2eand	2
-$emb_sm.bind	eo__24emb_5fsm_2ebind	4
+$emb_sm.bind	eo__24emb_5fsm_2ebind	2
 $emb_sm.bvadd	eo__24emb_5fsm_2ebvadd	2
 $emb_sm.bvand	eo__24emb_5fsm_2ebvand	2
 $emb_sm.bvashr	eo__24emb_5fsm_2ebvashr	2
@@ -747,6 +755,7 @@ $emb_sm.int.pow2	eo__24emb_5fsm_2eint_2epow2	1
 $emb_sm.int_to_bv	eo__24emb_5fsm_2eint_5fto_5fbv	2
 $emb_sm.is_int	eo__24emb_5fsm_2eis_5fint	1
 $emb_sm.ite	eo__24emb_5fsm_2eite	3
+$emb_sm.lam	eo__24emb_5fsm_2elam	3
 $emb_sm.map_diff	eo__24emb_5fsm_2emap_5fdiff	2
 $emb_sm.mod	eo__24emb_5fsm_2emod	2
 $emb_sm.mod_total	eo__24emb_5fsm_2emod_5ftotal	2
@@ -978,6 +987,7 @@ int_to_bv	eo_int_5fto_5fbv	1
 is	eo_is	1
 is_int	eo_is_5fint	0
 ite	eo_ite	0
+lambda	eo_lambda	0
 mod	eo_mod	0
 mod_total	eo_mod_5ftotal	0
 not	eo_not	0

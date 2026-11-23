@@ -15,75 +15,76 @@ $arith_rel_sum	none
 $arith_rel_trichotomy	none	
 $assoc_nil_nth	program	14
 $assoc_nil_nth_type	program	15
-$bv_bitblast_apply_binary	program	16
-$bv_bitblast_apply_ite	program	17
-$bv_bitblast_apply_unary	program	18
+$beta_reduce	program	16
+$bv_bitblast_apply_binary	program	17
+$bv_bitblast_apply_ite	program	18
+$bv_bitblast_apply_unary	program	19
 $bv_bitblast_binary_app	none	
-$bv_bitblast_concat	program	20
+$bv_bitblast_concat	program	21
 $bv_bitblast_head	none	
-$bv_bitblast_prefix	program	22
+$bv_bitblast_prefix	program	23
 $bv_bitblast_slt_impl	none	
-$bv_bitblast_subsequence	program	24
+$bv_bitblast_subsequence	program	25
 $bv_bitblast_tail	none	
 $bv_bitblast_ult	none	
-$bv_bitblast_ult_rec	program	27
+$bv_bitblast_ult_rec	program	28
 $bv_bitwidth	none	
-$bv_const_to_bitlist_rec	program	29
-$bv_div_mod_impl	program	30
-$bv_eval_concat	program	31
-$bv_get_first_const_child	program	32
+$bv_const_to_bitlist_rec	program	30
+$bv_div_mod_impl	program	31
+$bv_eval_concat	program	32
+$bv_get_first_const_child	program	33
 $bv_mk_bitblast_step	none	
-$bv_mk_bitblast_step_add	program	34
-$bv_mk_bitblast_step_bitwise	program	35
-$bv_mk_bitblast_step_concat	program	36
-$bv_mk_bitblast_step_eq_rec	program	37
-$bv_mk_bitblast_step_ite	program	38
-$bv_mk_bitblast_step_mul	program	39
-$bv_mk_bitblast_step_shl_rec	program	40
-$bv_mk_bitblast_step_shl_rec_step	program	41
-$bv_mk_bitblast_step_shr_rec	program	42
-$bv_mk_bitblast_step_shr_rec_step	program	43
-$bv_mk_bitblast_step_var_rec	program	44
+$bv_mk_bitblast_step_add	program	35
+$bv_mk_bitblast_step_bitwise	program	36
+$bv_mk_bitblast_step_concat	program	37
+$bv_mk_bitblast_step_eq_rec	program	38
+$bv_mk_bitblast_step_ite	program	39
+$bv_mk_bitblast_step_mul	program	40
+$bv_mk_bitblast_step_shl_rec	program	41
+$bv_mk_bitblast_step_shl_rec_step	program	42
+$bv_mk_bitblast_step_shr_rec	program	43
+$bv_mk_bitblast_step_shr_rec_step	program	44
+$bv_mk_bitblast_step_var_rec	program	45
 $bv_mk_bitwise_slicing	none	
-$bv_mk_bitwise_slicing_rec	program	46
-$bv_ripple_carry_adder_2	program	47
+$bv_mk_bitwise_slicing_rec	program	47
+$bv_ripple_carry_adder_2	program	48
 $bv_shift_add_multiplier	none	
-$bv_shift_add_multiplier_rec	program	49
-$bv_shift_add_multiplier_rec_step	program	50
-$bv_smulo_elim_rec	program	51
-$bv_umulo_elim_rec	program	52
+$bv_shift_add_multiplier_rec	program	50
+$bv_shift_add_multiplier_rec_step	program	51
+$bv_smulo_elim_rec	program	52
+$bv_umulo_elim_rec	program	53
 $chain_m_resolve	none	
 $chain_m_resolve_final	none	
-$chain_m_resolve_rec	program	55
+$chain_m_resolve_rec	program	56
 $chain_m_resolve_rec_step	none	
 $compute_card	none	
-$contains_atomic_term_list_free_rec	program	58
-$derivative	program	59
+$contains_atomic_term_list_free_rec	program	59
+$derivative	program	60
 $dt_arg_list	none	
-$dt_collapse_updater_rhs	program	61
-$dt_distinct_terms	program	62
-$dt_eq_cons	program	63
-$dt_find_cycle	program	64
-$dt_get_constructors	program	65
+$dt_collapse_updater_rhs	program	62
+$dt_distinct_terms	program	63
+$dt_eq_cons	program	64
+$dt_find_cycle	program	65
+$dt_get_constructors	program	66
 $dt_get_selectors	none	
-$dt_get_selectors_of_app	program	67
-$dt_updater_elim_rhs	program	68
+$dt_get_selectors_of_app	program	68
+$dt_updater_elim_rhs	program	69
 $eo_StateObj_proven	none	
 $eo_checker_is_refutation	none	
 $eo_cmd_step_pop_proven	none	
 $eo_cmd_step_proven	none	
-$eo_datatype_cons_selectors_rec	program	73
-$eo_datatype_constructors_rec	program	74
-$eo_dd_lookup	program	75
+$eo_datatype_cons_selectors_rec	program	74
+$eo_datatype_constructors_rec	program	75
+$eo_dd_lookup	program	76
 $eo_dd_resolve	none	
 $eo_disamb_type_seq.empty	none	
 $eo_disamb_type_set.empty	none	
 $eo_dt_constructors	none	
 $eo_dt_constructors_main	none	
-$eo_dt_resolve	program	81
+$eo_dt_resolve	program	82
 $eo_dt_selectors	none	
 $eo_dt_selectors_main	none	
-$eo_dtc_resolve	program	84
+$eo_dtc_resolve	program	85
 $eo_invoke_assume_list	none	
 $eo_invoke_cmd	none	
 $eo_invoke_cmd_check_proven	none	
@@ -91,7 +92,7 @@ $eo_invoke_cmd_list	none
 $eo_invoke_cmd_step_pop	none	
 $eo_is_bool_type	none	
 $eo_is_closed	none	
-$eo_is_closed_rec	program	92
+$eo_is_closed_rec	program	93
 $eo_is_list_nil	none	
 $eo_is_list_nil_*	none	
 $eo_is_list_nil_+	none	
@@ -125,7 +126,8 @@ $eo_prog_and_intro	none
 $eo_prog_arith-abs-eq	none	
 $eo_prog_arith-abs-int-gt	none	
 $eo_prog_arith-abs-real-gt	none	
-$eo_prog_arith-div-elim-to-real	none	
+$eo_prog_arith-div-int-to-real	none	
+$eo_prog_arith-div-total-int-to-real	none	
 $eo_prog_arith-div-total-zero-int	none	
 $eo_prog_arith-div-total-zero-real	none	
 $eo_prog_arith-divisible-elim	none	
@@ -184,6 +186,7 @@ $eo_prog_arrays_ext	none
 $eo_prog_arrays_read_over_write	none	
 $eo_prog_arrays_read_over_write_1	none	
 $eo_prog_arrays_read_over_write_contra	none	
+$eo_prog_beta-reduce	none	
 $eo_prog_bool-and-conf	none	
 $eo_prog_bool-and-conf2	none	
 $eo_prog_bool-and-de-morgan	none	
@@ -249,6 +252,8 @@ $eo_prog_bv-extract-sign-extend-3	none
 $eo_prog_bv-extract-whole	none	
 $eo_prog_bv-ite-const-children-1	none	
 $eo_prog_bv-ite-const-children-2	none	
+$eo_prog_bv-ite-const-cond-1	none	
+$eo_prog_bv-ite-const-cond-2	none	
 $eo_prog_bv-ite-equal-children	none	
 $eo_prog_bv-ite-equal-cond-1	none	
 $eo_prog_bv-ite-equal-cond-2	none	
@@ -526,6 +531,7 @@ $eo_prog_sets-inter-comm	none
 $eo_prog_sets-inter-emp1	none	
 $eo_prog_sets-inter-emp2	none	
 $eo_prog_sets-inter-member	none	
+$eo_prog_sets-inter-self	none	
 $eo_prog_sets-is-empty-elim	none	
 $eo_prog_sets-is-singleton-elim	none	
 $eo_prog_sets-member-emp	none	
@@ -539,6 +545,7 @@ $eo_prog_sets-union-comm	none
 $eo_prog_sets-union-emp1	none	
 $eo_prog_sets-union-emp2	none	
 $eo_prog_sets-union-member	none	
+$eo_prog_sets-union-self	none	
 $eo_prog_sets_choose_member	none	
 $eo_prog_sets_ext	none	
 $eo_prog_sets_singleton_inj	none	
@@ -736,19 +743,22 @@ $eo_push_proven_check	none
 $eo_state_is_closed	none	
 $eo_state_is_refutation	none	
 $eo_state_proven_nth	none	
-$eo_to_smt	program	737
+$eo_to_smt	program	744
+$eo_to_smt_apply	none	
 $eo_to_smt_array_deq_diff	none	
+$eo_to_smt_bindings_snoc	program	747
 $eo_to_smt_bv_size	none	
-$eo_to_smt_datatype	program	740
-$eo_to_smt_datatype_cons	program	741
-$eo_to_smt_datatype_decl	program	742
-$eo_to_smt_distinct	program	743
-$eo_to_smt_distinct_pairs	program	744
-$eo_to_smt_exists	program	745
+$eo_to_smt_datatype	program	749
+$eo_to_smt_datatype_cons	program	750
+$eo_to_smt_datatype_decl	program	751
+$eo_to_smt_distinct	program	752
+$eo_to_smt_distinct_pairs	program	753
+$eo_to_smt_exists	program	754
+$eo_to_smt_lambda_curry	program	755
 $eo_to_smt_nat	none	
 $eo_to_smt_nat_is_valid	none	
-$eo_to_smt_quantifiers_skolemize	program	748
-$eo_to_smt_re_unfold_pos_component	program	749
+$eo_to_smt_quantifiers_skolemize	program	758
+$eo_to_smt_re_unfold_pos_component	program	759
 $eo_to_smt_reserved_datatype_name	none	
 $eo_to_smt_seq.empty	none	
 $eo_to_smt_set.empty	none	
@@ -758,14 +768,14 @@ $eo_to_smt_tester	none
 $eo_to_smt_tuple_decl	none	
 $eo_to_smt_tuple_prepend	none	
 $eo_to_smt_tuple_prepend_of_type	none	
-$eo_to_smt_tuple_prepend_rec	program	759
+$eo_to_smt_tuple_prepend_rec	program	769
 $eo_to_smt_tuple_select	none	
 $eo_to_smt_tuple_update	none	
-$eo_to_smt_type	program	762
+$eo_to_smt_type	program	772
 $eo_to_smt_type_tuple	none	
-$eo_to_smt_typed_list_elem_type	program	764
+$eo_to_smt_typed_list_elem_type	program	774
 $eo_to_smt_updater	none	
-$eo_to_smt_updater_rec	program	766
+$eo_to_smt_updater_rec	program	776
 $eo_typeof	eo-type	
 $eo_typeof_+	none	
 $eo_typeof_/	none	
@@ -785,7 +795,7 @@ $eo_typeof_@const	none
 $eo_typeof_@div_by_zero	none	
 $eo_typeof_@from_bools	none	
 $eo_typeof_@purify	none	
-$eo_typeof_@quantifiers_skolemize	program	786
+$eo_typeof_@quantifiers_skolemize	program	796
 $eo_typeof_@re_unfold_pos_component	none	
 $eo_typeof_@sets_deq_diff	none	
 $eo_typeof_@strings_deq_diff	none	
@@ -809,8 +819,8 @@ $eo_typeof_concat	none
 $eo_typeof_distinct	none	
 $eo_typeof_div	none	
 $eo_typeof_divisible	none	
-$eo_typeof_dt_cons_rec	program	810
-$eo_typeof_dt_sel_return	program	811
+$eo_typeof_dt_cons_rec	program	820
+$eo_typeof_dt_sel_return	program	821
 $eo_typeof_extract	none	
 $eo_typeof_forall	none	
 $eo_typeof_fun_type	none	
@@ -820,6 +830,7 @@ $eo_typeof_int_to_bv	none
 $eo_typeof_is	none	
 $eo_typeof_is_int	none	
 $eo_typeof_ite	none	
+$eo_typeof_lambda	none	
 $eo_typeof_not	none	
 $eo_typeof_or	none	
 $eo_typeof_re.*	none	
@@ -862,144 +873,149 @@ $eo_typeof_str.to_re	none
 $eo_typeof_str.update	none	
 $eo_typeof_to_int	none	
 $eo_typeof_to_real	none	
-$eo_typeof_tuple	program	863
-$eo_typeof_tuple.select	program	864
-$eo_typeof_tuple.update	program	865
+$eo_typeof_tuple	program	874
+$eo_typeof_tuple.select	program	875
+$eo_typeof_tuple.update	program	876
 $eo_typeof_update	none	
 $eo_typeof_zero_extend	none	
-$eval_sets_inter	program	868
-$eval_sets_minus	program	869
+$eval_sets_inter	program	879
+$eval_sets_minus	program	880
 $eval_sets_op	none	
 $extract_antec	none	
-$extract_antec_rec	program	872
+$extract_antec_rec	program	883
 $from_clause	none	
 $get_a_norm	none	
-$get_a_norm_rec	program	875
+$get_a_norm_rec	program	886
 $get_aci_normal_form	none	
 $get_ai_norm	none	
-$get_ai_norm_rec	program	878
-$get_arg_list_rec	program	879
-$get_arith_poly_norm	program	880
-$get_bv_poly_norm_rec	program	881
-$get_nth_var_type	program	882
+$get_ai_norm_rec	program	889
+$get_arg_list_rec	program	890
+$get_arith_poly_norm	program	891
+$get_bv_poly_norm_rec	program	892
+$get_lambda_type	program	893
+$get_nth_var_type	program	894
 $get_unused_vars	none	
 $get_var_type	none	
 $get_zero	none	
 $greatest_int_lt	none	
-$iota_rec	program	887
+$iota_rec	program	899
 $is_absorb	none	
-$is_absorb_rec	program	889
+$is_absorb_rec	program	901
 $is_arith_type	none	
-$is_closed_rec	program	891
-$is_cons_app	program	892
+$is_closed_rec	program	903
+$is_cons_app	program	904
 $is_eq_maybe_to_real	none	
-$is_instantiation	program	894
+$is_instantiation	program	906
 $is_poly_norm_rel_consts	none	
 $is_poly_norm_rel_consts_rel	none	
-$is_quant_dt_split	program	897
-$is_quant_dt_split_conj	program	898
-$is_quant_miniscope_or	program	899
-$is_renaming_rec	program	900
+$is_quant_dt_split	program	909
+$is_quant_dt_split_conj	program	910
+$is_quant_miniscope_or	program	911
+$is_renaming_rec	program	912
 $is_seq_const	none	
-$is_seq_const_rec	program	902
-$is_var_list	program	903
+$is_seq_const_rec	program	914
+$is_var_list	program	915
 $least_int_gt	none	
-$lower_not_and	program	905
+$lower_not_and	program	917
 $mk_arith_mult_abs_comparison	none	
-$mk_arith_mult_abs_comparison_rec	program	907
+$mk_arith_mult_abs_comparison_rec	program	919
 $mk_arith_mult_neg	none	
 $mk_arith_mult_pos	none	
-$mk_arith_mult_sign_sgn	program	910
+$mk_arith_mult_sign_sgn	program	922
 $mk_arith_sum_ub	none	
-$mk_arith_sum_ub_rec	program	912
+$mk_arith_sum_ub_rec	program	924
 $mk_arith_trichotomy	none	
-$mk_cong_rhs	program	914
-$mk_distinct_elim	program	915
-$mk_distinct_elim_rec	program	916
+$mk_cong_rhs	program	926
+$mk_distinct_elim	program	927
+$mk_distinct_elim_rec	program	928
 $mk_dt_collapse_updater_rhs	none	
-$mk_dt_cons_eq	program	918
+$mk_dt_cons_eq	program	930
 $mk_dt_inst	none	
-$mk_dt_inst_rec	program	920
-$mk_dt_inst_tuple_rec	program	921
-$mk_dt_split	program	922
+$mk_dt_inst_prem	none	
+$mk_dt_inst_rec	program	933
+$mk_dt_inst_tuple	none	
+$mk_dt_inst_tuple_rec	program	935
+$mk_dt_split	program	936
+$mk_dt_updater_elim_conc	none	
 $mk_dt_updater_elim_rhs	none	
-$mk_ho_cong	program	924
-$mk_nary_cong_rhs	program	925
-$mk_quant_merge_prenex	program	926
-$mk_quant_miniscope_and	program	927
+$mk_ho_cong	program	939
+$mk_nary_cong_rhs	program	940
+$mk_quant_merge_prenex	program	941
+$mk_quant_miniscope_and	program	942
 $mk_quant_var_elim_eq	none	
-$mk_re_concat	program	929
+$mk_re_concat	program	944
 $mk_re_unfold_neg	none	
 $mk_re_unfold_neg_concat_fixed	none	
 $mk_re_unfold_pos	none	
 $mk_re_unfold_pos_star	none	
-$mk_skolems	program	934
+$mk_skolems	program	949
 $mk_str_eager_reduction	none	
 $mk_symm	none	
-$mk_trans	program	937
+$mk_trans	program	952
 $mon_mul_mon	none	
-$mvar_mul_mvar	program	939
+$mvar_mul_mvar	program	954
 $pair_first	none	
 $pair_second	none	
-$poly_add	program	942
-$poly_mod_coeffs	program	943
-$poly_mul	program	944
-$poly_mul_mon	program	945
-$poly_neg	program	946
+$poly_add	program	957
+$poly_mod_coeffs	program	958
+$poly_mul	program	959
+$poly_mul_mon	program	960
+$poly_neg	program	961
 $re_ac_merge	none	
 $re_concat_merge	none	
-$re_flatten	program	949
-$re_is_unbound_wildcard	program	950
-$re_nullable	program	951
-$re_rev_comp	program	952
-$re_rev_map_rev	program	953
-$re_split_str_to_re	program	954
-$re_unflatten	program	955
-$re_unflatten_str	program	956
-$re_unfold_pos_concat_rec	program	957
-$run_evaluate	program	958
+$re_flatten	program	964
+$re_is_unbound_wildcard	program	965
+$re_nullable	program	966
+$re_rev_comp	program	967
+$re_rev_map_rev	program	968
+$re_split_str_to_re	program	969
+$re_unflatten	program	970
+$re_unflatten_str	program	971
+$re_unfold_pos_concat_rec	program	972
+$run_evaluate	program	973
 $run_process_scope	none	
-$seq_distinct_terms	program	960
+$seq_distinct_terms	program	975
 $seq_element_of_unit	none	
 $seq_empty	none	
-$seq_eval	program	963
-$seq_eval_replace_all_rec	program	964
-$seq_find	program	965
+$seq_eval	program	978
+$seq_eval_replace_all_rec	program	979
+$seq_find	program	980
 $seq_is_non_empty	none	
-$seq_is_prefix	program	967
-$seq_subsequence_rec	program	968
-$set_is_not_subset	program	969
-$set_union_to_list	program	970
-$smtx_dd_has_dt	program	971
-$smtx_dd_lookup	program	972
-$smtx_decl_inhabited	program	973
-$smtx_decl_wf_rec	program	974
-$smtx_dt_cons_inhabited	program	975
-$smtx_dt_cons_wf_rec	program	976
-$smtx_dt_inhabited	program	977
-$smtx_dt_num_sels	program	978
-$smtx_dt_resolve	program	979
-$smtx_dt_wf_rec	program	980
-$smtx_dtc_num_sels	program	981
-$smtx_dtc_resolve	program	982
-$smtx_inhabited_type	program	983
+$seq_is_prefix	program	982
+$seq_subsequence_rec	program	983
+$set_is_not_subset	program	984
+$set_union_to_list	program	985
+$smtx_dd_has_dt	program	986
+$smtx_dd_lookup	program	987
+$smtx_decl_inhabited	program	988
+$smtx_decl_wf_rec	program	989
+$smtx_dt_cons_inhabited	program	990
+$smtx_dt_cons_wf_rec	program	991
+$smtx_dt_inhabited	program	992
+$smtx_dt_num_sels	program	993
+$smtx_dt_resolve	program	994
+$smtx_dt_wf_rec	program	995
+$smtx_dtc_num_sels	program	996
+$smtx_dtc_resolve	program	997
+$smtx_inhabited_type	program	998
 $smtx_ret_typeof_sel	none	
-$smtx_ret_typeof_sel_rec	program	985
-$smtx_type_wf	program	986
+$smtx_ret_typeof_sel_rec	program	1000
+$smtx_type_wf	program	1001
 $smtx_type_wf_component	none	
-$smtx_type_wf_rec	program	988
+$smtx_type_wf_rec	program	1003
 $smtx_typeof	smt-type	
 $smtx_typeof_=	none	
 $smtx_typeof_apply	none	
 $smtx_typeof_arith_overload_op_1	none	
 $smtx_typeof_arith_overload_op_2	none	
 $smtx_typeof_arith_overload_op_2_ret	none	
+$smtx_typeof_bindings	program	1010
 $smtx_typeof_bv_op_1	none	
 $smtx_typeof_bv_op_1_ret	none	
 $smtx_typeof_bv_op_2	none	
 $smtx_typeof_bv_op_2_ret	none	
 $smtx_typeof_concat	none	
-$smtx_typeof_dt_cons_rec	program	1000
+$smtx_typeof_dt_cons_rec	program	1016
 $smtx_typeof_extract	none	
 $smtx_typeof_guard	none	
 $smtx_typeof_guard_wf	none	
@@ -1029,59 +1045,60 @@ $smtx_typeof_str.indexof	none
 $smtx_typeof_str.substr	none	
 $smtx_typeof_str.update	none	
 $smtx_typeof_zero_extend	none	
-$str_arith_entail_is_approx	program	1030
+$str_arith_entail_is_approx	program	1046
 $str_arith_entail_is_approx_len	none	
 $str_arith_entail_simple_pred	none	
-$str_arith_entail_simple_rec	program	1033
-$str_case_conv_rec	program	1034
-$str_collect	program	1035
+$str_arith_entail_simple_rec	program	1049
+$str_case_conv_rec	program	1050
+$str_collect	program	1051
 $str_collect_merge	none	
-$str_eval_replace_all_rec	program	1037
+$str_eval_replace_all_rec	program	1053
 $str_eval_replace_re	none	
-$str_eval_replace_re_all_rec	program	1039
-$str_eval_str_in_re_rec	program	1040
-$str_first_match_rec	program	1041
-$str_first_match_rec_smallest	program	1042
-$str_fixed_len_re	program	1043
-$str_flatten	program	1044
-$str_flatten_word_rec	program	1045
-$str_from_int_eval_rec	program	1046
-$str_is_compatible	program	1047
+$str_eval_replace_re_all_rec	program	1055
+$str_eval_str_in_re_rec	program	1056
+$str_first_match_rec	program	1057
+$str_first_match_rec_smallest	program	1058
+$str_fixed_len_re	program	1059
+$str_flatten	program	1060
+$str_flatten_word_rec	program	1061
+$str_from_int_eval_rec	program	1062
+$str_is_compatible	program	1063
 $str_is_empty	none	
-$str_is_multiset_subset_strict	program	1049
-$str_is_multiset_subset_strict_done	program	1050
-$str_is_prefix_flat	program	1051
-$str_leq_eval_rec	program	1052
+$str_is_multiset_subset_strict	program	1065
+$str_is_multiset_subset_strict_done	program	1066
+$str_is_prefix_flat	program	1067
+$str_leq_eval_rec	program	1068
 $str_membership_re	none	
 $str_membership_str	none	
 $str_mk_ext_deq	none	
-$str_mk_re_loop_elim_rec	program	1056
-$str_mk_str_in_re_concat_star_char	program	1057
-$str_mk_str_in_re_sigma_rec	program	1058
-$str_mk_str_in_re_sigma_star_rec	program	1059
-$str_multiset_overapprox	program	1060
-$str_multiset_overapprox_word	program	1061
-$str_overlap_rec	program	1062
+$str_mk_re_loop_elim_rec	program	1072
+$str_mk_str_in_re_concat_star_char	program	1073
+$str_mk_str_in_re_sigma_rec	program	1074
+$str_mk_str_in_re_sigma_star_rec	program	1075
+$str_multiset_overapprox	program	1076
+$str_multiset_overapprox_word	program	1077
+$str_overlap_rec	program	1078
 $str_re_consume	none	
-$str_re_consume_inter	program	1064
-$str_re_consume_rec	program	1065
-$str_re_consume_union	program	1066
-$str_re_includes_base_rec	program	1067
-$str_re_includes_lhs_star	program	1068
-$str_re_includes_lhs_union	program	1069
-$str_re_includes_rec	program	1070
-$str_re_includes_rhs_inter	program	1071
+$str_re_consume_inter	program	1080
+$str_re_consume_rec	program	1081
+$str_re_consume_union	program	1082
+$str_re_includes_base_rec	program	1083
+$str_re_includes_concat	program	1084
+$str_re_includes_lhs_star	program	1085
+$str_re_includes_lhs_union	program	1086
+$str_re_includes_rec	program	1087
+$str_re_includes_rhs_inter	program	1088
 $str_reduction_pred	none	
-$str_strip_prefix	program	1073
-$str_to_int_eval_rec	program	1074
+$str_strip_prefix	program	1090
+$str_to_int_eval_rec	program	1091
 $str_unify_split	none	
 $str_value_len	none	
-$strip_even_exponent	program	1077
-$substitute_simul_rec	program	1078
+$strip_even_exponent	program	1094
+$substitute_simul_rec	program	1095
 $to_clause	none	
 $to_cube	none	
-$tuple_arg_list	program	1081
-$tuple_collapse_updater_rhs	program	1082
-$tuple_get_selectors_rec	program	1083
-$tuple_updater_elim_rhs	program	1084
+$tuple_arg_list	program	1098
+$tuple_collapse_updater_rhs	program	1099
+$tuple_get_selectors_rec	program	1100
+$tuple_updater_elim_rhs	program	1101
 $typed_list_element_type	none	

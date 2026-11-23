@@ -554,8 +554,11 @@ The generator writes the proofs for the full CPC too, into
 `generated/cpc-checker`
 (`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
 checked to be what the generator writes (`scripts/generate-cpc --check`),
-but **not built**; `proofs.tsv` (478 of 1,086 marked generated) says how
-far the emitter gets.
+but **not built**; `proofs.tsv` (484 of 1,103 marked generated) says how
+far the generator gets. The CPC is compiled from logos `bdcbd95f`, the
+revision the proofs pin and the eoc gate uses (`LOGOS_REV`); before the
+reference moved to Ethos `bde41a79` it was logos `a3232131`, with 478 of
+1,086.
 **76 of CpcMini's 82 programs (all 76 the gate counts)** have one, the four of the pilot among them; only the six datatype operators have none, the four of the pilot
 among them; `generated/cpcmini-checker/proofs.tsv` lists every program
 with `generated` or the first thing in it that the emitter has no line of
@@ -806,22 +809,22 @@ selector case.
 - **The other six** of the 82 are the datatype operators below, which
   have no logos function.
 
-In the full CPC (478 of 1,086), `$eo_state_proven_nth` and
+In the full CPC (484 of 1,103), `$eo_state_proven_nth` and
 `$eo_cmd_step_pop_proven` are proved, and:
-- `$eo_to_smt` is past `uconst_id` and stops at case 169 (the native
+- `$eo_to_smt` is past `uconst_id` and stops at case 170 (the native
   operation `mk_rational`), with `$eo_to_smt_distinct`,
   `$eo_to_smt_distinct_pairs` and `$eo_to_smt_typed_list_elem_type`
   waiting on it;
 - `$eo_mk_premise_list` stops at `eo::cons` with an operator that nests to
   the left (the CPC has some);
-- `$eo_cmd_step_proven` stops at its case 550, a literal that is not a
+- `$eo_cmd_step_proven` stops at its case 556, a literal that is not a
   Boolean;
 - `$eo_typeof` is past its selector case and stops at a call of
   `$eo_typeof_@from_bools`.
 
-The CPC crate's proofs are written against logos `a3232131`, which still
-prints the selector's type unguarded. They are not built, so this shows
-only once stage 5 builds them at a logos revision with #521.
+The CPC crate and its proofs are now generated from logos `bdcbd95f`,
+which has #521, so the selector's type is guarded in both, as in CpcMini.
+They are still not built (stage 5).
 
 `$eo_prog_scope`'s application of a term that may be stuck (the first
 finding below) is proved since its proof argument is assumed OK. The lemmas of `construct` and `destruct` are generated for

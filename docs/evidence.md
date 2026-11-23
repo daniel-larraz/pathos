@@ -5,10 +5,12 @@ checker in Rust: the `ethos` binary as `pathos-eo`, and `ethos-eoc` with its
 seven compiler stages as `pathos-eoc`. It is meant to replace the C++ if two
 things hold: it is memory safe, and it does what Ethos does. This page says
 what backs each claim and how to check it. The reference is Ethos
-`e51f527c` (cvc5/ethos `main` with PRs #270, #272, #274 and #275,
-milestones 26 and 29, and #276 and #277, which change only the `rust-meta`
-runtime, so that what pathos is compared with is that of `b8d65127`), built in
-release mode. The figures on this page were
+`bde41a79` (cvc5/ethos `main`, 2026-11-23), built in release mode. Its
+checker (`src/`) is that of `e51f527c`, the reference before it; what
+changed since are the compiler stages (#282, #286, #289), which
+`pathos-eoc` mirrors, and `rust-meta` (#280, #287), which pathos does not
+reimplement. The gate figures at `bde41a79` are below the table. The other
+figures on this page were
 measured against `9217112f`, four commits earlier, unless a section says
 otherwise; those commits fix the bugs pathos used to reproduce, change
 `lean-meta`'s output, add the `rust-meta` stage, and change three corners
@@ -86,9 +88,18 @@ All cases agree in every gate.
 | `bignum` | Generated files of `eo::add`, `mul`, `pow`, division, conversions and the bit-vector operations on operands from 64 bits to a million bits, with each expected value computed independently (Python's integers and fractions). Each file ends with one wrong expectation on purpose, so both checkers print a value of up to 600,000 digits in full | 7 (each stops at its deliberate last line, in both) | all agree, byte for byte; Ethos agrees with every computed value | `scripts/difftest bignum` |
 | `fuzz` | The groups of inputs on which two fuzzing runs of mutated regressions and proofs found the two to differ (41 from a first run, 12 from the 24-hour campaign below) | 53 | 37 fixed, 14 accepted differences, 2 Ethos crashes; none still differs | `scripts/difftest fuzz` |
 | `snapshot` | Regressions and proofs under every option set, pathos starting from a snapshot of CPC; and the proofs with a truncated, a corrupted and an empty snapshot | 6,300 + 3 × 400 | all agree | `scripts/difftest snapshot` |
-| `eoc` | eoc's driver with `ethos-eoc` and with `pathos-eoc`: every stage on every rule of the test signatures and of logos's CPC (logos `a3232131`), and logos's `lean --all`; every file written is compared | 3,507 (3,322 ok, 185 errors) | all agree | `scripts/difftest eoc` |
+| `eoc` | eoc's driver with `ethos-eoc` and with `pathos-eoc`: every stage on every rule of the test signatures and of logos's CPC (logos `bdcbd95f`), and logos's `lean --all`; every file written is compared | 3,551 (3,309 ok, 242 errors; 2026-11-23, at `bde41a79`) | all agree | `scripts/difftest eoc` |
 | logos's acceptance check | `install/install-cpc.sh --all --cached --check` in logos, with `pathos-eoc` in place of `ethos-eoc` | Cpc, CpcMini | "Up to date with the cached signature", exit 0 | commands in [reviews/m13-eoc-lean.md](reviews/m13-eoc-lean.md) |
 | `perf` | Regressions, proofs and large proofs, one job at a time, Ethos rerun | 673 | all agree; see below | `scripts/difftest perf` |
+
+**At the reference `bde41a79`** (2026-11-23, Linux x86-64, branch
+`reference-bde41a79`), with the reference results rebuilt:
+- `tests` 230, `proofs` 400, `large` 43 (Ethos rerun on every proof),
+  `cli` 3,192, `snapshot` 6,300 + 3 × 400 and `bignum` 7 cases all agree;
+- `fuzz` has no finding that still differs (50 fixed, 1 accepted
+  difference, 2 Ethos crashes not compared);
+- `eoc` agrees on all 3,551 cases, with logos `bdcbd95f`;
+- `options` and `perf` were not rerun; their figures are those above.
 
 Also green: 98 unit and end-to-end tests (`cargo test`, debug and release),
 and CI on every push, which runs the gates that need neither the cvc5
@@ -189,7 +200,7 @@ file`; the harness accepts those four cases by name.
 ## Keeping up with Ethos
 
 Everything above is about one Ethos revision, `REFERENCE_REV` in
-`difftest.env` (`e51f527c`). Ethos keeps changing. A workflow of its own,
+`difftest.env` (`bde41a79`). Ethos keeps changing. A workflow of its own,
 `.github/workflows/drift.yml` ("Drift from Ethos main"), runs every night
 and on demand, apart from CI and blocking nothing. On Linux x86-64 it
 builds Ethos and `ethos-eoc` at the current `main` of cvc5/ethos and

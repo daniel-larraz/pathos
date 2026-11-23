@@ -15,6 +15,7 @@ $arith_rel_sum	generated
 $arith_rel_trichotomy	generated	
 $assoc_nil_nth	none	case 0 has a literal that is not a Boolean
 $assoc_nil_nth_type	none	case 0 has a literal that is not a Boolean
+$beta_reduce	none	case 0 has a builtin operator
 $bv_bitblast_apply_binary	none	case 0 has a literal that is not a Boolean
 $bv_bitblast_apply_ite	none	case 0 has a literal that is not a Boolean
 $bv_bitblast_apply_unary	none	case 0 has a literal that is not a Boolean
@@ -71,7 +72,7 @@ $dt_updater_elim_rhs	generated
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
 $eo_cmd_step_pop_proven	generated	
-$eo_cmd_step_proven	none	case 550 has a literal that is not a Boolean
+$eo_cmd_step_proven	none	case 556 has a literal that is not a Boolean
 $eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
 $eo_dd_lookup	generated	
@@ -125,7 +126,8 @@ $eo_prog_and_intro	generated
 $eo_prog_arith-abs-eq	generated	
 $eo_prog_arith-abs-int-gt	none	case 0 has a literal that is not a Boolean
 $eo_prog_arith-abs-real-gt	none	case 0 has a literal that is not a Boolean
-$eo_prog_arith-div-elim-to-real	generated	
+$eo_prog_arith-div-int-to-real	generated	
+$eo_prog_arith-div-total-int-to-real	generated	
 $eo_prog_arith-div-total-zero-int	none	case 0 has a literal that is not a Boolean
 $eo_prog_arith-div-total-zero-real	none	case 0 has a literal that is not a Boolean
 $eo_prog_arith-divisible-elim	none	case 0 has a literal that is not a Boolean
@@ -184,6 +186,7 @@ $eo_prog_arrays_ext	generated
 $eo_prog_arrays_read_over_write	generated	
 $eo_prog_arrays_read_over_write_1	generated	
 $eo_prog_arrays_read_over_write_contra	generated	
+$eo_prog_beta-reduce	none	it calls $beta_reduce, which has no proof
 $eo_prog_bool-and-conf	none	case 0 has a builtin operator
 $eo_prog_bool-and-conf2	none	case 0 has a builtin operator
 $eo_prog_bool-and-de-morgan	none	case 0 has a builtin operator
@@ -249,6 +252,8 @@ $eo_prog_bv-extract-sign-extend-3	none	case 0 has a literal that is not a Boolea
 $eo_prog_bv-extract-whole	none	case 0 has a literal that is not a Boolean
 $eo_prog_bv-ite-const-children-1	none	case 0 has a literal that is not a Boolean
 $eo_prog_bv-ite-const-children-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-const-cond-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-const-cond-2	none	case 0 has a literal that is not a Boolean
 $eo_prog_bv-ite-equal-children	generated	
 $eo_prog_bv-ite-equal-cond-1	generated	
 $eo_prog_bv-ite-equal-cond-2	generated	
@@ -399,8 +404,8 @@ $eo_prog_dt-collapse-updater	none	it calls $mk_dt_collapse_updater_rhs, which ha
 $eo_prog_dt-cons-eq	none	case 0 has a builtin operator
 $eo_prog_dt-cons-eq-clash	none	case 0 has a builtin operator
 $eo_prog_dt-cycle	none	it calls $dt_find_cycle, which has no proof
-$eo_prog_dt-inst	none	case 0 has a builtin operator
-$eo_prog_dt-updater-elim	none	case 0 has a builtin operator
+$eo_prog_dt-inst	none	it calls $mk_dt_inst_prem, which has no proof
+$eo_prog_dt-updater-elim	none	it calls $mk_dt_updater_elim_conc, which has no proof
 $eo_prog_dt_split	none	case 0 has a builtin operator
 $eo_prog_eq-cond-deq	generated	
 $eo_prog_eq-ite-lift	generated	
@@ -526,6 +531,7 @@ $eo_prog_sets-inter-comm	generated
 $eo_prog_sets-inter-emp1	generated	
 $eo_prog_sets-inter-emp2	generated	
 $eo_prog_sets-inter-member	generated	
+$eo_prog_sets-inter-self	generated	
 $eo_prog_sets-is-empty-elim	generated	
 $eo_prog_sets-is-singleton-elim	generated	
 $eo_prog_sets-member-emp	generated	
@@ -539,6 +545,7 @@ $eo_prog_sets-union-comm	generated
 $eo_prog_sets-union-emp1	generated	
 $eo_prog_sets-union-emp2	generated	
 $eo_prog_sets-union-member	generated	
+$eo_prog_sets-union-self	generated	
 $eo_prog_sets_choose_member	none	case 0 has a builtin operator
 $eo_prog_sets_ext	generated	
 $eo_prog_sets_singleton_inj	generated	
@@ -736,8 +743,10 @@ $eo_push_proven_check	generated
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	generated	
-$eo_to_smt	none	case 169 has the native operation mk_rational
+$eo_to_smt	none	case 170 has the native operation mk_rational
+$eo_to_smt_apply	none	it calls $eo_to_smt_bindings_snoc, which has no proof
 $eo_to_smt_array_deq_diff	generated	
+$eo_to_smt_bindings_snoc	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_bv_size	none	case 0 has the native operation nat.to_int
 $eo_to_smt_datatype	generated	
 $eo_to_smt_datatype_cons	generated	
@@ -745,6 +754,7 @@ $eo_to_smt_datatype_decl	generated
 $eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_distinct_pairs	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_exists	generated	
+$eo_to_smt_lambda_curry	generated	
 $eo_to_smt_nat	generated	
 $eo_to_smt_nat_is_valid	generated	
 $eo_to_smt_quantifiers_skolemize	generated	
@@ -820,6 +830,7 @@ $eo_typeof_int_to_bv	none	case 0 has a builtin operator
 $eo_typeof_is	generated	
 $eo_typeof_is_int	generated	
 $eo_typeof_ite	generated	
+$eo_typeof_lambda	generated	
 $eo_typeof_not	generated	
 $eo_typeof_or	generated	
 $eo_typeof_re.*	generated	
@@ -881,6 +892,7 @@ $get_ai_norm_rec	none	case 0 has a builtin operator
 $get_arg_list_rec	generated	
 $get_arith_poly_norm	none	case 4 has a builtin operator
 $get_bv_poly_norm_rec	none	case 4 has a builtin operator
+$get_lambda_type	generated	
 $get_nth_var_type	none	case 0 has a builtin operator
 $get_unused_vars	none	case 0 has a builtin operator
 $get_var_type	generated	
@@ -919,9 +931,12 @@ $mk_distinct_elim_rec	generated
 $mk_dt_collapse_updater_rhs	none	case 0 has a builtin operator
 $mk_dt_cons_eq	none	case 1 has a builtin operator
 $mk_dt_inst	none	case 0 has a literal that is not a Boolean
+$mk_dt_inst_prem	none	case 0 has a builtin operator
 $mk_dt_inst_rec	generated	
+$mk_dt_inst_tuple	none	case 0 has a literal that is not a Boolean
 $mk_dt_inst_tuple_rec	none	case 1 has a builtin operator
 $mk_dt_split	generated	
+$mk_dt_updater_elim_conc	none	case 0 has a builtin operator
 $mk_dt_updater_elim_rhs	none	case 0 has a builtin operator
 $mk_ho_cong	generated	
 $mk_nary_cong_rhs	generated	
@@ -988,12 +1003,13 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	it calls $smtx_typeof_bv_op_2, which has no proof
+$smtx_typeof	none	it calls $smtx_typeof_bindings, which has no proof
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_arith_overload_op_1	generated	
 $smtx_typeof_arith_overload_op_2	generated	
 $smtx_typeof_arith_overload_op_2_ret	generated	
+$smtx_typeof_bindings	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $smtx_typeof_bv_op_1	generated	
 $smtx_typeof_bv_op_1_ret	generated	
 $smtx_typeof_bv_op_2	none	case 0 has the native operation nateq
@@ -1067,6 +1083,7 @@ $str_re_consume_inter	none	case 1 has a builtin operator
 $str_re_consume_rec	none	case 0 has a literal that is not a Boolean
 $str_re_consume_union	none	case 1 has a builtin operator
 $str_re_includes_base_rec	none	case 0 has a builtin operator
+$str_re_includes_concat	none	case 0 has a literal that is not a Boolean
 $str_re_includes_lhs_star	none	case 0 has a literal that is not a Boolean
 $str_re_includes_lhs_union	none	it calls $str_re_includes_rec, which has no proof
 $str_re_includes_rec	none	case 0 has a literal that is not a Boolean

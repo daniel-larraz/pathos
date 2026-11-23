@@ -129,7 +129,7 @@ logos keeps with their bars (`|x|`) are plain names here.
 
 | Input | logos | `pathos` |
 | --- | --- | --- |
-| A term with `lambda`, a rule logos leaves out (`trust`, the rules about `lambda`) | Parse error | Error: the checker for CPC has no symbol, or no rule, of that name |
+| A rule logos leaves out (`trust`, the rules about `lambda`); with the CPC of logos `a3232131`, also a term with `lambda` | Parse error | Error: the checker for CPC has no symbol, or no rule, of that name |
 | An `assume` after the first step | Parse error | Error, for the same reason: the checker takes the assumptions first |
 | `set-info`, `set-option`, `declare-parameterized-const`, `program`, `define` with `:type` | Parse error | Read as Ethos reads them |
 | An ill-typed term | Read; the checker rejects the step (`incorrect`) | Error from the front end, with Ethos's message |
@@ -235,7 +235,11 @@ from logos on seven proofs:
 | `regress1__proofs__base-lfsc-treesize` | timeout | error | The proof uses `lambda`; logos does not get as far as refusing it. |
 | `regress1__datatypes__dt-param-card4-unsat` | `incorrect` | `correct` | logos's parser leaves a term of the block `((Pair 2) (Color 0))` stuck ([cvc5/logos#510](https://github.com/cvc5/logos/issues/510)). Ethos accepts the proof. |
 
-The 16 errors are the 16 proofs with `lambda`. The one `incorrect`, which
+The 16 errors are the 16 proofs with `lambda`. (These figures are with the
+CPC of logos `a3232131`. Since logos `bdcbd95f` (#517, #519), the CPC the
+checker is compiled from translates `lambda`, and `pathos` checks a term
+with `lambda` rather than refusing it; the corpus has not been run again
+with it.) The one `incorrect`, which
 logos shares, is `regress1__quantifiers__RND_4_16`: both stop at
 `(assume-push @p2020 ...)`, whose formula is a `forall` with a variable of
 an outer quantifier free in it (`?y2`). The checker accepts only closed
