@@ -524,26 +524,26 @@ $eo_prog_seq-rev-concat	none	case 0 has a builtin operator
 $eo_prog_seq-rev-rev	generated	
 $eo_prog_seq-rev-unit	generated	
 $eo_prog_sets-choose-singleton	generated	
-$eo_prog_sets-eq-singleton-emp	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-eq-singleton-emp	generated	
 $eo_prog_sets-eval-op	none	case 0 has a builtin operator
 $eo_prog_sets-insert-elim	generated	
 $eo_prog_sets-inter-comm	generated	
-$eo_prog_sets-inter-emp1	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
-$eo_prog_sets-inter-emp2	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-inter-emp1	generated	
+$eo_prog_sets-inter-emp2	generated	
 $eo_prog_sets-inter-member	generated	
 $eo_prog_sets-inter-self	generated	
 $eo_prog_sets-is-empty-elim	generated	
 $eo_prog_sets-is-singleton-elim	generated	
-$eo_prog_sets-member-emp	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-member-emp	generated	
 $eo_prog_sets-member-singleton	generated	
-$eo_prog_sets-minus-emp1	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
-$eo_prog_sets-minus-emp2	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-minus-emp1	generated	
+$eo_prog_sets-minus-emp2	generated	
 $eo_prog_sets-minus-member	generated	
 $eo_prog_sets-minus-self	generated	
 $eo_prog_sets-subset-elim	generated	
 $eo_prog_sets-union-comm	generated	
-$eo_prog_sets-union-emp1	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
-$eo_prog_sets-union-emp2	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-union-emp1	generated	
+$eo_prog_sets-union-emp2	generated	
 $eo_prog_sets-union-member	generated	
 $eo_prog_sets-union-self	generated	
 $eo_prog_sets_choose_member	none	case 0 has a builtin operator

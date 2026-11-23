@@ -30,6 +30,422 @@ open Eo hiding Term
 open Smtm
 open generated generated.part0 generated.part1 generated.part2 generated.part3 generated.part4 generated.part5 generated.part6 generated.part7 generated.part8 generated.part9 generated.part10 generated.part11 generated.part12
 
+theorem case_0_eo__24eo_5ftypeof_5fis_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5fis s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_is.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_is.case_0 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5fis
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  case_done hinv1 hG with h_v0 in EoCases.__eo_typeof_is.case_0 using hn_a0 hn_a1
+
+/-- logos's `__eo_typeof_is` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5fis.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __eo_typeof_is x_a0 x_a1 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_is.case_0 x_a0 x_a1] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_is
+  unfold EoCases.__eo_typeof_is.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5fis_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    body_eo__24eo_5ftypeof_5fis s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_is x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5fis.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24eo_5ftypeof_5fis
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5fis_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
+  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_typeof_is.case_0
+
+theorem eo__24eo_5ftypeof_5fis_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fis.Spec n := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  unfold eo__24eo_5ftypeof_5fis
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5fis s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_typeof_is x_a0 x_a1))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5fis_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5fis_5fint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5fis_5fint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_is_int.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_is_int.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5fis_5fint
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_is_int.case_0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_is_int.case_0 using hn_a0
+
+/-- logos's `__eo_typeof_is_int` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5fis_5fint.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_typeof_is_int x_a0 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_is_int.case_0 x_a0] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_is_int
+  unfold EoCases.__eo_typeof_is_int.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5fis_5fint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24eo_5ftypeof_5fis_5fint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_is_int x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5fis_5fint.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5ftypeof_5fis_5fint
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5fis_5fint_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
+  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_typeof_is_int.case_0
+
+theorem eo__24eo_5ftypeof_5fis_5fint_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fis_5fint.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24eo_5ftypeof_5fis_5fint
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5fis_5fint s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_is_int x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5fis_5fint_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5fite_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5fite s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_ite.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_ite.case_0 x_a0 x_a1 x_a2 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5fite
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_ite.case_0
+  pat_same a2 a1 with h_a2 h_a1 using hinv1 else hinv1 hG in EoCases.__eo_typeof_ite.case_0
+  case_done hinv1 hG with h_a1 in EoCases.__eo_typeof_ite.case_0 using hn_a0 hn_a1 hn_a2
+
+/-- logos's `__eo_typeof_ite` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5fite.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
+    __eo_typeof_ite x_a0 x_a1 x_a2 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_ite.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_ite
+  unfold EoCases.__eo_typeof_ite.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5fite_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    body_eo__24eo_5ftypeof_5fite s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_ite x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5fite.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
+  unfold body_eo__24eo_5ftypeof_5fite
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5fite_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1 hn_a2
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1 hn_a2
+  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_typeof_ite.case_0
+
+theorem eo__24eo_5ftypeof_5fite_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fite.Spec n := by
+  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
+  unfold eo__24eo_5ftypeof_5fite
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5fite s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_typeof_ite x_a0 x_a1 x_a2))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5fite_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5flambda_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5flambda s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_lambda.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_lambda.case_0 x_a0 x_a1 x_a2 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5flambda
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24eo_5fList.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_lambda.case_0
+  store_step with ih.eo__24get_5flambda_5ftype s1 a1 a2 _ _ hinv1 h64 (hG.rem hrem) h_a1 h_a2 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_lambda.case_0 using hn_a0 hn_a1 hn_a2
+
+/-- logos's `__eo_typeof_lambda` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5flambda.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
+    __eo_typeof_lambda x_a0 x_a1 x_a2 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_lambda.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_lambda
+  unfold EoCases.__eo_typeof_lambda.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5flambda_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    body_eo__24eo_5ftypeof_5flambda s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_lambda x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5flambda.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
+  unfold body_eo__24eo_5ftypeof_5flambda
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5flambda_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1 hn_a2
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1 hn_a2
+  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_typeof_lambda.case_0
+
+theorem eo__24eo_5ftypeof_5flambda_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5flambda.Spec n := by
+  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
+  unfold eo__24eo_5ftypeof_5flambda
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5flambda s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_typeof_lambda x_a0 x_a1 x_a2))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5flambda_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5fnot_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5fnot s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_not.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_not.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5fnot
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_not.case_0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_not.case_0 using hn_a0
+
+/-- logos's `__eo_typeof_not` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5fnot.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_typeof_not x_a0 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_not.case_0 x_a0] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_not
+  unfold EoCases.__eo_typeof_not.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5fnot_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24eo_5ftypeof_5fnot s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_not x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5fnot.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5ftypeof_5fnot
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5fnot_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
+  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_typeof_not.case_0
+
+theorem eo__24eo_5ftypeof_5fnot_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fnot.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24eo_5ftypeof_5fnot
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5fnot s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_not x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5fnot_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5for_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5for s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_or.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_or.case_0 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5for
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_or.case_0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  pat_same a1 v1 with h_a1 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_typeof_or.case_0
+  step as ⟨e_v2, he_v2⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  case_done hinv3 hG with h_v2 in EoCases.__eo_typeof_or.case_0 using hn_a0 hn_a1
+
+/-- logos's `__eo_typeof_or` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5for.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __eo_typeof_or x_a0 x_a1 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_or.case_0 x_a0 x_a1] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_or
+  unfold EoCases.__eo_typeof_or.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5for_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    body_eo__24eo_5ftypeof_5for s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_or x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5for.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24eo_5ftypeof_5for
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5for_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
+  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_typeof_or.case_0
+
+theorem eo__24eo_5ftypeof_5for_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5for.Spec n := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  unfold eo__24eo_5ftypeof_5for
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5for s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_typeof_or x_a0 x_a1))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5for_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5fre_2e_2a_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5fre_2e_2a s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_re_mult.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_re_mult.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5fre_2e_2a
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_RegLan.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_re_mult.case_0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo_RegLan.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_re_mult.case_0 using hn_a0
+
+/-- logos's `__eo_typeof_re_mult` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5fre_2e_2a.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_typeof_re_mult x_a0 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_re_mult.case_0 x_a0] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_re_mult
+  unfold EoCases.__eo_typeof_re_mult.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5fre_2e_2a_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24eo_5ftypeof_5fre_2e_2a s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_re_mult x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5fre_2e_2a.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5ftypeof_5fre_2e_2a
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5fre_2e_2a_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
+  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_typeof_re_mult.case_0
+
+theorem eo__24eo_5ftypeof_5fre_2e_2a_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fre_2e_2a.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24eo_5ftypeof_5fre_2e_2a
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5fre_2e_2a s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_re_mult x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5fre_2e_2a_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5ftypeof_5fre_2e_2b_2b_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
+    case_0_eo__24eo_5ftypeof_5fre_2e_2b_2b s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_typeof_re_concat.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_typeof_re_concat.case_0 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5ftypeof_5fre_2e_2b_2b
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_RegLan.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_re_concat.case_0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo_RegLan.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  pat_same a1 v1 with h_a1 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_typeof_re_concat.case_0
+  step as ⟨e_v2, he_v2⟩
+  store_step with CtorSpec.eo_RegLan.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  case_done hinv3 hG with h_v2 in EoCases.__eo_typeof_re_concat.case_0 using hn_a0 hn_a1
+
+/-- logos's `__eo_typeof_re_concat` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5ftypeof_5fre_2e_2b_2b.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __eo_typeof_re_concat x_a0 x_a1 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_re_concat.case_0 x_a0 x_a1] HasStuck.stuck) := by
+  conv => lhs; unfold __eo_typeof_re_concat
+  unfold EoCases.__eo_typeof_re_concat.case_0
+  logos_eq
+
+theorem body_eo__24eo_5ftypeof_5fre_2e_2b_2b_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    body_eo__24eo_5ftypeof_5fre_2e_2b_2b s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_re_concat x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5ftypeof_5fre_2e_2b_2b.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24eo_5ftypeof_5fre_2e_2b_2b
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
+  case_step with case_0_eo__24eo_5ftypeof_5fre_2e_2b_2b_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
+  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_typeof_re_concat.case_0
+
+theorem eo__24eo_5ftypeof_5fre_2e_2b_2b_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fre_2e_2b_2b.Spec n := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  unfold eo__24eo_5ftypeof_5fre_2e_2b_2b
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5ftypeof_5fre_2e_2b_2b s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_typeof_re_concat x_a0 x_a1))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5ftypeof_5fre_2e_2b_2b_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
 theorem case_0_eo__24eo_5ftypeof_5fre_2erange_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
     case_0_eo__24eo_5ftypeof_5fre_2erange s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
@@ -1846,565 +2262,6 @@ theorem eo__24eo_5ftypeof_5fstr_2eupdate_spec (n : Nat) (ih : ∀ m < n, Specs m
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
       spec_exact body_eo__24eo_5ftypeof_5fstr_2eupdate_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5ftypeof_5fto_5fint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5ftypeof_5fto_5fint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_typeof_to_int.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_typeof_to_int.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5ftypeof_5fto_5fint
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_to_int.case_0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_Int.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_to_int.case_0 using hn_a0
-
-/-- logos's `__eo_typeof_to_int` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5ftypeof_5fto_5fint.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_typeof_to_int x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_to_int.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_typeof_to_int
-  unfold EoCases.__eo_typeof_to_int.case_0
-  logos_eq
-
-theorem body_eo__24eo_5ftypeof_5fto_5fint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5ftypeof_5fto_5fint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_to_int x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5ftypeof_5fto_5fint.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5ftypeof_5fto_5fint
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5ftypeof_5fto_5fint_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_typeof_to_int.case_0
-
-theorem eo__24eo_5ftypeof_5fto_5fint_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fto_5fint.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5ftypeof_5fto_5fint
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5fto_5fint s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_to_int x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5ftypeof_5fto_5fint_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5ftypeof_5fto_5freal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5ftypeof_5fto_5freal s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_typeof_to_real.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_typeof_to_real.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5ftypeof_5fto_5freal
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_to_real.case_0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_Real.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_to_real.case_0 using hn_a0
-
-/-- logos's `__eo_typeof_to_real` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5ftypeof_5fto_5freal.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_typeof_to_real x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_to_real.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_typeof_to_real
-  unfold EoCases.__eo_typeof_to_real.case_0
-  logos_eq
-
-theorem body_eo__24eo_5ftypeof_5fto_5freal_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5ftypeof_5fto_5freal s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_to_real x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5ftypeof_5fto_5freal.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5ftypeof_5fto_5freal
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5ftypeof_5fto_5freal_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_typeof_to_real.case_0
-
-theorem eo__24eo_5ftypeof_5fto_5freal_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fto_5freal.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5ftypeof_5fto_5freal
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5fto_5freal s1 a0) (fun s' t => Represents.rep s' t (__eo_typeof_to_real x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5ftypeof_5fto_5freal_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5ftypeof_5fupdate_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5ftypeof_5fupdate s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_typeof_update.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_typeof_update.case_0 x_a0 x_a1 x_a2 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5ftypeof_5fupdate
-  have hG := Store.Grows.refl s
-  case_done hinv hG with h_a1 in EoCases.__eo_typeof_update.case_0 using hn_a0 hn_a1 hn_a2
-
-/-- logos's `__eo_typeof_update` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5ftypeof_5fupdate.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    __eo_typeof_update x_a0 x_a1 x_a2 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_typeof_update.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_typeof_update
-  unfold EoCases.__eo_typeof_update.case_0
-  logos_eq
-
-theorem body_eo__24eo_5ftypeof_5fupdate_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
-    body_eo__24eo_5ftypeof_5fupdate s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_typeof_update x_a0 x_a1 x_a2)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5ftypeof_5fupdate.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
-  unfold body_eo__24eo_5ftypeof_5fupdate
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5ftypeof_5fupdate_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_typeof_update.case_0
-
-theorem eo__24eo_5ftypeof_5fupdate_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5ftypeof_5fupdate.Spec n := by
-  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
-  unfold eo__24eo_5ftypeof_5fupdate
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5ftypeof_5fupdate s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_typeof_update x_a0 x_a1 x_a2))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5ftypeof_5fupdate_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24from_5fclause_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24from_5fclause s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__from_clause.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__from_clause.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24from_5fclause
-  have hG := Store.Grows.refl s
-  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__from_clause.case_0
-  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__from_clause.case_0
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_or.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
-  pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__from_clause.case_0
-  store_step with Store.literal_boolean_spec s1 false hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  step as ⟨e_v8, he_v8⟩
-  store_step with Store.builtin_spec_eq s2 e_v8 (by rw [he_v8]; rfl) h_v2 h_v7 hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
-  have h_ite_v12 := (show if_0_eo__24from_5fclause s3 v8 v5 v2 ⦃ r s' => s'.Inv ∧ s3.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
-    unfold if_0_eo__24from_5fclause
-    have hrem := (hG.rem hrem)
-    have hG := Store.Grows.refl s3
-    rcases Store.boolean_value_term h_v8 with ⟨hx_9, hbv_9⟩ | ⟨hx_9, hbv_9⟩ | ⟨hx_9, hbv_9⟩
-    · ite_branch hbv_9
-      ite_done hinv3 hG with (eo_ite_true_rep _ hx_9 h_v5)
-    · ite_branch hbv_9
-      step as ⟨e_v9, he_v9⟩
-      store_step with CtorSpec.eo_or.construct s3 e_v9 (by rw [he_v9]; exact empty_args) hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
-      store_step with Store.apply_rep s4 v9 v5 _ _ hinv4 h64 h_v9 h_v5 (by ns_tac) (by ns_tac) as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
-      store_step with Store.apply_rep s5 v10 v2 _ _ hinv5 h64 h_v10 h_v2 (by ns_tac) (by ns_tac) as ⟨v11, s6, hinv6, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
-      ite_done hinv6 hG with (eo_ite_false_rep _ hx_9 h_v11)
-    · ite_branch hbv_9
-      ite_stuck hinv3 hG with hx_9)
-  store_step with h_ite_v12 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
-  case_done hinv4 hG with h_v12 in EoCases.__from_clause.case_0 using hn_a0 hn_v1 hn_v2 hn_v4 hn_v5
-
-theorem case_1_eo__24from_5fclause_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_1_eo__24from_5fclause s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__from_clause.case_1 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__from_clause.case_1 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_1_eo__24from_5fclause
-  have hG := Store.Grows.refl s
-  case_done hinv hG with h_a0 in EoCases.__from_clause.case_1 using hn_a0
-
-/-- logos's `__from_clause` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24from_5fclause.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __from_clause x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__from_clause.case_0 x_a0, EoCases.__from_clause.case_1 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __from_clause
-  unfold EoCases.__from_clause.case_0 EoCases.__from_clause.case_1
-  logos_eq
-
-theorem body_eo__24from_5fclause_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24from_5fclause s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__from_clause x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24from_5fclause.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24from_5fclause
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24from_5fclause_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  case_step with case_1_eo__24from_5fclause_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0 hn_a0
-    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 using hn_a0 hc0
-  body_stuck hinv2 hG using hn_a0 hc0 hc1 in EoCases.__from_clause.case_0 EoCases.__from_clause.case_1
-
-theorem eo__24from_5fclause_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24from_5fclause.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24from_5fclause
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24from_5fclause s1 a0) (fun s' t => Represents.rep s' t (__from_clause x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24from_5fclause_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24get_5farg_5flist_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some (Next.Done t)) =>
-        ∃ res, EoCases.__get_arg_list_rec.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok (some (Next.Again arr)) =>
-        ∃ (u0 : Term) (y0 : _) (u1 : Term) (y1 : _), arr.val = [u0, u1] ∧ Represents.rep s' u0 y0 ∧ Represents.rep s' u1 y1 ∧
-          EoCases.__get_arg_list_rec.case_0 x_a0 x_a1 = some (__get_arg_list_rec y0 y1)
-      | core.result.Result.Ok none => EoCases.__get_arg_list_rec.case_0 x_a0 x_a1 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24get_5farg_5flist_5frec
-  have hG := Store.Grows.refl s
-  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__get_arg_list_rec.case_0
-  step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with Store.apply_rep s1 v3 v2 _ _ hinv1 h64 h_v3 h_v2 (by ns_tac) (by ns_tac) as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s2 v4 a1 _ _ hinv2 h64 h_v4 h_a1 (by ns_tac) (by ns_tac) as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
-  case_again hinv3 hG with h_v1 h_v5 in EoCases.__get_arg_list_rec.case_0 using hn_a0 hn_a1 hn_v1 hn_v2
-
-theorem case_1_eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_1_eo__24get_5farg_5flist_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some (Next.Done t)) =>
-        ∃ res, EoCases.__get_arg_list_rec.case_1 x_a0 x_a1 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok (some (Next.Again arr)) =>
-        ∃ (u0 : Term) (y0 : _) (u1 : Term) (y1 : _), arr.val = [u0, u1] ∧ Represents.rep s' u0 y0 ∧ Represents.rep s' u1 y1 ∧
-          EoCases.__get_arg_list_rec.case_1 x_a0 x_a1 = some (__get_arg_list_rec y0 y1)
-      | core.result.Result.Ok none => EoCases.__get_arg_list_rec.case_1 x_a0 x_a1 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_1_eo__24get_5farg_5flist_5frec
-  have hG := Store.Grows.refl s
-  case_done hinv hG with h_a1 in EoCases.__get_arg_list_rec.case_1 using hn_a0 hn_a1
-
-/-- logos's `__get_arg_list_rec` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24get_5farg_5flist_5frec.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    __get_arg_list_rec x_a0 x_a1 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__get_arg_list_rec.case_0 x_a0 x_a1, EoCases.__get_arg_list_rec.case_1 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold __get_arg_list_rec
-  unfold EoCases.__get_arg_list_rec.case_0 EoCases.__get_arg_list_rec.case_1
-  logos_eq
-
-theorem step_eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
-    step_eo__24get_5farg_5flist_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (Next.Done t) => Represents.rep s' t (__get_arg_list_rec x_a0 x_a1)
-      | core.result.Result.Ok (Next.Again arr) =>
-        s'.budget < s.budget ∧ ∃ (u0 : Term) (y0 : _) (u1 : Term) (y1 : _), arr.val = [u0, u1] ∧ Represents.rep s' u0 y0 ∧ Represents.rep s' u1 y1 ∧
-          __get_arg_list_rec x_a0 x_a1 = __get_arg_list_rec y0 y1
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24get_5farg_5flist_5frec.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
-  unfold step_eo__24get_5farg_5flist_5frec
-  have hG := Store.Grows.refl s
-  tick_step as ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv1 hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv1 hG
-  round_step with case_0_eo__24get_5farg_5flist_5frec_spec n ih s1 a0 a1 x_a0 x_a1 hinv1 h64 (hG.rem hrem) h_a0 h_a1 hn_a0 hn_a1
-    as ⟨s2, hinv2, hc0⟩ growing hG carrying h_a0 h_a1 hbud using hn_a0 hn_a1
-  round_step with case_1_eo__24get_5farg_5flist_5frec_spec n ih s2 a0 a1 x_a0 x_a1 hinv2 h64 (hG.rem hrem) h_a0 h_a1 hn_a0 hn_a1
-    as ⟨s3, hinv3, hc1⟩ growing hG carrying h_a0 h_a1 hbud using hn_a0 hn_a1 hc0
-  round_stuck hinv3 hG using hn_a0 hn_a1 hc0 hc1 in EoCases.__get_arg_list_rec.case_0 EoCases.__get_arg_list_rec.case_1
-
-theorem body_eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
-    body_eo__24get_5farg_5flist_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__get_arg_list_rec x_a0 x_a1)
-      | core.result.Result.Err _ => True ⦄div := by
-  refine (?_ : ∀ (k : Nat) (a0 a1 : Term) (s : Store) (x_a0 : _) (x_a1 : _), s.budget ≤ k → s.Inv → s.remaining ≤ n →
-      Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
-      body_eo__24get_5farg_5flist_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__get_arg_list_rec x_a0 x_a1)
-      | core.result.Result.Err _ => True ⦄div) s.budget a0 a1 s x_a0 x_a1 le_rfl hinv hrem h_a0 h_a1
-  intro k
-  refine Nat.strong_induction_on k ?_
-  intro k ihl a0 a1 s x_a0 x_a1 hk hinv hrem h_a0 h_a1
-  unfold body_eo__24get_5farg_5flist_5frec body_eo__24get_5farg_5flist_5frec_loop
-  step with step_eo__24get_5farg_5flist_5frec_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 as ⟨r, s1, hinv1, hg1, hr⟩
-  cases r with
-  | Err e => simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨hinv1, hg1, trivial⟩
-  | Ok nx =>
-    cases nx with
-    | Done value =>
-      simp only [WP.dspec_ok, WP.uncurry'_pair]
-      exact ⟨hinv1, hg1, hr⟩
-    | Again next =>
-      obtain ⟨hlt, u0, y0, u1, y1, hnext, hrep0, hrep1, heq⟩ := hr
-      simp only
-      have hlen : next.length = 2 := by simp [Array.length, hnext]
-      step as ⟨b0, hb0⟩
-      obtain rfl : b0 = u0 := by simp [hb0, hnext]
-      step as ⟨b1, hb1⟩
-      obtain rfl : b1 = u1 := by simp [hb1, hnext]
-      have hrec := ihl s1.budget (by omega) b0 b1 s1 y0 y1 le_rfl hinv1 (hg1.rem hrem)  hrep0  hrep1
-      unfold body_eo__24get_5farg_5flist_5frec at hrec
-      apply WP.dspec_mono hrec
-      loop_close hg1 heq
-
-theorem eo__24get_5farg_5flist_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24get_5farg_5flist_5frec.Spec n := by
-  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
-  unfold eo__24get_5farg_5flist_5frec
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 890#u32 _ [a0, a1] rfl
-    (fun s1 => body_eo__24get_5farg_5flist_5frec s1 a0 a1) (fun s' t => Represents.rep s' t (__get_arg_list_rec x_a0 x_a1))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (by
-      intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_890 hsem
-      simp only [List.cons.injEq, and_true] at hargs
-      obtain ⟨rfl, rfl⟩ := hargs
-      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
-      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
-      exact hr)
-    (by
-      intro s1 res hpre h
-      exact ProgramSem.to_890 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24get_5farg_5flist_5frec_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24get_5flambda_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24get_5flambda_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__get_lambda_type.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__get_lambda_type.case_0 x_a0 x_a1 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24get_5flambda_5ftype
-  have hG := Store.Grows.refl s
-  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__get_lambda_type.case_0
-  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__get_lambda_type.case_0
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
-  pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__get_lambda_type.case_0
-  pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_v5 as ⟨v8, x_v8, h_v8⟩ ⟨v9, x_v9, h_v9⟩ else hinv1 hG in EoCases.__get_lambda_type.case_0
-  store_step with ih.eo__24get_5flambda_5ftype s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9
-  step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo__24emb_5fFunType.construct s2 e_v11 (by rw [he_v11]; exact empty_args) hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10
-  store_step with Store.apply_mk_rep s3 v11 v9 _ _ hinv3 h64 h_v11 h_v9 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11
-  store_step with Store.apply_mk_rep s4 v12 v10 _ _ hinv4 h64 h_v12 h_v10 as ⟨v13, s5, hinv5, h_v13⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12
-  case_done hinv5 hG with h_v13 in EoCases.__get_lambda_type.case_0 using hn_a0 hn_a1 hn_v1 hn_v2 hn_v4 hn_v5
-
-theorem case_1_eo__24get_5flambda_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_1_eo__24get_5flambda_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__get_lambda_type.case_1 x_a0 x_a1 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__get_lambda_type.case_1 x_a0 x_a1 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_1_eo__24get_5flambda_5ftype
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
-  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__get_lambda_type.case_1
-  case_done hinv1 hG with h_a1 in EoCases.__get_lambda_type.case_1 using hn_a0 hn_a1
-
-/-- logos's `__get_lambda_type` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24get_5flambda_5ftype.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    __get_lambda_type x_a0 x_a1 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__get_lambda_type.case_0 x_a0 x_a1, EoCases.__get_lambda_type.case_1 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold __get_lambda_type
-  unfold EoCases.__get_lambda_type.case_0 EoCases.__get_lambda_type.case_1
-  logos_eq
-
-theorem body_eo__24get_5flambda_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
-    body_eo__24get_5flambda_5ftype s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__get_lambda_type x_a0 x_a1)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24get_5flambda_5ftype.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
-  unfold body_eo__24get_5flambda_5ftype
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  case_step with case_0_eo__24get_5flambda_5ftype_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
-  case_step with case_1_eo__24get_5flambda_5ftype_spec n ih s1 a0 a1 x_a0 x_a1 hinv1 h64 (hG.rem hrem) h_a0 h_a1 hn_a0 hn_a1
-    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1 hc0
-  body_stuck hinv2 hG using hn_a0 hn_a1 hc0 hc1 in EoCases.__get_lambda_type.case_0 EoCases.__get_lambda_type.case_1
-
-theorem eo__24get_5flambda_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24get_5flambda_5ftype.Spec n := by
-  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
-  unfold eo__24get_5flambda_5ftype
-  apply WP.dspec_mono (Store.framed_cached s hinv hrem 893#u32 _ [a0, a1] rfl
-    (fun s1 => body_eo__24get_5flambda_5ftype s1 a0 a1) (fun s' t => Represents.rep s' t (__get_lambda_type x_a0 x_a1))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (by
-      intro s1 res hn hsem
-      obtain ⟨b0, b1, y0, y1, hargs, hb0, hb1, hr⟩ := ProgramSem.of_893 hsem
-      simp only [List.cons.injEq, and_true] at hargs
-      obtain ⟨rfl, rfl⟩ := hargs
-      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
-      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
-      exact hr)
-    (by
-      intro s1 res hpre h
-      exact ProgramSem.to_893 ⟨a0, a1, x_a0, x_a1, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, h⟩)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24get_5flambda_5ftype_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24get_5fvar_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24get_5fvar_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__get_var_type.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__get_var_type.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24get_5fvar_5ftype
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__get_var_type.case_0
-  case_done hinv hG with h_v2 in EoCases.__get_var_type.case_0 using hn_a0
-
-/-- logos's `__get_var_type` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24get_5fvar_5ftype.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __get_var_type x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__get_var_type.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __get_var_type
-  unfold EoCases.__get_var_type.case_0
-  logos_eq
-
-theorem body_eo__24get_5fvar_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24get_5fvar_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__get_var_type x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24get_5fvar_5ftype.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24get_5fvar_5ftype
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24get_5fvar_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__get_var_type.case_0
-
-theorem eo__24get_5fvar_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24get_5fvar_5ftype.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24get_5fvar_5ftype
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24get_5fvar_5ftype s1 a0) (fun s' t => Represents.rep s' t (__get_var_type x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24get_5fvar_5ftype_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24is_5farith_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24is_5farith_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__is_arith_type.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__is_arith_type.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24is_5farith_5ftype
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__is_arith_type.case_0
-  store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  case_done hinv2 hG with h_v1 in EoCases.__is_arith_type.case_0 using hn_a0
-
-theorem case_1_eo__24is_5farith_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_1_eo__24is_5farith_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__is_arith_type.case_1 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__is_arith_type.case_1 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_1_eo__24is_5farith_5ftype
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__is_arith_type.case_1
-  store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  case_done hinv2 hG with h_v1 in EoCases.__is_arith_type.case_1 using hn_a0
-
-/-- logos's `__is_arith_type` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24is_5farith_5ftype.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __is_arith_type x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__is_arith_type.case_0 x_a0, EoCases.__is_arith_type.case_1 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __is_arith_type
-  unfold EoCases.__is_arith_type.case_0 EoCases.__is_arith_type.case_1
-  logos_eq
-
-theorem body_eo__24is_5farith_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24is_5farith_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__is_arith_type x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24is_5farith_5ftype.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24is_5farith_5ftype
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24is_5farith_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  case_step with case_1_eo__24is_5farith_5ftype_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0 hn_a0
-    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 using hn_a0 hc0
-  body_stuck hinv2 hG using hn_a0 hc0 hc1 in EoCases.__is_arith_type.case_0 EoCases.__is_arith_type.case_1
-
-theorem eo__24is_5farith_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24is_5farith_5ftype.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24is_5farith_5ftype
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24is_5farith_5ftype s1 a0) (fun s' t => Represents.rep s' t (__is_arith_type x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24is_5farith_5ftype_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 

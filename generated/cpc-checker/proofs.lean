@@ -10,6 +10,7 @@ public import $PROOFS$.Part7
 public import $PROOFS$.Part8
 public import $PROOFS$.Part9
 public import $PROOFS$.Part10
+public import $PROOFS$.Part11
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos
@@ -221,17 +222,25 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fseq_2drev_2drev_spec n ih,
       eo__24eo_5fprog_5fseq_2drev_2dunit_spec n ih,
       eo__24eo_5fprog_5fsets_2dchoose_2dsingleton_spec n ih,
+      eo__24eo_5fprog_5fsets_2deq_2dsingleton_2demp_spec n ih,
       eo__24eo_5fprog_5fsets_2dinsert_2delim_spec n ih,
       eo__24eo_5fprog_5fsets_2dinter_2dcomm_spec n ih,
+      eo__24eo_5fprog_5fsets_2dinter_2demp1_spec n ih,
+      eo__24eo_5fprog_5fsets_2dinter_2demp2_spec n ih,
       eo__24eo_5fprog_5fsets_2dinter_2dmember_spec n ih,
       eo__24eo_5fprog_5fsets_2dinter_2dself_spec n ih,
       eo__24eo_5fprog_5fsets_2dis_2dempty_2delim_spec n ih,
       eo__24eo_5fprog_5fsets_2dis_2dsingleton_2delim_spec n ih,
+      eo__24eo_5fprog_5fsets_2dmember_2demp_spec n ih,
       eo__24eo_5fprog_5fsets_2dmember_2dsingleton_spec n ih,
+      eo__24eo_5fprog_5fsets_2dminus_2demp1_spec n ih,
+      eo__24eo_5fprog_5fsets_2dminus_2demp2_spec n ih,
       eo__24eo_5fprog_5fsets_2dminus_2dmember_spec n ih,
       eo__24eo_5fprog_5fsets_2dminus_2dself_spec n ih,
       eo__24eo_5fprog_5fsets_2dsubset_2delim_spec n ih,
       eo__24eo_5fprog_5fsets_2dunion_2dcomm_spec n ih,
+      eo__24eo_5fprog_5fsets_2dunion_2demp1_spec n ih,
+      eo__24eo_5fprog_5fsets_2dunion_2demp2_spec n ih,
       eo__24eo_5fprog_5fsets_2dunion_2dmember_spec n ih,
       eo__24eo_5fprog_5fsets_2dunion_2dself_spec n ih,
       eo__24eo_5fprog_5fsets_5fext_spec n ih,

@@ -480,10 +480,9 @@ theorem eoList_valid_elems {xf xr : Eo.Term} :
   | nil => intro _ y hy; cases hy
   | cons y ys ih =>
     intro hv z hz
-    rw [eoList] at hv
-    unfold TermValid at hv
+    rw [eoList, TermValid.apply] at hv
     obtain ⟨_, _, h3, h4⟩ := hv
-    unfold TermValid at h3
+    rw [TermValid.apply] at h3
     obtain ⟨_, hy, _, _⟩ := h3
     rcases List.mem_cons.mp hz with rfl | hz
     · exact hy

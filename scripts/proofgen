@@ -869,6 +869,20 @@ class Generator:
                      + " ⦃ r s' => s'.Inv ∧ s.Grows s' ∧\n      match r with\n      | "
                      + ok + " t => Represents.rep s' t (" + n.lean + n.xs
                      + ")\n      | " + err + " _ => True ⦄div\n\n")
+        # `Valid` of an indexed operator is that of its indices (TermValid,
+        # Runtime/Embed.lean), as a simp lemma per arity: the library cannot
+        # state it, as CpcMini has no indexed operators.
+        for k in sorted(self.uop_arities):
+            if k == 0:
+                continue
+            vs = " ".join("i%d" % j for j in range(k))
+            o.append("@[simp] theorem Valid.uop%d (op : Eo.UserOp%d) %s :\n"
+                     "    Valid.valid (Eo.Term.UOp%d op %s) ↔ %s := by\n"
+                     "  show TreeValid (Embed.enc_Term _) ↔ _\n"
+                     "  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true]\n"
+                     "  rfl\n\n"
+                     % (k, k, "".join("(i%d : Eo.Term) " % j for j in range(k)).strip(),
+                        k, vs, " ∧ ".join("Valid.valid i%d" % j for j in range(k))))
         o.append("/-- What is proved of the programs, for stores that can enter `n` "
                  "more calls. -/\nstructure Specs (n : Nat) : Prop where\n")
         for p in proved:
@@ -1915,6 +1929,7 @@ def main():
     with open(args.config, "rb") as f:
         cfg = tomllib.load(f)
     gen = Generator(trace, cfg)
+    gen.uop_arities = set(user_op_arities(args.calc_lean).values()) if args.calc_lean else set()
     gen.unproved = {}
     if args.unproved:
         with open(args.unproved, "rb") as f:

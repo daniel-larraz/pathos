@@ -624,7 +624,19 @@ which is a value of logos's type and of no store (`apply` never builds an
 application of or to the stuck term). Lemma C therefore takes, for each
 argument, that it is `Valid` (for a term: no application in it is of or to
 the stuck term), and the body's proof gets that from the handle
-(`Store.Rep.valid`). This is the same boundary as the first finding below,
+(`Store.Rep.valid`). For a term, `Valid` is defined through the encoding
+(`TermValid x = TreeValid (enc x)`), so it also holds in the indices of an
+operator (`UOp1`, …, whose indices the encoding makes a node's fields),
+for every calculus with the one definition: no application inside an
+index is of or to the stuck term. An index may itself be the stuck term,
+though: logos builds `(set.empty (eo::typeof a))` and
+`(seq.empty (eo::typeof t))` (`Term.UOp1 UserOp1.set_empty (__eo_typeof
+a)` in CPC's Lean), and `eo::typeof` of a term with no type is the stuck
+term; the store holds such a node as it is (`construct` does not check a
+node's fields, as `apply` does an application's, `TermData.Wf`), which is
+logos's value. So `Valid` does not exclude it, and a program whose case
+repeats a variable that is an index itself stays unproved
+(`proofs-cpc/unproved.toml`). This is the same boundary as the first finding below,
 met from the other side. For the checker's other argument types (its
 states, lists of commands, arguments and indices, rules; the datatype
 declarations; the SMT types, datatypes and terms; commands; strings and naturals) `Valid`
