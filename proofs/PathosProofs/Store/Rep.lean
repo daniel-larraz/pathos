@@ -31,6 +31,18 @@ table that the embedding is generated with (`Embed.uop`). -/
 
 theorem uopCtor_eq_uop (op : Eo.UserOp) : uopCtor op = Embed.uop op := rfl
 
+/-- No term is stored as a node of a constructor that embeds neither data
+nor a variable (a literal's, the stuck term's, an application's): `enc`
+makes nodes of data and variable constructors only (`Embed.enc_Term_node`,
+generated per signature). -/
+theorem enc_ne_node_of {x : Eo.Term} {c : schema.Constructor} {e : Embedding}
+    (hc : c.embedding = Result.ok e) (hd : e ≠ Embedding.Data) (hv : e ≠ Embedding.Var)
+    (xs : List Tree) : Embedded.enc x ≠ Tree.node c xs := by
+  intro h
+  rcases Embed.enc_Term_node h with he | he <;> rw [hc, ok.injEq] at he
+  · exact hd he
+  · exact hv he
+
 /-- The handle `t` stands for the value `x`. -/
 def Rep {α : Type} [Embedded α] (nodes : List TermData) (t : Nat) (x : α) : Prop :=
   Holds nodes t (Embedded.enc x) ∧ Embedded.emb x

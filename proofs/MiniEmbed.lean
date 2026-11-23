@@ -674,6 +674,125 @@ theorem inv_Term_lit {x : Eo.Term} {l : lit.Lit} (h : enc_Term x = Tree.lit l) :
       (∃ x0 x1, x = Eo.Term.Binary x0 x1 ∧ l = lit.Lit.Binary (Tree.bvOf x0 x1)) := by
   cases x <;> simp_all [enc_Term]
 
+theorem enc_Datatype_node {x : Eo.Datatype} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_Datatype x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «null» =>
+    simp only [enc_Datatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sum» =>
+    simp only [enc_Datatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_DatatypeCons_node {x : Eo.DatatypeCons} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_DatatypeCons x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «unit» =>
+    simp only [enc_DatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_DatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_DatatypeDecl_node {x : Eo.DatatypeDecl} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_DatatypeDecl x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_DatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_DatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_Term_node {x : Eo.Term} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_Term x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «UOp» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    rename_i op
+    cases op <;> exact Or.inl rfl
+  case «__eo_List» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «__eo_List_nil» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «__eo_List_cons» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Bool» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Boolean» =>
+    simp [enc_Term] at h
+  case «Numeral» =>
+    simp [enc_Term] at h
+  case «Rational» =>
+    simp [enc_Term] at h
+  case «String» =>
+    simp [enc_Term] at h
+  case «Binary» =>
+    simp [enc_Term] at h
+  case «Type» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Stuck» =>
+    simp [enc_Term] at h
+  case «Apply» =>
+    simp [enc_Term] at h
+  case «FunType» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Var» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inr rfl
+  case «DatatypeType» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DatatypeTypeRef» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtcAppType» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtCons» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtSel» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «USort» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «UConst» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.Datatype := ⟨enc_Datatype, dec_Datatype, emb_Datatype, dec_enc_Datatype⟩
 
 @[simp] theorem embedded_enc_Datatype (x : Eo.Datatype) : Embedded.enc x = enc_Datatype x := rfl
@@ -763,6 +882,19 @@ theorem inv_CArgList_cons {x : Eo.CArgList} {ts : List Tree}
   · unfold dec_CArgList at hd
     cases hd
 
+theorem enc_CArgList_node {x : Eo.CArgList} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CArgList x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CArgList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CArgList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CArgList := ⟨enc_CArgList, dec_CArgList, emb_CArgList, dec_enc_CArgList⟩
 
 @[simp] theorem embedded_enc_CArgList (x : Eo.CArgList) : Embedded.enc x = enc_CArgList x := rfl
@@ -836,6 +968,19 @@ theorem inv_CIndexList_cons {x : Eo.CIndexList} {ts : List Tree}
     exact ⟨_, _, rfl, h.symm⟩
   · unfold dec_CIndexList at hd
     cases hd
+
+theorem enc_CIndexList_node {x : Eo.CIndexList} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CIndexList x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CIndexList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CIndexList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Eo.CIndexList := ⟨enc_CIndexList, dec_CIndexList, emb_CIndexList, dec_enc_CIndexList⟩
 
@@ -956,6 +1101,31 @@ theorem inv_CRule_trans {x : Eo.CRule} {ts : List Tree}
     exact ⟨rfl, rfl⟩
   · unfold dec_CRule at hd
     cases hd
+
+theorem enc_CRule_node {x : Eo.CRule} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CRule x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «scope» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «contra» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «refl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «symm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «trans» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Eo.CRule := ⟨enc_CRule, dec_CRule, emb_CRule, dec_enc_CRule⟩
 
@@ -1102,6 +1272,27 @@ theorem inv_CCmd_step_pop {x : Eo.CCmd} {ts : List Tree}
   · unfold dec_CCmd at hd
     cases hd
 
+theorem enc_CCmd_node {x : Eo.CCmd} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «assume_push» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «check_proven» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «step» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «step_pop» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CCmd := ⟨enc_CCmd, dec_CCmd, emb_CCmd, dec_enc_CCmd⟩
 
 @[simp] theorem embedded_enc_CCmd (x : Eo.CCmd) : Embedded.enc x = enc_CCmd x := rfl
@@ -1175,6 +1366,19 @@ theorem inv_CCmdList_cons {x : Eo.CCmdList} {ts : List Tree}
     exact ⟨_, _, rfl, h.symm⟩
   · unfold dec_CCmdList at hd
     cases hd
+
+theorem enc_CCmdList_node {x : Eo.CCmdList} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CCmdList x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CCmdList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CCmdList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Eo.CCmdList := ⟨enc_CCmdList, dec_CCmdList, emb_CCmdList, dec_enc_CCmdList⟩
 
@@ -1282,6 +1486,23 @@ theorem inv_CStateObj_proven {x : Eo.CStateObj} {ts : List Tree}
   · unfold dec_CStateObj at hd
     cases hd
 
+theorem enc_CStateObj_node {x : Eo.CStateObj} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «assume» =>
+    simp only [enc_CStateObj, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «assume_push» =>
+    simp only [enc_CStateObj, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «proven» =>
+    simp only [enc_CStateObj, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CStateObj := ⟨enc_CStateObj, dec_CStateObj, emb_CStateObj, dec_enc_CStateObj⟩
 
 @[simp] theorem embedded_enc_CStateObj (x : Eo.CStateObj) : Embedded.enc x = enc_CStateObj x := rfl
@@ -1375,6 +1596,23 @@ theorem inv_CState_cons {x : Eo.CState} {ts : List Tree}
   · unfold dec_CState at hd
     cases hd
 
+theorem enc_CState_node {x : Eo.CState} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CState x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CState, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Stuck» =>
+    simp only [enc_CState, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CState, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CState := ⟨enc_CState, dec_CState, emb_CState, dec_enc_CState⟩
 
 @[simp] theorem embedded_enc_CState (x : Eo.CState) : Embedded.enc x = enc_CState x := rfl
@@ -1434,6 +1672,17 @@ theorem inv_Proof_pf {x : Eo.Proof} {ts : List Tree}
 
 theorem inv_Proof_Stuck {x : Eo.Proof} (h : enc_Proof x = Tree.stuck) : x = Eo.Proof.Stuck := by
   cases x <;> simp_all [enc_Proof]
+
+theorem enc_Proof_node {x : Eo.Proof} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_Proof x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «pf» =>
+    simp only [enc_Proof, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Stuck» =>
+    simp [enc_Proof] at h
 
 instance : Embedded Eo.Proof := ⟨enc_Proof, dec_Proof, emb_Proof, dec_enc_Proof⟩
 
@@ -2003,6 +2252,110 @@ theorem inv_SmtType_DtcAppType {x : Smtm.SmtType} {ts : List Tree}
   · unfold dec_SmtType at hd
     cases hd
 
+theorem enc_SmtDatatype_node {x : Smtm.SmtDatatype} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtDatatype x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «null» =>
+    simp only [enc_SmtDatatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sum» =>
+    simp only [enc_SmtDatatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_SmtDatatypeCons_node {x : Smtm.SmtDatatypeCons} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtDatatypeCons x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «unit» =>
+    simp only [enc_SmtDatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_SmtDatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_SmtDatatypeDecl_node {x : Smtm.SmtDatatypeDecl} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtDatatypeDecl x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_SmtDatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_SmtDatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_SmtType_node {x : Smtm.SmtType} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «None» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Bool» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Int» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Real» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «RegLan» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «BitVec» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Map» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Set» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Seq» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Char» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Datatype» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «TypeRef» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «USort» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «FunType» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtcAppType» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Smtm.SmtDatatype := ⟨enc_SmtDatatype, dec_SmtDatatype, emb_SmtDatatype, dec_enc_SmtDatatype⟩
 
 @[simp] theorem embedded_enc_SmtDatatype (x : Smtm.SmtDatatype) : Embedded.enc x = enc_SmtDatatype x := rfl
@@ -2571,6 +2924,83 @@ theorem inv_SmtTerm_ite {x : Smtm.SmtTerm} {ts : List Tree}
     exact ⟨_, _, _, rfl, h.symm⟩
   · unfold dec_SmtTerm at hd
     cases hd
+
+theorem enc_SmtTerm_node {x : Smtm.SmtTerm} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «None» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Boolean» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Numeral» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Rational» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «String» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Binary» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Apply» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Var» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtCons» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtSel» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtTester» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «UConst» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «and» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «or» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «imp» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «eq» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Smtm.SmtTerm := ⟨enc_SmtTerm, dec_SmtTerm, emb_SmtTerm, dec_enc_SmtTerm⟩
 

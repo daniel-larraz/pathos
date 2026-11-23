@@ -1689,6 +1689,29 @@ def embedding(table, calc_lean=None):
                 o.append("theorem inv_" + ty + "_lit {x : " + q + "} {l : lit.Lit} (h : enc_"
                          + ty + " x = Tree.lit l) :\n    " + lit_cases + " := by\n" + tac
                          + "\n")
+        # The constructor of a node that `enc` makes is a data or a variable
+        # constructor, never an object literal's or the stuck term's: one
+        # split over the datatype, each case a step (linear).
+        for ty in scc:
+            q = qualified(ty)
+            o.append("theorem enc_" + ty + "_node {x : " + q + "} {c : schema.Constructor} "
+                     "{ts : List Tree}\n    (h : enc_" + ty + " x = Tree.node c ts) :\n"
+                     "    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by\n"
+                     "  cases x\n")
+            for c in by_type[ty]:
+                s_ = c.sname
+                o.append("  case «" + c.cname + "» =>\n")
+                if s_ in LITS or s_ in ("$emb_Stuck", "$emb_Apply"):
+                    o.append("    simp [enc_" + ty + "] at h\n")
+                elif uop_k(s_) is not None:
+                    o.append("    simp only [enc_" + ty + ", Tree.node.injEq] at h\n"
+                             "    obtain ⟨rfl, -⟩ := h\n    rename_i op" + "".join(" _" for _ in c.fields[1:])
+                             + "\n    cases op <;> exact Or.inl rfl\n")
+                else:
+                    o.append("    simp only [enc_" + ty + ", Tree.node.injEq] at h\n"
+                             "    obtain ⟨rfl, -⟩ := h\n    exact Or." + ("inr" if s_ == "$emb_Var" else "inl")
+                             + " rfl\n")
+            o.append("\n")
         for ty in scc:
             q = qualified(ty)
             o.append("instance : Embedded " + q + " := ⟨enc_" + ty + ", dec_" + ty

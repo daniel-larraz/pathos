@@ -129,21 +129,13 @@ theorem Store.destruct_literal_rational (l : lit.Lit) :
 
 /-- No term is stored as a node of the numeral literal's constructor. -/
 theorem enc_ne_node_numeral (x : Eo.Term) (xs : List Tree) :
-    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fNumeral xs := by
-  intro h
-  cases x
-  all_goals first | (simp [Embed.embedded_enc_Term, Embed.enc_Term] at h; done) | skip
-  rename_i y
-  cases y <;> simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop] at h
+    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fNumeral xs :=
+  enc_ne_node_of (e := Embedding.Numeral) rfl nofun nofun xs
 
 /-- No term is stored as a node of the rational literal's constructor. -/
 theorem enc_ne_node_rational (x : Eo.Term) (xs : List Tree) :
-    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fRational xs := by
-  intro h
-  cases x
-  all_goals first | (simp [Embed.embedded_enc_Term, Embed.enc_Term] at h; done) | skip
-  rename_i y
-  cases y <;> simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop] at h
+    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fRational xs :=
+  enc_ne_node_of (e := Embedding.Rational) rfl nofun nofun xs
 
 /-- `destruct` with `$emb_Numeral` on a handle of a term: a handle of the
 native integer of a numeral literal, and nothing for any other term. -/

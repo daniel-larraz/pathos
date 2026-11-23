@@ -47,12 +47,8 @@ theorem Store.destruct_literal_boolean (l : lit.Lit) :
 
 /-- No term is stored as a node of the Boolean literal's constructor. -/
 theorem enc_ne_node_boolean (x : Eo.Term) (xs : List Tree) :
-    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fBoolean xs := by
-  intro h
-  cases x
-  all_goals first | (simp [Embed.embedded_enc_Term, Embed.enc_Term] at h; done) | skip
-  rename_i y
-  cases y <;> simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop] at h
+    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fBoolean xs :=
+  enc_ne_node_of (e := Embedding.Boolean) rfl nofun nofun xs
 
 /-- `destruct` with `$emb_Boolean` on a handle of a term: a handle of the
 native Boolean of a Boolean literal, and nothing for any other term. -/

@@ -1111,6 +1111,140 @@ theorem inv_Term_lit {x : Eo.Term} {l : lit.Lit} (h : enc_Term x = Tree.lit l) :
       (∃ x0 x1, x = Eo.Term.Binary x0 x1 ∧ l = lit.Lit.Binary (Tree.bvOf x0 x1)) := by
   cases x <;> simp_all [enc_Term]
 
+theorem enc_Datatype_node {x : Eo.Datatype} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_Datatype x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «null» =>
+    simp only [enc_Datatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sum» =>
+    simp only [enc_Datatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_DatatypeCons_node {x : Eo.DatatypeCons} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_DatatypeCons x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «unit» =>
+    simp only [enc_DatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_DatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_DatatypeDecl_node {x : Eo.DatatypeDecl} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_DatatypeDecl x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_DatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_DatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_Term_node {x : Eo.Term} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_Term x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «UOp» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    rename_i op
+    cases op <;> exact Or.inl rfl
+  case «UOp1» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    rename_i op _
+    cases op <;> exact Or.inl rfl
+  case «UOp2» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    rename_i op _ _
+    cases op <;> exact Or.inl rfl
+  case «UOp3» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    rename_i op _ _ _
+    cases op <;> exact Or.inl rfl
+  case «__eo_List» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «__eo_List_nil» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «__eo_List_cons» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Bool» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Boolean» =>
+    simp [enc_Term] at h
+  case «Numeral» =>
+    simp [enc_Term] at h
+  case «Rational» =>
+    simp [enc_Term] at h
+  case «String» =>
+    simp [enc_Term] at h
+  case «Binary» =>
+    simp [enc_Term] at h
+  case «Type» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Stuck» =>
+    simp [enc_Term] at h
+  case «Apply» =>
+    simp [enc_Term] at h
+  case «FunType» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Var» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inr rfl
+  case «DatatypeType» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DatatypeTypeRef» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtcAppType» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtCons» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtSel» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «USort» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «UConst» =>
+    simp only [enc_Term, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.Datatype := ⟨enc_Datatype, dec_Datatype, emb_Datatype, dec_enc_Datatype⟩
 
 @[simp] theorem embedded_enc_Datatype (x : Eo.Datatype) : Embedded.enc x = enc_Datatype x := rfl
@@ -1200,6 +1334,19 @@ theorem inv_CArgList_cons {x : Eo.CArgList} {ts : List Tree}
   · unfold dec_CArgList at hd
     cases hd
 
+theorem enc_CArgList_node {x : Eo.CArgList} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CArgList x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CArgList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CArgList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CArgList := ⟨enc_CArgList, dec_CArgList, emb_CArgList, dec_enc_CArgList⟩
 
 @[simp] theorem embedded_enc_CArgList (x : Eo.CArgList) : Embedded.enc x = enc_CArgList x := rfl
@@ -1273,6 +1420,19 @@ theorem inv_CIndexList_cons {x : Eo.CIndexList} {ts : List Tree}
     exact ⟨_, _, rfl, h.symm⟩
   · unfold dec_CIndexList at hd
     cases hd
+
+theorem enc_CIndexList_node {x : Eo.CIndexList} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CIndexList x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CIndexList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CIndexList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Eo.CIndexList := ⟨enc_CIndexList, dec_CIndexList, emb_CIndexList, dec_enc_CIndexList⟩
 
@@ -13022,6 +13182,2479 @@ theorem inv_CRule_distinct_card_conflict {x : Eo.CRule} {ts : List Tree}
   · unfold dec_CRule at hd
     cases hd
 
+theorem enc_CRule_node {x : Eo.CRule} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CRule x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «scope» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «process_scope» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «split» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «resolution» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «chain_resolution» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «chain_m_resolution» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «factoring» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «reordering» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «eq_resolve» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «modus_ponens» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_not_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «contra» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «and_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «and_intro» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_or_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «implies_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_implies_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_implies_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «equiv_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «equiv_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_equiv_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_equiv_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «xor_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «xor_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_xor_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_xor_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_ite_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_ite_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not_and» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_and_pos» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_and_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_or_pos» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_or_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_implies_pos» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_implies_neg1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_implies_neg2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_equiv_pos1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_equiv_pos2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_equiv_neg1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_equiv_neg2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_xor_pos1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_xor_pos2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_xor_neg1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_xor_neg2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_ite_pos1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_ite_pos2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_ite_pos3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_ite_neg1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_ite_neg2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cnf_ite_neg3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arrays_read_over_write» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arrays_read_over_write_contra» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arrays_read_over_write_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arrays_ext» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «refl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «symm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «trans» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cong» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «nary_cong» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «pairwise_cong» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «true_intro» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «true_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «false_intro» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «false_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ho_cong» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «distinct_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «distinct_true» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «distinct_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_sum_ub» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mult_pos» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mult_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_trichotomy» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «int_tight_ub» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «int_tight_lb» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mult_tangent» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mult_sign» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mult_abs_comparison» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_reduction» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_poly_norm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_poly_norm_rel» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_repeat_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_smulo_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_umulo_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_bitwise_slicing» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_bitblast_step» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_poly_norm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_poly_norm_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_length_pos» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_length_non_empty» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «concat_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «concat_unify» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «concat_csplit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «concat_split» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «concat_lprop» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «concat_cprop» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_decompose» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «exists_string_length» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_code_inj» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_seq_unit_inj» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_inter» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_unfold_pos» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_unfold_neg_concat_fixed» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_unfold_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_ext» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_reduction» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «string_eager_reduction» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_string_pred_entail» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_string_pred_safe_approx» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_eval» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_consume» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_loop_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_eq_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_inter_inclusion» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_union_inclusion» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_concat_star_char» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_sigma» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_sigma_star» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_ctn_multiset_subset» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_overlap_split_ctn» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_overlap_endpoints_ctn» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_overlap_endpoints_indexof» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_overlap_endpoints_replace» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_re_eval» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_re_eval» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_re_all_eval» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_eval_op» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_singleton_inj» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_ext» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_choose_member» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_eval_op» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ubv_to_int_range» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ubv_to_int_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «int_to_bv_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «instantiate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «skolemize» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «skolem_intro» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «alpha_equiv» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «beta_reduce» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_var_reordering» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «exists_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_unused_vars» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_merge_prenex» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_miniscope_and» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_miniscope_or» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_miniscope_ite» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_var_elim_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «quant_dt_split» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_split» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_inst» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_collapse_selector» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_collapse_tester» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_collapse_tester_singleton» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_cons_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_cons_eq_clash» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_cycle» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_collapse_updater» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «dt_updater_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_div_total_zero_real» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_div_total_zero_int» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_div_total» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_div_total_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_div_total_zero» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_div_total_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_mod_total» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_mod_total_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_mod_total_zero» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_mod_total_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_div_total_over_mod» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_elim_gt» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_elim_lt» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_elim_int_gt» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_elim_int_lt» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_elim_leq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_leq_norm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_geq_tighten» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_geq_norm1_int» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_geq_norm1_real» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_eq_elim_real» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_eq_elim_int» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_to_int_elim_to_real» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_is_int_elim_to_real» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_div_int_to_real» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_div_total_int_to_real» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mod_over_mod_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mod_over_mod» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_mod_over_mod_mult» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_eq_conflict» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_int_geq_tighten» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_divisible_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_abs_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_abs_int_gt» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_abs_real_gt» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_geq_ite_lift» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_leq_ite_lift» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_min_lt1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_min_lt2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_max_geq1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «arith_max_geq2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «array_read_over_write» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «array_read_over_write2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «array_store_overwrite» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «array_store_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «array_read_over_write_split» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «array_store_swap» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_double_not_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_not_true» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_not_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_eq_true» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_eq_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_eq_nrefl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_impl_false1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_impl_false2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_impl_true1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_impl_true2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_impl_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_dual_impl_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_and_conf» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_and_conf2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_or_taut» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_or_taut2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_or_de_morgan» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_implies_de_morgan» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_and_de_morgan» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_or_and_distrib» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_implies_or_distrib» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_xor_refl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_xor_nrefl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_xor_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_xor_true» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_xor_comm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_xor_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_not_xor_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_not_eq_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_not_eq_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_neg_branch» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_then_true» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_else_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_then_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_else_true» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_then_lookahead_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_else_lookahead_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_then_lookahead_not_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_else_lookahead_not_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_expand» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bool_not_ite_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_true_cond» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_false_cond» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_not_cond» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_eq_branch» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_then_lookahead» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_else_lookahead» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_then_neg_lookahead» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite_else_neg_lookahead» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_concat_extract_merge» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_extract» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_whole» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_concat_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_concat_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_concat_3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_concat_4» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_eq_extract_elim1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_eq_extract_elim2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_eq_extract_elim3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_not» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_sign_extend_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_sign_extend_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_sign_extend_3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_not_xor» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_and_simplify_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_and_simplify_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_or_simplify_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_or_simplify_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_simplify_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_simplify_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_simplify_3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ult_add_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_mult_slt_mult_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_mult_slt_mult_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_commutative_xor» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_commutative_comp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_zero_extend_eliminate_0» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sign_extend_eliminate_0» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_not_neq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ult_ones» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_concat_merge_const» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_commutative_add» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sub_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_width_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_width_one_not» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_eq_xor_solve» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_eq_not_solve» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ugt_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_uge_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sgt_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sge_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sle_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_redor_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_redand_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ule_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_comp_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_rotate_left_eliminate_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_rotate_left_eliminate_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_rotate_right_eliminate_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_rotate_right_eliminate_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_nand_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_nor_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xnor_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sdiv_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_zero_extend_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_uaddo_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_saddo_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sdivo_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_smod_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_srem_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_usubo_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ssubo_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_nego_eliminate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_equal_children» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_const_cond_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_const_cond_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_const_children_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_const_children_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_equal_cond_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_equal_cond_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_equal_cond_3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_merge_then_if» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_merge_else_if» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_merge_then_else» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ite_merge_else_else» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_shl_by_const_0» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_shl_by_const_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_shl_by_const_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_lshr_by_const_0» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_lshr_by_const_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_lshr_by_const_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ashr_by_const_0» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ashr_by_const_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ashr_by_const_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_and_concat_pullup» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_or_concat_pullup» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_concat_pullup» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_and_concat_pullup2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_or_concat_pullup2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_concat_pullup2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_and_concat_pullup3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_or_concat_pullup3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_concat_pullup3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_duplicate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_ones» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_xor_not» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_not_idemp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ult_zero_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ult_zero_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ult_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_lt_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ule_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ule_zero» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_zero_ule» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sle_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ule_max» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_not_ult» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_mult_pow2_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_mult_pow2_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_mult_pow2_2b» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_extract_mult_leading_bit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_udiv_pow2_not_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_udiv_zero» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_udiv_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_urem_pow2_not_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_urem_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_urem_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_shl_zero» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_lshr_zero» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ashr_zero» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ugt_urem» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_ult_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_merge_sign_extend_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_merge_sign_extend_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sign_extend_eq_const_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sign_extend_eq_const_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_zero_extend_eq_const_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_zero_extend_eq_const_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_zero_extend_ult_const_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_zero_extend_ult_const_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sign_extend_ult_const_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sign_extend_ult_const_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sign_extend_ult_const_3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bv_sign_extend_ult_const_4» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_eq_singleton_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_member_singleton» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_member_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_subset_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_insert_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_union_comm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_inter_comm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_inter_emp1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_inter_emp2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_minus_emp1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_minus_emp2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_union_emp1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_union_emp2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_inter_member» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_minus_member» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_union_member» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_choose_singleton» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_minus_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_union_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_inter_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_is_empty_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sets_is_singleton_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_ctn_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_ctn_full_false1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_ctn_full_false2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_len_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_empty_str» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_empty_range» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_empty_start» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_empty_start_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_substr_start_geq_len» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_eq_empty» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_z_eq_empty_leq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_eq_empty_leq_len» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len_replace_inv» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len_replace_all_inv» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len_update_inv» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_update_oob» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_update_rev» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_update_fit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_update_concat_fit0» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_update_concat_fit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_update_in_first_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len_substr_in_range» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_clash» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_clash_rev» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_clash2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_clash2_rev» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_unify» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_unify_rev» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_unify_base» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat_unify_base_rev» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_prefixof_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_suffixof_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_prefixof_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_suffixof_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_prefixof_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_suffixof_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_combine1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_combine2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_combine3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_combine4» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_concat1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_concat2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_replace» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_full» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_full_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_refl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_concat_find» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_concat_find_contra» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_split_char» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_leq_len_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_char» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_at_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_id» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_prefix» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_prefix_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_no_contains» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_find_base» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_find_first_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_empty» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_one_pre» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_find_pre» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_all_no_contains» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_all_find_pre» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_all_find» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_all_empty» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_all_id» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_all_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_re_none» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_re_all_none» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len_concat_rec» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len_eq_zero_concat_rec» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len_eq_zero_base» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_no_contains» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_oob» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_oob2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_contains_pre» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_contains_concat_pre» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_prefix_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_len_oob» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_len_oob2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_find_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_eq_irr» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_re_none» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_re_emp_re» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_lower_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_upper_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_lower_upper» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_lower_idem» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_upper_lower» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_upper_idem» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_lower_len» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_upper_len» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_lower_from_int» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_upper_from_int» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_int_concat_neg_one» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_is_digit_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_leq_empty» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_leq_empty_eq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_leq_concat_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_leq_concat_true» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_leq_concat_base_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_leq_concat_base_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_lt_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_from_int_no_ctn_nondigit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_ctn_contra» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_ctn» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_dual_ctn» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_dual_ctn_false» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_self_ctn_simp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_emp_ctn_src» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_char_start_eq_len» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_repl_char» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_repl_self_tgt_char» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_repl_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains_repl_tgt» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_len_id» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_src_tgt_no_ctn» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_tgt_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_tgt_no_ctn» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_src_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_src_inv_no_ctn1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_src_inv_no_ctn2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_src_inv_no_ctn3» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_dual_self» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_dual_ite1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_dual_ite2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_repl_repl_lookahead_id_simp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_all_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_opt_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_diff_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_plus_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_repeat_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_concat_star_swap» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_concat_star_repeat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_concat_star_nullable1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_concat_star_nullable2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_concat_merge» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_union_all» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_union_const_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_inter_all» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_star_none» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_star_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_star_star» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_range_refl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_range_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_range_non_singleton_1» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_range_non_singleton_2» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_star_union_char» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_star_union_drop_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_loop_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_loop_star» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_inter_cstring» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_inter_cstring_neg» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_len_include» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_len_include_pre» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr_len_norm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_len_rev» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_rev_rev» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_rev_concat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_repl_self_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_repl_no_change» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_repl_tgt_eq_len» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_repl_len_one_emp_prefix» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_repl_emp_tgt_nemp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_repl_nemp_src_emp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_eq_repl_self_src» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_len_unit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_nth_unit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_nth_concat_unit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_nth_concat_unit_gen» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_rev_unit» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_in_empty» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_in_sigma» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_in_sigma_star» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_in_cstring» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_in_comp» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_union_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_inter_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_range_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_contains» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_from_int_nemp_dig_range» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re_from_int_dig_range» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «eq_refl» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «eq_symm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «eq_cond_deq» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «eq_ite_lift» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «distinct_binary_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_bv2nat_int2bv» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_bv2nat_int2bv_extend» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_bv2nat_int2bv_extract» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_int2bv_bv2nat» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_bv2nat_geq_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_int2bv_bvult_equiv» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_int2bv_bvule_equiv» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uf_sbv_to_int_elim» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «evaluate» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «distinct_values» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «aci_norm» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «absorb» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «distinct_card_conflict» =>
+    simp only [enc_CRule, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CRule := ⟨enc_CRule, dec_CRule, emb_CRule, dec_enc_CRule⟩
 
 @[simp] theorem embedded_enc_CRule (x : Eo.CRule) : Embedded.enc x = enc_CRule x := rfl
@@ -13167,6 +15800,27 @@ theorem inv_CCmd_step_pop {x : Eo.CCmd} {ts : List Tree}
   · unfold dec_CCmd at hd
     cases hd
 
+theorem enc_CCmd_node {x : Eo.CCmd} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CCmd x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «assume_push» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «check_proven» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «step» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «step_pop» =>
+    simp only [enc_CCmd, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CCmd := ⟨enc_CCmd, dec_CCmd, emb_CCmd, dec_enc_CCmd⟩
 
 @[simp] theorem embedded_enc_CCmd (x : Eo.CCmd) : Embedded.enc x = enc_CCmd x := rfl
@@ -13240,6 +15894,19 @@ theorem inv_CCmdList_cons {x : Eo.CCmdList} {ts : List Tree}
     exact ⟨_, _, rfl, h.symm⟩
   · unfold dec_CCmdList at hd
     cases hd
+
+theorem enc_CCmdList_node {x : Eo.CCmdList} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CCmdList x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CCmdList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CCmdList, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Eo.CCmdList := ⟨enc_CCmdList, dec_CCmdList, emb_CCmdList, dec_enc_CCmdList⟩
 
@@ -13347,6 +16014,23 @@ theorem inv_CStateObj_proven {x : Eo.CStateObj} {ts : List Tree}
   · unfold dec_CStateObj at hd
     cases hd
 
+theorem enc_CStateObj_node {x : Eo.CStateObj} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CStateObj x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «assume» =>
+    simp only [enc_CStateObj, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «assume_push» =>
+    simp only [enc_CStateObj, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «proven» =>
+    simp only [enc_CStateObj, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CStateObj := ⟨enc_CStateObj, dec_CStateObj, emb_CStateObj, dec_enc_CStateObj⟩
 
 @[simp] theorem embedded_enc_CStateObj (x : Eo.CStateObj) : Embedded.enc x = enc_CStateObj x := rfl
@@ -13440,6 +16124,23 @@ theorem inv_CState_cons {x : Eo.CState} {ts : List Tree}
   · unfold dec_CState at hd
     cases hd
 
+theorem enc_CState_node {x : Eo.CState} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_CState x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_CState, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Stuck» =>
+    simp only [enc_CState, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_CState, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
 instance : Embedded Eo.CState := ⟨enc_CState, dec_CState, emb_CState, dec_enc_CState⟩
 
 @[simp] theorem embedded_enc_CState (x : Eo.CState) : Embedded.enc x = enc_CState x := rfl
@@ -13499,6 +16200,17 @@ theorem inv_Proof_pf {x : Eo.Proof} {ts : List Tree}
 
 theorem inv_Proof_Stuck {x : Eo.Proof} (h : enc_Proof x = Tree.stuck) : x = Eo.Proof.Stuck := by
   cases x <;> simp_all [enc_Proof]
+
+theorem enc_Proof_node {x : Eo.Proof} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_Proof x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «pf» =>
+    simp only [enc_Proof, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Stuck» =>
+    simp [enc_Proof] at h
 
 instance : Embedded Eo.Proof := ⟨enc_Proof, dec_Proof, emb_Proof, dec_enc_Proof⟩
 
@@ -14067,6 +16779,110 @@ theorem inv_SmtType_DtcAppType {x : Smtm.SmtType} {ts : List Tree}
     exact ⟨_, _, rfl, h.symm⟩
   · unfold dec_SmtType at hd
     cases hd
+
+theorem enc_SmtDatatype_node {x : Smtm.SmtDatatype} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtDatatype x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «null» =>
+    simp only [enc_SmtDatatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sum» =>
+    simp only [enc_SmtDatatype, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_SmtDatatypeCons_node {x : Smtm.SmtDatatypeCons} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtDatatypeCons x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «unit» =>
+    simp only [enc_SmtDatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_SmtDatatypeCons, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_SmtDatatypeDecl_node {x : Smtm.SmtDatatypeDecl} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtDatatypeDecl x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_SmtDatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_SmtDatatypeDecl, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_SmtType_node {x : Smtm.SmtType} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtType x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «None» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Bool» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Int» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Real» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «RegLan» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «BitVec» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Map» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Set» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Seq» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Char» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Datatype» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «TypeRef» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «USort» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «FunType» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtcAppType» =>
+    simp only [enc_SmtType, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Smtm.SmtDatatype := ⟨enc_SmtDatatype, dec_SmtDatatype, emb_SmtDatatype, dec_enc_SmtDatatype⟩
 
@@ -18557,6 +21373,620 @@ theorem inv_SmtTerm_sbv_to_int {x : Smtm.SmtTerm} {ts : List Tree}
     exact ⟨_, rfl, h.symm⟩
   · unfold dec_SmtTerm at hd
     cases hd
+
+theorem enc_SmtBindings_node {x : Smtm.SmtBindings} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtBindings x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «nil» =>
+    simp only [enc_SmtBindings, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «cons» =>
+    simp only [enc_SmtBindings, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+
+theorem enc_SmtTerm_node {x : Smtm.SmtTerm} {c : schema.Constructor} {ts : List Tree}
+    (h : enc_SmtTerm x = Tree.node c ts) :
+    c.embedding = Result.ok Embedding.Data ∨ c.embedding = Result.ok Embedding.Var := by
+  cases x
+  case «None» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Boolean» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Numeral» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Rational» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «String» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Binary» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Apply» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «Var» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtCons» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtSel» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «DtTester» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «UConst» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ite» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «not» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «or» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «and» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «imp» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «xor» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «eq» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «lam» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bind» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «_at_purify» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «plus» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «neg» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «mult» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «lt» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «leq» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «gt» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «geq» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «to_real» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «to_int» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «is_int» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «abs» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «uneg» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «div» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «mod» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «divisible» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «int_pow2» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «int_log2» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «div_total» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «mod_total» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «select» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «store» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «map_diff» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «concat» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «extract» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «repeat» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvnot» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvand» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvor» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvnand» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvnor» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvxor» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvxnor» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvcomp» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvneg» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvadd» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvmul» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvudiv» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvurem» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsub» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsdiv» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsrem» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsmod» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvult» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvule» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvugt» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvuge» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvslt» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsle» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsgt» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsge» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvshl» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvlshr» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvashr» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «zero_extend» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sign_extend» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «rotate_left» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «rotate_right» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvuaddo» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvnego» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsaddo» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvumulo» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsmulo» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvusubo» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvssubo» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «bvsdivo» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_empty» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_len» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_concat» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_substr» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_contains» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_at» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_prefixof» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_suffixof» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_rev» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_update» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_lower» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_upper» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_code» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_from_code» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_is_digit» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_int» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_from_int» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_lt» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_leq» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_all» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_re» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_replace_re_all» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_re» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_allchar» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_none» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_all» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_to_re» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_mult» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_plus» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_exp» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_opt» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_comp» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_range» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_concat» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_inter» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_union» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_diff» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «re_loop» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_in_re» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_unit» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_nth» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «str_indexof_re_split» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «seq_diff» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «_at_strings_occur_index» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «_at_strings_occur_index_re» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «choice» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «set_empty» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «set_singleton» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «set_union» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «set_inter» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «set_minus» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «set_member» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «set_subset» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «qdiv» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «qdiv_total» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «forall» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «exists» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «int_to_bv» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «ubv_to_int» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
+  case «sbv_to_int» =>
+    simp only [enc_SmtTerm, Tree.node.injEq] at h
+    obtain ⟨rfl, -⟩ := h
+    exact Or.inl rfl
 
 instance : Embedded Smtm.SmtBindings := ⟨enc_SmtBindings, dec_SmtBindings, emb_SmtBindings, dec_enc_SmtBindings⟩
 

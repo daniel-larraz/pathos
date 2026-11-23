@@ -8,6 +8,7 @@ public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Ops
 public import PathosProofs.Runtime.Embed
 public import PathosProofs.Runtime.Natives
+public import PathosProofs.Runtime.ListNilSimp
 
 /-!
 # Lists of an operator: the runtime's walk, against logos
@@ -354,7 +355,8 @@ theorem get_nil_rec_eoList {xf : Eo.Term} (hnf : xf ≠ Eo.Term.Stuck) (xr : Eo.
     simp [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not, hnf, ih]
 
 /-- A nil of an operator is no application of two arguments (CpcMini's
-nils are `true` and the empty `List`). -/
+nils are `true` and the empty `List`; another calculus's are decided by the
+helpers of `Runtime/ListNilSimp.lean`). -/
 theorem is_list_nil_not_apply {xf xr : Eo.Term}
     (h : Eo.__eo_is_list_nil xf xr = Eo.Term.Boolean true) :
     ∀ g a b, xr ≠ Eo.Term.Apply (Eo.Term.Apply g a) b := by
@@ -362,7 +364,7 @@ theorem is_list_nil_not_apply {xf xr : Eo.Term}
   subst he
   revert h
   unfold Eo.__eo_is_list_nil
-  split <;> simp_all
+  split <;> simp_all [eo_list_nil]
 
 /-- logos's `eo::cons` on a list of `f`, given by its end. -/
 theorem eo_cons_eoList {xf xe xr : Eo.Term} (ys : List Eo.Term) (hnf : xf ≠ Eo.Term.Stuck)

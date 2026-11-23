@@ -1,33 +1,11 @@
 # The modules of proofs/PathosProofs that scripts/proofs-instance leaves out
 # of the CPC's instance, one per line.
 
-# CpcMini's own: its top-level theorem, and the import of logos's proof of
-# CpcMini's checker that it rests on (stage 5, milestone 9 for CPC).
+# CpcMini's own: its top-level theorem, and the base module it rests on
+# (stage 5, milestone 9 for CPC).
 PathosProofs.Basic
 PathosProofs.Top
 
-# Until the generated embedding encodes all of CPC's terms (milestone 2):
-# CpcEmbed has no encoding of Term (CPC's indexed user operators), so these,
-# which state facts about terms, cannot be stated yet.
-PathosProofs.Store.CacheOps
-PathosProofs.Runtime.Frame
-PathosProofs.Runtime.Embed
-PathosProofs.Runtime.Ops
-PathosProofs.Runtime.Natives
-PathosProofs.Runtime.Strings
-PathosProofs.Runtime.Literals
-PathosProofs.Runtime.Nats
-PathosProofs.Runtime.Numbers
-PathosProofs.Runtime.IntNatives
-PathosProofs.Runtime.Builtins
-PathosProofs.Runtime.StringLits
-PathosProofs.Runtime.Lists
-PathosProofs.Runtime.AssumeFold
-PathosProofs.Runtime.StateNth
-PathosProofs.Runtime.ConstNames
-PathosProofs.Tactic
-PathosProofs.Generated
-
-# The generated modules that do not build yet (milestone 2: the embedding;
-# milestone 4: the proofs). The root does not import them.
+# The generated proofs, which do not build yet (milestone 4). The root does
+# not import them.
 CpcProofs

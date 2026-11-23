@@ -60,12 +60,8 @@ theorem Store.destruct_literal_string (l : lit.Lit) :
 
 /-- No term is stored as a node of the string literal's constructor. -/
 theorem enc_ne_node_string (x : Eo.Term) (xs : List Tree) :
-    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fString xs := by
-  intro h
-  cases x
-  all_goals first | (simp [Embed.embedded_enc_Term, Embed.enc_Term] at h; done) | skip
-  rename_i y
-  cases y <;> simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop] at h
+    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fString xs :=
+  enc_ne_node_of (e := Embedding.Str) rfl nofun nofun xs
 
 /-- `destruct` with `$emb_String` on a handle of a term: a handle of the
 native string of a string literal, and nothing for any other term. -/
@@ -277,12 +273,8 @@ theorem Store.destruct_literal_binary (l : lit.Lit) :
 
 /-- No term is stored as a node of the binary literal's constructor. -/
 theorem enc_ne_node_binary (x : Eo.Term) (xs : List Tree) :
-    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fBinary xs := by
-  intro h
-  cases x
-  all_goals first | (simp [Embed.embedded_enc_Term, Embed.enc_Term] at h; done) | skip
-  rename_i y
-  cases y <;> simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop] at h
+    Embedded.enc x ≠ Tree.node schema.Constructor.eo__24emb_5fBinary xs :=
+  enc_ne_node_of (e := Embedding.Binary) rfl nofun nofun xs
 
 /-- `destruct` with `$emb_Binary` on a handle of a term: handles of the
 width and the value of a binary literal, and nothing for any other term. -/

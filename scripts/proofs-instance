@@ -49,6 +49,109 @@ def rename(text):
     return text
 
 
+# The calculus's Lean: logos's committed files, in proofs/'s packages.
+CALC_LEAN = SRC / ".lake" / "packages" / "LogosVerification" / "Cpc"
+
+
+def calc_defs():
+    """The definitions of the calculus's Lean: name -> (namespace, body)."""
+    if not CALC_LEAN.is_dir():
+        sys.exit(f"scripts/proofs-instance: no {CALC_LEAN} (build proofs/ once, "
+                 "or run `lake exe cache get` there, to fetch the packages)")
+    defs = {}
+    start = re.compile(r"^(?:@\[[^\]]*\]\s*)?(?:(?:noncomputable|partial|private|protected)\s+)*"
+                       r"(?:def|abbrev)\s+([^\s:({\[]+)")
+    for path in sorted(CALC_LEAN.glob("*.lean")):
+        ns, name, body = [], None, []
+        for line in path.read_text().splitlines():
+            m = re.match(r"namespace\s+(\S+)", line)
+            if m:
+                ns.append(m.group(1))
+                continue
+            m = re.match(r"end\s+(\S+)\s*$", line)
+            if m and ns and ns[-1] == m.group(1):
+                ns.pop()
+                continue
+            m = start.match(line)
+            if m:
+                if name and name not in defs:
+                    defs[name] = (".".join(namespaces), "\n".join(body))
+                name, namespaces, body = m.group(1), list(ns), [line]
+            elif name:
+                body.append(line)
+        if name and name not in defs:
+            defs[name] = (".".join(namespaces), "\n".join(body))
+    return defs
+
+
+def qualified(defs, name):
+    ns = defs[name][0]
+    return f"{ns}.{name}" if ns else name
+
+
+def requalify_natives(text, defs):
+    """Each `<namespace>.native_<x>` of the library, in the namespace the
+    calculus's Lean defines `native_<x>` in: lean-meta puts a native in the
+    module of its first use, which differs between calculi."""
+    def fix(m):
+        name = m.group(2)
+        return qualified(defs, name) if name in defs else m.group(0)
+    return re.sub(r"\b(Eo|Smtm|SmtEval)\.(native_\w+)", fix, text)
+
+
+def list_nil_simp(defs):
+    """Runtime/ListNilSimp.lean for the calculus: `__eo_is_list_nil` and
+    what its cases call, transitively (`__eo_*` and `native_*`)."""
+    seen, todo = [], ["__eo_is_list_nil"]
+    while todo:
+        n = todo.pop(0)
+        if n in seen or n not in defs:
+            continue
+        seen.append(n)
+        for m in re.findall(r"\b(__eo_\w+|native_\w+)\b", defs[n][1]):
+            if m not in seen and m in defs:
+                todo.append(m)
+    names = "\n  ".join(qualified(defs, n) for n in seen)
+    return f"""module
+public import Cpc.Logos
+import all Cpc.Logos
+public import Cpc.SmtEval
+import all Cpc.SmtEval
+public import PathosProofs.Util
+
+/-!
+# Which terms are the nil of a list operator, in CPC
+
+Written by scripts/proofs-instance from CPC's Lean: `__eo_is_list_nil`, and
+what its cases call, transitively (see proofs/PathosProofs/Runtime/
+ListNilSimp.lean, CpcMini's).
+-/
+
+attribute [eo_list_nil]
+  {names}
+"""
+
+
+def checker_parts():
+    """The translated checker's generated functions: name -> the part
+    (`generated.part<k>`) that defines it."""
+    parts = {}
+    for path in sorted((DST / "CpcChecker").glob("Part*.lean")):
+        for m in re.finditer(r"^(?:noncomputable |partial )?def (generated\.part\d+)\.(\w+)",
+                             path.read_text(), re.M):
+            parts.setdefault(m.group(2), m.group(1))
+    return parts
+
+
+def requalify_parts(text, parts):
+    """Each `generated.part<k>.<f>` of the library, in the part of the
+    calculus's checker that defines `f`: the translation splits the
+    generated functions into parts by size, and CpcMini's are all in part 0."""
+    def fix(m):
+        return f"{parts[m.group(2)]}.{m.group(2)}" if m.group(2) in parts else m.group(0)
+    return re.sub(r"\b(generated\.part\d+)\.(\w+)", fix, text)
+
+
 def excluded():
     names = set()
     for line in (DST / "excluded.txt").read_text().splitlines():
@@ -66,6 +169,8 @@ def imports(text):
 def main():
     check = "--check" in sys.argv[1:]
     skip = excluded()
+    defs = calc_defs()
+    parts = checker_parts()
     files = {}
     modules = []
     for path in sorted((SRC / "PathosProofs").rglob("*.lean")):
@@ -78,7 +183,9 @@ def main():
         if bad:
             sys.exit(f"scripts/proofs-instance: {mod} imports {', '.join(bad)}, which "
                      "proofs-cpc/excluded.txt leaves out; leave it out too")
-        files[rel] = rename(text)
+        files[rel] = requalify_parts(requalify_natives(rename(text), defs), parts)
+        if mod == "PathosProofs.Runtime.ListNilSimp":
+            files[rel] = list_nil_simp(defs)
         modules.append(mod)
     # The root: what proofs/PathosProofs.lean imports, but the excluded.
     root = []

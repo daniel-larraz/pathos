@@ -9,6 +9,12 @@ several arguments, which the induction over a function that Aeneas wrote
 with `partial_fixpoint` asks for.
 -/
 
+/-- The definitions that decide whether a term is the nil of a list
+operator, in the calculus at hand: `__eo_is_list_nil`, the helpers its cases
+call, and what those call (`Runtime/ListNilSimp.lean`, written per
+calculus). -/
+register_simp_attr eo_list_nil
+
 @[expose] public section
 
 namespace pathos_compiled_checker
