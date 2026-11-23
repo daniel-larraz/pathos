@@ -775,7 +775,10 @@ intended; everything between gates is not.
       pinned versions, with its time and peak.
     - **Stage 2: generated proofs, on all of CpcMini.** The generator
       (`rust_meta` in Ethos; branch `m32-proofs` of the fork, from
-      `m28-aeneas`; since cvc5/ethos#280 merged, on Ethos main `b02afbe6`)
+      `m28-aeneas`; since cvc5/ethos#280 merged, on Ethos main `b02afbe6`.
+      Since cvc5/ethos#289, Ethos main `bde41a79` writes a trace of the
+      generated code instead, and pathos's `scripts/proofgen` writes the
+      proofs from it)
       writes, beside the crate, a Lean file with a specification and a
       proof for every function it generates: each case function (its
       answer when the pattern matches and when it does not), each body

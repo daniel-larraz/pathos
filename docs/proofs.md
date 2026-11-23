@@ -16,10 +16,11 @@ Everything is in [proofs/](../proofs/), a Lean project of its own.
 | --- | --- |
 | `generated/cpcmini-checker/` | The checker for **CpcMini**, logos's calculus of five rules (`symm contra refl scope trans`), compiled by `rust-meta` as the CPC checker is. The pilot is on it. `scripts/generate-mini` writes it. |
 | `proofs/MiniChecker/` | The Lean that Charon and Aeneas write for that crate, stitched: the runtime once (`Runtime.lean`, 13,531 lines) and the generated functions (`Part0.lean`, 15,937 lines). Generated, never edited. |
-| `proofs/PathosProofs/` | The proofs: 4,400 lines, 1,120 theorems (Lean counts the auxiliary ones). |
+| `proofs/PathosProofs/` | The proofs written by hand: the store (`Store/`), the runtime lemmas and the embeddings that generated proofs use (`Runtime/`), and the tactics of their lines (`Tactic.lean`). 5,055 lines. |
+| `proofs/MiniCases.lean`, `MiniEmbed.lean`, `MiniCtors.lean`, `MiniCacheSem.lean`, `MiniProofs.lean` | Generated with the crate by `scripts/generate-mini` (milestone 32): the cases of logos's programs as functions, how the checker's values are stored (`enc`, `dec`, and that `dec` undoes `enc` on the values the store can hold), what `construct` and `destruct` do with each data constructor, what the cache of results holds, and the proofs about the generated functions. Never edited. |
 | `proofs/PathosProofs/Trusted.lean` | What is assumed about the Rust that is not translated. |
 | `proofs/axioms-allowed.txt` | Every axiom a theorem may rest on: the trust, as a list. |
-| `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `a9944ea7` (cvc5/logos main, at Lean `v4.36.0` since cvc5/logos#518). |
+| `proofs/pins.env` | The versions: Lean and Mathlib `v4.36.0`, Aeneas `1dc8ad31`, Charon `454586e9`, logos `bdcbd95f` for the proofs (cvc5/logos main with #521, function types guarded; at Lean `v4.36.0` since cvc5/logos#518). The full CPC crate is still compiled from logos `a3232131`, `difftest.env`'s `LOGOS_REV`. |
 
 To build and check, from a clean checkout:
 
@@ -168,15 +169,21 @@ cheap so far.
   constructors that are plain data.
 - **`Store.new_spec`** (`New.lean`): the store `Store::new` builds has the
   invariant, so the invariant is not vacuous.
-- **Handles and logos's terms** (`Rep.lean`). `Rep nodes t x`: the handle
-  `t` stands for the CpcMini term `x`. A handle stands for at most one term
-  (`Rep.functional`), a term has at most one handle (`Rep.injective`, from
-  "no two handles have the same data"), and both survive the store growing
-  (`Rep.mono`). Both directions matter: the generated code chooses a case
-  by comparing handles, and `Store.Rep.eq_iff` says that is comparing
-  terms. `Rep` covers the stuck term, the operators, applications and
-  Booleans; numerals, strings, variables and datatypes are embedded the
-  same way and are not written out.
+- **Handles and logos's values** (`Tree.lean`, `Rep.lean`, milestone 32).
+  A handle unfolds to a tree (`Holds nodes t x`: its data, with the handles
+  in it unfolded). Every value of logos the checker computes with has the
+  tree it is stored as, `Embedded.enc`, generated for each datatype
+  (`MiniEmbed`), with `Embedded.emb` the values the store can hold.
+  `Rep nodes t x`, and `Represents.rep s t x` for a store: the handle
+  unfolds to the value's tree and the value is embeddable, for a value of
+  any type. A handle stands for at most one value (`Rep.functional`, from
+  `Holds.functional` and `dec_enc`), a value has at most one handle
+  (`Rep.injective`, from "no two handles have the same data"), and both
+  survive the store growing (`Rep.mono`). Both directions matter: the
+  generated code chooses a case by comparing handles, and
+  `Represents.eq_iff` says that is comparing values. (Until milestone 32
+  there was a relation per type, written out for the stuck term, the
+  operators, applications and Booleans only.)
 - **The cache of program results** (`Cache.lean`, `CacheOps.lean`). Its
   table's operations do not panic and keep it well formed; what `get`
   answers is the result of an entry with that program and those arguments;
@@ -184,46 +191,163 @@ cheap so far.
   finds every entry is not proved, and not needed**: a cache that misses
   is slower, not wrong. `CacheInv`, part of the store's invariant: every
   entry is its program's result on what its arguments stand for.
+- **The type cache** (`CacheOps.lean`, `Runtime/Ops.lean`). `$eo_typeof`
+  and `$smtx_typeof` keep their results apart: a row per term, pushed
+  with the term (`push_term`), with a slot for each kind, read and written
+  by the term's handle (`cached_type`, `cache_type`); no hashing, no size
+  limit. Its meaning is the program cache's for a program of one
+  argument, so it reuses the generated table `ProgramSem`, under ids that
+  no program id can be (`typeSemId`: 2^32 and 2^32 + 1). `CacheInv`
+  gained two fields: every filled slot is right (`TypesOK`), and the count
+  of entries that `type_insert` keeps is at most the number of filled
+  slots (`count`), so its `+ 1` cannot overflow (Aeneas makes an
+  overflow a failure). `Store.Extends` says that `intern` adds only empty
+  rows and keeps the counters. The wrapper of such a program is
+  `Store.framed_type_cached`, as `framed_cached` is for the other.
+- **The jump pointers of the state lookup** (`Jumps.lean`, milestone 32).
+  `state_nth` keeps a side table, `state_jumps`, indexed by handle; it is
+  the fourth part of `Store.Inv`, `jumps : JumpsOK`.
+  - What it says: the entry `(d, j)` of a handle, where `d > 0`, has `d`
+    equal to the handle's depth (the number of `$emb_s.cons` nodes down
+    its tails, `StateDepth`), and `j` is reached after between 1 and `d`
+    tails (`StateDown`). These are inductive relations over the store's
+    terms, so they survive the store growing (`JumpsOK.mono`).
+  - It changes the meaning of no other part. The lemmas that rebuild the
+    invariant (`Inv.congr`, `congr'`, `with_cache`) take that the table is
+    unchanged, and `tick`, `enter` and `leave` now say so. `intern_inv`
+    gets it from `Store.Extends`, and `new_spec` from the empty table.
 
-### Four programs (`Programs/`)
+### The programs (`MiniProofs.lean`, generated)
 
-| Program | Shape | Theorem | Lines |
-| --- | --- | --- | --- |
-| `$mk_symm` | not recursive, two cases | `eo__24mk_5fsymm_spec` | 331 |
-| `$eo_prog_contra` | nonlinear pattern: proofs of `F` and `(not F)` | `eo__24eo_5fprog_5fcontra_spec` | 252 |
-| `$mk_trans` | recursive, cached (and nonlinear) | `eo__24mk_5ftrans_spec` | 483 |
-| `$eo_state_is_closed` | compiled to a loop | `eo__24eo_5fstate_5fis_5fclosed_spec` | 471 |
-
-Each says: on a store with the invariant and handles that stand for the
-arguments, the generated program, if it returns, has not panicked, leaves a
-store with the invariant in which every earlier handle stands for what it
-did, and returns a handle of what logos's definition gives (or an error).
+Milestone 31 proved four programs by hand (`$mk_symm`, `$eo_prog_contra`,
+`$mk_trans`, `$eo_state_is_closed`: 1,537 lines). Those proofs are gone:
+the generator writes them now, with the crate (see "Generated proofs"
+below). Of each program with a generated proof, `specs` says: on a store
+with the invariant and handles that stand for the arguments, the generated
+program, if it returns, has not panicked, leaves a store with the
+invariant in which every earlier handle stands for what it did, and
+returns a handle of what logos's function of the same name gives (or an
+error).
 
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
-it. In use today, by 1,120 theorems, are 25 axioms:
+it, and sorts every axiom in use into one of two kinds (milestone 32,
+step 5):
 
-- Lean's three (`propext`, `Quot.sound`, `Classical.choice`).
-- 12 of the 54 declarations that Aeneas leaves without a body in the Lean
-  of the checker (the types `num.Integer` and `num.Rational` and some of
-  their functions).
-- 10 of the 52 axioms of `Trusted.lean`: `Integer` is ℤ and `Rational` is ℚ
-  (`toInt`/`ofInt`, `toRat`/`ofRat`), their `==`, and that their hash
-  returns.
+- **Assumptions**: axioms whose type is a proposition, and Lean's three.
+  This is the trust. In use today, by 8,741 theorems, are **27**:
+  `propext`, `Quot.sound`, `Classical.choice` (Lean's; choice is a
+  function, `Nonempty α → α`, but it is the axiom of choice); 8 of
+  `Trusted.lean` about the numbers themselves: `Integer` is ℤ and
+  `Rational` is ℚ (`ofInt_toInt`, `toInt_ofInt`, `ofRat_toRat`,
+  `toRat_ofRat`: the embedding's `dec_enc` uses `toInt (ofInt z) = z`),
+  their `==` (`eq_spec`), and that their hash returns (`hash_code_spec`);
+  and the specs of the integer functions that the proved programs reach
+  (brought into use by Daniel's decision of 2026-11-20, group by group).
+  Each states what a function of `num.rs` computes; `num.rs` wraps
+  `malachite`'s integers and rationals in a thin layer (one line a
+  function, e.g. `Integer(&self.0 + &y.0)`), which Aeneas cannot
+  translate, so these say what that library computes:
+  - the natural numbers (`nat.zero`, the patterns `nat.zero` and
+    `nat.succ`, `Runtime/Nats.lean`): `Integer.zero_spec`, `one_spec`,
+    `clone_spec`, `sgn_spec`, `add_spec`, `neg_spec`;
+  - numeral and rational literals in patterns and built from values
+    (`Runtime/Numbers.lean`): `Integer.clone_spec` (already in use) and
+    `Rational.clone_spec`;
+  - the integer natives (`zeq`, `zleq`, `mod_total`, `int.pow2`,
+    `int.to_nat`, `nat.succ`) and the numeral constants of the generated
+    code (`Runtime/IntNatives.lean`): `Integer.partial_cmp_spec`,
+    `euclidean_qr_spec`, `fits_u32_spec`, `to_u32_spec`, `from_u32_spec`,
+    `pow_spec` (and `eq_spec`, `sgn_spec`, `zero_spec`, `one_spec`,
+    `add_spec`, `neg_spec`, `clone_spec`, already in use);
+  - `eo::len` (`Runtime/Builtins.lean`): `Integer.from_usize_spec` (and
+    `from_u32_spec`, already in use);
+  - `eo::and` (`Runtime/Builtins.lean`): `Integer.bitwise_and_spec` and
+    `mod_by_pow2_spec` (and `clone_spec`, `Rational.clone_spec`, already
+    in use). logos computes the `and` of two binaries with
+    `BitVec.toInt`, which is signed, and then reduces it modulo `2^w`;
+    the runtime reduces malachite's `and` of the two values. They agree
+    for every width and every pair of values in range
+    (`bv_and_toInt_emod`, proved, not assumed).
+- **Declarations**: axioms that declare a type or a function and say
+  nothing of it: 44 of the 52 that Aeneas leaves without a body in the
+  Lean of the checker (the types `num.Integer` and `num.Rational`, their
+  functions, the printing functions), and `Trusted.lean`'s
+  `toInt`, `ofInt`, `toRat`, `ofRat`. In use today: 48. An axiom whose
+  type is not a proposition only says that its type has an element, and
+  `Result α` always has one (`fail`), so a declaration adds no trust.
+
+The declarations in use grow whenever a proof unfolds one of the runtime's
+dispatchers, `native_op` or `builtin_core`: each is one `match` over all
+its operations, so its equation names the functions of every operation,
+and Lean counts every constant a proof refers to. The specifications of
+step 5 take only the branch of their own operation (27 declarations in
+use before them, 49 after). The audit fails if an axiom of the
+`[MiniChecker]` or `[Aeneas]` sections is a proposition and in use: the
+Lean of the checker and Aeneas's library are to declare, not to assume.
+One of Aeneas's six is a proposition
+(`Slice.get_unchecked_SliceIndexUsizeSlice_spec`); it is not in use.
 
 No axiom of Aeneas's library is reached (it declares six), and none of
 logos.
 
 `Trusted.lean` gives every function of `num.rs` that the checker calls its
 meaning on ℤ and ℚ, one equation each, with the hypothesis the Rust
-documents where there is one (a non-zero divisor). Of the two functions of
-`front.rs` that CpcMini's checker calls (`native_literal`,
-`constant_name`) it assumes only that they return. **That is not enough
-for the final theorem**: a literal of the generated code must stand for
-logos's constant, so `native_literal` needs its specification, and that
-needs the generated list `NATIVE_TEXTS` as a Lean table, which the
-generator would have to write.
+documents where there is one (a non-zero divisor). Nothing of `front.rs`
+is trusted any more: the checking code called one function of it,
+`constant_name`, trusted only to return (`front.constant_name_spec`).
+Since Ethos `cd4d38c` the name of a constant is built in `native.rs` from
+its digits and proved (below, "The names of constants"), and
+`constant_name_spec` and the declaration `front.constant_name` are gone
+from `Trusted.lean`, the translation and `axioms-allowed.txt` (Daniel's
+decision of 2026-11-20).
+
+**The names of constants** (milestone 32, `Runtime/ConstNames.lean`).
+logos's `native_uconst_id i` is `"@u." ++ toString i`.
+- **The runtime:** `native::constant_name` builds the digits by repeated
+  `euclidean_qr` by 10 and `to_u32` (`decimal_digits`, the last first),
+  then the prefix (`@u.` or `@c.`), a `-` for a negative number (which
+  the checker never asks for), and the digits back to front. A test
+  checks it against `format!` for both prefixes, 0, small, large and
+  negative numbers, so the strings are unchanged.
+- **The one new error:** `CheckError::Limit` for a number with more than
+  `usize::MAX - 8` digits. No memory holds such a number, and `format!`
+  could not write it either; the bound keeps every push in range, which
+  the proof needs (Aeneas makes a push past `usize::MAX` a failure, and
+  the store's integers are unbounded).
+- **The proof:** `digitsRev` and `toString_codes` relate the digits to
+  `Nat.repr` (`toDigitsCore`, `digitChar`); the two loops are proved by
+  fixpoint induction; `Store.native_spec_uconst_id` gives the line the
+  emitter writes. It uses the specs of `euclidean_qr`, `to_u32`, `sgn`,
+  `from_u32` and `clone`, all already in use.
+- **Lemma C needs no `HasStuck SmtTerm`:** `__eo_to_smt` ends with
+  `| y => SmtTerm.None`, a case that matches every value (the Rust has
+  it too), so the no-case rule gives `default`. Checked with the force
+  patch before the proof: lemma C and the body build.
+
+**Literals are values** (milestone 32, Ethos `db074f2`). The generated
+code builds every literal from a value, not from text. A numeral is
+`Integer::from(<u32>)`, negated when negative (the specs of `from_u32`
+and `neg`); a rational is `Rational::from_integers` of two such; a binary
+is `BitVec::new` over one; a numeral or string constant of the EO
+definitions is `s.raw` of such a value, or of `EoString::from_code_points`
+of the code points the generator reads from the signature. So no parse,
+no `NATIVE_TEXTS` lookup and no `native_literal` is on any path that a
+proof reaches: every numeral of CpcMini and of the full CPC fits a `u32`
+(20 distinct values in the CPC, at most 6 digits; a numeral that did not
+fit would be built from 32-bit limbs with `mul` and `add`). The text and
+parse paths are gone (milestone 32, Ethos `b8be4ea`): `parse_int`,
+`parse_rat` and `native_literal` are removed from the runtime, and with
+them the declaration `front.native_literal` and the assumption
+`front.native_literal_spec` from `Trusted.lean` and
+`axioms-allowed.txt`. What the generator can still write for a native
+constant it cannot build as a value, `native_constant` and
+`native_pattern_constant` (no signature has one today), now refuses it
+with `UnsupportedNative`, the error `native_literal` gave for such a text.
+`NATIVE_TEXTS` keeps the names that errors print (`UnsupportedNative`,
+"SMT translation is unavailable"), so it is no gap for the final theorem:
+no value the checker computes comes from it.
 
 Beyond the axioms, the theorems are about a program under these
 conditions:
@@ -260,7 +384,11 @@ Where logos builds an application, in CpcMini:
   2. `__eo_typeof` of a datatype selector: `(-> D (…sel_return…))`, whose
      second argument is a program's result and can be `Stuck`.
   3. `__eo_cons`: `((f e) a)` under a `requires` that catches a stuck `a`
-     but not a stuck `e`.
+     but not a stuck `e`. `Store.builtin_spec_cons` therefore takes `e`
+     not stuck, and the emitter writes it only where that is known; in
+     CpcMini's one `eo::cons` (`$eo_mk_premise_list`) the element is a
+     result of `$eo_state_proven_nth`, which an OK state never makes
+     stuck (`state_proven_nth_ne_stuck`, "The state invariant").
 
 So, function by function, "the Rust's result stands for logos's result" is
 false for the whole checker. The statement has to be up to this: let
@@ -270,6 +398,22 @@ and **each logos function has to respect `norm`** (`f x` and `f (norm x)`
 have the same `norm`). That is one more lemma per function on logos's
 side, trivial where every pattern that looks under an application sends
 `Stuck` there to `Stuck`, and a real difference where it fails.
+
+**Guarded applications are matched one for one** (milestone 32). lean-meta
+writes `__eo_mk_apply` exactly where an application is evaluatable (has a
+program or builtin call under it, `lean_meta_reduce.cpp`), and a plain
+`Term.Apply` elsewhere. The runtime's `apply` is `__eo_mk_apply`
+(`Store.apply_mk_rep`), so the emitter now writes that lemma, with no
+hypothesis that the parts are not stuck, wherever lean-meta wrote the
+guarded form; a literal counts as not stuck. That proved
+`$eo_lit_type_Binary` and, in the full CPC, cleared 36 of the 40 programs
+that stopped there first (452 to 473 generated). What is left of this
+kind is the function type of `$eo_typeof`'s selector case, which waits
+on a question to lean-meta's author (see the handoff). The plain
+`Term.Apply` on a variable bound under a proof (`$eo_prog_scope`, and in
+the full CPC `$eo_prog_arith_trichotomy` and `$eo_prog_true_intro`) is
+proved since the proof argument is assumed OK ("The state invariant"; 473
+to 476 generated in the full CPC).
 
 For the pilot none of this is assumed. The four programs' inputs are
 handles, so they stand for terms without a stuck argument, and each
@@ -323,13 +467,12 @@ line left out, and with `(assume-push @p4 e)` before the `trans` step and
 
 ### The generator
 
-- Clippy with warnings as errors fails on the CpcMini crate in three
-  places: the generator assumes a numeral in the generated code
-  (`parse_int` unused) and a left-associative operator
-  (`is_left_assoc` with a single arm). The tests pass.
+- Clippy with warnings as errors fails on the CpcMini crate in one place:
+  the generator assumes a left-associative operator (`is_left_assoc` with
+  a single arm). (The other, `parse_int` unused, went with the text
+  paths.) The tests pass.
 - The Rust pipeline lacks the Lean pipeline's second trim, so six
   functions with no counterpart in logos's CpcMini stay.
-- `NATIVE_TEXTS` as a Lean table, for `native_literal` (above).
 - A cache entry's meaning (`EntryOK`) has a clause per cached program; for
   the whole checker it is a table from a program's number to what it
   computes, which the generator knows (`caches.tsv`).
@@ -385,6 +528,426 @@ cache changed two files by six lines. The program proofs only ever use
 "the invariant holds" and "the store grew", so what the invariant says can
 change under them.
 
+## Generated proofs (milestone 32, stage 2: the state at the first checkpoint)
+
+**Who writes them.** pathos's `scripts/proofgen` writes the proofs, from
+what Ethos main `bde41a79` (cvc5/ethos#289) records of the code it
+generated:
+- rust-meta's trace of the generated code: per case, the nodes of its
+  patterns and body, each with its Rust variable, and lean-meta's decision
+  of a guarded application;
+- lean-meta's table of the embedding's constructors;
+- lean-meta's cases of the programs as Lean functions (`MiniCases.lean`).
+
+What the generator knows of the checker's programs and types is in
+`proofs/proofgen.toml`: the state, the programs that keep it OK, the types
+with a trivial `Valid`, and the programs proved by hand.
+`scripts/generate-cpc` and `scripts/generate-mini` run Ethos and then the
+generator.
+
+Its output is byte-identical to what rust-meta itself wrote during
+milestone 32, on the Ethos fork's `m32-proofs`, which is no longer used.
+The rest of this section says "rust-meta" or "the emitter" for the
+generator of the proofs, as it was then.
+
+The generator writes the proofs for the full CPC too, into
+`generated/cpc-checker`
+(`proofs.lean`, `proofs.tsv`, `cache_sem.lean`): they are generated and
+checked to be what the generator writes (`scripts/generate-cpc --check`),
+but **not built**; `proofs.tsv` (478 of 1,086 marked generated) says how
+far the emitter gets.
+**76 of CpcMini's 82 programs (all 76 the gate counts)** have one, the four of the pilot among them; only the six datatype operators have none, the four of the pilot
+among them; `generated/cpcmini-checker/proofs.tsv` lists every program
+with `generated` or the first thing in it that the emitter has no line of
+proof for yet. `proofs/MiniProofs.lean` (7,809 lines) elaborates in 16
+seconds (3.0 GiB; `$smtx_typeof` adds about 2 s), `MiniCtors.lean` (169 lemmas) in 2 and `MiniEmbed.lean` in 5.
+
+**Three generated pieces.**
+
+- *The cases as functions* (`MiniCases.lean`, by lean-meta in the same run
+  that writes logos's Lean). For each case of each program a function
+  `EoCases.<program>.case_<i>` from the arguments to `Option` of the
+  result: `some` of the right-hand side where the case's pattern matches,
+  `none` where it does not. A pattern that uses a variable twice is
+  written with fresh variables and a test that they are equal, which is
+  what the Rust does with handles.
+- *The proofs* (`MiniProofs.lean`, by rust-meta). The emitter records one
+  line of proof with each line of Rust it writes. For a case: a theorem
+  that the Rust function answers `Some` of a handle of what the case's
+  function answers, or `None` where it answers `none`. For the body: that
+  it gives logos's function, through the lemma below. For a tail-call
+  loop: a round of it, and an induction over the rounds (below).
+  For the program: the body between `enter` and `leave`, with its cache.
+- *Lemma C*, per program: logos's function is the tests for the stuck term
+  followed by the first case that answers (`<program>.rust_eq`). It is
+  proved by unfolding both sides and splitting on the arguments
+  (`logos_eq`). **It is never assumed**: a program whose lemma does not
+  close is a program without a proof, and `scripts/proofs-axioms` checks
+  the generated files as it does the others (no `sorry`, no axiom outside
+  `axioms-allowed.txt`).
+
+**Recursion.** Every call of a program goes through `enter`, which counts
+depth against a limit. The theorems about cases and bodies assume what is
+to be proved of every program (`Specs n`) for stores that can enter at
+most `n` more calls; the theorem about a program proves it for `n` from
+all smaller numbers; `specs` closes all programs together by one induction
+on `n`. So programs that call each other need no induction of their own,
+and the generator does not need to know which do. (Where `enter` refuses, at the limit, the program returns an error, of which the theorems say nothing: they are about runs that return, and an error is a return with nothing claimed.) (The pilot's proof of
+`$mk_trans` was an induction over its four functions with a statement for
+each.)
+
+**Loops.** Loops are not calls, so `Specs n` does not cover them: each
+loop has an induction of its own, on the budget of calls
+(`Store.budget`: the limit of `calls` less the calls made, which `enter`
+and `tick` count). Every round begins with `tick`, which fails at the
+limit and otherwise uses up one call; no function raises the budget
+again (it is a field of `Store.Grows`, which every operation's theorem
+gives). So the round's theorem says, where the loop goes round again, that
+the budget went down, and the loop's theorem is a strong induction on it
+over the loop's unfolding equation. (The induction that Lean gives a
+`partial_fixpoint` does not do: where a loop's round calls programs that
+call back into the loop's program, as `$smtx_inhabited_type`'s does, Aeneas
+puts the loop in one mutual block with them, and that block's induction
+takes the programs it calls as unknown functions; `$smtx_inhabited_type`
+and the four programs on its cycle are proved this way. The only reset of
+`calls`, in `check_refutation_inner`, is the entry point's, before any
+generated function runs.)
+
+**Where logos and the Rust agree only on values a store can hold.**
+logos's `__eo_prog_contra` is `requires (eo_eq F F') true false` where the
+Rust compares two handles; the two differ on a proof of `(not Stuck)`,
+which is a value of logos's type and of no store (`apply` never builds an
+application of or to the stuck term). Lemma C therefore takes, for each
+argument, that it is `Valid` (for a term: no application in it is of or to
+the stuck term), and the body's proof gets that from the handle
+(`Store.Rep.valid`). This is the same boundary as the first finding below,
+met from the other side. For the checker's other argument types (its
+states, lists of commands, arguments and indices, rules; the datatype
+declarations; the SMT types, datatypes and terms; commands; strings and naturals) `Valid`
+is `True`: no case of a program over them tells apart values that no
+store holds (they match data constructors, compare strings, pass values
+on), and a term inside one of them is compared only as the argument of a
+program over terms, whose own lemma C takes it `Valid`. The emitter lets
+through exactly the types that have an instance (`Runtime/Embed.lean`
+says why each is enough). `CCmd` and `SmtTerm` were added last, by the
+same experiment (a `True` instance, the gate opened, the proofs forced):
+lemma C closes for `$eo_invoke_cmd` and `$smtx_typeof`. The full CPC's
+`Int` arguments have none yet; its programs over SMT terms pass the gate
+now, but CPC's generated proofs are not built, so lemma C is checked for
+them only through CpcMini's `$smtx_typeof`.
+
+**Order of the stuck tests.** The Rust tests the arguments for the stuck
+term in order, before any case; logos's function has a first match arm for
+each. Lemma C states the Rust's order explicitly (`if x0 = Stuck then …
+else if x1 = Stuck then … else firstSome […]`) and is proved against
+logos's definition, so if the two orders could give different results the
+lemma would not close. Inside a requirement the order is `a ≠ b` first,
+then `a` stuck; both give the stuck term, and `requires_ite` (in
+`Runtime/Ops.lean`) is where that is shown.
+
+**Where no case applies.** The body then gives the stuck term (handle 0),
+whatever the program's type. For a program that returns a term, a proof
+or a native Boolean, lemma C gives the type's stuck value there
+(`HasStuck.stuck`), and the body's proof shows that handle 0 stands for
+it. For every other type (checker states, datatype declarations, SMT
+types) lemma C gives `default` (every logos type is `Inhabited`), a value
+the body never returns: logos writes no default case for such a type, so
+its cases cover every value (a last case that matches anything, or one
+case per constructor, which Lean checks), and the body's proof closes the
+path by contradiction from the facts that every case answered `none`
+(`body_stuck … splitting`, `round_stuck … splitting`; `split_none` splits
+an argument into its constructors where the cases are one per
+constructor). A native Boolean keeps its stuck value in lemma C, but its
+body's proof closes the path the same way: handle 0 stands for no
+Boolean. logos and the Rust agree on stuck tests for every type
+(only a program that returns a term tests, and only its term arguments),
+and the checker's state `CState.Stuck` is a node in the Rust as in logos
+(`$emb_s.Stuck`), built and matched where logos builds and matches it. The
+split over constructors is in the proofs of seven programs of CpcMini
+(`$eo_dd_lookup`, `$eo_dt_resolve`, `$eo_dtc_resolve`, `$smtx_dd_has_dt`,
+`$smtx_dd_lookup`, `$smtx_dt_resolve`, `$smtx_dtc_resolve`).
+
+**The state invariant** (Ethos `d42bf81`). The store does not keep the
+stuck term out of a state: `construct` checks nothing, and a handle can
+stand for `pf Stuck` or for a state that holds `Stuck`. logos's functions
+can, though: no builder of the checker puts a stuck formula into a state.
+`Runtime/StateInv.lean` states that and proves it on logos's side only:
+
+- `StateOK S`: no object of `S` holds the stuck term; `ProofOK p`: if
+  `p` is `pf G`, then `G` is not stuck.
+- `state_proven_nth_ne_stuck`: a premise looked up in an OK state is not
+  stuck.
+- Every function that builds a state keeps it: `StateOK.push_proven`,
+  `.push_assume_check` and `.push_input_assume_check` in the guarded form
+  the checker calls them in, `.invoke_cmd_check_proven`,
+  `.invoke_cmd_step_pop`, `.invoke_cmd`, `.invoke_cmd_list` and
+  `.invoke_assume_list`. With `.nil`, `.stuck` and `.tail`, these are
+  enough for every state passed in CpcMini.
+
+The generated specs assume the invariant, and every call proves it:
+
+- **The spec's shape.** `<program>.Spec n` is the spec it was, with one
+  more premise after the handle facts for each argument the program
+  assumes OK: `StateOK x_ai →` for every state argument (by its type), and
+  `ProofOK x_ai →` for a proof argument whose formula a case applies
+  without logos's guard. The case, group, body and loop theorems take the
+  same facts as `hg_ai`. The facts are about values, so no store carries
+  them. `Specs n` still has one field per program, the induction is
+  unchanged, and lemma C does not mention the invariant.
+- **Which proof arguments.** The emitter decides while it writes a case's
+  lines: the formula of a `$eo_pf` pattern on the argument, used in an
+  application that logos writes as `Term.Apply`, gets
+  `have hn_v := hg_ai _ rfl`. Only `$eo_prog_scope` does this in CpcMini.
+  The rule is narrow by design: a `ProofOK` on every proof argument would
+  oblige `$eo_prog_trans`'s caller to show that `__eo_mk_premise_list`
+  is not stuck, which is not true for every operator.
+- **Calls.** A call passes `(by good_tac)` for each argument its callee
+  assumes OK. `good_tac` is `solve_by_elim` over the hypotheses and the
+  lemmas above, or `ProofOK.pf` with `ns_tac`.
+  - The callee's assumptions are known only once every program has been
+    emitted, so the line holds a marker until the printer resolves it.
+  - The emitter writes the proof only where it can name where the value
+    comes from: an argument assumed OK, the tail of an OK state, the
+    empty or stuck state, a builder applied to OK states, or `pf` of a
+    term that is not stuck. Elsewhere the program gets a reason ("a state
+    that may not be OK", "a proof that may not be OK") instead of a proof
+    that does not build. No program of CpcMini or the CPC has one.
+- **Loops.** A loop's next round assumes its states OK too: the round's
+  theorem says so of the next arguments (`case_again … goods k`, by
+  `good_tac`), and the loop's induction carries it. A loop with a
+  `ProofOK` argument gets a reason; there is none.
+- **A new non-stuck fact.** After a call of `$eo_state_proven_nth` on an
+  OK state, `have hn_v := state_proven_nth_ne_stuck_of h_v (by good_tac)`
+  says its result is not stuck, for the gate. This is what
+  `$eo_mk_premise_list`'s `eo::cons` needed, which now waits only on
+  `$eo_state_proven_nth`.
+- **The hand-written fold** (`invoke_assume_list_spec`) assumes its state
+  OK too, and carries it through every push of the unwind loop.
+
+The emitted lines for a proof argument (`$eo_prog_scope`) and for states
+(the tail in `$eo_invoke_cmd_check_proven`, a parameter and a builder's
+result in `$eo_state_is_refutation`, the next round of
+`$eo_state_is_closed`) build. So do the `$eo_state_proven_nth` fact and
+`ProofOK` of `pf` of a looked-up premise, since `$eo_state_proven_nth` is
+proved (`$eo_mk_premise_list`, `$eo_cmd_step_proven`,
+`$eo_cmd_step_pop_proven`). The fold's application against the spec it
+will have was checked in a throwaway module: it still waits on
+`$eo_is_bool_type`.
+
+**The state lookup** (milestone 32). The
+generator compiles `$eo_state_proven_nth` to the runtime's
+`Store::state_nth`, which finds the index-th object of a state list in
+O(log n) steps with Myers's jump pointers, and to `$eo_StateObj_proven` on
+it. `Runtime/StateNth.lean` proves `state_nth` against logos's recursive
+definition (`Store.state_nth_spec`), and the program around it
+(`state_proven_nth_spec`: `enter`, `state_nth`, `$eo_StateObj_proven` or
+the literal `true`, `leave`), which the emitter writes the program's theorem
+as an application of, as for the fold (Ethos `a30d58c`): for handles of a state `S` and an
+index `n`, it gives the handle of an object `so` with
+`__eo_state_proven_nth S n = __eo_StateObj_proven so`, or `none` where logos
+gives `true`, or an error.
+- It rests on the store's new invariant part `JumpsOK` (above), which
+  `state_depth` keeps: each entry it writes, on its way back up, is the
+  node's depth and either its tail or the tail's two jumps, which
+  `jumpOK_two` shows stay within the depth.
+- The specs are partial: an error satisfies them. So the budget that
+  `state_nth` charges (the runtime charges what the walk would) needs no
+  proof that it equals the walk's, only that the store grows
+  (`Store.Grows`, whose budget never goes up).
+- **`charge` and the runtime fix.** `charge` used to compute
+  `self.calls += count` after a saturating test against `limits.calls`.
+  With `limits.calls` at `u64::MAX` (what pathos-eoc's adapter sets,
+  panics.md, `adapter.rs:140-142`) the test let a sum past `u64::MAX`
+  through, and the addition overflowed. pathos builds with
+  `overflow-checks = true` (Cargo.toml), so that is a panic in release
+  too, and a failure in Aeneas's model. It takes about 2^64 calls, but the
+  store's invariant could not rule it out. Daniel's decision (2026-11-20):
+  fix the runtime. `charge` now assigns the saturating sum that it tested
+  (Ethos `25e4ef7`), and `Store.charge_spec` and `state_nth_spec` need no
+  hypothesis beyond the store's invariant.
+
+**What is written by hand** (`proofs/PathosProofs/`):
+
+| File | Lines | |
+| --- | --- | --- |
+| `Tactic.lean` | 941 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again` (with `goods k` for a loop over states), the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), `split_none` (no case answered, which cannot be), and `good_tac` (an argument the callee assumes OK, see "The state invariant"). |
+| `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
+| `Runtime/Embed.lean` | 152 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
+| `Runtime/Ops.lean` | 514 | `literal` and `native_bool` for Booleans, guarded applications (`apply_mk_rep`: `apply` is logos's `__eo_mk_apply`), `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body (`framed_cached`, and `framed_type_cached` for the type cache). |
+| `Runtime/Node.lean` | 143 | `construct` and `destruct` of any data constructor or variable (`$emb_Var`, which the runtime stores as a node the same way), over trees; `construct` of the stuck term (`$emb_Stuck`), which gives handle 0 (`Store.construct_stuck_spec`); `is_node`, which a function type in a pattern (`(-> T U)`, the applications `(FunType T) U`) tests its head with (`pat_is_node`). |
+| `Runtime/Natives.lean` | 252 | What `native_op` gives for `teq`, `Teq`, `streq`, `and`, `or`, and `builtin_core` for `eo::eq`: on handles of the arguments, a handle of logos's native. The equalities compare handles, which is comparing values (`Represents.eq_iff`). |
+| `Runtime/Strings.lean` | 297 | `not`, `string_valid` and `string_prefix_eq`: the two string operations are loops over the code points, proved by induction over the loop; a string the store can hold has code points below 2^32 (the embedding's `okStr`), so its code points are its characters. |
+| `Runtime/Nats.lean` | 153 | The natural numbers: the constant `nat.zero`, and the patterns `nat.zero` (`pat_native_zero`) and `(nat.succ m)` (`pat_destruct_lit`), which store a numeral; from the trusted specs of `zero`, `one`, `clone`, `sgn`, `add` and `neg`. |
+| `Runtime/Builtins.lean` | 730 | Builtin operators on literals: what every one needs (a literal's clone, `literal_of`, `literals` on one and two arguments, `any_stuck` on one, what a handle of a literal stands for), `eo::len` (`builtin_spec_len`: the width of a binary, the length of a string) and `eo::and` (`builtin_spec_and`: the `and` of two Booleans, of two binaries of the same width), through `Lit::evaluate`; and that logos's signed `and` of bit-vectors, reduced, is malachite's (`bv_and_toInt_emod`). |
+| `Runtime/IntNatives.lean` | 283 | The native operations on integers (`zeq`, `zleq` through `partial_cmp`, `mod_total`, `int.pow2`, `int.to_nat`, `nat.succ`) and the numeral constants of the generated code (`Integer::from(<u32>)`, negated); from the trusted specs of the integer functions. |
+| `Runtime/StateInv.lean` | 160 | The checker-state invariant, on logos's side only: `StateOK` (no object of a state holds `Stuck`) and `ProofOK`; a premise looked up in an OK state is not `Stuck` (`state_proven_nth_ne_stuck`, and `_of` a handle's fact, for the generated lines); and every state builder keeps it (the three push checks, `push_proven`, `invoke_cmd_check_proven`, `invoke_cmd_step_pop`, `invoke_cmd`, `invoke_cmd_list`, `invoke_assume_list`; `StateOK.nil`, `.stuck`, `.tail`). The generated specs take it as a precondition (see "The state invariant"). |
+| `Runtime/StateNth.lean` | 1178 | `Store::state_nth`, the jump-pointer lookup that `$eo_state_proven_nth` is compiled to, against logos's recursive `__eo_state_proven_nth` (`Store.state_nth_spec`): the walk down a state list and back up, which fills the entries (`state_down_spec`, `state_up_…_spec`; the two copies of the way up that Aeneas makes are proved alike), the search for the node at a depth (`state_ancestor_spec`), the read of the index, `charge`, and the program (`state_proven_nth_spec`), which the generated proofs use. See "The state lookup". |
+| `Runtime/ConstNames.lean` | 293 | The names of constants (`native::constant_name`, `uconst_id`): the runtime's digit loop and copy loop against `"@u." ++ toString i` (`digitsRev`, `toString_codes`, `native_uconst_id_codes`), and `Store.native_spec_uconst_id`, which the emitter writes the line of `uconst_id` from. See "The names of constants". |
+| `Top.lean` | 506 | CpcMini's top-level theorem (`check_proof_correct`): `check_proof_inner`'s refutation (`check_refutation_inner`, with `calls = 0`), its side-condition checks (`has_translation`, `arguments_translate` and its loop, the loop over the commands) against logos's `TranslatableAssumptionList` and `CmdListTranslationOk`, and the composition with logos's `correct___eo_is_refutation`. See "The top-level theorem". |
+| `Runtime/AssumeFold.lean` | 451 | `$eo_invoke_assume_list`, which the generator compiles to an iterative fold (`scan`, then `unwind`): proved by hand against logos's recursive definition (`invoke_assume_list_spec`), from what is proved of `$eo_is_bool_type`, `$eo_is_closed` and `$eo_push_input_assume_check` (hypotheses in the shape of the generated specs, the state assumed OK); the emitter writes the program's theorem as that application (`handProof`). |
+| `Runtime/Lists.lean` | 624 | Lists of an operator: the runtime's walk down a list (`list_step_spec`, `list_elements_loop_spec`), its parts (`list_parts_spec`, which takes what is proved of the generated `$eo_is_list_nil` as a hypothesis, `IsListNilSpec n`, from the generated `Specs n`), building one again (`list_build_loop_spec`), and `eo::cons` (`Store.builtin_spec_cons`) against logos's `__eo_cons`, for operators that nest to the right. Meant for every list builtin. |
+| `Runtime/StringLits.lean` | 455 | String and binary literals: a pattern on one stores a copy of its code points (`destruct_string_spec`, with `pat_destruct_lit`), `construct` from a native string gives the literal (`construct_string_spec`), and `raw` of a string in range (`raw_str_spec`); a string constant of the generated code (`"@"`: `raw` of `EoString::from_code_points(vec![64])`) stands for the code points of its vector (`raw_str_vec_spec`: a vector of `u32` is always in range), rewritten to logos's `native_string_lit` once both are concrete (`Represents.rep_of_eq`). `EoString`'s clone is translated code, so no trusted spec. A pattern on a binary literal stores its width and value as two numerals (`destruct_binary_spec`, with `pat_destruct_lit2`), and building it again from those two fields gives the literal (`construct_binary_spec`, in range by `rep_binary_okBv`), from the specs of `from_u32`, `clone`, `fits_u32`, `to_u32` and `mod_by_pow2`, already in use. |
+| `Runtime/Numbers.lean` | 399 | Numeral and rational literals: a pattern on one stores a copy of its value (`destruct_numeral_spec`, `destruct_rational_spec`, with `pat_destruct_lit`), and `construct` from a native value gives the literal (`construct_numeral_spec`, `construct_rational_spec`); from the trusted specs of `clone`. |
+| `Runtime/Literals.lean` | 122 | `destruct` with the Boolean literal's constructor, which stores a native copy of the Boolean: a pattern that changes the store (`pat_destruct_lit`). |
+
+No generated proof has a line written by hand, and no program needed a
+person. What needed a person is the above: a tactic for each kind of line,
+and a lemma for each runtime operation and constructor a line names.
+
+**All 76 are proved** (2026-11-21). The last eight (`$eo_typeof`,
+`$eo_is_bool_type`, `$eo_push_proven`, `$eo_invoke_cmd_step_pop`,
+`$eo_invoke_cmd`, `$eo_invoke_cmd_list`, `$eo_invoke_assume_list` with its
+hand-written fold, and `$eo_checker_is_refutation`) waited on `$eo_typeof`'s
+selector case.
+- **The fix:** with cvc5/ethos#286 and cvc5/logos#521, a function type
+  whose parts call a program is built with logos's guarded `__eo_mk_apply`,
+  as the runtime's `apply` builds it. The emitter writes `apply_mk_rep`
+  for it (Ethos fork `2a9bd4b`).
+- **The other six** of the 82 are the datatype operators below, which
+  have no logos function.
+
+In the full CPC (478 of 1,086), `$eo_state_proven_nth` and
+`$eo_cmd_step_pop_proven` are proved, and:
+- `$eo_to_smt` is past `uconst_id` and stops at case 169 (the native
+  operation `mk_rational`), with `$eo_to_smt_distinct`,
+  `$eo_to_smt_distinct_pairs` and `$eo_to_smt_typed_list_elem_type`
+  waiting on it;
+- `$eo_mk_premise_list` stops at `eo::cons` with an operator that nests to
+  the left (the CPC has some);
+- `$eo_cmd_step_proven` stops at its case 550, a literal that is not a
+  Boolean;
+- `$eo_typeof` is past its selector case and stops at a call of
+  `$eo_typeof_@from_bools`.
+
+The CPC crate's proofs are written against logos `a3232131`, which still
+prints the selector's type unguarded. They are not built, so this shows
+only once stage 5 builds them at a logos revision with #521.
+
+`$eo_prog_scope`'s application of a term that may be stuck (the first
+finding below) is proved since its proof argument is assumed OK. The lemmas of `construct` and `destruct` are generated for
+every data constructor (`MiniCtors`); the literal constructors are stored
+otherwise and have none. The cache of results is stated for every
+embedded type (`MiniCacheSem`).
+
+**Groups of cases** (milestone 32, step 4). A program with more than four
+cases tries them in groups (`cases_<d>_<g>`), and each group has a
+theorem: it answers what the first of its cases that answers does (`∀ d,
+firstSome [its cases] d = res`), or none of them answers. The body and
+the enclosing groups split their list of cases around each member
+(`firstSome (l₁ ++ l₂) d = firstSome l₁ (firstSome l₂ d)`). None of the 8
+such programs of CpcMini has a proof yet, each for another reason; the
+group proofs were checked by writing `$eo_typeof`'s (27 cases, groups of
+groups) and `$eo_cmd_step_proven`'s with `sorry` for the cases that the
+emitter cannot do: the groups and the body go through (4 s, 1.8 GiB). A
+loop whose cases are in groups (`$smtx_inhabited_type`) has the same
+theorems with a round's result: a group ends the loop with what its first
+answering case gives, or names the next round's arguments, on which the
+program has the same result (`∀ d, firstSome [its cases] d = f ys`); its
+members are tried with `group_round_step` and, in the round,
+`body_group_round_step`.
+
+**Conditionals** (step 4). `eo::ite c a b` and the native `ite` are
+functions of their own in the Rust (`if_k`), and the proof of each is a
+statement proved in place, as a requirement's is: the function gives a
+handle of logos's `__eo_ite` (or `native_ite`) of the condition and the
+branches, with a bullet per branch (`Store.boolean_value_term`,
+`_native` and the `ite` lemmas in `Runtime/Ops.lean`). None of the 10
+programs that had a conditional has a proof yet: the condition of most is
+a native operation (`streq`, `Teq`), which the emitter has no line for.
+The proof was checked by forcing `$eo_to_smt_type`: two cases with a
+native `ite` go through. No case of CpcMini can exercise `eo::ite` (its
+one use, in `$eo_is_closed_rec`, is in a case with a variable in its
+pattern).
+
+**Six programs have no function in logos's Lean**: the datatype operators
+(`$eo_dt_constructors`, `$eo_dt_selectors` and the four they call). The
+runtime calls them for `eo::dt_constructors` and `eo::dt_selectors`, so
+rust-meta always compiles them; no program of CpcMini uses either
+operator, and lean-meta leaves them out. There is nothing to prove them
+against. For the gate they need a decision: count 76 programs, or show
+that the checker never reaches them.
+
+**The alternative not taken: have rust-meta compile the linearized
+program.** lean-meta makes a pattern linear before it prints (a variable
+used twice becomes two and a `requires`, or an `ite` with a continuation
+program where a later case could still apply), and rust-meta compiles the
+pattern as written, with a comparison of handles. If rust-meta compiled
+lean-meta's linear form, each Rust case would be a logos match arm, and
+lemma C would be the identity. It would also change the Rust of every
+program with such a pattern: a comparison that answers "no match" would
+become the evaluation of `eo::requires` or `eo::ite` on terms, with a
+program call for each continuation, so the change would have to be
+measured on the 400 and the large proofs, and Ethos's rust-meta would
+depend on the linearization pass. Reasoned, not measured: with the case
+functions the Rust stays byte for byte what it is (checked:
+`scripts/generate-mini` writes the same crate), and the difference is
+confined to lemma C, which Lean proves per program.
+
+## The top-level theorem
+
+`proofs/PathosProofs/Top.lean` states and proves, for CpcMini:
+
+```lean
+theorem check_proof_correct
+    (s : Store) (hinv : s.Inv) (h64 : Platform64) (a c : Term)
+    (F : Eo.CArgList) (pf : Eo.CCmdList)
+    (hF : Represents.rep s a F) (hpf : Represents.rep s c pf) (s' : Store)
+    (hrun : Store.check_proof_inner s a c = ok (core.result.Result.Ok Verdict.Correct, s')) :
+    eo_satisfiability (argListAssumes F) false
+```
+
+If the compiled checker says `Correct` on handles of the assumptions `F`
+and the proof `pf`, then `F` is unsatisfiable as logos defines it.
+
+**How.**
+- `check_proof_inner` returns `Correct` only after three things:
+  - its refutation (`check_refutation_inner`: `calls = 0`, then
+    `$eo_checker_is_refutation`, then `is_native_true`) is true, which is
+    `eo_is_refutation F pf`;
+  - the assumptions translate (`arguments_translate`), which is
+    `TranslatableAssumptionList F`;
+  - every command passes the loop over the commands, which is
+    `CmdListTranslationOk pf`: an `assume_push` formula translates, a
+    step's arguments translate, nothing is asked of the others.
+- `has_translation` is `__smtx_typeof (__eo_to_smt t) ≠ None`, through the
+  proved `$eo_to_smt` and `$smtx_typeof`.
+- logos's `correct___eo_is_refutation` (`CpcMini/Proofs/Checker.lean:865`)
+  takes the three and concludes.
+- No rule of CpcMini has an argument mask, so every argument is checked
+  as a term; the full CPC's masks are not covered.
+
+**It is unconditional** (2026-11-21).
+- `check_proof_correct_of_spec` is the same theorem from any proof of
+  `$eo_checker_is_refutation`'s spec, `CheckerIsRefutationSpec`.
+- `check_proof_correct` gives it the generated one,
+  `fun n => (specs n).eo__24eo_5fchecker_5fis_5frefutation`. That program
+  is proved since cvc5/ethos#286 and cvc5/logos#521.
+- So the theorem has no hypothesis beyond the store's invariant, the
+  handles, the platform and the run.
+
+**Its trust base.**
+- **The 27 assumptions of "What is trusted"**, and only those:
+  `#print axioms check_proof_correct` gives Lean's three and the 24 of
+  `Trusted.lean` in use. Its other 47 axioms are declarations of the
+  translation (`num`'s types and functions), which add no trust.
+- **Charon and Aeneas:** that the Lean of the checker is the Rust's
+  meaning.
+- **logos's definitions** (`eo_satisfiability`, the SMT model, the
+  checker's functions) and its proofs, at `bdcbd95f`. Its `correct___eo_is_refutation`
+  rests on Lean's three axioms only.
+- **The boundary**, unverified:
+  - `Store::check_proof` runs `check_proof_inner` on a thread with a
+    larger stack (`with_checker_stack`); both are in `front.rs`, which is
+    not translated.
+  - CpcMini has no front end: `crates/pathos` builds the full CPC's
+    checker. So the theorem is about any store with the invariant and any
+    handles that stand for some `F` and `pf`. For CPC, the front end
+    (`crates/pathos/src/adapter.rs`) would have to give handles that stand
+    for what the input file means.
+- **Partial correctness:** a run that returns `Correct`. Other verdicts,
+  errors and runs that do not return are not covered.
+- **`Platform64`** (a 64-bit `usize`) is assumed, as in every spec.
+
 ## What is missing for the theorem
 
 1. **The rest of the runtime.** Proved: the table, `intern`, the cache,
@@ -394,16 +957,18 @@ change under them.
    `destruct` (literals from native fields, binaries, user operators with
    indices), the builtin operators (`lit.rs`: arithmetic, strings,
    bit-vectors, on the trusted numbers), the list operators, `state_nth`
-   with its jump pointers, term comparison and its order, the type caches
-   (`$eo_typeof`, `$smtx_typeof`), and for CPC the translation checks.
+   with its jump pointers, term comparison and its order, and for CPC the
+   translation checks. (The type cache is now proved, with `$smtx_typeof`.)
 2. **`Rep` for all of `Eo.Term`** and for the other embedded types
    (datatype declarations, the SMT terms, types and values of
    `$eo_to_smt`), with `norm` (above).
-3. **Every program**, by generated proofs: CpcMini has 82 functions with
-   233 case functions; CPC has 1,086 with 2,975 case functions, 66 loops
+3. **Every program**, by generated proofs (7 of CpcMini's 82 so far, see
+   above): CpcMini has 82 functions with 233 case functions; CPC has 1,086 with 2,975 case functions, 66 loops
    and 190 cached programs.
-4. **The specification of `native_literal`** and the table it needs.
-5. **The top**: `check_refutation` and, for CPC, `check_proof` with the
+4. ~~The specification of `native_literal`~~: not needed, literals are
+   values (above).
+5. **The top**: for CpcMini, done (above, "The top-level theorem"),
+   given `$eo_checker_is_refutation`'s spec. For CPC, `check_proof` with the
    translation checks against logos's `ApiChecks`, and the composition
    with `correct___logos_verdict`.
 6. **The "respects `norm`" lemmas** on logos's side, and the answer to
@@ -422,7 +987,7 @@ With generated proofs the work is in three places:
   and 12,000 more lines.
 - **The generator and the tactic**: the step tactic, the emission of a
   lemma and a proof per case, per body, per loop, per recursive group and
-  per cached program, and the Lean tables (`NATIVE_TEXTS`, the cache's
+  per cached program, and the Lean tables (the cache's
   meanings, `Rep` for every constructor). The pilot's four shapes cover
   what the generator emits; what is untried is scale: whether 3,000
   generated proofs elaborate in acceptable time (the Lean of CPC itself

@@ -8,8 +8,10 @@ public import Mathlib.Data.Int.Bitwise
 
 Charon and Aeneas translate all of the compiled checker except two modules,
 which they leave as axioms without a meaning: `num.rs`, the integers and
-rationals over `malachite`, and the functions of `front.rs` that work on
-text. This file says what those functions compute. Every statement here is
+rationals over `malachite`, and `front.rs`, which works on text and which
+the checking functions no longer call (the names of constants are built in
+`native.rs` and proved, Runtime/ConstNames.lean). This file says what the
+functions of `num.rs` compute. Every statement here is
 an **axiom**: nothing checks it against the Rust. It is, with Lean's own
 axioms and logos's, everything that a theorem of `PathosProofs` rests on
 beyond what Charon and Aeneas did (`scripts/proofs-axioms` checks that).
@@ -206,28 +208,5 @@ axiom Rational.pow_spec (a : Rational) (n : Std.U32) :
   Rational.pow a n = ok (Rational.ofRat (a.toRat ^ n.val))
 
 end num
-
-/-! ## The text functions
-
-`front.rs` holds what works on text, for the program around the checker.
-The checking code calls four of its functions. Two read the numerals
-written in the generated code (`parse_int`, `parse_rat`); the checker for
-CpcMini has none, so they are not declared here. The other two:
-
-* `native_literal code` is the constant that the EO definitions write as
-  the text number `code` of the generated list `NATIVE_TEXTS`
-  (`src/names.rs`).
-* `constant_name uninterpreted n` is the text `@u.n` or `@c.n`.
-
-Of both only this is assumed so far: they return. What each returns is a
-statement about one signature's list of texts and about the printing of
-integers; none of the proofs here needs it yet.
--/
-
-axiom front.native_literal_spec (code : Std.U32) :
-  ∃ r, front.native_literal code = ok r
-
-axiom front.constant_name_spec (uninterpreted : Bool) (n : num.Integer) :
-  ∃ r, front.constant_name uninterpreted n = ok r
 
 end pathos_compiled_checker

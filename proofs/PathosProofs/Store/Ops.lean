@@ -4,7 +4,9 @@ public import PathosProofs.Util
 public import CpcMini.Logos
 public import PathosProofs.Store.Intern
 public import PathosProofs.Store.Rep
+public import MiniCacheSem
 public import PathosProofs.Store.Cache
+public import PathosProofs.Store.Jumps
 
 /-!
 # The store's operations on terms
@@ -102,34 +104,88 @@ structure Store.Wf (s : Store) : Prop where
 
 /-- What an entry of the cache of program results says, in a store whose
 terms are `nodes`: its result is a handle of the program's result on what
-its arguments stand for.
-
-Only the program of the pilot that is cached has a clause here, `$mk_trans`
-(number 58 in `caches.tsv`); an entry of any other program says nothing.
-For the whole checker this is a table from the number of a program to
-what it computes. -/
+its arguments stand for. What that is for each program is the generated
+table `ProgramSem` (`MiniCacheSem`). -/
 def EntryOK (nodes : List TermData) (e : cache.ProgramEntry) : Prop :=
-  e.program = 58#u32 →
-    ∃ (a0 a1 a2 : Term) (x y z : Eo.Term), e.args.val = [a0, a1, a2] ∧
-      Rep nodes a0.val x ∧ Rep nodes a1.val y ∧ Rep nodes a2.val z ∧
-      Rep nodes e.result.val (Eo.__mk_trans x y z)
+  ProgramSem nodes e.program.val e.args.val e.result
 
 theorem EntryOK.mono {nodes nodes' : List TermData} {e : cache.ProgramEntry}
-    (hpre : nodes <+: nodes') (h : EntryOK nodes e) : EntryOK nodes' e := by
-  intro hp
-  obtain ⟨a0, a1, a2, x, y, z, hargs, h0, h1, h2, hr⟩ := h hp
-  exact ⟨a0, a1, a2, x, y, z, hargs, h0.mono hpre, h1.mono hpre, h2.mono hpre, hr.mono hpre⟩
+    (hpre : nodes <+: nodes') (h : EntryOK nodes e) : EntryOK nodes' e :=
+  ProgramSem.mono hpre h
 
-/-- The cache of program results is well formed and every entry is right. -/
+/-- The type caches stand in the table `ProgramSem` as programs of one
+argument, under ids that no `u32` program id can be: `$eo_typeof`'s
+(`TypeCacheKind::Eunoia`) is `2^32`, `$smtx_typeof`'s (`Smt`) `2^32 + 1`.
+The generated `MiniCacheSem` uses the same numbers. -/
+def typeSemId : cache.TypeCacheKind → Nat
+  | cache.TypeCacheKind.Eunoia => 4294967296
+  | cache.TypeCacheKind.Smt => 4294967297
+
+/-- The slot of a row of the type cache for one kind. -/
+def cache.TypeEntry.slot (e : cache.TypeEntry) : cache.TypeCacheKind → Option Term
+  | cache.TypeCacheKind.Eunoia => e.eo
+  | cache.TypeCacheKind.Smt => e.smt
+
+/-- What the type cache says, in a store whose terms are `nodes`: the row
+of a handle holds, in each slot that is filled, a handle of that program's
+result on what the handle stands for. -/
+def TypesOK (nodes : List TermData) (types : List cache.TypeEntry) : Prop :=
+  ∀ (t : Term) (e : cache.TypeEntry), types[(t.val : Nat)]? = some e →
+    ∀ k r, e.slot k = some r → ProgramSem nodes (typeSemId k) [t] r
+
+theorem TypesOK.mono {nodes nodes' : List TermData} {types : List cache.TypeEntry}
+    (hpre : nodes <+: nodes') (h : TypesOK nodes types) : TypesOK nodes' types :=
+  fun t e he k r hr => ProgramSem.mono hpre (h t e he k r hr)
+
+/-- The number of filled slots of the type cache. -/
+def typesFilled (types : List cache.TypeEntry) : Nat :=
+  (types.map (fun e => (if e.eo.isSome then 1 else 0) + (if e.smt.isSome then 1 else 0))).sum
+
+theorem typesFilled_le (types : List cache.TypeEntry) : typesFilled types ≤ 2 * types.length := by
+  unfold typesFilled
+  induction types with
+  | nil => simp
+  | cons e es ih =>
+    simp only [List.map_cons, List.sum_cons, List.length_cons]
+    split <;> split <;> omega
+
+theorem typesFilled_extend (a : List cache.TypeEntry) (k : Nat) :
+    typesFilled (a ++ List.replicate k { eo := none, smt := none }) = typesFilled a := by
+  unfold typesFilled
+  simp [List.map_replicate, List.sum_replicate]
+
+theorem TypesOK.extend {nodes : List TermData} {a b : cache.Caches}
+    (hx : TypesExtend a b) (h : TypesOK nodes a.types.val) : TypesOK nodes b.types.val := by
+  obtain ⟨⟨k, hk⟩, _⟩ := hx
+  intro t e he kk r hr
+  rw [hk] at he
+  by_cases ht : (t.val : Nat) < a.types.val.length
+  · rw [List.getElem?_append_left ht] at he
+    exact h t e he kk r hr
+  · rw [List.getElem?_append_right (by omega)] at he
+    have := List.mem_of_getElem? he
+    simp only [List.mem_replicate] at this
+    rw [this.2] at hr
+    cases kk <;> simp [cache.TypeEntry.slot] at hr
+
+/-- The cache of program results is well formed and every entry is right,
+and so is every filled slot of the type cache. -/
 structure CacheInv (s : Store) : Prop where
   wf : CacheWf s.caches.programs
   entries : ∀ e ∈ s.caches.programs.entries.val, EntryOK s.nodes.val e
+  types : TypesOK s.nodes.val s.caches.types.val
+  /-- The count of entries that `type_insert` keeps is at most the number
+  of filled slots, so it never overflows. -/
+  count : s.caches.stats.type_entries.val ≤ typesFilled s.caches.types.val
 
 /-- The invariant of the store. -/
 structure Store.Inv (s : Store) : Prop where
   table : StoreInv s
   terms : s.Wf
   cache : CacheInv s
+  /-- The jump pointers of `state_nth` lead where the walk down a state
+  list would (Store/Jumps.lean). -/
+  jumps : JumpsOK s.nodes.val s.state_jumps.val
 
 theorem Store.Wf.data {s : Store} (h : s.Wf) (t : Nat) (ht : t < s.nodes.length) :
     (s.nodes.val[t]!).Wf s.nodes.val :=
@@ -152,13 +208,18 @@ theorem Store.intern_inv (s : Store) (data : TermData) (hinv : s.Inv)
     simp only at hr ⊢
     obtain ⟨hlt, hdata, hshape⟩ := hr
     have hcache : CacheInv s' := by
-      have hp := hext.2.2.2.2.2
+      have hp := hext.2.2.2.2.2.1
       constructor
       · rw [hp]; exact hinv.cache.wf
       · intro e he
         rw [hp] at he
         exact (hinv.cache.entries e he).mono hext.1
-    refine ⟨⟨htable, ?_, hcache⟩, hext, hlt, hdata⟩
+      · exact (hinv.cache.types.mono hext.1).extend hext.2.2.2.2.2.2
+      · obtain ⟨⟨k, hk⟩, hst⟩ := hext.2.2.2.2.2.2
+        rw [hst, hk, typesFilled_extend]; exact hinv.cache.count
+    have hjumps : JumpsOK s'.nodes.val s'.state_jumps.val := by
+      rw [hext.2.2.2.2.1]; exact hinv.jumps.mono hext.1
+    refine ⟨⟨htable, ?_, hcache, hjumps⟩, hext, hlt, hdata⟩
     rcases hshape with hsame | happ
     · constructor
       · simp only [alloc.vec.Vec.length, hsame]; exact hinv.terms.nonempty
@@ -268,10 +329,12 @@ theorem Store.check_handles_loop_spec (s : Store) (args : Slice Term) (i : Std.U
 theorem schema.Constructor.arity_ok (c : schema.Constructor) : ∃ n, c.arity = ok n := by
   cases c <;> exact ⟨_, rfl⟩
 
-/-- `construct` with a constructor that is plain data: the node of that
-constructor with the arguments as its fields. -/
+/-- `construct` with a constructor that is plain data, or a variable (which
+the store keeps the same way): the node of that constructor with the
+arguments as its fields. -/
 theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : Slice Term)
-    (hinv : s.Inv) (h64 : Platform64) (hemb : c.embedding = ok Embedding.Data) :
+    (hinv : s.Inv) (h64 : Platform64)
+    (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var) :
     Store.construct s c args ⦃ r s' =>
       s'.Inv ∧ s.Extends s' ∧
       match r with
@@ -296,8 +359,8 @@ theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : S
       exact ⟨hinv, Store.Extends.refl s⟩
     | Ok u =>
       simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
-      rw [hemb]
-      simp only [Std.bind_ok]
+      rcases hemb with hemb | hemb <;> rw [hemb] <;> simp only [Std.bind_ok]
+      all_goals
       step with alloc.slice.Slice.to_vec_spec as ⟨v, hv⟩
       · intro x _; rfl
       have hvals : v.val = args.val := by rw [hv]; rfl
@@ -323,6 +386,11 @@ theorem Store.destruct_literal_data (l : lit.Lit) :
   unfold Store.destruct_literal
   cases l <;> simp
 
+theorem Store.destruct_literal_var (l : lit.Lit) :
+    Store.destruct_literal Embedding.Var l = ok (Hit.Done none) := by
+  unfold Store.destruct_literal
+  cases l <;> simp [Embedding.Insts.CoreCmpPartialEqEmbedding.eq, Embedding.read_discriminant]
+
 theorem alloc.vec.CloneVec.clone_terms (v : alloc.vec.Vec Term) :
     alloc.vec.CloneVec.clone Term.Insts.CoreCloneClone v = ok v := by
   unfold alloc.vec.CloneVec.clone
@@ -332,10 +400,10 @@ theorem alloc.vec.CloneVec.clone_terms (v : alloc.vec.Vec Term) :
   rw [hs]
   simp [← heq]
 
-/-- `destruct` with a constructor that is plain data: the fields of a node
-of that constructor, and nothing for any other term. -/
+/-- `destruct` with a constructor that is plain data, or a variable: the
+fields of a node of that constructor, and nothing for any other term. -/
 theorem Store.destruct_data_eq (s : Store) (c : schema.Constructor) (t : Term)
-    (hemb : c.embedding = ok Embedding.Data) :
+    (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var) :
     Store.destruct s c t = ok (
       (if t.val < s.nodes.length then
         core.result.Result.Ok (match s.data t with
@@ -343,13 +411,13 @@ theorem Store.destruct_data_eq (s : Store) (c : schema.Constructor) (t : Term)
           | _ => none)
       else core.result.Result.Err CheckError.InvalidHandle), s) := by
   unfold Store.destruct
-  rw [hemb]
-  simp only [Std.bind_ok]
+  rcases hemb with hemb | hemb <;> rw [hemb] <;> simp only [Std.bind_ok]
+  all_goals
   rw [Store.view_eq]
   by_cases h : t.val < s.nodes.length
   · simp only [h, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch, Store.data]
     cases hd : s.nodes.val[t.val]! with
-    | Literal l => simp [Store.destruct_literal_data]
+    | Literal l => simp [Store.destruct_literal_data, Store.destruct_literal_var]
     | Node d fields =>
       obtain ⟨n1, h1, _⟩ := schema.Constructor.code_spec c
       obtain ⟨n2, h2, _⟩ := schema.Constructor.code_spec d

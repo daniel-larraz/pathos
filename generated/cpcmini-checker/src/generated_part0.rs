@@ -2472,7 +2472,7 @@ let v1 = match s.construct(Constructor::eo__24emb_5ftsm_2eBool, &[]) { Ok(v) => 
 Ok(Some(v1))
 }
 pub(super) fn case_0_eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.native_constant(0) { Ok(v) => v, Err(e) => return Err(e) };
+let v0 = match s.raw(Lit::Str(EoString::from_code_points(vec![64,]))) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.native_op(NativeOp::StringPrefixEq, &[v0, a0]) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v1))
 }
@@ -2603,7 +2603,7 @@ let v4 = match s.destruct(Constructor::eo__24emb_5fNumeral, v2) { Ok(v) => v, Er
 let Some(fields) = v4 else { return Ok(None); }
 ;
 let v5 = fields[0];
-let v6 = match s.native_constant(1) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.raw(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
 let v7 = match s.native_op(NativeOp::Zleq, &[v6, v5]) { Ok(v) => v, Err(e) => return Err(e) };
 let v11 = match if_2_eo__24eo_5fto_5fsmt_5ftype(s, v7, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v11))
@@ -3905,7 +3905,7 @@ let Some(fields) = v0 else { return Ok(None); }
 ;
 let v1 = fields[0];
 let v2 = fields[1];
-let v3 = match s.native_constant(1) { Ok(v) => v, Err(e) => return Err(e) };
+let v3 = match s.raw(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
 let v4 = match s.native_op(NativeOp::Zleq, &[v3, v1]) { Ok(v) => v, Err(e) => return Err(e) };
 let v5 = match s.native_op(NativeOp::IntPow2, &[v1]) { Ok(v) => v, Err(e) => return Err(e) };
 let v6 = match s.native_op(NativeOp::ModTotal, &[v2, v5]) { Ok(v) => v, Err(e) => return Err(e) };

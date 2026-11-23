@@ -14,7 +14,13 @@ than Trusted, and compares them with proofs/axioms-allowed.txt. Exits 1 if
     of proofs/PathosProofs/Trusted.lean: the file is the statement of what
     is trusted, so it must not fall behind either.
 
-Prints the number of theorems and the axioms in use, by section. The
+Prints the number of theorems, the assumptions in use (axioms whose type is
+a proposition, and Lean's three), the number of declarations in use (axioms
+that declare a type or a function: Aeneas's for the Rust it does not
+translate, and Trusted.lean's ℤ and ℚ, with no property), and the axioms in
+use by section. Also exits 1 if an axiom of the [MiniChecker] or [Aeneas]
+section that is a proposition is in use: those are to declare, not to
+assume. The
 project must be built (scripts/proofs-build does that, and runs this).
 Needs elan (lake) and Python 3.
 """
@@ -90,7 +96,9 @@ def main():
     if run.returncode != 0:
         sys.stderr.write(run.stdout[-2000:] + run.stderr[-2000:])
         fail("proofs/audit/Axioms.lean failed (is the project built?)")
-    used = re.findall(r"^axiom (\S+)$", run.stdout, re.M)
+    kinds = dict(re.findall(r"^axiom (\S+) (assumption|declaration)$", run.stdout, re.M))
+    used = list(kinds)
+    props = set(re.findall(r"^prop (\S+)$", run.stdout, re.M))
     count = re.search(r"^theorems (\d+)$", run.stdout, re.M)
     if not count:
         fail("proofs/audit/Axioms.lean printed no count of theorems")
@@ -101,7 +109,25 @@ def main():
             problems.append(f"a theorem uses the axiom {a}, which axioms-allowed.txt does not list")
         else:
             by_section.setdefault(where[a], []).append(a)
-    print(f"proofs-axioms: {count.group(1)} theorems of PathosProofs; they use {len(used)} axioms")
+    # An assumption is an axiom whose type is a proposition, and Lean's own
+    # three: Classical.choice is a function (`Nonempty α → α`), but it is
+    # the axiom of choice.
+    lean = set(sections.get("Lean", []))
+    assumptions = [a for a in used if kinds[a] == "assumption" or a in lean]
+    print(f"proofs-axioms: {count.group(1)} theorems of PathosProofs; they rest on "
+          f"{len(assumptions)} assumptions (axioms that are propositions, and Lean's), and use "
+          f"{len(used) - len(assumptions)} declarations (axioms that declare a type or "
+          f"a function, with no property)")
+    print("  assumptions: " + ", ".join(a.removeprefix(NS + ".") for a in sorted(assumptions)))
+    # The Lean of the checker and Aeneas's library are to declare, not to
+    # assume: an axiom of theirs that is a proposition must not be in use.
+    for s in ("MiniChecker", "Aeneas"):
+        for a in sections.get(s, []):
+            if a in props and a in kinds:
+                problems.append(f"[{s}] {a} is a proposition (an assumption) and is in use")
+            elif a in props:
+                print(f"  note: [{s}] {a.removeprefix(NS + '.')} is a proposition; "
+                      "it is listed and not in use")
     for s in sections:
         names = by_section.get(s, [])
         print(f"  [{s}] {len(names)} of {len(sections[s])} listed"

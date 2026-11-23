@@ -2,1392 +2,125 @@
 #[allow(unused_imports)]
 use super::*;
 use crate::*;
-pub(super) fn case_296_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fsle_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v8 { return Ok(None); }
-let v9 = match eo__24eo_5fprog_5fbv_2dsle_2deliminate(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dredor_2deliminate(s: &mut Store, v14: Term, a0: Term, v13: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v15 = match s.apply(v14, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v13, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.construct(Constructor::eo_bvcomp, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v18, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.literal(Lit::Numeral(v21)) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v20, v22) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v19, v23) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v17, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v16, v25) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v26))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dredor_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v0 else { return Ok(None); }
-;
-let v1 = fields[0];
-let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v3, v4)) = v2 else { return Ok(None); }
-;
-let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v6, v7)) = v5 else { return Ok(None); }
-;
-let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v8 { return Ok(None); }
-if v7 != a1 { return Ok(None); }
-let v9 = match s.unapply(v4) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v10, v11)) = v9 else { return Ok(None); }
-;
-let v12 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v10 != v12 { return Ok(None); }
-if v11 != a0 { return Ok(None); }
-let v13 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.construct(Constructor::eo_bvredor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dredor_2deliminate(s, v14, a0, v13, a1)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2dredor_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dredor_2deliminate(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-redor-eliminate"
-pub fn eo__24eo_5fprog_5fbv_2dredor_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2dredor_2deliminate(s, a0, a1, a2);
-s.leave();
-result
-}
-pub(super) fn case_297_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fredor_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v8 else { return Ok(None); }
-;
-let v9 = fields[0];
-let v10 = fields[1];
-let v11 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v10 != v11 { return Ok(None); }
-let v12 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v9) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.construct(Constructor::eo__24eo_5fpf, &[v12]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match eo__24eo_5fprog_5fbv_2dredor_2deliminate(s, v2, v5, v13) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v14))
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dredand_2deliminate(s: &mut Store, v14: Term, a0: Term, v13: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v15 = match s.apply(v14, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v13, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.construct(Constructor::eo_bvcomp, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v17, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.literal(Lit::Numeral(v21)) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v20, v22) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v19, v23) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v18, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v16, v25) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v26))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dredand_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v0 else { return Ok(None); }
-;
-let v1 = fields[0];
-let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v3, v4)) = v2 else { return Ok(None); }
-;
-let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v6, v7)) = v5 else { return Ok(None); }
-;
-let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v8 { return Ok(None); }
-if v7 != a1 { return Ok(None); }
-let v9 = match s.unapply(v4) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v10, v11)) = v9 else { return Ok(None); }
-;
-let v12 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v10 != v12 { return Ok(None); }
-if v11 != a0 { return Ok(None); }
-let v13 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.construct(Constructor::eo_bvredand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dredand_2deliminate(s, v14, a0, v13, a1)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2dredand_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dredand_2deliminate(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-redand-eliminate"
-pub fn eo__24eo_5fprog_5fbv_2dredand_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2dredand_2deliminate(s, a0, a1, a2);
-s.leave();
-result
-}
-pub(super) fn case_298_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fredand_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v8 else { return Ok(None); }
-;
-let v9 = fields[0];
-let v10 = fields[1];
-let v11 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v10 != v11 { return Ok(None); }
-let v12 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v9) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.construct(Constructor::eo__24eo_5fpf, &[v12]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match eo__24eo_5fprog_5fbv_2dredand_2deliminate(s, v2, v5, v13) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v14))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dule_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.construct(Constructor::eo_bvule, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v0, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo_not, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.construct(Constructor::eo_bvult, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v7, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v5, v8) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.apply(v4, v9) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v10))
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2dule_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dule_2deliminate(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-ule-eliminate"
-pub fn eo__24eo_5fprog_5fbv_2dule_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2dule_2deliminate(s, a0, a1);
-s.leave();
-result
-}
-pub(super) fn case_299_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fule_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v8 { return Ok(None); }
-let v9 = match eo__24eo_5fprog_5fbv_2dule_2deliminate(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
-}
-pub(super) fn cases_0_74_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_296_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_297_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_298_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_299_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-Ok(None)
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s: &mut Store, v12: Term, v9: Term, v4: Term) -> CheckResult<Option<Term>> {
-let v13 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.literal(Lit::Numeral(v13)) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v12, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v9, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.literal(Lit::Numeral(v17)) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v18]) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v19, v21) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v16, v22) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v4, v23) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v24))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.construct(Constructor::eo_bvcomp, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v0, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v7, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v5, v8) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match s.literal(Lit::Numeral(v10)) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v11]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s, v12, v9, v4)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-comp-eliminate"
-pub fn eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s, a0, a1);
-s.leave();
-result
-}
-pub(super) fn case_300_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fcomp_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v8 { return Ok(None); }
-let v9 = match eo__24eo_5fprog_5fbv_2dcomp_2deliminate(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
-}
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v142: Term, v144: Term, v141: Term, v135: Term) -> CheckResult<Option<Term>> {
-let v145 = match s.apply(v142, v144) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match s.literal(Lit::Binary(BitVec::new(0, &v146))) { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.apply(v145, v147) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.apply(v141, v148) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.apply(v135, v149) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v150))
-}
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, a1: Term, a0: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v132 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.construct(Constructor::eo_rotate_5fleft, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match s.apply(v133, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v135 = match s.apply(v132, v134) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.literal(Lit::Numeral(v137)) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.construct(Constructor::eo_extract, &[a2, v138]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.apply(v139, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v141 = match s.apply(v136, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v143 = match s.construct(Constructor::eo_extract, &[a3, a4]) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v143, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v142, v144, v141, v135)
-}
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v118: Term, v119: Term, a0: Term, v112: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v120 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v118 != v120 { return Ok(None); }
-if v119 != a0 { return Ok(None); }
-let v121 = match s.unapply(v112) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v122, v123)) = v121 else { return Ok(None); }
-;
-let v124 = match s.unapply(v122) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v125, v126)) = v124 else { return Ok(None); }
-;
-let v127 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v125 != v127 { return Ok(None); }
-if v126 != a1 { return Ok(None); }
-let v128 = match s.unapply(v123) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v129, v130)) = v128 else { return Ok(None); }
-;
-let v131 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v129 != v131 { return Ok(None); }
-if v130 != a0 { return Ok(None); }
-more_7_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, a1, a0, a2, a3, a4)
-}
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v90: Term, v100: Term, a8: Term, a4: Term, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-if v90 != v100 { return Ok(None); }
-let v101 = match s.destruct(Constructor::eo__24eo_5fpf, a8) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v101 else { return Ok(None); }
-;
-let v102 = fields[0];
-let v103 = match s.unapply(v102) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v104, v105)) = v103 else { return Ok(None); }
-;
-let v106 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v107, v108)) = v106 else { return Ok(None); }
-;
-let v109 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v107 != v109 { return Ok(None); }
-if v108 != a4 { return Ok(None); }
-let v110 = match s.unapply(v105) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v111, v112)) = v110 else { return Ok(None); }
-;
-let v113 = match s.unapply(v111) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v114, v115)) = v113 else { return Ok(None); }
-;
-let v116 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v114 != v116 { return Ok(None); }
-let v117 = match s.unapply(v115) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v118, v119)) = v117 else { return Ok(None); }
-;
-more_6_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v118, v119, a0, v112, a1, a2, a3, a4)
-}
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v85: Term, v86: Term, a3: Term, v83: Term, a0: Term, a8: Term, a4: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v87 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v85 != v87 { return Ok(None); }
-if v86 != a3 { return Ok(None); }
-let v88 = match s.unapply(v83) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v89, v90)) = v88 else { return Ok(None); }
-;
-let v91 = match s.unapply(v89) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v92, v93)) = v91 else { return Ok(None); }
-;
-let v94 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v92 != v94 { return Ok(None); }
-let v95 = match s.unapply(v93) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v96, v97)) = v95 else { return Ok(None); }
-;
-let v98 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v96 != v98 { return Ok(None); }
-if v97 != a0 { return Ok(None); }
-let v99 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.literal(Lit::Numeral(v99)) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v90, v100, a8, a4, a0, a1, a2, a3)
-}
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v70: Term, v71: Term, a1: Term, v68: Term, a0: Term, v61: Term, a7: Term, a3: Term, a8: Term, a4: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v72 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v70 != v72 { return Ok(None); }
-if v71 != a1 { return Ok(None); }
-let v73 = match s.unapply(v68) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v74, v75)) = v73 else { return Ok(None); }
-;
-let v76 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v74 != v76 { return Ok(None); }
-if v75 != a0 { return Ok(None); }
-let v77 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.literal(Lit::Numeral(v77)) { Ok(v) => v, Err(e) => return Err(e) };
-if v61 != v78 { return Ok(None); }
-let v79 = match s.destruct(Constructor::eo__24eo_5fpf, a7) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v79 else { return Ok(None); }
-;
-let v80 = fields[0];
-let v81 = match s.unapply(v80) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v82, v83)) = v81 else { return Ok(None); }
-;
-let v84 = match s.unapply(v82) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v85, v86)) = v84 else { return Ok(None); }
-;
-more_4_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v85, v86, a3, v83, a0, a8, a4, a1, a2)
-}
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v41: Term, a1: Term, a0: Term, a7: Term, a3: Term, a8: Term, a4: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v50 = match s.unapply(v41) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v51, v52)) = v50 else { return Ok(None); }
-;
-let v53 = match s.unapply(v51) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v54, v55)) = v53 else { return Ok(None); }
-;
-let v56 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v54 != v56 { return Ok(None); }
-let v57 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.literal(Lit::Numeral(v57)) { Ok(v) => v, Err(e) => return Err(e) };
-if v55 != v58 { return Ok(None); }
-let v59 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v60, v61)) = v59 else { return Ok(None); }
-;
-let v62 = match s.unapply(v60) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v63, v64)) = v62 else { return Ok(None); }
-;
-let v65 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v63 != v65 { return Ok(None); }
-let v66 = match s.unapply(v64) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v67, v68)) = v66 else { return Ok(None); }
-;
-let v69 = match s.unapply(v67) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v70, v71)) = v69 else { return Ok(None); }
-;
-more_3_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v70, v71, a1, v68, a0, v61, a7, a3, a8, a4, a2)
-}
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v33: Term, a2: Term, v34: Term, a0: Term, a1: Term, a7: Term, a3: Term, a8: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v35 = match s.unapply(v33) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v36, v37)) = v35 else { return Ok(None); }
-;
-let v38 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v36 != v38 { return Ok(None); }
-if v37 != a2 { return Ok(None); }
-let v39 = match s.unapply(v34) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v40, v41)) = v39 else { return Ok(None); }
-;
-let v42 = match s.unapply(v40) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v43, v44)) = v42 else { return Ok(None); }
-;
-let v45 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v43 != v45 { return Ok(None); }
-let v46 = match s.unapply(v44) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v47, v48)) = v46 else { return Ok(None); }
-;
-let v49 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v47 != v49 { return Ok(None); }
-if v48 != a0 { return Ok(None); }
-more_2_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v41, a1, a0, a7, a3, a8, a4, a2)
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, v20: Term, v22: Term, v21: Term, a1: Term, v18: Term, a0: Term, v11: Term, v4: Term, a6: Term, a2: Term, a7: Term, a3: Term, a8: Term, a4: Term) -> CheckResult<Option<Term>> {
-if v20 != v22 { return Ok(None); }
-if v21 != a1 { return Ok(None); }
-let v23 = match s.unapply(v18) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v24, v25)) = v23 else { return Ok(None); }
-;
-let v26 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v24 != v26 { return Ok(None); }
-if v25 != a0 { return Ok(None); }
-let v27 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.literal(Lit::Numeral(v27)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v28 { return Ok(None); }
-let v29 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
-if v4 != v29 { return Ok(None); }
-let v30 = match s.destruct(Constructor::eo__24eo_5fpf, a6) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v30 else { return Ok(None); }
-;
-let v31 = fields[0];
-let v32 = match s.unapply(v31) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v33, v34)) = v32 else { return Ok(None); }
-;
-more_1_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v33, a2, v34, a0, a1, a7, a3, a8, a4)
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a5) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v0 else { return Ok(None); }
-;
-let v1 = fields[0];
-let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v3, v4)) = v2 else { return Ok(None); }
-;
-let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v6, v7)) = v5 else { return Ok(None); }
-;
-let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v8 { return Ok(None); }
-let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v10, v11)) = v9 else { return Ok(None); }
-;
-let v12 = match s.unapply(v10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v13, v14)) = v12 else { return Ok(None); }
-;
-let v15 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v13 != v15 { return Ok(None); }
-let v16 = match s.unapply(v14) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v17, v18)) = v16 else { return Ok(None); }
-;
-let v19 = match s.unapply(v17) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v20, v21)) = v19 else { return Ok(None); }
-;
-let v22 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v20, v22, v21, a1, v18, a0, v11, v4, a6, a2, a7, a3, a8, a4)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck2 { return Ok(s.stuck()); }
-let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck3 { return Ok(s.stuck()); }
-let stuck4 = match s.is_stuck(a4) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck4 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, a0, a1, a2, a3, a4, a5, a6, a7, a8) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-rotate-left-eliminate-1"
-pub fn eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, a0, a1, a2, a3, a4, a5, a6, a7, a8);
-s.leave();
-result
-}
-pub(super) fn more_44_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v25: Term, a0: Term, v18: Term, v21: Term, v24: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term) -> CheckResult<Option<Term>> {
-let v26 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v26 else { return Ok(None); }
-;
-let v27 = fields[0];
-let v28 = fields[1];
-let v29 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v28 != v29 { return Ok(None); }
-let v30 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.construct(Constructor::eo__24eo_5fpf, &[v30]) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v21) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.construct(Constructor::eo__24eo_5fpf, &[v32]) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.construct(Constructor::eo__24eo_5fpf, &[v34]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v27) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.construct(Constructor::eo__24eo_5fpf, &[v36]) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1(s, v2, v5, v8, v11, v14, v31, v33, v35, v37) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v38))
-}
-pub(super) fn case_301_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f1, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v6) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v7 else { return Ok(None); }
-;
-let v8 = fields[0];
-let v9 = fields[1];
-let v10 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v9) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v10 else { return Ok(None); }
-;
-let v11 = fields[0];
-let v12 = fields[1];
-let v13 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v13 else { return Ok(None); }
-;
-let v14 = fields[0];
-let v15 = fields[1];
-let v16 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v15 != v16 { return Ok(None); }
-let v17 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v17 else { return Ok(None); }
-;
-let v18 = fields[0];
-let v19 = fields[1];
-let v20 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v19) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v20 else { return Ok(None); }
-;
-let v21 = fields[0];
-let v22 = fields[1];
-let v23 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v22) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v23 else { return Ok(None); }
-;
-let v24 = fields[0];
-let v25 = fields[1];
-more_44_eo__24eo_5fcmd_5fstep_5fproven(s, v25, a0, v18, v21, v24, v2, v5, v8, v11, v14)
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v4: Term, a1: Term) -> CheckResult<Option<Term>> {
-if v17 != v19 { return Ok(None); }
-if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v4 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_rotate_5fleft, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v22, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v25, a0) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v26))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v0 else { return Ok(None); }
-;
-let v1 = fields[0];
-let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v3, v4)) = v2 else { return Ok(None); }
-;
-let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v6, v7)) = v5 else { return Ok(None); }
-;
-let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v8 { return Ok(None); }
-let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v10, v11)) = v9 else { return Ok(None); }
-;
-let v12 = match s.unapply(v10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v13, v14)) = v12 else { return Ok(None); }
-;
-let v15 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v13 != v15 { return Ok(None); }
-if v14 != a1 { return Ok(None); }
-let v16 = match s.unapply(v11) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v17, v18)) = v16 else { return Ok(None); }
-;
-let v19 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s, v17, v19, v18, a0, v4, a1)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-rotate-left-eliminate-2"
-pub fn eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s, a0, a1, a2);
-s.leave();
-result
-}
-pub(super) fn case_302_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v8 else { return Ok(None); }
-;
-let v9 = fields[0];
-let v10 = fields[1];
-let v11 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v10 != v11 { return Ok(None); }
-let v12 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v9) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.construct(Constructor::eo__24eo_5fpf, &[v12]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2(s, v2, v5, v13) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v14))
-}
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, a3: Term, a4: Term, a0: Term, v111: Term, v110: Term, v104: Term) -> CheckResult<Option<Term>> {
-let v112 = match s.construct(Constructor::eo_extract, &[a3, a4]) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.apply(v112, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.apply(v111, v113) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.literal(Lit::Binary(BitVec::new(0, &v115))) { Ok(v) => v, Err(e) => return Err(e) };
-let v117 = match s.apply(v114, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.apply(v110, v117) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.apply(v104, v118) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v119))
-}
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, v98: Term, v100: Term, v99: Term, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Option<Term>> {
-if v98 != v100 { return Ok(None); }
-if v99 != a0 { return Ok(None); }
-let v101 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match s.construct(Constructor::eo_rotate_5fright, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.apply(v102, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v101, v103) { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.literal(Lit::Numeral(v106)) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.construct(Constructor::eo_extract, &[a2, v107]) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.apply(v108, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.apply(v105, v109) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, a3, a4, a0, v111, v110, v104)
-}
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, v82: Term, a4: Term, a1: Term, a0: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v83 = match s.unapply(v82) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v84, v85)) = v83 else { return Ok(None); }
-;
-let v86 = match s.unapply(v84) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v87, v88)) = v86 else { return Ok(None); }
-;
-let v89 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v87 != v89 { return Ok(None); }
-if v88 != a4 { return Ok(None); }
-let v90 = match s.unapply(v85) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v91, v92)) = v90 else { return Ok(None); }
-;
-let v93 = match s.unapply(v91) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v94, v95)) = v93 else { return Ok(None); }
-;
-let v96 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v94 != v96 { return Ok(None); }
-if v95 != a1 { return Ok(None); }
-let v97 = match s.unapply(v92) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v98, v99)) = v97 else { return Ok(None); }
-;
-let v100 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v98, v100, v99, a0, a1, a2, a3, a4)
-}
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, v66: Term, a3: Term, v63: Term, a0: Term, a8: Term, a4: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-if v66 != a3 { return Ok(None); }
-let v68 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v69, v70)) = v68 else { return Ok(None); }
-;
-let v71 = match s.unapply(v69) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v72, v73)) = v71 else { return Ok(None); }
-;
-let v74 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v72 != v74 { return Ok(None); }
-let v75 = match s.unapply(v73) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v76, v77)) = v75 else { return Ok(None); }
-;
-let v78 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v76 != v78 { return Ok(None); }
-if v77 != a0 { return Ok(None); }
-let v79 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.literal(Lit::Numeral(v79)) { Ok(v) => v, Err(e) => return Err(e) };
-if v70 != v80 { return Ok(None); }
-let v81 = match s.destruct(Constructor::eo__24eo_5fpf, a8) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v81 else { return Ok(None); }
-;
-let v82 = fields[0];
-more_4_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v82, a4, a1, a0, a2, a3)
-}
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, v51: Term, a1: Term, v48: Term, a0: Term, v41: Term, a7: Term, a3: Term, a8: Term, a4: Term, a2: Term) -> CheckResult<Option<Term>> {
-if v51 != a1 { return Ok(None); }
-let v53 = match s.unapply(v48) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v54, v55)) = v53 else { return Ok(None); }
-;
-let v56 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v54 != v56 { return Ok(None); }
-if v55 != a0 { return Ok(None); }
-let v57 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.literal(Lit::Numeral(v57)) { Ok(v) => v, Err(e) => return Err(e) };
-if v41 != v58 { return Ok(None); }
-let v59 = match s.destruct(Constructor::eo__24eo_5fpf, a7) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v59 else { return Ok(None); }
-;
-let v60 = fields[0];
-let v61 = match s.unapply(v60) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v62, v63)) = v61 else { return Ok(None); }
-;
-let v64 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v65, v66)) = v64 else { return Ok(None); }
-;
-let v67 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v65 != v67 { return Ok(None); }
-more_3_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v66, a3, v63, a0, a8, a4, a1, a2)
-}
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, v33: Term, a2: Term, v34: Term, a1: Term, a0: Term, a7: Term, a3: Term, a8: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v35 = match s.unapply(v33) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v36, v37)) = v35 else { return Ok(None); }
-;
-let v38 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v36 != v38 { return Ok(None); }
-if v37 != a2 { return Ok(None); }
-let v39 = match s.unapply(v34) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v40, v41)) = v39 else { return Ok(None); }
-;
-let v42 = match s.unapply(v40) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v43, v44)) = v42 else { return Ok(None); }
-;
-let v45 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v43 != v45 { return Ok(None); }
-let v46 = match s.unapply(v44) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v47, v48)) = v46 else { return Ok(None); }
-;
-let v49 = match s.unapply(v47) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v50, v51)) = v49 else { return Ok(None); }
-;
-let v52 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v50 != v52 { return Ok(None); }
-more_2_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v51, a1, v48, a0, v41, a7, a3, a8, a4, a2)
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, v20: Term, v22: Term, v21: Term, a1: Term, v18: Term, a0: Term, v11: Term, v4: Term, a6: Term, a2: Term, a7: Term, a3: Term, a8: Term, a4: Term) -> CheckResult<Option<Term>> {
-if v20 != v22 { return Ok(None); }
-if v21 != a1 { return Ok(None); }
-let v23 = match s.unapply(v18) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v24, v25)) = v23 else { return Ok(None); }
-;
-let v26 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v24 != v26 { return Ok(None); }
-if v25 != a0 { return Ok(None); }
-let v27 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.literal(Lit::Numeral(v27)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v28 { return Ok(None); }
-let v29 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
-if v4 != v29 { return Ok(None); }
-let v30 = match s.destruct(Constructor::eo__24eo_5fpf, a6) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v30 else { return Ok(None); }
-;
-let v31 = fields[0];
-let v32 = match s.unapply(v31) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v33, v34)) = v32 else { return Ok(None); }
-;
-more_1_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v33, a2, v34, a1, a0, a7, a3, a8, a4)
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a5) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v0 else { return Ok(None); }
-;
-let v1 = fields[0];
-let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v3, v4)) = v2 else { return Ok(None); }
-;
-let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v6, v7)) = v5 else { return Ok(None); }
-;
-let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v8 { return Ok(None); }
-let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v10, v11)) = v9 else { return Ok(None); }
-;
-let v12 = match s.unapply(v10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v13, v14)) = v12 else { return Ok(None); }
-;
-let v15 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v13 != v15 { return Ok(None); }
-let v16 = match s.unapply(v14) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v17, v18)) = v16 else { return Ok(None); }
-;
-let v19 = match s.unapply(v17) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v20, v21)) = v19 else { return Ok(None); }
-;
-let v22 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v20, v22, v21, a1, v18, a0, v11, v4, a6, a2, a7, a3, a8, a4)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck2 { return Ok(s.stuck()); }
-let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck3 { return Ok(s.stuck()); }
-let stuck4 = match s.is_stuck(a4) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck4 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, a0, a1, a2, a3, a4, a5, a6, a7, a8) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-rotate-right-eliminate-1"
-pub fn eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, a0, a1, a2, a3, a4, a5, a6, a7, a8);
-s.leave();
-result
-}
-pub(super) fn more_45_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v25: Term, a0: Term, v18: Term, v21: Term, v24: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term) -> CheckResult<Option<Term>> {
-let v26 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v26 else { return Ok(None); }
-;
-let v27 = fields[0];
-let v28 = fields[1];
-let v29 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v28 != v29 { return Ok(None); }
-let v30 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.construct(Constructor::eo__24eo_5fpf, &[v30]) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v21) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.construct(Constructor::eo__24eo_5fpf, &[v32]) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.construct(Constructor::eo__24eo_5fpf, &[v34]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v27) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.construct(Constructor::eo__24eo_5fpf, &[v36]) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1(s, v2, v5, v8, v11, v14, v31, v33, v35, v37) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v38))
-}
-pub(super) fn case_303_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f1, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v6) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v7 else { return Ok(None); }
-;
-let v8 = fields[0];
-let v9 = fields[1];
-let v10 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v9) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v10 else { return Ok(None); }
-;
-let v11 = fields[0];
-let v12 = fields[1];
-let v13 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v13 else { return Ok(None); }
-;
-let v14 = fields[0];
-let v15 = fields[1];
-let v16 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v15 != v16 { return Ok(None); }
-let v17 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v17 else { return Ok(None); }
-;
-let v18 = fields[0];
-let v19 = fields[1];
-let v20 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v19) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v20 else { return Ok(None); }
-;
-let v21 = fields[0];
-let v22 = fields[1];
-let v23 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v22) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v23 else { return Ok(None); }
-;
-let v24 = fields[0];
-let v25 = fields[1];
-more_45_eo__24eo_5fcmd_5fstep_5fproven(s, v25, a0, v18, v21, v24, v2, v5, v8, v11, v14)
-}
-pub(super) fn cases_0_75_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_300_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_301_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_302_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_303_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-Ok(None)
-}
-pub(super) fn cases_1_18_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match cases_0_72_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match cases_0_73_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match cases_0_74_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match cases_0_75_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-Ok(None)
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v4: Term, a1: Term) -> CheckResult<Option<Term>> {
-if v17 != v19 { return Ok(None); }
-if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v4 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_rotate_5fright, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v22, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v25, a0) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v26))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v0 else { return Ok(None); }
-;
-let v1 = fields[0];
-let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v3, v4)) = v2 else { return Ok(None); }
-;
-let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v6, v7)) = v5 else { return Ok(None); }
-;
-let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v8 { return Ok(None); }
-let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v10, v11)) = v9 else { return Ok(None); }
-;
-let v12 = match s.unapply(v10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v13, v14)) = v12 else { return Ok(None); }
-;
-let v15 = match s.construct(Constructor::eo_mod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v13 != v15 { return Ok(None); }
-if v14 != a1 { return Ok(None); }
-let v16 = match s.unapply(v11) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v17, v18)) = v16 else { return Ok(None); }
-;
-let v19 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s, v17, v19, v18, a0, v4, a1)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s, a0, a1, a2) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-rotate-right-eliminate-2"
-pub fn eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s, a0, a1, a2);
-s.leave();
-result
-}
-pub(super) fn case_304_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v8 else { return Ok(None); }
-;
-let v9 = fields[0];
-let v10 = fields[1];
-let v11 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v10 != v11 { return Ok(None); }
-let v12 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v9) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.construct(Constructor::eo__24eo_5fpf, &[v12]) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2(s, v2, v5, v13) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v14))
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dnand_2deliminate(s: &mut Store, v10: Term, v11: Term, v9: Term, v7: Term, v5: Term, v4: Term) -> CheckResult<Option<Term>> {
-let v12 = match eo__24eo_5fnil(s, v10, v11) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.apply(v9, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v7, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v5, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v4, v15) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v16))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dnand_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.construct(Constructor::eo_bvnand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v0, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v8, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dnand_2deliminate(s, v10, v11, v9, v7, v5, v4)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2dnand_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dnand_2deliminate(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-nand-eliminate"
-pub fn eo__24eo_5fprog_5fbv_2dnand_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2dnand_2deliminate(s, a0, a1);
-s.leave();
-result
-}
-pub(super) fn case_305_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fnand_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v8 { return Ok(None); }
-let v9 = match eo__24eo_5fprog_5fbv_2dnand_2deliminate(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dnor_2deliminate(s: &mut Store, v10: Term, v11: Term, v9: Term, v7: Term, v5: Term, v4: Term) -> CheckResult<Option<Term>> {
-let v12 = match eo__24eo_5fnil(s, v10, v11) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.apply(v9, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v7, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v5, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v4, v15) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v16))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dnor_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.construct(Constructor::eo_bvnor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v0, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v8, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dnor_2deliminate(s, v10, v11, v9, v7, v5, v4)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2dnor_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dnor_2deliminate(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-nor-eliminate"
-pub fn eo__24eo_5fprog_5fbv_2dnor_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2dnor_2deliminate(s, a0, a1);
-s.leave();
-result
-}
-pub(super) fn case_306_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fnor_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v8 { return Ok(None); }
-let v9 = match eo__24eo_5fprog_5fbv_2dnor_2deliminate(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
-}
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s: &mut Store, v10: Term, v11: Term, v9: Term, v7: Term, v5: Term, v4: Term) -> CheckResult<Option<Term>> {
-let v12 = match eo__24eo_5fnil(s, v10, v11) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.apply(v9, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v7, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v5, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v4, v15) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v16))
-}
-pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v1 = match s.construct(Constructor::eo_bvxnor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match s.apply(v2, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.apply(v0, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v8, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s, v10, v11, v9, v7, v5, v4)
-}
-pub(super) fn body_eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck0 { return Ok(s.stuck()); }
-let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
-if stuck1 { return Ok(s.stuck()); }
-if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s, a0, a1) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
-Ok(s.stuck())
-}
-// EO program "$eo_prog_bv-xnor-eliminate"
-pub fn eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
-match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
-let result = body_eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s, a0, a1);
-s.leave();
-result
-}
-pub(super) fn case_307_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fxnor_5feliminate, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a1 != v0 { return Ok(None); }
-let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v1 else { return Ok(None); }
-;
-let v2 = fields[0];
-let v3 = fields[1];
-let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v4 else { return Ok(None); }
-;
-let v5 = fields[0];
-let v6 = fields[1];
-let v7 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v6 != v7 { return Ok(None); }
-let v8 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if a3 != v8 { return Ok(None); }
-let v9 = match eo__24eo_5fprog_5fbv_2dxnor_2deliminate(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
-}
-pub(super) fn cases_0_76_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-if let Some(found) = match case_304_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_305_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_306_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-if let Some(found) = match case_307_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
-Ok(None)
-}
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, a1: Term, v125: Term, v112: Term, v93: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v126 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.apply(v126, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v125, v127) { Ok(v) => v, Err(e) => return Err(e) };
-let v129 = match s.apply(v128, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v130 = match s.apply(v112, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.apply(v93, v130) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.apply(v26, v131) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v132))
-}
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v94: Term, v111: Term, a2: Term, a1: Term, v93: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v112 = match s.apply(v94, v111) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.apply(v115, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v117 = match s.apply(v114, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.literal(Lit::Numeral(v118)) { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v119]) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match s.literal(Lit::Numeral(v121)) { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.apply(v120, v122) { Ok(v) => v, Err(e) => return Err(e) };
-let v124 = match s.apply(v117, v123) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.apply(v113, v124) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, a1, v125, v112, v93, v26)
-}
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v97: Term, a0: Term, v96: Term, v95: Term, v94: Term, a2: Term, a1: Term, v93: Term, v26: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v85: Term, v100: Term, a2: Term, a1: Term, v84: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v101 = match s.apply(v85, v100) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.apply(v104, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.apply(v103, v105) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v107]) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.apply(v108, v109) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.apply(v106, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.apply(v102, v111) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, a1, v112, v101, v84, v25)
+}
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v88: Term, a0: Term, v87: Term, v86: Term, v85: Term, a2: Term, a1: Term, v84: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v89 = match s.apply(v88, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.apply(v87, v89) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v91]) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.apply(v92, v93) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.apply(v90, v94) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.apply(v86, v95) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v98 = match s.apply(v97, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v99 = match s.apply(v96, v98) { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.literal(Lit::Numeral(v100)) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v101]) { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.literal(Lit::Numeral(v103)) { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match s.apply(v102, v104) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.apply(v99, v105) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.apply(v95, v106) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.apply(v108, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.apply(v107, v109) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.apply(v110, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v94, v111, a2, a1, v93, v26)
+let v100 = match s.apply(v99, a0) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v85, v100, a2, a1, v84, v25)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v74: Term, v85: Term, a1: Term, v73: Term, v54: Term, v53: Term, a2: Term, a0: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v86 = match s.apply(v74, v85) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.apply(v87, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v89 = match s.apply(v86, v88) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.apply(v89, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.apply(v73, v90) { Ok(v) => v, Err(e) => return Err(e) };
-let v92 = match s.apply(v54, v91) { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.apply(v53, v92) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.construct(Constructor::eo_bvudiv, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v97, a0, v96, v95, v94, a2, a1, v93, v26)
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v67: Term, v76: Term, a1: Term, v66: Term, v49: Term, v48: Term, a2: Term, a0: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v77 = match s.apply(v67, v76) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.apply(v78, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.apply(v77, v79) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.apply(v80, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v66, v81) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.apply(v49, v82) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v48, v83) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.construct(Constructor::eo_bvudiv, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v88, a0, v87, v86, v85, a2, a1, v84, v25)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v71: Term, a0: Term, v55: Term, a2: Term, a1: Term, v54: Term, v53: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v72 = match s.apply(v71, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.apply(v55, v72) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.apply(v76, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v75, v77) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.literal(Lit::Numeral(v79)) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v80]) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.literal(Lit::Numeral(v82)) { Ok(v) => v, Err(e) => return Err(e) };
-let v84 = match s.apply(v81, v83) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v78, v84) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v74, v85, a1, v73, v54, v53, a2, a0, v26)
-}
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, a2: Term, a0: Term, v57: Term, v56: Term, v55: Term, a1: Term, v54: Term, v53: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v58 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.apply(v58, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.apply(v57, v59) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.literal(Lit::Numeral(v61)) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v62]) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.literal(Lit::Numeral(v64)) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.apply(v63, v65) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.apply(v60, v66) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match s.apply(v56, v67) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.apply(v69, a0) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v64: Term, a0: Term, v50: Term, a2: Term, a1: Term, v49: Term, v48: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v65 = match s.apply(v64, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v50, v65) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.apply(v69, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v71 = match s.apply(v68, v70) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v71, a0, v55, a2, a1, v54, v53, v26)
+let v72 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v72]) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.apply(v73, v74) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.apply(v71, v75) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v67, v76, a1, v66, v49, v48, a2, a0, v25)
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v41: Term, v43: Term, v40: Term, v27: Term, a2: Term, a0: Term, a1: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v44 = match s.apply(v41, v43) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.literal(Lit::Numeral(v45)) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v46]) { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.literal(Lit::Numeral(v48)) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.apply(v47, v49) { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.apply(v44, v50) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.apply(v40, v51) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v27, v52) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.construct(Constructor::eo_bvudiv, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, a2, a0, v57, v56, v55, a1, v54, v53, v26)
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, a2: Term, a0: Term, v52: Term, v51: Term, v50: Term, a1: Term, v49: Term, v48: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v53 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.apply(v53, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.apply(v52, v54) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v56]) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.apply(v57, v58) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v55, v59) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.apply(v51, v60) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.apply(v62, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v61, v63) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v64, a0, v50, a2, a1, v49, v48, v25)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, a2: Term, a0: Term, v29: Term, v28: Term, a1: Term, v27: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v30 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.apply(v30, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.apply(v29, v31) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.literal(Lit::Numeral(v33)) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v34]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.literal(Lit::Numeral(v36)) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.apply(v35, v37) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v32, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.apply(v28, v39) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.apply(v42, a1) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v41, v43, v40, v27, a2, a0, a1, v26)
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v38: Term, v40: Term, v37: Term, v26: Term, a2: Term, a0: Term, a1: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v41 = match s.apply(v38, v40) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v42]) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.apply(v43, v44) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.apply(v41, v45) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v37, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.apply(v26, v47) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.construct(Constructor::eo_bvudiv, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, a2, a0, v52, v51, v50, a1, v49, v48, v25)
+}
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, a2: Term, a0: Term, v28: Term, v27: Term, a1: Term, v26: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v29 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.apply(v29, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.apply(v28, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v32]) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.apply(v33, v34) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v31, v35) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.apply(v27, v36) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.apply(v39, a1) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, v38, v40, v37, v26, a2, a0, a1, v25)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v11: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
 if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_bvsdiv, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v24, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v22, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.construct(Constructor::eo_xor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, a2, a0, v29, v28, a1, v27, v26)
+let v20 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v20 { return Ok(None); }
+let v21 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_bvsdiv, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.apply(v23, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v21, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.construct(Constructor::eo_xor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s, a2, a0, v28, v27, a1, v26, v25)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dsdiv_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a3) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1469,11 +202,11 @@ let v15 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v12) { Ok(v) => v, Err(e)
 let v16 = match s.construct(Constructor::eo__24eo_5fpf, &[v15]) { Ok(v) => v, Err(e) => return Err(e) };
 more_46_eo__24eo_5fcmd_5fstep_5fproven(s, v2, v5, v8, v16)
 }
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s: &mut Store, v11: Term, v13: Term, v9: Term, v3: Term) -> CheckResult<Option<Term>> {
-let v14 = match s.apply(v11, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v9, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v3, v15) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v16))
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s: &mut Store, v10: Term, v11: Term, v8: Term, v3: Term) -> CheckResult<Option<Term>> {
+let v12 = match s.apply(v10, v11) { Ok(v) => v, Err(e) => return Err(e) };
+let v13 = match s.apply(v8, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v3, v13) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v14))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1482,15 +215,13 @@ let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.apply(v0, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v4 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v5 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.literal(Lit::Numeral(v6)) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v5, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v4, v8) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match s.apply(v10, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.literal(Lit::Binary(BitVec::new(0, &v12))) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s, v11, v13, v9, v3)
+let v6 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v5, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.apply(v4, v7) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.apply(v9, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v11 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s, v10, v11, v8, v3)
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1527,69 +258,60 @@ if a3 != v8 { return Ok(None); }
 let v9 = match eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v9))
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, v18: Term, v71: Term, v17: Term) -> CheckResult<Option<Term>> {
-let v72 = match s.apply(v18, v71) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.literal(Lit::Numeral(v73)) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v74]) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.literal(Lit::Numeral(v76)) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v75, v77) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match s.apply(v72, v78) { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.apply(v17, v79) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v80))
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, v18: Term, v62: Term, v17: Term) -> CheckResult<Option<Term>> {
+let v63 = match s.apply(v18, v62) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v64]) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v65, v66) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.apply(v63, v67) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.apply(v17, v68) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v69))
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, v56: Term, v58: Term, v53: Term, a0: Term, v52: Term, v51: Term, v35: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
-let v59 = match s.apply(v56, v58) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.apply(v53, v59) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.apply(v61, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.literal(Lit::Binary(BitVec::new(0, &v63))) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v62, v64) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.apply(v60, v65) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match eo__24eo_5ftypeof(s, v66) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match eo__24eo_5fnil(s, v52, v67) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.apply(v51, v68) { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.apply(v35, v69) { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.apply(v19, v70) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, v18, v71, v17)
-}
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, v37: Term, v43: Term, a1: Term, v36: Term, a0: Term, v35: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
-let v44 = match s.apply(v37, v43) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.apply(v45, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Binary(BitVec::new(0, &v47))) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.apply(v46, v48) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.apply(v44, v49) { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.apply(v36, v50) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, v49: Term, v50: Term, v47: Term, a0: Term, v46: Term, v45: Term, v32: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
+let v51 = match s.apply(v49, v50) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v47, v51) { Ok(v) => v, Err(e) => return Err(e) };
 let v53 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.literal(Lit::Numeral(v54)) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v55]) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.literal(Lit::Numeral(v57)) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, v56, v58, v53, a0, v52, v51, v35, v19, v18, v17)
+let v54 = match s.apply(v53, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.apply(v54, v55) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.apply(v52, v56) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match eo__24eo_5ftypeof(s, v57) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match eo__24eo_5fnil(s, v46, v58) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v45, v59) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.apply(v32, v60) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.apply(v19, v61) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, v18, v62, v17)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, a0: Term, v28: Term, v20: Term, a1: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
-let v29 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v30 = match s.apply(v29, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.literal(Lit::Binary(BitVec::new(0, &v31))) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.apply(v30, v32) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.apply(v28, v33) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.apply(v20, v34) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.literal(Lit::Numeral(v38)) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v39]) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.literal(Lit::Numeral(v41)) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.apply(v40, v42) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, v37, v43, a1, v36, a0, v35, v19, v18, v17)
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, v34: Term, v38: Term, a1: Term, v33: Term, a0: Term, v32: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
+let v39 = match s.apply(v34, v38) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v41 = match s.apply(v40, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.apply(v41, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.apply(v39, v43) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.apply(v33, v44) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v48]) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, v49, v50, v47, a0, v46, v45, v32, v19, v18, v17)
+}
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, a0: Term, v26: Term, v20: Term, a1: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
+let v27 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.apply(v27, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v29 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.apply(v28, v29) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.apply(v26, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.apply(v20, v31) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v35]) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.apply(v36, v37) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, v34, v38, a1, v33, a0, v32, v19, v18, v17)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, v14: Term, a0: Term, a1: Term, v13: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v15 = match s.apply(v14, a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1599,14 +321,12 @@ let v18 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => re
 let v19 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
 let v20 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v21 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.literal(Lit::Numeral(v22)) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v23]) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.literal(Lit::Numeral(v25)) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.apply(v24, v26) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.apply(v21, v27) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, a0, v28, v20, a1, v19, v18, v17)
+let v22 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v22]) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v23, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.apply(v21, v25) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s, a0, v26, v20, a1, v19, v18, v17)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2duaddo_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a3) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1684,165 +404,152 @@ let v15 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v12) { Ok(v) => v, Err(e)
 let v16 = match s.construct(Constructor::eo__24eo_5fpf, &[v15]) { Ok(v) => v, Err(e) => return Err(e) };
 more_47_eo__24eo_5fcmd_5fstep_5fproven(s, v2, v5, v8, v16)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v117: Term, v137: Term, v116: Term, v85: Term, v84: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v138 = match s.apply(v117, v137) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.apply(v138, v139) { Ok(v) => v, Err(e) => return Err(e) };
-let v141 = match s.apply(v116, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match s.apply(v85, v141) { Ok(v) => v, Err(e) => return Err(e) };
-let v143 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v142, v143) { Ok(v) => v, Err(e) => return Err(e) };
-let v145 = match s.apply(v84, v144) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.apply(v26, v145) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v146))
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v106: Term, v124: Term, v105: Term, v78: Term, v77: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v125 = match s.apply(v106, v124) { Ok(v) => v, Err(e) => return Err(e) };
+let v126 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v127 = match s.apply(v125, v126) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.apply(v105, v127) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.apply(v78, v128) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.apply(v129, v130) { Ok(v) => v, Err(e) => return Err(e) };
+let v132 = match s.apply(v77, v131) { Ok(v) => v, Err(e) => return Err(e) };
+let v133 = match s.apply(v25, v132) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v133))
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, a0: Term, v123: Term, v121: Term, v119: Term, v118: Term, v117: Term, v116: Term, v85: Term, v84: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v124 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v126 = match eo__24eo_5fnil(s, v124, v125) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.apply(v123, v126) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v121, v127) { Ok(v) => v, Err(e) => return Err(e) };
-let v129 = match s.apply(v119, v128) { Ok(v) => v, Err(e) => return Err(e) };
-let v130 = match s.apply(v118, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.literal(Lit::Numeral(v131)) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v132]) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v135 = match s.literal(Lit::Numeral(v134)) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.apply(v133, v135) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.apply(v130, v136) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v117, v137, v116, v85, v84, v26)
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, a0: Term, v112: Term, v110: Term, v108: Term, v107: Term, v106: Term, v105: Term, v78: Term, v77: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v113 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match eo__24eo_5fnil(s, v113, v114) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.apply(v112, v115) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.apply(v110, v116) { Ok(v) => v, Err(e) => return Err(e) };
+let v118 = match s.apply(v108, v117) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.apply(v107, v118) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v120]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.apply(v121, v122) { Ok(v) => v, Err(e) => return Err(e) };
+let v124 = match s.apply(v119, v123) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v106, v124, v105, v78, v77, v25)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v100: Term, v111: Term, v99: Term, v86: Term, a2: Term, a0: Term, a1: Term, v85: Term, v84: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v112 = match s.apply(v100, v111) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.apply(v112, v113) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match s.apply(v99, v114) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.apply(v86, v115) { Ok(v) => v, Err(e) => return Err(e) };
-let v117 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match s.apply(v120, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.apply(v122, a1) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, a0, v123, v121, v119, v118, v117, v116, v85, v84, v26)
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v91: Term, v100: Term, v90: Term, v79: Term, a2: Term, a0: Term, a1: Term, v78: Term, v77: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v101 = match s.apply(v91, v100) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.apply(v101, v102) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.apply(v90, v103) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.apply(v79, v104) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.apply(v109, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.apply(v111, a1) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, a0, v112, v110, v108, v107, v106, v105, v78, v77, v25)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v91: Term, v97: Term, v87: Term, a2: Term, a1: Term, v86: Term, a0: Term, v85: Term, v84: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v98 = match s.apply(v91, v97) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match s.apply(v87, v98) { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.apply(v102, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v101, v103) { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.literal(Lit::Numeral(v105)) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v106]) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.literal(Lit::Numeral(v108)) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.apply(v107, v109) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.apply(v104, v110) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v100, v111, v99, v86, a2, a0, a1, v85, v84, v26)
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v84: Term, v88: Term, v80: Term, a2: Term, a1: Term, v79: Term, a0: Term, v78: Term, v77: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v89 = match s.apply(v84, v88) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.apply(v80, v89) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.apply(v93, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.apply(v92, v94) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v96]) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.apply(v97, v98) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.apply(v95, v99) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v91, v100, v90, v79, a2, a0, a1, v78, v77, v25)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v27: Term, v83: Term, a2: Term, a0: Term, a1: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v84 = match s.apply(v27, v83) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v89 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.apply(v89, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.apply(v88, v90) { Ok(v) => v, Err(e) => return Err(e) };
-let v92 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.literal(Lit::Numeral(v92)) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v93]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.literal(Lit::Numeral(v95)) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.apply(v94, v96) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v91, v97, v87, a2, a1, v86, a0, v85, v84, v26)
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v26: Term, v76: Term, a2: Term, a0: Term, a1: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v77 = match s.apply(v26, v76) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.apply(v82, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v81, v83) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v85]) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.apply(v86, v87) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v84, v88, v80, a2, a1, v79, a0, v78, v77, v25)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v63: Term, v69: Term, v61: Term, v60: Term, v59: Term, v58: Term, v27: Term, a2: Term, a0: Term, a1: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v70 = match s.apply(v63, v69) { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.apply(v61, v70) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.apply(v60, v71) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.literal(Lit::Numeral(v73)) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v74]) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.literal(Lit::Numeral(v76)) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v75, v77) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match s.apply(v72, v78) { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.apply(v59, v79) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.apply(v80, v81) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.apply(v58, v82) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v27, v83, a2, a0, a1, v26)
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v58: Term, v64: Term, v56: Term, v55: Term, v54: Term, v53: Term, v26: Term, a2: Term, a0: Term, a1: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v65 = match s.apply(v58, v64) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v56, v65) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v55, v66) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v68]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.apply(v69, v70) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.apply(v67, v71) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.apply(v54, v72) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.apply(v73, v74) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.apply(v53, v75) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v26, v76, a2, a0, a1, v25)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v28: Term, v57: Term, a2: Term, a0: Term, a1: Term, v27: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v58 = match s.apply(v28, v57) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.apply(v62, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v64, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match eo__24eo_5fnil(s, v66, v67) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.apply(v65, v68) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v63, v69, v61, v60, v59, v58, v27, a2, a0, a1, v26)
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v27: Term, v52: Term, a2: Term, a0: Term, a1: Term, v26: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v53 = match s.apply(v27, v52) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.apply(v57, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v59, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match eo__24eo_5fnil(s, v61, v62) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v60, v63) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v58, v64, v56, v55, v54, v53, v26, a2, a0, a1, v25)
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, a2: Term, a1: Term, v43: Term, v42: Term, v41: Term, v28: Term, a0: Term, v27: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v44 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.apply(v44, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.apply(v43, v45) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Numeral(v47)) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v48]) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.literal(Lit::Numeral(v50)) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.apply(v49, v51) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v46, v52) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v42, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.apply(v54, v55) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.apply(v41, v56) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v28, v57, a2, a0, a1, v27, v26)
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, a2: Term, a1: Term, v40: Term, v39: Term, v38: Term, v27: Term, a0: Term, v26: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v41 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.apply(v41, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.apply(v40, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v44]) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v45, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.apply(v43, v47) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.apply(v39, v48) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.apply(v49, v50) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v38, v51) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, v27, v52, a2, a0, a1, v26, v25)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, a2: Term, a0: Term, v29: Term, a1: Term, v28: Term, v27: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v30 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.apply(v31, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.apply(v30, v32) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.literal(Lit::Numeral(v34)) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v35]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.literal(Lit::Numeral(v37)) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v36, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.apply(v33, v39) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.apply(v29, v40) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, a2, a1, v43, v42, v41, v28, a0, v27, v26)
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, a2: Term, a0: Term, v28: Term, a1: Term, v27: Term, v26: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v29 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.apply(v30, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.apply(v29, v31) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v33]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v34, v35) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.apply(v32, v36) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.apply(v28, v37) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, a2, a1, v40, v39, v38, v27, a0, v26, v25)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v11: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
 if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_bvsaddo, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v24, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v22, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v20 { return Ok(None); }
+let v21 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_bvsaddo, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.apply(v23, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v21, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v28 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, a2, a0, v29, a1, v28, v27, v26)
+more_1_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s, a2, a0, v28, a1, v27, v26, v25)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dsaddo_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a3) { Ok(v) => v, Err(e) => return Err(e) };
@@ -1931,87 +638,81 @@ if let Some(found) = match case_310_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2
 if let Some(found) = match case_311_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v73: Term, v62: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v74 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.apply(v73, v74) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v62, v75) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.apply(v39, v76) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v77))
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v67: Term, v57: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v68 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.apply(v67, v68) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.apply(v57, v69) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.apply(v38, v70) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v71))
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v42: Term, v60: Term, v40: Term, a1: Term, a2: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v61 = match s.apply(v42, v60) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.apply(v40, v61) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v64, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.literal(Lit::Numeral(v68)) { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.apply(v67, v69) { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.apply(v66, v70) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.apply(v65, v71) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.apply(v63, v72) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v73, v62, v39)
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v41: Term, v55: Term, v39: Term, a1: Term, a2: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v56 = match s.apply(v41, v55) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.apply(v39, v56) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v59, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v62, v63) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match s.apply(v61, v64) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v60, v65) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v58, v66) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v67, v57, v38)
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v45: Term, v43: Term, a3: Term, v42: Term, v40: Term, a1: Term, a2: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v46 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v45]) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Numeral(v47)) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.apply(v46, v48) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.apply(v43, v49) { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.literal(Lit::Numeral(v53)) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.apply(v52, v54) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.apply(v51, v55) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.literal(Lit::Binary(BitVec::new(0, &v57))) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.apply(v56, v58) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.apply(v50, v59) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v42, v60, v40, a1, a2, v39)
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v43: Term, v42: Term, a3: Term, v41: Term, v39: Term, a1: Term, a2: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v44 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v43]) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.apply(v44, v45) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v42, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.apply(v49, v50) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v48, v51) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.apply(v52, v53) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.apply(v47, v54) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v41, v55, v39, a1, a2, v38)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v32: Term, v34: Term, v33: Term, a1: Term, a0: Term, a3: Term, a2: Term) -> CheckResult<Option<Term>> {
-if v32 != v34 { return Ok(None); }
-if v33 != a1 { return Ok(None); }
-let v35 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo_bvsdivo, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.apply(v36, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.apply(v37, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v35, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.apply(v41, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.literal(Lit::Numeral(v44)) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v45, v43, a3, v42, v40, a1, a2, v39)
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v31: Term, v33: Term, v32: Term, a1: Term, a0: Term, a3: Term, a2: Term) -> CheckResult<Option<Term>> {
+if v31 != v33 { return Ok(None); }
+if v32 != a1 { return Ok(None); }
+let v34 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.construct(Constructor::eo_bvsdivo, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v35, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.apply(v36, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.apply(v34, v37) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v41 = match s.apply(v40, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v43, v42, a3, v41, v39, a1, a2, v38)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v11: Term, a5: Term, a2: Term, a1: Term, a3: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
 if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v21 { return Ok(None); }
-let v22 = match s.destruct(Constructor::eo__24eo_5fpf, a5) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v22 else { return Ok(None); }
+let v20 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v20 { return Ok(None); }
+let v21 = match s.destruct(Constructor::eo__24eo_5fpf, a5) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v21 else { return Ok(None); }
 ;
-let v23 = fields[0];
-let v24 = match s.unapply(v23) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v25, v26)) = v24 else { return Ok(None); }
+let v22 = fields[0];
+let v23 = match s.unapply(v22) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v24, v25)) = v23 else { return Ok(None); }
 ;
-let v27 = match s.unapply(v25) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v28, v29)) = v27 else { return Ok(None); }
+let v26 = match s.unapply(v24) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v27, v28)) = v26 else { return Ok(None); }
 ;
-let v30 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v28 != v30 { return Ok(None); }
-if v29 != a2 { return Ok(None); }
-let v31 = match s.unapply(v26) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v32, v33)) = v31 else { return Ok(None); }
+let v29 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v27 != v29 { return Ok(None); }
+if v28 != a2 { return Ok(None); }
+let v30 = match s.unapply(v25) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v31, v32)) = v30 else { return Ok(None); }
 ;
-let v34 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v32, v34, v33, a1, a0, a3, a2)
+let v33 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s, v31, v33, v32, a1, a0, a3, a2)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dsdivo_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a4) { Ok(v) => v, Err(e) => return Err(e) };
@@ -2107,543 +808,497 @@ let v20 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) =>
 if v19 != v20 { return Ok(None); }
 more_49_eo__24eo_5fcmd_5fstep_5fproven(s, a0, v15, v18, v2, v5, v8, v11)
 }
-pub(super) fn more_33_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v461: Term, a1: Term, v460: Term, v446: Term, v427: Term, v426: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v462 = match s.apply(v461, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v463 = match s.apply(v460, v462) { Ok(v) => v, Err(e) => return Err(e) };
-let v464 = match s.apply(v446, v463) { Ok(v) => v, Err(e) => return Err(e) };
-let v465 = match s.apply(v427, v464) { Ok(v) => v, Err(e) => return Err(e) };
-let v466 = match s.apply(v426, v465) { Ok(v) => v, Err(e) => return Err(e) };
-let v467 = match s.apply(v311, v466) { Ok(v) => v, Err(e) => return Err(e) };
-let v468 = match s.apply(v192, v467) { Ok(v) => v, Err(e) => return Err(e) };
-let v469 = match s.apply(v123, v468) { Ok(v) => v, Err(e) => return Err(e) };
-let v470 = match s.apply(v39, v469) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v470))
+pub(super) fn more_33_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v415: Term, a1: Term, v414: Term, v402: Term, v385: Term, v384: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v416 = match s.apply(v415, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v417 = match s.apply(v414, v416) { Ok(v) => v, Err(e) => return Err(e) };
+let v418 = match s.apply(v402, v417) { Ok(v) => v, Err(e) => return Err(e) };
+let v419 = match s.apply(v385, v418) { Ok(v) => v, Err(e) => return Err(e) };
+let v420 = match s.apply(v384, v419) { Ok(v) => v, Err(e) => return Err(e) };
+let v421 = match s.apply(v281, v420) { Ok(v) => v, Err(e) => return Err(e) };
+let v422 = match s.apply(v174, v421) { Ok(v) => v, Err(e) => return Err(e) };
+let v423 = match s.apply(v113, v422) { Ok(v) => v, Err(e) => return Err(e) };
+let v424 = match s.apply(v38, v423) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v424))
 }
-pub(super) fn more_32_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v447: Term, v446: Term, v427: Term, v426: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v448 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v449 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v450 = match s.apply(v449, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v451 = match s.apply(v448, v450) { Ok(v) => v, Err(e) => return Err(e) };
-let v452 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v453 = match s.literal(Lit::Numeral(v452)) { Ok(v) => v, Err(e) => return Err(e) };
-let v454 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v453]) { Ok(v) => v, Err(e) => return Err(e) };
-let v455 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v456 = match s.literal(Lit::Numeral(v455)) { Ok(v) => v, Err(e) => return Err(e) };
-let v457 = match s.apply(v454, v456) { Ok(v) => v, Err(e) => return Err(e) };
-let v458 = match s.apply(v451, v457) { Ok(v) => v, Err(e) => return Err(e) };
-let v459 = match s.apply(v447, v458) { Ok(v) => v, Err(e) => return Err(e) };
-let v460 = match s.apply(v459, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v461 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_33_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v461, a1, v460, v446, v427, v426, v311, v192, v123, v39)
+pub(super) fn more_32_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v403: Term, v402: Term, v385: Term, v384: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v404 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v405 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v406 = match s.apply(v405, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v407 = match s.apply(v404, v406) { Ok(v) => v, Err(e) => return Err(e) };
+let v408 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v409 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v408]) { Ok(v) => v, Err(e) => return Err(e) };
+let v410 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v411 = match s.apply(v409, v410) { Ok(v) => v, Err(e) => return Err(e) };
+let v412 = match s.apply(v407, v411) { Ok(v) => v, Err(e) => return Err(e) };
+let v413 = match s.apply(v403, v412) { Ok(v) => v, Err(e) => return Err(e) };
+let v414 = match s.apply(v413, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v415 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_33_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v415, a1, v414, v402, v385, v384, v281, v174, v113, v38)
 }
-pub(super) fn more_31_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v433: Term, v429: Term, a0: Term, v428: Term, a3: Term, a1: Term, v427: Term, v426: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v434 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v435 = match s.literal(Lit::Numeral(v434)) { Ok(v) => v, Err(e) => return Err(e) };
-let v436 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v435]) { Ok(v) => v, Err(e) => return Err(e) };
-let v437 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v438 = match s.literal(Lit::Numeral(v437)) { Ok(v) => v, Err(e) => return Err(e) };
-let v439 = match s.apply(v436, v438) { Ok(v) => v, Err(e) => return Err(e) };
-let v440 = match s.apply(v433, v439) { Ok(v) => v, Err(e) => return Err(e) };
-let v441 = match s.apply(v429, v440) { Ok(v) => v, Err(e) => return Err(e) };
-let v442 = match s.apply(v441, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v443 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v444 = match s.apply(v443, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v445 = match s.apply(v442, v444) { Ok(v) => v, Err(e) => return Err(e) };
-let v446 = match s.apply(v428, v445) { Ok(v) => v, Err(e) => return Err(e) };
-let v447 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_32_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v447, v446, v427, v426, v311, v192, v123, v39)
-}
-pub(super) fn more_30_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v421: Term, v384: Term, v383: Term, v381: Term, v342: Term, a3: Term, a0: Term, a1: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v422 = match eo__24eo_5ftypeof(s, v421) { Ok(v) => v, Err(e) => return Err(e) };
-let v423 = match eo__24eo_5fnil(s, v384, v422) { Ok(v) => v, Err(e) => return Err(e) };
-let v424 = match s.apply(v383, v423) { Ok(v) => v, Err(e) => return Err(e) };
-let v425 = match s.apply(v381, v424) { Ok(v) => v, Err(e) => return Err(e) };
-let v426 = match s.apply(v342, v425) { Ok(v) => v, Err(e) => return Err(e) };
-let v427 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v428 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v429 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v430 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v431 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v432 = match s.apply(v431, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v433 = match s.apply(v430, v432) { Ok(v) => v, Err(e) => return Err(e) };
-more_31_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v433, v429, a0, v428, a3, a1, v427, v426, v311, v192, v123, v39)
-}
-pub(super) fn more_29_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v405: Term, v407: Term, v404: Term, a1: Term, v403: Term, v384: Term, v383: Term, v381: Term, v342: Term, a3: Term, a0: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v408 = match s.apply(v405, v407) { Ok(v) => v, Err(e) => return Err(e) };
-let v409 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v410 = match s.literal(Lit::Numeral(v409)) { Ok(v) => v, Err(e) => return Err(e) };
-let v411 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v410]) { Ok(v) => v, Err(e) => return Err(e) };
-let v412 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v413 = match s.literal(Lit::Numeral(v412)) { Ok(v) => v, Err(e) => return Err(e) };
-let v414 = match s.apply(v411, v413) { Ok(v) => v, Err(e) => return Err(e) };
-let v415 = match s.apply(v408, v414) { Ok(v) => v, Err(e) => return Err(e) };
-let v416 = match s.apply(v404, v415) { Ok(v) => v, Err(e) => return Err(e) };
-let v417 = match s.apply(v416, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v418 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v419 = match s.apply(v418, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v420 = match s.apply(v417, v419) { Ok(v) => v, Err(e) => return Err(e) };
-let v421 = match s.apply(v403, v420) { Ok(v) => v, Err(e) => return Err(e) };
-more_30_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v421, v384, v383, v381, v342, a3, a0, a1, v311, v192, v123, v39)
-}
-pub(super) fn more_28_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v393: Term, v395: Term, v390: Term, v386: Term, a0: Term, v385: Term, a3: Term, a1: Term, v384: Term, v383: Term, v381: Term, v342: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v396 = match s.apply(v393, v395) { Ok(v) => v, Err(e) => return Err(e) };
-let v397 = match s.apply(v390, v396) { Ok(v) => v, Err(e) => return Err(e) };
-let v398 = match s.apply(v386, v397) { Ok(v) => v, Err(e) => return Err(e) };
-let v399 = match s.apply(v398, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v400 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v401 = match s.apply(v400, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v402 = match s.apply(v399, v401) { Ok(v) => v, Err(e) => return Err(e) };
-let v403 = match s.apply(v385, v402) { Ok(v) => v, Err(e) => return Err(e) };
-let v404 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v405 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v406 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v407 = match s.apply(v406, a1) { Ok(v) => v, Err(e) => return Err(e) };
-more_29_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v405, v407, v404, a1, v403, v384, v383, v381, v342, a3, a0, v311, v192, v123, v39)
-}
-pub(super) fn more_27_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a1: Term, a3: Term, a0: Term, v381: Term, v342: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v382 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v383 = match s.apply(v382, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v384 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v385 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v386 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v387 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v388 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v389 = match s.apply(v388, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v390 = match s.apply(v387, v389) { Ok(v) => v, Err(e) => return Err(e) };
-let v391 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v392 = match s.literal(Lit::Numeral(v391)) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_31_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v391: Term, v387: Term, a0: Term, v386: Term, a3: Term, a1: Term, v385: Term, v384: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v392 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
 let v393 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v392]) { Ok(v) => v, Err(e) => return Err(e) };
-let v394 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v395 = match s.literal(Lit::Numeral(v394)) { Ok(v) => v, Err(e) => return Err(e) };
-more_28_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v393, v395, v390, v386, a0, v385, a3, a1, v384, v383, v381, v342, v311, v192, v123, v39)
+let v394 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v395 = match s.apply(v393, v394) { Ok(v) => v, Err(e) => return Err(e) };
+let v396 = match s.apply(v391, v395) { Ok(v) => v, Err(e) => return Err(e) };
+let v397 = match s.apply(v387, v396) { Ok(v) => v, Err(e) => return Err(e) };
+let v398 = match s.apply(v397, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v399 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v400 = match s.apply(v399, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v401 = match s.apply(v398, v400) { Ok(v) => v, Err(e) => return Err(e) };
+let v402 = match s.apply(v386, v401) { Ok(v) => v, Err(e) => return Err(e) };
+let v403 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_32_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v403, v402, v385, v384, v281, v174, v113, v38)
 }
-pub(super) fn more_26_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v367: Term, v363: Term, a1: Term, v362: Term, v343: Term, a3: Term, a0: Term, v342: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v368 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v369 = match s.literal(Lit::Numeral(v368)) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_30_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v379: Term, v346: Term, v345: Term, v343: Term, v308: Term, a3: Term, a0: Term, a1: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v380 = match eo__24eo_5ftypeof(s, v379) { Ok(v) => v, Err(e) => return Err(e) };
+let v381 = match eo__24eo_5fnil(s, v346, v380) { Ok(v) => v, Err(e) => return Err(e) };
+let v382 = match s.apply(v345, v381) { Ok(v) => v, Err(e) => return Err(e) };
+let v383 = match s.apply(v343, v382) { Ok(v) => v, Err(e) => return Err(e) };
+let v384 = match s.apply(v308, v383) { Ok(v) => v, Err(e) => return Err(e) };
+let v385 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v386 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v387 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v388 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v389 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v390 = match s.apply(v389, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v391 = match s.apply(v388, v390) { Ok(v) => v, Err(e) => return Err(e) };
+more_31_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v391, v387, a0, v386, a3, a1, v385, v384, v281, v174, v113, v38)
+}
+pub(super) fn more_29_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v365: Term, v367: Term, v364: Term, a1: Term, v363: Term, v346: Term, v345: Term, v343: Term, v308: Term, a3: Term, a0: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v368 = match s.apply(v365, v367) { Ok(v) => v, Err(e) => return Err(e) };
+let v369 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
 let v370 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v369]) { Ok(v) => v, Err(e) => return Err(e) };
-let v371 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v372 = match s.literal(Lit::Numeral(v371)) { Ok(v) => v, Err(e) => return Err(e) };
-let v373 = match s.apply(v370, v372) { Ok(v) => v, Err(e) => return Err(e) };
-let v374 = match s.apply(v367, v373) { Ok(v) => v, Err(e) => return Err(e) };
-let v375 = match s.apply(v363, v374) { Ok(v) => v, Err(e) => return Err(e) };
-let v376 = match s.apply(v375, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v377 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v378 = match s.apply(v377, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v379 = match s.apply(v376, v378) { Ok(v) => v, Err(e) => return Err(e) };
-let v380 = match s.apply(v362, v379) { Ok(v) => v, Err(e) => return Err(e) };
-let v381 = match s.apply(v343, v380) { Ok(v) => v, Err(e) => return Err(e) };
-more_27_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a1, a3, a0, v381, v342, v311, v192, v123, v39)
+let v371 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v372 = match s.apply(v370, v371) { Ok(v) => v, Err(e) => return Err(e) };
+let v373 = match s.apply(v368, v372) { Ok(v) => v, Err(e) => return Err(e) };
+let v374 = match s.apply(v364, v373) { Ok(v) => v, Err(e) => return Err(e) };
+let v375 = match s.apply(v374, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v376 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v377 = match s.apply(v376, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v378 = match s.apply(v375, v377) { Ok(v) => v, Err(e) => return Err(e) };
+let v379 = match s.apply(v363, v378) { Ok(v) => v, Err(e) => return Err(e) };
+more_30_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v379, v346, v345, v343, v308, a3, a0, a1, v281, v174, v113, v38)
 }
-pub(super) fn more_25_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v349: Term, v355: Term, v345: Term, a0: Term, v344: Term, a3: Term, a1: Term, v343: Term, v342: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v356 = match s.apply(v349, v355) { Ok(v) => v, Err(e) => return Err(e) };
-let v357 = match s.apply(v345, v356) { Ok(v) => v, Err(e) => return Err(e) };
-let v358 = match s.apply(v357, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v359 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v360 = match s.apply(v359, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v361 = match s.apply(v358, v360) { Ok(v) => v, Err(e) => return Err(e) };
-let v362 = match s.apply(v344, v361) { Ok(v) => v, Err(e) => return Err(e) };
-let v363 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v364 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v365 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v366 = match s.apply(v365, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v367 = match s.apply(v364, v366) { Ok(v) => v, Err(e) => return Err(e) };
-more_26_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v367, v363, a1, v362, v343, a3, a0, v342, v311, v192, v123, v39)
+pub(super) fn more_28_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v354: Term, v355: Term, v352: Term, v348: Term, a0: Term, v347: Term, a3: Term, a1: Term, v346: Term, v345: Term, v343: Term, v308: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v356 = match s.apply(v354, v355) { Ok(v) => v, Err(e) => return Err(e) };
+let v357 = match s.apply(v352, v356) { Ok(v) => v, Err(e) => return Err(e) };
+let v358 = match s.apply(v348, v357) { Ok(v) => v, Err(e) => return Err(e) };
+let v359 = match s.apply(v358, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v360 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v361 = match s.apply(v360, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v362 = match s.apply(v359, v361) { Ok(v) => v, Err(e) => return Err(e) };
+let v363 = match s.apply(v347, v362) { Ok(v) => v, Err(e) => return Err(e) };
+let v364 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v365 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v366 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v367 = match s.apply(v366, a1) { Ok(v) => v, Err(e) => return Err(e) };
+more_29_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v365, v367, v364, a1, v363, v346, v345, v343, v308, a3, a0, v281, v174, v113, v38)
 }
-pub(super) fn more_24_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v312: Term, v341: Term, a3: Term, a0: Term, a1: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v342 = match s.apply(v312, v341) { Ok(v) => v, Err(e) => return Err(e) };
-let v343 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v344 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v345 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v346 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v347 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v348 = match s.apply(v347, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v349 = match s.apply(v346, v348) { Ok(v) => v, Err(e) => return Err(e) };
-let v350 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v351 = match s.literal(Lit::Numeral(v350)) { Ok(v) => v, Err(e) => return Err(e) };
-let v352 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v351]) { Ok(v) => v, Err(e) => return Err(e) };
-let v353 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v354 = match s.literal(Lit::Numeral(v353)) { Ok(v) => v, Err(e) => return Err(e) };
-let v355 = match s.apply(v352, v354) { Ok(v) => v, Err(e) => return Err(e) };
-more_25_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v349, v355, v345, a0, v344, a3, a1, v343, v342, v311, v192, v123, v39)
+pub(super) fn more_27_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a1: Term, a3: Term, a0: Term, v343: Term, v308: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v344 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v345 = match s.apply(v344, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v346 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v347 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v348 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v349 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v350 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v351 = match s.apply(v350, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v352 = match s.apply(v349, v351) { Ok(v) => v, Err(e) => return Err(e) };
+let v353 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v354 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v353]) { Ok(v) => v, Err(e) => return Err(e) };
+let v355 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+more_28_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v354, v355, v352, v348, a0, v347, a3, a1, v346, v345, v343, v308, v281, v174, v113, v38)
 }
-pub(super) fn more_23_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v327: Term, v326: Term, v325: Term, v312: Term, a0: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v328 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v329 = match s.apply(v328, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v330 = match s.apply(v327, v329) { Ok(v) => v, Err(e) => return Err(e) };
-let v331 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v332 = match s.literal(Lit::Numeral(v331)) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_26_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v331: Term, v327: Term, a1: Term, v326: Term, v309: Term, a3: Term, a0: Term, v308: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v332 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
 let v333 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v332]) { Ok(v) => v, Err(e) => return Err(e) };
-let v334 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v335 = match s.literal(Lit::Numeral(v334)) { Ok(v) => v, Err(e) => return Err(e) };
-let v336 = match s.apply(v333, v335) { Ok(v) => v, Err(e) => return Err(e) };
-let v337 = match s.apply(v330, v336) { Ok(v) => v, Err(e) => return Err(e) };
-let v338 = match s.apply(v326, v337) { Ok(v) => v, Err(e) => return Err(e) };
-let v339 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v340 = match s.apply(v338, v339) { Ok(v) => v, Err(e) => return Err(e) };
-let v341 = match s.apply(v325, v340) { Ok(v) => v, Err(e) => return Err(e) };
-more_24_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v312, v341, a3, a0, a1, v311, v192, v123, v39)
+let v334 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v335 = match s.apply(v333, v334) { Ok(v) => v, Err(e) => return Err(e) };
+let v336 = match s.apply(v331, v335) { Ok(v) => v, Err(e) => return Err(e) };
+let v337 = match s.apply(v327, v336) { Ok(v) => v, Err(e) => return Err(e) };
+let v338 = match s.apply(v337, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v339 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v340 = match s.apply(v339, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v341 = match s.apply(v338, v340) { Ok(v) => v, Err(e) => return Err(e) };
+let v342 = match s.apply(v326, v341) { Ok(v) => v, Err(e) => return Err(e) };
+let v343 = match s.apply(v309, v342) { Ok(v) => v, Err(e) => return Err(e) };
+more_27_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a1, a3, a0, v343, v308, v281, v174, v113, v38)
 }
-pub(super) fn more_22_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, v313: Term, a1: Term, v312: Term, v311: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v314 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v315 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v316 = match s.apply(v315, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v317 = match s.apply(v314, v316) { Ok(v) => v, Err(e) => return Err(e) };
-let v318 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v319 = match s.literal(Lit::Numeral(v318)) { Ok(v) => v, Err(e) => return Err(e) };
-let v320 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v319]) { Ok(v) => v, Err(e) => return Err(e) };
-let v321 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v322 = match s.literal(Lit::Numeral(v321)) { Ok(v) => v, Err(e) => return Err(e) };
-let v323 = match s.apply(v320, v322) { Ok(v) => v, Err(e) => return Err(e) };
-let v324 = match s.apply(v317, v323) { Ok(v) => v, Err(e) => return Err(e) };
-let v325 = match s.apply(v313, v324) { Ok(v) => v, Err(e) => return Err(e) };
-let v326 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v327 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_23_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v327, v326, v325, v312, a0, v311, v192, v123, v39)
+pub(super) fn more_25_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v315: Term, v319: Term, v311: Term, a0: Term, v310: Term, a3: Term, a1: Term, v309: Term, v308: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v320 = match s.apply(v315, v319) { Ok(v) => v, Err(e) => return Err(e) };
+let v321 = match s.apply(v311, v320) { Ok(v) => v, Err(e) => return Err(e) };
+let v322 = match s.apply(v321, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v323 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v324 = match s.apply(v323, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v325 = match s.apply(v322, v324) { Ok(v) => v, Err(e) => return Err(e) };
+let v326 = match s.apply(v310, v325) { Ok(v) => v, Err(e) => return Err(e) };
+let v327 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v328 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v329 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v330 = match s.apply(v329, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v331 = match s.apply(v328, v330) { Ok(v) => v, Err(e) => return Err(e) };
+more_26_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v331, v327, a1, v326, v309, a3, a0, v308, v281, v174, v113, v38)
 }
-pub(super) fn more_21_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a1: Term, v301: Term, v287: Term, v268: Term, v267: Term, v266: Term, v264: Term, v223: Term, a3: Term, a0: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v302 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v303 = match s.apply(v302, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v304 = match s.apply(v301, v303) { Ok(v) => v, Err(e) => return Err(e) };
-let v305 = match s.apply(v287, v304) { Ok(v) => v, Err(e) => return Err(e) };
-let v306 = match s.apply(v268, v305) { Ok(v) => v, Err(e) => return Err(e) };
-let v307 = match eo__24eo_5ftypeof(s, v306) { Ok(v) => v, Err(e) => return Err(e) };
-let v308 = match eo__24eo_5fnil(s, v267, v307) { Ok(v) => v, Err(e) => return Err(e) };
-let v309 = match s.apply(v266, v308) { Ok(v) => v, Err(e) => return Err(e) };
-let v310 = match s.apply(v264, v309) { Ok(v) => v, Err(e) => return Err(e) };
-let v311 = match s.apply(v223, v310) { Ok(v) => v, Err(e) => return Err(e) };
-let v312 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v313 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_22_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, v313, a1, v312, v311, v192, v123, v39)
+pub(super) fn more_24_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v282: Term, v307: Term, a3: Term, a0: Term, a1: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v308 = match s.apply(v282, v307) { Ok(v) => v, Err(e) => return Err(e) };
+let v309 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v310 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v311 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v312 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v313 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v314 = match s.apply(v313, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v315 = match s.apply(v312, v314) { Ok(v) => v, Err(e) => return Err(e) };
+let v316 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v317 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v316]) { Ok(v) => v, Err(e) => return Err(e) };
+let v318 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v319 = match s.apply(v317, v318) { Ok(v) => v, Err(e) => return Err(e) };
+more_25_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v315, v319, v311, a0, v310, a3, a1, v309, v308, v281, v174, v113, v38)
 }
-pub(super) fn more_20_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v287: Term, v268: Term, v267: Term, v266: Term, v264: Term, v223: Term, a0: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v288 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v289 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v290 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v291 = match s.apply(v290, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v292 = match s.apply(v289, v291) { Ok(v) => v, Err(e) => return Err(e) };
-let v293 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v294 = match s.literal(Lit::Numeral(v293)) { Ok(v) => v, Err(e) => return Err(e) };
-let v295 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v294]) { Ok(v) => v, Err(e) => return Err(e) };
-let v296 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v297 = match s.literal(Lit::Numeral(v296)) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_23_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v295: Term, v294: Term, v293: Term, v282: Term, a0: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v296 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v297 = match s.apply(v296, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v298 = match s.apply(v295, v297) { Ok(v) => v, Err(e) => return Err(e) };
-let v299 = match s.apply(v292, v298) { Ok(v) => v, Err(e) => return Err(e) };
-let v300 = match s.apply(v288, v299) { Ok(v) => v, Err(e) => return Err(e) };
-let v301 = match s.apply(v300, a1) { Ok(v) => v, Err(e) => return Err(e) };
-more_21_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a1, v301, v287, v268, v267, v266, v264, v223, a3, a0, v192, v123, v39)
+let v299 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v300 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v299]) { Ok(v) => v, Err(e) => return Err(e) };
+let v301 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v302 = match s.apply(v300, v301) { Ok(v) => v, Err(e) => return Err(e) };
+let v303 = match s.apply(v298, v302) { Ok(v) => v, Err(e) => return Err(e) };
+let v304 = match s.apply(v294, v303) { Ok(v) => v, Err(e) => return Err(e) };
+let v305 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v306 = match s.apply(v304, v305) { Ok(v) => v, Err(e) => return Err(e) };
+let v307 = match s.apply(v293, v306) { Ok(v) => v, Err(e) => return Err(e) };
+more_24_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v282, v307, a3, a0, a1, v281, v174, v113, v38)
 }
-pub(super) fn more_19_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v271: Term, v273: Term, v270: Term, a0: Term, v269: Term, a3: Term, a1: Term, v268: Term, v267: Term, v266: Term, v264: Term, v223: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_22_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, v283: Term, a1: Term, v282: Term, v281: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v284 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v285 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v286 = match s.apply(v285, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v287 = match s.apply(v284, v286) { Ok(v) => v, Err(e) => return Err(e) };
+let v288 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v289 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v288]) { Ok(v) => v, Err(e) => return Err(e) };
+let v290 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v291 = match s.apply(v289, v290) { Ok(v) => v, Err(e) => return Err(e) };
+let v292 = match s.apply(v287, v291) { Ok(v) => v, Err(e) => return Err(e) };
+let v293 = match s.apply(v283, v292) { Ok(v) => v, Err(e) => return Err(e) };
+let v294 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v295 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_23_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v295, v294, v293, v282, a0, v281, v174, v113, v38)
+}
+pub(super) fn more_21_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a1: Term, v271: Term, v259: Term, v242: Term, v241: Term, v240: Term, v238: Term, v201: Term, a3: Term, a0: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v272 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v273 = match s.apply(v272, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v274 = match s.apply(v271, v273) { Ok(v) => v, Err(e) => return Err(e) };
-let v275 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v276 = match s.literal(Lit::Numeral(v275)) { Ok(v) => v, Err(e) => return Err(e) };
-let v277 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v276]) { Ok(v) => v, Err(e) => return Err(e) };
-let v278 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v279 = match s.literal(Lit::Numeral(v278)) { Ok(v) => v, Err(e) => return Err(e) };
-let v280 = match s.apply(v277, v279) { Ok(v) => v, Err(e) => return Err(e) };
-let v281 = match s.apply(v274, v280) { Ok(v) => v, Err(e) => return Err(e) };
-let v282 = match s.apply(v270, v281) { Ok(v) => v, Err(e) => return Err(e) };
-let v283 = match s.apply(v282, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v284 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v285 = match s.apply(v284, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v286 = match s.apply(v283, v285) { Ok(v) => v, Err(e) => return Err(e) };
-let v287 = match s.apply(v269, v286) { Ok(v) => v, Err(e) => return Err(e) };
-more_20_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v287, v268, v267, v266, v264, v223, a0, v192, v123, v39)
+let v275 = match s.apply(v259, v274) { Ok(v) => v, Err(e) => return Err(e) };
+let v276 = match s.apply(v242, v275) { Ok(v) => v, Err(e) => return Err(e) };
+let v277 = match eo__24eo_5ftypeof(s, v276) { Ok(v) => v, Err(e) => return Err(e) };
+let v278 = match eo__24eo_5fnil(s, v241, v277) { Ok(v) => v, Err(e) => return Err(e) };
+let v279 = match s.apply(v240, v278) { Ok(v) => v, Err(e) => return Err(e) };
+let v280 = match s.apply(v238, v279) { Ok(v) => v, Err(e) => return Err(e) };
+let v281 = match s.apply(v201, v280) { Ok(v) => v, Err(e) => return Err(e) };
+let v282 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v283 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_22_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, v283, a1, v282, v281, v174, v113, v38)
 }
-pub(super) fn more_18_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v244: Term, v261: Term, v225: Term, v224: Term, a1: Term, a3: Term, a0: Term, v223: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v262 = match s.apply(v244, v261) { Ok(v) => v, Err(e) => return Err(e) };
-let v263 = match s.apply(v225, v262) { Ok(v) => v, Err(e) => return Err(e) };
-let v264 = match s.apply(v224, v263) { Ok(v) => v, Err(e) => return Err(e) };
-let v265 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v266 = match s.apply(v265, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v267 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v268 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v269 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v270 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v271 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v272 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v273 = match s.apply(v272, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_19_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v271, v273, v270, a0, v269, a3, a1, v268, v267, v266, v264, v223, v192, v123, v39)
+pub(super) fn more_20_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v259: Term, v242: Term, v241: Term, v240: Term, v238: Term, v201: Term, a0: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v260 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v261 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v262 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v263 = match s.apply(v262, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v264 = match s.apply(v261, v263) { Ok(v) => v, Err(e) => return Err(e) };
+let v265 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v266 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v265]) { Ok(v) => v, Err(e) => return Err(e) };
+let v267 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v268 = match s.apply(v266, v267) { Ok(v) => v, Err(e) => return Err(e) };
+let v269 = match s.apply(v264, v268) { Ok(v) => v, Err(e) => return Err(e) };
+let v270 = match s.apply(v260, v269) { Ok(v) => v, Err(e) => return Err(e) };
+let v271 = match s.apply(v270, a1) { Ok(v) => v, Err(e) => return Err(e) };
+more_21_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a1, v271, v259, v242, v241, v240, v238, v201, a3, a0, v174, v113, v38)
 }
-pub(super) fn more_17_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v247: Term, a1: Term, v246: Term, v245: Term, v244: Term, v225: Term, v224: Term, a3: Term, a0: Term, v223: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v248 = match s.apply(v247, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v249 = match s.apply(v246, v248) { Ok(v) => v, Err(e) => return Err(e) };
-let v250 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v251 = match s.literal(Lit::Numeral(v250)) { Ok(v) => v, Err(e) => return Err(e) };
-let v252 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v251]) { Ok(v) => v, Err(e) => return Err(e) };
-let v253 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v254 = match s.literal(Lit::Numeral(v253)) { Ok(v) => v, Err(e) => return Err(e) };
-let v255 = match s.apply(v252, v254) { Ok(v) => v, Err(e) => return Err(e) };
-let v256 = match s.apply(v249, v255) { Ok(v) => v, Err(e) => return Err(e) };
-let v257 = match s.apply(v245, v256) { Ok(v) => v, Err(e) => return Err(e) };
-let v258 = match s.apply(v257, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v259 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v260 = match s.apply(v259, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v261 = match s.apply(v258, v260) { Ok(v) => v, Err(e) => return Err(e) };
-more_18_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v244, v261, v225, v224, a1, a3, a0, v223, v192, v123, v39)
+pub(super) fn more_19_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v245: Term, v247: Term, v244: Term, a0: Term, v243: Term, a3: Term, a1: Term, v242: Term, v241: Term, v240: Term, v238: Term, v201: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v248 = match s.apply(v245, v247) { Ok(v) => v, Err(e) => return Err(e) };
+let v249 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v250 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v249]) { Ok(v) => v, Err(e) => return Err(e) };
+let v251 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v252 = match s.apply(v250, v251) { Ok(v) => v, Err(e) => return Err(e) };
+let v253 = match s.apply(v248, v252) { Ok(v) => v, Err(e) => return Err(e) };
+let v254 = match s.apply(v244, v253) { Ok(v) => v, Err(e) => return Err(e) };
+let v255 = match s.apply(v254, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v256 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v257 = match s.apply(v256, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v258 = match s.apply(v255, v257) { Ok(v) => v, Err(e) => return Err(e) };
+let v259 = match s.apply(v243, v258) { Ok(v) => v, Err(e) => return Err(e) };
+more_20_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v259, v242, v241, v240, v238, v201, a0, v174, v113, v38)
 }
-pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v234: Term, v231: Term, v227: Term, a0: Term, v226: Term, a3: Term, a1: Term, v225: Term, v224: Term, v223: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v235 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v236 = match s.literal(Lit::Numeral(v235)) { Ok(v) => v, Err(e) => return Err(e) };
-let v237 = match s.apply(v234, v236) { Ok(v) => v, Err(e) => return Err(e) };
-let v238 = match s.apply(v231, v237) { Ok(v) => v, Err(e) => return Err(e) };
-let v239 = match s.apply(v227, v238) { Ok(v) => v, Err(e) => return Err(e) };
-let v240 = match s.apply(v239, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v241 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v242 = match s.apply(v241, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v243 = match s.apply(v240, v242) { Ok(v) => v, Err(e) => return Err(e) };
-let v244 = match s.apply(v226, v243) { Ok(v) => v, Err(e) => return Err(e) };
-let v245 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v246 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v247 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-more_17_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v247, a1, v246, v245, v244, v225, v224, a3, a0, v223, v192, v123, v39)
+pub(super) fn more_18_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v220: Term, v235: Term, v203: Term, v202: Term, a1: Term, a3: Term, a0: Term, v201: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v236 = match s.apply(v220, v235) { Ok(v) => v, Err(e) => return Err(e) };
+let v237 = match s.apply(v203, v236) { Ok(v) => v, Err(e) => return Err(e) };
+let v238 = match s.apply(v202, v237) { Ok(v) => v, Err(e) => return Err(e) };
+let v239 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v240 = match s.apply(v239, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v241 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v242 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v243 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v244 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v245 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v246 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v247 = match s.apply(v246, a0) { Ok(v) => v, Err(e) => return Err(e) };
+more_19_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v245, v247, v244, a0, v243, a3, a1, v242, v241, v240, v238, v201, v174, v113, v38)
 }
-pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v206: Term, v221: Term, v193: Term, a3: Term, a0: Term, a1: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v222 = match s.apply(v206, v221) { Ok(v) => v, Err(e) => return Err(e) };
-let v223 = match s.apply(v193, v222) { Ok(v) => v, Err(e) => return Err(e) };
-let v224 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v225 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v226 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v227 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v228 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v229 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v230 = match s.apply(v229, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v231 = match s.apply(v228, v230) { Ok(v) => v, Err(e) => return Err(e) };
-let v232 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v233 = match s.literal(Lit::Numeral(v232)) { Ok(v) => v, Err(e) => return Err(e) };
-let v234 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v233]) { Ok(v) => v, Err(e) => return Err(e) };
-more_16_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v234, v231, v227, a0, v226, a3, a1, v225, v224, v223, v192, v123, v39)
+pub(super) fn more_17_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v223: Term, a1: Term, v222: Term, v221: Term, v220: Term, v203: Term, v202: Term, a3: Term, a0: Term, v201: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v224 = match s.apply(v223, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v225 = match s.apply(v222, v224) { Ok(v) => v, Err(e) => return Err(e) };
+let v226 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v227 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v226]) { Ok(v) => v, Err(e) => return Err(e) };
+let v228 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v229 = match s.apply(v227, v228) { Ok(v) => v, Err(e) => return Err(e) };
+let v230 = match s.apply(v225, v229) { Ok(v) => v, Err(e) => return Err(e) };
+let v231 = match s.apply(v221, v230) { Ok(v) => v, Err(e) => return Err(e) };
+let v232 = match s.apply(v231, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v233 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v234 = match s.apply(v233, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v235 = match s.apply(v232, v234) { Ok(v) => v, Err(e) => return Err(e) };
+more_18_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v220, v235, v203, v202, a1, a3, a0, v201, v174, v113, v38)
 }
-pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v207: Term, v206: Term, v193: Term, a0: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v208 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v209 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v210 = match s.apply(v209, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v211 = match s.apply(v208, v210) { Ok(v) => v, Err(e) => return Err(e) };
-let v212 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v213 = match s.literal(Lit::Numeral(v212)) { Ok(v) => v, Err(e) => return Err(e) };
-let v214 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v213]) { Ok(v) => v, Err(e) => return Err(e) };
-let v215 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v216 = match s.literal(Lit::Numeral(v215)) { Ok(v) => v, Err(e) => return Err(e) };
-let v217 = match s.apply(v214, v216) { Ok(v) => v, Err(e) => return Err(e) };
-let v218 = match s.apply(v211, v217) { Ok(v) => v, Err(e) => return Err(e) };
-let v219 = match s.apply(v207, v218) { Ok(v) => v, Err(e) => return Err(e) };
-let v220 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v221 = match s.apply(v219, v220) { Ok(v) => v, Err(e) => return Err(e) };
-more_15_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v206, v221, v193, a3, a0, a1, v192, v123, v39)
+pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v211: Term, v209: Term, v205: Term, a0: Term, v204: Term, a3: Term, a1: Term, v203: Term, v202: Term, v201: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v212 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v213 = match s.apply(v211, v212) { Ok(v) => v, Err(e) => return Err(e) };
+let v214 = match s.apply(v209, v213) { Ok(v) => v, Err(e) => return Err(e) };
+let v215 = match s.apply(v205, v214) { Ok(v) => v, Err(e) => return Err(e) };
+let v216 = match s.apply(v215, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v217 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v218 = match s.apply(v217, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v219 = match s.apply(v216, v218) { Ok(v) => v, Err(e) => return Err(e) };
+let v220 = match s.apply(v204, v219) { Ok(v) => v, Err(e) => return Err(e) };
+let v221 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v222 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v223 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+more_17_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v223, a1, v222, v221, v220, v203, v202, a3, a0, v201, v174, v113, v38)
 }
-pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, a1: Term, v193: Term, v192: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v194 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v195 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v196 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v197 = match s.apply(v196, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v198 = match s.apply(v195, v197) { Ok(v) => v, Err(e) => return Err(e) };
-let v199 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v200 = match s.literal(Lit::Numeral(v199)) { Ok(v) => v, Err(e) => return Err(e) };
-let v201 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v200]) { Ok(v) => v, Err(e) => return Err(e) };
-let v202 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v203 = match s.literal(Lit::Numeral(v202)) { Ok(v) => v, Err(e) => return Err(e) };
-let v204 = match s.apply(v201, v203) { Ok(v) => v, Err(e) => return Err(e) };
-let v205 = match s.apply(v198, v204) { Ok(v) => v, Err(e) => return Err(e) };
-let v206 = match s.apply(v194, v205) { Ok(v) => v, Err(e) => return Err(e) };
-let v207 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_14_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v207, v206, v193, a0, v192, v123, v39)
+pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v186: Term, v199: Term, v175: Term, a3: Term, a0: Term, a1: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v200 = match s.apply(v186, v199) { Ok(v) => v, Err(e) => return Err(e) };
+let v201 = match s.apply(v175, v200) { Ok(v) => v, Err(e) => return Err(e) };
+let v202 = match s.construct(Constructor::eo_bvadd, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v203 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v204 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v205 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v206 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v207 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v208 = match s.apply(v207, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v209 = match s.apply(v206, v208) { Ok(v) => v, Err(e) => return Err(e) };
+let v210 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v211 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v210]) { Ok(v) => v, Err(e) => return Err(e) };
+more_16_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v211, v209, v205, a0, v204, a3, a1, v203, v202, v201, v174, v113, v38)
 }
-pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v180: Term, v178: Term, v174: Term, a1: Term, v173: Term, v154: Term, a3: Term, a0: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v181 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v180]) { Ok(v) => v, Err(e) => return Err(e) };
-let v182 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v183 = match s.literal(Lit::Numeral(v182)) { Ok(v) => v, Err(e) => return Err(e) };
-let v184 = match s.apply(v181, v183) { Ok(v) => v, Err(e) => return Err(e) };
-let v185 = match s.apply(v178, v184) { Ok(v) => v, Err(e) => return Err(e) };
-let v186 = match s.apply(v174, v185) { Ok(v) => v, Err(e) => return Err(e) };
-let v187 = match s.apply(v186, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v188 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v189 = match s.apply(v188, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v190 = match s.apply(v187, v189) { Ok(v) => v, Err(e) => return Err(e) };
-let v191 = match s.apply(v173, v190) { Ok(v) => v, Err(e) => return Err(e) };
-let v192 = match s.apply(v154, v191) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_13_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, a1, v193, v192, v123, v39)
+pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v187: Term, v186: Term, v175: Term, a0: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v188 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v189 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v190 = match s.apply(v189, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v191 = match s.apply(v188, v190) { Ok(v) => v, Err(e) => return Err(e) };
+let v192 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v193 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v192]) { Ok(v) => v, Err(e) => return Err(e) };
+let v194 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v195 = match s.apply(v193, v194) { Ok(v) => v, Err(e) => return Err(e) };
+let v196 = match s.apply(v191, v195) { Ok(v) => v, Err(e) => return Err(e) };
+let v197 = match s.apply(v187, v196) { Ok(v) => v, Err(e) => return Err(e) };
+let v198 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v199 = match s.apply(v197, v198) { Ok(v) => v, Err(e) => return Err(e) };
+more_15_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v186, v199, v175, a3, a0, a1, v174, v113, v38)
 }
-pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v156: Term, v167: Term, a0: Term, v155: Term, a3: Term, a1: Term, v154: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v168 = match s.apply(v156, v167) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.apply(v168, a0) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, a1: Term, v175: Term, v174: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v176 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.apply(v178, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match s.apply(v177, v179) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v182 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v181]) { Ok(v) => v, Err(e) => return Err(e) };
+let v183 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v184 = match s.apply(v182, v183) { Ok(v) => v, Err(e) => return Err(e) };
+let v185 = match s.apply(v180, v184) { Ok(v) => v, Err(e) => return Err(e) };
+let v186 = match s.apply(v176, v185) { Ok(v) => v, Err(e) => return Err(e) };
+let v187 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_14_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v187, v186, v175, a0, v174, v113, v38)
+}
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v163: Term, v162: Term, v158: Term, a1: Term, v157: Term, v140: Term, a3: Term, a0: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v164 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v163]) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.apply(v164, v165) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.apply(v162, v166) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.apply(v158, v167) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v168, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v170 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v170, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v171 = match s.apply(v170, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v172 = match s.apply(v169, v171) { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.apply(v155, v172) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v175 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.apply(v176, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v178 = match s.apply(v175, v177) { Ok(v) => v, Err(e) => return Err(e) };
-let v179 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.literal(Lit::Numeral(v179)) { Ok(v) => v, Err(e) => return Err(e) };
-more_12_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v180, v178, v174, a1, v173, v154, a3, a0, v123, v39)
+let v173 = match s.apply(v157, v172) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.apply(v140, v173) { Ok(v) => v, Err(e) => return Err(e) };
+let v175 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_13_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, a1, v175, v174, v113, v38)
 }
-pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v124: Term, v153: Term, a3: Term, a0: Term, a1: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v154 = match s.apply(v124, v153) { Ok(v) => v, Err(e) => return Err(e) };
-let v155 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v156 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v157 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v158 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v159 = match s.apply(v158, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v160 = match s.apply(v157, v159) { Ok(v) => v, Err(e) => return Err(e) };
-let v161 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.literal(Lit::Numeral(v161)) { Ok(v) => v, Err(e) => return Err(e) };
-let v163 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v162]) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v165 = match s.literal(Lit::Numeral(v164)) { Ok(v) => v, Err(e) => return Err(e) };
-let v166 = match s.apply(v163, v165) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v160, v166) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v156, v167, a0, v155, a3, a1, v154, v123, v39)
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v142: Term, v151: Term, a0: Term, v141: Term, a3: Term, a1: Term, v140: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v152 = match s.apply(v142, v151) { Ok(v) => v, Err(e) => return Err(e) };
+let v153 = match s.apply(v152, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v154 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v155 = match s.apply(v154, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v156 = match s.apply(v153, v155) { Ok(v) => v, Err(e) => return Err(e) };
+let v157 = match s.apply(v141, v156) { Ok(v) => v, Err(e) => return Err(e) };
+let v158 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v159 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.apply(v160, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.apply(v159, v161) { Ok(v) => v, Err(e) => return Err(e) };
+let v163 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+more_12_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v163, v162, v158, a1, v157, v140, a3, a0, v113, v38)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v139: Term, v138: Term, v137: Term, v124: Term, a0: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v140 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v141 = match s.apply(v140, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match s.apply(v139, v141) { Ok(v) => v, Err(e) => return Err(e) };
-let v143 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.literal(Lit::Numeral(v143)) { Ok(v) => v, Err(e) => return Err(e) };
-let v145 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v144]) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match s.literal(Lit::Numeral(v146)) { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.apply(v145, v147) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.apply(v142, v148) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.apply(v138, v149) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v152 = match s.apply(v150, v151) { Ok(v) => v, Err(e) => return Err(e) };
-let v153 = match s.apply(v137, v152) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v124, v153, a3, a0, a1, v123, v39)
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v114: Term, v139: Term, a3: Term, a0: Term, a1: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v140 = match s.apply(v114, v139) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v143 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v145 = match s.apply(v144, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v146 = match s.apply(v143, v145) { Ok(v) => v, Err(e) => return Err(e) };
+let v147 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v148 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v147]) { Ok(v) => v, Err(e) => return Err(e) };
+let v149 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v150 = match s.apply(v148, v149) { Ok(v) => v, Err(e) => return Err(e) };
+let v151 = match s.apply(v146, v150) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v142, v151, a0, v141, a3, a1, v140, v113, v38)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, v125: Term, a1: Term, v124: Term, v123: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v126 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v127, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v129 = match s.apply(v126, v128) { Ok(v) => v, Err(e) => return Err(e) };
-let v130 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.literal(Lit::Numeral(v130)) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a1: Term, v127: Term, v126: Term, v125: Term, v114: Term, a0: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v128 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.apply(v128, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.apply(v127, v129) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
 let v132 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v131]) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match s.literal(Lit::Numeral(v133)) { Ok(v) => v, Err(e) => return Err(e) };
-let v135 = match s.apply(v132, v134) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.apply(v129, v135) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.apply(v125, v136) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v139, v138, v137, v124, a0, v123, v39)
+let v133 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.apply(v132, v133) { Ok(v) => v, Err(e) => return Err(e) };
+let v135 = match s.apply(v130, v134) { Ok(v) => v, Err(e) => return Err(e) };
+let v136 = match s.apply(v126, v135) { Ok(v) => v, Err(e) => return Err(e) };
+let v137 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.apply(v136, v137) { Ok(v) => v, Err(e) => return Err(e) };
+let v139 = match s.apply(v125, v138) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v114, v139, a3, a0, a1, v113, v38)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v112: Term, v109: Term, v105: Term, a1: Term, v104: Term, v85: Term, a3: Term, a0: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v113 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.literal(Lit::Numeral(v113)) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match s.apply(v112, v114) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.apply(v109, v115) { Ok(v) => v, Err(e) => return Err(e) };
-let v117 = match s.apply(v105, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.apply(v117, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.apply(v119, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match s.apply(v118, v120) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match s.apply(v104, v121) { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.apply(v85, v122) { Ok(v) => v, Err(e) => return Err(e) };
-let v124 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, v125, a1, v124, v123, v39)
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, v115: Term, a1: Term, v114: Term, v113: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v116 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v118 = match s.apply(v117, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.apply(v116, v118) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v120]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.apply(v121, v122) { Ok(v) => v, Err(e) => return Err(e) };
+let v124 = match s.apply(v119, v123) { Ok(v) => v, Err(e) => return Err(e) };
+let v125 = match s.apply(v115, v124) { Ok(v) => v, Err(e) => return Err(e) };
+let v126 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v127 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a1, v127, v126, v125, v114, a0, v113, v38)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v99: Term, a0: Term, v86: Term, a3: Term, a1: Term, v85: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v100 = match s.apply(v99, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match s.apply(v101, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.apply(v100, v102) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v86, v103) { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v103: Term, v101: Term, v97: Term, a1: Term, v96: Term, v79: Term, a3: Term, a0: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v104 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.apply(v103, v104) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.apply(v101, v105) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.apply(v97, v106) { Ok(v) => v, Err(e) => return Err(e) };
 let v108 = match s.apply(v107, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.apply(v106, v108) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.literal(Lit::Numeral(v110)) { Ok(v) => v, Err(e) => return Err(e) };
-let v112 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v111]) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v112, v109, v105, a1, v104, v85, a3, a0, v39)
+let v109 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.apply(v109, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.apply(v108, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.apply(v96, v111) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.apply(v79, v112) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, v115, a1, v114, v113, v38)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, a1: Term, v85: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v86 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v89 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.apply(v89, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.apply(v88, v90) { Ok(v) => v, Err(e) => return Err(e) };
-let v92 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.literal(Lit::Numeral(v92)) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v93]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.literal(Lit::Numeral(v95)) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.apply(v94, v96) { Ok(v) => v, Err(e) => return Err(e) };
-let v98 = match s.apply(v91, v97) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match s.apply(v87, v98) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v99, a0, v86, a3, a1, v85, v39)
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v91: Term, a0: Term, v80: Term, a3: Term, a1: Term, v79: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v92 = match s.apply(v91, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.apply(v93, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.apply(v92, v94) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.apply(v80, v95) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.apply(v99, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v101 = match s.apply(v98, v100) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v102]) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v103, v101, v97, a1, v96, v79, a3, a0, v38)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v61: Term, v72: Term, a1: Term, v60: Term, v41: Term, a2: Term, v40: Term, a3: Term, a0: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v73 = match s.apply(v61, v72) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.apply(v73, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v75, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.apply(v74, v76) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v60, v77) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match s.apply(v41, v78) { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.literal(Lit::Numeral(v81)) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.apply(v80, v82) { Ok(v) => v, Err(e) => return Err(e) };
-let v84 = match s.apply(v79, v83) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v40, v84) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, a1, v85, v39)
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, a1: Term, v79: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v80 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v83, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.apply(v82, v84) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v86]) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v89 = match s.apply(v87, v88) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.apply(v85, v89) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.apply(v81, v90) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v91, a0, v80, a3, a1, v79, v38)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v56: Term, v58: Term, v42: Term, a3: Term, a1: Term, v41: Term, a2: Term, v40: Term, a0: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v59 = match s.apply(v56, v58) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.apply(v42, v59) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v63, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v62, v64) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.literal(Lit::Numeral(v66)) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v67]) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.literal(Lit::Numeral(v69)) { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.apply(v68, v70) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.apply(v65, v71) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v61, v72, a1, v60, v41, a2, v40, a3, a0, v39)
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v58: Term, v67: Term, a1: Term, v57: Term, v40: Term, a2: Term, v39: Term, a3: Term, a0: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v68 = match s.apply(v58, v67) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.apply(v68, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.apply(v70, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.apply(v69, v71) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.apply(v57, v72) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.apply(v40, v73) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v77 = match s.apply(v75, v76) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v74, v77) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.apply(v39, v78) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, a1, v79, v38)
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, v44: Term, v43: Term, v42: Term, a1: Term, v41: Term, a2: Term, v40: Term, v39: Term) -> CheckResult<Option<Term>> {
-let v45 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.apply(v45, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match s.apply(v44, v46) { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.literal(Lit::Numeral(v48)) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v49]) { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.literal(Lit::Numeral(v51)) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v50, v52) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v47, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.apply(v43, v54) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.apply(v55, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.apply(v57, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v56, v58, v42, a3, a1, v41, a2, v40, a0, v39)
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v53: Term, v55: Term, v41: Term, a3: Term, a1: Term, v40: Term, a2: Term, v39: Term, a0: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v56 = match s.apply(v53, v55) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.apply(v41, v56) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.apply(v60, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.apply(v59, v61) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v63]) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v64, v65) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v62, v66) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v58, v67, a1, v57, v40, a2, v39, a3, a0, v38)
+}
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, a3: Term, a0: Term, v43: Term, v42: Term, v41: Term, a1: Term, v40: Term, a2: Term, v39: Term, v38: Term) -> CheckResult<Option<Term>> {
+let v44 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.apply(v44, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.apply(v43, v45) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v47]) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.apply(v48, v49) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.apply(v46, v50) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v42, v51) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.apply(v52, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.apply(v54, a0) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, v53, v55, v41, a3, a1, v40, a2, v39, a0, v38)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v24: Term, a0: Term, a1: Term, a3: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v33 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.literal(Lit::Numeral(v33)) { Ok(v) => v, Err(e) => return Err(e) };
-if v24 != v34 { return Ok(None); }
-let v35 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo_bvsmod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.apply(v36, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.apply(v37, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v35, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, v44, v43, v42, a1, v41, a2, v40, v39)
+let v33 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v24 != v33 { return Ok(None); }
+let v34 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.construct(Constructor::eo_bvsmod, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v35, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.apply(v36, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.apply(v34, v37) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v41 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s, a3, a0, v43, v42, v41, a1, v40, a2, v39, v38)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dsmod_2deliminate(s: &mut Store, v16: Term, a3: Term, v17: Term, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v18 = match s.unapply(v16) { Ok(v) => v, Err(e) => return Err(e) };
@@ -2763,131 +1418,120 @@ let v20 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) =>
 if v19 != v20 { return Ok(None); }
 more_50_eo__24eo_5fcmd_5fstep_5fproven(s, a0, v15, v18, v2, v5, v8, v11)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, a1: Term, v111: Term, v98: Term, v79: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v112 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.apply(v112, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.apply(v111, v113) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match s.apply(v114, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.apply(v98, v115) { Ok(v) => v, Err(e) => return Err(e) };
-let v117 = match s.apply(v79, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.apply(v26, v117) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v118))
-}
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v80: Term, v97: Term, a2: Term, a1: Term, v79: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v98 = match s.apply(v80, v97) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, a1: Term, v100: Term, v89: Term, v72: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v101 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v102 = match s.apply(v101, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v103 = match s.apply(v100, v102) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match s.literal(Lit::Numeral(v104)) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v105]) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.literal(Lit::Numeral(v107)) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.apply(v106, v108) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.apply(v103, v109) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.apply(v99, v110) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, a1, v111, v98, v79, v26)
+let v104 = match s.apply(v103, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.apply(v89, v104) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.apply(v72, v105) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.apply(v25, v106) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v107))
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v83: Term, a0: Term, v82: Term, v81: Term, v80: Term, a2: Term, a1: Term, v79: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v84 = match s.apply(v83, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v82, v84) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.literal(Lit::Numeral(v86)) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v87]) { Ok(v) => v, Err(e) => return Err(e) };
-let v89 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.literal(Lit::Numeral(v89)) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.apply(v88, v90) { Ok(v) => v, Err(e) => return Err(e) };
-let v92 = match s.apply(v85, v91) { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.apply(v81, v92) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match s.apply(v94, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.apply(v93, v95) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.apply(v96, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v80, v97, a2, a1, v79, v26)
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v73: Term, v88: Term, a2: Term, a1: Term, v72: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v89 = match s.apply(v73, v88) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.apply(v92, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.apply(v91, v93) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v95]) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.apply(v96, v97) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.apply(v94, v98) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.apply(v90, v99) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, a1, v100, v89, v72, v25)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v60: Term, v71: Term, a1: Term, v59: Term, v40: Term, v39: Term, a2: Term, a0: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v72 = match s.apply(v60, v71) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.apply(v73, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.apply(v72, v74) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v75, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.apply(v59, v76) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v40, v77) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match s.apply(v39, v78) { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v83, a0, v82, v81, v80, a2, a1, v79, v26)
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v76: Term, a0: Term, v75: Term, v74: Term, v73: Term, a2: Term, a1: Term, v72: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v77 = match s.apply(v76, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v75, v77) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v79]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v80, v81) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.apply(v78, v82) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v74, v83) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.apply(v85, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.apply(v84, v86) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.apply(v87, a0) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v73, v88, a2, a1, v72, v25)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v57: Term, a0: Term, v41: Term, a2: Term, a1: Term, v40: Term, v39: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v58 = match s.apply(v57, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.apply(v41, v58) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.apply(v62, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v61, v63) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.literal(Lit::Numeral(v65)) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v66]) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.literal(Lit::Numeral(v68)) { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.apply(v67, v69) { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.apply(v64, v70) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v60, v71, a1, v59, v40, v39, a2, a0, v26)
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v55: Term, v64: Term, a1: Term, v54: Term, v37: Term, v36: Term, a2: Term, a0: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v65 = match s.apply(v55, v64) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v66, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.apply(v65, v67) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.apply(v68, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.apply(v54, v69) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.apply(v37, v70) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.apply(v36, v71) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v76, a0, v75, v74, v73, a2, a1, v72, v25)
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, a2: Term, a0: Term, v43: Term, v42: Term, v41: Term, a1: Term, v40: Term, v39: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v44 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.apply(v44, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.apply(v43, v45) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Numeral(v47)) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v48]) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.literal(Lit::Numeral(v50)) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v52: Term, a0: Term, v38: Term, a2: Term, a1: Term, v37: Term, v36: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v53 = match s.apply(v52, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.apply(v38, v53) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.apply(v57, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.apply(v56, v58) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v60]) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.apply(v61, v62) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v59, v63) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v55, v64, a1, v54, v37, v36, a2, a0, v25)
+}
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, a2: Term, a0: Term, v40: Term, v39: Term, v38: Term, a1: Term, v37: Term, v36: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v41 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.apply(v41, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.apply(v40, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v44]) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v45, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.apply(v43, v47) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.apply(v39, v48) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.apply(v50, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v52 = match s.apply(v49, v51) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v46, v52) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v42, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.apply(v55, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.apply(v54, v56) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v57, a0, v41, a2, a1, v40, v39, v26)
+more_3_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v52, a0, v38, a2, a1, v37, v36, v25)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v29: Term, a0: Term, v28: Term, v27: Term, a2: Term, a1: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v30 = match s.apply(v29, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.apply(v28, v30) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.literal(Lit::Numeral(v32)) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v33]) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.literal(Lit::Numeral(v35)) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.apply(v34, v36) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.apply(v31, v37) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v27, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, a2, a0, v43, v42, v41, a1, v40, v39, v26)
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v28: Term, a0: Term, v27: Term, v26: Term, a2: Term, a1: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v29 = match s.apply(v28, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.apply(v27, v29) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v31]) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.apply(v32, v33) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.apply(v30, v34) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v26, v35) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.construct(Constructor::eo_bvurem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, a2, a0, v40, v39, v38, a1, v37, v36, v25)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v11: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
 if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_bvsrem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v24, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v22, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v29, a0, v28, v27, a2, a1, v26)
+let v20 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v20 { return Ok(None); }
+let v21 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_bvsrem, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.apply(v23, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v21, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s, v28, a0, v27, v26, a2, a1, v25)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dsrem_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a3) { Ok(v) => v, Err(e) => return Err(e) };
@@ -2969,20 +1613,18 @@ let v15 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v12) { Ok(v) => v, Err(e)
 let v16 = match s.construct(Constructor::eo__24eo_5fpf, &[v15]) { Ok(v) => v, Err(e) => return Err(e) };
 more_51_eo__24eo_5fcmd_5fstep_5fproven(s, v2, v5, v8, v16)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dusubo_2deliminate(s: &mut Store, v28: Term, a1: Term, v25: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
-let v29 = match s.apply(v28, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v30 = match s.apply(v25, v29) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.apply(v19, v30) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.apply(v18, v31) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.literal(Lit::Numeral(v33)) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v34]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.literal(Lit::Numeral(v36)) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.apply(v35, v37) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v32, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.apply(v17, v39) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v40))
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dusubo_2deliminate(s: &mut Store, v26: Term, a1: Term, v24: Term, v19: Term, v18: Term, v17: Term) -> CheckResult<Option<Term>> {
+let v27 = match s.apply(v26, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.apply(v24, v27) { Ok(v) => v, Err(e) => return Err(e) };
+let v29 = match s.apply(v19, v28) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.apply(v18, v29) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v31]) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.apply(v32, v33) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.apply(v30, v34) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v17, v35) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v36))
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dusubo_2deliminate(s: &mut Store, v14: Term, a0: Term, a1: Term, v13: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v15 = match s.apply(v14, a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -2991,15 +1633,13 @@ let v17 = match s.apply(v13, v16) { Ok(v) => v, Err(e) => return Err(e) };
 let v18 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v19 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
 let v20 = match s.construct(Constructor::eo_bvsub, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.literal(Lit::Numeral(v21)) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_zero_5fextend, &[v22]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v20, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.literal(Lit::Numeral(v26)) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.construct(Constructor::eo_zero_5fextend, &[v27]) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dusubo_2deliminate(s, v28, a1, v25, v19, v18, v17)
+let v21 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_zero_5fextend, &[v21]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.apply(v20, v23) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.construct(Constructor::eo_zero_5fextend, &[v25]) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dusubo_2deliminate(s, v26, a1, v24, v19, v18, v17)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dusubo_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a3) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3084,150 +1724,137 @@ if let Some(found) = match case_314_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2
 if let Some(found) = match case_315_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v111: Term, v125: Term, v110: Term, v79: Term, v78: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v126 = match s.apply(v111, v125) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v126, v127) { Ok(v) => v, Err(e) => return Err(e) };
-let v129 = match s.apply(v110, v128) { Ok(v) => v, Err(e) => return Err(e) };
-let v130 = match s.apply(v79, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.apply(v130, v131) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.apply(v78, v132) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match s.apply(v26, v133) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v134))
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v100: Term, v112: Term, v99: Term, v72: Term, v71: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v113 = match s.apply(v100, v112) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.apply(v113, v114) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.apply(v99, v115) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.apply(v72, v116) { Ok(v) => v, Err(e) => return Err(e) };
+let v118 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.apply(v117, v118) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.apply(v71, v119) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.apply(v25, v120) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v121))
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, a2: Term, a0: Term, a1: Term, v111: Term, v110: Term, v79: Term, v78: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v112 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.construct(Constructor::eo_bvsub, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match s.apply(v114, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match s.apply(v115, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v117 = match s.apply(v113, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.apply(v112, v117) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.literal(Lit::Numeral(v119)) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v120]) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.literal(Lit::Numeral(v122)) { Ok(v) => v, Err(e) => return Err(e) };
-let v124 = match s.apply(v121, v123) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.apply(v118, v124) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v111, v125, v110, v79, v78, v26)
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, a2: Term, a0: Term, a1: Term, v100: Term, v99: Term, v72: Term, v71: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v101 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.construct(Constructor::eo_bvsub, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.apply(v103, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.apply(v104, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.apply(v102, v105) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.apply(v101, v106) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v108]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.apply(v109, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.apply(v107, v111) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v100, v112, v99, v72, v71, v25)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v95: Term, v97: Term, v94: Term, v93: Term, v80: Term, a2: Term, a0: Term, a1: Term, v79: Term, v78: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v98 = match s.apply(v95, v97) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.literal(Lit::Numeral(v99)) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v100]) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.literal(Lit::Numeral(v102)) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v101, v103) { Ok(v) => v, Err(e) => return Err(e) };
-let v105 = match s.apply(v98, v104) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.apply(v94, v105) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.apply(v106, v107) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.apply(v93, v108) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.apply(v80, v109) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, a2, a0, a1, v111, v110, v79, v78, v26)
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v86: Term, v88: Term, v85: Term, v84: Term, v73: Term, a2: Term, a0: Term, a1: Term, v72: Term, v71: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v89 = match s.apply(v86, v88) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v90]) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.apply(v91, v92) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.apply(v89, v93) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.apply(v85, v94) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.apply(v95, v96) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.apply(v84, v97) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.apply(v73, v98) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, a2, a0, a1, v100, v99, v72, v71, v25)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v83: Term, a0: Term, v82: Term, v81: Term, a2: Term, a1: Term, v80: Term, v79: Term, v78: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v84 = match s.apply(v83, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v82, v84) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.literal(Lit::Numeral(v86)) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v87]) { Ok(v) => v, Err(e) => return Err(e) };
-let v89 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.literal(Lit::Numeral(v89)) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.apply(v88, v90) { Ok(v) => v, Err(e) => return Err(e) };
-let v92 = match s.apply(v85, v91) { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.apply(v81, v92) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.apply(v96, a1) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v95, v97, v94, v93, v80, a2, a0, a1, v79, v78, v26)
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v76: Term, a0: Term, v75: Term, v74: Term, a2: Term, a1: Term, v73: Term, v72: Term, v71: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v77 = match s.apply(v76, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v75, v77) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v79]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v80, v81) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.apply(v78, v82) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v74, v83) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.apply(v87, a1) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v86, v88, v85, v84, v73, a2, a0, a1, v72, v71, v25)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v69: Term, v71: Term, v66: Term, v59: Term, v58: Term, v27: Term, a2: Term, a0: Term, a1: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v72 = match s.apply(v69, v71) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.apply(v66, v72) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.apply(v59, v73) { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v74, v75) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.apply(v58, v76) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v27, v77) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v83, a0, v82, v81, a2, a1, v80, v79, v78, v26)
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v63: Term, v64: Term, v61: Term, v54: Term, v53: Term, v26: Term, a2: Term, a0: Term, a1: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v65 = match s.apply(v63, v64) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v61, v65) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v54, v66) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.apply(v67, v68) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.apply(v53, v69) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.apply(v26, v70) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v76, a0, v75, v74, a2, a1, v73, v72, v71, v25)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v28: Term, v57: Term, a2: Term, a0: Term, a1: Term, v27: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v58 = match s.apply(v28, v57) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.construct(Constructor::eo_bvsub, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.apply(v62, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v63, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v61, v64) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.apply(v60, v65) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match s.literal(Lit::Numeral(v67)) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v68]) { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.literal(Lit::Numeral(v70)) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v69, v71, v66, v59, v58, v27, a2, a0, a1, v26)
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v27: Term, v52: Term, a2: Term, a0: Term, a1: Term, v26: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v53 = match s.apply(v27, v52) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.construct(Constructor::eo_bvsub, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.apply(v57, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.apply(v58, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v56, v59) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.apply(v55, v60) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v62]) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v63, v64, v61, v54, v53, v26, a2, a0, a1, v25)
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, a2: Term, a1: Term, v43: Term, v42: Term, v41: Term, v28: Term, a0: Term, v27: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v44 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.apply(v44, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.apply(v43, v45) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Numeral(v47)) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v48]) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.literal(Lit::Numeral(v50)) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.apply(v49, v51) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v46, v52) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v42, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.apply(v54, v55) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.apply(v41, v56) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v28, v57, a2, a0, a1, v27, v26)
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, a2: Term, a1: Term, v40: Term, v39: Term, v38: Term, v27: Term, a0: Term, v26: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v41 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.apply(v41, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.apply(v40, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v44]) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v45, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.apply(v43, v47) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.apply(v39, v48) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.apply(v49, v50) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v38, v51) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, v27, v52, a2, a0, a1, v26, v25)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, a2: Term, a0: Term, v29: Term, a1: Term, v28: Term, v27: Term, v26: Term) -> CheckResult<Option<Term>> {
-let v30 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match s.apply(v31, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.apply(v30, v32) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.literal(Lit::Numeral(v34)) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v35]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.literal(Lit::Numeral(v37)) { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.apply(v36, v38) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.apply(v33, v39) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.apply(v29, v40) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, a2, a1, v43, v42, v41, v28, a0, v27, v26)
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, a2: Term, a0: Term, v28: Term, a1: Term, v27: Term, v26: Term, v25: Term) -> CheckResult<Option<Term>> {
+let v29 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.construct(Constructor::eo_extract, &[a2, a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.apply(v30, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.apply(v29, v31) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v33]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v34, v35) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.apply(v32, v36) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.apply(v28, v37) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, a2, a1, v40, v39, v38, v27, a0, v26, v25)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v11: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
 if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_bvssubo, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v24, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v22, v25) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v20 { return Ok(None); }
+let v21 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_bvssubo, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.apply(v23, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v21, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.construct(Constructor::eo_or, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v28 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, a2, a0, v29, a1, v28, v27, v26)
+more_1_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s, a2, a0, v28, a1, v27, v26, v25)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dssubo_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a3) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3309,45 +1936,40 @@ let v15 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v12) { Ok(v) => v, Err(e)
 let v16 = match s.construct(Constructor::eo__24eo_5fpf, &[v15]) { Ok(v) => v, Err(e) => return Err(e) };
 more_53_eo__24eo_5fcmd_5fstep_5fproven(s, v2, v5, v8, v16)
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s: &mut Store, v27: Term, v45: Term, v25: Term) -> CheckResult<Option<Term>> {
-let v46 = match s.apply(v27, v45) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match s.apply(v25, v46) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v47))
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s: &mut Store, v26: Term, v40: Term, v24: Term) -> CheckResult<Option<Term>> {
+let v41 = match s.apply(v26, v40) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.apply(v24, v41) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v42))
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s: &mut Store, v30: Term, v28: Term, a1: Term, v27: Term, v25: Term) -> CheckResult<Option<Term>> {
-let v31 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v30]) { Ok(v) => v, Err(e) => return Err(e) };
-let v32 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.literal(Lit::Numeral(v32)) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.apply(v31, v33) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.apply(v28, v34) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v39 = match s.literal(Lit::Numeral(v38)) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.apply(v37, v39) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.apply(v36, v40) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.literal(Lit::Binary(BitVec::new(0, &v42))) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match s.apply(v41, v43) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.apply(v35, v44) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s, v27, v45, v25)
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s: &mut Store, v28: Term, v27: Term, a1: Term, v26: Term, v24: Term) -> CheckResult<Option<Term>> {
+let v29 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v28]) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.apply(v29, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.apply(v27, v31) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v34, v35) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.apply(v33, v36) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.apply(v37, v38) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.apply(v32, v39) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s, v26, v40, v24)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v11: Term, a1: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
 if v18 != a0 { return Ok(None); }
-let v20 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_bvnego, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.apply(v22, v24) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.apply(v26, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v30 = match s.literal(Lit::Numeral(v29)) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s, v30, v28, a1, v27, v25)
+let v20 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v20 { return Ok(None); }
+let v21 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_bvnego, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v24 = match s.apply(v21, v23) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.apply(v25, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s, v28, v27, a1, v26, v24)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dnego_2deliminate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a2) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3464,32 +2086,28 @@ if a3 != v8 { return Ok(None); }
 let v9 = match eo__24eo_5fprog_5fbv_2dite_2dequal_2dchildren(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v9))
 }
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d1(s: &mut Store, v9: Term, v15: Term, v0: Term, a0: Term) -> CheckResult<Option<Term>> {
-let v16 = match s.apply(v9, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v0, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v18, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v17, v19) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v20))
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d1(s: &mut Store, v7: Term, v11: Term, v0: Term, a0: Term) -> CheckResult<Option<Term>> {
+let v12 = match s.apply(v7, v11) { Ok(v) => v, Err(e) => return Err(e) };
+let v13 = match s.apply(v0, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v15 = match s.apply(v14, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v13, v15) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v16))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d1(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.construct(Constructor::eo_bvite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.literal(Lit::Numeral(v3)) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v4]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.literal(Lit::Numeral(v6)) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v5, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v2, v8) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match s.literal(Lit::Numeral(v10)) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v11]) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.literal(Lit::Numeral(v13)) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v12, v14) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d1(s, v9, v15, v0, a0)
+let v3 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v4, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v2, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v11 = match s.apply(v9, v10) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d1(s, v7, v11, v0, a0)
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d1(s: &mut Store, a0: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3540,30 +2158,26 @@ if let Some(found) = match cases_1_18_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, 
 if let Some(found) = match cases_1_19_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d2(s: &mut Store, v9: Term, v15: Term, v0: Term, a0: Term) -> CheckResult<Option<Term>> {
-let v16 = match s.apply(v9, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v0, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v17, a0) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v18))
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d2(s: &mut Store, v7: Term, v11: Term, v0: Term, a0: Term) -> CheckResult<Option<Term>> {
+let v12 = match s.apply(v7, v11) { Ok(v) => v, Err(e) => return Err(e) };
+let v13 = match s.apply(v0, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v13, a0) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v14))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d2(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.construct(Constructor::eo_bvite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.literal(Lit::Numeral(v3)) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v4]) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.literal(Lit::Numeral(v6)) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v5, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v2, v8) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match s.literal(Lit::Numeral(v10)) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v11]) { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.literal(Lit::Numeral(v13)) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v12, v14) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d2(s, v9, v15, v0, a0)
+let v3 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v4, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v2, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.construct(Constructor::eo_int_5fto_5fbv, &[v8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v11 = match s.apply(v9, v10) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d2(s, v7, v11, v0, a0)
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dite_2dconst_2dchildren_2d2(s: &mut Store, a0: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3827,15 +2441,14 @@ let v13 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => 
 let v14 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v15 = match s.apply(v14, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v16 = match s.apply(v13, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.literal(Lit::Binary(BitVec::new(1, &v17))) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v16, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v12, v19) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.apply(v10, v20) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v21, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v22, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v9, v23) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v24))
+let v17 = match s.literal(Lit::Binary(BitVec::new(1, &Integer::from(1u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v16, v17) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.apply(v12, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.apply(v10, v19) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.apply(v20, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.apply(v21, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v9, v22) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v23))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2dif(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3905,15 +2518,14 @@ pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dite_2dmerge_2delse_2dif(s: &mut Stor
 let v12 = match s.apply(v11, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v13, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.literal(Lit::Binary(BitVec::new(1, &v15))) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v14, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v12, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v10, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v19, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.apply(v20, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v9, v21) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v22))
+let v15 = match s.literal(Lit::Binary(BitVec::new(1, &Integer::from(1u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v14, v15) { Ok(v) => v, Err(e) => return Err(e) };
+let v17 = match s.apply(v12, v16) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v10, v17) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.apply(v18, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.apply(v19, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.apply(v9, v20) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v21))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dite_2dmerge_2delse_2dif(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3979,10 +2591,10 @@ if a3 != v14 { return Ok(None); }
 let v15 = match eo__24eo_5fprog_5fbv_2dite_2dmerge_2delse_2dif(s, v2, v5, v8, v11) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v15))
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2delse(s: &mut Store, v24: Term, a2: Term, v9: Term) -> CheckResult<Option<Term>> {
-let v25 = match s.apply(v24, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v9, v25) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v26))
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2delse(s: &mut Store, v23: Term, a2: Term, v9: Term) -> CheckResult<Option<Term>> {
+let v24 = match s.apply(v23, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v9, v24) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v25))
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2delse(s: &mut Store, a0: Term, v11: Term, a1: Term, v10: Term, a3: Term, a2: Term, v9: Term) -> CheckResult<Option<Term>> {
 let v12 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -3992,13 +2604,12 @@ let v15 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => 
 let v16 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v17 = match s.apply(v16, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v18 = match s.apply(v15, v17) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.literal(Lit::Binary(BitVec::new(1, &v19))) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.apply(v18, v20) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v14, v21) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v10, v22) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v23, a3) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2delse(s, v24, a2, v9)
+let v19 = match s.literal(Lit::Binary(BitVec::new(1, &Integer::from(1u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.apply(v18, v19) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.apply(v14, v20) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.apply(v10, v21) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v22, a3) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2delse(s, v23, a2, v9)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dite_2dmerge_2dthen_2delse(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4070,15 +2681,14 @@ let v13 = match s.apply(v12, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.apply(v11, v13) { Ok(v) => v, Err(e) => return Err(e) };
 let v15 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v16 = match s.apply(v15, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.literal(Lit::Binary(BitVec::new(1, &v17))) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.apply(v16, v18) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v14, v19) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.apply(v10, v20) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v21, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.apply(v22, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.apply(v9, v23) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v24))
+let v17 = match s.literal(Lit::Binary(BitVec::new(1, &Integer::from(1u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v18 = match s.apply(v16, v17) { Ok(v) => v, Err(e) => return Err(e) };
+let v19 = match s.apply(v14, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.apply(v10, v19) { Ok(v) => v, Err(e) => return Err(e) };
+let v21 = match s.apply(v20, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.apply(v21, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v23 = match s.apply(v9, v22) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v23))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dite_2dmerge_2delse_2delse(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4156,13 +2766,12 @@ let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => ret
 let v1 = match s.construct(Constructor::eo_bvshl, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.literal(Lit::Numeral(v4)) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.apply(v3, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v2, v6) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v0, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v8, a0) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
+let v4 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.apply(v3, v4) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v0, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.apply(v7, a0) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v8))
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d0(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4199,50 +2808,46 @@ if a3 != v8 { return Ok(None); }
 let v9 = match eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d0(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v9))
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s: &mut Store, v77: Term, v71: Term, v65: Term) -> CheckResult<Option<Term>> {
-let v78 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match s.literal(Lit::Binary(BitVec::new(0, &v78))) { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.apply(v77, v79) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.apply(v71, v80) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.apply(v65, v81) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v82))
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s: &mut Store, v73: Term, v68: Term, v63: Term) -> CheckResult<Option<Term>> {
+let v74 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.apply(v73, v74) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.apply(v68, v75) { Ok(v) => v, Err(e) => return Err(e) };
+let v77 = match s.apply(v63, v76) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v77))
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s: &mut Store, v61: Term, v63: Term, v59: Term, a3: Term, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v64 = match s.apply(v61, v63) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v59, v64) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match s.literal(Lit::Numeral(v67)) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.construct(Constructor::eo_extract, &[a3, v68]) { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.apply(v69, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.apply(v66, v70) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v75 = match s.literal(Lit::Numeral(v74)) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v73, v75) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.apply(v72, v76) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s, v77, v71, v65)
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s: &mut Store, v59: Term, v61: Term, v57: Term, a3: Term, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+let v62 = match s.apply(v59, v61) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.apply(v57, v62) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.construct(Constructor::eo_extract, &[a3, v65]) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v66, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.apply(v64, v67) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.apply(v70, v71) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.apply(v69, v72) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s, v73, v68, v63)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s: &mut Store, v43: Term, a1: Term, a0: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
-let v50 = match s.unapply(v43) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v51, v52)) = v50 else { return Ok(None); }
+let v49 = match s.unapply(v43) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v50, v51)) = v49 else { return Ok(None); }
 ;
-let v53 = match s.unapply(v51) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v54, v55)) = v53 else { return Ok(None); }
+let v52 = match s.unapply(v50) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v53, v54)) = v52 else { return Ok(None); }
 ;
-let v56 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v54 != v56 { return Ok(None); }
-if v55 != a1 { return Ok(None); }
-let v57 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.literal(Lit::Numeral(v57)) { Ok(v) => v, Err(e) => return Err(e) };
-if v52 != v58 { return Ok(None); }
-let v59 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.construct(Constructor::eo_bvshl, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.apply(v60, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.apply(v62, a1) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s, v61, v63, v59, a3, a0, a1)
+let v55 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v53 != v55 { return Ok(None); }
+if v54 != a1 { return Ok(None); }
+let v56 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v51 != v56 { return Ok(None); }
+let v57 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.construct(Constructor::eo_bvshl, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.apply(v58, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.apply(v60, a1) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s, v59, v61, v57, a3, a0, a1)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s: &mut Store, v34: Term, v35: Term, a0: Term, v32: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v36 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4261,9 +2866,8 @@ let Some((v45, v46)) = v44 else { return Ok(None); }
 ;
 let v47 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v45 != v47 { return Ok(None); }
-let v48 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.literal(Lit::Numeral(v48)) { Ok(v) => v, Err(e) => return Err(e) };
-if v46 != v49 { return Ok(None); }
+let v48 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v46 != v48 { return Ok(None); }
 more_2_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s, v43, a1, a0, a2, a3)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d1(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v4: Term, a5: Term, a3: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
@@ -4392,11 +2996,10 @@ let v63 = match s.apply(v62, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v64 = match s.apply(v61, v63) { Ok(v) => v, Err(e) => return Err(e) };
 let v65 = match s.apply(v59, v64) { Ok(v) => v, Err(e) => return Err(e) };
 let v66 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match s.literal(Lit::Numeral(v67)) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match s.apply(v66, v68) { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.apply(v65, v69) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v70))
+let v67 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.apply(v66, v67) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.apply(v65, v68) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v69))
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d2(s: &mut Store, v47: Term, a3: Term, a0: Term, a2: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v48 = match s.unapply(v47) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4573,13 +3176,12 @@ let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => ret
 let v1 = match s.construct(Constructor::eo_bvlshr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.literal(Lit::Numeral(v4)) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.apply(v3, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v2, v6) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v0, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v8, a0) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
+let v4 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.apply(v3, v4) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v0, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.apply(v7, a0) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v8))
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d0(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4623,29 +3225,27 @@ if let Some(found) = match case_330_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2
 if let Some(found) = match case_331_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s: &mut Store, v59: Term, v55: Term, v49: Term) -> CheckResult<Option<Term>> {
-let v60 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.literal(Lit::Binary(BitVec::new(0, &v60))) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.apply(v59, v61) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.apply(v55, v62) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v49, v63) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v64))
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s: &mut Store, v57: Term, v53: Term, v48: Term) -> CheckResult<Option<Term>> {
+let v58 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.apply(v57, v58) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v53, v59) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.apply(v48, v60) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v61))
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s: &mut Store, v46: Term, a1: Term, v45: Term, v43: Term, a3: Term, a0: Term) -> CheckResult<Option<Term>> {
-let v47 = match s.apply(v46, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.apply(v45, v47) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.apply(v43, v48) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.literal(Lit::Numeral(v52)) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v51, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.apply(v50, v54) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.construct(Constructor::eo_extract, &[a3, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.apply(v57, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.apply(v56, v58) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s, v59, v55, v49)
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s: &mut Store, v45: Term, a1: Term, v44: Term, v42: Term, a3: Term, a0: Term) -> CheckResult<Option<Term>> {
+let v46 = match s.apply(v45, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v44, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.apply(v42, v47) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v50, v51) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.apply(v49, v52) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.construct(Constructor::eo_extract, &[a3, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.apply(v55, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.apply(v54, v56) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s, v57, v53, v48)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s: &mut Store, v34: Term, v35: Term, a0: Term, v32: Term, a2: Term, a1: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v36 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4656,14 +3256,13 @@ let Some((v38, v39)) = v37 else { return Ok(None); }
 let v40 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v38 != v40 { return Ok(None); }
 if v39 != a0 { return Ok(None); }
-let v41 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.literal(Lit::Numeral(v41)) { Ok(v) => v, Err(e) => return Err(e) };
-if v32 != v42 { return Ok(None); }
-let v43 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match s.construct(Constructor::eo_bvlshr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.apply(v44, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s, v46, a1, v45, v43, a3, a0)
+let v41 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v32 != v41 { return Ok(None); }
+let v42 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.construct(Constructor::eo_bvlshr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.apply(v43, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s, v45, a1, v44, v42, a3, a0)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d1(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v4: Term, a5: Term, a3: Term, a2: Term, a1: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
@@ -4793,11 +3392,10 @@ let v50 = match s.apply(v49, a1) { Ok(v) => v, Err(e) => return Err(e) };
 let v51 = match s.apply(v48, v50) { Ok(v) => v, Err(e) => return Err(e) };
 let v52 = match s.apply(v46, v51) { Ok(v) => v, Err(e) => return Err(e) };
 let v53 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.literal(Lit::Numeral(v54)) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.apply(v53, v55) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.apply(v52, v56) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v57))
+let v54 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.apply(v53, v54) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.apply(v52, v55) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v56))
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dlshr_2dby_2dconst_2d2(s: &mut Store, v34: Term, v36: Term, v35: Term, a1: Term, v32: Term, a0: Term, v25: Term, a2: Term) -> CheckResult<Option<Term>> {
 if v34 != v36 { return Ok(None); }
@@ -4936,13 +3534,12 @@ let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => ret
 let v1 = match s.construct(Constructor::eo_bvashr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.literal(Lit::Numeral(v4)) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.apply(v3, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v2, v6) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v0, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.apply(v8, a0) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v9))
+let v4 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.apply(v3, v4) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v0, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.apply(v7, a0) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v8))
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d0(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -4979,29 +3576,28 @@ if a3 != v8 { return Ok(None); }
 let v9 = match eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d0(s, v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v9))
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s: &mut Store, v56: Term, v58: Term, v55: Term, v49: Term) -> CheckResult<Option<Term>> {
-let v59 = match s.apply(v56, v58) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.literal(Lit::Binary(BitVec::new(0, &v60))) { Ok(v) => v, Err(e) => return Err(e) };
-let v62 = match s.apply(v59, v61) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.apply(v55, v62) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v49, v63) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v64))
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s: &mut Store, v55: Term, v57: Term, v54: Term, v48: Term) -> CheckResult<Option<Term>> {
+let v58 = match s.apply(v55, v57) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.apply(v58, v59) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match s.apply(v54, v60) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.apply(v48, v61) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v62))
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s: &mut Store, v46: Term, a1: Term, v45: Term, v43: Term, a3: Term, a0: Term) -> CheckResult<Option<Term>> {
-let v47 = match s.apply(v46, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.apply(v45, v47) { Ok(v) => v, Err(e) => return Err(e) };
-let v49 = match s.apply(v43, v48) { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v51 = match s.construct(Constructor::eo_repeat, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v53 = match s.apply(v52, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v54 = match s.apply(v51, v53) { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.apply(v50, v54) { Ok(v) => v, Err(e) => return Err(e) };
-let v56 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v57 = match s.construct(Constructor::eo_extract, &[a3, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.apply(v57, a0) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s, v56, v58, v55, v49)
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s: &mut Store, v45: Term, a1: Term, v44: Term, v42: Term, a3: Term, a0: Term) -> CheckResult<Option<Term>> {
+let v46 = match s.apply(v45, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v47 = match s.apply(v44, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let v48 = match s.apply(v42, v47) { Ok(v) => v, Err(e) => return Err(e) };
+let v49 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v50 = match s.construct(Constructor::eo_repeat, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v51 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.apply(v51, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v53 = match s.apply(v50, v52) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.apply(v49, v53) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.construct(Constructor::eo_extract, &[a3, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match s.apply(v56, a0) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s, v55, v57, v54, v48)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s: &mut Store, v34: Term, v35: Term, a0: Term, v32: Term, a2: Term, a1: Term, a3: Term) -> CheckResult<Option<Term>> {
 let v36 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -5012,14 +3608,13 @@ let Some((v38, v39)) = v37 else { return Ok(None); }
 let v40 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v38 != v40 { return Ok(None); }
 if v39 != a0 { return Ok(None); }
-let v41 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.literal(Lit::Numeral(v41)) { Ok(v) => v, Err(e) => return Err(e) };
-if v32 != v42 { return Ok(None); }
-let v43 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match s.construct(Constructor::eo_bvashr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.apply(v44, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v46 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s, v46, a1, v45, v43, a3, a0)
+let v41 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v32 != v41 { return Ok(None); }
+let v42 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.construct(Constructor::eo_bvashr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.apply(v43, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v45 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s, v45, a1, v44, v42, a3, a0)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d1(s: &mut Store, v17: Term, v19: Term, v18: Term, a0: Term, v4: Term, a5: Term, a3: Term, a2: Term, a1: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
@@ -5155,49 +3750,48 @@ if let Some(found) = match cases_0_82_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, 
 if let Some(found) = match cases_0_83_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s: &mut Store, v87: Term, v91: Term) -> CheckResult<Option<Term>> {
-let v92 = match s.apply(v87, v91) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v92))
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s: &mut Store, v86: Term, v90: Term) -> CheckResult<Option<Term>> {
+let v91 = match s.apply(v86, v90) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v91))
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s: &mut Store, v79: Term, a0: Term, a2: Term, a1: Term, a4: Term, a3: Term) -> CheckResult<Option<Term>> {
-if v79 != a0 { return Ok(None); }
-let v81 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.construct(Constructor::eo_bvashr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.apply(v82, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v84 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v84, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match s.apply(v83, v85) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.apply(v81, v86) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo_repeat, &[a4]) { Ok(v) => v, Err(e) => return Err(e) };
-let v89 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.apply(v89, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.apply(v88, v90) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s, v87, v91)
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s: &mut Store, v78: Term, a0: Term, a2: Term, a1: Term, a4: Term, a3: Term) -> CheckResult<Option<Term>> {
+if v78 != a0 { return Ok(None); }
+let v80 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.construct(Constructor::eo_bvashr, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v81, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v83, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.apply(v82, v84) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.apply(v80, v85) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.construct(Constructor::eo_repeat, &[a4]) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.construct(Constructor::eo_extract, &[a3, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v89 = match s.apply(v88, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.apply(v87, v89) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s, v86, v90)
 }
 pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s: &mut Store, v64: Term, a0: Term, v57: Term, a8: Term, a4: Term, a2: Term, a1: Term, a3: Term) -> CheckResult<Option<Term>> {
 if v64 != a0 { return Ok(None); }
-let v66 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.literal(Lit::Numeral(v66)) { Ok(v) => v, Err(e) => return Err(e) };
-if v57 != v67 { return Ok(None); }
-let v68 = match s.destruct(Constructor::eo__24eo_5fpf, a8) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v68 else { return Ok(None); }
+let v66 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v57 != v66 { return Ok(None); }
+let v67 = match s.destruct(Constructor::eo__24eo_5fpf, a8) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v67 else { return Ok(None); }
 ;
-let v69 = fields[0];
-let v70 = match s.unapply(v69) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v71, v72)) = v70 else { return Ok(None); }
+let v68 = fields[0];
+let v69 = match s.unapply(v68) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v70, v71)) = v69 else { return Ok(None); }
 ;
-let v73 = match s.unapply(v71) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v74, v75)) = v73 else { return Ok(None); }
+let v72 = match s.unapply(v70) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v73, v74)) = v72 else { return Ok(None); }
 ;
-let v76 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v74 != v76 { return Ok(None); }
-if v75 != a4 { return Ok(None); }
-let v77 = match s.unapply(v72) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v78, v79)) = v77 else { return Ok(None); }
+let v75 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v73 != v75 { return Ok(None); }
+if v74 != a4 { return Ok(None); }
+let v76 = match s.unapply(v71) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v77, v78)) = v76 else { return Ok(None); }
 ;
-let v80 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v78 != v80 { return Ok(None); }
-more_4_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s, v79, a0, a2, a1, a4, a3)
+let v79 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v77 != v79 { return Ok(None); }
+more_4_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s, v78, a0, a2, a1, a4, a3)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dashr_2dby_2dconst_2d2(s: &mut Store, v47: Term, a3: Term, a0: Term, a8: Term, a4: Term, a2: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v48 = match s.unapply(v47) { Ok(v) => v, Err(e) => return Err(e) };
@@ -5387,140 +3981,134 @@ let v24 = fields[0];
 let v25 = fields[1];
 more_59_eo__24eo_5fcmd_5fstep_5fproven(s, v25, a0, v18, v21, v24, v2, v5, v8, v11, v14)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v133: Term, v142: Term, v132: Term, v130: Term, v120: Term, v119: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v143 = match eo__24eo_5fnil(s, v133, v142) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v132, v143) { Ok(v) => v, Err(e) => return Err(e) };
-let v145 = match s.apply(v130, v144) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.apply(v120, v145) { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.literal(Lit::Binary(BitVec::new(0, &v147))) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.apply(v146, v148) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.apply(v119, v149) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.apply(v87, v150) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v151))
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v128: Term, v136: Term, v127: Term, v125: Term, v116: Term, v115: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v137 = match eo__24eo_5fnil(s, v128, v136) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.apply(v127, v137) { Ok(v) => v, Err(e) => return Err(e) };
+let v139 = match s.apply(v125, v138) { Ok(v) => v, Err(e) => return Err(e) };
+let v140 = match s.apply(v116, v139) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.apply(v140, v141) { Ok(v) => v, Err(e) => return Err(e) };
+let v143 = match s.apply(v115, v142) { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.apply(v84, v143) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v144))
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v121: Term, v129: Term, a2: Term, a7: Term, a0: Term, a1: Term, v120: Term, v119: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v130 = match s.apply(v121, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.apply(v131, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v135 = match s.literal(Lit::Numeral(v134)) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.construct(Constructor::eo_extract, &[a7, v135]) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.builtin_list(EvalOp::ListConcat, &[v138, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.builtin_list(EvalOp::ListSingletonElim, &[v137, v139]) { Ok(v) => v, Err(e) => return Err(e) };
-let v141 = match s.apply(v136, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match eo__24eo_5ftypeof(s, v141) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v133, v142, v132, v130, v120, v119, v87)
-}
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v107: Term, v116: Term, v96: Term, v88: Term, a7: Term, a0: Term, a1: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v117 = match s.apply(v107, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.apply(v96, v117) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.apply(v88, v118) { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.literal(Lit::Numeral(v122)) { Ok(v) => v, Err(e) => return Err(e) };
-let v124 = match s.construct(Constructor::eo_extract, &[a7, v123]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v117: Term, v124: Term, a2: Term, a7: Term, a0: Term, a1: Term, v116: Term, v115: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v125 = match s.apply(v117, v124) { Ok(v) => v, Err(e) => return Err(e) };
 let v126 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.builtin_list(EvalOp::ListConcat, &[v126, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.builtin_list(EvalOp::ListSingletonElim, &[v125, v127]) { Ok(v) => v, Err(e) => return Err(e) };
-let v129 = match s.apply(v124, v128) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v121, v129, a2, a7, a0, a1, v120, v119, v87)
+let v127 = match s.apply(v126, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.construct(Constructor::eo_extract, &[a7, v129]) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v132 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v133 = match s.builtin_list(EvalOp::ListConcat, &[v132, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.builtin_list(EvalOp::ListSingletonElim, &[v131, v133]) { Ok(v) => v, Err(e) => return Err(e) };
+let v135 = match s.apply(v130, v134) { Ok(v) => v, Err(e) => return Err(e) };
+let v136 = match eo__24eo_5ftypeof(s, v135) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v128, v136, v127, v125, v116, v115, v84)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v99: Term, a4: Term, v104: Term, v98: Term, v97: Term, a5: Term, a6: Term, a0: Term, a1: Term, v96: Term, v88: Term, a7: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v105 = match s.builtin_list(EvalOp::ListConcat, &[v99, a4, v104]) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.builtin_list(EvalOp::ListSingletonElim, &[v98, v105]) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.apply(v97, v106) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v112 = match s.builtin_list(EvalOp::ListConcat, &[v111, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.builtin_list(EvalOp::ListSingletonElim, &[v110, v112]) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.apply(v109, v113) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match eo__24eo_5ftypeof(s, v114) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match eo__24eo_5fnil(s, v108, v115) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v107, v116, v96, v88, a7, a0, a1, a2, v87)
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v103: Term, v112: Term, v93: Term, v85: Term, a7: Term, a0: Term, a1: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v113 = match s.apply(v103, v112) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.apply(v93, v113) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.apply(v85, v114) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v118 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.construct(Constructor::eo_extract, &[a7, v118]) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.builtin_list(EvalOp::ListConcat, &[v121, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.builtin_list(EvalOp::ListSingletonElim, &[v120, v122]) { Ok(v) => v, Err(e) => return Err(e) };
+let v124 = match s.apply(v119, v123) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v117, v124, a2, a7, a0, a1, v116, v115, v84)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, a0: Term, a1: Term, v91: Term, v90: Term, v89: Term, a3: Term, a4: Term, a5: Term, a6: Term, v88: Term, a7: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v92 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.builtin_list(EvalOp::ListConcat, &[v92, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.builtin_list(EvalOp::ListSingletonElim, &[v91, v93]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match s.apply(v90, v94) { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.apply(v89, v95) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v98 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.apply(v100, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.literal(Lit::Binary(BitVec::new(0, &v102))) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v101, v103) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v99, a4, v104, v98, v97, a5, a6, a0, a1, v96, v88, a7, a2, v87)
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v96: Term, a4: Term, v100: Term, v95: Term, v94: Term, a5: Term, a6: Term, a0: Term, a1: Term, v93: Term, v85: Term, a7: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v101 = match s.builtin_list(EvalOp::ListConcat, &[v96, a4, v100]) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.builtin_list(EvalOp::ListSingletonElim, &[v95, v101]) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.apply(v94, v102) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.builtin_list(EvalOp::ListConcat, &[v107, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.builtin_list(EvalOp::ListSingletonElim, &[v106, v108]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.apply(v105, v109) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match eo__24eo_5ftypeof(s, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match eo__24eo_5fnil(s, v104, v111) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v103, v112, v93, v85, a7, a0, a1, a2, v84)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v78: Term, v76: Term, v74: Term, a4: Term, v73: Term, a1: Term, v72: Term, a0: Term, v71: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v79 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.literal(Lit::Binary(BitVec::new(0, &v79))) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.apply(v78, v80) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.apply(v76, v81) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.builtin_list(EvalOp::ListConcat, &[v74, a4, v82]) { Ok(v) => v, Err(e) => return Err(e) };
-let v84 = match s.apply(v73, v83) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v84, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match s.builtin_list(EvalOp::ListConcat, &[v72, a0, v85]) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.apply(v71, v86) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, a0: Term, a1: Term, v88: Term, v87: Term, v86: Term, a3: Term, a4: Term, a5: Term, a6: Term, v85: Term, a7: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
 let v89 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, a0, a1, v91, v90, v89, a3, a4, a5, a6, v88, a7, a2, v87)
+let v90 = match s.builtin_list(EvalOp::ListConcat, &[v89, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.builtin_list(EvalOp::ListSingletonElim, &[v88, v90]) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.apply(v87, v91) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.apply(v86, v92) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.apply(v97, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.apply(v98, v99) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v96, a4, v100, v95, v94, a5, a6, a0, a1, v93, v85, a7, a2, v84)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v66: Term, v68: Term, v67: Term, a2: Term, v60: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v66 != v68 { return Ok(None); }
-if v67 != a2 { return Ok(None); }
-let v69 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.literal(Lit::Numeral(v69)) { Ok(v) => v, Err(e) => return Err(e) };
-if v60 != v70 { return Ok(None); }
-let v71 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v76: Term, v74: Term, v72: Term, a4: Term, v71: Term, a1: Term, v70: Term, a0: Term, v69: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term) -> CheckResult<Option<Term>> {
+let v77 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v76, v77) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.apply(v74, v78) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.builtin_list(EvalOp::ListConcat, &[v72, a4, v79]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.apply(v71, v80) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v81, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.builtin_list(EvalOp::ListConcat, &[v70, a0, v82]) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v69, v83) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, a0, a1, v88, v87, v86, a3, a4, a5, a6, v85, a7, a2, v84)
+}
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v65: Term, v67: Term, v66: Term, a2: Term, v59: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v65 != v67 { return Ok(None); }
+if v66 != a2 { return Ok(None); }
+let v68 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v59 != v68 { return Ok(None); }
+let v69 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.apply(v73, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v75 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v75, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v77, a2) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v78, v76, v74, a4, v73, a1, v72, a0, v71, a5, a6, a3, a7, a2)
+let v76 = match s.apply(v75, a2) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v76, v74, v72, a4, v71, a1, v70, a0, v69, a5, a6, a3, a7, a2)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, a10: Term, a7: Term, a2: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v49 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v49 else { return Ok(None); }
+let v48 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v48 else { return Ok(None); }
 ;
-let v50 = fields[0];
-let v51 = match s.unapply(v50) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v52, v53)) = v51 else { return Ok(None); }
+let v49 = fields[0];
+let v50 = match s.unapply(v49) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v51, v52)) = v50 else { return Ok(None); }
 ;
-let v54 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v55, v56)) = v54 else { return Ok(None); }
+let v53 = match s.unapply(v51) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v54, v55)) = v53 else { return Ok(None); }
 ;
-let v57 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v55 != v57 { return Ok(None); }
-if v56 != a7 { return Ok(None); }
-let v58 = match s.unapply(v53) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v59, v60)) = v58 else { return Ok(None); }
+let v56 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v54 != v56 { return Ok(None); }
+if v55 != a7 { return Ok(None); }
+let v57 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v58, v59)) = v57 else { return Ok(None); }
 ;
-let v61 = match s.unapply(v59) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v62, v63)) = v61 else { return Ok(None); }
+let v60 = match s.unapply(v58) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v61, v62)) = v60 else { return Ok(None); }
 ;
-let v64 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v62 != v64 { return Ok(None); }
-let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v66, v67)) = v65 else { return Ok(None); }
+let v63 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v61 != v63 { return Ok(None); }
+let v64 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v65, v66)) = v64 else { return Ok(None); }
 ;
-let v68 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v66, v68, v67, a2, v60, a3, a4, a1, a0, a5, a6, a7)
+let v67 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, v65, v67, v66, a2, v59, a3, a4, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v34: Term, a3: Term, v35: Term, a2: Term, a4: Term, v24: Term, a10: Term, a7: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v36 = match s.unapply(v34) { Ok(v) => v, Err(e) => return Err(e) };
@@ -5539,9 +4127,8 @@ let v46 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) =>
 if v44 != v46 { return Ok(None); }
 if v45 != a2 { return Ok(None); }
 if v42 != a4 { return Ok(None); }
-let v47 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Numeral(v47)) { Ok(v) => v, Err(e) => return Err(e) };
-if v24 != v48 { return Ok(None); }
+let v47 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v24 != v47 { return Ok(None); }
 more_2_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s, a10, a7, a2, a3, a4, a1, a0, a5, a6)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup(s: &mut Store, v16: Term, a5: Term, v17: Term, a3: Term, a2: Term, a4: Term, a10: Term, a7: Term, a1: Term, a0: Term, a6: Term) -> CheckResult<Option<Term>> {
@@ -5699,140 +4286,134 @@ let v25 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v
 if v24 != v25 { return Ok(None); }
 more_60_eo__24eo_5fcmd_5fstep_5fproven(s, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v133: Term, v142: Term, v132: Term, v130: Term, v120: Term, v119: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v143 = match eo__24eo_5fnil(s, v133, v142) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v132, v143) { Ok(v) => v, Err(e) => return Err(e) };
-let v145 = match s.apply(v130, v144) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.apply(v120, v145) { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.literal(Lit::Binary(BitVec::new(0, &v147))) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.apply(v146, v148) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.apply(v119, v149) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.apply(v87, v150) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v151))
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v128: Term, v136: Term, v127: Term, v125: Term, v116: Term, v115: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v137 = match eo__24eo_5fnil(s, v128, v136) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.apply(v127, v137) { Ok(v) => v, Err(e) => return Err(e) };
+let v139 = match s.apply(v125, v138) { Ok(v) => v, Err(e) => return Err(e) };
+let v140 = match s.apply(v116, v139) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.apply(v140, v141) { Ok(v) => v, Err(e) => return Err(e) };
+let v143 = match s.apply(v115, v142) { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.apply(v84, v143) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v144))
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v121: Term, v129: Term, a2: Term, a7: Term, a0: Term, a1: Term, v120: Term, v119: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v130 = match s.apply(v121, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.apply(v131, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v135 = match s.literal(Lit::Numeral(v134)) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.construct(Constructor::eo_extract, &[a7, v135]) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.builtin_list(EvalOp::ListConcat, &[v138, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.builtin_list(EvalOp::ListSingletonElim, &[v137, v139]) { Ok(v) => v, Err(e) => return Err(e) };
-let v141 = match s.apply(v136, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match eo__24eo_5ftypeof(s, v141) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v133, v142, v132, v130, v120, v119, v87)
-}
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v107: Term, v116: Term, v96: Term, v88: Term, a7: Term, a0: Term, a1: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v117 = match s.apply(v107, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.apply(v96, v117) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.apply(v88, v118) { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.literal(Lit::Numeral(v122)) { Ok(v) => v, Err(e) => return Err(e) };
-let v124 = match s.construct(Constructor::eo_extract, &[a7, v123]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v117: Term, v124: Term, a2: Term, a7: Term, a0: Term, a1: Term, v116: Term, v115: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v125 = match s.apply(v117, v124) { Ok(v) => v, Err(e) => return Err(e) };
 let v126 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.builtin_list(EvalOp::ListConcat, &[v126, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.builtin_list(EvalOp::ListSingletonElim, &[v125, v127]) { Ok(v) => v, Err(e) => return Err(e) };
-let v129 = match s.apply(v124, v128) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v121, v129, a2, a7, a0, a1, v120, v119, v87)
+let v127 = match s.apply(v126, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.construct(Constructor::eo_extract, &[a7, v129]) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v132 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v133 = match s.builtin_list(EvalOp::ListConcat, &[v132, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.builtin_list(EvalOp::ListSingletonElim, &[v131, v133]) { Ok(v) => v, Err(e) => return Err(e) };
+let v135 = match s.apply(v130, v134) { Ok(v) => v, Err(e) => return Err(e) };
+let v136 = match eo__24eo_5ftypeof(s, v135) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v128, v136, v127, v125, v116, v115, v84)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v99: Term, a4: Term, v104: Term, v98: Term, v97: Term, a5: Term, a6: Term, a0: Term, a1: Term, v96: Term, v88: Term, a7: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v105 = match s.builtin_list(EvalOp::ListConcat, &[v99, a4, v104]) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.builtin_list(EvalOp::ListSingletonElim, &[v98, v105]) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.apply(v97, v106) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v112 = match s.builtin_list(EvalOp::ListConcat, &[v111, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.builtin_list(EvalOp::ListSingletonElim, &[v110, v112]) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.apply(v109, v113) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match eo__24eo_5ftypeof(s, v114) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match eo__24eo_5fnil(s, v108, v115) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v107, v116, v96, v88, a7, a0, a1, a2, v87)
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v103: Term, v112: Term, v93: Term, v85: Term, a7: Term, a0: Term, a1: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v113 = match s.apply(v103, v112) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.apply(v93, v113) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.apply(v85, v114) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v118 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.construct(Constructor::eo_extract, &[a7, v118]) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.builtin_list(EvalOp::ListConcat, &[v121, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.builtin_list(EvalOp::ListSingletonElim, &[v120, v122]) { Ok(v) => v, Err(e) => return Err(e) };
+let v124 = match s.apply(v119, v123) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v117, v124, a2, a7, a0, a1, v116, v115, v84)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, a0: Term, a1: Term, v91: Term, v90: Term, v89: Term, a3: Term, a4: Term, a5: Term, a6: Term, v88: Term, a7: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v92 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.builtin_list(EvalOp::ListConcat, &[v92, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.builtin_list(EvalOp::ListSingletonElim, &[v91, v93]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match s.apply(v90, v94) { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.apply(v89, v95) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v98 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.apply(v100, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.literal(Lit::Binary(BitVec::new(0, &v102))) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v101, v103) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v99, a4, v104, v98, v97, a5, a6, a0, a1, v96, v88, a7, a2, v87)
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v96: Term, a4: Term, v100: Term, v95: Term, v94: Term, a5: Term, a6: Term, a0: Term, a1: Term, v93: Term, v85: Term, a7: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v101 = match s.builtin_list(EvalOp::ListConcat, &[v96, a4, v100]) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.builtin_list(EvalOp::ListSingletonElim, &[v95, v101]) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.apply(v94, v102) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.builtin_list(EvalOp::ListConcat, &[v107, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.builtin_list(EvalOp::ListSingletonElim, &[v106, v108]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.apply(v105, v109) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match eo__24eo_5ftypeof(s, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match eo__24eo_5fnil(s, v104, v111) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v103, v112, v93, v85, a7, a0, a1, a2, v84)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v78: Term, v76: Term, v74: Term, a4: Term, v73: Term, a1: Term, v72: Term, a0: Term, v71: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v79 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.literal(Lit::Binary(BitVec::new(0, &v79))) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.apply(v78, v80) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.apply(v76, v81) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.builtin_list(EvalOp::ListConcat, &[v74, a4, v82]) { Ok(v) => v, Err(e) => return Err(e) };
-let v84 = match s.apply(v73, v83) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v84, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match s.builtin_list(EvalOp::ListConcat, &[v72, a0, v85]) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.apply(v71, v86) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, a0: Term, a1: Term, v88: Term, v87: Term, v86: Term, a3: Term, a4: Term, a5: Term, a6: Term, v85: Term, a7: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
 let v89 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, a0, a1, v91, v90, v89, a3, a4, a5, a6, v88, a7, a2, v87)
+let v90 = match s.builtin_list(EvalOp::ListConcat, &[v89, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.builtin_list(EvalOp::ListSingletonElim, &[v88, v90]) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.apply(v87, v91) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.apply(v86, v92) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.apply(v97, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.apply(v98, v99) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v96, a4, v100, v95, v94, a5, a6, a0, a1, v93, v85, a7, a2, v84)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v66: Term, v68: Term, v67: Term, a2: Term, v60: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v66 != v68 { return Ok(None); }
-if v67 != a2 { return Ok(None); }
-let v69 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.literal(Lit::Numeral(v69)) { Ok(v) => v, Err(e) => return Err(e) };
-if v60 != v70 { return Ok(None); }
-let v71 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v76: Term, v74: Term, v72: Term, a4: Term, v71: Term, a1: Term, v70: Term, a0: Term, v69: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term) -> CheckResult<Option<Term>> {
+let v77 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v76, v77) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.apply(v74, v78) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.builtin_list(EvalOp::ListConcat, &[v72, a4, v79]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.apply(v71, v80) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v81, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.builtin_list(EvalOp::ListConcat, &[v70, a0, v82]) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v69, v83) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, a0, a1, v88, v87, v86, a3, a4, a5, a6, v85, a7, a2, v84)
+}
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v65: Term, v67: Term, v66: Term, a2: Term, v59: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v65 != v67 { return Ok(None); }
+if v66 != a2 { return Ok(None); }
+let v68 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v59 != v68 { return Ok(None); }
+let v69 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.apply(v73, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v75 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v75, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v77, a2) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v78, v76, v74, a4, v73, a1, v72, a0, v71, a5, a6, a3, a7, a2)
+let v76 = match s.apply(v75, a2) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v76, v74, v72, a4, v71, a1, v70, a0, v69, a5, a6, a3, a7, a2)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, a10: Term, a7: Term, a2: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v49 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v49 else { return Ok(None); }
+let v48 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v48 else { return Ok(None); }
 ;
-let v50 = fields[0];
-let v51 = match s.unapply(v50) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v52, v53)) = v51 else { return Ok(None); }
+let v49 = fields[0];
+let v50 = match s.unapply(v49) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v51, v52)) = v50 else { return Ok(None); }
 ;
-let v54 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v55, v56)) = v54 else { return Ok(None); }
+let v53 = match s.unapply(v51) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v54, v55)) = v53 else { return Ok(None); }
 ;
-let v57 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v55 != v57 { return Ok(None); }
-if v56 != a7 { return Ok(None); }
-let v58 = match s.unapply(v53) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v59, v60)) = v58 else { return Ok(None); }
+let v56 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v54 != v56 { return Ok(None); }
+if v55 != a7 { return Ok(None); }
+let v57 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v58, v59)) = v57 else { return Ok(None); }
 ;
-let v61 = match s.unapply(v59) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v62, v63)) = v61 else { return Ok(None); }
+let v60 = match s.unapply(v58) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v61, v62)) = v60 else { return Ok(None); }
 ;
-let v64 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v62 != v64 { return Ok(None); }
-let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v66, v67)) = v65 else { return Ok(None); }
+let v63 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v61 != v63 { return Ok(None); }
+let v64 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v65, v66)) = v64 else { return Ok(None); }
 ;
-let v68 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v66, v68, v67, a2, v60, a3, a4, a1, a0, a5, a6, a7)
+let v67 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, v65, v67, v66, a2, v59, a3, a4, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v34: Term, a3: Term, v35: Term, a2: Term, a4: Term, v24: Term, a10: Term, a7: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v36 = match s.unapply(v34) { Ok(v) => v, Err(e) => return Err(e) };
@@ -5851,9 +4432,8 @@ let v46 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) =>
 if v44 != v46 { return Ok(None); }
 if v45 != a2 { return Ok(None); }
 if v42 != a4 { return Ok(None); }
-let v47 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Numeral(v47)) { Ok(v) => v, Err(e) => return Err(e) };
-if v24 != v48 { return Ok(None); }
+let v47 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v24 != v47 { return Ok(None); }
 more_2_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s, a10, a7, a2, a3, a4, a1, a0, a5, a6)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup(s: &mut Store, v16: Term, a5: Term, v17: Term, a3: Term, a2: Term, a4: Term, a10: Term, a7: Term, a1: Term, a0: Term, a6: Term) -> CheckResult<Option<Term>> {
@@ -6011,140 +4591,134 @@ let v25 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v
 if v24 != v25 { return Ok(None); }
 more_61_eo__24eo_5fcmd_5fstep_5fproven(s, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v133: Term, v142: Term, v132: Term, v130: Term, v120: Term, v119: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v143 = match eo__24eo_5fnil(s, v133, v142) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v132, v143) { Ok(v) => v, Err(e) => return Err(e) };
-let v145 = match s.apply(v130, v144) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.apply(v120, v145) { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.literal(Lit::Binary(BitVec::new(0, &v147))) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.apply(v146, v148) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.apply(v119, v149) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.apply(v87, v150) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v151))
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v128: Term, v136: Term, v127: Term, v125: Term, v116: Term, v115: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v137 = match eo__24eo_5fnil(s, v128, v136) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.apply(v127, v137) { Ok(v) => v, Err(e) => return Err(e) };
+let v139 = match s.apply(v125, v138) { Ok(v) => v, Err(e) => return Err(e) };
+let v140 = match s.apply(v116, v139) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.apply(v140, v141) { Ok(v) => v, Err(e) => return Err(e) };
+let v143 = match s.apply(v115, v142) { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.apply(v84, v143) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v144))
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v121: Term, v129: Term, a2: Term, a7: Term, a0: Term, a1: Term, v120: Term, v119: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v130 = match s.apply(v121, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.apply(v131, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v135 = match s.literal(Lit::Numeral(v134)) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.construct(Constructor::eo_extract, &[a7, v135]) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.builtin_list(EvalOp::ListConcat, &[v138, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.builtin_list(EvalOp::ListSingletonElim, &[v137, v139]) { Ok(v) => v, Err(e) => return Err(e) };
-let v141 = match s.apply(v136, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match eo__24eo_5ftypeof(s, v141) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v133, v142, v132, v130, v120, v119, v87)
-}
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v107: Term, v116: Term, v96: Term, v88: Term, a7: Term, a0: Term, a1: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v117 = match s.apply(v107, v116) { Ok(v) => v, Err(e) => return Err(e) };
-let v118 = match s.apply(v96, v117) { Ok(v) => v, Err(e) => return Err(e) };
-let v119 = match s.apply(v88, v118) { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v121 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.literal(Lit::Numeral(v122)) { Ok(v) => v, Err(e) => return Err(e) };
-let v124 = match s.construct(Constructor::eo_extract, &[a7, v123]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v117: Term, v124: Term, a2: Term, a7: Term, a0: Term, a1: Term, v116: Term, v115: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v125 = match s.apply(v117, v124) { Ok(v) => v, Err(e) => return Err(e) };
 let v126 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.builtin_list(EvalOp::ListConcat, &[v126, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.builtin_list(EvalOp::ListSingletonElim, &[v125, v127]) { Ok(v) => v, Err(e) => return Err(e) };
-let v129 = match s.apply(v124, v128) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v121, v129, a2, a7, a0, a1, v120, v119, v87)
+let v127 = match s.apply(v126, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.construct(Constructor::eo_extract, &[a7, v129]) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v132 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v133 = match s.builtin_list(EvalOp::ListConcat, &[v132, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.builtin_list(EvalOp::ListSingletonElim, &[v131, v133]) { Ok(v) => v, Err(e) => return Err(e) };
+let v135 = match s.apply(v130, v134) { Ok(v) => v, Err(e) => return Err(e) };
+let v136 = match eo__24eo_5ftypeof(s, v135) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v128, v136, v127, v125, v116, v115, v84)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v99: Term, a4: Term, v104: Term, v98: Term, v97: Term, a5: Term, a6: Term, a0: Term, a1: Term, v96: Term, v88: Term, a7: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v105 = match s.builtin_list(EvalOp::ListConcat, &[v99, a4, v104]) { Ok(v) => v, Err(e) => return Err(e) };
-let v106 = match s.builtin_list(EvalOp::ListSingletonElim, &[v98, v105]) { Ok(v) => v, Err(e) => return Err(e) };
-let v107 = match s.apply(v97, v106) { Ok(v) => v, Err(e) => return Err(e) };
-let v108 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v109 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v110 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v111 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v112 = match s.builtin_list(EvalOp::ListConcat, &[v111, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v113 = match s.builtin_list(EvalOp::ListSingletonElim, &[v110, v112]) { Ok(v) => v, Err(e) => return Err(e) };
-let v114 = match s.apply(v109, v113) { Ok(v) => v, Err(e) => return Err(e) };
-let v115 = match eo__24eo_5ftypeof(s, v114) { Ok(v) => v, Err(e) => return Err(e) };
-let v116 = match eo__24eo_5fnil(s, v108, v115) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v107, v116, v96, v88, a7, a0, a1, a2, v87)
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v103: Term, v112: Term, v93: Term, v85: Term, a7: Term, a0: Term, a1: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v113 = match s.apply(v103, v112) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.apply(v93, v113) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.apply(v85, v114) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v118 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.construct(Constructor::eo_extract, &[a7, v118]) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.builtin_list(EvalOp::ListConcat, &[v121, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.builtin_list(EvalOp::ListSingletonElim, &[v120, v122]) { Ok(v) => v, Err(e) => return Err(e) };
+let v124 = match s.apply(v119, v123) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v117, v124, a2, a7, a0, a1, v116, v115, v84)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, a0: Term, a1: Term, v91: Term, v90: Term, v89: Term, a3: Term, a4: Term, a5: Term, a6: Term, v88: Term, a7: Term, a2: Term, v87: Term) -> CheckResult<Option<Term>> {
-let v92 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v93 = match s.builtin_list(EvalOp::ListConcat, &[v92, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v94 = match s.builtin_list(EvalOp::ListSingletonElim, &[v91, v93]) { Ok(v) => v, Err(e) => return Err(e) };
-let v95 = match s.apply(v90, v94) { Ok(v) => v, Err(e) => return Err(e) };
-let v96 = match s.apply(v89, v95) { Ok(v) => v, Err(e) => return Err(e) };
-let v97 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v98 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v99 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v100 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v101 = match s.apply(v100, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v102 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v103 = match s.literal(Lit::Binary(BitVec::new(0, &v102))) { Ok(v) => v, Err(e) => return Err(e) };
-let v104 = match s.apply(v101, v103) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v99, a4, v104, v98, v97, a5, a6, a0, a1, v96, v88, a7, a2, v87)
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v96: Term, a4: Term, v100: Term, v95: Term, v94: Term, a5: Term, a6: Term, a0: Term, a1: Term, v93: Term, v85: Term, a7: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
+let v101 = match s.builtin_list(EvalOp::ListConcat, &[v96, a4, v100]) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.builtin_list(EvalOp::ListSingletonElim, &[v95, v101]) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.apply(v94, v102) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v106 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.builtin_list(EvalOp::ListConcat, &[v107, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.builtin_list(EvalOp::ListSingletonElim, &[v106, v108]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.apply(v105, v109) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match eo__24eo_5ftypeof(s, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match eo__24eo_5fnil(s, v104, v111) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v103, v112, v93, v85, a7, a0, a1, a2, v84)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v78: Term, v76: Term, v74: Term, a4: Term, v73: Term, a1: Term, v72: Term, a0: Term, v71: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term) -> CheckResult<Option<Term>> {
-let v79 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.literal(Lit::Binary(BitVec::new(0, &v79))) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.apply(v78, v80) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.apply(v76, v81) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match s.builtin_list(EvalOp::ListConcat, &[v74, a4, v82]) { Ok(v) => v, Err(e) => return Err(e) };
-let v84 = match s.apply(v73, v83) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v84, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match s.builtin_list(EvalOp::ListConcat, &[v72, a0, v85]) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match s.apply(v71, v86) { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, a0: Term, a1: Term, v88: Term, v87: Term, v86: Term, a3: Term, a4: Term, a5: Term, a6: Term, v85: Term, a7: Term, a2: Term, v84: Term) -> CheckResult<Option<Term>> {
 let v89 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, a0, a1, v91, v90, v89, a3, a4, a5, a6, v88, a7, a2, v87)
+let v90 = match s.builtin_list(EvalOp::ListConcat, &[v89, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.builtin_list(EvalOp::ListSingletonElim, &[v88, v90]) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.apply(v87, v91) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.apply(v86, v92) { Ok(v) => v, Err(e) => return Err(e) };
+let v94 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.apply(v97, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.apply(v98, v99) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v96, a4, v100, v95, v94, a5, a6, a0, a1, v93, v85, a7, a2, v84)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v66: Term, v68: Term, v67: Term, a2: Term, v60: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v66 != v68 { return Ok(None); }
-if v67 != a2 { return Ok(None); }
-let v69 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.literal(Lit::Numeral(v69)) { Ok(v) => v, Err(e) => return Err(e) };
-if v60 != v70 { return Ok(None); }
-let v71 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v72 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v76: Term, v74: Term, v72: Term, a4: Term, v71: Term, a1: Term, v70: Term, a0: Term, v69: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term) -> CheckResult<Option<Term>> {
+let v77 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v76, v77) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.apply(v74, v78) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.builtin_list(EvalOp::ListConcat, &[v72, a4, v79]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.apply(v71, v80) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v81, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.builtin_list(EvalOp::ListConcat, &[v70, a0, v82]) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.apply(v69, v83) { Ok(v) => v, Err(e) => return Err(e) };
+let v85 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v88 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, a0, a1, v88, v87, v86, a3, a4, a5, a6, v85, a7, a2, v84)
+}
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v65: Term, v67: Term, v66: Term, a2: Term, v59: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v65 != v67 { return Ok(None); }
+if v66 != a2 { return Ok(None); }
+let v68 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v59 != v68 { return Ok(None); }
+let v69 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.apply(v73, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v75 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v75, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.apply(v77, a2) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v78, v76, v74, a4, v73, a1, v72, a0, v71, a5, a6, a3, a7, a2)
+let v76 = match s.apply(v75, a2) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v76, v74, v72, a4, v71, a1, v70, a0, v69, a5, a6, a3, a7, a2)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, a10: Term, a7: Term, a2: Term, a3: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v49 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v49 else { return Ok(None); }
+let v48 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v48 else { return Ok(None); }
 ;
-let v50 = fields[0];
-let v51 = match s.unapply(v50) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v52, v53)) = v51 else { return Ok(None); }
+let v49 = fields[0];
+let v50 = match s.unapply(v49) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v51, v52)) = v50 else { return Ok(None); }
 ;
-let v54 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v55, v56)) = v54 else { return Ok(None); }
+let v53 = match s.unapply(v51) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v54, v55)) = v53 else { return Ok(None); }
 ;
-let v57 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v55 != v57 { return Ok(None); }
-if v56 != a7 { return Ok(None); }
-let v58 = match s.unapply(v53) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v59, v60)) = v58 else { return Ok(None); }
+let v56 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v54 != v56 { return Ok(None); }
+if v55 != a7 { return Ok(None); }
+let v57 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v58, v59)) = v57 else { return Ok(None); }
 ;
-let v61 = match s.unapply(v59) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v62, v63)) = v61 else { return Ok(None); }
+let v60 = match s.unapply(v58) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v61, v62)) = v60 else { return Ok(None); }
 ;
-let v64 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v62 != v64 { return Ok(None); }
-let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v66, v67)) = v65 else { return Ok(None); }
+let v63 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v61 != v63 { return Ok(None); }
+let v64 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v65, v66)) = v64 else { return Ok(None); }
 ;
-let v68 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v66, v68, v67, a2, v60, a3, a4, a1, a0, a5, a6, a7)
+let v67 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, v65, v67, v66, a2, v59, a3, a4, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v34: Term, a3: Term, v35: Term, a2: Term, a4: Term, v24: Term, a10: Term, a7: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v36 = match s.unapply(v34) { Ok(v) => v, Err(e) => return Err(e) };
@@ -6163,9 +4737,8 @@ let v46 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) =>
 if v44 != v46 { return Ok(None); }
 if v45 != a2 { return Ok(None); }
 if v42 != a4 { return Ok(None); }
-let v47 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v48 = match s.literal(Lit::Numeral(v47)) { Ok(v) => v, Err(e) => return Err(e) };
-if v24 != v48 { return Ok(None); }
+let v47 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v24 != v47 { return Ok(None); }
 more_2_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s, a10, a7, a2, a3, a4, a1, a0, a5, a6)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup(s: &mut Store, v16: Term, a5: Term, v17: Term, a3: Term, a2: Term, a4: Term, a10: Term, a7: Term, a1: Term, a0: Term, a6: Term) -> CheckResult<Option<Term>> {
@@ -6330,177 +4903,172 @@ if let Some(found) = match case_338_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2
 if let Some(found) = match case_339_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v156: Term, v191: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v192 = match s.apply(v156, v191) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.apply(v133, v192) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v193))
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v154: Term, v186: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v187 = match s.apply(v154, v186) { Ok(v) => v, Err(e) => return Err(e) };
+let v188 = match s.apply(v131, v187) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v188))
 }
-pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, a0: Term, a1: Term, v178: Term, v175: Term, v174: Term, v167: Term, v157: Term, v156: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v179 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v181 = match s.builtin_list(EvalOp::ListConcat, &[v180, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v182 = match s.builtin_list(EvalOp::ListSingletonElim, &[v179, v181]) { Ok(v) => v, Err(e) => return Err(e) };
-let v183 = match s.apply(v178, v182) { Ok(v) => v, Err(e) => return Err(e) };
-let v184 = match eo__24eo_5ftypeof(s, v183) { Ok(v) => v, Err(e) => return Err(e) };
-let v185 = match eo__24eo_5fnil(s, v175, v184) { Ok(v) => v, Err(e) => return Err(e) };
-let v186 = match s.apply(v174, v185) { Ok(v) => v, Err(e) => return Err(e) };
-let v187 = match s.apply(v167, v186) { Ok(v) => v, Err(e) => return Err(e) };
-let v188 = match s.apply(v157, v187) { Ok(v) => v, Err(e) => return Err(e) };
-let v189 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v190 = match s.literal(Lit::Binary(BitVec::new(0, &v189))) { Ok(v) => v, Err(e) => return Err(e) };
-let v191 = match s.apply(v188, v190) { Ok(v) => v, Err(e) => return Err(e) };
-more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v156, v191, v133)
-}
-pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v161: Term, v165: Term, v158: Term, a2: Term, a4: Term, a7: Term, a0: Term, a1: Term, v157: Term, v156: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v166 = match s.apply(v161, v165) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v158, v166) { Ok(v) => v, Err(e) => return Err(e) };
-let v168 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v170, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v172 = match s.apply(v171, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.builtin_list(EvalOp::ListSingletonElim, &[v169, v172]) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.apply(v168, v173) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, a0: Term, a1: Term, v174: Term, v172: Term, v171: Term, v164: Term, v155: Term, v154: Term, v131: Term) -> CheckResult<Option<Term>> {
 let v175 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.literal(Lit::Numeral(v176)) { Ok(v) => v, Err(e) => return Err(e) };
-let v178 = match s.construct(Constructor::eo_extract, &[a7, v177]) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, a0, a1, v178, v175, v174, v167, v157, v156, v133)
+let v176 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.builtin_list(EvalOp::ListConcat, &[v176, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.builtin_list(EvalOp::ListSingletonElim, &[v175, v177]) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.apply(v174, v178) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match eo__24eo_5ftypeof(s, v179) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match eo__24eo_5fnil(s, v172, v180) { Ok(v) => v, Err(e) => return Err(e) };
+let v182 = match s.apply(v171, v181) { Ok(v) => v, Err(e) => return Err(e) };
+let v183 = match s.apply(v164, v182) { Ok(v) => v, Err(e) => return Err(e) };
+let v184 = match s.apply(v155, v183) { Ok(v) => v, Err(e) => return Err(e) };
+let v185 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v186 = match s.apply(v184, v185) { Ok(v) => v, Err(e) => return Err(e) };
+more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v154, v186, v131)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v145: Term, v152: Term, v144: Term, v142: Term, v134: Term, a7: Term, a0: Term, a1: Term, a2: Term, a4: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v153 = match eo__24eo_5fnil(s, v145, v152) { Ok(v) => v, Err(e) => return Err(e) };
-let v154 = match s.apply(v144, v153) { Ok(v) => v, Err(e) => return Err(e) };
-let v155 = match s.apply(v142, v154) { Ok(v) => v, Err(e) => return Err(e) };
-let v156 = match s.apply(v134, v155) { Ok(v) => v, Err(e) => return Err(e) };
-let v157 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v158 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v159 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v160 = match s.literal(Lit::Numeral(v159)) { Ok(v) => v, Err(e) => return Err(e) };
-let v161 = match s.construct(Constructor::eo_extract, &[a7, v160]) { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v163 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match s.builtin_list(EvalOp::ListConcat, &[v163, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v165 = match s.builtin_list(EvalOp::ListSingletonElim, &[v162, v164]) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v161, v165, v158, a2, a4, a7, a0, a1, v157, v156, v133)
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v158: Term, v162: Term, v156: Term, a2: Term, a4: Term, a7: Term, a0: Term, a1: Term, v155: Term, v154: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v163 = match s.apply(v158, v162) { Ok(v) => v, Err(e) => return Err(e) };
+let v164 = match s.apply(v156, v163) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.apply(v167, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v168, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.builtin_list(EvalOp::ListSingletonElim, &[v166, v169]) { Ok(v) => v, Err(e) => return Err(e) };
+let v171 = match s.apply(v165, v170) { Ok(v) => v, Err(e) => return Err(e) };
+let v172 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v173 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.construct(Constructor::eo_extract, &[a7, v173]) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, a0, a1, v174, v172, v171, v164, v155, v154, v131)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v136: Term, v140: Term, v135: Term, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v134: Term, a7: Term, a2: Term, a4: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v141 = match s.apply(v136, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match s.apply(v135, v141) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v143: Term, v150: Term, v142: Term, v140: Term, v132: Term, a7: Term, a0: Term, a1: Term, a2: Term, a4: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v151 = match eo__24eo_5fnil(s, v143, v150) { Ok(v) => v, Err(e) => return Err(e) };
+let v152 = match s.apply(v142, v151) { Ok(v) => v, Err(e) => return Err(e) };
+let v153 = match s.apply(v140, v152) { Ok(v) => v, Err(e) => return Err(e) };
+let v154 = match s.apply(v132, v153) { Ok(v) => v, Err(e) => return Err(e) };
+let v155 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v156 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v157 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v158 = match s.construct(Constructor::eo_extract, &[a7, v157]) { Ok(v) => v, Err(e) => return Err(e) };
+let v159 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.builtin_list(EvalOp::ListConcat, &[v160, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.builtin_list(EvalOp::ListSingletonElim, &[v159, v161]) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v158, v162, v156, a2, a4, a7, a0, a1, v155, v154, v131)
+}
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v134: Term, v138: Term, v133: Term, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v132: Term, a7: Term, a2: Term, a4: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v139 = match s.apply(v134, v138) { Ok(v) => v, Err(e) => return Err(e) };
+let v140 = match s.apply(v133, v139) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.apply(v141, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v143 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v143, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
 let v145 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.builtin_list(EvalOp::ListConcat, &[v148, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.builtin_list(EvalOp::ListSingletonElim, &[v147, v149]) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.apply(v146, v150) { Ok(v) => v, Err(e) => return Err(e) };
-let v152 = match eo__24eo_5ftypeof(s, v151) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v145, v152, v144, v142, v134, a7, a0, a1, a2, a4, v133)
+let v146 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v147 = match s.builtin_list(EvalOp::ListConcat, &[v146, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v148 = match s.builtin_list(EvalOp::ListSingletonElim, &[v145, v147]) { Ok(v) => v, Err(e) => return Err(e) };
+let v149 = match s.apply(v144, v148) { Ok(v) => v, Err(e) => return Err(e) };
+let v150 = match eo__24eo_5ftypeof(s, v149) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v143, v150, v142, v140, v132, a7, a0, a1, a2, a4, v131)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v125: Term, v128: Term, v123: Term, a1: Term, v122: Term, a0: Term, v121: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v129 = match s.apply(v125, v128) { Ok(v) => v, Err(e) => return Err(e) };
-let v130 = match s.apply(v123, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.apply(v130, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.builtin_list(EvalOp::ListConcat, &[v122, a0, v131]) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.apply(v121, v132) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v123: Term, v126: Term, v121: Term, a1: Term, v120: Term, a0: Term, v119: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term, a4: Term) -> CheckResult<Option<Term>> {
+let v127 = match s.apply(v123, v126) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.apply(v121, v127) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.apply(v128, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.builtin_list(EvalOp::ListConcat, &[v120, a0, v129]) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.apply(v119, v130) { Ok(v) => v, Err(e) => return Err(e) };
+let v132 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v133 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
 let v135 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.builtin_list(EvalOp::ListConcat, &[v138, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.builtin_list(EvalOp::ListSingletonElim, &[v137, v139]) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v136, v140, v135, a3, a5, a6, a0, a1, v134, a7, a2, a4, v133)
+let v136 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v137 = match s.builtin_list(EvalOp::ListConcat, &[v136, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.builtin_list(EvalOp::ListSingletonElim, &[v135, v137]) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v134, v138, v133, a3, a5, a6, a0, a1, v132, a7, a2, a4, v131)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v116: Term, v118: Term, v117: Term, a3: Term, v85: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v116 != v118 { return Ok(None); }
-if v117 != a3 { return Ok(None); }
-let v119 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.literal(Lit::Numeral(v119)) { Ok(v) => v, Err(e) => return Err(e) };
-if v85 != v120 { return Ok(None); }
-let v121 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v115: Term, v117: Term, v116: Term, a3: Term, v84: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v115 != v117 { return Ok(None); }
+if v116 != a3 { return Ok(None); }
+let v118 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v84 != v118 { return Ok(None); }
+let v119 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.apply(v122, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v124 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.apply(v124, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v126 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.apply(v126, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v127, a4) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v125, v128, v123, a1, v122, a0, v121, a5, a6, a3, a7, a2, a4)
+let v125 = match s.apply(v124, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v126 = match s.apply(v125, a4) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v123, v126, v121, a1, v120, a0, v119, a5, a6, a3, a7, a2, a4)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v102: Term, a3: Term, v103: Term, a2: Term, a4: Term, v92: Term, v85: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v104 = match s.unapply(v102) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v105, v106)) = v104 else { return Ok(None); }
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v101: Term, a3: Term, v102: Term, a2: Term, a4: Term, v91: Term, v84: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v103 = match s.unapply(v101) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v104, v105)) = v103 else { return Ok(None); }
 ;
-let v107 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v105 != v107 { return Ok(None); }
-if v106 != a3 { return Ok(None); }
-let v108 = match s.unapply(v103) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v109, v110)) = v108 else { return Ok(None); }
+let v106 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v104 != v106 { return Ok(None); }
+if v105 != a3 { return Ok(None); }
+let v107 = match s.unapply(v102) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v108, v109)) = v107 else { return Ok(None); }
 ;
-let v111 = match s.unapply(v109) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v112, v113)) = v111 else { return Ok(None); }
+let v110 = match s.unapply(v108) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v111, v112)) = v110 else { return Ok(None); }
 ;
-let v114 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v112 != v114 { return Ok(None); }
-if v113 != a2 { return Ok(None); }
-if v110 != a4 { return Ok(None); }
-let v115 = match s.unapply(v92) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v116, v117)) = v115 else { return Ok(None); }
+let v113 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v111 != v113 { return Ok(None); }
+if v112 != a2 { return Ok(None); }
+if v109 != a4 { return Ok(None); }
+let v114 = match s.unapply(v91) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v115, v116)) = v114 else { return Ok(None); }
 ;
-let v118 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v116, v118, v117, a3, v85, a2, a4, a1, a0, a5, a6, a7)
+let v117 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v115, v117, v116, a3, v84, a2, a4, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v78: Term, a3: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v83 = match s.unapply(v78) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v84, v85)) = v83 else { return Ok(None); }
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v77: Term, a3: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v82 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v83, v84)) = v82 else { return Ok(None); }
 ;
-let v86 = match s.unapply(v84) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v87, v88)) = v86 else { return Ok(None); }
+let v85 = match s.unapply(v83) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v86, v87)) = v85 else { return Ok(None); }
 ;
-let v89 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v87 != v89 { return Ok(None); }
-let v90 = match s.unapply(v88) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v91, v92)) = v90 else { return Ok(None); }
+let v88 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v86 != v88 { return Ok(None); }
+let v89 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v90, v91)) = v89 else { return Ok(None); }
 ;
-let v93 = match s.unapply(v91) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v94, v95)) = v93 else { return Ok(None); }
+let v92 = match s.unapply(v90) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v93, v94)) = v92 else { return Ok(None); }
 ;
-let v96 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v94 != v96 { return Ok(None); }
-let v97 = match s.unapply(v95) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v98, v99)) = v97 else { return Ok(None); }
+let v95 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v93 != v95 { return Ok(None); }
+let v96 = match s.unapply(v94) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v97, v98)) = v96 else { return Ok(None); }
 ;
-let v100 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v98 != v100 { return Ok(None); }
-let v101 = match s.unapply(v99) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v102, v103)) = v101 else { return Ok(None); }
+let v99 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v97 != v99 { return Ok(None); }
+let v100 = match s.unapply(v98) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v101, v102)) = v100 else { return Ok(None); }
 ;
-more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v102, a3, v103, a2, a4, v92, v85, a1, a0, a5, a6, a7)
+more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v101, a3, v102, a2, a4, v91, v84, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v69: Term, v70: Term, a2: Term, v67: Term, a4: Term, v49: Term, a10: Term, a7: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v71 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v69 != v71 { return Ok(None); }
 if v70 != a2 { return Ok(None); }
 if v67 != a4 { return Ok(None); }
-let v72 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.literal(Lit::Numeral(v72)) { Ok(v) => v, Err(e) => return Err(e) };
-if v49 != v73 { return Ok(None); }
-let v74 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v74 else { return Ok(None); }
+let v72 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v49 != v72 { return Ok(None); }
+let v73 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v73 else { return Ok(None); }
 ;
-let v75 = fields[0];
-let v76 = match s.unapply(v75) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v77, v78)) = v76 else { return Ok(None); }
+let v74 = fields[0];
+let v75 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v76, v77)) = v75 else { return Ok(None); }
 ;
-let v79 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v80, v81)) = v79 else { return Ok(None); }
+let v78 = match s.unapply(v76) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v79, v80)) = v78 else { return Ok(None); }
 ;
-let v82 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v80 != v82 { return Ok(None); }
-if v81 != a7 { return Ok(None); }
-more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v78, a3, a2, a4, a1, a0, a5, a6, a7)
+let v81 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v79 != v81 { return Ok(None); }
+if v80 != a7 { return Ok(None); }
+more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s, v77, a3, a2, a4, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup2(s: &mut Store, v51: Term, v52: Term, a3: Term, a2: Term, a4: Term, v49: Term, a10: Term, a7: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v53 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -6707,177 +5275,172 @@ let v25 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v
 if v24 != v25 { return Ok(None); }
 more_63_eo__24eo_5fcmd_5fstep_5fproven(s, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23)
 }
-pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v156: Term, v191: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v192 = match s.apply(v156, v191) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.apply(v133, v192) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v193))
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v154: Term, v186: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v187 = match s.apply(v154, v186) { Ok(v) => v, Err(e) => return Err(e) };
+let v188 = match s.apply(v131, v187) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v188))
 }
-pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, a0: Term, a1: Term, v178: Term, v175: Term, v174: Term, v167: Term, v157: Term, v156: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v179 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v181 = match s.builtin_list(EvalOp::ListConcat, &[v180, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v182 = match s.builtin_list(EvalOp::ListSingletonElim, &[v179, v181]) { Ok(v) => v, Err(e) => return Err(e) };
-let v183 = match s.apply(v178, v182) { Ok(v) => v, Err(e) => return Err(e) };
-let v184 = match eo__24eo_5ftypeof(s, v183) { Ok(v) => v, Err(e) => return Err(e) };
-let v185 = match eo__24eo_5fnil(s, v175, v184) { Ok(v) => v, Err(e) => return Err(e) };
-let v186 = match s.apply(v174, v185) { Ok(v) => v, Err(e) => return Err(e) };
-let v187 = match s.apply(v167, v186) { Ok(v) => v, Err(e) => return Err(e) };
-let v188 = match s.apply(v157, v187) { Ok(v) => v, Err(e) => return Err(e) };
-let v189 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v190 = match s.literal(Lit::Binary(BitVec::new(0, &v189))) { Ok(v) => v, Err(e) => return Err(e) };
-let v191 = match s.apply(v188, v190) { Ok(v) => v, Err(e) => return Err(e) };
-more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v156, v191, v133)
-}
-pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v161: Term, v165: Term, v158: Term, a2: Term, a4: Term, a7: Term, a0: Term, a1: Term, v157: Term, v156: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v166 = match s.apply(v161, v165) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v158, v166) { Ok(v) => v, Err(e) => return Err(e) };
-let v168 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v170, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v172 = match s.apply(v171, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.builtin_list(EvalOp::ListSingletonElim, &[v169, v172]) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.apply(v168, v173) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, a0: Term, a1: Term, v174: Term, v172: Term, v171: Term, v164: Term, v155: Term, v154: Term, v131: Term) -> CheckResult<Option<Term>> {
 let v175 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.literal(Lit::Numeral(v176)) { Ok(v) => v, Err(e) => return Err(e) };
-let v178 = match s.construct(Constructor::eo_extract, &[a7, v177]) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, a0, a1, v178, v175, v174, v167, v157, v156, v133)
+let v176 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.builtin_list(EvalOp::ListConcat, &[v176, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.builtin_list(EvalOp::ListSingletonElim, &[v175, v177]) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.apply(v174, v178) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match eo__24eo_5ftypeof(s, v179) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match eo__24eo_5fnil(s, v172, v180) { Ok(v) => v, Err(e) => return Err(e) };
+let v182 = match s.apply(v171, v181) { Ok(v) => v, Err(e) => return Err(e) };
+let v183 = match s.apply(v164, v182) { Ok(v) => v, Err(e) => return Err(e) };
+let v184 = match s.apply(v155, v183) { Ok(v) => v, Err(e) => return Err(e) };
+let v185 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v186 = match s.apply(v184, v185) { Ok(v) => v, Err(e) => return Err(e) };
+more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v154, v186, v131)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v145: Term, v152: Term, v144: Term, v142: Term, v134: Term, a7: Term, a0: Term, a1: Term, a2: Term, a4: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v153 = match eo__24eo_5fnil(s, v145, v152) { Ok(v) => v, Err(e) => return Err(e) };
-let v154 = match s.apply(v144, v153) { Ok(v) => v, Err(e) => return Err(e) };
-let v155 = match s.apply(v142, v154) { Ok(v) => v, Err(e) => return Err(e) };
-let v156 = match s.apply(v134, v155) { Ok(v) => v, Err(e) => return Err(e) };
-let v157 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v158 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v159 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v160 = match s.literal(Lit::Numeral(v159)) { Ok(v) => v, Err(e) => return Err(e) };
-let v161 = match s.construct(Constructor::eo_extract, &[a7, v160]) { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v163 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match s.builtin_list(EvalOp::ListConcat, &[v163, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v165 = match s.builtin_list(EvalOp::ListSingletonElim, &[v162, v164]) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v161, v165, v158, a2, a4, a7, a0, a1, v157, v156, v133)
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v158: Term, v162: Term, v156: Term, a2: Term, a4: Term, a7: Term, a0: Term, a1: Term, v155: Term, v154: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v163 = match s.apply(v158, v162) { Ok(v) => v, Err(e) => return Err(e) };
+let v164 = match s.apply(v156, v163) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.apply(v167, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v168, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.builtin_list(EvalOp::ListSingletonElim, &[v166, v169]) { Ok(v) => v, Err(e) => return Err(e) };
+let v171 = match s.apply(v165, v170) { Ok(v) => v, Err(e) => return Err(e) };
+let v172 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v173 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.construct(Constructor::eo_extract, &[a7, v173]) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, a0, a1, v174, v172, v171, v164, v155, v154, v131)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v136: Term, v140: Term, v135: Term, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v134: Term, a7: Term, a2: Term, a4: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v141 = match s.apply(v136, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match s.apply(v135, v141) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v143: Term, v150: Term, v142: Term, v140: Term, v132: Term, a7: Term, a0: Term, a1: Term, a2: Term, a4: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v151 = match eo__24eo_5fnil(s, v143, v150) { Ok(v) => v, Err(e) => return Err(e) };
+let v152 = match s.apply(v142, v151) { Ok(v) => v, Err(e) => return Err(e) };
+let v153 = match s.apply(v140, v152) { Ok(v) => v, Err(e) => return Err(e) };
+let v154 = match s.apply(v132, v153) { Ok(v) => v, Err(e) => return Err(e) };
+let v155 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v156 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v157 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v158 = match s.construct(Constructor::eo_extract, &[a7, v157]) { Ok(v) => v, Err(e) => return Err(e) };
+let v159 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.builtin_list(EvalOp::ListConcat, &[v160, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.builtin_list(EvalOp::ListSingletonElim, &[v159, v161]) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v158, v162, v156, a2, a4, a7, a0, a1, v155, v154, v131)
+}
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v134: Term, v138: Term, v133: Term, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v132: Term, a7: Term, a2: Term, a4: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v139 = match s.apply(v134, v138) { Ok(v) => v, Err(e) => return Err(e) };
+let v140 = match s.apply(v133, v139) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.apply(v141, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v143 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v143, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
 let v145 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.builtin_list(EvalOp::ListConcat, &[v148, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.builtin_list(EvalOp::ListSingletonElim, &[v147, v149]) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.apply(v146, v150) { Ok(v) => v, Err(e) => return Err(e) };
-let v152 = match eo__24eo_5ftypeof(s, v151) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v145, v152, v144, v142, v134, a7, a0, a1, a2, a4, v133)
+let v146 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v147 = match s.builtin_list(EvalOp::ListConcat, &[v146, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v148 = match s.builtin_list(EvalOp::ListSingletonElim, &[v145, v147]) { Ok(v) => v, Err(e) => return Err(e) };
+let v149 = match s.apply(v144, v148) { Ok(v) => v, Err(e) => return Err(e) };
+let v150 = match eo__24eo_5ftypeof(s, v149) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v143, v150, v142, v140, v132, a7, a0, a1, a2, a4, v131)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v125: Term, v128: Term, v123: Term, a1: Term, v122: Term, a0: Term, v121: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v129 = match s.apply(v125, v128) { Ok(v) => v, Err(e) => return Err(e) };
-let v130 = match s.apply(v123, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.apply(v130, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.builtin_list(EvalOp::ListConcat, &[v122, a0, v131]) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.apply(v121, v132) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v123: Term, v126: Term, v121: Term, a1: Term, v120: Term, a0: Term, v119: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term, a4: Term) -> CheckResult<Option<Term>> {
+let v127 = match s.apply(v123, v126) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.apply(v121, v127) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.apply(v128, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.builtin_list(EvalOp::ListConcat, &[v120, a0, v129]) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.apply(v119, v130) { Ok(v) => v, Err(e) => return Err(e) };
+let v132 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v133 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
 let v135 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.builtin_list(EvalOp::ListConcat, &[v138, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.builtin_list(EvalOp::ListSingletonElim, &[v137, v139]) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v136, v140, v135, a3, a5, a6, a0, a1, v134, a7, a2, a4, v133)
+let v136 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v137 = match s.builtin_list(EvalOp::ListConcat, &[v136, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.builtin_list(EvalOp::ListSingletonElim, &[v135, v137]) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v134, v138, v133, a3, a5, a6, a0, a1, v132, a7, a2, a4, v131)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v116: Term, v118: Term, v117: Term, a3: Term, v85: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v116 != v118 { return Ok(None); }
-if v117 != a3 { return Ok(None); }
-let v119 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.literal(Lit::Numeral(v119)) { Ok(v) => v, Err(e) => return Err(e) };
-if v85 != v120 { return Ok(None); }
-let v121 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v115: Term, v117: Term, v116: Term, a3: Term, v84: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v115 != v117 { return Ok(None); }
+if v116 != a3 { return Ok(None); }
+let v118 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v84 != v118 { return Ok(None); }
+let v119 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.apply(v122, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v124 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.apply(v124, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v126 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.apply(v126, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v127, a4) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v125, v128, v123, a1, v122, a0, v121, a5, a6, a3, a7, a2, a4)
+let v125 = match s.apply(v124, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v126 = match s.apply(v125, a4) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v123, v126, v121, a1, v120, a0, v119, a5, a6, a3, a7, a2, a4)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v102: Term, a3: Term, v103: Term, a2: Term, a4: Term, v92: Term, v85: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v104 = match s.unapply(v102) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v105, v106)) = v104 else { return Ok(None); }
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v101: Term, a3: Term, v102: Term, a2: Term, a4: Term, v91: Term, v84: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v103 = match s.unapply(v101) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v104, v105)) = v103 else { return Ok(None); }
 ;
-let v107 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v105 != v107 { return Ok(None); }
-if v106 != a3 { return Ok(None); }
-let v108 = match s.unapply(v103) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v109, v110)) = v108 else { return Ok(None); }
+let v106 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v104 != v106 { return Ok(None); }
+if v105 != a3 { return Ok(None); }
+let v107 = match s.unapply(v102) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v108, v109)) = v107 else { return Ok(None); }
 ;
-let v111 = match s.unapply(v109) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v112, v113)) = v111 else { return Ok(None); }
+let v110 = match s.unapply(v108) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v111, v112)) = v110 else { return Ok(None); }
 ;
-let v114 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v112 != v114 { return Ok(None); }
-if v113 != a2 { return Ok(None); }
-if v110 != a4 { return Ok(None); }
-let v115 = match s.unapply(v92) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v116, v117)) = v115 else { return Ok(None); }
+let v113 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v111 != v113 { return Ok(None); }
+if v112 != a2 { return Ok(None); }
+if v109 != a4 { return Ok(None); }
+let v114 = match s.unapply(v91) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v115, v116)) = v114 else { return Ok(None); }
 ;
-let v118 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v116, v118, v117, a3, v85, a2, a4, a1, a0, a5, a6, a7)
+let v117 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v115, v117, v116, a3, v84, a2, a4, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v78: Term, a3: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v83 = match s.unapply(v78) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v84, v85)) = v83 else { return Ok(None); }
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v77: Term, a3: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v82 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v83, v84)) = v82 else { return Ok(None); }
 ;
-let v86 = match s.unapply(v84) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v87, v88)) = v86 else { return Ok(None); }
+let v85 = match s.unapply(v83) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v86, v87)) = v85 else { return Ok(None); }
 ;
-let v89 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v87 != v89 { return Ok(None); }
-let v90 = match s.unapply(v88) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v91, v92)) = v90 else { return Ok(None); }
+let v88 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v86 != v88 { return Ok(None); }
+let v89 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v90, v91)) = v89 else { return Ok(None); }
 ;
-let v93 = match s.unapply(v91) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v94, v95)) = v93 else { return Ok(None); }
+let v92 = match s.unapply(v90) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v93, v94)) = v92 else { return Ok(None); }
 ;
-let v96 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v94 != v96 { return Ok(None); }
-let v97 = match s.unapply(v95) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v98, v99)) = v97 else { return Ok(None); }
+let v95 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v93 != v95 { return Ok(None); }
+let v96 = match s.unapply(v94) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v97, v98)) = v96 else { return Ok(None); }
 ;
-let v100 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v98 != v100 { return Ok(None); }
-let v101 = match s.unapply(v99) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v102, v103)) = v101 else { return Ok(None); }
+let v99 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v97 != v99 { return Ok(None); }
+let v100 = match s.unapply(v98) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v101, v102)) = v100 else { return Ok(None); }
 ;
-more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v102, a3, v103, a2, a4, v92, v85, a1, a0, a5, a6, a7)
+more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v101, a3, v102, a2, a4, v91, v84, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v69: Term, v70: Term, a2: Term, v67: Term, a4: Term, v49: Term, a10: Term, a7: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v71 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v69 != v71 { return Ok(None); }
 if v70 != a2 { return Ok(None); }
 if v67 != a4 { return Ok(None); }
-let v72 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.literal(Lit::Numeral(v72)) { Ok(v) => v, Err(e) => return Err(e) };
-if v49 != v73 { return Ok(None); }
-let v74 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v74 else { return Ok(None); }
+let v72 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v49 != v72 { return Ok(None); }
+let v73 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v73 else { return Ok(None); }
 ;
-let v75 = fields[0];
-let v76 = match s.unapply(v75) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v77, v78)) = v76 else { return Ok(None); }
+let v74 = fields[0];
+let v75 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v76, v77)) = v75 else { return Ok(None); }
 ;
-let v79 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v80, v81)) = v79 else { return Ok(None); }
+let v78 = match s.unapply(v76) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v79, v80)) = v78 else { return Ok(None); }
 ;
-let v82 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v80 != v82 { return Ok(None); }
-if v81 != a7 { return Ok(None); }
-more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v78, a3, a2, a4, a1, a0, a5, a6, a7)
+let v81 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v79 != v81 { return Ok(None); }
+if v80 != a7 { return Ok(None); }
+more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s, v77, a3, a2, a4, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup2(s: &mut Store, v51: Term, v52: Term, a3: Term, a2: Term, a4: Term, v49: Term, a10: Term, a7: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v53 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -7084,177 +5647,172 @@ let v25 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v
 if v24 != v25 { return Ok(None); }
 more_64_eo__24eo_5fcmd_5fstep_5fproven(s, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23)
 }
-pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v156: Term, v191: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v192 = match s.apply(v156, v191) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.apply(v133, v192) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v193))
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v154: Term, v186: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v187 = match s.apply(v154, v186) { Ok(v) => v, Err(e) => return Err(e) };
+let v188 = match s.apply(v131, v187) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v188))
 }
-pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, a0: Term, a1: Term, v178: Term, v175: Term, v174: Term, v167: Term, v157: Term, v156: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v179 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v181 = match s.builtin_list(EvalOp::ListConcat, &[v180, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v182 = match s.builtin_list(EvalOp::ListSingletonElim, &[v179, v181]) { Ok(v) => v, Err(e) => return Err(e) };
-let v183 = match s.apply(v178, v182) { Ok(v) => v, Err(e) => return Err(e) };
-let v184 = match eo__24eo_5ftypeof(s, v183) { Ok(v) => v, Err(e) => return Err(e) };
-let v185 = match eo__24eo_5fnil(s, v175, v184) { Ok(v) => v, Err(e) => return Err(e) };
-let v186 = match s.apply(v174, v185) { Ok(v) => v, Err(e) => return Err(e) };
-let v187 = match s.apply(v167, v186) { Ok(v) => v, Err(e) => return Err(e) };
-let v188 = match s.apply(v157, v187) { Ok(v) => v, Err(e) => return Err(e) };
-let v189 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v190 = match s.literal(Lit::Binary(BitVec::new(0, &v189))) { Ok(v) => v, Err(e) => return Err(e) };
-let v191 = match s.apply(v188, v190) { Ok(v) => v, Err(e) => return Err(e) };
-more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v156, v191, v133)
-}
-pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v161: Term, v165: Term, v158: Term, a2: Term, a4: Term, a7: Term, a0: Term, a1: Term, v157: Term, v156: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v166 = match s.apply(v161, v165) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v158, v166) { Ok(v) => v, Err(e) => return Err(e) };
-let v168 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v170, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v172 = match s.apply(v171, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.builtin_list(EvalOp::ListSingletonElim, &[v169, v172]) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.apply(v168, v173) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, a0: Term, a1: Term, v174: Term, v172: Term, v171: Term, v164: Term, v155: Term, v154: Term, v131: Term) -> CheckResult<Option<Term>> {
 let v175 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.literal(Lit::Numeral(v176)) { Ok(v) => v, Err(e) => return Err(e) };
-let v178 = match s.construct(Constructor::eo_extract, &[a7, v177]) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, a0, a1, v178, v175, v174, v167, v157, v156, v133)
+let v176 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.builtin_list(EvalOp::ListConcat, &[v176, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.builtin_list(EvalOp::ListSingletonElim, &[v175, v177]) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.apply(v174, v178) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match eo__24eo_5ftypeof(s, v179) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match eo__24eo_5fnil(s, v172, v180) { Ok(v) => v, Err(e) => return Err(e) };
+let v182 = match s.apply(v171, v181) { Ok(v) => v, Err(e) => return Err(e) };
+let v183 = match s.apply(v164, v182) { Ok(v) => v, Err(e) => return Err(e) };
+let v184 = match s.apply(v155, v183) { Ok(v) => v, Err(e) => return Err(e) };
+let v185 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v186 = match s.apply(v184, v185) { Ok(v) => v, Err(e) => return Err(e) };
+more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v154, v186, v131)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v145: Term, v152: Term, v144: Term, v142: Term, v134: Term, a7: Term, a0: Term, a1: Term, a2: Term, a4: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v153 = match eo__24eo_5fnil(s, v145, v152) { Ok(v) => v, Err(e) => return Err(e) };
-let v154 = match s.apply(v144, v153) { Ok(v) => v, Err(e) => return Err(e) };
-let v155 = match s.apply(v142, v154) { Ok(v) => v, Err(e) => return Err(e) };
-let v156 = match s.apply(v134, v155) { Ok(v) => v, Err(e) => return Err(e) };
-let v157 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v158 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v159 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v160 = match s.literal(Lit::Numeral(v159)) { Ok(v) => v, Err(e) => return Err(e) };
-let v161 = match s.construct(Constructor::eo_extract, &[a7, v160]) { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v163 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match s.builtin_list(EvalOp::ListConcat, &[v163, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v165 = match s.builtin_list(EvalOp::ListSingletonElim, &[v162, v164]) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v161, v165, v158, a2, a4, a7, a0, a1, v157, v156, v133)
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v158: Term, v162: Term, v156: Term, a2: Term, a4: Term, a7: Term, a0: Term, a1: Term, v155: Term, v154: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v163 = match s.apply(v158, v162) { Ok(v) => v, Err(e) => return Err(e) };
+let v164 = match s.apply(v156, v163) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.apply(v167, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v168, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.builtin_list(EvalOp::ListSingletonElim, &[v166, v169]) { Ok(v) => v, Err(e) => return Err(e) };
+let v171 = match s.apply(v165, v170) { Ok(v) => v, Err(e) => return Err(e) };
+let v172 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v173 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.construct(Constructor::eo_extract, &[a7, v173]) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, a0, a1, v174, v172, v171, v164, v155, v154, v131)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v136: Term, v140: Term, v135: Term, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v134: Term, a7: Term, a2: Term, a4: Term, v133: Term) -> CheckResult<Option<Term>> {
-let v141 = match s.apply(v136, v140) { Ok(v) => v, Err(e) => return Err(e) };
-let v142 = match s.apply(v135, v141) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v143: Term, v150: Term, v142: Term, v140: Term, v132: Term, a7: Term, a0: Term, a1: Term, a2: Term, a4: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v151 = match eo__24eo_5fnil(s, v143, v150) { Ok(v) => v, Err(e) => return Err(e) };
+let v152 = match s.apply(v142, v151) { Ok(v) => v, Err(e) => return Err(e) };
+let v153 = match s.apply(v140, v152) { Ok(v) => v, Err(e) => return Err(e) };
+let v154 = match s.apply(v132, v153) { Ok(v) => v, Err(e) => return Err(e) };
+let v155 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v156 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v157 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v158 = match s.construct(Constructor::eo_extract, &[a7, v157]) { Ok(v) => v, Err(e) => return Err(e) };
+let v159 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.builtin_list(EvalOp::ListConcat, &[v160, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.builtin_list(EvalOp::ListSingletonElim, &[v159, v161]) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v158, v162, v156, a2, a4, a7, a0, a1, v155, v154, v131)
+}
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v134: Term, v138: Term, v133: Term, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v132: Term, a7: Term, a2: Term, a4: Term, v131: Term) -> CheckResult<Option<Term>> {
+let v139 = match s.apply(v134, v138) { Ok(v) => v, Err(e) => return Err(e) };
+let v140 = match s.apply(v133, v139) { Ok(v) => v, Err(e) => return Err(e) };
+let v141 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v142 = match s.apply(v141, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v143 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v144 = match s.apply(v143, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v144 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
 let v145 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v146 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v147 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v148 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v149 = match s.builtin_list(EvalOp::ListConcat, &[v148, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v150 = match s.builtin_list(EvalOp::ListSingletonElim, &[v147, v149]) { Ok(v) => v, Err(e) => return Err(e) };
-let v151 = match s.apply(v146, v150) { Ok(v) => v, Err(e) => return Err(e) };
-let v152 = match eo__24eo_5ftypeof(s, v151) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v145, v152, v144, v142, v134, a7, a0, a1, a2, a4, v133)
+let v146 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v147 = match s.builtin_list(EvalOp::ListConcat, &[v146, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v148 = match s.builtin_list(EvalOp::ListSingletonElim, &[v145, v147]) { Ok(v) => v, Err(e) => return Err(e) };
+let v149 = match s.apply(v144, v148) { Ok(v) => v, Err(e) => return Err(e) };
+let v150 = match eo__24eo_5ftypeof(s, v149) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v143, v150, v142, v140, v132, a7, a0, a1, a2, a4, v131)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v125: Term, v128: Term, v123: Term, a1: Term, v122: Term, a0: Term, v121: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v129 = match s.apply(v125, v128) { Ok(v) => v, Err(e) => return Err(e) };
-let v130 = match s.apply(v123, v129) { Ok(v) => v, Err(e) => return Err(e) };
-let v131 = match s.apply(v130, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v132 = match s.builtin_list(EvalOp::ListConcat, &[v122, a0, v131]) { Ok(v) => v, Err(e) => return Err(e) };
-let v133 = match s.apply(v121, v132) { Ok(v) => v, Err(e) => return Err(e) };
-let v134 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v123: Term, v126: Term, v121: Term, a1: Term, v120: Term, a0: Term, v119: Term, a5: Term, a6: Term, a3: Term, a7: Term, a2: Term, a4: Term) -> CheckResult<Option<Term>> {
+let v127 = match s.apply(v123, v126) { Ok(v) => v, Err(e) => return Err(e) };
+let v128 = match s.apply(v121, v127) { Ok(v) => v, Err(e) => return Err(e) };
+let v129 = match s.apply(v128, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v130 = match s.builtin_list(EvalOp::ListConcat, &[v120, a0, v129]) { Ok(v) => v, Err(e) => return Err(e) };
+let v131 = match s.apply(v119, v130) { Ok(v) => v, Err(e) => return Err(e) };
+let v132 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v133 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v134 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
 let v135 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v136 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v137 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v138 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v139 = match s.builtin_list(EvalOp::ListConcat, &[v138, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v140 = match s.builtin_list(EvalOp::ListSingletonElim, &[v137, v139]) { Ok(v) => v, Err(e) => return Err(e) };
-more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v136, v140, v135, a3, a5, a6, a0, a1, v134, a7, a2, a4, v133)
+let v136 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v137 = match s.builtin_list(EvalOp::ListConcat, &[v136, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v138 = match s.builtin_list(EvalOp::ListSingletonElim, &[v135, v137]) { Ok(v) => v, Err(e) => return Err(e) };
+more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v134, v138, v133, a3, a5, a6, a0, a1, v132, a7, a2, a4, v131)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v116: Term, v118: Term, v117: Term, a3: Term, v85: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v116 != v118 { return Ok(None); }
-if v117 != a3 { return Ok(None); }
-let v119 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v120 = match s.literal(Lit::Numeral(v119)) { Ok(v) => v, Err(e) => return Err(e) };
-if v85 != v120 { return Ok(None); }
-let v121 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v122 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v123 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v115: Term, v117: Term, v116: Term, a3: Term, v84: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v115 != v117 { return Ok(None); }
+if v116 != a3 { return Ok(None); }
+let v118 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v84 != v118 { return Ok(None); }
+let v119 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v123 = match s.apply(v122, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v124 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.apply(v124, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v126 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.apply(v126, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v128 = match s.apply(v127, a4) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v125, v128, v123, a1, v122, a0, v121, a5, a6, a3, a7, a2, a4)
+let v125 = match s.apply(v124, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v126 = match s.apply(v125, a4) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v123, v126, v121, a1, v120, a0, v119, a5, a6, a3, a7, a2, a4)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v102: Term, a3: Term, v103: Term, a2: Term, a4: Term, v92: Term, v85: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v104 = match s.unapply(v102) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v105, v106)) = v104 else { return Ok(None); }
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v101: Term, a3: Term, v102: Term, a2: Term, a4: Term, v91: Term, v84: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v103 = match s.unapply(v101) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v104, v105)) = v103 else { return Ok(None); }
 ;
-let v107 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v105 != v107 { return Ok(None); }
-if v106 != a3 { return Ok(None); }
-let v108 = match s.unapply(v103) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v109, v110)) = v108 else { return Ok(None); }
+let v106 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v104 != v106 { return Ok(None); }
+if v105 != a3 { return Ok(None); }
+let v107 = match s.unapply(v102) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v108, v109)) = v107 else { return Ok(None); }
 ;
-let v111 = match s.unapply(v109) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v112, v113)) = v111 else { return Ok(None); }
+let v110 = match s.unapply(v108) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v111, v112)) = v110 else { return Ok(None); }
 ;
-let v114 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v112 != v114 { return Ok(None); }
-if v113 != a2 { return Ok(None); }
-if v110 != a4 { return Ok(None); }
-let v115 = match s.unapply(v92) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v116, v117)) = v115 else { return Ok(None); }
+let v113 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v111 != v113 { return Ok(None); }
+if v112 != a2 { return Ok(None); }
+if v109 != a4 { return Ok(None); }
+let v114 = match s.unapply(v91) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v115, v116)) = v114 else { return Ok(None); }
 ;
-let v118 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v116, v118, v117, a3, v85, a2, a4, a1, a0, a5, a6, a7)
+let v117 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v115, v117, v116, a3, v84, a2, a4, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v78: Term, a3: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v83 = match s.unapply(v78) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v84, v85)) = v83 else { return Ok(None); }
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v77: Term, a3: Term, a2: Term, a4: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v82 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v83, v84)) = v82 else { return Ok(None); }
 ;
-let v86 = match s.unapply(v84) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v87, v88)) = v86 else { return Ok(None); }
+let v85 = match s.unapply(v83) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v86, v87)) = v85 else { return Ok(None); }
 ;
-let v89 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v87 != v89 { return Ok(None); }
-let v90 = match s.unapply(v88) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v91, v92)) = v90 else { return Ok(None); }
+let v88 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v86 != v88 { return Ok(None); }
+let v89 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v90, v91)) = v89 else { return Ok(None); }
 ;
-let v93 = match s.unapply(v91) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v94, v95)) = v93 else { return Ok(None); }
+let v92 = match s.unapply(v90) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v93, v94)) = v92 else { return Ok(None); }
 ;
-let v96 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v94 != v96 { return Ok(None); }
-let v97 = match s.unapply(v95) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v98, v99)) = v97 else { return Ok(None); }
+let v95 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v93 != v95 { return Ok(None); }
+let v96 = match s.unapply(v94) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v97, v98)) = v96 else { return Ok(None); }
 ;
-let v100 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v98 != v100 { return Ok(None); }
-let v101 = match s.unapply(v99) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v102, v103)) = v101 else { return Ok(None); }
+let v99 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v97 != v99 { return Ok(None); }
+let v100 = match s.unapply(v98) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v101, v102)) = v100 else { return Ok(None); }
 ;
-more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v102, a3, v103, a2, a4, v92, v85, a1, a0, a5, a6, a7)
+more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v101, a3, v102, a2, a4, v91, v84, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v69: Term, v70: Term, a2: Term, v67: Term, a4: Term, v49: Term, a10: Term, a7: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v71 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v69 != v71 { return Ok(None); }
 if v70 != a2 { return Ok(None); }
 if v67 != a4 { return Ok(None); }
-let v72 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.literal(Lit::Numeral(v72)) { Ok(v) => v, Err(e) => return Err(e) };
-if v49 != v73 { return Ok(None); }
-let v74 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v74 else { return Ok(None); }
+let v72 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v49 != v72 { return Ok(None); }
+let v73 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v73 else { return Ok(None); }
 ;
-let v75 = fields[0];
-let v76 = match s.unapply(v75) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v77, v78)) = v76 else { return Ok(None); }
+let v74 = fields[0];
+let v75 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v76, v77)) = v75 else { return Ok(None); }
 ;
-let v79 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v80, v81)) = v79 else { return Ok(None); }
+let v78 = match s.unapply(v76) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v79, v80)) = v78 else { return Ok(None); }
 ;
-let v82 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v80 != v82 { return Ok(None); }
-if v81 != a7 { return Ok(None); }
-more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v78, a3, a2, a4, a1, a0, a5, a6, a7)
+let v81 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v79 != v81 { return Ok(None); }
+if v80 != a7 { return Ok(None); }
+more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s, v77, a3, a2, a4, a1, a0, a5, a6, a7)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup2(s: &mut Store, v51: Term, v52: Term, a3: Term, a2: Term, a4: Term, v49: Term, a10: Term, a7: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
 let v53 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -7461,298 +6019,289 @@ let v25 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v
 if v24 != v25 { return Ok(None); }
 more_65_eo__24eo_5fcmd_5fstep_5fproven(s, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23)
 }
-pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v237: Term, v251: Term, v227: Term, v226: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v252 = match s.apply(v237, v251) { Ok(v) => v, Err(e) => return Err(e) };
-let v253 = match s.apply(v227, v252) { Ok(v) => v, Err(e) => return Err(e) };
-let v254 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v255 = match s.literal(Lit::Binary(BitVec::new(0, &v254))) { Ok(v) => v, Err(e) => return Err(e) };
-let v256 = match s.apply(v253, v255) { Ok(v) => v, Err(e) => return Err(e) };
-let v257 = match s.apply(v226, v256) { Ok(v) => v, Err(e) => return Err(e) };
-let v258 = match s.apply(v203, v257) { Ok(v) => v, Err(e) => return Err(e) };
-let v259 = match s.apply(v180, v258) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v259))
+pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v229: Term, v242: Term, v220: Term, v219: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v243 = match s.apply(v229, v242) { Ok(v) => v, Err(e) => return Err(e) };
+let v244 = match s.apply(v220, v243) { Ok(v) => v, Err(e) => return Err(e) };
+let v245 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v246 = match s.apply(v244, v245) { Ok(v) => v, Err(e) => return Err(e) };
+let v247 = match s.apply(v219, v246) { Ok(v) => v, Err(e) => return Err(e) };
+let v248 = match s.apply(v196, v247) { Ok(v) => v, Err(e) => return Err(e) };
+let v249 = match s.apply(v173, v248) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v249))
 }
-pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v238: Term, a4: Term, a9: Term, a0: Term, a1: Term, v237: Term, v227: Term, v226: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v239 = match s.apply(v238, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v240 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v241 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v242 = match s.literal(Lit::Numeral(v241)) { Ok(v) => v, Err(e) => return Err(e) };
-let v243 = match s.construct(Constructor::eo_extract, &[a9, v242]) { Ok(v) => v, Err(e) => return Err(e) };
-let v244 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v245 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v246 = match s.builtin_list(EvalOp::ListConcat, &[v245, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v247 = match s.builtin_list(EvalOp::ListSingletonElim, &[v244, v246]) { Ok(v) => v, Err(e) => return Err(e) };
-let v248 = match s.apply(v243, v247) { Ok(v) => v, Err(e) => return Err(e) };
-let v249 = match eo__24eo_5ftypeof(s, v248) { Ok(v) => v, Err(e) => return Err(e) };
-let v250 = match eo__24eo_5fnil(s, v240, v249) { Ok(v) => v, Err(e) => return Err(e) };
-let v251 = match s.apply(v239, v250) { Ok(v) => v, Err(e) => return Err(e) };
-more_16_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v237, v251, v227, v226, v203, v180)
-}
-pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v204: Term, v225: Term, a9: Term, a0: Term, a1: Term, a4: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v226 = match s.apply(v204, v225) { Ok(v) => v, Err(e) => return Err(e) };
-let v227 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v228 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v229 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v230 = match s.literal(Lit::Numeral(v229)) { Ok(v) => v, Err(e) => return Err(e) };
-let v231 = match s.construct(Constructor::eo_extract, &[a9, v230]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v230: Term, a4: Term, a9: Term, a0: Term, a1: Term, v229: Term, v220: Term, v219: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v231 = match s.apply(v230, a4) { Ok(v) => v, Err(e) => return Err(e) };
 let v232 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v233 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v234 = match s.builtin_list(EvalOp::ListConcat, &[v233, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v235 = match s.builtin_list(EvalOp::ListSingletonElim, &[v232, v234]) { Ok(v) => v, Err(e) => return Err(e) };
-let v236 = match s.apply(v231, v235) { Ok(v) => v, Err(e) => return Err(e) };
-let v237 = match s.apply(v228, v236) { Ok(v) => v, Err(e) => return Err(e) };
-let v238 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_15_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v238, a4, a9, a0, a1, v237, v227, v226, v203, v180)
+let v233 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v234 = match s.construct(Constructor::eo_extract, &[a9, v233]) { Ok(v) => v, Err(e) => return Err(e) };
+let v235 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v236 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v237 = match s.builtin_list(EvalOp::ListConcat, &[v236, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v238 = match s.builtin_list(EvalOp::ListSingletonElim, &[v235, v237]) { Ok(v) => v, Err(e) => return Err(e) };
+let v239 = match s.apply(v234, v238) { Ok(v) => v, Err(e) => return Err(e) };
+let v240 = match eo__24eo_5ftypeof(s, v239) { Ok(v) => v, Err(e) => return Err(e) };
+let v241 = match eo__24eo_5fnil(s, v232, v240) { Ok(v) => v, Err(e) => return Err(e) };
+let v242 = match s.apply(v231, v241) { Ok(v) => v, Err(e) => return Err(e) };
+more_16_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v229, v242, v220, v219, v196, v173)
 }
-pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v213: Term, a2: Term, a7: Term, a8: Term, a0: Term, a1: Term, v212: Term, v204: Term, a9: Term, a4: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v214 = match s.apply(v213, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v215 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v216 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v217 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v218 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v219 = match s.builtin_list(EvalOp::ListConcat, &[v218, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v220 = match s.builtin_list(EvalOp::ListSingletonElim, &[v217, v219]) { Ok(v) => v, Err(e) => return Err(e) };
-let v221 = match s.apply(v216, v220) { Ok(v) => v, Err(e) => return Err(e) };
-let v222 = match eo__24eo_5ftypeof(s, v221) { Ok(v) => v, Err(e) => return Err(e) };
-let v223 = match eo__24eo_5fnil(s, v215, v222) { Ok(v) => v, Err(e) => return Err(e) };
-let v224 = match s.apply(v214, v223) { Ok(v) => v, Err(e) => return Err(e) };
-let v225 = match s.apply(v212, v224) { Ok(v) => v, Err(e) => return Err(e) };
-more_14_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v204, v225, a9, a0, a1, a4, v203, v180)
+pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v197: Term, v218: Term, a9: Term, a0: Term, a1: Term, a4: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v219 = match s.apply(v197, v218) { Ok(v) => v, Err(e) => return Err(e) };
+let v220 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v221 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v222 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v223 = match s.construct(Constructor::eo_extract, &[a9, v222]) { Ok(v) => v, Err(e) => return Err(e) };
+let v224 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v225 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v226 = match s.builtin_list(EvalOp::ListConcat, &[v225, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v227 = match s.builtin_list(EvalOp::ListSingletonElim, &[v224, v226]) { Ok(v) => v, Err(e) => return Err(e) };
+let v228 = match s.apply(v223, v227) { Ok(v) => v, Err(e) => return Err(e) };
+let v229 = match s.apply(v221, v228) { Ok(v) => v, Err(e) => return Err(e) };
+let v230 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_15_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v230, a4, a9, a0, a1, v229, v220, v219, v196, v173)
 }
-pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v189: Term, v201: Term, v181: Term, a7: Term, a8: Term, a0: Term, a1: Term, a2: Term, a9: Term, a4: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v202 = match s.apply(v189, v201) { Ok(v) => v, Err(e) => return Err(e) };
-let v203 = match s.apply(v181, v202) { Ok(v) => v, Err(e) => return Err(e) };
-let v204 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v205 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v206 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v207 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v206: Term, a2: Term, a7: Term, a8: Term, a0: Term, a1: Term, v205: Term, v197: Term, a9: Term, a4: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v207 = match s.apply(v206, a2) { Ok(v) => v, Err(e) => return Err(e) };
 let v208 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v209 = match s.builtin_list(EvalOp::ListConcat, &[v208, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v210 = match s.builtin_list(EvalOp::ListSingletonElim, &[v207, v209]) { Ok(v) => v, Err(e) => return Err(e) };
-let v211 = match s.apply(v206, v210) { Ok(v) => v, Err(e) => return Err(e) };
-let v212 = match s.apply(v205, v211) { Ok(v) => v, Err(e) => return Err(e) };
-let v213 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_13_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v213, a2, a7, a8, a0, a1, v212, v204, a9, a4, v203, v180)
+let v209 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v210 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v211 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v212 = match s.builtin_list(EvalOp::ListConcat, &[v211, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v213 = match s.builtin_list(EvalOp::ListSingletonElim, &[v210, v212]) { Ok(v) => v, Err(e) => return Err(e) };
+let v214 = match s.apply(v209, v213) { Ok(v) => v, Err(e) => return Err(e) };
+let v215 = match eo__24eo_5ftypeof(s, v214) { Ok(v) => v, Err(e) => return Err(e) };
+let v216 = match eo__24eo_5fnil(s, v208, v215) { Ok(v) => v, Err(e) => return Err(e) };
+let v217 = match s.apply(v207, v216) { Ok(v) => v, Err(e) => return Err(e) };
+let v218 = match s.apply(v205, v217) { Ok(v) => v, Err(e) => return Err(e) };
+more_14_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v197, v218, a9, a0, a1, a4, v196, v173)
 }
-pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v189: Term, v181: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v190 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v191 = match s.apply(v190, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v192 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v194 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v195 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v196 = match s.builtin_list(EvalOp::ListConcat, &[v195, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v197 = match s.builtin_list(EvalOp::ListSingletonElim, &[v194, v196]) { Ok(v) => v, Err(e) => return Err(e) };
-let v198 = match s.apply(v193, v197) { Ok(v) => v, Err(e) => return Err(e) };
-let v199 = match eo__24eo_5ftypeof(s, v198) { Ok(v) => v, Err(e) => return Err(e) };
-let v200 = match eo__24eo_5fnil(s, v192, v199) { Ok(v) => v, Err(e) => return Err(e) };
-let v201 = match s.apply(v191, v200) { Ok(v) => v, Err(e) => return Err(e) };
-more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v189, v201, v181, a7, a8, a0, a1, a2, a9, a4, v180)
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v182: Term, v194: Term, v174: Term, a7: Term, a8: Term, a0: Term, a1: Term, a2: Term, a9: Term, a4: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v195 = match s.apply(v182, v194) { Ok(v) => v, Err(e) => return Err(e) };
+let v196 = match s.apply(v174, v195) { Ok(v) => v, Err(e) => return Err(e) };
+let v197 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v198 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v199 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v200 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v201 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v202 = match s.builtin_list(EvalOp::ListConcat, &[v201, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v203 = match s.builtin_list(EvalOp::ListSingletonElim, &[v200, v202]) { Ok(v) => v, Err(e) => return Err(e) };
+let v204 = match s.apply(v199, v203) { Ok(v) => v, Err(e) => return Err(e) };
+let v205 = match s.apply(v198, v204) { Ok(v) => v, Err(e) => return Err(e) };
+let v206 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_13_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v206, a2, a7, a8, a0, a1, v205, v197, a9, a4, v196, v173)
 }
-pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v177: Term, a1: Term, v164: Term, a0: Term, v163: Term, a5: Term, a6: Term, a3: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v178 = match s.apply(v177, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v179 = match s.builtin_list(EvalOp::ListConcat, &[v164, a0, v178]) { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.apply(v163, v179) { Ok(v) => v, Err(e) => return Err(e) };
-let v181 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v182 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v183 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v184 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v182: Term, v174: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v183 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v184 = match s.apply(v183, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v185 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v186 = match s.builtin_list(EvalOp::ListConcat, &[v185, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v187 = match s.builtin_list(EvalOp::ListSingletonElim, &[v184, v186]) { Ok(v) => v, Err(e) => return Err(e) };
-let v188 = match s.apply(v183, v187) { Ok(v) => v, Err(e) => return Err(e) };
-let v189 = match s.apply(v182, v188) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, a3, a5, a6, a0, a1, v189, v181, a7, a8, a2, a9, a4, v180)
+let v186 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v187 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v188 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v189 = match s.builtin_list(EvalOp::ListConcat, &[v188, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v190 = match s.builtin_list(EvalOp::ListSingletonElim, &[v187, v189]) { Ok(v) => v, Err(e) => return Err(e) };
+let v191 = match s.apply(v186, v190) { Ok(v) => v, Err(e) => return Err(e) };
+let v192 = match eo__24eo_5ftypeof(s, v191) { Ok(v) => v, Err(e) => return Err(e) };
+let v193 = match eo__24eo_5fnil(s, v185, v192) { Ok(v) => v, Err(e) => return Err(e) };
+let v194 = match s.apply(v184, v193) { Ok(v) => v, Err(e) => return Err(e) };
+more_12_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v182, v194, v174, a7, a8, a0, a1, a2, a9, a4, v173)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, a3: Term, a2: Term, a4: Term, a1: Term, v164: Term, a0: Term, v163: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
-let v165 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v166 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v166, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v168 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.apply(v168, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v170, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v172 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.literal(Lit::Binary(BitVec::new(0, &v172))) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.apply(v171, v173) { Ok(v) => v, Err(e) => return Err(e) };
-let v175 = match s.apply(v169, v174) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match s.apply(v167, v175) { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.apply(v165, v176) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v177, a1, v164, a0, v163, a5, a6, a3, a7, a8, a2, a9, a4)
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v170: Term, a1: Term, v158: Term, a0: Term, v157: Term, a5: Term, a6: Term, a3: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term) -> CheckResult<Option<Term>> {
+let v171 = match s.apply(v170, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v172 = match s.builtin_list(EvalOp::ListConcat, &[v158, a0, v171]) { Ok(v) => v, Err(e) => return Err(e) };
+let v173 = match s.apply(v157, v172) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v175 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v176 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.builtin_list(EvalOp::ListConcat, &[v178, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match s.builtin_list(EvalOp::ListSingletonElim, &[v177, v179]) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match s.apply(v176, v180) { Ok(v) => v, Err(e) => return Err(e) };
+let v182 = match s.apply(v175, v181) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, a3, a5, a6, a0, a1, v182, v174, a7, a8, a2, a9, a4, v173)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v145: Term, a4: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
-let v150 = match s.unapply(v145) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v151, v152)) = v150 else { return Ok(None); }
-;
-let v153 = match s.unapply(v151) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v154, v155)) = v153 else { return Ok(None); }
-;
-let v156 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v154 != v156 { return Ok(None); }
-let v157 = match s.unapply(v155) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v158, v159)) = v157 else { return Ok(None); }
-;
-let v160 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v158 != v160 { return Ok(None); }
-if v159 != a4 { return Ok(None); }
-let v161 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.literal(Lit::Numeral(v161)) { Ok(v) => v, Err(e) => return Err(e) };
-if v152 != v162 { return Ok(None); }
-let v163 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, a3, a2, a4, a1, v164, a0, v163, a5, a6, a7, a8, a9)
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, a3: Term, a2: Term, a4: Term, a1: Term, v158: Term, a0: Term, v157: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
+let v159 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.apply(v160, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v163 = match s.apply(v162, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v164 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.apply(v164, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.apply(v165, v166) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.apply(v163, v167) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v161, v168) { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.apply(v159, v169) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v170, a1, v158, a0, v157, a5, a6, a3, a7, a8, a2, a9, a4)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v134: Term, v136: Term, v135: Term, a8: Term, v132: Term, a4: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v134 != v136 { return Ok(None); }
-if v135 != a8 { return Ok(None); }
-let v137 = match s.unapply(v132) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v138, v139)) = v137 else { return Ok(None); }
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v140: Term, a4: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
+let v145 = match s.unapply(v140) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v146, v147)) = v145 else { return Ok(None); }
 ;
-let v140 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v138 != v140 { return Ok(None); }
-if v139 != a4 { return Ok(None); }
-let v141 = match s.destruct(Constructor::eo__24eo_5fpf, a14) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v141 else { return Ok(None); }
+let v148 = match s.unapply(v146) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v149, v150)) = v148 else { return Ok(None); }
 ;
-let v142 = fields[0];
-let v143 = match s.unapply(v142) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v144, v145)) = v143 else { return Ok(None); }
+let v151 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v149 != v151 { return Ok(None); }
+let v152 = match s.unapply(v150) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v153, v154)) = v152 else { return Ok(None); }
 ;
-let v146 = match s.unapply(v144) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v147, v148)) = v146 else { return Ok(None); }
-;
-let v149 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v147 != v149 { return Ok(None); }
-if v148 != a9 { return Ok(None); }
-more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v145, a4, a3, a2, a1, a0, a5, a6, a7, a8, a9)
+let v155 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v153 != v155 { return Ok(None); }
+if v154 != a4 { return Ok(None); }
+let v156 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v147 != v156 { return Ok(None); }
+let v157 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v158 = match s.construct(Constructor::eo_bvand, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, a3, a2, a4, a1, v158, a0, v157, a5, a6, a7, a8, a9)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v118: Term, a4: Term, v115: Term, v97: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v120 = match s.unapply(v118) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v121, v122)) = v120 else { return Ok(None); }
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v129: Term, v131: Term, v130: Term, a8: Term, v127: Term, a4: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v129 != v131 { return Ok(None); }
+if v130 != a8 { return Ok(None); }
+let v132 = match s.unapply(v127) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v133, v134)) = v132 else { return Ok(None); }
 ;
-let v123 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v121 != v123 { return Ok(None); }
-if v122 != a4 { return Ok(None); }
-let v124 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.literal(Lit::Numeral(v124)) { Ok(v) => v, Err(e) => return Err(e) };
-if v115 != v125 { return Ok(None); }
-let v126 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.literal(Lit::Numeral(v126)) { Ok(v) => v, Err(e) => return Err(e) };
-if v97 != v127 { return Ok(None); }
-let v128 = match s.destruct(Constructor::eo__24eo_5fpf, a13) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v128 else { return Ok(None); }
+let v135 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v133 != v135 { return Ok(None); }
+if v134 != a4 { return Ok(None); }
+let v136 = match s.destruct(Constructor::eo__24eo_5fpf, a14) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v136 else { return Ok(None); }
 ;
-let v129 = fields[0];
-let v130 = match s.unapply(v129) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v131, v132)) = v130 else { return Ok(None); }
+let v137 = fields[0];
+let v138 = match s.unapply(v137) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v139, v140)) = v138 else { return Ok(None); }
 ;
-let v133 = match s.unapply(v131) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v134, v135)) = v133 else { return Ok(None); }
+let v141 = match s.unapply(v139) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v142, v143)) = v141 else { return Ok(None); }
 ;
-let v136 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v134, v136, v135, a8, v132, a4, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+let v144 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v142 != v144 { return Ok(None); }
+if v143 != a9 { return Ok(None); }
+more_8_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v140, a4, a3, a2, a1, a0, a5, a6, a7, a8, a9)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v100: Term, a2: Term, a4: Term, v97: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v115: Term, a4: Term, v112: Term, v94: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v117 = match s.unapply(v115) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v118, v119)) = v117 else { return Ok(None); }
+;
+let v120 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v118 != v120 { return Ok(None); }
+if v119 != a4 { return Ok(None); }
+let v121 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v112 != v121 { return Ok(None); }
+let v122 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v94 != v122 { return Ok(None); }
+let v123 = match s.destruct(Constructor::eo__24eo_5fpf, a13) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v123 else { return Ok(None); }
+;
+let v124 = fields[0];
+let v125 = match s.unapply(v124) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v126, v127)) = v125 else { return Ok(None); }
+;
+let v128 = match s.unapply(v126) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v129, v130)) = v128 else { return Ok(None); }
+;
+let v131 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v129, v131, v130, a8, v127, a4, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+}
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v97: Term, a2: Term, a4: Term, v94: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v99 = match s.unapply(v97) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v100, v101)) = v99 else { return Ok(None); }
+;
 let v102 = match s.unapply(v100) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v103, v104)) = v102 else { return Ok(None); }
 ;
-let v105 = match s.unapply(v103) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v106, v107)) = v105 else { return Ok(None); }
+let v105 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v103 != v105 { return Ok(None); }
+let v106 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v107, v108)) = v106 else { return Ok(None); }
 ;
-let v108 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v106 != v108 { return Ok(None); }
-let v109 = match s.unapply(v107) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v110, v111)) = v109 else { return Ok(None); }
+let v109 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v107 != v109 { return Ok(None); }
+if v108 != a2 { return Ok(None); }
+let v110 = match s.unapply(v101) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v111, v112)) = v110 else { return Ok(None); }
 ;
-let v112 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v110 != v112 { return Ok(None); }
-if v111 != a2 { return Ok(None); }
-let v113 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.unapply(v111) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v114, v115)) = v113 else { return Ok(None); }
 ;
-let v116 = match s.unapply(v114) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v117, v118)) = v116 else { return Ok(None); }
-;
-let v119 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v117 != v119 { return Ok(None); }
-more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v118, a4, v115, v97, a13, a8, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+let v116 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v114 != v116 { return Ok(None); }
+more_6_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v115, a4, v112, v94, a13, a8, a14, a9, a3, a2, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v75: Term, a12: Term, a7: Term, a2: Term, a4: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v84 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.literal(Lit::Numeral(v84)) { Ok(v) => v, Err(e) => return Err(e) };
-if v75 != v85 { return Ok(None); }
-let v86 = match s.destruct(Constructor::eo__24eo_5fpf, a12) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v86 else { return Ok(None); }
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v73: Term, a12: Term, a7: Term, a2: Term, a4: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
+let v82 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v73 != v82 { return Ok(None); }
+let v83 = match s.destruct(Constructor::eo__24eo_5fpf, a12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v83 else { return Ok(None); }
 ;
-let v87 = fields[0];
-let v88 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = fields[0];
+let v85 = match s.unapply(v84) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v86, v87)) = v85 else { return Ok(None); }
+;
+let v88 = match s.unapply(v86) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v89, v90)) = v88 else { return Ok(None); }
 ;
-let v91 = match s.unapply(v89) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v92, v93)) = v91 else { return Ok(None); }
+let v91 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v89 != v91 { return Ok(None); }
+if v90 != a7 { return Ok(None); }
+let v92 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v93, v94)) = v92 else { return Ok(None); }
 ;
-let v94 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v92 != v94 { return Ok(None); }
-if v93 != a7 { return Ok(None); }
-let v95 = match s.unapply(v90) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.unapply(v93) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v96, v97)) = v95 else { return Ok(None); }
 ;
-let v98 = match s.unapply(v96) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v99, v100)) = v98 else { return Ok(None); }
-;
-let v101 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v99 != v101 { return Ok(None); }
-more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v100, a2, a4, v97, a13, a8, a14, a9, a3, a1, a0, a5, a6, a7)
+let v98 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v96 != v98 { return Ok(None); }
+more_5_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v97, a2, a4, v94, a13, a8, a14, a9, a3, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v67: Term, a2: Term, v64: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v69 = match s.unapply(v67) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v70, v71)) = v69 else { return Ok(None); }
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v65: Term, a2: Term, v62: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
+let v67 = match s.unapply(v65) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v68, v69)) = v67 else { return Ok(None); }
 ;
-let v72 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v70 != v72 { return Ok(None); }
-if v71 != a2 { return Ok(None); }
-let v73 = match s.unapply(v64) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v74, v75)) = v73 else { return Ok(None); }
+let v70 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v68 != v70 { return Ok(None); }
+if v69 != a2 { return Ok(None); }
+let v71 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v72, v73)) = v71 else { return Ok(None); }
 ;
-let v76 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v77, v78)) = v76 else { return Ok(None); }
+let v74 = match s.unapply(v72) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v75, v76)) = v74 else { return Ok(None); }
 ;
-let v79 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v77 != v79 { return Ok(None); }
-let v80 = match s.unapply(v78) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v81, v82)) = v80 else { return Ok(None); }
+let v77 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v75 != v77 { return Ok(None); }
+let v78 = match s.unapply(v76) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v79, v80)) = v78 else { return Ok(None); }
 ;
-let v83 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v81 != v83 { return Ok(None); }
-if v82 != a4 { return Ok(None); }
-more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v75, a12, a7, a2, a4, a13, a8, a14, a9, a3, a1, a0, a5, a6)
+let v81 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v79 != v81 { return Ok(None); }
+if v80 != a4 { return Ok(None); }
+more_4_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v73, a12, a7, a2, a4, a13, a8, a14, a9, a3, a1, a0, a5, a6)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v11: Term, a11: Term, a6: Term, a2: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
-let v51 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.literal(Lit::Numeral(v51)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v52 { return Ok(None); }
-let v53 = match s.destruct(Constructor::eo__24eo_5fpf, a11) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v53 else { return Ok(None); }
+let v50 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v50 { return Ok(None); }
+let v51 = match s.destruct(Constructor::eo__24eo_5fpf, a11) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v51 else { return Ok(None); }
 ;
-let v54 = fields[0];
-let v55 = match s.unapply(v54) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v56, v57)) = v55 else { return Ok(None); }
+let v52 = fields[0];
+let v53 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v54, v55)) = v53 else { return Ok(None); }
 ;
-let v58 = match s.unapply(v56) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v59, v60)) = v58 else { return Ok(None); }
+let v56 = match s.unapply(v54) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v57, v58)) = v56 else { return Ok(None); }
 ;
-let v61 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v59 != v61 { return Ok(None); }
-if v60 != a6 { return Ok(None); }
-let v62 = match s.unapply(v57) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v63, v64)) = v62 else { return Ok(None); }
+let v59 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v57 != v59 { return Ok(None); }
+if v58 != a6 { return Ok(None); }
+let v60 = match s.unapply(v55) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v61, v62)) = v60 else { return Ok(None); }
 ;
-let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v66, v67)) = v65 else { return Ok(None); }
+let v63 = match s.unapply(v61) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v64, v65)) = v63 else { return Ok(None); }
 ;
-let v68 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v66 != v68 { return Ok(None); }
-more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v67, a2, v64, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5, a6)
+let v66 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v64 != v66 { return Ok(None); }
+more_3_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v65, a2, v62, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5, a6)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v35: Term, v37: Term, v36: Term, a2: Term, v29: Term, a3: Term, v11: Term, a11: Term, a6: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
 if v35 != v37 { return Ok(None); }
@@ -7771,9 +6320,8 @@ let Some((v46, v47)) = v45 else { return Ok(None); }
 let v48 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v46 != v48 { return Ok(None); }
 if v47 != a3 { return Ok(None); }
-let v49 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.literal(Lit::Numeral(v49)) { Ok(v) => v, Err(e) => return Err(e) };
-if v40 != v50 { return Ok(None); }
+let v49 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v40 != v49 { return Ok(None); }
 more_2_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s, v11, a11, a6, a2, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dand_2dconcat_2dpullup3(s: &mut Store, v20: Term, v21: Term, a4: Term, v18: Term, a2: Term, a3: Term, v11: Term, a11: Term, a6: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
@@ -7968,298 +6516,289 @@ if let Some(found) = match case_342_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2
 if let Some(found) = match case_343_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v237: Term, v251: Term, v227: Term, v226: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v252 = match s.apply(v237, v251) { Ok(v) => v, Err(e) => return Err(e) };
-let v253 = match s.apply(v227, v252) { Ok(v) => v, Err(e) => return Err(e) };
-let v254 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v255 = match s.literal(Lit::Binary(BitVec::new(0, &v254))) { Ok(v) => v, Err(e) => return Err(e) };
-let v256 = match s.apply(v253, v255) { Ok(v) => v, Err(e) => return Err(e) };
-let v257 = match s.apply(v226, v256) { Ok(v) => v, Err(e) => return Err(e) };
-let v258 = match s.apply(v203, v257) { Ok(v) => v, Err(e) => return Err(e) };
-let v259 = match s.apply(v180, v258) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v259))
+pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v229: Term, v242: Term, v220: Term, v219: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v243 = match s.apply(v229, v242) { Ok(v) => v, Err(e) => return Err(e) };
+let v244 = match s.apply(v220, v243) { Ok(v) => v, Err(e) => return Err(e) };
+let v245 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v246 = match s.apply(v244, v245) { Ok(v) => v, Err(e) => return Err(e) };
+let v247 = match s.apply(v219, v246) { Ok(v) => v, Err(e) => return Err(e) };
+let v248 = match s.apply(v196, v247) { Ok(v) => v, Err(e) => return Err(e) };
+let v249 = match s.apply(v173, v248) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v249))
 }
-pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v238: Term, a4: Term, a9: Term, a0: Term, a1: Term, v237: Term, v227: Term, v226: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v239 = match s.apply(v238, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v240 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v241 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v242 = match s.literal(Lit::Numeral(v241)) { Ok(v) => v, Err(e) => return Err(e) };
-let v243 = match s.construct(Constructor::eo_extract, &[a9, v242]) { Ok(v) => v, Err(e) => return Err(e) };
-let v244 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v245 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v246 = match s.builtin_list(EvalOp::ListConcat, &[v245, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v247 = match s.builtin_list(EvalOp::ListSingletonElim, &[v244, v246]) { Ok(v) => v, Err(e) => return Err(e) };
-let v248 = match s.apply(v243, v247) { Ok(v) => v, Err(e) => return Err(e) };
-let v249 = match eo__24eo_5ftypeof(s, v248) { Ok(v) => v, Err(e) => return Err(e) };
-let v250 = match eo__24eo_5fnil(s, v240, v249) { Ok(v) => v, Err(e) => return Err(e) };
-let v251 = match s.apply(v239, v250) { Ok(v) => v, Err(e) => return Err(e) };
-more_16_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v237, v251, v227, v226, v203, v180)
-}
-pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v204: Term, v225: Term, a9: Term, a0: Term, a1: Term, a4: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v226 = match s.apply(v204, v225) { Ok(v) => v, Err(e) => return Err(e) };
-let v227 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v228 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v229 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v230 = match s.literal(Lit::Numeral(v229)) { Ok(v) => v, Err(e) => return Err(e) };
-let v231 = match s.construct(Constructor::eo_extract, &[a9, v230]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v230: Term, a4: Term, a9: Term, a0: Term, a1: Term, v229: Term, v220: Term, v219: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v231 = match s.apply(v230, a4) { Ok(v) => v, Err(e) => return Err(e) };
 let v232 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v233 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v234 = match s.builtin_list(EvalOp::ListConcat, &[v233, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v235 = match s.builtin_list(EvalOp::ListSingletonElim, &[v232, v234]) { Ok(v) => v, Err(e) => return Err(e) };
-let v236 = match s.apply(v231, v235) { Ok(v) => v, Err(e) => return Err(e) };
-let v237 = match s.apply(v228, v236) { Ok(v) => v, Err(e) => return Err(e) };
-let v238 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_15_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v238, a4, a9, a0, a1, v237, v227, v226, v203, v180)
+let v233 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v234 = match s.construct(Constructor::eo_extract, &[a9, v233]) { Ok(v) => v, Err(e) => return Err(e) };
+let v235 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v236 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v237 = match s.builtin_list(EvalOp::ListConcat, &[v236, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v238 = match s.builtin_list(EvalOp::ListSingletonElim, &[v235, v237]) { Ok(v) => v, Err(e) => return Err(e) };
+let v239 = match s.apply(v234, v238) { Ok(v) => v, Err(e) => return Err(e) };
+let v240 = match eo__24eo_5ftypeof(s, v239) { Ok(v) => v, Err(e) => return Err(e) };
+let v241 = match eo__24eo_5fnil(s, v232, v240) { Ok(v) => v, Err(e) => return Err(e) };
+let v242 = match s.apply(v231, v241) { Ok(v) => v, Err(e) => return Err(e) };
+more_16_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v229, v242, v220, v219, v196, v173)
 }
-pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v213: Term, a2: Term, a7: Term, a8: Term, a0: Term, a1: Term, v212: Term, v204: Term, a9: Term, a4: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v214 = match s.apply(v213, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v215 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v216 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v217 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v218 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v219 = match s.builtin_list(EvalOp::ListConcat, &[v218, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v220 = match s.builtin_list(EvalOp::ListSingletonElim, &[v217, v219]) { Ok(v) => v, Err(e) => return Err(e) };
-let v221 = match s.apply(v216, v220) { Ok(v) => v, Err(e) => return Err(e) };
-let v222 = match eo__24eo_5ftypeof(s, v221) { Ok(v) => v, Err(e) => return Err(e) };
-let v223 = match eo__24eo_5fnil(s, v215, v222) { Ok(v) => v, Err(e) => return Err(e) };
-let v224 = match s.apply(v214, v223) { Ok(v) => v, Err(e) => return Err(e) };
-let v225 = match s.apply(v212, v224) { Ok(v) => v, Err(e) => return Err(e) };
-more_14_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v204, v225, a9, a0, a1, a4, v203, v180)
+pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v197: Term, v218: Term, a9: Term, a0: Term, a1: Term, a4: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v219 = match s.apply(v197, v218) { Ok(v) => v, Err(e) => return Err(e) };
+let v220 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v221 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v222 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v223 = match s.construct(Constructor::eo_extract, &[a9, v222]) { Ok(v) => v, Err(e) => return Err(e) };
+let v224 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v225 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v226 = match s.builtin_list(EvalOp::ListConcat, &[v225, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v227 = match s.builtin_list(EvalOp::ListSingletonElim, &[v224, v226]) { Ok(v) => v, Err(e) => return Err(e) };
+let v228 = match s.apply(v223, v227) { Ok(v) => v, Err(e) => return Err(e) };
+let v229 = match s.apply(v221, v228) { Ok(v) => v, Err(e) => return Err(e) };
+let v230 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_15_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v230, a4, a9, a0, a1, v229, v220, v219, v196, v173)
 }
-pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v189: Term, v201: Term, v181: Term, a7: Term, a8: Term, a0: Term, a1: Term, a2: Term, a9: Term, a4: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v202 = match s.apply(v189, v201) { Ok(v) => v, Err(e) => return Err(e) };
-let v203 = match s.apply(v181, v202) { Ok(v) => v, Err(e) => return Err(e) };
-let v204 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v205 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v206 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v207 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v206: Term, a2: Term, a7: Term, a8: Term, a0: Term, a1: Term, v205: Term, v197: Term, a9: Term, a4: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v207 = match s.apply(v206, a2) { Ok(v) => v, Err(e) => return Err(e) };
 let v208 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v209 = match s.builtin_list(EvalOp::ListConcat, &[v208, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v210 = match s.builtin_list(EvalOp::ListSingletonElim, &[v207, v209]) { Ok(v) => v, Err(e) => return Err(e) };
-let v211 = match s.apply(v206, v210) { Ok(v) => v, Err(e) => return Err(e) };
-let v212 = match s.apply(v205, v211) { Ok(v) => v, Err(e) => return Err(e) };
-let v213 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_13_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v213, a2, a7, a8, a0, a1, v212, v204, a9, a4, v203, v180)
+let v209 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v210 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v211 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v212 = match s.builtin_list(EvalOp::ListConcat, &[v211, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v213 = match s.builtin_list(EvalOp::ListSingletonElim, &[v210, v212]) { Ok(v) => v, Err(e) => return Err(e) };
+let v214 = match s.apply(v209, v213) { Ok(v) => v, Err(e) => return Err(e) };
+let v215 = match eo__24eo_5ftypeof(s, v214) { Ok(v) => v, Err(e) => return Err(e) };
+let v216 = match eo__24eo_5fnil(s, v208, v215) { Ok(v) => v, Err(e) => return Err(e) };
+let v217 = match s.apply(v207, v216) { Ok(v) => v, Err(e) => return Err(e) };
+let v218 = match s.apply(v205, v217) { Ok(v) => v, Err(e) => return Err(e) };
+more_14_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v197, v218, a9, a0, a1, a4, v196, v173)
 }
-pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v189: Term, v181: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v190 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v191 = match s.apply(v190, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v192 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v194 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v195 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v196 = match s.builtin_list(EvalOp::ListConcat, &[v195, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v197 = match s.builtin_list(EvalOp::ListSingletonElim, &[v194, v196]) { Ok(v) => v, Err(e) => return Err(e) };
-let v198 = match s.apply(v193, v197) { Ok(v) => v, Err(e) => return Err(e) };
-let v199 = match eo__24eo_5ftypeof(s, v198) { Ok(v) => v, Err(e) => return Err(e) };
-let v200 = match eo__24eo_5fnil(s, v192, v199) { Ok(v) => v, Err(e) => return Err(e) };
-let v201 = match s.apply(v191, v200) { Ok(v) => v, Err(e) => return Err(e) };
-more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v189, v201, v181, a7, a8, a0, a1, a2, a9, a4, v180)
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v182: Term, v194: Term, v174: Term, a7: Term, a8: Term, a0: Term, a1: Term, a2: Term, a9: Term, a4: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v195 = match s.apply(v182, v194) { Ok(v) => v, Err(e) => return Err(e) };
+let v196 = match s.apply(v174, v195) { Ok(v) => v, Err(e) => return Err(e) };
+let v197 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v198 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v199 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v200 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v201 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v202 = match s.builtin_list(EvalOp::ListConcat, &[v201, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v203 = match s.builtin_list(EvalOp::ListSingletonElim, &[v200, v202]) { Ok(v) => v, Err(e) => return Err(e) };
+let v204 = match s.apply(v199, v203) { Ok(v) => v, Err(e) => return Err(e) };
+let v205 = match s.apply(v198, v204) { Ok(v) => v, Err(e) => return Err(e) };
+let v206 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_13_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v206, a2, a7, a8, a0, a1, v205, v197, a9, a4, v196, v173)
 }
-pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v177: Term, a1: Term, v164: Term, a0: Term, v163: Term, a5: Term, a6: Term, a3: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v178 = match s.apply(v177, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v179 = match s.builtin_list(EvalOp::ListConcat, &[v164, a0, v178]) { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.apply(v163, v179) { Ok(v) => v, Err(e) => return Err(e) };
-let v181 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v182 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v183 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v184 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v182: Term, v174: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v183 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v184 = match s.apply(v183, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v185 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v186 = match s.builtin_list(EvalOp::ListConcat, &[v185, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v187 = match s.builtin_list(EvalOp::ListSingletonElim, &[v184, v186]) { Ok(v) => v, Err(e) => return Err(e) };
-let v188 = match s.apply(v183, v187) { Ok(v) => v, Err(e) => return Err(e) };
-let v189 = match s.apply(v182, v188) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, a3, a5, a6, a0, a1, v189, v181, a7, a8, a2, a9, a4, v180)
+let v186 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v187 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v188 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v189 = match s.builtin_list(EvalOp::ListConcat, &[v188, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v190 = match s.builtin_list(EvalOp::ListSingletonElim, &[v187, v189]) { Ok(v) => v, Err(e) => return Err(e) };
+let v191 = match s.apply(v186, v190) { Ok(v) => v, Err(e) => return Err(e) };
+let v192 = match eo__24eo_5ftypeof(s, v191) { Ok(v) => v, Err(e) => return Err(e) };
+let v193 = match eo__24eo_5fnil(s, v185, v192) { Ok(v) => v, Err(e) => return Err(e) };
+let v194 = match s.apply(v184, v193) { Ok(v) => v, Err(e) => return Err(e) };
+more_12_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v182, v194, v174, a7, a8, a0, a1, a2, a9, a4, v173)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a2: Term, a4: Term, a1: Term, v164: Term, a0: Term, v163: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
-let v165 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v166 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v166, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v168 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.apply(v168, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v170, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v172 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.literal(Lit::Binary(BitVec::new(0, &v172))) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.apply(v171, v173) { Ok(v) => v, Err(e) => return Err(e) };
-let v175 = match s.apply(v169, v174) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match s.apply(v167, v175) { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.apply(v165, v176) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v177, a1, v164, a0, v163, a5, a6, a3, a7, a8, a2, a9, a4)
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v170: Term, a1: Term, v158: Term, a0: Term, v157: Term, a5: Term, a6: Term, a3: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term) -> CheckResult<Option<Term>> {
+let v171 = match s.apply(v170, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v172 = match s.builtin_list(EvalOp::ListConcat, &[v158, a0, v171]) { Ok(v) => v, Err(e) => return Err(e) };
+let v173 = match s.apply(v157, v172) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v175 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v176 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.builtin_list(EvalOp::ListConcat, &[v178, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match s.builtin_list(EvalOp::ListSingletonElim, &[v177, v179]) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match s.apply(v176, v180) { Ok(v) => v, Err(e) => return Err(e) };
+let v182 = match s.apply(v175, v181) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, a3, a5, a6, a0, a1, v182, v174, a7, a8, a2, a9, a4, v173)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v145: Term, a4: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
-let v150 = match s.unapply(v145) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v151, v152)) = v150 else { return Ok(None); }
-;
-let v153 = match s.unapply(v151) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v154, v155)) = v153 else { return Ok(None); }
-;
-let v156 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v154 != v156 { return Ok(None); }
-let v157 = match s.unapply(v155) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v158, v159)) = v157 else { return Ok(None); }
-;
-let v160 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v158 != v160 { return Ok(None); }
-if v159 != a4 { return Ok(None); }
-let v161 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.literal(Lit::Numeral(v161)) { Ok(v) => v, Err(e) => return Err(e) };
-if v152 != v162 { return Ok(None); }
-let v163 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, a3, a2, a4, a1, v164, a0, v163, a5, a6, a7, a8, a9)
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a2: Term, a4: Term, a1: Term, v158: Term, a0: Term, v157: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
+let v159 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.apply(v160, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v163 = match s.apply(v162, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v164 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.apply(v164, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.apply(v165, v166) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.apply(v163, v167) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v161, v168) { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.apply(v159, v169) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v170, a1, v158, a0, v157, a5, a6, a3, a7, a8, a2, a9, a4)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v134: Term, v136: Term, v135: Term, a8: Term, v132: Term, a4: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v134 != v136 { return Ok(None); }
-if v135 != a8 { return Ok(None); }
-let v137 = match s.unapply(v132) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v138, v139)) = v137 else { return Ok(None); }
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v140: Term, a4: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
+let v145 = match s.unapply(v140) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v146, v147)) = v145 else { return Ok(None); }
 ;
-let v140 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v138 != v140 { return Ok(None); }
-if v139 != a4 { return Ok(None); }
-let v141 = match s.destruct(Constructor::eo__24eo_5fpf, a14) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v141 else { return Ok(None); }
+let v148 = match s.unapply(v146) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v149, v150)) = v148 else { return Ok(None); }
 ;
-let v142 = fields[0];
-let v143 = match s.unapply(v142) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v144, v145)) = v143 else { return Ok(None); }
+let v151 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v149 != v151 { return Ok(None); }
+let v152 = match s.unapply(v150) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v153, v154)) = v152 else { return Ok(None); }
 ;
-let v146 = match s.unapply(v144) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v147, v148)) = v146 else { return Ok(None); }
-;
-let v149 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v147 != v149 { return Ok(None); }
-if v148 != a9 { return Ok(None); }
-more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v145, a4, a3, a2, a1, a0, a5, a6, a7, a8, a9)
+let v155 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v153 != v155 { return Ok(None); }
+if v154 != a4 { return Ok(None); }
+let v156 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v147 != v156 { return Ok(None); }
+let v157 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v158 = match s.construct(Constructor::eo_bvor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, a3, a2, a4, a1, v158, a0, v157, a5, a6, a7, a8, a9)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v118: Term, a4: Term, v115: Term, v97: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v120 = match s.unapply(v118) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v121, v122)) = v120 else { return Ok(None); }
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v129: Term, v131: Term, v130: Term, a8: Term, v127: Term, a4: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v129 != v131 { return Ok(None); }
+if v130 != a8 { return Ok(None); }
+let v132 = match s.unapply(v127) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v133, v134)) = v132 else { return Ok(None); }
 ;
-let v123 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v121 != v123 { return Ok(None); }
-if v122 != a4 { return Ok(None); }
-let v124 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.literal(Lit::Numeral(v124)) { Ok(v) => v, Err(e) => return Err(e) };
-if v115 != v125 { return Ok(None); }
-let v126 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.literal(Lit::Numeral(v126)) { Ok(v) => v, Err(e) => return Err(e) };
-if v97 != v127 { return Ok(None); }
-let v128 = match s.destruct(Constructor::eo__24eo_5fpf, a13) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v128 else { return Ok(None); }
+let v135 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v133 != v135 { return Ok(None); }
+if v134 != a4 { return Ok(None); }
+let v136 = match s.destruct(Constructor::eo__24eo_5fpf, a14) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v136 else { return Ok(None); }
 ;
-let v129 = fields[0];
-let v130 = match s.unapply(v129) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v131, v132)) = v130 else { return Ok(None); }
+let v137 = fields[0];
+let v138 = match s.unapply(v137) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v139, v140)) = v138 else { return Ok(None); }
 ;
-let v133 = match s.unapply(v131) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v134, v135)) = v133 else { return Ok(None); }
+let v141 = match s.unapply(v139) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v142, v143)) = v141 else { return Ok(None); }
 ;
-let v136 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v134, v136, v135, a8, v132, a4, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+let v144 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v142 != v144 { return Ok(None); }
+if v143 != a9 { return Ok(None); }
+more_8_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v140, a4, a3, a2, a1, a0, a5, a6, a7, a8, a9)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v100: Term, a2: Term, a4: Term, v97: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v115: Term, a4: Term, v112: Term, v94: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v117 = match s.unapply(v115) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v118, v119)) = v117 else { return Ok(None); }
+;
+let v120 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v118 != v120 { return Ok(None); }
+if v119 != a4 { return Ok(None); }
+let v121 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v112 != v121 { return Ok(None); }
+let v122 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v94 != v122 { return Ok(None); }
+let v123 = match s.destruct(Constructor::eo__24eo_5fpf, a13) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v123 else { return Ok(None); }
+;
+let v124 = fields[0];
+let v125 = match s.unapply(v124) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v126, v127)) = v125 else { return Ok(None); }
+;
+let v128 = match s.unapply(v126) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v129, v130)) = v128 else { return Ok(None); }
+;
+let v131 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v129, v131, v130, a8, v127, a4, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+}
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v97: Term, a2: Term, a4: Term, v94: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v99 = match s.unapply(v97) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v100, v101)) = v99 else { return Ok(None); }
+;
 let v102 = match s.unapply(v100) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v103, v104)) = v102 else { return Ok(None); }
 ;
-let v105 = match s.unapply(v103) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v106, v107)) = v105 else { return Ok(None); }
+let v105 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v103 != v105 { return Ok(None); }
+let v106 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v107, v108)) = v106 else { return Ok(None); }
 ;
-let v108 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v106 != v108 { return Ok(None); }
-let v109 = match s.unapply(v107) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v110, v111)) = v109 else { return Ok(None); }
+let v109 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v107 != v109 { return Ok(None); }
+if v108 != a2 { return Ok(None); }
+let v110 = match s.unapply(v101) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v111, v112)) = v110 else { return Ok(None); }
 ;
-let v112 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v110 != v112 { return Ok(None); }
-if v111 != a2 { return Ok(None); }
-let v113 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.unapply(v111) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v114, v115)) = v113 else { return Ok(None); }
 ;
-let v116 = match s.unapply(v114) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v117, v118)) = v116 else { return Ok(None); }
-;
-let v119 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v117 != v119 { return Ok(None); }
-more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v118, a4, v115, v97, a13, a8, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+let v116 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v114 != v116 { return Ok(None); }
+more_6_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v115, a4, v112, v94, a13, a8, a14, a9, a3, a2, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v75: Term, a12: Term, a7: Term, a2: Term, a4: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v84 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.literal(Lit::Numeral(v84)) { Ok(v) => v, Err(e) => return Err(e) };
-if v75 != v85 { return Ok(None); }
-let v86 = match s.destruct(Constructor::eo__24eo_5fpf, a12) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v86 else { return Ok(None); }
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v73: Term, a12: Term, a7: Term, a2: Term, a4: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
+let v82 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v73 != v82 { return Ok(None); }
+let v83 = match s.destruct(Constructor::eo__24eo_5fpf, a12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v83 else { return Ok(None); }
 ;
-let v87 = fields[0];
-let v88 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = fields[0];
+let v85 = match s.unapply(v84) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v86, v87)) = v85 else { return Ok(None); }
+;
+let v88 = match s.unapply(v86) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v89, v90)) = v88 else { return Ok(None); }
 ;
-let v91 = match s.unapply(v89) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v92, v93)) = v91 else { return Ok(None); }
+let v91 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v89 != v91 { return Ok(None); }
+if v90 != a7 { return Ok(None); }
+let v92 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v93, v94)) = v92 else { return Ok(None); }
 ;
-let v94 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v92 != v94 { return Ok(None); }
-if v93 != a7 { return Ok(None); }
-let v95 = match s.unapply(v90) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.unapply(v93) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v96, v97)) = v95 else { return Ok(None); }
 ;
-let v98 = match s.unapply(v96) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v99, v100)) = v98 else { return Ok(None); }
-;
-let v101 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v99 != v101 { return Ok(None); }
-more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v100, a2, a4, v97, a13, a8, a14, a9, a3, a1, a0, a5, a6, a7)
+let v98 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v96 != v98 { return Ok(None); }
+more_5_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v97, a2, a4, v94, a13, a8, a14, a9, a3, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v67: Term, a2: Term, v64: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v69 = match s.unapply(v67) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v70, v71)) = v69 else { return Ok(None); }
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v65: Term, a2: Term, v62: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
+let v67 = match s.unapply(v65) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v68, v69)) = v67 else { return Ok(None); }
 ;
-let v72 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v70 != v72 { return Ok(None); }
-if v71 != a2 { return Ok(None); }
-let v73 = match s.unapply(v64) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v74, v75)) = v73 else { return Ok(None); }
+let v70 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v68 != v70 { return Ok(None); }
+if v69 != a2 { return Ok(None); }
+let v71 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v72, v73)) = v71 else { return Ok(None); }
 ;
-let v76 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v77, v78)) = v76 else { return Ok(None); }
+let v74 = match s.unapply(v72) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v75, v76)) = v74 else { return Ok(None); }
 ;
-let v79 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v77 != v79 { return Ok(None); }
-let v80 = match s.unapply(v78) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v81, v82)) = v80 else { return Ok(None); }
+let v77 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v75 != v77 { return Ok(None); }
+let v78 = match s.unapply(v76) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v79, v80)) = v78 else { return Ok(None); }
 ;
-let v83 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v81 != v83 { return Ok(None); }
-if v82 != a4 { return Ok(None); }
-more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v75, a12, a7, a2, a4, a13, a8, a14, a9, a3, a1, a0, a5, a6)
+let v81 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v79 != v81 { return Ok(None); }
+if v80 != a4 { return Ok(None); }
+more_4_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v73, a12, a7, a2, a4, a13, a8, a14, a9, a3, a1, a0, a5, a6)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v11: Term, a11: Term, a6: Term, a2: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
-let v51 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.literal(Lit::Numeral(v51)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v52 { return Ok(None); }
-let v53 = match s.destruct(Constructor::eo__24eo_5fpf, a11) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v53 else { return Ok(None); }
+let v50 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v50 { return Ok(None); }
+let v51 = match s.destruct(Constructor::eo__24eo_5fpf, a11) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v51 else { return Ok(None); }
 ;
-let v54 = fields[0];
-let v55 = match s.unapply(v54) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v56, v57)) = v55 else { return Ok(None); }
+let v52 = fields[0];
+let v53 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v54, v55)) = v53 else { return Ok(None); }
 ;
-let v58 = match s.unapply(v56) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v59, v60)) = v58 else { return Ok(None); }
+let v56 = match s.unapply(v54) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v57, v58)) = v56 else { return Ok(None); }
 ;
-let v61 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v59 != v61 { return Ok(None); }
-if v60 != a6 { return Ok(None); }
-let v62 = match s.unapply(v57) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v63, v64)) = v62 else { return Ok(None); }
+let v59 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v57 != v59 { return Ok(None); }
+if v58 != a6 { return Ok(None); }
+let v60 = match s.unapply(v55) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v61, v62)) = v60 else { return Ok(None); }
 ;
-let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v66, v67)) = v65 else { return Ok(None); }
+let v63 = match s.unapply(v61) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v64, v65)) = v63 else { return Ok(None); }
 ;
-let v68 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v66 != v68 { return Ok(None); }
-more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v67, a2, v64, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5, a6)
+let v66 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v64 != v66 { return Ok(None); }
+more_3_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v65, a2, v62, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5, a6)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v35: Term, v37: Term, v36: Term, a2: Term, v29: Term, a3: Term, v11: Term, a11: Term, a6: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
 if v35 != v37 { return Ok(None); }
@@ -8278,9 +6817,8 @@ let Some((v46, v47)) = v45 else { return Ok(None); }
 let v48 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v46 != v48 { return Ok(None); }
 if v47 != a3 { return Ok(None); }
-let v49 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.literal(Lit::Numeral(v49)) { Ok(v) => v, Err(e) => return Err(e) };
-if v40 != v50 { return Ok(None); }
+let v49 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v40 != v49 { return Ok(None); }
 more_2_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s, v11, a11, a6, a2, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dor_2dconcat_2dpullup3(s: &mut Store, v20: Term, v21: Term, a4: Term, v18: Term, a2: Term, a3: Term, v11: Term, a11: Term, a6: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
@@ -8468,298 +7006,289 @@ let v29 = fields[0];
 let v30 = fields[1];
 more_68_eo__24eo_5fcmd_5fstep_5fproven(s, v30, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23, v26, v29)
 }
-pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v237: Term, v251: Term, v227: Term, v226: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v252 = match s.apply(v237, v251) { Ok(v) => v, Err(e) => return Err(e) };
-let v253 = match s.apply(v227, v252) { Ok(v) => v, Err(e) => return Err(e) };
-let v254 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v255 = match s.literal(Lit::Binary(BitVec::new(0, &v254))) { Ok(v) => v, Err(e) => return Err(e) };
-let v256 = match s.apply(v253, v255) { Ok(v) => v, Err(e) => return Err(e) };
-let v257 = match s.apply(v226, v256) { Ok(v) => v, Err(e) => return Err(e) };
-let v258 = match s.apply(v203, v257) { Ok(v) => v, Err(e) => return Err(e) };
-let v259 = match s.apply(v180, v258) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v259))
+pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v229: Term, v242: Term, v220: Term, v219: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v243 = match s.apply(v229, v242) { Ok(v) => v, Err(e) => return Err(e) };
+let v244 = match s.apply(v220, v243) { Ok(v) => v, Err(e) => return Err(e) };
+let v245 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v246 = match s.apply(v244, v245) { Ok(v) => v, Err(e) => return Err(e) };
+let v247 = match s.apply(v219, v246) { Ok(v) => v, Err(e) => return Err(e) };
+let v248 = match s.apply(v196, v247) { Ok(v) => v, Err(e) => return Err(e) };
+let v249 = match s.apply(v173, v248) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v249))
 }
-pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v238: Term, a4: Term, a9: Term, a0: Term, a1: Term, v237: Term, v227: Term, v226: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v239 = match s.apply(v238, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v240 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v241 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v242 = match s.literal(Lit::Numeral(v241)) { Ok(v) => v, Err(e) => return Err(e) };
-let v243 = match s.construct(Constructor::eo_extract, &[a9, v242]) { Ok(v) => v, Err(e) => return Err(e) };
-let v244 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v245 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v246 = match s.builtin_list(EvalOp::ListConcat, &[v245, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v247 = match s.builtin_list(EvalOp::ListSingletonElim, &[v244, v246]) { Ok(v) => v, Err(e) => return Err(e) };
-let v248 = match s.apply(v243, v247) { Ok(v) => v, Err(e) => return Err(e) };
-let v249 = match eo__24eo_5ftypeof(s, v248) { Ok(v) => v, Err(e) => return Err(e) };
-let v250 = match eo__24eo_5fnil(s, v240, v249) { Ok(v) => v, Err(e) => return Err(e) };
-let v251 = match s.apply(v239, v250) { Ok(v) => v, Err(e) => return Err(e) };
-more_16_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v237, v251, v227, v226, v203, v180)
-}
-pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v204: Term, v225: Term, a9: Term, a0: Term, a1: Term, a4: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v226 = match s.apply(v204, v225) { Ok(v) => v, Err(e) => return Err(e) };
-let v227 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v228 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v229 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v230 = match s.literal(Lit::Numeral(v229)) { Ok(v) => v, Err(e) => return Err(e) };
-let v231 = match s.construct(Constructor::eo_extract, &[a9, v230]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v230: Term, a4: Term, a9: Term, a0: Term, a1: Term, v229: Term, v220: Term, v219: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v231 = match s.apply(v230, a4) { Ok(v) => v, Err(e) => return Err(e) };
 let v232 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v233 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v234 = match s.builtin_list(EvalOp::ListConcat, &[v233, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v235 = match s.builtin_list(EvalOp::ListSingletonElim, &[v232, v234]) { Ok(v) => v, Err(e) => return Err(e) };
-let v236 = match s.apply(v231, v235) { Ok(v) => v, Err(e) => return Err(e) };
-let v237 = match s.apply(v228, v236) { Ok(v) => v, Err(e) => return Err(e) };
-let v238 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_15_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v238, a4, a9, a0, a1, v237, v227, v226, v203, v180)
+let v233 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v234 = match s.construct(Constructor::eo_extract, &[a9, v233]) { Ok(v) => v, Err(e) => return Err(e) };
+let v235 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v236 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v237 = match s.builtin_list(EvalOp::ListConcat, &[v236, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v238 = match s.builtin_list(EvalOp::ListSingletonElim, &[v235, v237]) { Ok(v) => v, Err(e) => return Err(e) };
+let v239 = match s.apply(v234, v238) { Ok(v) => v, Err(e) => return Err(e) };
+let v240 = match eo__24eo_5ftypeof(s, v239) { Ok(v) => v, Err(e) => return Err(e) };
+let v241 = match eo__24eo_5fnil(s, v232, v240) { Ok(v) => v, Err(e) => return Err(e) };
+let v242 = match s.apply(v231, v241) { Ok(v) => v, Err(e) => return Err(e) };
+more_16_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v229, v242, v220, v219, v196, v173)
 }
-pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v213: Term, a2: Term, a7: Term, a8: Term, a0: Term, a1: Term, v212: Term, v204: Term, a9: Term, a4: Term, v203: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v214 = match s.apply(v213, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v215 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v216 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v217 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v218 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v219 = match s.builtin_list(EvalOp::ListConcat, &[v218, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v220 = match s.builtin_list(EvalOp::ListSingletonElim, &[v217, v219]) { Ok(v) => v, Err(e) => return Err(e) };
-let v221 = match s.apply(v216, v220) { Ok(v) => v, Err(e) => return Err(e) };
-let v222 = match eo__24eo_5ftypeof(s, v221) { Ok(v) => v, Err(e) => return Err(e) };
-let v223 = match eo__24eo_5fnil(s, v215, v222) { Ok(v) => v, Err(e) => return Err(e) };
-let v224 = match s.apply(v214, v223) { Ok(v) => v, Err(e) => return Err(e) };
-let v225 = match s.apply(v212, v224) { Ok(v) => v, Err(e) => return Err(e) };
-more_14_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v204, v225, a9, a0, a1, a4, v203, v180)
+pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v197: Term, v218: Term, a9: Term, a0: Term, a1: Term, a4: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v219 = match s.apply(v197, v218) { Ok(v) => v, Err(e) => return Err(e) };
+let v220 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v221 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v222 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v223 = match s.construct(Constructor::eo_extract, &[a9, v222]) { Ok(v) => v, Err(e) => return Err(e) };
+let v224 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v225 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v226 = match s.builtin_list(EvalOp::ListConcat, &[v225, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v227 = match s.builtin_list(EvalOp::ListSingletonElim, &[v224, v226]) { Ok(v) => v, Err(e) => return Err(e) };
+let v228 = match s.apply(v223, v227) { Ok(v) => v, Err(e) => return Err(e) };
+let v229 = match s.apply(v221, v228) { Ok(v) => v, Err(e) => return Err(e) };
+let v230 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_15_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v230, a4, a9, a0, a1, v229, v220, v219, v196, v173)
 }
-pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v189: Term, v201: Term, v181: Term, a7: Term, a8: Term, a0: Term, a1: Term, a2: Term, a9: Term, a4: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v202 = match s.apply(v189, v201) { Ok(v) => v, Err(e) => return Err(e) };
-let v203 = match s.apply(v181, v202) { Ok(v) => v, Err(e) => return Err(e) };
-let v204 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v205 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v206 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
-let v207 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v206: Term, a2: Term, a7: Term, a8: Term, a0: Term, a1: Term, v205: Term, v197: Term, a9: Term, a4: Term, v196: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v207 = match s.apply(v206, a2) { Ok(v) => v, Err(e) => return Err(e) };
 let v208 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v209 = match s.builtin_list(EvalOp::ListConcat, &[v208, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v210 = match s.builtin_list(EvalOp::ListSingletonElim, &[v207, v209]) { Ok(v) => v, Err(e) => return Err(e) };
-let v211 = match s.apply(v206, v210) { Ok(v) => v, Err(e) => return Err(e) };
-let v212 = match s.apply(v205, v211) { Ok(v) => v, Err(e) => return Err(e) };
-let v213 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_13_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v213, a2, a7, a8, a0, a1, v212, v204, a9, a4, v203, v180)
+let v209 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v210 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v211 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v212 = match s.builtin_list(EvalOp::ListConcat, &[v211, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v213 = match s.builtin_list(EvalOp::ListSingletonElim, &[v210, v212]) { Ok(v) => v, Err(e) => return Err(e) };
+let v214 = match s.apply(v209, v213) { Ok(v) => v, Err(e) => return Err(e) };
+let v215 = match eo__24eo_5ftypeof(s, v214) { Ok(v) => v, Err(e) => return Err(e) };
+let v216 = match eo__24eo_5fnil(s, v208, v215) { Ok(v) => v, Err(e) => return Err(e) };
+let v217 = match s.apply(v207, v216) { Ok(v) => v, Err(e) => return Err(e) };
+let v218 = match s.apply(v205, v217) { Ok(v) => v, Err(e) => return Err(e) };
+more_14_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v197, v218, a9, a0, a1, a4, v196, v173)
 }
-pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v189: Term, v181: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term, v180: Term) -> CheckResult<Option<Term>> {
-let v190 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v191 = match s.apply(v190, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v192 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v193 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v194 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v195 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v196 = match s.builtin_list(EvalOp::ListConcat, &[v195, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v197 = match s.builtin_list(EvalOp::ListSingletonElim, &[v194, v196]) { Ok(v) => v, Err(e) => return Err(e) };
-let v198 = match s.apply(v193, v197) { Ok(v) => v, Err(e) => return Err(e) };
-let v199 = match eo__24eo_5ftypeof(s, v198) { Ok(v) => v, Err(e) => return Err(e) };
-let v200 = match eo__24eo_5fnil(s, v192, v199) { Ok(v) => v, Err(e) => return Err(e) };
-let v201 = match s.apply(v191, v200) { Ok(v) => v, Err(e) => return Err(e) };
-more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v189, v201, v181, a7, a8, a0, a1, a2, a9, a4, v180)
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v182: Term, v194: Term, v174: Term, a7: Term, a8: Term, a0: Term, a1: Term, a2: Term, a9: Term, a4: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v195 = match s.apply(v182, v194) { Ok(v) => v, Err(e) => return Err(e) };
+let v196 = match s.apply(v174, v195) { Ok(v) => v, Err(e) => return Err(e) };
+let v197 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v198 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v199 = match s.construct(Constructor::eo_extract, &[a7, a8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v200 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v201 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v202 = match s.builtin_list(EvalOp::ListConcat, &[v201, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v203 = match s.builtin_list(EvalOp::ListSingletonElim, &[v200, v202]) { Ok(v) => v, Err(e) => return Err(e) };
+let v204 = match s.apply(v199, v203) { Ok(v) => v, Err(e) => return Err(e) };
+let v205 = match s.apply(v198, v204) { Ok(v) => v, Err(e) => return Err(e) };
+let v206 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_13_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v206, a2, a7, a8, a0, a1, v205, v197, a9, a4, v196, v173)
 }
-pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v177: Term, a1: Term, v164: Term, a0: Term, v163: Term, a5: Term, a6: Term, a3: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term) -> CheckResult<Option<Term>> {
-let v178 = match s.apply(v177, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v179 = match s.builtin_list(EvalOp::ListConcat, &[v164, a0, v178]) { Ok(v) => v, Err(e) => return Err(e) };
-let v180 = match s.apply(v163, v179) { Ok(v) => v, Err(e) => return Err(e) };
-let v181 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v182 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v183 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
-let v184 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a5: Term, a6: Term, a0: Term, a1: Term, v182: Term, v174: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term, v173: Term) -> CheckResult<Option<Term>> {
+let v183 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v184 = match s.apply(v183, a3) { Ok(v) => v, Err(e) => return Err(e) };
 let v185 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v186 = match s.builtin_list(EvalOp::ListConcat, &[v185, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v187 = match s.builtin_list(EvalOp::ListSingletonElim, &[v184, v186]) { Ok(v) => v, Err(e) => return Err(e) };
-let v188 = match s.apply(v183, v187) { Ok(v) => v, Err(e) => return Err(e) };
-let v189 = match s.apply(v182, v188) { Ok(v) => v, Err(e) => return Err(e) };
-more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, a3, a5, a6, a0, a1, v189, v181, a7, a8, a2, a9, a4, v180)
+let v186 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v187 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v188 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v189 = match s.builtin_list(EvalOp::ListConcat, &[v188, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v190 = match s.builtin_list(EvalOp::ListSingletonElim, &[v187, v189]) { Ok(v) => v, Err(e) => return Err(e) };
+let v191 = match s.apply(v186, v190) { Ok(v) => v, Err(e) => return Err(e) };
+let v192 = match eo__24eo_5ftypeof(s, v191) { Ok(v) => v, Err(e) => return Err(e) };
+let v193 = match eo__24eo_5fnil(s, v185, v192) { Ok(v) => v, Err(e) => return Err(e) };
+let v194 = match s.apply(v184, v193) { Ok(v) => v, Err(e) => return Err(e) };
+more_12_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v182, v194, v174, a7, a8, a0, a1, a2, a9, a4, v173)
 }
-pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a2: Term, a4: Term, a1: Term, v164: Term, a0: Term, v163: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
-let v165 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v166 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v167 = match s.apply(v166, a3) { Ok(v) => v, Err(e) => return Err(e) };
-let v168 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v169 = match s.apply(v168, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v170 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v171 = match s.apply(v170, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v172 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v173 = match s.literal(Lit::Binary(BitVec::new(0, &v172))) { Ok(v) => v, Err(e) => return Err(e) };
-let v174 = match s.apply(v171, v173) { Ok(v) => v, Err(e) => return Err(e) };
-let v175 = match s.apply(v169, v174) { Ok(v) => v, Err(e) => return Err(e) };
-let v176 = match s.apply(v167, v175) { Ok(v) => v, Err(e) => return Err(e) };
-let v177 = match s.apply(v165, v176) { Ok(v) => v, Err(e) => return Err(e) };
-more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v177, a1, v164, a0, v163, a5, a6, a3, a7, a8, a2, a9, a4)
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v170: Term, a1: Term, v158: Term, a0: Term, v157: Term, a5: Term, a6: Term, a3: Term, a7: Term, a8: Term, a2: Term, a9: Term, a4: Term) -> CheckResult<Option<Term>> {
+let v171 = match s.apply(v170, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v172 = match s.builtin_list(EvalOp::ListConcat, &[v158, a0, v171]) { Ok(v) => v, Err(e) => return Err(e) };
+let v173 = match s.apply(v157, v172) { Ok(v) => v, Err(e) => return Err(e) };
+let v174 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v175 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v176 = match s.construct(Constructor::eo_extract, &[a5, a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v177 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v178 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v179 = match s.builtin_list(EvalOp::ListConcat, &[v178, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v180 = match s.builtin_list(EvalOp::ListSingletonElim, &[v177, v179]) { Ok(v) => v, Err(e) => return Err(e) };
+let v181 = match s.apply(v176, v180) { Ok(v) => v, Err(e) => return Err(e) };
+let v182 = match s.apply(v175, v181) { Ok(v) => v, Err(e) => return Err(e) };
+more_11_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, a3, a5, a6, a0, a1, v182, v174, a7, a8, a2, a9, a4, v173)
 }
-pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v145: Term, a4: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
-let v150 = match s.unapply(v145) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v151, v152)) = v150 else { return Ok(None); }
-;
-let v153 = match s.unapply(v151) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v154, v155)) = v153 else { return Ok(None); }
-;
-let v156 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v154 != v156 { return Ok(None); }
-let v157 = match s.unapply(v155) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v158, v159)) = v157 else { return Ok(None); }
-;
-let v160 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v158 != v160 { return Ok(None); }
-if v159 != a4 { return Ok(None); }
-let v161 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v162 = match s.literal(Lit::Numeral(v161)) { Ok(v) => v, Err(e) => return Err(e) };
-if v152 != v162 { return Ok(None); }
-let v163 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v164 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, a3, a2, a4, a1, v164, a0, v163, a5, a6, a7, a8, a9)
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, a3: Term, a2: Term, a4: Term, a1: Term, v158: Term, a0: Term, v157: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
+let v159 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v160 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v161 = match s.apply(v160, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let v162 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v163 = match s.apply(v162, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v164 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v165 = match s.apply(v164, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v166 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v167 = match s.apply(v165, v166) { Ok(v) => v, Err(e) => return Err(e) };
+let v168 = match s.apply(v163, v167) { Ok(v) => v, Err(e) => return Err(e) };
+let v169 = match s.apply(v161, v168) { Ok(v) => v, Err(e) => return Err(e) };
+let v170 = match s.apply(v159, v169) { Ok(v) => v, Err(e) => return Err(e) };
+more_10_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v170, a1, v158, a0, v157, a5, a6, a3, a7, a8, a2, a9, a4)
 }
-pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v134: Term, v136: Term, v135: Term, a8: Term, v132: Term, a4: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-if v134 != v136 { return Ok(None); }
-if v135 != a8 { return Ok(None); }
-let v137 = match s.unapply(v132) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v138, v139)) = v137 else { return Ok(None); }
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v140: Term, a4: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
+let v145 = match s.unapply(v140) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v146, v147)) = v145 else { return Ok(None); }
 ;
-let v140 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v138 != v140 { return Ok(None); }
-if v139 != a4 { return Ok(None); }
-let v141 = match s.destruct(Constructor::eo__24eo_5fpf, a14) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v141 else { return Ok(None); }
+let v148 = match s.unapply(v146) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v149, v150)) = v148 else { return Ok(None); }
 ;
-let v142 = fields[0];
-let v143 = match s.unapply(v142) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v144, v145)) = v143 else { return Ok(None); }
+let v151 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v149 != v151 { return Ok(None); }
+let v152 = match s.unapply(v150) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v153, v154)) = v152 else { return Ok(None); }
 ;
-let v146 = match s.unapply(v144) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v147, v148)) = v146 else { return Ok(None); }
-;
-let v149 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v147 != v149 { return Ok(None); }
-if v148 != a9 { return Ok(None); }
-more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v145, a4, a3, a2, a1, a0, a5, a6, a7, a8, a9)
+let v155 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v153 != v155 { return Ok(None); }
+if v154 != a4 { return Ok(None); }
+let v156 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v147 != v156 { return Ok(None); }
+let v157 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v158 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_9_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, a3, a2, a4, a1, v158, a0, v157, a5, a6, a7, a8, a9)
 }
-pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v118: Term, a4: Term, v115: Term, v97: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
-let v120 = match s.unapply(v118) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v121, v122)) = v120 else { return Ok(None); }
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v129: Term, v131: Term, v130: Term, a8: Term, v127: Term, a4: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v129 != v131 { return Ok(None); }
+if v130 != a8 { return Ok(None); }
+let v132 = match s.unapply(v127) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v133, v134)) = v132 else { return Ok(None); }
 ;
-let v123 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v121 != v123 { return Ok(None); }
-if v122 != a4 { return Ok(None); }
-let v124 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v125 = match s.literal(Lit::Numeral(v124)) { Ok(v) => v, Err(e) => return Err(e) };
-if v115 != v125 { return Ok(None); }
-let v126 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v127 = match s.literal(Lit::Numeral(v126)) { Ok(v) => v, Err(e) => return Err(e) };
-if v97 != v127 { return Ok(None); }
-let v128 = match s.destruct(Constructor::eo__24eo_5fpf, a13) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v128 else { return Ok(None); }
+let v135 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v133 != v135 { return Ok(None); }
+if v134 != a4 { return Ok(None); }
+let v136 = match s.destruct(Constructor::eo__24eo_5fpf, a14) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v136 else { return Ok(None); }
 ;
-let v129 = fields[0];
-let v130 = match s.unapply(v129) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v131, v132)) = v130 else { return Ok(None); }
+let v137 = fields[0];
+let v138 = match s.unapply(v137) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v139, v140)) = v138 else { return Ok(None); }
 ;
-let v133 = match s.unapply(v131) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v134, v135)) = v133 else { return Ok(None); }
+let v141 = match s.unapply(v139) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v142, v143)) = v141 else { return Ok(None); }
 ;
-let v136 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v134, v136, v135, a8, v132, a4, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+let v144 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v142 != v144 { return Ok(None); }
+if v143 != a9 { return Ok(None); }
+more_8_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v140, a4, a3, a2, a1, a0, a5, a6, a7, a8, a9)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v100: Term, a2: Term, a4: Term, v97: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v115: Term, a4: Term, v112: Term, v94: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v117 = match s.unapply(v115) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v118, v119)) = v117 else { return Ok(None); }
+;
+let v120 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v118 != v120 { return Ok(None); }
+if v119 != a4 { return Ok(None); }
+let v121 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v112 != v121 { return Ok(None); }
+let v122 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v94 != v122 { return Ok(None); }
+let v123 = match s.destruct(Constructor::eo__24eo_5fpf, a13) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v123 else { return Ok(None); }
+;
+let v124 = fields[0];
+let v125 = match s.unapply(v124) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v126, v127)) = v125 else { return Ok(None); }
+;
+let v128 = match s.unapply(v126) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v129, v130)) = v128 else { return Ok(None); }
+;
+let v131 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v129, v131, v130, a8, v127, a4, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+}
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v97: Term, a2: Term, a4: Term, v94: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v99 = match s.unapply(v97) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v100, v101)) = v99 else { return Ok(None); }
+;
 let v102 = match s.unapply(v100) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v103, v104)) = v102 else { return Ok(None); }
 ;
-let v105 = match s.unapply(v103) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v106, v107)) = v105 else { return Ok(None); }
+let v105 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v103 != v105 { return Ok(None); }
+let v106 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v107, v108)) = v106 else { return Ok(None); }
 ;
-let v108 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v106 != v108 { return Ok(None); }
-let v109 = match s.unapply(v107) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v110, v111)) = v109 else { return Ok(None); }
+let v109 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v107 != v109 { return Ok(None); }
+if v108 != a2 { return Ok(None); }
+let v110 = match s.unapply(v101) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v111, v112)) = v110 else { return Ok(None); }
 ;
-let v112 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v110 != v112 { return Ok(None); }
-if v111 != a2 { return Ok(None); }
-let v113 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.unapply(v111) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v114, v115)) = v113 else { return Ok(None); }
 ;
-let v116 = match s.unapply(v114) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v117, v118)) = v116 else { return Ok(None); }
-;
-let v119 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v117 != v119 { return Ok(None); }
-more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v118, a4, v115, v97, a13, a8, a14, a9, a3, a2, a1, a0, a5, a6, a7)
+let v116 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v114 != v116 { return Ok(None); }
+more_6_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v115, a4, v112, v94, a13, a8, a14, a9, a3, a2, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v75: Term, a12: Term, a7: Term, a2: Term, a4: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v84 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.literal(Lit::Numeral(v84)) { Ok(v) => v, Err(e) => return Err(e) };
-if v75 != v85 { return Ok(None); }
-let v86 = match s.destruct(Constructor::eo__24eo_5fpf, a12) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v86 else { return Ok(None); }
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v73: Term, a12: Term, a7: Term, a2: Term, a4: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
+let v82 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v73 != v82 { return Ok(None); }
+let v83 = match s.destruct(Constructor::eo__24eo_5fpf, a12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v83 else { return Ok(None); }
 ;
-let v87 = fields[0];
-let v88 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = fields[0];
+let v85 = match s.unapply(v84) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v86, v87)) = v85 else { return Ok(None); }
+;
+let v88 = match s.unapply(v86) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v89, v90)) = v88 else { return Ok(None); }
 ;
-let v91 = match s.unapply(v89) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v92, v93)) = v91 else { return Ok(None); }
+let v91 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v89 != v91 { return Ok(None); }
+if v90 != a7 { return Ok(None); }
+let v92 = match s.unapply(v87) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v93, v94)) = v92 else { return Ok(None); }
 ;
-let v94 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v92 != v94 { return Ok(None); }
-if v93 != a7 { return Ok(None); }
-let v95 = match s.unapply(v90) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.unapply(v93) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v96, v97)) = v95 else { return Ok(None); }
 ;
-let v98 = match s.unapply(v96) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v99, v100)) = v98 else { return Ok(None); }
-;
-let v101 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v99 != v101 { return Ok(None); }
-more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v100, a2, a4, v97, a13, a8, a14, a9, a3, a1, a0, a5, a6, a7)
+let v98 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v96 != v98 { return Ok(None); }
+more_5_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v97, a2, a4, v94, a13, a8, a14, a9, a3, a1, a0, a5, a6, a7)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v67: Term, a2: Term, v64: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
-let v69 = match s.unapply(v67) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v70, v71)) = v69 else { return Ok(None); }
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v65: Term, a2: Term, v62: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term, a6: Term) -> CheckResult<Option<Term>> {
+let v67 = match s.unapply(v65) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v68, v69)) = v67 else { return Ok(None); }
 ;
-let v72 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v70 != v72 { return Ok(None); }
-if v71 != a2 { return Ok(None); }
-let v73 = match s.unapply(v64) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v74, v75)) = v73 else { return Ok(None); }
+let v70 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v68 != v70 { return Ok(None); }
+if v69 != a2 { return Ok(None); }
+let v71 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v72, v73)) = v71 else { return Ok(None); }
 ;
-let v76 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v77, v78)) = v76 else { return Ok(None); }
+let v74 = match s.unapply(v72) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v75, v76)) = v74 else { return Ok(None); }
 ;
-let v79 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v77 != v79 { return Ok(None); }
-let v80 = match s.unapply(v78) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v81, v82)) = v80 else { return Ok(None); }
+let v77 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v75 != v77 { return Ok(None); }
+let v78 = match s.unapply(v76) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v79, v80)) = v78 else { return Ok(None); }
 ;
-let v83 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v81 != v83 { return Ok(None); }
-if v82 != a4 { return Ok(None); }
-more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v75, a12, a7, a2, a4, a13, a8, a14, a9, a3, a1, a0, a5, a6)
+let v81 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v79 != v81 { return Ok(None); }
+if v80 != a4 { return Ok(None); }
+more_4_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v73, a12, a7, a2, a4, a13, a8, a14, a9, a3, a1, a0, a5, a6)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v11: Term, a11: Term, a6: Term, a2: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a3: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
-let v51 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v52 = match s.literal(Lit::Numeral(v51)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v52 { return Ok(None); }
-let v53 = match s.destruct(Constructor::eo__24eo_5fpf, a11) { Ok(v) => v, Err(e) => return Err(e) };
-let Some(fields) = v53 else { return Ok(None); }
+let v50 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v50 { return Ok(None); }
+let v51 = match s.destruct(Constructor::eo__24eo_5fpf, a11) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v51 else { return Ok(None); }
 ;
-let v54 = fields[0];
-let v55 = match s.unapply(v54) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v56, v57)) = v55 else { return Ok(None); }
+let v52 = fields[0];
+let v53 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v54, v55)) = v53 else { return Ok(None); }
 ;
-let v58 = match s.unapply(v56) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v59, v60)) = v58 else { return Ok(None); }
+let v56 = match s.unapply(v54) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v57, v58)) = v56 else { return Ok(None); }
 ;
-let v61 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v59 != v61 { return Ok(None); }
-if v60 != a6 { return Ok(None); }
-let v62 = match s.unapply(v57) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v63, v64)) = v62 else { return Ok(None); }
+let v59 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v57 != v59 { return Ok(None); }
+if v58 != a6 { return Ok(None); }
+let v60 = match s.unapply(v55) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v61, v62)) = v60 else { return Ok(None); }
 ;
-let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
-let Some((v66, v67)) = v65 else { return Ok(None); }
+let v63 = match s.unapply(v61) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v64, v65)) = v63 else { return Ok(None); }
 ;
-let v68 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-if v66 != v68 { return Ok(None); }
-more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v67, a2, v64, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5, a6)
+let v66 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v64 != v66 { return Ok(None); }
+more_3_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v65, a2, v62, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5, a6)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v35: Term, v37: Term, v36: Term, a2: Term, v29: Term, a3: Term, v11: Term, a11: Term, a6: Term, a4: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
 if v35 != v37 { return Ok(None); }
@@ -8778,9 +7307,8 @@ let Some((v46, v47)) = v45 else { return Ok(None); }
 let v48 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v46 != v48 { return Ok(None); }
 if v47 != a3 { return Ok(None); }
-let v49 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v50 = match s.literal(Lit::Numeral(v49)) { Ok(v) => v, Err(e) => return Err(e) };
-if v40 != v50 { return Ok(None); }
+let v49 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v40 != v49 { return Ok(None); }
 more_2_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s, v11, a11, a6, a2, a4, a12, a7, a13, a8, a14, a9, a3, a1, a0, a5)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dxor_2dconcat_2dpullup3(s: &mut Store, v20: Term, v21: Term, a4: Term, v18: Term, a2: Term, a3: Term, v11: Term, a11: Term, a6: Term, a12: Term, a7: Term, a13: Term, a8: Term, a14: Term, a9: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
@@ -8968,9 +7496,9 @@ let v29 = fields[0];
 let v30 = fields[1];
 more_70_eo__24eo_5fcmd_5fstep_5fproven(s, v30, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23, v26, v29)
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s: &mut Store, v23: Term, v27: Term) -> CheckResult<Option<Term>> {
-let v28 = match s.apply(v23, v27) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v28))
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s: &mut Store, v23: Term, v26: Term) -> CheckResult<Option<Term>> {
+let v27 = match s.apply(v23, v26) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v27))
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s: &mut Store, v14: Term, a0: Term, v13: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v15 = match s.apply(v14, a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -8983,10 +7511,9 @@ let v21 = match s.apply(v17, v20) { Ok(v) => v, Err(e) => return Err(e) };
 let v22 = match s.apply(v15, v21) { Ok(v) => v, Err(e) => return Err(e) };
 let v23 = match s.apply(v13, v22) { Ok(v) => v, Err(e) => return Err(e) };
 let v24 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.literal(Lit::Numeral(v25)) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.apply(v24, v26) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s, v23, v27)
+let v25 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.apply(v24, v25) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s, v23, v26)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s: &mut Store, a0: Term, a1: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a2) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9054,32 +7581,31 @@ let v13 = match s.construct(Constructor::eo__24eo_5fpf, &[v12]) { Ok(v) => v, Er
 let v14 = match eo__24eo_5fprog_5fbv_2dxor_2dduplicate(s, v2, v5, v13) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v14))
 }
-pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dxor_2dones(s: &mut Store, v22: Term, v29: Term, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
-let v30 = match s.apply(v22, v29) { Ok(v) => v, Err(e) => return Err(e) };
-let v31 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dxor_2dones(s: &mut Store, v21: Term, v28: Term, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
+let v29 = match s.apply(v21, v28) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.construct(Constructor::eo_bvnot, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v32 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v33 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v34 = match s.builtin_list(EvalOp::ListConcat, &[v33, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v35 = match s.builtin_list(EvalOp::ListSingletonElim, &[v32, v34]) { Ok(v) => v, Err(e) => return Err(e) };
-let v36 = match s.apply(v31, v35) { Ok(v) => v, Err(e) => return Err(e) };
-let v37 = match s.apply(v30, v36) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v37))
+let v33 = match s.builtin_list(EvalOp::ListConcat, &[v32, a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.builtin_list(EvalOp::ListSingletonElim, &[v31, v33]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.apply(v30, v34) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.apply(v29, v35) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v36))
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dxor_2dones(s: &mut Store, v17: Term, v19: Term, v18: Term, a3: Term, v11: Term, a2: Term, a1: Term, a0: Term) -> CheckResult<Option<Term>> {
 if v17 != v19 { return Ok(None); }
 if v18 != a3 { return Ok(None); }
-let v20 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.literal(Lit::Numeral(v20)) { Ok(v) => v, Err(e) => return Err(e) };
-if v11 != v21 { return Ok(None); }
-let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v20 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v20 { return Ok(None); }
+let v21 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v22 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v23 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.construct(Constructor::eo_bvxor, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v25 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
-let v26 = match s.apply(v25, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v27 = match s.apply(v24, v26) { Ok(v) => v, Err(e) => return Err(e) };
-let v28 = match s.apply(v27, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v29 = match s.builtin_list(EvalOp::ListConcat, &[v23, a0, v28]) { Ok(v) => v, Err(e) => return Err(e) };
-more_1_eo__24eo_5fprog_5fbv_2dxor_2dones(s, v22, v29, a0, a1)
+let v24 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v25 = match s.apply(v24, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v26 = match s.apply(v23, v25) { Ok(v) => v, Err(e) => return Err(e) };
+let v27 = match s.apply(v26, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.builtin_list(EvalOp::ListConcat, &[v22, a0, v27]) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dxor_2dones(s, v21, v28, a0, a1)
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dxor_2dones(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a4) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9284,30 +7810,28 @@ if a3 != v5 { return Ok(None); }
 let v6 = match eo__24eo_5fprog_5fbv_2dnot_2didemp(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v6))
 }
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dult_2dzero_2d1(s: &mut Store, v12: Term, v11: Term, v9: Term, v8: Term) -> CheckResult<Option<Term>> {
-let v13 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.literal(Lit::Numeral(v13)) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v12, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v11, v15) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.apply(v9, v16) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.apply(v8, v17) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v18))
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dult_2dzero_2d1(s: &mut Store, v11: Term, v10: Term, v8: Term, v7: Term) -> CheckResult<Option<Term>> {
+let v12 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v13 = match s.apply(v11, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v10, v13) { Ok(v) => v, Err(e) => return Err(e) };
+let v15 = match s.apply(v8, v14) { Ok(v) => v, Err(e) => return Err(e) };
+let v16 = match s.apply(v7, v15) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v16))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dult_2dzero_2d1(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.construct(Constructor::eo_bvult, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.literal(Lit::Numeral(v3)) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.apply(v2, v4) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.apply(v1, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v0, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.construct(Constructor::eo_not, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match s.apply(v10, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dult_2dzero_2d1(s, v12, v11, v9, v8)
+let v3 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.apply(v2, v3) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.apply(v1, v4) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v5, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v0, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.construct(Constructor::eo_not, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.apply(v9, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v11 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24eo_5fprog_5fbv_2dult_2dzero_2d1(s, v11, v10, v8, v7)
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dult_2dzero_2d1(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9349,14 +7873,13 @@ let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => ret
 let v1 = match s.construct(Constructor::eo_bvult, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.literal(Lit::Numeral(v4)) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.apply(v3, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v2, v6) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v0, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.apply(v8, v9) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v10))
+let v4 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.apply(v3, v4) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v0, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.apply(v7, v8) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v9))
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dult_2dzero_2d2(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9521,28 +8044,26 @@ if a3 != v5 { return Ok(None); }
 let v6 = match eo__24eo_5fprog_5fbv_2dule_2dself(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v6))
 }
-pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dule_2dzero(s: &mut Store, v11: Term, v13: Term, v10: Term, v8: Term) -> CheckResult<Option<Term>> {
-let v14 = match s.apply(v11, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.apply(v10, v14) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.apply(v8, v15) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v16))
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dule_2dzero(s: &mut Store, v10: Term, v11: Term, v9: Term, v7: Term) -> CheckResult<Option<Term>> {
+let v12 = match s.apply(v10, v11) { Ok(v) => v, Err(e) => return Err(e) };
+let v13 = match s.apply(v9, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let v14 = match s.apply(v7, v13) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v14))
 }
 pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dule_2dzero(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.construct(Constructor::eo_bvule, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.apply(v1, a0) { Ok(v) => v, Err(e) => return Err(e) };
 let v3 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.literal(Lit::Numeral(v4)) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.apply(v3, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v2, v6) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v0, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.apply(v9, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v11 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v12 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v13 = match s.literal(Lit::Numeral(v12)) { Ok(v) => v, Err(e) => return Err(e) };
-more_0_eo__24eo_5fprog_5fbv_2dule_2dzero(s, v11, v13, v10, v8)
+let v4 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.apply(v3, v4) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v2, v5) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v0, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.apply(v8, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v10 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v11 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24eo_5fprog_5fbv_2dule_2dzero(s, v10, v11, v9, v7)
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dule_2dzero(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9590,15 +8111,14 @@ pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dzero_2dule(s: &mut Store, a0: Term, 
 let v0 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.construct(Constructor::eo_bvule, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v2 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
-let v3 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v4 = match s.literal(Lit::Numeral(v3)) { Ok(v) => v, Err(e) => return Err(e) };
-let v5 = match s.apply(v2, v4) { Ok(v) => v, Err(e) => return Err(e) };
-let v6 = match s.apply(v1, v5) { Ok(v) => v, Err(e) => return Err(e) };
-let v7 = match s.apply(v6, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v8 = match s.apply(v0, v7) { Ok(v) => v, Err(e) => return Err(e) };
-let v9 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v10 = match s.apply(v8, v9) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v10))
+let v3 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v4 = match s.apply(v2, v3) { Ok(v) => v, Err(e) => return Err(e) };
+let v5 = match s.apply(v1, v4) { Ok(v) => v, Err(e) => return Err(e) };
+let v6 = match s.apply(v5, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v7 = match s.apply(v0, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v9 = match s.apply(v7, v8) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v9))
 }
 pub(super) fn body_eo__24eo_5fprog_5fbv_2dzero_2dule(s: &mut Store, a0: Term, a1: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9673,26 +8193,25 @@ if a3 != v5 { return Ok(None); }
 let v6 = match eo__24eo_5fprog_5fbv_2dsle_2dself(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v6))
 }
-pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dule_2dmax(s: &mut Store, v45: Term) -> CheckResult<Option<Term>> {
-let v46 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
-let v47 = match s.apply(v45, v46) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v47))
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dule_2dmax(s: &mut Store, v44: Term) -> CheckResult<Option<Term>> {
+let v45 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+let v46 = match s.apply(v44, v45) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v46))
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dule_2dmax(s: &mut Store, v34: Term, v35: Term, a0: Term, v24: Term, a2: Term, a1: Term) -> CheckResult<Option<Term>> {
 let v36 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v34 != v36 { return Ok(None); }
 if v35 != a0 { return Ok(None); }
-let v37 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v38 = match s.literal(Lit::Numeral(v37)) { Ok(v) => v, Err(e) => return Err(e) };
-if v24 != v38 { return Ok(None); }
-let v39 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v40 = match s.construct(Constructor::eo_bvule, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v41 = match s.apply(v40, a0) { Ok(v) => v, Err(e) => return Err(e) };
-let v42 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
-let v43 = match s.apply(v42, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v44 = match s.apply(v41, v43) { Ok(v) => v, Err(e) => return Err(e) };
-let v45 = match s.apply(v39, v44) { Ok(v) => v, Err(e) => return Err(e) };
-more_2_eo__24eo_5fprog_5fbv_2dule_2dmax(s, v45)
+let v37 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v24 != v37 { return Ok(None); }
+let v38 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match s.construct(Constructor::eo_bvule, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v40 = match s.apply(v39, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v41 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v42 = match s.apply(v41, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v43 = match s.apply(v40, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v44 = match s.apply(v38, v43) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dule_2dmax(s, v44)
 }
 pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dule_2dmax(s: &mut Store, v16: Term, a1: Term, v17: Term, a0: Term, a2: Term) -> CheckResult<Option<Term>> {
 let v18 = match s.unapply(v16) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9863,44 +8382,41 @@ if let Some(found) = match case_358_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2
 if let Some(found) = match case_359_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
 Ok(None)
 }
-pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v86: Term, v88: Term, v80: Term, v67: Term) -> CheckResult<Option<Term>> {
-let v89 = match s.apply(v86, v88) { Ok(v) => v, Err(e) => return Err(e) };
-let v90 = match s.apply(v80, v89) { Ok(v) => v, Err(e) => return Err(e) };
-let v91 = match s.apply(v67, v90) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v91))
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v83: Term, v84: Term, v78: Term, v66: Term) -> CheckResult<Option<Term>> {
+let v85 = match s.apply(v83, v84) { Ok(v) => v, Err(e) => return Err(e) };
+let v86 = match s.apply(v78, v85) { Ok(v) => v, Err(e) => return Err(e) };
+let v87 = match s.apply(v66, v86) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v87))
 }
-pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v74: Term, a2: Term, a1: Term, v73: Term, a0: Term, v72: Term, v71: Term, v68: Term, a5: Term, v67: Term) -> CheckResult<Option<Term>> {
-let v75 = match s.apply(v74, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v76 = match s.apply(v75, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v77 = match s.builtin_list(EvalOp::ListConcat, &[v73, a0, v76]) { Ok(v) => v, Err(e) => return Err(e) };
-let v78 = match s.builtin_list(EvalOp::ListSingletonElim, &[v72, v77]) { Ok(v) => v, Err(e) => return Err(e) };
-let v79 = match s.apply(v71, v78) { Ok(v) => v, Err(e) => return Err(e) };
-let v80 = match s.apply(v68, v79) { Ok(v) => v, Err(e) => return Err(e) };
-let v81 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v82 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a5]) { Ok(v) => v, Err(e) => return Err(e) };
-let v83 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v84 = match s.literal(Lit::Numeral(v83)) { Ok(v) => v, Err(e) => return Err(e) };
-let v85 = match s.apply(v82, v84) { Ok(v) => v, Err(e) => return Err(e) };
-let v86 = match s.apply(v81, v85) { Ok(v) => v, Err(e) => return Err(e) };
-let v87 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v88 = match s.literal(Lit::Binary(BitVec::new(0, &v87))) { Ok(v) => v, Err(e) => return Err(e) };
-more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v86, v88, v80, v67)
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v72: Term, a2: Term, a1: Term, v71: Term, a0: Term, v70: Term, v69: Term, v67: Term, a5: Term, v66: Term) -> CheckResult<Option<Term>> {
+let v73 = match s.apply(v72, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v74 = match s.apply(v73, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.builtin_list(EvalOp::ListConcat, &[v71, a0, v74]) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.builtin_list(EvalOp::ListSingletonElim, &[v70, v75]) { Ok(v) => v, Err(e) => return Err(e) };
+let v77 = match s.apply(v69, v76) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.apply(v67, v77) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a5]) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v82 = match s.apply(v80, v81) { Ok(v) => v, Err(e) => return Err(e) };
+let v83 = match s.apply(v79, v82) { Ok(v) => v, Err(e) => return Err(e) };
+let v84 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v83, v84, v78, v66)
 }
-pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v61: Term, a4: Term, v60: Term, a1: Term, v59: Term, v57: Term, a0: Term, v56: Term, a6: Term, a2: Term, a5: Term) -> CheckResult<Option<Term>> {
-let v62 = match s.apply(v61, a4) { Ok(v) => v, Err(e) => return Err(e) };
-let v63 = match s.apply(v60, v62) { Ok(v) => v, Err(e) => return Err(e) };
-let v64 = match s.apply(v63, a1) { Ok(v) => v, Err(e) => return Err(e) };
-let v65 = match s.apply(v59, v64) { Ok(v) => v, Err(e) => return Err(e) };
-let v66 = match s.builtin_list(EvalOp::ListConcat, &[v57, a0, v65]) { Ok(v) => v, Err(e) => return Err(e) };
-let v67 = match s.apply(v56, v66) { Ok(v) => v, Err(e) => return Err(e) };
-let v68 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v69 = match parse_int("0") { Ok(v) => v, Err(e) => return Err(e) };
-let v70 = match s.literal(Lit::Numeral(v69)) { Ok(v) => v, Err(e) => return Err(e) };
-let v71 = match s.construct(Constructor::eo_extract, &[a6, v70]) { Ok(v) => v, Err(e) => return Err(e) };
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v60: Term, a4: Term, v59: Term, a1: Term, v58: Term, v56: Term, a0: Term, v55: Term, a6: Term, a2: Term, a5: Term) -> CheckResult<Option<Term>> {
+let v61 = match s.apply(v60, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.apply(v59, v61) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.apply(v62, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v58, v63) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match s.builtin_list(EvalOp::ListConcat, &[v56, a0, v64]) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v55, v65) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.construct(Constructor::eo_extract, &[a6, v68]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v72 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v73 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v74 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v74, a2, a1, v73, a0, v72, v71, v68, a5, v67)
+more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v72, a2, a1, v71, a0, v70, v69, v67, a5, v66)
 }
 pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v45: Term, a4: Term, v38: Term, a2: Term, a3: Term, a1: Term, a0: Term, a6: Term, a5: Term) -> CheckResult<Option<Term>> {
 let v50 = match s.unapply(v45) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9909,16 +8425,15 @@ let Some((v51, v52)) = v50 else { return Ok(None); }
 let v53 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 if v51 != v53 { return Ok(None); }
 if v52 != a4 { return Ok(None); }
-let v54 = match parse_int("1") { Ok(v) => v, Err(e) => return Err(e) };
-let v55 = match s.literal(Lit::Numeral(v54)) { Ok(v) => v, Err(e) => return Err(e) };
-if v38 != v55 { return Ok(None); }
-let v56 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v38 != v54 { return Ok(None); }
+let v55 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v57 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v58 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v59 = match s.apply(v58, a2) { Ok(v) => v, Err(e) => return Err(e) };
-let v60 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v61 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
-more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v61, a4, v60, a1, v59, v57, a0, v56, a6, a2, a5)
+let v58 = match s.apply(v57, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v60, a4, v59, a1, v58, v56, a0, v55, a6, a2, a5)
 }
 pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, v33: Term, v34: Term, a6: Term, v31: Term, a3: Term, a4: Term, a2: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
 let v35 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
@@ -9997,4 +8512,1466 @@ let Some(fields) = v14 else { return Ok(None); }
 ;
 let v15 = fields[0];
 more_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v15, a5, a4, a9, a6, a3, a2, a1, a0)
+}
+pub(super) fn body_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Term> {
+let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck0 { return Ok(s.stuck()); }
+let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck1 { return Ok(s.stuck()); }
+let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck2 { return Ok(s.stuck()); }
+let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck3 { return Ok(s.stuck()); }
+let stuck4 = match s.is_stuck(a4) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck4 { return Ok(s.stuck()); }
+let stuck5 = match s.is_stuck(a5) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck5 { return Ok(s.stuck()); }
+let stuck6 = match s.is_stuck(a6) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck6 { return Ok(s.stuck()); }
+if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+Ok(s.stuck())
+}
+// EO program "$eo_prog_bv-mult-pow2-1"
+pub fn eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Term> {
+match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
+let result = body_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+s.leave();
+result
+}
+pub(super) fn more_74_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v25: Term, a0: Term, v24: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term, v17: Term, v20: Term) -> CheckResult<Option<Term>> {
+let v26 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v25) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v26 else { return Ok(None); }
+;
+let v27 = fields[0];
+let v28 = fields[1];
+let v29 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v28) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v29 else { return Ok(None); }
+;
+let v30 = fields[0];
+let v31 = fields[1];
+let v32 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v31 != v32 { return Ok(None); }
+let v33 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.construct(Constructor::eo__24eo_5fpf, &[v33]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v27) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.construct(Constructor::eo__24eo_5fpf, &[v35]) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.construct(Constructor::eo__24eo_5fpf, &[v37]) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d1(s, v2, v5, v8, v11, v14, v17, v20, v34, v36, v38) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v39))
+}
+pub(super) fn case_360_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fpow2_5f1, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if a1 != v0 { return Ok(None); }
+let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v1 else { return Ok(None); }
+;
+let v2 = fields[0];
+let v3 = fields[1];
+let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v4 else { return Ok(None); }
+;
+let v5 = fields[0];
+let v6 = fields[1];
+let v7 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v7 else { return Ok(None); }
+;
+let v8 = fields[0];
+let v9 = fields[1];
+let v10 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v9) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v10 else { return Ok(None); }
+;
+let v11 = fields[0];
+let v12 = fields[1];
+let v13 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v13 else { return Ok(None); }
+;
+let v14 = fields[0];
+let v15 = fields[1];
+let v16 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v15) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v16 else { return Ok(None); }
+;
+let v17 = fields[0];
+let v18 = fields[1];
+let v19 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v19 else { return Ok(None); }
+;
+let v20 = fields[0];
+let v21 = fields[1];
+let v22 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v21 != v22 { return Ok(None); }
+let v23 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v23 else { return Ok(None); }
+;
+let v24 = fields[0];
+let v25 = fields[1];
+more_74_eo__24eo_5fcmd_5fstep_5fproven(s, v25, a0, v24, v2, v5, v8, v11, v14, v17, v20)
+}
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, v114: Term, v117: Term, v113: Term, v99: Term) -> CheckResult<Option<Term>> {
+let v118 = match s.apply(v114, v117) { Ok(v) => v, Err(e) => return Err(e) };
+let v119 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v120 = match s.apply(v118, v119) { Ok(v) => v, Err(e) => return Err(e) };
+let v121 = match s.apply(v113, v120) { Ok(v) => v, Err(e) => return Err(e) };
+let v122 = match s.apply(v99, v121) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v122))
+}
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, a2: Term, a1: Term, v105: Term, a0: Term, v104: Term, v103: Term, v102: Term, v100: Term, a5: Term, v99: Term) -> CheckResult<Option<Term>> {
+let v106 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.apply(v106, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.apply(v107, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.builtin_list(EvalOp::ListConcat, &[v105, a0, v108]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.builtin_list(EvalOp::ListSingletonElim, &[v104, v109]) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.apply(v103, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.apply(v102, v111) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.apply(v100, v112) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a5]) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v117 = match s.apply(v115, v116) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v114, v117, v113, v99)
+}
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, v93: Term, a4: Term, v92: Term, a1: Term, v91: Term, v89: Term, a0: Term, v88: Term, a6: Term, a2: Term, a5: Term) -> CheckResult<Option<Term>> {
+let v94 = match s.apply(v93, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.apply(v92, v94) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match s.apply(v95, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match s.apply(v91, v96) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.builtin_list(EvalOp::ListConcat, &[v89, a0, v97]) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.apply(v88, v98) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v101 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.construct(Constructor::eo_extract, &[a6, v101]) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, a2, a1, v105, a0, v104, v103, v102, v100, a5, v99)
+}
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, v84: Term, v85: Term, a3: Term, v78: Term, a4: Term, v60: Term, a2: Term, a1: Term, a0: Term, a6: Term, a5: Term) -> CheckResult<Option<Term>> {
+let v86 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v84 != v86 { return Ok(None); }
+if v85 != a3 { return Ok(None); }
+if v78 != a4 { return Ok(None); }
+let v87 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v60 != v87 { return Ok(None); }
+let v88 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v89 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.apply(v90, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v93, a4, v92, a1, v91, v89, a0, v88, a6, a2, a5)
+}
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, v66: Term, a3: Term, v67: Term, a4: Term, v60: Term, a2: Term, a1: Term, a0: Term, a6: Term, a5: Term) -> CheckResult<Option<Term>> {
+let v68 = match s.unapply(v66) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v69, v70)) = v68 else { return Ok(None); }
+;
+let v71 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v69 != v71 { return Ok(None); }
+if v70 != a3 { return Ok(None); }
+let v72 = match s.unapply(v67) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v73, v74)) = v72 else { return Ok(None); }
+;
+let v75 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v73 != v75 { return Ok(None); }
+let v76 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v77, v78)) = v76 else { return Ok(None); }
+;
+let v79 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v80, v81)) = v79 else { return Ok(None); }
+;
+let v82 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v80 != v82 { return Ok(None); }
+let v83 = match s.unapply(v81) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v84, v85)) = v83 else { return Ok(None); }
+;
+more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v84, v85, a3, v78, a4, v60, a2, a1, a0, a6, a5)
+}
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, v40: Term, a4: Term, a9: Term, a6: Term, a3: Term, a2: Term, a1: Term, a0: Term, a5: Term) -> CheckResult<Option<Term>> {
+if v40 != a4 { return Ok(None); }
+let v49 = match s.destruct(Constructor::eo__24eo_5fpf, a9) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v49 else { return Ok(None); }
+;
+let v50 = fields[0];
+let v51 = match s.unapply(v50) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v52, v53)) = v51 else { return Ok(None); }
+;
+let v54 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v55, v56)) = v54 else { return Ok(None); }
+;
+let v57 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v55 != v57 { return Ok(None); }
+if v56 != a6 { return Ok(None); }
+let v58 = match s.unapply(v53) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v59, v60)) = v58 else { return Ok(None); }
+;
+let v61 = match s.unapply(v59) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v62, v63)) = v61 else { return Ok(None); }
+;
+let v64 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v62 != v64 { return Ok(None); }
+let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v66, v67)) = v65 else { return Ok(None); }
+;
+more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v66, a3, v67, a4, v60, a2, a1, a0, a6, a5)
+}
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, v32: Term, a5: Term, v29: Term, a3: Term, a4: Term, a9: Term, a6: Term, a2: Term, a1: Term, a0: Term) -> CheckResult<Option<Term>> {
+if v32 != a5 { return Ok(None); }
+let v34 = match s.unapply(v29) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v35, v36)) = v34 else { return Ok(None); }
+;
+let v37 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v35 != v37 { return Ok(None); }
+let v38 = match s.unapply(v36) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v39, v40)) = v38 else { return Ok(None); }
+;
+let v41 = match s.unapply(v39) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v42, v43)) = v41 else { return Ok(None); }
+;
+let v44 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v42 != v44 { return Ok(None); }
+let v45 = match s.unapply(v43) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v46, v47)) = v45 else { return Ok(None); }
+;
+let v48 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v46 != v48 { return Ok(None); }
+if v47 != a3 { return Ok(None); }
+more_2_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v40, a4, a9, a6, a3, a2, a1, a0, a5)
+}
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, v18: Term, a3: Term, v15: Term, a4: Term, v4: Term, a8: Term, a5: Term, a9: Term, a6: Term, a2: Term, a1: Term, a0: Term) -> CheckResult<Option<Term>> {
+let v20 = match s.unapply(v18) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v21, v22)) = v20 else { return Ok(None); }
+;
+let v23 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v21 != v23 { return Ok(None); }
+if v22 != a3 { return Ok(None); }
+if v15 != a4 { return Ok(None); }
+let v24 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v4 != v24 { return Ok(None); }
+let v25 = match s.destruct(Constructor::eo__24eo_5fpf, a8) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v25 else { return Ok(None); }
+;
+let v26 = fields[0];
+let v27 = match s.unapply(v26) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v28, v29)) = v27 else { return Ok(None); }
+;
+let v30 = match s.unapply(v28) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v31, v32)) = v30 else { return Ok(None); }
+;
+let v33 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v31 != v33 { return Ok(None); }
+more_1_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v32, a5, v29, a3, a4, a9, a6, a2, a1, a0)
+}
+pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a7) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v0 else { return Ok(None); }
+;
+let v1 = fields[0];
+let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v3, v4)) = v2 else { return Ok(None); }
+;
+let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v6, v7)) = v5 else { return Ok(None); }
+;
+let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v6 != v8 { return Ok(None); }
+let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v10, v11)) = v9 else { return Ok(None); }
+;
+let v12 = match s.construct(Constructor::eo_int_2eispow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v10 != v12 { return Ok(None); }
+let v13 = match s.unapply(v11) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v14, v15)) = v13 else { return Ok(None); }
+;
+let v16 = match s.unapply(v14) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v17, v18)) = v16 else { return Ok(None); }
+;
+let v19 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v17 != v19 { return Ok(None); }
+more_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v18, a3, v15, a4, v4, a8, a5, a9, a6, a2, a1, a0)
+}
+pub(super) fn body_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Term> {
+let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck0 { return Ok(s.stuck()); }
+let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck1 { return Ok(s.stuck()); }
+let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck2 { return Ok(s.stuck()); }
+let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck3 { return Ok(s.stuck()); }
+let stuck4 = match s.is_stuck(a4) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck4 { return Ok(s.stuck()); }
+let stuck5 = match s.is_stuck(a5) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck5 { return Ok(s.stuck()); }
+let stuck6 = match s.is_stuck(a6) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck6 { return Ok(s.stuck()); }
+if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+Ok(s.stuck())
+}
+// EO program "$eo_prog_bv-mult-pow2-2"
+pub fn eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term) -> CheckResult<Term> {
+match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
+let result = body_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+s.leave();
+result
+}
+pub(super) fn more_75_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v25: Term, a0: Term, v24: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term, v17: Term, v20: Term) -> CheckResult<Option<Term>> {
+let v26 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v25) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v26 else { return Ok(None); }
+;
+let v27 = fields[0];
+let v28 = fields[1];
+let v29 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v28) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v29 else { return Ok(None); }
+;
+let v30 = fields[0];
+let v31 = fields[1];
+let v32 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v31 != v32 { return Ok(None); }
+let v33 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match s.construct(Constructor::eo__24eo_5fpf, &[v33]) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v27) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match s.construct(Constructor::eo__24eo_5fpf, &[v35]) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match s.construct(Constructor::eo__24eo_5fpf, &[v37]) { Ok(v) => v, Err(e) => return Err(e) };
+let v39 = match eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2(s, v2, v5, v8, v11, v14, v17, v20, v34, v36, v38) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v39))
+}
+pub(super) fn case_361_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if a1 != v0 { return Ok(None); }
+let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v1 else { return Ok(None); }
+;
+let v2 = fields[0];
+let v3 = fields[1];
+let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v4 else { return Ok(None); }
+;
+let v5 = fields[0];
+let v6 = fields[1];
+let v7 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v7 else { return Ok(None); }
+;
+let v8 = fields[0];
+let v9 = fields[1];
+let v10 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v9) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v10 else { return Ok(None); }
+;
+let v11 = fields[0];
+let v12 = fields[1];
+let v13 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v13 else { return Ok(None); }
+;
+let v14 = fields[0];
+let v15 = fields[1];
+let v16 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v15) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v16 else { return Ok(None); }
+;
+let v17 = fields[0];
+let v18 = fields[1];
+let v19 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v19 else { return Ok(None); }
+;
+let v20 = fields[0];
+let v21 = fields[1];
+let v22 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v21 != v22 { return Ok(None); }
+let v23 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v23 else { return Ok(None); }
+;
+let v24 = fields[0];
+let v25 = fields[1];
+more_75_eo__24eo_5fcmd_5fstep_5fproven(s, v25, a0, v24, v2, v5, v8, v11, v14, v17, v20)
+}
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, v103: Term, v105: Term, v101: Term, a3: Term, v100: Term) -> CheckResult<Option<Term>> {
+let v106 = match s.apply(v103, v105) { Ok(v) => v, Err(e) => return Err(e) };
+let v107 = match s.apply(v101, v106) { Ok(v) => v, Err(e) => return Err(e) };
+let v108 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v109 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v110 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v111 = match s.apply(v109, v110) { Ok(v) => v, Err(e) => return Err(e) };
+let v112 = match s.apply(v108, v111) { Ok(v) => v, Err(e) => return Err(e) };
+let v113 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v114 = match s.apply(v112, v113) { Ok(v) => v, Err(e) => return Err(e) };
+let v115 = match s.apply(v107, v114) { Ok(v) => v, Err(e) => return Err(e) };
+let v116 = match s.apply(v100, v115) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v116))
+}
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, v91: Term, v93: Term, a0: Term, v90: Term, v88: Term, a4: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v94 = match s.apply(v91, v93) { Ok(v) => v, Err(e) => return Err(e) };
+let v95 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v96 = match eo__24eo_5ftypeof(s, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v97 = match eo__24eo_5fnil(s, v95, v96) { Ok(v) => v, Err(e) => return Err(e) };
+let v98 = match s.apply(v94, v97) { Ok(v) => v, Err(e) => return Err(e) };
+let v99 = match s.apply(v90, v98) { Ok(v) => v, Err(e) => return Err(e) };
+let v100 = match s.apply(v88, v99) { Ok(v) => v, Err(e) => return Err(e) };
+let v101 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v102 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v103 = match s.construct(Constructor::eo_extract, &[a4, v102]) { Ok(v) => v, Err(e) => return Err(e) };
+let v104 = match s.construct(Constructor::eo_bvneg, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v105 = match s.apply(v104, a0) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v103, v105, v101, a3, v100)
+}
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, v84: Term, v85: Term, a1: Term, v78: Term, a2: Term, v60: Term, a0: Term, a4: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v86 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v84 != v86 { return Ok(None); }
+if v85 != a1 { return Ok(None); }
+if v78 != a2 { return Ok(None); }
+let v87 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v60 != v87 { return Ok(None); }
+let v88 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v89 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v90 = match s.apply(v89, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v91 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v92 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v93 = match s.apply(v92, a2) { Ok(v) => v, Err(e) => return Err(e) };
+more_5_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v91, v93, a0, v90, v88, a4, a3)
+}
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, v66: Term, a1: Term, v67: Term, a2: Term, v60: Term, a0: Term, a4: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v68 = match s.unapply(v66) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v69, v70)) = v68 else { return Ok(None); }
+;
+let v71 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v69 != v71 { return Ok(None); }
+if v70 != a1 { return Ok(None); }
+let v72 = match s.unapply(v67) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v73, v74)) = v72 else { return Ok(None); }
+;
+let v75 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v73 != v75 { return Ok(None); }
+let v76 = match s.unapply(v74) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v77, v78)) = v76 else { return Ok(None); }
+;
+let v79 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v80, v81)) = v79 else { return Ok(None); }
+;
+let v82 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v80 != v82 { return Ok(None); }
+let v83 = match s.unapply(v81) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v84, v85)) = v83 else { return Ok(None); }
+;
+more_4_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v84, v85, a1, v78, a2, v60, a0, a4, a3)
+}
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, v40: Term, a2: Term, a7: Term, a4: Term, a1: Term, a0: Term, a3: Term) -> CheckResult<Option<Term>> {
+if v40 != a2 { return Ok(None); }
+let v49 = match s.destruct(Constructor::eo__24eo_5fpf, a7) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v49 else { return Ok(None); }
+;
+let v50 = fields[0];
+let v51 = match s.unapply(v50) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v52, v53)) = v51 else { return Ok(None); }
+;
+let v54 = match s.unapply(v52) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v55, v56)) = v54 else { return Ok(None); }
+;
+let v57 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v55 != v57 { return Ok(None); }
+if v56 != a4 { return Ok(None); }
+let v58 = match s.unapply(v53) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v59, v60)) = v58 else { return Ok(None); }
+;
+let v61 = match s.unapply(v59) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v62, v63)) = v61 else { return Ok(None); }
+;
+let v64 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v62 != v64 { return Ok(None); }
+let v65 = match s.unapply(v63) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v66, v67)) = v65 else { return Ok(None); }
+;
+more_3_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v66, a1, v67, a2, v60, a0, a4, a3)
+}
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, v32: Term, a3: Term, v29: Term, a1: Term, a2: Term, a7: Term, a4: Term, a0: Term) -> CheckResult<Option<Term>> {
+if v32 != a3 { return Ok(None); }
+let v34 = match s.unapply(v29) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v35, v36)) = v34 else { return Ok(None); }
+;
+let v37 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v35 != v37 { return Ok(None); }
+let v38 = match s.unapply(v36) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v39, v40)) = v38 else { return Ok(None); }
+;
+let v41 = match s.unapply(v39) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v42, v43)) = v41 else { return Ok(None); }
+;
+let v44 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v42 != v44 { return Ok(None); }
+let v45 = match s.unapply(v43) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v46, v47)) = v45 else { return Ok(None); }
+;
+let v48 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v46 != v48 { return Ok(None); }
+if v47 != a1 { return Ok(None); }
+more_2_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v40, a2, a7, a4, a1, a0, a3)
+}
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, v18: Term, a1: Term, v15: Term, a2: Term, v4: Term, a6: Term, a3: Term, a7: Term, a4: Term, a0: Term) -> CheckResult<Option<Term>> {
+let v20 = match s.unapply(v18) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v21, v22)) = v20 else { return Ok(None); }
+;
+let v23 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v21 != v23 { return Ok(None); }
+if v22 != a1 { return Ok(None); }
+if v15 != a2 { return Ok(None); }
+let v24 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v4 != v24 { return Ok(None); }
+let v25 = match s.destruct(Constructor::eo__24eo_5fpf, a6) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v25 else { return Ok(None); }
+;
+let v26 = fields[0];
+let v27 = match s.unapply(v26) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v28, v29)) = v27 else { return Ok(None); }
+;
+let v30 = match s.unapply(v28) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v31, v32)) = v30 else { return Ok(None); }
+;
+let v33 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v31 != v33 { return Ok(None); }
+more_1_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v32, a3, v29, a1, a2, a7, a4, a0)
+}
+pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a5) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v0 else { return Ok(None); }
+;
+let v1 = fields[0];
+let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v3, v4)) = v2 else { return Ok(None); }
+;
+let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v6, v7)) = v5 else { return Ok(None); }
+;
+let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v6 != v8 { return Ok(None); }
+let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v10, v11)) = v9 else { return Ok(None); }
+;
+let v12 = match s.construct(Constructor::eo_int_2eispow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v10 != v12 { return Ok(None); }
+let v13 = match s.unapply(v11) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v14, v15)) = v13 else { return Ok(None); }
+;
+let v16 = match s.unapply(v14) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v17, v18)) = v16 else { return Ok(None); }
+;
+let v19 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v17 != v19 { return Ok(None); }
+more_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v18, a1, v15, a2, v4, a6, a3, a7, a4, a0)
+}
+pub(super) fn body_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Term> {
+let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck0 { return Ok(s.stuck()); }
+let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck1 { return Ok(s.stuck()); }
+let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck2 { return Ok(s.stuck()); }
+let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck3 { return Ok(s.stuck()); }
+let stuck4 = match s.is_stuck(a4) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck4 { return Ok(s.stuck()); }
+if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, a0, a1, a2, a3, a4, a5, a6, a7) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+Ok(s.stuck())
+}
+// EO program "$eo_prog_bv-mult-pow2-2b"
+pub fn eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term) -> CheckResult<Term> {
+match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
+let result = body_eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, a0, a1, a2, a3, a4, a5, a6, a7);
+s.leave();
+result
+}
+pub(super) fn more_76_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v25: Term, a0: Term, v18: Term, v21: Term, v24: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term) -> CheckResult<Option<Term>> {
+let v26 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v25 != v26 { return Ok(None); }
+let v27 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let v28 = match s.construct(Constructor::eo__24eo_5fpf, &[v27]) { Ok(v) => v, Err(e) => return Err(e) };
+let v29 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v21) { Ok(v) => v, Err(e) => return Err(e) };
+let v30 = match s.construct(Constructor::eo__24eo_5fpf, &[v29]) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match s.construct(Constructor::eo__24eo_5fpf, &[v31]) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b(s, v2, v5, v8, v11, v14, v28, v30, v32) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v33))
+}
+pub(super) fn case_362_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if a1 != v0 { return Ok(None); }
+let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v1 else { return Ok(None); }
+;
+let v2 = fields[0];
+let v3 = fields[1];
+let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v4 else { return Ok(None); }
+;
+let v5 = fields[0];
+let v6 = fields[1];
+let v7 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v7 else { return Ok(None); }
+;
+let v8 = fields[0];
+let v9 = fields[1];
+let v10 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v9) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v10 else { return Ok(None); }
+;
+let v11 = fields[0];
+let v12 = fields[1];
+let v13 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v13 else { return Ok(None); }
+;
+let v14 = fields[0];
+let v15 = fields[1];
+let v16 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v15 != v16 { return Ok(None); }
+let v17 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v17 else { return Ok(None); }
+;
+let v18 = fields[0];
+let v19 = fields[1];
+let v20 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v19) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v20 else { return Ok(None); }
+;
+let v21 = fields[0];
+let v22 = fields[1];
+let v23 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v22) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v23 else { return Ok(None); }
+;
+let v24 = fields[0];
+let v25 = fields[1];
+more_76_eo__24eo_5fcmd_5fstep_5fproven(s, v25, a0, v18, v21, v24, v2, v5, v8, v11, v14)
+}
+pub(super) fn more_22_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v350: Term, v353: Term) -> CheckResult<Option<Term>> {
+let v354 = match s.apply(v350, v353) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v354))
+}
+pub(super) fn more_21_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v341: Term, v339: Term, v335: Term, v334: Term, v323: Term, v312: Term, v311: Term, a8: Term) -> CheckResult<Option<Term>> {
+let v342 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v343 = match s.apply(v341, v342) { Ok(v) => v, Err(e) => return Err(e) };
+let v344 = match s.apply(v339, v343) { Ok(v) => v, Err(e) => return Err(e) };
+let v345 = match eo__24eo_5ftypeof(s, v344) { Ok(v) => v, Err(e) => return Err(e) };
+let v346 = match eo__24eo_5fnil(s, v335, v345) { Ok(v) => v, Err(e) => return Err(e) };
+let v347 = match s.apply(v334, v346) { Ok(v) => v, Err(e) => return Err(e) };
+let v348 = match s.apply(v323, v347) { Ok(v) => v, Err(e) => return Err(e) };
+let v349 = match s.apply(v312, v348) { Ok(v) => v, Err(e) => return Err(e) };
+let v350 = match s.apply(v311, v349) { Ok(v) => v, Err(e) => return Err(e) };
+let v351 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a8]) { Ok(v) => v, Err(e) => return Err(e) };
+let v352 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v353 = match s.apply(v351, v352) { Ok(v) => v, Err(e) => return Err(e) };
+more_22_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v350, v353)
+}
+pub(super) fn more_20_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v329: Term, a7: Term, v328: Term, v324: Term, a3: Term, a2: Term, a4: Term, v323: Term, v312: Term, v311: Term, a8: Term) -> CheckResult<Option<Term>> {
+let v330 = match s.apply(v329, a7) { Ok(v) => v, Err(e) => return Err(e) };
+let v331 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v332 = match s.apply(v330, v331) { Ok(v) => v, Err(e) => return Err(e) };
+let v333 = match s.apply(v328, v332) { Ok(v) => v, Err(e) => return Err(e) };
+let v334 = match s.apply(v324, v333) { Ok(v) => v, Err(e) => return Err(e) };
+let v335 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v336 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v337 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v338 = match s.apply(v337, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v339 = match s.apply(v336, v338) { Ok(v) => v, Err(e) => return Err(e) };
+let v340 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v341 = match s.apply(v340, a4) { Ok(v) => v, Err(e) => return Err(e) };
+more_21_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v341, v339, v335, v334, v323, v312, v311, a8)
+}
+pub(super) fn more_19_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, a4: Term, v317: Term, v313: Term, a6: Term, a5: Term, a7: Term, a3: Term, a2: Term, v312: Term, v311: Term, a8: Term) -> CheckResult<Option<Term>> {
+let v318 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v319 = match s.apply(v318, a4) { Ok(v) => v, Err(e) => return Err(e) };
+let v320 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v321 = match s.apply(v319, v320) { Ok(v) => v, Err(e) => return Err(e) };
+let v322 = match s.apply(v317, v321) { Ok(v) => v, Err(e) => return Err(e) };
+let v323 = match s.apply(v313, v322) { Ok(v) => v, Err(e) => return Err(e) };
+let v324 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v325 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v326 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a6]) { Ok(v) => v, Err(e) => return Err(e) };
+let v327 = match s.apply(v326, a5) { Ok(v) => v, Err(e) => return Err(e) };
+let v328 = match s.apply(v325, v327) { Ok(v) => v, Err(e) => return Err(e) };
+let v329 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_20_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v329, a7, v328, v324, a3, a2, a4, v323, v312, v311, a8)
+}
+pub(super) fn more_18_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v307: Term, v309: Term, v308: Term, a0: Term, v305: Term, a1: Term, v298: Term, a3: Term, a2: Term, a4: Term, a6: Term, a5: Term, a7: Term, a8: Term) -> CheckResult<Option<Term>> {
+if v307 != v309 { return Ok(None); }
+if v308 != a0 { return Ok(None); }
+if v305 != a1 { return Ok(None); }
+let v310 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v298 != v310 { return Ok(None); }
+let v311 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v312 = match s.construct(Constructor::eo_extract, &[a0, a1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v313 = match s.construct(Constructor::eo_bvmul, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v314 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v315 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v316 = match s.apply(v315, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let v317 = match s.apply(v314, v316) { Ok(v) => v, Err(e) => return Err(e) };
+more_19_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, a4, v317, v313, a6, a5, a7, a3, a2, v312, v311, a8)
+}
+pub(super) fn more_17_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v289: Term, v290: Term, a0: Term, a1: Term, a3: Term, a2: Term, a4: Term, a6: Term, a5: Term, a7: Term, a8: Term) -> CheckResult<Option<Term>> {
+let v291 = match s.unapply(v289) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v292, v293)) = v291 else { return Ok(None); }
+;
+let v294 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v292 != v294 { return Ok(None); }
+let v295 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v293 != v295 { return Ok(None); }
+let v296 = match s.unapply(v290) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v297, v298)) = v296 else { return Ok(None); }
+;
+let v299 = match s.unapply(v297) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v300, v301)) = v299 else { return Ok(None); }
+;
+let v302 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v300 != v302 { return Ok(None); }
+let v303 = match s.unapply(v301) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v304, v305)) = v303 else { return Ok(None); }
+;
+let v306 = match s.unapply(v304) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v307, v308)) = v306 else { return Ok(None); }
+;
+let v309 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_18_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v307, v309, v308, a0, v305, a1, v298, a3, a2, a4, a6, a5, a7, a8)
+}
+pub(super) fn more_16_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v227: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a3: Term, a2: Term, a4: Term, a6: Term, a5: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v277 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v227 != v277 { return Ok(None); }
+if v126 != a1 { return Ok(None); }
+let v278 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v119 != v278 { return Ok(None); }
+let v279 = match s.destruct(Constructor::eo__24eo_5fpf, a15) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v279 else { return Ok(None); }
+;
+let v280 = fields[0];
+let v281 = match s.unapply(v280) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v282, v283)) = v281 else { return Ok(None); }
+;
+let v284 = match s.unapply(v282) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v285, v286)) = v284 else { return Ok(None); }
+;
+let v287 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v285 != v287 { return Ok(None); }
+if v286 != a8 { return Ok(None); }
+let v288 = match s.unapply(v283) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v289, v290)) = v288 else { return Ok(None); }
+;
+more_17_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v289, v290, a0, a1, a3, a2, a4, a6, a5, a7, a8)
+}
+pub(super) fn more_15_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v262: Term, v259: Term, a5: Term, v227: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a3: Term, a2: Term, a4: Term, a6: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v264 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v262 != v264 { return Ok(None); }
+let v265 = match s.unapply(v259) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v266, v267)) = v265 else { return Ok(None); }
+;
+let v268 = match s.unapply(v266) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v269, v270)) = v268 else { return Ok(None); }
+;
+let v271 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v269 != v271 { return Ok(None); }
+let v272 = match s.unapply(v270) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v273, v274)) = v272 else { return Ok(None); }
+;
+let v275 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v273 != v275 { return Ok(None); }
+if v274 != a5 { return Ok(None); }
+let v276 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v267 != v276 { return Ok(None); }
+more_16_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v227, v126, a1, v119, a15, a8, a0, a3, a2, a4, a6, a5, a7)
+}
+pub(super) fn more_14_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v244: Term, v237: Term, a6: Term, v234: Term, a5: Term, v227: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a3: Term, a2: Term, a4: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v249 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v244 != v249 { return Ok(None); }
+if v237 != a6 { return Ok(None); }
+let v250 = match s.unapply(v234) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v251, v252)) = v250 else { return Ok(None); }
+;
+let v253 = match s.unapply(v251) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v254, v255)) = v253 else { return Ok(None); }
+;
+let v256 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v254 != v256 { return Ok(None); }
+if v255 != a6 { return Ok(None); }
+let v257 = match s.unapply(v252) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v258, v259)) = v257 else { return Ok(None); }
+;
+let v260 = match s.unapply(v258) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v261, v262)) = v260 else { return Ok(None); }
+;
+let v263 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v261 != v263 { return Ok(None); }
+more_15_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v262, v259, a5, v227, v126, a1, v119, a15, a8, a0, a3, a2, a4, a6, a7)
+}
+pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v229: Term, v230: Term, a5: Term, a6: Term, v227: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a3: Term, a2: Term, a4: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v231 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v229 != v231 { return Ok(None); }
+let v232 = match s.unapply(v230) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v233, v234)) = v232 else { return Ok(None); }
+;
+let v235 = match s.unapply(v233) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v236, v237)) = v235 else { return Ok(None); }
+;
+let v238 = match s.unapply(v236) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v239, v240)) = v238 else { return Ok(None); }
+;
+let v241 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v239 != v241 { return Ok(None); }
+let v242 = match s.unapply(v240) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v243, v244)) = v242 else { return Ok(None); }
+;
+let v245 = match s.unapply(v243) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v246, v247)) = v245 else { return Ok(None); }
+;
+let v248 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v246 != v248 { return Ok(None); }
+if v247 != a5 { return Ok(None); }
+more_14_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v244, v237, a6, v234, a5, v227, v126, a1, v119, a15, a8, a0, a3, a2, a4, a7)
+}
+pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v207: Term, a2: Term, v175: Term, a5: Term, a6: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a3: Term, a4: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v213 = match s.unapply(v207) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v214, v215)) = v213 else { return Ok(None); }
+;
+let v216 = match s.unapply(v214) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v217, v218)) = v216 else { return Ok(None); }
+;
+let v219 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v217 != v219 { return Ok(None); }
+let v220 = match s.unapply(v218) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v221, v222)) = v220 else { return Ok(None); }
+;
+let v223 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v221 != v223 { return Ok(None); }
+if v222 != a2 { return Ok(None); }
+let v224 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v215 != v224 { return Ok(None); }
+let v225 = match s.unapply(v175) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v226, v227)) = v225 else { return Ok(None); }
+;
+let v228 = match s.unapply(v226) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v229, v230)) = v228 else { return Ok(None); }
+;
+more_13_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v229, v230, a5, a6, v227, v126, a1, v119, a15, a8, a0, a3, a2, a4, a7)
+}
+pub(super) fn more_11_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v185: Term, a3: Term, v182: Term, a2: Term, v175: Term, a5: Term, a6: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a4: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v185 != a3 { return Ok(None); }
+let v198 = match s.unapply(v182) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v199, v200)) = v198 else { return Ok(None); }
+;
+let v201 = match s.unapply(v199) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v202, v203)) = v201 else { return Ok(None); }
+;
+let v204 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v202 != v204 { return Ok(None); }
+if v203 != a3 { return Ok(None); }
+let v205 = match s.unapply(v200) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v206, v207)) = v205 else { return Ok(None); }
+;
+let v208 = match s.unapply(v206) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v209, v210)) = v208 else { return Ok(None); }
+;
+let v211 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v209 != v211 { return Ok(None); }
+let v212 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v210 != v212 { return Ok(None); }
+more_12_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v207, a2, v175, a5, a6, v126, a1, v119, a15, a8, a0, a3, a4, a7)
+}
+pub(super) fn more_10_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v178: Term, a2: Term, a3: Term, v175: Term, a5: Term, a6: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a4: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v180 = match s.unapply(v178) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v181, v182)) = v180 else { return Ok(None); }
+;
+let v183 = match s.unapply(v181) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v184, v185)) = v183 else { return Ok(None); }
+;
+let v186 = match s.unapply(v184) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v187, v188)) = v186 else { return Ok(None); }
+;
+let v189 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v187 != v189 { return Ok(None); }
+let v190 = match s.unapply(v188) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v191, v192)) = v190 else { return Ok(None); }
+;
+let v193 = match s.unapply(v191) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v194, v195)) = v193 else { return Ok(None); }
+;
+let v196 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v194 != v196 { return Ok(None); }
+if v195 != a2 { return Ok(None); }
+let v197 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v192 != v197 { return Ok(None); }
+more_11_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v185, a3, v182, a2, v175, a5, a6, v126, a1, v119, a15, a8, a0, a4, a7)
+}
+pub(super) fn more_9_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v165: Term, a4: Term, v162: Term, v148: Term, v133: Term, a2: Term, a3: Term, a5: Term, a6: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v167 = match s.unapply(v165) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v168, v169)) = v167 else { return Ok(None); }
+;
+let v170 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v168 != v170 { return Ok(None); }
+if v169 != a4 { return Ok(None); }
+let v171 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v162 != v171 { return Ok(None); }
+let v172 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v148 != v172 { return Ok(None); }
+let v173 = match s.unapply(v133) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v174, v175)) = v173 else { return Ok(None); }
+;
+let v176 = match s.unapply(v174) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v177, v178)) = v176 else { return Ok(None); }
+;
+let v179 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v177 != v179 { return Ok(None); }
+more_10_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v178, a2, a3, v175, a5, a6, v126, a1, v119, a15, a8, a0, a4, a7)
+}
+pub(super) fn more_8_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v147: Term, a3: Term, a4: Term, v148: Term, v133: Term, a2: Term, a5: Term, a6: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v149 = match s.unapply(v147) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v150, v151)) = v149 else { return Ok(None); }
+;
+let v152 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v150 != v152 { return Ok(None); }
+let v153 = match s.unapply(v151) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v154, v155)) = v153 else { return Ok(None); }
+;
+let v156 = match s.unapply(v154) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v157, v158)) = v156 else { return Ok(None); }
+;
+let v159 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v157 != v159 { return Ok(None); }
+if v158 != a3 { return Ok(None); }
+let v160 = match s.unapply(v155) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v161, v162)) = v160 else { return Ok(None); }
+;
+let v163 = match s.unapply(v161) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v164, v165)) = v163 else { return Ok(None); }
+;
+let v166 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v164 != v166 { return Ok(None); }
+more_9_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v165, a4, v162, v148, v133, a2, a3, a5, a6, v126, a1, v119, a15, a8, a0, a7)
+}
+pub(super) fn more_7_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v128: Term, v130: Term, v129: Term, a3: Term, a4: Term, a2: Term, a5: Term, a6: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v128 != v130 { return Ok(None); }
+let v131 = match s.unapply(v129) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v132, v133)) = v131 else { return Ok(None); }
+;
+let v134 = match s.unapply(v132) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v135, v136)) = v134 else { return Ok(None); }
+;
+let v137 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v135 != v137 { return Ok(None); }
+let v138 = match s.unapply(v136) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v139, v140)) = v138 else { return Ok(None); }
+;
+let v141 = match s.unapply(v139) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v142, v143)) = v141 else { return Ok(None); }
+;
+let v144 = match s.construct(Constructor::eo__2a, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v142 != v144 { return Ok(None); }
+let v145 = match s.literal(Lit::Numeral(Integer::from(2u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v143 != v145 { return Ok(None); }
+let v146 = match s.unapply(v140) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v147, v148)) = v146 else { return Ok(None); }
+;
+more_8_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v147, a3, a4, v148, v133, a2, a5, a6, v126, a1, v119, a15, a8, a0, a7)
+}
+pub(super) fn more_6_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v111: Term, v113: Term, v112: Term, a6: Term, v98: Term, a14: Term, a3: Term, a4: Term, a2: Term, a5: Term, a1: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v111 != v113 { return Ok(None); }
+if v112 != a6 { return Ok(None); }
+let v114 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v98 != v114 { return Ok(None); }
+let v115 = match s.destruct(Constructor::eo__24eo_5fpf, a14) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v115 else { return Ok(None); }
+;
+let v116 = fields[0];
+let v117 = match s.unapply(v116) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v118, v119)) = v117 else { return Ok(None); }
+;
+let v120 = match s.unapply(v118) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v121, v122)) = v120 else { return Ok(None); }
+;
+let v123 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v121 != v123 { return Ok(None); }
+let v124 = match s.unapply(v122) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v125, v126)) = v124 else { return Ok(None); }
+;
+let v127 = match s.unapply(v125) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v128, v129)) = v127 else { return Ok(None); }
+;
+let v130 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_7_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v128, v130, v129, a3, a4, a2, a5, a6, v126, a1, v119, a15, a8, a0, a7)
+}
+pub(super) fn more_5_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, a13: Term, a5: Term, a6: Term, a14: Term, a3: Term, a4: Term, a2: Term, a1: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v94 = match s.destruct(Constructor::eo__24eo_5fpf, a13) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v94 else { return Ok(None); }
+;
+let v95 = fields[0];
+let v96 = match s.unapply(v95) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v97, v98)) = v96 else { return Ok(None); }
+;
+let v99 = match s.unapply(v97) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v100, v101)) = v99 else { return Ok(None); }
+;
+let v102 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v100 != v102 { return Ok(None); }
+let v103 = match s.unapply(v101) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v104, v105)) = v103 else { return Ok(None); }
+;
+let v106 = match s.unapply(v104) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v107, v108)) = v106 else { return Ok(None); }
+;
+let v109 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v107 != v109 { return Ok(None); }
+if v108 != a5 { return Ok(None); }
+let v110 = match s.unapply(v105) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v111, v112)) = v110 else { return Ok(None); }
+;
+let v113 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_6_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v111, v113, v112, a6, v98, a14, a3, a4, a2, a5, a1, a15, a8, a0, a7)
+}
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v79: Term, a5: Term, v80: Term, a13: Term, a6: Term, a14: Term, a3: Term, a4: Term, a2: Term, a1: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v81 = match s.unapply(v79) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v82, v83)) = v81 else { return Ok(None); }
+;
+let v84 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v82 != v84 { return Ok(None); }
+let v85 = match s.unapply(v83) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v86, v87)) = v85 else { return Ok(None); }
+;
+let v88 = match s.unapply(v86) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v89, v90)) = v88 else { return Ok(None); }
+;
+let v91 = match s.construct(Constructor::eo__3e_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v89 != v91 { return Ok(None); }
+if v90 != a5 { return Ok(None); }
+let v92 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v87 != v92 { return Ok(None); }
+let v93 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v80 != v93 { return Ok(None); }
+more_5_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, a13, a5, a6, a14, a3, a4, a2, a1, a15, a8, a0, a7)
+}
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v65: Term, a2: Term, v66: Term, a3: Term, v59: Term, a12: Term, a5: Term, a13: Term, a6: Term, a14: Term, a4: Term, a1: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v67 = match s.unapply(v65) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v68, v69)) = v67 else { return Ok(None); }
+;
+let v70 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v68 != v70 { return Ok(None); }
+if v69 != a2 { return Ok(None); }
+let v71 = match s.unapply(v66) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v72, v73)) = v71 else { return Ok(None); }
+;
+let v74 = match s.construct(Constructor::eo_int_2epow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v72 != v74 { return Ok(None); }
+if v73 != a3 { return Ok(None); }
+let v75 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v59 != v75 { return Ok(None); }
+let v76 = match s.destruct(Constructor::eo__24eo_5fpf, a12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v76 else { return Ok(None); }
+;
+let v77 = fields[0];
+let v78 = match s.unapply(v77) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v79, v80)) = v78 else { return Ok(None); }
+;
+more_4_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v79, a5, v80, a13, a6, a14, a3, a4, a2, a1, a15, a8, a0, a7)
+}
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v50: Term, v52: Term, v51: Term, a2: Term, v48: Term, v41: Term, a11: Term, a3: Term, a12: Term, a5: Term, a13: Term, a6: Term, a14: Term, a4: Term, a1: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v50 != v52 { return Ok(None); }
+if v51 != a2 { return Ok(None); }
+let v53 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v48 != v53 { return Ok(None); }
+let v54 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v41 != v54 { return Ok(None); }
+let v55 = match s.destruct(Constructor::eo__24eo_5fpf, a11) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v55 else { return Ok(None); }
+;
+let v56 = fields[0];
+let v57 = match s.unapply(v56) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v58, v59)) = v57 else { return Ok(None); }
+;
+let v60 = match s.unapply(v58) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v61, v62)) = v60 else { return Ok(None); }
+;
+let v63 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v61 != v63 { return Ok(None); }
+let v64 = match s.unapply(v62) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v65, v66)) = v64 else { return Ok(None); }
+;
+more_3_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v65, a2, v66, a3, v59, a12, a5, a13, a6, a14, a4, a1, a15, a8, a0, a7)
+}
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v11: Term, v4: Term, a10: Term, a2: Term, a11: Term, a3: Term, a12: Term, a5: Term, a13: Term, a6: Term, a14: Term, a4: Term, a1: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v35 = match s.literal(Lit::Numeral(Integer::from(64u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v11 != v35 { return Ok(None); }
+let v36 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v4 != v36 { return Ok(None); }
+let v37 = match s.destruct(Constructor::eo__24eo_5fpf, a10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v37 else { return Ok(None); }
+;
+let v38 = fields[0];
+let v39 = match s.unapply(v38) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v40, v41)) = v39 else { return Ok(None); }
+;
+let v42 = match s.unapply(v40) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v43, v44)) = v42 else { return Ok(None); }
+;
+let v45 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v43 != v45 { return Ok(None); }
+let v46 = match s.unapply(v44) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v47, v48)) = v46 else { return Ok(None); }
+;
+let v49 = match s.unapply(v47) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v50, v51)) = v49 else { return Ok(None); }
+;
+let v52 = match s.construct(Constructor::eo__3e_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_2_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v50, v52, v51, a2, v48, v41, a11, a3, a12, a5, a13, a6, a14, a4, a1, a15, a8, a0, a7)
+}
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v20: Term, v22: Term, v21: Term, a3: Term, v18: Term, a4: Term, v11: Term, v4: Term, a10: Term, a2: Term, a11: Term, a12: Term, a5: Term, a13: Term, a6: Term, a14: Term, a1: Term, a15: Term, a8: Term, a0: Term, a7: Term) -> CheckResult<Option<Term>> {
+if v20 != v22 { return Ok(None); }
+if v21 != a3 { return Ok(None); }
+let v23 = match s.unapply(v18) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v24, v25)) = v23 else { return Ok(None); }
+;
+let v26 = match s.unapply(v24) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v27, v28)) = v26 else { return Ok(None); }
+;
+let v29 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v27 != v29 { return Ok(None); }
+let v30 = match s.unapply(v28) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v31, v32)) = v30 else { return Ok(None); }
+;
+let v33 = match s.construct(Constructor::eo__40bvsize, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v31 != v33 { return Ok(None); }
+if v32 != a4 { return Ok(None); }
+let v34 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v25 != v34 { return Ok(None); }
+more_1_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v11, v4, a10, a2, a11, a3, a12, a5, a13, a6, a14, a4, a1, a15, a8, a0, a7)
+}
+pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term, a10: Term, a11: Term, a12: Term, a13: Term, a14: Term, a15: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a9) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v0 else { return Ok(None); }
+;
+let v1 = fields[0];
+let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v3, v4)) = v2 else { return Ok(None); }
+;
+let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v6, v7)) = v5 else { return Ok(None); }
+;
+let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v6 != v8 { return Ok(None); }
+let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v10, v11)) = v9 else { return Ok(None); }
+;
+let v12 = match s.unapply(v10) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v13, v14)) = v12 else { return Ok(None); }
+;
+let v15 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v13 != v15 { return Ok(None); }
+let v16 = match s.unapply(v14) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v17, v18)) = v16 else { return Ok(None); }
+;
+let v19 = match s.unapply(v17) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v20, v21)) = v19 else { return Ok(None); }
+;
+let v22 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_0_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v20, v22, v21, a3, v18, a4, v11, v4, a10, a2, a11, a12, a5, a13, a6, a14, a1, a15, a8, a0, a7)
+}
+pub(super) fn body_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term, a10: Term, a11: Term, a12: Term, a13: Term, a14: Term, a15: Term) -> CheckResult<Term> {
+let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck0 { return Ok(s.stuck()); }
+let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck1 { return Ok(s.stuck()); }
+let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck2 { return Ok(s.stuck()); }
+let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck3 { return Ok(s.stuck()); }
+let stuck4 = match s.is_stuck(a4) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck4 { return Ok(s.stuck()); }
+let stuck5 = match s.is_stuck(a5) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck5 { return Ok(s.stuck()); }
+let stuck6 = match s.is_stuck(a6) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck6 { return Ok(s.stuck()); }
+let stuck7 = match s.is_stuck(a7) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck7 { return Ok(s.stuck()); }
+let stuck8 = match s.is_stuck(a8) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck8 { return Ok(s.stuck()); }
+if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+Ok(s.stuck())
+}
+// EO program "$eo_prog_bv-extract-mult-leading-bit"
+pub fn eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term, a9: Term, a10: Term, a11: Term, a12: Term, a13: Term, a14: Term, a15: Term) -> CheckResult<Term> {
+match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
+let result = body_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+s.leave();
+result
+}
+pub(super) fn more_79_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term, v17: Term, v20: Term, v23: Term, v26: Term, v52: Term, v54: Term, v56: Term, v58: Term, v60: Term, v62: Term, v64: Term) -> CheckResult<Option<Term>> {
+let v65 = match eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v2, v5, v8, v11, v14, v17, v20, v23, v26, v52, v54, v56, v58, v60, v62, v64) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v65))
+}
+pub(super) fn more_78_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, v33: Term, v36: Term, v39: Term, v42: Term, v45: Term, v48: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term, v17: Term, v20: Term, v23: Term, v26: Term, v52: Term) -> CheckResult<Option<Term>> {
+let v53 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v33) { Ok(v) => v, Err(e) => return Err(e) };
+let v54 = match s.construct(Constructor::eo__24eo_5fpf, &[v53]) { Ok(v) => v, Err(e) => return Err(e) };
+let v55 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v36) { Ok(v) => v, Err(e) => return Err(e) };
+let v56 = match s.construct(Constructor::eo__24eo_5fpf, &[v55]) { Ok(v) => v, Err(e) => return Err(e) };
+let v57 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v39) { Ok(v) => v, Err(e) => return Err(e) };
+let v58 = match s.construct(Constructor::eo__24eo_5fpf, &[v57]) { Ok(v) => v, Err(e) => return Err(e) };
+let v59 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v42) { Ok(v) => v, Err(e) => return Err(e) };
+let v60 = match s.construct(Constructor::eo__24eo_5fpf, &[v59]) { Ok(v) => v, Err(e) => return Err(e) };
+let v61 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v45) { Ok(v) => v, Err(e) => return Err(e) };
+let v62 = match s.construct(Constructor::eo__24eo_5fpf, &[v61]) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v48) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.construct(Constructor::eo__24eo_5fpf, &[v63]) { Ok(v) => v, Err(e) => return Err(e) };
+more_79_eo__24eo_5fcmd_5fstep_5fproven(s, v2, v5, v8, v11, v14, v17, v20, v23, v26, v52, v54, v56, v58, v60, v62, v64)
+}
+pub(super) fn more_77_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v27: Term, v28: Term, a3: Term, a0: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term, v17: Term, v20: Term, v23: Term, v26: Term) -> CheckResult<Option<Term>> {
+if v27 != v28 { return Ok(None); }
+let v29 = match s.destruct(Constructor::eo__24emb_5findl_2econs, a3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v29 else { return Ok(None); }
+;
+let v30 = fields[0];
+let v31 = fields[1];
+let v32 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v31) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v32 else { return Ok(None); }
+;
+let v33 = fields[0];
+let v34 = fields[1];
+let v35 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v34) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v35 else { return Ok(None); }
+;
+let v36 = fields[0];
+let v37 = fields[1];
+let v38 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v37) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v38 else { return Ok(None); }
+;
+let v39 = fields[0];
+let v40 = fields[1];
+let v41 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v40) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v41 else { return Ok(None); }
+;
+let v42 = fields[0];
+let v43 = fields[1];
+let v44 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v43) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v44 else { return Ok(None); }
+;
+let v45 = fields[0];
+let v46 = fields[1];
+let v47 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v46) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v47 else { return Ok(None); }
+;
+let v48 = fields[0];
+let v49 = fields[1];
+let v50 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v49 != v50 { return Ok(None); }
+let v51 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v30) { Ok(v) => v, Err(e) => return Err(e) };
+let v52 = match s.construct(Constructor::eo__24eo_5fpf, &[v51]) { Ok(v) => v, Err(e) => return Err(e) };
+more_78_eo__24eo_5fcmd_5fstep_5fproven(s, a0, v33, v36, v39, v42, v45, v48, v2, v5, v8, v11, v14, v17, v20, v23, v26, v52)
+}
+pub(super) fn case_363_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.construct(Constructor::eo__24emb_5fr_2ebv_5fextract_5fmult_5fleading_5fbit, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if a1 != v0 { return Ok(None); }
+let v1 = match s.destruct(Constructor::eo__24emb_5fal_2econs, a2) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v1 else { return Ok(None); }
+;
+let v2 = fields[0];
+let v3 = fields[1];
+let v4 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v4 else { return Ok(None); }
+;
+let v5 = fields[0];
+let v6 = fields[1];
+let v7 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v6) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v7 else { return Ok(None); }
+;
+let v8 = fields[0];
+let v9 = fields[1];
+let v10 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v9) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v10 else { return Ok(None); }
+;
+let v11 = fields[0];
+let v12 = fields[1];
+let v13 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v12) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v13 else { return Ok(None); }
+;
+let v14 = fields[0];
+let v15 = fields[1];
+let v16 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v15) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v16 else { return Ok(None); }
+;
+let v17 = fields[0];
+let v18 = fields[1];
+let v19 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v19 else { return Ok(None); }
+;
+let v20 = fields[0];
+let v21 = fields[1];
+let v22 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v21) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v22 else { return Ok(None); }
+;
+let v23 = fields[0];
+let v24 = fields[1];
+let v25 = match s.destruct(Constructor::eo__24emb_5fal_2econs, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v25 else { return Ok(None); }
+;
+let v26 = fields[0];
+let v27 = fields[1];
+let v28 = match s.construct(Constructor::eo__24emb_5fal_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+more_77_eo__24eo_5fcmd_5fstep_5fproven(s, v27, v28, a3, a0, v2, v5, v8, v11, v14, v17, v20, v23, v26)
+}
+pub(super) fn cases_0_90_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term) -> CheckResult<Option<Term>> {
+if let Some(found) = match case_360_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_361_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_362_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+if let Some(found) = match case_363_eo__24eo_5fcmd_5fstep_5fproven(s, a0, a1, a2, a3) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(Some(found)); }
+Ok(None)
+}
+pub(super) fn more_4_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, a4: Term, a3: Term, a0: Term, v73: Term, v68: Term) -> CheckResult<Option<Term>> {
+let v74 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v75 = match s.construct(Constructor::eo_extract, &[a4, a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v76 = match s.apply(v75, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v77 = match s.apply(v74, v76) { Ok(v) => v, Err(e) => return Err(e) };
+let v78 = match s.literal(Lit::Binary(BitVec::new(0, &Integer::from(0u32)))) { Ok(v) => v, Err(e) => return Err(e) };
+let v79 = match s.apply(v77, v78) { Ok(v) => v, Err(e) => return Err(e) };
+let v80 = match s.apply(v73, v79) { Ok(v) => v, Err(e) => return Err(e) };
+let v81 = match s.apply(v68, v80) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v81))
+}
+pub(super) fn more_3_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, a0: Term, a2: Term, a1: Term, a3: Term, a4: Term) -> CheckResult<Option<Term>> {
+let v62 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v63 = match s.construct(Constructor::eo_bvudiv, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v64 = match s.apply(v63, a0) { Ok(v) => v, Err(e) => return Err(e) };
+let v65 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a2]) { Ok(v) => v, Err(e) => return Err(e) };
+let v66 = match s.apply(v65, a1) { Ok(v) => v, Err(e) => return Err(e) };
+let v67 = match s.apply(v64, v66) { Ok(v) => v, Err(e) => return Err(e) };
+let v68 = match s.apply(v62, v67) { Ok(v) => v, Err(e) => return Err(e) };
+let v69 = match s.construct(Constructor::eo_concat, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+let v70 = match s.construct(Constructor::eo_int_5fto_5fbv, &[a3]) { Ok(v) => v, Err(e) => return Err(e) };
+let v71 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v72 = match s.apply(v70, v71) { Ok(v) => v, Err(e) => return Err(e) };
+let v73 = match s.apply(v69, v72) { Ok(v) => v, Err(e) => return Err(e) };
+more_4_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, a4, a3, a0, v73, v68)
+}
+pub(super) fn more_2_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, v46: Term, a4: Term, a2: Term, a0: Term, a1: Term, a3: Term) -> CheckResult<Option<Term>> {
+let v47 = match s.unapply(v46) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v48, v49)) = v47 else { return Ok(None); }
+;
+let v50 = match s.unapply(v48) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v51, v52)) = v50 else { return Ok(None); }
+;
+let v53 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v51 != v53 { return Ok(None); }
+if v52 != a4 { return Ok(None); }
+let v54 = match s.unapply(v49) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v55, v56)) = v54 else { return Ok(None); }
+;
+let v57 = match s.unapply(v55) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v58, v59)) = v57 else { return Ok(None); }
+;
+let v60 = match s.construct(Constructor::eo__2d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v58 != v60 { return Ok(None); }
+if v59 != a2 { return Ok(None); }
+let v61 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v56 != v61 { return Ok(None); }
+more_3_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, a0, a2, a1, a3, a4)
+}
+pub(super) fn more_1_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, v18: Term, v31: Term, a7: Term, a3: Term, a1: Term, a8: Term, a4: Term, a2: Term, a0: Term) -> CheckResult<Option<Term>> {
+if v18 != v31 { return Ok(None); }
+let v32 = match s.destruct(Constructor::eo__24eo_5fpf, a7) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v32 else { return Ok(None); }
+;
+let v33 = fields[0];
+let v34 = match s.unapply(v33) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v35, v36)) = v34 else { return Ok(None); }
+;
+let v37 = match s.unapply(v35) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v38, v39)) = v37 else { return Ok(None); }
+;
+let v40 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v38 != v40 { return Ok(None); }
+if v39 != a3 { return Ok(None); }
+let v41 = match s.unapply(v36) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v42, v43)) = v41 else { return Ok(None); }
+;
+let v44 = match s.construct(Constructor::eo_int_2elog2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v42 != v44 { return Ok(None); }
+if v43 != a1 { return Ok(None); }
+let v45 = match s.destruct(Constructor::eo__24eo_5fpf, a8) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v45 else { return Ok(None); }
+;
+let v46 = fields[0];
+more_2_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, v46, a4, a2, a0, a1, a3)
+}
+pub(super) fn more_0_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, v15: Term, a1: Term, a7: Term, a3: Term, a8: Term, a4: Term, a2: Term, a0: Term) -> CheckResult<Option<Term>> {
+let v16 = match s.unapply(v15) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v17, v18)) = v16 else { return Ok(None); }
+;
+let v19 = match s.unapply(v17) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v20, v21)) = v19 else { return Ok(None); }
+;
+let v22 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v20 != v22 { return Ok(None); }
+let v23 = match s.unapply(v21) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v24, v25)) = v23 else { return Ok(None); }
+;
+let v26 = match s.unapply(v24) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v27, v28)) = v26 else { return Ok(None); }
+;
+let v29 = match s.construct(Constructor::eo__3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v27 != v29 { return Ok(None); }
+if v28 != a1 { return Ok(None); }
+let v30 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
+if v25 != v30 { return Ok(None); }
+let v31 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+more_1_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, v18, v31, a7, a3, a1, a8, a4, a2, a0)
+}
+pub(super) fn case_0_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.destruct(Constructor::eo__24eo_5fpf, a5) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v0 else { return Ok(None); }
+;
+let v1 = fields[0];
+let v2 = match s.unapply(v1) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v3, v4)) = v2 else { return Ok(None); }
+;
+let v5 = match s.unapply(v3) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v6, v7)) = v5 else { return Ok(None); }
+;
+let v8 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v6 != v8 { return Ok(None); }
+let v9 = match s.unapply(v7) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v10, v11)) = v9 else { return Ok(None); }
+;
+let v12 = match s.construct(Constructor::eo_int_2eispow2, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v10 != v12 { return Ok(None); }
+if v11 != a1 { return Ok(None); }
+let v13 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
+if v4 != v13 { return Ok(None); }
+let v14 = match s.destruct(Constructor::eo__24eo_5fpf, a6) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v14 else { return Ok(None); }
+;
+let v15 = fields[0];
+more_0_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, v15, a1, a7, a3, a8, a4, a2, a0)
+}
+pub(super) fn body_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Term> {
+let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck0 { return Ok(s.stuck()); }
+let stuck1 = match s.is_stuck(a1) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck1 { return Ok(s.stuck()); }
+let stuck2 = match s.is_stuck(a2) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck2 { return Ok(s.stuck()); }
+let stuck3 = match s.is_stuck(a3) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck3 { return Ok(s.stuck()); }
+let stuck4 = match s.is_stuck(a4) { Ok(v) => v, Err(e) => return Err(e) };
+if stuck4 { return Ok(s.stuck()); }
+if let Some(found) = match case_0_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, a0, a1, a2, a3, a4, a5, a6, a7, a8) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+Ok(s.stuck())
+}
+// EO program "$eo_prog_bv-udiv-pow2-not-one"
+pub fn eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s: &mut Store, a0: Term, a1: Term, a2: Term, a3: Term, a4: Term, a5: Term, a6: Term, a7: Term, a8: Term) -> CheckResult<Term> {
+match s.enter() { Ok(v) => v, Err(e) => return Err(e) };
+let result = body_eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, a0, a1, a2, a3, a4, a5, a6, a7, a8);
+s.leave();
+result
+}
+pub(super) fn more_80_eo__24eo_5fcmd_5fstep_5fproven(s: &mut Store, v25: Term, a0: Term, v18: Term, v21: Term, v24: Term, v2: Term, v5: Term, v8: Term, v11: Term, v14: Term) -> CheckResult<Option<Term>> {
+let v26 = match s.destruct(Constructor::eo__24emb_5findl_2econs, v25) { Ok(v) => v, Err(e) => return Err(e) };
+let Some(fields) = v26 else { return Ok(None); }
+;
+let v27 = fields[0];
+let v28 = fields[1];
+let v29 = match s.construct(Constructor::eo__24emb_5findl_2enil, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v28 != v29 { return Ok(None); }
+let v30 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v18) { Ok(v) => v, Err(e) => return Err(e) };
+let v31 = match s.construct(Constructor::eo__24eo_5fpf, &[v30]) { Ok(v) => v, Err(e) => return Err(e) };
+let v32 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v21) { Ok(v) => v, Err(e) => return Err(e) };
+let v33 = match s.construct(Constructor::eo__24eo_5fpf, &[v32]) { Ok(v) => v, Err(e) => return Err(e) };
+let v34 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v24) { Ok(v) => v, Err(e) => return Err(e) };
+let v35 = match s.construct(Constructor::eo__24eo_5fpf, &[v34]) { Ok(v) => v, Err(e) => return Err(e) };
+let v36 = match eo__24eo_5fstate_5fproven_5fnth(s, a0, v27) { Ok(v) => v, Err(e) => return Err(e) };
+let v37 = match s.construct(Constructor::eo__24eo_5fpf, &[v36]) { Ok(v) => v, Err(e) => return Err(e) };
+let v38 = match eo__24eo_5fprog_5fbv_2dudiv_2dpow2_2dnot_2done(s, v2, v5, v8, v11, v14, v31, v33, v35, v37) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v38))
 }

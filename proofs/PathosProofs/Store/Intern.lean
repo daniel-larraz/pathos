@@ -42,11 +42,20 @@ structure StoreInv (s : Store) : Prop where
   nodup : ∀ i j : Nat, i < s.nodes.length → j < s.nodes.length →
     s.nodes.val[i]! = s.nodes.val[j]! → i = j
 
+/-- The rows of the type cache grow by empty rows only, and its counters
+stay. -/
+def TypesExtend (a b : cache.Caches) : Prop :=
+  (∃ k, b.types.val = a.types.val ++ List.replicate k { eo := none, smt := none }) ∧
+    b.stats = a.stats
+
+theorem TypesExtend.refl (a : cache.Caches) : TypesExtend a a :=
+  ⟨⟨0, by simp⟩, rfl⟩
+
 /-- The store `s'` has the terms of `s` under the same handles. -/
 def Store.Extends (s s' : Store) : Prop :=
   s.nodes.val <+: s'.nodes.val ∧ s'.limits = s.limits ∧ s'.calls = s.calls ∧
   s'.depth = s.depth ∧ s'.state_jumps = s.state_jumps ∧
-  s'.caches.programs = s.caches.programs
+  s'.caches.programs = s.caches.programs ∧ TypesExtend s.caches s'.caches
 
 theorem Placed.append {hashes slots : List Std.U32} {n : Nat} (h : Std.U32)
     (hn : n ≤ hashes.length) (hp : Placed hashes slots n) :
@@ -63,13 +72,15 @@ theorem Placed.append {hashes slots : List Std.U32} {n : Nat} (h : Std.U32)
 @[step]
 theorem cache.Caches.push_term_spec (c : cache.Caches) (h : c.types.length < Usize.max) :
     cache.Caches.push_term c ⦃ c' =>
-      c'.types.length = c.types.length + 1 ∧ c'.programs = c.programs ⦄ := by
+      c'.types.length = c.types.length + 1 ∧
+      c'.types.val = c.types.val ++ [{ eo := none, smt := none }] ∧ c'.programs = c.programs ∧
+      c'.stats = c.stats ⦄ := by
   unfold cache.Caches.push_term cache.TypeEntry.empty
   step*
   simp [alloc.vec.Vec.length, v_post]
 
 theorem Store.Extends.refl (s : Store) : s.Extends s :=
-  ⟨List.prefix_refl _, rfl, rfl, rfl, rfl, rfl⟩
+  ⟨List.prefix_refl _, rfl, rfl, rfl, rfl, rfl, TypesExtend.refl _⟩
 
 /-- `intern` keeps the invariant, keeps every term under its handle, and
 answers a handle whose data is the data it was given; the store is as it
@@ -154,7 +165,7 @@ theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
             · simp [alloc.vec.Vec.length, hslots]; simp [alloc.vec.Vec.length] at hb; omega
         step with hself as ⟨self1, hp, hpos, hbnd, e1, e2, e3, e4, e5, e6, e7⟩
         have hc := hinv.hcache
-        step as ⟨c, hc', hcp⟩
+        step as ⟨c, hc', hcv, hcp, hcs⟩
         simp only [WP.dspec_ok, WP.uncurry'_pair]
         have hnodes : ∀ t : Nat, t < s.nodes.length → v.val[t]! = s.nodes.val[t]! := by
           intro t ht; rw [hv]; simp [List.getElem?_append_left ht]
@@ -200,7 +211,7 @@ theorem Store.intern_spec (s : Store) (data : TermData) (hinv : StoreInv s)
               have hj' : j < s.nodes.length := by omega
               rw [hnodes i hi', hnodes j hj'] at hij
               exact hinv.nodup i j hi' hj' hij
-        · refine ⟨?_, e4, e5, e6, e7, by rw [hcp, e3]⟩
+        · refine ⟨?_, e4, e5, e6, e7, by rw [hcp, e3], ⟨⟨1, by rw [hcv, e3]; rfl⟩, by rw [hcs, e3]⟩⟩
           simp only [e1]; rw [hv]; exact List.prefix_append _ _
         · simp only [e1]; rw [hvlen, hnv]; omega
         · simp only [e1]; rw [hnv]; exact hlast

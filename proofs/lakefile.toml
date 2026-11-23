@@ -1,6 +1,6 @@
 name = "PathosProofs"
 version = "0.1.0"
-defaultTargets = ["MiniChecker", "PathosProofs"]
+defaultTargets = ["MiniChecker", "MiniCases", "MiniEmbed", "MiniCtors", "MiniCacheSem", "MiniProofs", "PathosProofs"]
 # The generated files have Rust's names, not Mathlib's. (No `-j1` here: with
 # it Lean needs more than 8 GiB for CPC's largest group of functions that
 # call each other, and under 4 GiB without.)
@@ -16,7 +16,7 @@ subDir = "backends/lean"
 [[require]]
 name = "LogosVerification"
 git = "https://github.com/cvc5/logos"
-rev = "a9944ea7dcee950feb5e0d9b6271e83b421d206e"
+rev = "bdcbd95f615627b26b6ebabc0f584e5230b0bf1f"
 subDir = "verification"
 
 # Mathlib comes last, as Lake asks: logos and Aeneas's library each name a
@@ -31,6 +31,31 @@ rev = "v4.36.0"
 # stitched by scripts/aeneas-stitch. Generated: never edited.
 [[lean_lib]]
 name = "MiniChecker"
+
+# The cases of CpcMini's programs, one function each, as the Rust tries
+# them: written by lean-meta in the run that scripts/generate-mini makes.
+# Generated: never edited.
+[[lean_lib]]
+name = "MiniCases"
+
+# How the checker's values are stored (enc, dec, and that dec undoes enc):
+# written by lean-meta with MiniCases. Generated: never edited.
+[[lean_lib]]
+name = "MiniEmbed"
+
+# What construct and destruct do with each data constructor (CtorSpec):
+# written by lean-meta with MiniEmbed. Generated: never edited.
+[[lean_lib]]
+name = "MiniCtors"
+
+# What the cache of program results holds, and the proofs about the
+# generated functions: written by rust-meta with the crate. Generated: never
+# edited.
+[[lean_lib]]
+name = "MiniCacheSem"
+
+[[lean_lib]]
+name = "MiniProofs"
 
 [[lean_lib]]
 name = "PathosProofs"

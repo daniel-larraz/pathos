@@ -1,0 +1,83 @@
+source	proof	why
+$eo_StateObj_proven	generated	
+$eo_checker_is_refutation	generated	
+$eo_cmd_step_pop_proven	generated	
+$eo_cmd_step_proven	generated	
+$eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
+$eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
+$eo_dd_lookup	generated	
+$eo_dd_resolve	generated	
+$eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_resolve	generated	
+$eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dtc_resolve	generated	
+$eo_invoke_assume_list	generated	
+$eo_invoke_cmd	generated	
+$eo_invoke_cmd_check_proven	generated	
+$eo_invoke_cmd_list	generated	
+$eo_invoke_cmd_step_pop	generated	
+$eo_is_bool_type	generated	
+$eo_is_closed	generated	
+$eo_is_closed_rec	generated	
+$eo_is_list_nil	generated	
+$eo_lit_type_Binary	generated	
+$eo_lit_type_Numeral	generated	
+$eo_lit_type_Rational	generated	
+$eo_lit_type_String	generated	
+$eo_mk_premise_list	generated	
+$eo_nil	generated	
+$eo_prog_contra	generated	
+$eo_prog_refl	generated	
+$eo_prog_scope	generated	
+$eo_prog_symm	generated	
+$eo_prog_trans	generated	
+$eo_push_assume_check	generated	
+$eo_push_input_assume_check	generated	
+$eo_push_proven	generated	
+$eo_push_proven_check	generated	
+$eo_state_is_closed	generated	
+$eo_state_is_refutation	generated	
+$eo_state_proven_nth	generated	
+$eo_to_smt	generated	
+$eo_to_smt_datatype	generated	
+$eo_to_smt_datatype_cons	generated	
+$eo_to_smt_datatype_decl	generated	
+$eo_to_smt_reserved_datatype_name	generated	
+$eo_to_smt_type	generated	
+$eo_typeof	generated	
+$eo_typeof_=	generated	
+$eo_typeof_BitVec	generated	
+$eo_typeof_Seq	generated	
+$eo_typeof_and	generated	
+$eo_typeof_apply	generated	
+$eo_typeof_dt_cons_rec	generated	
+$eo_typeof_dt_sel_return	generated	
+$eo_typeof_fun_type	generated	
+$eo_typeof_not	generated	
+$mk_symm	generated	
+$mk_trans	generated	
+$smtx_dd_has_dt	generated	
+$smtx_dd_lookup	generated	
+$smtx_decl_inhabited	generated	
+$smtx_decl_wf_rec	generated	
+$smtx_dt_cons_inhabited	generated	
+$smtx_dt_cons_wf_rec	generated	
+$smtx_dt_inhabited	generated	
+$smtx_dt_resolve	generated	
+$smtx_dt_wf_rec	generated	
+$smtx_dtc_resolve	generated	
+$smtx_inhabited_type	generated	
+$smtx_ret_typeof_sel	generated	
+$smtx_ret_typeof_sel_rec	generated	
+$smtx_type_wf	generated	
+$smtx_type_wf_component	generated	
+$smtx_type_wf_rec	generated	
+$smtx_typeof	generated	
+$smtx_typeof_=	generated	
+$smtx_typeof_apply	generated	
+$smtx_typeof_dt_cons_rec	generated	
+$smtx_typeof_guard	generated	
+$smtx_typeof_guard_wf	generated	
+$smtx_typeof_ite	generated	

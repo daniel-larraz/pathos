@@ -1,0 +1,1087 @@
+source	proof	why
+$abconv_int_to_bv_elim	none	case 0 has a literal that is not a Boolean
+$abconv_ubv_to_int_elim	none	case 0 has a literal that is not a Boolean
+$aci_norm_eq	none	case 2 has a builtin operator
+$are_distinct_terms_list	none	it calls $are_distinct_terms_list_rec, which has no proof
+$are_distinct_terms_list_rec	none	it calls $are_distinct_terms_type, which has no proof
+$are_distinct_terms_type	none	case 0 has a builtin operator
+$arith_mk_one	none	case 0 has a literal that is not a Boolean
+$arith_mk_zero	none	case 0 has a literal that is not a Boolean
+$arith_normalize_lit	generated	
+$arith_reduction_pred	none	case 0 has a literal that is not a Boolean
+$arith_rel_inv	generated	
+$arith_rel_neg	generated	
+$arith_rel_sum	generated	
+$arith_rel_trichotomy	generated	
+$assoc_nil_nth	none	case 0 has a literal that is not a Boolean
+$assoc_nil_nth_type	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_apply_binary	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_apply_ite	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_apply_unary	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_binary_app	generated	
+$bv_bitblast_concat	none	case 1 has a literal that is not a Boolean
+$bv_bitblast_head	generated	
+$bv_bitblast_prefix	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_slt_impl	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_subsequence	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_tail	generated	
+$bv_bitblast_ult	none	it calls $bv_bitblast_ult_rec, which has no proof
+$bv_bitblast_ult_rec	none	case 0 has a literal that is not a Boolean
+$bv_bitwidth	generated	
+$bv_const_to_bitlist_rec	none	case 0 has a literal that is not a Boolean
+$bv_div_mod_impl	none	case 2 has a literal that is not a Boolean
+$bv_eval_concat	none	case 0 has a builtin operator
+$bv_get_first_const_child	none	case 0 has a builtin operator
+$bv_mk_bitblast_step	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_add	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_bitwise	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_concat	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_eq_rec	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_ite	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_mul	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_shl_rec	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_shl_rec_step	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_shr_rec	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_shr_rec_step	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_var_rec	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitwise_slicing	none	case 0 has a builtin operator
+$bv_mk_bitwise_slicing_rec	none	case 0 has a literal that is not a Boolean
+$bv_ripple_carry_adder_2	none	case 1 has a literal that is not a Boolean
+$bv_shift_add_multiplier	none	case 0 has a literal that is not a Boolean
+$bv_shift_add_multiplier_rec	none	case 0 has a literal that is not a Boolean
+$bv_shift_add_multiplier_rec_step	none	case 0 has a literal that is not a Boolean
+$bv_smulo_elim_rec	none	case 1 has a builtin operator
+$bv_umulo_elim_rec	none	case 1 has a builtin operator
+$chain_m_resolve	none	it calls $chain_m_resolve_final, which has no proof
+$chain_m_resolve_final	none	case 0 has a builtin operator
+$chain_m_resolve_rec	none	it calls $chain_m_resolve_rec_step, which has no proof
+$chain_m_resolve_rec_step	none	case 0 has a builtin operator
+$compute_card	none	case 0 has a literal that is not a Boolean
+$contains_atomic_term_list_free_rec	none	case 0 has a builtin operator
+$derivative	none	case 5 has a literal that is not a Boolean
+$dt_arg_list	generated	
+$dt_collapse_updater_rhs	none	case 0 has a literal that is not a Boolean
+$dt_distinct_terms	none	case 0 has a builtin operator
+$dt_eq_cons	none	case 2 has a builtin operator
+$dt_find_cycle	none	it calls $is_cons_app, which has no proof
+$dt_get_constructors	none	case 3 has a builtin operator
+$dt_get_selectors	none	case 0 has a literal that is not a Boolean
+$dt_get_selectors_of_app	none	it calls $dt_get_selectors, which has no proof
+$dt_updater_elim_rhs	generated	
+$eo_StateObj_proven	generated	
+$eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
+$eo_cmd_step_pop_proven	generated	
+$eo_cmd_step_proven	none	case 550 has a literal that is not a Boolean
+$eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
+$eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
+$eo_dd_lookup	generated	
+$eo_dd_resolve	generated	
+$eo_disamb_type_seq.empty	generated	
+$eo_disamb_type_set.empty	generated	
+$eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_resolve	generated	
+$eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dtc_resolve	generated	
+$eo_invoke_assume_list	none	it calls $eo_is_closed, which has no proof
+$eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
+$eo_invoke_cmd_check_proven	generated	
+$eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
+$eo_invoke_cmd_step_pop	none	it calls $eo_push_proven, which has no proof
+$eo_is_bool_type	none	it calls $eo_typeof, which has no proof
+$eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
+$eo_is_closed_rec	none	case 2 has a builtin operator
+$eo_is_list_nil	none	case 5 has a literal that is not a Boolean
+$eo_is_list_nil_*	none	case 0 has a builtin operator
+$eo_is_list_nil_+	none	case 0 has a builtin operator
+$eo_is_list_nil_@@TypedList.cons	generated	
+$eo_is_list_nil_bvadd	none	case 0 has a builtin operator
+$eo_is_list_nil_bvand	none	case 0 has a builtin operator
+$eo_is_list_nil_bvmul	none	case 0 has a builtin operator
+$eo_is_list_nil_bvor	none	case 0 has a builtin operator
+$eo_is_list_nil_bvxor	none	case 0 has a builtin operator
+$eo_is_list_nil_str.++	none	case 1 has a literal that is not a Boolean
+$eo_lit_type_Binary	generated	
+$eo_lit_type_Numeral	generated	
+$eo_lit_type_Rational	generated	
+$eo_lit_type_String	generated	
+$eo_mk_premise_list	none	case 1 has eo::cons with an operator that nests to the left
+$eo_nil	none	case 5 has a literal that is not a Boolean
+$eo_nil_*	none	it calls $arith_mk_one, which has no proof
+$eo_nil_+	none	it calls $arith_mk_zero, which has no proof
+$eo_nil_@@TypedList.cons	generated	
+$eo_nil_bvadd	none	case 0 has a builtin operator
+$eo_nil_bvand	none	case 0 has a builtin operator
+$eo_nil_bvmul	none	case 0 has a builtin operator
+$eo_nil_bvor	none	case 0 has a builtin operator
+$eo_nil_bvxor	none	case 0 has a builtin operator
+$eo_nil_str.++	none	it calls $seq_empty, which has no proof
+$eo_prog_absorb	none	it calls $get_zero, which has no proof
+$eo_prog_aci_norm	none	it calls $aci_norm_eq, which has no proof
+$eo_prog_alpha_equiv	none	case 0 has a builtin operator
+$eo_prog_and_elim	none	case 0 has a builtin operator
+$eo_prog_and_intro	generated	
+$eo_prog_arith-abs-eq	generated	
+$eo_prog_arith-abs-int-gt	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-abs-real-gt	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-div-elim-to-real	generated	
+$eo_prog_arith-div-total-zero-int	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-div-total-zero-real	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-divisible-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-elim-gt	generated	
+$eo_prog_arith-elim-int-gt	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-elim-int-lt	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-elim-leq	generated	
+$eo_prog_arith-elim-lt	generated	
+$eo_prog_arith-eq-elim-int	generated	
+$eo_prog_arith-eq-elim-real	generated	
+$eo_prog_arith-geq-ite-lift	generated	
+$eo_prog_arith-geq-norm1-int	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-geq-norm1-real	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-geq-tighten	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-div-total	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-div-total-neg	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-div-total-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-div-total-over-mod	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-div-total-zero	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-eq-conflict	generated	
+$eo_prog_arith-int-geq-tighten	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-mod-total	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-mod-total-neg	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-mod-total-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-int-mod-total-zero	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-is-int-elim-to-real	generated	
+$eo_prog_arith-leq-ite-lift	generated	
+$eo_prog_arith-leq-norm	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-max-geq1	generated	
+$eo_prog_arith-max-geq2	generated	
+$eo_prog_arith-min-lt1	generated	
+$eo_prog_arith-min-lt2	generated	
+$eo_prog_arith-mod-over-mod	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-mod-over-mod-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-mod-over-mod-mult	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-string-pred-entail	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-string-pred-safe-approx	none	case 0 has a literal that is not a Boolean
+$eo_prog_arith-to-int-elim-to-real	generated	
+$eo_prog_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison, which has no proof
+$eo_prog_arith_mult_neg	none	case 0 has a builtin operator
+$eo_prog_arith_mult_pos	none	case 0 has a builtin operator
+$eo_prog_arith_mult_sign	none	case 0 has a builtin operator
+$eo_prog_arith_mult_tangent	none	case 0 has a builtin operator
+$eo_prog_arith_poly_norm	none	it calls $get_arith_poly_norm, which has no proof
+$eo_prog_arith_poly_norm_rel	none	case 0 has a builtin operator
+$eo_prog_arith_reduction	none	it calls $arith_reduction_pred, which has no proof
+$eo_prog_arith_sum_ub	none	it calls $mk_arith_sum_ub, which has no proof
+$eo_prog_arith_trichotomy	generated	
+$eo_prog_array-read-over-write	generated	
+$eo_prog_array-read-over-write-split	generated	
+$eo_prog_array-read-over-write2	generated	
+$eo_prog_array-store-overwrite	generated	
+$eo_prog_array-store-self	generated	
+$eo_prog_array-store-swap	generated	
+$eo_prog_arrays_ext	generated	
+$eo_prog_arrays_read_over_write	generated	
+$eo_prog_arrays_read_over_write_1	generated	
+$eo_prog_arrays_read_over_write_contra	generated	
+$eo_prog_bool-and-conf	none	case 0 has a builtin operator
+$eo_prog_bool-and-conf2	none	case 0 has a builtin operator
+$eo_prog_bool-and-de-morgan	none	case 0 has a builtin operator
+$eo_prog_bool-double-not-elim	generated	
+$eo_prog_bool-dual-impl-eq	generated	
+$eo_prog_bool-eq-false	generated	
+$eo_prog_bool-eq-nrefl	generated	
+$eo_prog_bool-eq-true	generated	
+$eo_prog_bool-impl-elim	generated	
+$eo_prog_bool-impl-false1	generated	
+$eo_prog_bool-impl-false2	generated	
+$eo_prog_bool-impl-true1	generated	
+$eo_prog_bool-impl-true2	generated	
+$eo_prog_bool-implies-de-morgan	generated	
+$eo_prog_bool-implies-or-distrib	none	case 0 has a builtin operator
+$eo_prog_bool-not-eq-elim1	generated	
+$eo_prog_bool-not-eq-elim2	generated	
+$eo_prog_bool-not-false	generated	
+$eo_prog_bool-not-ite-elim	generated	
+$eo_prog_bool-not-true	generated	
+$eo_prog_bool-not-xor-elim	generated	
+$eo_prog_bool-or-and-distrib	none	case 0 has a builtin operator
+$eo_prog_bool-or-de-morgan	none	case 0 has a builtin operator
+$eo_prog_bool-or-taut	none	case 0 has a builtin operator
+$eo_prog_bool-or-taut2	none	case 0 has a builtin operator
+$eo_prog_bool-xor-comm	generated	
+$eo_prog_bool-xor-elim	generated	
+$eo_prog_bool-xor-false	generated	
+$eo_prog_bool-xor-nrefl	generated	
+$eo_prog_bool-xor-refl	generated	
+$eo_prog_bool-xor-true	generated	
+$eo_prog_bv-and-concat-pullup	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-and-concat-pullup2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-and-concat-pullup3	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-and-simplify-1	none	case 0 has a builtin operator
+$eo_prog_bv-and-simplify-2	none	case 0 has a builtin operator
+$eo_prog_bv-ashr-by-const-0	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ashr-by-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ashr-by-const-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ashr-zero	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-bitwise-slicing	none	it calls $bv_mk_bitwise_slicing, which has no proof
+$eo_prog_bv-commutative-add	none	case 0 has a builtin operator
+$eo_prog_bv-commutative-comp	generated	
+$eo_prog_bv-commutative-xor	none	case 0 has a builtin operator
+$eo_prog_bv-comp-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-concat-extract-merge	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-concat-merge-const	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-eq-extract-elim1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-eq-extract-elim2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-eq-extract-elim3	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-eq-not-solve	generated	
+$eo_prog_bv-eq-xor-solve	none	case 0 has a builtin operator
+$eo_prog_bv-extract-concat-1	none	case 0 has a builtin operator
+$eo_prog_bv-extract-concat-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-extract-concat-3	none	case 0 has a builtin operator
+$eo_prog_bv-extract-concat-4	none	case 0 has a builtin operator
+$eo_prog_bv-extract-extract	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-extract-mult-leading-bit	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-extract-not	generated	
+$eo_prog_bv-extract-sign-extend-1	generated	
+$eo_prog_bv-extract-sign-extend-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-extract-sign-extend-3	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-extract-whole	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-const-children-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-const-children-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-equal-children	generated	
+$eo_prog_bv-ite-equal-cond-1	generated	
+$eo_prog_bv-ite-equal-cond-2	generated	
+$eo_prog_bv-ite-equal-cond-3	generated	
+$eo_prog_bv-ite-merge-else-else	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-merge-else-if	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-merge-then-else	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-merge-then-if	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-width-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-width-one-not	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-lshr-by-const-0	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-lshr-by-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-lshr-by-const-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-lshr-zero	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-lt-self	generated	
+$eo_prog_bv-merge-sign-extend-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-merge-sign-extend-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-mult-pow2-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-mult-pow2-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-mult-pow2-2b	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-mult-slt-mult-1	none	case 0 has a builtin operator
+$eo_prog_bv-mult-slt-mult-2	none	case 0 has a builtin operator
+$eo_prog_bv-nand-eliminate	none	case 0 has a builtin operator
+$eo_prog_bv-nego-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-nor-eliminate	none	case 0 has a builtin operator
+$eo_prog_bv-not-idemp	generated	
+$eo_prog_bv-not-neq	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-not-ult	generated	
+$eo_prog_bv-not-xor	generated	
+$eo_prog_bv-or-concat-pullup	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-or-concat-pullup2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-or-concat-pullup3	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-or-simplify-1	none	case 0 has a builtin operator
+$eo_prog_bv-or-simplify-2	none	case 0 has a builtin operator
+$eo_prog_bv-redand-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-redor-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-repeat-elim	none	case 0 has a builtin operator
+$eo_prog_bv-rotate-left-eliminate-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-rotate-left-eliminate-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-rotate-right-eliminate-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-rotate-right-eliminate-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-saddo-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sdiv-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sdivo-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sge-eliminate	generated	
+$eo_prog_bv-sgt-eliminate	generated	
+$eo_prog_bv-shl-by-const-0	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-shl-by-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-shl-by-const-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-shl-zero	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sign-extend-eliminate-0	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sign-extend-eq-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sign-extend-eq-const-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sign-extend-ult-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sign-extend-ult-const-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sign-extend-ult-const-3	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sign-extend-ult-const-4	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sle-eliminate	generated	
+$eo_prog_bv-sle-self	generated	
+$eo_prog_bv-smod-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-smulo-elim	none	case 0 has a builtin operator
+$eo_prog_bv-srem-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ssubo-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sub-eliminate	none	case 0 has a builtin operator
+$eo_prog_bv-uaddo-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-udiv-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-udiv-pow2-not-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-udiv-zero	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-uge-eliminate	generated	
+$eo_prog_bv-ugt-eliminate	generated	
+$eo_prog_bv-ugt-urem	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ule-eliminate	generated	
+$eo_prog_bv-ule-max	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ule-self	generated	
+$eo_prog_bv-ule-zero	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ult-add-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ult-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ult-ones	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ult-self	generated	
+$eo_prog_bv-ult-zero-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ult-zero-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-umulo-elim	none	case 0 has a builtin operator
+$eo_prog_bv-urem-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-urem-pow2-not-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-urem-self	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-usubo-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-xnor-eliminate	none	case 0 has a builtin operator
+$eo_prog_bv-xor-concat-pullup	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-xor-concat-pullup2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-xor-concat-pullup3	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-xor-duplicate	none	case 0 has a builtin operator
+$eo_prog_bv-xor-not	none	case 0 has a builtin operator
+$eo_prog_bv-xor-ones	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-xor-simplify-1	none	case 0 has a builtin operator
+$eo_prog_bv-xor-simplify-2	none	case 0 has a builtin operator
+$eo_prog_bv-xor-simplify-3	none	case 0 has a builtin operator
+$eo_prog_bv-zero-extend-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-zero-extend-eliminate-0	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-zero-extend-eq-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-zero-extend-eq-const-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-zero-extend-ult-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-zero-extend-ult-const-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-zero-ule	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv_bitblast_step	none	it calls $bv_mk_bitblast_step, which has no proof
+$eo_prog_bv_poly_norm	none	case 0 has a builtin operator
+$eo_prog_bv_poly_norm_eq	none	case 0 has a builtin operator
+$eo_prog_chain_m_resolution	none	case 0 has a builtin operator
+$eo_prog_chain_resolution	none	it calls $chain_m_resolve, which has no proof
+$eo_prog_cnf_and_neg	generated	
+$eo_prog_cnf_and_pos	none	case 0 has a builtin operator
+$eo_prog_cnf_equiv_neg1	generated	
+$eo_prog_cnf_equiv_neg2	generated	
+$eo_prog_cnf_equiv_pos1	generated	
+$eo_prog_cnf_equiv_pos2	generated	
+$eo_prog_cnf_implies_neg1	generated	
+$eo_prog_cnf_implies_neg2	generated	
+$eo_prog_cnf_implies_pos	generated	
+$eo_prog_cnf_ite_neg1	generated	
+$eo_prog_cnf_ite_neg2	generated	
+$eo_prog_cnf_ite_neg3	generated	
+$eo_prog_cnf_ite_pos1	generated	
+$eo_prog_cnf_ite_pos2	generated	
+$eo_prog_cnf_ite_pos3	generated	
+$eo_prog_cnf_or_neg	none	case 0 has a builtin operator
+$eo_prog_cnf_or_pos	generated	
+$eo_prog_cnf_xor_neg1	generated	
+$eo_prog_cnf_xor_neg2	generated	
+$eo_prog_cnf_xor_pos1	generated	
+$eo_prog_cnf_xor_pos2	generated	
+$eo_prog_concat_cprop	none	case 0 has a literal that is not a Boolean
+$eo_prog_concat_csplit	none	case 0 has a literal that is not a Boolean
+$eo_prog_concat_eq	none	case 0 has a builtin operator
+$eo_prog_concat_lprop	none	case 0 has a builtin operator
+$eo_prog_concat_split	none	case 0 has a builtin operator
+$eo_prog_concat_unify	none	case 0 has a builtin operator
+$eo_prog_cong	none	case 0 has a builtin operator
+$eo_prog_contra	generated	
+$eo_prog_distinct-binary-elim	none	case 0 has a builtin operator
+$eo_prog_distinct-card-conflict	none	case 0 has a builtin operator
+$eo_prog_distinct-elim	none	case 0 has a builtin operator
+$eo_prog_distinct-false	none	case 0 has a builtin operator
+$eo_prog_distinct-true	none	case 0 has a builtin operator
+$eo_prog_distinct_values	none	case 0 has a builtin operator
+$eo_prog_dt-collapse-selector	none	case 0 has a builtin operator
+$eo_prog_dt-collapse-tester	none	it calls $dt_eq_cons, which has no proof
+$eo_prog_dt-collapse-tester-singleton	none	case 0 has a builtin operator
+$eo_prog_dt-collapse-updater	none	it calls $mk_dt_collapse_updater_rhs, which has no proof
+$eo_prog_dt-cons-eq	none	case 0 has a builtin operator
+$eo_prog_dt-cons-eq-clash	none	case 0 has a builtin operator
+$eo_prog_dt-cycle	none	it calls $dt_find_cycle, which has no proof
+$eo_prog_dt-inst	none	case 0 has a builtin operator
+$eo_prog_dt-updater-elim	none	case 0 has a builtin operator
+$eo_prog_dt_split	none	case 0 has a builtin operator
+$eo_prog_eq-cond-deq	generated	
+$eo_prog_eq-ite-lift	generated	
+$eo_prog_eq-refl	generated	
+$eo_prog_eq-symm	generated	
+$eo_prog_eq_resolve	generated	
+$eo_prog_equiv_elim1	generated	
+$eo_prog_equiv_elim2	generated	
+$eo_prog_evaluate	none	it calls $run_evaluate, which has no proof
+$eo_prog_exists-elim	generated	
+$eo_prog_exists_string_length	none	case 0 has a builtin operator
+$eo_prog_factoring	none	case 0 has a builtin operator
+$eo_prog_false_elim	generated	
+$eo_prog_false_intro	generated	
+$eo_prog_ho_cong	generated	
+$eo_prog_implies_elim	generated	
+$eo_prog_instantiate	none	it calls $is_instantiation, which has no proof
+$eo_prog_int-to-bv-elim	none	case 0 has a builtin operator
+$eo_prog_int_tight_lb	none	it calls $least_int_gt, which has no proof
+$eo_prog_int_tight_ub	none	it calls $greatest_int_lt, which has no proof
+$eo_prog_ite-else-false	generated	
+$eo_prog_ite-else-lookahead	generated	
+$eo_prog_ite-else-lookahead-not-self	generated	
+$eo_prog_ite-else-lookahead-self	generated	
+$eo_prog_ite-else-neg-lookahead	generated	
+$eo_prog_ite-else-true	generated	
+$eo_prog_ite-eq-branch	generated	
+$eo_prog_ite-expand	generated	
+$eo_prog_ite-false-cond	generated	
+$eo_prog_ite-neg-branch	generated	
+$eo_prog_ite-not-cond	generated	
+$eo_prog_ite-then-false	generated	
+$eo_prog_ite-then-lookahead	generated	
+$eo_prog_ite-then-lookahead-not-self	generated	
+$eo_prog_ite-then-lookahead-self	generated	
+$eo_prog_ite-then-neg-lookahead	generated	
+$eo_prog_ite-then-true	generated	
+$eo_prog_ite-true-cond	generated	
+$eo_prog_ite_elim1	generated	
+$eo_prog_ite_elim2	generated	
+$eo_prog_ite_eq	generated	
+$eo_prog_modus_ponens	generated	
+$eo_prog_nary_cong	generated	
+$eo_prog_not_and	generated	
+$eo_prog_not_equiv_elim1	generated	
+$eo_prog_not_equiv_elim2	generated	
+$eo_prog_not_implies_elim1	generated	
+$eo_prog_not_implies_elim2	generated	
+$eo_prog_not_ite_elim1	generated	
+$eo_prog_not_ite_elim2	generated	
+$eo_prog_not_not_elim	generated	
+$eo_prog_not_or_elim	none	case 0 has a builtin operator
+$eo_prog_not_xor_elim1	generated	
+$eo_prog_not_xor_elim2	generated	
+$eo_prog_pairwise_cong	generated	
+$eo_prog_process_scope	generated	
+$eo_prog_quant-dt-split	none	case 0 has a builtin operator
+$eo_prog_quant-merge-prenex	none	case 0 has a builtin operator
+$eo_prog_quant-miniscope-and	generated	
+$eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
+$eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
+$eo_prog_quant-unused-vars	none	case 0 has a builtin operator
+$eo_prog_quant-var-elim-eq	none	it calls $mk_quant_var_elim_eq, which has no proof
+$eo_prog_quant_var_reordering	none	case 0 has a builtin operator
+$eo_prog_re-all-elim	none	a constant, not a program with cases
+$eo_prog_re-concat-merge	none	case 0 has a builtin operator
+$eo_prog_re-concat-star-nullable1	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-concat-star-nullable2	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-concat-star-repeat	none	case 0 has a builtin operator
+$eo_prog_re-concat-star-swap	none	case 0 has a builtin operator
+$eo_prog_re-diff-elim	generated	
+$eo_prog_re-eq-elim	none	case 0 has a variable term
+$eo_prog_re-in-comp	generated	
+$eo_prog_re-in-cstring	generated	
+$eo_prog_re-in-empty	generated	
+$eo_prog_re-in-sigma	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-in-sigma-star	generated	
+$eo_prog_re-inter-all	none	case 0 has a builtin operator
+$eo_prog_re-inter-cstring	generated	
+$eo_prog_re-inter-cstring-neg	generated	
+$eo_prog_re-inter-inclusion	none	it calls $re_flatten, which has no proof
+$eo_prog_re-loop-elim	none	case 0 has a builtin operator
+$eo_prog_re-loop-neg	generated	
+$eo_prog_re-loop-star	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-opt-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-plus-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-range-emp	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-range-non-singleton-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-range-non-singleton-2	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-range-refl	none	case 0 has a literal that is not a Boolean
+$eo_prog_re-repeat-elim	generated	
+$eo_prog_re-star-emp	none	a constant, not a program with cases
+$eo_prog_re-star-none	none	a constant, not a program with cases
+$eo_prog_re-star-star	generated	
+$eo_prog_re-star-union-char	none	case 0 has a builtin operator
+$eo_prog_re-star-union-drop-emp	none	case 0 has a builtin operator
+$eo_prog_re-union-all	none	case 0 has a builtin operator
+$eo_prog_re-union-const-elim	generated	
+$eo_prog_re-union-inclusion	none	it calls $re_flatten, which has no proof
+$eo_prog_re_concat	none	case 0 has a builtin operator
+$eo_prog_re_inter	generated	
+$eo_prog_re_unfold_neg	none	it calls $mk_re_unfold_neg, which has no proof
+$eo_prog_re_unfold_neg_concat_fixed	none	case 0 has a builtin operator
+$eo_prog_re_unfold_pos	none	it calls $mk_re_unfold_pos, which has no proof
+$eo_prog_refl	generated	
+$eo_prog_reordering	none	case 0 has a builtin operator
+$eo_prog_resolution	none	case 0 has a builtin operator
+$eo_prog_scope	generated	
+$eo_prog_seq-eval-op	none	it calls $seq_eval, which has no proof
+$eo_prog_seq-len-rev	generated	
+$eo_prog_seq-len-unit	none	case 0 has a literal that is not a Boolean
+$eo_prog_seq-nth-concat-unit	none	case 0 has a literal that is not a Boolean
+$eo_prog_seq-nth-concat-unit-gen	none	case 0 has a literal that is not a Boolean
+$eo_prog_seq-nth-unit	none	case 0 has a literal that is not a Boolean
+$eo_prog_seq-rev-concat	none	case 0 has a builtin operator
+$eo_prog_seq-rev-rev	generated	
+$eo_prog_seq-rev-unit	generated	
+$eo_prog_sets-choose-singleton	generated	
+$eo_prog_sets-eq-singleton-emp	generated	
+$eo_prog_sets-eval-op	none	case 0 has a builtin operator
+$eo_prog_sets-insert-elim	generated	
+$eo_prog_sets-inter-comm	generated	
+$eo_prog_sets-inter-emp1	generated	
+$eo_prog_sets-inter-emp2	generated	
+$eo_prog_sets-inter-member	generated	
+$eo_prog_sets-is-empty-elim	generated	
+$eo_prog_sets-is-singleton-elim	generated	
+$eo_prog_sets-member-emp	generated	
+$eo_prog_sets-member-singleton	generated	
+$eo_prog_sets-minus-emp1	generated	
+$eo_prog_sets-minus-emp2	generated	
+$eo_prog_sets-minus-member	generated	
+$eo_prog_sets-minus-self	generated	
+$eo_prog_sets-subset-elim	generated	
+$eo_prog_sets-union-comm	generated	
+$eo_prog_sets-union-emp1	generated	
+$eo_prog_sets-union-emp2	generated	
+$eo_prog_sets-union-member	generated	
+$eo_prog_sets_choose_member	none	case 0 has a builtin operator
+$eo_prog_sets_ext	generated	
+$eo_prog_sets_singleton_inj	generated	
+$eo_prog_skolem_intro	generated	
+$eo_prog_skolemize	none	case 0 has a builtin operator
+$eo_prog_split	generated	
+$eo_prog_str-at-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-concat-clash	generated	
+$eo_prog_str-concat-clash-rev	none	case 0 has a builtin operator
+$eo_prog_str-concat-clash2	generated	
+$eo_prog_str-concat-clash2-rev	none	case 0 has a builtin operator
+$eo_prog_str-concat-unify	none	case 0 has a builtin operator
+$eo_prog_str-concat-unify-base	none	case 0 has a builtin operator
+$eo_prog_str-concat-unify-base-rev	none	case 0 has a builtin operator
+$eo_prog_str-concat-unify-rev	none	case 0 has a builtin operator
+$eo_prog_str-contains-char	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-contains-concat-find	none	case 0 has a builtin operator
+$eo_prog_str-contains-concat-find-contra	none	case 0 has a builtin operator
+$eo_prog_str-contains-emp	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-contains-leq-len-eq	generated	
+$eo_prog_str-contains-refl	generated	
+$eo_prog_str-contains-repl-char	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-contains-repl-self	generated	
+$eo_prog_str-contains-repl-self-tgt-char	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-contains-repl-tgt	generated	
+$eo_prog_str-contains-split-char	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-ctn-multiset-subset	none	case 0 has a builtin operator
+$eo_prog_str-eq-ctn-false	none	case 0 has a builtin operator
+$eo_prog_str-eq-ctn-full-false1	generated	
+$eo_prog_str-eq-ctn-full-false2	generated	
+$eo_prog_str-eq-len-false	generated	
+$eo_prog_str-eq-repl-emp-tgt-nemp	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-eq-repl-len-one-emp-prefix	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-eq-repl-nemp-src-emp	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-eq-repl-no-change	generated	
+$eo_prog_str-eq-repl-self-emp	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-eq-repl-self-src	generated	
+$eo_prog_str-eq-repl-tgt-eq-len	generated	
+$eo_prog_str-from-int-no-ctn-nondigit	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-concat-star-char	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-consume	none	it calls $str_re_consume, which has no proof
+$eo_prog_str-in-re-contains	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-eval	none	case 0 has a builtin operator
+$eo_prog_str-in-re-from-int-dig-range	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-from-int-nemp-dig-range	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-inter-elim	none	case 0 has a builtin operator
+$eo_prog_str-in-re-range-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-sigma	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-sigma-star	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-in-re-union-elim	none	case 0 has a builtin operator
+$eo_prog_str-indexof-contains-concat-pre	none	case 0 has a builtin operator
+$eo_prog_str-indexof-contains-pre	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-eq-irr	generated	
+$eo_prog_str-indexof-find-emp	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-len-oob	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-len-oob2	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-no-contains	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-oob	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-oob2	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-prefix-concat	none	case 0 has a builtin operator
+$eo_prog_str-indexof-re-emp-re	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-re-eval	none	case 0 has a builtin operator
+$eo_prog_str-indexof-re-none	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-indexof-self	none	it calls $seq_empty, which has no proof
+$eo_prog_str-is-digit-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-len-concat-rec	none	case 0 has a builtin operator
+$eo_prog_str-len-eq-zero-base	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-len-eq-zero-concat-rec	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-len-replace-all-inv	generated	
+$eo_prog_str-len-replace-inv	generated	
+$eo_prog_str-len-substr-in-range	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-len-update-inv	generated	
+$eo_prog_str-leq-concat-base-1	generated	
+$eo_prog_str-leq-concat-base-2	generated	
+$eo_prog_str-leq-concat-false	none	case 0 has a builtin operator
+$eo_prog_str-leq-concat-true	none	case 0 has a builtin operator
+$eo_prog_str-leq-empty	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-leq-empty-eq	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-lt-elim	generated	
+$eo_prog_str-overlap-endpoints-ctn	none	case 0 has a builtin operator
+$eo_prog_str-overlap-endpoints-indexof	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-overlap-endpoints-replace	none	case 0 has a builtin operator
+$eo_prog_str-overlap-split-ctn	none	case 0 has a builtin operator
+$eo_prog_str-prefixof-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-prefixof-eq	generated	
+$eo_prog_str-prefixof-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-repl-repl-dual-ite1	generated	
+$eo_prog_str-repl-repl-dual-ite2	generated	
+$eo_prog_str-repl-repl-dual-self	generated	
+$eo_prog_str-repl-repl-len-id	generated	
+$eo_prog_str-repl-repl-lookahead-id-simp	generated	
+$eo_prog_str-repl-repl-src-inv-no-ctn1	generated	
+$eo_prog_str-repl-repl-src-inv-no-ctn2	generated	
+$eo_prog_str-repl-repl-src-inv-no-ctn3	generated	
+$eo_prog_str-repl-repl-src-self	generated	
+$eo_prog_str-repl-repl-src-tgt-no-ctn	generated	
+$eo_prog_str-repl-repl-tgt-no-ctn	generated	
+$eo_prog_str-repl-repl-tgt-self	generated	
+$eo_prog_str-replace-all-empty	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-all-find	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-all-find-pre	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-all-id	generated	
+$eo_prog_str-replace-all-no-contains	generated	
+$eo_prog_str-replace-all-self	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-dual-ctn	generated	
+$eo_prog_str-replace-dual-ctn-false	generated	
+$eo_prog_str-replace-emp-ctn-src	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-empty	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-find-base	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-find-first-concat	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-find-pre	none	case 0 has a builtin operator
+$eo_prog_str-replace-id	generated	
+$eo_prog_str-replace-no-contains	generated	
+$eo_prog_str-replace-one-pre	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-replace-prefix	generated	
+$eo_prog_str-replace-prefix-concat	none	case 0 has a builtin operator
+$eo_prog_str-replace-re-all-eval	none	case 0 has a builtin operator
+$eo_prog_str-replace-re-all-none	generated	
+$eo_prog_str-replace-re-eval	none	case 0 has a builtin operator
+$eo_prog_str-replace-re-none	generated	
+$eo_prog_str-replace-self	generated	
+$eo_prog_str-replace-self-ctn-simp	generated	
+$eo_prog_str-substr-char-start-eq-len	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-combine1	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-combine2	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-combine3	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-combine4	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-concat1	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-concat2	none	case 0 has a builtin operator
+$eo_prog_str-substr-ctn	generated	
+$eo_prog_str-substr-ctn-contra	generated	
+$eo_prog_str-substr-empty-range	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-empty-start	none	it calls $seq_empty, which has no proof
+$eo_prog_str-substr-empty-start-neg	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-empty-str	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-eq-empty	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-eq-empty-leq-len	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-full	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-full-eq	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-len-include	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-len-include-pre	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-len-norm	generated	
+$eo_prog_str-substr-replace	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-substr-substr-start-geq-len	none	it calls $seq_empty, which has no proof
+$eo_prog_str-substr-z-eq-empty-leq	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-suffixof-elim	generated	
+$eo_prog_str-suffixof-eq	generated	
+$eo_prog_str-suffixof-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-to-int-concat-neg-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-to-lower-concat	none	case 0 has a builtin operator
+$eo_prog_str-to-lower-from-int	generated	
+$eo_prog_str-to-lower-idem	generated	
+$eo_prog_str-to-lower-len	generated	
+$eo_prog_str-to-lower-upper	generated	
+$eo_prog_str-to-upper-concat	none	case 0 has a builtin operator
+$eo_prog_str-to-upper-from-int	generated	
+$eo_prog_str-to-upper-idem	generated	
+$eo_prog_str-to-upper-len	generated	
+$eo_prog_str-to-upper-lower	generated	
+$eo_prog_str-update-concat-fit	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-update-concat-fit0	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-update-fit	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-update-in-first-concat	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-update-oob	none	case 0 has a literal that is not a Boolean
+$eo_prog_str-update-rev	none	case 0 has a literal that is not a Boolean
+$eo_prog_string_code_inj	none	case 0 has a literal that is not a Boolean
+$eo_prog_string_decompose	none	case 0 has a literal that is not a Boolean
+$eo_prog_string_eager_reduction	none	it calls $mk_str_eager_reduction, which has no proof
+$eo_prog_string_ext	none	case 0 has a builtin operator
+$eo_prog_string_length_non_empty	none	case 0 has a literal that is not a Boolean
+$eo_prog_string_length_pos	none	case 0 has a literal that is not a Boolean
+$eo_prog_string_reduction	none	it calls $is_closed_rec, which has no proof
+$eo_prog_string_seq_unit_inj	generated	
+$eo_prog_symm	generated	
+$eo_prog_trans	generated	
+$eo_prog_true_elim	generated	
+$eo_prog_true_intro	generated	
+$eo_prog_trust	generated	
+$eo_prog_ubv-to-int-elim	none	case 0 has a builtin operator
+$eo_prog_ubv_to_int_range	none	case 0 has a literal that is not a Boolean
+$eo_prog_uf-bv2nat-geq-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_uf-bv2nat-int2bv	generated	
+$eo_prog_uf-bv2nat-int2bv-extend	none	case 0 has a literal that is not a Boolean
+$eo_prog_uf-bv2nat-int2bv-extract	none	case 0 has a literal that is not a Boolean
+$eo_prog_uf-int2bv-bv2nat	generated	
+$eo_prog_uf-int2bv-bvule-equiv	generated	
+$eo_prog_uf-int2bv-bvult-equiv	generated	
+$eo_prog_uf-sbv-to-int-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_xor_elim1	generated	
+$eo_prog_xor_elim2	generated	
+$eo_push_assume_check	generated	
+$eo_push_input_assume_check	generated	
+$eo_push_proven	none	it calls $eo_is_bool_type, which has no proof
+$eo_push_proven_check	generated	
+$eo_state_is_closed	generated	
+$eo_state_is_refutation	generated	
+$eo_state_proven_nth	generated	
+$eo_to_smt	none	case 169 has the native operation mk_rational
+$eo_to_smt_array_deq_diff	generated	
+$eo_to_smt_bv_size	none	case 0 has the native operation nat.to_int
+$eo_to_smt_datatype	generated	
+$eo_to_smt_datatype_cons	generated	
+$eo_to_smt_datatype_decl	generated	
+$eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
+$eo_to_smt_distinct_pairs	none	it calls $eo_to_smt, which has no proof
+$eo_to_smt_exists	generated	
+$eo_to_smt_nat	generated	
+$eo_to_smt_nat_is_valid	generated	
+$eo_to_smt_quantifiers_skolemize	generated	
+$eo_to_smt_re_unfold_pos_component	generated	
+$eo_to_smt_reserved_datatype_name	generated	
+$eo_to_smt_seq.empty	generated	
+$eo_to_smt_set.empty	generated	
+$eo_to_smt_set_elem_type	generated	
+$eo_to_smt_sets_deq_diff	generated	
+$eo_to_smt_tester	generated	
+$eo_to_smt_tuple_decl	generated	
+$eo_to_smt_tuple_prepend	none	it calls $smtx_typeof, which has no proof
+$eo_to_smt_tuple_prepend_of_type	generated	
+$eo_to_smt_tuple_prepend_rec	generated	
+$eo_to_smt_tuple_select	generated	
+$eo_to_smt_tuple_update	none	it calls $eo_to_smt_updater, which has no proof
+$eo_to_smt_type	generated	
+$eo_to_smt_type_tuple	generated	
+$eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
+$eo_to_smt_updater	none	case 0 has the native operation zlt
+$eo_to_smt_updater_rec	none	case 1 has the native operation nateq
+$eo_typeof	none	it calls $eo_typeof_@from_bools, which has no proof
+$eo_typeof_+	generated	
+$eo_typeof_/	generated	
+$eo_typeof_<	generated	
+$eo_typeof_=	generated	
+$eo_typeof_@@Pair	generated	
+$eo_typeof_@@TypedList.cons	generated	
+$eo_typeof_@@TypedList.nil	generated	
+$eo_typeof_@@aci_sorted	generated	
+$eo_typeof_@@mon	generated	
+$eo_typeof_@@pair	generated	
+$eo_typeof_@@poly	generated	
+$eo_typeof_@array_deq_diff	generated	
+$eo_typeof_@bit	generated	
+$eo_typeof_@bvsize	generated	
+$eo_typeof_@const	generated	
+$eo_typeof_@div_by_zero	generated	
+$eo_typeof_@from_bools	none	case 0 has a builtin operator
+$eo_typeof_@purify	generated	
+$eo_typeof_@quantifiers_skolemize	none	it calls $get_nth_var_type, which has no proof
+$eo_typeof_@re_unfold_pos_component	generated	
+$eo_typeof_@sets_deq_diff	generated	
+$eo_typeof_@strings_deq_diff	generated	
+$eo_typeof_@strings_num_occur_re	generated	
+$eo_typeof_@strings_replace_all_result	generated	
+$eo_typeof_@strings_replace_re_all_result	generated	
+$eo_typeof_@strings_stoi_result	generated	
+$eo_typeof_@witness_string_length	generated	
+$eo_typeof_BitVec	generated	
+$eo_typeof_Seq	generated	
+$eo_typeof_abs	generated	
+$eo_typeof_apply	generated	
+$eo_typeof_bvand	generated	
+$eo_typeof_bvcomp	none	case 0 has a literal that is not a Boolean
+$eo_typeof_bvite	none	case 0 has a literal that is not a Boolean
+$eo_typeof_bvnego	generated	
+$eo_typeof_bvnot	generated	
+$eo_typeof_bvredand	none	case 0 has a literal that is not a Boolean
+$eo_typeof_bvult	generated	
+$eo_typeof_concat	none	case 0 has a builtin operator
+$eo_typeof_distinct	generated	
+$eo_typeof_div	generated	
+$eo_typeof_divisible	generated	
+$eo_typeof_dt_cons_rec	generated	
+$eo_typeof_dt_sel_return	generated	
+$eo_typeof_extract	none	case 0 has a builtin operator
+$eo_typeof_forall	generated	
+$eo_typeof_fun_type	generated	
+$eo_typeof_int.ispow2	generated	
+$eo_typeof_int.pow2	generated	
+$eo_typeof_int_to_bv	none	case 0 has a builtin operator
+$eo_typeof_is	generated	
+$eo_typeof_is_int	generated	
+$eo_typeof_ite	generated	
+$eo_typeof_not	generated	
+$eo_typeof_or	generated	
+$eo_typeof_re.*	generated	
+$eo_typeof_re.++	generated	
+$eo_typeof_re.^	none	case 0 has a builtin operator
+$eo_typeof_re.loop	none	case 0 has a builtin operator
+$eo_typeof_re.range	generated	
+$eo_typeof_repeat	none	case 0 has a builtin operator
+$eo_typeof_rotate_left	none	case 0 has a builtin operator
+$eo_typeof_select	generated	
+$eo_typeof_seq.empty	generated	
+$eo_typeof_seq.nth	generated	
+$eo_typeof_seq.unit	generated	
+$eo_typeof_set.choose	generated	
+$eo_typeof_set.empty	generated	
+$eo_typeof_set.insert	generated	
+$eo_typeof_set.is_empty	generated	
+$eo_typeof_set.member	generated	
+$eo_typeof_set.singleton	generated	
+$eo_typeof_set.subset	generated	
+$eo_typeof_set.union	generated	
+$eo_typeof_store	generated	
+$eo_typeof_str.++	generated	
+$eo_typeof_str.<	generated	
+$eo_typeof_str.at	generated	
+$eo_typeof_str.contains	generated	
+$eo_typeof_str.from_code	generated	
+$eo_typeof_str.in_re	generated	
+$eo_typeof_str.indexof	generated	
+$eo_typeof_str.indexof_re	generated	
+$eo_typeof_str.is_digit	generated	
+$eo_typeof_str.len	generated	
+$eo_typeof_str.replace	generated	
+$eo_typeof_str.replace_re	generated	
+$eo_typeof_str.rev	generated	
+$eo_typeof_str.substr	generated	
+$eo_typeof_str.to_code	generated	
+$eo_typeof_str.to_lower	generated	
+$eo_typeof_str.to_re	generated	
+$eo_typeof_str.update	generated	
+$eo_typeof_to_int	generated	
+$eo_typeof_to_real	generated	
+$eo_typeof_tuple	none	case 0 has a builtin operator
+$eo_typeof_tuple.select	none	case 0 has a builtin operator
+$eo_typeof_tuple.update	none	case 0 has a builtin operator
+$eo_typeof_update	generated	
+$eo_typeof_zero_extend	none	case 0 has a builtin operator
+$eval_sets_inter	none	case 0 has a builtin operator
+$eval_sets_minus	none	case 0 has a builtin operator
+$eval_sets_op	none	case 0 has a builtin operator
+$extract_antec	generated	
+$extract_antec_rec	generated	
+$from_clause	generated	
+$get_a_norm	none	case 0 has a builtin operator
+$get_a_norm_rec	none	case 0 has a builtin operator
+$get_aci_normal_form	none	it calls $get_a_norm, which has no proof
+$get_ai_norm	none	case 0 has a builtin operator
+$get_ai_norm_rec	none	case 0 has a builtin operator
+$get_arg_list_rec	generated	
+$get_arith_poly_norm	none	case 4 has a builtin operator
+$get_bv_poly_norm_rec	none	case 4 has a builtin operator
+$get_nth_var_type	none	case 0 has a builtin operator
+$get_unused_vars	none	case 0 has a builtin operator
+$get_var_type	generated	
+$get_zero	none	case 5 has a builtin operator
+$greatest_int_lt	none	case 0 has a builtin operator
+$iota_rec	none	case 1 has a literal that is not a Boolean
+$is_absorb	generated	
+$is_absorb_rec	generated	
+$is_arith_type	generated	
+$is_closed_rec	none	case 0 has a builtin operator
+$is_cons_app	none	case 1 has a builtin operator
+$is_eq_maybe_to_real	generated	
+$is_instantiation	none	case 1 has a builtin operator
+$is_poly_norm_rel_consts	none	case 0 has a builtin operator
+$is_poly_norm_rel_consts_rel	none	case 0 has a builtin operator
+$is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
+$is_quant_dt_split_conj	none	case 0 has a builtin operator
+$is_quant_miniscope_or	none	it calls $contains_atomic_term_list_free_rec, which has no proof
+$is_renaming_rec	generated	
+$is_seq_const	generated	
+$is_seq_const_rec	generated	
+$is_var_list	none	case 0 has a builtin operator
+$least_int_gt	none	case 0 has a builtin operator
+$lower_not_and	generated	
+$mk_arith_mult_abs_comparison	none	case 0 has a builtin operator
+$mk_arith_mult_abs_comparison_rec	none	case 0 has a builtin operator
+$mk_arith_mult_neg	none	case 0 has a builtin operator
+$mk_arith_mult_pos	none	case 0 has a builtin operator
+$mk_arith_mult_sign_sgn	none	case 0 has a builtin operator
+$mk_arith_sum_ub	none	case 0 has a builtin operator
+$mk_arith_sum_ub_rec	generated	
+$mk_arith_trichotomy	generated	
+$mk_cong_rhs	generated	
+$mk_distinct_elim	generated	
+$mk_distinct_elim_rec	generated	
+$mk_dt_collapse_updater_rhs	none	case 0 has a builtin operator
+$mk_dt_cons_eq	none	case 1 has a builtin operator
+$mk_dt_inst	none	case 0 has a literal that is not a Boolean
+$mk_dt_inst_rec	generated	
+$mk_dt_inst_tuple_rec	none	case 1 has a builtin operator
+$mk_dt_split	generated	
+$mk_dt_updater_elim_rhs	none	case 0 has a builtin operator
+$mk_ho_cong	generated	
+$mk_nary_cong_rhs	generated	
+$mk_quant_merge_prenex	none	case 0 has a builtin operator
+$mk_quant_miniscope_and	generated	
+$mk_quant_var_elim_eq	none	case 1 has a builtin operator
+$mk_re_concat	generated	
+$mk_re_unfold_neg	none	case 0 has a literal that is not a Boolean
+$mk_re_unfold_neg_concat_fixed	none	case 0 has a literal that is not a Boolean
+$mk_re_unfold_pos	none	case 0 has a literal that is not a Boolean
+$mk_re_unfold_pos_star	none	case 0 has a literal that is not a Boolean
+$mk_skolems	none	case 0 has a builtin operator
+$mk_str_eager_reduction	none	case 0 has a literal that is not a Boolean
+$mk_symm	generated	
+$mk_trans	generated	
+$mon_mul_mon	none	case 0 has a builtin operator
+$mvar_mul_mvar	none	case 0 has a builtin operator
+$pair_first	generated	
+$pair_second	generated	
+$poly_add	none	case 0 has a builtin operator
+$poly_mod_coeffs	none	case 1 has a builtin operator
+$poly_mul	none	it calls $poly_add, which has no proof
+$poly_mul_mon	none	it calls $mon_mul_mon, which has no proof
+$poly_neg	none	case 1 has a builtin operator
+$re_ac_merge	none	case 3 has a builtin operator
+$re_concat_merge	none	case 0 has a builtin operator
+$re_flatten	none	case 0 has a literal that is not a Boolean
+$re_is_unbound_wildcard	none	case 0 has a literal that is not a Boolean
+$re_nullable	none	case 3 has a builtin operator
+$re_rev_comp	none	case 2 has a literal that is not a Boolean
+$re_rev_map_rev	none	case 0 has a literal that is not a Boolean
+$re_split_str_to_re	generated	
+$re_unflatten	none	case 0 has a builtin operator
+$re_unflatten_str	none	case 0 has a builtin operator
+$re_unfold_pos_concat_rec	none	case 0 has a literal that is not a Boolean
+$run_evaluate	none	case 0 has a builtin operator
+$run_process_scope	generated	
+$seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
+$seq_element_of_unit	generated	
+$seq_empty	none	case 0 has a literal that is not a Boolean
+$seq_eval	none	case 0 has a builtin operator
+$seq_eval_replace_all_rec	none	case 1 has a literal that is not a Boolean
+$seq_find	none	case 1 has a literal that is not a Boolean
+$seq_is_non_empty	generated	
+$seq_is_prefix	none	case 2 has a builtin operator
+$seq_subsequence_rec	none	case 1 has a literal that is not a Boolean
+$set_is_not_subset	none	it calls $are_distinct_terms_type, which has no proof
+$set_union_to_list	none	case 2 has a builtin operator
+$smtx_dd_has_dt	generated	
+$smtx_dd_lookup	generated	
+$smtx_decl_inhabited	generated	
+$smtx_decl_wf_rec	generated	
+$smtx_dt_cons_inhabited	generated	
+$smtx_dt_cons_wf_rec	generated	
+$smtx_dt_inhabited	generated	
+$smtx_dt_num_sels	generated	
+$smtx_dt_resolve	generated	
+$smtx_dt_wf_rec	generated	
+$smtx_dtc_num_sels	generated	
+$smtx_dtc_resolve	generated	
+$smtx_inhabited_type	generated	
+$smtx_ret_typeof_sel	generated	
+$smtx_ret_typeof_sel_rec	generated	
+$smtx_type_wf	generated	
+$smtx_type_wf_component	generated	
+$smtx_type_wf_rec	generated	
+$smtx_typeof	none	it calls $smtx_typeof_bv_op_2, which has no proof
+$smtx_typeof_=	generated	
+$smtx_typeof_apply	generated	
+$smtx_typeof_arith_overload_op_1	generated	
+$smtx_typeof_arith_overload_op_2	generated	
+$smtx_typeof_arith_overload_op_2_ret	generated	
+$smtx_typeof_bv_op_1	generated	
+$smtx_typeof_bv_op_1_ret	generated	
+$smtx_typeof_bv_op_2	none	case 0 has the native operation nateq
+$smtx_typeof_bv_op_2_ret	none	case 0 has the native operation nateq
+$smtx_typeof_concat	none	case 0 has the native operation zplus
+$smtx_typeof_dt_cons_rec	generated	
+$smtx_typeof_extract	none	case 0 has the native operation zlt
+$smtx_typeof_guard	generated	
+$smtx_typeof_guard_wf	generated	
+$smtx_typeof_int_to_bv	generated	
+$smtx_typeof_ite	generated	
+$smtx_typeof_map_diff	generated	
+$smtx_typeof_re.^	generated	
+$smtx_typeof_re.loop	generated	
+$smtx_typeof_repeat	none	case 0 has the native operation zmult
+$smtx_typeof_rotate_left	generated	
+$smtx_typeof_rotate_right	generated	
+$smtx_typeof_select	generated	
+$smtx_typeof_seq.nth	generated	
+$smtx_typeof_seq_diff	generated	
+$smtx_typeof_seq_op_1	generated	
+$smtx_typeof_seq_op_1_ret	generated	
+$smtx_typeof_seq_op_2	generated	
+$smtx_typeof_seq_op_2_ret	generated	
+$smtx_typeof_seq_op_3	generated	
+$smtx_typeof_set.member	generated	
+$smtx_typeof_sets_op_2	generated	
+$smtx_typeof_sets_op_2_ret	generated	
+$smtx_typeof_sign_extend	none	case 0 has the native operation zplus
+$smtx_typeof_store	generated	
+$smtx_typeof_str.at	generated	
+$smtx_typeof_str.indexof	generated	
+$smtx_typeof_str.substr	generated	
+$smtx_typeof_str.update	generated	
+$smtx_typeof_zero_extend	none	case 0 has the native operation zplus
+$str_arith_entail_is_approx	none	case 2 has a literal that is not a Boolean
+$str_arith_entail_is_approx_len	none	case 0 has a literal that is not a Boolean
+$str_arith_entail_simple_pred	none	case 1 has a literal that is not a Boolean
+$str_arith_entail_simple_rec	none	case 2 has a builtin operator
+$str_case_conv_rec	none	case 0 has a builtin operator
+$str_collect	none	case 0 has a builtin operator
+$str_collect_merge	none	case 0 has a builtin operator
+$str_eval_replace_all_rec	none	case 0 has a literal that is not a Boolean
+$str_eval_replace_re	none	case 0 has a literal that is not a Boolean
+$str_eval_replace_re_all_rec	none	case 0 has a literal that is not a Boolean
+$str_eval_str_in_re_rec	none	case 0 has a literal that is not a Boolean
+$str_first_match_rec	none	case 0 has a builtin operator
+$str_first_match_rec_smallest	none	case 0 has a builtin operator
+$str_fixed_len_re	none	case 0 has a builtin operator
+$str_flatten	none	case 0 has a builtin operator
+$str_flatten_word_rec	none	case 0 has a literal that is not a Boolean
+$str_from_int_eval_rec	none	case 0 has a literal that is not a Boolean
+$str_is_compatible	none	case 1 has a builtin operator
+$str_is_empty	none	case 1 has a literal that is not a Boolean
+$str_is_multiset_subset_strict	none	case 0 has a builtin operator
+$str_is_multiset_subset_strict_done	none	case 0 has a builtin operator
+$str_is_prefix_flat	none	case 0 has a literal that is not a Boolean
+$str_leq_eval_rec	none	case 0 has a builtin operator
+$str_membership_re	generated	
+$str_membership_str	generated	
+$str_mk_ext_deq	none	case 0 has a literal that is not a Boolean
+$str_mk_re_loop_elim_rec	none	case 0 has a builtin operator
+$str_mk_str_in_re_concat_star_char	none	case 1 has a literal that is not a Boolean
+$str_mk_str_in_re_sigma_rec	none	case 0 has a literal that is not a Boolean
+$str_mk_str_in_re_sigma_star_rec	none	case 0 has a literal that is not a Boolean
+$str_multiset_overapprox	none	case 0 has a builtin operator
+$str_multiset_overapprox_word	none	case 1 has a builtin operator
+$str_overlap_rec	none	case 0 has a literal that is not a Boolean
+$str_re_consume	none	case 0 has a builtin operator
+$str_re_consume_inter	none	case 1 has a builtin operator
+$str_re_consume_rec	none	case 0 has a literal that is not a Boolean
+$str_re_consume_union	none	case 1 has a builtin operator
+$str_re_includes_base_rec	none	case 0 has a builtin operator
+$str_re_includes_lhs_star	none	case 0 has a literal that is not a Boolean
+$str_re_includes_lhs_union	none	it calls $str_re_includes_rec, which has no proof
+$str_re_includes_rec	none	case 0 has a literal that is not a Boolean
+$str_re_includes_rhs_inter	none	it calls $str_re_includes_rec, which has no proof
+$str_reduction_pred	none	case 0 has a variable term
+$str_strip_prefix	generated	
+$str_to_int_eval_rec	none	case 0 has a builtin operator
+$str_unify_split	none	case 0 has a literal that is not a Boolean
+$str_value_len	none	case 0 has a literal that is not a Boolean
+$strip_even_exponent	generated	
+$substitute_simul_rec	none	case 0 has a builtin operator
+$to_clause	generated	
+$to_cube	generated	
+$tuple_arg_list	generated	
+$tuple_collapse_updater_rhs	none	case 0 has a literal that is not a Boolean
+$tuple_get_selectors_rec	none	case 1 has a builtin operator
+$tuple_updater_elim_rhs	generated	
+$typed_list_element_type	generated	
