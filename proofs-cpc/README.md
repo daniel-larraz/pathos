@@ -9,9 +9,10 @@ here.
 | --- | --- | --- |
 | `CpcChecker/`, `CpcChecker.lean` | The Lean of `generated/cpc-checker`: the runtime and its 13 parts | Charon and Aeneas (`scripts/aeneas-translate`, then `scripts/aeneas-stitch`); `scripts/proofs-build --cpc --translate TOOLS` checks it |
 | `CpcCases.lean` | The cases of CPC's programs, one function each | lean-meta, in the run `scripts/generate-cpc` makes |
-| `CpcEmbed.lean`, `CpcCtors.lean`, `CpcCacheSem.lean`, `CpcProofs.lean` | The embedding of the checker's values, the constructor lemmas, what the cache holds, the proofs about the generated functions | `scripts/proofgen`, in the same run |
+| `CpcEmbed.lean`, `CpcCtors.lean` and `CpcCtors/`, `CpcCacheSem.lean`, `CpcProofs.lean` and `CpcProofs/` | The embedding of the checker's values, the constructor lemmas, what the cache holds, the proofs about the generated functions (the lemmas and the proofs in parts, for Lean's memory) | `scripts/proofgen`, in the same run |
+| `unproved.toml` | The programs whose generated proof does not build, each with why: proofgen writes none of them (`generated/cpc-checker/proofs.tsv` says why) | by hand, from the build's errors |
 | `PathosProofs/`, `PathosProofs.lean`, `audit/` (not in the repository) | `proofs/PathosProofs`, the hand-written library, with its imports named for CPC (`MiniChecker` → `CpcChecker`, `CpcMini.*` → `Cpc.*`, `Mini*` → `Cpc*`) | `scripts/proofs-instance`, which `scripts/proofs-build --cpc` runs |
-| `excluded.txt` | What the instance leaves out: CpcMini's top-level theorem, and what does not build on CPC yet | by hand |
+| `excluded.txt` | What the instance leaves out: CpcMini's top-level theorem | by hand |
 
 The pins are `proofs/`'s (`proofs/pins.env`); the packages are `proofs/`'s
 too, through a link (`.lake/packages`), so Mathlib, Aeneas's library and

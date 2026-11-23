@@ -271,8 +271,11 @@ trace="$work/build-eoc/out/plugins/rust_meta/rust_meta_trace_gen.json"
 [[ -f "$trace" ]] || fail "the driver wrote no $trace"
 cp "$trace" "$work/trace.json"
 rm -rf "$work/proofgen"
+unproved=()
+[[ -f "$lean_dest/unproved.toml" ]] && unproved=(--unproved "$lean_dest/unproved.toml")
 python3 "$root/scripts/proofgen" --trace "$work/trace.json" \
-  --embedding "$work/embedding.json" --calc-lean "$lean_out/lean" --out "$work/proofgen" ||
+  --embedding "$work/embedding.json" --calc-lean "$lean_out/lean" "${unproved[@]}" \
+  --out "$work/proofgen" ||
   fail "scripts/proofgen failed"
 
 # The crate as the repository holds it: the driver's files and the note.
@@ -287,6 +290,7 @@ mkdir -p "$staged"
 for f in proofs.lean proofs.tsv cache_sem.lean; do
   cp "$work/proofgen/$f" "$staged/$f"
 done
+[[ -d "$work/proofgen/proofs" ]] && cp -r "$work/proofgen/proofs" "$staged/proofs"
 # The signature the crate was compiled from: the front end of crates/pathos
 # reads proofs against it.
 if $mini; then
@@ -357,7 +361,7 @@ rm -rf "$lean_staged"
 mkdir -p "$lean_staged"
 fill() {
   sed -e "s/\\\$CHECKER\\\$/${prefix}Checker/g; s/\\\$EO_CALC\\\$/$calc/g; s/\\\$CALC\\\$/$calc/g" \
-    -e "s/\\\$CASES\\\$/${prefix}Cases/g; s/\\\$EMBED\\\$/${prefix}Embed/g; s/\\\$CTORS\\\$/${prefix}Ctors/g" "$1" > "$2"
+    -e "s/\\\$CASES\\\$/${prefix}Cases/g; s/\\\$EMBED\\\$/${prefix}Embed/g; s/\\\$CTORS\\\$/${prefix}Ctors/g; s/\\\$PROOFS\\\$/${prefix}Proofs/g" "$1" > "$2"
 }
 fill "$work/case_defs.lean" "$lean_staged/${prefix}Cases.lean"
 fill "$work/proofgen/embed.lean" "$lean_staged/${prefix}Embed.lean"
@@ -374,6 +378,14 @@ if [[ -d "$work/proofgen/ctors" ]]; then
     lean_files+=("${prefix}Ctors/$(basename "$f")")
   done
 fi
+# So do the proofs of a calculus with many programs.
+if [[ -d "$work/proofgen/proofs" ]]; then
+  mkdir -p "$lean_staged/${prefix}Proofs"
+  for f in "$work/proofgen/proofs"/*.lean; do
+    fill "$f" "$lean_staged/${prefix}Proofs/$(basename "$f")"
+    lean_files+=("${prefix}Proofs/$(basename "$f")")
+  done
+fi
 lean_rel="${lean_dest#"$root"/}"
 
 dest="$root/generated/$name"
@@ -385,9 +397,11 @@ if $check; then
     diff "$lean_staged/$f" "$lean_dest/$f" >> "$work/check.diff" 2>&1 || same=false
   done
   # no part the generator no longer writes
-  if [[ -d "$lean_dest/${prefix}Ctors" ]]; then
-    diff -r "$lean_staged/${prefix}Ctors" "$lean_dest/${prefix}Ctors" >> "$work/check.diff" 2>&1 || same=false
-  fi
+  for d in Ctors Proofs; do
+    if [[ -d "$lean_dest/${prefix}$d" ]]; then
+      diff -r "$lean_staged/${prefix}$d" "$lean_dest/${prefix}$d" >> "$work/check.diff" 2>&1 || same=false
+    fi
+  done
   if $same; then
     echo "$me: generated/$name and its ${#lean_files[@]} Lean files in $lean_rel/ are what these revisions generate"
     exit 0
@@ -400,8 +414,10 @@ rm -rf "$dest"
 mkdir -p "$(dirname "$dest")"
 cp -r "$staged" "$dest"
 mkdir -p "$lean_dest"
-rm -rf "$lean_dest/${prefix}Ctors"
-[[ -d "$lean_staged/${prefix}Ctors" ]] && mkdir -p "$lean_dest/${prefix}Ctors"
+for d in Ctors Proofs; do
+  rm -rf "$lean_dest/${prefix}$d"
+  [[ -d "$lean_staged/${prefix}$d" ]] && mkdir -p "$lean_dest/${prefix}$d"
+done
 for f in "${lean_files[@]}"; do
   cp "$lean_staged/$f" "$lean_dest/$f"
 done

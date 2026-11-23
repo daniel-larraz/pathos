@@ -878,6 +878,342 @@ theorem inv_DatatypeDecl_cons {x : Eo.DatatypeDecl} {ts : List Tree}
   · unfold dec_DatatypeDecl at hd
     cases hd
 
+theorem inv_Term_UOp1_repeat {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_repeat ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.repeat x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_zero_extend {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_zero_5fextend ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.zero_extend x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_sign_extend {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_sign_5fextend ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.sign_extend x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_rotate_left {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_rotate_5fleft ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.rotate_left x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_rotate_right {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_rotate_5fright ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.rotate_right x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1__at_bit {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__40bit ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1._at_bit x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_seq_empty {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_seq_2eempty ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.seq_empty x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_re_exp {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_re_2e_5e ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.re_exp x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_is {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_is ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.is x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_update {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_update ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.update x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_tuple_select {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_tuple_2eselect ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.tuple_select x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_tuple_update {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_tuple_2eupdate ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.tuple_update x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_set_empty {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_set_2eempty ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.set_empty x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp1_int_to_bv {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_int_5fto_5fbv ts) (he : emb_Term x) :
+    ∃ x0, x = Eo.Term.UOp1 Eo.UserOp1.int_to_bv x0 ∧ ts = [(enc_Term x0)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨_, _⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, rfl⟩ := hd
+    simp only [enc_Term, uop1, Tree.node.injEq, true_and] at h
+    exact ⟨_, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp2_extract {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_extract ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.UOp2 Eo.UserOp2.extract x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, uop2, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp2_re_loop {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo_re_2eloop ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.UOp2 Eo.UserOp2.re_loop x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, uop2, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp2__at_quantifiers_skolemize {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__40quantifiers_5fskolemize ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.UOp2 Eo.UserOp2._at_quantifiers_skolemize x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, uop2, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp2__at_const {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__40const ts) (he : emb_Term x) :
+    ∃ x0 x1, x = Eo.Term.UOp2 Eo.UserOp2._at_const x0 x1 ∧ ts = [(enc_Term x0), (enc_Term x1)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨_, _⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, rfl⟩ := hd
+    simp only [enc_Term, uop2, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp3__at_re_unfold_pos_component {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent ts) (he : emb_Term x) :
+    ∃ x0 x1 x2, x = Eo.Term.UOp3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2 ∧ ts = [(enc_Term x0), (enc_Term x1), (enc_Term x2)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_Term, uop3, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
+theorem inv_Term_UOp3__at_witness_string_length {x : Eo.Term} {ts : List Tree}
+    (h : enc_Term x = Tree.node schema.Constructor.eo__40witness_5fstring_5flength ts) (he : emb_Term x) :
+    ∃ x0 x1 x2, x = Eo.Term.UOp3 Eo.UserOp3._at_witness_string_length x0 x1 x2 ∧ ts = [(enc_Term x0), (enc_Term x1), (enc_Term x2)] := by
+  have hd := dec_enc_Term x he
+  rw [h] at hd
+  rcases ts with _ | ⟨t0, _ | ⟨t1, _ | ⟨t2, _ | ⟨_, _⟩⟩⟩⟩
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    cases hd
+  · unfold dec_Term at hd
+    simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, Option.some.injEq] at hd
+    obtain ⟨x0, -, x1, -, x2, -, rfl⟩ := hd
+    simp only [enc_Term, uop3, Tree.node.injEq, true_and] at h
+    exact ⟨_, _, _, rfl, h.symm⟩
+  · unfold dec_Term at hd
+    cases hd
+
 theorem inv_Term___eo_List {x : Eo.Term} {ts : List Tree}
     (h : enc_Term x = Tree.node schema.Constructor.eo__24eo_5fList ts) (he : emb_Term x) :
     x = Eo.Term.__eo_List ∧ ts = [] := by

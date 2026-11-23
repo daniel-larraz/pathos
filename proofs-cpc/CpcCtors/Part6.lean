@@ -1670,6 +1670,822 @@ theorem CtorSpec.eo__40_40aci_5fsorted.construct (s : Store) (args : Slice Term)
     · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop] using hr
     · simp [Embed.embedded_emb_Term, Embed.emb_Term]
 
+/-- The user operator `repeat`. -/
+theorem CtorSpec.eo_repeat.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_repeat args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.repeat x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_repeat args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_repeat.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.repeat x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_repeat t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.repeat x0) ∧
+      Store.destruct s schema.Constructor.eo_repeat t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_repeat (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_repeat hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `zero_extend`. -/
+theorem CtorSpec.eo_zero_5fextend.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_zero_5fextend args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.zero_extend x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_zero_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_zero_5fextend.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.zero_extend x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_zero_5fextend t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.zero_extend x0) ∧
+      Store.destruct s schema.Constructor.eo_zero_5fextend t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_zero_5fextend (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_zero_extend hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `sign_extend`. -/
+theorem CtorSpec.eo_sign_5fextend.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_sign_5fextend args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.sign_extend x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_sign_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_sign_5fextend.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.sign_extend x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_sign_5fextend t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.sign_extend x0) ∧
+      Store.destruct s schema.Constructor.eo_sign_5fextend t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_sign_5fextend (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_sign_extend hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `rotate_left`. -/
+theorem CtorSpec.eo_rotate_5fleft.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_rotate_5fleft args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.rotate_left x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_rotate_5fleft args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_rotate_5fleft.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.rotate_left x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_rotate_5fleft t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.rotate_left x0) ∧
+      Store.destruct s schema.Constructor.eo_rotate_5fleft t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_rotate_5fleft (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_rotate_left hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `rotate_right`. -/
+theorem CtorSpec.eo_rotate_5fright.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_rotate_5fright args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.rotate_right x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_rotate_5fright args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_rotate_5fright.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.rotate_right x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_rotate_5fright t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.rotate_right x0) ∧
+      Store.destruct s schema.Constructor.eo_rotate_5fright t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_rotate_5fright (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_rotate_right hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `@bit`. -/
+theorem CtorSpec.eo__40bit.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo__40bit args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1._at_bit x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40bit args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo__40bit.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1._at_bit x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo__40bit t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1._at_bit x0) ∧
+      Store.destruct s schema.Constructor.eo__40bit t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo__40bit (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1__at_bit hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `seq.empty`. -/
+theorem CtorSpec.eo_seq_2eempty.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_seq_2eempty args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.seq_empty x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_seq_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_seq_2eempty.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.seq_empty x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_seq_2eempty t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.seq_empty x0) ∧
+      Store.destruct s schema.Constructor.eo_seq_2eempty t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_seq_2eempty (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_seq_empty hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `re.^`. -/
+theorem CtorSpec.eo_re_2e_5e.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_re_2e_5e args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.re_exp x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2e_5e args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_re_2e_5e.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.re_exp x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_re_2e_5e t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.re_exp x0) ∧
+      Store.destruct s schema.Constructor.eo_re_2e_5e t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_re_2e_5e (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_re_exp hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `is`. -/
+theorem CtorSpec.eo_is.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_is args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.is x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_is args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_is.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.is x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_is t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.is x0) ∧
+      Store.destruct s schema.Constructor.eo_is t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_is (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_is hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `update`. -/
+theorem CtorSpec.eo_update.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_update args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.update x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_update args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_update.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.update x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_update t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.update x0) ∧
+      Store.destruct s schema.Constructor.eo_update t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_update (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_update hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `tuple.select`. -/
+theorem CtorSpec.eo_tuple_2eselect.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_tuple_2eselect args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.tuple_select x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple_2eselect args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_tuple_2eselect.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.tuple_select x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_tuple_2eselect t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.tuple_select x0) ∧
+      Store.destruct s schema.Constructor.eo_tuple_2eselect t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_tuple_2eselect (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_tuple_select hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `tuple.update`. -/
+theorem CtorSpec.eo_tuple_2eupdate.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_tuple_2eupdate args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.tuple_update x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple_2eupdate args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_tuple_2eupdate.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.tuple_update x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_tuple_2eupdate t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.tuple_update x0) ∧
+      Store.destruct s schema.Constructor.eo_tuple_2eupdate t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_tuple_2eupdate (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_tuple_update hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `set.empty`. -/
+theorem CtorSpec.eo_set_2eempty.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_set_2eempty args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.set_empty x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_set_2eempty.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.set_empty x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_set_2eempty t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.set_empty x0) ∧
+      Store.destruct s schema.Constructor.eo_set_2eempty t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_set_2eempty (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_set_empty hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `int_to_bv`. -/
+theorem CtorSpec.eo_int_5fto_5fbv.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term}
+    (hargs : args.val = [a0]) (h0 : Represents.rep s a0 x0) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_int_5fto_5fbv args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.int_to_bv x0)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_int_5fto_5fbv args [Embedded.enc x0] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact h0.2
+
+theorem CtorSpec.eo_int_5fto_5fbv.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term), x = Eo.Term.UOp1 Eo.UserOp1.int_to_bv x0 ∧ v.val = [f0] ∧ Represents.rep s f0 x0 ∧
+      Store.destruct s schema.Constructor.eo_int_5fto_5fbv t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term), x ≠ Eo.Term.UOp1 Eo.UserOp1.int_to_bv x0) ∧
+      Store.destruct s schema.Constructor.eo_int_5fto_5fbv t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_int_5fto_5fbv (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, rfl, rfl⟩ := Embed.inv_Term_UOp1_int_to_bv hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0
+      exact Or.inl ⟨f0, v, x0, rfl, hvl, ⟨h0, he⟩, hd⟩
+  · exact Or.inr ⟨fun x0 he => hne [Embedded.enc x0]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]), hd⟩
+
+/-- The user operator `extract`. -/
+theorem CtorSpec.eo_extract.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term} {a1 : Term} {x1 : Eo.Term}
+    (hargs : args.val = [a0, a1]) (h0 : Represents.rep s a0 x0) (h1 : Represents.rep s a1 x1) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_extract args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2.extract x0 x1)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_extract args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo_extract.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (f1 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term) (x1 : Eo.Term), x = Eo.Term.UOp2 Eo.UserOp2.extract x0 x1 ∧ v.val = [f0, f1] ∧ Represents.rep s f0 x0 ∧ Represents.rep s f1 x1 ∧
+      Store.destruct s schema.Constructor.eo_extract t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term) (x1 : Eo.Term), x ≠ Eo.Term.UOp2 Eo.UserOp2.extract x0 x1) ∧
+      Store.destruct s schema.Constructor.eo_extract t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_extract (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_UOp2_extract hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0 with
+      | cons f1 _ _ _ h1 hn1 =>
+        cases hn1
+        exact Or.inl ⟨f0, f1, v, x0, x1, rfl, hvl, ⟨h0, he.1⟩, ⟨h1, he.2⟩, hd⟩
+  · exact Or.inr ⟨fun x0 x1 he => hne [Embedded.enc x0, Embedded.enc x1]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]), hd⟩
+
+/-- The user operator `re.loop`. -/
+theorem CtorSpec.eo_re_2eloop.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term} {a1 : Term} {x1 : Eo.Term}
+    (hargs : args.val = [a0, a1]) (h0 : Represents.rep s a0 x0) (h1 : Represents.rep s a1 x1) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo_re_2eloop args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2.re_loop x0 x1)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2eloop args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo_re_2eloop.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (f1 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term) (x1 : Eo.Term), x = Eo.Term.UOp2 Eo.UserOp2.re_loop x0 x1 ∧ v.val = [f0, f1] ∧ Represents.rep s f0 x0 ∧ Represents.rep s f1 x1 ∧
+      Store.destruct s schema.Constructor.eo_re_2eloop t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term) (x1 : Eo.Term), x ≠ Eo.Term.UOp2 Eo.UserOp2.re_loop x0 x1) ∧
+      Store.destruct s schema.Constructor.eo_re_2eloop t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo_re_2eloop (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_UOp2_re_loop hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0 with
+      | cons f1 _ _ _ h1 hn1 =>
+        cases hn1
+        exact Or.inl ⟨f0, f1, v, x0, x1, rfl, hvl, ⟨h0, he.1⟩, ⟨h1, he.2⟩, hd⟩
+  · exact Or.inr ⟨fun x0 x1 he => hne [Embedded.enc x0, Embedded.enc x1]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]), hd⟩
+
+/-- The user operator `@quantifiers_skolemize`. -/
+theorem CtorSpec.eo__40quantifiers_5fskolemize.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term} {a1 : Term} {x1 : Eo.Term}
+    (hargs : args.val = [a0, a1]) (h0 : Represents.rep s a0 x0) (h1 : Represents.rep s a1 x1) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo__40quantifiers_5fskolemize args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2._at_quantifiers_skolemize x0 x1)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40quantifiers_5fskolemize args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo__40quantifiers_5fskolemize.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (f1 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term) (x1 : Eo.Term), x = Eo.Term.UOp2 Eo.UserOp2._at_quantifiers_skolemize x0 x1 ∧ v.val = [f0, f1] ∧ Represents.rep s f0 x0 ∧ Represents.rep s f1 x1 ∧
+      Store.destruct s schema.Constructor.eo__40quantifiers_5fskolemize t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term) (x1 : Eo.Term), x ≠ Eo.Term.UOp2 Eo.UserOp2._at_quantifiers_skolemize x0 x1) ∧
+      Store.destruct s schema.Constructor.eo__40quantifiers_5fskolemize t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo__40quantifiers_5fskolemize (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_UOp2__at_quantifiers_skolemize hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0 with
+      | cons f1 _ _ _ h1 hn1 =>
+        cases hn1
+        exact Or.inl ⟨f0, f1, v, x0, x1, rfl, hvl, ⟨h0, he.1⟩, ⟨h1, he.2⟩, hd⟩
+  · exact Or.inr ⟨fun x0 x1 he => hne [Embedded.enc x0, Embedded.enc x1]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]), hd⟩
+
+/-- The user operator `@const`. -/
+theorem CtorSpec.eo__40const.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term} {a1 : Term} {x1 : Eo.Term}
+    (hargs : args.val = [a0, a1]) (h0 : Represents.rep s a0 x0) (h1 : Represents.rep s a1 x1) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo__40const args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2._at_const x0 x1)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40const args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo__40const.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (f1 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term) (x1 : Eo.Term), x = Eo.Term.UOp2 Eo.UserOp2._at_const x0 x1 ∧ v.val = [f0, f1] ∧ Represents.rep s f0 x0 ∧ Represents.rep s f1 x1 ∧
+      Store.destruct s schema.Constructor.eo__40const t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term) (x1 : Eo.Term), x ≠ Eo.Term.UOp2 Eo.UserOp2._at_const x0 x1) ∧
+      Store.destruct s schema.Constructor.eo__40const t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo__40const (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, x1, rfl, rfl⟩ := Embed.inv_Term_UOp2__at_const hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0 with
+      | cons f1 _ _ _ h1 hn1 =>
+        cases hn1
+        exact Or.inl ⟨f0, f1, v, x0, x1, rfl, hvl, ⟨h0, he.1⟩, ⟨h1, he.2⟩, hd⟩
+  · exact Or.inr ⟨fun x0 x1 he => hne [Embedded.enc x0, Embedded.enc x1]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]), hd⟩
+
+/-- The user operator `@re_unfold_pos_component`. -/
+theorem CtorSpec.eo__40re_5funfold_5fpos_5fcomponent.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term} {a1 : Term} {x1 : Eo.Term} {a2 : Term} {x2 : Eo.Term}
+    (hargs : args.val = [a0, a1, a2]) (h0 : Represents.rep s a0 x0) (h1 : Represents.rep s a1 x1) (h2 : Represents.rep s a2 x2) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact ⟨h0.2, h1.2, h2.2⟩
+
+theorem CtorSpec.eo__40re_5funfold_5fpos_5fcomponent.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (f1 : Term) (f2 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term) (x1 : Eo.Term) (x2 : Eo.Term), x = Eo.Term.UOp3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2 ∧ v.val = [f0, f1, f2] ∧ Represents.rep s f0 x0 ∧ Represents.rep s f1 x1 ∧ Represents.rep s f2 x2 ∧
+      Store.destruct s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term) (x1 : Eo.Term) (x2 : Eo.Term), x ≠ Eo.Term.UOp3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2) ∧
+      Store.destruct s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_Term_UOp3__at_re_unfold_pos_component hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0 with
+      | cons f1 _ _ _ h1 hn1 =>
+        cases hn1 with
+        | cons f2 _ _ _ h2 hn2 =>
+          cases hn2
+          exact Or.inl ⟨f0, f1, f2, v, x0, x1, x2, rfl, hvl, ⟨h0, he.1⟩, ⟨h1, he.2.1⟩, ⟨h2, he.2.2⟩, hd⟩
+  · exact Or.inr ⟨fun x0 x1 x2 he => hne [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3]), hd⟩
+
+/-- The user operator `@witness_string_length`. -/
+theorem CtorSpec.eo__40witness_5fstring_5flength.construct (s : Store) (args : Slice Term) {a0 : Term} {x0 : Eo.Term} {a1 : Term} {x1 : Eo.Term} {a2 : Term} {x2 : Eo.Term}
+    (hargs : args.val = [a0, a1, a2]) (h0 : Represents.rep s a0 x0) (h1 : Represents.rep s a1 x1) (h2 : Represents.rep s a2 x2) (hinv : s.Inv) (h64 : Platform64) :
+    Store.construct s schema.Constructor.eo__40witness_5fstring_5flength args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp3 Eo.UserOp3._at_witness_string_length x0 x1 x2)
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40witness_5fstring_5flength args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+  simp only [WP.uncurry'_pair] at hr ⊢
+  refine ⟨hinv', hg, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    refine ⟨?_, ?_⟩
+    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3] using hr
+    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+      exact ⟨h0.2, h1.2, h2.2⟩
+
+theorem CtorSpec.eo__40witness_5fstring_5flength.destruct {s : Store} {t : Term} {x : Eo.Term}
+    (h : Represents.rep s t x) :
+    (∃ (f0 : Term) (f1 : Term) (f2 : Term) (v : alloc.vec.Vec Term) (x0 : Eo.Term) (x1 : Eo.Term) (x2 : Eo.Term), x = Eo.Term.UOp3 Eo.UserOp3._at_witness_string_length x0 x1 x2 ∧ v.val = [f0, f1, f2] ∧ Represents.rep s f0 x0 ∧ Represents.rep s f1 x1 ∧ Represents.rep s f2 x2 ∧
+      Store.destruct s schema.Constructor.eo__40witness_5fstring_5flength t = ok (core.result.Result.Ok (some v), s)) ∨
+    ((∀ (x0 : Eo.Term) (x1 : Eo.Term) (x2 : Eo.Term), x ≠ Eo.Term.UOp3 Eo.UserOp3._at_witness_string_length x0 x1 x2) ∧
+      Store.destruct s schema.Constructor.eo__40witness_5fstring_5flength t = ok (core.result.Result.Ok none, s)) := by
+  rcases Store.destruct_holds schema.Constructor.eo__40witness_5fstring_5flength (.inl rfl) h.1 with
+    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩
+  · obtain ⟨x0, x1, x2, rfl, rfl⟩ := Embed.inv_Term_UOp3__at_witness_string_length hx h.2
+    have he := h.2
+    simp only [Embed.embedded_emb_Term, Embed.emb_Term] at he
+    generalize hvl : v.val = l at hl
+    cases hl with
+    | cons f0 _ _ _ h0 hn0 =>
+      cases hn0 with
+      | cons f1 _ _ _ h1 hn1 =>
+        cases hn1 with
+        | cons f2 _ _ _ h2 hn2 =>
+          cases hn2
+          exact Or.inl ⟨f0, f1, f2, v, x0, x1, x2, rfl, hvl, ⟨h0, he.1⟩, ⟨h1, he.2.1⟩, ⟨h2, he.2.2⟩, hd⟩
+  · exact Or.inr ⟨fun x0 x1 x2 he => hne [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2]
+      (by subst he; simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3]), hd⟩
+
 /-- `$eo_List`. -/
 theorem CtorSpec.eo__24eo_5fList.construct (s : Store) (args : Slice Term)
     (hargs : args.val = []) (hinv : s.Inv) (h64 : Platform64) :

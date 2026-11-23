@@ -5,7 +5,3 @@
 # (stage 5, milestone 9 for CPC).
 PathosProofs.Basic
 PathosProofs.Top
-
-# The generated proofs, which do not build yet (milestone 4). The root does
-# not import them.
-CpcProofs

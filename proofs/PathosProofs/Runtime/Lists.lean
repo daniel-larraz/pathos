@@ -8,7 +8,7 @@ public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Ops
 public import PathosProofs.Runtime.Embed
 public import PathosProofs.Runtime.Natives
-public import PathosProofs.Runtime.ListNilSimp
+public import PathosProofs.Runtime.CalcSimp
 
 /-!
 # Lists of an operator: the runtime's walk, against logos
@@ -356,7 +356,7 @@ theorem get_nil_rec_eoList {xf : Eo.Term} (hnf : xf ≠ Eo.Term.Stuck) (xr : Eo.
 
 /-- A nil of an operator is no application of two arguments (CpcMini's
 nils are `true` and the empty `List`; another calculus's are decided by the
-helpers of `Runtime/ListNilSimp.lean`). -/
+helpers of `Runtime/CalcSimp.lean`). -/
 theorem is_list_nil_not_apply {xf xr : Eo.Term}
     (h : Eo.__eo_is_list_nil xf xr = Eo.Term.Boolean true) :
     ∀ g a b, xr ≠ Eo.Term.Apply (Eo.Term.Apply g a) b := by

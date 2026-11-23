@@ -1,7 +1,8 @@
 import PathosProofs
 /-!
 Prints, for the theorems of the modules `PathosProofs.*` and of the
-generated `MiniProofs`, `MiniCacheSem`, `MiniEmbed` and `MiniCtors`, the axioms they rest on: one line `axiom <name> assumption|declaration` for
+generated `MiniProofs`, `MiniCacheSem`, `MiniEmbed` and `MiniCtors` (with their
+parts, if any), the axioms they rest on: one line `axiom <name> assumption|declaration` for
 each (an assumption is an axiom whose type is a proposition), a line
 `theorems <count>`, and a line `prop <name>` for each axiom of the Lean of
 the checker or of Aeneas's library that is a proposition.
@@ -20,9 +21,11 @@ run_cmd do
     | none => pure ()
     | some idx =>
       let m := names[idx.toNat]!
-      if ((`PathosProofs).isPrefixOf m && m != `PathosProofs.Trusted) || m == `MiniProofs ||
-          m == `MiniCacheSem || m == `MiniEmbed ||
-          m == `MiniCtors then
+      -- (a prefix: a large calculus has its generated modules in parts,
+      -- `MiniProofs.Part<k>`, `MiniCtors.Part<k>`)
+      if ((`PathosProofs).isPrefixOf m && m != `PathosProofs.Trusted) ||
+          (`MiniProofs).isPrefixOf m || m == `MiniCacheSem || m == `MiniEmbed ||
+          (`MiniCtors).isPrefixOf m then
         if ci matches .thmInfo _ then
           count := count + 1
           let used ← liftCoreM (collectAxioms n)

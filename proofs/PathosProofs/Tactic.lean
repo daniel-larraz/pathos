@@ -93,6 +93,8 @@ macro "logos_eq" : tactic =>
     | (split <;> simp_all [HasStuck.stuck]; done)
     | (split <;> simp_all [HasStuck.stuck, requires_ite] <;> (try split_ifs) <;>
         simp_all [eo_eq_of_ne, eo_eq_true]; done)
+    | (split <;> simp_all [HasStuck.stuck, requires_ite, eo_logos_eq] <;> (try split_ifs) <;>
+        simp_all [eo_eq_of_ne, eo_eq_true, eo_logos_eq]; done)
     | rfl)
 
 /-- A term is not the stuck term: said by a hypothesis, or plain from its

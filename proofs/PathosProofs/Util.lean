@@ -11,9 +11,14 @@ with `partial_fixpoint` asks for.
 
 /-- The definitions that decide whether a term is the nil of a list
 operator, in the calculus at hand: `__eo_is_list_nil`, the helpers its cases
-call, and what those call (`Runtime/ListNilSimp.lean`, written per
+call, and what those call (`Runtime/CalcSimp.lean`, written per
 calculus). -/
 register_simp_attr eo_list_nil
+
+/-- The definitions that `logos_eq` unfolds when a program's patterns
+repeat a variable: the Boolean connectives and the term equality of the
+calculus at hand (`Runtime/CalcSimp.lean`, written per calculus). -/
+register_simp_attr eo_logos_eq
 
 @[expose] public section
 

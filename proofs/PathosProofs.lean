@@ -26,7 +26,7 @@ public import PathosProofs.Runtime.Numbers
 public import PathosProofs.Runtime.IntNatives
 public import PathosProofs.Runtime.Builtins
 public import PathosProofs.Runtime.StringLits
-public import PathosProofs.Runtime.ListNilSimp
+public import PathosProofs.Runtime.CalcSimp
 public import PathosProofs.Runtime.Lists
 public import PathosProofs.Runtime.AssumeFold
 public import PathosProofs.Runtime.StateInv

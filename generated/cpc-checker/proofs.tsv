@@ -68,7 +68,7 @@ $dt_find_cycle	none	it calls $is_cons_app, which has no proof
 $dt_get_constructors	none	case 3 has a builtin operator
 $dt_get_selectors	none	case 0 has a literal that is not a Boolean
 $dt_get_selectors_of_app	none	it calls $dt_get_selectors, which has no proof
-$dt_updater_elim_rhs	generated	
+$dt_updater_elim_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
 $eo_cmd_step_pop_proven	generated	
@@ -185,7 +185,7 @@ $eo_prog_array-store-swap	generated
 $eo_prog_arrays_ext	generated	
 $eo_prog_arrays_read_over_write	generated	
 $eo_prog_arrays_read_over_write_1	generated	
-$eo_prog_arrays_read_over_write_contra	generated	
+$eo_prog_arrays_read_over_write_contra	none	its generated proof does not build: the spec of case 0: simp fails (a nested error)
 $eo_prog_beta-reduce	none	it calls $beta_reduce, which has no proof
 $eo_prog_bool-and-conf	none	case 0 has a builtin operator
 $eo_prog_bool-and-conf2	none	case 0 has a builtin operator
@@ -448,7 +448,7 @@ $eo_prog_ite_elim1	generated
 $eo_prog_ite_elim2	generated	
 $eo_prog_ite_eq	generated	
 $eo_prog_modus_ponens	generated	
-$eo_prog_nary_cong	generated	
+$eo_prog_nary_cong	none	it calls $mk_nary_cong_rhs, which has no proof
 $eo_prog_not_and	generated	
 $eo_prog_not_equiv_elim1	generated	
 $eo_prog_not_equiv_elim2	generated	
@@ -460,11 +460,11 @@ $eo_prog_not_not_elim	generated
 $eo_prog_not_or_elim	none	case 0 has a builtin operator
 $eo_prog_not_xor_elim1	generated	
 $eo_prog_not_xor_elim2	generated	
-$eo_prog_pairwise_cong	generated	
-$eo_prog_process_scope	generated	
+$eo_prog_pairwise_cong	none	it calls $mk_nary_cong_rhs, which has no proof
+$eo_prog_process_scope	none	it calls $run_process_scope, which has no proof
 $eo_prog_quant-dt-split	none	case 0 has a builtin operator
 $eo_prog_quant-merge-prenex	none	case 0 has a builtin operator
-$eo_prog_quant-miniscope-and	generated	
+$eo_prog_quant-miniscope-and	none	its generated proof does not build: the spec of case 0: leaves goals unsolved
 $eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
 $eo_prog_quant-unused-vars	none	case 0 has a builtin operator
@@ -484,8 +484,8 @@ $eo_prog_re-in-empty	generated
 $eo_prog_re-in-sigma	none	case 0 has a literal that is not a Boolean
 $eo_prog_re-in-sigma-star	generated	
 $eo_prog_re-inter-all	none	case 0 has a builtin operator
-$eo_prog_re-inter-cstring	generated	
-$eo_prog_re-inter-cstring-neg	generated	
+$eo_prog_re-inter-cstring	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
+$eo_prog_re-inter-cstring-neg	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
 $eo_prog_re-inter-inclusion	none	it calls $re_flatten, which has no proof
 $eo_prog_re-loop-elim	none	case 0 has a builtin operator
 $eo_prog_re-loop-neg	generated	
@@ -524,26 +524,26 @@ $eo_prog_seq-rev-concat	none	case 0 has a builtin operator
 $eo_prog_seq-rev-rev	generated	
 $eo_prog_seq-rev-unit	generated	
 $eo_prog_sets-choose-singleton	generated	
-$eo_prog_sets-eq-singleton-emp	generated	
+$eo_prog_sets-eq-singleton-emp	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
 $eo_prog_sets-eval-op	none	case 0 has a builtin operator
 $eo_prog_sets-insert-elim	generated	
 $eo_prog_sets-inter-comm	generated	
-$eo_prog_sets-inter-emp1	generated	
-$eo_prog_sets-inter-emp2	generated	
+$eo_prog_sets-inter-emp1	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-inter-emp2	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
 $eo_prog_sets-inter-member	generated	
 $eo_prog_sets-inter-self	generated	
 $eo_prog_sets-is-empty-elim	generated	
 $eo_prog_sets-is-singleton-elim	generated	
-$eo_prog_sets-member-emp	generated	
+$eo_prog_sets-member-emp	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
 $eo_prog_sets-member-singleton	generated	
-$eo_prog_sets-minus-emp1	generated	
-$eo_prog_sets-minus-emp2	generated	
+$eo_prog_sets-minus-emp1	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-minus-emp2	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
 $eo_prog_sets-minus-member	generated	
 $eo_prog_sets-minus-self	generated	
 $eo_prog_sets-subset-elim	generated	
 $eo_prog_sets-union-comm	generated	
-$eo_prog_sets-union-emp1	generated	
-$eo_prog_sets-union-emp2	generated	
+$eo_prog_sets-union-emp1	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
+$eo_prog_sets-union-emp2	none	its generated proof does not build: a variable repeated inside an indexed operator's index (set.empty), which Valid does not say is not stuck; logos_eq cannot prove the case form equal
 $eo_prog_sets-union-member	generated	
 $eo_prog_sets-union-self	generated	
 $eo_prog_sets_choose_member	none	case 0 has a builtin operator
@@ -553,9 +553,9 @@ $eo_prog_skolem_intro	generated
 $eo_prog_skolemize	none	case 0 has a builtin operator
 $eo_prog_split	generated	
 $eo_prog_str-at-elim	none	case 0 has a literal that is not a Boolean
-$eo_prog_str-concat-clash	generated	
+$eo_prog_str-concat-clash	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
 $eo_prog_str-concat-clash-rev	none	case 0 has a builtin operator
-$eo_prog_str-concat-clash2	generated	
+$eo_prog_str-concat-clash2	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
 $eo_prog_str-concat-clash2-rev	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify-base	none	case 0 has a builtin operator
@@ -598,7 +598,7 @@ $eo_prog_str-in-re-sigma-star	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-in-re-union-elim	none	case 0 has a builtin operator
 $eo_prog_str-indexof-contains-concat-pre	none	case 0 has a builtin operator
 $eo_prog_str-indexof-contains-pre	none	case 0 has a literal that is not a Boolean
-$eo_prog_str-indexof-eq-irr	generated	
+$eo_prog_str-indexof-eq-irr	none	its generated proof does not build: the spec of case 0: simp fails (a nested error)
 $eo_prog_str-indexof-find-emp	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-indexof-len-oob	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-indexof-len-oob2	none	case 0 has a literal that is not a Boolean
@@ -633,13 +633,13 @@ $eo_prog_str-prefixof-elim	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-prefixof-eq	generated	
 $eo_prog_str-prefixof-one	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-repl-repl-dual-ite1	generated	
-$eo_prog_str-repl-repl-dual-ite2	generated	
+$eo_prog_str-repl-repl-dual-ite2	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
 $eo_prog_str-repl-repl-dual-self	generated	
 $eo_prog_str-repl-repl-len-id	generated	
-$eo_prog_str-repl-repl-lookahead-id-simp	generated	
+$eo_prog_str-repl-repl-lookahead-id-simp	none	its generated proof does not build: the spec of case 0: simp fails (a nested error)
 $eo_prog_str-repl-repl-src-inv-no-ctn1	generated	
 $eo_prog_str-repl-repl-src-inv-no-ctn2	generated	
-$eo_prog_str-repl-repl-src-inv-no-ctn3	generated	
+$eo_prog_str-repl-repl-src-inv-no-ctn3	none	its generated proof does not build: the spec of case 0: times out (whnf, 200000 heartbeats)
 $eo_prog_str-repl-repl-src-self	generated	
 $eo_prog_str-repl-repl-src-tgt-no-ctn	generated	
 $eo_prog_str-repl-repl-tgt-no-ctn	generated	
@@ -748,16 +748,16 @@ $eo_to_smt_apply	none	it calls $eo_to_smt_bindings_snoc, which has no proof
 $eo_to_smt_array_deq_diff	generated	
 $eo_to_smt_bindings_snoc	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_bv_size	none	case 0 has the native operation nat.to_int
-$eo_to_smt_datatype	generated	
-$eo_to_smt_datatype_cons	generated	
-$eo_to_smt_datatype_decl	generated	
+$eo_to_smt_datatype	none	it calls $eo_to_smt_datatype_cons, which has no proof
+$eo_to_smt_datatype_cons	none	it calls $eo_to_smt_type, which has no proof
+$eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
 $eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_distinct_pairs	none	it calls $eo_to_smt, which has no proof
-$eo_to_smt_exists	generated	
-$eo_to_smt_lambda_curry	generated	
+$eo_to_smt_exists	none	it calls $eo_to_smt_type, which has no proof
+$eo_to_smt_lambda_curry	none	it calls $eo_to_smt_type, which has no proof
 $eo_to_smt_nat	generated	
 $eo_to_smt_nat_is_valid	generated	
-$eo_to_smt_quantifiers_skolemize	generated	
+$eo_to_smt_quantifiers_skolemize	none	it calls $eo_to_smt_exists, which has no proof
 $eo_to_smt_re_unfold_pos_component	generated	
 $eo_to_smt_reserved_datatype_name	generated	
 $eo_to_smt_seq.empty	generated	
@@ -766,20 +766,20 @@ $eo_to_smt_set_elem_type	generated
 $eo_to_smt_sets_deq_diff	generated	
 $eo_to_smt_tester	generated	
 $eo_to_smt_tuple_decl	generated	
-$eo_to_smt_tuple_prepend	none	it calls $smtx_typeof, which has no proof
-$eo_to_smt_tuple_prepend_of_type	generated	
+$eo_to_smt_tuple_prepend	none	it calls $eo_to_smt_tuple_prepend_of_type, which has no proof
+$eo_to_smt_tuple_prepend_of_type	none	its generated proof does not build: the spec of case 0: simp makes no progress
 $eo_to_smt_tuple_prepend_rec	generated	
-$eo_to_smt_tuple_select	generated	
+$eo_to_smt_tuple_select	none	its generated proof does not build: the spec of case 0: simp makes no progress
 $eo_to_smt_tuple_update	none	it calls $eo_to_smt_updater, which has no proof
-$eo_to_smt_type	generated	
-$eo_to_smt_type_tuple	generated	
+$eo_to_smt_type	none	its generated proof does not build: the spec of case 13: simp makes no progress
+$eo_to_smt_type_tuple	none	its generated proof does not build: the spec of case 0: simp makes no progress
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_updater	none	case 0 has the native operation zlt
 $eo_to_smt_updater_rec	none	case 1 has the native operation nateq
-$eo_typeof	none	it calls $eo_typeof_@from_bools, which has no proof
-$eo_typeof_+	generated	
-$eo_typeof_/	generated	
-$eo_typeof_<	generated	
+$eo_typeof	none	it calls $eo_typeof_+, which has no proof
+$eo_typeof_+	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
+$eo_typeof_/	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
+$eo_typeof_<	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
 $eo_typeof_=	generated	
 $eo_typeof_@@Pair	generated	
 $eo_typeof_@@TypedList.cons	generated	
@@ -806,7 +806,7 @@ $eo_typeof_@strings_stoi_result	generated
 $eo_typeof_@witness_string_length	generated	
 $eo_typeof_BitVec	generated	
 $eo_typeof_Seq	generated	
-$eo_typeof_abs	generated	
+$eo_typeof_abs	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
 $eo_typeof_apply	generated	
 $eo_typeof_bvand	generated	
 $eo_typeof_bvcomp	none	case 0 has a literal that is not a Boolean
@@ -881,8 +881,8 @@ $eo_typeof_zero_extend	none	case 0 has a builtin operator
 $eval_sets_inter	none	case 0 has a builtin operator
 $eval_sets_minus	none	case 0 has a builtin operator
 $eval_sets_op	none	case 0 has a builtin operator
-$extract_antec	generated	
-$extract_antec_rec	generated	
+$extract_antec	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$extract_antec_rec	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $from_clause	generated	
 $get_a_norm	none	case 0 has a builtin operator
 $get_a_norm_rec	none	case 0 has a builtin operator
@@ -899,19 +899,19 @@ $get_var_type	generated
 $get_zero	none	case 5 has a builtin operator
 $greatest_int_lt	none	case 0 has a builtin operator
 $iota_rec	none	case 1 has a literal that is not a Boolean
-$is_absorb	generated	
-$is_absorb_rec	generated	
+$is_absorb	none	it calls $is_absorb_rec, which has no proof
+$is_absorb_rec	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $is_arith_type	generated	
 $is_closed_rec	none	case 0 has a builtin operator
 $is_cons_app	none	case 1 has a builtin operator
-$is_eq_maybe_to_real	generated	
+$is_eq_maybe_to_real	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $is_instantiation	none	case 1 has a builtin operator
 $is_poly_norm_rel_consts	none	case 0 has a builtin operator
 $is_poly_norm_rel_consts_rel	none	case 0 has a builtin operator
 $is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
 $is_quant_dt_split_conj	none	case 0 has a builtin operator
 $is_quant_miniscope_or	none	it calls $contains_atomic_term_list_free_rec, which has no proof
-$is_renaming_rec	generated	
+$is_renaming_rec	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (a repeated variable)
 $is_seq_const	generated	
 $is_seq_const_rec	generated	
 $is_var_list	none	case 0 has a builtin operator
@@ -925,7 +925,7 @@ $mk_arith_mult_sign_sgn	none	case 0 has a builtin operator
 $mk_arith_sum_ub	none	case 0 has a builtin operator
 $mk_arith_sum_ub_rec	generated	
 $mk_arith_trichotomy	generated	
-$mk_cong_rhs	generated	
+$mk_cong_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $mk_distinct_elim	generated	
 $mk_distinct_elim_rec	generated	
 $mk_dt_collapse_updater_rhs	none	case 0 has a builtin operator
@@ -939,7 +939,7 @@ $mk_dt_split	generated
 $mk_dt_updater_elim_conc	none	case 0 has a builtin operator
 $mk_dt_updater_elim_rhs	none	case 0 has a builtin operator
 $mk_ho_cong	generated	
-$mk_nary_cong_rhs	generated	
+$mk_nary_cong_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $mk_quant_merge_prenex	none	case 0 has a builtin operator
 $mk_quant_miniscope_and	generated	
 $mk_quant_var_elim_eq	none	case 1 has a builtin operator
@@ -973,7 +973,7 @@ $re_unflatten	none	case 0 has a builtin operator
 $re_unflatten_str	none	case 0 has a builtin operator
 $re_unfold_pos_concat_rec	none	case 0 has a literal that is not a Boolean
 $run_evaluate	none	case 0 has a builtin operator
-$run_process_scope	generated	
+$run_process_scope	none	it calls $extract_antec, which has no proof
 $seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
 $seq_element_of_unit	generated	
 $seq_empty	none	case 0 has a literal that is not a Boolean
@@ -992,7 +992,7 @@ $smtx_decl_wf_rec	generated
 $smtx_dt_cons_inhabited	generated	
 $smtx_dt_cons_wf_rec	generated	
 $smtx_dt_inhabited	generated	
-$smtx_dt_num_sels	generated	
+$smtx_dt_num_sels	none	its generated proof does not build: the spec of step: leaves goals unsolved
 $smtx_dt_resolve	generated	
 $smtx_dt_wf_rec	generated	
 $smtx_dtc_num_sels	generated	
@@ -1089,16 +1089,16 @@ $str_re_includes_lhs_union	none	it calls $str_re_includes_rec, which has no proo
 $str_re_includes_rec	none	case 0 has a literal that is not a Boolean
 $str_re_includes_rhs_inter	none	it calls $str_re_includes_rec, which has no proof
 $str_reduction_pred	none	case 0 has a variable term
-$str_strip_prefix	generated	
+$str_strip_prefix	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $str_to_int_eval_rec	none	case 0 has a builtin operator
 $str_unify_split	none	case 0 has a literal that is not a Boolean
 $str_value_len	none	case 0 has a literal that is not a Boolean
-$strip_even_exponent	generated	
+$strip_even_exponent	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $substitute_simul_rec	none	case 0 has a builtin operator
 $to_clause	generated	
 $to_cube	generated	
 $tuple_arg_list	generated	
 $tuple_collapse_updater_rhs	none	case 0 has a literal that is not a Boolean
 $tuple_get_selectors_rec	none	case 1 has a builtin operator
-$tuple_updater_elim_rhs	generated	
+$tuple_updater_elim_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
 $typed_list_element_type	generated	

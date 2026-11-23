@@ -99,9 +99,15 @@ def requalify_natives(text, defs):
     return re.sub(r"\b(Eo|Smtm|SmtEval)\.(native_\w+)", fix, text)
 
 
-def list_nil_simp(defs):
-    """Runtime/ListNilSimp.lean for the calculus: `__eo_is_list_nil` and
-    what its cases call, transitively (`__eo_*` and `native_*`)."""
+# What `logos_eq` unfolds, of what the calculus defines (see
+# proofs/PathosProofs/Runtime/CalcSimp.lean).
+LOGOS_EQ = ["__eo_and", "__eo_ite", "native_and", "native_ite", "native_teq"]
+
+
+def calc_simp(defs):
+    """Runtime/CalcSimp.lean for the calculus. `eo_list_nil`:
+    `__eo_is_list_nil` and what its cases call, transitively (`__eo_*` and
+    `native_*`). `eo_logos_eq`: those of LOGOS_EQ that it defines."""
     seen, todo = [], ["__eo_is_list_nil"]
     while todo:
         n = todo.pop(0)
@@ -111,7 +117,8 @@ def list_nil_simp(defs):
         for m in re.findall(r"\b(__eo_\w+|native_\w+)\b", defs[n][1]):
             if m not in seen and m in defs:
                 todo.append(m)
-    names = "\n  ".join(qualified(defs, n) for n in seen)
+    nil = "\n  ".join(qualified(defs, n) for n in seen)
+    eq = "\n  ".join(qualified(defs, n) for n in LOGOS_EQ if n in defs)
     return f"""module
 public import Cpc.Logos
 import all Cpc.Logos
@@ -120,15 +127,18 @@ import all Cpc.SmtEval
 public import PathosProofs.Util
 
 /-!
-# Which terms are the nil of a list operator, in CPC
+# The definitions the library unfolds that depend on the calculus, in CPC
 
-Written by scripts/proofs-instance from CPC's Lean: `__eo_is_list_nil`, and
-what its cases call, transitively (see proofs/PathosProofs/Runtime/
-ListNilSimp.lean, CpcMini's).
+Written by scripts/proofs-instance from CPC's Lean (see proofs/PathosProofs/
+Runtime/CalcSimp.lean, CpcMini's): `__eo_is_list_nil` and what its cases
+call, transitively; the connectives and natives that `logos_eq` unfolds.
 -/
 
 attribute [eo_list_nil]
-  {names}
+  {nil}
+
+attribute [eo_logos_eq]
+  {eq}
 """
 
 
@@ -184,8 +194,8 @@ def main():
             sys.exit(f"scripts/proofs-instance: {mod} imports {', '.join(bad)}, which "
                      "proofs-cpc/excluded.txt leaves out; leave it out too")
         files[rel] = requalify_parts(requalify_natives(rename(text), defs), parts)
-        if mod == "PathosProofs.Runtime.ListNilSimp":
-            files[rel] = list_nil_simp(defs)
+        if mod == "PathosProofs.Runtime.CalcSimp":
+            files[rel] = calc_simp(defs)
         modules.append(mod)
     # The root: what proofs/PathosProofs.lean imports, but the excluded.
     root = []
