@@ -97,6 +97,19 @@ macro "logos_eq" : tactic =>
         simp_all [eo_eq_of_ne, eo_eq_true, eo_logos_eq]; done)
     | rfl)
 
+/-- `logos_eq` for a function of logos that falls through to helpers
+(`__eo_l_<k>___f`) when the repeated variables of a case differ, with the
+helpers unfolded: every match split, the connectives simplified, and what
+is left closed by symmetry or by a pattern that did not match. -/
+macro "logos_eq_deep" : tactic =>
+  `(tactic| first
+    | logos_eq
+    | (((repeat' split) <;>
+        (try simp_all [HasStuck.stuck, requires_ite, eo_eq_of_ne, eo_logos_eq]) <;>
+        (try split_ifs) <;> (try simp_all [eo_eq_of_ne, eo_eq_true, eo_logos_eq]) <;>
+        (try (intros; simp_all [eq_comm])) <;>
+        (try (rename_i hm _; exact absurd hm (by simp)))) <;> done))
+
 /-- A term is not the stuck term: said by a hypothesis, or plain from its
 form. -/
 macro "ns_tac" : tactic =>

@@ -28,6 +28,7 @@ checker comes from the config. Nothing here depends on how Ethos is built.
 """
 
 import argparse
+import glob
 import json
 import os
 import re
@@ -1031,8 +1032,14 @@ class Generator:
                  + " =\n      (")
         for i in p.stuck:
             o.append("if x_a%d = Eo.Term.Stuck then HasStuck.stuck else " % i)
+        # logos's fall-through helpers of the function (`__eo_l_<k>___f`,
+        # which it calls when a case's repeated variables differ): unfolded,
+        # and split by `logos_eq_deep`
+        helpers = self.helpers.get(n.lean.split(".")[-1], [])
         o.append("firstSome [" + cds + "] " + p.no_case + ") := by\n  conv => lhs; unfold "
-                 + n.lean + "\n  unfold" + defs + "\n  logos_eq\n\n")
+                 + n.lean + "\n  unfold" + defs + "\n"
+                 + "".join("  try unfold Eo." + h + "\n" for h in helpers)
+                 + ("  logos_eq_deep\n\n" if helpers else "  logos_eq\n\n"))
         rnd = ("step_" if p.loop else "body_") + n.id
         o.append("theorem " + rnd + "_spec" + head + " :\n    " + rnd + " s" + n.as_ + post)
         if p.loop:
@@ -1929,6 +1936,13 @@ def main():
     with open(args.config, "rb") as f:
         cfg = tomllib.load(f)
     gen = Generator(trace, cfg)
+    # logos's fall-through helpers, by the function they belong to
+    gen.helpers = {}
+    if args.calc_lean:
+        for path in sorted(glob.glob(os.path.join(args.calc_lean, "*.lean"))):
+            with open(path, encoding="utf-8") as f:
+                for m in re.finditer(r"^def (__eo_l_\d+___(\w+))", f.read(), re.M):
+                    gen.helpers.setdefault("__" + m.group(2), []).append(m.group(1))
     gen.uop_arities = set(user_op_arities(args.calc_lean).values()) if args.calc_lean else set()
     gen.unproved = {}
     if args.unproved:

@@ -68,7 +68,7 @@ $dt_find_cycle	none	it calls $is_cons_app, which has no proof
 $dt_get_constructors	none	case 3 has a builtin operator
 $dt_get_selectors	none	case 0 has a literal that is not a Boolean
 $dt_get_selectors_of_app	none	it calls $dt_get_selectors, which has no proof
-$dt_updater_elim_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$dt_updater_elim_rhs	none	its generated proof does not build: a variable repeated as an operator's index itself (update's), which may be the stuck term: logos's __eo_eq of two stuck terms is stuck, the case form's equality is true, so logos_eq_deep cannot prove the two equal
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
 $eo_cmd_step_pop_proven	generated	
@@ -448,7 +448,7 @@ $eo_prog_ite_elim1	generated
 $eo_prog_ite_elim2	generated	
 $eo_prog_ite_eq	generated	
 $eo_prog_modus_ponens	generated	
-$eo_prog_nary_cong	none	it calls $mk_nary_cong_rhs, which has no proof
+$eo_prog_nary_cong	generated	
 $eo_prog_not_and	generated	
 $eo_prog_not_equiv_elim1	generated	
 $eo_prog_not_equiv_elim2	generated	
@@ -460,8 +460,8 @@ $eo_prog_not_not_elim	generated
 $eo_prog_not_or_elim	none	case 0 has a builtin operator
 $eo_prog_not_xor_elim1	generated	
 $eo_prog_not_xor_elim2	generated	
-$eo_prog_pairwise_cong	none	it calls $mk_nary_cong_rhs, which has no proof
-$eo_prog_process_scope	none	it calls $run_process_scope, which has no proof
+$eo_prog_pairwise_cong	generated	
+$eo_prog_process_scope	generated	
 $eo_prog_quant-dt-split	none	case 0 has a builtin operator
 $eo_prog_quant-merge-prenex	none	case 0 has a builtin operator
 $eo_prog_quant-miniscope-and	none	its generated proof does not build: the spec of case 0: leaves goals unsolved
@@ -881,8 +881,8 @@ $eo_typeof_zero_extend	none	case 0 has a builtin operator
 $eval_sets_inter	none	case 0 has a builtin operator
 $eval_sets_minus	none	case 0 has a builtin operator
 $eval_sets_op	none	case 0 has a builtin operator
-$extract_antec	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
-$extract_antec_rec	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$extract_antec	generated	
+$extract_antec_rec	generated	
 $from_clause	generated	
 $get_a_norm	none	case 0 has a builtin operator
 $get_a_norm_rec	none	case 0 has a builtin operator
@@ -900,18 +900,18 @@ $get_zero	none	case 5 has a builtin operator
 $greatest_int_lt	none	case 0 has a builtin operator
 $iota_rec	none	case 1 has a literal that is not a Boolean
 $is_absorb	none	it calls $is_absorb_rec, which has no proof
-$is_absorb_rec	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$is_absorb_rec	none	its generated proof does not build: falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved
 $is_arith_type	generated	
 $is_closed_rec	none	case 0 has a builtin operator
 $is_cons_app	none	case 1 has a builtin operator
-$is_eq_maybe_to_real	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
 $is_instantiation	none	case 1 has a builtin operator
 $is_poly_norm_rel_consts	none	case 0 has a builtin operator
 $is_poly_norm_rel_consts_rel	none	case 0 has a builtin operator
 $is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
 $is_quant_dt_split_conj	none	case 0 has a builtin operator
 $is_quant_miniscope_or	none	it calls $contains_atomic_term_list_free_rec, which has no proof
-$is_renaming_rec	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (a repeated variable)
+$is_renaming_rec	none	its generated proof does not build: a repeated variable; logos_eq_deep leaves goals unsolved
 $is_seq_const	generated	
 $is_seq_const_rec	generated	
 $is_var_list	none	case 0 has a builtin operator
@@ -925,7 +925,7 @@ $mk_arith_mult_sign_sgn	none	case 0 has a builtin operator
 $mk_arith_sum_ub	none	case 0 has a builtin operator
 $mk_arith_sum_ub_rec	generated	
 $mk_arith_trichotomy	generated	
-$mk_cong_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$mk_cong_rhs	generated	
 $mk_distinct_elim	generated	
 $mk_distinct_elim_rec	generated	
 $mk_dt_collapse_updater_rhs	none	case 0 has a builtin operator
@@ -939,7 +939,7 @@ $mk_dt_split	generated
 $mk_dt_updater_elim_conc	none	case 0 has a builtin operator
 $mk_dt_updater_elim_rhs	none	case 0 has a builtin operator
 $mk_ho_cong	generated	
-$mk_nary_cong_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$mk_nary_cong_rhs	generated	
 $mk_quant_merge_prenex	none	case 0 has a builtin operator
 $mk_quant_miniscope_and	generated	
 $mk_quant_var_elim_eq	none	case 1 has a builtin operator
@@ -973,7 +973,7 @@ $re_unflatten	none	case 0 has a builtin operator
 $re_unflatten_str	none	case 0 has a builtin operator
 $re_unfold_pos_concat_rec	none	case 0 has a literal that is not a Boolean
 $run_evaluate	none	case 0 has a builtin operator
-$run_process_scope	none	it calls $extract_antec, which has no proof
+$run_process_scope	generated	
 $seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
 $seq_element_of_unit	generated	
 $seq_empty	none	case 0 has a literal that is not a Boolean
@@ -1089,16 +1089,16 @@ $str_re_includes_lhs_union	none	it calls $str_re_includes_rec, which has no proo
 $str_re_includes_rec	none	case 0 has a literal that is not a Boolean
 $str_re_includes_rhs_inter	none	it calls $str_re_includes_rec, which has no proof
 $str_reduction_pred	none	case 0 has a variable term
-$str_strip_prefix	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$str_strip_prefix	generated	
 $str_to_int_eval_rec	none	case 0 has a builtin operator
 $str_unify_split	none	case 0 has a literal that is not a Boolean
 $str_value_len	none	case 0 has a literal that is not a Boolean
-$strip_even_exponent	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$strip_even_exponent	generated	
 $substitute_simul_rec	none	case 0 has a builtin operator
 $to_clause	generated	
 $to_cube	generated	
 $tuple_arg_list	generated	
 $tuple_collapse_updater_rhs	none	case 0 has a literal that is not a Boolean
 $tuple_get_selectors_rec	none	case 1 has a builtin operator
-$tuple_updater_elim_rhs	none	its generated proof does not build: logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it
+$tuple_updater_elim_rhs	none	its generated proof does not build: a variable repeated as an operator's index itself (tuple.select's), which may be the stuck term (see $dt_updater_elim_rhs); logos_eq_deep also times out (whnf)
 $typed_list_element_type	generated	

@@ -5,7 +5,6 @@
 # (stage 5, milestone 4; docs/proofs.md). Written by hand, from the build's
 # errors.
 
-"$dt_updater_elim_rhs" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
 "$eo_prog_arrays_read_over_write_contra" = "the spec of case 0: simp fails (a nested error)"
 "$eo_prog_quant-miniscope-and" = "the spec of case 0: leaves goals unsolved"
 "$eo_prog_re-inter-cstring" = "the spec of case 0: times out (whnf, 200000 heartbeats)"
@@ -24,14 +23,9 @@
 "$eo_typeof_/" = "the spec of case 0: a rewrite finds no occurrence of its pattern"
 "$eo_typeof_<" = "the spec of case 0: a rewrite finds no occurrence of its pattern"
 "$eo_typeof_abs" = "the spec of case 0: a rewrite finds no occurrence of its pattern"
-"$extract_antec" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
-"$extract_antec_rec" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
-"$is_absorb_rec" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
-"$is_eq_maybe_to_real" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
-"$is_renaming_rec" = "logos_eq does not prove the case form equal to logos's function (a repeated variable)"
-"$mk_cong_rhs" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
-"$mk_nary_cong_rhs" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
 "$smtx_dt_num_sels" = "the spec of step: leaves goals unsolved"
-"$str_strip_prefix" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
-"$strip_even_exponent" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
-"$tuple_updater_elim_rhs" = "logos's function falls through to a helper (__eo_l_*) whose case repeats a variable; logos_eq does not prove the case form equal to it"
+"$dt_updater_elim_rhs" = "a variable repeated as an operator's index itself (update's), which may be the stuck term: logos's __eo_eq of two stuck terms is stuck, the case form's equality is true, so logos_eq_deep cannot prove the two equal"
+"$tuple_updater_elim_rhs" = "a variable repeated as an operator's index itself (tuple.select's), which may be the stuck term (see $dt_updater_elim_rhs); logos_eq_deep also times out (whnf)"
+"$is_absorb_rec" = "falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved"
+"$is_eq_maybe_to_real" = "falls through to a helper; logos_eq_deep fails (simp, a nested error)"
+"$is_renaming_rec" = "a repeated variable; logos_eq_deep leaves goals unsolved"
