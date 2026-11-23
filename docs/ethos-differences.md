@@ -7,7 +7,8 @@ Ethos.
 
 The reference is Ethos `e51f527c`. "Probed" means the behaviour was compared
 with the reference binary on a small input; the others follow from reading
-the C++.
+the C++. On the branch `eoc-282-286`, `pathos-eoc` follows a later Ethos,
+`67dd9e89` (see "pathos-eoc (the compiler stages)" below).
 
 ## Reported to Ethos
 
@@ -276,7 +277,41 @@ The compiled checker rejects; it accepts nothing that Ethos rejects.
 
 `pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with all its stages:
 `desugar`, `desugar-vc`, `trim-defs`, `model-smt`, `smt-meta`,
-`smt-meta-sygus` and `lean-meta`. What differs from the C++:
+`smt-meta-sygus` and `lean-meta`.
+
+**Which Ethos it follows.** On the branch `eoc-282-286`, `pathos-eoc`
+follows Ethos main `67dd9e89`, not `REFERENCE_REV` (`e51f527c`).
+- Mirrored from cvc5/ethos#282 (fallback cases, parallel bind):
+  - lean-meta gives an ordering key to the datatypes the semantics
+    configuration marks `:ordered` (the `-- ordered` lines of
+    `smt_termination.lean`), and no others;
+  - the SMT syntax datatypes derive no `Ord`;
+  - model-smt writes the cases of a program named after an aggregate
+    after every block's cases.
+- Mirrored from cvc5/ethos#286: lean-meta and smt-meta print an
+  evaluatable function type with `__eo_mk_apply` / `$eo_mk_apply`.
+- #282's changes to `tools/eoc` are in the driver and the semantics
+  compiler, which both binaries run, and its changes to the templates and
+  `.eo`/`.eos` files are read from the reference checkout. Neither needs a
+  mirror.
+- Against `67dd9e89`'s `ethos-eoc`, every eoc case agrees: Ethos's test
+  signatures, and logos's whole-CPC and per-rule cases.
+  - With logos `bdcbd95f` (the revision that pins Ethos `649c364f`):
+    3,551 cases.
+  - With logos at `LOGOS_REV`: 3,531 cases.
+- Against `e51f527c` the eoc gate (`scripts/difftest eoc`) therefore
+  differs on 964 of its 3,531 cases, all in outputs these changes reach:
+  - 760 cases differ in lean-meta's `SmtValueOrder`, `SmtSyntax` and
+    `Logos`. In these, `pathos-eoc` also warns that `$LEAN_SMT_KEYS$` is
+    not in `e51f527c`'s template.
+  - 204 differ in smt-meta's `smt_meta_gen.smt2`, with the vc and sygus
+    files built from it.
+
+  This is expected until `REFERENCE_REV` moves, which is Daniel's
+  decision. The checker gates are unaffected: `pathos-eoc` is not
+  `pathos`.
+
+What differs from the C++:
 
 - `ethos-eoc` falls back on the source and build directories CMake
   compiled into it when `ETHOS_PLUGIN_ROOT` or `ETHOS_PLUGIN_OUTPUT_DIR` is

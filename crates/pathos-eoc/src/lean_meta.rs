@@ -182,18 +182,16 @@ fn is_embed_datatype_kind(k: MetaKind) -> bool {
 
 /// The name of the method that gives the ordering key of the Lean type
 /// `t`: the type's name without `Smt` or `native_`, its first letter in
-/// lower case, then `Key`. Empty if the type is not named that way.
+/// lower case, then `Key`, e.g. `datatypeDeclKey` for `SmtDatatypeDecl`.
+/// The methods of the types that are not generated are in the
+/// lean_meta_smt_value_order.lean template, e.g. `modelIdKey` for `ModelId`.
 fn get_order_key_method(t: &str) -> String {
-    // an identifier a model chooses is a real number
-    if t == "ModelId" {
-        return "realKey".to_string();
-    }
     let base = (t.strip_prefix("Smt"))
         .or_else(|| t.strip_prefix("native_"))
-        .unwrap_or_default();
+        .unwrap_or(t);
     let mut chars = base.chars();
     match chars.next() {
-        None => String::new(),
+        None => "Key".to_string(),
         Some(first) => format!("{}{}Key", first.to_ascii_lowercase(), chars.as_str()),
     }
 }
@@ -277,11 +275,16 @@ pub struct LeanMeta {
     /// cases from.
     term_cons: Vec<(String, Vec<String>)>,
     /// The constructors of each datatype of the embedding the target
-    /// declares, by the name of the type they return; the cases of the
-    /// ordering key of each; and how many constructors each has so far.
+    /// declares, by the name of the type they return.
     embed_dt: BTreeMap<String, String>,
-    embed_key: BTreeMap<String, String>,
-    embed_ncons: BTreeMap<String, usize>,
+    /// The datatypes the configuration says are ordered, by the name of
+    /// their Lean inductive, e.g. SmtValue (see read_termination_clauses):
+    /// each of them, and nothing else, is given an ordering key. The
+    /// ordering-key cases of each, and how many constructors each has so
+    /// far, which is the tag of the next.
+    ordered: BTreeSet<String>,
+    key: BTreeMap<String, String>,
+    key_ncons: BTreeMap<String, usize>,
     /// The user operators, by their number of indices.
     embed_top_dt: [String; MAX_INDEX_ARITY + 1],
     eo_is_ref: String,
@@ -293,10 +296,6 @@ pub struct LeanMeta {
     smt_dt: String,
     smt_type_dt: String,
     smt_value_dt: String,
-    smt_type_key: String,
-    smt_value_key: String,
-    smt_type_ncons: usize,
-    smt_value_ncons: usize,
     cmd_dt: String,
     rule_dt: String,
     rl_include: String,
@@ -378,8 +377,9 @@ impl LeanMeta {
             embed_term_dt: String::new(),
             term_cons: Vec::new(),
             embed_dt: BTreeMap::new(),
-            embed_key: BTreeMap::new(),
-            embed_ncons: BTreeMap::new(),
+            ordered: BTreeSet::new(),
+            key: BTreeMap::new(),
+            key_ncons: BTreeMap::new(),
             embed_top_dt: Default::default(),
             eo_is_ref: String::new(),
             eo_checker: String::new(),
@@ -389,10 +389,6 @@ impl LeanMeta {
             smt_dt: String::new(),
             smt_type_dt: String::new(),
             smt_value_dt: String::new(),
-            smt_type_key: String::new(),
-            smt_value_key: String::new(),
-            smt_type_ncons: 0,
-            smt_value_ncons: 0,
             cmd_dt: String::new(),
             rule_dt: String::new(),
             rl_include: String::new(),
@@ -482,7 +478,9 @@ impl LeanMeta {
                 }
                 names.clear();
                 body.clear();
-                if let Some(line) = line.filter(|l| l.starts_with("-- $")) {
+                if let Some(name) = line.and_then(|l| l.strip_prefix("-- ordered ")) {
+                    self.ordered.insert(name.to_string());
+                } else if let Some(line) = line.filter(|l| l.starts_with("-- $")) {
                     // the names start at the `$`
                     let mut words = Words {
                         rest: line.get(3..).unwrap_or_default(),
@@ -814,7 +812,14 @@ impl LeanMeta {
                     *cparen.entry(key).or_default() += 1;
                 }
             } else if kind == Kind::FUNCTION_TYPE {
-                os.push_str("(Term.Apply (Term.Apply Term.FunType ");
+                // the final deep embedding, propagating stuckness as for
+                // applications above if the function type is evaluatable,
+                // e.g. if its return type is a program application
+                os.push_str(if ck.store.is_evaluatable(rec_term) {
+                    "(__eo_mk_apply (__eo_mk_apply Term.FunType "
+                } else {
+                    "(Term.Apply (Term.Apply Term.FunType "
+                });
                 *cparen.entry(key).or_default() += 1;
                 // the inner application closes after the first argument
                 *cparen.entry((first, MetaKind::Eunoia)).or_default() += 1;
@@ -1212,40 +1217,31 @@ impl LeanMeta {
             let _ = write!(text, "{sst} -> ");
             arg_types.push(sst);
         }
-        match &out {
-            DeclOut::Embed(name) => text.push_str(name),
-            _ => text.push_str(print_meta_type_kind(tk).unwrap_or_default()),
-        }
+        let dt_name = match &out {
+            DeclOut::Embed(name) => name.clone(),
+            _ => print_meta_type_kind(tk).unwrap_or_default().to_string(),
+        };
+        text.push_str(&dt_name);
         text.push('\n');
         if tk == MetaKind::Eunoia {
             self.term_cons.push((cname.clone(), arg_types.clone()));
         }
-        // The ordering keys are written in step with the datatypes they
-        // order: the tag of a constructor is its index in the datatype.
         match out {
             DeclOut::EmbedTerm => self.embed_term_dt.push_str(&text),
             DeclOut::Smt => self.smt_dt.push_str(&text),
             DeclOut::Rule => self.rule_dt.push_str(&text),
             DeclOut::Cmd => self.cmd_dt.push_str(&text),
-            DeclOut::SmtType => {
-                self.smt_type_dt.push_str(&text);
-                let key = print_order_key_case(ck, &cname, &arg_types, self.smt_type_ncons);
-                self.smt_type_key.push_str(&key);
-                self.smt_type_ncons += 1;
-            }
-            DeclOut::SmtValue => {
-                self.smt_value_dt.push_str(&text);
-                let key = print_order_key_case(ck, &cname, &arg_types, self.smt_value_ncons);
-                self.smt_value_key.push_str(&key);
-                self.smt_value_ncons += 1;
-            }
-            DeclOut::Embed(name) => {
-                (self.embed_dt.entry(name.clone()).or_default()).push_str(&text);
-                let ncons = self.embed_ncons.entry(name.clone()).or_default();
-                let key = print_order_key_case(ck, &cname, &arg_types, *ncons);
-                *ncons += 1;
-                self.embed_key.entry(name).or_default().push_str(&key);
-            }
+            DeclOut::SmtType => self.smt_type_dt.push_str(&text),
+            DeclOut::SmtValue => self.smt_value_dt.push_str(&text),
+            DeclOut::Embed(name) => (self.embed_dt.entry(name).or_default()).push_str(&text),
+        }
+        // The ordering keys are written in step with the datatypes they
+        // order: the tag of a constructor is its index in the datatype.
+        if self.ordered.contains(&dt_name) {
+            let ncons = self.key_ncons.entry(dt_name.clone()).or_default();
+            let key = print_order_key_case(&cname, &arg_types, *ncons);
+            *ncons += 1;
+            self.key.entry(dt_name).or_default().push_str(&key);
         }
         Ok(())
     }
@@ -1741,10 +1737,11 @@ impl LeanMeta {
         Ok(())
     }
 
-    /// The ordering keys of the datatypes the target declared.
-    fn print_embed_keys(&self) -> String {
+    /// The ordering keys of the datatypes the configuration says are
+    /// ordered, in one mutual block: the text of the `$LEAN_SMT_KEYS$` hole.
+    fn print_keys(&self) -> String {
         let mut keys = String::new();
-        for (name, cases) in &self.embed_key {
+        for (name, cases) in &self.key {
             let _ = writeln!(
                 keys,
                 "@[expose] def {} : {name} -> Key\n{cases}",
@@ -1799,9 +1796,9 @@ impl LeanMeta {
                 continue;
             }
             // What holds a value holds a real, whose equality is classical
-            // and which has neither a Repr nor an Ord.
+            // and which has no Repr.
             let deriving = if syntax {
-                "deriving Repr, DecidableEq, Inhabited, Ord"
+                "deriving Repr, DecidableEq, Inhabited"
             } else {
                 "deriving DecidableEq, Inhabited"
             };
@@ -1850,11 +1847,7 @@ impl LeanMeta {
             ck,
             "plugins/lean_meta/lean_meta_smt_value_order.lean",
             "plugins/lean_meta/lean_meta_smt_value_order_gen.lean",
-            &[
-                ("$LEAN_SMT_TYPE_KEY$", self.smt_type_key.clone()),
-                ("$LEAN_SMT_VALUE_KEY$", self.smt_value_key.clone()),
-                ("$LEAN_SMT_EMBED_KEY$", self.print_embed_keys()),
-            ],
+            &[("$LEAN_SMT_KEYS$", self.print_keys())],
             false,
         )?;
         self.emit(
@@ -1974,18 +1967,10 @@ fn term_cmp_method(t: &str) -> String {
 /// in its datatype is `tag` and whose arguments have the Lean types
 /// `arg_types`: `(node tag [k1 x1, ..., kn xn])`, where `ki` is the key
 /// method of the type of argument `i`.
-fn print_order_key_case(ck: &mut Checker, cname: &str, arg_types: &[String], tag: usize) -> String {
+fn print_order_key_case(cname: &str, arg_types: &[String], tag: usize) -> String {
     let mut keys = String::new();
     for (i, t) in arg_types.iter().enumerate() {
-        let mut method = get_order_key_method(t);
-        if method.is_empty() {
-            // a type whose key method cannot be named
-            ck.warn(&format!(
-                "Lean value order: constructor {cname} has argument of type {t}, which does not \
-                 name an ordering key method"
-            ));
-            method = "natKey".to_string();
-        }
+        let method = get_order_key_method(t);
         if i > 0 {
             keys.push_str(", ");
         }
@@ -2193,12 +2178,12 @@ mod tests {
 
     #[test]
     fn order_key_methods() {
-        assert_eq!(get_order_key_method("ModelId"), "realKey");
+        assert_eq!(get_order_key_method("ModelId"), "modelIdKey");
         assert_eq!(get_order_key_method("SmtDatatypeDecl"), "datatypeDeclKey");
         assert_eq!(get_order_key_method("native_Int"), "intKey");
-        assert_eq!(get_order_key_method("Smt"), "");
-        assert_eq!(get_order_key_method("native_"), "");
-        assert_eq!(get_order_key_method("Term"), "");
+        assert_eq!(get_order_key_method("Smt"), "Key");
+        assert_eq!(get_order_key_method("native_"), "Key");
+        assert_eq!(get_order_key_method("Term"), "termKey");
     }
 
     #[test]

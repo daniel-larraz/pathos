@@ -82,6 +82,12 @@ pub struct DefsBlock {
     pub defs: BTreeSet<String>,
     /// The names it uses that it does not define.
     pub uses: BTreeSet<String>,
+    /// Those of `uses` that only the cases of `last` name. Those cases are
+    /// written after every block's, so what they name is placed where the
+    /// rest of the input places it rather than ahead of this block, and the
+    /// cases of the other aggregates stand in the order they would without
+    /// them. See `order_by_declarations`.
+    pub last_uses: BTreeSet<String>,
     /// Whether the block stands whatever the input declares, which
     /// `(echo "eoc-keep ...")` says.
     pub keep: bool,
@@ -101,6 +107,13 @@ pub struct DefsBlock {
     /// What the block contributes, keyed by the marker of the template it
     /// is written at.
     pub at: BTreeMap<String, Vec<String>>,
+    /// The cases the block gives an aggregate by a program of that
+    /// aggregate's own name, keyed by the aggregate's marker as `at` is.
+    /// They are written after the cases every block contributes, so a case
+    /// that matches more than a symbol applied to its arguments, e.g. any
+    /// application of a certain shape, is tried only once every symbol's own
+    /// case has been.
+    pub last: BTreeMap<String, Vec<String>>,
 }
 
 /// A definitions file: its blocks, and what its head declares.
@@ -360,6 +373,9 @@ impl DefsFile {
         // A block named after the constant it declares is one of the
         // embedding's own among a datatype a signature also builds.
         let named_after_constant = self.embed_datatype_of(sym).is_some();
+        // What the cases the block gives an aggregate itself name, and what
+        // the rest of it does, see `DefsBlock::last_uses`.
+        let (mut last_uses, mut other_uses) = (BTreeSet::new(), BTreeSet::new());
         for f in forms(text) {
             let kind = form_kind(f);
             if kind == "echo" {
@@ -371,7 +387,21 @@ impl DefsFile {
             }
             let name = form_name(f);
             names_of(f, &mut b.uses);
-            b.defs.insert(name.to_string());
+            let aggregate = self.is_aggregate(name);
+            names_of(
+                f,
+                if aggregate {
+                    &mut last_uses
+                } else {
+                    &mut other_uses
+                },
+            );
+            // A program of an aggregate's own name gives it cases rather than
+            // defining it, see `DefsBlock::last`, so what calls the
+            // aggregate does not need the block.
+            if !aggregate {
+                b.defs.insert(name.to_string());
+            }
             if matches!(
                 kind,
                 "declare-const" | "declare-parameterized-const" | "define"
@@ -398,6 +428,11 @@ impl DefsFile {
         for d in &b.defs {
             b.uses.remove(d);
         }
+        for u in last_uses {
+            if b.uses.contains(&u) && !other_uses.contains(&u) {
+                b.last_uses.insert(u);
+            }
+        }
         for d in &b.defs {
             self.owner.insert(d.clone(), self.blocks.len());
         }
@@ -408,6 +443,11 @@ impl DefsFile {
     /// longest case the name begins with.
     fn aggregate_of(&self, name: &str) -> Option<&DefsAggregate> {
         self.aggregates.iter().find(|a| extends(name, &a.case))
+    }
+
+    /// Whether `name` is the name of an aggregate itself, e.g. `$eo_to_smt`.
+    fn is_aggregate(&self, name: &str) -> bool {
+        self.aggregates.iter().any(|a| a.name == name)
     }
 
     /// The same, for a program written over values.
@@ -424,6 +464,16 @@ impl DefsFile {
 
     /// Puts one form of a block into the stream its name says.
     fn classify_program(&self, b: &mut DefsBlock, f: &str, name: &str) {
+        // A program of the aggregate's own name gives cases of that
+        // aggregate rather than of one symbol, which are written after all
+        // of those, see `DefsBlock::last`.
+        if let Some(a) = self.aggregates.iter().find(|a| a.name == name) {
+            b.last
+                .entry(a.into.clone())
+                .or_default()
+                .extend(cases_of(f, name, name));
+            return;
+        }
         // A per-symbol program gives its cases to the aggregate it feeds.
         // The entry is made even if it has no cases.
         if let Some(a) = self.aggregate_of(name) {
@@ -577,7 +627,7 @@ pub fn order_by_declarations<'a>(
             // the recursion of the C++ on an explicit stack: a block and
             // what is left of its uses.
             let mut stack = vec![(*b, b.uses.iter())];
-            while let Some((_, uses)) = stack.last_mut() {
+            while let Some((at, uses)) = stack.last_mut() {
                 let Some(u) = uses.next() else {
                     if let Some((done, _)) = stack.pop()
                         && !stack.is_empty()
@@ -586,6 +636,11 @@ pub fn order_by_declarations<'a>(
                     }
                     continue;
                 };
+                // What only cases written after every block name need not
+                // stand before this one, see `DefsBlock::last_uses`.
+                if at.last_uses.contains(u) {
+                    continue;
+                }
                 if let Some(&o) = owner.get(u.as_str())
                     && !declared.contains(blocks[o].sym.as_str())
                     && !placed[o]
@@ -746,7 +801,7 @@ mod tests {
 (program $smtx_not_aux () :signature (V) V ())
 (program $smtx_not_canonical () :signature (V) V ())
 (program $eo_to_smt_not () :signature (V) V ())
-(program $eo_to_smt () :signature (V) V ())
+(program $eo_to_smt () :signature (V) V ((($eo_to_smt ($sm_not x)) x)))
 (define $smtx_const () $emb_sm.Binary)
 (declare-other $ignored $x)
 (echo \"eoc-exclude symbol not $y\")
@@ -771,7 +826,6 @@ mod tests {
             strs(&not.defs),
             [
                 "$emb_sm.not",
-                "$eo_to_smt",
                 "$eo_to_smt_not",
                 "$eoc_transform_type_not",
                 "$eoc_typeof_not",
@@ -783,10 +837,17 @@ mod tests {
                 "$smtx_not_canonical",
             ]
         );
-        // what it defines is not a use; the echo names nothing
+        // what it defines is not a use; the echo names nothing; the
+        // aggregate its last cases are of is a use, see below
         assert_eq!(
             strs(&not.uses),
-            ["$emb_sm.Binary", "$smtx_typeof_guard", "$tsm_Bool", "$x"]
+            [
+                "$emb_sm.Binary",
+                "$eo_to_smt",
+                "$smtx_typeof_guard",
+                "$tsm_Bool",
+                "$x"
+            ]
         );
         let at: Vec<(&str, Vec<&str>)> =
             (not.at.iter().map(|(k, v)| (k.as_str(), strs(v)))).collect();
@@ -817,13 +878,18 @@ mod tests {
         };
         assert_eq!(
             names(&not.helper_progs),
-            [
-                "$smtx_eval_not",
-                "$smtx_not_aux",
-                "$eo_to_smt",
-                "$smtx_const"
-            ]
+            ["$smtx_eval_not", "$smtx_not_aux", "$smtx_const"]
         );
+        // a program of an aggregate's own name gives it cases, written after
+        // every block's, and defines nothing: what only those cases name
+        // need not stand before the block
+        let last: Vec<(&str, Vec<&str>)> =
+            (not.last.iter().map(|(k, v)| (k.as_str(), strs(v)))).collect();
+        assert_eq!(
+            last,
+            [("$TRANSFORM_CASES$", vec!["(($eo_to_smt ($sm_not x)) x)"])]
+        );
+        assert_eq!(strs(&not.last_uses), ["$eo_to_smt"]);
         assert_eq!(names(&not.canonical_aux), ["$smtx_not_canonical"]);
         assert_eq!(names(&not.eo_aux), ["$eo_to_smt_not"]);
 
@@ -845,9 +911,10 @@ mod tests {
             syms(&file.select(&none, &set(&["$emb_sm.Binary"]))),
             ["Bool", "$emb_sm.Binary"]
         );
+        // (the aggregate is no block's: the template defines it)
         assert_eq!(
             strs(&file.external_uses(&sel)),
-            ["$smtx_typeof_guard", "$x"]
+            ["$eo_to_smt", "$smtx_typeof_guard", "$x"]
         );
     }
 

@@ -670,7 +670,15 @@ impl SmtMeta {
                     }
                 }
                 Kind::FUNCTION_TYPE => {
-                    os.push_str("(eo.Apply (eo.Apply eo.FunType ");
+                    // the final deep embedding, propagating stuckness as for
+                    // applications above if the function type is
+                    // evaluatable, e.g. if its return type is a program
+                    // application
+                    os.push_str(if ck.store.is_evaluatable(rec_term) {
+                        "($eo_mk_apply ($eo_mk_apply eo.FunType "
+                    } else {
+                        "(eo.Apply (eo.Apply eo.FunType "
+                    });
                     *cparen.entry(rec_term).or_default() += 1;
                     // the inner application closes after the first argument
                     *cparen.entry(children[0]).or_default() += 1;

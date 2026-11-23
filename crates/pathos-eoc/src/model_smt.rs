@@ -30,6 +30,10 @@ pub struct ModelSmt {
     /// What is written at each marker of the template that the signatures
     /// name.
     at: BTreeMap<String, String>,
+    /// The cases given an aggregate by a program of its own name, which are
+    /// written at its marker after everything in `at`; see
+    /// `DefsBlock::last`.
+    last: BTreeMap<String, String>,
     /// The markers that take the cases of an aggregate, which are indented
     /// by two.
     spliced: BTreeSet<String>,
@@ -43,14 +47,28 @@ pub struct ModelSmt {
     decl_seen: Vec<String>,
 }
 
-/// Writes what a block says about the model at the markers it names.
-fn emit_at(at: &mut BTreeMap<String, String>, spliced: &BTreeSet<String>, b: &DefsBlock) {
+/// Writes what a block says about the model at the markers it names, and
+/// the cases it gives an aggregate itself into `last`.
+fn emit_at(
+    at: &mut BTreeMap<String, String>,
+    last: &mut BTreeMap<String, String>,
+    spliced: &BTreeSet<String>,
+    b: &DefsBlock,
+) {
     for (marker, lines) in &b.at {
         for l in lines {
             let out = at.entry(marker.clone()).or_default();
             if spliced.contains(marker) {
                 out.push_str("  ");
             }
+            out.push_str(l);
+            out.push('\n');
+        }
+    }
+    for (marker, lines) in &b.last {
+        for l in lines {
+            let out = last.entry(marker.clone()).or_default();
+            out.push_str("  ");
             out.push_str(l);
             out.push('\n');
         }
@@ -96,6 +114,7 @@ impl ModelSmt {
             smt_defs_file: smt_defs_file.to_string(),
             defs_covered: BTreeSet::new(),
             at: BTreeMap::new(),
+            last: BTreeMap::new(),
             spliced: BTreeSet::new(),
             helper_progs: String::new(),
             eo_to_smt_aux: String::new(),
@@ -167,7 +186,7 @@ impl ModelSmt {
         // The literals stand before the symbols written over them, in the
         // order the configuration gives.
         for b in blocks.iter().filter(|b| b.literal) {
-            emit_at(&mut self.at, &self.spliced, b);
+            emit_at(&mut self.at, &mut self.last, &self.spliced, b);
         }
         for b in &by_decl {
             if b.literal || is_own(b) {
@@ -180,12 +199,12 @@ impl ModelSmt {
             if b.builds.is_some() || b.at.keys().any(|at| self.spliced.contains(at)) {
                 self.defs_covered.insert(b.sym.clone());
             }
-            emit_at(&mut self.at, &self.spliced, b);
+            emit_at(&mut self.at, &mut self.last, &self.spliced, b);
         }
         // The types and the values are the embedding's own, and stand in the
         // order the configuration gives them.
         for b in blocks.iter().filter(|b| is_own(b)) {
-            emit_at(&mut self.at, &self.spliced, b);
+            emit_at(&mut self.at, &mut self.last, &self.spliced, b);
         }
         for b in &by_decl {
             for (out, progs) in [
@@ -229,10 +248,13 @@ impl Plugin for ModelSmt {
             )));
         };
         // What the signatures said about their symbols, each at the marker
-        // the aggregate it belongs to names. A marker nothing was written at
-        // is replaced all the same: the output must have no placeholder.
+        // the aggregate it belongs to names, and after those the cases a
+        // signature gave the aggregate itself. A marker nothing was written
+        // at is replaced all the same: the output must have no placeholder.
         for a in smt_defs.aggregates() {
-            replace_placeholder(&mut final_smt, &a.into, self.written_at(&a.into))?;
+            let last = self.last.get(&a.into).map_or("", String::as_str);
+            let text = format!("{}{last}", self.written_at(&a.into));
+            replace_placeholder(&mut final_smt, &a.into, &text)?;
         }
         for h in smt_defs.helpers() {
             replace_placeholder(&mut final_smt, &h.forward, self.written_at(&h.forward))?;
