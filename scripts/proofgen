@@ -1,0 +1,1719 @@
+#!/usr/bin/env python3
+"""The Lean proofs about the checker that Ethos's rust-meta generates.
+
+    scripts/proofgen --trace TRACE --out DIR [--embedding TABLE]
+                     [--config proofs/proofgen.toml]
+
+reads what Ethos wrote with the crate, and writes the proofs that the
+crate's functions compute what logos's Lean does:
+
+- TRACE (rust-meta's rust_meta_trace_gen.json) records the generated code:
+  per program its functions, per case the nodes of its patterns and of its
+  body, each with the Rust variable it computes (see `d_trace` in
+  rust-meta's rust_meta_reduce.h for the format, version 1);
+- TABLE (lean-meta's lean_meta_embedding_gen.json) lists the constructors
+  of the embedding as lean-meta's Lean has them;
+- the config (proofs/proofgen.toml) is pathos's knowledge of logos's
+  signature: the checker's state, the programs that keep it OK, the types
+  with a trivial `Valid`, the programs proved by hand.
+
+It writes into DIR `proofs.lean`, `proofs.tsv` and `cache_sem.lean`, and
+with --embedding also `embed.lean` and `ctors.lean`. They name the modules
+they import by placeholders ($CHECKER$, $CALC$, $CASES$, $EO_CALC$), which
+scripts/generate-cpc fills in.
+
+Everything here that names a lemma or a tactic is pathos's (proofs/
+PathosProofs); everything that names a program or a type of logos's
+checker comes from the config. Nothing here depends on how Ethos is built.
+"""
+
+import argparse
+import json
+import os
+import re
+import sys
+import tomllib
+
+TRACE_VERSION = 1
+
+
+def ident(name):
+    """The Rust identifier rust-meta gives an EO name."""
+    out = "eo_"
+    for b in name.encode("utf-8"):
+        c = chr(b)
+        if c.isascii() and c.isalnum():
+            out += c
+        else:
+            out += "_%02x" % b
+    return out
+
+
+def words(items):
+    return "".join(" " + x for x in items)
+
+
+# What the proofs have lemmas for. Pathos's: Runtime/ and the generated
+# MiniCtors.lean.
+
+# The constructors of the embedding (Ethos's) that the runtime does not
+# store as a node over their fields: their lemmas are by hand, or none.
+NOT_NODES = {"$emb_Stuck", "$emb_Apply", "$emb_Boolean", "$emb_Numeral",
+             "$emb_Rational", "$emb_String", "$emb_Binary"}
+# The native operations with a specification (Runtime/Natives.lean,
+# Strings.lean, IntNatives.lean: Store.native_spec_<name>).
+SPECIFIED = {"teq": "teq", "Teq": "Teq", "streq": "streq", "and": "and",
+             "or": "or", "not": "not", "string_valid": "string_valid",
+             "string_prefix_eq": "string_prefix_eq", "zeq": "zeq",
+             "zleq": "zleq", "mod_total": "mod_total",
+             "int.pow2": "int_pow2", "int.to_nat": "int_to_nat",
+             "Int.toNat": "int_to_nat", "nat.succ": "nat_succ",
+             "uconst_id": "uconst_id"}
+# eo::eq, eo::len and eo::and, by their specs (Runtime/Builtins.lean).
+ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
+              "And": "Store.builtin_spec_and"}
+# The builtin operators the proofs have: eo::ite as a conditional,
+# eo::requires as a function of its own, and those with specs.
+SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons"}
+# The literal destructors and constructors (Runtime/Literals.lean,
+# Numbers.lean, StringLits.lean).
+DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
+                "$emb_Numeral": "Store.destruct_numeral_spec",
+                "$emb_Rational": "Store.destruct_rational_spec",
+                "$emb_String": "Store.destruct_string_spec"}
+CONSTRUCT_LIT = {"$emb_Numeral": "Store.construct_numeral_spec ",
+                 "$emb_Rational": "Store.construct_rational_spec ",
+                 "$emb_String": "Store.construct_string_spec "}
+PF = "$eo_pf"
+FUNTYPE = "$emb_FunType"
+
+
+class Lean:
+    """What the proof of a case has so far (rust-meta #288's `Lean`)."""
+
+    def __init__(self):
+        self.lines = []
+        self.store = 0
+        self.facts = []
+        self.pure = []
+        self.built = set()
+        self.why = ""
+        self.case_def = ""
+        self.unfolds = []
+        self.calls = set()
+        self.indent = ""
+        self.binary_of = {}
+        self.ok_state = set()
+        self.ok_proof = set()
+        self.pf_of = {}
+        self.proof_ok = set()
+
+
+class Case:
+    """The proof of one case: the helpers unfolded, its lines, why none."""
+
+    def __init__(self, unfolds, lines, why):
+        self.unfolds = unfolds
+        self.lines = lines
+        self.why = why
+
+
+class Proof:
+    """What is proved of a program (rust-meta #288's `LeanProof`)."""
+
+    def __init__(self, name):
+        self.name = name
+        self.id = ident(name)
+        self.lean = ""
+        self.nargs = 0
+        self.good = []
+        self.stuck = []
+        self.no_case = "HasStuck.stuck"
+        self.split = False
+        self.cases = []
+        self.groups = []
+        self.top = []
+        self.loop = False
+        self.hand = ""
+        self.cache = ""
+        self.type_kind = ""
+        self.calls = set()
+        self.why = ""
+
+
+class Emitter:
+    """The proof lines of one case, from the nodes of its trace."""
+
+    def __init__(self, gen, lean):
+        self.g = gen
+        self.l = lean
+
+    # the store and its invariant, as the proof names them
+    def st(self):
+        return "s" if self.l.store == 0 else "s%d" % self.l.store
+
+    def inv(self):
+        return "hinv" if self.l.store == 0 else "hinv%d" % self.l.store
+
+    def rem(self):
+        return "hrem" if self.l.store == 0 else "(hG.rem hrem)"
+
+    def line(self, text):
+        self.l.lines.append(self.l.indent + text)
+
+    def unsupported(self, what):
+        if not self.l.why:
+            self.l.why = what
+
+    def els(self):
+        return "else " + self.inv() + " hG in " + self.l.case_def
+
+    def not_stuck(self, x):
+        return x in self.l.built or ("hn_" + x) in self.l.pure
+
+    def good(self, callee, j, v):
+        ok = v in self.l.ok_state or v in self.l.ok_proof
+        return "\x01%s\x02%d\x02%s\x03" % (callee, j, "1" if ok else "0")
+
+    def store_step(self, spec, v):
+        before = words(self.l.facts)
+        self.l.store += 1
+        self.line("store_step with " + spec + " as ⟨" + v + ", " + self.st()
+                  + ", " + self.inv() + ", h_" + v + "⟩ growing hG carrying"
+                  + before)
+        self.l.facts.append("h_" + v)
+
+    def args_step(self, spec, st, inv, vs, v):
+        reps = words("h_" + x for x in vs)
+        self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+        self.store_step(spec + " " + st + " e_" + v + " (by rw [he_" + v
+                        + "]; rfl)" + reps + " " + inv + " h64", v)
+
+    def unapply(self, value, f, a):
+        self.line("pat_unapply h_" + value + " as ⟨" + f + ", " + a + ", x_" + f
+                  + ", x_" + a + ", h_" + f + ", h_" + a + ", hn_" + f + ", hn_"
+                  + a + "⟩ using " + self.inv() + " " + self.els())
+        self.l.facts += ["h_" + f, "h_" + a]
+        self.l.pure += ["hn_" + f, "hn_" + a]
+
+    def same(self, a, b):
+        self.line("pat_same " + a + " " + b + " with h_" + a + " h_" + b
+                  + " using " + self.inv() + " " + self.els())
+
+    def has_ctor_lemma(self, name):
+        if name in NOT_NODES or name.startswith("$emb_UOp"):
+            return False
+        if name.startswith("$emb_"):
+            dot = name.find(".")
+            prefix = name[5:] if dot < 0 else name[5:dot]
+            kind = self.g.trace["embedding_kinds"].get(prefix)
+            if prefix == "rsm" or kind in ("SMT_VALUE", "SMT_MAP", "SMT_SEQ"):
+                return False
+        return True
+
+    def apply(self, f, a, guarded, v):
+        if guarded:
+            st, inv = self.st(), self.inv()
+            self.store_step("Store.apply_mk_rep " + st + " " + f + " " + a
+                            + " _ _ " + inv + " h64 h_" + f + " h_" + a, v)
+            return v
+        for x in (f, a):
+            # the formula of a proof argument: the program assumes the
+            # argument OK (`ProofOK`), which says it is not stuck
+            if not self.not_stuck(x) and x in self.l.pf_of:
+                self.line("have hn_" + x + " := hg_a%d _ rfl" % self.l.pf_of[x])
+                self.l.pure.append("hn_" + x)
+                self.l.proof_ok.add(self.l.pf_of[x])
+        if not self.not_stuck(f) or not self.not_stuck(a):
+            self.unsupported("an application of a term that may be stuck")
+        st, inv = self.st(), self.inv()
+        self.l.built.add(v)
+        self.store_step("Store.apply_rep " + st + " " + f + " " + a + " _ _ "
+                        + inv + " h64 h_" + f + " h_" + a
+                        + " (by ns_tac) (by ns_tac)", v)
+        return v
+
+    def applied(self, n, st):
+        return n["fn"] + " " + st + words(n["args"])
+
+    # -- expressions --------------------------------------------------------
+
+    def expr(self, n):
+        op = n["op"]
+        v = n["v"]
+        sub = n.get("sub", [])
+        if op == "param":
+            return v
+        if op == "literal":
+            st, inv = self.st(), self.inv()
+            self.l.built.add(v)
+            if n["kind"] == "BOOLEAN":
+                self.store_step("Store.literal_boolean_spec " + st
+                                + (" true " if n["bool"] else " false ") + inv
+                                + " h64", v)
+            else:
+                self.unsupported("a literal that is not a Boolean")
+            return v
+        if op == "program_const":
+            self.unsupported("a program constant")
+            return v
+        if op == "constant":
+            return self.constant(n["ctor"], v)
+        if op == "native":
+            if "ite" in n:
+                return self.conditional(n, True)
+            return self.native(n, sub, v)
+        if op == "construct":
+            return self.construct(n["ctor"], sub, v)
+        if op == "call":
+            return self.call(n["program"], sub, v)
+        if op == "builtin":
+            if "program" in n:
+                if n["eval"] not in ("Requires", "Eq"):
+                    self.unsupported("the builtin " + n["program"])
+            elif n["eval"] not in SUPPORTED_OPS:
+                self.unsupported("a builtin operator")
+            return self.builtin(n, sub, v)
+        if op == "funtype":
+            if not self.has_ctor_lemma(FUNTYPE):
+                self.unsupported("a function type")
+            tail = self.expr(sub[0])
+            for i, r in enumerate(n["rounds"]):
+                a = self.expr(sub[i + 1])
+                st, inv = self.st(), self.inv()
+                h = r["fun"]
+                self.line("step as ⟨e_" + h + ", he_" + h + "⟩")
+                self.store_step("CtorSpec." + ident(FUNTYPE) + ".construct " + st
+                                + " e_" + h + " (by rw [he_" + h
+                                + "]; exact empty_args) " + inv + " h64", h)
+                self.l.built.add(h)
+                f = self.apply(h, a, n["guarded"], r["applied"])
+                tail = self.apply(f, tail, n["guarded"], r["v"])
+            return tail
+        if op == "apply":
+            f = self.expr(sub[0])
+            a = self.expr(sub[1])
+            return self.apply(f, a, n["guarded"], v)
+        if op == "variable":
+            self.unsupported("a variable term")
+            for s in sub:
+                self.expr(s)
+            return v
+        raise SystemExit("proofgen: unknown node %r" % op)
+
+    def constant(self, name, v):
+        st, inv = self.st(), self.inv()
+        # the stuck term is not a node: `construct` gives handle 0
+        stuck = name == "$emb_Stuck"
+        if not stuck and not self.has_ctor_lemma(name):
+            self.unsupported("the constructor " + name
+                             + ", which is not stored as a node (no lemma yet)")
+        self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+        self.store_step(("Store.construct_stuck_spec " if stuck
+                         else "CtorSpec." + ident(name) + ".construct ")
+                        + st + " e_" + v + " (by rw [he_" + v
+                        + "]; exact empty_args) " + inv + " h64", v)
+        self.l.built.add(v)
+        if name in self.g.cfg["state"]["ok_constants"]:
+            self.l.ok_state.add(v)
+        return v
+
+    def native(self, n, sub, v):
+        name = n["name"]
+        nullary = n["nargs"] == 0
+        if nullary and name in ("true", "false"):
+            st, inv = self.st(), self.inv()
+            self.store_step("Store.native_bool_spec " + st + " " + name + " " + inv
+                            + " h64", v)
+            return v
+        if (nullary and name and re.fullmatch(r"[-0-9]*", name)
+                and re.search("[0-9]", name) and len(name) <= 11):
+            # a numeral constant: from the specs of `from` and `neg`
+            st, inv = self.st(), self.inv()
+            self.line("simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, "
+                      "num.Integer.toInt_ofInt, Std.bind_ok]")
+            neg = name[0] == "-"
+            self.store_step(("Store.raw_int_neg_u32_spec " if neg
+                             else "Store.raw_int_u32_spec ") + st + " "
+                            + (name[1:] if neg else name) + "#u32 (" + name
+                            + ") (by scalar_tac) " + inv + " h64", v)
+            return v
+        if (nullary and len(name) >= 2 and name[0] == '"' and name[-1] == '"'
+                and not any(c in '\\"' for c in name[1:-1])
+                and all(" " <= c <= "~" for c in name)):
+            # a string constant of printable ASCII without escapes
+            st, inv = self.st(), self.inv()
+            self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+            self.line("simp only [eostring.EoString.from_code_points, Std.bind_ok]")
+            self.store_step("Store.raw_str_vec_spec " + st + " _ _ rfl " + inv
+                            + " h64", v)
+            self.line("replace h_" + v + " := Represents.rep_of_eq h_" + v
+                      + " (y := SmtEval.native_string_lit " + name
+                      + ") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_"
+                      + v + "]; decide)")
+            return v
+        if nullary and name == "nat.zero":
+            st, inv = self.st(), self.inv()
+            self.store_step("Store.native_nat_zero_spec " + st + " " + inv + " h64", v)
+            return v
+        if name not in SPECIFIED:
+            self.unsupported("the native operation " + name)
+        vs = [self.expr(s) for s in sub]
+        st, inv = self.st(), self.inv()
+        if name in SPECIFIED:
+            self.args_step("Store.native_spec_" + SPECIFIED[name], st, inv, vs, v)
+        return v
+
+    def construct(self, name, sub, v):
+        number = name in CONSTRUCT_LIT and len(sub) == 1
+        vs = [self.expr(s) for s in sub]
+        # a binary literal from the width and value that a pattern took
+        # from one, so they are in range
+        binary = ""
+        if name == "$emb_Binary" and len(vs) == 2:
+            binary = self.l.binary_of.get(vs[0] + " " + vs[1], "")
+        if not number and not binary and not self.has_ctor_lemma(name):
+            self.unsupported("the constructor " + name
+                             + " with arguments, which is not stored as a node")
+        st, inv = self.st(), self.inv()
+        reps = words("h_" + x for x in vs)
+        self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+        lemma = (CONSTRUCT_LIT[name] if number
+                 else "Store.construct_binary_spec " if binary
+                 else "CtorSpec." + ident(name) + ".construct ")
+        self.store_step(lemma + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
+                        + reps
+                        + (" (Store.rep_binary_okBv h_" + binary + ")" if binary
+                           else "")
+                        + " " + inv + " h64", v)
+        self.l.built.add(v)
+        if name == PF and len(vs) == 1 and self.not_stuck(vs[0]):
+            self.l.ok_proof.add(v)  # `ProofOK.pf`
+        return v
+
+    def call(self, name, sub, v):
+        vs = [self.expr(s) for s in sub]
+        st, inv, rem = self.st(), self.inv(), self.rem()
+        spec = "ih." + ident(name) + " " + st
+        holes = reps = goods = ""
+        for j, x in enumerate(vs):
+            spec += " " + x
+            holes += " _"
+            reps += " h_" + x
+            goods += self.good(name, j, x)
+        self.store_step(spec + holes + " " + inv + " h64 " + rem + reps + goods, v)
+        self.l.calls.add(name)
+        state = self.g.cfg["state"]
+        keeps = state["keeps"].get(name)
+        if keeps is not None and all(j < len(vs) and vs[j] in self.l.ok_state
+                                     for j in keeps):
+            self.l.ok_state.add(v)
+        if name == state["lookup"] and len(vs) == 2 and vs[0] in self.l.ok_state:
+            # the formula of an OK state's element is not stuck
+            self.line("have hn_" + v + " := " + state["lookup_lemma"] + " h_" + v
+                      + " (by good_tac)")
+            self.l.pure.append("hn_" + v)
+        return v
+
+    def builtin(self, n, sub, v):
+        k = n["eval"]
+        if k == "IfThenElse":
+            return self.conditional(n, False)
+        if k == "Requires":
+            return self.requires(n, sub, v)
+        if k in ARGS_SPECS:
+            vs = [self.expr(s) for s in sub]
+            st, inv = self.st(), self.inv()
+            self.args_step(ARGS_SPECS[k], st, inv, vs, v)
+            return v
+        lists = self.g.cfg["lists"]
+        if k == "Nil":
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            spec = "ih." + ident(lists["nil"]) + " " + st + words(vs)
+            self.store_step(spec + " _" * len(vs) + " " + inv + " h64 " + rem
+                            + words("h_" + x for x in vs), v)
+            self.l.calls.add(lists["nil"])
+            return v
+        if k == "Cons":
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            # Store.builtin_spec_cons (Runtime/Lists.lean) walks
+            # right-nested lists, of an element that is not stuck
+            if self.g.trace["left_nested_lists"]:
+                self.unsupported("eo::cons with an operator that nests to the left")
+            if len(vs) != 3 or not self.not_stuck(vs[1]):
+                self.unsupported("eo::cons of an element that may be stuck")
+            self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+            self.store_step("Store.builtin_spec_cons n ih." + ident(lists["is_nil"])
+                            + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
+                            + words("h_" + x for x in vs) + " (by ns_tac) " + inv
+                            + " h64 " + rem + " (fun _ => rfl)", v)
+            self.l.calls.add(lists["is_nil"])
+            return v
+        for s in sub:
+            self.expr(s)
+        return v
+
+    def block(self, kind):
+        """The start of a statement proved in place (a conditional, a
+        requirement): its two head lines are written at its end."""
+        l = self.l
+        return dict(store=self.st(), inv=self.inv(), rem=self.rem(),
+                    indent=l.indent, facts=list(l.facts), pure=list(l.pure),
+                    built=set(l.built), count=l.store, open=len(l.lines))
+
+    def conditional(self, n, native):
+        sub = n["sub"]
+        cv = self.expr(sub[0])
+        l = self.l
+        o = self.block("if")
+        tag = str(n["next_var"])
+        hx, hbv = "hx_" + tag, "hbv_" + tag
+        l.lines += ["", ""]
+        l.indent = o["indent"] + "  "
+        if l.store != 0:
+            self.line("have hrem := " + o["rem"])
+        self.line("have hG := Store.Grows.refl " + o["store"])
+        self.line("rcases Store.boolean_value_" + ("native" if native else "term")
+                  + " h_" + cv + " with ⟨" + hx + ", " + hbv + "⟩ | ⟨" + hx + ", "
+                  + hbv + "⟩" + ("" if native else " | ⟨" + hx + ", " + hbv + "⟩"))
+
+        def branch(e, lemma):
+            l.indent = o["indent"] + "  "
+            self.line("· ite_branch " + hbv)
+            l.indent = o["indent"] + "    "
+            r = self.expr(e)
+            self.line("ite_done " + self.inv() + " hG with (" + lemma + " _ " + hx
+                      + " h_" + r + ")")
+            l.store = o["count"]
+            l.facts = list(o["facts"])
+            l.pure = list(o["pure"])
+            l.built = set(o["built"])
+
+        branch(sub[1], "native_ite_true_rep" if native else "eo_ite_true_rep")
+        branch(sub[2], "native_ite_false_rep" if native else "eo_ite_false_rep")
+        if not native:
+            l.indent = o["indent"] + "  "
+            self.line("· ite_branch " + hbv)
+            self.line("  ite_stuck " + o["inv"] + " hG with " + hx)
+        l.lines[-1] += ")"
+        l.indent = o["indent"]
+        v = n["v"]
+        l.lines[o["open"]] = (
+            o["indent"] + "have h_ite_" + v + " := (show " + self.applied(n, o["store"])
+            + " ⦃ r s' => s'.Inv ∧ " + o["store"]
+            + ".Grows s' ∧ match r with | core.result.Result.Ok t => "
+              "Represents.rep s' t ("
+            + ("SmtEval.native_ite" if native else "Eo.__eo_ite")
+            + " _ _ _) | core.result.Result.Err _ => True ⦄div from by")
+        l.lines[o["open"] + 1] = (o["indent"] + "  unfold " + n["fn"]
+                                  + words(n.get("helpers", [])))
+        self.store_step("h_ite_" + v, v)
+        return v
+
+    def requires(self, n, sub, v):
+        a = self.expr(sub[0])
+        b = self.expr(sub[1])
+        l = self.l
+        o = self.block("requires")
+        first = l.store == 0
+        l.lines += ["", ""]
+        l.indent += "  "
+        if not first:
+            self.line("have hrem := " + o["rem"])
+        self.line("have hG := Store.Grows.refl " + o["store"])
+        self.line("req_same " + a + " " + b + " with h_" + a + " h_" + b
+                  + " using " + o["inv"] + " hG")
+        self.line("req_stuck h_" + a + " as hq_" + a + " using " + o["inv"] + " hG")
+        r = self.expr(sub[2])
+        self.line("req_done " + self.inv() + " hG with h_" + r + " using hq_" + a + ")")
+        l.indent = o["indent"]
+        l.facts = list(o["facts"])
+        l.pure = list(o["pure"])
+        l.lines[o["open"]] = (
+            o["indent"] + "have h_req_" + v + " := (show " + self.applied(n, o["store"])
+            + " ⦃ r s' => s'.Inv ∧ " + o["store"]
+            + ".Grows s' ∧ match r with | core.result.Result.Ok t => "
+              "Represents.rep s' t (Eo.__eo_requires _ _ _) | "
+              "core.result.Result.Err _ => True ⦄div from by")
+        l.lines[o["open"] + 1] = (o["indent"] + "  unfold " + n["fn"]
+                                  + words(n.get("helpers", [])))
+        self.store_step("h_req_" + v, v)
+        return v
+
+    # -- patterns -----------------------------------------------------------
+
+    def pattern(self, n):
+        pat = n["pat"]
+        value = n["value"]
+        sub = n.get("sub", [])
+        l = self.l
+        if pat == "param":
+            return
+        if pat == "same":
+            self.same(value, n["other"])
+            return
+        if pat == "value":
+            self.same(value, self.expr(sub[0]))
+            return
+        if pat == "funtype":
+            self.unapply(value, n["f"], n["r"])
+            self.unapply(n["f"], n["op"], n["l"])
+            op = n["op"]
+            self.line("pat_is_node h_" + op + " : x_" + op
+                      + " is Eo.Term.FunType by Embed.inv_Term_FunType " + self.els())
+            for s in sub:
+                self.pattern(s)
+            return
+        if pat == "apply":
+            self.unapply(value, n["f"], n["a"])
+            for s in sub:
+                self.pattern(s)
+            return
+        fields = n["fields"]
+        if pat == "native":
+            name = n["name"]
+            if not ((name == "nat.zero" and not fields)
+                    or (name == "nat.succ" and len(fields) == 1)):
+                self.unsupported("a native pattern")
+            if name in ("nat.zero", "nat.succ"):
+                # the pattern stores a numeral, so the store changes
+                st, inv = self.st(), self.inv()
+                before = words(l.facts)
+                l.store += 1
+                tail = ("storing ⟨" + self.st() + ", " + self.inv()
+                        + "⟩ growing hG carrying" + before + " in " + l.case_def)
+                if name == "nat.zero":
+                    self.line("pat_native_zero Store.native_pattern_nat_zero_spec "
+                              + st + " " + value + " h_" + value + " " + inv
+                              + " h64 " + tail)
+                else:
+                    f = fields[0]
+                    self.line("pat_destruct_lit Store.native_pattern_succ_spec " + st
+                              + " " + value + " h_" + value + " " + inv + " h64 as ⟨"
+                              + f + ", x_" + f + ", h_" + f + "⟩ " + tail)
+                    l.facts.append("h_" + f)
+        else:
+            name = n["ctor"]
+            if len(fields) == 1 and name in DESTRUCT_LIT:
+                # destruct stores a native copy of the literal's value
+                st, inv = self.st(), self.inv()
+                before = words(l.facts)
+                l.store += 1
+                f = fields[0]
+                self.line("pat_destruct_lit " + DESTRUCT_LIT[name] + " " + st + " "
+                          + value + " h_" + value + " " + inv + " h64 as ⟨" + f
+                          + ", x_" + f + ", h_" + f + "⟩ storing ⟨" + self.st() + ", "
+                          + self.inv() + "⟩ growing hG carrying" + before + " in "
+                          + l.case_def)
+                l.facts.append("h_" + f)
+            elif len(fields) == 2 and name == "$emb_Binary":
+                # its width and its value, as two numerals
+                st, inv = self.st(), self.inv()
+                before = words(l.facts)
+                l.store += 1
+                f, g = fields
+                self.line("pat_destruct_lit2 Store.destruct_binary_spec " + st + " "
+                          + value + " h_" + value + " " + inv + " h64 as ⟨" + f
+                          + ", x_" + f + ", h_" + f + "⟩ ⟨" + g + ", x_" + g + ", h_"
+                          + g + "⟩ storing ⟨" + self.st() + ", " + self.inv()
+                          + "⟩ growing hG carrying" + before + " in " + l.case_def)
+                l.facts += ["h_" + f, "h_" + g]
+                l.binary_of[f + " " + g] = value
+            elif not self.has_ctor_lemma(name):
+                self.unsupported("the constructor " + name
+                                 + " in a pattern, which is not stored as a node")
+            else:
+                text = "pat_destruct CtorSpec." + ident(name) + ".destruct h_" + value + " as"
+                for f in fields:
+                    text += " ⟨" + f + ", x_" + f + ", h_" + f + "⟩"
+                    l.facts.append("h_" + f)
+                self.line(text + " " + self.els())
+                if (name == self.g.cfg["state"]["cons"] and len(fields) == 2
+                        and value in l.ok_state):
+                    l.ok_state.add(fields[1])  # the tail of an OK state
+                if name == PF and len(fields) == 1 and re.fullmatch(r"a[0-9]+", value):
+                    l.pf_of[fields[0]] = int(value[1:])
+        for s in sub:
+            self.pattern(s)
+
+
+class Generator:
+    def __init__(self, trace, cfg):
+        if trace.get("version") != TRACE_VERSION:
+            raise SystemExit("proofgen: trace version %r, not %d"
+                             % (trace.get("version"), TRACE_VERSION))
+        self.trace = trace
+        self.cfg = cfg
+        self.proofs = []
+
+    def hand(self, p, entry, callees):
+        """A program proved by hand in pathos (Runtime/), from what is
+        proved of the programs it calls."""
+        proof = Proof(p["name"])
+        proof.lean = p["lean"]
+        proof.nargs = len(p["args"])
+        proof.good = list(entry["good"])
+        proof.calls = set(callees)
+        proof.hand = entry["lemma"] + " n" + "".join(
+            " (fun m hm => (ih m hm)." + ident(c) + ")" for c in callees)
+        return proof
+
+    def program(self, p):
+        kind = p["kind"]
+        hand = self.cfg.get("hand", {})
+        if kind == "state_nth":
+            return self.hand(p, hand["state_nth"], p["calls"])
+        if kind == "assume_fold":
+            h = hand.get("assume_fold")
+            if h and p["guard_calls"] == h["guard_calls"] and p["push"] == h["push"]:
+                return self.hand(p, h, p["guard_calls"] + [p["push"]])
+            proof = Proof(p["name"])
+            proof.why = "compiled to a function of the runtime"
+            return proof
+        proof = Proof(p["name"])
+        proof.lean = p["lean"]
+        if kind == "define":
+            proof.why = "a constant, not a program with cases"
+            return proof
+        args = p["args"]
+        proof.nargs = len(args)
+        state_type = self.cfg["state"]["type"]
+        proof.good = ["StateOK" if a["type"] == state_type else "" for a in args]
+        proof.stuck = list(p["stuck"])
+        proof.groups = p["groups"]
+        proof.top = p["top"]
+        proof.loop = p["loop"]
+        for c, case in enumerate(p["cases"]):
+            l = Lean()
+            l.case_def = "EoCases." + p["lean"] + ".case_%d" % c
+            l.facts = ["h_a%d" % j for j in range(proof.nargs)]
+            l.pure = ["hn_a%d" % j for j in proof.stuck]
+            l.ok_state = {"a%d" % j for j in range(proof.nargs)
+                          if proof.good[j] == "StateOK"}
+            e = Emitter(self, l)
+            for n in case["patterns"]:
+                e.pattern(n)
+            if "again" in case:
+                reps = ""
+                goods = 0
+                for j, n in enumerate(case["again"]):
+                    v = e.expr(n)
+                    reps += " h_" + v
+                    if proof.good[j] == "StateOK":
+                        goods += 1
+                        if v not in l.ok_state:
+                            e.unsupported("a state that may not be OK")
+                last = ("case_again " + e.inv() + " hG with" + reps
+                        + ("" if goods == 0 else " goods %d" % goods))
+            else:
+                v = e.expr(case["body"])
+                last = "case_done " + e.inv() + " hG with h_" + v
+            l.unfolds += case["helpers"]
+            lines = l.lines + [last + " in " + l.case_def + " using" + words(l.pure)]
+            for j in sorted(l.proof_ok):
+                proof.good[j] = "ProofOK"
+                if proof.loop and not l.why:
+                    e.unsupported("a loop whose proof argument is assumed OK")
+            proof.cases.append(Case(words(l.unfolds), lines, l.why))
+            proof.calls |= l.calls
+            if not proof.why and l.why:
+                proof.why = "case %d has %s" % (c, l.why)
+        if not proof.why:
+            # where no case applies, lemma C gives the stuck value for
+            # terms, proofs and native Booleans, otherwise `default`
+            rk = p["ret"]["meta"]
+            proof.split = rk not in ("EUNOIA", "PROOF")
+            if proof.split and p["ret"]["type"] != '($native_type_0 "Bool")':
+                proof.no_case = "default"
+        if not proof.why:
+            # lemma C takes that each argument is a value a store can hold
+            valid = set(self.cfg["valid"]["types"])
+            for a in args:
+                if a["meta"] not in ("EUNOIA", "PROOF") and a["type"] not in valid:
+                    proof.why = ("an argument of a type that has no Valid in the "
+                                 "proofs yet (lemma C)")
+                    break
+        cache = p["cache"]
+        proof.cache = {"none": "", "program": str(cache.get("id")),
+                       "eo_type": "4294967296", "smt_type": "4294967297"}[cache["kind"]]
+        proof.type_kind = {"eo_type": "Eunoia", "smt_type": "Smt"}.get(cache["kind"], "")
+        return proof
+
+    def run(self):
+        reached = {}
+        for p in self.trace["programs"]:
+            self.proofs.append(self.program(p))
+            reached[p["name"]] = not p["datatype_operators_only"]
+        self.reached = reached
+        return self.print_proofs()
+
+    def print_proofs(self):
+        proofs = self.proofs
+        why = {}
+        for p in proofs:
+            why[p.name] = (p.why if self.reached[p.name] else
+                           "no logos function: only the runtime's datatype "
+                           "operators reach it")
+        good_of = {p.name: p.good for p in proofs}
+
+        def resolve(line, reason):
+            out = ""
+            i = 0
+            while True:
+                b = line.find("\x01", i)
+                if b < 0:
+                    break
+                m1 = line.find("\x02", b)
+                m2 = line.find("\x02", m1 + 1)
+                e = line.find("\x03", m2)
+                out += line[i:b]
+                callee = line[b + 1:m1]
+                j = int(line[m1 + 1:m2])
+                ok = line[m2 + 1] == "1"
+                gl = good_of.get(callee)
+                g = gl[j] if gl is not None and j < len(gl) else ""
+                if g:
+                    out += " (by good_tac)"
+                    if not ok and reason is not None and not reason[0]:
+                        reason[0] = ("a state that may not be OK" if g == "StateOK"
+                                     else "a proof that may not be OK")
+                i = e + 1
+            return out + line[i:]
+
+        for p in proofs:
+            for c, case in enumerate(p.cases):
+                if why[p.name]:
+                    break
+                reason = [""]
+                for l in case.lines:
+                    resolve(l, reason)
+                if reason[0]:
+                    why[p.name] = "case %d has %s" % (c, reason[0])
+        changed = True
+        while changed:
+            changed = False
+            for p in proofs:
+                if why[p.name]:
+                    continue
+                for c in sorted(p.calls):
+                    if c not in why or why[c]:
+                        why[p.name] = "it calls " + c + ", which has no proof"
+                        changed = True
+                        break
+        o = []
+        table = ["source\tproof\twhy\n"]
+        o.append("module\npublic import $CHECKER$\npublic import $CALC$.Logos\n"
+                 "import all $CALC$.Logos\npublic import $CALC$.SmtTranslate\n"
+                 "import all $CALC$.SmtTranslate\npublic import $CALC$.SmtModel\n"
+                 "import all $CALC$.SmtModel\npublic import $CASES$\nimport all $CASES$\n"
+                 "public import PathosProofs.Generated\n\n"
+                 "/-!\n# The proofs about the generated functions\n\n"
+                 "Written by Ethos's rust-meta with the functions: for each program, "
+                 "that its\nRust computes what logos's function of the same name does. "
+                 "Do not edit.\n-/\n\n"
+                 "set_option linter.unusedVariables false\n"
+                 "set_option maxRecDepth 8000\n\n"
+                 "@[expose] public section\n\nnamespace pathos_compiled_checker\n\n"
+                 "open Aeneas Aeneas.Std Result\nopen Eo hiding Term\nopen Smtm\n"
+                 "open generated")
+        for k in range(self.trace["parts"]):
+            o.append(" generated.part%d" % k)
+        o.append("\n\n")
+        ok, err = "core.result.Result.Ok", "core.result.Result.Err"
+
+        class Names:
+            pass
+
+        def names(p):
+            n = Names()
+            n.id = p.id
+            n.lean = p.lean
+            n.as_ = n.xs = n.terms = n.reps = n.binders = n.valid = n.valids = ""
+            n.good_binders = n.goods = n.good_premises = ""
+            for i in range(p.nargs):
+                a = "a%d" % i
+                n.as_ += " " + a
+                n.xs += " x_" + a
+                n.terms += " (x_" + a + " : _)"
+                n.reps += " h_" + a
+                n.binders += " (h_" + a + " : Represents.rep s " + a + " x_" + a + ")"
+                n.valid += " (hw_" + a + " : Valid.valid x_" + a + ")"
+                n.valids += " (by valid_tac hinv h_" + a + ")"
+                if i < len(p.good) and p.good[i]:
+                    n.good_binders += " (hg_" + a + " : " + p.good[i] + " x_" + a + ")"
+                    n.goods += " hg_" + a
+                    n.good_premises += " " + p.good[i] + " x_" + a + " →"
+            n.handles = "" if p.nargs == 0 else " (" + n.as_[1:] + " : Term)"
+            return n
+
+        proved = []
+        for p in proofs:
+            table.append(p.name + "\t" + ("none" if why[p.name] else "generated")
+                         + "\t" + why[p.name] + "\n")
+            if not why[p.name]:
+                proved.append(p)
+        for p in proved:
+            n = names(p)
+            o.append("/-- What is proved of `" + p.name + "`. -/\ndef " + n.id
+                     + ".Spec (n : Nat) : Prop :=\n  ∀ (s : Store)" + n.handles + n.terms
+                     + ", s.Inv → Platform64 → s.remaining ≤ n →\n   ")
+            for i in range(p.nargs):
+                o.append(" Represents.rep s a%d x_a%d →" % (i, i))
+            o.append(n.good_premises + "\n    " + n.id + " s" + n.as_
+                     + " ⦃ r s' => s'.Inv ∧ s.Grows s' ∧\n      match r with\n      | "
+                     + ok + " t => Represents.rep s' t (" + n.lean + n.xs
+                     + ")\n      | " + err + " _ => True ⦄div\n\n")
+        o.append("/-- What is proved of the programs, for stores that can enter `n` "
+                 "more calls. -/\nstructure Specs (n : Nat) : Prop where\n")
+        for p in proved:
+            o.append("  " + p.id + " : " + p.id + ".Spec n\n")
+        o.append("\n")
+        for p in proved:
+            o.append(self.print_program(p, names(p), resolve, ok, err))
+        o.append("/-- **Every program with a generated proof computes what logos's "
+                 "function does.** -/\ntheorem specs (n : Nat) : Specs n := by\n"
+                 "  induction n using Nat.strong_induction_on with\n  | _ n ih =>\n"
+                 "    exact ⟨")
+        o.append(",\n      ".join(p.id + "_spec n ih" for p in proved))
+        o.append("⟩\n\nend pathos_compiled_checker\n")
+        return {"proofs.lean": "".join(o), "proofs.tsv": "".join(table),
+                "cache_sem.lean": self.print_cache_sem(why)}
+
+    def print_program(self, p, n, resolve, ok, err):
+        o = []
+        if p.hand:
+            o.append("/-- `" + p.name + "`, by the proof written by hand. -/\ntheorem "
+                     + n.id + "_spec (n : Nat) (ih : ∀ m < n, Specs m) : " + n.id
+                     + ".Spec n :=\n  " + p.hand + "\n\n")
+            return "".join(o)
+        head = (" (n : Nat) (ih : Specs n) (s : Store)" + n.handles + n.terms
+                + "\n    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n)"
+                + n.binders + n.good_binders)
+        stuck = facts = ""
+        for i in p.stuck:
+            stuck += " (hn_a%d : x_a%d ≠ Eo.Term.Stuck)" % (i, i)
+            facts += " hn_a%d" % i
+        not_stuck = facts
+        post = " ⦃ r s' => s'.Inv ∧ s.Grows s' ∧\n      match r with\n"
+        nxt = lst = ""
+        for i in range(p.nargs):
+            nxt += " (u%d : Term) (y%d : _)" % (i, i)
+            lst += ("u" if i == 0 else ", u") + str(i)
+        again = "∃" + nxt + ", arr.val = [" + lst + "]"
+        ys = ""
+        for i in range(p.nargs):
+            again += " ∧ Represents.rep s' u%d y%d" % (i, i)
+            ys += " y%d" % i
+        for i in range(p.nargs):
+            if p.good[i] == "StateOK":
+                again += " ∧ StateOK y%d" % i
+        defs = cds = ""
+
+        def cd_of(c):
+            return "EoCases." + p.lean + ".case_%d" % c
+
+        for c, case in enumerate(p.cases):
+            cd = cd_of(c)
+            fn = "case_%d_%s" % (c, n.id)
+            defs += " " + cd
+            cds += ("" if c == 0 else ", ") + cd + n.xs
+            o.append("theorem " + fn + "_spec" + head + stuck + " :\n    " + fn + " s"
+                     + n.as_ + post)
+            if p.loop:
+                o.append("      | " + ok + " (some (Next.Done t)) =>\n        ∃ res, " + cd
+                         + n.xs + " = some res ∧ Represents.rep s' t res\n      | " + ok
+                         + " (some (Next.Again arr)) =>\n        " + again
+                         + " ∧\n          " + cd + n.xs + " = some (" + n.lean + ys + ")\n")
+            else:
+                o.append("      | " + ok + " (some t) =>\n        ∃ res, " + cd + n.xs
+                         + " = some res ∧ Represents.rep s' t res\n")
+            o.append("      | " + ok + " none => " + cd + n.xs + " = none\n      | " + err
+                     + " _ => True ⦄div := by\n  unfold " + fn + case.unfolds
+                     + "\n  have hG := Store.Grows.refl s\n")
+            for l in case.lines:
+                o.append("  " + resolve(l, None) + "\n")
+            o.append("\n")
+
+        def leaves(lo, hi):
+            return "[" + ", ".join(cd_of(c) + n.xs for c in range(lo, hi)) + "]"
+
+        def hl(lo, hi):
+            return ", ".join("hl_%d" % c for c in range(lo, hi))
+
+        def none_facts(lo, hi):
+            return "".join(" hl_%d" % c for c in range(lo, hi))
+
+        def group_step(m, lo, hi, k, extra, body):
+            sk = "" if k == 0 else str(k)
+            pat = "⟨" + hl(m["lo"], m["hi"]) + "⟩"
+            tac = ("body_group" if body else "group") + ("_round_step" if p.loop
+                                                         else "_step")
+            return ("  " + tac + " with " + m["name"] + "_spec n ih s" + sk + n.as_
+                    + n.xs + " hinv" + sk + " h64 "
+                    + ("hrem" if k == 0 else "(hG.rem hrem)") + n.reps + n.goods
+                    + not_stuck + "\n    as ⟨s%d, hinv%d, hc%d⟩ growing hG carrying"
+                    % (k + 1, k + 1, k) + n.reps
+                    + (" hbud" if body and p.loop else "") + "\n    split (show "
+                    + leaves(lo, hi) + " = " + leaves(lo, m["lo"]) + " ++ "
+                    + leaves(m["lo"], m["hi"]) + " ++ " + leaves(m["hi"], hi)
+                    + " from rfl)\n    otherwise " + pat + " using" + extra
+                    + none_facts(lo, m["lo"]) + "\n")
+
+        for g in p.groups:
+            fn = g["name"]
+            o.append("theorem " + fn + "_spec" + head + stuck + " :\n    " + fn + " s"
+                     + n.as_ + post)
+            if p.loop:
+                o.append("      | " + ok + " (some (Next.Done t)) =>\n        ∃ res, (∀ d, "
+                         + "firstSome " + leaves(g["lo"], g["hi"])
+                         + " d = res) ∧ Represents.rep s' t res\n      | " + ok
+                         + " (some (Next.Again arr)) =>\n        " + again
+                         + " ∧\n          ∀ d, firstSome " + leaves(g["lo"], g["hi"])
+                         + " d = " + n.lean + ys + "\n")
+            else:
+                o.append("      | " + ok + " (some t) =>\n        ∃ res, (∀ d, firstSome "
+                         + leaves(g["lo"], g["hi"]) + " d = res) ∧ Represents.rep s' t res\n")
+            o.append("      | " + ok + " none =>")
+            for c in range(g["lo"], g["hi"]):
+                o.append((" " if c == g["lo"] else " ∧ ") + cd_of(c) + n.xs + " = none")
+            o.append("\n      | " + err + " _ => True ⦄div := by\n  unfold " + fn
+                     + "\n  have hG := Store.Grows.refl s\n")
+            k = 0
+            for m in g["members"]:
+                o.append(group_step(m, g["lo"], g["hi"], k, facts, False))
+                k += 1
+            o.append("  group_none hinv%d hG with " % k
+                     + (hl(g["lo"], g["hi"]) if g["hi"] - g["lo"] == 1
+                        else "⟨" + hl(g["lo"], g["hi"]) + "⟩") + "\n\n")
+        o.append("/-- logos's `" + p.lean
+                 + "` is what the generated body does: the tests for the stuck term,\n"
+                   "then the first case that answers. -/\ntheorem "
+                 + n.id + ".rust_eq" + n.terms + n.valid + " :\n    " + n.lean + n.xs
+                 + " =\n      (")
+        for i in p.stuck:
+            o.append("if x_a%d = Eo.Term.Stuck then HasStuck.stuck else " % i)
+        o.append("firstSome [" + cds + "] " + p.no_case + ") := by\n  conv => lhs; unfold "
+                 + n.lean + "\n  unfold" + defs + "\n  logos_eq\n\n")
+        rnd = ("step_" if p.loop else "body_") + n.id
+        o.append("theorem " + rnd + "_spec" + head + " :\n    " + rnd + " s" + n.as_ + post)
+        if p.loop:
+            o.append("      | " + ok + " (Next.Done t) => Represents.rep s' t (" + n.lean
+                     + n.xs + ")\n      | " + ok + " (Next.Again arr) =>\n        "
+                     + "s'.budget < s.budget ∧ " + again + " ∧\n          " + n.lean + n.xs
+                     + " = " + n.lean + ys + "\n")
+        else:
+            o.append("      | " + ok + " t => Represents.rep s' t (" + n.lean + n.xs + ")\n")
+        o.append("      | " + err + " _ => True ⦄div := by\n  rw [" + n.id + ".rust_eq"
+                 + n.xs + n.valids + "]\n  unfold " + rnd
+                 + "\n  have hG := Store.Grows.refl s\n")
+        store = 0
+
+        def st():
+            return "" if store == 0 else str(store)
+
+        splitting = " splitting" + n.xs if p.split else ""
+        if p.loop:
+            store += 1
+            o.append("  tick_step as ⟨s1, hinv1⟩ growing hG carrying" + n.reps + "\n")
+        for i in p.stuck:
+            o.append("  stuck_check h_a%d : x_a%d as hn_a%d else hinv" % (i, i, i)
+                     + st() + " hG\n")
+        if p.groups:
+            hn = facts
+            for m in p.top:
+                o.append(group_step(m, 0, len(p.cases), store, hn, True))
+                store += 1
+            o.append("  " + ("round_stuck" if p.loop else "body_stuck") + " hinv" + st()
+                     + " hG using" + hn + none_facts(0, len(p.cases)) + " in" + defs
+                     + splitting + "\n\n")
+        else:
+            for c in range(len(p.cases)):
+                o.append("  " + ("round_step" if p.loop else "case_step") + " with case_%d_"
+                         % c + n.id + "_spec n ih s" + st() + n.as_ + n.xs + " hinv" + st()
+                         + " h64 " + ("hrem" if store == 0 else "(hG.rem hrem)") + n.reps
+                         + n.goods + not_stuck + "\n    as ⟨s%d, hinv%d, hc%d⟩" % (
+                             store + 1, store + 1, c)
+                         + " growing hG carrying" + n.reps + (" hbud" if p.loop else "")
+                         + " using" + facts + "\n")
+                facts += " hc%d" % c
+                store += 1
+            o.append("  " + ("round_stuck" if p.loop else "body_stuck") + " hinv" + st()
+                     + " hG using" + facts + " in" + defs + splitting + "\n\n")
+        result = ("      | " + ok + " t => Represents.rep s' t (" + n.lean + n.xs
+                  + ")\n      | " + err + " _ => True ⦄div")
+        if p.loop:
+            order = n.as_ + " s" + n.xs
+            o.append("theorem body_" + n.id + "_spec" + head + " :\n    body_" + n.id + " s"
+                     + n.as_ + post + result + " := by\n")
+            motive = ("∀ (k : Nat)" + n.handles + " (s : Store)" + n.terms
+                      + ", s.budget ≤ k → s.Inv → s.remaining ≤ n →\n     ")
+            for i in range(p.nargs):
+                motive += " Represents.rep s a%d x_a%d →" % (i, i)
+            motive += n.good_premises
+            motive += "\n      body_" + n.id + " s" + n.as_ + post + result
+            o.append("  refine (?_ : " + motive + ") s.budget" + order
+                     + " le_rfl hinv hrem" + n.reps + n.goods + "\n  intro k\n"
+                     + "  refine Nat.strong_induction_on k ?_\n  intro k ihl" + order
+                     + " hk hinv hrem" + n.reps + n.goods + "\n  unfold body_" + n.id
+                     + " body_" + n.id + "_loop"
+                     + "\n  step with step_" + n.id + "_spec n ih s" + n.as_ + n.xs
+                     + " hinv h64 hrem" + n.reps + n.goods
+                     + " as ⟨r, s1, hinv1, hg1, hr⟩\n  cases r with\n"
+                       "  | Err e => simp only [WP.dspec_ok, WP.uncurry'_pair]; "
+                       "exact ⟨hinv1, hg1, trivial⟩\n  | Ok nx =>\n    cases nx with\n"
+                       "    | Done value =>\n      simp only [WP.dspec_ok, "
+                       "WP.uncurry'_pair]\n      exact ⟨hinv1, hg1, hr⟩\n"
+                       "    | Again next =>\n      obtain ⟨hlt, ")
+            bs = ys2 = hreps = ""
+            for i in range(p.nargs):
+                o.append("u%d, y%d, " % (i, i))
+                bs += " b%d" % i
+                ys2 += " y%d" % i
+                hreps += ", hrep%d" % i
+            for i in range(p.nargs):
+                if p.good[i] == "StateOK":
+                    hreps += ", hgood%d" % i
+            o.append("hnext" + hreps + ", heq⟩ := hr\n      simp only\n"
+                     "      have hlen : next.length = %d" % p.nargs
+                     + " := by simp [Array.length, hnext]\n")
+            for i in range(p.nargs):
+                o.append("      step as ⟨b%d, hb%d⟩\n      obtain rfl : b%d = u%d := by "
+                         "simp [hb%d, hnext]\n" % (i, i, i, i, i))
+            hs2 = hreps.replace(",", " ")
+            o.append("      have hrec := ihl s1.budget (by omega)" + bs + " s1" + ys2
+                     + " le_rfl hinv1 (hg1.rem hrem)" + hs2 + "\n      unfold body_" + n.id
+                     + " at hrec\n      apply WP.dspec_mono hrec\n      loop_close hg1 heq\n\n")
+        congr = xlist = ""
+        replist = "List.Forall₂.nil"
+        for i in range(p.nargs):
+            congr += " (by congr_one h_a%d hn)" % i
+            xlist += ("x_a" if i == 0 else ", x_a") + str(i)
+        fpost = "(fun s' t => Represents.rep s' t (" + n.lean + n.xs + "))"
+        if not p.cache:
+            framed = "framed s hinv hrem"
+        elif p.type_kind:
+            framed = ("framed_type_cached s hinv hrem h64 cache.TypeCacheKind."
+                      + p.type_kind + " a0")
+        else:
+            framed = ("framed_cached s hinv hrem " + p.cache + "#u32 _ ["
+                      + ", ".join("a%d" % i for i in range(p.nargs)) + "] rfl")
+        o.append("theorem " + n.id + "_spec (n : Nat) (ih : ∀ m < n, Specs m) : "
+                 + n.id + ".Spec n := by\n  intro s" + n.as_ + n.xs + " hinv h64 hrem"
+                 + n.reps + n.goods + "\n  unfold " + n.id + "\n  apply WP.dspec_mono (Store."
+                 + framed + "\n    (fun s1 => body_" + n.id + " s1" + n.as_ + ") " + fpost
+                 + "\n    (by intro _ _ _ hn h; congr_one h hn)\n")
+        if p.cache:
+            bs = ys_ = hb = subst = as_ = hput = ""
+            for i in range(p.nargs):
+                bs += "b%d, " % i
+                ys_ += "y%d, " % i
+                hb += ", hb%d" % i
+                subst += ("      obtain rfl := Rep.functional hb%d (Represents.congr h_a%d hn)\n"
+                          % (i, i))
+                as_ += "a%d, " % i
+                hput += ", Rep.mono hpre h_a%d" % i
+            o.append("    (by\n      intro s1 res hn hsem\n      obtain ⟨" + bs + ys_
+                     + "hargs" + hb + ", hr⟩ := ProgramSem.of_" + p.cache + " hsem\n"
+                     + ("" if p.nargs == 0 else
+                        "      simp only [List.cons.injEq, and_true] at hargs\n"
+                        "      obtain ⟨" + ", ".join(["rfl"] * p.nargs) + "⟩ := hargs\n")
+                     + subst + "      exact hr)\n    (by\n      intro s1 res hpre h\n"
+                     "      exact ProgramSem.to_" + p.cache + " ⟨" + as_ + xlist
+                     + ("" if p.nargs == 0 else ", ") + "rfl" + hput + ", h⟩)\n")
+        o.append("    (fun s1 m hinv1 hn hm hrem1 => by\n      spec_exact body_" + n.id
+                 + "_spec m (ih m hm) s1" + n.as_ + n.xs + " hinv1 h64 hrem1" + congr
+                 + n.goods + "))\n  rintro ⟨r, s'⟩ h\n  cases r <;> simpa [WP.uncurry'_pair]"
+                 " using h\n\n")
+        return "".join(o)
+
+    def print_cache_sem(self, why):
+        c = ["module\npublic import $CHECKER$\npublic import $CALC$.Logos\n"
+             "public import $CALC$.SmtTranslate\npublic import $CALC$.SmtModel\n"
+             "public import PathosProofs.Store.Rep\n\n"
+             "/-!\n# What the cache of program results holds\n\n"
+             "Written by Ethos's rust-meta with the functions: for each program "
+             "whose results\nare cached, that an entry's result is the program's on "
+             "the entry's arguments.\nDo not edit.\n-/\n\n"
+             "@[expose] public section\n\nnamespace pathos_compiled_checker\n\n"
+             "open Aeneas Aeneas.Std Result\nopen Eo hiding Term\nopen Smtm\n\n"]
+        conj, mono, lemmas = [], [], []
+        cached = sorted(((int(p.cache), i, p) for i, p in enumerate(self.proofs)
+                         if p.cache and not why[p.name]), key=lambda e: (e[0], e[1]))
+        path = ""
+        for _, _, p in cached:
+            as_ = xs = ex = reps = hs = mono_args = ""
+            for i in range(p.nargs):
+                as_ += ("a" if i == 0 else ", a") + str(i)
+                xs += " x%d" % i
+                ex += " (a%d : Term)" % i
+                reps += " ∧ Rep nodes a%d.val x%d" % (i, i)
+                hs += ", h%d" % i
+                mono_args += ", Rep.mono hpre h%d" % i
+            for i in range(p.nargs):
+                ex += " (x%d : _)" % i
+            nm = "".join("a%d, " % i for i in range(p.nargs)) + \
+                "".join("x%d, " % i for i in range(p.nargs))
+            k = p.cache
+            c.append("/-- `" + p.name + "`. -/\ndef ProgramSem.p" + k
+                     + " (nodes : List TermData) (args : List Term) (res : Term) : Prop :=\n  "
+                     + ("" if p.nargs == 0 else "∃" + ex + ", ") + "args = [" + as_ + "]"
+                     + reps + " ∧\n    Rep nodes res.val (" + p.lean + xs
+                     + ")\n\ntheorem ProgramSem.p" + k
+                     + ".mono {nodes nodes' : List TermData} {args : List Term} {res : Term}\n"
+                       "    (hpre : nodes <+: nodes') (h : ProgramSem.p" + k
+                     + " nodes args res) :\n    ProgramSem.p" + k
+                     + " nodes' args res := by\n  obtain ⟨" + nm + "hargs" + hs
+                     + ", hr⟩ := h\n  exact ⟨" + nm + "hargs" + mono_args
+                     + ", Rep.mono hpre hr⟩\n\n")
+            conj.append("  (pid = " + k + " → ProgramSem.p" + k + " nodes args res) ∧\n")
+            mono.append("fun e => ProgramSem.p" + k + ".mono hpre (h" + path + ".1 e), ")
+            lemmas.append("theorem ProgramSem.of_" + k
+                          + " {nodes : List TermData} {args : List Term} {res : Term}\n"
+                            "    (h : ProgramSem nodes " + k + " args res) : ProgramSem.p" + k
+                          + " nodes args res :=\n  h" + path + ".1 rfl\n\n"
+                            "theorem ProgramSem.to_" + k
+                          + " {nodes : List TermData} {args : List Term} {res : Term}\n"
+                            "    (h : ProgramSem.p" + k + " nodes args res) : ProgramSem nodes "
+                          + k + " args res := by\n  unfold ProgramSem\n  refine ⟨"
+                          + "?_, " * len(cached)
+                          + "trivial⟩ <;> intro e <;> first | exact h | exact absurd e (by "
+                            "decide)\n\n")
+            path += ".2"
+        c.append("/-- What an entry of the program `pid` with the arguments `args` and "
+                 "the result\n`res` says, in a store whose terms are `nodes`. -/\n"
+                 "def ProgramSem (nodes : List TermData) (pid : Nat) (args : List Term) "
+                 "(res : Term) : Prop :=\n" + "".join(conj)
+                 + "  True\n\ntheorem ProgramSem.mono {nodes nodes' : List "
+                   "TermData} {pid : Nat} {args : List Term}\n"
+                   "    {res : Term} (hpre : nodes <+: nodes') (h : "
+                   "ProgramSem nodes pid args res) :\n"
+                   "    ProgramSem nodes' pid args res :=\n  ⟨"
+                 + "".join(mono) + "trivial⟩\n\n" + "".join(lemmas)
+                 + "end pathos_compiled_checker\n")
+        return "".join(c)
+
+
+# -- the embedding (from lean-meta's table) ----------------------------------
+
+EMBED_HEADER = """module
+
+public import $CHECKER$
+public import PathosProofs.Store.Tree
+public import $EO_CALC$.Logos
+public import $EO_CALC$.SmtTranslate
+
+/-!
+How the Rust checker that rust-meta compiles stores the values of the
+checker: for each datatype `T` of the embedding, `enc_T` is the tree of the
+store (`Tree`, in pathos's proofs) that a value is stored as, `dec_T` reads
+a value back from a tree, and `dec_enc_T` says that it gets every value
+back that the store can hold (`emb_T`: its native strings and bit-vectors
+fit the runtime's). So `enc_T` is injective there: equal trees, equal
+values.
+
+A constructor is stored as the runtime's `Constructor::embedding` says: the
+stuck term, an application, an object literal, a user operator as a node of
+its own constructor with no fields, and every other constructor as a node
+over its fields, natives as native literals.
+
+Written by lean-meta with the case file, for pathos's proofs (its
+`MiniEmbed.lean`); `$CHECKER$` is the Lean of the compiled checker.
+Nothing in logos uses it.
+-/
+
+@[expose] public section
+
+set_option linter.unusedVariables false
+set_option linter.internalConstructors false
+set_option maxHeartbeats 10000000
+
+namespace pathos_compiled_checker.Embed
+
+open Aeneas Aeneas.Std
+
+noncomputable section
+
+"""
+EMBED_FOOTER = """
+end
+
+end pathos_compiled_checker.Embed
+"""
+CTORS_HEADER = """module
+
+public import $CHECKER$
+public import PathosProofs.Runtime.Node
+public import MiniEmbed
+
+/-!
+What the Rust checker's `construct` and `destruct` do with each data
+constructor of the embedding, under the names that rust-meta's generated
+proofs give them (`CtorSpec.<the Rust name>.construct`, `.destruct`):
+`construct` on handles of the fields gives a handle of the value, and
+`destruct` on a handle of a value finds handles of its fields exactly when
+the value has that constructor. Each is the generic lemma of pathos's
+`Runtime/Node.lean` with the inversion of the constructor's tree.
+
+The constructors the runtime does not store as a node over their fields
+(the stuck term, applications, object literals, variables) are not here.
+
+Written by lean-meta with the embedding, for pathos's proofs (its
+`MiniCtors.lean`); `$CHECKER$` is the Lean of the compiled checker.
+-/
+
+@[expose] public section
+
+set_option linter.unusedVariables false
+set_option linter.internalConstructors false
+set_option maxHeartbeats 10000000
+
+namespace pathos_compiled_checker
+
+open Aeneas Aeneas.Std Result
+
+"""
+CTORS_FOOTER = """
+end pathos_compiled_checker
+"""
+LITS = {"$emb_Boolean", "$emb_Numeral", "$emb_Rational", "$emb_String",
+        "$emb_Binary"}
+
+
+def native_codec(t):
+    """The codec in PathosProofs.Store.Tree of a native type, or ""."""
+    return {"native_Bool": "Bool", "native_Int": "Int", "CIndex": "Int",
+            "native_Nat": "Nat", "native_Rat": "Rat",
+            "native_String": "Str"}.get(t, "")
+
+
+def qualified(t):
+    return ("Smtm." if t.startswith("Smt") else "Eo.") + t
+
+
+def rtrim_lines(text):
+    return "\n".join(l.rstrip(" \t") for l in text.split("\n"))
+
+
+def embedding(table):
+    """MiniEmbed's and MiniCtors's text: the encoding of each embedded
+    datatype in the store's trees, and the lemmas of the constructors."""
+    if table.get("version") != 1:
+        raise SystemExit("proofgen: embedding table version %r, not 1"
+                         % table.get("version"))
+
+    class C:
+        def __init__(self, d):
+            self.sname, self.cname, self.type = d["eo"], d["lean"], d["type"]
+            self.fields, self.user_op = d["fields"], d["user_op"]
+            self.unsupported = d["unsupported"]
+
+    ctors = [C(d) for d in table["constructors"]]
+    by_type, user_ops, dropped, why = {}, [], set(), {}
+    for c in ctors:
+        if c.user_op:
+            user_ops.append(c)
+            if c.unsupported:
+                dropped.add("Term")
+                why["Term"] = c.unsupported
+            continue
+        by_type.setdefault(c.type, []).append(c)
+        if c.unsupported and c.type not in dropped:
+            dropped.add(c.type)
+            why[c.type] = c.unsupported
+    # a datatype is embedded if each of its fields is a native with a codec
+    # or an embedded datatype
+    changed = True
+    while changed:
+        changed = False
+        for ty in sorted(by_type):
+            if ty in dropped:
+                continue
+            for c in by_type[ty]:
+                for f in c.fields:
+                    ok = ((c.sname == "$emb_UOp" and f == "UserOp") or native_codec(f)
+                          or (f in by_type and f not in dropped))
+                    if not ok and ty not in dropped:
+                        dropped.add(ty)
+                        why[ty] = "the field " + f + " of " + c.cname
+                        changed = True
+    types = [t for t in sorted(by_type) if t not in dropped]
+    # the datatypes that refer to each other, dependencies first (Tarjan)
+    index, low, on_stack, stack, sccs = {}, {}, set(), [], []
+    counter = [0]
+
+    def visit(v):
+        index[v] = low[v] = counter[0]
+        counter[0] += 1
+        stack.append(v)
+        on_stack.add(v)
+        succ = sorted({f for c in by_type[v] for f in c.fields
+                       if f in by_type and f not in dropped})
+        for w in succ:
+            if w not in index:
+                visit(w)
+                low[v] = min(low[v], low[w])
+            elif w in on_stack:
+                low[v] = min(low[v], index[w])
+        if low[v] == index[v]:
+            scc = []
+            while True:
+                w = stack.pop()
+                on_stack.discard(w)
+                scc.append(w)
+                if w == v:
+                    break
+            sccs.append(sorted(scc))
+
+    for v in types:
+        if v not in index:
+            visit(v)
+    o = ["/-! Not embedded (a field or a constructor that has no encoding):\n"]
+    for k in sorted(why):
+        o.append("- `" + k + "`: " + why[k] + "\n")
+    o.append("-/\n\n")
+    if "Term" not in dropped:
+        o.append("/-- The constructor of the store for a user operator. -/\n"
+                 "def uop : Eo.UserOp → schema.Constructor\n")
+        for u in user_ops:
+            o.append("  | Eo.UserOp." + u.cname + " => schema.Constructor."
+                     + ident(u.sname) + "\n")
+        o.append("\n")
+
+    def field_enc(f, x):
+        n = native_codec(f)
+        return "(enc_" + f + " " + x + ")" if not n else "(Tree.enc" + n + " " + x + ")"
+
+    def field_dec(f):
+        n = native_codec(f)
+        return "dec_" + f if not n else "Tree.dec" + n
+
+    def field_ok(f, x):
+        n = native_codec(f)
+        return "emb_" + f + " " + x if not n else "Tree.ok" + n + " " + x
+
+    def field_lemma(f, x, h):
+        n = native_codec(f)
+        return ("dec_enc_" + f + " " + x + " " + h if not n
+                else "Tree.dec_enc" + n + " " + x + " " + h)
+
+    def head(c, q):
+        return q + "." + c.cname + "".join(" x%d" % i for i in range(len(c.fields)))
+
+    for scc in sccs:
+        o.append("mutual\n")
+        for ty in scc:
+            q = qualified(ty)
+            o.append("/-- The tree of the store that a `" + ty
+                     + "` is stored as. -/\ndef enc_" + ty + " : " + q + " → Tree\n")
+            for c in by_type[ty]:
+                o.append("  | " + head(c, q) + " => ")
+                s = c.sname
+                if s == "$emb_Stuck":
+                    o.append("Tree.stuck")
+                elif s == "$emb_Apply":
+                    o.append("Tree.apply " + field_enc(c.fields[0], "x0") + " "
+                             + field_enc(c.fields[1], "x1"))
+                elif s == "$emb_UOp":
+                    o.append("Tree.node (uop x0) []")
+                elif s == "$emb_Boolean":
+                    o.append("Tree.lit (lit.Lit.Boolean x0)")
+                elif s == "$emb_Numeral":
+                    o.append("Tree.lit (lit.Lit.Numeral (num.Integer.ofInt x0))")
+                elif s == "$emb_Rational":
+                    o.append("Tree.lit (lit.Lit.Rational (num.Rational.ofRat x0))")
+                elif s == "$emb_String":
+                    o.append("Tree.lit (lit.Lit.Str (Tree.strOf x0))")
+                elif s == "$emb_Binary":
+                    o.append("Tree.lit (lit.Lit.Binary (Tree.bvOf x0 x1))")
+                else:
+                    o.append("Tree.node schema.Constructor." + ident(s) + " ["
+                             + ", ".join(field_enc(f, "x%d" % i)
+                                         for i, f in enumerate(c.fields)) + "]")
+                o.append("\n")
+        o.append("end\n\n")
+        o.append("mutual\n")
+        for ty in scc:
+            q = qualified(ty)
+            o.append("/-- The `" + ty + "` that a tree stands for. -/\ndef dec_" + ty
+                     + " : Tree → Option " + q + "\n")
+            for c in by_type[ty]:
+                k = q + "." + c.cname
+                s = c.sname
+                if s == "$emb_Stuck":
+                    o.append("  | Tree.stuck => some " + k + "\n")
+                elif s == "$emb_Apply":
+                    o.append("  | Tree.apply t0 t1 => do\n    let x0 ← "
+                             + field_dec(c.fields[0]) + " t0\n    let x1 ← "
+                             + field_dec(c.fields[1]) + " t1\n    some (" + k + " x0 x1)\n")
+                elif s == "$emb_UOp":
+                    for u in user_ops:
+                        o.append("  | Tree.node schema.Constructor." + ident(u.sname)
+                                 + " [] => some (" + k + " Eo.UserOp." + u.cname + ")\n")
+                elif s == "$emb_Boolean":
+                    o.append("  | Tree.lit (lit.Lit.Boolean b) => some (" + k + " b)\n")
+                elif s == "$emb_Numeral":
+                    o.append("  | Tree.lit (lit.Lit.Numeral i) => some (" + k + " i.toInt)\n")
+                elif s == "$emb_Rational":
+                    o.append("  | Tree.lit (lit.Lit.Rational r) => some (" + k + " r.toRat)\n")
+                elif s == "$emb_String":
+                    o.append("  | Tree.lit (lit.Lit.Str v) => some (" + k
+                             + " (Tree.strTo v))\n")
+                elif s == "$emb_Binary":
+                    o.append("  | Tree.lit (lit.Lit.Binary v) => some (" + k
+                             + " (Tree.bvW v) (Tree.bvV v))\n")
+                else:
+                    o.append("  | Tree.node schema.Constructor." + ident(s) + " ["
+                             + ", ".join("t%d" % i for i in range(len(c.fields))) + "] =>")
+                    if not c.fields:
+                        o.append(" some " + k + "\n")
+                        continue
+                    o.append(" do\n")
+                    for i, f in enumerate(c.fields):
+                        o.append("    let x%d ← " % i + field_dec(f) + " t%d\n" % i)
+                    o.append("    some (" + head(c, q) + ")\n")
+            o.append("  | _ => none\n")
+        o.append("end\n\n")
+        o.append("mutual\n")
+        for ty in scc:
+            q = qualified(ty)
+            o.append("/-- A `" + ty + "` that the store can hold: its natives fit the "
+                     "runtime's. -/\ndef emb_" + ty + " : " + q + " → Prop\n")
+            for c in by_type[ty]:
+                o.append("  | " + head(c, q) + " => ")
+                if c.sname == "$emb_String":
+                    o.append("Tree.okStr x0")
+                elif c.sname == "$emb_Binary":
+                    o.append("Tree.okBv x0 x1")
+                elif c.sname in LITS or c.sname == "$emb_UOp" or not c.fields:
+                    o.append("True")
+                else:
+                    o.append(" ∧ ".join(field_ok(f, "x%d" % i)
+                                        for i, f in enumerate(c.fields)))
+                o.append("\n")
+        o.append("end\n\n")
+        for ty in scc:
+            q = qualified(ty)
+            has_uop = any(c.sname == "$emb_UOp" for c in by_type[ty])
+            tac = ("  cases x\n  case UOp y => cases y <;> simp_all [enc_" + ty
+                   + ", uop]\n  all_goals simp_all [enc_" + ty + "]\n" if has_uop
+                   else "  cases x <;> simp_all [enc_" + ty + "]\n")
+            lit_cases = ""
+            for c in by_type[ty]:
+                k = q + "." + c.cname
+                vs = "".join(" x%d" % i for i in range(len(c.fields)))
+                encs = ", ".join(field_enc(f, "x%d" % i) for i, f in enumerate(c.fields))
+                s = c.sname
+                if s == "$emb_Stuck":
+                    o.append("theorem inv_" + ty + "_Stuck {x : " + q + "} (h : enc_" + ty
+                             + " x = Tree.stuck) : x = " + k + " := by\n" + tac + "\n")
+                elif s == "$emb_Apply":
+                    o.append("theorem inv_" + ty + "_Apply {x : " + q
+                             + "} {a b : Tree} (h : enc_" + ty
+                             + " x = Tree.apply a b) :\n    ∃ x0 x1, x = " + k
+                             + " x0 x1 ∧ a = " + field_enc(c.fields[0], "x0")
+                             + " ∧ b = " + field_enc(c.fields[1], "x1") + " := by\n"
+                             + tac + "\n")
+                elif s == "$emb_UOp":
+                    o.append("theorem inv_" + ty + "_UOp {x : " + q
+                             + "} {op : Eo.UserOp} {ts : List Tree}\n    (h : enc_" + ty
+                             + " x = Tree.node (uop op) ts) : x = " + k
+                             + " op ∧ ts = [] := by\n  cases x\n  case UOp y => cases y <;> "
+                               "cases op <;> simp_all [enc_" + ty
+                             + ", uop]\n  all_goals cases op <;> simp_all [enc_" + ty
+                             + ", uop]\n\n")
+                elif s in LITS:
+                    l = {"$emb_Boolean": "lit.Lit.Boolean x0",
+                         "$emb_Numeral": "lit.Lit.Numeral (num.Integer.ofInt x0)",
+                         "$emb_Rational": "lit.Lit.Rational (num.Rational.ofRat x0)",
+                         "$emb_String": "lit.Lit.Str (Tree.strOf x0)"}.get(
+                             s, "lit.Lit.Binary (Tree.bvOf x0 x1)")
+                    lit_cases += (("" if not lit_cases else " ∨\n      ") + "(∃" + vs
+                                  + ", x = " + k + vs + " ∧ l = " + l + ")")
+                else:
+                    o.append("theorem inv_" + ty + "_" + c.cname + " {x : " + q
+                             + "} {ts : List Tree}\n    (h : enc_" + ty
+                             + " x = Tree.node schema.Constructor." + ident(s)
+                             + " ts) :\n    ")
+                    if not c.fields:
+                        o.append("x = " + k + " ∧ ts = []")
+                    else:
+                        o.append("∃" + vs + ", x = " + k + vs + " ∧ ts = [" + encs + "]")
+                    o.append(" := by\n" + tac + "\n")
+            if lit_cases:
+                o.append("theorem inv_" + ty + "_lit {x : " + q + "} {l : lit.Lit} (h : enc_"
+                         + ty + " x = Tree.lit l) :\n    " + lit_cases + " := by\n" + tac
+                         + "\n")
+        o.append("mutual\n")
+        for ty in scc:
+            q = qualified(ty)
+            o.append("theorem dec_enc_" + ty + " : (x : " + q + ") → emb_" + ty
+                     + " x → dec_" + ty + " (enc_" + ty + " x) = some x\n")
+            for c in by_type[ty]:
+                o.append("  | " + head(c, q) + ", h => by\n")
+                s = c.sname
+                lemmas = ""
+                if s == "$emb_UOp":
+                    o.append("    cases x0 <;> simp [enc_" + ty + ", dec_" + ty + ", uop]\n")
+                    continue
+                if s == "$emb_String":
+                    lemmas = ", Tree.strTo_strOf x0 h"
+                elif s == "$emb_Binary":
+                    lemmas = ", Tree.bvW_bvOf x0 x1 h, Tree.bvV_bvOf x0 x1 h"
+                elif s == "$emb_Numeral":
+                    lemmas = ", num.Integer.toInt_ofInt"
+                elif s == "$emb_Rational":
+                    lemmas = ", num.Rational.toRat_ofRat"
+                elif s not in LITS:
+                    k = len(c.fields)
+                    if k > 0:
+                        o.append("    simp only [emb_" + ty + "] at h\n")
+                    if k == 1:
+                        o.append("    have h0 := h\n")
+                    elif k > 1:
+                        o.append("    obtain ⟨" + ", ".join("h%d" % i for i in range(k))
+                                 + "⟩ := h\n")
+                    for i, f in enumerate(c.fields):
+                        lemmas += ", " + field_lemma(f, "x%d" % i, "h%d" % i)
+                o.append("    simp [enc_" + ty + ", dec_" + ty + lemmas + "]\n")
+        o.append("end\n\n")
+        for ty in scc:
+            q = qualified(ty)
+            o.append("instance : Embedded " + q + " := ⟨enc_" + ty + ", dec_" + ty
+                     + ", emb_" + ty + ", dec_enc_" + ty + "⟩\n\n"
+                     + "@[simp] theorem embedded_enc_" + ty + " (x : " + q
+                     + ") : Embedded.enc x = enc_" + ty + " x := rfl\n"
+                     + "@[simp] theorem embedded_emb_" + ty + " (x : " + q
+                     + ") : Embedded.emb x = emb_" + ty + " x := rfl\n\n")
+    cs = []
+
+    def field_type(f):
+        if f == "CIndex":
+            return "Eo.CIndex"
+        return qualified(f) if not native_codec(f) else "SmtEval." + f
+
+    def emit_construct(cid, ty, value, fields, unfold):
+        k = len(fields)
+        node = "(.inr rfl)" if cid == ident("$emb_Var") else "(.inl rfl)"
+        binders = as_ = hs = lst = embs = ""
+        holds = "HoldsList.nil"
+        for i, f in enumerate(fields):
+            binders += " {a%d : Term} {x%d : %s}" % (i, i, field_type(f))
+            as_ += ("a" if i == 0 else ", a") + str(i)
+            hs += " (h%d : Represents.rep s a%d x%d)" % (i, i, i)
+            lst += ("" if i == 0 else ", ") + "Embedded.enc x%d" % i
+            embs += ("h" if i == 0 else ", h") + str(i) + ".2"
+        for i in range(k, 0, -1):
+            holds = "(HoldsList.cons _ _ _ _ h%d.1 " % (i - 1) + holds + ")"
+        cs.append("theorem CtorSpec." + cid + ".construct (s : Store) (args : Slice Term)"
+                  + binders + "\n    (hargs : args.val = [" + as_ + "])" + hs
+                  + " (hinv : s.Inv) (h64 : Platform64) :\n    Store.construct s "
+                    "schema.Constructor." + cid
+                  + " args ⦃ r s' =>\n      s'.Inv ∧ s.Grows s' ∧\n      match r with\n"
+                    "      | core.result.Result.Ok t => Represents.rep s' t (" + value
+                  + ")\n      | core.result.Result.Err _ => True ⦄div := by\n"
+                    "  apply WP.dspec_mono (Store.construct_holds s schema.Constructor."
+                  + cid + " args [" + lst + "] hinv h64 " + node
+                  + "\n    (by rw [hargs]; exact " + holds
+                  + "))\n  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩\n"
+                    "  simp only [WP.uncurry'_pair] at hr ⊢\n"
+                    "  refine ⟨hinv', hg, ?_⟩\n  cases r with\n  | Err e => trivial\n"
+                    "  | Ok t =>\n    refine ⟨?_, ?_⟩\n    · simpa [Embed.embedded_enc_"
+                  + ty + ", Embed.enc_" + ty + unfold + "] using hr\n")
+        if k == 0:
+            cs.append("    · simp [Embed.embedded_emb_" + ty + ", Embed.emb_" + ty + "]\n\n")
+        else:
+            cs.append("    · simp only [Embed.embedded_emb_" + ty + ", Embed.emb_" + ty
+                      + "]\n      exact " + (embs if k == 1 else "⟨" + embs + "⟩") + "\n\n")
+
+    for ty in types:
+        q = qualified(ty)
+        for c in by_type[ty]:
+            if c.sname == "$emb_UOp":
+                for u in user_ops:
+                    cs.append("/-- The user operator `" + u.sname + "`. -/\n")
+                    emit_construct(ident(u.sname), ty, q + ".UOp Eo.UserOp." + u.cname,
+                                   [], ", Embed.uop")
+                continue
+            if c.sname in LITS or c.sname in ("$emb_Stuck", "$emb_Apply"):
+                continue
+            cid = ident(c.sname)
+            k = q + "." + c.cname
+            n = len(c.fields)
+            vs = "".join(" x%d" % i for i in range(n))
+            ex = "".join(" (x%d : %s)" % (i, field_type(f)) for i, f in enumerate(c.fields))
+            fs = ", ".join("f%d" % i for i in range(n))
+            reps = "".join(" ∧ Represents.rep s f%d x%d" % (i, i) for i in range(n))
+            encs = ", ".join("Embedded.enc x%d" % i for i in range(n))
+            cs.append("/-- `" + c.sname + "`. -/\n")
+            emit_construct(cid, ty, k + vs, c.fields, "")
+            cs.append("theorem CtorSpec." + cid + ".destruct {s : Store} {t : Term} {x : "
+                      + q + "}\n    (h : Represents.rep s t x) :\n    (∃"
+                      + "".join(" (f%d : Term)" % i for i in range(n))
+                      + " (v : alloc.vec.Vec Term)" + ex + ", x = " + k + vs
+                      + " ∧ v.val = [" + fs + "]" + reps
+                      + " ∧\n      Store.destruct s schema.Constructor." + cid
+                      + " t = ok (core.result.Result.Ok (some v), s)) ∨\n    (("
+                      + ("" if n == 0 else "∀" + ex + ", ") + "x ≠ " + k + vs
+                      + ") ∧\n      Store.destruct s schema.Constructor." + cid
+                      + " t = ok (core.result.Result.Ok none, s)) := by\n"
+                      + "  rcases Store.destruct_holds schema.Constructor." + cid + " "
+                      + ("(.inr rfl)" if c.sname == "$emb_Var" else "(.inl rfl)")
+                      + " h.1 with\n    ⟨v, xs, hx, hl, hd⟩ | ⟨hne, hd⟩\n")
+            if n == 0:
+                cs.append("  · obtain ⟨rfl, rfl⟩ := Embed.inv_" + ty + "_" + c.cname
+                          + " hx\n    generalize hvl : v.val = l at hl\n    cases hl\n"
+                            "    exact Or.inl ⟨v, rfl, hvl, hd⟩\n")
+            else:
+                pat = "".join("x%d, " % i for i in range(n))
+                cs.append("  · obtain ⟨" + pat + "rfl, rfl⟩ := Embed.inv_" + ty + "_"
+                          + c.cname + " hx\n")
+                cs.append("    have he := h.2\n    simp only [Embed.embedded_emb_" + ty
+                          + ", Embed.emb_" + ty + "] at he\n    generalize hvl : v.val = l at hl\n")
+                indent = "    "
+                for i in range(n):
+                    cs.append(indent + "cases " + ("hl" if i == 0 else "hn%d" % (i - 1))
+                              + " with\n" + indent + "| cons f%d _ _ _ h%d hn%d =>\n" % (i, i, i))
+                    indent += "  "
+                cs.append(indent + "cases hn%d\n" % (n - 1) + indent + "exact Or.inl ⟨" + fs
+                          + ", v")
+                for i in range(n):
+                    cs.append(", x%d" % i)
+                cs.append(", rfl, hvl")
+                for i in range(n):
+                    e = "he" + ".2" * i + (".1" if i + 1 < n else "")
+                    cs.append(", ⟨h%d, %s⟩" % (i, e))
+                cs.append(", hd⟩\n")
+            cs.append("  · exact Or.inr ⟨fun" + ("" if n == 0 else vs) + " he => hne ["
+                      + encs + "]\n      (by subst he; simp [Embed.embedded_enc_" + ty
+                      + ", Embed.enc_" + ty + "]), hd⟩\n\n")
+    return {"embed.lean": rtrim_lines(EMBED_HEADER + "".join(o) + EMBED_FOOTER),
+            "ctors.lean": rtrim_lines(CTORS_HEADER + "".join(cs) + CTORS_FOOTER)}
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--trace", required=True)
+    ap.add_argument("--embedding")
+    ap.add_argument("--config",
+                    default=os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                         "..", "proofs", "proofgen.toml"))
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args()
+    with open(args.trace, encoding="utf-8") as f:
+        trace = json.load(f)
+    with open(args.config, "rb") as f:
+        cfg = tomllib.load(f)
+    files = Generator(trace, cfg).run()
+    if args.embedding:
+        with open(args.embedding, encoding="utf-8") as f:
+            files.update(embedding(json.load(f)))
+    os.makedirs(args.out, exist_ok=True)
+    for name, text in files.items():
+        with open(os.path.join(args.out, name), "w", encoding="utf-8", newline="") as f:
+            f.write(text)
+
+
+if __name__ == "__main__":
+    main()

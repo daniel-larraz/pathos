@@ -3,9 +3,14 @@
 Rewritten on 2026-11-21 for whoever continues (Fable, the week after).
 Start here; [proofs.md](proofs.md), "Generated proofs", "What is trusted"
 and "The top-level theorem", has the report. Everything is on pathos `m32`
-and the Ethos fork's `m32-proofs` (local clone
-`~/Projects/cvc5/pathos-m28/ethos`); pathos pins the Ethos commit in
-`scripts/generate-cpc` (`default_rev`, `mini_default_rev`).
+and upstream Ethos. pathos pins the Ethos commit in `scripts/generate-cpc`
+(`default_rev`, `mini_default_rev`): Ethos main `bde41a79`, cvc5/ethos#289.
+- The proofs are written by pathos's `scripts/proofgen`, from the trace of
+  the generated code that Ethos writes, with `proofs/proofgen.toml` for
+  what it knows of logos's checker.
+- The Ethos fork's `m32-proofs`, where rust-meta wrote the proofs itself,
+  is no longer used. The generated proofs are byte-identical to what it
+  wrote.
 
 ## Done for CpcMini
 
@@ -31,8 +36,10 @@ and the Ethos fork's `m32-proofs` (local clone
   - logos `bdcbd95f` for the proofs (`LOGOS_PROOFS_REV`, and
     `mini_logos_rev` for CpcMini's crate), which is cvc5/logos#521:
     function types guarded;
-  - Ethos fork `2a9bd4b`: cvc5/ethos main `649c364f` (#282, #283, #286)
-    merged, then the emitter's guarded function types.
+  - Ethos main `bde41a79` (cvc5/ethos#289: rust-meta's trace and
+    lean-meta's case functions and embedding table), with pathos's
+    `scripts/proofgen` writing the proofs. Before it, the fork's
+    `m32-proofs` at `2a9bd4b` wrote them.
 - **What got it there in milestone 32**, each with its section in
   proofs.md:
   - generated proofs, with groups of cases and loops by induction on the

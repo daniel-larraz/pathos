@@ -39,7 +39,10 @@
 # then copies the crate the driver writes, without its build directory,
 # with the signature beside it (Cpc.cached.eo, which crates/pathos builds
 # in), and records in generated/cpc-checker/GENERATED.md what it was
-# generated from.
+# generated from. Beside the crate it puts the proofs about it (proofs.lean,
+# proofs.tsv, cache_sem.lean), which scripts/proofgen writes from the trace
+# of the generated code that rust-meta leaves in the build directory
+# (rust_meta_trace_gen.json) and from proofs/proofgen.toml.
 #
 # With --mini it generates the checker for CpcMini, the calculus of five
 # rules that logos develops its proofs on, for the proofs of proofs/. logos
@@ -68,16 +71,14 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=../difftest.env
 source "$root/difftest.env"
 
-# The commit of Ethos the checker is generated from: on milestone 32, a
-# commit of the fork's m32-proofs (which builds literals as values), found
-# through the harness's repository when upstream does not have it.
-default_rev=2a9bd4b5d4d0d4c466437742e0dde05dbacc40df
+# The commit of Ethos the checker is generated from: a commit of
+# cvc5/ethos's main, the first whose rust-meta and lean-meta write the trace
+# of the generated code that scripts/proofgen reads (cvc5/ethos#289).
+default_rev=bde41a79a3fb99d41012efa1f0d2c6c7635448a3
 
-# The same for --mini: a commit of the fork (branch m32-proofs: Ethos main,
-# whose generator Charon and Aeneas translate since cvc5/ethos#280, and on it
-# the one that writes the proofs), and the logos revision whose CpcMini the
-# proofs are about. proofs/ pins the same logos revision.
-mini_default_rev=2a9bd4b5d4d0d4c466437742e0dde05dbacc40df
+# The same for --mini, and the logos revision whose CpcMini the proofs are
+# about. proofs/ pins the same logos revision.
+mini_default_rev=bde41a79a3fb99d41012efa1f0d2c6c7635448a3
 mini_logos_rev=bdcbd95f615627b26b6ebabc0f584e5230b0bf1f
 
 me=generate-cpc
@@ -114,8 +115,6 @@ if $mini; then
   default_rev="$mini_default_rev"
   $rev_given || rev="$mini_default_rev"
   $logos_rev_given || logos_rev="$mini_logos_rev"
-  # The default Ethos commit is on the fork, not yet upstream.
-  $ethos_given || ethos_repo="$HARNESS_REPO"
   default_logos_rev="$mini_logos_rev"
 else
   default_logos_rev="$LOGOS_REV"
@@ -226,14 +225,14 @@ if $mini; then
     fail "the Lean this Ethos writes for CpcMini is not logos's CpcMini at $logos_commit ($work/lean.diff)"
   fi
   echo "$me: rules $rules; the $compared Lean files are logos's CpcMini"
-  # The cases of the programs as functions and the embedding of the
-  # checker's values (lean-meta writes the files with the others; the
-  # driver leaves them in its build directory), before the next run of the
-  # driver writes there.
-  for f in case_defs embed ctors; do
-    gen="$work/build-eoc/out/plugins/lean_meta/lean_meta_${f}_gen.lean"
+  # The cases of the programs as functions and the table of the
+  # embedding's constructors (lean-meta writes the files with the others;
+  # the driver leaves them in its build directory), before the next run of
+  # the driver writes there.
+  for f in case_defs_gen.lean embedding_gen.json; do
+    gen="$work/build-eoc/out/plugins/lean_meta/lean_meta_$f"
     [[ -f "$gen" ]] || fail "the driver wrote no $gen"
-    cp "$gen" "$work/$f.lean"
+    cp "$gen" "$work/${f/_gen/}"
   done
 fi
 (cd "$work/ethos" && capped python3 tools/eoc/driver.py rust \
@@ -243,6 +242,16 @@ fi
   { tail -n 30 "$work/driver.log" >&2; fail "the driver failed; see $work/driver.log"; }
 [[ -f "$out/rust/Cargo.toml" && -f "$out/rust/src/generated.rs" ]] ||
   fail "the driver wrote no crate in $out/rust; see $work/driver.log"
+# The proofs about the crate, from rust-meta's trace of what it generated
+# (and for CpcMini lean-meta's table of the embedding).
+trace="$work/build-eoc/out/plugins/rust_meta/rust_meta_trace_gen.json"
+[[ -f "$trace" ]] || fail "the driver wrote no $trace"
+cp "$trace" "$work/trace.json"
+rm -rf "$work/proofgen"
+proofgen_args=(--trace "$work/trace.json" --out "$work/proofgen")
+$mini && proofgen_args+=(--embedding "$work/embedding.json")
+python3 "$root/scripts/proofgen" "${proofgen_args[@]}" ||
+  fail "scripts/proofgen failed"
 
 # The crate as the repository holds it: the driver's files and the note.
 staged="$work/staged"
@@ -253,6 +262,9 @@ mkdir -p "$staged"
     mkdir -p "$staged/$(dirname "$f")"
     cp "$f" "$staged/$f"
   done)
+for f in proofs.lean proofs.tsv cache_sem.lean; do
+  cp "$work/proofgen/$f" "$staged/$f"
+done
 # The signature the crate was compiled from: the front end of crates/pathos
 # reads proofs against it.
 if $mini; then
@@ -312,24 +324,22 @@ EOF
 fi
 
 # The Lean that is generated with the crate, for proofs/: the cases of the
-# programs, the embedding of the checker's values and what construct and
-# destruct do with each data constructor (lean-meta), and what the cache of results holds and the proofs
-# about the generated functions (rust-meta, beside the crate). They name the
-# modules they import by placeholders, which are filled in here.
+# programs (lean-meta), the embedding of the checker's values, what
+# construct and destruct do with each data constructor, what the cache of
+# results holds and the proofs about the generated functions
+# (scripts/proofgen). They name the modules they import by placeholders,
+# which are filled in here.
 lean_files=()
 if $mini; then
   lean_staged="$work/staged-lean"
   rm -rf "$lean_staged"
   mkdir -p "$lean_staged"
   fill() { sed -e 's/\$CHECKER\$/MiniChecker/g; s/\$EO_CALC\$/CpcMini/g; s/\$CALC\$/CpcMini/g; s/\$CASES\$/MiniCases/g' "$1" > "$2"; }
-  for f in proofs.lean cache_sem.lean proofs.tsv; do
-    [[ -f "$out/rust/$f" ]] || fail "the driver wrote no $f beside the crate"
-  done
   fill "$work/case_defs.lean" "$lean_staged/MiniCases.lean"
-  fill "$work/embed.lean" "$lean_staged/MiniEmbed.lean"
-  fill "$work/ctors.lean" "$lean_staged/MiniCtors.lean"
-  fill "$out/rust/proofs.lean" "$lean_staged/MiniProofs.lean"
-  fill "$out/rust/cache_sem.lean" "$lean_staged/MiniCacheSem.lean"
+  fill "$work/proofgen/embed.lean" "$lean_staged/MiniEmbed.lean"
+  fill "$work/proofgen/ctors.lean" "$lean_staged/MiniCtors.lean"
+  fill "$work/proofgen/proofs.lean" "$lean_staged/MiniProofs.lean"
+  fill "$work/proofgen/cache_sem.lean" "$lean_staged/MiniCacheSem.lean"
   lean_files=(MiniCases.lean MiniEmbed.lean MiniCtors.lean MiniProofs.lean MiniCacheSem.lean)
 fi
 
