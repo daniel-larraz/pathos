@@ -185,7 +185,7 @@ $eo_prog_array-store-swap	generated
 $eo_prog_arrays_ext	generated	
 $eo_prog_arrays_read_over_write	generated	
 $eo_prog_arrays_read_over_write_1	generated	
-$eo_prog_arrays_read_over_write_contra	none	its generated proof does not build: the spec of case 0: simp fails (a nested error)
+$eo_prog_arrays_read_over_write_contra	generated	
 $eo_prog_beta-reduce	none	it calls $beta_reduce, which has no proof
 $eo_prog_bool-and-conf	none	case 0 has a builtin operator
 $eo_prog_bool-and-conf2	none	case 0 has a builtin operator
@@ -464,7 +464,7 @@ $eo_prog_pairwise_cong	generated
 $eo_prog_process_scope	generated	
 $eo_prog_quant-dt-split	none	case 0 has a builtin operator
 $eo_prog_quant-merge-prenex	none	case 0 has a builtin operator
-$eo_prog_quant-miniscope-and	none	its generated proof does not build: the spec of case 0: leaves goals unsolved
+$eo_prog_quant-miniscope-and	none	its generated proof does not build: the spec of case 0: its closing step leaves an equation of two __eo_requires whose third arguments it does not identify
 $eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
 $eo_prog_quant-unused-vars	none	case 0 has a builtin operator
@@ -598,7 +598,7 @@ $eo_prog_str-in-re-sigma-star	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-in-re-union-elim	none	case 0 has a builtin operator
 $eo_prog_str-indexof-contains-concat-pre	none	case 0 has a builtin operator
 $eo_prog_str-indexof-contains-pre	none	case 0 has a literal that is not a Boolean
-$eo_prog_str-indexof-eq-irr	none	its generated proof does not build: the spec of case 0: simp fails (a nested error)
+$eo_prog_str-indexof-eq-irr	none	its generated proof does not build: the spec of case 0: simp times out (isDefEq, 1,000,000 heartbeats)
 $eo_prog_str-indexof-find-emp	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-indexof-len-oob	none	case 0 has a literal that is not a Boolean
 $eo_prog_str-indexof-len-oob2	none	case 0 has a literal that is not a Boolean
@@ -636,7 +636,7 @@ $eo_prog_str-repl-repl-dual-ite1	generated
 $eo_prog_str-repl-repl-dual-ite2	generated	
 $eo_prog_str-repl-repl-dual-self	generated	
 $eo_prog_str-repl-repl-len-id	generated	
-$eo_prog_str-repl-repl-lookahead-id-simp	none	its generated proof does not build: the spec of case 0: simp fails (a nested error)
+$eo_prog_str-repl-repl-lookahead-id-simp	generated	
 $eo_prog_str-repl-repl-src-inv-no-ctn1	generated	
 $eo_prog_str-repl-repl-src-inv-no-ctn2	generated	
 $eo_prog_str-repl-repl-src-inv-no-ctn3	generated	
@@ -748,16 +748,16 @@ $eo_to_smt_apply	none	it calls $eo_to_smt_bindings_snoc, which has no proof
 $eo_to_smt_array_deq_diff	generated	
 $eo_to_smt_bindings_snoc	none	an argument of a type that has no Valid in the proofs yet (lemma C)
 $eo_to_smt_bv_size	none	case 0 has the native operation nat.to_int
-$eo_to_smt_datatype	none	it calls $eo_to_smt_datatype_cons, which has no proof
-$eo_to_smt_datatype_cons	none	it calls $eo_to_smt_type, which has no proof
-$eo_to_smt_datatype_decl	none	it calls $eo_to_smt_datatype, which has no proof
+$eo_to_smt_datatype	generated	
+$eo_to_smt_datatype_cons	generated	
+$eo_to_smt_datatype_decl	generated	
 $eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_distinct_pairs	none	it calls $eo_to_smt, which has no proof
-$eo_to_smt_exists	none	it calls $eo_to_smt_type, which has no proof
-$eo_to_smt_lambda_curry	none	it calls $eo_to_smt_type, which has no proof
+$eo_to_smt_exists	generated	
+$eo_to_smt_lambda_curry	generated	
 $eo_to_smt_nat	generated	
 $eo_to_smt_nat_is_valid	generated	
-$eo_to_smt_quantifiers_skolemize	none	it calls $eo_to_smt_exists, which has no proof
+$eo_to_smt_quantifiers_skolemize	generated	
 $eo_to_smt_re_unfold_pos_component	generated	
 $eo_to_smt_reserved_datatype_name	generated	
 $eo_to_smt_seq.empty	generated	
@@ -767,19 +767,19 @@ $eo_to_smt_sets_deq_diff	generated
 $eo_to_smt_tester	generated	
 $eo_to_smt_tuple_decl	generated	
 $eo_to_smt_tuple_prepend	none	it calls $eo_to_smt_tuple_prepend_of_type, which has no proof
-$eo_to_smt_tuple_prepend_of_type	none	its generated proof does not build: the spec of case 0: simp makes no progress
+$eo_to_smt_tuple_prepend_of_type	none	it calls $smtx_dt_num_sels, which has no proof
 $eo_to_smt_tuple_prepend_rec	generated	
-$eo_to_smt_tuple_select	none	its generated proof does not build: the spec of case 0: simp makes no progress
+$eo_to_smt_tuple_select	generated	
 $eo_to_smt_tuple_update	none	it calls $eo_to_smt_updater, which has no proof
-$eo_to_smt_type	none	its generated proof does not build: the spec of case 13: simp makes no progress
-$eo_to_smt_type_tuple	none	its generated proof does not build: the spec of case 0: simp makes no progress
+$eo_to_smt_type	generated	
+$eo_to_smt_type_tuple	generated	
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_updater	none	case 0 has the native operation zlt
 $eo_to_smt_updater_rec	none	case 1 has the native operation nateq
-$eo_typeof	none	it calls $eo_typeof_+, which has no proof
-$eo_typeof_+	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
-$eo_typeof_/	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
-$eo_typeof_<	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
+$eo_typeof	none	it calls $eo_typeof_@from_bools, which has no proof
+$eo_typeof_+	generated	
+$eo_typeof_/	generated	
+$eo_typeof_<	generated	
 $eo_typeof_=	generated	
 $eo_typeof_@@Pair	generated	
 $eo_typeof_@@TypedList.cons	generated	
@@ -806,7 +806,7 @@ $eo_typeof_@strings_stoi_result	generated
 $eo_typeof_@witness_string_length	generated	
 $eo_typeof_BitVec	generated	
 $eo_typeof_Seq	generated	
-$eo_typeof_abs	none	its generated proof does not build: the spec of case 0: a rewrite finds no occurrence of its pattern
+$eo_typeof_abs	generated	
 $eo_typeof_apply	generated	
 $eo_typeof_bvand	generated	
 $eo_typeof_bvcomp	none	case 0 has a literal that is not a Boolean
@@ -992,7 +992,7 @@ $smtx_decl_wf_rec	generated
 $smtx_dt_cons_inhabited	generated	
 $smtx_dt_cons_wf_rec	generated	
 $smtx_dt_inhabited	generated	
-$smtx_dt_num_sels	none	its generated proof does not build: the spec of step: leaves goals unsolved
+$smtx_dt_num_sels	none	its generated proof does not build: the spec of its loop's step: the branch where no case answers (Ok none) is left as False
 $smtx_dt_resolve	generated	
 $smtx_dt_wf_rec	generated	
 $smtx_dtc_num_sels	generated	

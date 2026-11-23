@@ -345,7 +345,11 @@ class Emitter:
             # a string constant of printable ASCII without escapes
             st, inv = self.st(), self.inv()
             self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
-            self.line("simp only [eostring.EoString.from_code_points, Std.bind_ok]")
+            # (after the case's first string constant, the simp may find
+            # nothing left to do)
+            again = any("EoString.from_code_points" in l for l in self.l.lines)
+            self.line(("try " if again else "")
+                      + "simp only [eostring.EoString.from_code_points, Std.bind_ok]")
             self.store_step("Store.raw_str_vec_spec " + st + " _ _ rfl " + inv
                             + " h64", v)
             self.line("replace h_" + v + " := Represents.rep_of_eq h_" + v

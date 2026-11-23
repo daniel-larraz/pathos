@@ -527,8 +527,11 @@ macro_rules
     `(tactic| (
       simp only [WP.dspec_ok, WP.uncurry'_pair]
       refine ⟨$hinv, $hG, ?_⟩
-      rw [requires_eq _ _ $hq]
-      exact $h))
+      first
+        | (rw [requires_eq _ _ $hq]; exact $h)
+        -- the two sides are equal terms that `req_same` could not
+        -- substitute (neither is a variable): by its equation
+        | (rw [requires_ite, if_pos (by assumption), if_neg $hq]; exact $h)))
 
 /-! ## A conditional
 
