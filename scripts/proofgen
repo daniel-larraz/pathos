@@ -79,7 +79,13 @@ ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               "IsOk": "Store.builtin_spec_is_ok", "IsEq": "Store.builtin_spec_is_eq",
               "IsZ": "Store.builtin_spec_is_z", "IsQ": "Store.builtin_spec_is_q",
               "IsBin": "Store.builtin_spec_is_bin", "IsStr": "Store.builtin_spec_is_str",
-              "IsBool": "Store.builtin_spec_is_bool"}
+              "IsBool": "Store.builtin_spec_is_bool",
+              # arithmetic (proofs-cpc/PathosProofsCpc/Arith.lean), of two
+              # arguments
+              "Add": "Store.builtin_spec_add", "Mul": "Store.builtin_spec_mul",
+              "ToRat": "Store.builtin_spec_to_q"}
+# The builtins whose specs take exactly two arguments.
+BINARY_SPECS = {"Add", "Mul"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
@@ -280,6 +286,18 @@ class Emitter:
                                  else "Store.literal_int_u32_spec ") + st + " "
                                 + str(abs(i)) + "#u32 (" + str(i) + ") (by scalar_tac) "
                                 + inv + " h64", v)
+            elif (n["kind"] == "RATIONAL" and self.l.lits.get(v, ("",))[0] == "RATIONAL"
+                    and self.l.lits[v][1][1] != 0):
+                # `Rational::from_integers` of two numeral constants (its
+                # spec), then the literal; as logos's `native_mk_rational`
+                num, den = self.l.lits[v][1]
+                self.line("try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, "
+                          "num.Integer.toInt_ofInt, num.Rational.from_integers_spec, Std.bind_ok]")
+                self.line("try rw [if_neg (by simp)]")
+                self.store_step("Store.literal_rational_spec " + st + " _ " + inv + " h64", v)
+                self.line("replace h_" + v + " := Represents.rep_of_eq h_" + v
+                          + " (y := Eo.Term.Rational (SmtEval.native_mk_rational (%d) (%d))) "
+                            "(by simp [SmtEval.native_mk_rational])" % (num, den))
             elif n["kind"] == "BINARY" and self.l.lits.get(v, ("",))[0] == "BINARY":
                 # `BitVec::new(<w>, &Integer::from(<n>u32))`: from the specs
                 # of `from` and `mod_by_pow2`, a value in range
@@ -496,6 +514,8 @@ class Emitter:
         if k == "Requires":
             return self.requires(n, sub, v)
         if k in ARGS_SPECS:
+            if k in BINARY_SPECS and len(sub) != 2:
+                self.unsupported("eo::" + k.lower() + " of other than two arguments")
             vs = [self.expr(s) for s in sub]
             st, inv = self.st(), self.inv()
             self.args_step(ARGS_SPECS[k], st, inv, vs, v)
@@ -1494,6 +1514,18 @@ def rust_literals(rust_src):
                     continue
                 for c in re.findall(r"\b((?:more|if|requires)_\d+_eo__\w+)\(", line):
                     cur["calls"].add(c)
+                # a rational constant: from_integers of two numerals, then
+                # the literal of it
+                q = re.match(r"let (v\d+) = match Rational::from_integers\(&Integer::from\((\d+)u32\)"
+                             r"(\.neg\(\))?, &Integer::from\((\d+)u32\)\) \{", line)
+                if q:
+                    n = int(q.group(2)) * (-1 if q.group(3) else 1)
+                    cur.setdefault("rats", {})[q.group(1)] = (n, int(q.group(4)))
+                    continue
+                r = re.match(r"let (v\d+) = match s\.literal\(Lit::Rational\((v\d+)\)\) \{", line)
+                if r and r.group(2) in cur.get("rats", {}):
+                    cur["lits"][r.group(1)] = ("RATIONAL", cur["rats"][r.group(2)])
+                    continue
                 m = re.match(r"let (v\d+) = match s\.literal\(Lit::(Numeral|Str|Binary)\((.*?)\)\) \{", line)
                 if not m:
                     continue
