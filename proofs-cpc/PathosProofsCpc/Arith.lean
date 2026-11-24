@@ -125,17 +125,47 @@ theorem lit_rat_pow_spec (a : num.Rational) (k : Std.U32) :
   conv => rhs; rw [← Rat.num_div_den a.toRat]
   rw [div_pow]
 
+theorem sign_num_of_neg {q : ℚ} (h : q < 0) : Int.sign q.num = -1 :=
+  Int.sign_eq_neg_one_of_neg (Rat.num_neg.mpr h)
+
+theorem sign_num_of_eq {q : ℚ} (h : q = 0) : Int.sign q.num = 0 := by
+  subst h; rfl
+
+theorem sign_num_of_pos {q : ℚ} (h : 0 < q) : Int.sign q.num = 1 :=
+  Int.sign_eq_one_of_pos (Rat.num_pos.mpr h)
+
+/-- `rat_cmp`: by the signs where they differ or are both zero, else by
+cross-multiplying; either way the order of the rationals. -/
 theorem lit_rat_cmp_spec (a b : num.Rational) :
     lit.rat_cmp a b = ok (compare a.toRat b.toRat) := by
   unfold lit.rat_cmp
-  simp only [num.Rational.numerator_spec, num.Rational.denominator_spec, num.Integer.mul_spec,
-    num.Integer.partial_cmp_spec, num.Integer.toInt_ofInt, Std.bind_ok,
-    core.option.Option.unwrap_or]
-  congr 1
-  rcases lt_trichotomy a.toRat b.toRat with h | h | h
-  · rw [compare_lt_iff_lt.mpr h, compare_lt_iff_lt.mpr ((Rat.lt_iff ..).mp h)]
-  · rw [h, compare_eq_iff_eq.mpr rfl, compare_eq_iff_eq.mpr rfl]
-  · rw [compare_gt_iff_gt.mpr h, compare_gt_iff_gt.mpr ((Rat.lt_iff ..).mp h)]
+  obtain ⟨sa, hsa, hva⟩ := lit_rat_sgn_spec a
+  obtain ⟨sb, hsb, hvb⟩ := lit_rat_sgn_spec b
+  simp only [hsa, hsb, Std.bind_ok]
+  rcases lt_trichotomy a.toRat 0 with ha | ha | ha <;>
+  rcases lt_trichotomy b.toRat 0 with hb | hb | hb <;>
+  (first
+    | rw [sign_num_of_neg ha] at hva
+    | rw [sign_num_of_eq ha] at hva
+    | rw [sign_num_of_pos ha] at hva) <;>
+  (first
+    | rw [sign_num_of_neg hb] at hvb
+    | rw [sign_num_of_eq hb] at hvb
+    | rw [sign_num_of_pos hb] at hvb) <;>
+  split_ifs <;>
+  first
+    | (exfalso; scalar_tac)
+    | rw [compare_lt_iff_lt.mpr (by linarith)]
+    | rw [compare_gt_iff_gt.mpr (by linarith)]
+    | rw [compare_eq_iff_eq.mpr (by linarith)]
+    | (simp only [num.Rational.numerator_spec, num.Rational.denominator_spec,
+         num.Integer.mul_spec, num.Integer.partial_cmp_spec, num.Integer.toInt_ofInt,
+         Std.bind_ok, core.option.Option.unwrap_or]
+       congr 1
+       rcases lt_trichotomy a.toRat b.toRat with h | h | h
+       · rw [compare_lt_iff_lt.mpr h, compare_lt_iff_lt.mpr ((Rat.lt_iff ..).mp h)]
+       · rw [h, compare_eq_iff_eq.mpr rfl, compare_eq_iff_eq.mpr rfl]
+       · rw [compare_gt_iff_gt.mpr h, compare_gt_iff_gt.mpr ((Rat.lt_iff ..).mp h)])
 
 /-! ## `eo::add` -/
 

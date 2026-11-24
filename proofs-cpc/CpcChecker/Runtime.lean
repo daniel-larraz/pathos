@@ -9004,16 +9004,27 @@ def lit.Lit.evaluate_nary
   | lit.Lit.Str s => lit.Lit.fold_str op s args
 
 /-- [pathos_compiled_checker::lit::rat_cmp]:
-    Source: 'src/lit.rs', lines 667:0-671:1 -/
+    Source: 'src/lit.rs', lines 669:0-684:1 -/
 def lit.rat_cmp (a : num.Rational) (b : num.Rational) : Result Ordering := do
-  let i ← num.Rational.numerator a
-  let i1 ← num.Rational.denominator b
-  let x ← num.Integer.mul i i1
-  let i2 ← num.Rational.numerator b
-  let i3 ← num.Rational.denominator a
-  let y ← num.Integer.mul i2 i3
-  let o ← num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp x y
-  ok (core.option.Option.unwrap_or o Ordering.eq)
+  let sa ← lit.rat_sgn a
+  let sb ← lit.rat_sgn b
+  if sa < sb
+  then ok Ordering.lt
+  else
+    if sa > sb
+    then ok Ordering.gt
+    else
+      if sa = 0#i32
+      then ok Ordering.eq
+      else
+        let i ← num.Rational.numerator a
+        let i1 ← num.Rational.denominator b
+        let x ← num.Integer.mul i i1
+        let i2 ← num.Rational.numerator b
+        let i3 ← num.Rational.denominator a
+        let y ← num.Integer.mul i2 i3
+        let o ← num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp x y
+        ok (core.option.Option.unwrap_or o Ordering.eq)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::arg]:
     Source: 'src/lit.rs', lines 120:4-122:5 -/
@@ -10292,7 +10303,7 @@ def lit.Lit.evaluate_int_div
             ok (some l)
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]: loop 0:
-    Source: 'src/lit.rs', lines 682:4-686:5 -/
+    Source: 'src/lit.rs', lines 695:4-699:5 -/
 @[rust_loop]
 def lit.integer_floor_log_loop
   (base : num.Integer) (one : num.Integer) (result : num.Integer)
@@ -10311,7 +10322,7 @@ def lit.integer_floor_log_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]:
-    Source: 'src/lit.rs', lines 675:0-688:1 -/
+    Source: 'src/lit.rs', lines 688:0-701:1 -/
 def lit.integer_floor_log
   (base : num.Integer) (value : num.Integer) : Result num.Integer := do
   let one ← num.Integer.one
