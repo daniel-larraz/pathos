@@ -73,11 +73,17 @@ SPECIFIED = {"teq": "teq", "Teq": "Teq", "streq": "streq", "and": "and",
              "nat.to_int": "nat_to_int", "zlt": "zlt", "zneg": "zneg"}
 # eo::eq, eo::len and eo::and, by their specs (Runtime/Builtins.lean).
 ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
-              "And": "Store.builtin_spec_and"}
+              "And": "Store.builtin_spec_and",
+              # the testers (Runtime/Natives.lean; those CpcMini's logos lacks
+              # in proofs-cpc/PathosProofsCpc/Testers.lean)
+              "IsOk": "Store.builtin_spec_is_ok", "IsEq": "Store.builtin_spec_is_eq",
+              "IsZ": "Store.builtin_spec_is_z", "IsQ": "Store.builtin_spec_is_q",
+              "IsBin": "Store.builtin_spec_is_bin", "IsStr": "Store.builtin_spec_is_str",
+              "IsBool": "Store.builtin_spec_is_bool"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
-                 "TypeOf"}
+                 "TypeOf"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",

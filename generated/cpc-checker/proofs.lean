@@ -58,6 +58,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24bv_5fbitblast_5fhead_spec n ih,
       eo__24bv_5fbitblast_5ftail_spec n ih,
       eo__24bv_5fbitwidth_spec n ih,
+      eo__24bv_5fget_5ffirst_5fconst_5fchild_spec n ih,
       eo__24dt_5farg_5flist_spec n ih,
       eo__24eo_5fStateObj_5fproven_spec n ih,
       eo__24eo_5fcmd_5fstep_5fpop_5fproven_spec n ih,

@@ -250,4 +250,34 @@ theorem Store.builtin_spec_eq (s : Store) (args : Slice Term) {a b : Term} {x y 
     rw [hd, eo_eq_of_ne x y hx hy]
     exact Store.literal_boolean_spec s _ hinv h64
 
+/-- `eo::is_ok` on a handle of a term: whether it is not stuck. -/
+theorem Store.builtin_spec_is_ok (s : Store) (args : Slice Term) {a : Term} {x : Eo.Term}
+    (hargs : args.val = [a]) (ha : s.Rep a x) (hinv : s.Inv) (h64 : Platform64) :
+    Store.builtin_core s kind.EvalOp.IsOk args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_is_ok x)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 1#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  have htakes : Store.takes kind.EvalOp.IsOk 1#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  unfold Store.builtin_core
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, h0,
+      Store.Rep.is_stuck ha, Store.boolean]
+    have hv : Eo.__eo_is_ok x = Eo.Term.Boolean (!decide (x = Eo.Term.Stuck)) := by
+      simp [Eo.__eo_is_ok, Eo.native_teq, SmtEval.native_not]
+    rw [hv]
+    exact Store.literal_boolean_spec s _ hinv h64
+
 end pathos_compiled_checker

@@ -24,7 +24,7 @@ run_cmd do
       -- (a prefix: a large calculus has its generated modules in parts,
       -- `MiniProofs.Part<k>`, `MiniCtors.Part<k>`)
       if ((`PathosProofs).isPrefixOf m && m != `PathosProofs.Trusted) ||
-          (`MiniProofs).isPrefixOf m || m == `MiniCacheSem || m == `MiniEmbed ||
+          (`MiniProofs).isPrefixOf m || (`PathosProofsCpc).isPrefixOf m || m == `MiniCacheSem || m == `MiniEmbed ||
           (`MiniCtors).isPrefixOf m then
         if ci matches .thmInfo _ then
           count := count + 1

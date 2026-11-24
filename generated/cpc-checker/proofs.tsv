@@ -4,7 +4,7 @@ $abconv_ubv_to_int_elim	none	case 1 has a literal that is not a Boolean
 $aci_norm_eq	none	case 2 has a builtin operator
 $are_distinct_terms_list	none	it calls $are_distinct_terms_list_rec, which has no proof
 $are_distinct_terms_list_rec	none	it calls $are_distinct_terms_type, which has no proof
-$are_distinct_terms_type	none	case 0 has a builtin operator
+$are_distinct_terms_type	none	case 5 has a builtin operator
 $arith_mk_one	none	case 1 has a literal that is not a Boolean
 $arith_mk_zero	none	case 1 has a literal that is not a Boolean
 $arith_normalize_lit	generated	
@@ -32,7 +32,7 @@ $bv_bitwidth	generated
 $bv_const_to_bitlist_rec	none	case 0 has a literal that is not a Boolean
 $bv_div_mod_impl	none	case 2 has a literal that is not a Boolean
 $bv_eval_concat	none	case 0 has a builtin operator
-$bv_get_first_const_child	none	case 0 has a builtin operator
+$bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	case 1 has a builtin operator
 $bv_mk_bitblast_step_add	none	case 0 has a literal that is not a Boolean
 $bv_mk_bitblast_step_bitwise	none	it calls $bv_bitblast_apply_binary, which has no proof
@@ -965,14 +965,14 @@ $re_ac_merge	none	case 3 has a builtin operator
 $re_concat_merge	none	case 0 has a builtin operator
 $re_flatten	none	case 1 has a builtin operator
 $re_is_unbound_wildcard	generated	
-$re_nullable	none	case 3 has a builtin operator
+$re_nullable	none	case 6 has a builtin operator
 $re_rev_comp	generated	
 $re_rev_map_rev	generated	
 $re_split_str_to_re	generated	
 $re_unflatten	none	case 0 has a builtin operator
 $re_unflatten_str	none	case 0 has a builtin operator
 $re_unfold_pos_concat_rec	none	case 1 has a builtin operator
-$run_evaluate	none	case 0 has a builtin operator
+$run_evaluate	none	case 1 has a builtin operator
 $run_process_scope	generated	
 $seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
 $seq_element_of_unit	generated	
@@ -1050,7 +1050,7 @@ $str_arith_entail_is_approx_len	none	case 0 has a builtin operator
 $str_arith_entail_simple_pred	none	it calls $get_arith_poly_norm, which has no proof
 $str_arith_entail_simple_rec	none	case 2 has a builtin operator
 $str_case_conv_rec	none	case 0 has a builtin operator
-$str_collect	none	case 0 has a builtin operator
+$str_collect	none	it calls $eo_typeof, which has no proof
 $str_collect_merge	none	case 0 has a builtin operator
 $str_eval_replace_all_rec	none	case 1 has a builtin operator
 $str_eval_replace_re	none	case 1 has a builtin operator
@@ -1065,7 +1065,7 @@ $str_from_int_eval_rec	none	case 1 has a builtin operator
 $str_is_compatible	none	case 2 has a builtin operator
 $str_is_empty	generated	
 $str_is_multiset_subset_strict	none	case 0 has a builtin operator
-$str_is_multiset_subset_strict_done	none	case 0 has a builtin operator
+$str_is_multiset_subset_strict_done	none	it calls $are_distinct_terms_list_rec, which has no proof
 $str_is_prefix_flat	generated	
 $str_leq_eval_rec	none	case 0 has a builtin operator
 $str_membership_re	generated	
@@ -1079,9 +1079,9 @@ $str_multiset_overapprox	none	case 0 has a builtin operator
 $str_multiset_overapprox_word	none	it calls $eo_nil, which has no proof
 $str_overlap_rec	none	case 0 has a builtin operator
 $str_re_consume	none	case 0 has a builtin operator
-$str_re_consume_inter	none	case 1 has a builtin operator
-$str_re_consume_rec	none	case 1 has a builtin operator
-$str_re_consume_union	none	case 1 has a builtin operator
+$str_re_consume_inter	none	it calls $str_re_consume_rec, which has no proof
+$str_re_consume_rec	none	case 2 has a builtin operator
+$str_re_consume_union	none	it calls $str_re_consume_rec, which has no proof
 $str_re_includes_base_rec	none	case 0 has a builtin operator
 $str_re_includes_concat	none	it calls $str_re_includes_base_rec, which has no proof
 $str_re_includes_lhs_star	none	it calls $str_re_includes_rec, which has no proof

@@ -59,3 +59,9 @@ name = "CpcProofs"
 # of excluded.txt left out. Not in the repository.
 [[lean_lib]]
 name = "PathosProofs"
+
+# What the shared library cannot state, as CpcMini's logos lacks it
+# (milestone 6): hand-written, CPC only; scripts/proofs-instance does not
+# touch it.
+[[lean_lib]]
+name = "PathosProofsCpc"

@@ -110,6 +110,15 @@ def eo__24bv_5fbitwidth.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__bv_bitwidth x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$bv_get_first_const_child`. -/
+def eo__24bv_5fget_5ffirst_5fconst_5fchild.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24bv_5fget_5ffirst_5fconst_5fchild s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_get_first_const_child x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$dt_arg_list`. -/
 def eo__24dt_5farg_5flist.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -5701,6 +5710,7 @@ structure Specs (n : Nat) : Prop where
   eo__24bv_5fbitblast_5fhead : eo__24bv_5fbitblast_5fhead.Spec n
   eo__24bv_5fbitblast_5ftail : eo__24bv_5fbitblast_5ftail.Spec n
   eo__24bv_5fbitwidth : eo__24bv_5fbitwidth.Spec n
+  eo__24bv_5fget_5ffirst_5fconst_5fchild : eo__24bv_5fget_5ffirst_5fconst_5fchild.Spec n
   eo__24dt_5farg_5flist : eo__24dt_5farg_5flist.Spec n
   eo__24eo_5fStateObj_5fproven : eo__24eo_5fStateObj_5fproven.Spec n
   eo__24eo_5fcmd_5fstep_5fpop_5fproven : eo__24eo_5fcmd_5fstep_5fpop_5fproven.Spec n
