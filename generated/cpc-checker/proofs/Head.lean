@@ -3755,6 +3755,15 @@ def eo__24eo_5fto_5fsmt_5farray_5fdeq_5fdiff.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_array_deq_diff x_a0 x_a1 x_a2 x_a3)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_to_smt_bv_size`. -/
+def eo__24eo_5fto_5fsmt_5fbv_5fsize.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fto_5fsmt_5fbv_5fsize s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_bv_size x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_to_smt_datatype`. -/
 def eo__24eo_5fto_5fsmt_5fdatatype.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -5294,6 +5303,15 @@ def eo__24smtx_5ftypeof_5fdt_5fcons_5frec.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__smtx_typeof_dt_cons_rec x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$smtx_typeof_extract`. -/
+def eo__24smtx_5ftypeof_5fextract.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24smtx_5ftypeof_5fextract s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__smtx_typeof_extract x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$smtx_typeof_guard`. -/
 def eo__24smtx_5ftypeof_5fguard.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -6088,6 +6106,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fstate_5fis_5frefutation : eo__24eo_5fstate_5fis_5frefutation.Spec n
   eo__24eo_5fstate_5fproven_5fnth : eo__24eo_5fstate_5fproven_5fnth.Spec n
   eo__24eo_5fto_5fsmt_5farray_5fdeq_5fdiff : eo__24eo_5fto_5fsmt_5farray_5fdeq_5fdiff.Spec n
+  eo__24eo_5fto_5fsmt_5fbv_5fsize : eo__24eo_5fto_5fsmt_5fbv_5fsize.Spec n
   eo__24eo_5fto_5fsmt_5fdatatype : eo__24eo_5fto_5fsmt_5fdatatype.Spec n
   eo__24eo_5fto_5fsmt_5fdatatype_5fcons : eo__24eo_5fto_5fsmt_5fdatatype_5fcons.Spec n
   eo__24eo_5fto_5fsmt_5fdatatype_5fdecl : eo__24eo_5fto_5fsmt_5fdatatype_5fdecl.Spec n
@@ -6259,6 +6278,7 @@ structure Specs (n : Nat) : Prop where
   eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret : eo__24smtx_5ftypeof_5fbv_5fop_5f2_5fret.Spec n
   eo__24smtx_5ftypeof_5fconcat : eo__24smtx_5ftypeof_5fconcat.Spec n
   eo__24smtx_5ftypeof_5fdt_5fcons_5frec : eo__24smtx_5ftypeof_5fdt_5fcons_5frec.Spec n
+  eo__24smtx_5ftypeof_5fextract : eo__24smtx_5ftypeof_5fextract.Spec n
   eo__24smtx_5ftypeof_5fguard : eo__24smtx_5ftypeof_5fguard.Spec n
   eo__24smtx_5ftypeof_5fguard_5fwf : eo__24smtx_5ftypeof_5fguard_5fwf.Spec n
   eo__24smtx_5ftypeof_5fint_5fto_5fbv : eo__24smtx_5ftypeof_5fint_5fto_5fbv.Spec n

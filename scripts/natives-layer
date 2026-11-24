@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""Writes proofs/PathosProofs/Eunoia/Natives.lean, pathos's own definitions
+of Eunoia's natives.
+
+  scripts/natives-layer [--ethos DIR] [--check]
+
+The natives are what a signature written in Eunoia may call and no compiler
+writes (Ethos's plugins/desugar/natives.eos). What each one *is* in Lean is
+the block Ethos's Lean backend defines it by (plugins/lean_meta/lean.eos,
+`:lean-impl`), which lean-meta prints into each calculus's Lean, in the
+namespace of the module that first uses it (`Eo`, `Smtm`, `SmtEval`, ...).
+The runtime's specs are stated once against these definitions, in namespace
+`Eunoia`, whatever the calculus; a bridge lemma per calculus says that
+logos's `native_X` is this one (scripts/proofs-instance writes the CPC's,
+this script CpcMini's, proofs/PathosProofs/Eunoia/Bridge.lean).
+
+The blocks are copied as Ethos writes them, so they are the same definitions
+by construction. Left out are those that name a type of the SMT-LIB embedding
+(`SmtValue`, `SmtSeq`, ...), which each calculus declares for itself, and
+those that use one left out.
+
+  --ethos  an Ethos checkout at the revision the checkers are generated from
+           (default: target/generate-cpc/ethos, which scripts/generate-cpc
+           clones)
+  --check  write nothing; exit 1 if the files would differ
+"""
+
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "proofs" / "PathosProofs" / "Eunoia" / "Natives.lean"
+BRIDGE = ROOT / "proofs" / "PathosProofs" / "Eunoia" / "Bridge.lean"
+# The types of the SMT-LIB embedding, which a calculus declares.
+CALC_TYPES = re.compile(r"\b(Smt[A-Z]\w*|Term|Proof)\b")
+
+
+def blocks(ethos):
+    text = (ethos / "plugins" / "lean_meta" / "lean.eos").read_text()
+    out = []
+    for name, impl in re.findall(
+            r'\(define-native-method (\S+).*?:lean-impl "((?:[^"\\]|\\.)*)"', text, re.S):
+        out.append((name, impl.replace('\\"', '"').replace("\\\\", "\\")))
+    return out
+
+
+def defined(impl):
+    return re.findall(r"^(?:@\[[^\]]*\]\s*)?(?:noncomputable |partial |private )*"
+                      r"(?:def|abbrev|instance|inductive|structure|theorem)\s+([^\s:({\[]+)",
+                      impl, re.M)
+
+
+def layer(ethos):
+    kept, left, names = [], [], set()
+    for name, impl in blocks(ethos):
+        uses = set(re.findall(r"\bnative_\w+", impl)) - set(defined(impl))
+        if CALC_TYPES.search(impl) or any(u not in names for u in uses):
+            left.append(name)
+            continue
+        kept.append((name, impl))
+        names |= set(defined(impl))
+    return kept, left, names
+
+
+def header(impl, n):
+    """The text between a definition's name and its `:=` or first case."""
+    m = re.search(r"(?:def|abbrev)\s+" + re.escape(n) + r"\b(.*?)(?::=|\n\s*\|)", impl, re.S)
+    return m.group(1) if m else ""
+
+
+def arity(impl, n):
+    """The number of arguments of `n`: its binders, and the arrows of its type."""
+    h = header(impl, n)
+    depth, top, i = 0, [], 0
+    binders = 0
+    for g in re.finditer(r"\(([^()]*)\)|\{[^{}]*\}", h):
+        if g.group(0).startswith("("):
+            names = g.group(1).split(":")[0].split()
+            binders += len(names)
+    ty = h.rsplit(")", 1)[-1] if ")" in h else h
+    ty = ty.split(":", 1)[1] if ":" in ty else ""
+    return binders + ty.count("->")
+
+
+def recursive_natives(kept):
+    """Each definition of the layer (a native, or a helper of one) with its
+    arity and whether it is recursive: name -> (arity, recursive, helpers it
+    uses)."""
+    out = {}
+    for _, impl in kept:
+        for n in defined(impl):
+            body = impl.split(n, 1)[1]
+            rec = re.search(r"\b" + re.escape(n) + r"\b", body.split(":=", 1)[-1] if ":=" in body
+                            else body.split("|", 1)[-1]) is not None
+            out[n] = (arity(impl, n), rec, [])
+    for _, impl in kept:
+        for n in defined(impl):
+            seg = impl.split(n, 1)[1]
+            out[n][2].extend(h for h in out if h != n
+                             and re.search(r"\b" + re.escape(h) + r"\b", seg))
+    return out
+
+
+def natives_text(kept, left):
+    body = "\n\n".join(impl.strip() for _, impl in kept)
+    return f"""module
+public import Init
+
+/-!
+# Eunoia's natives
+
+Written by scripts/natives-layer from Ethos's plugins/lean_meta/lean.eos (the
+`:lean-impl` of each native), the definitions lean-meta prints into every
+calculus's Lean: here once, in namespace `Eunoia`, for the runtime's specs to
+be stated against whatever the calculus (Eunoia/Bridge.lean relates them to
+a calculus's own). Do not edit.
+
+Left out, as they name a type of the SMT-LIB embedding that each calculus
+declares (or use one that does): {", ".join(left)}.
+-/
+
+set_option linter.unusedVariables false
+
+@[expose] public section
+
+namespace Eunoia
+
+{body}
+
+end Eunoia
+"""
+
+
+def calc_natives(calc_dir):
+    """The natives a calculus's Lean defines: name -> its namespace."""
+    out = {}
+    for path in sorted(calc_dir.glob("*.lean")):
+        ns = []
+        for line in path.read_text().splitlines():
+            m = re.match(r"namespace\s+(\S+)", line)
+            if m:
+                ns.append(m.group(1))
+                continue
+            m = re.match(r"end\s+(\S+)\s*$", line)
+            if m and ns and ns[-1] == m.group(1):
+                ns.pop()
+                continue
+            m = re.match(r"(?:@\[[^\]]*\]\s*)?(?:noncomputable |partial )*(?:def|abbrev)\s+"
+                         r"((?:impl_)?native_\w+)", line)
+            if m and m.group(1) not in out:
+                out[m.group(1)] = ".".join(ns)
+    return out
+
+
+def bridge_text(calc, calc_natives_, names, imports, recursive):
+    lemmas = []
+    # in dependency order, as a proof rewrites by the bridges of what the
+    # definition uses
+    order, seen = [], set()
+
+    def visit(n):
+        if n in seen or n not in calc_natives_ or n not in names:
+            return
+        seen.add(n)
+        for h in recursive.get(n, (0, False, []))[2]:
+            visit(h)
+        order.append(n)
+    for n in sorted(calc_natives_):
+        visit(n)
+    for n in order:
+        q = f"{calc_natives_[n]}.{n}" if calc_natives_[n] else n
+        k, rec, helpers = recursive.get(n, (0, False, []))
+        helpers = [h for h in helpers if h in seen and h in calc_natives_]
+        xs = " ".join("x%d" % i for i in range(k))
+        if rec:
+            # two copies of one recursive definition are not equal by
+            # unfolding: by Eunoia's functional induction
+            proof = (f"by\n  funext {xs}\n  fun_induction Eunoia.{n} {xs} <;>\n"
+                     f"    simp_all [{q}, Eunoia.{n}"
+                     + "".join(f", Bridge.{h}" for h in helpers) + "]")
+        else:
+            # the same text: by unfolding, but where it uses natives whose
+            # copies are only provably equal, or matches (each copy has its
+            # own matcher), by those bridges and by cases
+            bs = "".join(f", Bridge.{h}" for h in helpers)
+            fx = f"funext {xs}; " if k else ""
+            proof = ("by\n  first\n    | rfl\n"
+                     f"    | ({fx}simp only [{q}, Eunoia.{n}{bs}]; done)\n"
+                     f"    | ({fx}simp only [{q}, Eunoia.{n}{bs}]; split <;> simp_all{(' [' + bs[2:] + ']') if bs else ''})\n"
+                     f"    | ({fx}unfold {q} Eunoia.{n}; split <;> split <;> simp_all{(' [' + bs[2:] + ']') if bs else ''})")
+        lemmas.append(f"/-- `{n}` of {calc} is Eunoia's. -/\n"
+                      f"theorem Bridge.{n} : @{q} = @Eunoia.{n} := {proof}\n")
+    imp = "".join(f"public import {m}\nimport all {m}\n" for m in imports)
+    return f"""module
+{imp}public import PathosProofs.Eunoia.Natives
+
+/-!
+# The natives of {calc} are Eunoia's
+
+Written by scripts/natives-layer: for each native that {calc}'s Lean defines
+(lean-meta prints it from the same block of Ethos's lean.eos as
+Eunoia/Natives.lean has), that it is the same definition (`rfl`). The
+generated proofs rewrite the runtime's specs, stated against Eunoia's, by
+these. Do not edit.
+-/
+
+@[expose] public section
+
+namespace pathos_compiled_checker
+
+{chr(10).join(lemmas)}
+end pathos_compiled_checker
+"""
+
+
+def bridge_for(calc, calc_dir, imports):
+    """The bridge module for a calculus, from the layer as written."""
+    text = OUT.read_text()
+    kept = [(None, b) for b in text.split("\n\n")]
+    names = {n for _, b in kept for n in defined(b)}
+    return bridge_text(calc, calc_natives(calc_dir), names, imports, recursive_natives(kept))
+
+
+def main():
+    args = sys.argv[1:]
+    check = "--check" in args
+    ethos = ROOT / "target" / "generate-cpc" / "ethos"
+    if "--ethos" in args:
+        ethos = Path(args[args.index("--ethos") + 1])
+    if not (ethos / "plugins" / "lean_meta" / "lean.eos").exists():
+        sys.exit(f"scripts/natives-layer: no {ethos}/plugins/lean_meta/lean.eos "
+                 "(run scripts/generate-cpc once, or pass --ethos)")
+    kept, left, names = layer(ethos)
+    recursive = recursive_natives(kept)
+    calc = ROOT / "proofs" / ".lake" / "packages" / "LogosVerification" / "CpcMini"
+    files = {OUT: natives_text(kept, left),
+             BRIDGE: bridge_text("CpcMini", calc_natives(calc), names,
+                                 ["CpcMini.Logos", "CpcMini.SmtEval", "CpcMini.SmtModel"],
+                                 recursive)}
+    differs = [p for p, t in files.items() if not p.exists() or p.read_text() != t]
+    if check:
+        for p in differs:
+            print(f"scripts/natives-layer: {p.relative_to(ROOT)} is not what this writes")
+        sys.exit(1 if differs else 0)
+    for p, t in files.items():
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(t)
+    print(f"natives-layer: {len(kept)} natives in {OUT.relative_to(ROOT)} "
+          f"({len(left)} left out)")
+
+
+if __name__ == "__main__":
+    main()

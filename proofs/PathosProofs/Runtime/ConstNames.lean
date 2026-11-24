@@ -6,6 +6,7 @@ import all CpcMini.SmtTyping
 import all CpcMini.SmtEval
 import all Init.Data.Repr
 public import PathosProofs.Util
+public import PathosProofs.Eunoia.Natives
 public import PathosProofs.Store.Sem
 public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Ops
@@ -78,8 +79,8 @@ theorem toString_codes (n : Nat) :
 
 /-- logos's name of the `i`-th uninterpreted constant. -/
 theorem native_uconst_id_codes (i : Nat) :
-    Smtm.native_uconst_id i = [64, 117, 46] ++ (digitsRev i).reverse := by
-  unfold Smtm.native_uconst_id SmtEval.native_string_lit
+    Eunoia.native_uconst_id i = [64, 117, 46] ++ (digitsRev i).reverse := by
+  unfold Eunoia.native_uconst_id Eunoia.native_string_lit
   dsimp only
   rw [toString_codes]
   rfl
@@ -252,7 +253,7 @@ theorem Store.native_spec_uconst_id (s : Store) (args : Slice Term) {a : Term} {
     native.Store.native_op s native.NativeOp.UconstId args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Smtm.native_uconst_id x)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_uconst_id x)
       | core.result.Result.Err _ => True ⦄div := by
   have hlen : Slice.len args = 1#usize := by
     apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
@@ -286,7 +287,7 @@ theorem Store.native_spec_uconst_id (s : Store) (args : Slice Term) {a : Term} {
     exact ⟨hinv, Store.Grows.refl s⟩
   | Ok es =>
     simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
-    apply Store.raw_str_vec_spec s es (Smtm.native_uconst_id x) _ hinv h64
+    apply Store.raw_str_vec_spec s es (Eunoia.native_uconst_id x) _ hinv h64
     rw [hr, native_uconst_id_codes]
     rfl
 

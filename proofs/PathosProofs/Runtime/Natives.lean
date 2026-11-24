@@ -5,6 +5,7 @@ import all CpcMini.Logos
 public import CpcMini.SmtTranslate
 import all CpcMini.SmtTranslate
 public import PathosProofs.Util
+public import PathosProofs.Eunoia.Natives
 public import PathosProofs.Store.Sem
 public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Ops
@@ -94,13 +95,13 @@ theorem Store.native_spec_Teq (s : Store) (args : Slice Term) {a b : Term} {x y 
 
 /-- `streq`: compares the handles of the two strings (after reading both). -/
 theorem Store.native_spec_streq (s : Store) (args : Slice Term) {a b : Term}
-    {x y : SmtEval.native_String}
+    {x y : Eunoia.native_String}
     (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
     (hinv : s.Inv) (h64 : Platform64) :
     native.Store.native_op s native.NativeOp.Streq args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_streq x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_streq x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]
@@ -108,8 +109,8 @@ theorem Store.native_spec_streq (s : Store) (args : Slice Term) {a b : Term}
   rw [Store.view_eq, Store.view_eq]
   simp only [Represents.lt ha, Represents.lt hb, ite_true, Std.bind_ok,
     core.result.Result.Insts.CoreOpsTry.branch, Term.Insts.CoreCmpPartialEqTerm.eq]
-  have hd : decide (a = b) = SmtEval.native_streq x y := by
-    simp [SmtEval.native_streq, Represents.eq_iff hinv ha hb]
+  have hd : decide (a = b) = Eunoia.native_streq x y := by
+    simp [Eunoia.native_streq, Represents.eq_iff hinv ha hb]
   rw [hd]
   exact Store.native_bool_spec s _ hinv h64
 
@@ -133,7 +134,7 @@ theorem Store.native_spec_and (s : Store) (args : Slice Term) {a b : Term} {x y 
     native.Store.native_op s native.NativeOp.And args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_and x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_and x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]
@@ -146,7 +147,7 @@ theorem Store.native_spec_or (s : Store) (args : Slice Term) {a b : Term} {x y :
     native.Store.native_op s native.NativeOp.Or args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_or x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_or x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]

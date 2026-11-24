@@ -70,7 +70,7 @@ SPECIFIED = {"teq": "teq", "Teq": "Teq", "streq": "streq", "and": "and",
              "int.pow2": "int_pow2", "int.to_nat": "int_to_nat",
              "Int.toNat": "int_to_nat", "nat.succ": "nat_succ",
              "uconst_id": "uconst_id", "zplus": "zplus", "nateq": "nateq",
-             "nat.to_int": "nat_to_int"}
+             "nat.to_int": "nat_to_int", "zlt": "zlt", "zneg": "zneg"}
 # eo::eq, eo::len and eo::and, by their specs (Runtime/Builtins.lean).
 ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               "And": "Store.builtin_spec_and"}
@@ -365,9 +365,12 @@ class Emitter:
             return v
         if (nullary and name and re.fullmatch(r"[-0-9]*", name)
                 and re.search("[0-9]", name) and len(name) <= 11):
-            # a numeral constant: from the specs of `from` and `neg`
+            # a numeral constant: from the specs of `from` and `neg` (after
+            # the case's first, the simp may find nothing left to do)
             st, inv = self.st(), self.inv()
-            self.line("simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, "
+            again = any("num.Integer.from_u32_spec" in l for l in self.l.lines)
+            self.line(("try " if again else "")
+                      + "simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, "
                       "num.Integer.toInt_ofInt, Std.bind_ok]")
             neg = name[0] == "-"
             self.store_step(("Store.raw_int_neg_u32_spec " if neg
@@ -403,6 +406,11 @@ class Emitter:
         st, inv = self.st(), self.inv()
         if name in SPECIFIED:
             self.args_step("Store.native_spec_" + SPECIFIED[name], st, inv, vs, v)
+            # the spec is stated against Eunoia's native (Eunoia/Natives.lean):
+            # the calculus's own, by its bridge (Eunoia/Bridge.lean)
+            native = "native_" + SPECIFIED[name]
+            if native in LAYER:
+                self.line("rw [← Bridge." + native + "] at h_" + v)
         return v
 
     def construct(self, name, sub, v):
@@ -1411,6 +1419,18 @@ def qualified(t):
 
 def rtrim_lines(text):
     return "\n".join(l.rstrip(" \t") for l in text.split("\n"))
+
+
+def layer_natives():
+    """The natives of the layer (proofs/PathosProofs/Eunoia/Natives.lean,
+    scripts/natives-layer), which the runtime's specs are stated against."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "proofs",
+                        "PathosProofs", "Eunoia", "Natives.lean")
+    with open(path, encoding="utf-8") as f:
+        return set(re.findall(r"^(?:def|abbrev)\s+(native_\w+)", f.read(), re.M))
+
+
+LAYER = layer_natives()
 
 
 def rust_literals(rust_src):

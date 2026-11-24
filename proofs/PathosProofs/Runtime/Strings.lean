@@ -6,6 +6,7 @@ public import CpcMini.SmtTranslate
 import all CpcMini.SmtTyping
 import all CpcMini.SmtTranslate
 public import PathosProofs.Util
+public import PathosProofs.Eunoia.Natives
 public import PathosProofs.Store.Sem
 public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Ops
@@ -54,7 +55,7 @@ theorem Store.native_spec_not (s : Store) (args : Slice Term) {a : Term} {x : Bo
     native.Store.native_op s native.NativeOp.Not args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_not x)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_not x)
       | core.result.Result.Err _ => True ⦄div := by
   have hlen : Slice.len args = 1#usize := by
     apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
@@ -131,12 +132,12 @@ theorem string_valid_loop_spec (codes : Slice Std.U32) (valid : Bool) (i : Std.U
       simp [this]
 
 theorem Store.native_spec_string_valid (s : Store) (args : Slice Term) {a : Term}
-    {x : SmtEval.native_String}
+    {x : Eunoia.native_String}
     (hargs : args.val = [a]) (ha : Represents.rep s a x) (hinv : s.Inv) (h64 : Platform64) :
     native.Store.native_op s native.NativeOp.StringValid args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_string_valid x)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_string_valid x)
       | core.result.Result.Err _ => True ⦄div := by
   have hlen : Slice.len args = 1#usize := by
     apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
@@ -147,13 +148,13 @@ theorem Store.native_spec_string_valid (s : Store) (args : Slice Term) {a : Term
     eostring.EoString.code_points]
   step with string_valid_loop_spec as ⟨v, hv⟩
   have hok : Tree.okStr x := ha.2
-  have hvx : v = SmtEval.native_string_valid x := by
+  have hvx : v = Eunoia.native_string_valid x := by
     rw [hv]
     simp only [Bool.true_and, Nat.cast_ofNat, List.drop_zero]
     have hval : (alloc.vec.Vec.deref (Tree.strOf x)).val = x.map Tree.u32Wrap := by
       simp [alloc.vec.Vec.deref, Tree.strOf_val x hok]
     rw [hval, List.all_map]
-    unfold SmtEval.native_string_valid SmtEval.native_char_valid
+    unfold Eunoia.native_string_valid Eunoia.native_char_valid
     apply Bool.eq_iff_iff.mpr
     simp only [List.all_eq_true, Function.comp, decide_eq_true_eq]
     constructor <;> intro h c hc <;> have := h c hc <;> rw [Tree.u32Wrap_val c (hok.2 c hc)] at * <;>
@@ -165,14 +166,14 @@ theorem Store.native_spec_string_valid (s : Store) (args : Slice Term) {a : Term
 
 /-- logos's prefix test is `isPrefixOf`. -/
 theorem string_prefix_eq_isPrefixOf (a b : List Nat) :
-    Smtm.native_string_prefix_eq a b = a.isPrefixOf b := by
+    Eunoia.native_string_prefix_eq a b = a.isPrefixOf b := by
   induction a generalizing b with
   | nil => cases b <;> rfl
   | cons c cs ih =>
     cases b with
     | nil => rfl
     | cons d ds =>
-      simp only [Smtm.native_string_prefix_eq, List.isPrefixOf, ih]
+      simp only [Eunoia.native_string_prefix_eq, List.isPrefixOf, ih]
       cases h : decide (c = d) <;> simp_all
 
 /-- The code points of two strings the store can hold: one is a prefix of
@@ -262,13 +263,13 @@ theorem is_prefix_spec (x y : Slice Std.U32) :
     simpa using hr
 
 theorem Store.native_spec_string_prefix_eq (s : Store) (args : Slice Term) {a b : Term}
-    {x y : SmtEval.native_String}
+    {x y : Eunoia.native_String}
     (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
     (hinv : s.Inv) (h64 : Platform64) :
     native.Store.native_op s native.NativeOp.StringPrefixEq args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Smtm.native_string_prefix_eq x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_string_prefix_eq x y)
       | core.result.Result.Err _ => True ⦄div := by
   have hlen : Slice.len args = 2#usize := by
     apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
@@ -284,7 +285,7 @@ theorem Store.native_spec_string_prefix_eq (s : Store) (args : Slice Term) {a b 
   step with is_prefix_spec as ⟨v, hv⟩
   have hx : Tree.okStr x := ha.2
   have hy : Tree.okStr y := hb.2
-  have hvx : v = Smtm.native_string_prefix_eq x y := by
+  have hvx : v = Eunoia.native_string_prefix_eq x y := by
     rw [hv, string_prefix_eq_isPrefixOf]
     have h1 : (alloc.vec.Vec.deref (Tree.strOf x)).val = x.map Tree.u32Wrap := by
       simp [alloc.vec.Vec.deref, Tree.strOf_val x hx]

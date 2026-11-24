@@ -2,6 +2,8 @@ module
 public import PathosProofs.Basic
 public import PathosProofs.Trusted
 public import PathosProofs.Util
+public import PathosProofs.Eunoia.Natives
+public import PathosProofs.Eunoia.Bridge
 public import PathosProofs.Store.Table
 public import PathosProofs.Store.SameData
 public import PathosProofs.Store.Hash

@@ -1,4 +1,5 @@
 module
+public import PathosProofs.Eunoia.Bridge
 public import PathosProofs.Tactic
 
 /-!

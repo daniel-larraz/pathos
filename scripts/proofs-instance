@@ -162,6 +162,17 @@ def requalify_parts(text, parts):
     return re.sub(r"\b(generated\.part\d+)\.(\w+)", fix, text)
 
 
+def natives_layer():
+    """scripts/natives-layer, as a module (it writes the bridge modules)."""
+    import importlib.machinery
+    import importlib.util
+    loader = importlib.machinery.SourceFileLoader("natives_layer", str(ROOT / "scripts" / "natives-layer"))
+    spec = importlib.util.spec_from_loader("natives_layer", loader)
+    mod = importlib.util.module_from_spec(spec)
+    loader.exec_module(mod)
+    return mod
+
+
 def excluded():
     names = set()
     for line in (DST / "excluded.txt").read_text().splitlines():
@@ -196,6 +207,9 @@ def main():
         files[rel] = requalify_parts(requalify_natives(rename(text), defs), parts)
         if mod == "PathosProofs.Runtime.CalcSimp":
             files[rel] = calc_simp(defs)
+        if mod == "PathosProofs.Eunoia.Bridge":
+            files[rel] = natives_layer().bridge_for(
+                "CPC", CALC_LEAN, ["Cpc.Logos", "Cpc.SmtEval", "Cpc.SmtModel"])
         modules.append(mod)
     # The root: what proofs/PathosProofs.lean imports, but the excluded.
     root = []

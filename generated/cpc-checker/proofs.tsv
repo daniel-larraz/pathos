@@ -747,7 +747,7 @@ $eo_to_smt	none	case 170 has the native operation mk_rational
 $eo_to_smt_apply	none	it calls $eo_to_smt_bindings_snoc, which has no proof
 $eo_to_smt_array_deq_diff	generated	
 $eo_to_smt_bindings_snoc	none	an argument of a type that has no Valid in the proofs yet (lemma C)
-$eo_to_smt_bv_size	none	case 1 has the native operation zneg
+$eo_to_smt_bv_size	generated	
 $eo_to_smt_datatype	generated	
 $eo_to_smt_datatype_cons	generated	
 $eo_to_smt_datatype_decl	generated	
@@ -774,7 +774,7 @@ $eo_to_smt_tuple_update	none	it calls $eo_to_smt_updater, which has no proof
 $eo_to_smt_type	generated	
 $eo_to_smt_type_tuple	generated	
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
-$eo_to_smt_updater	none	case 0 has the native operation zlt
+$eo_to_smt_updater	none	it calls $smtx_dt_num_sels, which has no proof
 $eo_to_smt_updater_rec	generated	
 $eo_typeof	none	it calls $eo_typeof_@from_bools, which has no proof
 $eo_typeof_+	generated	
@@ -1016,7 +1016,7 @@ $smtx_typeof_bv_op_2	generated
 $smtx_typeof_bv_op_2_ret	generated	
 $smtx_typeof_concat	generated	
 $smtx_typeof_dt_cons_rec	generated	
-$smtx_typeof_extract	none	case 0 has the native operation zlt
+$smtx_typeof_extract	generated	
 $smtx_typeof_guard	generated	
 $smtx_typeof_guard_wf	generated	
 $smtx_typeof_int_to_bv	generated	

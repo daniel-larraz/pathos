@@ -6,6 +6,7 @@ public import CpcMini.SmtTranslate
 import all CpcMini.SmtTyping
 import all CpcMini.SmtTranslate
 public import PathosProofs.Util
+public import PathosProofs.Eunoia.Natives
 public import PathosProofs.Store.Sem
 public import PathosProofs.Runtime.Frame
 public import PathosProofs.Runtime.Ops
@@ -99,7 +100,7 @@ theorem Store.native_spec_zeq (s : Store) (args : Slice Term) {a b : Term} {x y 
     native.Store.native_op s native.NativeOp.Zeq args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_zeq x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_zeq x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]
@@ -114,7 +115,7 @@ theorem Store.native_spec_zleq (s : Store) (args : Slice Term) {a b : Term} {x y
     native.Store.native_op s native.NativeOp.Zleq args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_zleq x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_zleq x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]
@@ -123,8 +124,8 @@ theorem Store.native_spec_zleq (s : Store) (args : Slice Term) {a b : Term} {x y
     core.result.Result.Insts.CoreOpsTry.branch, core.cmp.PartialOrd.le.trait_default,
     core.cmp.PartialOrd.le.default, core.cmp.PartialOrd.le_body,
     num.Integer.partial_cmp_spec, num.Integer.toInt_ofInt]
-  convert Store.native_bool_spec s (SmtEval.native_zleq x y) hinv h64 using 3
-  simp [SmtEval.native_zleq, compare_lt_iff_lt, compare_eq_iff_eq, le_iff_lt_or_eq]
+  convert Store.native_bool_spec s (Eunoia.native_zleq x y) hinv h64 using 3
+  simp [Eunoia.native_zleq, compare_lt_iff_lt, compare_eq_iff_eq, le_iff_lt_or_eq]
 
 /-! ## Arithmetic -/
 
@@ -134,7 +135,7 @@ theorem Store.native_spec_mod_total (s : Store) (args : Slice Term) {a b : Term}
     native.Store.native_op s native.NativeOp.ModTotal args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_mod_total x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_mod_total x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]
@@ -151,7 +152,7 @@ theorem Store.native_spec_mod_total (s : Store) (args : Slice Term) {a b : Term}
       apply IScalar.eq_of_val_eq
       rw [hsv]; rfl
     simp only [this, ite_true, Std.bind_ok]
-    have hv : SmtEval.native_mod_total x 0 = x := by simp [SmtEval.native_mod_total]
+    have hv : Eunoia.native_mod_total x 0 = x := by simp [Eunoia.native_mod_total]
     rw [hv]
     exact Store.raw_int_spec s x hinv h64
   · have : sg ≠ 0#i32 := by
@@ -162,7 +163,7 @@ theorem Store.native_spec_mod_total (s : Store) (args : Slice Term) {a b : Term}
       · rw [h] at hsv; scalar_tac
     simp only [this, ite_false, num.Integer.euclidean_qr_spec _ _
       (by rw [num.Integer.toInt_ofInt]; exact hy), num.Integer.toInt_ofInt, Std.bind_ok]
-    have hv : SmtEval.native_mod_total x y = x % y := rfl
+    have hv : Eunoia.native_mod_total x y = x % y := rfl
     rw [hv]
     simp
     exact Store.raw_int_spec s (x % y) hinv h64
@@ -172,7 +173,7 @@ theorem Store.native_spec_int_pow2 (s : Store) (args : Slice Term) {a : Term} {x
     native.Store.native_op s native.NativeOp.IntPow2 args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_int_pow2 x)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_int_pow2 x)
       | core.result.Result.Err _ => True ⦄div := by
   have hlen : Slice.len args = 1#usize := by
     apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
@@ -189,8 +190,8 @@ theorem Store.native_spec_int_pow2 (s : Store) (args : Slice Term) {a : Term} {x
       have : sg.val = -1 := by rw [hsv]; exact Int.sign_eq_neg_one_of_neg hx
       scalar_tac
     simp only [this, ite_true, num.Integer.zero_spec, Std.bind_ok]
-    have hv : SmtEval.native_int_pow2 x = 0 := by
-      simp [SmtEval.native_int_pow2, SmtEval.native_zexp_total, hx]
+    have hv : Eunoia.native_int_pow2 x = 0 := by
+      simp [Eunoia.native_int_pow2, Eunoia.native_zexp_total, hx]
     rw [hv]
     exact Store.raw_int_spec s 0 hinv h64
   · have : ¬ sg < 0#i32 := by
@@ -208,8 +209,8 @@ theorem Store.native_spec_int_pow2 (s : Store) (args : Slice Term) {a : Term} {x
       rw [hu]
       simp only [Std.bind_ok, num.Integer.pow_spec, num.Integer.toInt_ofInt]
       have hux : (u.val : Int) = x := by rw [huv]; simp only [hf, and_self, ite_true]
-      have hpow : ((2#u32).val : Int) ^ u.val = SmtEval.native_int_pow2 x := by
-        simp only [SmtEval.native_int_pow2, SmtEval.native_zexp_total, hx, ite_false]
+      have hpow : ((2#u32).val : Int) ^ u.val = Eunoia.native_int_pow2 x := by
+        simp only [Eunoia.native_int_pow2, Eunoia.native_zexp_total, hx, ite_false]
         have : u.val = x.toNat := by omega
         rw [this]; simp
       rw [hpow]
@@ -225,7 +226,7 @@ theorem Store.native_spec_int_to_nat (s : Store) (args : Slice Term) {a : Term} 
     native.Store.native_op s native.NativeOp.IntToNat args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_int_to_nat x)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_int_to_nat x)
       | core.result.Result.Err _ => True ⦄div := by
   have hlen : Slice.len args = 1#usize := by
     apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
@@ -242,8 +243,8 @@ theorem Store.native_spec_int_to_nat (s : Store) (args : Slice Term) {a : Term} 
       have : sg.val = -1 := by rw [hsv]; exact Int.sign_eq_neg_one_of_neg hx
       scalar_tac
     simp only [this, ite_true, num.Integer.zero_spec, Std.bind_ok]
-    have h0' : SmtEval.native_int_to_nat x = 0 := by
-      simp [SmtEval.native_int_to_nat]; omega
+    have h0' : Eunoia.native_int_to_nat x = 0 := by
+      simp [Eunoia.native_int_to_nat]; omega
     rw [h0']
     have := Store.raw_nat_spec s 0 hinv h64
     simp only [Nat.cast_zero] at this
@@ -256,9 +257,9 @@ theorem Store.native_spec_int_to_nat (s : Store) (args : Slice Term) {a : Term} 
       · rw [h] at hsv; omega
       · rw [h] at hsv; omega
     simp only [this, ite_false]
-    have := Store.raw_nat_spec s (SmtEval.native_int_to_nat x) hinv h64
-    have hc : ((SmtEval.native_int_to_nat x : Nat) : Int) = x := by
-      simp [SmtEval.native_int_to_nat]; omega
+    have := Store.raw_nat_spec s (Eunoia.native_int_to_nat x) hinv h64
+    have hc : ((Eunoia.native_int_to_nat x : Nat) : Int) = x := by
+      simp [Eunoia.native_int_to_nat]; omega
     rw [hc] at this
     exact this
 
@@ -288,7 +289,7 @@ theorem Store.native_spec_zplus (s : Store) (args : Slice Term) {a b : Term} {x 
     native.Store.native_op s native.NativeOp.Zplus args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.native_zplus x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_zplus x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]
@@ -303,15 +304,15 @@ theorem Store.native_spec_nateq (s : Store) (args : Slice Term) {a b : Term} {x 
     native.Store.native_op s native.NativeOp.Nateq args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Smtm.native_nateq x y)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_nateq x y)
       | core.result.Result.Err _ => True ⦄div := by
   rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
   simp only [slice_index_one hargs, Std.bind_ok]
   unfold native.Store.native_int_compare
   simp only [Store.raw_int_rep_nat ha, Store.raw_int_rep_nat hb, Std.bind_ok,
     core.result.Result.Insts.CoreOpsTry.branch, num.Integer.eq_spec, num.Integer.toInt_ofInt]
-  convert Store.native_bool_spec s (Smtm.native_nateq x y) hinv h64 using 3
-  simp [Smtm.native_nateq]
+  convert Store.native_bool_spec s (Eunoia.native_nateq x y) hinv h64 using 3
+  simp [Eunoia.native_nateq]
 
 /-- `nat.to_int` gives its argument's handle: a natural and an integer are
 stored alike (`encNat`, `encInt`). -/
@@ -320,7 +321,7 @@ theorem Store.native_spec_nat_to_int (s : Store) (args : Slice Term) {a : Term} 
     native.Store.native_op s native.NativeOp.NatToInt args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Smtm.native_nat_to_int x)
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_nat_to_int x)
       | core.result.Result.Err _ => True ⦄div := by
   have hlen : Slice.len args = 1#usize := by
     apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
@@ -330,5 +331,42 @@ theorem Store.native_spec_nat_to_int (s : Store) (args : Slice Term) {a : Term} 
   simp only [Store.raw_int_rep_nat ha, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch,
     WP.dspec_ok, WP.uncurry'_pair]
   exact ⟨hinv, Store.Grows.refl s, ha.1, trivial⟩
+
+theorem Store.native_spec_zlt (s : Store) (args : Slice Term) {a b : Term} {x y : Int}
+    (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.Zlt args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_zlt x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
+  simp only [slice_index_one hargs, Std.bind_ok]
+  unfold native.Store.native_int_compare
+  simp only [Store.raw_int_rep ha, Store.raw_int_rep hb, Std.bind_ok,
+    core.result.Result.Insts.CoreOpsTry.branch, core.cmp.PartialOrd.lt.trait_default,
+    core.cmp.PartialOrd.lt.default, core.cmp.PartialOrd.lt_body,
+    num.Integer.partial_cmp_spec, num.Integer.toInt_ofInt]
+  convert Store.native_bool_spec s (Eunoia.native_zlt x y) hinv h64 using 3
+  simp [Eunoia.native_zlt, compare_lt_iff_lt]
+
+theorem Store.native_spec_zneg (s : Store) (args : Slice Term) {a : Term} {x : Int}
+    (hargs : args.val = [a]) (ha : Represents.rep s a x) (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.Zneg args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_zneg x)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 1#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  rw [native_op_n s _ args 1#usize hlen rfl h0 _ (by rw [native.Store.native_op])]
+  unfold native.Store.native_int_unary
+  have hz : native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq native.NativeOp.Zneg
+      native.NativeOp.Zneg = ok true := by
+    simp [native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq]
+  simp only [Store.raw_int_rep ha, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch, hz,
+    ite_true, num.Integer.neg_spec, num.Integer.toInt_ofInt]
+  exact Store.raw_int_spec s (-x) hinv h64
 
 end pathos_compiled_checker
