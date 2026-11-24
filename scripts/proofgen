@@ -91,7 +91,7 @@ BINARY_SPECS = {"Add", "Mul", "Gt"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
-                 "TypeOf", "ListSingletonElim"} | set(ARGS_SPECS)
+                 "TypeOf", "ListSingletonElim", "ListConcat"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -553,6 +553,28 @@ class Emitter:
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
                             + " (by not_left_tac) (by nil_apply_tac)", v)
+            self.l.calls.add(lists["is_nil"])
+            return v
+        if k == "ListConcat":
+            # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
+            # constant that does not nest to the left and has one nil
+            # (UniqueNil). Where logos's nil test takes several terms,
+            # logos concatenates two lists that end in different nils,
+            # which Ethos and the runtime do not (docs/proofs.md).
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            if len(vs) != 3 or not self.not_left(vs[0]):
+                self.unsupported("eo::list_concat of an operator that is not a constant")
+            elif self.l.ctor_of.get(vs[0]) not in self.g.unique_nil:
+                self.unsupported("eo::list_concat of " + self.l.ctor_of.get(vs[0])
+                                 + ", whose nil test takes more than one term (logos"
+                                 " concatenates lists that end in different nils;"
+                                 " Ethos and the runtime do not)")
+            self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+            self.store_step("Store.builtin_spec_list_concat n ih." + ident(lists["is_nil"])
+                            + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
+                            + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
+                            + " (by not_left_tac) (by unique_nil_tac)", v)
             self.l.calls.add(lists["is_nil"])
             return v
         if k == "Cons":
@@ -1568,6 +1590,37 @@ def rust_literals(rust_src):
     return out
 
 
+def unique_nil_ops(calc_lean, embedding_path):
+    """The list operators (EO names) whose nil test in logos's
+    `__eo_is_list_nil` is a single clause on a closed pattern that answers
+    `true`: they have one nil (`UniqueNil`). An operator whose clause takes
+    a variable (`nil`), and so hands it to a test of its own, may have
+    several."""
+    if not calc_lean or not embedding_path:
+        return set()
+    with open(os.path.join(calc_lean, "Logos.lean"), encoding="utf-8") as f:
+        text = f.read()
+    m = re.search(r"^def __eo_is_list_nil : Term -> Term -> Term\n((?:  \|.*\n)+)", text, re.M)
+    if not m:
+        return set()
+    clauses = {}
+    for line in m.group(1).splitlines():
+        c = re.match(r"  \| (\(Term\.UOp UserOp\.(\w+)\)|Term\.(\w+)), (.+?) => (.+)$", line)
+        if not c:
+            continue
+        lean = c.group(2) or c.group(3)
+        clauses.setdefault(lean, []).append((c.group(4).strip(), c.group(5).strip()))
+    with open(embedding_path, encoding="utf-8") as f:
+        eo_of = {d["lean"]: d["eo"] for d in json.load(f)["constructors"]
+                 if d["type"] in ("UserOp", "Term") and not d["eo"].startswith("$emb")}
+    out = set()
+    for lean, cs in clauses.items():
+        if len(cs) == 1 and cs[0][1] == "(Term.Boolean true)" \
+                and not re.fullmatch(r"[a-z_]\w*", cs[0][0]) and lean in eo_of:
+            out.add(eo_of[lean])
+    return out
+
+
 def user_op_arities(calc_lean):
     """The number of indices of each user operator, by its Lean name: from
     the inductives `UserOp`, `UserOp1`, … of the calculus's Lean
@@ -2166,6 +2219,7 @@ def main():
         body = text.split("pub fn is_left_assoc(self) -> bool", 1)
         if len(body) == 2:
             gen.left_assoc = set(re.findall(r"Self::(\w+) => true", body[1].split("\n}", 1)[0]))
+    gen.unique_nil = unique_nil_ops(args.calc_lean, args.embedding)
     gen.unproved = {}
     if args.unproved:
         with open(args.unproved, "rb") as f:

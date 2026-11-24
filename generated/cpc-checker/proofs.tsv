@@ -58,7 +58,7 @@ $chain_m_resolve_final	none	case 0 has a builtin operator
 $chain_m_resolve_rec	none	it calls $chain_m_resolve_rec_step, which has no proof
 $chain_m_resolve_rec_step	none	case 0 has a builtin operator
 $compute_card	none	case 1 has a builtin operator
-$contains_atomic_term_list_free_rec	none	case 0 has a builtin operator
+$contains_atomic_term_list_free_rec	none	case 2 has a builtin operator
 $derivative	none	case 6 has a builtin operator
 $dt_arg_list	generated	
 $dt_collapse_updater_rhs	generated	
@@ -92,7 +92,7 @@ $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
 $eo_invoke_cmd_step_pop	none	it calls $eo_push_proven, which has no proof
 $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
 $eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
-$eo_is_closed_rec	none	case 2 has a builtin operator
+$eo_is_closed_rec	none	case 6 has the constructor $emb_UOp1 in a pattern, which is not stored as a node
 $eo_is_list_nil	generated	
 $eo_is_list_nil_*	generated	
 $eo_is_list_nil_+	generated	
@@ -160,9 +160,9 @@ $eo_prog_arith-max-geq1	generated
 $eo_prog_arith-max-geq2	generated	
 $eo_prog_arith-min-lt1	generated	
 $eo_prog_arith-min-lt2	generated	
-$eo_prog_arith-mod-over-mod	none	case 0 has a builtin operator
+$eo_prog_arith-mod-over-mod	none	case 0 has eo::list_concat of +, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_arith-mod-over-mod-1	generated	
-$eo_prog_arith-mod-over-mod-mult	none	case 0 has a builtin operator
+$eo_prog_arith-mod-over-mod-mult	none	case 0 has eo::list_concat of *, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_arith-string-pred-entail	none	it calls $get_arith_poly_norm, which has no proof
 $eo_prog_arith-string-pred-safe-approx	none	it calls $str_arith_entail_is_approx, which has no proof
 $eo_prog_arith-to-int-elim-to-real	generated	
@@ -187,8 +187,8 @@ $eo_prog_arrays_read_over_write	generated
 $eo_prog_arrays_read_over_write_1	generated	
 $eo_prog_arrays_read_over_write_contra	generated	
 $eo_prog_beta-reduce	none	it calls $beta_reduce, which has no proof
-$eo_prog_bool-and-conf	none	case 0 has a builtin operator
-$eo_prog_bool-and-conf2	none	case 0 has a builtin operator
+$eo_prog_bool-and-conf	generated	
+$eo_prog_bool-and-conf2	generated	
 $eo_prog_bool-and-de-morgan	generated	
 $eo_prog_bool-double-not-elim	generated	
 $eo_prog_bool-dual-impl-eq	generated	
@@ -210,19 +210,19 @@ $eo_prog_bool-not-true	generated
 $eo_prog_bool-not-xor-elim	generated	
 $eo_prog_bool-or-and-distrib	generated	
 $eo_prog_bool-or-de-morgan	generated	
-$eo_prog_bool-or-taut	none	case 0 has a builtin operator
-$eo_prog_bool-or-taut2	none	case 0 has a builtin operator
+$eo_prog_bool-or-taut	generated	
+$eo_prog_bool-or-taut2	generated	
 $eo_prog_bool-xor-comm	generated	
 $eo_prog_bool-xor-elim	generated	
 $eo_prog_bool-xor-false	generated	
 $eo_prog_bool-xor-nrefl	generated	
 $eo_prog_bool-xor-refl	generated	
 $eo_prog_bool-xor-true	generated	
-$eo_prog_bv-and-concat-pullup	none	case 0 has a builtin operator
-$eo_prog_bv-and-concat-pullup2	none	case 0 has a builtin operator
-$eo_prog_bv-and-concat-pullup3	none	case 0 has a builtin operator
-$eo_prog_bv-and-simplify-1	none	case 0 has a builtin operator
-$eo_prog_bv-and-simplify-2	none	case 0 has a builtin operator
+$eo_prog_bv-and-concat-pullup	none	case 0 has eo::list_concat of bvand, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-and-concat-pullup2	none	case 0 has eo::list_concat of bvand, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-and-concat-pullup3	none	case 0 has eo::list_concat of bvand, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-and-simplify-1	none	case 0 has eo::list_concat of bvand, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-and-simplify-2	none	case 0 has eo::list_concat of bvand, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-ashr-by-const-0	generated	
 $eo_prog_bv-ashr-by-const-1	generated	
 $eo_prog_bv-ashr-by-const-2	generated	
@@ -232,17 +232,17 @@ $eo_prog_bv-commutative-add	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-commutative-comp	generated	
 $eo_prog_bv-commutative-xor	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-comp-eliminate	generated	
-$eo_prog_bv-concat-extract-merge	none	case 0 has a builtin operator
-$eo_prog_bv-concat-merge-const	none	case 0 has a builtin operator
+$eo_prog_bv-concat-extract-merge	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
+$eo_prog_bv-concat-merge-const	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
 $eo_prog_bv-eq-extract-elim1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)
 $eo_prog_bv-eq-extract-elim2	generated	
 $eo_prog_bv-eq-extract-elim3	generated	
 $eo_prog_bv-eq-not-solve	generated	
 $eo_prog_bv-eq-xor-solve	none	it calls $eo_nil, which has no proof
-$eo_prog_bv-extract-concat-1	none	case 0 has a builtin operator
-$eo_prog_bv-extract-concat-2	none	case 0 has a builtin operator
-$eo_prog_bv-extract-concat-3	none	case 0 has a builtin operator
-$eo_prog_bv-extract-concat-4	none	case 0 has a builtin operator
+$eo_prog_bv-extract-concat-1	generated	
+$eo_prog_bv-extract-concat-2	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once eo::list_concat had a spec
+$eo_prog_bv-extract-concat-3	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
+$eo_prog_bv-extract-concat-4	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
 $eo_prog_bv-extract-extract	generated	
 $eo_prog_bv-extract-mult-leading-bit	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-extract-not	generated	
@@ -271,8 +271,8 @@ $eo_prog_bv-lshr-zero	generated
 $eo_prog_bv-lt-self	generated	
 $eo_prog_bv-merge-sign-extend-1	generated	
 $eo_prog_bv-merge-sign-extend-2	generated	
-$eo_prog_bv-mult-pow2-1	none	case 0 has a builtin operator
-$eo_prog_bv-mult-pow2-2	none	case 0 has a builtin operator
+$eo_prog_bv-mult-pow2-1	none	case 0 has eo::list_concat of bvmul, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-mult-pow2-2	none	case 0 has eo::list_concat of bvmul, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-mult-pow2-2b	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-mult-slt-mult-1	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-mult-slt-mult-2	none	it calls $eo_nil, which has no proof
@@ -283,11 +283,11 @@ $eo_prog_bv-not-idemp	generated
 $eo_prog_bv-not-neq	generated	
 $eo_prog_bv-not-ult	generated	
 $eo_prog_bv-not-xor	generated	
-$eo_prog_bv-or-concat-pullup	none	case 0 has a builtin operator
-$eo_prog_bv-or-concat-pullup2	none	case 0 has a builtin operator
-$eo_prog_bv-or-concat-pullup3	none	case 0 has a builtin operator
-$eo_prog_bv-or-simplify-1	none	case 0 has a builtin operator
-$eo_prog_bv-or-simplify-2	none	case 0 has a builtin operator
+$eo_prog_bv-or-concat-pullup	none	case 0 has eo::list_concat of bvor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-or-concat-pullup2	none	case 0 has eo::list_concat of bvor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-or-concat-pullup3	none	case 0 has eo::list_concat of bvor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-or-simplify-1	none	case 0 has eo::list_concat of bvor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-or-simplify-2	none	case 0 has eo::list_concat of bvor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-redand-eliminate	generated	
 $eo_prog_bv-redor-eliminate	generated	
 $eo_prog_bv-repeat-elim	none	case 0 has a builtin operator
@@ -329,7 +329,7 @@ $eo_prog_bv-ule-eliminate	generated
 $eo_prog_bv-ule-max	generated	
 $eo_prog_bv-ule-self	generated	
 $eo_prog_bv-ule-zero	generated	
-$eo_prog_bv-ult-add-one	none	case 0 has a builtin operator
+$eo_prog_bv-ult-add-one	none	case 0 has eo::list_concat of bvadd, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-ult-one	generated	
 $eo_prog_bv-ult-ones	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-ult-self	generated	
@@ -341,15 +341,15 @@ $eo_prog_bv-urem-pow2-not-one	generated
 $eo_prog_bv-urem-self	generated	
 $eo_prog_bv-usubo-eliminate	generated	
 $eo_prog_bv-xnor-eliminate	none	it calls $eo_nil, which has no proof
-$eo_prog_bv-xor-concat-pullup	none	case 0 has a builtin operator
-$eo_prog_bv-xor-concat-pullup2	none	case 0 has a builtin operator
-$eo_prog_bv-xor-concat-pullup3	none	case 0 has a builtin operator
+$eo_prog_bv-xor-concat-pullup	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-xor-concat-pullup2	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-xor-concat-pullup3	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-xor-duplicate	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-xor-not	none	it calls $eo_nil, which has no proof
-$eo_prog_bv-xor-ones	none	case 0 has a builtin operator
-$eo_prog_bv-xor-simplify-1	none	case 0 has a builtin operator
-$eo_prog_bv-xor-simplify-2	none	case 0 has a builtin operator
-$eo_prog_bv-xor-simplify-3	none	case 0 has a builtin operator
+$eo_prog_bv-xor-ones	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-xor-simplify-1	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-xor-simplify-2	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_bv-xor-simplify-3	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-zero-extend-eliminate	generated	
 $eo_prog_bv-zero-extend-eliminate-0	generated	
 $eo_prog_bv-zero-extend-eq-const-1	generated	
@@ -471,11 +471,11 @@ $eo_prog_quant-unused-vars	none	case 0 has a builtin operator
 $eo_prog_quant-var-elim-eq	none	it calls $mk_quant_var_elim_eq, which has no proof
 $eo_prog_quant_var_reordering	none	case 0 has a builtin operator
 $eo_prog_re-all-elim	none	a constant, not a program with cases
-$eo_prog_re-concat-merge	none	case 0 has a builtin operator
-$eo_prog_re-concat-star-nullable1	none	case 0 has a builtin operator
-$eo_prog_re-concat-star-nullable2	none	case 0 has a builtin operator
-$eo_prog_re-concat-star-repeat	none	case 0 has a builtin operator
-$eo_prog_re-concat-star-swap	none	case 0 has a builtin operator
+$eo_prog_re-concat-merge	generated	
+$eo_prog_re-concat-star-nullable1	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
+$eo_prog_re-concat-star-nullable2	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
+$eo_prog_re-concat-star-repeat	generated	
+$eo_prog_re-concat-star-swap	generated	
 $eo_prog_re-diff-elim	generated	
 $eo_prog_re-eq-elim	none	case 0 has a variable term
 $eo_prog_re-in-comp	generated	
@@ -483,7 +483,7 @@ $eo_prog_re-in-cstring	generated
 $eo_prog_re-in-empty	generated	
 $eo_prog_re-in-sigma	generated	
 $eo_prog_re-in-sigma-star	generated	
-$eo_prog_re-inter-all	none	case 0 has a builtin operator
+$eo_prog_re-inter-all	generated	
 $eo_prog_re-inter-cstring	generated	
 $eo_prog_re-inter-cstring-neg	generated	
 $eo_prog_re-inter-inclusion	none	it calls $re_flatten, which has no proof
@@ -500,9 +500,9 @@ $eo_prog_re-repeat-elim	generated
 $eo_prog_re-star-emp	none	a constant, not a program with cases
 $eo_prog_re-star-none	none	a constant, not a program with cases
 $eo_prog_re-star-star	generated	
-$eo_prog_re-star-union-char	none	case 0 has a builtin operator
-$eo_prog_re-star-union-drop-emp	none	case 0 has a builtin operator
-$eo_prog_re-union-all	none	case 0 has a builtin operator
+$eo_prog_re-star-union-char	generated	
+$eo_prog_re-star-union-drop-emp	generated	
+$eo_prog_re-union-all	generated	
 $eo_prog_re-union-const-elim	generated	
 $eo_prog_re-union-inclusion	none	it calls $re_flatten, which has no proof
 $eo_prog_re_concat	none	case 0 has a builtin operator
@@ -518,9 +518,9 @@ $eo_prog_seq-eval-op	none	it calls $seq_eval, which has no proof
 $eo_prog_seq-len-rev	generated	
 $eo_prog_seq-len-unit	generated	
 $eo_prog_seq-nth-concat-unit	generated	
-$eo_prog_seq-nth-concat-unit-gen	none	case 0 has a builtin operator
+$eo_prog_seq-nth-concat-unit-gen	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_seq-nth-unit	generated	
-$eo_prog_seq-rev-concat	none	case 0 has a builtin operator
+$eo_prog_seq-rev-concat	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_seq-rev-rev	generated	
 $eo_prog_seq-rev-unit	generated	
 $eo_prog_sets-choose-singleton	generated	
@@ -554,16 +554,16 @@ $eo_prog_skolemize	none	case 0 has a builtin operator
 $eo_prog_split	generated	
 $eo_prog_str-at-elim	generated	
 $eo_prog_str-concat-clash	generated	
-$eo_prog_str-concat-clash-rev	none	case 0 has a builtin operator
+$eo_prog_str-concat-clash-rev	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-concat-clash2	generated	
-$eo_prog_str-concat-clash2-rev	none	case 0 has a builtin operator
+$eo_prog_str-concat-clash2-rev	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-concat-unify	generated	
 $eo_prog_str-concat-unify-base	generated	
-$eo_prog_str-concat-unify-base-rev	none	case 0 has a builtin operator
-$eo_prog_str-concat-unify-rev	none	case 0 has a builtin operator
+$eo_prog_str-concat-unify-base-rev	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_str-concat-unify-rev	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-contains-char	generated	
-$eo_prog_str-contains-concat-find	none	case 0 has a builtin operator
-$eo_prog_str-contains-concat-find-contra	none	case 0 has a builtin operator
+$eo_prog_str-contains-concat-find	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_str-contains-concat-find-contra	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-contains-emp	generated	
 $eo_prog_str-contains-leq-len-eq	generated	
 $eo_prog_str-contains-refl	generated	
@@ -573,7 +573,7 @@ $eo_prog_str-contains-repl-self-tgt-char	generated
 $eo_prog_str-contains-repl-tgt	generated	
 $eo_prog_str-contains-split-char	generated	
 $eo_prog_str-ctn-multiset-subset	none	case 0 has a builtin operator
-$eo_prog_str-eq-ctn-false	none	case 0 has a builtin operator
+$eo_prog_str-eq-ctn-false	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-eq-ctn-full-false1	generated	
 $eo_prog_str-eq-ctn-full-false2	generated	
 $eo_prog_str-eq-len-false	generated	
@@ -596,7 +596,7 @@ $eo_prog_str-in-re-range-elim	generated
 $eo_prog_str-in-re-sigma	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)
 $eo_prog_str-in-re-sigma-star	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)
 $eo_prog_str-in-re-union-elim	generated	
-$eo_prog_str-indexof-contains-concat-pre	none	case 0 has a builtin operator
+$eo_prog_str-indexof-contains-concat-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-indexof-contains-pre	generated	
 $eo_prog_str-indexof-eq-irr	none	its generated proof does not build: the spec of case 0: simp times out (isDefEq, 1,000,000 heartbeats)
 $eo_prog_str-indexof-find-emp	generated	
@@ -605,7 +605,7 @@ $eo_prog_str-indexof-len-oob2	generated
 $eo_prog_str-indexof-no-contains	generated	
 $eo_prog_str-indexof-oob	generated	
 $eo_prog_str-indexof-oob2	generated	
-$eo_prog_str-indexof-prefix-concat	none	case 0 has a builtin operator
+$eo_prog_str-indexof-prefix-concat	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-indexof-re-emp-re	generated	
 $eo_prog_str-indexof-re-eval	none	case 0 has a builtin operator
 $eo_prog_str-indexof-re-none	generated	
@@ -620,8 +620,8 @@ $eo_prog_str-len-substr-in-range	generated
 $eo_prog_str-len-update-inv	generated	
 $eo_prog_str-leq-concat-base-1	generated	
 $eo_prog_str-leq-concat-base-2	generated	
-$eo_prog_str-leq-concat-false	none	case 0 has a builtin operator
-$eo_prog_str-leq-concat-true	none	case 0 has a builtin operator
+$eo_prog_str-leq-concat-false	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
+$eo_prog_str-leq-concat-true	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-leq-empty	generated	
 $eo_prog_str-leq-empty-eq	generated	
 $eo_prog_str-lt-elim	generated	
@@ -656,12 +656,12 @@ $eo_prog_str-replace-emp-ctn-src	generated
 $eo_prog_str-replace-empty	none	it calls $eo_nil, which has no proof
 $eo_prog_str-replace-find-base	none	it calls $eo_nil, which has no proof
 $eo_prog_str-replace-find-first-concat	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
-$eo_prog_str-replace-find-pre	none	case 0 has a builtin operator
+$eo_prog_str-replace-find-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-replace-id	generated	
 $eo_prog_str-replace-no-contains	generated	
-$eo_prog_str-replace-one-pre	none	case 0 has a builtin operator
+$eo_prog_str-replace-one-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-replace-prefix	generated	
-$eo_prog_str-replace-prefix-concat	none	case 0 has a builtin operator
+$eo_prog_str-replace-prefix-concat	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-replace-re-all-eval	none	case 0 has a builtin operator
 $eo_prog_str-replace-re-all-none	generated	
 $eo_prog_str-replace-re-eval	none	case 0 has a builtin operator
@@ -694,7 +694,7 @@ $eo_prog_str-substr-z-eq-empty-leq	generated
 $eo_prog_str-suffixof-elim	generated	
 $eo_prog_str-suffixof-eq	generated	
 $eo_prog_str-suffixof-one	generated	
-$eo_prog_str-to-int-concat-neg-one	none	case 0 has a builtin operator
+$eo_prog_str-to-int-concat-neg-one	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-to-lower-concat	generated	
 $eo_prog_str-to-lower-from-int	generated	
 $eo_prog_str-to-lower-idem	generated	
@@ -705,7 +705,7 @@ $eo_prog_str-to-upper-from-int	generated
 $eo_prog_str-to-upper-idem	generated	
 $eo_prog_str-to-upper-len	generated	
 $eo_prog_str-to-upper-lower	generated	
-$eo_prog_str-update-concat-fit	none	case 0 has a builtin operator
+$eo_prog_str-update-concat-fit	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-update-concat-fit0	generated	
 $eo_prog_str-update-fit	generated	
 $eo_prog_str-update-in-first-concat	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
@@ -880,12 +880,12 @@ $eo_typeof_update	generated
 $eo_typeof_zero_extend	generated	
 $eval_sets_inter	none	case 0 has a builtin operator
 $eval_sets_minus	none	case 0 has a builtin operator
-$eval_sets_op	none	case 0 has a builtin operator
+$eval_sets_op	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $extract_antec	generated	
 $extract_antec_rec	generated	
 $from_clause	generated	
 $get_a_norm	none	case 0 has eo::list_singleton_elim of an operator that is not a constant
-$get_a_norm_rec	none	case 0 has a builtin operator
+$get_a_norm_rec	none	case 0 has eo::list_concat of an operator that is not a constant
 $get_aci_normal_form	none	it calls $get_a_norm, which has no proof
 $get_ai_norm	none	case 0 has eo::list_singleton_elim of an operator that is not a constant
 $get_ai_norm_rec	none	case 0 has a builtin operator
@@ -902,7 +902,7 @@ $iota_rec	generated
 $is_absorb	none	it calls $is_absorb_rec, which has no proof
 $is_absorb_rec	none	its generated proof does not build: falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved
 $is_arith_type	generated	
-$is_closed_rec	none	case 0 has a builtin operator
+$is_closed_rec	none	case 2 has a builtin operator
 $is_cons_app	none	case 1 has a builtin operator
 $is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
 $is_instantiation	none	it calls $eo_typeof, which has no proof
@@ -918,7 +918,7 @@ $is_var_list	none	case 0 has a builtin operator
 $least_int_gt	generated	
 $lower_not_and	generated	
 $mk_arith_mult_abs_comparison	none	it calls $eo_nil, which has no proof
-$mk_arith_mult_abs_comparison_rec	none	case 0 has a builtin operator
+$mk_arith_mult_abs_comparison_rec	none	case 0 has eo::list_concat of *, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $mk_arith_mult_neg	none	it calls $eo_nil, which has no proof
 $mk_arith_mult_pos	none	it calls $eo_nil, which has no proof
 $mk_arith_mult_sign_sgn	none	its generated proof does not build: logos_eq_deep times out (whnf, 2,000,000 heartbeats): three cases with deep patterns and repeated variables
@@ -929,7 +929,7 @@ $mk_cong_rhs	generated
 $mk_distinct_elim	generated	
 $mk_distinct_elim_rec	generated	
 $mk_dt_collapse_updater_rhs	none	case 0 has a builtin operator
-$mk_dt_cons_eq	none	case 1 has a builtin operator
+$mk_dt_cons_eq	none	case 2 has a builtin operator
 $mk_dt_inst	none	case 2 has a builtin operator
 $mk_dt_inst_prem	none	it calls $eo_typeof, which has no proof
 $mk_dt_inst_rec	generated	
@@ -940,7 +940,7 @@ $mk_dt_updater_elim_conc	none	it calls $dt_get_selectors, which has no proof
 $mk_dt_updater_elim_rhs	none	case 0 has a builtin operator
 $mk_ho_cong	generated	
 $mk_nary_cong_rhs	generated	
-$mk_quant_merge_prenex	none	case 0 has a builtin operator
+$mk_quant_merge_prenex	generated	
 $mk_quant_miniscope_and	generated	
 $mk_quant_var_elim_eq	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $mk_re_concat	generated	
@@ -962,7 +962,7 @@ $poly_mul	none	it calls $poly_add, which has no proof
 $poly_mul_mon	none	it calls $mon_mul_mon, which has no proof
 $poly_neg	generated	
 $re_ac_merge	none	case 3 has a builtin operator
-$re_concat_merge	none	case 0 has a builtin operator
+$re_concat_merge	generated	
 $re_flatten	none	case 1 has a builtin operator
 $re_is_unbound_wildcard	generated	
 $re_nullable	none	case 6 has a builtin operator
@@ -978,7 +978,7 @@ $seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
 $seq_element_of_unit	generated	
 $seq_empty	generated	
 $seq_eval	none	case 0 has a builtin operator
-$seq_eval_replace_all_rec	none	case 1 has a builtin operator
+$seq_eval_replace_all_rec	none	case 1 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $seq_find	none	it calls $seq_is_prefix, which has no proof
 $seq_is_non_empty	generated	
 $seq_is_prefix	none	it calls $are_distinct_terms_type, which has no proof
@@ -1059,7 +1059,7 @@ $str_eval_str_in_re_rec	none	it calls $derivative, which has no proof
 $str_first_match_rec	none	it calls $str_eval_str_in_re_rec, which has no proof
 $str_first_match_rec_smallest	none	it calls $derivative, which has no proof
 $str_fixed_len_re	generated	
-$str_flatten	none	case 0 has a builtin operator
+$str_flatten	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $str_flatten_word_rec	none	case 1 has a builtin operator
 $str_from_int_eval_rec	none	case 1 has a builtin operator
 $str_is_compatible	none	case 2 has a builtin operator
@@ -1075,7 +1075,7 @@ $str_mk_re_loop_elim_rec	generated
 $str_mk_str_in_re_concat_star_char	generated	
 $str_mk_str_in_re_sigma_rec	generated	
 $str_mk_str_in_re_sigma_star_rec	generated	
-$str_multiset_overapprox	none	case 0 has a builtin operator
+$str_multiset_overapprox	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $str_multiset_overapprox_word	none	it calls $eo_nil, which has no proof
 $str_overlap_rec	none	it calls $str_is_compatible, which has no proof
 $str_re_consume	none	case 0 has a builtin operator
@@ -1094,7 +1094,7 @@ $str_to_int_eval_rec	generated
 $str_unify_split	generated	
 $str_value_len	none	case 1 has a builtin operator
 $strip_even_exponent	generated	
-$substitute_simul_rec	none	case 0 has a builtin operator
+$substitute_simul_rec	none	case 2 has a builtin operator
 $to_clause	generated	
 $to_cube	generated	
 $tuple_arg_list	generated	

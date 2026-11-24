@@ -466,6 +466,39 @@ line. logos: `incorrect`, naming the `trans` step. The same with the last
 line left out, and with `(assume-push @p4 e)` before the `trans` step and
 `(step-pop @p5 :rule scope :premises (@p3))` after it.
 
+### `eo::list_concat` and the nils of an operator
+
+logos's `eo::list_concat f a b` asks only that each of `a` and `b` be a
+list of `f`: that each ends in a term logos's `__eo_is_list_nil f` takes
+for a nil. Then it puts the elements of `a` before `b`, whole. Ethos
+takes one nil for the call: the operator's own, or the nil for the type
+of `a` where it depends on a type (`type_checker.cpp`,
+`evaluateNil`). It requires both lists to end in exactly that term. The
+runtime requires the two ends to be the same term (`list_pair`). So
+where the nil test takes several terms, logos concatenates two lists that
+end in different nils, and Ethos and the runtime give the stuck term.
+For example, a `str.++` list ending in `""` and one ending in
+`(seq.empty String)`.
+
+Operators where this happens, by logos's nil test:
+- `str.++`: `""` and any `(seq.empty T)`;
+- the bit-vector operators: by the value, so of any width, and the
+  integer too;
+- `+` and `*`: `0` and `0/1`, `1` and `1/1`;
+- `@@TypedList.cons`: any `T`.
+
+The others have one nil: `or`, `and`, `concat`, `re.++`, `re.inter`,
+`re.union`, `$eo_List_cons`, `Tuple`, `tuple`, `@@poly`, `@from_bools`.
+
+`Store.builtin_spec_list_concat` (proofs-cpc/PathosProofsCpc/Lists.lean)
+is proved under `UniqueNil f`: two terms the nil test takes are one.
+proofgen emits it only for an operator constant whose clause of
+`__eo_is_list_nil` is a single closed pattern answering `true`
+(`unique_nil_ops`). The calls on the other operators stay unproved,
+with this as the reason. Daniel's decision (2026-11-24): leave them so,
+and report the difference to logos. The runtime keeps Ethos's
+behaviour.
+
 ### The generator
 
 - Clippy with warnings as errors fails on the CpcMini crate in one place:
