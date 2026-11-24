@@ -83,7 +83,7 @@ ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
-                 "TypeOf"} | set(ARGS_SPECS)
+                 "TypeOf", "ListSingletonElim"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -112,6 +112,8 @@ class Lean:
         self.calls = set()
         self.indent = ""
         self.binary_of = {}
+        # the constructor of each constant the case builds
+        self.ctor_of = {}
         self.ok_state = set()
         self.ok_proof = set()
         self.pf_of = {}
@@ -204,6 +206,13 @@ class Emitter:
                   + a + "⟩ using " + self.inv() + " " + self.els())
         self.l.facts += ["h_" + f, "h_" + a]
         self.l.pure += ["hn_" + f, "hn_" + a]
+
+    def not_left(self, f):
+        """Whether the list operator `f` is a constant whose constructor does
+        not nest to the left (the generated crate's
+        `Constructor::is_left_assoc`)."""
+        c = self.l.ctor_of.get(f)
+        return c is not None and ident(c) not in self.g.left_assoc
 
     def same(self, a, b):
         self.line("pat_same " + a + " " + b + " with h_" + a + " h_" + b
@@ -357,6 +366,7 @@ class Emitter:
                         + st + " e_" + v + " (by rw [he_" + v
                         + "]; exact empty_args) " + inv + " h64", v)
         self.l.built.add(v)
+        self.l.ctor_of[v] = name
         if name in self.g.cfg["state"]["ok_constants"]:
             self.l.ok_state.add(v)
         return v
@@ -499,20 +509,38 @@ class Emitter:
                             + " " + inv + " h64 " + rem + words("h_" + x for x in vs), v)
             self.l.calls.add(prog)
             return v
+        if k == "ListSingletonElim":
+            # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
+            # constant, which does not nest to the left and has no
+            # application as its nil (NilApply)
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            if len(vs) != 2 or not self.not_left(vs[0]):
+                self.unsupported("eo::list_singleton_elim of an operator that is not a constant")
+            self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+            self.store_step("Store.builtin_spec_list_singleton_elim n ih." + ident(lists["is_nil"])
+                            + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
+                            + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
+                            + " (by not_left_tac) (by nil_apply_tac)", v)
+            self.l.calls.add(lists["is_nil"])
+            return v
         if k == "Cons":
             vs = [self.expr(s) for s in sub]
             st, inv, rem = self.st(), self.inv(), self.rem()
             # Store.builtin_spec_cons (Runtime/Lists.lean) walks
             # right-nested lists, of an element that is not stuck
-            if self.g.trace["left_nested_lists"]:
-                self.unsupported("eo::cons with an operator that nests to the left")
+            # (the list operator must not nest to the left, NotLeftNested:
+            # where some constructor does, it is a constant whose
+            # constructor does not)
+            if self.g.trace["left_nested_lists"] and not self.not_left(vs[0]):
+                self.unsupported("eo::cons with an operator that may nest to the left")
             if len(vs) != 3 or not self.not_stuck(vs[1]):
                 self.unsupported("eo::cons of an element that may be stuck")
             self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
             self.store_step("Store.builtin_spec_cons n ih." + ident(lists["is_nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " (by ns_tac) " + inv
-                            + " h64 " + rem + " (fun _ => rfl)", v)
+                            + " h64 " + rem + " (by not_left_tac)", v)
             self.l.calls.add(lists["is_nil"])
             return v
         for s in sub:
@@ -2084,6 +2112,13 @@ def main():
                     gen.helpers.setdefault("__" + m.group(2), []).append(m.group(1))
     gen.uop_arities = set(user_op_arities(args.calc_lean).values()) if args.calc_lean else set()
     gen.literals = rust_literals(args.rust_src) if args.rust_src else {}
+    gen.left_assoc = set()
+    if args.rust_src and os.path.exists(os.path.join(args.rust_src, "schema.rs")):
+        with open(os.path.join(args.rust_src, "schema.rs"), encoding="utf-8") as f:
+            text = f.read()
+        body = text.split("pub fn is_left_assoc(self) -> bool", 1)
+        if len(body) == 2:
+            gen.left_assoc = set(re.findall(r"Self::(\w+) => true", body[1].split("\n}", 1)[0]))
     gen.unproved = {}
     if args.unproved:
         with open(args.unproved, "rb") as f:

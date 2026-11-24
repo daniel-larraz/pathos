@@ -110,6 +110,16 @@ macro "logos_eq_deep" : tactic =>
         (try (intros; simp_all [eq_comm])) <;>
         (try (rename_i hm _; exact absurd hm (by simp)))) <;> done))
 
+/-- A list operator does not nest to the left (`NotLeftNested`): where no
+constructor does (CpcMini), or by the constructor of the operator constant. -/
+macro "not_left_tac" : tactic =>
+  `(tactic| first
+    | (intro _ _ _; rfl)
+    | (intro c ts h
+       simp only [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop, Tree.node.injEq] at h
+       obtain ⟨rfl, -⟩ := h
+       rfl))
+
 /-- A term is not the stuck term: said by a hypothesis, or plain from its
 form. -/
 macro "ns_tac" : tactic =>

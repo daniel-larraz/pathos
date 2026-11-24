@@ -2549,7 +2549,7 @@ theorem case_1_eo__24eo_5fmk_5fpremise_5flist_spec (n : Nat) (ih : Specs n) (s :
   have hn_v3 := state_proven_nth_ne_stuck_of h_v3 (by good_tac)
   store_step with ih.eo__24eo_5fmk_5fpremise_5flist s1 a0 v2 a2 _ _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 h_a2 (by good_tac) as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.builtin_spec_cons n ih.eo__24eo_5fis_5flist_5fnil s2 e_v5 (by rw [he_v5]; rfl) h_a0 h_v3 h_v4 (by ns_tac) hinv2 h64 (hG.rem hrem) (fun _ => rfl) as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.builtin_spec_cons n ih.eo__24eo_5fis_5flist_5fnil s2 e_v5 (by rw [he_v5]; rfl) h_a0 h_v3 h_v4 (by ns_tac) hinv2 h64 (hG.rem hrem) (by not_left_tac) as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_mk_premise_list.case_1 using hn_v3
 
 /-- logos's `__eo_mk_premise_list` is what the generated body does: the tests for the stuck term,

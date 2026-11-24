@@ -182,15 +182,30 @@ theorem list_elements_loop_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) {f
       exact ⟨[], xl, by simpa using hout, hl, by rfl, fun h => absurd h hmore,
         fun _ => ⟨trivial, trivial⟩, hsz⟩
 
-/-- `is_left_assoc` where no constructor of the signature nests to the
-left (CpcMini: `schema.Constructor.is_left_assoc` is `false`). -/
+/-- The list operator `xf` does not nest to the left: no node it is stored
+as has a constructor that does (CpcMini has none; CPC's `-` and `/` do,
+`schema.Constructor.is_left_assoc`). -/
+def NotLeftNested (xf : Eo.Term) : Prop :=
+  ∀ c ts, Embedded.enc xf = Tree.node c ts → schema.Constructor.is_left_assoc c = ok false
+
+/-- `is_left_assoc` on a handle of an operator that does not nest to the left. -/
 theorem is_left_assoc_false (s : Store) {fh : Term} {xf : Eo.Term} (hf : s.Rep fh xf)
-    (hleft : ∀ c, schema.Constructor.is_left_assoc c = ok false) :
+    (hleft : NotLeftNested xf) :
     generated.part0.Store.is_left_assoc s fh = ok (core.result.Result.Ok false) := by
   unfold generated.part0.Store.is_left_assoc
   rw [Store.view_eq]
   simp only [hf.lt, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
-  split <;> simp [hleft]
+  obtain ⟨hh, _⟩ := hf
+  generalize hx : Embedded.enc xf = tx at hh
+  split <;> try rfl
+  rename_i c v hd
+  cases hh with
+  | node _ c' v' xs _ hd' _ =>
+    rw [hd] at hd'
+    injection hd' with h1 h2
+    subst h1
+    simp [hleft _ _ hx]
+  | _ => simp_all
 
 /-- What `$eo_is_list_nil` is proved to compute (the generated
 `eo__24eo_5fis_5flist_5fnil.Spec n`, written out). -/
@@ -207,7 +222,7 @@ ends at a nil of `f`; nothing where it ends elsewhere. -/
 theorem list_parts_spec (n : Nat) (hnil : IsListNilSpec n) (s : Store) (hinv : s.Inv)
     (h64 : Platform64) (hrem : s.remaining ≤ n) {fh lh : Term} {xf xl : Eo.Term}
     (hf : s.Rep fh xf) (hl : s.Rep lh xl)
-    (hleft : ∀ c, schema.Constructor.is_left_assoc c = ok false) :
+    (hleft : NotLeftNested xf) :
     generated.part0.Store.list_parts s fh lh ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
@@ -366,6 +381,31 @@ theorem is_list_nil_not_apply {xf xr : Eo.Term}
   unfold Eo.__eo_is_list_nil
   split <;> simp_all [eo_list_nil]
 
+/-- logos's `eo::is_list` on a list of `f`, given by its end: whether the
+end is a nil of `f`. -/
+theorem is_list_eoList {xf xr : Eo.Term} (ys : List Eo.Term) (hnf : xf ≠ Eo.Term.Stuck)
+    (hnr : eoList xf xr ys ≠ Eo.Term.Stuck)
+    (hend : ∀ a b, xr ≠ Eo.Term.Apply (Eo.Term.Apply xf a) b) :
+    Eo.__eo_is_list xf (eoList xf xr ys) =
+      Eo.Term.Boolean (decide (Eo.__eo_is_list_nil xf xr = Eo.Term.Boolean true)) := by
+  have hrec := get_nil_rec_eoList hnf xr ys
+  have hsplit : Eo.__eo_is_list xf (eoList xf xr ys) = Eo.__eo_is_ok (Eo.__eo_get_nil_rec xf xr) := by
+    unfold Eo.__eo_is_list; split <;> simp_all
+  rw [hsplit]
+  by_cases hn : Eo.__eo_is_list_nil xf xr = Eo.Term.Boolean true
+  · have hna := is_list_nil_not_apply hn
+    have hxr : xr ≠ Eo.Term.Stuck := by
+      intro h; subst h; revert hn; unfold Eo.__eo_is_list_nil; split <;> simp_all
+    have hg : Eo.__eo_get_nil_rec xf xr = xr := by
+      unfold Eo.__eo_get_nil_rec
+      split <;> simp_all [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
+    simp [hg, hn, Eo.__eo_is_ok, SmtEval.native_not, Eo.native_teq, hxr]
+  · have hg : Eo.__eo_get_nil_rec xf xr = Eo.Term.Stuck := by
+      unfold Eo.__eo_get_nil_rec
+      split <;> simp_all [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
+      intro h; exact absurd h.symm hend
+    simp [hg, hn, Eo.__eo_is_ok, SmtEval.native_not, Eo.native_teq]
+
 /-- logos's `eo::cons` on a list of `f`, given by its end. -/
 theorem eo_cons_eoList {xf xe xr : Eo.Term} (ys : List Eo.Term) (hnf : xf ≠ Eo.Term.Stuck)
     (hnr : eoList xf xr ys ≠ Eo.Term.Stuck)
@@ -497,7 +537,7 @@ theorem Store.builtin_spec_cons (n : Nat) (hnil : IsListNilSpec n) (s : Store)
     (args : Slice Term) {a b c : Term} {xf xe xa : Eo.Term} (hargs : args.val = [a, b, c])
     (ha : s.Rep a xf) (hb : s.Rep b xe) (hc : s.Rep c xa) (hne : xe ≠ Eo.Term.Stuck)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n)
-    (hleft : ∀ c, schema.Constructor.is_left_assoc c = ok false) :
+    (hleft : NotLeftNested xf) :
     generated.part0.Store.builtin_list s kind.EvalOp.Cons args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
