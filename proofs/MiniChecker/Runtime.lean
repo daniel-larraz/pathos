@@ -23,27 +23,6 @@ noncomputable section
 
 namespace pathos_compiled_checker
 
-/-- [core::cmp::{impl core::cmp::PartialEq<core::cmp::Ordering> for core::cmp::Ordering}::eq]:
-    Source: '/rustc/library/core/src/cmp.rs', lines 413:43-413:52
-    Name pattern: [core::cmp::{core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>}::eq]
-    Visibility: public -/
-@[rust_fun
-  "core::cmp::{core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>}::eq"]
-axiom core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq
-  : Ordering → Ordering → Result Bool
-
-/-- Trait implementation: [core::cmp::{impl core::cmp::PartialEq<core::cmp::Ordering> for core::cmp::Ordering}]
-    Source: '/rustc/library/core/src/cmp.rs', lines 413:43-413:52
-    Name pattern: [core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>] -/
-@[reducible, rust_trait_impl
-  "core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>"]
-impl_def core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering : core.cmp.PartialEq
-  Ordering Ordering := {
-  eq := core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq
-  ne := core.cmp.PartialEq.ne.trait_default
-    core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering
-}
-
 /-- [core::cmp::impls::{impl core::cmp::PartialEq<bool> for bool}::ne]:
     Source: '/rustc/library/core/src/cmp.rs', lines 2188:16-2188:50; this code is generated from a macro invocation at: '/rustc/library/core/src/cmp.rs', lines 2193:4-2195:5
     Name pattern: [core::cmp::impls::{core::cmp::PartialEq<bool, bool>}::ne]
@@ -4338,7 +4317,7 @@ axiom num.Integer.Insts.CoreConvertFromUsize.from
 axiom num.Rational.numerator : num.Rational → Result num.Integer
 
 /-- [pathos_compiled_checker::lit::rat_sgn]:
-    Source: 'src/lit.rs', lines 652:0-654:1 -/
+    Source: 'src/lit.rs', lines 659:0-661:1 -/
 def lit.rat_sgn (a : num.Rational) : Result Std.I32 := do
   let i ← num.Rational.numerator a
   num.Integer.sgn i
@@ -4355,7 +4334,7 @@ axiom num.Rational.from_integers
   : num.Integer → num.Integer → Result (Option num.Rational)
 
 /-- [pathos_compiled_checker::lit::rat]:
-    Source: 'src/lit.rs', lines 617:0-622:1 -/
+    Source: 'src/lit.rs', lines 624:0-629:1 -/
 def lit.rat (n : num.Integer) (d : num.Integer) : Result num.Rational := do
   let o ← num.Rational.from_integers n d
   match o with
@@ -4364,7 +4343,7 @@ def lit.rat (n : num.Integer) (d : num.Integer) : Result num.Rational := do
   | some q => ok q
 
 /-- [pathos_compiled_checker::lit::rat_from_integer]:
-    Source: 'src/lit.rs', lines 624:0-626:1 -/
+    Source: 'src/lit.rs', lines 631:0-633:1 -/
 def lit.rat_from_integer (n : num.Integer) : Result num.Rational := do
   let i ← num.Integer.one
   lit.rat n i
@@ -4439,7 +4418,7 @@ def lit.Lit.kind (self : lit.Lit) : Result kind.LitKind := do
   | lit.Lit.Str _ => ok kind.LitKind.Str
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_extract]:
-    Source: 'src/lit.rs', lines 569:4-605:5 -/
+    Source: 'src/lit.rs', lines 576:4-612:5 -/
 def lit.Lit.evaluate_extract
   (s : lit.Lit) (i1 : num.Integer) (i2 : num.Integer) :
   Result (Option lit.Lit)
@@ -4619,7 +4598,7 @@ def lit.Lit.as_str (self : lit.Lit) : Result (Option eostring.EoString) := do
   | lit.Lit.Str s => ok (some s)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_str]: loop 0:
-    Source: 'src/lit.rs', lines 552:8-561:9 -/
+    Source: 'src/lit.rs', lines 559:8-568:9 -/
 @[rust_loop]
 def lit.Lit.fold_str_loop
   (args : Slice lit.Lit) (res : Option eostring.EoString) (i : Std.Usize) :
@@ -4645,7 +4624,7 @@ def lit.Lit.fold_str_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_str]:
-    Source: 'src/lit.rs', lines 545:4-566:5 -/
+    Source: 'src/lit.rs', lines 552:4-573:5 -/
 def lit.Lit.fold_str
   (op : kind.EvalOp) (first : eostring.EoString) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -4726,7 +4705,7 @@ def lit.Lit.as_bv (self : lit.Lit) : Result (Option bitvec.BitVec) := do
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::is_bv_of_size]:
-    Source: 'src/lit.rs', lines 491:4-496:5 -/
+    Source: 'src/lit.rs', lines 498:4-503:5 -/
 def lit.Lit.is_bv_of_size (self : lit.Lit) (size : Std.U32) : Result Bool := do
   let o ← lit.Lit.as_bv self
   match o with
@@ -4735,7 +4714,7 @@ def lit.Lit.is_bv_of_size (self : lit.Lit) (size : Std.U32) : Result Bool := do
               ok (i = size)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::all_of_size]: loop 0:
-    Source: 'src/lit.rs', lines 502:8-507:9 -/
+    Source: 'src/lit.rs', lines 509:8-514:9 -/
 @[rust_loop]
 def lit.Lit.all_of_size_loop
   (args : Slice lit.Lit) (size : Std.U32) (all : Bool) (i : Std.Usize) :
@@ -4755,14 +4734,14 @@ def lit.Lit.all_of_size_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::all_of_size]:
-    Source: 'src/lit.rs', lines 499:4-509:5 -/
+    Source: 'src/lit.rs', lines 506:4-516:5 -/
 @[reducible]
 def lit.Lit.all_of_size
   (args : Slice lit.Lit) (size : Std.U32) : Result Bool := do
   lit.Lit.all_of_size_loop args size true 1#usize
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bv]: loop 0:
-    Source: 'src/lit.rs', lines 521:8-538:9 -/
+    Source: 'src/lit.rs', lines 528:8-545:9 -/
 @[rust_loop]
 def lit.Lit.fold_bv_loop0
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option bitvec.BitVec)
@@ -4864,7 +4843,7 @@ def lit.Lit.fold_bv_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bv]: loop 1:
-    Source: 'src/lit.rs', lines 521:8-538:9 -/
+    Source: 'src/lit.rs', lines 528:8-545:9 -/
 @[rust_loop]
 def lit.Lit.fold_bv_loop1
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option bitvec.BitVec)
@@ -4966,7 +4945,7 @@ def lit.Lit.fold_bv_loop1
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bv]:
-    Source: 'src/lit.rs', lines 511:4-543:5 -/
+    Source: 'src/lit.rs', lines 518:4-550:5 -/
 def lit.Lit.fold_bv
   (op : kind.EvalOp) (ka : kind.LitKind) (first : bitvec.BitVec)
   (args : Slice lit.Lit) :
@@ -5057,7 +5036,7 @@ def lit.Lit.fold_bv
 axiom num.Rational.denominator : num.Rational → Result num.Integer
 
 /-- [pathos_compiled_checker::lit::rat_mul]:
-    Source: 'src/lit.rs', lines 635:0-637:1 -/
+    Source: 'src/lit.rs', lines 642:0-644:1 -/
 def lit.rat_mul
   (a : num.Rational) (b : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
@@ -5069,7 +5048,7 @@ def lit.rat_mul
   lit.rat i2 i5
 
 /-- [pathos_compiled_checker::lit::rat_add]:
-    Source: 'src/lit.rs', lines 628:0-633:1 -/
+    Source: 'src/lit.rs', lines 635:0-640:1 -/
 def lit.rat_add
   (a : num.Rational) (b : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
@@ -5105,7 +5084,7 @@ def lit.Lit.rational
   else ok (lit.Lit.Rational r)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_rat]: loop 0:
-    Source: 'src/lit.rs', lines 471:8-484:9 -/
+    Source: 'src/lit.rs', lines 478:8-491:9 -/
 @[rust_loop]
 def lit.Lit.fold_rat_loop
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option num.Rational)
@@ -5194,7 +5173,7 @@ def lit.Lit.fold_rat_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_rat]:
-    Source: 'src/lit.rs', lines 468:4-489:5 -/
+    Source: 'src/lit.rs', lines 475:4-496:5 -/
 def lit.Lit.fold_rat
   (op : kind.EvalOp) (ka : kind.LitKind) (first : num.Rational)
   (args : Slice lit.Lit) :
@@ -5220,7 +5199,7 @@ def lit.Lit.as_int (self : lit.Lit) : Result (Option num.Integer) := do
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_int]: loop 0:
-    Source: 'src/lit.rs', lines 448:8-461:9 -/
+    Source: 'src/lit.rs', lines 455:8-468:9 -/
 @[rust_loop]
 def lit.Lit.fold_int_loop
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option num.Integer)
@@ -5309,7 +5288,7 @@ def lit.Lit.fold_int_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_int]:
-    Source: 'src/lit.rs', lines 445:4-466:5 -/
+    Source: 'src/lit.rs', lines 452:4-473:5 -/
 def lit.Lit.fold_int
   (op : kind.EvalOp) (first : num.Integer) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -5333,7 +5312,7 @@ def lit.Lit.as_bool (self : lit.Lit) : Result (Option Bool) := do
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bool]: loop 0:
-    Source: 'src/lit.rs', lines 424:8-438:9 -/
+    Source: 'src/lit.rs', lines 431:8-445:9 -/
 @[rust_loop]
 def lit.Lit.fold_bool_loop
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option Bool) (i : Std.Usize)
@@ -5440,7 +5419,7 @@ def lit.Lit.fold_bool_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bool]:
-    Source: 'src/lit.rs', lines 421:4-443:5 -/
+    Source: 'src/lit.rs', lines 428:4-450:5 -/
 def lit.Lit.fold_bool
   (op : kind.EvalOp) (first : Bool) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -5451,7 +5430,7 @@ def lit.Lit.fold_bool
   | some r => ok (some (lit.Lit.Boolean r))
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_nary]:
-    Source: 'src/lit.rs', lines 411:4-419:5 -/
+    Source: 'src/lit.rs', lines 418:4-426:5 -/
 def lit.Lit.evaluate_nary
   (op : kind.EvalOp) (ka : kind.LitKind) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -5467,7 +5446,7 @@ def lit.Lit.evaluate_nary
   | lit.Lit.Str s => lit.Lit.fold_str op s args
 
 /-- [pathos_compiled_checker::lit::rat_cmp]:
-    Source: 'src/lit.rs', lines 660:0-664:1 -/
+    Source: 'src/lit.rs', lines 667:0-671:1 -/
 def lit.rat_cmp (a : num.Rational) (b : num.Rational) : Result Ordering := do
   let i ← num.Rational.numerator a
   let i1 ← num.Rational.denominator b
@@ -5489,7 +5468,7 @@ def lit.Lit.arg
   else ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_gt]:
-    Source: 'src/lit.rs', lines 382:4-407:5 -/
+    Source: 'src/lit.rs', lines 389:4-414:5 -/
 def lit.Lit.evaluate_gt
   (first : lit.Lit) (args : Slice lit.Lit) : Result (Option lit.Lit) := do
   let o ← lit.Lit.arg args 1#usize
@@ -5545,9 +5524,10 @@ def lit.Lit.evaluate_gt
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
           let o3 ← lit.rat_cmp a b
-          let b1 ←
-            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
-          ok (some (lit.Lit.Boolean b1))
+          match o3 with
+          | Ordering.lt => ok (some (lit.Lit.Boolean false))
+          | Ordering.eq => ok (some (lit.Lit.Boolean false))
+          | Ordering.gt => ok (some (lit.Lit.Boolean true))
     | lit.Lit.Numeral a =>
       match second with
       | lit.Lit.Boolean _ =>
@@ -5598,10 +5578,10 @@ def lit.Lit.evaluate_gt
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
             let o3 ← lit.rat_cmp a1 b
-            let b1 ←
-              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
-                Ordering.gt
-            ok (some (lit.Lit.Boolean b1))
+            match o3 with
+            | Ordering.lt => ok (some (lit.Lit.Boolean false))
+            | Ordering.eq => ok (some (lit.Lit.Boolean false))
+            | Ordering.gt => ok (some (lit.Lit.Boolean true))
       | lit.Lit.Numeral b =>
         let b1 ←
           core.cmp.impls.PartialOrdShared.gt
@@ -5655,10 +5635,10 @@ def lit.Lit.evaluate_gt
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
             let o3 ← lit.rat_cmp a1 b
-            let b1 ←
-              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
-                Ordering.gt
-            ok (some (lit.Lit.Boolean b1))
+            match o3 with
+            | Ordering.lt => ok (some (lit.Lit.Boolean false))
+            | Ordering.eq => ok (some (lit.Lit.Boolean false))
+            | Ordering.gt => ok (some (lit.Lit.Boolean true))
       | lit.Lit.Rational _ =>
         let o1 ← lit.Lit.as_rat first
         match o1 with
@@ -5707,10 +5687,10 @@ def lit.Lit.evaluate_gt
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
             let o3 ← lit.rat_cmp a1 b
-            let b1 ←
-              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
-                Ordering.gt
-            ok (some (lit.Lit.Boolean b1))
+            match o3 with
+            | Ordering.lt => ok (some (lit.Lit.Boolean false))
+            | Ordering.eq => ok (some (lit.Lit.Boolean false))
+            | Ordering.gt => ok (some (lit.Lit.Boolean true))
       | lit.Lit.Hex _ =>
         let o1 ← lit.Lit.as_rat first
         match o1 with
@@ -5759,10 +5739,10 @@ def lit.Lit.evaluate_gt
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
             let o3 ← lit.rat_cmp a1 b
-            let b1 ←
-              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
-                Ordering.gt
-            ok (some (lit.Lit.Boolean b1))
+            match o3 with
+            | Ordering.lt => ok (some (lit.Lit.Boolean false))
+            | Ordering.eq => ok (some (lit.Lit.Boolean false))
+            | Ordering.gt => ok (some (lit.Lit.Boolean true))
       | lit.Lit.Binary _ =>
         let o1 ← lit.Lit.as_rat first
         match o1 with
@@ -5811,10 +5791,10 @@ def lit.Lit.evaluate_gt
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
             let o3 ← lit.rat_cmp a1 b
-            let b1 ←
-              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
-                Ordering.gt
-            ok (some (lit.Lit.Boolean b1))
+            match o3 with
+            | Ordering.lt => ok (some (lit.Lit.Boolean false))
+            | Ordering.eq => ok (some (lit.Lit.Boolean false))
+            | Ordering.gt => ok (some (lit.Lit.Boolean true))
       | lit.Lit.Str _ =>
         let o1 ← lit.Lit.as_rat first
         match o1 with
@@ -5863,10 +5843,10 @@ def lit.Lit.evaluate_gt
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
             let o3 ← lit.rat_cmp a1 b
-            let b1 ←
-              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
-                Ordering.gt
-            ok (some (lit.Lit.Boolean b1))
+            match o3 with
+            | Ordering.lt => ok (some (lit.Lit.Boolean false))
+            | Ordering.eq => ok (some (lit.Lit.Boolean false))
+            | Ordering.gt => ok (some (lit.Lit.Boolean true))
     | lit.Lit.Decimal _ =>
       let o1 ← lit.Lit.as_rat first
       match o1 with
@@ -5915,9 +5895,10 @@ def lit.Lit.evaluate_gt
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
           let o3 ← lit.rat_cmp a b
-          let b1 ←
-            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
-          ok (some (lit.Lit.Boolean b1))
+          match o3 with
+          | Ordering.lt => ok (some (lit.Lit.Boolean false))
+          | Ordering.eq => ok (some (lit.Lit.Boolean false))
+          | Ordering.gt => ok (some (lit.Lit.Boolean true))
     | lit.Lit.Rational _ =>
       let o1 ← lit.Lit.as_rat first
       match o1 with
@@ -5966,9 +5947,10 @@ def lit.Lit.evaluate_gt
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
           let o3 ← lit.rat_cmp a b
-          let b1 ←
-            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
-          ok (some (lit.Lit.Boolean b1))
+          match o3 with
+          | Ordering.lt => ok (some (lit.Lit.Boolean false))
+          | Ordering.eq => ok (some (lit.Lit.Boolean false))
+          | Ordering.gt => ok (some (lit.Lit.Boolean true))
     | lit.Lit.Hex _ =>
       let o1 ← lit.Lit.as_rat first
       match o1 with
@@ -6017,9 +5999,10 @@ def lit.Lit.evaluate_gt
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
           let o3 ← lit.rat_cmp a b
-          let b1 ←
-            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
-          ok (some (lit.Lit.Boolean b1))
+          match o3 with
+          | Ordering.lt => ok (some (lit.Lit.Boolean false))
+          | Ordering.eq => ok (some (lit.Lit.Boolean false))
+          | Ordering.gt => ok (some (lit.Lit.Boolean true))
     | lit.Lit.Binary _ =>
       let o1 ← lit.Lit.as_rat first
       match o1 with
@@ -6068,9 +6051,10 @@ def lit.Lit.evaluate_gt
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
           let o3 ← lit.rat_cmp a b
-          let b1 ←
-            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
-          ok (some (lit.Lit.Boolean b1))
+          match o3 with
+          | Ordering.lt => ok (some (lit.Lit.Boolean false))
+          | Ordering.eq => ok (some (lit.Lit.Boolean false))
+          | Ordering.gt => ok (some (lit.Lit.Boolean true))
     | lit.Lit.Str _ =>
       let o1 ← lit.Lit.as_rat first
       match o1 with
@@ -6119,12 +6103,13 @@ def lit.Lit.evaluate_gt
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
           let o3 ← lit.rat_cmp a b
-          let b1 ←
-            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
-          ok (some (lit.Lit.Boolean b1))
+          match o3 with
+          | Ordering.lt => ok (some (lit.Lit.Boolean false))
+          | Ordering.eq => ok (some (lit.Lit.Boolean false))
+          | Ordering.gt => ok (some (lit.Lit.Boolean true))
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_string]:
-    Source: 'src/lit.rs', lines 367:4-380:5 -/
+    Source: 'src/lit.rs', lines 374:4-387:5 -/
 def lit.Lit.evaluate_to_string
   (first : lit.Lit) : Result (Option lit.Lit) := do
   match first with
@@ -6153,7 +6138,7 @@ def lit.Lit.evaluate_to_string
     ok (some l)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_bin]:
-    Source: 'src/lit.rs', lines 349:4-365:5 -/
+    Source: 'src/lit.rs', lines 356:4-372:5 -/
 def lit.Lit.evaluate_to_bin
   (first : lit.Lit) (args : Slice lit.Lit) : Result (Option lit.Lit) := do
   let o ← lit.Lit.as_int first
@@ -6187,7 +6172,7 @@ def lit.Lit.evaluate_to_bin
     else ok none
 
 /-- [pathos_compiled_checker::lit::rat_floor]:
-    Source: 'src/lit.rs', lines 656:0-658:1 -/
+    Source: 'src/lit.rs', lines 663:0-665:1 -/
 def lit.rat_floor (a : num.Rational) : Result num.Integer := do
   let i ← num.Rational.numerator a
   let i1 ← num.Rational.denominator a
@@ -6195,7 +6180,7 @@ def lit.rat_floor (a : num.Rational) : Result num.Integer := do
   ok i2
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_int]:
-    Source: 'src/lit.rs', lines 332:4-347:5 -/
+    Source: 'src/lit.rs', lines 332:4-354:5 -/
 def lit.Lit.evaluate_to_int (first : lit.Lit) : Result (Option lit.Lit) := do
   match first with
   | lit.Lit.Boolean _ => ok none
@@ -6218,13 +6203,19 @@ def lit.Lit.evaluate_to_int (first : lit.Lit) : Result (Option lit.Lit) := do
     if i = 1#usize
     then
       let s1 ← eostring.EoString.code_points s
-      let i1 ← Slice.index_usize s1 0#usize
-      let i2 ← num.Integer.Insts.CoreConvertFromU32.from i1
-      ok (some (lit.Lit.Numeral i2))
+      let c ← Slice.index_usize s1 0#usize
+      if c < eostring.NUM_CODES
+      then
+        let i1 ← num.Integer.Insts.CoreConvertFromU32.from c
+        ok (some (lit.Lit.Numeral i1))
+      else
+        let i1 ← num.Integer.one
+        let i2 ← num.Integer.neg i1
+        ok (some (lit.Lit.Numeral i2))
     else ok none
 
 /-- [pathos_compiled_checker::lit::rat_div]:
-    Source: 'src/lit.rs', lines 640:0-642:1 -/
+    Source: 'src/lit.rs', lines 647:0-649:1 -/
 def lit.rat_div
   (a : num.Rational) (b : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
@@ -6743,7 +6734,7 @@ def lit.Lit.evaluate_int_div
             ok (some l)
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]: loop 0:
-    Source: 'src/lit.rs', lines 675:4-679:5 -/
+    Source: 'src/lit.rs', lines 682:4-686:5 -/
 @[rust_loop]
 def lit.integer_floor_log_loop
   (base : num.Integer) (one : num.Integer) (result : num.Integer)
@@ -6762,7 +6753,7 @@ def lit.integer_floor_log_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]:
-    Source: 'src/lit.rs', lines 668:0-681:1 -/
+    Source: 'src/lit.rs', lines 675:0-688:1 -/
 def lit.integer_floor_log
   (base : num.Integer) (value : num.Integer) : Result num.Integer := do
   let one ← num.Integer.one
@@ -6811,7 +6802,7 @@ def lit.Lit.evaluate_log
       | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::rat_pow]:
-    Source: 'src/lit.rs', lines 648:0-650:1 -/
+    Source: 'src/lit.rs', lines 655:0-657:1 -/
 def lit.rat_pow (a : num.Rational) (exp : Std.U32) : Result num.Rational := do
   let i ← num.Rational.numerator a
   let i1 ← num.Integer.pow i exp
@@ -6861,7 +6852,7 @@ def lit.Lit.evaluate_pow
     else ok none
 
 /-- [pathos_compiled_checker::lit::rat_neg]:
-    Source: 'src/lit.rs', lines 644:0-646:1 -/
+    Source: 'src/lit.rs', lines 651:0-653:1 -/
 def lit.rat_neg (a : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
   let i1 ← num.Integer.neg i
@@ -9842,228 +9833,271 @@ def native.Store.native_rat_compare
       match op with
       | native.NativeOp.Teq =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Tcmp =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.IsOk =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Not =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.And =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Or =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Iff =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.NatSucc =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.NatPred =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.NatToInt =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.IntToNat =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Zeq =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Nateq =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Zlt =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Zleq =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.NatLt =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Zplus =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Zmult =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.ZdivTotal =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.DivTotal =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.ModTotal =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.ZmodTotal =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.ZexpTotal =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.BinaryAnd =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.BinaryOr =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.BinaryXor =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Zneg =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Zabs =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Qeq =>
         let b ← num.Rational.Insts.CoreCmpPartialEqRational.eq val val1
         native.Store.native_bool self b
       | native.NativeOp.Qlt =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Qleq =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.PartialEq.ne.trait_default
-            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering o Ordering.gt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self (¬ false)
+        | Ordering.eq => native.Store.native_bool self (¬ false)
+        | Ordering.gt => native.Store.native_bool self (¬ true)
       | native.NativeOp.Qplus =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Qmult =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.QdivTotal =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Qneg =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Qabs =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.MkRational =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.ToInt =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.ToReal =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.Streq =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.IntPow2 =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.UconstId =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.ConstId =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.StringValid =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
       | native.NativeOp.StringPrefixEq =>
         let o ← lit.rat_cmp val val1
-        let b ←
-          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
-        native.Store.native_bool self b
+        match o with
+        | Ordering.lt => native.Store.native_bool self true
+        | Ordering.eq => native.Store.native_bool self false
+        | Ordering.gt => native.Store.native_bool self false
     | core.ops.control_flow.ControlFlow.Break residual =>
       let r2 ←
         core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual

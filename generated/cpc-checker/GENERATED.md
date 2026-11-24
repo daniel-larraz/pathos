@@ -9,7 +9,7 @@ logos's signature. `crates/pathos` builds its input and calls it.
 
 | Generated from | |
 | --- | --- |
-| Ethos (`ethos-eoc`, `tools/eoc/driver.py rust`, the runtime in `plugins/rust_meta/runtime`) | `4378e342987a8e39f04e751c37a85fb1e6768f94` |
+| Ethos (`ethos-eoc`, `tools/eoc/driver.py rust`, the runtime in `plugins/rust_meta/runtime`) | `0fa2569b4fbae0cb85cc547abb9db63299938435` |
 | logos (`install/defs/Cpc.cached.eo`, with `Cpc.eos` as `--semantics` and `smt.eos` as `--smt-semantics`) | `bdcbd95f615627b26b6ebabc0f584e5230b0bf1f` |
 
 `Cpc.cached.eo` is a copy of that signature: `crates/pathos` builds it in

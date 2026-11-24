@@ -83,9 +83,11 @@ ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               # arithmetic (proofs-cpc/PathosProofsCpc/Arith.lean), of two
               # arguments
               "Add": "Store.builtin_spec_add", "Mul": "Store.builtin_spec_mul",
-              "ToRat": "Store.builtin_spec_to_q"}
+              "ToRat": "Store.builtin_spec_to_q", "IsNeg": "Store.builtin_spec_is_neg",
+              "ToInt": "Store.builtin_spec_to_z", "Not": "Store.builtin_spec_not",
+              "Neg": "Store.builtin_spec_neg", "Gt": "Store.builtin_spec_gt"}
 # The builtins whose specs take exactly two arguments.
-BINARY_SPECS = {"Add", "Mul"}
+BINARY_SPECS = {"Add", "Mul", "Gt"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",

@@ -117,7 +117,8 @@ macro "not_left_tac" : tactic =>
     | (intro _ _ _; rfl)
     | (intro c ts h
        simp only [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop, Tree.node.injEq] at h
-       obtain ⟨rfl, -⟩ := h
+       obtain ⟨hc, -⟩ := h
+       subst hc
        rfl))
 
 /-- A term is not the stuck term: said by a hypothesis, or plain from its
@@ -451,7 +452,11 @@ macro_rules
       refine ⟨$hinv, $hG, _, ?_, $h⟩
       first
         | (simp [$cd:ident, $[$facts:ident],*]; done)
-        | (unfold $cd; split <;> simp_all; done)))
+        | (unfold $cd; split <;> simp_all; done)
+        -- a result that has the term `eo::requires` compared, where logos
+        -- has the one it was compared with
+        | (unfold $cd; split <;> (try simp only [requires_ite]) <;> (try split_ifs) <;>
+            simp_all; done)))
 
 /-- Ends a case of a loop that goes round again: the handles `hs` speak of
 are the arguments of the next round. -/

@@ -305,8 +305,8 @@ impl Store {
         let y = self.raw_rat(y)?;
         self.native_bool(match op {
             NativeOp::Qeq => x == y,
-            NativeOp::Qleq => rat_cmp(&x, &y) != std::cmp::Ordering::Greater,
-            _ => rat_cmp(&x, &y) == std::cmp::Ordering::Less,
+            NativeOp::Qleq => !matches!(rat_cmp(&x, &y), std::cmp::Ordering::Greater),
+            _ => matches!(rat_cmp(&x, &y), std::cmp::Ordering::Less),
         })
     }
     fn native_rat_binary(&mut self, op: NativeOp, x: Term, y: Term) -> CheckResult<Term> {

@@ -8,7 +8,7 @@ $are_distinct_terms_type	none	case 5 has a builtin operator
 $arith_mk_one	generated	
 $arith_mk_zero	generated	
 $arith_normalize_lit	generated	
-$arith_reduction_pred	none	case 6 has a builtin operator
+$arith_reduction_pred	none	it calls $eo_nil, which has no proof
 $arith_rel_inv	generated	
 $arith_rel_neg	generated	
 $arith_rel_sum	generated	
@@ -34,12 +34,12 @@ $bv_div_mod_impl	none	case 2 has a builtin operator
 $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	case 4 has a builtin operator
-$bv_mk_bitblast_step_add	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_add	none	it calls $bv_ripple_carry_adder_2, which has no proof
 $bv_mk_bitblast_step_bitwise	none	it calls $eo_nil, which has no proof
 $bv_mk_bitblast_step_concat	generated	
 $bv_mk_bitblast_step_eq_rec	generated	
 $bv_mk_bitblast_step_ite	generated	
-$bv_mk_bitblast_step_mul	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_mul	none	it calls $bv_shift_add_multiplier, which has no proof
 $bv_mk_bitblast_step_shl_rec	none	case 1 has a builtin operator
 $bv_mk_bitblast_step_shl_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
 $bv_mk_bitblast_step_shr_rec	none	case 1 has a builtin operator
@@ -51,8 +51,8 @@ $bv_ripple_carry_adder_2	none	case 1 has a builtin operator
 $bv_shift_add_multiplier	none	case 0 has a builtin operator
 $bv_shift_add_multiplier_rec	none	it calls $bv_shift_add_multiplier_rec_step, which has no proof
 $bv_shift_add_multiplier_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
-$bv_smulo_elim_rec	none	case 1 has a builtin operator
-$bv_umulo_elim_rec	none	case 1 has a builtin operator
+$bv_smulo_elim_rec	none	it calls $eo_nil, which has no proof
+$bv_umulo_elim_rec	none	it calls $eo_nil, which has no proof
 $chain_m_resolve	none	it calls $chain_m_resolve_final, which has no proof
 $chain_m_resolve_final	none	case 0 has a builtin operator
 $chain_m_resolve_rec	none	it calls $chain_m_resolve_rec_step, which has no proof
@@ -93,15 +93,15 @@ $eo_invoke_cmd_step_pop	none	it calls $eo_push_proven, which has no proof
 $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
 $eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
 $eo_is_closed_rec	none	case 2 has a builtin operator
-$eo_is_list_nil	none	it calls $eo_is_list_nil_bvadd, which has no proof
+$eo_is_list_nil	generated	
 $eo_is_list_nil_*	generated	
 $eo_is_list_nil_+	generated	
 $eo_is_list_nil_@@TypedList.cons	generated	
-$eo_is_list_nil_bvadd	none	case 0 has a builtin operator
-$eo_is_list_nil_bvand	none	case 0 has a builtin operator
-$eo_is_list_nil_bvmul	none	case 0 has a builtin operator
-$eo_is_list_nil_bvor	none	case 0 has a builtin operator
-$eo_is_list_nil_bvxor	none	case 0 has a builtin operator
+$eo_is_list_nil_bvadd	generated	
+$eo_is_list_nil_bvand	generated	
+$eo_is_list_nil_bvmul	generated	
+$eo_is_list_nil_bvor	generated	
+$eo_is_list_nil_bvxor	generated	
 $eo_is_list_nil_str.++	generated	
 $eo_lit_type_Binary	generated	
 $eo_lit_type_Numeral	generated	
@@ -189,7 +189,7 @@ $eo_prog_arrays_read_over_write_contra	generated
 $eo_prog_beta-reduce	none	it calls $beta_reduce, which has no proof
 $eo_prog_bool-and-conf	none	case 0 has a builtin operator
 $eo_prog_bool-and-conf2	none	case 0 has a builtin operator
-$eo_prog_bool-and-de-morgan	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_bool-and-de-morgan	generated	
 $eo_prog_bool-double-not-elim	generated	
 $eo_prog_bool-dual-impl-eq	generated	
 $eo_prog_bool-eq-false	generated	
@@ -201,15 +201,15 @@ $eo_prog_bool-impl-false2	generated
 $eo_prog_bool-impl-true1	generated	
 $eo_prog_bool-impl-true2	generated	
 $eo_prog_bool-implies-de-morgan	generated	
-$eo_prog_bool-implies-or-distrib	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_bool-implies-or-distrib	generated	
 $eo_prog_bool-not-eq-elim1	generated	
 $eo_prog_bool-not-eq-elim2	generated	
 $eo_prog_bool-not-false	generated	
 $eo_prog_bool-not-ite-elim	generated	
 $eo_prog_bool-not-true	generated	
 $eo_prog_bool-not-xor-elim	generated	
-$eo_prog_bool-or-and-distrib	none	it calls $eo_is_list_nil, which has no proof
-$eo_prog_bool-or-de-morgan	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_bool-or-and-distrib	generated	
+$eo_prog_bool-or-de-morgan	generated	
 $eo_prog_bool-or-taut	none	case 0 has a builtin operator
 $eo_prog_bool-or-taut2	none	case 0 has a builtin operator
 $eo_prog_bool-xor-comm	generated	
@@ -393,7 +393,7 @@ $eo_prog_cong	none	case 0 has a builtin operator
 $eo_prog_contra	generated	
 $eo_prog_distinct-binary-elim	none	it calls $eo_nil, which has no proof
 $eo_prog_distinct-card-conflict	none	case 0 has a builtin operator
-$eo_prog_distinct-elim	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_distinct-elim	generated	
 $eo_prog_distinct-false	none	case 0 has a builtin operator
 $eo_prog_distinct-true	none	it calls $are_distinct_terms_list, which has no proof
 $eo_prog_distinct_values	none	it calls $are_distinct_terms_type, which has no proof
@@ -401,7 +401,7 @@ $eo_prog_dt-collapse-selector	none	case 0 has a builtin operator
 $eo_prog_dt-collapse-tester	none	it calls $dt_eq_cons, which has no proof
 $eo_prog_dt-collapse-tester-singleton	none	case 0 has a builtin operator
 $eo_prog_dt-collapse-updater	none	it calls $mk_dt_collapse_updater_rhs, which has no proof
-$eo_prog_dt-cons-eq	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_dt-cons-eq	none	it calls $mk_dt_cons_eq, which has no proof
 $eo_prog_dt-cons-eq-clash	none	it calls $are_distinct_terms_type, which has no proof
 $eo_prog_dt-cycle	none	it calls $dt_find_cycle, which has no proof
 $eo_prog_dt-inst	none	it calls $mk_dt_inst_prem, which has no proof
@@ -416,7 +416,7 @@ $eo_prog_equiv_elim1	generated
 $eo_prog_equiv_elim2	generated	
 $eo_prog_evaluate	none	it calls $run_evaluate, which has no proof
 $eo_prog_exists-elim	generated	
-$eo_prog_exists_string_length	none	case 0 has a builtin operator
+$eo_prog_exists_string_length	generated	
 $eo_prog_factoring	none	case 0 has a builtin operator
 $eo_prog_false_elim	generated	
 $eo_prog_false_intro	generated	
@@ -424,8 +424,8 @@ $eo_prog_ho_cong	generated
 $eo_prog_implies_elim	generated	
 $eo_prog_instantiate	none	it calls $substitute_simul_rec, which has no proof
 $eo_prog_int-to-bv-elim	none	case 0 has a builtin operator
-$eo_prog_int_tight_lb	none	it calls $least_int_gt, which has no proof
-$eo_prog_int_tight_ub	none	it calls $greatest_int_lt, which has no proof
+$eo_prog_int_tight_lb	generated	
+$eo_prog_int_tight_ub	generated	
 $eo_prog_ite-else-false	generated	
 $eo_prog_ite-else-lookahead	generated	
 $eo_prog_ite-else-lookahead-not-self	generated	
@@ -464,7 +464,7 @@ $eo_prog_pairwise_cong	generated
 $eo_prog_process_scope	generated	
 $eo_prog_quant-dt-split	none	it calls $dt_get_constructors, which has no proof
 $eo_prog_quant-merge-prenex	none	case 0 has a builtin operator
-$eo_prog_quant-miniscope-and	none	its generated proof does not build: the spec of case 0: its closing step leaves an equation of two __eo_requires whose third arguments it does not identify
+$eo_prog_quant-miniscope-and	generated	
 $eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
 $eo_prog_quant-unused-vars	none	case 0 has a builtin operator
@@ -557,8 +557,8 @@ $eo_prog_str-concat-clash	generated
 $eo_prog_str-concat-clash-rev	none	case 0 has a builtin operator
 $eo_prog_str-concat-clash2	generated	
 $eo_prog_str-concat-clash2-rev	none	case 0 has a builtin operator
-$eo_prog_str-concat-unify	none	it calls $eo_is_list_nil, which has no proof
-$eo_prog_str-concat-unify-base	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-concat-unify	generated	
+$eo_prog_str-concat-unify-base	generated	
 $eo_prog_str-concat-unify-base-rev	none	case 0 has a builtin operator
 $eo_prog_str-concat-unify-rev	none	case 0 has a builtin operator
 $eo_prog_str-contains-char	generated	
@@ -571,7 +571,7 @@ $eo_prog_str-contains-repl-char	generated
 $eo_prog_str-contains-repl-self	generated	
 $eo_prog_str-contains-repl-self-tgt-char	generated	
 $eo_prog_str-contains-repl-tgt	generated	
-$eo_prog_str-contains-split-char	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-contains-split-char	generated	
 $eo_prog_str-ctn-multiset-subset	none	case 0 has a builtin operator
 $eo_prog_str-eq-ctn-false	none	case 0 has a builtin operator
 $eo_prog_str-eq-ctn-full-false1	generated	
@@ -591,11 +591,11 @@ $eo_prog_str-in-re-contains	generated
 $eo_prog_str-in-re-eval	none	case 0 has a builtin operator
 $eo_prog_str-in-re-from-int-dig-range	generated	
 $eo_prog_str-in-re-from-int-nemp-dig-range	generated	
-$eo_prog_str-in-re-inter-elim	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-in-re-inter-elim	generated	
 $eo_prog_str-in-re-range-elim	generated	
 $eo_prog_str-in-re-sigma	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)
 $eo_prog_str-in-re-sigma-star	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)
-$eo_prog_str-in-re-union-elim	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-in-re-union-elim	generated	
 $eo_prog_str-indexof-contains-concat-pre	none	case 0 has a builtin operator
 $eo_prog_str-indexof-contains-pre	generated	
 $eo_prog_str-indexof-eq-irr	none	its generated proof does not build: the spec of case 0: simp times out (isDefEq, 1,000,000 heartbeats)
@@ -611,9 +611,9 @@ $eo_prog_str-indexof-re-eval	none	case 0 has a builtin operator
 $eo_prog_str-indexof-re-none	generated	
 $eo_prog_str-indexof-self	generated	
 $eo_prog_str-is-digit-elim	generated	
-$eo_prog_str-len-concat-rec	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-len-concat-rec	generated	
 $eo_prog_str-len-eq-zero-base	generated	
-$eo_prog_str-len-eq-zero-concat-rec	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-len-eq-zero-concat-rec	generated	
 $eo_prog_str-len-replace-all-inv	generated	
 $eo_prog_str-len-replace-inv	generated	
 $eo_prog_str-len-substr-in-range	generated	
@@ -674,7 +674,7 @@ $eo_prog_str-substr-combine2	generated
 $eo_prog_str-substr-combine3	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
 $eo_prog_str-substr-combine4	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
 $eo_prog_str-substr-concat1	generated	
-$eo_prog_str-substr-concat2	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-substr-concat2	generated	
 $eo_prog_str-substr-ctn	generated	
 $eo_prog_str-substr-ctn-contra	generated	
 $eo_prog_str-substr-empty-range	generated	
@@ -686,7 +686,7 @@ $eo_prog_str-substr-eq-empty-leq-len	generated
 $eo_prog_str-substr-full	generated	
 $eo_prog_str-substr-full-eq	generated	
 $eo_prog_str-substr-len-include	generated	
-$eo_prog_str-substr-len-include-pre	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-substr-len-include-pre	none	it calls $eo_nil, which has no proof
 $eo_prog_str-substr-len-norm	generated	
 $eo_prog_str-substr-replace	generated	
 $eo_prog_str-substr-substr-start-geq-len	generated	
@@ -695,18 +695,18 @@ $eo_prog_str-suffixof-elim	generated
 $eo_prog_str-suffixof-eq	generated	
 $eo_prog_str-suffixof-one	generated	
 $eo_prog_str-to-int-concat-neg-one	none	case 0 has a builtin operator
-$eo_prog_str-to-lower-concat	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-to-lower-concat	generated	
 $eo_prog_str-to-lower-from-int	generated	
 $eo_prog_str-to-lower-idem	generated	
 $eo_prog_str-to-lower-len	generated	
 $eo_prog_str-to-lower-upper	generated	
-$eo_prog_str-to-upper-concat	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-to-upper-concat	generated	
 $eo_prog_str-to-upper-from-int	generated	
 $eo_prog_str-to-upper-idem	generated	
 $eo_prog_str-to-upper-len	generated	
 $eo_prog_str-to-upper-lower	generated	
 $eo_prog_str-update-concat-fit	none	case 0 has a builtin operator
-$eo_prog_str-update-concat-fit0	none	it calls $eo_is_list_nil, which has no proof
+$eo_prog_str-update-concat-fit0	generated	
 $eo_prog_str-update-fit	generated	
 $eo_prog_str-update-in-first-concat	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
 $eo_prog_str-update-oob	generated	
@@ -776,7 +776,7 @@ $eo_to_smt_type_tuple	generated
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_updater	none	it calls $smtx_dt_num_sels, which has no proof
 $eo_to_smt_updater_rec	generated	
-$eo_typeof	none	it calls $eo_typeof_extract, which has no proof
+$eo_typeof	none	it calls $eo_typeof_tuple, which has no proof
 $eo_typeof_+	generated	
 $eo_typeof_/	generated	
 $eo_typeof_<	generated	
@@ -821,12 +821,12 @@ $eo_typeof_div	generated
 $eo_typeof_divisible	generated	
 $eo_typeof_dt_cons_rec	generated	
 $eo_typeof_dt_sel_return	generated	
-$eo_typeof_extract	none	case 0 has a builtin operator
+$eo_typeof_extract	generated	
 $eo_typeof_forall	generated	
 $eo_typeof_fun_type	generated	
 $eo_typeof_int.ispow2	generated	
 $eo_typeof_int.pow2	generated	
-$eo_typeof_int_to_bv	none	case 0 has a builtin operator
+$eo_typeof_int_to_bv	generated	
 $eo_typeof_is	generated	
 $eo_typeof_is_int	generated	
 $eo_typeof_ite	generated	
@@ -835,11 +835,11 @@ $eo_typeof_not	generated
 $eo_typeof_or	generated	
 $eo_typeof_re.*	generated	
 $eo_typeof_re.++	generated	
-$eo_typeof_re.^	none	case 0 has a builtin operator
-$eo_typeof_re.loop	none	case 0 has a builtin operator
+$eo_typeof_re.^	generated	
+$eo_typeof_re.loop	generated	
 $eo_typeof_re.range	generated	
-$eo_typeof_repeat	none	case 0 has a builtin operator
-$eo_typeof_rotate_left	none	case 0 has a builtin operator
+$eo_typeof_repeat	generated	
+$eo_typeof_rotate_left	generated	
 $eo_typeof_select	generated	
 $eo_typeof_seq.empty	generated	
 $eo_typeof_seq.nth	generated	
@@ -877,7 +877,7 @@ $eo_typeof_tuple	none	case 0 has a builtin operator
 $eo_typeof_tuple.select	none	case 0 has a builtin operator
 $eo_typeof_tuple.update	none	case 0 has a builtin operator
 $eo_typeof_update	generated	
-$eo_typeof_zero_extend	none	case 0 has a builtin operator
+$eo_typeof_zero_extend	generated	
 $eval_sets_inter	none	case 0 has a builtin operator
 $eval_sets_minus	none	case 0 has a builtin operator
 $eval_sets_op	none	case 0 has a builtin operator
@@ -891,13 +891,13 @@ $get_ai_norm	none	case 0 has eo::list_singleton_elim of an operator that is not 
 $get_ai_norm_rec	none	case 0 has a builtin operator
 $get_arg_list_rec	generated	
 $get_arith_poly_norm	none	case 4 has a builtin operator
-$get_bv_poly_norm_rec	none	case 4 has a builtin operator
+$get_bv_poly_norm_rec	none	it calls $poly_add, which has no proof
 $get_lambda_type	generated	
 $get_nth_var_type	none	case 0 has a builtin operator
 $get_unused_vars	none	case 0 has a builtin operator
 $get_var_type	generated	
 $get_zero	none	case 5 has a builtin operator
-$greatest_int_lt	none	case 0 has a builtin operator
+$greatest_int_lt	generated	
 $iota_rec	generated	
 $is_absorb	none	it calls $is_absorb_rec, which has no proof
 $is_absorb_rec	none	its generated proof does not build: falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved
@@ -907,7 +907,7 @@ $is_cons_app	none	case 1 has a builtin operator
 $is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
 $is_instantiation	none	it calls $eo_typeof, which has no proof
 $is_poly_norm_rel_consts	none	case 0 has a builtin operator
-$is_poly_norm_rel_consts_rel	none	case 0 has a builtin operator
+$is_poly_norm_rel_consts_rel	generated	
 $is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
 $is_quant_dt_split_conj	none	case 0 has a builtin operator
 $is_quant_miniscope_or	none	it calls $contains_atomic_term_list_free_rec, which has no proof
@@ -915,13 +915,13 @@ $is_renaming_rec	none	its generated proof does not build: a repeated variable; l
 $is_seq_const	generated	
 $is_seq_const_rec	generated	
 $is_var_list	none	case 0 has a builtin operator
-$least_int_gt	none	case 0 has a builtin operator
+$least_int_gt	generated	
 $lower_not_and	generated	
 $mk_arith_mult_abs_comparison	none	it calls $eo_nil, which has no proof
 $mk_arith_mult_abs_comparison_rec	none	case 0 has a builtin operator
 $mk_arith_mult_neg	none	it calls $eo_nil, which has no proof
 $mk_arith_mult_pos	none	it calls $eo_nil, which has no proof
-$mk_arith_mult_sign_sgn	none	case 2 has a builtin operator
+$mk_arith_mult_sign_sgn	none	its generated proof does not build: logos_eq_deep times out (whnf, 2,000,000 heartbeats): three cases with deep patterns and repeated variables
 $mk_arith_sum_ub	none	case 0 has a builtin operator
 $mk_arith_sum_ub_rec	generated	
 $mk_arith_trichotomy	generated	
@@ -960,7 +960,7 @@ $poly_add	none	case 0 has a builtin operator
 $poly_mod_coeffs	none	case 1 has a builtin operator
 $poly_mul	none	it calls $poly_add, which has no proof
 $poly_mul_mon	none	it calls $mon_mul_mon, which has no proof
-$poly_neg	none	case 1 has a builtin operator
+$poly_neg	generated	
 $re_ac_merge	none	case 3 has a builtin operator
 $re_concat_merge	none	case 0 has a builtin operator
 $re_flatten	none	case 1 has a builtin operator
@@ -972,7 +972,7 @@ $re_split_str_to_re	generated
 $re_unflatten	none	case 0 has a builtin operator
 $re_unflatten_str	none	case 0 has a builtin operator
 $re_unfold_pos_concat_rec	generated	
-$run_evaluate	none	case 1 has a builtin operator
+$run_evaluate	none	case 3 has a builtin operator
 $run_process_scope	generated	
 $seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
 $seq_element_of_unit	generated	
@@ -1045,10 +1045,10 @@ $smtx_typeof_str.indexof	generated
 $smtx_typeof_str.substr	generated	
 $smtx_typeof_str.update	generated	
 $smtx_typeof_zero_extend	generated	
-$str_arith_entail_is_approx	none	case 2 has a builtin operator
-$str_arith_entail_is_approx_len	none	case 0 has a builtin operator
+$str_arith_entail_is_approx	none	it calls $str_arith_entail_is_approx_len, which has no proof
+$str_arith_entail_is_approx_len	none	case 1 has a builtin operator
 $str_arith_entail_simple_pred	none	it calls $get_arith_poly_norm, which has no proof
-$str_arith_entail_simple_rec	none	case 2 has a builtin operator
+$str_arith_entail_simple_rec	generated	
 $str_case_conv_rec	none	case 0 has a builtin operator
 $str_collect	none	it calls $eo_typeof, which has no proof
 $str_collect_merge	none	case 0 has a builtin operator
@@ -1067,11 +1067,11 @@ $str_is_empty	generated
 $str_is_multiset_subset_strict	none	case 0 has a builtin operator
 $str_is_multiset_subset_strict_done	none	it calls $are_distinct_terms_list_rec, which has no proof
 $str_is_prefix_flat	generated	
-$str_leq_eval_rec	none	case 0 has a builtin operator
+$str_leq_eval_rec	generated	
 $str_membership_re	generated	
 $str_membership_str	generated	
 $str_mk_ext_deq	generated	
-$str_mk_re_loop_elim_rec	none	it calls $eo_is_list_nil, which has no proof
+$str_mk_re_loop_elim_rec	generated	
 $str_mk_str_in_re_concat_star_char	generated	
 $str_mk_str_in_re_sigma_rec	generated	
 $str_mk_str_in_re_sigma_star_rec	generated	
@@ -1090,7 +1090,7 @@ $str_re_includes_rec	none	it calls $str_re_includes_base_rec, which has no proof
 $str_re_includes_rhs_inter	none	it calls $str_re_includes_rec, which has no proof
 $str_reduction_pred	none	case 0 has a variable term
 $str_strip_prefix	generated	
-$str_to_int_eval_rec	none	case 0 has a builtin operator
+$str_to_int_eval_rec	generated	
 $str_unify_split	generated	
 $str_value_len	none	case 1 has a builtin operator
 $strip_even_exponent	generated	

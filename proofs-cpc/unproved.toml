@@ -10,7 +10,6 @@
 "$is_eq_maybe_to_real" = "falls through to a helper; logos_eq_deep fails (simp, a nested error)"
 "$is_renaming_rec" = "a repeated variable; logos_eq_deep leaves goals unsolved"
 "$tuple_updater_elim_rhs" = "a variable repeated as an operator's index itself (tuple.select's), which may be the stuck term (see $dt_updater_elim_rhs); logos_eq_deep also times out (whnf)"
-"$eo_prog_quant-miniscope-and" = "the spec of case 0: its closing step leaves an equation of two __eo_requires whose third arguments it does not identify"
 "$eo_prog_str-indexof-eq-irr" = "the spec of case 0: simp times out (isDefEq, 1,000,000 heartbeats)"
 "$smtx_dt_num_sels" = "the spec of its loop's step: the branch where no case answers (Ok none) is left as False"
 "$eo_prog_arith-int-geq-tighten" = "the spec of case 0: leaves goals unsolved (with its numeral or string literals, step C)"
@@ -38,3 +37,4 @@
 "$eo_prog_str-in-re-concat-star-char" = "the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)"
 "$eo_prog_str-in-re-sigma" = "the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)"
 "$eo_prog_str-in-re-sigma-star" = "the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)"
+"$mk_arith_mult_sign_sgn" = "logos_eq_deep times out (whnf, 2,000,000 heartbeats): three cases with deep patterns and repeated variables"
