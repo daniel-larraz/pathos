@@ -91,7 +91,8 @@ BINARY_SPECS = {"Add", "Mul", "Gt"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
-                 "TypeOf", "ListSingletonElim", "ListConcat"} | set(ARGS_SPECS)
+                 "TypeOf", "ListSingletonElim", "ListConcat", "ListLength",
+                 "ListRev"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -553,6 +554,23 @@ class Emitter:
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
                             + " (by not_left_tac) (by nil_apply_tac)", v)
+            self.l.calls.add(lists["is_nil"])
+            return v
+        if k in ("ListLength", "ListRev"):
+            # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
+            # constant that does not nest to the left, and a list
+            spec = {"ListLength": "Store.builtin_spec_list_len",
+                    "ListRev": "Store.builtin_spec_list_rev"}[k]
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            if len(vs) != 2 or not self.not_left(vs[0]):
+                self.unsupported("eo::" + {"ListLength": "list_len", "ListRev": "list_rev"}[k]
+                                 + " of an operator that is not a constant")
+            self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+            self.store_step(spec + " n ih." + ident(lists["is_nil"])
+                            + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
+                            + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
+                            + " (by not_left_tac)", v)
             self.l.calls.add(lists["is_nil"])
             return v
         if k == "ListConcat":

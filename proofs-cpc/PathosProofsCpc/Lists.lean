@@ -5,6 +5,7 @@ import all Cpc.Logos
 public import Cpc.SmtEval
 import all Cpc.SmtEval
 public import PathosProofs.Runtime.Lists
+public import PathosProofs.Runtime.Numbers
 
 /-!
 # CPC's list builtins (CPC only)
@@ -466,5 +467,301 @@ theorem Store.builtin_spec_list_concat (n : Nat) (hnil : IsListNilSpec n) (s : S
               (by rw [← hyl]; exact hxb) hend hend]
             simp [hn]
           rw [hval, ← eoList_append]; exact hr3
+
+/-! ## `eo::list_len` -/
+
+/-- logos's `list_len_rec` counts the elements of a list given by its end. -/
+theorem list_len_rec_eoList {xf xr : Eo.Term}
+    (hna : ∀ g a c, xr ≠ Eo.Term.Apply (Eo.Term.Apply g a) c) (hxr : xr ≠ Eo.Term.Stuck) :
+    ∀ ys, Eo.__eo_list_len_rec (eoList xf xr ys) = Eo.Term.Numeral ys.length := by
+  intro ys
+  induction ys with
+  | nil =>
+    simp only [eoList]
+    unfold Eo.__eo_list_len_rec
+    split <;> simp_all
+  | cons y ys ih =>
+    simp only [eoList]
+    rw [Eo.__eo_list_len_rec.eq_def]
+    simp [ih, Eo.__eo_add, SmtEval.native_zplus, Int.add_comm]
+
+/-- `eo::list_len` on handles of an operator and a term: logos's
+`__eo_list_len`. -/
+theorem Store.builtin_spec_list_len (n : Nat) (hnil : IsListNilSpec n) (s : Store)
+    (args : Slice Term) {a b : Term} {xf xa : Eo.Term} (hargs : args.val = [a, b])
+    (ha : s.Rep a xf) (hb : s.Rep b xa) (hinv : s.Inv) (h64 : Platform64)
+    (hrem : s.remaining ≤ n) (hleft : NotLeftNested xf) :
+    generated.part0.Store.builtin_list s kind.EvalOp.ListLength args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_list_len xf xa)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have htakes : Store.takes kind.EvalOp.ListLength 2#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  have hdef : ∀ y z, Eo.__eo_list_len y z = Eo.__eo_requires (Eo.__eo_is_list y z)
+      (Eo.Term.Boolean true) (Eo.__eo_list_len_rec z) := fun _ _ => rfl
+  unfold generated.part0.Store.builtin_list
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  unfold Store.check_handles
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    step with Store.any_stuck_two hargs ha hb as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hxf : xf = Eo.Term.Stuck
+    · subst hxf
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_len Eo.Term.Stuck xa = Eo.Term.Stuck := by
+        rw [hdef]; simp [Eo.__eo_is_list, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    by_cases hxa : xa = Eo.Term.Stuck
+    · subst hxa
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_len xf Eo.Term.Stuck = Eo.Term.Stuck := by
+        rw [hdef]; simp [Eo.__eo_is_list, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    simp only [hxf, hxa, decide_false, Bool.or_false, Bool.false_eq_true, ite_false]
+    unfold generated.part0.Store.list_builtin
+    have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+    have h1 : Slice.index_usize args 1#usize = ok b := by simp [Slice.index_usize, hargs]
+    simp only [h0, Std.bind_ok]
+    unfold generated.part0.Store.list_of_one
+    simp only [h1, Std.bind_ok]
+    step with list_parts_spec n hnil s hinv h64 hrem ha hb hleft as ⟨r, s1, hinv1, hg1, hr⟩
+    cases r with
+    | Err e =>
+      simp [core.result.Result.Insts.CoreOpsTry.branch,
+        core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+        core.convert.FromSame.from]
+      exact ⟨hinv1, hg1⟩
+    | Ok o =>
+      cases o with
+      | none =>
+        obtain ⟨ys, xr, hxl, hend, hn⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, Store.stuck_eq,
+          WP.dspec_ok, WP.uncurry'_pair]
+        refine ⟨hinv1, hg1, ?_⟩
+        have : Eo.__eo_list_len xf xa = Eo.Term.Stuck := by
+          rw [hdef, hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend]
+          simp [hn, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+        rw [this]; exact hinv1.rep_stuck
+      | some p =>
+        obtain ⟨tail, rest⟩ := p
+        obtain ⟨ys, xr, hys, hrest, hxl, hend, hn, hsz⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok,
+          num.Integer.from_usize_spec]
+        have hxr : xr ≠ Eo.Term.Stuck := by
+          intro h; subst h; revert hn; unfold Eo.__eo_is_list_nil; split <;> simp_all
+        have hval : Eo.__eo_list_len xf xa = Eo.Term.Numeral ys.length := by
+          rw [hdef, hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend,
+            list_len_rec_eoList (is_list_nil_not_apply hn) hxr ys]
+          simp [hn, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
+        have hl : (alloc.vec.Vec.len tail).val = ys.length := by
+          simp [alloc.vec.Vec.len]; exact hys.length_eq
+        unfold Store.numeral
+        rw [hval]
+        apply WP.dspec_mono (Store.literal_numeral_spec s1 ((alloc.vec.Vec.len tail).val) hinv1 h64)
+        rintro ⟨r2, s2⟩ ⟨hinv2, hg2, hr2⟩
+        refine ⟨hinv2, hg1.trans hg2, ?_⟩
+        cases r2 with
+        | Err e => trivial
+        | Ok t => simp only at hr2 ⊢; rw [← hl]; exact_mod_cast hr2
+
+/-! ## `eo::list_rev` -/
+
+/-- `reversed`: the vector with the first `i` elements of the slice after
+it, last first. -/
+theorem reversed_loop_spec (xs : Slice Term) :
+    ∀ (out : alloc.vec.Vec Term) (i : Std.Usize), i.val ≤ xs.length →
+      out.val.length + i.val < Usize.max →
+      reversed_loop xs out i ⦃ r => r.val = out.val ++ (xs.val.take i.val).reverse ⦄div := by
+  apply reversed_loop.fixpoint_induct xs
+    (motive := fun loop => ∀ (out : alloc.vec.Vec Term) (i : Std.Usize), i.val ≤ xs.length →
+      out.val.length + i.val < Usize.max →
+      loop out i ⦃ r => r.val = out.val ++ (xs.val.take i.val).reverse ⦄div)
+  · prove_adm
+  · intro loop ih out i hi hcap
+    simp only
+    split
+    · rename_i hpos
+      step as ⟨i1, hi1⟩
+      have hlt : i1.val < xs.val.length := by simp only [Slice.length] at hi; scalar_tac
+      step as ⟨t, ht⟩
+      have hcap1 : out.val.length < Usize.max := by scalar_tac
+      step with alloc.vec.Vec.push_spec out t hcap1 as ⟨out1, hout1⟩
+      apply WP.dspec_mono (ih out1 i1 (by scalar_tac) (by
+        rw [hout1]; simp only [List.length_append, List.length_singleton]; scalar_tac))
+      intro r hr
+      have hi' : i.val = i1.val + 1 := by scalar_tac
+      rw [hr, hout1, hi', ht, List.take_succ_eq_append_getElem hlt]
+      simp only [List.reverse_append, List.reverse_singleton, List.append_assoc,
+        List.singleton_append]
+    · rename_i hz
+      simp only [WP.dspec_ok]
+      have : i.val = 0 := by scalar_tac
+      simp [this]
+
+/-- logos's walk to the nil stops at a nil. -/
+theorem get_nil_rec_nil {xf xr : Eo.Term} (hn : Eo.__eo_is_list_nil xf xr = Eo.Term.Boolean true)
+    (hxr : xr ≠ Eo.Term.Stuck) : Eo.__eo_get_nil_rec xf xr = xr := by
+  have hna := is_list_nil_not_apply hn
+  have hxf : xf ≠ Eo.Term.Stuck := by
+    intro h; subst h; revert hn; unfold Eo.__eo_is_list_nil; split <;> simp_all
+  unfold Eo.__eo_get_nil_rec
+  split <;> simp_all [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
+
+/-- logos's `list_rev_rec` puts the elements before the accumulator, last
+first. -/
+theorem rev_rec_eoList {xf xr : Eo.Term}
+    (hna : ∀ g a c, xr ≠ Eo.Term.Apply (Eo.Term.Apply g a) c) (hxr : xr ≠ Eo.Term.Stuck) :
+    ∀ ys acc, acc ≠ Eo.Term.Stuck →
+      Eo.__eo_list_rev_rec (eoList xf xr ys) acc = eoList xf acc ys.reverse := by
+  intro ys
+  induction ys with
+  | nil =>
+    intro acc hacc
+    simp only [eoList, List.reverse_nil]
+    unfold Eo.__eo_list_rev_rec
+    split <;> simp_all
+  | cons y ys ih =>
+    intro acc hacc
+    simp only [eoList]
+    rw [Eo.__eo_list_rev_rec.eq_def]
+    simp only [hacc, ne_eq, not_false_eq_true]
+    rw [ih _ (by simp), List.reverse_cons, eoList_append]
+    rfl
+
+/-- `eo::list_rev` on handles of an operator and a term: logos's
+`__eo_list_rev`. -/
+theorem Store.builtin_spec_list_rev (n : Nat) (hnil : IsListNilSpec n) (s : Store)
+    (args : Slice Term) {a b : Term} {xf xa : Eo.Term} (hargs : args.val = [a, b])
+    (ha : s.Rep a xf) (hb : s.Rep b xa) (hinv : s.Inv) (h64 : Platform64)
+    (hrem : s.remaining ≤ n) (hleft : NotLeftNested xf) :
+    generated.part0.Store.builtin_list s kind.EvalOp.ListRev args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_list_rev xf xa)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have htakes : Store.takes kind.EvalOp.ListRev 2#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  have hdef : ∀ y z, Eo.__eo_list_rev y z = Eo.__eo_requires (Eo.__eo_is_list y z)
+      (Eo.Term.Boolean true) (Eo.__eo_list_rev_rec z (Eo.__eo_get_nil_rec y z)) := fun _ _ => rfl
+  unfold generated.part0.Store.builtin_list
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  unfold Store.check_handles
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    step with Store.any_stuck_two hargs ha hb as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hxf : xf = Eo.Term.Stuck
+    · subst hxf
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_rev Eo.Term.Stuck xa = Eo.Term.Stuck := by
+        rw [hdef]; simp [Eo.__eo_is_list, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    by_cases hxa : xa = Eo.Term.Stuck
+    · subst hxa
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_rev xf Eo.Term.Stuck = Eo.Term.Stuck := by
+        rw [hdef]; simp [Eo.__eo_is_list, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    simp only [hxf, hxa, decide_false, Bool.or_false, Bool.false_eq_true, ite_false]
+    unfold generated.part0.Store.list_builtin
+    have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+    have h1 : Slice.index_usize args 1#usize = ok b := by simp [Slice.index_usize, hargs]
+    simp only [h0, Std.bind_ok]
+    unfold generated.part0.Store.list_of_one
+    simp only [h1, Std.bind_ok]
+    step with list_parts_spec n hnil s hinv h64 hrem ha hb hleft as ⟨r, s1, hinv1, hg1, hr⟩
+    cases r with
+    | Err e =>
+      simp [core.result.Result.Insts.CoreOpsTry.branch,
+        core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+        core.convert.FromSame.from]
+      exact ⟨hinv1, hg1⟩
+    | Ok o =>
+      cases o with
+      | none =>
+        obtain ⟨ys, xr, hxl, hend, hn⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, Store.stuck_eq,
+          WP.dspec_ok, WP.uncurry'_pair]
+        refine ⟨hinv1, hg1, ?_⟩
+        have : Eo.__eo_list_rev xf xa = Eo.Term.Stuck := by
+          rw [hdef, hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend]
+          simp [hn, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+        rw [this]; exact hinv1.rep_stuck
+      | some p =>
+        obtain ⟨tail, rest⟩ := p
+        obtain ⟨ys, xr, hys, hrest, hxl, hend, hn, hsz⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+        have hva : TermValid xa := Store.Rep.valid' hinv hb
+        have hxr : xr ≠ Eo.Term.Stuck := by
+          intro h; subst h; revert hn; unfold Eo.__eo_is_list_nil; split <;> simp_all
+        have hval : Eo.__eo_list_rev xf xa = eoList xf xr ys.reverse := by
+          rw [hdef, hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend,
+            get_nil_rec_eoList hxf xr ys, get_nil_rec_nil hn hxr,
+            rev_rec_eoList (is_list_nil_not_apply hn) hxr ys xr hxr]
+          simp [hn, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not,
+            eoList_ne_stuck hxr]
+        have hmax := hinv.table.hmax
+        have h40 : (2 : Nat) ^ 40 ≤ Usize.max := h64
+        have hnodes : s.nodes.val.length ≤ 2 ^ 32 := by scalar_tac
+        have htl : tail.val.length ≤ 2 ^ 32 := by
+          simp only [alloc.vec.Vec.length] at hsz; omega
+        unfold reversed
+        step with reversed_loop_spec (alloc.vec.Vec.deref tail)
+          (alloc.vec.Vec.with_capacity Term (Slice.len (alloc.vec.Vec.deref tail)))
+          (Slice.len (alloc.vec.Vec.deref tail))
+          (by simp [Slice.len, Slice.length])
+          (by simp [alloc.vec.Vec.with_capacity, alloc.vec.Vec.deref, Slice.len]; omega)
+          as ⟨rv, hrv⟩
+        have hrv' : rv.val = tail.val.reverse := by
+          rw [hrv]; simp [alloc.vec.Vec.with_capacity, alloc.vec.Vec.deref, Slice.len]
+        have hall : List.Forall₂ s1.Rep (alloc.vec.Vec.deref rv).val ys.reverse := by
+          have : (alloc.vec.Vec.deref rv).val = rv.val := by simp [alloc.vec.Vec.deref]
+          rw [this, hrv']
+          exact List.forall₂_reverse_iff.mpr hys
+        have hny : ∀ y ∈ ys.reverse, y ≠ Eo.Term.Stuck := by
+          intro y hy
+          exact eoList_valid_elems ys (hxl ▸ hva) y (List.mem_reverse.mp hy)
+        unfold generated.part0.Store.list_build
+        rw [is_left_assoc_false s1 (Represents.grows ha hg1) hleft]
+        simp only [Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
+        have hlenE : (Slice.len (alloc.vec.Vec.deref rv)).val = ys.reverse.length := by
+          have := hall.length_eq; simp [Slice.len, Slice.length] at this ⊢; omega
+        apply WP.dspec_mono (list_build_loop_spec s1 h64 (alloc.vec.Vec.deref rv)
+          ys.reverse hall hxf hny hxr s1 rest (Slice.len (alloc.vec.Vec.deref rv)) hinv1
+          (Store.Grows.refl s1) (Represents.grows ha hg1) (by omega)
+          (by rw [hlenE, List.drop_length]; exact hrest))
+        rintro ⟨r2, s2⟩ ⟨hinv2, hg2, hr2⟩
+        refine ⟨hinv2, hg1.trans hg2, ?_⟩
+        cases r2 with
+        | Err e => trivial
+        | Ok t => simp only at hr2 ⊢; rw [hval]; exact hr2
 
 end pathos_compiled_checker

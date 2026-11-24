@@ -45,3 +45,4 @@
 "$eo_prog_bv-extract-concat-2" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once eo::list_concat had a spec"
 "$eo_prog_bv-extract-concat-3" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec"
 "$eo_prog_bv-extract-concat-4" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec"
+"$bv_div_mod_impl" = "the spec of case 2: times out (whnf, 2,000,000 heartbeats); reached once eo::list_len and eo::list_rev had specs"
