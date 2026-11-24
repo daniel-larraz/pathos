@@ -23,6 +23,27 @@ noncomputable section
 
 namespace pathos_compiled_checker
 
+/-- [core::cmp::{impl core::cmp::PartialEq<core::cmp::Ordering> for core::cmp::Ordering}::eq]:
+    Source: '/rustc/library/core/src/cmp.rs', lines 413:43-413:52
+    Name pattern: [core::cmp::{core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>}::eq]
+    Visibility: public -/
+@[rust_fun
+  "core::cmp::{core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>}::eq"]
+axiom core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq
+  : Ordering → Ordering → Result Bool
+
+/-- Trait implementation: [core::cmp::{impl core::cmp::PartialEq<core::cmp::Ordering> for core::cmp::Ordering}]
+    Source: '/rustc/library/core/src/cmp.rs', lines 413:43-413:52
+    Name pattern: [core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>] -/
+@[reducible, rust_trait_impl
+  "core::cmp::PartialEq<core::cmp::Ordering, core::cmp::Ordering>"]
+impl_def core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering : core.cmp.PartialEq
+  Ordering Ordering := {
+  eq := core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq
+  ne := core.cmp.PartialEq.ne.trait_default
+    core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering
+}
+
 /-- [core::cmp::impls::{impl core::cmp::PartialEq<bool> for bool}::ne]:
     Source: '/rustc/library/core/src/cmp.rs', lines 2188:16-2188:50; this code is generated from a macro invocation at: '/rustc/library/core/src/cmp.rs', lines 2193:4-2195:5
     Name pattern: [core::cmp::impls::{core::cmp::PartialEq<bool, bool>}::ne]
@@ -164,13 +185,30 @@ def bitvec.BitVec.Insts.CoreFmtDebug : core.fmt.Debug bitvec.BitVec := {
   fmt := bitvec.BitVec.Insts.CoreFmtDebug.fmt
 }
 
+/-- [pathos_compiled_checker::num::{impl core::convert::From<u32> for pathos_compiled_checker::num::Integer}::from]:
+    Source: 'src/num.rs', lines 190:4-192:5
+    Visibility: public -/
+axiom num.Integer.Insts.CoreConvertFromU32.from
+  : Std.U32 → Result num.Integer
+
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::pow]:
+    Source: 'src/num.rs', lines 110:4-112:5
+    Visibility: public -/
+axiom num.Integer.pow : num.Integer → Std.U32 → Result num.Integer
+
+/-- [pathos_compiled_checker::bitvec::pow2]:
+    Source: 'src/bitvec.rs', lines 18:0-20:1 -/
+def bitvec.pow2 (k : Std.U32) : Result num.Integer := do
+  let i ← num.Integer.Insts.CoreConvertFromU32.from 2#u32
+  num.Integer.pow i k
+
 /-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::mod_by_pow2]:
     Source: 'src/num.rs', lines 136:4-138:5
     Visibility: public -/
 axiom num.Integer.mod_by_pow2 : num.Integer → Std.U32 → Result num.Integer
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::new]:
-    Source: 'src/bitvec.rs', lines 17:4-22:5
+    Source: 'src/bitvec.rs', lines 24:4-29:5
     Visibility: public -/
 def bitvec.BitVec.new
   (size : Std.U32) (value : num.Integer) : Result bitvec.BitVec := do
@@ -183,29 +221,28 @@ def bitvec.BitVec.new
 axiom num.Integer.zero : Result num.Integer
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::zero]:
-    Source: 'src/bitvec.rs', lines 25:4-30:5
+    Source: 'src/bitvec.rs', lines 32:4-37:5
     Visibility: public -/
 def bitvec.BitVec.zero (size : Std.U32) : Result bitvec.BitVec := do
   let i ← num.Integer.zero
   ok { size, value := i }
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::size]:
-    Source: 'src/bitvec.rs', lines 32:4-34:5
+    Source: 'src/bitvec.rs', lines 39:4-41:5
     Visibility: public -/
 def bitvec.BitVec.impl.size (self : bitvec.BitVec) : Result Std.U32 := do
   ok self.size
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::value]:
-    Source: 'src/bitvec.rs', lines 36:4-38:5
+    Source: 'src/bitvec.rs', lines 43:4-45:5
     Visibility: public -/
 def bitvec.BitVec.impl.value (self : bitvec.BitVec) : Result num.Integer := do
   ok self.value
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::multiply_by_pow2]:
-    Source: 'src/num.rs', lines 131:4-133:5
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::mul]:
+    Source: 'src/num.rs', lines 106:4-108:5
     Visibility: public -/
-axiom num.Integer.multiply_by_pow2
-  : num.Integer → Std.U32 → Result num.Integer
+axiom num.Integer.mul : num.Integer → num.Integer → Result num.Integer
 
 /-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::add]:
     Source: 'src/num.rs', lines 102:4-104:5
@@ -213,23 +250,24 @@ axiom num.Integer.multiply_by_pow2
 axiom num.Integer.add : num.Integer → num.Integer → Result num.Integer
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::concat]:
-    Source: 'src/bitvec.rs', lines 40:4-45:5
+    Source: 'src/bitvec.rs', lines 47:4-52:5
     Visibility: public -/
 def bitvec.BitVec.concat
   (self : bitvec.BitVec) (other : bitvec.BitVec) : Result bitvec.BitVec := do
   let i ← lift (core.num.U32.wrapping_add self.size other.size)
-  let i1 ← num.Integer.multiply_by_pow2 self.value other.size
-  let i2 ← num.Integer.add i1 other.value
-  bitvec.BitVec.new i i2
+  let i1 ← bitvec.pow2 other.size
+  let i2 ← num.Integer.mul self.value i1
+  let i3 ← num.Integer.add i2 other.value
+  bitvec.BitVec.new i i3
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::extract_bit_range]:
-    Source: 'src/num.rs', lines 141:4-145:5
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::euclidean_qr]:
+    Source: 'src/num.rs', lines 165:4-173:5
     Visibility: public -/
-axiom num.Integer.extract_bit_range
-  : num.Integer → Std.U32 → Std.U32 → Result num.Integer
+axiom num.Integer.euclidean_qr
+  : num.Integer → num.Integer → Result (num.Integer × num.Integer)
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::extract]:
-    Source: 'src/bitvec.rs', lines 49:4-52:5
+    Source: 'src/bitvec.rs', lines 56:4-60:5
     Visibility: public -/
 def bitvec.BitVec.extract
   (self : bitvec.BitVec) (high : Std.U32) (low : Std.U32) :
@@ -237,8 +275,9 @@ def bitvec.BitVec.extract
   := do
   let i ← high - low
   let count ← lift (core.num.U32.wrapping_add i 1#u32)
-  let i1 ← num.Integer.extract_bit_range self.value count low
-  bitvec.BitVec.new count i1
+  let i1 ← bitvec.pow2 low
+  let (i2, _) ← num.Integer.euclidean_qr self.value i1
+  bitvec.BitVec.new count i2
 
 /-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::bitwise_xor]:
     Source: 'src/num.rs', lines 122:4-124:5
@@ -247,7 +286,7 @@ axiom num.Integer.bitwise_xor
   : num.Integer → num.Integer → Result num.Integer
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::xor]:
-    Source: 'src/bitvec.rs', lines 54:4-56:5
+    Source: 'src/bitvec.rs', lines 62:4-64:5
     Visibility: public -/
 def bitvec.BitVec.xor
   (self : bitvec.BitVec) (b : bitvec.BitVec) : Result bitvec.BitVec := do
@@ -261,7 +300,7 @@ axiom num.Integer.bitwise_or
   : num.Integer → num.Integer → Result num.Integer
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::or]:
-    Source: 'src/bitvec.rs', lines 58:4-60:5
+    Source: 'src/bitvec.rs', lines 66:4-68:5
     Visibility: public -/
 def bitvec.BitVec.or
   (self : bitvec.BitVec) (b : bitvec.BitVec) : Result bitvec.BitVec := do
@@ -275,40 +314,44 @@ axiom num.Integer.bitwise_and
   : num.Integer → num.Integer → Result num.Integer
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::and]:
-    Source: 'src/bitvec.rs', lines 62:4-64:5
+    Source: 'src/bitvec.rs', lines 70:4-72:5
     Visibility: public -/
 def bitvec.BitVec.and
   (self : bitvec.BitVec) (b : bitvec.BitVec) : Result bitvec.BitVec := do
   let i ← num.Integer.bitwise_and self.value b.value
   bitvec.BitVec.new self.size i
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::bitwise_not]:
-    Source: 'src/num.rs', lines 127:4-129:5
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::neg]:
+    Source: 'src/num.rs', lines 98:4-100:5
     Visibility: public -/
-axiom num.Integer.bitwise_not : num.Integer → Result num.Integer
-
-/-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::not]:
-    Source: 'src/bitvec.rs', lines 66:4-68:5
-    Visibility: public -/
-def bitvec.BitVec.not (self : bitvec.BitVec) : Result bitvec.BitVec := do
-  let i ← num.Integer.bitwise_not self.value
-  bitvec.BitVec.new self.size i
-
-/-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::add]:
-    Source: 'src/bitvec.rs', lines 70:4-72:5
-    Visibility: public -/
-def bitvec.BitVec.add
-  (self : bitvec.BitVec) (b : bitvec.BitVec) : Result bitvec.BitVec := do
-  let i ← num.Integer.add self.value b.value
-  bitvec.BitVec.new self.size i
+axiom num.Integer.neg : num.Integer → Result num.Integer
 
 /-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::one]:
     Source: 'src/num.rs', lines 76:4-78:5
     Visibility: public -/
 axiom num.Integer.one : Result num.Integer
 
+/-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::not]:
+    Source: 'src/bitvec.rs', lines 74:4-77:5
+    Visibility: public -/
+def bitvec.BitVec.not (self : bitvec.BitVec) : Result bitvec.BitVec := do
+  let i ← bitvec.pow2 self.size
+  let i1 ← num.Integer.one
+  let i2 ← num.Integer.add self.value i1
+  let i3 ← num.Integer.neg i2
+  let i4 ← num.Integer.add i i3
+  bitvec.BitVec.new self.size i4
+
+/-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::add]:
+    Source: 'src/bitvec.rs', lines 79:4-81:5
+    Visibility: public -/
+def bitvec.BitVec.add
+  (self : bitvec.BitVec) (b : bitvec.BitVec) : Result bitvec.BitVec := do
+  let i ← num.Integer.add self.value b.value
+  bitvec.BitVec.new self.size i
+
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::neg]:
-    Source: 'src/bitvec.rs', lines 74:4-76:5
+    Source: 'src/bitvec.rs', lines 83:4-85:5
     Visibility: public -/
 def bitvec.BitVec.neg (self : bitvec.BitVec) : Result bitvec.BitVec := do
   let bv ← bitvec.BitVec.not self
@@ -316,30 +359,13 @@ def bitvec.BitVec.neg (self : bitvec.BitVec) : Result bitvec.BitVec := do
   let bv1 ← bitvec.BitVec.new self.size i
   bitvec.BitVec.add bv bv1
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::mul]:
-    Source: 'src/num.rs', lines 106:4-108:5
-    Visibility: public -/
-axiom num.Integer.mul : num.Integer → num.Integer → Result num.Integer
-
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::mul]:
-    Source: 'src/bitvec.rs', lines 78:4-80:5
+    Source: 'src/bitvec.rs', lines 87:4-89:5
     Visibility: public -/
 def bitvec.BitVec.mul
   (self : bitvec.BitVec) (b : bitvec.BitVec) : Result bitvec.BitVec := do
   let i ← num.Integer.mul self.value b.value
   bitvec.BitVec.new self.size i
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::floor_div_quotient]:
-    Source: 'src/num.rs', lines 154:4-156:5
-    Visibility: public -/
-axiom num.Integer.floor_div_quotient
-  : num.Integer → num.Integer → Result num.Integer
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::one_extend]:
-    Source: 'src/num.rs', lines 148:4-151:5
-    Visibility: public -/
-axiom num.Integer.one_extend
-  : num.Integer → Std.U32 → Std.U32 → Result num.Integer
 
 /-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::sgn]:
     Source: 'src/num.rs', lines 90:4-96:5
@@ -347,32 +373,24 @@ axiom num.Integer.one_extend
 axiom num.Integer.sgn : num.Integer → Result Std.I32
 
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::unsigned_div_total]:
-    Source: 'src/bitvec.rs', lines 83:4-94:5
+    Source: 'src/bitvec.rs', lines 92:4-103:5
     Visibility: public -/
 def bitvec.BitVec.unsigned_div_total
   (self : bitvec.BitVec) (y : bitvec.BitVec) : Result bitvec.BitVec := do
   let i ← num.Integer.sgn y.value
   if i = 0#i32
   then
-    if self.size = 0#u32
-    then bitvec.BitVec.zero 0#u32
-    else
-      let i1 ← num.Integer.one
-      let i2 ← self.size - 1#u32
-      let i3 ← num.Integer.one_extend i1 1#u32 i2
-      bitvec.BitVec.new self.size i3
+    let i1 ← bitvec.pow2 self.size
+    let i2 ← num.Integer.one
+    let i3 ← num.Integer.neg i2
+    let i4 ← num.Integer.add i1 i3
+    bitvec.BitVec.new self.size i4
   else
-    let i1 ← num.Integer.floor_div_quotient self.value y.value
+    let (i1, _) ← num.Integer.euclidean_qr self.value y.value
     bitvec.BitVec.new self.size i1
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::floor_div_remainder]:
-    Source: 'src/num.rs', lines 159:4-161:5
-    Visibility: public -/
-axiom num.Integer.floor_div_remainder
-  : num.Integer → num.Integer → Result num.Integer
-
 /-- [pathos_compiled_checker::bitvec::{pathos_compiled_checker::bitvec::BitVec}::unsigned_rem_total]:
-    Source: 'src/bitvec.rs', lines 97:4-102:5
+    Source: 'src/bitvec.rs', lines 106:4-111:5
     Visibility: public -/
 def bitvec.BitVec.unsigned_rem_total
   (self : bitvec.BitVec) (y : bitvec.BitVec) : Result bitvec.BitVec := do
@@ -380,7 +398,7 @@ def bitvec.BitVec.unsigned_rem_total
   if i = 0#i32
   then bitvec.BitVec.new self.size self.value
   else
-    let i1 ← num.Integer.floor_div_remainder self.value y.value
+    let (_, i1) ← num.Integer.euclidean_qr self.value y.value
     bitvec.BitVec.new self.size i1
 
 /-- [pathos_compiled_checker::cache::ProgramId]
@@ -2566,12 +2584,6 @@ inductive schema.Constructor where
 | eo_update : schema.Constructor
 | eo_xor : schema.Constructor
 | eo_zero_5fextend : schema.Constructor
-
-/-- [pathos_compiled_checker::num::{impl core::convert::From<u32> for pathos_compiled_checker::num::Integer}::from]:
-    Source: 'src/num.rs', lines 190:4-192:5
-    Visibility: public -/
-axiom num.Integer.Insts.CoreConvertFromU32.from
-  : Std.U32 → Result num.Integer
 
 /-- [pathos_compiled_checker::num::Rational]
     Source: 'src/num.rs', lines 215:0-215:26
@@ -7865,22 +7877,12 @@ def Store.any_stuck (self : Store) (args : Slice Term) : Result Bool := do
   Store.any_stuck_loop self args false 0#usize
 
 /-- [pathos_compiled_checker::native::is_less]:
-    Source: 'src/native.rs', lines 407:0-412:1 -/
+    Source: 'src/native.rs', lines 408:0-413:1 -/
 def native.is_less (order : Ordering) : Result Bool := do
   match order with
   | Ordering.lt => ok true
   | Ordering.eq => ok false
   | Ordering.gt => ok false
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::sgn]:
-    Source: 'src/num.rs', lines 258:4-264:5
-    Visibility: public -/
-axiom num.Rational.sgn : num.Rational → Result Std.I32
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::from_integer]:
-    Source: 'src/num.rs', lines 244:4-246:5
-    Visibility: public -/
-axiom num.Rational.from_integer : num.Integer → Result num.Rational
 
 /-- [pathos_compiled_checker::num::{impl core::convert::From<usize> for pathos_compiled_checker::num::Integer}::from]:
     Source: 'src/num.rs', lines 202:4-204:5
@@ -7888,10 +7890,42 @@ axiom num.Rational.from_integer : num.Integer → Result num.Rational
 axiom num.Integer.Insts.CoreConvertFromUsize.from
   : Std.Usize → Result num.Integer
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::neg]:
-    Source: 'src/num.rs', lines 98:4-100:5
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::numerator]:
+    Source: 'src/num.rs', lines 234:4-237:5
     Visibility: public -/
-axiom num.Integer.neg : num.Integer → Result num.Integer
+axiom num.Rational.numerator : num.Rational → Result num.Integer
+
+/-- [pathos_compiled_checker::lit::rat_sgn]:
+    Source: 'src/lit.rs', lines 652:0-654:1 -/
+def lit.rat_sgn (a : num.Rational) : Result Std.I32 := do
+  let i ← num.Rational.numerator a
+  num.Integer.sgn i
+
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::from_integer]:
+    Source: 'src/num.rs', lines 244:4-246:5
+    Visibility: public -/
+axiom num.Rational.from_integer : num.Integer → Result num.Rational
+
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::from_integers]:
+    Source: 'src/num.rs', lines 226:4-231:5
+    Visibility: public -/
+axiom num.Rational.from_integers
+  : num.Integer → num.Integer → Result (Option num.Rational)
+
+/-- [pathos_compiled_checker::lit::rat]:
+    Source: 'src/lit.rs', lines 617:0-622:1 -/
+def lit.rat (n : num.Integer) (d : num.Integer) : Result num.Rational := do
+  let o ← num.Rational.from_integers n d
+  match o with
+  | none => let i ← num.Integer.zero
+            num.Rational.from_integer i
+  | some q => ok q
+
+/-- [pathos_compiled_checker::lit::rat_from_integer]:
+    Source: 'src/lit.rs', lines 624:0-626:1 -/
+def lit.rat_from_integer (n : num.Integer) : Result num.Rational := do
+  let i ← num.Integer.one
+  lit.rat n i
 
 /-- [pathos_compiled_checker::num::{impl core::cmp::PartialOrd<pathos_compiled_checker::num::Integer> for pathos_compiled_checker::num::Integer}::partial_cmp]:
     Source: 'src/num.rs', lines 61:37-61:47
@@ -8575,15 +8609,36 @@ def lit.Lit.fold_bv
                   ok (some l)
     else ok none
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::mul]:
-    Source: 'src/num.rs', lines 278:4-280:5
+/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::denominator]:
+    Source: 'src/num.rs', lines 240:4-242:5
     Visibility: public -/
-axiom num.Rational.mul : num.Rational → num.Rational → Result num.Rational
+axiom num.Rational.denominator : num.Rational → Result num.Integer
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::add]:
-    Source: 'src/num.rs', lines 274:4-276:5
-    Visibility: public -/
-axiom num.Rational.add : num.Rational → num.Rational → Result num.Rational
+/-- [pathos_compiled_checker::lit::rat_mul]:
+    Source: 'src/lit.rs', lines 635:0-637:1 -/
+def lit.rat_mul
+  (a : num.Rational) (b : num.Rational) : Result num.Rational := do
+  let i ← num.Rational.numerator a
+  let i1 ← num.Rational.numerator b
+  let i2 ← num.Integer.mul i i1
+  let i3 ← num.Rational.denominator a
+  let i4 ← num.Rational.denominator b
+  let i5 ← num.Integer.mul i3 i4
+  lit.rat i2 i5
+
+/-- [pathos_compiled_checker::lit::rat_add]:
+    Source: 'src/lit.rs', lines 628:0-633:1 -/
+def lit.rat_add
+  (a : num.Rational) (b : num.Rational) : Result num.Rational := do
+  let i ← num.Rational.numerator a
+  let i1 ← num.Rational.denominator b
+  let i2 ← num.Integer.mul i i1
+  let i3 ← num.Rational.numerator b
+  let i4 ← num.Rational.denominator a
+  let i5 ← num.Integer.mul i3 i4
+  let i6 ← num.Integer.add i2 i5
+  let i7 ← num.Integer.mul i4 i1
+  lit.rat i6 i7
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::as_rat]:
     Source: 'src/lit.rs', lines 97:4-102:5 -/
@@ -8667,15 +8722,13 @@ def lit.Lit.fold_rat_loop
             | kind.EvalOp.And => ok none
             | kind.EvalOp.Or => ok none
             | kind.EvalOp.Xor => ok none
-            | kind.EvalOp.Add =>
-              do
-              let r1 ← num.Rational.add r a
-              ok (some r1)
+            | kind.EvalOp.Add => do
+                                 let r1 ← lit.rat_add r a
+                                 ok (some r1)
             | kind.EvalOp.Neg => ok none
-            | kind.EvalOp.Mul =>
-              do
-              let r1 ← num.Rational.mul r a
-              ok (some r1)
+            | kind.EvalOp.Mul => do
+                                 let r1 ← lit.rat_mul r a
+                                 ok (some r1)
             | kind.EvalOp.Pow => ok none
             | kind.EvalOp.IntDiv => ok none
             | kind.EvalOp.IntMod => ok none
@@ -8971,28 +9024,17 @@ def lit.Lit.evaluate_nary
   | lit.Lit.Binary b => lit.Lit.fold_bv op ka b args
   | lit.Lit.Str s => lit.Lit.fold_str op s args
 
-/-- [pathos_compiled_checker::num::{impl core::cmp::PartialOrd<pathos_compiled_checker::num::Rational> for pathos_compiled_checker::num::Rational}::partial_cmp]:
-    Source: 'src/num.rs', lines 214:37-214:47
-    Visibility: public -/
-axiom num.Rational.Insts.CoreCmpPartialOrdRational.partial_cmp
-  : num.Rational → num.Rational → Result (Option Ordering)
-
-/-- Trait implementation: [pathos_compiled_checker::num::{impl core::cmp::PartialOrd<pathos_compiled_checker::num::Rational> for pathos_compiled_checker::num::Rational}]
-    Source: 'src/num.rs', lines 214:37-214:47 -/
-@[reducible]
-impl_def num.Rational.Insts.CoreCmpPartialOrdRational : core.cmp.PartialOrd
-  num.Rational num.Rational := {
-  partialEqInst := num.Rational.Insts.CoreCmpPartialEqRational
-  partial_cmp := num.Rational.Insts.CoreCmpPartialOrdRational.partial_cmp
-  lt := core.cmp.PartialOrd.lt.trait_default
-    num.Rational.Insts.CoreCmpPartialOrdRational
-  le := core.cmp.PartialOrd.le.trait_default
-    num.Rational.Insts.CoreCmpPartialOrdRational
-  gt := core.cmp.PartialOrd.gt.trait_default
-    num.Rational.Insts.CoreCmpPartialOrdRational
-  ge := core.cmp.PartialOrd.ge.trait_default
-    num.Rational.Insts.CoreCmpPartialOrdRational
-}
+/-- [pathos_compiled_checker::lit::rat_cmp]:
+    Source: 'src/lit.rs', lines 660:0-664:1 -/
+def lit.rat_cmp (a : num.Rational) (b : num.Rational) : Result Ordering := do
+  let i ← num.Rational.numerator a
+  let i1 ← num.Rational.denominator b
+  let x ← num.Integer.mul i i1
+  let i2 ← num.Rational.numerator b
+  let i3 ← num.Rational.denominator a
+  let y ← num.Integer.mul i2 i3
+  let o ← num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp x y
+  ok (core.option.Option.unwrap_or o Ordering.eq)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::arg]:
     Source: 'src/lit.rs', lines 120:4-122:5 -/
@@ -9060,9 +9102,9 @@ def lit.Lit.evaluate_gt
                     num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
+          let o3 ← lit.rat_cmp a b
           let b1 ←
-            core.cmp.impls.PartialOrdShared.gt
-              num.Rational.Insts.CoreCmpPartialOrdRational a b
+            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
           ok (some (lit.Lit.Boolean b1))
     | lit.Lit.Numeral a =>
       match second with
@@ -9113,9 +9155,10 @@ def lit.Lit.evaluate_gt
                       num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
+            let o3 ← lit.rat_cmp a1 b
             let b1 ←
-              core.cmp.impls.PartialOrdShared.gt
-                num.Rational.Insts.CoreCmpPartialOrdRational a1 b
+              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
+                Ordering.gt
             ok (some (lit.Lit.Boolean b1))
       | lit.Lit.Numeral b =>
         let b1 ←
@@ -9169,9 +9212,10 @@ def lit.Lit.evaluate_gt
                       num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
+            let o3 ← lit.rat_cmp a1 b
             let b1 ←
-              core.cmp.impls.PartialOrdShared.gt
-                num.Rational.Insts.CoreCmpPartialOrdRational a1 b
+              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
+                Ordering.gt
             ok (some (lit.Lit.Boolean b1))
       | lit.Lit.Rational _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9220,9 +9264,10 @@ def lit.Lit.evaluate_gt
                       num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
+            let o3 ← lit.rat_cmp a1 b
             let b1 ←
-              core.cmp.impls.PartialOrdShared.gt
-                num.Rational.Insts.CoreCmpPartialOrdRational a1 b
+              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
+                Ordering.gt
             ok (some (lit.Lit.Boolean b1))
       | lit.Lit.Hex _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9271,9 +9316,10 @@ def lit.Lit.evaluate_gt
                       num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
+            let o3 ← lit.rat_cmp a1 b
             let b1 ←
-              core.cmp.impls.PartialOrdShared.gt
-                num.Rational.Insts.CoreCmpPartialOrdRational a1 b
+              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
+                Ordering.gt
             ok (some (lit.Lit.Boolean b1))
       | lit.Lit.Binary _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9322,9 +9368,10 @@ def lit.Lit.evaluate_gt
                       num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
+            let o3 ← lit.rat_cmp a1 b
             let b1 ←
-              core.cmp.impls.PartialOrdShared.gt
-                num.Rational.Insts.CoreCmpPartialOrdRational a1 b
+              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
+                Ordering.gt
             ok (some (lit.Lit.Boolean b1))
       | lit.Lit.Str _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9373,9 +9420,10 @@ def lit.Lit.evaluate_gt
                       num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                   ok (some (lit.Lit.Boolean b1))
           | some b =>
+            let o3 ← lit.rat_cmp a1 b
             let b1 ←
-              core.cmp.impls.PartialOrdShared.gt
-                num.Rational.Insts.CoreCmpPartialOrdRational a1 b
+              core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3
+                Ordering.gt
             ok (some (lit.Lit.Boolean b1))
     | lit.Lit.Decimal _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9424,9 +9472,9 @@ def lit.Lit.evaluate_gt
                     num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
+          let o3 ← lit.rat_cmp a b
           let b1 ←
-            core.cmp.impls.PartialOrdShared.gt
-              num.Rational.Insts.CoreCmpPartialOrdRational a b
+            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
           ok (some (lit.Lit.Boolean b1))
     | lit.Lit.Rational _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9475,9 +9523,9 @@ def lit.Lit.evaluate_gt
                     num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
+          let o3 ← lit.rat_cmp a b
           let b1 ←
-            core.cmp.impls.PartialOrdShared.gt
-              num.Rational.Insts.CoreCmpPartialOrdRational a b
+            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
           ok (some (lit.Lit.Boolean b1))
     | lit.Lit.Hex _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9526,9 +9574,9 @@ def lit.Lit.evaluate_gt
                     num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
+          let o3 ← lit.rat_cmp a b
           let b1 ←
-            core.cmp.impls.PartialOrdShared.gt
-              num.Rational.Insts.CoreCmpPartialOrdRational a b
+            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
           ok (some (lit.Lit.Boolean b1))
     | lit.Lit.Binary _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9577,9 +9625,9 @@ def lit.Lit.evaluate_gt
                     num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
+          let o3 ← lit.rat_cmp a b
           let b1 ←
-            core.cmp.impls.PartialOrdShared.gt
-              num.Rational.Insts.CoreCmpPartialOrdRational a b
+            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
           ok (some (lit.Lit.Boolean b1))
     | lit.Lit.Str _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9628,9 +9676,9 @@ def lit.Lit.evaluate_gt
                     num.Integer.Insts.CoreCmpPartialOrdInteger i2 i3
                 ok (some (lit.Lit.Boolean b1))
         | some b =>
+          let o3 ← lit.rat_cmp a b
           let b1 ←
-            core.cmp.impls.PartialOrdShared.gt
-              num.Rational.Insts.CoreCmpPartialOrdRational a b
+            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o3 Ordering.gt
           ok (some (lit.Lit.Boolean b1))
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_string]:
@@ -9696,10 +9744,13 @@ def lit.Lit.evaluate_to_bin
         | lit.Lit.Str _ => ok none
     else ok none
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::floor]:
-    Source: 'src/num.rs', lines 266:4-268:5
-    Visibility: public -/
-axiom num.Rational.floor : num.Rational → Result num.Integer
+/-- [pathos_compiled_checker::lit::rat_floor]:
+    Source: 'src/lit.rs', lines 656:0-658:1 -/
+def lit.rat_floor (a : num.Rational) : Result num.Integer := do
+  let i ← num.Rational.numerator a
+  let i1 ← num.Rational.denominator a
+  let (i2, _) ← num.Integer.euclidean_qr i i1
+  ok i2
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_int]:
     Source: 'src/lit.rs', lines 332:4-347:5 -/
@@ -9710,10 +9761,10 @@ def lit.Lit.evaluate_to_int (first : lit.Lit) : Result (Option lit.Lit) := do
     let l ← lit.Lit.Insts.CoreCloneClone.clone first
     ok (some l)
   | lit.Lit.Decimal r =>
-    let i ← num.Rational.floor r
+    let i ← lit.rat_floor r
     ok (some (lit.Lit.Numeral i))
   | lit.Lit.Rational r =>
-    let i ← num.Rational.floor r
+    let i ← lit.rat_floor r
     ok (some (lit.Lit.Numeral i))
   | lit.Lit.Hex _ => ok none
   | lit.Lit.Binary b =>
@@ -9730,16 +9781,17 @@ def lit.Lit.evaluate_to_int (first : lit.Lit) : Result (Option lit.Lit) := do
       ok (some (lit.Lit.Numeral i2))
     else ok none
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::div]:
-    Source: 'src/num.rs', lines 283:4-285:5
-    Visibility: public -/
-axiom num.Rational.div : num.Rational → num.Rational → Result num.Rational
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::from_integers]:
-    Source: 'src/num.rs', lines 226:4-231:5
-    Visibility: public -/
-axiom num.Rational.from_integers
-  : num.Integer → num.Integer → Result (Option num.Rational)
+/-- [pathos_compiled_checker::lit::rat_div]:
+    Source: 'src/lit.rs', lines 640:0-642:1 -/
+def lit.rat_div
+  (a : num.Rational) (b : num.Rational) : Result num.Rational := do
+  let i ← num.Rational.numerator a
+  let i1 ← num.Rational.denominator b
+  let i2 ← num.Integer.mul i i1
+  let i3 ← num.Rational.denominator a
+  let i4 ← num.Rational.numerator b
+  let i5 ← num.Integer.mul i3 i4
+  lit.rat i2 i5
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_rat_div]:
     Source: 'src/lit.rs', lines 308:4-330:5 -/
@@ -9759,10 +9811,10 @@ def lit.Lit.evaluate_rat_div
         match o2 with
         | none => ok none
         | some d =>
-          let i ← num.Rational.sgn d
+          let i ← lit.rat_sgn d
           if i = 0#i32
           then ok none
-          else let r ← num.Rational.div n d
+          else let r ← lit.rat_div n d
                ok (some (lit.Lit.Rational r))
     | lit.Lit.Numeral n =>
       match second with
@@ -9775,10 +9827,10 @@ def lit.Lit.evaluate_rat_div
           match o2 with
           | none => ok none
           | some d =>
-            let i ← num.Rational.sgn d
+            let i ← lit.rat_sgn d
             if i = 0#i32
             then ok none
-            else let r ← num.Rational.div n1 d
+            else let r ← lit.rat_div n1 d
                  ok (some (lit.Lit.Rational r))
       | lit.Lit.Numeral d =>
         let o1 ← num.Rational.from_integers n d
@@ -9794,10 +9846,10 @@ def lit.Lit.evaluate_rat_div
           match o2 with
           | none => ok none
           | some d =>
-            let i ← num.Rational.sgn d
+            let i ← lit.rat_sgn d
             if i = 0#i32
             then ok none
-            else let r ← num.Rational.div n1 d
+            else let r ← lit.rat_div n1 d
                  ok (some (lit.Lit.Rational r))
       | lit.Lit.Rational _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9808,10 +9860,10 @@ def lit.Lit.evaluate_rat_div
           match o2 with
           | none => ok none
           | some d =>
-            let i ← num.Rational.sgn d
+            let i ← lit.rat_sgn d
             if i = 0#i32
             then ok none
-            else let r ← num.Rational.div n1 d
+            else let r ← lit.rat_div n1 d
                  ok (some (lit.Lit.Rational r))
       | lit.Lit.Hex _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9822,10 +9874,10 @@ def lit.Lit.evaluate_rat_div
           match o2 with
           | none => ok none
           | some d =>
-            let i ← num.Rational.sgn d
+            let i ← lit.rat_sgn d
             if i = 0#i32
             then ok none
-            else let r ← num.Rational.div n1 d
+            else let r ← lit.rat_div n1 d
                  ok (some (lit.Lit.Rational r))
       | lit.Lit.Binary _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9836,10 +9888,10 @@ def lit.Lit.evaluate_rat_div
           match o2 with
           | none => ok none
           | some d =>
-            let i ← num.Rational.sgn d
+            let i ← lit.rat_sgn d
             if i = 0#i32
             then ok none
-            else let r ← num.Rational.div n1 d
+            else let r ← lit.rat_div n1 d
                  ok (some (lit.Lit.Rational r))
       | lit.Lit.Str _ =>
         let o1 ← lit.Lit.as_rat first
@@ -9850,10 +9902,10 @@ def lit.Lit.evaluate_rat_div
           match o2 with
           | none => ok none
           | some d =>
-            let i ← num.Rational.sgn d
+            let i ← lit.rat_sgn d
             if i = 0#i32
             then ok none
-            else let r ← num.Rational.div n1 d
+            else let r ← lit.rat_div n1 d
                  ok (some (lit.Lit.Rational r))
     | lit.Lit.Decimal _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9864,10 +9916,10 @@ def lit.Lit.evaluate_rat_div
         match o2 with
         | none => ok none
         | some d =>
-          let i ← num.Rational.sgn d
+          let i ← lit.rat_sgn d
           if i = 0#i32
           then ok none
-          else let r ← num.Rational.div n d
+          else let r ← lit.rat_div n d
                ok (some (lit.Lit.Rational r))
     | lit.Lit.Rational _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9878,10 +9930,10 @@ def lit.Lit.evaluate_rat_div
         match o2 with
         | none => ok none
         | some d =>
-          let i ← num.Rational.sgn d
+          let i ← lit.rat_sgn d
           if i = 0#i32
           then ok none
-          else let r ← num.Rational.div n d
+          else let r ← lit.rat_div n d
                ok (some (lit.Lit.Rational r))
     | lit.Lit.Hex _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9892,10 +9944,10 @@ def lit.Lit.evaluate_rat_div
         match o2 with
         | none => ok none
         | some d =>
-          let i ← num.Rational.sgn d
+          let i ← lit.rat_sgn d
           if i = 0#i32
           then ok none
-          else let r ← num.Rational.div n d
+          else let r ← lit.rat_div n d
                ok (some (lit.Lit.Rational r))
     | lit.Lit.Binary _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9906,10 +9958,10 @@ def lit.Lit.evaluate_rat_div
         match o2 with
         | none => ok none
         | some d =>
-          let i ← num.Rational.sgn d
+          let i ← lit.rat_sgn d
           if i = 0#i32
           then ok none
-          else let r ← num.Rational.div n d
+          else let r ← lit.rat_div n d
                ok (some (lit.Lit.Rational r))
     | lit.Lit.Str _ =>
       let o1 ← lit.Lit.as_rat first
@@ -9920,17 +9972,11 @@ def lit.Lit.evaluate_rat_div
         match o2 with
         | none => ok none
         | some d =>
-          let i ← num.Rational.sgn d
+          let i ← lit.rat_sgn d
           if i = 0#i32
           then ok none
-          else let r ← num.Rational.div n d
+          else let r ← lit.rat_div n d
                ok (some (lit.Lit.Rational r))
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::euclidean_qr]:
-    Source: 'src/num.rs', lines 165:4-173:5
-    Visibility: public -/
-axiom num.Integer.euclidean_qr
-  : num.Integer → num.Integer → Result (num.Integer × num.Integer)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_int_div]:
     Source: 'src/lit.rs', lines 272:4-306:5 -/
@@ -10255,7 +10301,7 @@ def lit.Lit.evaluate_int_div
             ok (some l)
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]: loop 0:
-    Source: 'src/lit.rs', lines 617:4-620:5 -/
+    Source: 'src/lit.rs', lines 675:4-679:5 -/
 @[rust_loop]
 def lit.integer_floor_log_loop
   (base : num.Integer) (one : num.Integer) (result : num.Integer)
@@ -10268,13 +10314,13 @@ def lit.integer_floor_log_loop
   if b
   then
     let result1 ← num.Integer.add result one
-    let remaining1 ← num.Integer.floor_div_quotient remaining base
+    let (remaining1, _) ← num.Integer.euclidean_qr remaining base
     lit.integer_floor_log_loop base one result1 remaining1
   else ok result
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]:
-    Source: 'src/lit.rs', lines 610:0-622:1 -/
+    Source: 'src/lit.rs', lines 668:0-681:1 -/
 def lit.integer_floor_log
   (base : num.Integer) (value : num.Integer) : Result num.Integer := do
   let one ← num.Integer.one
@@ -10311,26 +10357,25 @@ def lit.Lit.evaluate_log
         let i1 ← lit.integer_floor_log base value
         ok (some (lit.Lit.Numeral i1))
       | lit.Lit.Decimal r =>
-        let value ← num.Rational.floor r
+        let value ← lit.rat_floor r
         let i ← lit.integer_floor_log base value
         ok (some (lit.Lit.Numeral i))
       | lit.Lit.Rational r =>
-        let value ← num.Rational.floor r
+        let value ← lit.rat_floor r
         let i ← lit.integer_floor_log base value
         ok (some (lit.Lit.Numeral i))
       | lit.Lit.Hex _ => ok none
       | lit.Lit.Binary _ => ok none
       | lit.Lit.Str _ => ok none
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::pow]:
-    Source: 'src/num.rs', lines 287:4-289:5
-    Visibility: public -/
-axiom num.Rational.pow : num.Rational → Std.U32 → Result num.Rational
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Integer}::pow]:
-    Source: 'src/num.rs', lines 110:4-112:5
-    Visibility: public -/
-axiom num.Integer.pow : num.Integer → Std.U32 → Result num.Integer
+/-- [pathos_compiled_checker::lit::rat_pow]:
+    Source: 'src/lit.rs', lines 648:0-650:1 -/
+def lit.rat_pow (a : num.Rational) (exp : Std.U32) : Result num.Rational := do
+  let i ← num.Rational.numerator a
+  let i1 ← num.Integer.pow i exp
+  let i2 ← num.Rational.denominator a
+  let i3 ← num.Integer.pow i2 exp
+  lit.rat i1 i3
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::int_arg]:
     Source: 'src/lit.rs', lines 125:4-130:5 -/
@@ -10361,11 +10406,11 @@ def lit.Lit.evaluate_pow
         let i1 ← num.Integer.pow i exp1
         ok (some (lit.Lit.Numeral i1))
       | lit.Lit.Decimal r =>
-        let r1 ← num.Rational.pow r exp1
+        let r1 ← lit.rat_pow r exp1
         let l ← lit.Lit.rational ka r1
         ok (some l)
       | lit.Lit.Rational r =>
-        let r1 ← num.Rational.pow r exp1
+        let r1 ← lit.rat_pow r exp1
         let l ← lit.Lit.rational ka r1
         ok (some l)
       | lit.Lit.Hex _ => ok none
@@ -10373,10 +10418,13 @@ def lit.Lit.evaluate_pow
       | lit.Lit.Str _ => ok none
     else ok none
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::neg]:
-    Source: 'src/num.rs', lines 270:4-272:5
-    Visibility: public -/
-axiom num.Rational.neg : num.Rational → Result num.Rational
+/-- [pathos_compiled_checker::lit::rat_neg]:
+    Source: 'src/lit.rs', lines 644:0-646:1 -/
+def lit.rat_neg (a : num.Rational) : Result num.Rational := do
+  let i ← num.Rational.numerator a
+  let i1 ← num.Integer.neg i
+  let i2 ← num.Rational.denominator a
+  lit.rat i1 i2
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_neg]:
     Source: 'src/lit.rs', lines 233:4-240:5 -/
@@ -10388,11 +10436,11 @@ def lit.Lit.evaluate_neg
     let i1 ← num.Integer.neg i
     ok (some (lit.Lit.Numeral i1))
   | lit.Lit.Decimal r =>
-    let r1 ← num.Rational.neg r
+    let r1 ← lit.rat_neg r
     let l ← lit.Lit.rational ka r1
     ok (some l)
   | lit.Lit.Rational r =>
-    let r1 ← num.Rational.neg r
+    let r1 ← lit.rat_neg r
     let l ← lit.Lit.rational ka r1
     ok (some l)
   | lit.Lit.Hex b =>
@@ -10600,10 +10648,10 @@ def lit.Lit.evaluate
           let i1 ← num.Integer.sgn i
           ok (some (lit.Lit.Boolean (i1 = (-1)#i32)))
         | lit.Lit.Decimal r =>
-          let i ← num.Rational.sgn r
+          let i ← lit.rat_sgn r
           ok (some (lit.Lit.Boolean (i = (-1)#i32)))
         | lit.Lit.Rational r =>
-          let i ← num.Rational.sgn r
+          let i ← lit.rat_sgn r
           ok (some (lit.Lit.Boolean (i = (-1)#i32)))
         | lit.Lit.Hex _ => ok none
         | lit.Lit.Binary _ => ok none
@@ -10657,7 +10705,7 @@ def lit.Lit.evaluate
         match first with
         | lit.Lit.Boolean _ => ok none
         | lit.Lit.Numeral i =>
-          let r ← num.Rational.from_integer i
+          let r ← lit.rat_from_integer i
           ok (some (lit.Lit.Rational r))
         | lit.Lit.Decimal r =>
           let r1 ← num.Rational.Insts.CoreCloneClone.clone r
@@ -10730,10 +10778,10 @@ def lit.Lit.evaluate
             let i1 ← num.Integer.sgn i
             ok (some (lit.Lit.Boolean (i1 = (-1)#i32)))
           | lit.Lit.Decimal r =>
-            let i ← num.Rational.sgn r
+            let i ← lit.rat_sgn r
             ok (some (lit.Lit.Boolean (i = (-1)#i32)))
           | lit.Lit.Rational r =>
-            let i ← num.Rational.sgn r
+            let i ← lit.rat_sgn r
             ok (some (lit.Lit.Boolean (i = (-1)#i32)))
           | lit.Lit.Hex _ => ok none
           | lit.Lit.Binary _ => ok none
@@ -10788,7 +10836,7 @@ def lit.Lit.evaluate
           match first with
           | lit.Lit.Boolean _ => ok none
           | lit.Lit.Numeral i =>
-            let r ← num.Rational.from_integer i
+            let r ← lit.rat_from_integer i
             ok (some (lit.Lit.Rational r))
           | lit.Lit.Decimal r =>
             let r1 ← num.Rational.Insts.CoreCloneClone.clone r
@@ -10973,24 +11021,8 @@ def table.PairStack.push
 def table.PairStack.new : Result table.PairStack := do
   ok { items := (alloc.vec.Vec.new (Term × Term)), len := 0#usize }
 
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::denominator]:
-    Source: 'src/num.rs', lines 240:4-242:5
-    Visibility: public -/
-axiom num.Rational.denominator : num.Rational → Result num.Integer
-
-/-- [pathos_compiled_checker::num::{pathos_compiled_checker::num::Rational}::numerator]:
-    Source: 'src/num.rs', lines 234:4-237:5
-    Visibility: public -/
-axiom num.Rational.numerator : num.Rational → Result num.Integer
-
-/-- [pathos_compiled_checker::num::{impl core::cmp::Ord for pathos_compiled_checker::num::Integer}::cmp]:
-    Source: 'src/num.rs', lines 61:49-61:52
-    Visibility: public -/
-axiom num.Integer.Insts.CoreCmpOrd.cmp
-  : num.Integer → num.Integer → Result Ordering
-
 /-- [pathos_compiled_checker::code_points_cmp]: loop 0:
-    Source: 'src/lib.rs', lines 1185:4-1195:5 -/
+    Source: 'src/lib.rs', lines 1190:4-1200:5 -/
 @[rust_loop]
 def code_points_cmp_loop
   (a : Slice Std.U32) (b : Slice Std.U32) (order : Ordering) (i : Std.Usize)
@@ -11027,11 +11059,17 @@ def code_points_cmp_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::code_points_cmp]:
-    Source: 'src/lib.rs', lines 1180:0-1197:1 -/
+    Source: 'src/lib.rs', lines 1185:0-1202:1 -/
 @[reducible]
 def code_points_cmp
   (a : Slice Std.U32) (b : Slice Std.U32) : Result Ordering := do
   code_points_cmp_loop a b Ordering.eq 0#usize true
+
+/-- [pathos_compiled_checker::integer_cmp]:
+    Source: 'src/lib.rs', lines 1180:0-1182:1 -/
+def integer_cmp (a : num.Integer) (b : num.Integer) : Result Ordering := do
+  let o ← num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp a b
+  ok (core.option.Option.unwrap_or o Ordering.eq)
 
 /-- [pathos_compiled_checker::literal_cmp]:
     Source: 'src/lib.rs', lines 1140:0-1177:1 -/
@@ -11060,7 +11098,7 @@ def literal_cmp
     match b with
     | lit.Lit.Boolean _ => ok (core.result.Result.Err CheckError.InvalidNative)
     | lit.Lit.Numeral b1 =>
-      let o ← num.Integer.Insts.CoreCmpOrd.cmp a1 b1
+      let o ← integer_cmp a1 b1
       ok (core.result.Result.Ok o)
     | lit.Lit.Decimal _ => ok (core.result.Result.Err CheckError.InvalidNative)
     | lit.Lit.Rational _ =>
@@ -11077,13 +11115,13 @@ def literal_cmp
     | lit.Lit.Rational b1 =>
       let i ← num.Rational.numerator a1
       let i1 ← num.Rational.numerator b1
-      let o ← num.Integer.Insts.CoreCmpOrd.cmp i i1
+      let o ← integer_cmp i i1
       match o with
       | Ordering.lt => ok (core.result.Result.Ok Ordering.lt)
       | Ordering.eq =>
         let i2 ← num.Rational.denominator a1
         let i3 ← num.Rational.denominator b1
-        let o1 ← num.Integer.Insts.CoreCmpOrd.cmp i2 i3
+        let o1 ← integer_cmp i2 i3
         ok (core.result.Result.Ok o1)
       | Ordering.gt => ok (core.result.Result.Ok Ordering.gt)
     | lit.Lit.Hex _ => ok (core.result.Result.Err CheckError.InvalidNative)
@@ -11107,7 +11145,7 @@ def literal_cmp
       | Ordering.eq =>
         let i2 ← bitvec.BitVec.impl.value a1
         let i3 ← bitvec.BitVec.impl.value b1
-        let o1 ← num.Integer.Insts.CoreCmpOrd.cmp i2 i3
+        let o1 ← integer_cmp i2 i3
         ok (core.result.Result.Ok o1)
       | Ordering.gt => ok (core.result.Result.Ok Ordering.gt)
     | lit.Lit.Str _ => ok (core.result.Result.Err CheckError.InvalidNative)
@@ -16076,7 +16114,7 @@ def Store.destruct
       ok (r1, self)
 
 /-- [pathos_compiled_checker::native::is_prefix]: loop 0:
-    Source: 'src/native.rs', lines 421:4-426:5 -/
+    Source: 'src/native.rs', lines 422:4-427:5 -/
 @[rust_loop]
 def native.is_prefix_loop
   (x : Slice Std.U32) (y : Slice Std.U32) («prefix» : Bool) (i : Std.Usize) :
@@ -16096,7 +16134,7 @@ def native.is_prefix_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::is_prefix]:
-    Source: 'src/native.rs', lines 415:0-428:1 -/
+    Source: 'src/native.rs', lines 416:0-429:1 -/
 def native.is_prefix
   (x : Slice Std.U32) (y : Slice Std.U32) : Result Bool := do
   let i := Slice.len x
@@ -16106,7 +16144,7 @@ def native.is_prefix
   else native.is_prefix_loop x y true 0#usize
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string]:
-    Source: 'src/native.rs', lines 377:4-382:5 -/
+    Source: 'src/native.rs', lines 378:4-383:5 -/
 def native.Store.native_string
   (self : Store) (x : Term) :
   Result (core.result.Result eostring.EoString CheckError)
@@ -16142,7 +16180,7 @@ def native.Store.native_string
       eostring.EoString (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_bool]:
-    Source: 'src/native.rs', lines 103:4-105:5 -/
+    Source: 'src/native.rs', lines 104:4-106:5 -/
 def native.Store.native_bool
   (self : Store) (b : Bool) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16150,7 +16188,7 @@ def native.Store.native_bool
   Store.raw self (lit.Lit.Boolean b)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string_prefix_eq]:
-    Source: 'src/native.rs', lines 395:4-403:5 -/
+    Source: 'src/native.rs', lines 396:4-404:5 -/
 def native.Store.native_string_prefix_eq
   (self : Store) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16197,7 +16235,7 @@ def native.Store.native_string_prefix_eq
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string_valid]: loop 0:
-    Source: 'src/native.rs', lines 387:8-392:9 -/
+    Source: 'src/native.rs', lines 388:8-393:9 -/
 @[rust_loop]
 def native.Store.native_string_valid_loop
   (codes : Slice Std.U32) (valid : Bool) (i : Std.Usize) : Result Bool := do
@@ -16214,7 +16252,7 @@ def native.Store.native_string_valid_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string_valid]:
-    Source: 'src/native.rs', lines 383:4-394:5 -/
+    Source: 'src/native.rs', lines 384:4-395:5 -/
 def native.Store.native_string_valid
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16233,12 +16271,12 @@ def native.Store.native_string_valid
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::MAX_NAME_DIGITS]
-    Source: 'src/native.rs', lines 433:0-433:46 -/
+    Source: 'src/native.rs', lines 434:0-434:46 -/
 @[global_simps, irreducible]
 def native.MAX_NAME_DIGITS : Result Std.Usize := core.num.Usize.MAX - 8#usize
 
 /-- [pathos_compiled_checker::native::decimal_digits]: loop 0:
-    Source: 'src/native.rs', lines 465:4-475:5 -/
+    Source: 'src/native.rs', lines 466:4-476:5 -/
 @[rust_loop]
 def native.decimal_digits_loop
   (ten : num.Integer) (digits : alloc.vec.Vec Std.U32) (m : num.Integer) :
@@ -16260,7 +16298,7 @@ def native.decimal_digits_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::decimal_digits]:
-    Source: 'src/native.rs', lines 461:0-476:1 -/
+    Source: 'src/native.rs', lines 462:0-477:1 -/
 def native.decimal_digits
   (m : num.Integer) :
   Result (core.result.Result (alloc.vec.Vec Std.U32) CheckError)
@@ -16270,7 +16308,7 @@ def native.decimal_digits
   native.decimal_digits_loop ten (alloc.vec.Vec.new Std.U32) m1
 
 /-- [pathos_compiled_checker::native::constant_name]: loop 0:
-    Source: 'src/native.rs', lines 453:4-456:5 -/
+    Source: 'src/native.rs', lines 454:4-457:5 -/
 @[rust_loop]
 def native.constant_name_loop
   (digits : alloc.vec.Vec Std.U32) (codes : alloc.vec.Vec Std.U32)
@@ -16289,7 +16327,7 @@ def native.constant_name_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::constant_name]:
-    Source: 'src/native.rs', lines 440:0-458:1 -/
+    Source: 'src/native.rs', lines 441:0-459:1 -/
 def native.constant_name
   (uninterpreted : Bool) (n : num.Integer) :
   Result (core.result.Result eostring.EoString CheckError)
@@ -16322,7 +16360,7 @@ def native.constant_name
       eostring.EoString (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::NativeOp]
-    Source: 'src/native.rs', lines 17:0-63:1
+    Source: 'src/native.rs', lines 18:0-64:1
     Visibility: public -/
 @[discriminant isize]
 inductive native.NativeOp where
@@ -16373,7 +16411,7 @@ inductive native.NativeOp where
 | StringPrefixEq : native.NativeOp
 
 /-- [pathos_compiled_checker::native::{impl core::cmp::PartialEq<pathos_compiled_checker::native::NativeOp> for pathos_compiled_checker::native::NativeOp}::eq]:
-    Source: 'src/native.rs', lines 16:29-16:38
+    Source: 'src/native.rs', lines 17:29-17:38
     Visibility: public -/
 def native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq
   (self : native.NativeOp) (other : native.NativeOp) : Result Bool := do
@@ -16382,7 +16420,7 @@ def native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_const_id]:
-    Source: 'src/native.rs', lines 369:4-376:5 -/
+    Source: 'src/native.rs', lines 370:4-377:5 -/
 def native.Store.native_const_id
   (self : Store) (op : native.NativeOp) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16415,7 +16453,7 @@ def native.Store.native_const_id
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pow2]:
-    Source: 'src/native.rs', lines 359:4-368:5 -/
+    Source: 'src/native.rs', lines 360:4-369:5 -/
 def native.Store.native_pow2
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16444,7 +16482,7 @@ def native.Store.native_pow2
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_streq]:
-    Source: 'src/native.rs', lines 354:4-358:5 -/
+    Source: 'src/native.rs', lines 355:4-359:5 -/
 def native.Store.native_streq
   (self : Store) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16471,7 +16509,7 @@ def native.Store.native_streq
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_to_real]:
-    Source: 'src/native.rs', lines 347:4-350:5 -/
+    Source: 'src/native.rs', lines 348:4-351:5 -/
 def native.Store.native_to_real
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16480,7 +16518,7 @@ def native.Store.native_to_real
   let cf ← core.result.Result.Insts.CoreOpsTry.branch r
   match cf with
   | core.ops.control_flow.ControlFlow.Continue val =>
-    let r1 ← num.Rational.from_integer val
+    let r1 ← lit.rat_from_integer val
     Store.raw self (lit.Lit.Rational r1)
   | core.ops.control_flow.ControlFlow.Break residual =>
     let r1 ←
@@ -16526,7 +16564,7 @@ def Store.raw_rat
       num.Rational (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_to_int]:
-    Source: 'src/native.rs', lines 343:4-346:5 -/
+    Source: 'src/native.rs', lines 344:4-347:5 -/
 def native.Store.native_to_int
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16535,7 +16573,7 @@ def native.Store.native_to_int
   let cf ← core.result.Result.Insts.CoreOpsTry.branch r
   match cf with
   | core.ops.control_flow.ControlFlow.Continue val =>
-    let i ← num.Rational.floor val
+    let i ← lit.rat_floor val
     Store.raw self (lit.Lit.Numeral i)
   | core.ops.control_flow.ControlFlow.Break residual =>
     let r1 ←
@@ -16544,7 +16582,7 @@ def native.Store.native_to_int
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_mk_rational]:
-    Source: 'src/native.rs', lines 335:4-342:5 -/
+    Source: 'src/native.rs', lines 336:4-343:5 -/
 def native.Store.native_mk_rational
   (self : Store) (n : Term) (d : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16573,7 +16611,7 @@ def native.Store.native_mk_rational
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_rat_unary]:
-    Source: 'src/native.rs', lines 327:4-334:5 -/
+    Source: 'src/native.rs', lines 328:4-335:5 -/
 def native.Store.native_rat_unary
   (self : Store) (op : native.NativeOp) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16585,15 +16623,13 @@ def native.Store.native_rat_unary
     let b ←
       native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq op native.NativeOp.Qneg
     if b
-    then
-      let val1 ← num.Rational.neg val
-      Store.raw self (lit.Lit.Rational val1)
+    then let val1 ← lit.rat_neg val
+         Store.raw self (lit.Lit.Rational val1)
     else
-      let i ← num.Rational.sgn val
+      let i ← lit.rat_sgn val
       if i < 0#i32
-      then
-        let val1 ← num.Rational.neg val
-        Store.raw self (lit.Lit.Rational val1)
+      then let val1 ← lit.rat_neg val
+           Store.raw self (lit.Lit.Rational val1)
       else Store.raw self (lit.Lit.Rational val)
   | core.ops.control_flow.ControlFlow.Break residual =>
     let r1 ←
@@ -16602,7 +16638,7 @@ def native.Store.native_rat_unary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_rat_binary]:
-    Source: 'src/native.rs', lines 311:4-326:5 -/
+    Source: 'src/native.rs', lines 312:4-327:5 -/
 def native.Store.native_rat_binary
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16617,440 +16653,440 @@ def native.Store.native_rat_binary
     | core.ops.control_flow.ControlFlow.Continue val1 =>
       match op with
       | native.NativeOp.Teq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Tcmp =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.IsOk =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Not =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.And =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Or =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Iff =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.NatSucc =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.NatPred =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.NatToInt =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.IntToNat =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Zeq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Nateq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Zlt =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Zleq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.NatLt =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Zplus =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Zmult =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.ZdivTotal =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.DivTotal =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.ModTotal =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.ZmodTotal =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.ZexpTotal =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.BinaryAnd =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.BinaryOr =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.BinaryXor =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Zneg =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Zabs =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Qeq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Qlt =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Qleq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Qplus =>
-        let r2 ← num.Rational.add val val1
+        let r2 ← lit.rat_add val val1
         Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Qmult =>
-        let r2 ← num.Rational.mul val val1
+        let r2 ← lit.rat_mul val val1
         Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.QdivTotal =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Qneg =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Qabs =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.MkRational =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.ToInt =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.ToReal =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.Streq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.IntPow2 =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.UconstId =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.ConstId =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.StringValid =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
       | native.NativeOp.StringPrefixEq =>
-        let i ← num.Rational.sgn val1
+        let i ← lit.rat_sgn val1
         if i = 0#i32
         then
           let i1 ← num.Integer.zero
-          let r2 ← num.Rational.from_integer i1
+          let r2 ← lit.rat_from_integer i1
           Store.raw self (lit.Lit.Rational r2)
         else
-          let r2 ← num.Rational.div val val1
+          let r2 ← lit.rat_div val val1
           Store.raw self (lit.Lit.Rational r2)
     | core.ops.control_flow.ControlFlow.Break residual =>
       let r2 ←
@@ -17064,7 +17100,7 @@ def native.Store.native_rat_binary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_rat_compare]:
-    Source: 'src/native.rs', lines 302:4-310:5 -/
+    Source: 'src/native.rs', lines 303:4-311:5 -/
 def native.Store.native_rat_compare
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17079,227 +17115,228 @@ def native.Store.native_rat_compare
     | core.ops.control_flow.ControlFlow.Continue val1 =>
       match op with
       | native.NativeOp.Teq =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Tcmp =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.IsOk =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Not =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.And =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Or =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Iff =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.NatSucc =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.NatPred =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.NatToInt =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.IntToNat =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Zeq =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Nateq =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Zlt =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Zleq =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.NatLt =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Zplus =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Zmult =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.ZdivTotal =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.DivTotal =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.ModTotal =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.ZmodTotal =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.ZexpTotal =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.BinaryAnd =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.BinaryOr =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.BinaryXor =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Zneg =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Zabs =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Qeq =>
         let b ← num.Rational.Insts.CoreCmpPartialEqRational.eq val val1
         native.Store.native_bool self b
       | native.NativeOp.Qlt =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Qleq =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.le.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.PartialEq.ne.trait_default
+            core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering o Ordering.gt
         native.Store.native_bool self b
       | native.NativeOp.Qplus =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Qmult =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.QdivTotal =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Qneg =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Qabs =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.MkRational =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.ToInt =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.ToReal =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.Streq =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.IntPow2 =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.UconstId =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.ConstId =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.StringValid =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
       | native.NativeOp.StringPrefixEq =>
+        let o ← lit.rat_cmp val val1
         let b ←
-          core.cmp.PartialOrd.lt.trait_default
-            num.Rational.Insts.CoreCmpPartialOrdRational val val1
+          core.cmp.Ordering.Insts.CoreCmpPartialEqOrdering.eq o Ordering.lt
         native.Store.native_bool self b
     | core.ops.control_flow.ControlFlow.Break residual =>
       let r2 ←
@@ -17313,7 +17350,7 @@ def native.Store.native_rat_compare
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_unary]:
-    Source: 'src/native.rs', lines 294:4-301:5 -/
+    Source: 'src/native.rs', lines 295:4-302:5 -/
 def native.Store.native_int_unary
   (self : Store) (op : native.NativeOp) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17341,7 +17378,7 @@ def native.Store.native_int_unary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_binary]:
-    Source: 'src/native.rs', lines 258:4-293:5 -/
+    Source: 'src/native.rs', lines 259:4-294:5 -/
 def native.Store.native_int_binary
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17746,7 +17783,7 @@ def native.Store.native_int_binary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_compare]:
-    Source: 'src/native.rs', lines 249:4-257:5 -/
+    Source: 'src/native.rs', lines 250:4-258:5 -/
 def native.Store.native_int_compare
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17993,7 +18030,7 @@ def native.Store.native_int_compare
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_to_nat]:
-    Source: 'src/native.rs', lines 245:4-248:5 -/
+    Source: 'src/native.rs', lines 246:4-249:5 -/
 def native.Store.native_int_to_nat
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18014,7 +18051,7 @@ def native.Store.native_int_to_nat
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_nat_to_int]:
-    Source: 'src/native.rs', lines 241:4-244:5 -/
+    Source: 'src/native.rs', lines 242:4-245:5 -/
 def native.Store.native_nat_to_int
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18031,7 +18068,7 @@ def native.Store.native_nat_to_int
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pred]:
-    Source: 'src/native.rs', lines 233:4-240:5 -/
+    Source: 'src/native.rs', lines 234:4-241:5 -/
 def native.Store.native_pred
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18056,7 +18093,7 @@ def native.Store.native_pred
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_succ]:
-    Source: 'src/native.rs', lines 229:4-232:5 -/
+    Source: 'src/native.rs', lines 230:4-233:5 -/
 def native.Store.native_succ
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18075,7 +18112,7 @@ def native.Store.native_succ
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_connective]:
-    Source: 'src/native.rs', lines 216:4-228:5 -/
+    Source: 'src/native.rs', lines 217:4-229:5 -/
 def native.Store.native_connective
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18167,7 +18204,7 @@ def native.Store.native_connective
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_bool_value]:
-    Source: 'src/native.rs', lines 206:4-211:5 -/
+    Source: 'src/native.rs', lines 207:4-212:5 -/
 def native.Store.native_bool_value
   (self : Store) (x : Term) : Result (core.result.Result Bool CheckError) := do
   let r ← Store.boolean_value self x true
@@ -18182,7 +18219,7 @@ def native.Store.native_bool_value
       Bool (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_not]:
-    Source: 'src/native.rs', lines 212:4-215:5 -/
+    Source: 'src/native.rs', lines 213:4-216:5 -/
 def native.Store.native_not
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18199,7 +18236,7 @@ def native.Store.native_not
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_is_ok]:
-    Source: 'src/native.rs', lines 202:4-205:5 -/
+    Source: 'src/native.rs', lines 203:4-206:5 -/
 def native.Store.native_is_ok
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18216,7 +18253,7 @@ def native.Store.native_is_ok
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_tcmp]:
-    Source: 'src/native.rs', lines 198:4-201:5 -/
+    Source: 'src/native.rs', lines 199:4-202:5 -/
 def native.Store.native_tcmp
   (self : Store) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18234,7 +18271,7 @@ def native.Store.native_tcmp
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::native::NativeOp}::arity]:
-    Source: 'src/native.rs', lines 67:4-87:5
+    Source: 'src/native.rs', lines 68:4-88:5
     Visibility: public -/
 def native.NativeOp.arity (self : native.NativeOp) : Result Std.Usize := do
   match self with
@@ -18285,7 +18322,7 @@ def native.NativeOp.arity (self : native.NativeOp) : Result Std.Usize := do
   | native.NativeOp.StringPrefixEq => ok 2#usize
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_op]:
-    Source: 'src/native.rs', lines 153:4-196:5 -/
+    Source: 'src/native.rs', lines 154:4-197:5 -/
 def native.Store.native_op
   (self : Store) (op : native.NativeOp) (a : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18409,7 +18446,7 @@ def native.Store.native_op
       native.Store.native_string_prefix_eq self x t
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::pattern_constant]:
-    Source: 'src/native.rs', lines 148:4-150:5 -/
+    Source: 'src/native.rs', lines 149:4-151:5 -/
 def native.Store.pattern_constant
   (expected : Term) (t : Term) : Result (Option (alloc.vec.Vec Term)) := do
   let b ← Term.Insts.CoreCmpPartialEqTerm.eq expected t
@@ -18418,14 +18455,14 @@ def native.Store.pattern_constant
   else ok none
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_nat_zero]:
-    Source: 'src/native.rs', lines 107:4-109:5 -/
+    Source: 'src/native.rs', lines 108:4-110:5 -/
 def native.Store.native_nat_zero
   (self : Store) : Result ((core.result.Result Term CheckError) × Store) := do
   let i ← num.Integer.zero
   Store.raw self (lit.Lit.Numeral i)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_nat_zero]:
-    Source: 'src/native.rs', lines 136:4-139:5 -/
+    Source: 'src/native.rs', lines 137:4-140:5 -/
 def native.Store.native_pattern_nat_zero
   (self : Store) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -18453,7 +18490,7 @@ inductive Next (T : Type _) where
 | Again : T → Next T
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_succ]:
-    Source: 'src/native.rs', lines 119:4-127:5 -/
+    Source: 'src/native.rs', lines 120:4-128:5 -/
 def native.Store.native_pattern_succ
   (self : Store) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -18654,7 +18691,7 @@ def table.TermCounts.new (n : Std.Usize) : Result table.TermCounts := do
     }
 
 /-- [pathos_compiled_checker::first_occurrences]: loop 0:
-    Source: 'src/lib.rs', lines 1260:4-1266:5 -/
+    Source: 'src/lib.rs', lines 1265:4-1271:5 -/
 @[rust_loop]
 def first_occurrences_loop
   (xs : Slice Term) (seen : table.TermCounts) (out : alloc.vec.Vec Term)
@@ -18681,14 +18718,14 @@ def first_occurrences_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::first_occurrences]:
-    Source: 'src/lib.rs', lines 1256:0-1268:1 -/
+    Source: 'src/lib.rs', lines 1261:0-1273:1 -/
 def first_occurrences (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let seen ← table.TermCounts.new i
   first_occurrences_loop xs seen (alloc.vec.Vec.new Term) 0#usize
 
 /-- [pathos_compiled_checker::without]: loop 0:
-    Source: 'src/lib.rs', lines 1247:4-1252:5 -/
+    Source: 'src/lib.rs', lines 1252:4-1257:5 -/
 @[rust_loop]
 def without_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -18709,14 +18746,14 @@ def without_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without]:
-    Source: 'src/lib.rs', lines 1244:0-1254:1 -/
+    Source: 'src/lib.rs', lines 1249:0-1259:1 -/
 def without (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
   without_loop xs x out 0#usize
 
 /-- [pathos_compiled_checker::without_first]: loop 0:
-    Source: 'src/lib.rs', lines 1233:4-1240:5 -/
+    Source: 'src/lib.rs', lines 1238:4-1245:5 -/
 @[rust_loop]
 def without_first_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (erased : Bool)
@@ -18747,7 +18784,7 @@ def without_first_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without_first]:
-    Source: 'src/lib.rs', lines 1229:0-1242:1 -/
+    Source: 'src/lib.rs', lines 1234:0-1247:1 -/
 def without_first
   (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
@@ -18755,7 +18792,7 @@ def without_first
   without_first_loop xs x out false 0#usize
 
 /-- [pathos_compiled_checker::reversed]: loop 0:
-    Source: 'src/lib.rs', lines 1222:4-1225:5 -/
+    Source: 'src/lib.rs', lines 1227:4-1230:5 -/
 @[rust_loop]
 def reversed_loop
   (xs : Slice Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -18771,7 +18808,7 @@ def reversed_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::reversed]:
-    Source: 'src/lib.rs', lines 1219:0-1227:1 -/
+    Source: 'src/lib.rs', lines 1224:0-1232:1 -/
 def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
@@ -18779,7 +18816,7 @@ def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   reversed_loop xs out i1
 
 /-- [pathos_compiled_checker::position]: loop 0:
-    Source: 'src/lib.rs', lines 1210:4-1215:5 -/
+    Source: 'src/lib.rs', lines 1215:4-1220:5 -/
 @[rust_loop]
 def position_loop
   (xs : Slice Term) (x : Term) (found : Option Std.Usize) (i : Std.Usize) :
@@ -18797,7 +18834,7 @@ def position_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::position]:
-    Source: 'src/lib.rs', lines 1207:0-1217:1 -/
+    Source: 'src/lib.rs', lines 1212:0-1222:1 -/
 def position (xs : Slice Term) (x : Term) : Result (Option Std.Usize) := do
   let i := Slice.len xs
   position_loop xs x none i
@@ -18915,7 +18952,7 @@ def table.TermCounts.count
     self.counts place
 
 /-- [pathos_compiled_checker::multiset]: loop 0:
-    Source: 'src/lib.rs', lines 1273:4-1276:5 -/
+    Source: 'src/lib.rs', lines 1278:4-1281:5 -/
 @[rust_loop]
 def multiset_loop
   (ys : Slice Term) (counts : table.TermCounts) (i : Std.Usize) :
@@ -18932,14 +18969,14 @@ def multiset_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset]:
-    Source: 'src/lib.rs', lines 1270:0-1278:1 -/
+    Source: 'src/lib.rs', lines 1275:0-1283:1 -/
 def multiset (ys : Slice Term) : Result table.TermCounts := do
   let i := Slice.len ys
   let counts ← table.TermCounts.new i
   multiset_loop ys counts 0#usize
 
 /-- [pathos_compiled_checker::multiset_select]: loop 0:
-    Source: 'src/lib.rs', lines 1301:4-1314:5 -/
+    Source: 'src/lib.rs', lines 1306:4-1319:5 -/
 @[rust_loop]
 def multiset_select_loop
   (xs : Slice Term) (paired : Bool) (counts : table.TermCounts)
@@ -18968,7 +19005,7 @@ def multiset_select_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_select]:
-    Source: 'src/lib.rs', lines 1297:0-1316:1 -/
+    Source: 'src/lib.rs', lines 1302:0-1321:1 -/
 def multiset_select
   (xs : Slice Term) (ys : Slice Term) (paired : Bool) :
   Result (alloc.vec.Vec Term)
@@ -20223,7 +20260,7 @@ def table.TermCounts.all_zero (self : table.TermCounts) : Result Bool := do
   table.TermCounts.all_zero_loop self true 0#usize
 
 /-- [pathos_compiled_checker::multiset_inclusion]: loop 0:
-    Source: 'src/lib.rs', lines 1286:4-1292:5 -/
+    Source: 'src/lib.rs', lines 1291:4-1297:5 -/
 @[rust_loop]
 def multiset_inclusion_loop
   (xs : Slice Term) (counts : table.TermCounts) (foreign : Bool)
@@ -20248,7 +20285,7 @@ def multiset_inclusion_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_inclusion]:
-    Source: 'src/lib.rs', lines 1282:0-1294:1 -/
+    Source: 'src/lib.rs', lines 1287:0-1299:1 -/
 def multiset_inclusion
   (xs : Slice Term) (ys : Slice Term) : Result (Bool × Bool) := do
   let counts ← multiset ys
@@ -20257,7 +20294,7 @@ def multiset_inclusion
   ok (foreign, b)
 
 /-- [pathos_compiled_checker::append_terms]: loop 0:
-    Source: 'src/lib.rs', lines 1201:4-1204:5 -/
+    Source: 'src/lib.rs', lines 1206:4-1209:5 -/
 @[rust_loop]
 def append_terms_loop
   («to» : alloc.vec.Vec Term) («from» : Slice Term) (i : Std.Usize) :
@@ -20274,7 +20311,7 @@ def append_terms_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::append_terms]:
-    Source: 'src/lib.rs', lines 1199:0-1205:1 -/
+    Source: 'src/lib.rs', lines 1204:0-1210:1 -/
 @[reducible]
 def append_terms
   («to» : alloc.vec.Vec Term) («from» : Slice Term) :
@@ -21796,14 +21833,14 @@ def lit.Lit.Insts.CoreCmpEq : core.cmp.Eq lit.Lit := {
 }
 
 /-- [pathos_compiled_checker::native::{impl core::clone::Clone for pathos_compiled_checker::native::NativeOp}::clone]:
-    Source: 'src/native.rs', lines 16:15-16:20
+    Source: 'src/native.rs', lines 17:15-17:20
     Visibility: public -/
 def native.NativeOp.Insts.CoreCloneClone.clone
   (self : native.NativeOp) : Result native.NativeOp := do
   ok self
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::clone::Clone for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 16:15-16:20 -/
+    Source: 'src/native.rs', lines 17:15-17:20 -/
 @[reducible]
 def native.NativeOp.Insts.CoreCloneClone : core.clone.Clone native.NativeOp
   := {
@@ -21811,7 +21848,7 @@ def native.NativeOp.Insts.CoreCloneClone : core.clone.Clone native.NativeOp
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::marker::Copy for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 16:9-16:13 -/
+    Source: 'src/native.rs', lines 17:9-17:13 -/
 @[reducible]
 def native.NativeOp.Insts.CoreMarkerCopy : core.marker.Copy native.NativeOp
   := {
@@ -21819,7 +21856,7 @@ def native.NativeOp.Insts.CoreMarkerCopy : core.marker.Copy native.NativeOp
 }
 
 /-- [pathos_compiled_checker::native::{impl core::fmt::Debug for pathos_compiled_checker::native::NativeOp}::fmt]:
-    Source: 'src/native.rs', lines 16:22-16:27
+    Source: 'src/native.rs', lines 17:22-17:27
     Visibility: public -/
 def native.NativeOp.Insts.CoreFmtDebug.fmt
   (self : native.NativeOp) (f : core.fmt.Formatter) :
@@ -21888,21 +21925,21 @@ def native.NativeOp.Insts.CoreFmtDebug.fmt
     core.fmt.Formatter.write_str f (toStr "StringPrefixEq")
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::fmt::Debug for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 16:22-16:27 -/
+    Source: 'src/native.rs', lines 17:22-17:27 -/
 @[reducible]
 def native.NativeOp.Insts.CoreFmtDebug : core.fmt.Debug native.NativeOp := {
   fmt := native.NativeOp.Insts.CoreFmtDebug.fmt
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 16:29-16:38 -/
+    Source: 'src/native.rs', lines 17:29-17:38 -/
 @[reducible]
 def native.NativeOp.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq native.NativeOp := {
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::cmp::PartialEq<pathos_compiled_checker::native::NativeOp> for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 16:29-16:38 -/
+    Source: 'src/native.rs', lines 17:29-17:38 -/
 @[reducible]
 impl_def native.NativeOp.Insts.CoreCmpPartialEqNativeOp : core.cmp.PartialEq
   native.NativeOp native.NativeOp := {
@@ -21912,7 +21949,7 @@ impl_def native.NativeOp.Insts.CoreCmpPartialEqNativeOp : core.cmp.PartialEq
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::cmp::Eq for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 16:40-16:42 -/
+    Source: 'src/native.rs', lines 17:40-17:42 -/
 @[reducible]
 impl_def native.NativeOp.Insts.CoreCmpEq : core.cmp.Eq native.NativeOp := {
   partialEqInst := native.NativeOp.Insts.CoreCmpPartialEqNativeOp
@@ -21921,7 +21958,7 @@ impl_def native.NativeOp.Insts.CoreCmpEq : core.cmp.Eq native.NativeOp := {
 }
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::unsupported_native]:
-    Source: 'src/native.rs', lines 94:4-96:5 -/
+    Source: 'src/native.rs', lines 95:4-97:5 -/
 def native.Store.unsupported_native
   (self : Store) («name» : Std.U32) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -21929,13 +21966,13 @@ def native.Store.unsupported_native
   ok (core.result.Result.Err (CheckError.UnsupportedNative «name»), self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::missing_constructor]:
-    Source: 'src/native.rs', lines 99:4-101:5 -/
+    Source: 'src/native.rs', lines 100:4-102:5 -/
 def native.Store.missing_constructor
   (self : Store) : Result ((core.result.Result Term CheckError) × Store) := do
   ok (core.result.Result.Err CheckError.InvalidConstructor, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_constant]:
-    Source: 'src/native.rs', lines 113:4-115:5 -/
+    Source: 'src/native.rs', lines 114:4-116:5 -/
 def native.Store.native_constant
   (self : Store) (text : Std.U32) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -21943,7 +21980,7 @@ def native.Store.native_constant
   ok (core.result.Result.Err (CheckError.UnsupportedNative text), self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_bool]:
-    Source: 'src/native.rs', lines 128:4-135:5 -/
+    Source: 'src/native.rs', lines 129:4-136:5 -/
 def native.Store.native_pattern_bool
   (self : Store) (b : Bool) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -21963,7 +22000,7 @@ def native.Store.native_pattern_bool
     ok (r1, self1)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_constant]:
-    Source: 'src/native.rs', lines 140:4-147:5 -/
+    Source: 'src/native.rs', lines 141:4-148:5 -/
 def native.Store.native_pattern_constant
   (self : Store) (text : Std.U32) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×

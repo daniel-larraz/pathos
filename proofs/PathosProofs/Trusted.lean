@@ -71,9 +71,6 @@ axiom Integer.partial_cmp_spec (a b : Integer) :
   Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp a b
     = ok (some (compare a.toInt b.toInt))
 
-axiom Integer.cmp_spec (a b : Integer) :
-  Integer.Insts.CoreCmpOrd.cmp a b = ok (compare a.toInt b.toInt)
-
 axiom Integer.hash_code_spec (a : Integer) : ∃ h, Integer.hash_code a = ok h
 
 axiom Integer.zero_spec : Integer.zero = ok (Integer.ofInt 0)
@@ -112,34 +109,9 @@ axiom Integer.bitwise_and_spec (a b : Integer) :
 axiom Integer.bitwise_xor_spec (a b : Integer) :
   Integer.bitwise_xor a b = ok (Integer.ofInt (Int.xor a.toInt b.toInt))
 
-axiom Integer.bitwise_not_spec (a : Integer) :
-  Integer.bitwise_not a = ok (Integer.ofInt (-a.toInt - 1))
-
-axiom Integer.multiply_by_pow2_spec (a : Integer) (n : Std.U32) :
-  Integer.multiply_by_pow2 a n = ok (Integer.ofInt (a.toInt * 2 ^ n.val))
-
 /-- The remainder of the floor division by `2^n`; never negative. -/
 axiom Integer.mod_by_pow2_spec (a : Integer) (n : Std.U32) :
   Integer.mod_by_pow2 a n = ok (Integer.ofInt (Int.emod a.toInt (2 ^ n.val)))
-
-/-- Bits `low .. low + count` of the value, as a non-negative integer. -/
-axiom Integer.extract_bit_range_spec (a : Integer) (count low : Std.U32) :
-  Integer.extract_bit_range a count low
-    = ok (Integer.ofInt
-        (Int.ediv (Int.emod a.toInt (2 ^ (low.val + count.val))) (2 ^ low.val)))
-
-/-- `2^amount - 1` shifted left by `size`, or-ed into the value. -/
-axiom Integer.one_extend_spec (a : Integer) (size amount : Std.U32) :
-  Integer.one_extend a size amount
-    = ok (Integer.ofInt (Int.lor a.toInt ((2 ^ amount.val - 1) * 2 ^ size.val)))
-
-/-- The quotient rounded towards negative infinity. -/
-axiom Integer.floor_div_quotient_spec (a b : Integer) (h : b.toInt ≠ 0) :
-  Integer.floor_div_quotient a b = ok (Integer.ofInt (Int.fdiv a.toInt b.toInt))
-
-/-- The remainder of that division; it has the sign of the divisor. -/
-axiom Integer.floor_div_remainder_spec (a b : Integer) (h : b.toInt ≠ 0) :
-  Integer.floor_div_remainder a b = ok (Integer.ofInt (Int.fmod a.toInt b.toInt))
 
 /-- Euclidean division: the remainder is never negative. -/
 axiom Integer.euclidean_qr_spec (a b : Integer) (h : b.toInt ≠ 0) :
@@ -163,10 +135,6 @@ axiom Rational.clone_spec (a : Rational) :
 axiom Rational.eq_spec (a b : Rational) :
   Rational.Insts.CoreCmpPartialEqRational.eq a b = ok (decide (a.toRat = b.toRat))
 
-axiom Rational.partial_cmp_spec (a b : Rational) :
-  Rational.Insts.CoreCmpPartialOrdRational.partial_cmp a b
-    = ok (some (compare a.toRat b.toRat))
-
 axiom Rational.hash_code_spec (a : Rational) : ∃ h, Rational.hash_code a = ok h
 
 /-- `n / d`, or `None` when `d` is zero. -/
@@ -185,27 +153,6 @@ axiom Rational.numerator_spec (a : Rational) :
 /-- The denominator of the number in lowest terms, which is positive. -/
 axiom Rational.denominator_spec (a : Rational) :
   Rational.denominator a = ok (Integer.ofInt (a.toRat.den : Int))
-
-axiom Rational.sgn_spec (a : Rational) :
-  ∃ r : Std.I32, Rational.sgn a = ok r ∧ r.val = Int.sign a.toRat.num
-
-axiom Rational.floor_spec (a : Rational) :
-  Rational.floor a = ok (Integer.ofInt (Rat.floor a.toRat))
-
-axiom Rational.neg_spec (a : Rational) :
-  Rational.neg a = ok (Rational.ofRat (-a.toRat))
-
-axiom Rational.add_spec (a b : Rational) :
-  Rational.add a b = ok (Rational.ofRat (a.toRat + b.toRat))
-
-axiom Rational.mul_spec (a b : Rational) :
-  Rational.mul a b = ok (Rational.ofRat (a.toRat * b.toRat))
-
-axiom Rational.div_spec (a b : Rational) (h : b.toRat ≠ 0) :
-  Rational.div a b = ok (Rational.ofRat (a.toRat / b.toRat))
-
-axiom Rational.pow_spec (a : Rational) (n : Std.U32) :
-  Rational.pow a n = ok (Rational.ofRat (a.toRat ^ n.val))
 
 end num
 
