@@ -1,6 +1,6 @@
 source	proof	why
-$abconv_int_to_bv_elim	none	case 0 has a literal that is not a Boolean
-$abconv_ubv_to_int_elim	none	case 1 has a literal that is not a Boolean
+$abconv_int_to_bv_elim	none	case 1 has a builtin operator
+$abconv_ubv_to_int_elim	none	case 1 has a builtin operator
 $aci_norm_eq	none	case 2 has a builtin operator
 $are_distinct_terms_list	none	it calls $are_distinct_terms_list_rec, which has no proof
 $are_distinct_terms_list_rec	none	it calls $are_distinct_terms_type, which has no proof
@@ -16,41 +16,41 @@ $arith_rel_trichotomy	generated
 $assoc_nil_nth	none	case 1 has a builtin operator
 $assoc_nil_nth_type	none	case 1 has a builtin operator
 $beta_reduce	none	case 0 has a builtin operator
-$bv_bitblast_apply_binary	none	case 0 has a literal that is not a Boolean
-$bv_bitblast_apply_ite	none	case 0 has a literal that is not a Boolean
-$bv_bitblast_apply_unary	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_apply_binary	generated	
+$bv_bitblast_apply_ite	generated	
+$bv_bitblast_apply_unary	generated	
 $bv_bitblast_binary_app	generated	
-$bv_bitblast_concat	none	case 1 has a literal that is not a Boolean
+$bv_bitblast_concat	generated	
 $bv_bitblast_head	generated	
-$bv_bitblast_prefix	none	case 0 has a literal that is not a Boolean
-$bv_bitblast_slt_impl	none	case 0 has a literal that is not a Boolean
-$bv_bitblast_subsequence	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_prefix	none	case 2 has a builtin operator
+$bv_bitblast_slt_impl	none	case 1 has a builtin operator
+$bv_bitblast_subsequence	none	case 1 has a builtin operator
 $bv_bitblast_tail	generated	
-$bv_bitblast_ult	none	it calls $bv_bitblast_ult_rec, which has no proof
-$bv_bitblast_ult_rec	none	case 0 has a literal that is not a Boolean
+$bv_bitblast_ult	generated	
+$bv_bitblast_ult_rec	generated	
 $bv_bitwidth	generated	
-$bv_const_to_bitlist_rec	none	case 0 has a literal that is not a Boolean
-$bv_div_mod_impl	none	case 2 has a literal that is not a Boolean
+$bv_const_to_bitlist_rec	none	case 1 has a builtin operator
+$bv_div_mod_impl	none	case 2 has a builtin operator
 $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	case 4 has a builtin operator
-$bv_mk_bitblast_step_add	none	case 0 has a literal that is not a Boolean
-$bv_mk_bitblast_step_bitwise	none	it calls $bv_bitblast_apply_binary, which has no proof
-$bv_mk_bitblast_step_concat	none	case 0 has a literal that is not a Boolean
-$bv_mk_bitblast_step_eq_rec	none	case 0 has a literal that is not a Boolean
-$bv_mk_bitblast_step_ite	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_add	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_bitwise	none	it calls $eo_nil, which has no proof
+$bv_mk_bitblast_step_concat	generated	
+$bv_mk_bitblast_step_eq_rec	generated	
+$bv_mk_bitblast_step_ite	generated	
 $bv_mk_bitblast_step_mul	none	case 1 has a builtin operator
 $bv_mk_bitblast_step_shl_rec	none	case 1 has a builtin operator
-$bv_mk_bitblast_step_shl_rec_step	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_shl_rec_step	none	case 2 has a builtin operator
 $bv_mk_bitblast_step_shr_rec	none	case 1 has a builtin operator
-$bv_mk_bitblast_step_shr_rec_step	none	case 0 has a literal that is not a Boolean
-$bv_mk_bitblast_step_var_rec	none	case 0 has a literal that is not a Boolean
+$bv_mk_bitblast_step_shr_rec_step	none	case 3 has a builtin operator
+$bv_mk_bitblast_step_var_rec	generated	
 $bv_mk_bitwise_slicing	none	case 0 has a builtin operator
-$bv_mk_bitwise_slicing_rec	none	case 0 has a literal that is not a Boolean
-$bv_ripple_carry_adder_2	none	case 1 has a literal that is not a Boolean
+$bv_mk_bitwise_slicing_rec	none	case 1 has a builtin operator
+$bv_ripple_carry_adder_2	none	case 1 has a builtin operator
 $bv_shift_add_multiplier	none	case 0 has a builtin operator
-$bv_shift_add_multiplier_rec	none	case 0 has a literal that is not a Boolean
-$bv_shift_add_multiplier_rec_step	none	case 0 has a literal that is not a Boolean
+$bv_shift_add_multiplier_rec	none	case 1 has a builtin operator
+$bv_shift_add_multiplier_rec_step	none	case 2 has a builtin operator
 $bv_smulo_elim_rec	none	case 1 has a builtin operator
 $bv_umulo_elim_rec	none	case 1 has a builtin operator
 $chain_m_resolve	none	it calls $chain_m_resolve_final, which has no proof
@@ -93,7 +93,7 @@ $eo_invoke_cmd_step_pop	none	it calls $eo_push_proven, which has no proof
 $eo_is_bool_type	none	it calls $eo_typeof, which has no proof
 $eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
 $eo_is_closed_rec	none	case 2 has a builtin operator
-$eo_is_list_nil	none	case 5 has a literal that is not a Boolean
+$eo_is_list_nil	none	it calls $eo_is_list_nil_*, which has no proof
 $eo_is_list_nil_*	none	case 0 has a builtin operator
 $eo_is_list_nil_+	none	case 0 has a builtin operator
 $eo_is_list_nil_@@TypedList.cons	generated	
@@ -108,7 +108,7 @@ $eo_lit_type_Numeral	generated
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
 $eo_mk_premise_list	none	case 1 has eo::cons with an operator that may nest to the left
-$eo_nil	none	case 5 has a literal that is not a Boolean
+$eo_nil	none	it calls $eo_nil_bvadd, which has no proof
 $eo_nil_*	none	it calls $arith_mk_one, which has no proof
 $eo_nil_+	none	it calls $arith_mk_zero, which has no proof
 $eo_nil_@@TypedList.cons	generated	
@@ -224,7 +224,7 @@ $eo_prog_bv-and-concat-pullup3	none	case 0 has a builtin operator
 $eo_prog_bv-and-simplify-1	none	case 0 has a builtin operator
 $eo_prog_bv-and-simplify-2	none	case 0 has a builtin operator
 $eo_prog_bv-ashr-by-const-0	generated	
-$eo_prog_bv-ashr-by-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ashr-by-const-1	generated	
 $eo_prog_bv-ashr-by-const-2	generated	
 $eo_prog_bv-ashr-zero	generated	
 $eo_prog_bv-bitwise-slicing	none	it calls $bv_mk_bitwise_slicing, which has no proof
@@ -234,9 +234,9 @@ $eo_prog_bv-commutative-xor	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-comp-eliminate	generated	
 $eo_prog_bv-concat-extract-merge	none	case 0 has a builtin operator
 $eo_prog_bv-concat-merge-const	none	case 0 has a builtin operator
-$eo_prog_bv-eq-extract-elim1	none	case 0 has a literal that is not a Boolean
-$eo_prog_bv-eq-extract-elim2	none	case 0 has a literal that is not a Boolean
-$eo_prog_bv-eq-extract-elim3	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-eq-extract-elim1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)
+$eo_prog_bv-eq-extract-elim2	generated	
+$eo_prog_bv-eq-extract-elim3	generated	
 $eo_prog_bv-eq-not-solve	generated	
 $eo_prog_bv-eq-xor-solve	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-extract-concat-1	none	case 0 has a builtin operator
@@ -244,7 +244,7 @@ $eo_prog_bv-extract-concat-2	none	case 0 has a builtin operator
 $eo_prog_bv-extract-concat-3	none	case 0 has a builtin operator
 $eo_prog_bv-extract-concat-4	none	case 0 has a builtin operator
 $eo_prog_bv-extract-extract	generated	
-$eo_prog_bv-extract-mult-leading-bit	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-extract-mult-leading-bit	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-extract-not	generated	
 $eo_prog_bv-extract-sign-extend-1	generated	
 $eo_prog_bv-extract-sign-extend-2	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
@@ -258,14 +258,14 @@ $eo_prog_bv-ite-equal-children	generated
 $eo_prog_bv-ite-equal-cond-1	generated	
 $eo_prog_bv-ite-equal-cond-2	generated	
 $eo_prog_bv-ite-equal-cond-3	generated	
-$eo_prog_bv-ite-merge-else-else	none	case 0 has a literal that is not a Boolean
-$eo_prog_bv-ite-merge-else-if	none	case 0 has a literal that is not a Boolean
-$eo_prog_bv-ite-merge-then-else	none	case 0 has a literal that is not a Boolean
-$eo_prog_bv-ite-merge-then-if	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-ite-merge-else-else	generated	
+$eo_prog_bv-ite-merge-else-if	generated	
+$eo_prog_bv-ite-merge-then-else	generated	
+$eo_prog_bv-ite-merge-then-if	generated	
 $eo_prog_bv-ite-width-one	generated	
 $eo_prog_bv-ite-width-one-not	generated	
 $eo_prog_bv-lshr-by-const-0	generated	
-$eo_prog_bv-lshr-by-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-lshr-by-const-1	generated	
 $eo_prog_bv-lshr-by-const-2	generated	
 $eo_prog_bv-lshr-zero	generated	
 $eo_prog_bv-lt-self	generated	
@@ -273,11 +273,11 @@ $eo_prog_bv-merge-sign-extend-1	generated
 $eo_prog_bv-merge-sign-extend-2	generated	
 $eo_prog_bv-mult-pow2-1	none	case 0 has a builtin operator
 $eo_prog_bv-mult-pow2-2	none	case 0 has a builtin operator
-$eo_prog_bv-mult-pow2-2b	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-mult-pow2-2b	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-mult-slt-mult-1	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-mult-slt-mult-2	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-nand-eliminate	none	it calls $eo_nil, which has no proof
-$eo_prog_bv-nego-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-nego-eliminate	generated	
 $eo_prog_bv-nor-eliminate	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-not-idemp	generated	
 $eo_prog_bv-not-neq	generated	
@@ -291,17 +291,17 @@ $eo_prog_bv-or-simplify-2	none	case 0 has a builtin operator
 $eo_prog_bv-redand-eliminate	generated	
 $eo_prog_bv-redor-eliminate	generated	
 $eo_prog_bv-repeat-elim	none	case 0 has a builtin operator
-$eo_prog_bv-rotate-left-eliminate-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-rotate-left-eliminate-1	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats) and simp exceeds its steps; logos_eq does not prove the case form (binary literals, milestone 6)
 $eo_prog_bv-rotate-left-eliminate-2	generated	
-$eo_prog_bv-rotate-right-eliminate-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-rotate-right-eliminate-1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)
 $eo_prog_bv-rotate-right-eliminate-2	generated	
 $eo_prog_bv-saddo-eliminate	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-sdiv-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
-$eo_prog_bv-sdivo-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-sdivo-eliminate	generated	
 $eo_prog_bv-sge-eliminate	generated	
 $eo_prog_bv-sgt-eliminate	generated	
 $eo_prog_bv-shl-by-const-0	generated	
-$eo_prog_bv-shl-by-const-1	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-shl-by-const-1	generated	
 $eo_prog_bv-shl-by-const-2	generated	
 $eo_prog_bv-shl-zero	generated	
 $eo_prog_bv-sign-extend-eliminate-0	generated	
@@ -314,13 +314,13 @@ $eo_prog_bv-sign-extend-ult-const-4	none	its generated proof does not build: the
 $eo_prog_bv-sle-eliminate	generated	
 $eo_prog_bv-sle-self	generated	
 $eo_prog_bv-smod-eliminate	none	it calls $eo_nil, which has no proof
-$eo_prog_bv-smulo-elim	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-smulo-elim	none	case 0 has a builtin operator
 $eo_prog_bv-srem-eliminate	generated	
 $eo_prog_bv-ssubo-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
 $eo_prog_bv-sub-eliminate	none	it calls $eo_nil, which has no proof
-$eo_prog_bv-uaddo-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-uaddo-eliminate	none	it calls $eo_nil, which has no proof
 $eo_prog_bv-udiv-one	generated	
-$eo_prog_bv-udiv-pow2-not-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-udiv-pow2-not-one	generated	
 $eo_prog_bv-udiv-zero	generated	
 $eo_prog_bv-uge-eliminate	generated	
 $eo_prog_bv-ugt-eliminate	generated	
@@ -337,7 +337,7 @@ $eo_prog_bv-ult-zero-1	generated
 $eo_prog_bv-ult-zero-2	generated	
 $eo_prog_bv-umulo-elim	none	case 0 has a builtin operator
 $eo_prog_bv-urem-one	generated	
-$eo_prog_bv-urem-pow2-not-one	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-urem-pow2-not-one	generated	
 $eo_prog_bv-urem-self	generated	
 $eo_prog_bv-usubo-eliminate	generated	
 $eo_prog_bv-xnor-eliminate	none	it calls $eo_nil, which has no proof
@@ -350,7 +350,7 @@ $eo_prog_bv-xor-ones	none	case 0 has a builtin operator
 $eo_prog_bv-xor-simplify-1	none	case 0 has a builtin operator
 $eo_prog_bv-xor-simplify-2	none	case 0 has a builtin operator
 $eo_prog_bv-xor-simplify-3	none	case 0 has a builtin operator
-$eo_prog_bv-zero-extend-eliminate	none	case 0 has a literal that is not a Boolean
+$eo_prog_bv-zero-extend-eliminate	generated	
 $eo_prog_bv-zero-extend-eliminate-0	generated	
 $eo_prog_bv-zero-extend-eq-const-1	generated	
 $eo_prog_bv-zero-extend-eq-const-2	generated	
@@ -728,7 +728,7 @@ $eo_prog_ubv-to-int-elim	none	case 0 has a builtin operator
 $eo_prog_ubv_to_int_range	none	case 0 has a builtin operator
 $eo_prog_uf-bv2nat-geq-elim	generated	
 $eo_prog_uf-bv2nat-int2bv	generated	
-$eo_prog_uf-bv2nat-int2bv-extend	none	case 0 has a literal that is not a Boolean
+$eo_prog_uf-bv2nat-int2bv-extend	generated	
 $eo_prog_uf-bv2nat-int2bv-extract	generated	
 $eo_prog_uf-int2bv-bv2nat	generated	
 $eo_prog_uf-int2bv-bvule-equiv	generated	

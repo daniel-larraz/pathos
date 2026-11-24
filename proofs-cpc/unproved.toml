@@ -29,3 +29,6 @@
 "$eo_prog_str-substr-combine3" = "the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)"
 "$eo_prog_str-substr-combine4" = "the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)"
 "$eo_prog_str-update-in-first-concat" = "the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)"
+"$eo_prog_bv-eq-extract-elim1" = "logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)"
+"$eo_prog_bv-rotate-left-eliminate-1" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats) and simp exceeds its steps; logos_eq does not prove the case form (binary literals, milestone 6)"
+"$eo_prog_bv-rotate-right-eliminate-1" = "logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)"

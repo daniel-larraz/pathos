@@ -280,6 +280,15 @@ class Emitter:
                                  else "Store.literal_int_u32_spec ") + st + " "
                                 + str(abs(i)) + "#u32 (" + str(i) + ") (by scalar_tac) "
                                 + inv + " h64", v)
+            elif n["kind"] == "BINARY" and self.l.lits.get(v, ("",))[0] == "BINARY":
+                # `BitVec::new(<w>, &Integer::from(<n>u32))`: from the specs
+                # of `from` and `mod_by_pow2`, a value in range
+                w, val = self.l.lits[v][1]
+                self.line("try simp only [num.Integer.from_u32_spec, num.Integer.toInt_ofInt, "
+                          "Std.bind_ok, bitvec.BitVec.new, num.Integer.mod_by_pow2_spec]")
+                self.store_step("Store.literal_binary_u32_spec " + st + " " + str(w) + "#u32 "
+                                + str(val) + "#u32 (" + str(w) + ") (" + str(val)
+                                + ") rfl rfl (by unfold Tree.okBv; norm_num) " + inv + " h64", v)
             elif n["kind"] == "STRING" and self.l.lits.get(v, ("",))[0] == "STRING":
                 # a vector of code points, given to the store as logos's
                 # string literal
@@ -1485,7 +1494,7 @@ def rust_literals(rust_src):
                     continue
                 for c in re.findall(r"\b((?:more|if|requires)_\d+_eo__\w+)\(", line):
                     cur["calls"].add(c)
-                m = re.match(r"let (v\d+) = match s\.literal\(Lit::(Numeral|Str)\((.*?)\)\) \{", line)
+                m = re.match(r"let (v\d+) = match s\.literal\(Lit::(Numeral|Str|Binary)\((.*?)\)\) \{", line)
                 if not m:
                     continue
                 if m.group(2) == "Numeral":
@@ -1493,6 +1502,10 @@ def rust_literals(rust_src):
                     if n:
                         cur["lits"][m.group(1)] = ("NUMERAL", -int(n.group(1)) if n.group(2)
                                                    else int(n.group(1)))
+                elif m.group(2) == "Binary":
+                    n = re.fullmatch(r"BitVec::new\((\d+), &Integer::from\((\d+)u32\)\)", m.group(3))
+                    if n:
+                        cur["lits"][m.group(1)] = ("BINARY", (int(n.group(1)), int(n.group(2))))
                 else:
                     n = re.fullmatch(r"EoString::from_code_points\(vec!\[([0-9, ]*)\]\)", m.group(3))
                     if n:

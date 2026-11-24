@@ -383,6 +383,34 @@ theorem Store.rep_binary_okBv {s : Store} {t : Term} {w n : Int}
   have := h.2
   simpa [Embed.embedded_emb_Term, Embed.emb_Term] using this
 
+/-- `literal` with a binary constant as the generated code builds it,
+`BitVec::new(<w>, &Integer::from(<n>u32))`: after the specs of `from` and
+`mod_by_pow2`, a handle of the binary term, for a value in range. -/
+theorem Store.literal_binary_u32_spec (s : Store) (w n : Std.U32) (wi ni : Int)
+    (hw : (w.val : Int) = wi) (hn : (n.val : Int) = ni) (hok : Tree.okBv wi ni)
+    (hinv : s.Inv) (h64 : Platform64) :
+    Store.literal s (lit.Lit.Binary ({ size := w, value := num.Integer.ofInt (Int.emod (n.val : Int) (2 ^ w.val)) } : bitvec.BitVec)) ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.Term.Binary wi ni)
+      | core.result.Result.Err _ => True ⦄div := by
+  obtain ⟨hw0, hw1, hn0, hn1⟩ := hok
+  have hmod : Int.emod (n.val : Int) (2 ^ w.val) = ni := by
+    rw [hn]
+    have : (2 : Int) ^ w.val = 2 ^ wi.toNat := by
+      have : w.val = wi.toNat := by omega
+      rw [this]
+    rw [this]; exact Int.emod_eq_of_lt hn0 hn1
+  have hw' : w = Tree.u32Wrap wi.toNat := by
+    apply UScalar.eq_of_val_eq
+    rw [Tree.u32Wrap_val _ (by omega)]
+    omega
+  have hbv : ({ size := w, value := num.Integer.ofInt (Int.emod (n.val : Int) (2 ^ w.val)) } :
+      bitvec.BitVec) = Tree.bvOf wi ni := by
+    rw [hmod, hw']; rfl
+  rw [hbv]
+  exact Store.literal_binary_spec s wi ni ⟨hw0, hw1, hn0, hn1⟩ hinv h64
+
 /-- `construct_binary` on handles of a width and a value in range: the
 binary term. -/
 theorem Store.construct_binary_spec' (s : Store) {a0 a1 : Term} {w n : Int}
