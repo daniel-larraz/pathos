@@ -6,6 +6,7 @@ public import Cpc.SmtEval
 import all Cpc.SmtEval
 public import PathosProofs.Runtime.Lists
 public import PathosProofs.Runtime.Numbers
+public import PathosProofs.Runtime.Builtins
 
 /-!
 # CPC's list builtins (CPC only)
@@ -763,5 +764,277 @@ theorem Store.builtin_spec_list_rev (n : Nat) (hnil : IsListNilSpec n) (s : Stor
         cases r2 with
         | Err e => trivial
         | Ok t => simp only at hr2 ⊢; rw [hval]; exact hr2
+
+/-! ## `eo::list_nth` -/
+
+/-- A handle of a numeral holds that numeral's literal. -/
+theorem Store.rep_numeral_lit {s : Store} {a : Term} {k : Int}
+    (ha : s.Rep a (Eo.Term.Numeral k)) :
+    s.nodes.val[a.val]! = TermData.Literal (lit.Lit.Numeral (num.Integer.ofInt k)) := by
+  obtain ⟨hh, _⟩ := ha
+  simp only [Embed.embedded_enc_Term, Embed.enc_Term] at hh
+  cases hh with
+  | lit _ _ _ hd => exact hd
+
+/-- `object_index` on a handle of a term: the index if the term is a
+numeral in `[0, 2^32)`, nothing otherwise. -/
+theorem Store.object_index_rep {s : Store} {t : Term} {x : Eo.Term} (ha : s.Rep t x) :
+    ∃ o, Store.object_index s t = ok (core.result.Result.Ok o) ∧
+      match o with
+      | some n => ∃ k : Int, x = Eo.Term.Numeral k ∧ (n.val : Int) = k
+      | none => ∀ k : Int, x = Eo.Term.Numeral k → ¬ (0 ≤ k ∧ k < 2 ^ 32) := by
+  have hnum : ∀ k, x = Eo.Term.Numeral k →
+      s.nodes.val[t.val]! = TermData.Literal (lit.Lit.Numeral (num.Integer.ofInt k)) := by
+    intro k hk; subst hk; exact Store.rep_numeral_lit ha
+  unfold Store.object_index
+  rw [Store.view_eq]
+  simp only [ha.lt, ite_true, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
+  cases hd : s.nodes.val[t.val]! with
+  | Literal l =>
+    simp only
+    rcases Store.rep_lit ha hd with ⟨b, rfl, rfl⟩ | ⟨i, rfl, rfl⟩ | ⟨q, rfl, rfl⟩ |
+        ⟨str, rfl, rfl⟩ | ⟨w, n, rfl, rfl, _⟩
+    · exact ⟨none, rfl, fun k h => by cases h⟩
+    · simp only [num.Integer.fits_u32_spec, num.Integer.toInt_ofInt, Std.bind_ok]
+      by_cases hk : 0 ≤ i ∧ i < 2 ^ 32
+      · obtain ⟨r, hr, hv⟩ := num.Integer.to_u32_spec (num.Integer.ofInt i)
+        simp only [hk, decide_true, ite_true, hr, Std.bind_ok]
+        refine ⟨some r, rfl, i, rfl, ?_⟩
+        rw [hv, if_pos (by rw [num.Integer.toInt_ofInt]; exact hk), num.Integer.toInt_ofInt]
+      · simp only [hk, decide_false, Bool.false_eq_true, ite_false]
+        exact ⟨none, rfl, fun k h => by cases h; exact hk⟩
+    · exact ⟨none, rfl, fun k h => by cases h⟩
+    · exact ⟨none, rfl, fun k h => by cases h⟩
+    · exact ⟨none, rfl, fun k h => by cases h⟩
+  | _ =>
+    simp only
+    refine ⟨none, rfl, fun k h => ?_⟩
+    have := hnum k h
+    rw [hd] at this
+    cases this
+
+/-- logos's `list_nth_rec` at a numeral: the element at that place, or the
+stuck term past the end or below zero. -/
+theorem nth_rec_eoList_num {xf xr : Eo.Term}
+    (hna : ∀ g a c, xr ≠ Eo.Term.Apply (Eo.Term.Apply g a) c) :
+    ∀ (ys : List Eo.Term) (k : Int),
+      Eo.__eo_list_nth_rec (eoList xf xr ys) (Eo.Term.Numeral k) =
+        if h : 0 ≤ k ∧ k.toNat < ys.length then ys[k.toNat] else Eo.Term.Stuck := by
+  intro ys
+  induction ys with
+  | nil =>
+    intro k
+    simp only [eoList, List.length_nil, Nat.not_lt_zero, and_false, _root_.dite_false]
+    unfold Eo.__eo_list_nth_rec
+    split <;> simp_all
+  | cons y ys ih =>
+    intro k
+    simp only [eoList]
+    by_cases hk0 : k = 0
+    · subst hk0; simp [Eo.__eo_list_nth_rec]
+    · have hstep : Eo.__eo_list_nth_rec
+            (Eo.Term.Apply (Eo.Term.Apply xf y) (eoList xf xr ys)) (Eo.Term.Numeral k) =
+          Eo.__eo_list_nth_rec (eoList xf xr ys)
+            (Eo.__eo_add (Eo.Term.Numeral k) (Eo.Term.Numeral (-1))) := by
+        simp [Eo.__eo_list_nth_rec, hk0]
+      have hadd : Eo.__eo_add (Eo.Term.Numeral k) (Eo.Term.Numeral (-1)) =
+          Eo.Term.Numeral (k - 1) := by
+        simp [Eo.__eo_add, SmtEval.native_zplus, Int.sub_eq_add_neg]
+      rw [hstep, hadd, ih (k - 1)]
+      by_cases hneg : k < 0
+      · have h1 : ¬ (0 ≤ k - 1 ∧ (k - 1).toNat < ys.length) := by omega
+        have h2 : ¬ (0 ≤ k ∧ k.toNat < (y :: ys).length) := by omega
+        rw [dif_neg h1, dif_neg h2]
+      · have hpos : 0 < k := by omega
+        have hidx : k.toNat = (k - 1).toNat + 1 := by omega
+        by_cases hlt : (k - 1).toNat < ys.length
+        · have h1 : 0 ≤ k - 1 ∧ (k - 1).toNat < ys.length := ⟨by omega, hlt⟩
+          have h2 : 0 ≤ k ∧ k.toNat < (y :: ys).length := by
+            simp only [List.length_cons]; omega
+          rw [dif_pos h1, dif_pos h2]
+          simp only [hidx, List.getElem_cons_succ]
+        · have h1 : ¬ (0 ≤ k - 1 ∧ (k - 1).toNat < ys.length) := by omega
+          have h2 : ¬ (0 ≤ k ∧ k.toNat < (y :: ys).length) := by
+            simp only [List.length_cons]; omega
+          rw [dif_neg h1, dif_neg h2]
+
+/-- logos's `list_nth_rec` at what is not a numeral (and not stuck): the
+stuck term. -/
+theorem nth_rec_eoList_nonnum {xf xr : Eo.Term}
+    (hna : ∀ g a c, xr ≠ Eo.Term.Apply (Eo.Term.Apply g a) c) :
+    ∀ (ys : List Eo.Term) (xi : Eo.Term), xi ≠ Eo.Term.Stuck →
+      (∀ k, xi ≠ Eo.Term.Numeral k) →
+      Eo.__eo_list_nth_rec (eoList xf xr ys) xi = Eo.Term.Stuck := by
+  intro ys
+  induction ys with
+  | nil =>
+    intro xi hs hn
+    simp only [eoList]
+    unfold Eo.__eo_list_nth_rec
+    split <;> simp_all
+  | cons y ys _ =>
+    intro xi hs hn
+    simp only [eoList]
+    have hadd : Eo.__eo_add xi (Eo.Term.Numeral (-1)) = Eo.Term.Stuck := by
+      unfold Eo.__eo_add; split <;> simp_all
+    rw [Eo.__eo_list_nth_rec.eq_def]
+    split
+    · simp_all
+    · exact absurd rfl (hn 0)
+    · rw [hadd]; unfold Eo.__eo_list_nth_rec; simp
+    · simp_all
+
+/-- `eo::list_nth` on handles of an operator, a term and an index: logos's
+`__eo_list_nth`. -/
+theorem Store.builtin_spec_list_nth (n : Nat) (hnil : IsListNilSpec n) (s : Store)
+    (args : Slice Term) {a b c : Term} {xf xa xi : Eo.Term} (hargs : args.val = [a, b, c])
+    (ha : s.Rep a xf) (hb : s.Rep b xa) (hc : s.Rep c xi) (hinv : s.Inv) (h64 : Platform64)
+    (hrem : s.remaining ≤ n) (hleft : NotLeftNested xf) :
+    generated.part0.Store.builtin_list s kind.EvalOp.ListNth args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_list_nth xf xa xi)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 3#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have htakes : Store.takes kind.EvalOp.ListNth 3#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  have hdef : ∀ y z w, Eo.__eo_list_nth y z w = Eo.__eo_requires (Eo.__eo_is_list y z)
+      (Eo.Term.Boolean true) (Eo.__eo_list_nth_rec z w) := fun _ _ _ => rfl
+  have hrecStuck : ∀ z, Eo.__eo_list_nth_rec z Eo.Term.Stuck = Eo.Term.Stuck := by
+    intro z; cases z <;> simp [Eo.__eo_list_nth_rec]
+  unfold generated.part0.Store.builtin_list
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  unfold Store.check_handles
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    step with Store.any_stuck_three hargs ha hb hc as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hxf : xf = Eo.Term.Stuck
+    · subst hxf
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_nth Eo.Term.Stuck xa xi = Eo.Term.Stuck := by
+        rw [hdef]; simp [Eo.__eo_is_list, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    by_cases hxa : xa = Eo.Term.Stuck
+    · subst hxa
+      simp only [decide_true, Bool.or_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok,
+        WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_nth xf Eo.Term.Stuck xi = Eo.Term.Stuck := by
+        rw [hdef]; simp [Eo.__eo_is_list, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    by_cases hxi : xi = Eo.Term.Stuck
+    · subst hxi
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok,
+        WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_nth xf xa Eo.Term.Stuck = Eo.Term.Stuck := by
+        rw [hdef, hrecStuck, requires_ite]
+        split_ifs <;> rfl
+      rw [this]; exact hinv.rep_stuck
+    simp only [hxf, hxa, hxi, decide_false, Bool.or_false, Bool.false_eq_true, ite_false]
+    unfold generated.part0.Store.list_builtin
+    have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+    have h1 : Slice.index_usize args 1#usize = ok b := by simp [Slice.index_usize, hargs]
+    have h2 : Slice.index_usize args 2#usize = ok c := by simp [Slice.index_usize, hargs]
+    simp only [h0, Std.bind_ok]
+    unfold generated.part0.Store.list_of_one
+    simp only [h1, Std.bind_ok]
+    step with list_parts_spec n hnil s hinv h64 hrem ha hb hleft as ⟨r, s1, hinv1, hg1, hr⟩
+    cases r with
+    | Err e =>
+      simp [core.result.Result.Insts.CoreOpsTry.branch,
+        core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+        core.convert.FromSame.from]
+      exact ⟨hinv1, hg1⟩
+    | Ok o =>
+      cases o with
+      | none =>
+        obtain ⟨ys, xr, hxl, hend, hn⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, Store.stuck_eq,
+          WP.dspec_ok, WP.uncurry'_pair]
+        refine ⟨hinv1, hg1, ?_⟩
+        have : Eo.__eo_list_nth xf xa xi = Eo.Term.Stuck := by
+          rw [hdef, hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend]
+          simp [hn, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq]
+        rw [this]; exact hinv1.rep_stuck
+      | some p =>
+        obtain ⟨tail, rest⟩ := p
+        obtain ⟨ys, xr, hys, hrest, hxl, hend, hn, hsz⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, h2]
+        show generated.part0.Store.list_nth s1 (alloc.vec.Vec.deref tail) c ⦃ r s' => _ ⦄div
+        have hval : Eo.__eo_list_nth xf xa xi = Eo.__eo_list_nth_rec (eoList xf xr ys) xi := by
+          rw [hdef, hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend]
+          simp [hn, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
+        have hna := is_list_nil_not_apply hn
+        have hmax := hinv.table.hmax
+        have hnodes : s.nodes.val.length ≤ 2 ^ 32 := by scalar_tac
+        have hly : ys.length ≤ 2 ^ 32 := by
+          have := hys.length_eq; simp only [alloc.vec.Vec.length] at hsz; omega
+        unfold generated.part0.Store.list_nth
+        obtain ⟨o, ho, hoP⟩ := Store.object_index_rep (Represents.grows hc hg1)
+        rw [ho]
+        simp only [Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
+        cases o with
+        | none =>
+          simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+          refine ⟨hinv1, hg1, ?_⟩
+          have : Eo.__eo_list_nth_rec (eoList xf xr ys) xi = Eo.Term.Stuck := by
+            by_cases hnum : ∃ k, xi = Eo.Term.Numeral k
+            · obtain ⟨k, rfl⟩ := hnum
+              have hk := hoP k rfl
+              rw [nth_rec_eoList_num hna ys k, dif_neg]
+              intro h; apply hk; refine ⟨h.1, ?_⟩; omega
+            · exact nth_rec_eoList_nonnum hna ys xi hxi (fun k h => hnum ⟨k, h⟩)
+          rw [hval, this]; exact hinv1.rep_stuck
+        | some m =>
+          obtain ⟨k, rfl, hmk⟩ := hoP
+          have hk0 : 0 ≤ k := by omega
+          have hnat : k.toNat = m.val := by omega
+          simp only [lift, Std.bind_ok]
+          have hi : ((UScalar.cast UScalarTy.Usize m : Std.Usize) : Nat) = (m.val : Nat) := by
+            simp
+          generalize hio : (UScalar.cast UScalarTy.Usize m : Std.Usize) = i at hi ⊢
+          have hlenT := hys.length_eq
+          split
+          · rename_i hlt
+            have hil : i.val < tail.val.length := by
+              have : i.val < (Slice.len (alloc.vec.Vec.deref tail)).val := hlt
+              simpa [Slice.len, alloc.vec.Vec.deref] using this
+            have hlt' : m.val < ys.length := by omega
+            have hidx : Slice.index_usize (alloc.vec.Vec.deref tail) i =
+                ok (tail.val[m.val]'(by omega)) := by
+              simp [Slice.index_usize, alloc.vec.Vec.deref, hil, hi,
+                List.getElem?_eq_getElem (show m.val < tail.val.length by omega)]
+            simp only [hidx, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+            refine ⟨hinv1, hg1, ?_⟩
+            have : Eo.__eo_list_nth_rec (eoList xf xr ys) (Eo.Term.Numeral k) =
+                ys[m.val]'hlt' := by
+              rw [nth_rec_eoList_num hna ys k, dif_pos ⟨hk0, by omega⟩]
+              simp only [hnat]
+            rw [hval, this]
+            exact hys.get _ _
+          · rename_i hge
+            simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+            refine ⟨hinv1, hg1, ?_⟩
+            have hge' : ¬ m.val < ys.length := by
+              intro hlt
+              apply hge
+              show i.val < (Slice.len (alloc.vec.Vec.deref tail)).val
+              simp [Slice.len, alloc.vec.Vec.deref]; omega
+            have : Eo.__eo_list_nth_rec (eoList xf xr ys) (Eo.Term.Numeral k) = Eo.Term.Stuck := by
+              rw [nth_rec_eoList_num hna ys k, dif_neg]
+              intro h; exact hge' (by omega)
+            rw [hval, this]; exact hinv1.rep_stuck
 
 end pathos_compiled_checker
