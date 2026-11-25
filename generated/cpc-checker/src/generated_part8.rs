@@ -2,6 +2,31 @@
 #[allow(unused_imports)]
 use super::*;
 use crate::*;
+pub(super) fn more_13_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v229: Term, v230: Term, a5: Term, a6: Term, v227: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a3: Term, a2: Term, a4: Term, a7: Term) -> CheckResult<Option<Term>> {
+let v231 = match s.construct(Constructor::eo__2b, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v229 != v231 { return Ok(None); }
+let v232 = match s.unapply(v230) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v233, v234)) = v232 else { return Ok(None); }
+;
+let v235 = match s.unapply(v233) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v236, v237)) = v235 else { return Ok(None); }
+;
+let v238 = match s.unapply(v236) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v239, v240)) = v238 else { return Ok(None); }
+;
+let v241 = match s.construct(Constructor::eo_ite, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v239 != v241 { return Ok(None); }
+let v242 = match s.unapply(v240) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v243, v244)) = v242 else { return Ok(None); }
+;
+let v245 = match s.unapply(v243) { Ok(v) => v, Err(e) => return Err(e) };
+let Some((v246, v247)) = v245 else { return Ok(None); }
+;
+let v248 = match s.construct(Constructor::eo__3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
+if v246 != v248 { return Ok(None); }
+if v247 != a5 { return Ok(None); }
+more_14_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s, v244, v237, a6, v234, a5, v227, v126, a1, v119, a15, a8, a0, a3, a2, a4, a7)
+}
 pub(super) fn more_12_eo__24eo_5fprog_5fbv_2dextract_2dmult_2dleading_2dbit(s: &mut Store, v207: Term, a2: Term, v175: Term, a5: Term, a6: Term, v126: Term, a1: Term, v119: Term, a15: Term, a8: Term, a0: Term, a3: Term, a4: Term, a7: Term) -> CheckResult<Option<Term>> {
 let v213 = match s.unapply(v207) { Ok(v) => v, Err(e) => return Err(e) };
 let Some((v214, v215)) = v213 else { return Ok(None); }

@@ -171,10 +171,15 @@ if v1 != v3 { return Ok(None); }
 let v4 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(Some(v4))
 }
+pub(super) fn case_1_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
+let v0 = match s.literal(Lit::Boolean(false)) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v0))
+}
 pub(super) fn body_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs(s: &mut Store, a0: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };
 if stuck0 { return Ok(s.stuck()); }
 if let Some(found) = match case_0_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
+if let Some(found) = match case_1_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs(s, a0) { Ok(v) => v, Err(e) => return Err(e) } { return Ok(found); }
 Ok(s.stuck())
 }
 // EO program "$eo_is_list_nil_@@TypedList.cons"
@@ -9982,19 +9987,4 @@ let v34 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => re
 let v35 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
 let v36 = match s.apply(v35, v2) { Ok(v) => v, Err(e) => return Err(e) };
 more_58_eo__24arith_5freduction_5fpred(s, v2, v36, v34, v33, v22, v16, v15, v14)
-}
-pub(super) fn more_56_eo__24arith_5freduction_5fpred(s: &mut Store, v8: Term, v12: Term, v4: Term, v2: Term) -> CheckResult<Option<Term>> {
-let v13 = match s.apply(v8, v12) { Ok(v) => v, Err(e) => return Err(e) };
-let v14 = match s.apply(v4, v13) { Ok(v) => v, Err(e) => return Err(e) };
-let v15 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v16 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v17 = match s.construct(Constructor::eo__3d_3e, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v18 = match s.construct(Constructor::eo__3c, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v19 = match s.literal(Lit::Numeral(Integer::from(0u32))) { Ok(v) => v, Err(e) => return Err(e) };
-let v20 = match s.apply(v18, v19) { Ok(v) => v, Err(e) => return Err(e) };
-let v21 = match s.apply(v20, v2) { Ok(v) => v, Err(e) => return Err(e) };
-let v22 = match s.apply(v17, v21) { Ok(v) => v, Err(e) => return Err(e) };
-let v23 = match s.construct(Constructor::eo_and, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-let v24 = match s.construct(Constructor::eo__3c_3d, &[]) { Ok(v) => v, Err(e) => return Err(e) };
-more_57_eo__24arith_5freduction_5fpred(s, v2, v24, v23, v22, v16, v15, v14)
 }

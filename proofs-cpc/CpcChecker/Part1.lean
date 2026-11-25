@@ -25,8 +25,80 @@ noncomputable section
 
 namespace pathos_compiled_checker
 
+/-- [pathos_compiled_checker::generated::part1::more_56_eo__24arith_5freduction_5fpred]:
+    Source: 'src/generated_part1.rs', lines 5:0-19:1 -/
+def generated.part1.more_56_eo__24arith_5freduction_5fpred
+  (s : Store) (v8 : Term) (v12 : Term) (v4 : Term) (v2 : Term) :
+  Result ((core.result.Result (Option Term) CheckError) × Store)
+  := do
+  let (r, s1) ← Store.apply s v8 v12
+  match r with
+  | core.result.Result.Ok v =>
+    let (r1, s2) ← Store.apply s1 v4 v
+    match r1 with
+    | core.result.Result.Ok v1 =>
+      let s3 ← lift (Array.to_slice (Std.Array.empty Term))
+      let (r2, s4) ← Store.construct s2 schema.Constructor.eo_and s3
+      match r2 with
+      | core.result.Result.Ok v3 =>
+        let s5 ← lift (Array.to_slice (Std.Array.empty Term))
+        let (r3, s6) ← Store.construct s4 schema.Constructor.eo_and s5
+        match r3 with
+        | core.result.Result.Ok v5 =>
+          let s7 ← lift (Array.to_slice (Std.Array.empty Term))
+          let (r4, s8) ← Store.construct s6 schema.Constructor.eo__3d_3e s7
+          match r4 with
+          | core.result.Result.Ok v6 =>
+            let s9 ← lift (Array.to_slice (Std.Array.empty Term))
+            let (r5, s10) ← Store.construct s8 schema.Constructor.eo__3c s9
+            match r5 with
+            | core.result.Result.Ok v7 =>
+              let i ← num.Integer.Insts.CoreConvertFromU32.from 0#u32
+              let (r6, s11) ← Store.literal s10 (lit.Lit.Numeral i)
+              match r6 with
+              | core.result.Result.Ok v9 =>
+                let (r7, s12) ← Store.apply s11 v7 v9
+                match r7 with
+                | core.result.Result.Ok v10 =>
+                  let (r8, s13) ← Store.apply s12 v10 v2
+                  match r8 with
+                  | core.result.Result.Ok v11 =>
+                    let (r9, s14) ← Store.apply s13 v6 v11
+                    match r9 with
+                    | core.result.Result.Ok v13 =>
+                      let s15 ← lift (Array.to_slice (Std.Array.empty Term))
+                      let (r10, s16) ←
+                        Store.construct s14 schema.Constructor.eo_and s15
+                      match r10 with
+                      | core.result.Result.Ok v14 =>
+                        let s17 ←
+                          lift (Array.to_slice (Std.Array.empty Term))
+                        let (r11, s18) ←
+                          Store.construct s16 schema.Constructor.eo__3c_3d s17
+                        match r11 with
+                        | core.result.Result.Ok v15 =>
+                          generated.part0.more_57_eo__24arith_5freduction_5fpred
+                            s18 v2 v15 v14 v13 v5 v3 v1
+                        | core.result.Result.Err e =>
+                          ok (core.result.Result.Err e, s18)
+                      | core.result.Result.Err e =>
+                        ok (core.result.Result.Err e, s16)
+                    | core.result.Result.Err e =>
+                      ok (core.result.Result.Err e, s14)
+                  | core.result.Result.Err e =>
+                    ok (core.result.Result.Err e, s13)
+                | core.result.Result.Err e =>
+                  ok (core.result.Result.Err e, s12)
+              | core.result.Result.Err e => ok (core.result.Result.Err e, s11)
+            | core.result.Result.Err e => ok (core.result.Result.Err e, s10)
+          | core.result.Result.Err e => ok (core.result.Result.Err e, s8)
+        | core.result.Result.Err e => ok (core.result.Result.Err e, s6)
+      | core.result.Result.Err e => ok (core.result.Result.Err e, s4)
+    | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
+  | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
+
 /-- [pathos_compiled_checker::generated::part1::case_9_eo__24arith_5freduction_5fpred]:
-    Source: 'src/generated_part1.rs', lines 5:0-21:1 -/
+    Source: 'src/generated_part1.rs', lines 20:0-36:1 -/
 def generated.part1.case_9_eo__24arith_5freduction_5fpred
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -84,7 +156,7 @@ def generated.part1.case_9_eo__24arith_5freduction_5fpred
                           let (r10, s16) ← Store.apply s15 v9 v11
                           match r10 with
                           | core.result.Result.Ok v12 =>
-                            generated.part0.more_56_eo__24arith_5freduction_5fpred
+                            generated.part1.more_56_eo__24arith_5freduction_5fpred
                               s16 v8 v12 v4 v2
                           | core.result.Result.Err e =>
                             ok (core.result.Result.Err e, s16)
@@ -104,7 +176,7 @@ def generated.part1.case_9_eo__24arith_5freduction_5fpred
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_2_eo__24arith_5freduction_5fpred]:
-    Source: 'src/generated_part1.rs', lines 22:0-26:1 -/
+    Source: 'src/generated_part1.rs', lines 37:0-41:1 -/
 def generated.part1.cases_0_2_eo__24arith_5freduction_5fpred
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -126,7 +198,7 @@ def generated.part1.cases_0_2_eo__24arith_5freduction_5fpred
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24arith_5freduction_5fpred]:
-    Source: 'src/generated_part1.rs', lines 27:0-34:1 -/
+    Source: 'src/generated_part1.rs', lines 42:0-49:1 -/
 def generated.part1.body_eo__24arith_5freduction_5fpred
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -167,7 +239,7 @@ def generated.part1.body_eo__24arith_5freduction_5fpred
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24arith_5freduction_5fpred]:
-    Source: 'src/generated_part1.rs', lines 36:0-41:1
+    Source: 'src/generated_part1.rs', lines 51:0-56:1
     Visibility: public -/
 def generated.part1.eo__24arith_5freduction_5fpred
   (s : Store) (a0 : Term) :
@@ -183,7 +255,7 @@ def generated.part1.eo__24arith_5freduction_5fpred
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 42:0-49:1 -/
+    Source: 'src/generated_part1.rs', lines 57:0-64:1 -/
 def generated.part1.case_0_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -214,7 +286,7 @@ def generated.part1.case_0_eo__24arith_5frel_5finv
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 50:0-57:1 -/
+    Source: 'src/generated_part1.rs', lines 65:0-72:1 -/
 def generated.part1.case_1_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -245,7 +317,7 @@ def generated.part1.case_1_eo__24arith_5frel_5finv
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 58:0-65:1 -/
+    Source: 'src/generated_part1.rs', lines 73:0-80:1 -/
 def generated.part1.case_2_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -276,7 +348,7 @@ def generated.part1.case_2_eo__24arith_5frel_5finv
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 66:0-73:1 -/
+    Source: 'src/generated_part1.rs', lines 81:0-88:1 -/
 def generated.part1.case_3_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -307,7 +379,7 @@ def generated.part1.case_3_eo__24arith_5frel_5finv
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 74:0-80:1 -/
+    Source: 'src/generated_part1.rs', lines 89:0-95:1 -/
 def generated.part1.cases_0_0_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -345,7 +417,7 @@ def generated.part1.cases_0_0_eo__24arith_5frel_5finv
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 81:0-88:1 -/
+    Source: 'src/generated_part1.rs', lines 96:0-103:1 -/
 def generated.part1.case_4_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -376,7 +448,7 @@ def generated.part1.case_4_eo__24arith_5frel_5finv
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 89:0-92:1 -/
+    Source: 'src/generated_part1.rs', lines 104:0-107:1 -/
 def generated.part1.cases_0_1_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -390,7 +462,7 @@ def generated.part1.cases_0_1_eo__24arith_5frel_5finv
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 93:0-103:1 -/
+    Source: 'src/generated_part1.rs', lines 108:0-118:1 -/
 def generated.part1.body_eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -441,7 +513,7 @@ def generated.part1.body_eo__24arith_5frel_5finv
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24arith_5frel_5finv]:
-    Source: 'src/generated_part1.rs', lines 105:0-110:1
+    Source: 'src/generated_part1.rs', lines 120:0-125:1
     Visibility: public -/
 def generated.part1.eo__24arith_5frel_5finv
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -457,7 +529,7 @@ def generated.part1.eo__24arith_5frel_5finv
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 111:0-120:1 -/
+    Source: 'src/generated_part1.rs', lines 126:0-135:1 -/
 def generated.part1.case_0_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -499,7 +571,7 @@ def generated.part1.case_0_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 121:0-130:1 -/
+    Source: 'src/generated_part1.rs', lines 136:0-145:1 -/
 def generated.part1.case_1_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -541,7 +613,7 @@ def generated.part1.case_1_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 131:0-140:1 -/
+    Source: 'src/generated_part1.rs', lines 146:0-155:1 -/
 def generated.part1.case_2_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -583,7 +655,7 @@ def generated.part1.case_2_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 141:0-150:1 -/
+    Source: 'src/generated_part1.rs', lines 156:0-165:1 -/
 def generated.part1.case_3_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -625,7 +697,7 @@ def generated.part1.case_3_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 151:0-157:1 -/
+    Source: 'src/generated_part1.rs', lines 166:0-172:1 -/
 def generated.part1.cases_0_0_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -663,7 +735,7 @@ def generated.part1.cases_0_0_eo__24arith_5frel_5fsum
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 158:0-167:1 -/
+    Source: 'src/generated_part1.rs', lines 173:0-182:1 -/
 def generated.part1.case_4_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -705,7 +777,7 @@ def generated.part1.case_4_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 168:0-177:1 -/
+    Source: 'src/generated_part1.rs', lines 183:0-192:1 -/
 def generated.part1.case_5_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -747,7 +819,7 @@ def generated.part1.case_5_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_6_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 178:0-187:1 -/
+    Source: 'src/generated_part1.rs', lines 193:0-202:1 -/
 def generated.part1.case_6_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -789,7 +861,7 @@ def generated.part1.case_6_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_7_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 188:0-197:1 -/
+    Source: 'src/generated_part1.rs', lines 203:0-212:1 -/
 def generated.part1.case_7_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -831,7 +903,7 @@ def generated.part1.case_7_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 198:0-204:1 -/
+    Source: 'src/generated_part1.rs', lines 213:0-219:1 -/
 def generated.part1.cases_0_1_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -869,7 +941,7 @@ def generated.part1.cases_0_1_eo__24arith_5frel_5fsum
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_8_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 205:0-214:1 -/
+    Source: 'src/generated_part1.rs', lines 220:0-229:1 -/
 def generated.part1.case_8_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -911,7 +983,7 @@ def generated.part1.case_8_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_2_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 215:0-218:1 -/
+    Source: 'src/generated_part1.rs', lines 230:0-233:1 -/
 def generated.part1.cases_0_2_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -925,7 +997,7 @@ def generated.part1.cases_0_2_eo__24arith_5frel_5fsum
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 219:0-232:1 -/
+    Source: 'src/generated_part1.rs', lines 234:0-247:1 -/
 def generated.part1.body_eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -997,7 +1069,7 @@ def generated.part1.body_eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24arith_5frel_5fsum]:
-    Source: 'src/generated_part1.rs', lines 234:0-239:1
+    Source: 'src/generated_part1.rs', lines 249:0-254:1
     Visibility: public -/
 def generated.part1.eo__24arith_5frel_5fsum
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -1013,7 +1085,7 @@ def generated.part1.eo__24arith_5frel_5fsum
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 240:0-249:1 -/
+    Source: 'src/generated_part1.rs', lines 255:0-264:1 -/
 def generated.part1.case_0_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1055,7 +1127,7 @@ def generated.part1.case_0_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 250:0-259:1 -/
+    Source: 'src/generated_part1.rs', lines 265:0-274:1 -/
 def generated.part1.case_1_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1097,7 +1169,7 @@ def generated.part1.case_1_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 260:0-269:1 -/
+    Source: 'src/generated_part1.rs', lines 275:0-284:1 -/
 def generated.part1.case_2_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1139,7 +1211,7 @@ def generated.part1.case_2_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 270:0-279:1 -/
+    Source: 'src/generated_part1.rs', lines 285:0-294:1 -/
 def generated.part1.case_3_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1181,7 +1253,7 @@ def generated.part1.case_3_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 280:0-286:1 -/
+    Source: 'src/generated_part1.rs', lines 295:0-301:1 -/
 def generated.part1.cases_0_0_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1222,7 +1294,7 @@ def generated.part1.cases_0_0_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 287:0-296:1 -/
+    Source: 'src/generated_part1.rs', lines 302:0-311:1 -/
 def generated.part1.case_4_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1264,7 +1336,7 @@ def generated.part1.case_4_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 297:0-306:1 -/
+    Source: 'src/generated_part1.rs', lines 312:0-321:1 -/
 def generated.part1.case_5_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1306,7 +1378,7 @@ def generated.part1.case_5_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 307:0-311:1 -/
+    Source: 'src/generated_part1.rs', lines 322:0-326:1 -/
 def generated.part1.cases_0_1_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -1329,7 +1401,7 @@ def generated.part1.cases_0_1_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 312:0-324:1 -/
+    Source: 'src/generated_part1.rs', lines 327:0-339:1 -/
 def generated.part1.body_eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -1390,7 +1462,7 @@ def generated.part1.body_eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24arith_5frel_5ftrichotomy]:
-    Source: 'src/generated_part1.rs', lines 326:0-331:1
+    Source: 'src/generated_part1.rs', lines 341:0-346:1
     Visibility: public -/
 def generated.part1.eo__24arith_5frel_5ftrichotomy
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -1406,7 +1478,7 @@ def generated.part1.eo__24arith_5frel_5ftrichotomy
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24assoc_5fnil_5fnth]:
-    Source: 'src/generated_part1.rs', lines 332:0-343:1 -/
+    Source: 'src/generated_part1.rs', lines 347:0-358:1 -/
 def generated.part1.case_0_eo__24assoc_5fnil_5fnth
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -1447,7 +1519,7 @@ def generated.part1.case_0_eo__24assoc_5fnil_5fnth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24assoc_5fnil_5fnth]:
-    Source: 'src/generated_part1.rs', lines 344:0-355:1 -/
+    Source: 'src/generated_part1.rs', lines 359:0-370:1 -/
 def generated.part1.case_1_eo__24assoc_5fnil_5fnth
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -1490,7 +1562,7 @@ def generated.part1.case_1_eo__24assoc_5fnil_5fnth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24assoc_5fnil_5fnth]:
-    Source: 'src/generated_part1.rs', lines 356:0-367:1 -/
+    Source: 'src/generated_part1.rs', lines 371:0-382:1 -/
 def generated.part1.step_eo__24assoc_5fnil_5fnth
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Next (Array Term 3#usize)) CheckError) × Store)
@@ -1548,7 +1620,7 @@ def generated.part1.step_eo__24assoc_5fnil_5fnth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24assoc_5fnil_5fnth]: loop 0:
-    Source: 'src/generated_part1.rs', lines 369:0-380:1 -/
+    Source: 'src/generated_part1.rs', lines 384:0-395:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24assoc_5fnil_5fnth_loop
   (a2 : Term) (s : Store) (a0 : Term) (a1 : Term) :
@@ -1568,7 +1640,7 @@ def generated.part1.body_eo__24assoc_5fnil_5fnth_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24assoc_5fnil_5fnth]:
-    Source: 'src/generated_part1.rs', lines 368:0-380:1 -/
+    Source: 'src/generated_part1.rs', lines 383:0-395:1 -/
 @[reducible]
 def generated.part1.body_eo__24assoc_5fnil_5fnth
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -1577,7 +1649,7 @@ def generated.part1.body_eo__24assoc_5fnil_5fnth
   generated.part1.body_eo__24assoc_5fnil_5fnth_loop a2 s a0 a1
 
 /-- [pathos_compiled_checker::generated::part1::eo__24assoc_5fnil_5fnth]:
-    Source: 'src/generated_part1.rs', lines 382:0-394:1
+    Source: 'src/generated_part1.rs', lines 397:0-409:1
     Visibility: public -/
 def generated.part1.eo__24assoc_5fnil_5fnth
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -1612,7 +1684,7 @@ def generated.part1.eo__24assoc_5fnil_5fnth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24assoc_5fnil_5fnth_5ftype]:
-    Source: 'src/generated_part1.rs', lines 395:0-407:1 -/
+    Source: 'src/generated_part1.rs', lines 410:0-422:1 -/
 def generated.part1.case_0_eo__24assoc_5fnil_5fnth_5ftype
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -1658,7 +1730,7 @@ def generated.part1.case_0_eo__24assoc_5fnil_5fnth_5ftype
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24assoc_5fnil_5fnth_5ftype]:
-    Source: 'src/generated_part1.rs', lines 408:0-419:1 -/
+    Source: 'src/generated_part1.rs', lines 423:0-434:1 -/
 def generated.part1.case_1_eo__24assoc_5fnil_5fnth_5ftype
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -1701,7 +1773,7 @@ def generated.part1.case_1_eo__24assoc_5fnil_5fnth_5ftype
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24assoc_5fnil_5fnth_5ftype]:
-    Source: 'src/generated_part1.rs', lines 420:0-431:1 -/
+    Source: 'src/generated_part1.rs', lines 435:0-446:1 -/
 def generated.part1.step_eo__24assoc_5fnil_5fnth_5ftype
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Next (Array Term 3#usize)) CheckError) × Store)
@@ -1760,7 +1832,7 @@ def generated.part1.step_eo__24assoc_5fnil_5fnth_5ftype
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24assoc_5fnil_5fnth_5ftype]: loop 0:
-    Source: 'src/generated_part1.rs', lines 433:0-444:1 -/
+    Source: 'src/generated_part1.rs', lines 448:0-459:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24assoc_5fnil_5fnth_5ftype_loop
   (a2 : Term) (s : Store) (a0 : Term) (a1 : Term) :
@@ -1781,7 +1853,7 @@ def generated.part1.body_eo__24assoc_5fnil_5fnth_5ftype_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24assoc_5fnil_5fnth_5ftype]:
-    Source: 'src/generated_part1.rs', lines 432:0-444:1 -/
+    Source: 'src/generated_part1.rs', lines 447:0-459:1 -/
 @[reducible]
 def generated.part1.body_eo__24assoc_5fnil_5fnth_5ftype
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -1790,7 +1862,7 @@ def generated.part1.body_eo__24assoc_5fnil_5fnth_5ftype
   generated.part1.body_eo__24assoc_5fnil_5fnth_5ftype_loop a2 s a0 a1
 
 /-- [pathos_compiled_checker::generated::part1::eo__24assoc_5fnil_5fnth_5ftype]:
-    Source: 'src/generated_part1.rs', lines 446:0-458:1
+    Source: 'src/generated_part1.rs', lines 461:0-473:1
     Visibility: public -/
 def generated.part1.eo__24assoc_5fnil_5fnth_5ftype
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -1825,7 +1897,7 @@ def generated.part1.eo__24assoc_5fnil_5fnth_5ftype
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 459:0-480:1 -/
+    Source: 'src/generated_part1.rs', lines 474:0-495:1 -/
 def generated.part1.case_0_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -1917,7 +1989,7 @@ def generated.part1.case_0_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 481:0-497:1 -/
+    Source: 'src/generated_part1.rs', lines 496:0-512:1 -/
 def generated.part1.if_1_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (condition : Term) (v1 : Term) (v2 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -1963,7 +2035,7 @@ def generated.part1.if_1_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 498:0-510:1 -/
+    Source: 'src/generated_part1.rs', lines 513:0-525:1 -/
 def generated.part1.case_2_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -2014,7 +2086,7 @@ def generated.part1.case_2_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::requires_2_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 511:0-517:1 -/
+    Source: 'src/generated_part1.rs', lines 526:0-532:1 -/
 def
   generated.part1.requires_2_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (v1 : Term) (v2 : Term) :
@@ -2040,7 +2112,7 @@ def
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 518:0-530:1 -/
+    Source: 'src/generated_part1.rs', lines 533:0-545:1 -/
 def generated.part1.case_2_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2090,7 +2162,7 @@ def generated.part1.case_2_eo__24is_5fclosed_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 531:0-538:1 -/
+    Source: 'src/generated_part1.rs', lines 546:0-553:1 -/
 def generated.part1.case_3_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2114,7 +2186,7 @@ def generated.part1.case_3_eo__24is_5fclosed_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 539:0-542:1 -/
+    Source: 'src/generated_part1.rs', lines 554:0-557:1 -/
 def generated.part1.case_5_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2129,7 +2201,7 @@ def generated.part1.case_5_eo__24is_5fclosed_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 544:0-556:1
+    Source: 'src/generated_part1.rs', lines 559:0-571:1
     Visibility: public -/
 def generated.part1.eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -2165,7 +2237,7 @@ def generated.part1.eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24is_5fclosed_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 558:0-568:1 -/
+    Source: 'src/generated_part1.rs', lines 573:0-583:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24is_5fclosed_5frec_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -2184,7 +2256,7 @@ def generated.part1.body_eo__24is_5fclosed_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 557:0-568:1 -/
+    Source: 'src/generated_part1.rs', lines 572:0-583:1 -/
 @[reducible]
 def generated.part1.body_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -2194,7 +2266,7 @@ def generated.part1.body_eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 569:0-578:1 -/
+    Source: 'src/generated_part1.rs', lines 584:0-593:1 -/
 def generated.part1.step_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -2242,7 +2314,7 @@ def generated.part1.step_eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 579:0-601:1 -/
+    Source: 'src/generated_part1.rs', lines 594:0-616:1 -/
 def generated.part1.case_0_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2342,7 +2414,7 @@ def generated.part1.case_0_eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 602:0-610:1 -/
+    Source: 'src/generated_part1.rs', lines 617:0-625:1 -/
 def generated.part1.case_1_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2373,7 +2445,7 @@ def generated.part1.case_1_eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 611:0-622:1 -/
+    Source: 'src/generated_part1.rs', lines 626:0-637:1 -/
 def generated.part1.case_4_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2413,7 +2485,7 @@ def generated.part1.case_4_eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 623:0-629:1 -/
+    Source: 'src/generated_part1.rs', lines 638:0-644:1 -/
 def generated.part1.cases_0_0_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2452,7 +2524,7 @@ def generated.part1.cases_0_0_eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 630:0-634:1 -/
+    Source: 'src/generated_part1.rs', lines 645:0-649:1 -/
 def generated.part1.cases_0_1_eo__24is_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2475,7 +2547,7 @@ def generated.part1.cases_0_1_eo__24is_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24is_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 635:0-639:1 -/
+    Source: 'src/generated_part1.rs', lines 650:0-654:1 -/
 def generated.part1.more_0_eo__24is_5fclosed_5frec
   (s : Store) (v2 : Term) (v18 : Term) (v13 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -2496,7 +2568,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 640:0-646:1 -/
+    Source: 'src/generated_part1.rs', lines 655:0-661:1 -/
 def generated.part1.case_3_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -2526,7 +2598,7 @@ def generated.part1.case_3_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 648:0-660:1
+    Source: 'src/generated_part1.rs', lines 663:0-675:1
     Visibility: public -/
 def generated.part1.eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -2563,7 +2635,7 @@ def generated.part1.eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 662:0-673:1 -/
+    Source: 'src/generated_part1.rs', lines 677:0-688:1 -/
 @[rust_loop]
 def
   generated.part1.body_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec_loop
@@ -2587,7 +2659,7 @@ def
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 661:0-673:1 -/
+    Source: 'src/generated_part1.rs', lines 676:0-688:1 -/
 @[reducible]
 def generated.part1.body_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -2598,7 +2670,7 @@ def generated.part1.body_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 674:0-687:1 -/
+    Source: 'src/generated_part1.rs', lines 689:0-702:1 -/
 def generated.part1.step_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Next (Array Term 3#usize)) CheckError) × Store)
@@ -2679,7 +2751,7 @@ def generated.part1.step_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 688:0-695:1 -/
+    Source: 'src/generated_part1.rs', lines 703:0-710:1 -/
 def generated.part1.case_1_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -2709,7 +2781,7 @@ def generated.part1.case_1_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec]:
-    Source: 'src/generated_part1.rs', lines 696:0-709:1 -/
+    Source: 'src/generated_part1.rs', lines 711:0-724:1 -/
 def generated.part1.if_0_eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec
   (s : Store) (condition : Term) (v2 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -2740,7 +2812,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::if_3_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 710:0-727:1 -/
+    Source: 'src/generated_part1.rs', lines 725:0-742:1 -/
 def generated.part1.if_3_eo__24substitute_5fsimul_5frec
   (s : Store) (condition : Term) (v1 : Term) (v2 : Term) (a2 : Term)
   (a3 : Term) :
@@ -2795,7 +2867,7 @@ def generated.part1.if_3_eo__24substitute_5fsimul_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_4_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 728:0-745:1 -/
+    Source: 'src/generated_part1.rs', lines 743:0-760:1 -/
 def generated.part1.if_4_eo__24substitute_5fsimul_5frec
   (s : Store) (condition : Term) (v1 : Term) (v2 : Term) (a2 : Term)
   (a3 : Term) :
@@ -2850,7 +2922,7 @@ def generated.part1.if_4_eo__24substitute_5fsimul_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 746:0-758:1 -/
+    Source: 'src/generated_part1.rs', lines 761:0-773:1 -/
 def generated.part1.case_2_eo__24substitute_5fsimul_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -2900,7 +2972,7 @@ def generated.part1.case_2_eo__24substitute_5fsimul_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::requires_5_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 759:0-764:1 -/
+    Source: 'src/generated_part1.rs', lines 774:0-779:1 -/
 def generated.part1.requires_5_eo__24substitute_5fsimul_5frec
   (s : Store) (v1 : Term) (v2 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -2921,7 +2993,7 @@ def generated.part1.requires_5_eo__24substitute_5fsimul_5frec
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 765:0-771:1 -/
+    Source: 'src/generated_part1.rs', lines 780:0-786:1 -/
 def generated.part1.case_3_eo__24substitute_5fsimul_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -2948,7 +3020,7 @@ def generated.part1.case_3_eo__24substitute_5fsimul_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 773:0-785:1
+    Source: 'src/generated_part1.rs', lines 788:0-800:1
     Visibility: public -/
 def generated.part1.eo__24substitute_5fsimul_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
@@ -2986,7 +3058,7 @@ def generated.part1.eo__24substitute_5fsimul_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 786:0-802:1 -/
+    Source: 'src/generated_part1.rs', lines 801:0-817:1 -/
 def generated.part1.body_eo__24substitute_5fsimul_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -3081,7 +3153,7 @@ def generated.part1.body_eo__24substitute_5fsimul_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 803:0-825:1 -/
+    Source: 'src/generated_part1.rs', lines 818:0-840:1 -/
 def generated.part1.case_0_eo__24substitute_5fsimul_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -3177,7 +3249,7 @@ def generated.part1.case_0_eo__24substitute_5fsimul_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 826:0-834:1 -/
+    Source: 'src/generated_part1.rs', lines 841:0-849:1 -/
 def generated.part1.case_1_eo__24substitute_5fsimul_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -3208,7 +3280,7 @@ def generated.part1.case_1_eo__24substitute_5fsimul_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 835:0-864:1 -/
+    Source: 'src/generated_part1.rs', lines 850:0-879:1 -/
 def generated.part1.if_0_eo__24substitute_5fsimul_5frec
   (s : Store) (condition : Term) (v11 : Term) (v8 : Term) (a0 : Term)
   (a2 : Term) (a3 : Term) (a4 : Term) (v4 : Term) (v2 : Term) :
@@ -3321,7 +3393,7 @@ def generated.part1.if_0_eo__24substitute_5fsimul_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::requires_1_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 865:0-871:1 -/
+    Source: 'src/generated_part1.rs', lines 880:0-886:1 -/
 def generated.part1.requires_1_eo__24substitute_5fsimul_5frec
   (s : Store) (v17 : Term) (v18 : Term) (a0 : Term) (v11 : Term) (v8 : Term)
   (a2 : Term) (a3 : Term) (a4 : Term) (v4 : Term) (v2 : Term) :
@@ -3350,7 +3422,7 @@ def generated.part1.requires_1_eo__24substitute_5fsimul_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24substitute_5fsimul_5frec]:
-    Source: 'src/generated_part1.rs', lines 872:0-875:1 -/
+    Source: 'src/generated_part1.rs', lines 887:0-890:1 -/
 def generated.part1.more_2_eo__24substitute_5fsimul_5frec
   (s : Store) (v17 : Term) (v18 : Term) (a0 : Term) (v11 : Term) (v8 : Term)
   (a2 : Term) (a3 : Term) (a4 : Term) (v4 : Term) (v2 : Term) :
@@ -3367,7 +3439,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 876:0-880:1 -/
+    Source: 'src/generated_part1.rs', lines 891:0-895:1 -/
 def generated.part1.more_0_eo__24beta_5freduce
   (s : Store) (v41 : Term) (v44 : Term) (v48 : Term) (v52 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -3384,7 +3456,7 @@ def generated.part1.more_0_eo__24beta_5freduce
   | core.result.Result.Err _ => ok (r, s2)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 881:0-915:1 -/
+    Source: 'src/generated_part1.rs', lines 896:0-930:1 -/
 def generated.part1.if_1_eo__24beta_5freduce
   (s : Store) (condition : Term) (v15 : Term) (v2 : Term) (v5 : Term)
   (v12 : Term) :
@@ -3528,7 +3600,7 @@ def generated.part1.if_1_eo__24beta_5freduce
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_2_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 916:0-924:1 -/
+    Source: 'src/generated_part1.rs', lines 931:0-939:1 -/
 def generated.part1.requires_2_eo__24beta_5freduce
   (s : Store) (v26 : Term) (v27 : Term) (v12 : Term) (v15 : Term) (v2 : Term)
   (v5 : Term) :
@@ -3566,7 +3638,7 @@ def generated.part1.requires_2_eo__24beta_5freduce
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 925:0-937:1 -/
+    Source: 'src/generated_part1.rs', lines 940:0-952:1 -/
 def generated.part1.more_3_eo__24beta_5freduce
   (s : Store) (v15 : Term) (v12 : Term) (v18 : Term) (v2 : Term) (v5 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -3628,7 +3700,7 @@ def generated.part1.more_3_eo__24beta_5freduce
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 938:0-962:1 -/
+    Source: 'src/generated_part1.rs', lines 953:0-977:1 -/
 def generated.part1.case_0_eo__24beta_5freduce
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -3733,7 +3805,7 @@ def generated.part1.case_0_eo__24beta_5freduce
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_4_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 963:0-971:1 -/
+    Source: 'src/generated_part1.rs', lines 978:0-986:1 -/
 def generated.part1.requires_4_eo__24beta_5freduce
   (s : Store) (v9 : Term) (v10 : Term) (v2 : Term) (v5 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -3769,7 +3841,7 @@ def generated.part1.requires_4_eo__24beta_5freduce
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 972:0-987:1 -/
+    Source: 'src/generated_part1.rs', lines 987:0-1002:1 -/
 def generated.part1.case_1_eo__24beta_5freduce
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -3838,7 +3910,7 @@ def generated.part1.case_1_eo__24beta_5freduce
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 988:0-996:1 -/
+    Source: 'src/generated_part1.rs', lines 1003:0-1011:1 -/
 def generated.part1.case_2_eo__24beta_5freduce
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -3870,7 +3942,7 @@ def generated.part1.case_2_eo__24beta_5freduce
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 997:0-1007:1 -/
+    Source: 'src/generated_part1.rs', lines 1012:0-1022:1 -/
 def generated.part1.step_eo__24beta_5freduce
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -3926,7 +3998,7 @@ def generated.part1.step_eo__24beta_5freduce
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24beta_5freduce]: loop 0:
-    Source: 'src/generated_part1.rs', lines 1009:0-1019:1 -/
+    Source: 'src/generated_part1.rs', lines 1024:0-1034:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24beta_5freduce_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -3945,7 +4017,7 @@ def generated.part1.body_eo__24beta_5freduce_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 1008:0-1019:1 -/
+    Source: 'src/generated_part1.rs', lines 1023:0-1034:1 -/
 @[reducible]
 def generated.part1.body_eo__24beta_5freduce
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -3954,7 +4026,7 @@ def generated.part1.body_eo__24beta_5freduce
   generated.part1.body_eo__24beta_5freduce_loop a1 s a0
 
 /-- [pathos_compiled_checker::generated::part1::eo__24beta_5freduce]:
-    Source: 'src/generated_part1.rs', lines 1021:0-1033:1
+    Source: 'src/generated_part1.rs', lines 1036:0-1048:1
     Visibility: public -/
 def generated.part1.eo__24beta_5freduce
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -3988,7 +4060,7 @@ def generated.part1.eo__24beta_5freduce
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fapply_5fbinary]:
-    Source: 'src/generated_part1.rs', lines 1034:0-1041:1 -/
+    Source: 'src/generated_part1.rs', lines 1049:0-1056:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fapply_5fbinary
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4023,7 +4095,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fapply_5fbinary
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fbitblast_5fapply_5fbinary]:
-    Source: 'src/generated_part1.rs', lines 1042:0-1045:1 -/
+    Source: 'src/generated_part1.rs', lines 1057:0-1060:1 -/
 def generated.part1.more_0_eo__24bv_5fbitblast_5fapply_5fbinary
   (s : Store) (v16 : Term) (v17 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4034,7 +4106,7 @@ def generated.part1.more_0_eo__24bv_5fbitblast_5fapply_5fbinary
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fbinary_5fapp]:
-    Source: 'src/generated_part1.rs', lines 1046:0-1057:1 -/
+    Source: 'src/generated_part1.rs', lines 1061:0-1072:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fbinary_5fapp
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4084,7 +4156,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fbinary_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fbinary_5fapp]:
-    Source: 'src/generated_part1.rs', lines 1058:0-1069:1 -/
+    Source: 'src/generated_part1.rs', lines 1073:0-1084:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fbinary_5fapp
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4134,7 +4206,7 @@ def generated.part1.case_1_eo__24bv_5fbitblast_5fbinary_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fbitblast_5fbinary_5fapp]:
-    Source: 'src/generated_part1.rs', lines 1070:0-1077:1 -/
+    Source: 'src/generated_part1.rs', lines 1085:0-1092:1 -/
 def generated.part1.case_2_eo__24bv_5fbitblast_5fbinary_5fapp
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4165,7 +4237,7 @@ def generated.part1.case_2_eo__24bv_5fbitblast_5fbinary_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24bv_5fbitblast_5fbinary_5fapp]:
-    Source: 'src/generated_part1.rs', lines 1078:0-1085:1 -/
+    Source: 'src/generated_part1.rs', lines 1093:0-1100:1 -/
 def generated.part1.case_3_eo__24bv_5fbitblast_5fbinary_5fapp
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4196,7 +4268,7 @@ def generated.part1.case_3_eo__24bv_5fbitblast_5fbinary_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fbinary_5fapp]:
-    Source: 'src/generated_part1.rs', lines 1086:0-1098:1 -/
+    Source: 'src/generated_part1.rs', lines 1101:0-1113:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fbinary_5fapp
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -4269,7 +4341,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fbinary_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fbinary_5fapp]:
-    Source: 'src/generated_part1.rs', lines 1100:0-1105:1
+    Source: 'src/generated_part1.rs', lines 1115:0-1120:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fbinary_5fapp
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -4287,7 +4359,7 @@ def generated.part1.eo__24bv_5fbitblast_5fbinary_5fapp
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fapply_5fbinary]:
-    Source: 'src/generated_part1.rs', lines 1107:0-1119:1
+    Source: 'src/generated_part1.rs', lines 1122:0-1134:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fapply_5fbinary
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -4323,7 +4395,7 @@ def generated.part1.eo__24bv_5fbitblast_5fapply_5fbinary
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fapply_5fbinary]:
-    Source: 'src/generated_part1.rs', lines 1120:0-1130:1 -/
+    Source: 'src/generated_part1.rs', lines 1135:0-1145:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fapply_5fbinary
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -4376,7 +4448,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fapply_5fbinary
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fapply_5fbinary]:
-    Source: 'src/generated_part1.rs', lines 1131:0-1153:1 -/
+    Source: 'src/generated_part1.rs', lines 1146:0-1168:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fapply_5fbinary
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4475,7 +4547,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fapply_5fite]:
-    Source: 'src/generated_part1.rs', lines 1154:0-1161:1 -/
+    Source: 'src/generated_part1.rs', lines 1169:0-1176:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fapply_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4512,7 +4584,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fapply_5fite
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fapply_5fite]:
-    Source: 'src/generated_part1.rs', lines 1163:0-1175:1
+    Source: 'src/generated_part1.rs', lines 1178:0-1190:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fapply_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -4548,7 +4620,7 @@ def generated.part1.eo__24bv_5fbitblast_5fapply_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fapply_5fite]:
-    Source: 'src/generated_part1.rs', lines 1176:0-1186:1 -/
+    Source: 'src/generated_part1.rs', lines 1191:0-1201:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fapply_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -4601,7 +4673,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fapply_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fapply_5fite]:
-    Source: 'src/generated_part1.rs', lines 1187:0-1209:1 -/
+    Source: 'src/generated_part1.rs', lines 1202:0-1224:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fapply_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4697,7 +4769,7 @@ def generated.part1.case_1_eo__24bv_5fbitblast_5fapply_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fbitblast_5fapply_5fite]:
-    Source: 'src/generated_part1.rs', lines 1210:0-1216:1 -/
+    Source: 'src/generated_part1.rs', lines 1225:0-1231:1 -/
 def generated.part1.more_0_eo__24bv_5fbitblast_5fapply_5fite
   (s : Store) (v17 : Term) (v12 : Term) (v14 : Term) (a0 : Term) (v2 : Term)
   (v9 : Term) :
@@ -4725,7 +4797,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fapply_5funary]:
-    Source: 'src/generated_part1.rs', lines 1217:0-1222:1 -/
+    Source: 'src/generated_part1.rs', lines 1232:0-1237:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fapply_5funary
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4750,7 +4822,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fapply_5funary
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fapply_5funary]:
-    Source: 'src/generated_part1.rs', lines 1224:0-1236:1
+    Source: 'src/generated_part1.rs', lines 1239:0-1251:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fapply_5funary
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -4786,7 +4858,7 @@ def generated.part1.eo__24bv_5fbitblast_5fapply_5funary
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fapply_5funary]:
-    Source: 'src/generated_part1.rs', lines 1237:0-1245:1 -/
+    Source: 'src/generated_part1.rs', lines 1252:0-1260:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fapply_5funary
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -4829,7 +4901,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fapply_5funary
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fapply_5funary]:
-    Source: 'src/generated_part1.rs', lines 1246:0-1261:1 -/
+    Source: 'src/generated_part1.rs', lines 1261:0-1276:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fapply_5funary
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4895,7 +4967,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 1262:0-1266:1 -/
+    Source: 'src/generated_part1.rs', lines 1277:0-1281:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fconcat
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -4915,7 +4987,7 @@ def generated.part1.case_1_eo__24bv_5fbitblast_5fconcat
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 1268:0-1280:1
+    Source: 'src/generated_part1.rs', lines 1283:0-1295:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fconcat
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -4951,7 +5023,7 @@ def generated.part1.eo__24bv_5fbitblast_5fconcat
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 1281:0-1289:1 -/
+    Source: 'src/generated_part1.rs', lines 1296:0-1304:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fconcat
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -4993,7 +5065,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fconcat
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 1290:0-1304:1 -/
+    Source: 'src/generated_part1.rs', lines 1305:0-1319:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fconcat
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5053,7 +5125,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fhead]:
-    Source: 'src/generated_part1.rs', lines 1305:0-1315:1 -/
+    Source: 'src/generated_part1.rs', lines 1320:0-1330:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fhead
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5088,7 +5160,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fhead
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fhead]:
-    Source: 'src/generated_part1.rs', lines 1316:0-1321:1 -/
+    Source: 'src/generated_part1.rs', lines 1331:0-1336:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fhead
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -5111,7 +5183,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fhead
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fhead]:
-    Source: 'src/generated_part1.rs', lines 1323:0-1328:1
+    Source: 'src/generated_part1.rs', lines 1338:0-1343:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fhead
   (s : Store) (a0 : Term) :
@@ -5126,7 +5198,7 @@ def generated.part1.eo__24bv_5fbitblast_5fhead
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fprefix]:
-    Source: 'src/generated_part1.rs', lines 1329:0-1334:1 -/
+    Source: 'src/generated_part1.rs', lines 1344:0-1349:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fprefix
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5148,7 +5220,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fprefix
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fprefix]:
-    Source: 'src/generated_part1.rs', lines 1335:0-1340:1 -/
+    Source: 'src/generated_part1.rs', lines 1350:0-1355:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fprefix
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5173,7 +5245,7 @@ def generated.part1.case_1_eo__24bv_5fbitblast_5fprefix
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fprefix]:
-    Source: 'src/generated_part1.rs', lines 1342:0-1354:1
+    Source: 'src/generated_part1.rs', lines 1357:0-1369:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fprefix
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -5209,7 +5281,7 @@ def generated.part1.eo__24bv_5fbitblast_5fprefix
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fprefix]:
-    Source: 'src/generated_part1.rs', lines 1355:0-1364:1 -/
+    Source: 'src/generated_part1.rs', lines 1370:0-1379:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fprefix
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -5261,7 +5333,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fprefix
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fbitblast_5fprefix]:
-    Source: 'src/generated_part1.rs', lines 1365:0-1381:1 -/
+    Source: 'src/generated_part1.rs', lines 1380:0-1396:1 -/
 def generated.part1.case_2_eo__24bv_5fbitblast_5fprefix
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5335,7 +5407,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1382:0-1391:1 -/
+    Source: 'src/generated_part1.rs', lines 1397:0-1406:1 -/
 def generated.part1.more_0_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (v27 : Term) (v23 : Term) (v21 : Term) (v20 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -5370,7 +5442,7 @@ def generated.part1.more_0_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1392:0-1424:1 -/
+    Source: 'src/generated_part1.rs', lines 1407:0-1439:1 -/
 def generated.part1.if_1_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (condition : Term) (v5 : Term) (v13 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -5489,7 +5561,7 @@ def generated.part1.if_1_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1425:0-1428:1 -/
+    Source: 'src/generated_part1.rs', lines 1440:0-1443:1 -/
 def generated.part1.more_2_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (a2 : Term) (v5 : Term) (v13 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5501,7 +5573,7 @@ def generated.part1.more_2_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1429:0-1451:1 -/
+    Source: 'src/generated_part1.rs', lines 1444:0-1466:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5596,7 +5668,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_5_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1452:0-1457:1 -/
+    Source: 'src/generated_part1.rs', lines 1467:0-1472:1 -/
 def generated.part1.more_5_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (v41 : Term) (v30 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5615,7 +5687,7 @@ def generated.part1.more_5_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_4_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1458:0-1472:1 -/
+    Source: 'src/generated_part1.rs', lines 1473:0-1487:1 -/
 def generated.part1.more_4_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (v14 : Term) (v29 : Term) (v5 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -5681,7 +5753,7 @@ def generated.part1.more_4_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fbitblast_5fult]:
-    Source: 'src/generated_part1.rs', lines 1473:0-1482:1 -/
+    Source: 'src/generated_part1.rs', lines 1488:0-1497:1 -/
 def generated.part1.more_0_eo__24bv_5fbitblast_5fult
   (s : Store) (v5 : Term) (v12 : Term) (v25 : Term) (v24 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -5717,7 +5789,7 @@ def generated.part1.more_0_eo__24bv_5fbitblast_5fult
   | core.result.Result.Err _ => ok (r, s2)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24bv_5fbitblast_5fult]:
-    Source: 'src/generated_part1.rs', lines 1483:0-1515:1 -/
+    Source: 'src/generated_part1.rs', lines 1498:0-1530:1 -/
 def generated.part1.if_1_eo__24bv_5fbitblast_5fult
   (s : Store) (condition : Term) (v5 : Term) (v12 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -5835,7 +5907,7 @@ def generated.part1.if_1_eo__24bv_5fbitblast_5fult
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fult_5frec]:
-    Source: 'src/generated_part1.rs', lines 1516:0-1522:1 -/
+    Source: 'src/generated_part1.rs', lines 1531:0-1537:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fult_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -5865,7 +5937,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fult_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fbitblast_5fult_5frec]:
-    Source: 'src/generated_part1.rs', lines 1523:0-1535:1 -/
+    Source: 'src/generated_part1.rs', lines 1538:0-1550:1 -/
 def generated.part1.more_1_eo__24bv_5fbitblast_5fult_5frec
   (s : Store) (v27 : Term) (v29 : Term) (v12 : Term) (v26 : Term) (v25 : Term)
   (v2 : Term) (v9 : Term) :
@@ -5919,7 +5991,7 @@ def generated.part1.more_1_eo__24bv_5fbitblast_5fult_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fbitblast_5fult_5frec]:
-    Source: 'src/generated_part1.rs', lines 1536:0-1550:1 -/
+    Source: 'src/generated_part1.rs', lines 1551:0-1565:1 -/
 def generated.part1.more_0_eo__24bv_5fbitblast_5fult_5frec
   (s : Store) (v17 : Term) (v12 : Term) (v15 : Term) (a2 : Term) (v14 : Term)
   (v5 : Term) (v2 : Term) (v9 : Term) :
@@ -5989,7 +6061,7 @@ def generated.part1.more_0_eo__24bv_5fbitblast_5fult_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fult_5frec]:
-    Source: 'src/generated_part1.rs', lines 1551:0-1573:1 -/
+    Source: 'src/generated_part1.rs', lines 1566:0-1588:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fult_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -6087,7 +6159,7 @@ def generated.part1.case_1_eo__24bv_5fbitblast_5fult_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fbitblast_5fult_5frec]:
-    Source: 'src/generated_part1.rs', lines 1574:0-1585:1 -/
+    Source: 'src/generated_part1.rs', lines 1589:0-1600:1 -/
 def generated.part1.step_eo__24bv_5fbitblast_5fult_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Next (Array Term 3#usize)) CheckError) × Store)
@@ -6146,7 +6218,7 @@ def generated.part1.step_eo__24bv_5fbitblast_5fult_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fult_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 1587:0-1598:1 -/
+    Source: 'src/generated_part1.rs', lines 1602:0-1613:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fbitblast_5fult_5frec_loop
   (a2 : Term) (s : Store) (a0 : Term) (a1 : Term) :
@@ -6167,7 +6239,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fult_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fult_5frec]:
-    Source: 'src/generated_part1.rs', lines 1586:0-1598:1 -/
+    Source: 'src/generated_part1.rs', lines 1601:0-1613:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fbitblast_5fult_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -6176,7 +6248,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fult_5frec
   generated.part1.body_eo__24bv_5fbitblast_5fult_5frec_loop a2 s a0 a1
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fult_5frec]:
-    Source: 'src/generated_part1.rs', lines 1600:0-1612:1
+    Source: 'src/generated_part1.rs', lines 1615:0-1627:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fult_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -6211,7 +6283,7 @@ def generated.part1.eo__24bv_5fbitblast_5fult_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fult]:
-    Source: 'src/generated_part1.rs', lines 1613:0-1633:1 -/
+    Source: 'src/generated_part1.rs', lines 1628:0-1648:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fult
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -6292,7 +6364,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fult
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fult]:
-    Source: 'src/generated_part1.rs', lines 1634:0-1643:1 -/
+    Source: 'src/generated_part1.rs', lines 1649:0-1658:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fult
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -6333,7 +6405,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fult
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fult]:
-    Source: 'src/generated_part1.rs', lines 1645:0-1650:1
+    Source: 'src/generated_part1.rs', lines 1660:0-1665:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fult
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -6349,7 +6421,7 @@ def generated.part1.eo__24bv_5fbitblast_5fult
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1651:0-1665:1 -/
+    Source: 'src/generated_part1.rs', lines 1666:0-1680:1 -/
 def generated.part1.more_3_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (v17 : Term) (v12 : Term) (v15 : Term) (v2 : Term) (v9 : Term)
   (a2 : Term) (v14 : Term) (v5 : Term) :
@@ -6422,7 +6494,7 @@ def generated.part1.more_3_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1666:0-1688:1 -/
+    Source: 'src/generated_part1.rs', lines 1681:0-1703:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -6519,7 +6591,7 @@ def generated.part1.case_1_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1689:0-1699:1 -/
+    Source: 'src/generated_part1.rs', lines 1704:0-1714:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -6571,7 +6643,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fslt_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1701:0-1706:1
+    Source: 'src/generated_part1.rs', lines 1716:0-1721:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fslt_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -6587,7 +6659,7 @@ def generated.part1.eo__24bv_5fbitblast_5fslt_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5fsubsequence]:
-    Source: 'src/generated_part1.rs', lines 1707:0-1712:1 -/
+    Source: 'src/generated_part1.rs', lines 1722:0-1727:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5fsubsequence
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -6612,7 +6684,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5fsubsequence
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fbitblast_5fsubsequence]:
-    Source: 'src/generated_part1.rs', lines 1713:0-1720:1 -/
+    Source: 'src/generated_part1.rs', lines 1728:0-1735:1 -/
 def generated.part1.case_1_eo__24bv_5fbitblast_5fsubsequence
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -6646,7 +6718,7 @@ def generated.part1.case_1_eo__24bv_5fbitblast_5fsubsequence
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fbitblast_5fsubsequence]:
-    Source: 'src/generated_part1.rs', lines 1721:0-1735:1 -/
+    Source: 'src/generated_part1.rs', lines 1736:0-1750:1 -/
 def generated.part1.case_2_eo__24bv_5fbitblast_5fsubsequence
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -6709,7 +6781,7 @@ def generated.part1.case_2_eo__24bv_5fbitblast_5fsubsequence
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fbitblast_5fsubsequence]:
-    Source: 'src/generated_part1.rs', lines 1736:0-1748:1 -/
+    Source: 'src/generated_part1.rs', lines 1751:0-1763:1 -/
 def generated.part1.step_eo__24bv_5fbitblast_5fsubsequence
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Next (Array Term 3#usize)) CheckError) × Store)
@@ -6778,7 +6850,7 @@ def generated.part1.step_eo__24bv_5fbitblast_5fsubsequence
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fsubsequence]: loop 0:
-    Source: 'src/generated_part1.rs', lines 1750:0-1761:1 -/
+    Source: 'src/generated_part1.rs', lines 1765:0-1776:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fbitblast_5fsubsequence_loop
   (a2 : Term) (s : Store) (a0 : Term) (a1 : Term) :
@@ -6800,7 +6872,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fsubsequence_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5fsubsequence]:
-    Source: 'src/generated_part1.rs', lines 1749:0-1761:1 -/
+    Source: 'src/generated_part1.rs', lines 1764:0-1776:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fbitblast_5fsubsequence
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -6809,7 +6881,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5fsubsequence
   generated.part1.body_eo__24bv_5fbitblast_5fsubsequence_loop a2 s a0 a1
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5fsubsequence]:
-    Source: 'src/generated_part1.rs', lines 1763:0-1775:1
+    Source: 'src/generated_part1.rs', lines 1778:0-1790:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5fsubsequence
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -6844,7 +6916,7 @@ def generated.part1.eo__24bv_5fbitblast_5fsubsequence
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitblast_5ftail]:
-    Source: 'src/generated_part1.rs', lines 1776:0-1786:1 -/
+    Source: 'src/generated_part1.rs', lines 1791:0-1801:1 -/
 def generated.part1.case_0_eo__24bv_5fbitblast_5ftail
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -6879,7 +6951,7 @@ def generated.part1.case_0_eo__24bv_5fbitblast_5ftail
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitblast_5ftail]:
-    Source: 'src/generated_part1.rs', lines 1787:0-1792:1 -/
+    Source: 'src/generated_part1.rs', lines 1802:0-1807:1 -/
 def generated.part1.body_eo__24bv_5fbitblast_5ftail
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -6902,7 +6974,7 @@ def generated.part1.body_eo__24bv_5fbitblast_5ftail
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitblast_5ftail]:
-    Source: 'src/generated_part1.rs', lines 1794:0-1799:1
+    Source: 'src/generated_part1.rs', lines 1809:0-1814:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitblast_5ftail
   (s : Store) (a0 : Term) :
@@ -6917,7 +6989,7 @@ def generated.part1.eo__24bv_5fbitblast_5ftail
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fbitwidth]:
-    Source: 'src/generated_part1.rs', lines 1800:0-1807:1 -/
+    Source: 'src/generated_part1.rs', lines 1815:0-1822:1 -/
 def generated.part1.case_0_eo__24bv_5fbitwidth
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -6943,7 +7015,7 @@ def generated.part1.case_0_eo__24bv_5fbitwidth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fbitwidth]:
-    Source: 'src/generated_part1.rs', lines 1808:0-1813:1 -/
+    Source: 'src/generated_part1.rs', lines 1823:0-1828:1 -/
 def generated.part1.body_eo__24bv_5fbitwidth
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -6966,7 +7038,7 @@ def generated.part1.body_eo__24bv_5fbitwidth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fbitwidth]:
-    Source: 'src/generated_part1.rs', lines 1815:0-1820:1
+    Source: 'src/generated_part1.rs', lines 1830:0-1835:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fbitwidth
   (s : Store) (a0 : Term) :
@@ -6981,7 +7053,7 @@ def generated.part1.eo__24bv_5fbitwidth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fconst_5fto_5fbitlist_5frec]:
-    Source: 'src/generated_part1.rs', lines 1821:0-1831:1 -/
+    Source: 'src/generated_part1.rs', lines 1836:0-1846:1 -/
 def generated.part1.case_0_eo__24bv_5fconst_5fto_5fbitlist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -7028,7 +7100,7 @@ def generated.part1.case_0_eo__24bv_5fconst_5fto_5fbitlist_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fconst_5fto_5fbitlist_5frec]:
-    Source: 'src/generated_part1.rs', lines 1833:0-1845:1
+    Source: 'src/generated_part1.rs', lines 1848:0-1860:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fconst_5fto_5fbitlist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -7064,7 +7136,7 @@ def generated.part1.eo__24bv_5fconst_5fto_5fbitlist_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fconst_5fto_5fbitlist_5frec]:
-    Source: 'src/generated_part1.rs', lines 1846:0-1854:1 -/
+    Source: 'src/generated_part1.rs', lines 1861:0-1869:1 -/
 def generated.part1.body_eo__24bv_5fconst_5fto_5fbitlist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7108,7 +7180,7 @@ def generated.part1.body_eo__24bv_5fconst_5fto_5fbitlist_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fconst_5fto_5fbitlist_5frec]:
-    Source: 'src/generated_part1.rs', lines 1855:0-1872:1 -/
+    Source: 'src/generated_part1.rs', lines 1870:0-1887:1 -/
 def generated.part1.case_1_eo__24bv_5fconst_5fto_5fbitlist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -7190,7 +7262,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1873:0-1885:1 -/
+    Source: 'src/generated_part1.rs', lines 1888:0-1900:1 -/
 def generated.part1.case_0_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -7244,7 +7316,7 @@ def generated.part1.case_0_eo__24bv_5fdiv_5fmod_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 1886:0-1892:1 -/
+    Source: 'src/generated_part1.rs', lines 1901:0-1907:1 -/
 def generated.part1.case_1_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -7269,7 +7341,7 @@ def generated.part1.case_1_eo__24bv_5fdiv_5fmod_5fimpl
     | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1893:0-1900:1 -/
+    Source: 'src/generated_part1.rs', lines 1908:0-1915:1 -/
 def generated.part1.more_2_eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (v41 : Term) (v12 : Term) (v39 : Term) (a2 : Term) (v38 : Term)
   (a3 : Term) (v2 : Term) (v9 : Term) (v37 : Term) :
@@ -7300,7 +7372,7 @@ def generated.part1.more_2_eo__24bv_5fripple_5fcarry_5fadder_5f2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1901:0-1915:1 -/
+    Source: 'src/generated_part1.rs', lines 1916:0-1930:1 -/
 def generated.part1.more_1_eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (v29 : Term) (a2 : Term) (v28 : Term) (v23 : Term) (v22 : Term)
   (v5 : Term) (v12 : Term) (a3 : Term) (v2 : Term) (v9 : Term) :
@@ -7369,7 +7441,7 @@ def generated.part1.more_1_eo__24bv_5fripple_5fcarry_5fadder_5f2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1916:0-1930:1 -/
+    Source: 'src/generated_part1.rs', lines 1931:0-1945:1 -/
 def generated.part1.more_0_eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (v17 : Term) (v12 : Term) (v16 : Term) (v14 : Term) (v5 : Term)
   (a2 : Term) (a3 : Term) (v2 : Term) (v9 : Term) :
@@ -7440,7 +7512,7 @@ def generated.part1.more_0_eo__24bv_5fripple_5fcarry_5fadder_5f2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1931:0-1953:1 -/
+    Source: 'src/generated_part1.rs', lines 1946:0-1968:1 -/
 def generated.part1.case_0_eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -7539,7 +7611,7 @@ def generated.part1.case_0_eo__24bv_5fripple_5fcarry_5fadder_5f2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1954:0-1965:1 -/
+    Source: 'src/generated_part1.rs', lines 1969:0-1980:1 -/
 def generated.part1.case_1_eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -7598,7 +7670,7 @@ def generated.part1.case_1_eo__24bv_5fripple_5fcarry_5fadder_5f2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1966:0-1979:1 -/
+    Source: 'src/generated_part1.rs', lines 1981:0-1994:1 -/
 def generated.part1.step_eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Next (Array Term 4#usize)) CheckError) × Store)
@@ -7667,7 +7739,7 @@ def generated.part1.step_eo__24bv_5fripple_5fcarry_5fadder_5f2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fripple_5fcarry_5fadder_5f2]: loop 0:
-    Source: 'src/generated_part1.rs', lines 1981:0-1993:1 -/
+    Source: 'src/generated_part1.rs', lines 1996:0-2008:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fripple_5fcarry_5fadder_5f2_loop
   (a3 : Term) (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -7690,7 +7762,7 @@ def generated.part1.body_eo__24bv_5fripple_5fcarry_5fadder_5f2_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1980:0-1993:1 -/
+    Source: 'src/generated_part1.rs', lines 1995:0-2008:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -7699,7 +7771,7 @@ def generated.part1.body_eo__24bv_5fripple_5fcarry_5fadder_5f2
   generated.part1.body_eo__24bv_5fripple_5fcarry_5fadder_5f2_loop a3 s a0 a1 a2
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fripple_5fcarry_5fadder_5f2]:
-    Source: 'src/generated_part1.rs', lines 1995:0-2007:1
+    Source: 'src/generated_part1.rs', lines 2010:0-2022:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fripple_5fcarry_5fadder_5f2
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -7736,7 +7808,7 @@ def generated.part1.eo__24bv_5fripple_5fcarry_5fadder_5f2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24pair_5fsecond]:
-    Source: 'src/generated_part1.rs', lines 2008:0-2018:1 -/
+    Source: 'src/generated_part1.rs', lines 2023:0-2033:1 -/
 def generated.part1.case_0_eo__24pair_5fsecond
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -7771,7 +7843,7 @@ def generated.part1.case_0_eo__24pair_5fsecond
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24pair_5fsecond]:
-    Source: 'src/generated_part1.rs', lines 2019:0-2024:1 -/
+    Source: 'src/generated_part1.rs', lines 2034:0-2039:1 -/
 def generated.part1.body_eo__24pair_5fsecond
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7794,7 +7866,7 @@ def generated.part1.body_eo__24pair_5fsecond
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24pair_5fsecond]:
-    Source: 'src/generated_part1.rs', lines 2026:0-2031:1
+    Source: 'src/generated_part1.rs', lines 2041:0-2046:1
     Visibility: public -/
 def generated.part1.eo__24pair_5fsecond
   (s : Store) (a0 : Term) :
@@ -7809,7 +7881,7 @@ def generated.part1.eo__24pair_5fsecond
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_27_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2032:0-2040:1 -/
+    Source: 'src/generated_part1.rs', lines 2047:0-2055:1 -/
 def generated.part1.more_27_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v335 : Term) (v337 : Term) (v338 : Term) (v231 : Term)
   (v283 : Term) (v171 : Term) (a0 : Term) (v163 : Term) :
@@ -7847,7 +7919,7 @@ def generated.part1.more_27_eo__24bv_5fdiv_5fmod_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_26_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2041:0-2055:1 -/
+    Source: 'src/generated_part1.rs', lines 2056:0-2070:1 -/
 def generated.part1.more_26_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v325 : Term) (v326 : Term) (v322 : Term) (v321 : Term)
   (a2 : Term) (a1 : Term) (v231 : Term) (v283 : Term) (v171 : Term) (a0 : Term)
@@ -7919,7 +7991,7 @@ def generated.part1.more_26_eo__24bv_5fdiv_5fmod_5fimpl
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24pair_5ffirst]:
-    Source: 'src/generated_part1.rs', lines 2056:0-2066:1 -/
+    Source: 'src/generated_part1.rs', lines 2071:0-2081:1 -/
 def generated.part1.case_0_eo__24pair_5ffirst
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -7954,7 +8026,7 @@ def generated.part1.case_0_eo__24pair_5ffirst
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24pair_5ffirst]:
-    Source: 'src/generated_part1.rs', lines 2067:0-2072:1 -/
+    Source: 'src/generated_part1.rs', lines 2082:0-2087:1 -/
 def generated.part1.body_eo__24pair_5ffirst
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7977,7 +8049,7 @@ def generated.part1.body_eo__24pair_5ffirst
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24pair_5ffirst]:
-    Source: 'src/generated_part1.rs', lines 2074:0-2079:1
+    Source: 'src/generated_part1.rs', lines 2089:0-2094:1
     Visibility: public -/
 def generated.part1.eo__24pair_5ffirst
   (s : Store) (a0 : Term) :
@@ -7994,7 +8066,7 @@ def generated.part1.eo__24pair_5ffirst
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2081:0-2093:1
+    Source: 'src/generated_part1.rs', lines 2096:0-2108:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -8031,7 +8103,7 @@ def generated.part1.eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2094:0-2107:1 -/
+    Source: 'src/generated_part1.rs', lines 2109:0-2122:1 -/
 def generated.part1.body_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8104,7 +8176,7 @@ def generated.part1.body_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2108:0-2126:1 -/
+    Source: 'src/generated_part1.rs', lines 2123:0-2141:1 -/
 def generated.part1.case_2_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -8194,7 +8266,7 @@ def generated.part1.case_2_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_25_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2127:0-2141:1 -/
+    Source: 'src/generated_part1.rs', lines 2142:0-2156:1 -/
 def generated.part1.more_25_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v314 : Term) (v311 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v289 : Term) (v307 : Term) (v288 : Term) (a0 : Term) (v231 : Term)
@@ -8269,7 +8341,7 @@ def generated.part1.more_25_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_24_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2142:0-2156:1 -/
+    Source: 'src/generated_part1.rs', lines 2157:0-2171:1 -/
 def generated.part1.more_24_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v290 : Term) (v302 : Term) (a0 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v289 : Term) (v288 : Term) (v231 : Term) (v283 : Term)
@@ -8354,7 +8426,7 @@ def generated.part1.more_24_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_23_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2157:0-2171:1 -/
+    Source: 'src/generated_part1.rs', lines 2172:0-2186:1 -/
 def generated.part1.more_23_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (v2 : Term) (v290 : Term)
   (v289 : Term) (v288 : Term) (v231 : Term) (v283 : Term) (v171 : Term)
@@ -8434,7 +8506,7 @@ def generated.part1.more_23_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_22_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2172:0-2186:1 -/
+    Source: 'src/generated_part1.rs', lines 2187:0-2201:1 -/
 def generated.part1.more_22_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v278 : Term) (v269 : Term) (a2 : Term) (a0 : Term) (a1 : Term)
   (v2 : Term) (v231 : Term) (v171 : Term) (v163 : Term) :
@@ -8508,7 +8580,7 @@ def generated.part1.more_22_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_21_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2187:0-2201:1 -/
+    Source: 'src/generated_part1.rs', lines 2202:0-2216:1 -/
 def generated.part1.more_21_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v266 : Term) (v237 : Term) (v255 : Term) (v236 : Term)
   (a0 : Term) (a2 : Term) (a1 : Term) (v2 : Term) (v231 : Term) (v171 : Term)
@@ -8577,7 +8649,7 @@ def generated.part1.more_21_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_20_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2202:0-2216:1 -/
+    Source: 'src/generated_part1.rs', lines 2217:0-2231:1 -/
 def generated.part1.more_20_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v253 : Term) (v254 : Term) (a0 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v237 : Term) (v236 : Term) (v231 : Term) (v171 : Term)
@@ -8656,7 +8728,7 @@ def generated.part1.more_20_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_19_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2217:0-2231:1 -/
+    Source: 'src/generated_part1.rs', lines 2232:0-2246:1 -/
 def generated.part1.more_19_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v242 : Term) (a1 : Term) (a2 : Term) (v2 : Term) (v238 : Term)
   (a0 : Term) (v237 : Term) (v236 : Term) (v231 : Term) (v171 : Term)
@@ -8736,7 +8808,7 @@ def generated.part1.more_19_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_18_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2232:0-2246:1 -/
+    Source: 'src/generated_part1.rs', lines 2247:0-2261:1 -/
 def generated.part1.more_18_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v172 : Term) (v230 : Term) (a0 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v171 : Term) (v163 : Term) :
@@ -8816,7 +8888,7 @@ def generated.part1.more_18_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_17_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2247:0-2261:1 -/
+    Source: 'src/generated_part1.rs', lines 2262:0-2276:1 -/
 def generated.part1.more_17_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v217 : Term) (v218 : Term) (v210 : Term) (a2 : Term) (a1 : Term)
   (v172 : Term) (a0 : Term) (v2 : Term) (v171 : Term) (v163 : Term) :
@@ -8889,7 +8961,7 @@ def generated.part1.more_17_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_16_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2262:0-2276:1 -/
+    Source: 'src/generated_part1.rs', lines 2277:0-2291:1 -/
 def generated.part1.more_16_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v206 : Term) (a1 : Term) (a2 : Term) (v2 : Term) (v178 : Term)
   (v196 : Term) (v177 : Term) (a0 : Term) (v172 : Term) (v171 : Term)
@@ -8959,7 +9031,7 @@ def generated.part1.more_16_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_15_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2277:0-2291:1 -/
+    Source: 'src/generated_part1.rs', lines 2292:0-2306:1 -/
 def generated.part1.more_15_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v194 : Term) (a0 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v178 : Term) (v177 : Term) (v172 : Term) (v171 : Term) (v163 : Term) :
@@ -9037,7 +9109,7 @@ def generated.part1.more_15_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_14_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2292:0-2306:1 -/
+    Source: 'src/generated_part1.rs', lines 2307:0-2321:1 -/
 def generated.part1.more_14_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v180 : Term) (v182 : Term) (a0 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v179 : Term) (v178 : Term) (v177 : Term) (v172 : Term)
@@ -9119,7 +9191,7 @@ def generated.part1.more_14_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_13_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2307:0-2321:1 -/
+    Source: 'src/generated_part1.rs', lines 2322:0-2336:1 -/
 def generated.part1.more_13_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v164 : Term) (v170 : Term) (a0 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v163 : Term) :
@@ -9200,7 +9272,7 @@ def generated.part1.more_13_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_12_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2322:0-2336:1 -/
+    Source: 'src/generated_part1.rs', lines 2337:0-2351:1 -/
 def generated.part1.more_12_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v126 : Term) (v158 : Term) (v121 : Term) (v15 : Term)
   (a2 : Term) (v7 : Term) (a1 : Term) (a0 : Term) (v2 : Term) :
@@ -9273,7 +9345,7 @@ def generated.part1.more_12_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_11_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2337:0-2351:1 -/
+    Source: 'src/generated_part1.rs', lines 2352:0-2366:1 -/
 def generated.part1.more_11_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (v146 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v127 : Term) (v145 : Term) (v126 : Term) (v121 : Term) (v15 : Term)
@@ -9352,7 +9424,7 @@ def generated.part1.more_11_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_10_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2352:0-2366:1 -/
+    Source: 'src/generated_part1.rs', lines 2367:0-2381:1 -/
 def generated.part1.more_10_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v133 : Term) (v134 : Term) (v132 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v128 : Term) (a0 : Term) (v127 : Term) (v126 : Term)
@@ -9432,7 +9504,7 @@ def generated.part1.more_10_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_9_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2367:0-2381:1 -/
+    Source: 'src/generated_part1.rs', lines 2382:0-2396:1 -/
 def generated.part1.more_9_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v122 : Term) (a0 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v121 : Term) (v15 : Term) (v7 : Term) :
@@ -9513,7 +9585,7 @@ def generated.part1.more_9_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_8_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2382:0-2396:1 -/
+    Source: 'src/generated_part1.rs', lines 2397:0-2411:1 -/
 def generated.part1.more_8_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v109 : Term) (v110 : Term) (v106 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v84 : Term) (v102 : Term) (v83 : Term) (v78 : Term) (v16 : Term)
@@ -9584,7 +9656,7 @@ def generated.part1.more_8_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_7_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2397:0-2411:1 -/
+    Source: 'src/generated_part1.rs', lines 2412:0-2426:1 -/
 def generated.part1.more_7_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v98 : Term) (a0 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v84 : Term) (v83 : Term) (v78 : Term) (v16 : Term) (v15 : Term) (v7 : Term)
@@ -9669,7 +9741,7 @@ def generated.part1.more_7_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_6_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2412:0-2426:1 -/
+    Source: 'src/generated_part1.rs', lines 2427:0-2441:1 -/
 def generated.part1.more_6_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (v86 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v85 : Term) (v84 : Term) (v83 : Term) (v78 : Term) (v16 : Term) (v15 : Term)
@@ -9751,7 +9823,7 @@ def generated.part1.more_6_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_5_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2427:0-2441:1 -/
+    Source: 'src/generated_part1.rs', lines 2442:0-2456:1 -/
 def generated.part1.more_5_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v70 : Term) (v72 : Term) (v73 : Term) (v74 : Term) (v18 : Term)
   (v17 : Term) (a0 : Term) (a1 : Term) (a2 : Term) (v2 : Term) (v16 : Term)
@@ -9826,7 +9898,7 @@ def generated.part1.more_5_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_4_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2442:0-2456:1 -/
+    Source: 'src/generated_part1.rs', lines 2457:0-2471:1 -/
 def generated.part1.more_4_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v57 : Term) (v62 : Term) (v56 : Term) (a2 : Term) (a1 : Term)
   (v18 : Term) (v17 : Term) (a0 : Term) (v2 : Term) (v16 : Term) (v15 : Term)
@@ -9901,7 +9973,7 @@ def generated.part1.more_4_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2457:0-2471:1 -/
+    Source: 'src/generated_part1.rs', lines 2472:0-2486:1 -/
 def generated.part1.more_3_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v49 : Term) (v50 : Term) (v46 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v24 : Term) (v42 : Term) (v23 : Term) (a0 : Term) (v18 : Term)
@@ -9974,7 +10046,7 @@ def generated.part1.more_3_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2472:0-2486:1 -/
+    Source: 'src/generated_part1.rs', lines 2487:0-2501:1 -/
 def generated.part1.more_2_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v38 : Term) (a0 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v24 : Term) (v23 : Term) (v18 : Term) (v17 : Term) (v16 : Term) (v15 : Term)
@@ -10059,7 +10131,7 @@ def generated.part1.more_2_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2487:0-2501:1 -/
+    Source: 'src/generated_part1.rs', lines 2502:0-2516:1 -/
 def generated.part1.more_1_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (a0 : Term) (v26 : Term) (a1 : Term) (a2 : Term) (v2 : Term)
   (v25 : Term) (v24 : Term) (v23 : Term) (v18 : Term) (v17 : Term) (v16 : Term)
@@ -10141,7 +10213,7 @@ def generated.part1.more_1_eo__24bv_5fdiv_5fmod_5fimpl
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fdiv_5fmod_5fimpl]:
-    Source: 'src/generated_part1.rs', lines 2502:0-2516:1 -/
+    Source: 'src/generated_part1.rs', lines 2517:0-2531:1 -/
 def generated.part1.more_0_eo__24bv_5fdiv_5fmod_5fimpl
   (s : Store) (v8 : Term) (v14 : Term) (a0 : Term) (a1 : Term) (a2 : Term)
   (v2 : Term) (v7 : Term) :
@@ -10221,7 +10293,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5feval_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2517:0-2522:1 -/
+    Source: 'src/generated_part1.rs', lines 2532:0-2537:1 -/
 def generated.part1.case_1_eo__24bv_5feval_5fconcat
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10246,7 +10318,7 @@ def generated.part1.case_1_eo__24bv_5feval_5fconcat
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5feval_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2524:0-2536:1
+    Source: 'src/generated_part1.rs', lines 2539:0-2551:1
     Visibility: public -/
 def generated.part1.eo__24bv_5feval_5fconcat
   (s : Store) (a0 : Term) :
@@ -10282,7 +10354,7 @@ def generated.part1.eo__24bv_5feval_5fconcat
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5feval_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2537:0-2543:1 -/
+    Source: 'src/generated_part1.rs', lines 2552:0-2558:1 -/
 def generated.part1.body_eo__24bv_5feval_5fconcat
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10314,7 +10386,7 @@ def generated.part1.body_eo__24bv_5feval_5fconcat
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5feval_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2544:0-2556:1 -/
+    Source: 'src/generated_part1.rs', lines 2559:0-2571:1 -/
 def generated.part1.case_0_eo__24bv_5feval_5fconcat
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10364,7 +10436,7 @@ end
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fget_5ffirst_5fconst_5fchild]:
-    Source: 'src/generated_part1.rs', lines 2558:0-2570:1
+    Source: 'src/generated_part1.rs', lines 2573:0-2585:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fget_5ffirst_5fconst_5fchild
   (s : Store) (a0 : Term) :
@@ -10400,7 +10472,7 @@ def generated.part1.eo__24bv_5fget_5ffirst_5fconst_5fchild
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fget_5ffirst_5fconst_5fchild]:
-    Source: 'src/generated_part1.rs', lines 2571:0-2576:1 -/
+    Source: 'src/generated_part1.rs', lines 2586:0-2591:1 -/
 def generated.part1.body_eo__24bv_5fget_5ffirst_5fconst_5fchild
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10425,7 +10497,7 @@ def generated.part1.body_eo__24bv_5fget_5ffirst_5fconst_5fchild
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fget_5ffirst_5fconst_5fchild]:
-    Source: 'src/generated_part1.rs', lines 2577:0-2587:1 -/
+    Source: 'src/generated_part1.rs', lines 2592:0-2602:1 -/
 def generated.part1.case_0_eo__24bv_5fget_5ffirst_5fconst_5fchild
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10461,7 +10533,7 @@ def generated.part1.case_0_eo__24bv_5fget_5ffirst_5fconst_5fchild
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24bv_5fget_5ffirst_5fconst_5fchild]:
-    Source: 'src/generated_part1.rs', lines 2588:0-2600:1 -/
+    Source: 'src/generated_part1.rs', lines 2603:0-2615:1 -/
 def generated.part1.if_0_eo__24bv_5fget_5ffirst_5fconst_5fchild
   (s : Store) (condition : Term) (v5 : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10487,7 +10559,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2601:0-2610:1 -/
+    Source: 'src/generated_part1.rs', lines 2616:0-2625:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10524,7 +10596,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec]:
-    Source: 'src/generated_part1.rs', lines 2611:0-2618:1 -/
+    Source: 'src/generated_part1.rs', lines 2626:0-2633:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10560,7 +10632,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec]:
-    Source: 'src/generated_part1.rs', lines 2620:0-2632:1
+    Source: 'src/generated_part1.rs', lines 2635:0-2647:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -10597,7 +10669,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec]:
-    Source: 'src/generated_part1.rs', lines 2633:0-2641:1 -/
+    Source: 'src/generated_part1.rs', lines 2648:0-2656:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10641,7 +10713,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec]:
-    Source: 'src/generated_part1.rs', lines 2642:0-2664:1 -/
+    Source: 'src/generated_part1.rs', lines 2657:0-2679:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10736,7 +10808,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec]:
-    Source: 'src/generated_part1.rs', lines 2665:0-2670:1 -/
+    Source: 'src/generated_part1.rs', lines 2680:0-2685:1 -/
 def generated.part1.more_0_eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec
   (s : Store) (v14 : Term) (v17 : Term) (v2 : Term) (v9 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10759,7 +10831,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2671:0-2684:1 -/
+    Source: 'src/generated_part1.rs', lines 2686:0-2699:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10814,7 +10886,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2685:0-2697:1 -/
+    Source: 'src/generated_part1.rs', lines 2700:0-2712:1 -/
 def generated.part1.case_2_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10858,7 +10930,7 @@ def generated.part1.case_2_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2698:0-2710:1 -/
+    Source: 'src/generated_part1.rs', lines 2713:0-2725:1 -/
 def generated.part1.case_3_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10902,7 +10974,7 @@ def generated.part1.case_3_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2711:0-2717:1 -/
+    Source: 'src/generated_part1.rs', lines 2726:0-2732:1 -/
 def generated.part1.cases_0_0_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -10940,7 +11012,7 @@ def generated.part1.cases_0_0_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2718:0-2734:1 -/
+    Source: 'src/generated_part1.rs', lines 2733:0-2749:1 -/
 def generated.part1.case_4_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11017,7 +11089,7 @@ def generated.part1.case_4_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2735:0-2751:1 -/
+    Source: 'src/generated_part1.rs', lines 2750:0-2766:1 -/
 def generated.part1.case_5_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11094,7 +11166,7 @@ def generated.part1.case_5_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_6_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2752:0-2763:1 -/
+    Source: 'src/generated_part1.rs', lines 2767:0-2778:1 -/
 def generated.part1.case_6_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11128,7 +11200,7 @@ def generated.part1.case_6_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2764:0-2769:1 -/
+    Source: 'src/generated_part1.rs', lines 2779:0-2784:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11153,7 +11225,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2771:0-2783:1
+    Source: 'src/generated_part1.rs', lines 2786:0-2798:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fconcat
   (s : Store) (a0 : Term) :
@@ -11189,7 +11261,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fconcat
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2784:0-2790:1 -/
+    Source: 'src/generated_part1.rs', lines 2799:0-2805:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11223,7 +11295,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat]:
-    Source: 'src/generated_part1.rs', lines 2791:0-2803:1 -/
+    Source: 'src/generated_part1.rs', lines 2806:0-2818:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11271,7 +11343,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_7_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2804:0-2818:1 -/
+    Source: 'src/generated_part1.rs', lines 2819:0-2833:1 -/
 def generated.part1.case_7_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11328,7 +11400,7 @@ def generated.part1.case_7_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2819:0-2825:1 -/
+    Source: 'src/generated_part1.rs', lines 2834:0-2840:1 -/
 def generated.part1.cases_0_1_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11366,7 +11438,7 @@ def generated.part1.cases_0_1_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise]:
-    Source: 'src/generated_part1.rs', lines 2826:0-2836:1 -/
+    Source: 'src/generated_part1.rs', lines 2841:0-2851:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -11403,7 +11475,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise]:
-    Source: 'src/generated_part1.rs', lines 2837:0-2842:1 -/
+    Source: 'src/generated_part1.rs', lines 2852:0-2857:1 -/
 def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   (s : Store) (a2 : Term) (v1 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11424,7 +11496,7 @@ def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise]:
-    Source: 'src/generated_part1.rs', lines 2843:0-2848:1 -/
+    Source: 'src/generated_part1.rs', lines 2858:0-2863:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -11447,7 +11519,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise]:
-    Source: 'src/generated_part1.rs', lines 2849:0-2862:1 -/
+    Source: 'src/generated_part1.rs', lines 2864:0-2877:1 -/
 def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Next (Array Term 4#usize)) CheckError) × Store)
@@ -11516,7 +11588,7 @@ def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise]: loop 0:
-    Source: 'src/generated_part1.rs', lines 2864:0-2876:1 -/
+    Source: 'src/generated_part1.rs', lines 2879:0-2891:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_loop
   (a3 : Term) (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -11540,7 +11612,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise]:
-    Source: 'src/generated_part1.rs', lines 2863:0-2876:1 -/
+    Source: 'src/generated_part1.rs', lines 2878:0-2891:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -11550,7 +11622,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
     a1 a2
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise]:
-    Source: 'src/generated_part1.rs', lines 2878:0-2890:1
+    Source: 'src/generated_part1.rs', lines 2893:0-2905:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -11587,7 +11659,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_8_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2891:0-2904:1 -/
+    Source: 'src/generated_part1.rs', lines 2906:0-2919:1 -/
 def generated.part1.case_8_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11639,7 +11711,7 @@ def generated.part1.case_8_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_9_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2905:0-2918:1 -/
+    Source: 'src/generated_part1.rs', lines 2920:0-2933:1 -/
 def generated.part1.case_9_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11693,7 +11765,7 @@ def generated.part1.case_9_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_10_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2919:0-2932:1 -/
+    Source: 'src/generated_part1.rs', lines 2934:0-2947:1 -/
 def generated.part1.case_10_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11747,7 +11819,7 @@ def generated.part1.case_10_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_11_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2933:0-2945:1 -/
+    Source: 'src/generated_part1.rs', lines 2948:0-2960:1 -/
 def generated.part1.case_11_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11793,7 +11865,7 @@ def generated.part1.case_11_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_2_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 2946:0-2952:1 -/
+    Source: 'src/generated_part1.rs', lines 2961:0-2967:1 -/
 def generated.part1.cases_0_2_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11831,7 +11903,7 @@ def generated.part1.cases_0_2_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fadd]:
-    Source: 'src/generated_part1.rs', lines 2953:0-2967:1 -/
+    Source: 'src/generated_part1.rs', lines 2968:0-2982:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -11890,7 +11962,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fadd]:
-    Source: 'src/generated_part1.rs', lines 2968:0-2973:1 -/
+    Source: 'src/generated_part1.rs', lines 2983:0-2988:1 -/
 def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   (s : Store) (v0 : Term) (v1 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11911,7 +11983,7 @@ def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fadd]:
-    Source: 'src/generated_part1.rs', lines 2974:0-2979:1 -/
+    Source: 'src/generated_part1.rs', lines 2989:0-2994:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -11936,7 +12008,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fmk_5fbitblast_5fstep_5fadd]:
-    Source: 'src/generated_part1.rs', lines 2980:0-2989:1 -/
+    Source: 'src/generated_part1.rs', lines 2995:0-3004:1 -/
 def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -11985,7 +12057,7 @@ def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fadd]: loop 0:
-    Source: 'src/generated_part1.rs', lines 2991:0-3001:1 -/
+    Source: 'src/generated_part1.rs', lines 3006:0-3016:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fadd_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -12006,7 +12078,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fadd_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fadd]:
-    Source: 'src/generated_part1.rs', lines 2990:0-3001:1 -/
+    Source: 'src/generated_part1.rs', lines 3005:0-3016:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -12015,7 +12087,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fadd_loop a1 s a0
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fadd]:
-    Source: 'src/generated_part1.rs', lines 3003:0-3015:1
+    Source: 'src/generated_part1.rs', lines 3018:0-3030:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -12050,7 +12122,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fadd
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_12_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3016:0-3027:1 -/
+    Source: 'src/generated_part1.rs', lines 3031:0-3042:1 -/
 def generated.part1.case_12_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -12090,7 +12162,7 @@ def generated.part1.case_12_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec]:
-    Source: 'src/generated_part1.rs', lines 3028:0-3032:1 -/
+    Source: 'src/generated_part1.rs', lines 3043:0-3047:1 -/
 def generated.part1.case_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -12109,7 +12181,7 @@ def generated.part1.case_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3033:0-3040:1 -/
+    Source: 'src/generated_part1.rs', lines 3048:0-3055:1 -/
 def generated.part1.case_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -12145,7 +12217,7 @@ def generated.part1.case_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3042:0-3054:1
+    Source: 'src/generated_part1.rs', lines 3057:0-3069:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
@@ -12184,7 +12256,7 @@ def generated.part1.eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3055:0-3070:1 -/
+    Source: 'src/generated_part1.rs', lines 3070:0-3085:1 -/
 def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -12268,7 +12340,7 @@ def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3071:0-3093:1 -/
+    Source: 'src/generated_part1.rs', lines 3086:0-3108:1 -/
 def generated.part1.case_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -12368,7 +12440,7 @@ def generated.part1.case_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3094:0-3110:1 -/
+    Source: 'src/generated_part1.rs', lines 3109:0-3125:1 -/
 def generated.part1.case_2_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -12441,7 +12513,7 @@ def generated.part1.case_2_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_4_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3111:0-3119:1 -/
+    Source: 'src/generated_part1.rs', lines 3126:0-3134:1 -/
 def generated.part1.more_4_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (v47 : Term) (v64 : Term) (v46 : Term) (a0 : Term) (v2 : Term)
   (v30 : Term) (v10 : Term) (v29 : Term) :
@@ -12477,7 +12549,7 @@ def generated.part1.more_4_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3120:0-3134:1 -/
+    Source: 'src/generated_part1.rs', lines 3135:0-3149:1 -/
 def generated.part1.more_3_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (v5 : Term) (v52 : Term) (v50 : Term) (v48 : Term) (a4 : Term)
   (v47 : Term) (v46 : Term) (a0 : Term) (v2 : Term) (v30 : Term) (v10 : Term)
@@ -12545,7 +12617,7 @@ def generated.part1.more_3_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3135:0-3149:1 -/
+    Source: 'src/generated_part1.rs', lines 3150:0-3164:1 -/
 def generated.part1.more_2_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (v36 : Term) (v40 : Term) (v34 : Term) (v33 : Term) (v31 : Term)
   (v13 : Term) (a0 : Term) (v5 : Term) (a4 : Term) (v2 : Term) (v30 : Term)
@@ -12617,7 +12689,7 @@ def generated.part1.more_2_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3150:0-3164:1 -/
+    Source: 'src/generated_part1.rs', lines 3165:0-3179:1 -/
 def generated.part1.more_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (v15 : Term) (v28 : Term) (v13 : Term) (a0 : Term) (v5 : Term)
   (a4 : Term) (v2 : Term) (v10 : Term) :
@@ -12690,7 +12762,7 @@ def generated.part1.more_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3165:0-3179:1 -/
+    Source: 'src/generated_part1.rs', lines 3180:0-3194:1 -/
 def generated.part1.more_0_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep
   (s : Store) (v13 : Term) (a0 : Term) (v5 : Term) (v16 : Term) (a4 : Term)
   (v15 : Term) (v2 : Term) (v10 : Term) :
@@ -12759,7 +12831,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec]:
-    Source: 'src/generated_part1.rs', lines 3180:0-3194:1 -/
+    Source: 'src/generated_part1.rs', lines 3195:0-3209:1 -/
 def generated.part1.case_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -12820,7 +12892,7 @@ def generated.part1.case_1_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fshift_5fadd_5fmultiplier_5frec]:
-    Source: 'src/generated_part1.rs', lines 3195:0-3208:1 -/
+    Source: 'src/generated_part1.rs', lines 3210:0-3223:1 -/
 def generated.part1.step_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Next (Array Term 4#usize)) CheckError) × Store)
@@ -12889,7 +12961,7 @@ def generated.part1.step_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 3210:0-3222:1 -/
+    Source: 'src/generated_part1.rs', lines 3225:0-3237:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_loop
   (a3 : Term) (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -12913,7 +12985,7 @@ def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec]:
-    Source: 'src/generated_part1.rs', lines 3209:0-3222:1 -/
+    Source: 'src/generated_part1.rs', lines 3224:0-3237:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -12923,7 +12995,7 @@ def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier_5frec
     a1 a2
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fshift_5fadd_5fmultiplier_5frec]:
-    Source: 'src/generated_part1.rs', lines 3224:0-3236:1
+    Source: 'src/generated_part1.rs', lines 3239:0-3251:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -12960,7 +13032,7 @@ def generated.part1.eo__24bv_5fshift_5fadd_5fmultiplier_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fshift_5fadd_5fmultiplier]:
-    Source: 'src/generated_part1.rs', lines 3237:0-3255:1 -/
+    Source: 'src/generated_part1.rs', lines 3252:0-3270:1 -/
 def generated.part1.case_0_eo__24bv_5fshift_5fadd_5fmultiplier
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13049,7 +13121,7 @@ def generated.part1.case_0_eo__24bv_5fshift_5fadd_5fmultiplier
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fshift_5fadd_5fmultiplier]:
-    Source: 'src/generated_part1.rs', lines 3256:0-3263:1 -/
+    Source: 'src/generated_part1.rs', lines 3271:0-3278:1 -/
 def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13081,7 +13153,7 @@ def generated.part1.body_eo__24bv_5fshift_5fadd_5fmultiplier
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fshift_5fadd_5fmultiplier]:
-    Source: 'src/generated_part1.rs', lines 3265:0-3270:1
+    Source: 'src/generated_part1.rs', lines 3280:0-3285:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fshift_5fadd_5fmultiplier
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -13097,7 +13169,7 @@ def generated.part1.eo__24bv_5fshift_5fadd_5fmultiplier
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fmul]:
-    Source: 'src/generated_part1.rs', lines 3271:0-3282:1 -/
+    Source: 'src/generated_part1.rs', lines 3286:0-3297:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -13139,7 +13211,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fmul]:
-    Source: 'src/generated_part1.rs', lines 3283:0-3288:1 -/
+    Source: 'src/generated_part1.rs', lines 3298:0-3303:1 -/
 def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   (s : Store) (v0 : Term) (v1 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13160,7 +13232,7 @@ def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fmul]:
-    Source: 'src/generated_part1.rs', lines 3289:0-3294:1 -/
+    Source: 'src/generated_part1.rs', lines 3304:0-3309:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -13185,7 +13257,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fmk_5fbitblast_5fstep_5fmul]:
-    Source: 'src/generated_part1.rs', lines 3295:0-3304:1 -/
+    Source: 'src/generated_part1.rs', lines 3310:0-3319:1 -/
 def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -13234,7 +13306,7 @@ def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fmul]: loop 0:
-    Source: 'src/generated_part1.rs', lines 3306:0-3316:1 -/
+    Source: 'src/generated_part1.rs', lines 3321:0-3331:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fmul_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -13255,7 +13327,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fmul_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fmul]:
-    Source: 'src/generated_part1.rs', lines 3305:0-3316:1 -/
+    Source: 'src/generated_part1.rs', lines 3320:0-3331:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -13264,7 +13336,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fmul_loop a1 s a0
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fmul]:
-    Source: 'src/generated_part1.rs', lines 3318:0-3330:1
+    Source: 'src/generated_part1.rs', lines 3333:0-3345:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -13299,7 +13371,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fmul
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_13_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3331:0-3342:1 -/
+    Source: 'src/generated_part1.rs', lines 3346:0-3357:1 -/
 def generated.part1.case_13_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13339,7 +13411,7 @@ def generated.part1.case_13_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24iota_5frec]:
-    Source: 'src/generated_part1.rs', lines 3343:0-3355:1 -/
+    Source: 'src/generated_part1.rs', lines 3358:0-3370:1 -/
 def generated.part1.case_0_eo__24iota_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13398,7 +13470,7 @@ def generated.part1.case_0_eo__24iota_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24iota_5frec]:
-    Source: 'src/generated_part1.rs', lines 3357:0-3369:1
+    Source: 'src/generated_part1.rs', lines 3372:0-3384:1
     Visibility: public -/
 def generated.part1.eo__24iota_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -13433,7 +13505,7 @@ def generated.part1.eo__24iota_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24iota_5frec]:
-    Source: 'src/generated_part1.rs', lines 3370:0-3378:1 -/
+    Source: 'src/generated_part1.rs', lines 3385:0-3393:1 -/
 def generated.part1.body_eo__24iota_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13473,7 +13545,7 @@ def generated.part1.body_eo__24iota_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24iota_5frec]:
-    Source: 'src/generated_part1.rs', lines 3379:0-3397:1 -/
+    Source: 'src/generated_part1.rs', lines 3394:0-3412:1 -/
 def generated.part1.case_1_eo__24iota_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13563,7 +13635,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::requires_0_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3398:0-3410:1 -/
+    Source: 'src/generated_part1.rs', lines 3413:0-3425:1 -/
 def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v27 : Term) (v28 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13619,7 +13691,7 @@ def generated.part1.requires_0_eo__24bv_5fmk_5fbitblast_5fstep
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3411:0-3419:1 -/
+    Source: 'src/generated_part1.rs', lines 3426:0-3434:1 -/
 def generated.part1.more_2_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v26 : Term) (v5 : Term) (v2 : Term) (v24 : Term) (v14 : Term)
   (v19 : Term) :
@@ -13656,7 +13728,7 @@ def generated.part1.more_2_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3420:0-3434:1 -/
+    Source: 'src/generated_part1.rs', lines 3435:0-3449:1 -/
 def generated.part1.more_1_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v5 : Term) (v2 : Term) (v14 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13730,7 +13802,7 @@ def generated.part1.more_1_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_14_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3435:0-3453:1 -/
+    Source: 'src/generated_part1.rs', lines 3450:0-3468:1 -/
 def generated.part1.case_14_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13820,7 +13892,7 @@ def generated.part1.case_14_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_3_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3454:0-3466:1 -/
+    Source: 'src/generated_part1.rs', lines 3469:0-3481:1 -/
 def generated.part1.requires_3_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v22 : Term) (v23 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13876,7 +13948,7 @@ def generated.part1.requires_3_eo__24bv_5fmk_5fbitblast_5fstep
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_5_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3467:0-3470:1 -/
+    Source: 'src/generated_part1.rs', lines 3482:0-3485:1 -/
 def generated.part1.more_5_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v14 : Term) (v5 : Term) (v33 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13888,7 +13960,7 @@ def generated.part1.more_5_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_4_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3471:0-3485:1 -/
+    Source: 'src/generated_part1.rs', lines 3486:0-3500:1 -/
 def generated.part1.more_4_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v5 : Term) (v2 : Term) (v14 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -13959,7 +14031,7 @@ def generated.part1.more_4_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_15_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3486:0-3504:1 -/
+    Source: 'src/generated_part1.rs', lines 3501:0-3519:1 -/
 def generated.part1.case_15_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14049,7 +14121,7 @@ def generated.part1.case_15_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_3_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3505:0-3511:1 -/
+    Source: 'src/generated_part1.rs', lines 3520:0-3526:1 -/
 def generated.part1.cases_0_3_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14087,7 +14159,7 @@ def generated.part1.cases_0_3_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::cases_1_0_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3512:0-3518:1 -/
+    Source: 'src/generated_part1.rs', lines 3527:0-3533:1 -/
 def generated.part1.cases_1_0_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14126,7 +14198,7 @@ def generated.part1.cases_1_0_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_16_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3519:0-3535:1 -/
+    Source: 'src/generated_part1.rs', lines 3534:0-3550:1 -/
 def generated.part1.case_16_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14196,7 +14268,7 @@ def generated.part1.case_16_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_6_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3536:0-3540:1 -/
+    Source: 'src/generated_part1.rs', lines 3551:0-3555:1 -/
 def generated.part1.more_6_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v5 : Term) (v10 : Term) (v11 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14212,7 +14284,7 @@ def generated.part1.more_6_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_17_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3541:0-3557:1 -/
+    Source: 'src/generated_part1.rs', lines 3556:0-3572:1 -/
 def generated.part1.case_17_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14295,7 +14367,7 @@ def generated.part1.case_17_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fite]:
-    Source: 'src/generated_part1.rs', lines 3558:0-3575:1 -/
+    Source: 'src/generated_part1.rs', lines 3573:0-3590:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14376,7 +14448,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fite
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fite]:
-    Source: 'src/generated_part1.rs', lines 3577:0-3589:1
+    Source: 'src/generated_part1.rs', lines 3592:0-3604:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -14413,7 +14485,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fite]:
-    Source: 'src/generated_part1.rs', lines 3590:0-3600:1 -/
+    Source: 'src/generated_part1.rs', lines 3605:0-3615:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -14466,7 +14538,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fite]:
-    Source: 'src/generated_part1.rs', lines 3601:0-3627:1 -/
+    Source: 'src/generated_part1.rs', lines 3616:0-3642:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fite
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14568,7 +14640,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fmk_5fbitblast_5fstep_5fite]:
-    Source: 'src/generated_part1.rs', lines 3628:0-3639:1 -/
+    Source: 'src/generated_part1.rs', lines 3643:0-3654:1 -/
 def generated.part1.more_2_eo__24bv_5fmk_5fbitblast_5fstep_5fite
   (s : Store) (v42 : Term) (v43 : Term) (v33 : Term) (v22 : Term) (v5 : Term)
   (v10 : Term) (v17 : Term) :
@@ -14621,7 +14693,7 @@ def generated.part1.more_2_eo__24bv_5fmk_5fbitblast_5fstep_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fmk_5fbitblast_5fstep_5fite]:
-    Source: 'src/generated_part1.rs', lines 3640:0-3654:1 -/
+    Source: 'src/generated_part1.rs', lines 3655:0-3669:1 -/
 def generated.part1.more_1_eo__24bv_5fmk_5fbitblast_5fstep_5fite
   (s : Store) (v27 : Term) (v31 : Term) (v23 : Term) (v5 : Term) (v20 : Term)
   (v22 : Term) (v10 : Term) (v17 : Term) :
@@ -14689,7 +14761,7 @@ def generated.part1.more_1_eo__24bv_5fmk_5fbitblast_5fstep_5fite
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fite]:
-    Source: 'src/generated_part1.rs', lines 3655:0-3669:1 -/
+    Source: 'src/generated_part1.rs', lines 3670:0-3684:1 -/
 def generated.part1.more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fite
   (s : Store) (v19 : Term) (v5 : Term) (v13 : Term) (v20 : Term) (v10 : Term)
   (v17 : Term) :
@@ -14765,7 +14837,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_18_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3670:0-3684:1 -/
+    Source: 'src/generated_part1.rs', lines 3685:0-3699:1 -/
 def generated.part1.case_18_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -14815,7 +14887,7 @@ def generated.part1.case_18_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_7_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3685:0-3701:1 -/
+    Source: 'src/generated_part1.rs', lines 3700:0-3716:1 -/
 def generated.part1.requires_7_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v18 : Term) (v19 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -14895,7 +14967,7 @@ def generated.part1.requires_7_eo__24bv_5fmk_5fbitblast_5fstep
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_8_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3702:0-3718:1 -/
+    Source: 'src/generated_part1.rs', lines 3717:0-3733:1 -/
 def generated.part1.if_8_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -14936,7 +15008,7 @@ def generated.part1.if_8_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_9_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3719:0-3738:1 -/
+    Source: 'src/generated_part1.rs', lines 3734:0-3753:1 -/
 def generated.part1.if_9_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -14989,7 +15061,7 @@ def generated.part1.if_9_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_10_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3739:0-3760:1 -/
+    Source: 'src/generated_part1.rs', lines 3754:0-3775:1 -/
 def generated.part1.if_10_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15057,7 +15129,7 @@ def generated.part1.if_10_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_11_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3761:0-3780:1 -/
+    Source: 'src/generated_part1.rs', lines 3776:0-3795:1 -/
 def generated.part1.if_11_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15111,7 +15183,7 @@ def generated.part1.if_11_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_12_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3781:0-3797:1 -/
+    Source: 'src/generated_part1.rs', lines 3796:0-3812:1 -/
 def generated.part1.if_12_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15152,7 +15224,7 @@ def generated.part1.if_12_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_13_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3798:0-3817:1 -/
+    Source: 'src/generated_part1.rs', lines 3813:0-3832:1 -/
 def generated.part1.if_13_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15205,7 +15277,7 @@ def generated.part1.if_13_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_14_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3818:0-3834:1 -/
+    Source: 'src/generated_part1.rs', lines 3833:0-3849:1 -/
 def generated.part1.if_14_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15246,7 +15318,7 @@ def generated.part1.if_14_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_15_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3835:0-3854:1 -/
+    Source: 'src/generated_part1.rs', lines 3850:0-3869:1 -/
 def generated.part1.if_15_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15299,7 +15371,7 @@ def generated.part1.if_15_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_16_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3855:0-3876:1 -/
+    Source: 'src/generated_part1.rs', lines 3870:0-3891:1 -/
 def generated.part1.if_16_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15364,7 +15436,7 @@ def generated.part1.if_16_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_19_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3877:0-3882:1 -/
+    Source: 'src/generated_part1.rs', lines 3892:0-3897:1 -/
 def generated.part1.more_19_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v116 : Term) (v112 : Term) (v115 : Term) (v34 : Term)
   (v111 : Term) :
@@ -15387,7 +15459,7 @@ def generated.part1.more_19_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]:
-    Source: 'src/generated_part1.rs', lines 3883:0-3886:1 -/
+    Source: 'src/generated_part1.rs', lines 3898:0-3901:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 5#usize))) CheckError)
@@ -15400,7 +15472,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   else ok (core.result.Result.Ok (some (Next.Done a0)), s)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]:
-    Source: 'src/generated_part1.rs', lines 3887:0-3901:1 -/
+    Source: 'src/generated_part1.rs', lines 3902:0-3916:1 -/
 def generated.part1.if_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   (s : Store) (condition : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15433,7 +15505,7 @@ def generated.part1.if_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]:
-    Source: 'src/generated_part1.rs', lines 3902:0-3917:1 -/
+    Source: 'src/generated_part1.rs', lines 3917:0-3932:1 -/
 def generated.part1.if_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   (s : Store) (condition : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -15471,7 +15543,7 @@ def generated.part1.if_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3918:0-3923:1 -/
+    Source: 'src/generated_part1.rs', lines 3933:0-3938:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 5#usize))) CheckError)
@@ -15496,7 +15568,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3924:0-3936:1 -/
+    Source: 'src/generated_part1.rs', lines 3939:0-3951:1 -/
 def generated.part1.case_3_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 5#usize))) CheckError)
@@ -15548,7 +15620,7 @@ def generated.part1.case_3_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3938:0-3950:1
+    Source: 'src/generated_part1.rs', lines 3953:0-3965:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
@@ -15587,7 +15659,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]: loop 0:
-    Source: 'src/generated_part1.rs', lines 3952:0-3965:1 -/
+    Source: 'src/generated_part1.rs', lines 3967:0-3980:1 -/
 @[rust_loop]
 def
   generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep_loop
@@ -15613,7 +15685,7 @@ def
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3951:0-3965:1 -/
+    Source: 'src/generated_part1.rs', lines 3966:0-3980:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
@@ -15624,7 +15696,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3966:0-3983:1 -/
+    Source: 'src/generated_part1.rs', lines 3981:0-3998:1 -/
 def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Next (Array Term 5#usize)) CheckError) × Store)
@@ -15728,7 +15800,7 @@ def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 3984:0-4006:1 -/
+    Source: 'src/generated_part1.rs', lines 3999:0-4021:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 5#usize))) CheckError)
@@ -15829,7 +15901,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4007:0-4025:1 -/
+    Source: 'src/generated_part1.rs', lines 4022:0-4040:1 -/
 def generated.part1.case_2_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 5#usize))) CheckError)
@@ -15916,7 +15988,7 @@ def generated.part1.case_2_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4026:0-4037:1 -/
+    Source: 'src/generated_part1.rs', lines 4041:0-4052:1 -/
 def generated.part1.more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (a3 : Term) (v16 : Term) (v5 : Term) (v12 : Term) (v15 : Term)
   (v2 : Term) (v9 : Term) (a4 : Term) :
@@ -15968,7 +16040,7 @@ def generated.part1.more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4038:0-4046:1 -/
+    Source: 'src/generated_part1.rs', lines 4053:0-4061:1 -/
 def generated.part1.more_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep
   (s : Store) (v12 : Term) (v5 : Term) (v9 : Term) (v2 : Term) (a3 : Term)
   (a4 : Term) :
@@ -16009,7 +16081,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]:
-    Source: 'src/generated_part1.rs', lines 4047:0-4062:1 -/
+    Source: 'src/generated_part1.rs', lines 4062:0-4077:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 5#usize))) CheckError)
@@ -16078,7 +16150,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]:
-    Source: 'src/generated_part1.rs', lines 4063:0-4078:1 -/
+    Source: 'src/generated_part1.rs', lines 4078:0-4093:1 -/
 def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
   Result ((core.result.Result (Next (Array Term 5#usize)) CheckError) × Store)
@@ -16158,7 +16230,7 @@ def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 4080:0-4093:1 -/
+    Source: 'src/generated_part1.rs', lines 4095:0-4108:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_loop
   (a4 : Term) (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -16183,7 +16255,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]:
-    Source: 'src/generated_part1.rs', lines 4079:0-4093:1 -/
+    Source: 'src/generated_part1.rs', lines 4094:0-4108:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
@@ -16193,7 +16265,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
     a1 a2 a3
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec]:
-    Source: 'src/generated_part1.rs', lines 4095:0-4107:1
+    Source: 'src/generated_part1.rs', lines 4110:0-4122:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term) :
@@ -16231,7 +16303,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_18_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4108:0-4122:1 -/
+    Source: 'src/generated_part1.rs', lines 4123:0-4137:1 -/
 def generated.part1.more_18_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v37 : Term) (v5 : Term) (v2 : Term) (v35 : Term) (v34 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -16313,7 +16385,7 @@ def generated.part1.more_18_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_17_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4123:0-4137:1 -/
+    Source: 'src/generated_part1.rs', lines 4138:0-4152:1 -/
 def generated.part1.more_17_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v14 : Term) (v13 : Term) (v5 : Term) (v11 : Term) (v2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -16385,7 +16457,7 @@ def generated.part1.more_17_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_19_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4138:0-4156:1 -/
+    Source: 'src/generated_part1.rs', lines 4153:0-4171:1 -/
 def generated.part1.case_19_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -16465,7 +16537,7 @@ def generated.part1.case_19_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_4_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4157:0-4163:1 -/
+    Source: 'src/generated_part1.rs', lines 4172:0-4178:1 -/
 def generated.part1.cases_0_4_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -16503,7 +16575,7 @@ def generated.part1.cases_0_4_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::requires_20_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4164:0-4180:1 -/
+    Source: 'src/generated_part1.rs', lines 4179:0-4195:1 -/
 def generated.part1.requires_20_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v18 : Term) (v19 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16583,7 +16655,7 @@ def generated.part1.requires_20_eo__24bv_5fmk_5fbitblast_5fstep
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_21_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4181:0-4197:1 -/
+    Source: 'src/generated_part1.rs', lines 4196:0-4212:1 -/
 def generated.part1.if_21_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16624,7 +16696,7 @@ def generated.part1.if_21_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_22_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4198:0-4217:1 -/
+    Source: 'src/generated_part1.rs', lines 4213:0-4232:1 -/
 def generated.part1.if_22_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16677,7 +16749,7 @@ def generated.part1.if_22_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_23_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4218:0-4239:1 -/
+    Source: 'src/generated_part1.rs', lines 4233:0-4254:1 -/
 def generated.part1.if_23_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16745,7 +16817,7 @@ def generated.part1.if_23_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_24_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4240:0-4259:1 -/
+    Source: 'src/generated_part1.rs', lines 4255:0-4274:1 -/
 def generated.part1.if_24_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16799,7 +16871,7 @@ def generated.part1.if_24_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_25_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4260:0-4276:1 -/
+    Source: 'src/generated_part1.rs', lines 4275:0-4291:1 -/
 def generated.part1.if_25_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16840,7 +16912,7 @@ def generated.part1.if_25_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_26_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4277:0-4296:1 -/
+    Source: 'src/generated_part1.rs', lines 4292:0-4311:1 -/
 def generated.part1.if_26_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16893,7 +16965,7 @@ def generated.part1.if_26_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_27_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4297:0-4313:1 -/
+    Source: 'src/generated_part1.rs', lines 4312:0-4328:1 -/
 def generated.part1.if_27_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16934,7 +17006,7 @@ def generated.part1.if_27_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_28_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4314:0-4333:1 -/
+    Source: 'src/generated_part1.rs', lines 4329:0-4348:1 -/
 def generated.part1.if_28_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -16987,7 +17059,7 @@ def generated.part1.if_28_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_29_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4334:0-4355:1 -/
+    Source: 'src/generated_part1.rs', lines 4349:0-4370:1 -/
 def generated.part1.if_29_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17052,7 +17124,7 @@ def generated.part1.if_29_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_31_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4356:0-4369:1 -/
+    Source: 'src/generated_part1.rs', lines 4371:0-4384:1 -/
 def generated.part1.more_31_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v37 : Term) (v5 : Term) (v2 : Term) (v35 : Term) (v34 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -17122,7 +17194,7 @@ def generated.part1.more_31_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_30_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4370:0-4384:1 -/
+    Source: 'src/generated_part1.rs', lines 4385:0-4399:1 -/
 def generated.part1.more_30_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v14 : Term) (v13 : Term) (v5 : Term) (v11 : Term) (v2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -17194,7 +17266,7 @@ def generated.part1.more_30_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_20_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4385:0-4403:1 -/
+    Source: 'src/generated_part1.rs', lines 4400:0-4418:1 -/
 def generated.part1.case_20_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -17274,7 +17346,7 @@ def generated.part1.case_20_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_32_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4404:0-4420:1 -/
+    Source: 'src/generated_part1.rs', lines 4419:0-4435:1 -/
 def generated.part1.requires_32_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v18 : Term) (v19 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17354,7 +17426,7 @@ def generated.part1.requires_32_eo__24bv_5fmk_5fbitblast_5fstep
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_33_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4421:0-4437:1 -/
+    Source: 'src/generated_part1.rs', lines 4436:0-4452:1 -/
 def generated.part1.if_33_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17395,7 +17467,7 @@ def generated.part1.if_33_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_34_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4438:0-4457:1 -/
+    Source: 'src/generated_part1.rs', lines 4453:0-4472:1 -/
 def generated.part1.if_34_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17448,7 +17520,7 @@ def generated.part1.if_34_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_35_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4458:0-4479:1 -/
+    Source: 'src/generated_part1.rs', lines 4473:0-4494:1 -/
 def generated.part1.if_35_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17516,7 +17588,7 @@ def generated.part1.if_35_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_36_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4480:0-4499:1 -/
+    Source: 'src/generated_part1.rs', lines 4495:0-4514:1 -/
 def generated.part1.if_36_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17570,7 +17642,7 @@ def generated.part1.if_36_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_37_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4500:0-4516:1 -/
+    Source: 'src/generated_part1.rs', lines 4515:0-4531:1 -/
 def generated.part1.if_37_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17611,7 +17683,7 @@ def generated.part1.if_37_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_38_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4517:0-4536:1 -/
+    Source: 'src/generated_part1.rs', lines 4532:0-4551:1 -/
 def generated.part1.if_38_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17664,7 +17736,7 @@ def generated.part1.if_38_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_39_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4537:0-4553:1 -/
+    Source: 'src/generated_part1.rs', lines 4552:0-4568:1 -/
 def generated.part1.if_39_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17705,7 +17777,7 @@ def generated.part1.if_39_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_40_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4554:0-4573:1 -/
+    Source: 'src/generated_part1.rs', lines 4569:0-4588:1 -/
 def generated.part1.if_40_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17758,7 +17830,7 @@ def generated.part1.if_40_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_41_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4574:0-4595:1 -/
+    Source: 'src/generated_part1.rs', lines 4589:0-4610:1 -/
 def generated.part1.if_41_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17823,7 +17895,7 @@ def generated.part1.if_41_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]:
-    Source: 'src/generated_part1.rs', lines 4596:0-4599:1 -/
+    Source: 'src/generated_part1.rs', lines 4611:0-4614:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -17836,7 +17908,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   else ok (core.result.Result.Ok (some (Next.Done a0)), s)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]:
-    Source: 'src/generated_part1.rs', lines 4600:0-4614:1 -/
+    Source: 'src/generated_part1.rs', lines 4615:0-4629:1 -/
 def generated.part1.if_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   (s : Store) (condition : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17869,7 +17941,7 @@ def generated.part1.if_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]:
-    Source: 'src/generated_part1.rs', lines 4615:0-4630:1 -/
+    Source: 'src/generated_part1.rs', lines 4630:0-4645:1 -/
 def generated.part1.if_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   (s : Store) (condition : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -17907,7 +17979,7 @@ def generated.part1.if_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4631:0-4636:1 -/
+    Source: 'src/generated_part1.rs', lines 4646:0-4651:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -17932,7 +18004,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4638:0-4650:1
+    Source: 'src/generated_part1.rs', lines 4653:0-4665:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -17970,7 +18042,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4651:0-4664:1 -/
+    Source: 'src/generated_part1.rs', lines 4666:0-4679:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -18043,7 +18115,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4665:0-4687:1 -/
+    Source: 'src/generated_part1.rs', lines 4680:0-4702:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18143,7 +18215,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4688:0-4706:1 -/
+    Source: 'src/generated_part1.rs', lines 4703:0-4721:1 -/
 def generated.part1.case_2_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18227,7 +18299,7 @@ def generated.part1.case_2_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4707:0-4716:1 -/
+    Source: 'src/generated_part1.rs', lines 4722:0-4731:1 -/
 def generated.part1.more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
   (s : Store) (v16 : Term) (a3 : Term) (v12 : Term) (v5 : Term) (v15 : Term)
   (v2 : Term) (v9 : Term) :
@@ -18268,7 +18340,7 @@ def generated.part1.more_0_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4717:0-4722:1 -/
+    Source: 'src/generated_part1.rs', lines 4732:0-4737:1 -/
 def generated.part1.more_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep
   (s : Store) (a2 : Term) (v14 : Term) (v2 : Term) (a1 : Term) (a3 : Term)
   (v13 : Term) :
@@ -18294,7 +18366,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]:
-    Source: 'src/generated_part1.rs', lines 4723:0-4738:1 -/
+    Source: 'src/generated_part1.rs', lines 4738:0-4753:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 4#usize))) CheckError)
@@ -18363,7 +18435,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]:
-    Source: 'src/generated_part1.rs', lines 4739:0-4752:1 -/
+    Source: 'src/generated_part1.rs', lines 4754:0-4767:1 -/
 def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Next (Array Term 4#usize)) CheckError) × Store)
@@ -18432,7 +18504,7 @@ def generated.part1.step_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 4754:0-4766:1 -/
+    Source: 'src/generated_part1.rs', lines 4769:0-4781:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_loop
   (a3 : Term) (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -18456,7 +18528,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]:
-    Source: 'src/generated_part1.rs', lines 4753:0-4766:1 -/
+    Source: 'src/generated_part1.rs', lines 4768:0-4781:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -18466,7 +18538,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
     a1 a2
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec]:
-    Source: 'src/generated_part1.rs', lines 4768:0-4780:1
+    Source: 'src/generated_part1.rs', lines 4783:0-4795:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -18503,7 +18575,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_43_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4781:0-4793:1 -/
+    Source: 'src/generated_part1.rs', lines 4796:0-4808:1 -/
 def generated.part1.more_43_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v37 : Term) (v5 : Term) (v2 : Term) (v35 : Term) (v34 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18567,7 +18639,7 @@ def generated.part1.more_43_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_42_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4794:0-4808:1 -/
+    Source: 'src/generated_part1.rs', lines 4809:0-4823:1 -/
 def generated.part1.more_42_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v14 : Term) (v13 : Term) (v5 : Term) (v11 : Term) (v2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18639,7 +18711,7 @@ def generated.part1.more_42_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_21_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4809:0-4827:1 -/
+    Source: 'src/generated_part1.rs', lines 4824:0-4842:1 -/
 def generated.part1.case_21_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18719,7 +18791,7 @@ def generated.part1.case_21_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_22_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4828:0-4845:1 -/
+    Source: 'src/generated_part1.rs', lines 4843:0-4860:1 -/
 def generated.part1.case_22_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18800,7 +18872,7 @@ def generated.part1.case_22_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_23_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4846:0-4862:1 -/
+    Source: 'src/generated_part1.rs', lines 4861:0-4877:1 -/
 def generated.part1.case_23_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18868,7 +18940,7 @@ def generated.part1.case_23_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_5_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4863:0-4869:1 -/
+    Source: 'src/generated_part1.rs', lines 4878:0-4884:1 -/
 def generated.part1.cases_0_5_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18906,7 +18978,7 @@ def generated.part1.cases_0_5_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_44_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4870:0-4874:1 -/
+    Source: 'src/generated_part1.rs', lines 4885:0-4889:1 -/
 def generated.part1.more_44_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v14 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -18923,7 +18995,7 @@ def generated.part1.more_44_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_24_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4875:0-4893:1 -/
+    Source: 'src/generated_part1.rs', lines 4890:0-4908:1 -/
 def generated.part1.case_24_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -19015,7 +19087,7 @@ def generated.part1.case_24_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_25_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4894:0-4909:1 -/
+    Source: 'src/generated_part1.rs', lines 4909:0-4924:1 -/
 def generated.part1.case_25_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -19079,7 +19151,7 @@ def generated.part1.case_25_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_45_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4910:0-4921:1 -/
+    Source: 'src/generated_part1.rs', lines 4925:0-4936:1 -/
 def generated.part1.requires_45_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v2 : Term) (v3 : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -19131,7 +19203,7 @@ def generated.part1.requires_45_eo__24bv_5fmk_5fbitblast_5fstep
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_46_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4922:0-4934:1 -/
+    Source: 'src/generated_part1.rs', lines 4937:0-4949:1 -/
 def generated.part1.requires_46_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (v14 : Term) (v15 : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -19187,7 +19259,7 @@ def generated.part1.requires_46_eo__24bv_5fmk_5fbitblast_5fstep
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec]:
-    Source: 'src/generated_part1.rs', lines 4935:0-4945:1 -/
+    Source: 'src/generated_part1.rs', lines 4950:0-4960:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -19234,7 +19306,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec]:
-    Source: 'src/generated_part1.rs', lines 4947:0-4959:1
+    Source: 'src/generated_part1.rs', lines 4962:0-4974:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -19271,7 +19343,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec]:
-    Source: 'src/generated_part1.rs', lines 4960:0-4968:1 -/
+    Source: 'src/generated_part1.rs', lines 4975:0-4983:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -19315,7 +19387,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec]:
-    Source: 'src/generated_part1.rs', lines 4969:0-4985:1 -/
+    Source: 'src/generated_part1.rs', lines 4984:0-5000:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -19388,7 +19460,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::if_47_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 4986:0-5008:1 -/
+    Source: 'src/generated_part1.rs', lines 5001:0-5023:1 -/
 def generated.part1.if_47_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (condition : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -19461,7 +19533,7 @@ def generated.part1.if_47_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_26_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5009:0-5013:1 -/
+    Source: 'src/generated_part1.rs', lines 5024:0-5028:1 -/
 def generated.part1.case_26_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -19478,7 +19550,7 @@ def generated.part1.case_26_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_6_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5014:0-5019:1 -/
+    Source: 'src/generated_part1.rs', lines 5029:0-5034:1 -/
 def generated.part1.cases_0_6_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -19508,7 +19580,7 @@ def generated.part1.cases_0_6_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::cases_1_1_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5020:0-5025:1 -/
+    Source: 'src/generated_part1.rs', lines 5035:0-5040:1 -/
 def generated.part1.cases_1_1_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -19539,7 +19611,7 @@ def generated.part1.cases_1_1_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5026:0-5032:1 -/
+    Source: 'src/generated_part1.rs', lines 5041:0-5047:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -19571,7 +19643,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitblast_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5034:0-5039:1
+    Source: 'src/generated_part1.rs', lines 5049:0-5054:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep
   (s : Store) (a0 : Term) :
@@ -19587,7 +19659,7 @@ def generated.part1.eo__24bv_5fmk_5fbitblast_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::requires_0_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5040:0-5054:1 -/
+    Source: 'src/generated_part1.rs', lines 5055:0-5069:1 -/
 def generated.part1.requires_0_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (v34 : Term) (v35 : Term) (v4 : Term) (v5 : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -19654,7 +19726,7 @@ def generated.part1.requires_0_eo__24bv_5fmk_5fbitwise_5fslicing
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fmk_5fbitwise_5fslicing_5frec]:
-    Source: 'src/generated_part1.rs', lines 5055:0-5066:1 -/
+    Source: 'src/generated_part1.rs', lines 5070:0-5081:1 -/
 def generated.part1.more_0_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   (s : Store) (a5 : Term) (v10 : Term) (a1 : Term) (a0 : Term) (v9 : Term)
   (v5 : Term) (v1 : Term) :
@@ -19703,7 +19775,7 @@ def generated.part1.more_0_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitwise_5fslicing_5frec]:
-    Source: 'src/generated_part1.rs', lines 5067:0-5081:1 -/
+    Source: 'src/generated_part1.rs', lines 5082:0-5096:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) (a6 : Term) :
@@ -19776,7 +19848,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitwise_5fslicing_5frec]:
-    Source: 'src/generated_part1.rs', lines 5083:0-5095:1
+    Source: 'src/generated_part1.rs', lines 5098:0-5110:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
@@ -19817,7 +19889,7 @@ def generated.part1.eo__24bv_5fmk_5fbitwise_5fslicing_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitwise_5fslicing_5frec]:
-    Source: 'src/generated_part1.rs', lines 5096:0-5114:1 -/
+    Source: 'src/generated_part1.rs', lines 5111:0-5129:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) (a6 : Term) :
@@ -19912,7 +19984,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fmk_5fbitwise_5fslicing_5frec]:
-    Source: 'src/generated_part1.rs', lines 5115:0-5127:1 -/
+    Source: 'src/generated_part1.rs', lines 5130:0-5142:1 -/
 def generated.part1.case_1_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) (a6 : Term) :
@@ -19961,7 +20033,7 @@ def generated.part1.case_1_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fmk_5fbitwise_5fslicing_5frec]:
-    Source: 'src/generated_part1.rs', lines 5128:0-5142:1 -/
+    Source: 'src/generated_part1.rs', lines 5143:0-5157:1 -/
 def generated.part1.more_1_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   (s : Store) (a6 : Term) (v22 : Term) (a5 : Term) (a1 : Term) (a0 : Term)
   (v21 : Term) (v16 : Term) (v11 : Term) (a2 : Term) (v2 : Term) (v5 : Term) :
@@ -20027,7 +20099,7 @@ def generated.part1.more_1_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::if_2_eo__24bv_5fmk_5fbitwise_5fslicing_5frec]:
-    Source: 'src/generated_part1.rs', lines 5143:0-5169:1 -/
+    Source: 'src/generated_part1.rs', lines 5158:0-5184:1 -/
 def generated.part1.if_2_eo__24bv_5fmk_5fbitwise_5fslicing_5frec
   (s : Store) (condition : Term) (a6 : Term) (a0 : Term) (a1 : Term)
   (a2 : Term) (v2 : Term) (v5 : Term) (a5 : Term) :
@@ -20129,7 +20201,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::more_4_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5170:0-5178:1 -/
+    Source: 'src/generated_part1.rs', lines 5185:0-5193:1 -/
 def generated.part1.more_4_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (v72 : Term) (v2 : Term) (v4 : Term) (v18 : Term) (v25 : Term)
   (v47 : Term) (v65 : Term) (v71 : Term) :
@@ -20168,7 +20240,7 @@ def generated.part1.more_4_eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5179:0-5193:1 -/
+    Source: 'src/generated_part1.rs', lines 5194:0-5208:1 -/
 def generated.part1.more_3_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (v60 : Term) (v50 : Term) (v56 : Term) (v4 : Term) (v5 : Term)
   (v2 : Term) (v18 : Term) (v25 : Term) (v47 : Term) :
@@ -20240,7 +20312,7 @@ def generated.part1.more_3_eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5194:0-5208:1 -/
+    Source: 'src/generated_part1.rs', lines 5209:0-5223:1 -/
 def generated.part1.more_2_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (v48 : Term) (v2 : Term) (v4 : Term) (v5 : Term) (v18 : Term)
   (v25 : Term) (v47 : Term) :
@@ -20310,7 +20382,7 @@ def generated.part1.more_2_eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5209:0-5223:1 -/
+    Source: 'src/generated_part1.rs', lines 5224:0-5238:1 -/
 def generated.part1.more_1_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (v27 : Term) (v2 : Term) (v4 : Term) (v5 : Term) (v26 : Term)
   (v18 : Term) (v25 : Term) :
@@ -20380,7 +20452,7 @@ def generated.part1.more_1_eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::requires_5_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5224:0-5241:1 -/
+    Source: 'src/generated_part1.rs', lines 5239:0-5256:1 -/
 def generated.part1.requires_5_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (v14 : Term) (v15 : Term) (v4 : Term) (v5 : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -20468,7 +20540,7 @@ def generated.part1.requires_5_eo__24bv_5fmk_5fbitwise_5fslicing
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_6_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5242:0-5246:1 -/
+    Source: 'src/generated_part1.rs', lines 5257:0-5261:1 -/
 def generated.part1.more_6_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (v14 : Term) (v15 : Term) (v4 : Term) (v5 : Term) (v2 : Term)
   (v6 : Term) :
@@ -20488,7 +20560,7 @@ def generated.part1.more_6_eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5247:0-5265:1 -/
+    Source: 'src/generated_part1.rs', lines 5262:0-5280:1 -/
 def generated.part1.case_0_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -20579,7 +20651,7 @@ def generated.part1.case_0_eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5266:0-5271:1 -/
+    Source: 'src/generated_part1.rs', lines 5281:0-5286:1 -/
 def generated.part1.body_eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -20603,7 +20675,7 @@ def generated.part1.body_eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fmk_5fbitwise_5fslicing]:
-    Source: 'src/generated_part1.rs', lines 5273:0-5278:1
+    Source: 'src/generated_part1.rs', lines 5288:0-5293:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fmk_5fbitwise_5fslicing
   (s : Store) (a0 : Term) :
@@ -20619,7 +20691,7 @@ def generated.part1.eo__24bv_5fmk_5fbitwise_5fslicing
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5279:0-5288:1 -/
+    Source: 'src/generated_part1.rs', lines 5294:0-5303:1 -/
 def generated.part1.case_0_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) :
@@ -20659,7 +20731,7 @@ def generated.part1.case_0_eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5289:0-5301:1 -/
+    Source: 'src/generated_part1.rs', lines 5304:0-5316:1 -/
 def generated.part1.more_3_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (v48 : Term) (v50 : Term) (a1 : Term) (v46 : Term) (v45 : Term)
   (v30 : Term) (v22 : Term) (v21 : Term) (a0 : Term) (v19 : Term) (v2 : Term)
@@ -20717,7 +20789,7 @@ def generated.part1.more_3_eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5302:0-5316:1 -/
+    Source: 'src/generated_part1.rs', lines 5317:0-5331:1 -/
 def generated.part1.more_2_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (v36 : Term) (v38 : Term) (a0 : Term) (v34 : Term) (v33 : Term)
   (v31 : Term) (v5 : Term) (a1 : Term) (v30 : Term) (v22 : Term) (v21 : Term)
@@ -20795,7 +20867,7 @@ def generated.part1.more_2_eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5317:0-5331:1 -/
+    Source: 'src/generated_part1.rs', lines 5332:0-5346:1 -/
 def generated.part1.more_1_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (v5 : Term) (v26 : Term) (v25 : Term) (a1 : Term) (v23 : Term)
   (a2 : Term) (a5 : Term) (a0 : Term) (v22 : Term) (v21 : Term) (v19 : Term)
@@ -20877,7 +20949,7 @@ def generated.part1.more_1_eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5332:0-5346:1 -/
+    Source: 'src/generated_part1.rs', lines 5347:0-5361:1 -/
 def generated.part1.more_0_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (v14 : Term) (a0 : Term) (v9 : Term) (v8 : Term) (a3 : Term)
   (v5 : Term) (a1 : Term) (a2 : Term) (a5 : Term) (v2 : Term) :
@@ -20953,7 +21025,7 @@ def generated.part1.more_0_eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5347:0-5365:1 -/
+    Source: 'src/generated_part1.rs', lines 5362:0-5380:1 -/
 def generated.part1.case_1_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) :
@@ -21050,7 +21122,7 @@ def generated.part1.case_1_eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5366:0-5383:1 -/
+    Source: 'src/generated_part1.rs', lines 5381:0-5398:1 -/
 def generated.part1.step_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) :
@@ -21143,7 +21215,7 @@ def generated.part1.step_eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fsmulo_5felim_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 5385:0-5399:1 -/
+    Source: 'src/generated_part1.rs', lines 5400:0-5414:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24bv_5fsmulo_5felim_5frec_loop
   (a5 : Term) (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term)
@@ -21169,7 +21241,7 @@ def generated.part1.body_eo__24bv_5fsmulo_5felim_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5384:0-5399:1 -/
+    Source: 'src/generated_part1.rs', lines 5399:0-5414:1 -/
 @[reducible]
 def generated.part1.body_eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
@@ -21179,7 +21251,7 @@ def generated.part1.body_eo__24bv_5fsmulo_5felim_5frec
   generated.part1.body_eo__24bv_5fsmulo_5felim_5frec_loop a5 s a0 a1 a2 a3 a4
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fsmulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5401:0-5413:1
+    Source: 'src/generated_part1.rs', lines 5416:0-5428:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fsmulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
@@ -21219,7 +21291,7 @@ def generated.part1.eo__24bv_5fsmulo_5felim_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5414:0-5423:1 -/
+    Source: 'src/generated_part1.rs', lines 5429:0-5438:1 -/
 def generated.part1.case_0_eo__24bv_5fumulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) :
@@ -21260,7 +21332,7 @@ def generated.part1.case_0_eo__24bv_5fumulo_5felim_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5425:0-5437:1
+    Source: 'src/generated_part1.rs', lines 5440:0-5452:1
     Visibility: public -/
 def generated.part1.eo__24bv_5fumulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
@@ -21301,7 +21373,7 @@ def generated.part1.eo__24bv_5fumulo_5felim_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5438:0-5454:1 -/
+    Source: 'src/generated_part1.rs', lines 5453:0-5469:1 -/
 def generated.part1.body_eo__24bv_5fumulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) :
@@ -21386,7 +21458,7 @@ def generated.part1.body_eo__24bv_5fumulo_5felim_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5455:0-5473:1 -/
+    Source: 'src/generated_part1.rs', lines 5470:0-5488:1 -/
 def generated.part1.case_1_eo__24bv_5fumulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) (a4 : Term)
   (a5 : Term) :
@@ -21476,7 +21548,7 @@ def generated.part1.case_1_eo__24bv_5fumulo_5felim_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5474:0-5478:1 -/
+    Source: 'src/generated_part1.rs', lines 5489:0-5493:1 -/
 def generated.part1.more_3_eo__24bv_5fumulo_5felim_5frec
   (s : Store) (a0 : Term) (a1 : Term) (v50 : Term) (a3 : Term) (v2 : Term)
   (a5 : Term) (v21 : Term) :
@@ -21494,7 +21566,7 @@ def generated.part1.more_3_eo__24bv_5fumulo_5felim_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5479:0-5493:1 -/
+    Source: 'src/generated_part1.rs', lines 5494:0-5508:1 -/
 def generated.part1.more_2_eo__24bv_5fumulo_5felim_5frec
   (s : Store) (v5 : Term) (v38 : Term) (a5 : Term) (a0 : Term) (v36 : Term)
   (v35 : Term) (v33 : Term) (a1 : Term) (a3 : Term) (v2 : Term) (v21 : Term) :
@@ -21568,7 +21640,7 @@ def generated.part1.more_2_eo__24bv_5fumulo_5felim_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5494:0-5508:1 -/
+    Source: 'src/generated_part1.rs', lines 5509:0-5523:1 -/
 def generated.part1.more_1_eo__24bv_5fumulo_5felim_5frec
   (s : Store) (a5 : Term) (v5 : Term) (v26 : Term) (a0 : Term) (v22 : Term)
   (a2 : Term) (a1 : Term) (a3 : Term) (v2 : Term) (v21 : Term) :
@@ -21647,7 +21719,7 @@ def generated.part1.more_1_eo__24bv_5fumulo_5felim_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24bv_5fumulo_5felim_5frec]:
-    Source: 'src/generated_part1.rs', lines 5509:0-5523:1 -/
+    Source: 'src/generated_part1.rs', lines 5524:0-5538:1 -/
 def generated.part1.more_0_eo__24bv_5fumulo_5felim_5frec
   (s : Store) (v5 : Term) (a1 : Term) (v14 : Term) (v13 : Term) (v11 : Term)
   (v7 : Term) (a5 : Term) (a0 : Term) (a2 : Term) (a3 : Term) (v2 : Term) :
@@ -21728,7 +21800,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24chain_5fm_5fresolve_5ffinal]:
-    Source: 'src/generated_part1.rs', lines 5524:0-5542:1 -/
+    Source: 'src/generated_part1.rs', lines 5539:0-5557:1 -/
 def generated.part1.if_0_eo__24chain_5fm_5fresolve_5ffinal
   (s : Store) (condition : Term) (v5 : Term) (v12 : Term) (v9 : Term)
   (a0 : Term) :
@@ -21786,7 +21858,7 @@ def generated.part1.if_0_eo__24chain_5fm_5fresolve_5ffinal
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24chain_5fm_5fresolve_5ffinal]:
-    Source: 'src/generated_part1.rs', lines 5543:0-5563:1 -/
+    Source: 'src/generated_part1.rs', lines 5558:0-5578:1 -/
 def generated.part1.case_0_eo__24chain_5fm_5fresolve_5ffinal
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -21868,7 +21940,7 @@ def generated.part1.case_0_eo__24chain_5fm_5fresolve_5ffinal
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24chain_5fm_5fresolve_5ffinal]:
-    Source: 'src/generated_part1.rs', lines 5564:0-5571:1 -/
+    Source: 'src/generated_part1.rs', lines 5579:0-5586:1 -/
 def generated.part1.body_eo__24chain_5fm_5fresolve_5ffinal
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -21900,7 +21972,7 @@ def generated.part1.body_eo__24chain_5fm_5fresolve_5ffinal
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24chain_5fm_5fresolve_5ffinal]:
-    Source: 'src/generated_part1.rs', lines 5573:0-5578:1
+    Source: 'src/generated_part1.rs', lines 5588:0-5593:1
     Visibility: public -/
 def generated.part1.eo__24chain_5fm_5fresolve_5ffinal
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -21916,7 +21988,7 @@ def generated.part1.eo__24chain_5fm_5fresolve_5ffinal
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24chain_5fm_5fresolve_5frec]:
-    Source: 'src/generated_part1.rs', lines 5579:0-5592:1 -/
+    Source: 'src/generated_part1.rs', lines 5594:0-5607:1 -/
 def generated.part1.case_0_eo__24chain_5fm_5fresolve_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -21982,7 +22054,7 @@ def generated.part1.case_0_eo__24chain_5fm_5fresolve_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5593:0-5606:1 -/
+    Source: 'src/generated_part1.rs', lines 5608:0-5621:1 -/
 def generated.part1.if_0_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (condition : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22009,7 +22081,7 @@ def generated.part1.if_0_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5607:0-5620:1 -/
+    Source: 'src/generated_part1.rs', lines 5622:0-5635:1 -/
 def generated.part1.if_1_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (condition : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22036,7 +22108,7 @@ def generated.part1.if_1_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_2_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5621:0-5634:1 -/
+    Source: 'src/generated_part1.rs', lines 5636:0-5649:1 -/
 def generated.part1.if_2_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (condition : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22063,7 +22135,7 @@ def generated.part1.if_2_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_3_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5635:0-5648:1 -/
+    Source: 'src/generated_part1.rs', lines 5650:0-5663:1 -/
 def generated.part1.if_3_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (condition : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22090,7 +22162,7 @@ def generated.part1.if_3_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_4_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5649:0-5654:1 -/
+    Source: 'src/generated_part1.rs', lines 5664:0-5669:1 -/
 def generated.part1.more_4_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (v32 : Term) (v35 : Term) (v2 : Term) (v31 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22109,7 +22181,7 @@ def generated.part1.more_4_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::if_5_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5655:0-5685:1 -/
+    Source: 'src/generated_part1.rs', lines 5670:0-5700:1 -/
 def generated.part1.if_5_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (condition : Term) (v5 : Term) (a2 : Term) (a3 : Term)
   (v2 : Term) (a1 : Term) :
@@ -22231,7 +22303,7 @@ def generated.part1.if_5_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5686:0-5699:1 -/
+    Source: 'src/generated_part1.rs', lines 5701:0-5714:1 -/
 def generated.part1.case_0_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22286,7 +22358,7 @@ def generated.part1.case_0_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5700:0-5711:1 -/
+    Source: 'src/generated_part1.rs', lines 5715:0-5726:1 -/
 def generated.part1.body_eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22337,7 +22409,7 @@ def generated.part1.body_eo__24chain_5fm_5fresolve_5frec_5fstep
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24chain_5fm_5fresolve_5frec_5fstep]:
-    Source: 'src/generated_part1.rs', lines 5713:0-5718:1
+    Source: 'src/generated_part1.rs', lines 5728:0-5733:1
     Visibility: public -/
 def generated.part1.eo__24chain_5fm_5fresolve_5frec_5fstep
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -22356,7 +22428,7 @@ def generated.part1.eo__24chain_5fm_5fresolve_5frec_5fstep
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24chain_5fm_5fresolve_5frec]:
-    Source: 'src/generated_part1.rs', lines 5720:0-5732:1
+    Source: 'src/generated_part1.rs', lines 5735:0-5747:1
     Visibility: public -/
 def generated.part1.eo__24chain_5fm_5fresolve_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -22392,7 +22464,7 @@ def generated.part1.eo__24chain_5fm_5fresolve_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24chain_5fm_5fresolve_5frec]:
-    Source: 'src/generated_part1.rs', lines 5733:0-5743:1 -/
+    Source: 'src/generated_part1.rs', lines 5748:0-5758:1 -/
 def generated.part1.body_eo__24chain_5fm_5fresolve_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22445,7 +22517,7 @@ def generated.part1.body_eo__24chain_5fm_5fresolve_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24chain_5fm_5fresolve_5frec]:
-    Source: 'src/generated_part1.rs', lines 5744:0-5770:1 -/
+    Source: 'src/generated_part1.rs', lines 5759:0-5785:1 -/
 def generated.part1.case_1_eo__24chain_5fm_5fresolve_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22548,7 +22620,7 @@ def generated.part1.case_1_eo__24chain_5fm_5fresolve_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24chain_5fm_5fresolve_5frec]:
-    Source: 'src/generated_part1.rs', lines 5771:0-5775:1 -/
+    Source: 'src/generated_part1.rs', lines 5786:0-5790:1 -/
 def generated.part1.more_0_eo__24chain_5fm_5fresolve_5frec
   (s : Store) (v2 : Term) (v9 : Term) (v16 : Term) (v5 : Term) (v12 : Term)
   (v19 : Term) :
@@ -22568,7 +22640,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24chain_5fm_5fresolve]:
-    Source: 'src/generated_part1.rs', lines 5776:0-5788:1 -/
+    Source: 'src/generated_part1.rs', lines 5791:0-5803:1 -/
 def generated.part1.case_0_eo__24chain_5fm_5fresolve
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22613,7 +22685,7 @@ def generated.part1.case_0_eo__24chain_5fm_5fresolve
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24chain_5fm_5fresolve]:
-    Source: 'src/generated_part1.rs', lines 5789:0-5798:1 -/
+    Source: 'src/generated_part1.rs', lines 5804:0-5813:1 -/
 def generated.part1.body_eo__24chain_5fm_5fresolve
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22654,7 +22726,7 @@ def generated.part1.body_eo__24chain_5fm_5fresolve
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24chain_5fm_5fresolve]:
-    Source: 'src/generated_part1.rs', lines 5800:0-5805:1
+    Source: 'src/generated_part1.rs', lines 5815:0-5820:1
     Visibility: public -/
 def generated.part1.eo__24chain_5fm_5fresolve
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -22670,7 +22742,7 @@ def generated.part1.eo__24chain_5fm_5fresolve
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24compute_5fcard]:
-    Source: 'src/generated_part1.rs', lines 5806:0-5811:1 -/
+    Source: 'src/generated_part1.rs', lines 5821:0-5826:1 -/
 def generated.part1.case_0_eo__24compute_5fcard
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22692,7 +22764,7 @@ def generated.part1.case_0_eo__24compute_5fcard
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24compute_5fcard]:
-    Source: 'src/generated_part1.rs', lines 5812:0-5826:1 -/
+    Source: 'src/generated_part1.rs', lines 5827:0-5841:1 -/
 def generated.part1.if_0_eo__24compute_5fcard
   (s : Store) (condition : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22725,7 +22797,7 @@ def generated.part1.if_0_eo__24compute_5fcard
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24compute_5fcard]:
-    Source: 'src/generated_part1.rs', lines 5827:0-5842:1 -/
+    Source: 'src/generated_part1.rs', lines 5842:0-5857:1 -/
 def generated.part1.if_1_eo__24compute_5fcard
   (s : Store) (condition : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22761,7 +22833,7 @@ def generated.part1.if_1_eo__24compute_5fcard
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24compute_5fcard]:
-    Source: 'src/generated_part1.rs', lines 5843:0-5852:1 -/
+    Source: 'src/generated_part1.rs', lines 5858:0-5867:1 -/
 def generated.part1.case_1_eo__24compute_5fcard
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22797,7 +22869,7 @@ def generated.part1.case_1_eo__24compute_5fcard
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24compute_5fcard]:
-    Source: 'src/generated_part1.rs', lines 5853:0-5859:1 -/
+    Source: 'src/generated_part1.rs', lines 5868:0-5874:1 -/
 def generated.part1.body_eo__24compute_5fcard
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -22827,7 +22899,7 @@ def generated.part1.body_eo__24compute_5fcard
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24compute_5fcard]:
-    Source: 'src/generated_part1.rs', lines 5861:0-5866:1
+    Source: 'src/generated_part1.rs', lines 5876:0-5881:1
     Visibility: public -/
 def generated.part1.eo__24compute_5fcard
   (s : Store) (a0 : Term) :
@@ -22842,7 +22914,7 @@ def generated.part1.eo__24compute_5fcard
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5867:0-5873:1 -/
+    Source: 'src/generated_part1.rs', lines 5882:0-5888:1 -/
 def generated.part1.case_0_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22870,7 +22942,7 @@ def generated.part1.case_0_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5874:0-5881:1 -/
+    Source: 'src/generated_part1.rs', lines 5889:0-5896:1 -/
 def generated.part1.case_1_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22905,7 +22977,7 @@ def generated.part1.case_1_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5882:0-5885:1 -/
+    Source: 'src/generated_part1.rs', lines 5897:0-5900:1 -/
 def generated.part1.case_2_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22917,7 +22989,7 @@ def generated.part1.case_2_eo__24re_5fac_5fmerge
   else ok (core.result.Result.Ok (some a1), s)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5886:0-5890:1 -/
+    Source: 'src/generated_part1.rs', lines 5901:0-5905:1 -/
 def generated.part1.more_0_eo__24re_5fac_5fmerge
   (s : Store) (v17 : Term) (v8 : Term) (a0 : Term) (v16 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -22934,7 +23006,7 @@ def generated.part1.more_0_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5891:0-5913:1 -/
+    Source: 'src/generated_part1.rs', lines 5906:0-5928:1 -/
 def generated.part1.case_3_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23022,7 +23094,7 @@ def generated.part1.case_3_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5914:0-5920:1 -/
+    Source: 'src/generated_part1.rs', lines 5929:0-5935:1 -/
 def generated.part1.cases_0_0_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23059,7 +23131,7 @@ def generated.part1.cases_0_0_eo__24re_5fac_5fmerge
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5921:0-5938:1 -/
+    Source: 'src/generated_part1.rs', lines 5936:0-5953:1 -/
 def generated.part1.if_1_eo__24re_5fac_5fmerge
   (s : Store) (condition : Term) (a0 : Term) (a2 : Term) (v5 : Term)
   (v2 : Term) :
@@ -23102,7 +23174,7 @@ def generated.part1.if_1_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5939:0-5953:1 -/
+    Source: 'src/generated_part1.rs', lines 5954:0-5968:1 -/
 def generated.part1.case_4_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23160,7 +23232,7 @@ def generated.part1.case_4_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_2_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5954:0-5971:1 -/
+    Source: 'src/generated_part1.rs', lines 5969:0-5986:1 -/
 def generated.part1.if_2_eo__24re_5fac_5fmerge
   (s : Store) (condition : Term) (a0 : Term) (a1 : Term) (v5 : Term)
   (v2 : Term) :
@@ -23203,7 +23275,7 @@ def generated.part1.if_2_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5972:0-5986:1 -/
+    Source: 'src/generated_part1.rs', lines 5987:0-6001:1 -/
 def generated.part1.case_5_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23261,7 +23333,7 @@ def generated.part1.case_5_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_6_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5987:0-5995:1 -/
+    Source: 'src/generated_part1.rs', lines 6002:0-6010:1 -/
 def generated.part1.case_6_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23294,7 +23366,7 @@ def generated.part1.case_6_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 5996:0-6001:1 -/
+    Source: 'src/generated_part1.rs', lines 6011:0-6016:1 -/
 def generated.part1.cases_0_1_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23323,7 +23395,7 @@ def generated.part1.cases_0_1_eo__24re_5fac_5fmerge
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6002:0-6012:1 -/
+    Source: 'src/generated_part1.rs', lines 6017:0-6027:1 -/
 def generated.part1.body_eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -23373,7 +23445,7 @@ def generated.part1.body_eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24re_5fac_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6014:0-6019:1
+    Source: 'src/generated_part1.rs', lines 6029:0-6034:1
     Visibility: public -/
 def generated.part1.eo__24re_5fac_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -23388,7 +23460,7 @@ def generated.part1.eo__24re_5fac_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6020:0-6026:1 -/
+    Source: 'src/generated_part1.rs', lines 6035:0-6041:1 -/
 def generated.part1.more_0_eo__24re_5fconcat_5fmerge
   (s : Store) (v12 : Term) (v9 : Term) (v14 : Term) (v17 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23414,7 +23486,7 @@ def generated.part1.more_0_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6027:0-6049:1 -/
+    Source: 'src/generated_part1.rs', lines 6042:0-6064:1 -/
 def generated.part1.case_0_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23509,7 +23581,7 @@ def generated.part1.case_0_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6050:0-6055:1 -/
+    Source: 'src/generated_part1.rs', lines 6065:0-6070:1 -/
 def generated.part1.case_1_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23531,7 +23603,7 @@ def generated.part1.case_1_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6056:0-6072:1 -/
+    Source: 'src/generated_part1.rs', lines 6071:0-6087:1 -/
 def generated.part1.case_2_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23599,7 +23671,7 @@ def generated.part1.case_2_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6073:0-6082:1 -/
+    Source: 'src/generated_part1.rs', lines 6088:0-6097:1 -/
 def generated.part1.case_3_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23637,7 +23709,7 @@ def generated.part1.case_3_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6083:0-6089:1 -/
+    Source: 'src/generated_part1.rs', lines 6098:0-6104:1 -/
 def generated.part1.cases_0_0_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23675,7 +23747,7 @@ def generated.part1.cases_0_0_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6090:0-6099:1 -/
+    Source: 'src/generated_part1.rs', lines 6105:0-6114:1 -/
 def generated.part1.case_4_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23713,7 +23785,7 @@ def generated.part1.case_4_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6100:0-6111:1 -/
+    Source: 'src/generated_part1.rs', lines 6115:0-6126:1 -/
 def generated.part1.case_5_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23765,7 +23837,7 @@ def generated.part1.case_5_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6112:0-6116:1 -/
+    Source: 'src/generated_part1.rs', lines 6127:0-6131:1 -/
 def generated.part1.cases_0_1_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23787,7 +23859,7 @@ def generated.part1.cases_0_1_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6117:0-6125:1 -/
+    Source: 'src/generated_part1.rs', lines 6132:0-6140:1 -/
 def generated.part1.body_eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -23828,7 +23900,7 @@ def generated.part1.body_eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24re_5fconcat_5fmerge]:
-    Source: 'src/generated_part1.rs', lines 6127:0-6132:1
+    Source: 'src/generated_part1.rs', lines 6142:0-6147:1
     Visibility: public -/
 def generated.part1.eo__24re_5fconcat_5fmerge
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -23844,7 +23916,7 @@ def generated.part1.eo__24re_5fconcat_5fmerge
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6133:0-6138:1 -/
+    Source: 'src/generated_part1.rs', lines 6148:0-6153:1 -/
 def generated.part1.case_0_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23865,7 +23937,7 @@ def generated.part1.case_0_eo__24re_5fnullable
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6139:0-6144:1 -/
+    Source: 'src/generated_part1.rs', lines 6154:0-6159:1 -/
 def generated.part1.case_1_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23886,7 +23958,7 @@ def generated.part1.case_1_eo__24re_5fnullable
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6145:0-6150:1 -/
+    Source: 'src/generated_part1.rs', lines 6160:0-6165:1 -/
 def generated.part1.case_2_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23907,7 +23979,7 @@ def generated.part1.case_2_eo__24re_5fnullable
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::requires_0_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6151:0-6158:1 -/
+    Source: 'src/generated_part1.rs', lines 6166:0-6173:1 -/
 def generated.part1.requires_0_eo__24re_5fnullable
   (s : Store) (v4 : Term) (v5 : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -23939,7 +24011,7 @@ def generated.part1.requires_0_eo__24re_5fnullable
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6159:0-6169:1 -/
+    Source: 'src/generated_part1.rs', lines 6174:0-6184:1 -/
 def generated.part1.case_3_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -23980,7 +24052,7 @@ def generated.part1.case_3_eo__24re_5fnullable
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6170:0-6176:1 -/
+    Source: 'src/generated_part1.rs', lines 6185:0-6191:1 -/
 def generated.part1.cases_0_0_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24015,7 +24087,7 @@ def generated.part1.cases_0_0_eo__24re_5fnullable
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6177:0-6185:1 -/
+    Source: 'src/generated_part1.rs', lines 6192:0-6200:1 -/
 def generated.part1.case_4_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24046,7 +24118,7 @@ def generated.part1.case_4_eo__24re_5fnullable
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6186:0-6197:1 -/
+    Source: 'src/generated_part1.rs', lines 6201:0-6212:1 -/
 def generated.part1.case_5_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24088,7 +24160,7 @@ def generated.part1.case_5_eo__24re_5fnullable
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6199:0-6211:1
+    Source: 'src/generated_part1.rs', lines 6214:0-6226:1
     Visibility: public -/
 def generated.part1.eo__24re_5fnullable
   (s : Store) (a0 : Term) :
@@ -24123,7 +24195,7 @@ def generated.part1.eo__24re_5fnullable
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6212:0-6219:1 -/
+    Source: 'src/generated_part1.rs', lines 6227:0-6234:1 -/
 def generated.part1.body_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -24163,7 +24235,7 @@ def generated.part1.body_eo__24re_5fnullable
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_6_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6220:0-6233:1 -/
+    Source: 'src/generated_part1.rs', lines 6235:0-6248:1 -/
 def generated.part1.case_6_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24215,7 +24287,7 @@ def generated.part1.case_6_eo__24re_5fnullable
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_7_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6234:0-6247:1 -/
+    Source: 'src/generated_part1.rs', lines 6249:0-6262:1 -/
 def generated.part1.case_7_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24267,7 +24339,7 @@ def generated.part1.case_7_eo__24re_5fnullable
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_8_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6248:0-6261:1 -/
+    Source: 'src/generated_part1.rs', lines 6263:0-6276:1 -/
 def generated.part1.case_8_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24319,7 +24391,7 @@ def generated.part1.case_8_eo__24re_5fnullable
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_9_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6262:0-6271:1 -/
+    Source: 'src/generated_part1.rs', lines 6277:0-6286:1 -/
 def generated.part1.case_9_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24356,7 +24428,7 @@ def generated.part1.case_9_eo__24re_5fnullable
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6272:0-6278:1 -/
+    Source: 'src/generated_part1.rs', lines 6287:0-6293:1 -/
 def generated.part1.cases_0_1_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24392,7 +24464,7 @@ def generated.part1.cases_0_1_eo__24re_5fnullable
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_2_eo__24re_5fnullable]:
-    Source: 'src/generated_part1.rs', lines 6279:0-6283:1 -/
+    Source: 'src/generated_part1.rs', lines 6294:0-6298:1 -/
 def generated.part1.cases_0_2_eo__24re_5fnullable
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24416,7 +24488,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6284:0-6294:1 -/
+    Source: 'src/generated_part1.rs', lines 6299:0-6309:1 -/
 def generated.part1.case_5_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24461,7 +24533,7 @@ def generated.part1.case_5_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6295:0-6314:1 -/
+    Source: 'src/generated_part1.rs', lines 6310:0-6329:1 -/
 def generated.part1.if_1_eo__24derivative
   (s : Store) (condition : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -24522,7 +24594,7 @@ def generated.part1.if_1_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_6_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6315:0-6327:1 -/
+    Source: 'src/generated_part1.rs', lines 6330:0-6342:1 -/
 def generated.part1.case_6_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24576,7 +24648,7 @@ def generated.part1.case_6_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_2_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6328:0-6343:1 -/
+    Source: 'src/generated_part1.rs', lines 6343:0-6358:1 -/
 def generated.part1.if_2_eo__24derivative
   (s : Store) (condition : Term) (a0 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -24613,7 +24685,7 @@ def generated.part1.if_2_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_3_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6344:0-6359:1 -/
+    Source: 'src/generated_part1.rs', lines 6359:0-6374:1 -/
 def generated.part1.if_3_eo__24derivative
   (s : Store) (condition : Term) (v2 : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -24650,7 +24722,7 @@ def generated.part1.if_3_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_4_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6360:0-6375:1 -/
+    Source: 'src/generated_part1.rs', lines 6375:0-6390:1 -/
 def generated.part1.if_4_eo__24derivative
   (s : Store) (condition : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -24689,7 +24761,7 @@ def generated.part1.if_4_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::more_5_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6376:0-6380:1 -/
+    Source: 'src/generated_part1.rs', lines 6391:0-6395:1 -/
 def generated.part1.more_5_eo__24derivative
   (s : Store) (v14 : Term) (v22 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24705,7 +24777,7 @@ def generated.part1.more_5_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_7_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6381:0-6399:1 -/
+    Source: 'src/generated_part1.rs', lines 6396:0-6414:1 -/
 def generated.part1.case_7_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24797,7 +24869,7 @@ def generated.part1.case_7_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_8_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6400:0-6405:1 -/
+    Source: 'src/generated_part1.rs', lines 6415:0-6420:1 -/
 def generated.part1.case_8_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24819,7 +24891,7 @@ def generated.part1.case_8_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_9_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6406:0-6411:1 -/
+    Source: 'src/generated_part1.rs', lines 6421:0-6426:1 -/
 def generated.part1.case_9_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24841,7 +24913,7 @@ def generated.part1.case_9_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_10_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6412:0-6419:1 -/
+    Source: 'src/generated_part1.rs', lines 6427:0-6434:1 -/
 def generated.part1.case_10_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24875,7 +24947,7 @@ def generated.part1.case_10_eo__24derivative
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_2_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6420:0-6425:1 -/
+    Source: 'src/generated_part1.rs', lines 6435:0-6440:1 -/
 def generated.part1.cases_0_2_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -24905,7 +24977,7 @@ def generated.part1.cases_0_2_eo__24derivative
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6427:0-6439:1
+    Source: 'src/generated_part1.rs', lines 6442:0-6454:1
     Visibility: public -/
 def generated.part1.eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -24940,7 +25012,7 @@ def generated.part1.eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6440:0-6449:1 -/
+    Source: 'src/generated_part1.rs', lines 6455:0-6464:1 -/
 def generated.part1.body_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -24990,7 +25062,7 @@ def generated.part1.body_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6450:0-6464:1 -/
+    Source: 'src/generated_part1.rs', lines 6465:0-6479:1 -/
 def generated.part1.case_0_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25048,7 +25120,7 @@ def generated.part1.case_0_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6465:0-6477:1 -/
+    Source: 'src/generated_part1.rs', lines 6480:0-6492:1 -/
 def generated.part1.case_1_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25094,7 +25166,7 @@ def generated.part1.case_1_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6478:0-6492:1 -/
+    Source: 'src/generated_part1.rs', lines 6493:0-6507:1 -/
 def generated.part1.case_2_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25152,7 +25224,7 @@ def generated.part1.case_2_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6493:0-6503:1 -/
+    Source: 'src/generated_part1.rs', lines 6508:0-6518:1 -/
 def generated.part1.case_3_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25194,7 +25266,7 @@ def generated.part1.case_3_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6504:0-6515:1 -/
+    Source: 'src/generated_part1.rs', lines 6519:0-6530:1 -/
 def generated.part1.case_4_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25241,7 +25313,7 @@ def generated.part1.case_4_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6516:0-6522:1 -/
+    Source: 'src/generated_part1.rs', lines 6531:0-6537:1 -/
 def generated.part1.cases_0_0_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25277,7 +25349,7 @@ def generated.part1.cases_0_0_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6523:0-6529:1 -/
+    Source: 'src/generated_part1.rs', lines 6538:0-6544:1 -/
 def generated.part1.cases_0_1_eo__24derivative
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25313,7 +25385,7 @@ def generated.part1.cases_0_1_eo__24derivative
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24derivative]:
-    Source: 'src/generated_part1.rs', lines 6530:0-6548:1 -/
+    Source: 'src/generated_part1.rs', lines 6545:0-6563:1 -/
 def generated.part1.if_0_eo__24derivative
   (s : Store) (condition : Term) (a0 : Term) (v2 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -25365,7 +25437,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24tuple_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6549:0-6554:1 -/
+    Source: 'src/generated_part1.rs', lines 6564:0-6569:1 -/
 def generated.part1.case_1_eo__24tuple_5farg_5flist
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25390,7 +25462,7 @@ def generated.part1.case_1_eo__24tuple_5farg_5flist
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24tuple_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6556:0-6568:1
+    Source: 'src/generated_part1.rs', lines 6571:0-6583:1
     Visibility: public -/
 def generated.part1.eo__24tuple_5farg_5flist
   (s : Store) (a0 : Term) :
@@ -25426,7 +25498,7 @@ def generated.part1.eo__24tuple_5farg_5flist
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24tuple_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6569:0-6575:1 -/
+    Source: 'src/generated_part1.rs', lines 6584:0-6590:1 -/
 def generated.part1.body_eo__24tuple_5farg_5flist
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -25458,7 +25530,7 @@ def generated.part1.body_eo__24tuple_5farg_5flist
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24tuple_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6576:0-6590:1 -/
+    Source: 'src/generated_part1.rs', lines 6591:0-6605:1 -/
 def generated.part1.case_0_eo__24tuple_5farg_5flist
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25517,7 +25589,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6591:0-6605:1 -/
+    Source: 'src/generated_part1.rs', lines 6606:0-6620:1 -/
 def generated.part1.case_0_eo__24dt_5farg_5flist
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25573,7 +25645,7 @@ def generated.part1.case_0_eo__24dt_5farg_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24get_5farg_5flist_5frec]:
-    Source: 'src/generated_part1.rs', lines 6606:0-6614:1 -/
+    Source: 'src/generated_part1.rs', lines 6621:0-6629:1 -/
 def generated.part1.case_0_eo__24get_5farg_5flist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -25605,7 +25677,7 @@ def generated.part1.case_0_eo__24get_5farg_5flist_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24get_5farg_5flist_5frec]:
-    Source: 'src/generated_part1.rs', lines 6615:0-6617:1 -/
+    Source: 'src/generated_part1.rs', lines 6630:0-6632:1 -/
 def generated.part1.case_1_eo__24get_5farg_5flist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -25614,7 +25686,7 @@ def generated.part1.case_1_eo__24get_5farg_5flist_5frec
   ok (core.result.Result.Ok (some (Next.Done a1)), s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24get_5farg_5flist_5frec]:
-    Source: 'src/generated_part1.rs', lines 6618:0-6627:1 -/
+    Source: 'src/generated_part1.rs', lines 6633:0-6642:1 -/
 def generated.part1.step_eo__24get_5farg_5flist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -25661,7 +25733,7 @@ def generated.part1.step_eo__24get_5farg_5flist_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24get_5farg_5flist_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 6629:0-6639:1 -/
+    Source: 'src/generated_part1.rs', lines 6644:0-6654:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24get_5farg_5flist_5frec_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -25680,7 +25752,7 @@ def generated.part1.body_eo__24get_5farg_5flist_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24get_5farg_5flist_5frec]:
-    Source: 'src/generated_part1.rs', lines 6628:0-6639:1 -/
+    Source: 'src/generated_part1.rs', lines 6643:0-6654:1 -/
 @[reducible]
 def generated.part1.body_eo__24get_5farg_5flist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -25689,7 +25761,7 @@ def generated.part1.body_eo__24get_5farg_5flist_5frec
   generated.part1.body_eo__24get_5farg_5flist_5frec_loop a1 s a0
 
 /-- [pathos_compiled_checker::generated::part1::eo__24get_5farg_5flist_5frec]:
-    Source: 'src/generated_part1.rs', lines 6641:0-6653:1
+    Source: 'src/generated_part1.rs', lines 6656:0-6668:1
     Visibility: public -/
 def generated.part1.eo__24get_5farg_5flist_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -25724,7 +25796,7 @@ def generated.part1.eo__24get_5farg_5flist_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6654:0-6658:1 -/
+    Source: 'src/generated_part1.rs', lines 6669:0-6673:1 -/
 def generated.part1.case_1_eo__24dt_5farg_5flist
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25740,7 +25812,7 @@ def generated.part1.case_1_eo__24dt_5farg_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6659:0-6665:1 -/
+    Source: 'src/generated_part1.rs', lines 6674:0-6680:1 -/
 def generated.part1.body_eo__24dt_5farg_5flist
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -25770,7 +25842,7 @@ def generated.part1.body_eo__24dt_5farg_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5farg_5flist]:
-    Source: 'src/generated_part1.rs', lines 6667:0-6672:1
+    Source: 'src/generated_part1.rs', lines 6682:0-6687:1
     Visibility: public -/
 def generated.part1.eo__24dt_5farg_5flist
   (s : Store) (a0 : Term) :
@@ -25785,7 +25857,7 @@ def generated.part1.eo__24dt_5farg_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5fcollapse_5fupdater_5frhs]:
-    Source: 'src/generated_part1.rs', lines 6673:0-6681:1 -/
+    Source: 'src/generated_part1.rs', lines 6688:0-6696:1 -/
 def generated.part1.case_0_eo__24dt_5fcollapse_5fupdater_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25818,7 +25890,7 @@ def generated.part1.case_0_eo__24dt_5fcollapse_5fupdater_5frhs
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5fcollapse_5fupdater_5frhs]:
-    Source: 'src/generated_part1.rs', lines 6683:0-6695:1
+    Source: 'src/generated_part1.rs', lines 6698:0-6710:1
     Visibility: public -/
 def generated.part1.eo__24dt_5fcollapse_5fupdater_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -25854,7 +25926,7 @@ def generated.part1.eo__24dt_5fcollapse_5fupdater_5frhs
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fcollapse_5fupdater_5frhs]:
-    Source: 'src/generated_part1.rs', lines 6696:0-6706:1 -/
+    Source: 'src/generated_part1.rs', lines 6711:0-6721:1 -/
 def generated.part1.body_eo__24dt_5fcollapse_5fupdater_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -25907,7 +25979,7 @@ def generated.part1.body_eo__24dt_5fcollapse_5fupdater_5frhs
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5fcollapse_5fupdater_5frhs]:
-    Source: 'src/generated_part1.rs', lines 6707:0-6716:1 -/
+    Source: 'src/generated_part1.rs', lines 6722:0-6731:1 -/
 def generated.part1.case_1_eo__24dt_5fcollapse_5fupdater_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -25946,7 +26018,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6717:0-6722:1 -/
+    Source: 'src/generated_part1.rs', lines 6732:0-6737:1 -/
 def generated.part1.case_0_eo__24dt_5feq_5fcons
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -25964,7 +26036,7 @@ def generated.part1.case_0_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6723:0-6728:1 -/
+    Source: 'src/generated_part1.rs', lines 6738:0-6743:1 -/
 def generated.part1.case_1_eo__24dt_5feq_5fcons
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -25982,7 +26054,7 @@ def generated.part1.case_1_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6729:0-6743:1 -/
+    Source: 'src/generated_part1.rs', lines 6744:0-6758:1 -/
 def generated.part1.if_0_eo__24dt_5feq_5fcons
   (s : Store) (condition : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26013,7 +26085,7 @@ def generated.part1.if_0_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6744:0-6759:1 -/
+    Source: 'src/generated_part1.rs', lines 6759:0-6774:1 -/
 def generated.part1.if_1_eo__24dt_5feq_5fcons
   (s : Store) (condition : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26050,7 +26122,7 @@ def generated.part1.if_1_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_2_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6760:0-6774:1 -/
+    Source: 'src/generated_part1.rs', lines 6775:0-6789:1 -/
 def generated.part1.if_2_eo__24dt_5feq_5fcons
   (s : Store) (condition : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26081,7 +26153,7 @@ def generated.part1.if_2_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_3_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6775:0-6790:1 -/
+    Source: 'src/generated_part1.rs', lines 6790:0-6805:1 -/
 def generated.part1.if_3_eo__24dt_5feq_5fcons
   (s : Store) (condition : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26118,7 +26190,7 @@ def generated.part1.if_3_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_4_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6791:0-6797:1 -/
+    Source: 'src/generated_part1.rs', lines 6806:0-6812:1 -/
 def generated.part1.requires_4_eo__24dt_5feq_5fcons
   (s : Store) (v22 : Term) (v23 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26143,7 +26215,7 @@ def generated.part1.requires_4_eo__24dt_5feq_5fcons
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_5_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6798:0-6815:1 -/
+    Source: 'src/generated_part1.rs', lines 6813:0-6830:1 -/
 def generated.part1.if_5_eo__24dt_5feq_5fcons
   (s : Store) (condition : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26188,7 +26260,7 @@ def generated.part1.if_5_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_6_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6816:0-6823:1 -/
+    Source: 'src/generated_part1.rs', lines 6831:0-6838:1 -/
 def generated.part1.requires_6_eo__24dt_5feq_5fcons
   (s : Store) (v9 : Term) (v10 : Term) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26218,7 +26290,7 @@ def generated.part1.requires_6_eo__24dt_5feq_5fcons
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6824:0-6831:1 -/
+    Source: 'src/generated_part1.rs', lines 6839:0-6846:1 -/
 def generated.part1.case_2_eo__24dt_5feq_5fcons
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -26250,7 +26322,7 @@ def generated.part1.case_2_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6832:0-6842:1 -/
+    Source: 'src/generated_part1.rs', lines 6847:0-6857:1 -/
 def generated.part1.step_eo__24dt_5feq_5fcons
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -26306,7 +26378,7 @@ def generated.part1.step_eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5feq_5fcons]: loop 0:
-    Source: 'src/generated_part1.rs', lines 6844:0-6854:1 -/
+    Source: 'src/generated_part1.rs', lines 6859:0-6869:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24dt_5feq_5fcons_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -26325,7 +26397,7 @@ def generated.part1.body_eo__24dt_5feq_5fcons_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6843:0-6854:1 -/
+    Source: 'src/generated_part1.rs', lines 6858:0-6869:1 -/
 @[reducible]
 def generated.part1.body_eo__24dt_5feq_5fcons
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -26334,7 +26406,7 @@ def generated.part1.body_eo__24dt_5feq_5fcons
   generated.part1.body_eo__24dt_5feq_5fcons_loop a1 s a0
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5feq_5fcons]:
-    Source: 'src/generated_part1.rs', lines 6856:0-6868:1
+    Source: 'src/generated_part1.rs', lines 6871:0-6883:1
     Visibility: public -/
 def generated.part1.eo__24dt_5feq_5fcons
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -26368,7 +26440,7 @@ def generated.part1.eo__24dt_5feq_5fcons
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5ffind_5fcycle]:
-    Source: 'src/generated_part1.rs', lines 6869:0-6872:1 -/
+    Source: 'src/generated_part1.rs', lines 6884:0-6887:1 -/
 def generated.part1.case_0_eo__24dt_5ffind_5fcycle
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -26380,7 +26452,7 @@ def generated.part1.case_0_eo__24dt_5ffind_5fcycle
   else ok (core.result.Result.Ok (some a3), s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24is_5fcons_5fapp]:
-    Source: 'src/generated_part1.rs', lines 6873:0-6878:1 -/
+    Source: 'src/generated_part1.rs', lines 6888:0-6893:1 -/
 def generated.part1.case_0_eo__24is_5fcons_5fapp
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 1#usize))) CheckError)
@@ -26398,7 +26470,7 @@ def generated.part1.case_0_eo__24is_5fcons_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24is_5fcons_5fapp]:
-    Source: 'src/generated_part1.rs', lines 6879:0-6893:1 -/
+    Source: 'src/generated_part1.rs', lines 6894:0-6908:1 -/
 def generated.part1.if_0_eo__24is_5fcons_5fapp
   (s : Store) (condition : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26429,7 +26501,7 @@ def generated.part1.if_0_eo__24is_5fcons_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24is_5fcons_5fapp]:
-    Source: 'src/generated_part1.rs', lines 6894:0-6909:1 -/
+    Source: 'src/generated_part1.rs', lines 6909:0-6924:1 -/
 def generated.part1.if_1_eo__24is_5fcons_5fapp
   (s : Store) (condition : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26467,7 +26539,7 @@ def generated.part1.if_1_eo__24is_5fcons_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24is_5fcons_5fapp]:
-    Source: 'src/generated_part1.rs', lines 6910:0-6915:1 -/
+    Source: 'src/generated_part1.rs', lines 6925:0-6930:1 -/
 def generated.part1.case_1_eo__24is_5fcons_5fapp
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 1#usize))) CheckError)
@@ -26490,7 +26562,7 @@ def generated.part1.case_1_eo__24is_5fcons_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24is_5fcons_5fapp]:
-    Source: 'src/generated_part1.rs', lines 6916:0-6923:1 -/
+    Source: 'src/generated_part1.rs', lines 6931:0-6938:1 -/
 def generated.part1.step_eo__24is_5fcons_5fapp
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Next (Array Term 1#usize)) CheckError) × Store)
@@ -26526,7 +26598,7 @@ def generated.part1.step_eo__24is_5fcons_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24is_5fcons_5fapp]: loop 0:
-    Source: 'src/generated_part1.rs', lines 6925:0-6934:1 -/
+    Source: 'src/generated_part1.rs', lines 6940:0-6949:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24is_5fcons_5fapp_loop
   (a0 : Term) (s : Store) :
@@ -26544,7 +26616,7 @@ def generated.part1.body_eo__24is_5fcons_5fapp_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24is_5fcons_5fapp]:
-    Source: 'src/generated_part1.rs', lines 6924:0-6934:1 -/
+    Source: 'src/generated_part1.rs', lines 6939:0-6949:1 -/
 @[reducible]
 def generated.part1.body_eo__24is_5fcons_5fapp
   (s : Store) (a0 : Term) :
@@ -26553,7 +26625,7 @@ def generated.part1.body_eo__24is_5fcons_5fapp
   generated.part1.body_eo__24is_5fcons_5fapp_loop a0 s
 
 /-- [pathos_compiled_checker::generated::part1::eo__24is_5fcons_5fapp]:
-    Source: 'src/generated_part1.rs', lines 6936:0-6948:1
+    Source: 'src/generated_part1.rs', lines 6951:0-6963:1
     Visibility: public -/
 def generated.part1.eo__24is_5fcons_5fapp
   (s : Store) (a0 : Term) :
@@ -26587,7 +26659,7 @@ def generated.part1.eo__24is_5fcons_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24dt_5ffind_5fcycle]:
-    Source: 'src/generated_part1.rs', lines 6949:0-6952:1 -/
+    Source: 'src/generated_part1.rs', lines 6964:0-6967:1 -/
 def generated.part1.case_2_eo__24dt_5ffind_5fcycle
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -26600,7 +26672,7 @@ def generated.part1.case_2_eo__24dt_5ffind_5fcycle
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5ffind_5fcycle]:
-    Source: 'src/generated_part1.rs', lines 6954:0-6966:1
+    Source: 'src/generated_part1.rs', lines 6969:0-6981:1
     Visibility: public -/
 def generated.part1.eo__24dt_5ffind_5fcycle
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -26637,7 +26709,7 @@ def generated.part1.eo__24dt_5ffind_5fcycle
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5ffind_5fcycle]:
-    Source: 'src/generated_part1.rs', lines 6967:0-6980:1 -/
+    Source: 'src/generated_part1.rs', lines 6982:0-6995:1 -/
 def generated.part1.body_eo__24dt_5ffind_5fcycle
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26710,7 +26782,7 @@ def generated.part1.body_eo__24dt_5ffind_5fcycle
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5ffind_5fcycle]:
-    Source: 'src/generated_part1.rs', lines 6981:0-6992:1 -/
+    Source: 'src/generated_part1.rs', lines 6996:0-7007:1 -/
 def generated.part1.case_1_eo__24dt_5ffind_5fcycle
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -26755,7 +26827,7 @@ def generated.part1.case_1_eo__24dt_5ffind_5fcycle
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24dt_5ffind_5fcycle]:
-    Source: 'src/generated_part1.rs', lines 6993:0-7007:1 -/
+    Source: 'src/generated_part1.rs', lines 7008:0-7022:1 -/
 def generated.part1.if_0_eo__24dt_5ffind_5fcycle
   (s : Store) (condition : Term) (v1 : Term) (a1 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26789,7 +26861,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5fget_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7008:0-7023:1 -/
+    Source: 'src/generated_part1.rs', lines 7023:0-7038:1 -/
 def generated.part1.case_0_eo__24dt_5fget_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 1#usize))) CheckError)
@@ -26855,7 +26927,7 @@ def generated.part1.case_0_eo__24dt_5fget_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5fget_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7024:0-7033:1 -/
+    Source: 'src/generated_part1.rs', lines 7039:0-7048:1 -/
 def generated.part1.case_1_eo__24dt_5fget_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 1#usize))) CheckError)
@@ -26900,7 +26972,7 @@ def generated.part1.case_1_eo__24dt_5fget_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24dt_5fget_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7034:0-7039:1 -/
+    Source: 'src/generated_part1.rs', lines 7049:0-7054:1 -/
 def generated.part1.case_2_eo__24dt_5fget_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 1#usize))) CheckError)
@@ -26918,7 +26990,7 @@ def generated.part1.case_2_eo__24dt_5fget_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fdatatype_5fconstructors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7040:0-7043:1 -/
+    Source: 'src/generated_part1.rs', lines 7055:0-7058:1 -/
 def generated.part1.case_1_eo__24eo_5fdatatype_5fconstructors_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -26932,7 +27004,7 @@ def generated.part1.case_1_eo__24eo_5fdatatype_5fconstructors_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fdatatype_5fconstructors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7045:0-7057:1
+    Source: 'src/generated_part1.rs', lines 7060:0-7072:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fdatatype_5fconstructors_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -26970,7 +27042,7 @@ def generated.part1.eo__24eo_5fdatatype_5fconstructors_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fdatatype_5fconstructors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7058:0-7062:1 -/
+    Source: 'src/generated_part1.rs', lines 7073:0-7077:1 -/
 def generated.part1.body_eo__24eo_5fdatatype_5fconstructors_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -26997,7 +27069,7 @@ def generated.part1.body_eo__24eo_5fdatatype_5fconstructors_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fdatatype_5fconstructors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7063:0-7076:1 -/
+    Source: 'src/generated_part1.rs', lines 7078:0-7091:1 -/
 def generated.part1.case_0_eo__24eo_5fdatatype_5fconstructors_5frec
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27054,7 +27126,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fdt_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7077:0-7087:1 -/
+    Source: 'src/generated_part1.rs', lines 7092:0-7102:1 -/
 def generated.part1.case_0_eo__24eo_5fdt_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27090,7 +27162,7 @@ def generated.part1.case_0_eo__24eo_5fdt_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fdt_5fconstructors_5fmain]:
-    Source: 'src/generated_part1.rs', lines 7088:0-7092:1 -/
+    Source: 'src/generated_part1.rs', lines 7103:0-7107:1 -/
 def generated.part1.body_eo__24eo_5fdt_5fconstructors_5fmain
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -27106,7 +27178,7 @@ def generated.part1.body_eo__24eo_5fdt_5fconstructors_5fmain
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fdt_5fconstructors_5fmain]:
-    Source: 'src/generated_part1.rs', lines 7094:0-7099:1
+    Source: 'src/generated_part1.rs', lines 7109:0-7114:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fdt_5fconstructors_5fmain
   (s : Store) (a0 : Term) :
@@ -27122,7 +27194,7 @@ def generated.part1.eo__24eo_5fdt_5fconstructors_5fmain
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fdt_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7100:0-7103:1 -/
+    Source: 'src/generated_part1.rs', lines 7115:0-7118:1 -/
 def generated.part1.case_1_eo__24eo_5fdt_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27133,7 +27205,7 @@ def generated.part1.case_1_eo__24eo_5fdt_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fdt_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7104:0-7110:1 -/
+    Source: 'src/generated_part1.rs', lines 7119:0-7125:1 -/
 def generated.part1.body_eo__24eo_5fdt_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -27164,7 +27236,7 @@ def generated.part1.body_eo__24eo_5fdt_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fdt_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7112:0-7117:1
+    Source: 'src/generated_part1.rs', lines 7127:0-7132:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fdt_5fconstructors
   (s : Store) (a0 : Term) :
@@ -27180,7 +27252,7 @@ def generated.part1.eo__24eo_5fdt_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24dt_5fget_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7118:0-7121:1 -/
+    Source: 'src/generated_part1.rs', lines 7133:0-7136:1 -/
 def generated.part1.case_3_eo__24dt_5fget_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 1#usize))) CheckError)
@@ -27193,7 +27265,7 @@ def generated.part1.case_3_eo__24dt_5fget_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24dt_5fget_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7122:0-7131:1 -/
+    Source: 'src/generated_part1.rs', lines 7137:0-7146:1 -/
 def generated.part1.step_eo__24dt_5fget_5fconstructors
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Next (Array Term 1#usize)) CheckError) × Store)
@@ -27249,7 +27321,7 @@ def generated.part1.step_eo__24dt_5fget_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fget_5fconstructors]: loop 0:
-    Source: 'src/generated_part1.rs', lines 7133:0-7142:1 -/
+    Source: 'src/generated_part1.rs', lines 7148:0-7157:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24dt_5fget_5fconstructors_loop
   (a0 : Term) (s : Store) :
@@ -27267,7 +27339,7 @@ def generated.part1.body_eo__24dt_5fget_5fconstructors_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fget_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7132:0-7142:1 -/
+    Source: 'src/generated_part1.rs', lines 7147:0-7157:1 -/
 @[reducible]
 def generated.part1.body_eo__24dt_5fget_5fconstructors
   (s : Store) (a0 : Term) :
@@ -27276,7 +27348,7 @@ def generated.part1.body_eo__24dt_5fget_5fconstructors
   generated.part1.body_eo__24dt_5fget_5fconstructors_loop a0 s
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5fget_5fconstructors]:
-    Source: 'src/generated_part1.rs', lines 7144:0-7156:1
+    Source: 'src/generated_part1.rs', lines 7159:0-7171:1
     Visibility: public -/
 def generated.part1.eo__24dt_5fget_5fconstructors
   (s : Store) (a0 : Term) :
@@ -27311,7 +27383,7 @@ def generated.part1.eo__24dt_5fget_5fconstructors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24tuple_5fget_5fselectors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7157:0-7162:1 -/
+    Source: 'src/generated_part1.rs', lines 7172:0-7177:1 -/
 def generated.part1.case_0_eo__24tuple_5fget_5fselectors_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27336,7 +27408,7 @@ def generated.part1.case_0_eo__24tuple_5fget_5fselectors_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24tuple_5fget_5fselectors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7164:0-7176:1
+    Source: 'src/generated_part1.rs', lines 7179:0-7191:1
     Visibility: public -/
 def generated.part1.eo__24tuple_5fget_5fselectors_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -27372,7 +27444,7 @@ def generated.part1.eo__24tuple_5fget_5fselectors_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24tuple_5fget_5fselectors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7177:0-7185:1 -/
+    Source: 'src/generated_part1.rs', lines 7192:0-7200:1 -/
 def generated.part1.body_eo__24tuple_5fget_5fselectors_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -27415,7 +27487,7 @@ def generated.part1.body_eo__24tuple_5fget_5fselectors_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24tuple_5fget_5fselectors_5frec]:
-    Source: 'src/generated_part1.rs', lines 7186:0-7203:1 -/
+    Source: 'src/generated_part1.rs', lines 7201:0-7218:1 -/
 def generated.part1.case_1_eo__24tuple_5fget_5fselectors_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27496,7 +27568,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5fget_5fselectors]:
-    Source: 'src/generated_part1.rs', lines 7204:0-7221:1 -/
+    Source: 'src/generated_part1.rs', lines 7219:0-7236:1 -/
 def generated.part1.case_0_eo__24dt_5fget_5fselectors
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27574,7 +27646,7 @@ def generated.part1.case_0_eo__24dt_5fget_5fselectors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5fget_5fselectors]:
-    Source: 'src/generated_part1.rs', lines 7222:0-7229:1 -/
+    Source: 'src/generated_part1.rs', lines 7237:0-7244:1 -/
 def generated.part1.case_1_eo__24dt_5fget_5fselectors
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27609,7 +27681,7 @@ def generated.part1.case_1_eo__24dt_5fget_5fselectors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24dt_5fget_5fselectors]:
-    Source: 'src/generated_part1.rs', lines 7230:0-7233:1 -/
+    Source: 'src/generated_part1.rs', lines 7245:0-7248:1 -/
 def generated.part1.case_2_eo__24dt_5fget_5fselectors
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -27620,7 +27692,7 @@ def generated.part1.case_2_eo__24dt_5fget_5fselectors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fget_5fselectors]:
-    Source: 'src/generated_part1.rs', lines 7234:0-7243:1 -/
+    Source: 'src/generated_part1.rs', lines 7249:0-7258:1 -/
 def generated.part1.body_eo__24dt_5fget_5fselectors
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -27670,7 +27742,7 @@ def generated.part1.body_eo__24dt_5fget_5fselectors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5fget_5fselectors]:
-    Source: 'src/generated_part1.rs', lines 7245:0-7250:1
+    Source: 'src/generated_part1.rs', lines 7260:0-7265:1
     Visibility: public -/
 def generated.part1.eo__24dt_5fget_5fselectors
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -27686,7 +27758,7 @@ def generated.part1.eo__24dt_5fget_5fselectors
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5fget_5fselectors_5fof_5fapp]:
-    Source: 'src/generated_part1.rs', lines 7251:0-7256:1 -/
+    Source: 'src/generated_part1.rs', lines 7266:0-7271:1 -/
 def generated.part1.case_0_eo__24dt_5fget_5fselectors_5fof_5fapp
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -27704,7 +27776,7 @@ def generated.part1.case_0_eo__24dt_5fget_5fselectors_5fof_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5fget_5fselectors_5fof_5fapp]:
-    Source: 'src/generated_part1.rs', lines 7257:0-7260:1 -/
+    Source: 'src/generated_part1.rs', lines 7272:0-7275:1 -/
 def generated.part1.case_1_eo__24dt_5fget_5fselectors_5fof_5fapp
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -27717,7 +27789,7 @@ def generated.part1.case_1_eo__24dt_5fget_5fselectors_5fof_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24dt_5fget_5fselectors_5fof_5fapp]:
-    Source: 'src/generated_part1.rs', lines 7261:0-7270:1 -/
+    Source: 'src/generated_part1.rs', lines 7276:0-7285:1 -/
 def generated.part1.step_eo__24dt_5fget_5fselectors_5fof_5fapp
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -27766,7 +27838,7 @@ def generated.part1.step_eo__24dt_5fget_5fselectors_5fof_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fget_5fselectors_5fof_5fapp]: loop 0:
-    Source: 'src/generated_part1.rs', lines 7272:0-7282:1 -/
+    Source: 'src/generated_part1.rs', lines 7287:0-7297:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24dt_5fget_5fselectors_5fof_5fapp_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -27787,7 +27859,7 @@ def generated.part1.body_eo__24dt_5fget_5fselectors_5fof_5fapp_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fget_5fselectors_5fof_5fapp]:
-    Source: 'src/generated_part1.rs', lines 7271:0-7282:1 -/
+    Source: 'src/generated_part1.rs', lines 7286:0-7297:1 -/
 @[reducible]
 def generated.part1.body_eo__24dt_5fget_5fselectors_5fof_5fapp
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -27796,7 +27868,7 @@ def generated.part1.body_eo__24dt_5fget_5fselectors_5fof_5fapp
   generated.part1.body_eo__24dt_5fget_5fselectors_5fof_5fapp_loop a1 s a0
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5fget_5fselectors_5fof_5fapp]:
-    Source: 'src/generated_part1.rs', lines 7284:0-7296:1
+    Source: 'src/generated_part1.rs', lines 7299:0-7311:1
     Visibility: public -/
 def generated.part1.eo__24dt_5fget_5fselectors_5fof_5fapp
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -27831,7 +27903,7 @@ def generated.part1.eo__24dt_5fget_5fselectors_5fof_5fapp
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24dt_5fupdater_5felim_5frhs]:
-    Source: 'src/generated_part1.rs', lines 7297:0-7322:1 -/
+    Source: 'src/generated_part1.rs', lines 7312:0-7337:1 -/
 def generated.part1.case_0_eo__24dt_5fupdater_5felim_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -27929,7 +28001,7 @@ def generated.part1.case_0_eo__24dt_5fupdater_5felim_5frhs
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24dt_5fupdater_5felim_5frhs]:
-    Source: 'src/generated_part1.rs', lines 7323:0-7348:1 -/
+    Source: 'src/generated_part1.rs', lines 7338:0-7363:1 -/
 def generated.part1.case_1_eo__24dt_5fupdater_5felim_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -28025,7 +28097,7 @@ def generated.part1.case_1_eo__24dt_5fupdater_5felim_5frhs
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24dt_5fupdater_5felim_5frhs]:
-    Source: 'src/generated_part1.rs', lines 7349:0-7363:1 -/
+    Source: 'src/generated_part1.rs', lines 7364:0-7378:1 -/
 def generated.part1.case_2_eo__24dt_5fupdater_5felim_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 3#usize))) CheckError)
@@ -28071,7 +28143,7 @@ def generated.part1.case_2_eo__24dt_5fupdater_5felim_5frhs
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24dt_5fupdater_5felim_5frhs]:
-    Source: 'src/generated_part1.rs', lines 7364:0-7376:1 -/
+    Source: 'src/generated_part1.rs', lines 7379:0-7391:1 -/
 def generated.part1.step_eo__24dt_5fupdater_5felim_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Next (Array Term 3#usize)) CheckError) × Store)
@@ -28140,7 +28212,7 @@ def generated.part1.step_eo__24dt_5fupdater_5felim_5frhs
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fupdater_5felim_5frhs]: loop 0:
-    Source: 'src/generated_part1.rs', lines 7378:0-7389:1 -/
+    Source: 'src/generated_part1.rs', lines 7393:0-7404:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24dt_5fupdater_5felim_5frhs_loop
   (a2 : Term) (s : Store) (a0 : Term) (a1 : Term) :
@@ -28161,7 +28233,7 @@ def generated.part1.body_eo__24dt_5fupdater_5felim_5frhs_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24dt_5fupdater_5felim_5frhs]:
-    Source: 'src/generated_part1.rs', lines 7377:0-7389:1 -/
+    Source: 'src/generated_part1.rs', lines 7392:0-7404:1 -/
 @[reducible]
 def generated.part1.body_eo__24dt_5fupdater_5felim_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -28170,7 +28242,7 @@ def generated.part1.body_eo__24dt_5fupdater_5felim_5frhs
   generated.part1.body_eo__24dt_5fupdater_5felim_5frhs_loop a2 s a0 a1
 
 /-- [pathos_compiled_checker::generated::part1::eo__24dt_5fupdater_5felim_5frhs]:
-    Source: 'src/generated_part1.rs', lines 7391:0-7403:1
+    Source: 'src/generated_part1.rs', lines 7406:0-7418:1
     Visibility: public -/
 def generated.part1.eo__24dt_5fupdater_5felim_5frhs
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -28205,7 +28277,7 @@ def generated.part1.eo__24dt_5fupdater_5felim_5frhs
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fStateObj_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7404:0-7410:1 -/
+    Source: 'src/generated_part1.rs', lines 7419:0-7425:1 -/
 def generated.part1.case_0_eo__24eo_5fStateObj_5fproven
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -28224,7 +28296,7 @@ def generated.part1.case_0_eo__24eo_5fStateObj_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fStateObj_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7411:0-7417:1 -/
+    Source: 'src/generated_part1.rs', lines 7426:0-7432:1 -/
 def generated.part1.case_1_eo__24eo_5fStateObj_5fproven
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -28243,7 +28315,7 @@ def generated.part1.case_1_eo__24eo_5fStateObj_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24eo_5fStateObj_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7418:0-7424:1 -/
+    Source: 'src/generated_part1.rs', lines 7433:0-7439:1 -/
 def generated.part1.case_2_eo__24eo_5fStateObj_5fproven
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -28262,7 +28334,7 @@ def generated.part1.case_2_eo__24eo_5fStateObj_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fStateObj_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7425:0-7430:1 -/
+    Source: 'src/generated_part1.rs', lines 7440:0-7445:1 -/
 def generated.part1.body_eo__24eo_5fStateObj_5fproven
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -28293,7 +28365,7 @@ def generated.part1.body_eo__24eo_5fStateObj_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fStateObj_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7432:0-7437:1
+    Source: 'src/generated_part1.rs', lines 7447:0-7452:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fStateObj_5fproven
   (s : Store) (a0 : Term) :
@@ -28309,7 +28381,7 @@ def generated.part1.eo__24eo_5fStateObj_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5finvoke_5fassume_5flist]:
-    Source: 'src/generated_part1.rs', lines 7438:0-7442:1 -/
+    Source: 'src/generated_part1.rs', lines 7453:0-7457:1 -/
 def generated.part1.case_0_eo__24eo_5finvoke_5fassume_5flist
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option FoldStep) CheckError) × Store)
@@ -28326,7 +28398,7 @@ def generated.part1.case_0_eo__24eo_5finvoke_5fassume_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fis_5fbool_5ftype]:
-    Source: 'src/generated_part1.rs', lines 7443:0-7448:1 -/
+    Source: 'src/generated_part1.rs', lines 7458:0-7463:1 -/
 def generated.part1.case_0_eo__24eo_5fis_5fbool_5ftype
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -28347,7 +28419,7 @@ def generated.part1.case_0_eo__24eo_5fis_5fbool_5ftype
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fis_5fbool_5ftype]:
-    Source: 'src/generated_part1.rs', lines 7449:0-7454:1 -/
+    Source: 'src/generated_part1.rs', lines 7464:0-7469:1 -/
 def generated.part1.body_eo__24eo_5fis_5fbool_5ftype
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -28370,7 +28442,7 @@ def generated.part1.body_eo__24eo_5fis_5fbool_5ftype
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fis_5fbool_5ftype]:
-    Source: 'src/generated_part1.rs', lines 7456:0-7461:1
+    Source: 'src/generated_part1.rs', lines 7471:0-7476:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fis_5fbool_5ftype
   (s : Store) (a0 : Term) :
@@ -28385,7 +28457,7 @@ def generated.part1.eo__24eo_5fis_5fbool_5ftype
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7462:0-7472:1 -/
+    Source: 'src/generated_part1.rs', lines 7477:0-7487:1 -/
 def generated.part1.case_0_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28423,7 +28495,7 @@ def generated.part1.case_0_eo__24eo_5fis_5fclosed_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7473:0-7485:1 -/
+    Source: 'src/generated_part1.rs', lines 7488:0-7500:1 -/
 def generated.part1.case_2_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28474,7 +28546,7 @@ def generated.part1.case_2_eo__24eo_5fis_5fclosed_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7486:0-7498:1 -/
+    Source: 'src/generated_part1.rs', lines 7501:0-7513:1 -/
 def generated.part1.case_3_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28525,7 +28597,7 @@ def generated.part1.case_3_eo__24eo_5fis_5fclosed_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7499:0-7511:1 -/
+    Source: 'src/generated_part1.rs', lines 7514:0-7526:1 -/
 def generated.part1.case_4_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28576,7 +28648,7 @@ def generated.part1.case_4_eo__24eo_5fis_5fclosed_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_6_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7512:0-7519:1 -/
+    Source: 'src/generated_part1.rs', lines 7527:0-7534:1 -/
 def generated.part1.case_6_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28599,7 +28671,7 @@ def generated.part1.case_6_eo__24eo_5fis_5fclosed_5frec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_9_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7520:0-7523:1 -/
+    Source: 'src/generated_part1.rs', lines 7535:0-7538:1 -/
 def generated.part1.case_9_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28614,7 +28686,7 @@ def generated.part1.case_9_eo__24eo_5fis_5fclosed_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7525:0-7537:1
+    Source: 'src/generated_part1.rs', lines 7540:0-7552:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -28650,7 +28722,7 @@ def generated.part1.eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fis_5fclosed_5frec]: loop 0:
-    Source: 'src/generated_part1.rs', lines 7539:0-7549:1 -/
+    Source: 'src/generated_part1.rs', lines 7554:0-7564:1 -/
 @[rust_loop]
 def generated.part1.body_eo__24eo_5fis_5fclosed_5frec_loop
   (a1 : Term) (s : Store) (a0 : Term) :
@@ -28669,7 +28741,7 @@ def generated.part1.body_eo__24eo_5fis_5fclosed_5frec_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7538:0-7549:1 -/
+    Source: 'src/generated_part1.rs', lines 7553:0-7564:1 -/
 @[reducible]
 def generated.part1.body_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -28679,7 +28751,7 @@ def generated.part1.body_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7550:0-7560:1 -/
+    Source: 'src/generated_part1.rs', lines 7565:0-7575:1 -/
 def generated.part1.step_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Next (Array Term 2#usize)) CheckError) × Store)
@@ -28738,7 +28810,7 @@ def generated.part1.step_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7561:0-7579:1 -/
+    Source: 'src/generated_part1.rs', lines 7576:0-7594:1 -/
 def generated.part1.case_1_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28811,7 +28883,7 @@ def generated.part1.case_1_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7580:0-7588:1 -/
+    Source: 'src/generated_part1.rs', lines 7595:0-7603:1 -/
 def generated.part1.case_5_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28842,7 +28914,7 @@ def generated.part1.case_5_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_7_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7589:0-7600:1 -/
+    Source: 'src/generated_part1.rs', lines 7604:0-7615:1 -/
 def generated.part1.case_7_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28881,7 +28953,7 @@ def generated.part1.case_7_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_8_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7601:0-7615:1 -/
+    Source: 'src/generated_part1.rs', lines 7616:0-7630:1 -/
 def generated.part1.case_8_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28933,7 +29005,7 @@ def generated.part1.case_8_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7616:0-7622:1 -/
+    Source: 'src/generated_part1.rs', lines 7631:0-7637:1 -/
 def generated.part1.cases_0_0_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -28973,7 +29045,7 @@ def generated.part1.cases_0_0_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7623:0-7629:1 -/
+    Source: 'src/generated_part1.rs', lines 7638:0-7644:1 -/
 def generated.part1.cases_0_1_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -29013,7 +29085,7 @@ def generated.part1.cases_0_1_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_2_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7630:0-7634:1 -/
+    Source: 'src/generated_part1.rs', lines 7645:0-7649:1 -/
 def generated.part1.cases_0_2_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -29037,7 +29109,7 @@ def generated.part1.cases_0_2_eo__24eo_5fis_5fclosed_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24eo_5fis_5fclosed_5frec]:
-    Source: 'src/generated_part1.rs', lines 7635:0-7649:1 -/
+    Source: 'src/generated_part1.rs', lines 7650:0-7664:1 -/
 def generated.part1.if_0_eo__24eo_5fis_5fclosed_5frec
   (s : Store) (condition : Term) (v1 : Term) (v2 : Term) (v5 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29073,7 +29145,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fis_5fclosed]:
-    Source: 'src/generated_part1.rs', lines 7650:0-7654:1 -/
+    Source: 'src/generated_part1.rs', lines 7665:0-7669:1 -/
 def generated.part1.case_0_eo__24eo_5fis_5fclosed
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29089,7 +29161,7 @@ def generated.part1.case_0_eo__24eo_5fis_5fclosed
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fis_5fclosed]:
-    Source: 'src/generated_part1.rs', lines 7655:0-7660:1 -/
+    Source: 'src/generated_part1.rs', lines 7670:0-7675:1 -/
 def generated.part1.body_eo__24eo_5fis_5fclosed
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29112,7 +29184,7 @@ def generated.part1.body_eo__24eo_5fis_5fclosed
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fis_5fclosed]:
-    Source: 'src/generated_part1.rs', lines 7662:0-7667:1
+    Source: 'src/generated_part1.rs', lines 7677:0-7682:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fis_5fclosed
   (s : Store) (a0 : Term) :
@@ -29127,7 +29199,7 @@ def generated.part1.eo__24eo_5fis_5fclosed
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5finvoke_5fassume_5flist]:
-    Source: 'src/generated_part1.rs', lines 7668:0-7679:1 -/
+    Source: 'src/generated_part1.rs', lines 7683:0-7694:1 -/
 def generated.part1.case_1_eo__24eo_5finvoke_5fassume_5flist
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option FoldStep) CheckError) × Store)
@@ -29165,7 +29237,7 @@ def generated.part1.case_1_eo__24eo_5finvoke_5fassume_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::step_eo__24eo_5finvoke_5fassume_5flist]:
-    Source: 'src/generated_part1.rs', lines 7680:0-7684:1 -/
+    Source: 'src/generated_part1.rs', lines 7695:0-7699:1 -/
 def generated.part1.step_eo__24eo_5finvoke_5fassume_5flist
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result FoldStep CheckError) × Store)
@@ -29190,7 +29262,7 @@ def generated.part1.step_eo__24eo_5finvoke_5fassume_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::scan_eo__24eo_5finvoke_5fassume_5flist]: loop 0:
-    Source: 'src/generated_part1.rs', lines 7688:0-7697:1 -/
+    Source: 'src/generated_part1.rs', lines 7703:0-7712:1 -/
 @[rust_loop]
 def generated.part1.scan_eo__24eo_5finvoke_5fassume_5flist_loop
   (args : Term) (s : Store) (a0 : Term)
@@ -29212,7 +29284,7 @@ def generated.part1.scan_eo__24eo_5finvoke_5fassume_5flist_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::scan_eo__24eo_5finvoke_5fassume_5flist]:
-    Source: 'src/generated_part1.rs', lines 7685:0-7698:1 -/
+    Source: 'src/generated_part1.rs', lines 7700:0-7713:1 -/
 @[reducible]
 def generated.part1.scan_eo__24eo_5finvoke_5fassume_5flist
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -29223,7 +29295,7 @@ def generated.part1.scan_eo__24eo_5finvoke_5fassume_5flist
     (alloc.vec.Vec.new (Term × Term))
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fpush_5finput_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7699:0-7705:1 -/
+    Source: 'src/generated_part1.rs', lines 7714:0-7720:1 -/
 def generated.part1.case_0_eo__24eo_5fpush_5finput_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29251,7 +29323,7 @@ def generated.part1.case_0_eo__24eo_5fpush_5finput_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fpush_5finput_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7706:0-7709:1 -/
+    Source: 'src/generated_part1.rs', lines 7721:0-7724:1 -/
 def generated.part1.case_1_eo__24eo_5fpush_5finput_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29263,7 +29335,7 @@ def generated.part1.case_1_eo__24eo_5fpush_5finput_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fpush_5finput_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7710:0-7714:1 -/
+    Source: 'src/generated_part1.rs', lines 7725:0-7729:1 -/
 def generated.part1.body_eo__24eo_5fpush_5finput_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29288,7 +29360,7 @@ def generated.part1.body_eo__24eo_5fpush_5finput_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fpush_5finput_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7716:0-7721:1
+    Source: 'src/generated_part1.rs', lines 7731:0-7736:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fpush_5finput_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -29304,7 +29376,7 @@ def generated.part1.eo__24eo_5fpush_5finput_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::unwind_eo__24eo_5finvoke_5fassume_5flist]: loop 0:
-    Source: 'src/generated_part1.rs', lines 7725:0-7731:1 -/
+    Source: 'src/generated_part1.rs', lines 7740:0-7746:1 -/
 @[rust_loop]
 def generated.part1.unwind_eo__24eo_5finvoke_5fassume_5flist_loop
   (s : Store) (pending : Slice (Term × Term)) (state : Term) (i : Std.Usize) :
@@ -29328,7 +29400,7 @@ def generated.part1.unwind_eo__24eo_5finvoke_5fassume_5flist_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::unwind_eo__24eo_5finvoke_5fassume_5flist]:
-    Source: 'src/generated_part1.rs', lines 7722:0-7731:1 -/
+    Source: 'src/generated_part1.rs', lines 7737:0-7746:1 -/
 def generated.part1.unwind_eo__24eo_5finvoke_5fassume_5flist
   (s : Store) (state : Term) (pending : Slice (Term × Term)) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29338,7 +29410,7 @@ def generated.part1.unwind_eo__24eo_5finvoke_5fassume_5flist
     i
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5finvoke_5fassume_5flist]:
-    Source: 'src/generated_part1.rs', lines 7732:0-7735:1 -/
+    Source: 'src/generated_part1.rs', lines 7747:0-7750:1 -/
 def generated.part1.body_eo__24eo_5finvoke_5fassume_5flist
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29353,7 +29425,7 @@ def generated.part1.body_eo__24eo_5finvoke_5fassume_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5finvoke_5fassume_5flist]:
-    Source: 'src/generated_part1.rs', lines 7737:0-7742:1
+    Source: 'src/generated_part1.rs', lines 7752:0-7757:1
     Visibility: public -/
 def generated.part1.eo__24eo_5finvoke_5fassume_5flist
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -29369,7 +29441,7 @@ def generated.part1.eo__24eo_5finvoke_5fassume_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5finvoke_5fcmd_5flist]:
-    Source: 'src/generated_part1.rs', lines 7743:0-7747:1 -/
+    Source: 'src/generated_part1.rs', lines 7758:0-7762:1 -/
 def generated.part1.case_0_eo__24eo_5finvoke_5fcmd_5flist
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option (Next (Array Term 2#usize))) CheckError)
@@ -29388,7 +29460,7 @@ def generated.part1.case_0_eo__24eo_5finvoke_5fcmd_5flist
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5finvoke_5fcmd]:
-    Source: 'src/generated_part1.rs', lines 7748:0-7753:1 -/
+    Source: 'src/generated_part1.rs', lines 7763:0-7768:1 -/
 def generated.part1.case_0_eo__24eo_5finvoke_5fcmd
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29411,7 +29483,7 @@ def generated.part1.case_0_eo__24eo_5finvoke_5fcmd
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fpush_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7754:0-7760:1 -/
+    Source: 'src/generated_part1.rs', lines 7769:0-7775:1 -/
 def generated.part1.case_0_eo__24eo_5fpush_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29439,7 +29511,7 @@ def generated.part1.case_0_eo__24eo_5fpush_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fpush_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7761:0-7764:1 -/
+    Source: 'src/generated_part1.rs', lines 7776:0-7779:1 -/
 def generated.part1.case_1_eo__24eo_5fpush_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29451,7 +29523,7 @@ def generated.part1.case_1_eo__24eo_5fpush_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fpush_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7765:0-7769:1 -/
+    Source: 'src/generated_part1.rs', lines 7780:0-7784:1 -/
 def generated.part1.body_eo__24eo_5fpush_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29475,7 +29547,7 @@ def generated.part1.body_eo__24eo_5fpush_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fpush_5fassume_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7771:0-7776:1
+    Source: 'src/generated_part1.rs', lines 7786:0-7791:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fpush_5fassume_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -29491,7 +29563,7 @@ def generated.part1.eo__24eo_5fpush_5fassume_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5finvoke_5fcmd]:
-    Source: 'src/generated_part1.rs', lines 7777:0-7787:1 -/
+    Source: 'src/generated_part1.rs', lines 7792:0-7802:1 -/
 def generated.part1.case_1_eo__24eo_5finvoke_5fcmd
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29528,7 +29600,7 @@ def generated.part1.case_1_eo__24eo_5finvoke_5fcmd
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fpush_5fproven_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7788:0-7794:1 -/
+    Source: 'src/generated_part1.rs', lines 7803:0-7809:1 -/
 def generated.part1.case_0_eo__24eo_5fpush_5fproven_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29556,7 +29628,7 @@ def generated.part1.case_0_eo__24eo_5fpush_5fproven_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fpush_5fproven_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7795:0-7798:1 -/
+    Source: 'src/generated_part1.rs', lines 7810:0-7813:1 -/
 def generated.part1.case_1_eo__24eo_5fpush_5fproven_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29568,7 +29640,7 @@ def generated.part1.case_1_eo__24eo_5fpush_5fproven_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fpush_5fproven_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7799:0-7803:1 -/
+    Source: 'src/generated_part1.rs', lines 7814:0-7818:1 -/
 def generated.part1.body_eo__24eo_5fpush_5fproven_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29592,7 +29664,7 @@ def generated.part1.body_eo__24eo_5fpush_5fproven_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fpush_5fproven_5fcheck]:
-    Source: 'src/generated_part1.rs', lines 7805:0-7810:1
+    Source: 'src/generated_part1.rs', lines 7820:0-7825:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fpush_5fproven_5fcheck
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -29608,7 +29680,7 @@ def generated.part1.eo__24eo_5fpush_5fproven_5fcheck
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7811:0-7824:1 -/
+    Source: 'src/generated_part1.rs', lines 7826:0-7839:1 -/
 def generated.part1.case_0_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29650,7 +29722,7 @@ def generated.part1.case_0_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7825:0-7828:1 -/
+    Source: 'src/generated_part1.rs', lines 7840:0-7843:1 -/
 def generated.part1.case_1_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29662,7 +29734,7 @@ def generated.part1.case_1_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7829:0-7833:1 -/
+    Source: 'src/generated_part1.rs', lines 7844:0-7848:1 -/
 def generated.part1.body_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29687,7 +29759,7 @@ def generated.part1.body_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5finvoke_5fcmd_5fcheck_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7835:0-7840:1
+    Source: 'src/generated_part1.rs', lines 7850:0-7855:1
     Visibility: public -/
 def generated.part1.eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -29703,7 +29775,7 @@ def generated.part1.eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24eo_5finvoke_5fcmd]:
-    Source: 'src/generated_part1.rs', lines 7841:0-7848:1 -/
+    Source: 'src/generated_part1.rs', lines 7856:0-7863:1 -/
 def generated.part1.case_2_eo__24eo_5finvoke_5fcmd
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29726,7 +29798,7 @@ def generated.part1.case_2_eo__24eo_5finvoke_5fcmd
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24extract_5fantec]:
-    Source: 'src/generated_part1.rs', lines 7849:0-7860:1 -/
+    Source: 'src/generated_part1.rs', lines 7864:0-7875:1 -/
 def generated.part1.case_0_eo__24extract_5fantec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29766,7 +29838,7 @@ def generated.part1.case_0_eo__24extract_5fantec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24extract_5fantec_5frec]:
-    Source: 'src/generated_part1.rs', lines 7861:0-7865:1 -/
+    Source: 'src/generated_part1.rs', lines 7876:0-7880:1 -/
 def generated.part1.case_0_eo__24extract_5fantec_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29784,7 +29856,7 @@ def generated.part1.case_0_eo__24extract_5fantec_5frec
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24extract_5fantec_5frec]:
-    Source: 'src/generated_part1.rs', lines 7867:0-7879:1
+    Source: 'src/generated_part1.rs', lines 7882:0-7894:1
     Visibility: public -/
 def generated.part1.eo__24extract_5fantec_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -29820,7 +29892,7 @@ def generated.part1.eo__24extract_5fantec_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24extract_5fantec_5frec]:
-    Source: 'src/generated_part1.rs', lines 7880:0-7888:1 -/
+    Source: 'src/generated_part1.rs', lines 7895:0-7903:1 -/
 def generated.part1.body_eo__24extract_5fantec_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29862,7 +29934,7 @@ def generated.part1.body_eo__24extract_5fantec_5frec
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24extract_5fantec_5frec]:
-    Source: 'src/generated_part1.rs', lines 7889:0-7903:1 -/
+    Source: 'src/generated_part1.rs', lines 7904:0-7918:1 -/
 def generated.part1.case_1_eo__24extract_5fantec_5frec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29920,7 +29992,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24extract_5fantec]:
-    Source: 'src/generated_part1.rs', lines 7904:0-7907:1 -/
+    Source: 'src/generated_part1.rs', lines 7919:0-7922:1 -/
 def generated.part1.case_1_eo__24extract_5fantec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -29931,7 +30003,7 @@ def generated.part1.case_1_eo__24extract_5fantec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24extract_5fantec]:
-    Source: 'src/generated_part1.rs', lines 7908:0-7916:1 -/
+    Source: 'src/generated_part1.rs', lines 7923:0-7931:1 -/
 def generated.part1.body_eo__24extract_5fantec
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -29971,7 +30043,7 @@ def generated.part1.body_eo__24extract_5fantec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24extract_5fantec]:
-    Source: 'src/generated_part1.rs', lines 7918:0-7923:1
+    Source: 'src/generated_part1.rs', lines 7933:0-7938:1
     Visibility: public -/
 def generated.part1.eo__24extract_5fantec
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -29986,7 +30058,7 @@ def generated.part1.eo__24extract_5fantec
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24run_5fprocess_5fscope]:
-    Source: 'src/generated_part1.rs', lines 7924:0-7932:1 -/
+    Source: 'src/generated_part1.rs', lines 7939:0-7947:1 -/
 def generated.part1.case_0_eo__24run_5fprocess_5fscope
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30020,7 +30092,7 @@ def generated.part1.case_0_eo__24run_5fprocess_5fscope
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24run_5fprocess_5fscope]:
-    Source: 'src/generated_part1.rs', lines 7933:0-7939:1 -/
+    Source: 'src/generated_part1.rs', lines 7948:0-7954:1 -/
 def generated.part1.case_1_eo__24run_5fprocess_5fscope
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30044,7 +30116,7 @@ def generated.part1.case_1_eo__24run_5fprocess_5fscope
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24run_5fprocess_5fscope]:
-    Source: 'src/generated_part1.rs', lines 7940:0-7948:1 -/
+    Source: 'src/generated_part1.rs', lines 7955:0-7963:1 -/
 def generated.part1.body_eo__24run_5fprocess_5fscope
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30085,7 +30157,7 @@ def generated.part1.body_eo__24run_5fprocess_5fscope
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24run_5fprocess_5fscope]:
-    Source: 'src/generated_part1.rs', lines 7950:0-7955:1
+    Source: 'src/generated_part1.rs', lines 7965:0-7970:1
     Visibility: public -/
 def generated.part1.eo__24run_5fprocess_5fscope
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -30101,7 +30173,7 @@ def generated.part1.eo__24run_5fprocess_5fscope
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fprocess_5fscope]:
-    Source: 'src/generated_part1.rs', lines 7956:0-7963:1 -/
+    Source: 'src/generated_part1.rs', lines 7971:0-7978:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fprocess_5fscope
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30122,7 +30194,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fprocess_5fscope
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fprocess_5fscope]:
-    Source: 'src/generated_part1.rs', lines 7964:0-7969:1 -/
+    Source: 'src/generated_part1.rs', lines 7979:0-7984:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fprocess_5fscope
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30146,7 +30218,7 @@ def generated.part1.body_eo__24eo_5fprog_5fprocess_5fscope
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fprocess_5fscope]:
-    Source: 'src/generated_part1.rs', lines 7971:0-7976:1
+    Source: 'src/generated_part1.rs', lines 7986:0-7991:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fprocess_5fscope
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -30162,7 +30234,7 @@ def generated.part1.eo__24eo_5fprog_5fprocess_5fscope
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fstate_5fproven_5fnth]:
-    Source: 'src/generated_part1.rs', lines 7978:0-7987:1
+    Source: 'src/generated_part1.rs', lines 7993:0-8002:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fstate_5fproven_5fnth
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -30192,7 +30264,7 @@ def generated.part1.eo__24eo_5fstate_5fproven_5fnth
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 7988:0-8009:1 -/
+    Source: 'src/generated_part1.rs', lines 8003:0-8024:1 -/
 def generated.part1.case_0_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30288,7 +30360,7 @@ def generated.part1.case_0_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fite_5feq]:
-    Source: 'src/generated_part1.rs', lines 8010:0-8023:1 -/
+    Source: 'src/generated_part1.rs', lines 8025:0-8038:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fite_5feq
   (s : Store) (v12 : Term) (v16 : Term) (v5 : Term) (v11 : Term) (v8 : Term)
   (v2 : Term) :
@@ -30347,7 +30419,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fite_5feq
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fite_5feq]:
-    Source: 'src/generated_part1.rs', lines 8024:0-8044:1 -/
+    Source: 'src/generated_part1.rs', lines 8039:0-8059:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fite_5feq
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30432,7 +30504,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fite_5feq
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fite_5feq]:
-    Source: 'src/generated_part1.rs', lines 8045:0-8050:1 -/
+    Source: 'src/generated_part1.rs', lines 8060:0-8065:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fite_5feq
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30455,7 +30527,7 @@ def generated.part1.body_eo__24eo_5fprog_5fite_5feq
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fite_5feq]:
-    Source: 'src/generated_part1.rs', lines 8052:0-8057:1
+    Source: 'src/generated_part1.rs', lines 8067:0-8072:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fite_5feq
   (s : Store) (a0 : Term) :
@@ -30470,7 +30542,7 @@ def generated.part1.eo__24eo_5fprog_5fite_5feq
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8058:0-8072:1 -/
+    Source: 'src/generated_part1.rs', lines 8073:0-8087:1 -/
 def generated.part1.case_1_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30533,7 +30605,7 @@ def generated.part1.case_1_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fsplit]:
-    Source: 'src/generated_part1.rs', lines 8073:0-8084:1 -/
+    Source: 'src/generated_part1.rs', lines 8088:0-8099:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fsplit
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30582,7 +30654,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fsplit
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fsplit]:
-    Source: 'src/generated_part1.rs', lines 8085:0-8090:1 -/
+    Source: 'src/generated_part1.rs', lines 8100:0-8105:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fsplit
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30605,7 +30677,7 @@ def generated.part1.body_eo__24eo_5fprog_5fsplit
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fsplit]:
-    Source: 'src/generated_part1.rs', lines 8092:0-8097:1
+    Source: 'src/generated_part1.rs', lines 8107:0-8112:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fsplit
   (s : Store) (a0 : Term) :
@@ -30620,7 +30692,7 @@ def generated.part1.eo__24eo_5fprog_5fsplit
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8098:0-8112:1 -/
+    Source: 'src/generated_part1.rs', lines 8113:0-8127:1 -/
 def generated.part1.case_2_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30682,7 +30754,7 @@ def generated.part1.case_2_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8113:0-8126:1 -/
+    Source: 'src/generated_part1.rs', lines 8128:0-8141:1 -/
 def generated.part1.if_0_eo__24eo_5fprog_5fresolution
   (s : Store) (condition : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30709,7 +30781,7 @@ def generated.part1.if_0_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_1_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8127:0-8140:1 -/
+    Source: 'src/generated_part1.rs', lines 8142:0-8155:1 -/
 def generated.part1.if_1_eo__24eo_5fprog_5fresolution
   (s : Store) (condition : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30736,7 +30808,7 @@ def generated.part1.if_1_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24to_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8141:0-8154:1 -/
+    Source: 'src/generated_part1.rs', lines 8156:0-8169:1 -/
 def generated.part1.case_0_eo__24to_5fclause
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30785,7 +30857,7 @@ def generated.part1.case_0_eo__24to_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24to_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8155:0-8160:1 -/
+    Source: 'src/generated_part1.rs', lines 8170:0-8175:1 -/
 def generated.part1.case_1_eo__24to_5fclause
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30805,7 +30877,7 @@ def generated.part1.case_1_eo__24to_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_2_eo__24to_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8161:0-8167:1 -/
+    Source: 'src/generated_part1.rs', lines 8176:0-8182:1 -/
 def generated.part1.case_2_eo__24to_5fclause
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -30829,7 +30901,7 @@ def generated.part1.case_2_eo__24to_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24to_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8168:0-8175:1 -/
+    Source: 'src/generated_part1.rs', lines 8183:0-8190:1 -/
 def generated.part1.body_eo__24to_5fclause
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30867,7 +30939,7 @@ def generated.part1.body_eo__24to_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24to_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8177:0-8182:1
+    Source: 'src/generated_part1.rs', lines 8192:0-8197:1
     Visibility: public -/
 def generated.part1.eo__24to_5fclause
   (s : Store) (a0 : Term) :
@@ -30882,7 +30954,7 @@ def generated.part1.eo__24to_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::if_2_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8183:0-8199:1 -/
+    Source: 'src/generated_part1.rs', lines 8198:0-8214:1 -/
 def generated.part1.if_2_eo__24eo_5fprog_5fresolution
   (s : Store) (condition : Term) (v1 : Term) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30925,7 +30997,7 @@ def generated.part1.if_2_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_3_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8200:0-8213:1 -/
+    Source: 'src/generated_part1.rs', lines 8215:0-8228:1 -/
 def generated.part1.if_3_eo__24eo_5fprog_5fresolution
   (s : Store) (condition : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30952,7 +31024,7 @@ def generated.part1.if_3_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_4_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8214:0-8227:1 -/
+    Source: 'src/generated_part1.rs', lines 8229:0-8242:1 -/
 def generated.part1.if_4_eo__24eo_5fprog_5fresolution
   (s : Store) (condition : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -30979,7 +31051,7 @@ def generated.part1.if_4_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_5_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8228:0-8244:1 -/
+    Source: 'src/generated_part1.rs', lines 8243:0-8259:1 -/
 def generated.part1.if_5_eo__24eo_5fprog_5fresolution
   (s : Store) (condition : Term) (v3 : Term) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31022,7 +31094,7 @@ def generated.part1.if_5_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24from_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8245:0-8259:1 -/
+    Source: 'src/generated_part1.rs', lines 8260:0-8274:1 -/
 def generated.part1.if_0_eo__24from_5fclause
   (s : Store) (condition : Term) (v5 : Term) (v2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31053,7 +31125,7 @@ def generated.part1.if_0_eo__24from_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24from_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8260:0-8273:1 -/
+    Source: 'src/generated_part1.rs', lines 8275:0-8288:1 -/
 def generated.part1.case_0_eo__24from_5fclause
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31104,7 +31176,7 @@ def generated.part1.case_0_eo__24from_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24from_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8274:0-8276:1 -/
+    Source: 'src/generated_part1.rs', lines 8289:0-8291:1 -/
 def generated.part1.case_1_eo__24from_5fclause
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31112,7 +31184,7 @@ def generated.part1.case_1_eo__24from_5fclause
   ok (core.result.Result.Ok (some a0), s)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24from_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8277:0-8283:1 -/
+    Source: 'src/generated_part1.rs', lines 8292:0-8298:1 -/
 def generated.part1.body_eo__24from_5fclause
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31142,7 +31214,7 @@ def generated.part1.body_eo__24from_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24from_5fclause]:
-    Source: 'src/generated_part1.rs', lines 8285:0-8290:1
+    Source: 'src/generated_part1.rs', lines 8300:0-8305:1
     Visibility: public -/
 def generated.part1.eo__24from_5fclause
   (s : Store) (a0 : Term) :
@@ -31157,7 +31229,7 @@ def generated.part1.eo__24from_5fclause
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_6_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8291:0-8294:1 -/
+    Source: 'src/generated_part1.rs', lines 8306:0-8309:1 -/
 def generated.part1.more_6_eo__24eo_5fprog_5fresolution
   (s : Store) (v31 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31168,7 +31240,7 @@ def generated.part1.more_6_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8295:0-8315:1 -/
+    Source: 'src/generated_part1.rs', lines 8310:0-8330:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31263,7 +31335,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8316:0-8323:1 -/
+    Source: 'src/generated_part1.rs', lines 8331:0-8338:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31295,7 +31367,7 @@ def generated.part1.body_eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8325:0-8330:1
+    Source: 'src/generated_part1.rs', lines 8340:0-8345:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -31311,7 +31383,7 @@ def generated.part1.eo__24eo_5fprog_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8331:0-8336:1 -/
+    Source: 'src/generated_part1.rs', lines 8346:0-8351:1 -/
 def generated.part1.more_0_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (v12 : Term) (v2 : Term) (v5 : Term) (v16 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31332,7 +31404,7 @@ def generated.part1.more_0_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_3_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8337:0-8367:1 -/
+    Source: 'src/generated_part1.rs', lines 8352:0-8382:1 -/
 def generated.part1.case_3_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31460,7 +31532,7 @@ def generated.part1.case_3_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_0_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8368:0-8374:1 -/
+    Source: 'src/generated_part1.rs', lines 8383:0-8389:1 -/
 def generated.part1.cases_0_0_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31501,7 +31573,7 @@ def generated.part1.cases_0_0_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fmk_5fpremise_5flist]:
-    Source: 'src/generated_part1.rs', lines 8375:0-8381:1 -/
+    Source: 'src/generated_part1.rs', lines 8390:0-8396:1 -/
 def generated.part1.case_0_eo__24eo_5fmk_5fpremise_5flist
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31531,7 +31603,7 @@ def generated.part1.case_0_eo__24eo_5fmk_5fpremise_5flist
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fmk_5fpremise_5flist]:
-    Source: 'src/generated_part1.rs', lines 8383:0-8388:1
+    Source: 'src/generated_part1.rs', lines 8398:0-8403:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fmk_5fpremise_5flist
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -31548,7 +31620,7 @@ def generated.part1.eo__24eo_5fmk_5fpremise_5flist
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fmk_5fpremise_5flist]:
-    Source: 'src/generated_part1.rs', lines 8389:0-8393:1 -/
+    Source: 'src/generated_part1.rs', lines 8404:0-8408:1 -/
 def generated.part1.body_eo__24eo_5fmk_5fpremise_5flist
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31573,7 +31645,7 @@ def generated.part1.body_eo__24eo_5fmk_5fpremise_5flist
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24eo_5fmk_5fpremise_5flist]:
-    Source: 'src/generated_part1.rs', lines 8394:0-8404:1 -/
+    Source: 'src/generated_part1.rs', lines 8409:0-8419:1 -/
 def generated.part1.case_1_eo__24eo_5fmk_5fpremise_5flist
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31613,7 +31685,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fchain_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8405:0-8413:1 -/
+    Source: 'src/generated_part1.rs', lines 8420:0-8428:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fchain_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31638,7 +31710,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fchain_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fchain_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8414:0-8421:1 -/
+    Source: 'src/generated_part1.rs', lines 8429:0-8436:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fchain_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31671,7 +31743,7 @@ def generated.part1.body_eo__24eo_5fprog_5fchain_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fchain_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8423:0-8428:1
+    Source: 'src/generated_part1.rs', lines 8438:0-8443:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fchain_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) :
@@ -31687,7 +31759,7 @@ def generated.part1.eo__24eo_5fprog_5fchain_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_4_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8429:0-8449:1 -/
+    Source: 'src/generated_part1.rs', lines 8444:0-8464:1 -/
 def generated.part1.case_4_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31775,7 +31847,7 @@ def generated.part1.case_4_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::if_0_eo__24eo_5fprog_5fchain_5fm_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8450:0-8467:1 -/
+    Source: 'src/generated_part1.rs', lines 8465:0-8482:1 -/
 def generated.part1.if_0_eo__24eo_5fprog_5fchain_5fm_5fresolution
   (s : Store) (condition : Term) (v1 : Term) (a1 : Term) (a2 : Term)
   (a0 : Term) :
@@ -31827,7 +31899,7 @@ def generated.part1.if_0_eo__24eo_5fprog_5fchain_5fm_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::requires_1_eo__24eo_5fprog_5fchain_5fm_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8468:0-8473:1 -/
+    Source: 'src/generated_part1.rs', lines 8483:0-8488:1 -/
 def generated.part1.requires_1_eo__24eo_5fprog_5fchain_5fm_5fresolution
   (s : Store) (v13 : Term) (v14 : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31848,7 +31920,7 @@ def generated.part1.requires_1_eo__24eo_5fprog_5fchain_5fm_5fresolution
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fchain_5fm_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8474:0-8488:1 -/
+    Source: 'src/generated_part1.rs', lines 8489:0-8503:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fchain_5fm_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -31909,7 +31981,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fchain_5fm_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fchain_5fm_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8489:0-8498:1 -/
+    Source: 'src/generated_part1.rs', lines 8504:0-8513:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fchain_5fm_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -31951,7 +32023,7 @@ def generated.part1.body_eo__24eo_5fprog_5fchain_5fm_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fchain_5fm_5fresolution]:
-    Source: 'src/generated_part1.rs', lines 8500:0-8505:1
+    Source: 'src/generated_part1.rs', lines 8515:0-8520:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fchain_5fm_5fresolution
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
@@ -31968,7 +32040,7 @@ def generated.part1.eo__24eo_5fprog_5fchain_5fm_5fresolution
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_5_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8506:0-8531:1 -/
+    Source: 'src/generated_part1.rs', lines 8521:0-8546:1 -/
 def generated.part1.case_5_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32074,7 +32146,7 @@ def generated.part1.case_5_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5ffactoring]:
-    Source: 'src/generated_part1.rs', lines 8532:0-8541:1 -/
+    Source: 'src/generated_part1.rs', lines 8547:0-8556:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5ffactoring
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32107,7 +32179,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5ffactoring
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5ffactoring]:
-    Source: 'src/generated_part1.rs', lines 8542:0-8545:1 -/
+    Source: 'src/generated_part1.rs', lines 8557:0-8560:1 -/
 def generated.part1.body_eo__24eo_5fprog_5ffactoring
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -32122,7 +32194,7 @@ def generated.part1.body_eo__24eo_5fprog_5ffactoring
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5ffactoring]:
-    Source: 'src/generated_part1.rs', lines 8547:0-8552:1
+    Source: 'src/generated_part1.rs', lines 8562:0-8567:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5ffactoring
   (s : Store) (a0 : Term) :
@@ -32137,7 +32209,7 @@ def generated.part1.eo__24eo_5fprog_5ffactoring
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_6_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8553:0-8569:1 -/
+    Source: 'src/generated_part1.rs', lines 8568:0-8584:1 -/
 def generated.part1.case_6_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32214,7 +32286,7 @@ def generated.part1.case_6_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::requires_0_eo__24eo_5fprog_5freordering]:
-    Source: 'src/generated_part1.rs', lines 8570:0-8575:1 -/
+    Source: 'src/generated_part1.rs', lines 8585:0-8590:1 -/
 def generated.part1.requires_0_eo__24eo_5fprog_5freordering
   (s : Store) (v3 : Term) (v4 : Term) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -32235,7 +32307,7 @@ def generated.part1.requires_0_eo__24eo_5fprog_5freordering
     | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5freordering]:
-    Source: 'src/generated_part1.rs', lines 8576:0-8586:1 -/
+    Source: 'src/generated_part1.rs', lines 8591:0-8601:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5freordering
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32274,7 +32346,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5freordering
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5freordering]:
-    Source: 'src/generated_part1.rs', lines 8587:0-8592:1 -/
+    Source: 'src/generated_part1.rs', lines 8602:0-8607:1 -/
 def generated.part1.body_eo__24eo_5fprog_5freordering
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -32298,7 +32370,7 @@ def generated.part1.body_eo__24eo_5fprog_5freordering
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5freordering]:
-    Source: 'src/generated_part1.rs', lines 8594:0-8599:1
+    Source: 'src/generated_part1.rs', lines 8609:0-8614:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5freordering
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -32314,7 +32386,7 @@ def generated.part1.eo__24eo_5fprog_5freordering
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_7_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8600:0-8621:1 -/
+    Source: 'src/generated_part1.rs', lines 8615:0-8636:1 -/
 def generated.part1.case_7_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32410,7 +32482,7 @@ def generated.part1.case_7_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_1_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8622:0-8628:1 -/
+    Source: 'src/generated_part1.rs', lines 8637:0-8643:1 -/
 def generated.part1.cases_0_1_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32451,7 +32523,7 @@ def generated.part1.cases_0_1_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5feq_5fresolve]:
-    Source: 'src/generated_part1.rs', lines 8629:0-8648:1 -/
+    Source: 'src/generated_part1.rs', lines 8644:0-8663:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5feq_5fresolve
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32513,7 +32585,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5feq_5fresolve
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5feq_5fresolve]:
-    Source: 'src/generated_part1.rs', lines 8649:0-8652:1 -/
+    Source: 'src/generated_part1.rs', lines 8664:0-8667:1 -/
 def generated.part1.body_eo__24eo_5fprog_5feq_5fresolve
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -32528,7 +32600,7 @@ def generated.part1.body_eo__24eo_5fprog_5feq_5fresolve
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5feq_5fresolve]:
-    Source: 'src/generated_part1.rs', lines 8654:0-8659:1
+    Source: 'src/generated_part1.rs', lines 8669:0-8674:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5feq_5fresolve
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -32544,7 +32616,7 @@ def generated.part1.eo__24eo_5fprog_5feq_5fresolve
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_1_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8660:0-8663:1 -/
+    Source: 'src/generated_part1.rs', lines 8675:0-8678:1 -/
 def generated.part1.more_1_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (v10 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32555,7 +32627,7 @@ def generated.part1.more_1_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_8_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8664:0-8686:1 -/
+    Source: 'src/generated_part1.rs', lines 8679:0-8701:1 -/
 def generated.part1.case_8_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32662,7 +32734,7 @@ def generated.part1.case_8_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fmodus_5fponens]:
-    Source: 'src/generated_part1.rs', lines 8687:0-8706:1 -/
+    Source: 'src/generated_part1.rs', lines 8702:0-8721:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fmodus_5fponens
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32724,7 +32796,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fmodus_5fponens
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fmodus_5fponens]:
-    Source: 'src/generated_part1.rs', lines 8707:0-8710:1 -/
+    Source: 'src/generated_part1.rs', lines 8722:0-8725:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fmodus_5fponens
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -32740,7 +32812,7 @@ def generated.part1.body_eo__24eo_5fprog_5fmodus_5fponens
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fmodus_5fponens]:
-    Source: 'src/generated_part1.rs', lines 8712:0-8717:1
+    Source: 'src/generated_part1.rs', lines 8727:0-8732:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fmodus_5fponens
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -32756,7 +32828,7 @@ def generated.part1.eo__24eo_5fprog_5fmodus_5fponens
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_2_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8718:0-8721:1 -/
+    Source: 'src/generated_part1.rs', lines 8733:0-8736:1 -/
 def generated.part1.more_2_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (v10 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32767,7 +32839,7 @@ def generated.part1.more_2_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_9_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8722:0-8744:1 -/
+    Source: 'src/generated_part1.rs', lines 8737:0-8759:1 -/
 def generated.part1.case_9_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32874,7 +32946,7 @@ def generated.part1.case_9_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fnot_5felim]:
-    Source: 'src/generated_part1.rs', lines 8745:0-8761:1 -/
+    Source: 'src/generated_part1.rs', lines 8760:0-8776:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fnot_5felim
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -32931,7 +33003,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fnot_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fnot_5felim]:
-    Source: 'src/generated_part1.rs', lines 8762:0-8765:1 -/
+    Source: 'src/generated_part1.rs', lines 8777:0-8780:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fnot_5felim
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -32947,7 +33019,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fnot_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fnot_5felim]:
-    Source: 'src/generated_part1.rs', lines 8767:0-8772:1
+    Source: 'src/generated_part1.rs', lines 8782:0-8787:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fnot_5felim
   (s : Store) (a0 : Term) :
@@ -32963,7 +33035,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fnot_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_10_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8773:0-8789:1 -/
+    Source: 'src/generated_part1.rs', lines 8788:0-8804:1 -/
 def generated.part1.case_10_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33041,7 +33113,7 @@ def generated.part1.case_10_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fcontra]:
-    Source: 'src/generated_part1.rs', lines 8790:0-8807:1 -/
+    Source: 'src/generated_part1.rs', lines 8805:0-8822:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fcontra
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33099,7 +33171,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fcontra
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fcontra]:
-    Source: 'src/generated_part1.rs', lines 8808:0-8811:1 -/
+    Source: 'src/generated_part1.rs', lines 8823:0-8826:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fcontra
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -33114,7 +33186,7 @@ def generated.part1.body_eo__24eo_5fprog_5fcontra
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fcontra]:
-    Source: 'src/generated_part1.rs', lines 8813:0-8818:1
+    Source: 'src/generated_part1.rs', lines 8828:0-8833:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fcontra
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -33129,7 +33201,7 @@ def generated.part1.eo__24eo_5fprog_5fcontra
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_3_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8819:0-8822:1 -/
+    Source: 'src/generated_part1.rs', lines 8834:0-8837:1 -/
 def generated.part1.more_3_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (v10 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33140,7 +33212,7 @@ def generated.part1.more_3_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_11_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8823:0-8845:1 -/
+    Source: 'src/generated_part1.rs', lines 8838:0-8860:1 -/
 def generated.part1.case_11_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33247,7 +33319,7 @@ def generated.part1.case_11_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_2_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8846:0-8852:1 -/
+    Source: 'src/generated_part1.rs', lines 8861:0-8867:1 -/
 def generated.part1.cases_0_2_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33288,7 +33360,7 @@ def generated.part1.cases_0_2_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fand_5felim]:
-    Source: 'src/generated_part1.rs', lines 8853:0-8861:1 -/
+    Source: 'src/generated_part1.rs', lines 8868:0-8876:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fand_5felim
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33316,7 +33388,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fand_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fand_5felim]:
-    Source: 'src/generated_part1.rs', lines 8862:0-8867:1 -/
+    Source: 'src/generated_part1.rs', lines 8877:0-8882:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fand_5felim
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -33340,7 +33412,7 @@ def generated.part1.body_eo__24eo_5fprog_5fand_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fand_5felim]:
-    Source: 'src/generated_part1.rs', lines 8869:0-8874:1
+    Source: 'src/generated_part1.rs', lines 8884:0-8889:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fand_5felim
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -33356,7 +33428,7 @@ def generated.part1.eo__24eo_5fprog_5fand_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_12_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8875:0-8896:1 -/
+    Source: 'src/generated_part1.rs', lines 8890:0-8911:1 -/
 def generated.part1.case_12_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33452,7 +33524,7 @@ def generated.part1.case_12_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fand_5fintro]:
-    Source: 'src/generated_part1.rs', lines 8897:0-8903:1 -/
+    Source: 'src/generated_part1.rs', lines 8912:0-8918:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fand_5fintro
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33470,7 +33542,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fand_5fintro
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fand_5fintro]:
-    Source: 'src/generated_part1.rs', lines 8904:0-8907:1 -/
+    Source: 'src/generated_part1.rs', lines 8919:0-8922:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fand_5fintro
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -33485,7 +33557,7 @@ def generated.part1.body_eo__24eo_5fprog_5fand_5fintro
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fand_5fintro]:
-    Source: 'src/generated_part1.rs', lines 8909:0-8914:1
+    Source: 'src/generated_part1.rs', lines 8924:0-8929:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fand_5fintro
   (s : Store) (a0 : Term) :
@@ -33501,7 +33573,7 @@ def generated.part1.eo__24eo_5fprog_5fand_5fintro
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_13_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8915:0-8925:1 -/
+    Source: 'src/generated_part1.rs', lines 8930:0-8940:1 -/
 def generated.part1.case_13_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33554,7 +33626,7 @@ def generated.part1.case_13_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5for_5felim]:
-    Source: 'src/generated_part1.rs', lines 8926:0-8941:1 -/
+    Source: 'src/generated_part1.rs', lines 8941:0-8956:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5for_5felim
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33615,7 +33687,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5for_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5for_5felim]:
-    Source: 'src/generated_part1.rs', lines 8942:0-8947:1 -/
+    Source: 'src/generated_part1.rs', lines 8957:0-8962:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5for_5felim
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -33639,7 +33711,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5for_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5for_5felim]:
-    Source: 'src/generated_part1.rs', lines 8949:0-8954:1
+    Source: 'src/generated_part1.rs', lines 8964:0-8969:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5for_5felim
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -33655,7 +33727,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5for_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_14_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 8955:0-8976:1 -/
+    Source: 'src/generated_part1.rs', lines 8970:0-8991:1 -/
 def generated.part1.case_14_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33751,7 +33823,7 @@ def generated.part1.case_14_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fimplies_5felim]:
-    Source: 'src/generated_part1.rs', lines 8977:0-8981:1 -/
+    Source: 'src/generated_part1.rs', lines 8992:0-8996:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fimplies_5felim
   (s : Store) (v14 : Term) (v15 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33766,7 +33838,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fimplies_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fimplies_5felim]:
-    Source: 'src/generated_part1.rs', lines 8982:0-9003:1 -/
+    Source: 'src/generated_part1.rs', lines 8997:0-9018:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fimplies_5felim
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33856,7 +33928,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fimplies_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fimplies_5felim]:
-    Source: 'src/generated_part1.rs', lines 9004:0-9007:1 -/
+    Source: 'src/generated_part1.rs', lines 9019:0-9022:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fimplies_5felim
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -33871,7 +33943,7 @@ def generated.part1.body_eo__24eo_5fprog_5fimplies_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fimplies_5felim]:
-    Source: 'src/generated_part1.rs', lines 9009:0-9014:1
+    Source: 'src/generated_part1.rs', lines 9024:0-9029:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fimplies_5felim
   (s : Store) (a0 : Term) :
@@ -33887,7 +33959,7 @@ def generated.part1.eo__24eo_5fprog_5fimplies_5felim
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_15_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9015:0-9031:1 -/
+    Source: 'src/generated_part1.rs', lines 9030:0-9046:1 -/
 def generated.part1.case_15_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -33964,7 +34036,7 @@ def generated.part1.case_15_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_3_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9032:0-9038:1 -/
+    Source: 'src/generated_part1.rs', lines 9047:0-9053:1 -/
 def generated.part1.cases_0_3_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34005,7 +34077,7 @@ def generated.part1.cases_0_3_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::cases_1_0_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9039:0-9045:1 -/
+    Source: 'src/generated_part1.rs', lines 9054:0-9060:1 -/
 def generated.part1.cases_1_0_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34046,7 +34118,7 @@ def generated.part1.cases_1_0_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fimplies_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9046:0-9065:1 -/
+    Source: 'src/generated_part1.rs', lines 9061:0-9080:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fimplies_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34112,7 +34184,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fimplies_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fimplies_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9066:0-9069:1 -/
+    Source: 'src/generated_part1.rs', lines 9081:0-9084:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fimplies_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -34128,7 +34200,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fimplies_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fimplies_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9071:0-9076:1
+    Source: 'src/generated_part1.rs', lines 9086:0-9091:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fimplies_5felim1
   (s : Store) (a0 : Term) :
@@ -34144,7 +34216,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fimplies_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_16_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9077:0-9093:1 -/
+    Source: 'src/generated_part1.rs', lines 9092:0-9108:1 -/
 def generated.part1.case_16_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34223,7 +34295,7 @@ def generated.part1.case_16_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fimplies_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9094:0-9115:1 -/
+    Source: 'src/generated_part1.rs', lines 9109:0-9130:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fimplies_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34303,7 +34375,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fimplies_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fimplies_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9116:0-9119:1 -/
+    Source: 'src/generated_part1.rs', lines 9131:0-9134:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fimplies_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -34319,7 +34391,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fimplies_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fimplies_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9121:0-9126:1
+    Source: 'src/generated_part1.rs', lines 9136:0-9141:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fimplies_5felim2
   (s : Store) (a0 : Term) :
@@ -34335,7 +34407,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fimplies_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_17_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9127:0-9143:1 -/
+    Source: 'src/generated_part1.rs', lines 9142:0-9158:1 -/
 def generated.part1.case_17_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34414,7 +34486,7 @@ def generated.part1.case_17_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9144:0-9148:1 -/
+    Source: 'src/generated_part1.rs', lines 9159:0-9163:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fequiv_5felim1
   (s : Store) (v14 : Term) (v15 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34429,7 +34501,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9149:0-9170:1 -/
+    Source: 'src/generated_part1.rs', lines 9164:0-9185:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fequiv_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34518,7 +34590,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9171:0-9174:1 -/
+    Source: 'src/generated_part1.rs', lines 9186:0-9189:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fequiv_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -34533,7 +34605,7 @@ def generated.part1.body_eo__24eo_5fprog_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9176:0-9181:1
+    Source: 'src/generated_part1.rs', lines 9191:0-9196:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fequiv_5felim1
   (s : Store) (a0 : Term) :
@@ -34549,7 +34621,7 @@ def generated.part1.eo__24eo_5fprog_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_18_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9182:0-9198:1 -/
+    Source: 'src/generated_part1.rs', lines 9197:0-9213:1 -/
 def generated.part1.case_18_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34626,7 +34698,7 @@ def generated.part1.case_18_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9199:0-9203:1 -/
+    Source: 'src/generated_part1.rs', lines 9214:0-9218:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fequiv_5felim2
   (s : Store) (v14 : Term) (v15 : Term) (v10 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34641,7 +34713,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9204:0-9225:1 -/
+    Source: 'src/generated_part1.rs', lines 9219:0-9240:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fequiv_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34729,7 +34801,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9226:0-9229:1 -/
+    Source: 'src/generated_part1.rs', lines 9241:0-9244:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fequiv_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -34744,7 +34816,7 @@ def generated.part1.body_eo__24eo_5fprog_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9231:0-9236:1
+    Source: 'src/generated_part1.rs', lines 9246:0-9251:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fequiv_5felim2
   (s : Store) (a0 : Term) :
@@ -34760,7 +34832,7 @@ def generated.part1.eo__24eo_5fprog_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_19_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9237:0-9253:1 -/
+    Source: 'src/generated_part1.rs', lines 9252:0-9268:1 -/
 def generated.part1.case_19_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34837,7 +34909,7 @@ def generated.part1.case_19_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_4_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9254:0-9260:1 -/
+    Source: 'src/generated_part1.rs', lines 9269:0-9275:1 -/
 def generated.part1.cases_0_4_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34878,7 +34950,7 @@ def generated.part1.cases_0_4_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fnot_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9261:0-9266:1 -/
+    Source: 'src/generated_part1.rs', lines 9276:0-9281:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fequiv_5felim1
   (s : Store) (v16 : Term) (v14 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34897,7 +34969,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9267:0-9290:1 -/
+    Source: 'src/generated_part1.rs', lines 9282:0-9305:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fequiv_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -34991,7 +35063,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9291:0-9294:1 -/
+    Source: 'src/generated_part1.rs', lines 9306:0-9309:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fequiv_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -35007,7 +35079,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fequiv_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9296:0-9301:1
+    Source: 'src/generated_part1.rs', lines 9311:0-9316:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fequiv_5felim1
   (s : Store) (a0 : Term) :
@@ -35023,7 +35095,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fequiv_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_20_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9302:0-9318:1 -/
+    Source: 'src/generated_part1.rs', lines 9317:0-9333:1 -/
 def generated.part1.case_20_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35101,7 +35173,7 @@ def generated.part1.case_20_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fnot_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9319:0-9328:1 -/
+    Source: 'src/generated_part1.rs', lines 9334:0-9343:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fequiv_5felim2
   (s : Store) (v8 : Term) (v16 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35139,7 +35211,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9329:0-9352:1 -/
+    Source: 'src/generated_part1.rs', lines 9344:0-9367:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fequiv_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35233,7 +35305,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9353:0-9356:1 -/
+    Source: 'src/generated_part1.rs', lines 9368:0-9371:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fequiv_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -35249,7 +35321,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fequiv_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9358:0-9363:1
+    Source: 'src/generated_part1.rs', lines 9373:0-9378:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fequiv_5felim2
   (s : Store) (a0 : Term) :
@@ -35265,7 +35337,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fequiv_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_21_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9364:0-9380:1 -/
+    Source: 'src/generated_part1.rs', lines 9379:0-9395:1 -/
 def generated.part1.case_21_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35343,7 +35415,7 @@ def generated.part1.case_21_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fxor_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9381:0-9402:1 -/
+    Source: 'src/generated_part1.rs', lines 9396:0-9417:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fxor_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35428,7 +35500,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fxor_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fxor_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9403:0-9406:1 -/
+    Source: 'src/generated_part1.rs', lines 9418:0-9421:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fxor_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -35443,7 +35515,7 @@ def generated.part1.body_eo__24eo_5fprog_5fxor_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fxor_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9408:0-9413:1
+    Source: 'src/generated_part1.rs', lines 9423:0-9428:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fxor_5felim1
   (s : Store) (a0 : Term) :
@@ -35459,7 +35531,7 @@ def generated.part1.eo__24eo_5fprog_5fxor_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_22_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9414:0-9430:1 -/
+    Source: 'src/generated_part1.rs', lines 9429:0-9445:1 -/
 def generated.part1.case_22_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35536,7 +35608,7 @@ def generated.part1.case_22_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9431:0-9437:1 -/
+    Source: 'src/generated_part1.rs', lines 9446:0-9452:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fxor_5felim2
   (s : Store) (v13 : Term) (v15 : Term) (v12 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35559,7 +35631,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9438:0-9459:1 -/
+    Source: 'src/generated_part1.rs', lines 9453:0-9474:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fxor_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35650,7 +35722,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9460:0-9463:1 -/
+    Source: 'src/generated_part1.rs', lines 9475:0-9478:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fxor_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -35665,7 +35737,7 @@ def generated.part1.body_eo__24eo_5fprog_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9465:0-9470:1
+    Source: 'src/generated_part1.rs', lines 9480:0-9485:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fxor_5felim2
   (s : Store) (a0 : Term) :
@@ -35681,7 +35753,7 @@ def generated.part1.eo__24eo_5fprog_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_23_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9471:0-9487:1 -/
+    Source: 'src/generated_part1.rs', lines 9486:0-9502:1 -/
 def generated.part1.case_23_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35758,7 +35830,7 @@ def generated.part1.case_23_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_5_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9488:0-9494:1 -/
+    Source: 'src/generated_part1.rs', lines 9503:0-9509:1 -/
 def generated.part1.cases_0_5_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35799,7 +35871,7 @@ def generated.part1.cases_0_5_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fnot_5fxor_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9495:0-9502:1 -/
+    Source: 'src/generated_part1.rs', lines 9510:0-9517:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fxor_5felim1
   (s : Store) (v16 : Term) (v8 : Term) (v15 : Term) (v14 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35827,7 +35899,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fxor_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fxor_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9503:0-9526:1 -/
+    Source: 'src/generated_part1.rs', lines 9518:0-9541:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fxor_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -35925,7 +35997,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fxor_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fxor_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9527:0-9530:1 -/
+    Source: 'src/generated_part1.rs', lines 9542:0-9545:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fxor_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -35941,7 +36013,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fxor_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fxor_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9532:0-9537:1
+    Source: 'src/generated_part1.rs', lines 9547:0-9552:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fxor_5felim1
   (s : Store) (a0 : Term) :
@@ -35957,7 +36029,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fxor_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_24_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9538:0-9554:1 -/
+    Source: 'src/generated_part1.rs', lines 9553:0-9569:1 -/
 def generated.part1.case_24_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36035,7 +36107,7 @@ def generated.part1.case_24_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fnot_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9555:0-9562:1 -/
+    Source: 'src/generated_part1.rs', lines 9570:0-9577:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fxor_5felim2
   (s : Store) (v8 : Term) (v16 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36064,7 +36136,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9563:0-9586:1 -/
+    Source: 'src/generated_part1.rs', lines 9578:0-9601:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fxor_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36158,7 +36230,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9587:0-9590:1 -/
+    Source: 'src/generated_part1.rs', lines 9602:0-9605:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fxor_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -36174,7 +36246,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fxor_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9592:0-9597:1
+    Source: 'src/generated_part1.rs', lines 9607:0-9612:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fxor_5felim2
   (s : Store) (a0 : Term) :
@@ -36190,7 +36262,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fxor_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_25_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9598:0-9614:1 -/
+    Source: 'src/generated_part1.rs', lines 9613:0-9629:1 -/
 def generated.part1.case_25_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36268,7 +36340,7 @@ def generated.part1.case_25_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9615:0-9620:1 -/
+    Source: 'src/generated_part1.rs', lines 9630:0-9635:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fite_5felim1
   (s : Store) (v17 : Term) (v15 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36287,7 +36359,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9621:0-9644:1 -/
+    Source: 'src/generated_part1.rs', lines 9636:0-9659:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fite_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36380,7 +36452,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9645:0-9648:1 -/
+    Source: 'src/generated_part1.rs', lines 9660:0-9663:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fite_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -36395,7 +36467,7 @@ def generated.part1.body_eo__24eo_5fprog_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9650:0-9655:1
+    Source: 'src/generated_part1.rs', lines 9665:0-9670:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fite_5felim1
   (s : Store) (a0 : Term) :
@@ -36411,7 +36483,7 @@ def generated.part1.eo__24eo_5fprog_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_26_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9656:0-9672:1 -/
+    Source: 'src/generated_part1.rs', lines 9671:0-9687:1 -/
 def generated.part1.case_26_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36488,7 +36560,7 @@ def generated.part1.case_26_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9673:0-9676:1 -/
+    Source: 'src/generated_part1.rs', lines 9688:0-9691:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fite_5felim2
   (s : Store) (v13 : Term) (v17 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36499,7 +36571,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9677:0-9700:1 -/
+    Source: 'src/generated_part1.rs', lines 9692:0-9715:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fite_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36591,7 +36663,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9701:0-9704:1 -/
+    Source: 'src/generated_part1.rs', lines 9716:0-9719:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fite_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -36606,7 +36678,7 @@ def generated.part1.body_eo__24eo_5fprog_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9706:0-9711:1
+    Source: 'src/generated_part1.rs', lines 9721:0-9726:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fite_5felim2
   (s : Store) (a0 : Term) :
@@ -36622,7 +36694,7 @@ def generated.part1.eo__24eo_5fprog_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_27_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9712:0-9728:1 -/
+    Source: 'src/generated_part1.rs', lines 9727:0-9743:1 -/
 def generated.part1.case_27_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36699,7 +36771,7 @@ def generated.part1.case_27_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::cases_0_6_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9729:0-9735:1 -/
+    Source: 'src/generated_part1.rs', lines 9744:0-9750:1 -/
 def generated.part1.cases_0_6_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36740,7 +36812,7 @@ def generated.part1.cases_0_6_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err _ => ok (r, s1)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fnot_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9736:0-9746:1 -/
+    Source: 'src/generated_part1.rs', lines 9751:0-9761:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fite_5felim1
   (s : Store) (v16 : Term) (v18 : Term) (v11 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36783,7 +36855,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9747:0-9772:1 -/
+    Source: 'src/generated_part1.rs', lines 9762:0-9787:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fite_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36883,7 +36955,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9773:0-9776:1 -/
+    Source: 'src/generated_part1.rs', lines 9788:0-9791:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fite_5felim1
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -36899,7 +36971,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fite_5felim1]:
-    Source: 'src/generated_part1.rs', lines 9778:0-9783:1
+    Source: 'src/generated_part1.rs', lines 9793:0-9798:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fite_5felim1
   (s : Store) (a0 : Term) :
@@ -36915,7 +36987,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fite_5felim1
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_28_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9784:0-9800:1 -/
+    Source: 'src/generated_part1.rs', lines 9799:0-9815:1 -/
 def generated.part1.case_28_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -36993,7 +37065,7 @@ def generated.part1.case_28_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::more_0_eo__24eo_5fprog_5fnot_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9801:0-9809:1 -/
+    Source: 'src/generated_part1.rs', lines 9816:0-9824:1 -/
 def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fite_5felim2
   (s : Store) (v8 : Term) (v18 : Term) (v17 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37026,7 +37098,7 @@ def generated.part1.more_0_eo__24eo_5fprog_5fnot_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9810:0-9835:1 -/
+    Source: 'src/generated_part1.rs', lines 9825:0-9850:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fite_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37127,7 +37199,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9836:0-9839:1 -/
+    Source: 'src/generated_part1.rs', lines 9851:0-9854:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fite_5felim2
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -37143,7 +37215,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fite_5felim2]:
-    Source: 'src/generated_part1.rs', lines 9841:0-9846:1
+    Source: 'src/generated_part1.rs', lines 9856:0-9861:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fite_5felim2
   (s : Store) (a0 : Term) :
@@ -37159,7 +37231,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fite_5felim2
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_29_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9847:0-9863:1 -/
+    Source: 'src/generated_part1.rs', lines 9862:0-9878:1 -/
 def generated.part1.case_29_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37237,7 +37309,7 @@ def generated.part1.case_29_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24lower_5fnot_5fand]:
-    Source: 'src/generated_part1.rs', lines 9864:0-9869:1 -/
+    Source: 'src/generated_part1.rs', lines 9879:0-9884:1 -/
 def generated.part1.case_0_eo__24lower_5fnot_5fand
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37259,7 +37331,7 @@ def generated.part1.case_0_eo__24lower_5fnot_5fand
 mutual
 
 /-- [pathos_compiled_checker::generated::part1::eo__24lower_5fnot_5fand]:
-    Source: 'src/generated_part1.rs', lines 9871:0-9883:1
+    Source: 'src/generated_part1.rs', lines 9886:0-9898:1
     Visibility: public -/
 def generated.part1.eo__24lower_5fnot_5fand
   (s : Store) (a0 : Term) :
@@ -37294,7 +37366,7 @@ def generated.part1.eo__24lower_5fnot_5fand
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24lower_5fnot_5fand]:
-    Source: 'src/generated_part1.rs', lines 9884:0-9890:1 -/
+    Source: 'src/generated_part1.rs', lines 9899:0-9905:1 -/
 def generated.part1.body_eo__24lower_5fnot_5fand
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -37325,7 +37397,7 @@ def generated.part1.body_eo__24lower_5fnot_5fand
 partial_fixpoint
 
 /-- [pathos_compiled_checker::generated::part1::case_1_eo__24lower_5fnot_5fand]:
-    Source: 'src/generated_part1.rs', lines 9891:0-9907:1 -/
+    Source: 'src/generated_part1.rs', lines 9906:0-9922:1 -/
 def generated.part1.case_1_eo__24lower_5fnot_5fand
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37395,7 +37467,7 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fnot_5fand]:
-    Source: 'src/generated_part1.rs', lines 9908:0-9920:1 -/
+    Source: 'src/generated_part1.rs', lines 9923:0-9935:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fand
   (s : Store) (a0 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37436,7 +37508,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fnot_5fand
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fnot_5fand]:
-    Source: 'src/generated_part1.rs', lines 9921:0-9924:1 -/
+    Source: 'src/generated_part1.rs', lines 9936:0-9939:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fnot_5fand
   (s : Store) (a0 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -37451,7 +37523,7 @@ def generated.part1.body_eo__24eo_5fprog_5fnot_5fand
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fnot_5fand]:
-    Source: 'src/generated_part1.rs', lines 9926:0-9931:1
+    Source: 'src/generated_part1.rs', lines 9941:0-9946:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fnot_5fand
   (s : Store) (a0 : Term) :
@@ -37466,7 +37538,7 @@ def generated.part1.eo__24eo_5fprog_5fnot_5fand
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
 
 /-- [pathos_compiled_checker::generated::part1::case_30_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9932:0-9948:1 -/
+    Source: 'src/generated_part1.rs', lines 9947:0-9963:1 -/
 def generated.part1.case_30_eo__24eo_5fcmd_5fstep_5fproven
   (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37543,7 +37615,7 @@ def generated.part1.case_30_eo__24eo_5fcmd_5fstep_5fproven
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::case_0_eo__24eo_5fprog_5fcnf_5fand_5fpos]:
-    Source: 'src/generated_part1.rs', lines 9949:0-9962:1 -/
+    Source: 'src/generated_part1.rs', lines 9964:0-9977:1 -/
 def generated.part1.case_0_eo__24eo_5fprog_5fcnf_5fand_5fpos
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -37606,7 +37678,7 @@ def generated.part1.case_0_eo__24eo_5fprog_5fcnf_5fand_5fpos
   | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
 
 /-- [pathos_compiled_checker::generated::part1::body_eo__24eo_5fprog_5fcnf_5fand_5fpos]:
-    Source: 'src/generated_part1.rs', lines 9963:0-9970:1 -/
+    Source: 'src/generated_part1.rs', lines 9978:0-9985:1 -/
 def generated.part1.body_eo__24eo_5fprog_5fcnf_5fand_5fpos
   (s : Store) (a0 : Term) (a1 : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -37638,7 +37710,7 @@ def generated.part1.body_eo__24eo_5fprog_5fcnf_5fand_5fpos
   | core.result.Result.Err e => ok (core.result.Result.Err e, s)
 
 /-- [pathos_compiled_checker::generated::part1::eo__24eo_5fprog_5fcnf_5fand_5fpos]:
-    Source: 'src/generated_part1.rs', lines 9972:0-9977:1
+    Source: 'src/generated_part1.rs', lines 9987:0-9992:1
     Visibility: public -/
 def generated.part1.eo__24eo_5fprog_5fcnf_5fand_5fpos
   (s : Store) (a0 : Term) (a1 : Term) :
@@ -37652,126 +37724,5 @@ def generated.part1.eo__24eo_5fprog_5fcnf_5fand_5fpos
     let s3 ← Store.leave s2
     ok (result, s3)
   | core.result.Result.Err e => ok (core.result.Result.Err e, s1)
-
-/-- [pathos_compiled_checker::generated::part1::case_31_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9978:0-9997:1 -/
-def generated.part1.case_31_eo__24eo_5fcmd_5fstep_5fproven
-  (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
-  Result ((core.result.Result (Option Term) CheckError) × Store)
-  := do
-  let s1 ← lift (Array.to_slice (Std.Array.empty Term))
-  let (r, s2) ←
-    Store.construct s schema.Constructor.eo__24emb_5fr_2ecnf_5fand_5fpos s1
-  match r with
-  | core.result.Result.Ok v =>
-    let b ←
-      core.cmp.PartialEq.ne.trait_default Term.Insts.CoreCmpPartialEqTerm a1 v
-    if b
-    then ok (core.result.Result.Ok none, s2)
-    else
-      let (r1, s3) ←
-        Store.destruct s2 schema.Constructor.eo__24emb_5fal_2econs a2
-      match r1 with
-      | core.result.Result.Ok v1 =>
-        match v1 with
-        | none => ok (core.result.Result.Ok none, s3)
-        | some fields =>
-          let v2 ←
-            alloc.vec.Vec.index (core.slice.index.SliceIndexUsizeSlice Term)
-              fields 0#usize
-          let v3 ←
-            alloc.vec.Vec.index (core.slice.index.SliceIndexUsizeSlice Term)
-              fields 1#usize
-          let (r2, s4) ←
-            Store.destruct s3 schema.Constructor.eo__24emb_5fal_2econs v3
-          match r2 with
-          | core.result.Result.Ok v4 =>
-            match v4 with
-            | none => ok (core.result.Result.Ok none, s4)
-            | some fields1 =>
-              let v5 ←
-                alloc.vec.Vec.index (core.slice.index.SliceIndexUsizeSlice
-                  Term) fields1 0#usize
-              let v6 ←
-                alloc.vec.Vec.index (core.slice.index.SliceIndexUsizeSlice
-                  Term) fields1 1#usize
-              let s5 ← lift (Array.to_slice (Std.Array.empty Term))
-              let (r3, s6) ←
-                Store.construct s4 schema.Constructor.eo__24emb_5fal_2enil s5
-              match r3 with
-              | core.result.Result.Ok v7 =>
-                let b1 ←
-                  core.cmp.PartialEq.ne.trait_default
-                    Term.Insts.CoreCmpPartialEqTerm v6 v7
-                if b1
-                then ok (core.result.Result.Ok none, s6)
-                else
-                  let s7 ← lift (Array.to_slice (Std.Array.empty Term))
-                  let (r4, s8) ←
-                    Store.construct s6
-                      schema.Constructor.eo__24emb_5findl_2enil s7
-                  match r4 with
-                  | core.result.Result.Ok v8 =>
-                    let b2 ←
-                      core.cmp.PartialEq.ne.trait_default
-                        Term.Insts.CoreCmpPartialEqTerm a3 v8
-                    if b2
-                    then ok (core.result.Result.Ok none, s8)
-                    else
-                      let (r5, s9) ←
-                        generated.part1.eo__24eo_5fprog_5fcnf_5fand_5fpos s8 v2
-                          v5
-                      match r5 with
-                      | core.result.Result.Ok v9 =>
-                        ok (core.result.Result.Ok (some v9), s9)
-                      | core.result.Result.Err e =>
-                        ok (core.result.Result.Err e, s9)
-                  | core.result.Result.Err e =>
-                    ok (core.result.Result.Err e, s8)
-              | core.result.Result.Err e => ok (core.result.Result.Err e, s6)
-          | core.result.Result.Err e => ok (core.result.Result.Err e, s4)
-      | core.result.Result.Err e => ok (core.result.Result.Err e, s3)
-  | core.result.Result.Err e => ok (core.result.Result.Err e, s2)
-
-/-- [pathos_compiled_checker::generated::part1::cases_0_7_eo__24eo_5fcmd_5fstep_5fproven]:
-    Source: 'src/generated_part1.rs', lines 9998:0-10004:1 -/
-def generated.part1.cases_0_7_eo__24eo_5fcmd_5fstep_5fproven
-  (s : Store) (a0 : Term) (a1 : Term) (a2 : Term) (a3 : Term) :
-  Result ((core.result.Result (Option Term) CheckError) × Store)
-  := do
-  let (r, s1) ←
-    generated.part1.case_28_eo__24eo_5fcmd_5fstep_5fproven s a0 a1 a2 a3
-  match r with
-  | core.result.Result.Ok v =>
-    match v with
-    | none =>
-      let (r1, s2) ←
-        generated.part1.case_29_eo__24eo_5fcmd_5fstep_5fproven s1 a0 a1 a2 a3
-      match r1 with
-      | core.result.Result.Ok v1 =>
-        match v1 with
-        | none =>
-          let (r2, s3) ←
-            generated.part1.case_30_eo__24eo_5fcmd_5fstep_5fproven s2 a0 a1 a2
-              a3
-          match r2 with
-          | core.result.Result.Ok v2 =>
-            match v2 with
-            | none =>
-              let (r3, s4) ←
-                generated.part1.case_31_eo__24eo_5fcmd_5fstep_5fproven s3 a0 a1
-                  a2 a3
-              match r3 with
-              | core.result.Result.Ok v3 =>
-                match v3 with
-                | none => ok (core.result.Result.Ok none, s4)
-                | some _ => ok (r3, s4)
-              | core.result.Result.Err _ => ok (r3, s4)
-            | some _ => ok (r2, s3)
-          | core.result.Result.Err _ => ok (r2, s3)
-        | some _ => ok (r1, s2)
-      | core.result.Result.Err _ => ok (r1, s2)
-    | some _ => ok (r, s1)
-  | core.result.Result.Err _ => ok (r, s1)
 
 end pathos_compiled_checker

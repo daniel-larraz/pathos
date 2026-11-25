@@ -7142,6 +7142,9 @@ def __eo_is_list_nil__at__at_TypedList_cons.case_0 : Term -> Option (Term)
   | (Term.Apply (Term.UOp UserOp._at__at_TypedList_nil) T) => some ((Term.Boolean true))
   | _ => none
 
+def __eo_is_list_nil__at__at_TypedList_cons.case_1 : Term -> Option (Term)
+  | x1 => some ((Term.Boolean false))
+
 def __eo_is_list_nil_plus.case_0 : Term -> Option (Term)
   | x1 => some ((__eo_is_eq (__eo_to_q x1) (Term.Rational (native_mk_rational 0 1))))
 

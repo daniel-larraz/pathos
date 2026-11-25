@@ -769,13 +769,26 @@ theorem case_0_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs_spec (n : Nat
   store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
   case_done hinv2 hG with h_v4 in EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_0 using hn_a0 hn_v1 hn_v2
 
+theorem case_1_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
+    case_1_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_1 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_1 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs
+  have hG := Store.Grows.refl s
+  store_step with Store.literal_boolean_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  case_done hinv1 hG with h_v0 in EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_1 using hn_a0
+
 /-- logos's `__eo_is_list_nil__at__at_TypedList_cons` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
     __eo_is_list_nil__at__at_TypedList_cons x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_0 x_a0] HasStuck.stuck) := by
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_0 x_a0, EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_1 x_a0] HasStuck.stuck) := by
   conv => lhs; unfold __eo_is_list_nil__at__at_TypedList_cons
-  unfold EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_0
+  unfold EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_0 EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_1
   logos_eq
 
 theorem body_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -790,7 +803,9 @@ theorem body_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs_spec (n : Nat) 
   stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
   case_step with case_0_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
     as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_0
+  case_step with case_1_eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0 hn_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 using hn_a0 hc0
+  body_stuck hinv2 hG using hn_a0 hc0 hc1 in EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_0 EoCases.__eo_is_list_nil__at__at_TypedList_cons.case_1
 
 theorem eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fis_5flist_5fnil_5f_40_40TypedList_2econs.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
