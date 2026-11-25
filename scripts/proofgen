@@ -92,7 +92,7 @@ BINARY_SPECS = {"Add", "Mul", "Gt"}
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
                  "TypeOf", "ListSingletonElim", "ListConcat", "ListLength",
-                 "ListRev"} | set(ARGS_SPECS)
+                 "ListRev", "ListNth"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -561,16 +561,17 @@ class Emitter:
                             + " (by not_left_tac) (by nil_apply_tac)", v)
             self.l.calls.add(lists["is_nil"])
             return v
-        if k in ("ListLength", "ListRev"):
+        if k in ("ListLength", "ListRev", "ListNth"):
             # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
-            # constant that does not nest to the left, and a list
-            spec = {"ListLength": "Store.builtin_spec_list_len",
-                    "ListRev": "Store.builtin_spec_list_rev"}[k]
+            # constant that does not nest to the left, a list, and for
+            # eo::list_nth an index
+            spec, name, arity = {"ListLength": ("Store.builtin_spec_list_len", "list_len", 2),
+                                 "ListRev": ("Store.builtin_spec_list_rev", "list_rev", 2),
+                                 "ListNth": ("Store.builtin_spec_list_nth", "list_nth", 3)}[k]
             vs = [self.expr(s) for s in sub]
             st, inv, rem = self.st(), self.inv(), self.rem()
-            if len(vs) != 2 or not self.not_left(vs[0]):
-                self.unsupported("eo::" + {"ListLength": "list_len", "ListRev": "list_rev"}[k]
-                                 + " of an operator that is not a constant")
+            if len(vs) != arity or not self.not_left(vs[0]):
+                self.unsupported("eo::" + name + " of an operator that is not a constant")
             self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
             self.store_step(spec + " n ih." + ident(lists["is_nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"

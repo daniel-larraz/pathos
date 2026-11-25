@@ -499,6 +499,22 @@ with this as the reason. Daniel's decision (2026-11-24): leave them so,
 and report the difference to logos. The runtime keeps Ethos's
 behaviour.
 
+### `$eo_typeof` and its equation lemma
+
+With `eo::list_nth`'s spec, every call of `$eo_typeof` (logos's
+`__eo_typeof`, 208 cases) has a proof, and its own proof is generated.
+Only its `rust_eq` does not build. `unfold __eo_typeof` makes Lean
+generate the function's equation lemma, and that times out (`simp`,
+`isDefEq`) at 200,000 heartbeats. Raising `maxHeartbeats` in the module
+of the proof does not help, not even to 0, and nor does asking for the
+lemma alone (`#check @__eo_typeof.eq_def`): the lemma is made under the
+options of `Cpc.Logos`, which defines the function. So `$eo_typeof` is in
+`proofs-cpc/unproved.toml`. The twelve programs that would follow it
+wait for it: `$eo_push_proven`, `$eo_is_bool_type`, and the rules that
+type their arguments. A larger limit where logos defines the function, or
+a `rust_eq` that does not unfold it through its equation lemma, would
+close it.
+
 ### The generator
 
 - Clippy with warnings as errors fails on the CpcMini crate in one place:

@@ -8,7 +8,7 @@ $are_distinct_terms_type	none	case 5 has a builtin operator
 $arith_mk_one	generated	
 $arith_mk_zero	generated	
 $arith_normalize_lit	generated	
-$arith_reduction_pred	none	it calls $eo_nil, which has no proof
+$arith_reduction_pred	none	it calls $eo_typeof, which has no proof
 $arith_rel_inv	generated	
 $arith_rel_neg	generated	
 $arith_rel_sum	generated	
@@ -35,7 +35,7 @@ $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	case 14 has a builtin operator
 $bv_mk_bitblast_step_add	generated	
-$bv_mk_bitblast_step_bitwise	none	it calls $eo_nil, which has no proof
+$bv_mk_bitblast_step_bitwise	none	it calls $eo_typeof, which has no proof
 $bv_mk_bitblast_step_concat	generated	
 $bv_mk_bitblast_step_eq_rec	generated	
 $bv_mk_bitblast_step_ite	generated	
@@ -46,13 +46,13 @@ $bv_mk_bitblast_step_shr_rec	none	case 1 has a builtin operator
 $bv_mk_bitblast_step_shr_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
 $bv_mk_bitblast_step_var_rec	generated	
 $bv_mk_bitwise_slicing	none	case 0 has a builtin operator
-$bv_mk_bitwise_slicing_rec	none	it calls $eo_nil, which has no proof
+$bv_mk_bitwise_slicing_rec	none	it calls $eo_typeof, which has no proof
 $bv_ripple_carry_adder_2	generated	
 $bv_shift_add_multiplier	none	case 0 has a builtin operator
 $bv_shift_add_multiplier_rec	none	it calls $bv_shift_add_multiplier_rec_step, which has no proof
 $bv_shift_add_multiplier_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
-$bv_smulo_elim_rec	none	it calls $eo_nil, which has no proof
-$bv_umulo_elim_rec	none	it calls $eo_nil, which has no proof
+$bv_smulo_elim_rec	none	it calls $eo_typeof, which has no proof
+$bv_umulo_elim_rec	none	it calls $eo_typeof, which has no proof
 $chain_m_resolve	none	it calls $chain_m_resolve_final, which has no proof
 $chain_m_resolve_final	none	case 0 has a builtin operator
 $chain_m_resolve_rec	none	it calls $chain_m_resolve_rec_step, which has no proof
@@ -85,7 +85,7 @@ $eo_dt_resolve	generated
 $eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
-$eo_invoke_assume_list	none	it calls $eo_is_closed, which has no proof
+$eo_invoke_assume_list	none	it calls $eo_is_bool_type, which has no proof
 $eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
@@ -121,7 +121,7 @@ $eo_nil_str.++	generated
 $eo_prog_absorb	none	it calls $get_zero, which has no proof
 $eo_prog_aci_norm	none	it calls $aci_norm_eq, which has no proof
 $eo_prog_alpha_equiv	none	case 0 has a builtin operator
-$eo_prog_and_elim	none	case 0 has a builtin operator
+$eo_prog_and_elim	generated	
 $eo_prog_and_intro	generated	
 $eo_prog_arith-abs-eq	generated	
 $eo_prog_arith-abs-int-gt	generated	
@@ -169,7 +169,7 @@ $eo_prog_arith-to-int-elim-to-real	generated
 $eo_prog_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison, which has no proof
 $eo_prog_arith_mult_neg	none	it calls $eo_typeof, which has no proof
 $eo_prog_arith_mult_pos	none	it calls $eo_typeof, which has no proof
-$eo_prog_arith_mult_sign	none	it calls $mk_arith_mult_sign_sgn, which has no proof
+$eo_prog_arith_mult_sign	none	it calls $eo_typeof, which has no proof
 $eo_prog_arith_mult_tangent	none	it calls $eo_nil, which has no proof
 $eo_prog_arith_poly_norm	none	it calls $get_arith_poly_norm, which has no proof
 $eo_prog_arith_poly_norm_rel	none	it calls $is_eq_maybe_to_real, which has no proof
@@ -363,7 +363,7 @@ $eo_prog_bv_poly_norm_eq	none	case 0 has a builtin operator
 $eo_prog_chain_m_resolution	none	case 0 has a builtin operator
 $eo_prog_chain_resolution	none	it calls $chain_m_resolve, which has no proof
 $eo_prog_cnf_and_neg	generated	
-$eo_prog_cnf_and_pos	none	case 0 has a builtin operator
+$eo_prog_cnf_and_pos	generated	
 $eo_prog_cnf_equiv_neg1	generated	
 $eo_prog_cnf_equiv_neg2	generated	
 $eo_prog_cnf_equiv_pos1	generated	
@@ -377,7 +377,7 @@ $eo_prog_cnf_ite_neg3	generated
 $eo_prog_cnf_ite_pos1	generated	
 $eo_prog_cnf_ite_pos2	generated	
 $eo_prog_cnf_ite_pos3	generated	
-$eo_prog_cnf_or_neg	none	case 0 has a builtin operator
+$eo_prog_cnf_or_neg	generated	
 $eo_prog_cnf_or_pos	generated	
 $eo_prog_cnf_xor_neg1	generated	
 $eo_prog_cnf_xor_neg2	generated	
@@ -392,10 +392,10 @@ $eo_prog_concat_unify	none	case 0 has a builtin operator
 $eo_prog_cong	generated	
 $eo_prog_contra	generated	
 $eo_prog_distinct-binary-elim	none	it calls $eo_nil, which has no proof
-$eo_prog_distinct-card-conflict	none	it calls $compute_card, which has no proof
+$eo_prog_distinct-card-conflict	none	it calls $assoc_nil_nth_type, which has no proof
 $eo_prog_distinct-elim	generated	
 $eo_prog_distinct-false	none	case 0 has a builtin operator
-$eo_prog_distinct-true	none	it calls $are_distinct_terms_list, which has no proof
+$eo_prog_distinct-true	none	it calls $eo_typeof, which has no proof
 $eo_prog_distinct_values	none	it calls $are_distinct_terms_type, which has no proof
 $eo_prog_dt-collapse-selector	none	case 0 has a builtin operator
 $eo_prog_dt-collapse-tester	none	it calls $dt_eq_cons, which has no proof
@@ -457,7 +457,7 @@ $eo_prog_not_implies_elim2	generated
 $eo_prog_not_ite_elim1	generated	
 $eo_prog_not_ite_elim2	generated	
 $eo_prog_not_not_elim	generated	
-$eo_prog_not_or_elim	none	case 0 has a builtin operator
+$eo_prog_not_or_elim	generated	
 $eo_prog_not_xor_elim1	generated	
 $eo_prog_not_xor_elim2	generated	
 $eo_prog_pairwise_cong	generated	
@@ -776,7 +776,7 @@ $eo_to_smt_type_tuple	generated
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_updater	none	it calls $smtx_dt_num_sels, which has no proof
 $eo_to_smt_updater_rec	generated	
-$eo_typeof	none	it calls $eo_typeof_tuple.select, which has no proof
+$eo_typeof	none	its generated proof does not build: rust_eq: unfolding __eo_typeof (208 cases) makes Lean generate its equation lemma, which times out (simp, isDefEq) at 200,000 heartbeats whatever this module's maxHeartbeats, even 0: the lemma is made under Cpc.Logos's options; reached once eo::list_nth had a spec
 $eo_typeof_+	generated	
 $eo_typeof_/	generated	
 $eo_typeof_<	generated	
@@ -795,7 +795,7 @@ $eo_typeof_@const	generated
 $eo_typeof_@div_by_zero	generated	
 $eo_typeof_@from_bools	generated	
 $eo_typeof_@purify	generated	
-$eo_typeof_@quantifiers_skolemize	none	it calls $get_nth_var_type, which has no proof
+$eo_typeof_@quantifiers_skolemize	generated	
 $eo_typeof_@re_unfold_pos_component	generated	
 $eo_typeof_@sets_deq_diff	generated	
 $eo_typeof_@strings_deq_diff	generated	
@@ -874,8 +874,8 @@ $eo_typeof_str.update	generated
 $eo_typeof_to_int	generated	
 $eo_typeof_to_real	generated	
 $eo_typeof_tuple	generated	
-$eo_typeof_tuple.select	none	case 0 has a builtin operator
-$eo_typeof_tuple.update	none	case 0 has a builtin operator
+$eo_typeof_tuple.select	generated	
+$eo_typeof_tuple.update	generated	
 $eo_typeof_update	generated	
 $eo_typeof_zero_extend	generated	
 $eval_sets_inter	none	case 0 has a builtin operator
@@ -893,7 +893,7 @@ $get_arg_list_rec	generated
 $get_arith_poly_norm	none	case 4 has a builtin operator
 $get_bv_poly_norm_rec	none	it calls $poly_add, which has no proof
 $get_lambda_type	generated	
-$get_nth_var_type	none	case 0 has a builtin operator
+$get_nth_var_type	generated	
 $get_unused_vars	none	case 0 has a builtin operator
 $get_var_type	generated	
 $get_zero	none	case 5 has a builtin operator
