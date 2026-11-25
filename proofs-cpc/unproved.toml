@@ -47,3 +47,4 @@
 "$eo_prog_bv-extract-concat-4" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec"
 "$bv_div_mod_impl" = "the spec of case 2: times out (whnf, 2,000,000 heartbeats); reached once eo::list_len and eo::list_rev had specs"
 "$eo_typeof" = "rust_eq: logos_eq over 209 cases exceeds simp's maxSteps, and with more steps 2,000,000 heartbeats: simplifying the 208-entry firstSome in every branch is quadratic; needs a structured proof (firstSome picks the k-th entry), docs/proofs.md; reached once eo::list_nth had a spec"
+"$get_unused_vars" = "rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once eo::list_minclude had a spec"

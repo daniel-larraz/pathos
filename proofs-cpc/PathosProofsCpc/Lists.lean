@@ -2142,4 +2142,239 @@ theorem Store.builtin_spec_list_inter (n : Nat) (hnil : IsListNilSpec n) (s : St
             simp [hn, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
           rw [hval]; exact hr3
 
+
+/-! ## `eo::list_minclude` -/
+
+-- logos's `eo::List` constructors, as the generated cases name them.
+set_option linter.internalConstructors false
+
+/-- `eo::List` lists: the elements under `__eo_List_cons`, ending in
+`__eo_List_nil`. -/
+abbrev elemsL (ys : List Eo.Term) : Eo.Term := eoList Eo.Term.__eo_List_cons Eo.Term.__eo_List_nil ys
+
+theorem list_nil_not_apply : ∀ g a c, Eo.Term.__eo_List_nil ≠ Eo.Term.Apply (Eo.Term.Apply g a) c := by
+  intro g a c h; cases h
+
+theorem list_nil_ne_stuck : Eo.Term.__eo_List_nil ≠ Eo.Term.Stuck := by intro h; cases h
+
+/-- logos's `get_elements_rec`: the elements as an `eo::List`. -/
+theorem get_elements_rec_eoList {xf xr : Eo.Term} (hxf : xf ≠ Eo.Term.Stuck)
+    (hna : ∀ g a c, xr ≠ Eo.Term.Apply (Eo.Term.Apply g a) c) (hxr : xr ≠ Eo.Term.Stuck) :
+    ∀ ys : List Eo.Term, Eo.__eo_get_elements_rec (eoList xf xr ys) = elemsL ys
+  | [] => by
+    simp only [eoList, elemsL]
+    unfold Eo.__eo_get_elements_rec
+    split <;> simp_all
+  | y :: ys => by
+    have hne : ∀ l, elemsL l ≠ Eo.Term.Stuck := eoList_ne_stuck list_nil_ne_stuck
+    simp only [eoList, elemsL]
+    rw [Eo.__eo_get_elements_rec.eq_def]
+    simp only [get_elements_rec_eoList hxf hna hxr ys]
+    simp [Eo.__eo_mk_apply, hne, elemsL]
+
+theorem minclude_rec_false {y z : Eo.Term} (hy : y ≠ Eo.Term.Stuck) (hz : z ≠ Eo.Term.Stuck) :
+    Eo.__eo_list_minclude_rec y z (Eo.Term.Boolean false) = Eo.Term.Boolean false := by
+  unfold Eo.__eo_list_minclude_rec; split <;> simp_all
+
+/-- logos's `list_minclude_rec` on two `eo::List`s: `minclL`. -/
+theorem minclude_rec_eoList :
+    ∀ (B A : List Eo.Term), (∀ a ∈ A, a ≠ Eo.Term.Stuck) → (∀ b ∈ B, b ≠ Eo.Term.Stuck) →
+      Eo.__eo_list_minclude_rec (elemsL A) (elemsL B) (Eo.Term.Boolean true) =
+        Eo.Term.Boolean (minclL A B)
+  | [], A, _, _ => by
+    have hA : elemsL A ≠ Eo.Term.Stuck := eoList_ne_stuck list_nil_ne_stuck A
+    simp only [elemsL, eoList, minclL]
+    unfold Eo.__eo_list_minclude_rec; split <;> simp_all
+  | x :: B, A, hA, hB => by
+    have hx : x ≠ Eo.Term.Stuck := hB x (by simp)
+    have hB' : ∀ b ∈ B, b ≠ Eo.Term.Stuck := fun b hb => hB b (by simp [hb])
+    have hA' : ∀ a ∈ A.erase x, a ≠ Eo.Term.Stuck := fun a ha => hA a (List.mem_of_mem_erase ha)
+    have hne : ∀ l, elemsL l ≠ Eo.Term.Stuck := eoList_ne_stuck list_nil_ne_stuck
+    have hv0 : Eo.__eo_list_erase_rec (elemsL A) x = elemsL (A.erase x) := by
+      rw [erase_rec_eoList list_nil_not_apply list_nil_ne_stuck hx A hA, erase_eq_eraseP_term]
+    have heq : Eo.__eo_not (Eo.__eo_eq (elemsL (A.erase x)) (elemsL A)) =
+        Eo.Term.Boolean (decide (x ∈ A)) := by
+      have hiff : elemsL A = elemsL (A.erase x) ↔ x ∉ A := by
+        constructor
+        · intro h; rw [← eraseP_eq_self_iff, ← erase_eq_eraseP_term]
+          exact (eoList_inj list_nil_not_apply _ _ h).symm
+        · intro h; rw [List.erase_of_not_mem h]
+      have : Eo.__eo_eq (elemsL (A.erase x)) (elemsL A) = Eo.Term.Boolean (decide (x ∉ A)) := by
+        unfold Eo.__eo_eq; split <;> simp_all [Eo.native_teq]
+      rw [this]; simp [Eo.__eo_not, SmtEval.native_not]
+    have hstep : Eo.__eo_list_minclude_rec (elemsL A) (elemsL (x :: B)) (Eo.Term.Boolean true) =
+        Eo.__eo_list_minclude_rec (Eo.__eo_list_erase_rec (elemsL A) x) (elemsL B)
+          (Eo.__eo_not (Eo.__eo_eq (Eo.__eo_list_erase_rec (elemsL A) x) (elemsL A))) := by
+      rw [Eo.__eo_list_minclude_rec.eq_def]; simp [hne, elemsL, eoList]
+    rw [hstep, hv0, heq]
+    by_cases hxA : x ∈ A
+    · rw [decide_eq_true hxA, minclude_rec_eoList B (A.erase x) hA' hB']
+      simp [minclL, hxA]
+    · rw [decide_eq_false hxA, minclude_rec_false (hne _) (hne _)]
+      simp [minclL, hxA]
+
+/-- A handle's count among handles is its term's count among their terms. -/
+theorem count_rep {s : Store} (hinv : s.Inv) {t : Term} {y : Eo.Term} (ht : s.Rep t y) :
+    ∀ {ts : List Term} {ys : List Eo.Term}, List.Forall₂ s.Rep ts ys → ts.count t = ys.count y
+  | _, _, .nil => by simp
+  | _, _, .cons (a := u) (b := z) h hs => by
+    rw [List.count_cons, List.count_cons, count_rep hinv ht hs]
+    have : (u == t) = (z == y) := by
+      rw [Bool.eq_iff_iff, beq_iff_eq, beq_iff_eq]
+      exact (Store.Rep.eq_iff hinv h ht)
+    rw [this]
+
+/-- The runtime's inclusion test over handles is logos's over terms. -/
+theorem eraseAll_rep {s : Store} (hinv : s.Inv) {xsh ysh : List Term} {xs ys : List Eo.Term}
+    (hx : List.Forall₂ s.Rep xsh xs) (hy : List.Forall₂ s.Rep ysh ys) :
+    (eraseAll ysh xsh = []) ↔ minclL xs ys = true := by
+  rw [show eraseAll ysh xsh = eraseAllG ysh xsh from rfl, eraseAll_nil_iff, minclL_iff]
+  constructor
+  · intro h τ
+    by_cases hτ : τ ∈ ys
+    · obtain ⟨t, -, ht⟩ : ∃ t ∈ ysh, s.Rep t τ := by
+        obtain ⟨k, hk, hkτ⟩ := List.mem_iff_getElem.mp hτ
+        have hl := hy.length_eq
+        refine ⟨ysh[k]'(by omega), List.getElem_mem _, ?_⟩
+        rw [← hkτ]; exact List.forall₂_iff_get.mp hy |>.2 k (by omega) hk
+      rw [← count_rep hinv ht hy, ← count_rep hinv ht hx]; exact h t
+    · simp [List.count_eq_zero_of_not_mem hτ]
+  · intro h t
+    by_cases ht : t ∈ ysh
+    · obtain ⟨k, hk, hkt⟩ := List.mem_iff_getElem.mp ht
+      have hl := hy.length_eq
+      have hr : s.Rep t (ys[k]'(by omega)) := by
+        rw [← hkt]; exact List.forall₂_iff_get.mp hy |>.2 k hk (by omega)
+      rw [count_rep hinv hr hy, count_rep hinv hr hx]; exact h _
+    · simp [List.count_eq_zero_of_not_mem ht]
+
+
+/-- `eo::list_minclude` on handles of an operator with one nil and two lists:
+logos's `__eo_list_minclude`. -/
+theorem Store.builtin_spec_list_minclude (n : Nat) (hnil : IsListNilSpec n) (s : Store)
+    (args : Slice Term) {a b c : Term} {xf xa xb : Eo.Term} (hargs : args.val = [a, b, c])
+    (ha : s.Rep a xf) (hb : s.Rep b xa) (hc : s.Rep c xb)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n)
+    (hleft : NotLeftNested xf) (huniq : UniqueNil xf) :
+    generated.part0.Store.builtin_list s kind.EvalOp.ListMinclude args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_list_minclude xf xa xb)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 3#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have htakes : Store.takes kind.EvalOp.ListMinclude 3#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  have hcat : ∀ y z, Eo.__eo_list_minclude xf y z = Eo.__eo_list_minclude_rec
+      (Eo.__eo_requires (Eo.__eo_is_list xf y) (Eo.Term.Boolean true) (Eo.__eo_get_elements_rec y))
+      (Eo.__eo_requires (Eo.__eo_is_list xf z) (Eo.Term.Boolean true) (Eo.__eo_get_elements_rec z))
+      (Eo.Term.Boolean true) := fun _ _ => rfl
+  have hreqS : ∀ c y, c ≠ Eo.Term.Boolean true →
+      Eo.__eo_requires c (Eo.Term.Boolean true) y = Eo.Term.Stuck := by
+    intro c y hc; simp [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, hc]
+  unfold generated.part0.Store.builtin_list
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  unfold Store.check_handles
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    step with Store.any_stuck_three hargs ha hb hc as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hxf : xf = Eo.Term.Stuck
+    · subst hxf
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_minclude Eo.Term.Stuck xa xb = Eo.Term.Stuck := by
+        rw [hcat]; unfold Eo.__eo_list_minclude_rec; split <;> simp_all [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, Eo.__eo_is_list]
+      rw [this]; exact hinv.rep_stuck
+    by_cases hxa : xa = Eo.Term.Stuck
+    · subst hxa
+      simp only [decide_true, Bool.or_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok,
+        WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_minclude xf Eo.Term.Stuck xb = Eo.Term.Stuck := by
+        rw [hcat]; unfold Eo.__eo_list_minclude_rec; split <;> simp_all [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, Eo.__eo_is_list]
+      rw [this]; exact hinv.rep_stuck
+    by_cases hxb : xb = Eo.Term.Stuck
+    · subst hxb
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok,
+        WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_minclude xf xa Eo.Term.Stuck = Eo.Term.Stuck := by
+        rw [hcat]; unfold Eo.__eo_list_minclude_rec; split <;> simp_all [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, Eo.__eo_is_list]
+      rw [this]; exact hinv.rep_stuck
+    simp only [hxf, hxa, hxb, decide_false, Bool.or_false, Bool.false_eq_true, ite_false]
+    unfold generated.part0.Store.list_builtin
+    have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+    have h1 : Slice.index_usize args 1#usize = ok b := by simp [Slice.index_usize, hargs]
+    have h2 : Slice.index_usize args 2#usize = ok c := by simp [Slice.index_usize, hargs]
+    simp only [h0, h1, h2, Std.bind_ok]
+    unfold generated.part0.Store.list_inclusion
+    have hva : TermValid xa := Store.Rep.valid' hinv hb
+    have hvb : TermValid xb := Store.Rep.valid' hinv hc
+    step with list_pair_spec n hnil s hinv h64 hrem ha hb hc hxf hxa hxb hleft huniq
+      as ⟨r, s2, hinv2, hg2, hr⟩
+    cases r with
+    | Err e =>
+      simp [core.result.Result.Insts.CoreOpsTry.branch,
+        core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+        core.convert.FromSame.from]
+      exact ⟨hinv2, hg2⟩
+    | Ok o =>
+      cases o with
+      | none =>
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, Store.stuck_eq,
+          WP.dspec_ok, WP.uncurry'_pair]
+        refine ⟨hinv2, hg2, ?_⟩
+        have : Eo.__eo_list_minclude xf xa xb = Eo.Term.Stuck := by
+          rw [hcat]
+          rcases hr with h | h
+          · rw [hreqS _ _ h]; unfold Eo.__eo_list_minclude_rec; simp
+          · rw [hreqS _ _ h]; unfold Eo.__eo_list_minclude_rec; split <;> simp_all
+        rw [this]; exact hinv2.rep_stuck
+      | some p =>
+        obtain ⟨xsh, ysh, nilh⟩ := p
+        obtain ⟨xs, ys, xr, hxs, hys, hnilh, hxl, hyl, hend, hn, hlx', hly'⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+        step with multiset_inclusion_spec (alloc.vec.Vec.deref xsh) (alloc.vec.Vec.deref ysh)
+          (by simp [alloc.vec.Vec.deref, Slice.length]; omega) h64 as ⟨foreign, contained, hfor, hcon⟩
+        simp only [Bool.false_eq_true, ite_false]
+        have hxr : xr ≠ Eo.Term.Stuck := by
+          intro h; subst h; revert hn; unfold Eo.__eo_is_list_nil; split <;> simp_all
+        have hnx : ∀ y ∈ xs, y ≠ Eo.Term.Stuck := eoList_valid_elems xs (hxl ▸ hva)
+        have hny : ∀ y ∈ ys, y ≠ Eo.Term.Stuck := eoList_valid_elems ys (hyl ▸ hvb)
+        have hcm : contained = minclL xs ys := by
+          have h := eraseAll_rep hinv2 (by simpa [alloc.vec.Vec.deref] using hxs)
+            (by simpa [alloc.vec.Vec.deref] using hys)
+          rw [hcon]
+          simp only [alloc.vec.Vec.deref] at h ⊢
+          cases hm : minclL xs ys
+          · apply decide_eq_false; intro e; have := h.mp (by simpa using e); simp_all
+          · simpa using h.mpr hm
+        have hval : Eo.__eo_list_minclude xf xa xb = Eo.Term.Boolean (minclL xs ys) := by
+          have hlx : Eo.__eo_is_list xf xa = Eo.Term.Boolean true := by
+            rw [hxl, is_list_eoList xs hxf (by rw [← hxl]; exact hxa) hend]; simp [hn]
+          have hly : Eo.__eo_is_list xf xb = Eo.Term.Boolean true := by
+            rw [hyl, is_list_eoList ys hxf (by rw [← hyl]; exact hxb) hend]; simp [hn]
+          have hreqT : ∀ y, Eo.__eo_requires (Eo.Term.Boolean true) (Eo.Term.Boolean true) y = y := by
+            intro y; simp [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
+          rw [hcat, hlx, hly, hreqT, hreqT, hxl, hyl,
+            get_elements_rec_eoList hxf (is_list_nil_not_apply hn) hxr,
+            get_elements_rec_eoList hxf (is_list_nil_not_apply hn) hxr,
+            minclude_rec_eoList ys xs hnx hny]
+        unfold Store.boolean
+        apply WP.dspec_mono (Store.literal_boolean_spec s2 contained hinv2 h64)
+        rintro ⟨r3, s3⟩ ⟨hinv3, hg3, hr3⟩
+        refine ⟨hinv3, hg2.trans hg3, ?_⟩
+        cases r3 with
+        | Err e => trivial
+        | Ok t => simp only at hr3 ⊢; rw [hval, ← hcm]; exact hr3
+
 end pathos_compiled_checker

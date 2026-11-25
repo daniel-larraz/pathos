@@ -96,7 +96,7 @@ BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv"
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
                  "TypeOf", "ListSingletonElim", "ListConcat", "ListLength",
                  "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof",
-                 "ListDiff", "ListInter"} | set(ARGS_SPECS)
+                 "ListDiff", "ListInter", "ListMinclude"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -586,14 +586,14 @@ class Emitter:
                             + " (by not_left_tac)", v)
             self.l.calls.add(lists["is_nil"])
             return v
-        if k in ("ListConcat", "ListDiff", "ListInter"):
+        if k in ("ListConcat", "ListDiff", "ListInter", "ListMinclude"):
             # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
             # constant that does not nest to the left and has one nil
             # (UniqueNil). Where logos's nil test takes several terms,
             # logos takes two lists that end in different nils, which
             # Ethos and the runtime do not (docs/proofs.md).
             name = {"ListConcat": "list_concat", "ListDiff": "list_diff",
-                    "ListInter": "list_inter"}[k]
+                    "ListInter": "list_inter", "ListMinclude": "list_minclude"}[k]
             vs = [self.expr(s) for s in sub]
             st, inv, rem = self.st(), self.inv(), self.rem()
             if len(vs) != 3 or not self.not_left(vs[0]):

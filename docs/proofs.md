@@ -234,13 +234,14 @@ error).
 
 The builtins CpcMini's logos lacks, proved for CPC in
 `proofs-cpc/PathosProofsCpc/` and emitted by `scripts/proofgen` where a
-program calls them; 775 of CPC's 1,103 programs have a generated proof
+program calls them; 777 of CPC's 1,103 programs have a generated proof
 (746 at the start of milestone 6).
 
 - **Lists** (`Lists.lean`): `eo::list_len`, `list_rev`, `list_nth`,
   `list_find`, `list_erase`, `list_setof`, `list_singleton_elim`, and, for an
   operator with one nil (`UniqueNil`, see "`eo::list_concat` and the nils
-  of an operator"), `list_concat`, `list_diff` and `list_inter`. Each
+  of an operator"), `list_concat`, `list_diff`, `list_inter` and
+  `list_minclude`. Each
   says the runtime's `list_parts`/`list_pair`, its walk over the handles,
   and `list_build` give logos's function.
 - **The multiset table** (`Counts.lean`): `table::TermCounts`, the

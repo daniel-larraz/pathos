@@ -940,4 +940,80 @@ theorem multiset_inclusion_spec (xs ys : Slice Term) (hys : ys.length < 2 ^ 32)
     rw [← hk, ← getElem!_eq _ _ hkc, hcnt1 k hkk, hR]
     simp
 
+/-- `eraseAll` for any type with decidable equality. -/
+def eraseAllG {α : Type} [BEq α] (B A : List α) : List α := A.foldl List.erase B
+
+/-! ## Inclusion of multisets, by counts -/
+
+/-- logos's `list_minclude_rec` on the elements: each term of `B` in turn
+taken from what is left of `A`. -/
+def minclL {α : Type} [DecidableEq α] : List α → List α → Bool
+  | _, [] => true
+  | A, x :: B => decide (x ∈ A) && minclL (A.erase x) B
+
+theorem minclL_iff {α : Type} [DecidableEq α] :
+    ∀ (A B : List α), minclL A B = true ↔ ∀ t, B.count t ≤ A.count t
+  | A, [] => by simp [minclL]
+  | A, x :: B => by
+    simp only [minclL, Bool.and_eq_true, decide_eq_true_eq, minclL_iff (A.erase x) B]
+    constructor
+    · rintro ⟨hx, h⟩ t
+      have := h t
+      rw [List.count_erase] at this
+      by_cases htx : x = t
+      · subst htx
+        have h0 : 0 < A.count x := List.count_pos_iff.mpr hx
+        rw [List.count_cons_self]; simp at this; omega
+      · rw [List.count_cons]; simp [htx, Ne.symm htx] at this ⊢; omega
+    · intro h
+      have hx : x ∈ A := by
+        have := h x; rw [List.count_cons_self] at this
+        exact List.count_pos_iff.mp (by omega)
+      refine ⟨hx, fun t => ?_⟩
+      have := h t
+      rw [List.count_erase, List.count_cons] at *
+      by_cases htx : x = t
+      · subst htx; simp at *; omega
+      · simp [htx, Ne.symm htx] at *; omega
+
+theorem count_eraseAll {α : Type} [BEq α] [LawfulBEq α] (t : α) :
+    ∀ (B A : List α), (eraseAllG B A).count t = B.count t - A.count t
+  | B, [] => by simp [eraseAllG]
+  | B, x :: A => by
+    simp only [eraseAllG, List.foldl_cons]
+    rw [show A.foldl List.erase (B.erase x) = eraseAllG (B.erase x) A from rfl,
+      count_eraseAll t (B.erase x) A, List.count_erase, List.count_cons]
+    by_cases htx : x = t
+    · subst htx; simp; omega
+    · simp [htx, Ne.symm htx]
+
+theorem eraseAll_nil_iff {α : Type} [BEq α] [LawfulBEq α] (B A : List α) :
+    eraseAllG B A = [] ↔ ∀ t, B.count t ≤ A.count t := by
+  rw [List.eq_nil_iff_forall_not_mem]
+  constructor
+  · intro h t
+    have := h t
+    rw [← List.count_pos_iff, count_eraseAll] at this
+    omega
+  · intro h t ht
+    rw [← List.count_pos_iff, count_eraseAll] at ht
+    have := h t; omega
+
+/-- `eo::list_meq`'s test in the runtime (no foreign term, inclusion, equal
+lengths) is inclusion both ways. -/
+theorem meq_iff {α : Type} [DecidableEq α] (A B : List α) :
+    ((¬ ∃ x ∈ A, x ∉ B) ∧ (∀ t, B.count t ≤ A.count t) ∧ A.length = B.length) ↔
+      ((∀ t, B.count t ≤ A.count t) ∧ (∀ t, A.count t ≤ B.count t)) := by
+  constructor
+  · rintro ⟨-, hBA, hlen⟩
+    have hsub : B.Subperm A := List.subperm_iff_count.mpr hBA
+    have hperm : B.Perm A := hsub.perm_of_length_le (by omega)
+    exact ⟨hBA, fun t => (hperm.count_eq t).ge⟩
+  · rintro ⟨hBA, hAB⟩
+    have hperm : B.Perm A :=
+      (List.subperm_iff_count.mpr hBA).antisymm (List.subperm_iff_count.mpr hAB)
+    refine ⟨?_, hBA, hperm.length_eq.symm⟩
+    rintro ⟨x, hx, hxB⟩
+    exact hxB (hperm.mem_iff.mpr hx)
+
 end pathos_compiled_checker
