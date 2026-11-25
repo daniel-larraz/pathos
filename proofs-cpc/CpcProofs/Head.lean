@@ -2846,6 +2846,15 @@ def eo__24eo_5fprog_5fquant_2dminiscope_2dand.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_quant_miniscope_and x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_quant_var_reordering`. -/
+def eo__24eo_5fprog_5fquant_5fvar_5freordering.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fprog_5fquant_5fvar_5freordering s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_quant_var_reordering x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_re-concat-merge`. -/
 def eo__24eo_5fprog_5fre_2dconcat_2dmerge.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -7355,6 +7364,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fprocess_5fscope : eo__24eo_5fprog_5fprocess_5fscope.Spec n
   eo__24eo_5fprog_5fquant_2dmerge_2dprenex : eo__24eo_5fprog_5fquant_2dmerge_2dprenex.Spec n
   eo__24eo_5fprog_5fquant_2dminiscope_2dand : eo__24eo_5fprog_5fquant_2dminiscope_2dand.Spec n
+  eo__24eo_5fprog_5fquant_5fvar_5freordering : eo__24eo_5fprog_5fquant_5fvar_5freordering.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dmerge : eo__24eo_5fprog_5fre_2dconcat_2dmerge.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dstar_2drepeat : eo__24eo_5fprog_5fre_2dconcat_2dstar_2drepeat.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dstar_2dswap : eo__24eo_5fprog_5fre_2dconcat_2dstar_2dswap.Spec n

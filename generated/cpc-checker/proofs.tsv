@@ -1,7 +1,7 @@
 source	proof	why
 $abconv_int_to_bv_elim	generated	
 $abconv_ubv_to_int_elim	generated	
-$aci_norm_eq	none	case 2 has a builtin operator
+$aci_norm_eq	none	case 2 has eo::list_meq of an operator that is not a constant
 $are_distinct_terms_list	none	it calls $are_distinct_terms_list_rec, which has no proof
 $are_distinct_terms_list_rec	none	it calls $are_distinct_terms_type, which has no proof
 $are_distinct_terms_type	none	it calls $dt_distinct_terms, which has no proof
@@ -469,7 +469,7 @@ $eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, 
 $eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
 $eo_prog_quant-unused-vars	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_quant-var-elim-eq	none	it calls $mk_quant_var_elim_eq, which has no proof
-$eo_prog_quant_var_reordering	none	case 0 has a builtin operator
+$eo_prog_quant_var_reordering	generated	
 $eo_prog_re-all-elim	none	a constant, not a program with cases
 $eo_prog_re-concat-merge	generated	
 $eo_prog_re-concat-star-nullable1	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
@@ -525,7 +525,7 @@ $eo_prog_seq-rev-rev	generated
 $eo_prog_seq-rev-unit	generated	
 $eo_prog_sets-choose-singleton	generated	
 $eo_prog_sets-eq-singleton-emp	generated	
-$eo_prog_sets-eval-op	none	case 0 has a builtin operator
+$eo_prog_sets-eval-op	none	case 0 has eo::list_meq of @@TypedList.cons, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_sets-insert-elim	generated	
 $eo_prog_sets-inter-comm	generated	
 $eo_prog_sets-inter-emp1	generated	

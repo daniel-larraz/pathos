@@ -366,6 +366,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fprocess_5fscope_spec n ih,
       eo__24eo_5fprog_5fquant_2dmerge_2dprenex_spec n ih,
       eo__24eo_5fprog_5fquant_2dminiscope_2dand_spec n ih,
+      eo__24eo_5fprog_5fquant_5fvar_5freordering_spec n ih,
       eo__24eo_5fprog_5fre_2dconcat_2dmerge_spec n ih,
       eo__24eo_5fprog_5fre_2dconcat_2dstar_2drepeat_spec n ih,
       eo__24eo_5fprog_5fre_2dconcat_2dstar_2dswap_spec n ih,

@@ -31,6 +31,57 @@ open Eo hiding Term
 open Smtm
 open generated generated.part0 generated.part1 generated.part2 generated.part3 generated.part4 generated.part5 generated.part6 generated.part7 generated.part8 generated.part9 generated.part10 generated.part11 generated.part12
 
+theorem case_0_eo__24str_5fmembership_5fre_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
+    case_0_eo__24str_5fmembership_5fre s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__str_membership_re.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__str_membership_re.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24str_5fmembership_5fre
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__str_membership_re.case_0
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__str_membership_re.case_0
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo_str_2ein_5fre.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__str_membership_re.case_0
+  case_done hinv1 hG with h_v2 in EoCases.__str_membership_re.case_0 using hn_a0 hn_v1 hn_v2 hn_v4 hn_v5
+
+/-- logos's `__str_membership_re` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24str_5fmembership_5fre.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __str_membership_re x_a0 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__str_membership_re.case_0 x_a0] HasStuck.stuck) := by
+  conv => lhs; unfold __str_membership_re
+  unfold EoCases.__str_membership_re.case_0
+  logos_eq
+
+theorem body_eo__24str_5fmembership_5fre_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24str_5fmembership_5fre s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__str_membership_re x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24str_5fmembership_5fre.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24str_5fmembership_5fre
+  have hG := Store.Grows.refl s
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
+  case_step with case_0_eo__24str_5fmembership_5fre_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
+  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__str_membership_re.case_0
+
+theorem eo__24str_5fmembership_5fre_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24str_5fmembership_5fre.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24str_5fmembership_5fre
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24str_5fmembership_5fre s1 a0) (fun s' t => Represents.rep s' t (__str_membership_re x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24str_5fmembership_5fre_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
 theorem case_0_eo__24str_5fmembership_5fstr_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
     case_0_eo__24str_5fmembership_5fstr s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
