@@ -2349,4 +2349,200 @@ theorem Store.builtin_spec_int_mod (s : Store) (args : Slice Term) {a b : Term} 
              simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
              exact ⟨hinv, Store.Grows.refl s, hinv.rep_stuck⟩)
 
+
+/-! ## `eo::qdiv` -/
+
+/-- `rat_sgn` is zero exactly at zero. -/
+theorem rat_sgn_zero (a : num.Rational) :
+    ∃ r : Std.I32, lit.rat_sgn a = ok r ∧ (r = 0#i32 ↔ a.toRat = 0) := by
+  unfold lit.rat_sgn
+  obtain ⟨r, hr, hz⟩ := integer_sgn_zero (num.Integer.ofInt a.toRat.num)
+  refine ⟨r, by simp [num.Rational.numerator_spec, hr], ?_⟩
+  rw [hz, num.Integer.toInt_ofInt, Rat.num_eq_zero]
+
+/-- `rat_div` of a rational by a nonzero one is the quotient. -/
+theorem rat_div_spec (a b : num.Rational) (hb : b.toRat ≠ 0) :
+    lit.rat_div a b = ok (num.Rational.ofRat (a.toRat / b.toRat)) := by
+  unfold lit.rat_div
+  simp only [num.Rational.numerator_spec, num.Rational.denominator_spec, num.Integer.mul_spec,
+    num.Integer.toInt_ofInt, Std.bind_ok]
+  have hbn : b.toRat.num ≠ 0 := by rwa [Ne, Rat.num_eq_zero]
+  have hd : (a.toRat.den : Int) * b.toRat.num ≠ 0 :=
+    mul_ne_zero (by exact_mod_cast a.toRat.den_nz) hbn
+  rw [lit_rat_spec _ _ (by rw [num.Integer.toInt_ofInt]; exact hd)]
+  congr 1
+  simp only [num.Integer.toInt_ofInt]
+  push_cast
+  conv_rhs => rw [← Rat.num_div_den a.toRat, ← Rat.num_div_den b.toRat]
+  have h1 : (a.toRat.den : ℚ) ≠ 0 := by exact_mod_cast a.toRat.den_nz
+  have h2 : (b.toRat.den : ℚ) ≠ 0 := by exact_mod_cast b.toRat.den_nz
+  have h3 : (b.toRat.num : ℚ) ≠ 0 := by exact_mod_cast hbn
+  field_simp
+
+/-- What `Lit::evaluate` gives for `eo::qdiv` on two literals that stand
+for terms. -/
+noncomputable def ratDivLit : lit.Lit → lit.Lit → Option lit.Lit
+  | lit.Lit.Numeral n, lit.Lit.Numeral m =>
+    if m.toInt = 0 then none
+    else some (lit.Lit.Rational (num.Rational.ofRat ((n.toInt : ℚ) / (m.toInt : ℚ))))
+  | lit.Lit.Rational a, lit.Lit.Rational b =>
+    if b.toRat = 0 then none
+    else some (lit.Lit.Rational (num.Rational.ofRat (a.toRat / b.toRat)))
+  | _, _ => none
+
+theorem lit_evaluate_rat_div (args : Slice lit.Lit) {l1 l2 : lit.Lit}
+    (hargs : args.val = [l1, l2]) (ht1 : TermLit l1) (ht2 : TermLit l2) :
+    lit.Lit.evaluate kind.EvalOp.RatDiv args ⦃ o => o = ratDivLit l1 l2 ⦄ := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok l1 := by simp [Slice.index_usize, hargs]
+  have hl2 : Slice.length args = 2 := by simp [Slice.length, hargs]
+  have h1 : ∀ i : Std.Usize, i.val = 1 → Slice.index_usize args i = ok l2 := by
+    intro i hi; simp [Slice.index_usize, hargs, hi]
+  unfold lit.Lit.evaluate lit.Lit.all_of_kind lit.Lit.all_of_kind_loop
+  cases l1 <;> cases l2 <;> simp only [TermLit] at ht1 ht2 <;>
+  first
+  | (simp [hl2, h0, hlen, lit.Lit.kind, litkind_ne_self']
+     step as ⟨i1, hi1⟩
+     unfold lit.Lit.all_of_kind_loop
+     have hlt : i1 < 2#usize := by scalar_tac
+     simp [hlen, hlt, h1 i1 (by scalar_tac), lit.Lit.kind, litkind_ne]
+     step as ⟨i2, hi2⟩
+     rw [all_of_kind_loop_exit args _ _ i2 (by scalar_tac)]
+     simp [ratDivLit]
+     done)
+  | (simp [hl2, h0, hlen, lit.Lit.kind, litkind_ne_self']
+     step as ⟨i1, hi1⟩
+     unfold lit.Lit.all_of_kind_loop
+     have hlt : i1 < 2#usize := by scalar_tac
+     simp [hlen, hlt, h1 i1 (by scalar_tac), lit.Lit.kind, litkind_ne_self']
+     step as ⟨i2, hi2⟩
+     rw [all_of_kind_loop_exit args _ _ i2 (by scalar_tac)]
+     simp [lit.Lit.evaluate_rat_div, lit.Lit.arg, hlen, h1 1#usize (by simp), lit.Lit.as_rat,
+       ratDivLit, num.Rational.from_integers_spec]
+     all_goals
+       rename_i x y
+       first
+       | (split_ifs <;> simp)
+       | (obtain ⟨r, hr, hz⟩ := rat_sgn_zero y
+          by_cases h0 : y.toRat = 0
+          · simp [hr, hz.mpr h0, h0]
+          · have hr0 : ¬ r = 0#i32 := fun h => h0 (hz.mp h)
+            simp [hr, hr0, h0, rat_div_spec _ _ h0]))
+
+
+/-- logos's `eo::qdiv` of two numerals: stuck by zero, else their quotient. -/
+theorem eo_qdiv_num (n m : Int) :
+    Eo.__eo_qdiv (Eo.Term.Numeral n) (Eo.Term.Numeral m) =
+      if m = 0 then Eo.Term.Stuck else Eo.Term.Rational ((n : ℚ) / (m : ℚ)) := by
+  by_cases h : m = 0
+  · subst h; simp [Eo.__eo_qdiv, SmtEval.native_ite, SmtEval.native_zeq]
+  · simp [Eo.__eo_qdiv, SmtEval.native_ite, SmtEval.native_zeq, SmtEval.native_mk_rational, h,
+      Ne.symm h]
+
+/-- logos's `eo::qdiv` of two rationals: stuck by zero, else their quotient. -/
+theorem eo_qdiv_rat (a b : ℚ) :
+    Eo.__eo_qdiv (Eo.Term.Rational a) (Eo.Term.Rational b) =
+      if b = 0 then Eo.Term.Stuck else Eo.Term.Rational (a / b) := by
+  by_cases h : b = 0
+  · subst h; simp [Eo.__eo_qdiv, SmtEval.native_ite, Eo.native_qeq, SmtEval.native_mk_rational]
+  · simp [Eo.__eo_qdiv, SmtEval.native_ite, Eo.native_qeq, SmtEval.native_mk_rational,
+      SmtEval.native_qdiv_total, h, Ne.symm h]
+
+/-- `eo::qdiv` on handles of two numerals or two rationals: logos's
+`__eo_qdiv`. -/
+theorem Store.builtin_spec_rat_div (s : Store) (args : Slice Term) {a b : Term} {x y : Eo.Term}
+    (hargs : args.val = [a, b]) (ha : s.Rep a x) (hb : s.Rep b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    Store.builtin_core s kind.EvalOp.RatDiv args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_qdiv x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  have htakes : Store.takes kind.EvalOp.RatDiv 2#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  unfold Store.builtin_core
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, h0]
+    unfold Store.builtin_strict
+    step with Store.any_stuck_two hargs ha hb as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hx : x = Eo.Term.Stuck
+    · subst hx
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_qdiv Eo.Term.Stuck y = Eo.Term.Stuck := by
+        unfold Eo.__eo_qdiv; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    by_cases hy : y = Eo.Term.Stuck
+    · subst hy
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_qdiv x Eo.Term.Stuck = Eo.Term.Stuck := by
+        unfold Eo.__eo_qdiv; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    simp only [hx, hy, decide_false, Bool.or_false, Bool.false_eq_true, ite_false,
+      kind.EvalOp.is_list_op, Std.bind_ok]
+    unfold Store.builtin_literal
+    step with Store.literals_two s args hargs ha.lt hb.lt as ⟨o, ho⟩
+    cases o with
+    | none =>
+      simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_qdiv x y = Eo.Term.Stuck := by
+        unfold Eo.__eo_qdiv
+        split
+        · exact absurd ⟨⟨_, Store.rep_numeral_data ha⟩, ⟨_, Store.rep_numeral_data hb⟩⟩ ho
+        · exact absurd ⟨⟨_, Store.rep_rational_data ha⟩, ⟨_, Store.rep_rational_data hb⟩⟩ ho
+        · rfl
+      rw [this]; exact hinv.rep_stuck
+    | some v =>
+      obtain ⟨l1, l2, hv, hd1, hd2⟩ := ho
+      simp only
+      have hx' := Store.rep_lit ha hd1
+      have hy' := Store.rep_lit hb hd2
+      have ht1 : TermLit l1 := by
+        rcases hx' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      have ht2 : TermLit l2 := by
+        rcases hy' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      step with lit_evaluate_rat_div (alloc.vec.Vec.deref v) (l1 := l1) (l2 := l2)
+        (by simp [alloc.vec.Vec.deref, hv]) ht1 ht2 as ⟨o1, ho1⟩
+      subst ho1
+      rcases hx' with ⟨b1, rfl, rfl⟩ | ⟨i1, rfl, rfl⟩ | ⟨q1, rfl, rfl⟩ | ⟨s1, rfl, rfl⟩ |
+          ⟨w1, n1, rfl, rfl, hok1⟩ <;>
+        rcases hy' with ⟨b2, rfl, rfl⟩ | ⟨i2, rfl, rfl⟩ | ⟨q2, rfl, rfl⟩ | ⟨s2, rfl, rfl⟩ |
+          ⟨w2, n2, rfl, rfl, hok2⟩ <;>
+        first
+        | (simp only [ratDivLit, Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+           exact ⟨hinv, Store.Grows.refl s, by simpa [Eo.__eo_qdiv] using hinv.rep_stuck⟩)
+        | (rw [eo_qdiv_num]
+           by_cases h0 : i2 = 0
+           · simp only [ratDivLit, num.Integer.toInt_ofInt, h0, ite_true, Store.stuck_eq,
+               Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+             exact ⟨hinv, Store.Grows.refl s, hinv.rep_stuck⟩
+           · simp only [ratDivLit, num.Integer.toInt_ofInt, h0, ite_false]
+             exact Store.literal_rational_spec s _ hinv h64)
+        | (rw [eo_qdiv_rat]
+           by_cases h0 : q2 = 0
+           · simp only [ratDivLit, num.Rational.toRat_ofRat, h0, ite_true, Store.stuck_eq,
+               Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+             exact ⟨hinv, Store.Grows.refl s, hinv.rep_stuck⟩
+           · simp only [ratDivLit, num.Rational.toRat_ofRat, h0, ite_false]
+             exact Store.literal_rational_spec s _ hinv h64)
+
 end pathos_compiled_checker

@@ -890,7 +890,7 @@ $get_aci_normal_form	none	it calls $get_a_norm, which has no proof
 $get_ai_norm	none	case 0 has eo::list_singleton_elim of an operator that is not a constant
 $get_ai_norm_rec	none	case 0 has a builtin operator
 $get_arg_list_rec	generated	
-$get_arith_poly_norm	none	case 4 has a builtin operator
+$get_arith_poly_norm	none	it calls $poly_add, which has no proof
 $get_bv_poly_norm_rec	none	it calls $poly_add, which has no proof
 $get_lambda_type	generated	
 $get_nth_var_type	generated	
