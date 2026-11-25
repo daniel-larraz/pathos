@@ -18,6 +18,7 @@ public import CpcProofs.Part15
 public import CpcProofs.Part16
 public import CpcProofs.Part17
 public import CpcProofs.Part18
+public import CpcProofs.Part19
 public import CpcChecker
 public import Cpc.Logos
 import all Cpc.Logos
@@ -106,9 +107,15 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5flit_5ftype_5fNumeral_spec n ih,
       eo__24eo_5flit_5ftype_5fRational_spec n ih,
       eo__24eo_5flit_5ftype_5fString_spec n ih,
+      eo__24eo_5fnil_spec n ih,
       eo__24eo_5fnil_5f_2a_spec n ih,
       eo__24eo_5fnil_5f_2b_spec n ih,
       eo__24eo_5fnil_5f_40_40TypedList_2econs_spec n ih,
+      eo__24eo_5fnil_5fbvadd_spec n ih,
+      eo__24eo_5fnil_5fbvand_spec n ih,
+      eo__24eo_5fnil_5fbvmul_spec n ih,
+      eo__24eo_5fnil_5fbvor_spec n ih,
+      eo__24eo_5fnil_5fbvxor_spec n ih,
       eo__24eo_5fnil_5fstr_2e_2b_2b_spec n ih,
       eo__24eo_5fprog_5fand_5felim_spec n ih,
       eo__24eo_5fprog_5fand_5fintro_spec n ih,
