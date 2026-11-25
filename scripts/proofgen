@@ -95,7 +95,8 @@ BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv"
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
                  "TypeOf", "ListSingletonElim", "ListConcat", "ListLength",
-                 "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof"} | set(ARGS_SPECS)
+                 "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof",
+                 "ListDiff", "ListInter"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -585,23 +586,25 @@ class Emitter:
                             + " (by not_left_tac)", v)
             self.l.calls.add(lists["is_nil"])
             return v
-        if k == "ListConcat":
+        if k in ("ListConcat", "ListDiff", "ListInter"):
             # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
             # constant that does not nest to the left and has one nil
             # (UniqueNil). Where logos's nil test takes several terms,
-            # logos concatenates two lists that end in different nils,
-            # which Ethos and the runtime do not (docs/proofs.md).
+            # logos takes two lists that end in different nils, which
+            # Ethos and the runtime do not (docs/proofs.md).
+            name = {"ListConcat": "list_concat", "ListDiff": "list_diff",
+                    "ListInter": "list_inter"}[k]
             vs = [self.expr(s) for s in sub]
             st, inv, rem = self.st(), self.inv(), self.rem()
             if len(vs) != 3 or not self.not_left(vs[0]):
-                self.unsupported("eo::list_concat of an operator that is not a constant")
+                self.unsupported("eo::" + name + " of an operator that is not a constant")
             elif self.l.ctor_of.get(vs[0]) not in self.g.unique_nil:
-                self.unsupported("eo::list_concat of " + self.l.ctor_of.get(vs[0])
+                self.unsupported("eo::" + name + " of " + self.l.ctor_of.get(vs[0])
                                  + ", whose nil test takes more than one term (logos"
-                                 " concatenates lists that end in different nils;"
+                                 " takes lists that end in different nils;"
                                  " Ethos and the runtime do not)")
             self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
-            self.store_step("Store.builtin_spec_list_concat n ih." + ident(lists["is_nil"])
+            self.store_step("Store.builtin_spec_" + name + " n ih." + ident(lists["is_nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
                             + " (by not_left_tac) (by unique_nil_tac)", v)

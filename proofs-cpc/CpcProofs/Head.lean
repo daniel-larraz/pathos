@@ -299,6 +299,42 @@ def eo__24bv_5fripple_5fcarry_5fadder_5f2.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__bv_ripple_carry_adder_2 x_a0 x_a1 x_a2 x_a3)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$chain_m_resolve`. -/
+def eo__24chain_5fm_5fresolve.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24chain_5fm_5fresolve s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__chain_m_resolve x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$chain_m_resolve_final`. -/
+def eo__24chain_5fm_5fresolve_5ffinal.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24chain_5fm_5fresolve_5ffinal s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__chain_m_resolve_final x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$chain_m_resolve_rec`. -/
+def eo__24chain_5fm_5fresolve_5frec.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24chain_5fm_5fresolve_5frec s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__chain_m_resolve_rec x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$chain_m_resolve_rec_step`. -/
+def eo__24chain_5fm_5fresolve_5frec_5fstep.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+    eo__24chain_5fm_5fresolve_5frec_5fstep s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__chain_m_resolve_rec_step x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$compute_card`. -/
 def eo__24compute_5fcard.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -2079,6 +2115,15 @@ def eo__24eo_5fprog_5fbv_5fpoly_5fnorm_5feq.Spec (n : Nat) : Prop :=
     eo__24eo_5fprog_5fbv_5fpoly_5fnorm_5feq s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_bv_poly_norm_eq x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_chain_resolution`. -/
+def eo__24eo_5fprog_5fchain_5fresolution.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24eo_5fprog_5fchain_5fresolution s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_chain_resolution x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_cnf_and_neg`. -/
@@ -7009,6 +7054,10 @@ structure Specs (n : Nat) : Prop where
   eo__24bv_5fmk_5fbitblast_5fstep_5fite : eo__24bv_5fmk_5fbitblast_5fstep_5fite.Spec n
   eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec : eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec.Spec n
   eo__24bv_5fripple_5fcarry_5fadder_5f2 : eo__24bv_5fripple_5fcarry_5fadder_5f2.Spec n
+  eo__24chain_5fm_5fresolve : eo__24chain_5fm_5fresolve.Spec n
+  eo__24chain_5fm_5fresolve_5ffinal : eo__24chain_5fm_5fresolve_5ffinal.Spec n
+  eo__24chain_5fm_5fresolve_5frec : eo__24chain_5fm_5fresolve_5frec.Spec n
+  eo__24chain_5fm_5fresolve_5frec_5fstep : eo__24chain_5fm_5fresolve_5frec_5fstep.Spec n
   eo__24compute_5fcard : eo__24compute_5fcard.Spec n
   eo__24dt_5farg_5flist : eo__24dt_5farg_5flist.Spec n
   eo__24dt_5fcollapse_5fupdater_5frhs : eo__24dt_5fcollapse_5fupdater_5frhs.Spec n
@@ -7207,6 +7256,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d2 : eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d2.Spec n
   eo__24eo_5fprog_5fbv_2dzero_2dule : eo__24eo_5fprog_5fbv_2dzero_2dule.Spec n
   eo__24eo_5fprog_5fbv_5fpoly_5fnorm_5feq : eo__24eo_5fprog_5fbv_5fpoly_5fnorm_5feq.Spec n
+  eo__24eo_5fprog_5fchain_5fresolution : eo__24eo_5fprog_5fchain_5fresolution.Spec n
   eo__24eo_5fprog_5fcnf_5fand_5fneg : eo__24eo_5fprog_5fcnf_5fand_5fneg.Spec n
   eo__24eo_5fprog_5fcnf_5fand_5fpos : eo__24eo_5fprog_5fcnf_5fand_5fpos.Spec n
   eo__24eo_5fprog_5fcnf_5fequiv_5fneg1 : eo__24eo_5fprog_5fcnf_5fequiv_5fneg1.Spec n
