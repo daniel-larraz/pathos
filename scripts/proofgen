@@ -92,7 +92,7 @@ BINARY_SPECS = {"Add", "Mul", "Gt"}
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
                  "TypeOf", "ListSingletonElim", "ListConcat", "ListLength",
-                 "ListRev", "ListNth", "ListFind"} | set(ARGS_SPECS)
+                 "ListRev", "ListNth", "ListFind", "ListErase"} | set(ARGS_SPECS)
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -561,14 +561,15 @@ class Emitter:
                             + " (by not_left_tac) (by nil_apply_tac)", v)
             self.l.calls.add(lists["is_nil"])
             return v
-        if k in ("ListLength", "ListRev", "ListNth", "ListFind"):
+        if k in ("ListLength", "ListRev", "ListNth", "ListFind", "ListErase"):
             # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
             # constant that does not nest to the left, a list, and for
-            # eo::list_nth an index, for eo::list_find a term
+            # eo::list_nth an index, for eo::list_find and list_erase a term
             spec, name, arity = {"ListLength": ("Store.builtin_spec_list_len", "list_len", 2),
                                  "ListRev": ("Store.builtin_spec_list_rev", "list_rev", 2),
                                  "ListNth": ("Store.builtin_spec_list_nth", "list_nth", 3),
-                                 "ListFind": ("Store.builtin_spec_list_find", "list_find", 3)}[k]
+                                 "ListFind": ("Store.builtin_spec_list_find", "list_find", 3),
+                                 "ListErase": ("Store.builtin_spec_list_erase", "list_erase", 3)}[k]
             vs = [self.expr(s) for s in sub]
             st, inv, rem = self.st(), self.inv(), self.rem()
             if len(vs) != arity or not self.not_left(vs[0]):

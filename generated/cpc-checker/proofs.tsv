@@ -45,7 +45,7 @@ $bv_mk_bitblast_step_shl_rec_step	none	its generated proof does not build: logos
 $bv_mk_bitblast_step_shr_rec	none	case 1 has a builtin operator
 $bv_mk_bitblast_step_shr_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
 $bv_mk_bitblast_step_var_rec	generated	
-$bv_mk_bitwise_slicing	none	case 0 has a builtin operator
+$bv_mk_bitwise_slicing	none	case 0 has eo::list_erase of an operator that is not a constant
 $bv_mk_bitwise_slicing_rec	none	it calls $eo_typeof, which has no proof
 $bv_ripple_carry_adder_2	generated	
 $bv_shift_add_multiplier	none	case 0 has a builtin operator
@@ -512,7 +512,7 @@ $eo_prog_re_unfold_neg_concat_fixed	generated
 $eo_prog_re_unfold_pos	generated	
 $eo_prog_refl	generated	
 $eo_prog_reordering	none	case 0 has a builtin operator
-$eo_prog_resolution	none	case 0 has a builtin operator
+$eo_prog_resolution	generated	
 $eo_prog_scope	generated	
 $eo_prog_seq-eval-op	none	it calls $seq_eval, which has no proof
 $eo_prog_seq-len-rev	generated	
@@ -1064,7 +1064,7 @@ $str_flatten_word_rec	none	case 1 has a builtin operator
 $str_from_int_eval_rec	none	case 1 has a builtin operator
 $str_is_compatible	none	it calls $are_distinct_terms_type, which has no proof
 $str_is_empty	generated	
-$str_is_multiset_subset_strict	none	case 0 has a builtin operator
+$str_is_multiset_subset_strict	none	it calls $str_is_multiset_subset_strict_done, which has no proof
 $str_is_multiset_subset_strict_done	none	it calls $eo_typeof, which has no proof
 $str_is_prefix_flat	generated	
 $str_leq_eval_rec	generated	

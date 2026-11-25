@@ -2972,6 +2972,15 @@ def eo__24eo_5fprog_5frefl.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_refl x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_resolution`. -/
+def eo__24eo_5fprog_5fresolution.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+    eo__24eo_5fprog_5fresolution s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_resolution x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_scope`. -/
 def eo__24eo_5fprog_5fscope.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -7189,6 +7198,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fre_5funfold_5fneg_5fconcat_5ffixed : eo__24eo_5fprog_5fre_5funfold_5fneg_5fconcat_5ffixed.Spec n
   eo__24eo_5fprog_5fre_5funfold_5fpos : eo__24eo_5fprog_5fre_5funfold_5fpos.Spec n
   eo__24eo_5fprog_5frefl : eo__24eo_5fprog_5frefl.Spec n
+  eo__24eo_5fprog_5fresolution : eo__24eo_5fprog_5fresolution.Spec n
   eo__24eo_5fprog_5fscope : eo__24eo_5fprog_5fscope.Spec n
   eo__24eo_5fprog_5fseq_2dlen_2drev : eo__24eo_5fprog_5fseq_2dlen_2drev.Spec n
   eo__24eo_5fprog_5fseq_2dlen_2dunit : eo__24eo_5fprog_5fseq_2dlen_2dunit.Spec n

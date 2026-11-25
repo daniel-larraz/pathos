@@ -379,6 +379,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fre_5funfold_5fneg_5fconcat_5ffixed_spec n ih,
       eo__24eo_5fprog_5fre_5funfold_5fpos_spec n ih,
       eo__24eo_5fprog_5frefl_spec n ih,
+      eo__24eo_5fprog_5fresolution_spec n ih,
       eo__24eo_5fprog_5fscope_spec n ih,
       eo__24eo_5fprog_5fseq_2dlen_2drev_spec n ih,
       eo__24eo_5fprog_5fseq_2dlen_2dunit_spec n ih,
