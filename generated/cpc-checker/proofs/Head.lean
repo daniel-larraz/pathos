@@ -2297,6 +2297,15 @@ def eo__24eo_5fprog_5fdistinct_2delim.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_distinct_elim x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_distinct-false`. -/
+def eo__24eo_5fprog_5fdistinct_2dfalse.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fprog_5fdistinct_2dfalse s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_distinct_false x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_eq-cond-deq`. -/
 def eo__24eo_5fprog_5feq_2dcond_2ddeq.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -2376,6 +2385,15 @@ def eo__24eo_5fprog_5fexists_5fstring_5flength.Spec (n : Nat) : Prop :=
     eo__24eo_5fprog_5fexists_5fstring_5flength s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_exists_string_length x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_factoring`. -/
+def eo__24eo_5fprog_5ffactoring.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fprog_5ffactoring s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_factoring x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_false_elim`. -/
@@ -7213,6 +7231,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fcong : eo__24eo_5fprog_5fcong.Spec n
   eo__24eo_5fprog_5fcontra : eo__24eo_5fprog_5fcontra.Spec n
   eo__24eo_5fprog_5fdistinct_2delim : eo__24eo_5fprog_5fdistinct_2delim.Spec n
+  eo__24eo_5fprog_5fdistinct_2dfalse : eo__24eo_5fprog_5fdistinct_2dfalse.Spec n
   eo__24eo_5fprog_5feq_2dcond_2ddeq : eo__24eo_5fprog_5feq_2dcond_2ddeq.Spec n
   eo__24eo_5fprog_5feq_2dite_2dlift : eo__24eo_5fprog_5feq_2dite_2dlift.Spec n
   eo__24eo_5fprog_5feq_2drefl : eo__24eo_5fprog_5feq_2drefl.Spec n
@@ -7222,6 +7241,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fequiv_5felim2 : eo__24eo_5fprog_5fequiv_5felim2.Spec n
   eo__24eo_5fprog_5fexists_2delim : eo__24eo_5fprog_5fexists_2delim.Spec n
   eo__24eo_5fprog_5fexists_5fstring_5flength : eo__24eo_5fprog_5fexists_5fstring_5flength.Spec n
+  eo__24eo_5fprog_5ffactoring : eo__24eo_5fprog_5ffactoring.Spec n
   eo__24eo_5fprog_5ffalse_5felim : eo__24eo_5fprog_5ffalse_5felim.Spec n
   eo__24eo_5fprog_5ffalse_5fintro : eo__24eo_5fprog_5ffalse_5fintro.Spec n
   eo__24eo_5fprog_5fho_5fcong : eo__24eo_5fprog_5fho_5fcong.Spec n

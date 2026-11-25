@@ -369,4 +369,134 @@ theorem new_spec (n : Std.Usize) (hn : n.val ≤ 2 ^ 32) (h64 : Platform64) :
     · simp [hzl]
     · simp [hzl]; rfl
 
+/-! ## `eo::list_setof` -/
+
+/-- One step of the runtime's walk: a term goes out unless it already has. -/
+def firstOccStep {α : Type} [DecidableEq α] (acc : List α) (x : α) : List α :=
+  if x ∈ acc then acc else acc ++ [x]
+
+/-- The runtime's `first_occurrences`: the first occurrence of each term, in
+order. -/
+def firstOcc {α : Type} [DecidableEq α] (xs : List α) : List α :=
+  xs.foldl firstOccStep []
+
+/-- logos's `list_setof_rec` on the elements: the first, then the rest's set
+without it. -/
+def setofL {α : Type} [DecidableEq α] : List α → List α
+  | [] => []
+  | x :: xs => x :: (setofL xs).filter (fun y => decide (y ≠ x))
+
+theorem foldl_firstOccStep {α : Type} [DecidableEq α] :
+    ∀ (l acc : List α),
+      l.foldl firstOccStep acc = acc ++ (setofL l).filter (fun y => decide (y ∉ acc))
+  | [], acc => by simp [setofL]
+  | x :: l, acc => by
+    rw [List.foldl_cons, foldl_firstOccStep l]
+    by_cases hx : x ∈ acc
+    · simp only [firstOccStep, hx, ite_true, setofL, List.filter_cons, List.filter_filter]
+      simp [hx]
+      congr 1
+      funext y
+      by_cases hy : y ∈ acc
+      · simp [hy]
+      · have : y ≠ x := fun e => hy (e ▸ hx)
+        simp [hy, this]
+    · simp only [firstOccStep, hx, ite_false, setofL, List.filter_cons, List.filter_filter]
+      simp [hx]
+
+theorem firstOcc_eq_setofL {α : Type} [DecidableEq α] (l : List α) :
+    firstOcc l = setofL l := by
+  unfold firstOcc
+  rw [foldl_firstOccStep]
+  simp
+
+theorem firstOcc_append {α : Type} [DecidableEq α] (l : List α) (x : α) :
+    firstOcc (l ++ [x]) = firstOccStep (firstOcc l) x := by
+  simp [firstOcc, List.foldl_append]
+
+theorem firstOcc_length_le {α : Type} [DecidableEq α] (l : List α) :
+    (firstOcc l).length ≤ l.length := by
+  induction l using List.reverseRecOn with
+  | nil => simp [firstOcc]
+  | append_singleton l x ih =>
+    rw [firstOcc_append]; unfold firstOccStep; split <;> simp <;> omega
+
+theorem firstOcc_nodup {α : Type} [DecidableEq α] (l : List α) : (firstOcc l).Nodup := by
+  induction l using List.reverseRecOn with
+  | nil => simp [firstOcc]
+  | append_singleton l x ih =>
+    rw [firstOcc_append]; unfold firstOccStep
+    split
+    · exact ih
+    · rename_i hx
+      rw [List.nodup_append]
+      refine ⟨ih, List.nodup_singleton x, ?_⟩
+      intro a ha b hb; simp at hb; subst hb; intro e; subst e; exact hx ha
+
+/-- `first_occurrences`' loop: what is out is the first occurrences of the
+slice's first `i` terms, and the table holds them, once each. -/
+theorem first_occurrences_loop_spec (xs : Slice Term) (hxs : xs.length < 2 ^ 32)
+    (h64 : Platform64) :
+    ∀ (seen : table.TermCounts) (out : alloc.vec.Vec Term) (i : Std.Usize),
+      i.val ≤ xs.length →
+      TC seen out.val (List.replicate out.val.length 1) →
+      out.val = firstOcc (xs.val.take i.val) →
+      first_occurrences_loop xs seen out i ⦃ r => r.val = firstOcc xs.val ⦄div := by
+  have h40 : (2 : Nat) ^ 40 ≤ Usize.max := h64
+  apply first_occurrences_loop.fixpoint_induct xs
+    (motive := fun f => ∀ (seen : table.TermCounts) (out : alloc.vec.Vec Term) (i : Std.Usize),
+      i.val ≤ xs.length →
+      TC seen out.val (List.replicate out.val.length 1) →
+      out.val = firstOcc (xs.val.take i.val) →
+      f seen out i ⦃ r => r.val = firstOcc xs.val ⦄div)
+  · prove_adm
+  · intro loop ih seen out i hi hTC hout
+    simp only
+    split
+    · rename_i hlt
+      have hlt' : i.val < xs.val.length := by simp [Slice.len, Slice.length] at hlt ⊢; scalar_tac
+      have htake : xs.val.take (i.val + 1) = xs.val.take i.val ++ [xs.val[i.val]] :=
+        List.take_succ_eq_append_getElem hlt'
+      have hle1 : i.val + 1 ≤ xs.length := by simp only [Slice.length] at hi ⊢; omega
+      have hol : out.val.length ≤ i.val := by
+        rw [hout]; have := firstOcc_length_le (xs.val.take i.val); simp at this; omega
+      step as ⟨t, ht⟩
+      step with entry_spec seen hTC t as ⟨o, ho⟩
+      cases o with
+      | none =>
+        simp only [Option.isNone_none, ite_true, Std.bind_ok]
+        have h32 : (2 : Nat) ^ 32 = 4294967296 := by norm_num
+        step with add_spec seen hTC t (by simp only [Slice.length] at hxs; omega)
+          (by intro c hc; simp at hc; rw [hc.2]; omega) h64 as ⟨seen2, _, hnew, _⟩
+        have hcap : out.val.length < Usize.max := by omega
+        step with alloc.vec.Vec.push_spec out t hcap as ⟨out2, hout2⟩
+        step as ⟨i2, hi2⟩
+        apply ih seen2 out2 i2 (by scalar_tac)
+        · rw [hout2]
+          have := hnew ho
+          simpa [List.replicate_succ'] using this
+        · have hn : xs.val[i.val] ∉ out.val := ht ▸ ho
+          rw [hout2, hi2, htake, firstOcc_append, ← hout, ← ht]
+          simp [firstOccStep, ho]
+      | some p =>
+        obtain ⟨hp, hpt⟩ := ho
+        simp only [Option.isNone_some, Bool.false_eq_true, ite_false, Std.bind_ok]
+        step as ⟨i2, hi2⟩
+        apply ih seen out i2 (by scalar_tac) hTC
+        rw [hi2, htake, firstOcc_append, ← hout]
+        have hmem : xs.val[i.val] ∈ out.val := by
+          rw [← ht, ← hpt]; exact List.mem_iff_getElem.mpr ⟨p.val, hp, (getElem!_eq _ _ hp).symm⟩
+        simp [firstOccStep, hmem]
+    · rename_i hge
+      simp only [WP.dspec_ok]
+      have : xs.val.length ≤ i.val := by simp [Slice.len, Slice.length] at hge ⊢; scalar_tac
+      rw [hout, List.take_of_length_le this]
+
+theorem first_occurrences_spec (xs : Slice Term) (hxs : xs.length < 2 ^ 32) (h64 : Platform64) :
+    first_occurrences xs ⦃ r => r.val = firstOcc xs.val ⦄div := by
+  unfold first_occurrences
+  step with new_spec (Slice.len xs) (by scalar_tac) h64 as ⟨tc, htc⟩
+  apply first_occurrences_loop_spec xs hxs h64 tc _ 0#usize (by simp) _ (by simp [firstOcc])
+  simpa using htc
+
 end pathos_compiled_checker

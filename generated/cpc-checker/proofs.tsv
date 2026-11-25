@@ -15,7 +15,7 @@ $arith_rel_sum	generated
 $arith_rel_trichotomy	generated	
 $assoc_nil_nth	generated	
 $assoc_nil_nth_type	none	it calls $eo_typeof, which has no proof
-$beta_reduce	none	case 0 has a builtin operator
+$beta_reduce	none	it calls $substitute_simul_rec, which has no proof
 $bv_bitblast_apply_binary	generated	
 $bv_bitblast_apply_ite	generated	
 $bv_bitblast_apply_unary	generated	
@@ -120,7 +120,7 @@ $eo_nil_bvxor	generated
 $eo_nil_str.++	generated	
 $eo_prog_absorb	none	it calls $get_zero, which has no proof
 $eo_prog_aci_norm	none	it calls $aci_norm_eq, which has no proof
-$eo_prog_alpha_equiv	none	case 0 has a builtin operator
+$eo_prog_alpha_equiv	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_and_elim	generated	
 $eo_prog_and_intro	generated	
 $eo_prog_arith-abs-eq	generated	
@@ -394,7 +394,7 @@ $eo_prog_contra	generated
 $eo_prog_distinct-binary-elim	none	it calls $eo_typeof, which has no proof
 $eo_prog_distinct-card-conflict	none	it calls $assoc_nil_nth_type, which has no proof
 $eo_prog_distinct-elim	generated	
-$eo_prog_distinct-false	none	case 0 has a builtin operator
+$eo_prog_distinct-false	generated	
 $eo_prog_distinct-true	none	it calls $eo_typeof, which has no proof
 $eo_prog_distinct_values	none	it calls $are_distinct_terms_type, which has no proof
 $eo_prog_dt-collapse-selector	none	it calls $dt_get_selectors_of_app, which has no proof
@@ -417,7 +417,7 @@ $eo_prog_equiv_elim2	generated
 $eo_prog_evaluate	none	it calls $run_evaluate, which has no proof
 $eo_prog_exists-elim	generated	
 $eo_prog_exists_string_length	generated	
-$eo_prog_factoring	none	case 0 has a builtin operator
+$eo_prog_factoring	generated	
 $eo_prog_false_elim	generated	
 $eo_prog_false_intro	generated	
 $eo_prog_ho_cong	generated	
@@ -550,7 +550,7 @@ $eo_prog_sets_choose_member	none	it calls $eo_typeof, which has no proof
 $eo_prog_sets_ext	generated	
 $eo_prog_sets_singleton_inj	generated	
 $eo_prog_skolem_intro	generated	
-$eo_prog_skolemize	none	case 0 has a builtin operator
+$eo_prog_skolemize	none	it calls $is_closed_rec, which has no proof
 $eo_prog_split	generated	
 $eo_prog_str-at-elim	generated	
 $eo_prog_str-concat-clash	generated	
@@ -888,7 +888,7 @@ $get_a_norm	none	case 0 has eo::list_singleton_elim of an operator that is not a
 $get_a_norm_rec	none	case 0 has eo::list_concat of an operator that is not a constant
 $get_aci_normal_form	none	it calls $get_a_norm, which has no proof
 $get_ai_norm	none	case 0 has eo::list_singleton_elim of an operator that is not a constant
-$get_ai_norm_rec	none	case 0 has a builtin operator
+$get_ai_norm_rec	none	case 0 has eo::list_concat of an operator that is not a constant
 $get_arg_list_rec	generated	
 $get_arith_poly_norm	none	it calls $poly_add, which has no proof
 $get_bv_poly_norm_rec	none	it calls $poly_add, which has no proof
