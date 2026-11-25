@@ -159,6 +159,23 @@ def main():
     logos = Path(args.logos).resolve() if args.logos else work / "logos/.lake/build/bin/logos"
     if not logos.exists():
         fail(f"no logos binary at {logos}; build logos at {env.get('LOGOS_REV')} and pass --logos")
+    if not args.logos:
+        # The harness's checkout must be at LOGOS_REV, and its binary built
+        # since its sources last changed: a binary left from an earlier
+        # revision would compare pathos with the wrong logos.
+        checkout = work / "logos"
+        head = subprocess.run(["git", "-C", str(checkout), "rev-parse", "HEAD"],
+                              capture_output=True, text=True).stdout.strip()
+        rev = env.get("LOGOS_REV", "")
+        if not rev or not head.startswith(rev):
+            fail(f"{checkout} is at {head or 'no revision'}, not LOGOS_REV "
+                 f"{env.get('LOGOS_REV')}; check it out there and build logos")
+        sources = [f for d in ("Cpc", "CpcMini", "Logos") for f in (checkout / d).rglob("*.lean")]
+        sources += [checkout / f for f in ("Main.lean", "Cpc.lean", "Logos.lean") if (checkout / f).exists()]
+        newest = max((f.stat().st_mtime for f in sources), default=0)
+        if logos.stat().st_mtime < newest:
+            fail(f"{logos} is older than the sources of {checkout}; build it again "
+                 f"(lake build logos) before comparing")
     bins = ["--bin", "pathos-eo"] + ([] if args.pathos else ["--bin", "pathos"])
     built = subprocess.run(
         ["systemd-run", "--user", "--scope", "-q", "-p", "MemoryMax=16G", "-p", "MemorySwapMax=0",
