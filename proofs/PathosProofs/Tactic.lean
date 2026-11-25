@@ -97,10 +97,30 @@ macro "logos_eq" : tactic =>
         simp_all [eo_eq_of_ne, eo_eq_true, eo_logos_eq]; done)
     | rfl)
 
+open Lean Meta Elab Tactic in
+/-- Closes a goal that a hypothesis makes absurd: one of the form
+`∀ xs, a = x → … → ¬b = y`, which a match split leaves when a pattern did
+not match, is contradicted by taking each `x` to be what it is equated
+with. -/
+elab "absurd_match" : tactic => withMainContext do
+  let g ← getMainGoal
+  for d in ← getLCtx do
+    if d.isImplementationDetail then continue
+    let st ← saveState
+    try
+      let gs ← (← g.exfalso).apply d.toExpr
+      for g2 in gs do
+        unless ← g2.isAssigned do g2.refl
+      replaceMainGoal []
+      return
+    catch _ => st.restore
+  throwError "absurd_match: no hypothesis makes the goal absurd"
+
 /-- `logos_eq` for a function of logos that falls through to helpers
 (`__eo_l_<k>___f`) when the repeated variables of a case differ, with the
 helpers unfolded: every match split, the connectives simplified, and what
-is left closed by symmetry or by a pattern that did not match. -/
+is left closed by symmetry or by a pattern that did not match
+(`absurd_match`). -/
 macro "logos_eq_deep" : tactic =>
   `(tactic| first
     | logos_eq
@@ -108,6 +128,9 @@ macro "logos_eq_deep" : tactic =>
         (try simp_all [HasStuck.stuck, requires_ite, eo_eq_of_ne, eo_logos_eq]) <;>
         (try split_ifs) <;> (try simp_all [eo_eq_of_ne, eo_eq_true, eo_logos_eq]) <;>
         (try (intros; simp_all [eq_comm])) <;>
+        -- before the next step: its `by simp` fails only after `try` has
+        -- let it through
+        (try (intros; absurd_match)) <;>
         (try (rename_i hm _; exact absurd hm (by simp)))) <;> done))
 
 /-- A list operator does not nest to the left (`NotLeftNested`): where no

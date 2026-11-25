@@ -95,6 +95,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24compute_5fcard_spec n ih,
       eo__24dt_5farg_5flist_spec n ih,
       eo__24dt_5fcollapse_5fupdater_5frhs_spec n ih,
+      eo__24dt_5fupdater_5felim_5frhs_spec n ih,
       eo__24eo_5fStateObj_5fproven_spec n ih,
       eo__24eo_5fcmd_5fstep_5fpop_5fproven_spec n ih,
       eo__24eo_5fdd_5flookup_spec n ih,
@@ -875,6 +876,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24tuple_5farg_5flist_spec n ih,
       eo__24tuple_5fcollapse_5fupdater_5frhs_spec n ih,
       eo__24tuple_5fget_5fselectors_5frec_spec n ih,
+      eo__24tuple_5fupdater_5felim_5frhs_spec n ih,
       eo__24typed_5flist_5felement_5ftype_spec n ih⟩
 
 end pathos_compiled_checker

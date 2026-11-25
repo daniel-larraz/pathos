@@ -398,6 +398,15 @@ def eo__24dt_5fcollapse_5fupdater_5frhs.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__dt_collapse_updater_rhs x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$dt_updater_elim_rhs`. -/
+def eo__24dt_5fupdater_5felim_5frhs.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24dt_5fupdater_5felim_5frhs s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__dt_updater_elim_rhs x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_StateObj_proven`. -/
 def eo__24eo_5fStateObj_5fproven.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -7418,6 +7427,15 @@ def eo__24tuple_5fget_5fselectors_5frec.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__tuple_get_selectors_rec x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$tuple_updater_elim_rhs`. -/
+def eo__24tuple_5fupdater_5felim_5frhs.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24tuple_5fupdater_5felim_5frhs s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__tuple_updater_elim_rhs x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$typed_list_element_type`. -/
 def eo__24typed_5flist_5felement_5ftype.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -7506,6 +7524,7 @@ structure Specs (n : Nat) : Prop where
   eo__24compute_5fcard : eo__24compute_5fcard.Spec n
   eo__24dt_5farg_5flist : eo__24dt_5farg_5flist.Spec n
   eo__24dt_5fcollapse_5fupdater_5frhs : eo__24dt_5fcollapse_5fupdater_5frhs.Spec n
+  eo__24dt_5fupdater_5felim_5frhs : eo__24dt_5fupdater_5felim_5frhs.Spec n
   eo__24eo_5fStateObj_5fproven : eo__24eo_5fStateObj_5fproven.Spec n
   eo__24eo_5fcmd_5fstep_5fpop_5fproven : eo__24eo_5fcmd_5fstep_5fpop_5fproven.Spec n
   eo__24eo_5fdd_5flookup : eo__24eo_5fdd_5flookup.Spec n
@@ -8286,6 +8305,7 @@ structure Specs (n : Nat) : Prop where
   eo__24tuple_5farg_5flist : eo__24tuple_5farg_5flist.Spec n
   eo__24tuple_5fcollapse_5fupdater_5frhs : eo__24tuple_5fcollapse_5fupdater_5frhs.Spec n
   eo__24tuple_5fget_5fselectors_5frec : eo__24tuple_5fget_5fselectors_5frec.Spec n
+  eo__24tuple_5fupdater_5felim_5frhs : eo__24tuple_5fupdater_5felim_5frhs.Spec n
   eo__24typed_5flist_5felement_5ftype : eo__24typed_5flist_5felement_5ftype.Spec n
 
 end pathos_compiled_checker

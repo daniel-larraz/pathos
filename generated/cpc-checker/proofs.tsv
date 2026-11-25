@@ -68,7 +68,7 @@ $dt_find_cycle	none	it calls $is_cons_app, which has no proof
 $dt_get_constructors	none	case 3 has a builtin operator
 $dt_get_selectors	none	case 2 has a builtin operator
 $dt_get_selectors_of_app	none	it calls $dt_get_selectors, which has no proof
-$dt_updater_elim_rhs	none	its generated proof does not build: a variable repeated as an operator's index itself (update's), which may be the stuck term: logos's __eo_eq of two stuck terms is stuck, the case form's equality is true, so logos_eq_deep cannot prove the two equal
+$dt_updater_elim_rhs	generated	
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
 $eo_cmd_step_pop_proven	generated	
@@ -1100,5 +1100,5 @@ $to_cube	generated
 $tuple_arg_list	generated	
 $tuple_collapse_updater_rhs	generated	
 $tuple_get_selectors_rec	generated	
-$tuple_updater_elim_rhs	none	its generated proof does not build: a variable repeated as an operator's index itself (tuple.select's), which may be the stuck term (see $dt_updater_elim_rhs); logos_eq_deep also times out (whnf)
+$tuple_updater_elim_rhs	generated	
 $typed_list_element_type	generated	
