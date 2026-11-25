@@ -499,4 +499,268 @@ theorem first_occurrences_spec (xs : Slice Term) (hxs : xs.length < 2 ^ 32) (h64
   apply first_occurrences_loop_spec xs hxs h64 tc _ 0#usize (by simp) _ (by simp [firstOcc])
   simpa using htc
 
+/-! ## The table as a multiset -/
+
+/-- The table counts the terms of the multiset `R`: its keys, each with
+the number of times `R` has it, and every term of `R` a key. -/
+def TCList (tc : table.TermCounts) (R : List Term) : Prop :=
+  ∃ keys counts, TC tc keys counts ∧
+    (∀ k, k < keys.length → counts[k]! = R.count keys[k]!) ∧ (∀ t ∈ R, t ∈ keys)
+
+/-- `count` at a key's place: how many times `R` has the key. -/
+theorem count_spec (tc : table.TermCounts) {keys : List Term} {counts : List Nat}
+    (hTC : TC tc keys counts) (p : Std.Usize) (hp : p.val < keys.length) :
+    table.TermCounts.count tc p ⦃ c => c.val = counts[p.val]! ⦄div := by
+  have hcl : tc.counts.val.length = keys.length := by
+    have := congrArg List.length hTC.counts_eq; simp at this; rw [this, hTC.counts_len]
+  unfold table.TermCounts.count
+  step as ⟨c, hc⟩
+  rw [← hTC.counts_eq, getElem!_eq _ _ (by simp; omega)]
+  subst hc; simp
+
+/-- `remove_one` at a key's place: one fewer of the key, if any is left. -/
+theorem remove_one_spec (tc : table.TermCounts) {keys : List Term} {counts : List Nat}
+    (hTC : TC tc keys counts) (p : Std.Usize) (hp : p.val < keys.length) :
+    table.TermCounts.remove_one tc p ⦃ tc' =>
+      tc'.slots = tc.slots ∧ TC tc' keys (counts.set p.val (counts[p.val]! - 1)) ⦄div := by
+  have hcl : tc.counts.val.length = keys.length := by
+    have := congrArg List.length hTC.counts_eq; simp at this; rw [this, hTC.counts_len]
+  have hcp : counts[p.val]! = (tc.counts.val[p.val]'(by omega)).val := by
+    rw [← hTC.counts_eq, getElem!_eq _ _ (by simp; omega)]; simp
+  unfold table.TermCounts.remove_one
+  step as ⟨c, hc⟩
+  split
+  · rename_i hpos
+    step as ⟨old, back, hold, hback⟩
+    step as ⟨c2, hc2⟩
+    simp only [WP.dspec_ok]
+    refine ⟨by simp, { hTC with counts_eq := ?_, counts_len := by simp [hTC.counts_len] }⟩
+    rw [hback]
+    simp only [alloc.vec.Vec.set_val_eq, List.map_set, hTC.counts_eq]
+    congr 1
+    rw [hc2, hold, hcp]
+  · rename_i hz
+    simp only [WP.dspec_ok]
+    refine ⟨by simp, ?_⟩
+    have hlt : p.val < counts.length := by rw [hTC.counts_len]; exact hp
+    have h0 : counts[p.val]! = 0 := by rw [hcp, ← hc]; scalar_tac
+    have : counts.set p.val (counts[p.val]! - 1) = counts := by
+      rw [show counts[p.val]! - 1 = counts[p.val]! by rw [h0]]
+      rw [getElem!_eq _ _ hlt, List.set_getElem_self]
+    rw [this]; exact hTC
+
+/-- While `multiset` adds the slice's terms: the table counts exactly the
+terms added so far. -/
+def MS (tc : table.TermCounts) (R : List Term) : Prop :=
+  ∃ keys counts, TC tc keys counts ∧
+    (∀ k, k < keys.length → counts[k]! = R.count keys[k]!) ∧
+    (∀ t ∈ R, t ∈ keys) ∧ (∀ t ∈ keys, t ∈ R) ∧ keys.length ≤ R.length
+
+theorem MS.add {tc : table.TermCounts} {R : List Term} (h : MS tc R) (t : Term)
+    (hcap : R.length + 1 < 2 ^ 32) (h64 : Platform64) :
+    table.TermCounts.add tc t ⦃ tc' => MS tc' (R ++ [t]) ⦄div := by
+  obtain ⟨keys, counts, hTC, hcnt, hsub, hsup, hlen⟩ := h
+  have h40 : (2 : Nat) ^ 40 ≤ Usize.max := h64
+  have hcl : counts.length = keys.length := hTC.counts_len
+  have hcb : ∀ c ∈ counts, c + 1 ≤ Usize.max := by
+    intro c hc
+    obtain ⟨k, hk, hkc⟩ := List.mem_iff_getElem.mp hc
+    have := hcnt k (by omega)
+    rw [getElem!_eq _ _ hk, hkc] at this
+    have := List.count_le_length (a := keys[k]!) (l := R)
+    have h32 : (2 : Nat) ^ 32 ≤ 2 ^ 40 := by norm_num
+    omega
+  apply WP.dspec_mono (add_spec tc hTC t (by omega) hcb h64)
+  rintro tc' ⟨-, hnew, hold⟩
+  by_cases ht : t ∈ keys
+  · obtain ⟨k, hk, hkt⟩ := List.mem_iff_getElem.mp ht
+    have hkt' : keys[k]! = t := by rw [getElem!_eq _ _ hk]; exact hkt
+    refine ⟨keys, counts.set k (counts[k]! + 1), hold k hk hkt', ?_, ?_, ?_, ?_⟩
+    · intro k' hk'
+      by_cases hkk : k' = k
+      · subst hkk
+        rw [getElem!_eq _ _ (by simp; omega), List.getElem_set_self, hcnt k' hk', hkt']
+        simp
+      · have hne : keys[k']! ≠ t := by
+          intro e
+          apply hkk
+          apply (hTC.nodup.getElem_inj_iff (hi := hk') (hj := hk)).mp
+          rw [← getElem!_eq _ _ hk', ← getElem!_eq _ _ hk, e, hkt']
+        rw [getElem!_eq _ _ (by simp; omega), List.getElem_set_ne (Ne.symm hkk),
+          ← getElem!_eq _ _ (by omega), hcnt k' hk']
+        generalize keys[k']! = a at hne ⊢
+        simp [List.count_append, Ne.symm hne]
+    · intro x hx; simp at hx; rcases hx with hx | hx
+      · exact hsub x hx
+      · rw [hx]; exact ht
+    · intro x hx; exact List.mem_append_left _ (hsup x hx)
+    · simp; omega
+  · have htR : t ∉ R := fun e => ht (hsub t e)
+    refine ⟨keys ++ [t], counts ++ [1], hnew ht, ?_, ?_, ?_, ?_⟩
+    · intro k' hk'
+      simp only [List.length_append, List.length_singleton] at hk'
+      by_cases hkl : k' < keys.length
+      · have hne : keys[k']! ≠ t := by
+          intro e; apply ht; rw [← e, getElem!_eq _ _ hkl]; exact List.getElem_mem _
+        rw [getElem!_eq _ _ (by simp; omega), getElem!_eq _ _ (by simp; omega),
+          List.getElem_append_left (by omega), List.getElem_append_left hkl,
+          ← getElem!_eq _ _ (by omega), ← getElem!_eq _ _ hkl, hcnt k' hkl]
+        generalize keys[k']! = a at hne ⊢
+        simp [List.count_append, Ne.symm hne]
+      · have hkk : k' = keys.length := by omega
+        subst hkk
+        rw [getElem!_eq _ _ (by simp; omega), getElem!_eq _ _ (by simp)]
+        simp [List.count_append, hcl, List.count_eq_zero_of_not_mem htR]
+    · intro x hx; simp at hx; rcases hx with hx | hx
+      · exact List.mem_append_left _ (hsub x hx)
+      · rw [hx]; simp
+    · intro x hx; simp at hx; rcases hx with hx | hx
+      · exact List.mem_append_left _ (hsup x hx)
+      · rw [hx]; simp
+    · simp; omega
+
+theorem multiset_loop_spec (ys : Slice Term) (hys : ys.length < 2 ^ 32) (h64 : Platform64) :
+    ∀ (counts : table.TermCounts) (i : Std.Usize), i.val ≤ ys.length →
+      MS counts (ys.val.take i.val) →
+      multiset_loop ys counts i ⦃ r => MS r ys.val ⦄div := by
+  apply multiset_loop.fixpoint_induct ys
+    (motive := fun f => ∀ (counts : table.TermCounts) (i : Std.Usize), i.val ≤ ys.length →
+      MS counts (ys.val.take i.val) → f counts i ⦃ r => MS r ys.val ⦄div)
+  · prove_adm
+  · intro loop ih counts i hi hms
+    simp only
+    split
+    · rename_i hlt
+      have hlt' : i.val < ys.val.length := by simp [Slice.len, Slice.length] at hlt ⊢; scalar_tac
+      have htake : ys.val.take (i.val + 1) = ys.val.take i.val ++ [ys.val[i.val]] :=
+        List.take_succ_eq_append_getElem hlt'
+      step as ⟨t, ht⟩
+      step with hms.add t (by simp only [Slice.length] at hys; simp; omega) h64 as ⟨c1, hc1⟩
+      step as ⟨i2, hi2⟩
+      apply ih c1 i2 (by simp only [Slice.length] at hi ⊢; scalar_tac)
+      rw [hi2, htake, ← ht]; exact hc1
+    · rename_i hge
+      simp only [WP.dspec_ok]
+      have : ys.val.length ≤ i.val := by simp [Slice.len, Slice.length] at hge ⊢; scalar_tac
+      rw [List.take_of_length_le this] at hms; exact hms
+
+theorem multiset_spec (ys : Slice Term) (hys : ys.length < 2 ^ 32) (h64 : Platform64) :
+    multiset ys ⦃ r => MS r ys.val ⦄div := by
+  unfold multiset
+  step with new_spec (Slice.len ys) (by scalar_tac) h64 as ⟨tc, htc⟩
+  apply multiset_loop_spec ys hys h64 tc 0#usize (by simp)
+  exact ⟨[], [], htc, by simp, by simp, by simp, by simp⟩
+
+/-- What `multiset_select` keeps of `xs` against the multiset `R`: each
+term found in what is left of `R` (`paired`) or not, each find using one. -/
+def selectL (paired : Bool) : List Term → List Term → List Term
+  | [], _ => []
+  | x :: xs, R => (if decide (x ∈ R) = paired then [x] else []) ++ selectL paired xs (R.erase x)
+
+/-- Looking `t` up and using one: whether `R` has `t`, and the table of
+`R.erase t`. -/
+theorem take_one {tc : table.TermCounts} {R keys : List Term} {counts : List Nat}
+    (hTC : TC tc keys counts) (hcnt : ∀ k, k < keys.length → counts[k]! = R.count keys[k]!)
+    (hsub : ∀ t ∈ R, t ∈ keys) (t : Term) (o : Option Std.Usize)
+    (ho : match o with
+      | none => t ∉ keys
+      | some p => p.val < keys.length ∧ keys[p.val]! = t) :
+    (match o with
+      | none => ok (tc, false)
+      | some place => do
+        let i2 ← table.TermCounts.count tc place
+        let tc2 ← table.TermCounts.remove_one tc place
+        ok (tc2, i2 > 0#usize)) ⦃ r =>
+      TCList r.1 (R.erase t) ∧ r.2 = decide (t ∈ R) ⦄div := by
+  cases o with
+  | none =>
+    simp only [WP.dspec_ok]
+    have htR : t ∉ R := fun e => ho (hsub t e)
+    rw [List.erase_of_not_mem htR]
+    exact ⟨⟨keys, counts, hTC, hcnt, hsub⟩, by simp [htR]⟩
+  | some p =>
+    obtain ⟨hp, hpt⟩ := ho
+    step with count_spec tc hTC p hp as ⟨c, hc⟩
+    step with remove_one_spec tc hTC p hp as ⟨tc2, _, hTC2⟩
+    simp only [WP.dspec_ok]
+    have hct : counts[p.val]! = R.count t := by rw [hcnt p.val hp, hpt]
+    refine ⟨⟨keys, _, hTC2, ?_, ?_⟩, ?_⟩
+    · intro k hk
+      have hkc : k < counts.length := by rw [hTC.counts_len]; exact hk
+      by_cases hkp : k = p.val
+      · subst hkp
+        rw [getElem!_eq _ _ (by simp; omega), List.getElem_set_self, hct, hpt,
+          List.count_erase_self]
+      · have hne : keys[k]! ≠ t := by
+          intro e; apply hkp
+          apply (hTC.nodup.getElem_inj_iff (hi := hk) (hj := hp)).mp
+          rw [← getElem!_eq _ _ hk, ← getElem!_eq _ _ hp, e, hpt]
+        rw [getElem!_eq _ _ (by simp; omega), List.getElem_set_ne (Ne.symm hkp),
+          ← getElem!_eq _ _ hkc, hcnt k hk, List.count_erase_of_ne hne]
+    · intro x hx; exact hsub x (List.mem_of_mem_erase hx)
+    · have : (c.val > 0) ↔ t ∈ R := by
+        rw [hc, hct, gt_iff_lt, List.count_pos_iff]
+      simp only [decide_eq_decide]
+      constructor
+      · intro h; exact this.mp (by scalar_tac)
+      · intro h; have := this.mpr h; scalar_tac
+
+theorem multiset_select_loop_spec (xs : Slice Term) (paired : Bool) (R0 : List Term)
+    (h64 : Platform64) :
+    ∀ (counts : table.TermCounts) (out : alloc.vec.Vec Term) (i : Std.Usize) (R : List Term),
+      i.val ≤ xs.length → out.val.length ≤ i.val → TCList counts R →
+      out.val ++ selectL paired (xs.val.drop i.val) R = selectL paired xs.val R0 →
+      multiset_select_loop xs paired counts out i ⦃ r => r.val = selectL paired xs.val R0 ⦄div := by
+  have h40 : (2 : Nat) ^ 40 ≤ Usize.max := h64
+  apply multiset_select_loop.fixpoint_induct xs paired
+    (motive := fun f => ∀ (counts : table.TermCounts) (out : alloc.vec.Vec Term) (i : Std.Usize)
+      (R : List Term), i.val ≤ xs.length → out.val.length ≤ i.val → TCList counts R →
+      out.val ++ selectL paired (xs.val.drop i.val) R = selectL paired xs.val R0 →
+      f counts out i ⦃ r => r.val = selectL paired xs.val R0 ⦄div)
+  · prove_adm
+  · intro loop ih counts out i R hi hol hTL hinv
+    simp only
+    split
+    · rename_i hlt
+      have hlt' : i.val < xs.val.length := by simp [Slice.len, Slice.length] at hlt ⊢; scalar_tac
+      have hdrop : xs.val.drop i.val = xs.val[i.val] :: xs.val.drop (i.val + 1) :=
+        List.drop_eq_getElem_cons hlt'
+      step as ⟨t, ht⟩
+      obtain ⟨keys, cnts, hTC, hcnt, hsub⟩ := hTL
+      step with entry_spec counts hTC t as ⟨o, ho⟩
+      step with take_one hTC hcnt hsub t o ho as ⟨c1, found, hr1, hr2⟩
+      subst hr2
+      have hcap : out.val.length < Usize.max := by scalar_tac
+      split
+      · rename_i heq
+        step with alloc.vec.Vec.push_spec out t hcap as ⟨out2, hout2⟩
+        step as ⟨i2, hi2⟩
+        apply ih c1 out2 i2 (R.erase t) (by scalar_tac) (by rw [hout2]; simp; omega) hr1
+        rw [hout2, hi2, ← hinv, hdrop, ← ht]
+        simp [selectL, heq]
+      · rename_i heq
+        step as ⟨i2, hi2⟩
+        apply ih c1 out i2 (R.erase t) (by scalar_tac) (by omega) hr1
+        rw [hi2, ← hinv, hdrop, ← ht]
+        simp [selectL, heq]
+    · rename_i hge
+      simp only [WP.dspec_ok]
+      have : xs.val.length ≤ i.val := by simp [Slice.len, Slice.length] at hge ⊢; scalar_tac
+      rw [← hinv, List.drop_of_length_le this]
+      simp [selectL]
+
+theorem MS.tclist {tc : table.TermCounts} {R : List Term} (h : MS tc R) : TCList tc R := by
+  obtain ⟨keys, counts, hTC, hcnt, hsub, -, -⟩ := h
+  exact ⟨keys, counts, hTC, hcnt, hsub⟩
+
+/-- `multiset_select`: the terms of `xs` that pair off with one of `ys`
+(`paired`), or those that do not. -/
+theorem multiset_select_spec (xs ys : Slice Term) (paired : Bool) (hys : ys.length < 2 ^ 32)
+    (h64 : Platform64) :
+    multiset_select xs ys paired ⦃ r => r.val = selectL paired xs.val ys.val ⦄div := by
+  unfold multiset_select
+  step with multiset_spec ys hys h64 as ⟨tc, htc⟩
+  exact multiset_select_loop_spec xs paired ys.val h64 tc (alloc.vec.Vec.new Term) 0#usize
+    ys.val (by simp) (by simp) htc.tclist (by simp)
+
 end pathos_compiled_checker
