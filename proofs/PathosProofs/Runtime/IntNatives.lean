@@ -369,4 +369,11 @@ theorem Store.native_spec_zneg (s : Store) (args : Slice Term) {a : Term} {x : I
     ite_true, num.Integer.neg_spec, num.Integer.toInt_ofInt]
   exact Store.raw_int_spec s (-x) hinv h64
 
+
+/-- The maximum code point (`eo::max_code_point`) as an integer: 196607,
+logos's `native_z_max_code_point`; the generated code builds its numeral
+from `MAX_CODE_POINT`. -/
+theorem max_code_point_int : ((MAX_CODE_POINT.val : Nat) : Int) = 196607 := by
+  rw [max_code_point_eq]; rfl
+
 end pathos_compiled_checker

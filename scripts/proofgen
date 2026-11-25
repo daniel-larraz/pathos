@@ -286,8 +286,15 @@ class Emitter:
         sub = n.get("sub", [])
         if op == "max_code_point":
             # eo::max_code_point, which the trace names since cvc5/ethos#294:
-            # no spec yet
-            self.unsupported("eo::max_code_point (no spec yet)")
+            # the numeral 196607, which the generated code builds from
+            # `MAX_CODE_POINT` (max_code_point_int, Runtime/IntNatives.lean)
+            st, inv = self.st(), self.inv()
+            self.line("try simp only [num.Integer.from_u32_spec, Std.bind_ok]")
+            self.line("rw [max_code_point_int]")
+            self.store_step("Store.literal_numeral_spec " + st + " 196607 " + inv + " h64", v)
+            # logos names it `native_z_max_code_point`, which is 196607
+            self.line("replace h_" + v + " := Represents.rep_of_eq h_" + v
+                      + " (y := Eo.Term.Numeral SmtEval.native_z_max_code_point) rfl")
             return v
         if op == "param":
             return v

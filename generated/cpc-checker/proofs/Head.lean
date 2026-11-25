@@ -4799,6 +4799,15 @@ def eo__24eo_5fprog_5fstring_5fdecompose.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_string_decompose x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_string_eager_reduction`. -/
+def eo__24eo_5fprog_5fstring_5feager_5freduction.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fprog_5fstring_5feager_5freduction s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_string_eager_reduction x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_string_ext`. -/
 def eo__24eo_5fprog_5fstring_5fext.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -6518,6 +6527,15 @@ def eo__24mk_5fskolems.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__mk_skolems x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$mk_str_eager_reduction`. -/
+def eo__24mk_5fstr_5feager_5freduction.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24mk_5fstr_5feager_5freduction s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__mk_str_eager_reduction x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$mk_symm`. -/
 def eo__24mk_5fsymm.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -7977,6 +7995,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fstr_2dupdate_2drev : eo__24eo_5fprog_5fstr_2dupdate_2drev.Spec n
   eo__24eo_5fprog_5fstring_5fcode_5finj : eo__24eo_5fprog_5fstring_5fcode_5finj.Spec n
   eo__24eo_5fprog_5fstring_5fdecompose : eo__24eo_5fprog_5fstring_5fdecompose.Spec n
+  eo__24eo_5fprog_5fstring_5feager_5freduction : eo__24eo_5fprog_5fstring_5feager_5freduction.Spec n
   eo__24eo_5fprog_5fstring_5fext : eo__24eo_5fprog_5fstring_5fext.Spec n
   eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty : eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty.Spec n
   eo__24eo_5fprog_5fstring_5flength_5fpos : eo__24eo_5fprog_5fstring_5flength_5fpos.Spec n
@@ -8168,6 +8187,7 @@ structure Specs (n : Nat) : Prop where
   eo__24mk_5fre_5funfold_5fpos : eo__24mk_5fre_5funfold_5fpos.Spec n
   eo__24mk_5fre_5funfold_5fpos_5fstar : eo__24mk_5fre_5funfold_5fpos_5fstar.Spec n
   eo__24mk_5fskolems : eo__24mk_5fskolems.Spec n
+  eo__24mk_5fstr_5feager_5freduction : eo__24mk_5fstr_5feager_5freduction.Spec n
   eo__24mk_5fsymm : eo__24mk_5fsymm.Spec n
   eo__24mk_5ftrans : eo__24mk_5ftrans.Spec n
   eo__24pair_5ffirst : eo__24pair_5ffirst.Spec n

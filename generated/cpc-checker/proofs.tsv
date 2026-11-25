@@ -713,7 +713,7 @@ $eo_prog_str-update-oob	generated
 $eo_prog_str-update-rev	generated	
 $eo_prog_string_code_inj	generated	
 $eo_prog_string_decompose	generated	
-$eo_prog_string_eager_reduction	none	it calls $mk_str_eager_reduction, which has no proof
+$eo_prog_string_eager_reduction	generated	
 $eo_prog_string_ext	generated	
 $eo_prog_string_length_non_empty	generated	
 $eo_prog_string_length_pos	generated	
@@ -949,7 +949,7 @@ $mk_re_unfold_neg_concat_fixed	generated
 $mk_re_unfold_pos	generated	
 $mk_re_unfold_pos_star	generated	
 $mk_skolems	generated	
-$mk_str_eager_reduction	none	case 0 has eo::max_code_point (no spec yet)
+$mk_str_eager_reduction	generated	
 $mk_symm	generated	
 $mk_trans	generated	
 $mon_mul_mon	none	it calls $mvar_mul_mvar, which has no proof
