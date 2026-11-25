@@ -1336,6 +1336,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2deq_2dsingleton_2demp_spec (n : Nat) (ih 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_eq_singleton_emp.case_0
   pat_same v11 a0 with h_v11 h_a0 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_eq_singleton_emp.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_eq_singleton_emp.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_eq_singleton_emp.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -1353,7 +1354,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2deq_2dsingleton_2demp_spec (n : Nat) (ih 
   store_step with Store.apply_rep s9 v19 v24 _ _ hinv9 h64 h_v19 h_v24 (by ns_tac) (by ns_tac) as ⟨v25, s10, hinv10, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
   store_step with Store.literal_boolean_spec s10 false hinv10 h64 as ⟨v26, s11, hinv11, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
   store_step with Store.apply_rep s11 v25 v26 _ _ hinv11 h64 h_v25 h_v26 (by ns_tac) (by ns_tac) as ⟨v27, s12, hinv12, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  case_done hinv12 hG with h_v27 in EoCases.__eo_prog_sets_eq_singleton_emp.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv12 hG with h_v27 in EoCases.__eo_prog_sets_eq_singleton_emp.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_eq_singleton_emp` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
@@ -1534,6 +1535,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dinter_2demp1_spec (n : Nat) (ih : Specs 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_inter_emp1.case_0
   pat_same v11 a0 with h_v11 h_a0 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_inter_emp1.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_inter_emp1.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_inter_emp1.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -1547,7 +1549,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dinter_2demp1_spec (n : Nat) (ih : Specs 
   store_step with Store.apply_rep s6 v21 a1 _ _ hinv6 h64 h_v21 h_a1 (by ns_tac) (by ns_tac) as ⟨v22, s7, hinv7, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
   store_step with Store.apply_rep s7 v19 v22 _ _ hinv7 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s8, hinv8, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   store_step with Store.apply_rep s8 v23 a0 _ _ hinv8 h64 h_v23 h_a0 (by ns_tac) (by ns_tac) as ⟨v24, s9, hinv9, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_inter_emp1.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_inter_emp1.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_inter_emp1` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
@@ -1607,6 +1609,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dinter_2demp2_spec (n : Nat) (ih : Specs 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_inter_emp2.case_0
   pat_same v11 a1 with h_v11 h_a1 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_inter_emp2.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_inter_emp2.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_inter_emp2.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -1620,7 +1623,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dinter_2demp2_spec (n : Nat) (ih : Specs 
   store_step with Store.apply_rep s6 v21 a1 _ _ hinv6 h64 h_v21 h_a1 (by ns_tac) (by ns_tac) as ⟨v22, s7, hinv7, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
   store_step with Store.apply_rep s7 v19 v22 _ _ hinv7 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s8, hinv8, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   store_step with Store.apply_rep s8 v23 a1 _ _ hinv8 h64 h_v23 h_a1 (by ns_tac) (by ns_tac) as ⟨v24, s9, hinv9, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_inter_emp2.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_inter_emp2.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_inter_emp2` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
@@ -1941,6 +1944,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dmember_2demp_spec (n : Nat) (ih : Specs 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_member_emp.case_0
   pat_same v11 a1 with h_v11 h_a1 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_member_emp.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_member_emp.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_member_emp.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -1955,7 +1959,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dmember_2demp_spec (n : Nat) (ih : Specs 
   store_step with Store.apply_rep s7 v19 v22 _ _ hinv7 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s8, hinv8, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   store_step with Store.literal_boolean_spec s8 false hinv8 h64 as ⟨v24, s9, hinv9, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
   store_step with Store.apply_rep s9 v23 v24 _ _ hinv9 h64 h_v23 h_v24 (by ns_tac) (by ns_tac) as ⟨v25, s10, hinv10, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  case_done hinv10 hG with h_v25 in EoCases.__eo_prog_sets_member_emp.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv10 hG with h_v25 in EoCases.__eo_prog_sets_member_emp.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_member_emp` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
@@ -2077,6 +2081,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dminus_2demp1_spec (n : Nat) (ih : Specs 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_minus_emp1.case_0
   pat_same v11 a0 with h_v11 h_a0 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_minus_emp1.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_minus_emp1.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_minus_emp1.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -2090,7 +2095,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dminus_2demp1_spec (n : Nat) (ih : Specs 
   store_step with Store.apply_rep s6 v21 a1 _ _ hinv6 h64 h_v21 h_a1 (by ns_tac) (by ns_tac) as ⟨v22, s7, hinv7, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
   store_step with Store.apply_rep s7 v19 v22 _ _ hinv7 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s8, hinv8, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   store_step with Store.apply_rep s8 v23 a0 _ _ hinv8 h64 h_v23 h_a0 (by ns_tac) (by ns_tac) as ⟨v24, s9, hinv9, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_minus_emp1.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_minus_emp1.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_minus_emp1` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
@@ -2150,6 +2155,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dminus_2demp2_spec (n : Nat) (ih : Specs 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_minus_emp2.case_0
   pat_same v11 a1 with h_v11 h_a1 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_minus_emp2.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_minus_emp2.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_minus_emp2.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -2163,7 +2169,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dminus_2demp2_spec (n : Nat) (ih : Specs 
   store_step with Store.apply_rep s6 v21 a1 _ _ hinv6 h64 h_v21 h_a1 (by ns_tac) (by ns_tac) as ⟨v22, s7, hinv7, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
   store_step with Store.apply_rep s7 v19 v22 _ _ hinv7 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s8, hinv8, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   store_step with Store.apply_rep s8 v23 a0 _ _ hinv8 h64 h_v23 h_a0 (by ns_tac) (by ns_tac) as ⟨v24, s9, hinv9, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_minus_emp2.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_minus_emp2.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_minus_emp2` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
@@ -2489,6 +2495,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dunion_2demp1_spec (n : Nat) (ih : Specs 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_union_emp1.case_0
   pat_same v11 a0 with h_v11 h_a0 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_union_emp1.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_union_emp1.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_union_emp1.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -2502,7 +2509,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dunion_2demp1_spec (n : Nat) (ih : Specs 
   store_step with Store.apply_rep s6 v21 a1 _ _ hinv6 h64 h_v21 h_a1 (by ns_tac) (by ns_tac) as ⟨v22, s7, hinv7, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
   store_step with Store.apply_rep s7 v19 v22 _ _ hinv7 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s8, hinv8, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   store_step with Store.apply_rep s8 v23 a1 _ _ hinv8 h64 h_v23 h_a1 (by ns_tac) (by ns_tac) as ⟨v24, s9, hinv9, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_union_emp1.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_union_emp1.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_union_emp1` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
@@ -2562,6 +2569,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dunion_2demp2_spec (n : Nat) (ih : Specs 
   pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_union_emp2.case_0
   pat_same v11 a1 with h_v11 h_a1 using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_union_emp2.case_0
   pat_destruct CtorSpec.eo_set_2eempty.destruct h_v8 as ⟨v14, x_v14, h_v14⟩ else hinv2 hG in EoCases.__eo_prog_sets_union_emp2.case_0
+  obtain hn_v14 := CtorSpec.eo_set_2eempty.fields_ne_stuck hinv2 h_v8
   pat_unapply h_v14 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_sets_union_emp2.case_0
   step as ⟨e_v18, he_v18⟩
   store_step with CtorSpec.eo_Set.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17
@@ -2575,7 +2583,7 @@ theorem case_0_eo__24eo_5fprog_5fsets_2dunion_2demp2_spec (n : Nat) (ih : Specs 
   store_step with Store.apply_rep s6 v21 a1 _ _ hinv6 h64 h_v21 h_a1 (by ns_tac) (by ns_tac) as ⟨v22, s7, hinv7, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
   store_step with Store.apply_rep s7 v19 v22 _ _ hinv7 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s8, hinv8, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   store_step with Store.apply_rep s8 v23 a0 _ _ hinv8 h64 h_v23 h_a0 (by ns_tac) (by ns_tac) as ⟨v24, s9, hinv9, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_union_emp2.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v16 hn_v17
+  case_done hinv9 hG with h_v24 in EoCases.__eo_prog_sets_union_emp2.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v16 hn_v17
 
 /-- logos's `__eo_prog_sets_union_emp2` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/

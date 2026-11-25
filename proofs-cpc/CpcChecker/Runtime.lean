@@ -5365,6 +5365,1226 @@ def schema.Constructor.arity
   | schema.Constructor.eo_xor => ok 0#usize
   | schema.Constructor.eo_zero_5fextend => ok 1#usize
 
+/-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::is_user]:
+    Source: 'src/schema.rs', lines 2141:0-2332:14
+    Visibility: public -/
+def schema.Constructor.is_user (self : schema.Constructor) : Result Bool := do
+  match self with
+  | schema.Constructor.eo__24emb_5fApply => ok false
+  | schema.Constructor.eo__24emb_5fBinary => ok false
+  | schema.Constructor.eo__24emb_5fBool => ok false
+  | schema.Constructor.eo__24emb_5fBoolean => ok false
+  | schema.Constructor.eo__24emb_5fDatatypeType => ok false
+  | schema.Constructor.eo__24emb_5fDatatypeTypeRef => ok false
+  | schema.Constructor.eo__24emb_5fDtCons => ok false
+  | schema.Constructor.eo__24emb_5fDtSel => ok false
+  | schema.Constructor.eo__24emb_5fDtcAppType => ok false
+  | schema.Constructor.eo__24emb_5fFunType => ok false
+  | schema.Constructor.eo__24emb_5fNumeral => ok false
+  | schema.Constructor.eo__24emb_5fRational => ok false
+  | schema.Constructor.eo__24emb_5fString => ok false
+  | schema.Constructor.eo__24emb_5fStuck => ok false
+  | schema.Constructor.eo__24emb_5fType => ok false
+  | schema.Constructor.eo__24emb_5fUConst => ok false
+  | schema.Constructor.eo__24emb_5fUOp => ok false
+  | schema.Constructor.eo__24emb_5fUOp1 => ok false
+  | schema.Constructor.eo__24emb_5fUOp2 => ok false
+  | schema.Constructor.eo__24emb_5fUOp3 => ok false
+  | schema.Constructor.eo__24emb_5fUSort => ok false
+  | schema.Constructor.eo__24emb_5fVar => ok false
+  | schema.Constructor.eo__24emb_5fal_2econs => ok false
+  | schema.Constructor.eo__24emb_5fal_2enil => ok false
+  | schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush => ok false
+  | schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven => ok false
+  | schema.Constructor.eo__24emb_5fcmd_2estep => ok false
+  | schema.Constructor.eo__24emb_5fcmd_2estep_5fpop => ok false
+  | schema.Constructor.eo__24emb_5fcmdl_2econs => ok false
+  | schema.Constructor.eo__24emb_5fcmdl_2enil => ok false
+  | schema.Constructor.eo__24emb_5fdd_2econs => ok false
+  | schema.Constructor.eo__24emb_5fdd_2enil => ok false
+  | schema.Constructor.eo__24emb_5fdt_2enull => ok false
+  | schema.Constructor.eo__24emb_5fdt_2esum => ok false
+  | schema.Constructor.eo__24emb_5fdtc_2econs => ok false
+  | schema.Constructor.eo__24emb_5fdtc_2eunit => ok false
+  | schema.Constructor.eo__24emb_5fedd_2econs => ok false
+  | schema.Constructor.eo__24emb_5fedd_2enil => ok false
+  | schema.Constructor.eo__24emb_5fedt_2enull => ok false
+  | schema.Constructor.eo__24emb_5fedt_2esum => ok false
+  | schema.Constructor.eo__24emb_5fedtc_2econs => ok false
+  | schema.Constructor.eo__24emb_5fedtc_2eunit => ok false
+  | schema.Constructor.eo__24emb_5findl_2econs => ok false
+  | schema.Constructor.eo__24emb_5findl_2enil => ok false
+  | schema.Constructor.eo__24emb_5fmsm_2econs => ok false
+  | schema.Constructor.eo__24emb_5fmsm_2edefault => ok false
+  | schema.Constructor.eo__24emb_5fr_2eabsorb => ok false
+  | schema.Constructor.eo__24emb_5fr_2eaci_5fnorm => ok false
+  | schema.Constructor.eo__24emb_5fr_2ealpha_5fequiv => ok false
+  | schema.Constructor.eo__24emb_5fr_2eand_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2eand_5fintro => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fabs_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fabs_5fint_5fgt => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fabs_5freal_5fgt => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5fint_5fto_5freal =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5ftotal_5fint_5fto_5freal =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5fint =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5freal =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fdivisible_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fgt => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fint_5fgt => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fint_5flt => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fleq => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5flt => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5feq_5felim_5fint => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5feq_5felim_5freal => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5fite_5flift => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5fnorm1_5fint => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5fnorm1_5freal => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5ftighten => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fneg =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fone =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fover_5fmod
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fzero =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5feq_5fconflict => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fgeq_5ftighten => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fneg =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fone =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fzero =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fis_5fint_5felim_5fto_5freal =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fleq_5fite_5flift => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fleq_5fnorm => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmax_5fgeq1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmax_5fgeq2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmin_5flt1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmin_5flt2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmod_5fover_5fmod => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmod_5fover_5fmod_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmod_5fover_5fmod_5fmult =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fabs_5fcomparison =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fneg => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fpos => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fsign => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5ftangent => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fpoly_5fnorm => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fpoly_5fnorm_5frel => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5freduction => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fstring_5fpred_5fentail =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fstring_5fpred_5fsafe_5fapprox =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fsum_5fub => ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5fto_5fint_5felim_5fto_5freal =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earith_5ftrichotomy => ok false
+  | schema.Constructor.eo__24emb_5fr_2earray_5fread_5fover_5fwrite => ok false
+  | schema.Constructor.eo__24emb_5fr_2earray_5fread_5fover_5fwrite2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2earray_5fread_5fover_5fwrite_5fsplit =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earray_5fstore_5foverwrite => ok false
+  | schema.Constructor.eo__24emb_5fr_2earray_5fstore_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2earray_5fstore_5fswap => ok false
+  | schema.Constructor.eo__24emb_5fr_2earrays_5fext => ok false
+  | schema.Constructor.eo__24emb_5fr_2earrays_5fread_5fover_5fwrite => ok false
+  | schema.Constructor.eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5fcontra =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebeta_5freduce => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fand_5fconf => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fand_5fconf2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fand_5fde_5fmorgan => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fdouble_5fnot_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fdual_5fimpl_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5feq_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5feq_5fnrefl => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5feq_5ftrue => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ffalse1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ffalse2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ftrue1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ftrue2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fimplies_5fde_5fmorgan => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fimplies_5for_5fdistrib =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5feq_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5feq_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5fite_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5ftrue => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5fxor_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5fand_5fdistrib => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5fde_5fmorgan => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5ftaut => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5ftaut2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5fcomm => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5fnrefl => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5frefl => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5ftrue => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fsimplify_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fsimplify_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f0 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fzero => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fbitblast_5fstep => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fbitwise_5fslicing => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fcommutative_5fadd => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fcommutative_5fcomp => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fcommutative_5fxor => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fcomp_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fconcat_5fextract_5fmerge =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fconcat_5fmerge_5fconst => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fextract_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fextract_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fextract_5felim3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fnot_5fsolve => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fxor_5fsolve => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f4 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fextract => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fmult_5fleading_5fbit =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fnot => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f3 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fwhole => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fcond_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fcond_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fchildren => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5felse_5felse =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5felse_5fif => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5fthen_5felse =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5fthen_5fif => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fwidth_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fwidth_5fone_5fnot => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f0 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fzero => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5flt_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fmerge_5fsign_5fextend_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fmerge_5fsign_5fextend_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fpow2_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2b => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fslt_5fmult_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fslt_5fmult_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fnand_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fnego_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fnor_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fidemp => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fneq => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fult => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fxor => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fsimplify_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fsimplify_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fpoly_5fnorm => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fpoly_5fnorm_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fredand_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fredor_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5frepeat_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsaddo_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsdiv_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsdivo_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsge_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsgt_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f0 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fzero => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5feliminate_5f0 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5feq_5fconst_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5feq_5fconst_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f3 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f4 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsle_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsle_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsmod_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsmulo_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsrem_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fssubo_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fsub_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fuaddo_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fudiv_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fudiv_5fpow2_5fnot_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fudiv_5fzero => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fuge_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fugt_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fugt_5furem => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5fmax => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5fzero => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fadd_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fones => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fzero_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fzero_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fumulo_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5furem_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5furem_5fpow2_5fnot_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5furem_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fusubo_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxnor_5feliminate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fduplicate => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fnot => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fones => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feliminate =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feliminate_5f0 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feq_5fconst_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feq_5fconst_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5fult_5fconst_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5fult_5fconst_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fule => ok false
+  | schema.Constructor.eo__24emb_5fr_2echain_5fm_5fresolution => ok false
+  | schema.Constructor.eo__24emb_5fr_2echain_5fresolution => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fand_5fneg => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fand_5fpos => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fneg1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fneg2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fpos1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fpos2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fimplies_5fneg1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fimplies_5fneg2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fimplies_5fpos => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fneg1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fneg2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fneg3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fpos1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fpos2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fpos3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5for_5fneg => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5for_5fpos => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fneg1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fneg2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fpos1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fpos2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2econcat_5fcprop => ok false
+  | schema.Constructor.eo__24emb_5fr_2econcat_5fcsplit => ok false
+  | schema.Constructor.eo__24emb_5fr_2econcat_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2econcat_5flprop => ok false
+  | schema.Constructor.eo__24emb_5fr_2econcat_5fsplit => ok false
+  | schema.Constructor.eo__24emb_5fr_2econcat_5funify => ok false
+  | schema.Constructor.eo__24emb_5fr_2econg => ok false
+  | schema.Constructor.eo__24emb_5fr_2econtra => ok false
+  | schema.Constructor.eo__24emb_5fr_2edistinct_5fbinary_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2edistinct_5fcard_5fconflict => ok false
+  | schema.Constructor.eo__24emb_5fr_2edistinct_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2edistinct_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2edistinct_5ftrue => ok false
+  | schema.Constructor.eo__24emb_5fr_2edistinct_5fvalues => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5fselector => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5ftester => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5ftester_5fsingleton =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5fupdater => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fcons_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fcons_5feq_5fclash => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fcycle => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5finst => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fsplit => ok false
+  | schema.Constructor.eo__24emb_5fr_2edt_5fupdater_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2eeq_5fcond_5fdeq => ok false
+  | schema.Constructor.eo__24emb_5fr_2eeq_5fite_5flift => ok false
+  | schema.Constructor.eo__24emb_5fr_2eeq_5frefl => ok false
+  | schema.Constructor.eo__24emb_5fr_2eeq_5fresolve => ok false
+  | schema.Constructor.eo__24emb_5fr_2eeq_5fsymm => ok false
+  | schema.Constructor.eo__24emb_5fr_2eequiv_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2eequiv_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2eevaluate => ok false
+  | schema.Constructor.eo__24emb_5fr_2eexists_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2eexists_5fstring_5flength => ok false
+  | schema.Constructor.eo__24emb_5fr_2efactoring => ok false
+  | schema.Constructor.eo__24emb_5fr_2efalse_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2efalse_5fintro => ok false
+  | schema.Constructor.eo__24emb_5fr_2eho_5fcong => ok false
+  | schema.Constructor.eo__24emb_5fr_2eimplies_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2einstantiate => ok false
+  | schema.Constructor.eo__24emb_5fr_2eint_5ftight_5flb => ok false
+  | schema.Constructor.eo__24emb_5fr_2eint_5ftight_5fub => ok false
+  | schema.Constructor.eo__24emb_5fr_2eint_5fto_5fbv_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5flookahead => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5flookahead_5fnot_5fself =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5flookahead_5fself =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5fneg_5flookahead => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5ftrue => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5feq_5fbranch => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fexpand => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5ffalse_5fcond => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fneg_5fbranch => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fnot_5fcond => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5flookahead => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5flookahead_5fnot_5fself =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5flookahead_5fself =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5fneg_5flookahead => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5ftrue => ok false
+  | schema.Constructor.eo__24emb_5fr_2eite_5ftrue_5fcond => ok false
+  | schema.Constructor.eo__24emb_5fr_2emodus_5fponens => ok false
+  | schema.Constructor.eo__24emb_5fr_2enary_5fcong => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fand => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fequiv_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fequiv_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fimplies_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fimplies_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fite_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fite_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fnot_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5for_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fxor_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2enot_5fxor_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2epairwise_5fcong => ok false
+  | schema.Constructor.eo__24emb_5fr_2eprocess_5fscope => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5fdt_5fsplit => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5fmerge_5fprenex => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5fminiscope_5fand => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5fminiscope_5fite => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5fminiscope_5for => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5funused_5fvars => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5fvar_5felim_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2equant_5fvar_5freordering => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fall_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fmerge => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5fnullable1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5fnullable2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5frepeat => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5fswap => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fdiff_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5feq_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fcomp => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fcstring => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fempty => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fsigma => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fsigma_5fstar => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5finter => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5fall => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5fcstring => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5fcstring_5fneg => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5finclusion => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5floop_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5floop_5fneg => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5floop_5fstar => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fopt_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fplus_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5femp => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5fnon_5fsingleton_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5fnon_5fsingleton_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5frefl => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5frepeat_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5femp => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5fnone => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5fstar => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5funion_5fchar => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5funion_5fdrop_5femp =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5funfold_5fneg => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5funfold_5fneg_5fconcat_5ffixed =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5funfold_5fpos => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5funion_5fall => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5funion_5fconst_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2ere_5funion_5finclusion => ok false
+  | schema.Constructor.eo__24emb_5fr_2erefl => ok false
+  | schema.Constructor.eo__24emb_5fr_2ereordering => ok false
+  | schema.Constructor.eo__24emb_5fr_2eresolution => ok false
+  | schema.Constructor.eo__24emb_5fr_2escope => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5feval_5fop => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5flen_5frev => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5flen_5funit => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5fnth_5fconcat_5funit => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5fnth_5fconcat_5funit_5fgen =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5fnth_5funit => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5frev_5fconcat => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5frev_5frev => ok false
+  | schema.Constructor.eo__24emb_5fr_2eseq_5frev_5funit => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fchoose_5fmember => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fchoose_5fsingleton => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5feq_5fsingleton_5femp => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5feval_5fop => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fext => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5finsert_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5fcomm => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5femp1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5femp2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5fmember => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fis_5fempty_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fis_5fsingleton_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fmember_5femp => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fmember_5fsingleton => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5femp1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5femp2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5fmember => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fsingleton_5finj => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5fsubset_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5fcomm => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5femp1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5femp2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5fmember => ok false
+  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2eskolem_5fintro => ok false
+  | schema.Constructor.eo__24emb_5fr_2eskolemize => ok false
+  | schema.Constructor.eo__24emb_5fr_2esplit => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fat_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash2_5frev => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash_5frev => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify_5fbase => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify_5fbase_5frev =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify_5frev => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fchar => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fconcat_5ffind =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fconcat_5ffind_5fcontra
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5femp => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fleq_5flen_5feq =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frefl => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5fchar => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5fself => ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5fself_5ftgt_5fchar
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5ftgt => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fsplit_5fchar =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fctn_5fmultiset_5fsubset =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5fctn_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5fctn_5ffull_5ffalse1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5fctn_5ffull_5ffalse2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5flen_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5femp_5ftgt_5fnemp =>
+    ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5flen_5fone_5femp_5fprefix
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fnemp_5fsrc_5femp =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fno_5fchange =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fself_5femp => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fself_5fsrc => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5ftgt_5feq_5flen =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5ffrom_5fint_5fno_5fctn_5fnondigit
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fconcat_5fstar_5fchar =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fconsume => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fcontains => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5feval => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fdig_5frange
+    =>
+    ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fnemp_5fdig_5frange
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5finter_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5frange_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fsigma => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fsigma_5fstar => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5funion_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fcontains_5fconcat_5fpre
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fcontains_5fpre =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5feq_5firr => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5ffind_5femp => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5flen_5foob => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5flen_5foob2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fno_5fcontains =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5foob => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5foob2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fprefix_5fconcat =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fre_5femp_5fre =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fre_5feval => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fre_5fnone => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fis_5fdigit_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5fconcat_5frec => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fbase => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fconcat_5frec =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5freplace_5fall_5finv =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5freplace_5finv => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5fsubstr_5fin_5frange =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5fupdate_5finv => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5fbase_5f1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5fbase_5f2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5ffalse => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5ftrue => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fempty => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fempty_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5flt_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fendpoints_5fctn =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fendpoints_5findexof =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fendpoints_5freplace =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fsplit_5fctn => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fprefixof_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fprefixof_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fprefixof_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fite1 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fite2 =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fself =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5flen_5fid => ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5flookahead_5fid_5fsimp
+    =>
+    ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn1
+    =>
+    ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn2
+    =>
+    ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn3
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5fself =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5ftgt_5fno_5fctn
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5ftgt_5fno_5fctn =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5ftgt_5fself =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fempty => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5ffind => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5ffind_5fpre =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fid => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fno_5fcontains =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fdual_5fctn => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fdual_5fctn_5ffalse =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5femp_5fctn_5fsrc =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fempty => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5ffind_5fbase => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5ffind_5ffirst_5fconcat =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5ffind_5fpre => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fid => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fno_5fcontains =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fone_5fpre => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fprefix => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fprefix_5fconcat =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5fall_5feval =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5fall_5fnone =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5feval => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5fnone => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fself => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fself_5fctn_5fsimp =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fchar_5fstart_5feq_5flen
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine3 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine4 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fconcat1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fconcat2 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fctn => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fctn_5fcontra => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5frange => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart_5fneg =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstr => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5feq_5fempty => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5feq_5fempty_5fleq_5flen =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5ffull => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5ffull_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5flen_5finclude => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5flen_5finclude_5fpre =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5flen_5fnorm => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5freplace => ok false
+  |
+    schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fsubstr_5fstart_5fgeq_5flen
+    =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fz_5feq_5fempty_5fleq =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsuffixof_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsuffixof_5feq => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fsuffixof_5fone => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fint_5fconcat_5fneg_5fone =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5fconcat => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5ffrom_5fint =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5fidem => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5flen => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5fupper => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5fconcat => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5ffrom_5fint =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5fidem => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5flen => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5flower => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5fconcat_5ffit => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5fconcat_5ffit0 => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5ffit => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5fin_5ffirst_5fconcat =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5foob => ok false
+  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5frev => ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5fcode_5finj => ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5fdecompose => ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5feager_5freduction => ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5fext => ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5flength_5fnon_5fempty =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5flength_5fpos => ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5freduction => ok false
+  | schema.Constructor.eo__24emb_5fr_2estring_5fseq_5funit_5finj => ok false
+  | schema.Constructor.eo__24emb_5fr_2esymm => ok false
+  | schema.Constructor.eo__24emb_5fr_2etrans => ok false
+  | schema.Constructor.eo__24emb_5fr_2etrue_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2etrue_5fintro => ok false
+  | schema.Constructor.eo__24emb_5fr_2eubv_5fto_5fint_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2eubv_5fto_5fint_5frange => ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fgeq_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv => ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextend =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextract =>
+    ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbv2nat => ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbvule_5fequiv => ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbvult_5fequiv => ok false
+  | schema.Constructor.eo__24emb_5fr_2euf_5fsbv_5fto_5fint_5felim => ok false
+  | schema.Constructor.eo__24emb_5fr_2exor_5felim1 => ok false
+  | schema.Constructor.eo__24emb_5fr_2exor_5felim2 => ok false
+  | schema.Constructor.eo__24emb_5frsm_2eallchar => ok false
+  | schema.Constructor.eo__24emb_5frsm_2echar => ok false
+  | schema.Constructor.eo__24emb_5frsm_2ecomp => ok false
+  | schema.Constructor.eo__24emb_5frsm_2econcat => ok false
+  | schema.Constructor.eo__24emb_5frsm_2eempty => ok false
+  | schema.Constructor.eo__24emb_5frsm_2eepsilon => ok false
+  | schema.Constructor.eo__24emb_5frsm_2einter => ok false
+  | schema.Constructor.eo__24emb_5frsm_2erange => ok false
+  | schema.Constructor.eo__24emb_5frsm_2estar => ok false
+  | schema.Constructor.eo__24emb_5frsm_2eunion => ok false
+  | schema.Constructor.eo__24emb_5fs_2eStuck => ok false
+  | schema.Constructor.eo__24emb_5fs_2econs => ok false
+  | schema.Constructor.eo__24emb_5fs_2enil => ok false
+  | schema.Constructor.eo__24emb_5fsbd_2econs => ok false
+  | schema.Constructor.eo__24emb_5fsbd_2enil => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_2a => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_2b => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_2d => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_2f => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_2f_5ftotal => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_3c => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_3c_3d => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_3d => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_3e => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_3e_3d => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_40purify => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_40strings_5foccur_5findex => ok false
+  | schema.Constructor.eo__24emb_5fsm_2e_40strings_5foccur_5findex_5fre =>
+    ok false
+  | schema.Constructor.eo__24emb_5fsm_2eApply => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eBinary => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eBoolean => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eDtCons => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eDtSel => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eDtTester => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eNone => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eNumeral => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eRational => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eString => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eUConst => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eVar => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eabs => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eand => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebind => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvadd => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvand => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvashr => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvcomp => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvlshr => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvmul => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvnand => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvneg => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvnego => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvnor => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvnot => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvor => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsaddo => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsdiv => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsdivo => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsge => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsgt => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvshl => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsle => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvslt => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsmod => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsmulo => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsrem => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvssubo => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvsub => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvuaddo => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvudiv => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvuge => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvugt => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvule => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvult => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvumulo => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvurem => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvusubo => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvxnor => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ebvxor => ok false
+  | schema.Constructor.eo__24emb_5fsm_2echoice => ok false
+  | schema.Constructor.eo__24emb_5fsm_2econcat => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ediv => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ediv_5ftotal => ok false
+  | schema.Constructor.eo__24emb_5fsm_2edivisible => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eexists => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eextract => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eforall => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eint_2elog2 => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eint_2epow2 => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eint_5fto_5fbv => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eis_5fint => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eite => ok false
+  | schema.Constructor.eo__24emb_5fsm_2elam => ok false
+  | schema.Constructor.eo__24emb_5fsm_2emap_5fdiff => ok false
+  | schema.Constructor.eo__24emb_5fsm_2emod => ok false
+  | schema.Constructor.eo__24emb_5fsm_2emod_5ftotal => ok false
+  | schema.Constructor.eo__24emb_5fsm_2enot => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eor => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2e_2a => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2e_2b => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2e_2b_2b => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2e_5e => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2eall => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2eallchar => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2ecomp => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2ediff => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2einter => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2eloop => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2enone => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2eopt => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2erange => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ere_2eunion => ok false
+  | schema.Constructor.eo__24emb_5fsm_2erepeat => ok false
+  | schema.Constructor.eo__24emb_5fsm_2erotate_5fleft => ok false
+  | schema.Constructor.eo__24emb_5fsm_2erotate_5fright => ok false
+  | schema.Constructor.eo__24emb_5fsm_2esbv_5fto_5fint => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eselect => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eseq_2eempty => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eseq_2enth => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eseq_2eunit => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eseq_5fdiff => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eset_2eempty => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eset_2einter => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eset_2emember => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eset_2eminus => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eset_2esingleton => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eset_2esubset => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eset_2eunion => ok false
+  | schema.Constructor.eo__24emb_5fsm_2esign_5fextend => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estore => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2e_2b_2b => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2e_3c => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2e_3c_3d => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eat => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2econtains => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2efrom_5fcode => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2efrom_5fint => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2ein_5fre => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eindexof => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eindexof_5fre => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eindexof_5fre_5fsplit => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eis_5fdigit => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2elen => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eprefixof => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace_5fall => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace_5fre => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace_5fre_5fall => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2erev => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2esubstr => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2esuffixof => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fcode => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fint => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5flower => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fre => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fupper => ok false
+  | schema.Constructor.eo__24emb_5fsm_2estr_2eupdate => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eto_5fint => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eto_5freal => ok false
+  | schema.Constructor.eo__24emb_5fsm_2eubv_5fto_5fint => ok false
+  | schema.Constructor.eo__24emb_5fsm_2euneg => ok false
+  | schema.Constructor.eo__24emb_5fsm_2exor => ok false
+  | schema.Constructor.eo__24emb_5fsm_2ezero_5fextend => ok false
+  | schema.Constructor.eo__24emb_5fso_2eassume => ok false
+  | schema.Constructor.eo__24emb_5fso_2eassume_5fpush => ok false
+  | schema.Constructor.eo__24emb_5fso_2eproven => ok false
+  | schema.Constructor.eo__24emb_5fssm_2econs => ok false
+  | schema.Constructor.eo__24emb_5fssm_2eempty => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eBitVec => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eBool => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eChar => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eDatatype => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eDtcAppType => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eFunType => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eInt => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eMap => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eNone => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eReal => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eRegLan => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eSeq => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eSet => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eTypeRef => ok false
+  | schema.Constructor.eo__24emb_5ftsm_2eUSort => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eApply => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eBinary => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eBoolean => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eChar => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eDtCons => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eFun => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eMap => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eNotValue => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eNumeral => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eReal => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eRegLan => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eSeq => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eSet => ok false
+  | schema.Constructor.eo__24emb_5fvsm_2eUValue => ok false
+  | schema.Constructor.eo__24eo_5fCmd => ok false
+  | schema.Constructor.eo__24eo_5fList => ok false
+  | schema.Constructor.eo__24eo_5fList_5fcons => ok false
+  | schema.Constructor.eo__24eo_5fList_5fnil => ok false
+  | schema.Constructor.eo__24eo_5fProof => ok false
+  | schema.Constructor.eo__24eo_5fRule => ok false
+  | schema.Constructor.eo__24eo_5fTerm => ok false
+  | schema.Constructor.eo__24eo_5fpf => ok false
+  | schema.Constructor.eo__24eoo_5f_2d_2e2 => ok true
+  | schema.Constructor.eo__24smt_5fMap => ok false
+  | schema.Constructor.eo__24smt_5fSeq => ok false
+  | schema.Constructor.eo__24smt_5fTerm => ok false
+  | schema.Constructor.eo__24smt_5fType => ok false
+  | schema.Constructor.eo__24smt_5fValue => ok false
+  | schema.Constructor.eo__2a => ok true
+  | schema.Constructor.eo__2b => ok true
+  | schema.Constructor.eo__2d => ok true
+  | schema.Constructor.eo__2f => ok true
+  | schema.Constructor.eo__2f_5ftotal => ok true
+  | schema.Constructor.eo__3c => ok true
+  | schema.Constructor.eo__3c_3d => ok true
+  | schema.Constructor.eo__3d => ok true
+  | schema.Constructor.eo__3d_3e => ok true
+  | schema.Constructor.eo__3e => ok true
+  | schema.Constructor.eo__3e_3d => ok true
+  | schema.Constructor.eo__40_40Monomial => ok true
+  | schema.Constructor.eo__40_40Pair => ok true
+  | schema.Constructor.eo__40_40Polynomial => ok true
+  | schema.Constructor.eo__40_40TypedList => ok true
+  | schema.Constructor.eo__40_40TypedList_2econs => ok true
+  | schema.Constructor.eo__40_40TypedList_2enil => ok true
+  | schema.Constructor.eo__40_40aci_5fsorted => ok true
+  | schema.Constructor.eo__40_40mon => ok true
+  | schema.Constructor.eo__40_40pair => ok true
+  | schema.Constructor.eo__40_40poly => ok true
+  | schema.Constructor.eo__40_40poly_2ezero => ok true
+  | schema.Constructor.eo__40array_5fdeq_5fdiff => ok true
+  | schema.Constructor.eo__40bit => ok true
+  | schema.Constructor.eo__40bvsize => ok true
+  | schema.Constructor.eo__40const => ok true
+  | schema.Constructor.eo__40div_5fby_5fzero => ok true
+  | schema.Constructor.eo__40from_5fbools => ok true
+  | schema.Constructor.eo__40int_5fdiv_5fby_5fzero => ok true
+  | schema.Constructor.eo__40mod_5fby_5fzero => ok true
+  | schema.Constructor.eo__40purify => ok true
+  | schema.Constructor.eo__40quantifiers_5fskolemize => ok true
+  | schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent => ok true
+  | schema.Constructor.eo__40sets_5fdeq_5fdiff => ok true
+  | schema.Constructor.eo__40strings_5fdeq_5fdiff => ok true
+  | schema.Constructor.eo__40strings_5fitos_5fresult => ok true
+  | schema.Constructor.eo__40strings_5fnum_5foccur => ok true
+  | schema.Constructor.eo__40strings_5fnum_5foccur_5fre => ok true
+  | schema.Constructor.eo__40strings_5foccur_5findex => ok true
+  | schema.Constructor.eo__40strings_5foccur_5findex_5fre => ok true
+  | schema.Constructor.eo__40strings_5freplace_5fall_5fresult => ok true
+  | schema.Constructor.eo__40strings_5freplace_5fre_5fall_5fresult => ok true
+  | schema.Constructor.eo__40strings_5fstoi_5fnon_5fdigit => ok true
+  | schema.Constructor.eo__40strings_5fstoi_5fresult => ok true
+  | schema.Constructor.eo__40witness_5fstring_5flength => ok true
+  | schema.Constructor.eo_Array => ok true
+  | schema.Constructor.eo_BitVec => ok true
+  | schema.Constructor.eo_Char => ok true
+  | schema.Constructor.eo_Int => ok true
+  | schema.Constructor.eo_Real => ok true
+  | schema.Constructor.eo_RegLan => ok true
+  | schema.Constructor.eo_Seq => ok true
+  | schema.Constructor.eo_Set => ok true
+  | schema.Constructor.eo_Tuple => ok true
+  | schema.Constructor.eo_UnitTuple => ok true
+  | schema.Constructor.eo_abs => ok true
+  | schema.Constructor.eo_and => ok true
+  | schema.Constructor.eo_bvadd => ok true
+  | schema.Constructor.eo_bvand => ok true
+  | schema.Constructor.eo_bvashr => ok true
+  | schema.Constructor.eo_bvcomp => ok true
+  | schema.Constructor.eo_bvite => ok true
+  | schema.Constructor.eo_bvlshr => ok true
+  | schema.Constructor.eo_bvmul => ok true
+  | schema.Constructor.eo_bvnand => ok true
+  | schema.Constructor.eo_bvneg => ok true
+  | schema.Constructor.eo_bvnego => ok true
+  | schema.Constructor.eo_bvnor => ok true
+  | schema.Constructor.eo_bvnot => ok true
+  | schema.Constructor.eo_bvor => ok true
+  | schema.Constructor.eo_bvredand => ok true
+  | schema.Constructor.eo_bvredor => ok true
+  | schema.Constructor.eo_bvsaddo => ok true
+  | schema.Constructor.eo_bvsdiv => ok true
+  | schema.Constructor.eo_bvsdivo => ok true
+  | schema.Constructor.eo_bvsge => ok true
+  | schema.Constructor.eo_bvsgt => ok true
+  | schema.Constructor.eo_bvshl => ok true
+  | schema.Constructor.eo_bvsle => ok true
+  | schema.Constructor.eo_bvslt => ok true
+  | schema.Constructor.eo_bvsltbv => ok true
+  | schema.Constructor.eo_bvsmod => ok true
+  | schema.Constructor.eo_bvsmulo => ok true
+  | schema.Constructor.eo_bvsrem => ok true
+  | schema.Constructor.eo_bvssubo => ok true
+  | schema.Constructor.eo_bvsub => ok true
+  | schema.Constructor.eo_bvuaddo => ok true
+  | schema.Constructor.eo_bvudiv => ok true
+  | schema.Constructor.eo_bvuge => ok true
+  | schema.Constructor.eo_bvugt => ok true
+  | schema.Constructor.eo_bvule => ok true
+  | schema.Constructor.eo_bvult => ok true
+  | schema.Constructor.eo_bvultbv => ok true
+  | schema.Constructor.eo_bvumulo => ok true
+  | schema.Constructor.eo_bvurem => ok true
+  | schema.Constructor.eo_bvusubo => ok true
+  | schema.Constructor.eo_bvxnor => ok true
+  | schema.Constructor.eo_bvxor => ok true
+  | schema.Constructor.eo_concat => ok true
+  | schema.Constructor.eo_distinct => ok true
+  | schema.Constructor.eo_div => ok true
+  | schema.Constructor.eo_div_5ftotal => ok true
+  | schema.Constructor.eo_divisible => ok true
+  | schema.Constructor.eo_exists => ok true
+  | schema.Constructor.eo_extract => ok true
+  | schema.Constructor.eo_forall => ok true
+  | schema.Constructor.eo_int_2eispow2 => ok true
+  | schema.Constructor.eo_int_2elog2 => ok true
+  | schema.Constructor.eo_int_2epow2 => ok true
+  | schema.Constructor.eo_int_5fto_5fbv => ok true
+  | schema.Constructor.eo_is => ok true
+  | schema.Constructor.eo_is_5fint => ok true
+  | schema.Constructor.eo_ite => ok true
+  | schema.Constructor.eo_lambda => ok true
+  | schema.Constructor.eo_mod => ok true
+  | schema.Constructor.eo_mod_5ftotal => ok true
+  | schema.Constructor.eo_not => ok true
+  | schema.Constructor.eo_or => ok true
+  | schema.Constructor.eo_re_2e_2a => ok true
+  | schema.Constructor.eo_re_2e_2b => ok true
+  | schema.Constructor.eo_re_2e_2b_2b => ok true
+  | schema.Constructor.eo_re_2e_5e => ok true
+  | schema.Constructor.eo_re_2eall => ok true
+  | schema.Constructor.eo_re_2eallchar => ok true
+  | schema.Constructor.eo_re_2ecomp => ok true
+  | schema.Constructor.eo_re_2ediff => ok true
+  | schema.Constructor.eo_re_2einter => ok true
+  | schema.Constructor.eo_re_2eloop => ok true
+  | schema.Constructor.eo_re_2enone => ok true
+  | schema.Constructor.eo_re_2eopt => ok true
+  | schema.Constructor.eo_re_2erange => ok true
+  | schema.Constructor.eo_re_2eunion => ok true
+  | schema.Constructor.eo_repeat => ok true
+  | schema.Constructor.eo_rotate_5fleft => ok true
+  | schema.Constructor.eo_rotate_5fright => ok true
+  | schema.Constructor.eo_sbv_5fto_5fint => ok true
+  | schema.Constructor.eo_select => ok true
+  | schema.Constructor.eo_seq_2eempty => ok true
+  | schema.Constructor.eo_seq_2enth => ok true
+  | schema.Constructor.eo_seq_2eunit => ok true
+  | schema.Constructor.eo_set_2echoose => ok true
+  | schema.Constructor.eo_set_2eempty => ok true
+  | schema.Constructor.eo_set_2einsert => ok true
+  | schema.Constructor.eo_set_2einter => ok true
+  | schema.Constructor.eo_set_2eis_5fempty => ok true
+  | schema.Constructor.eo_set_2eis_5fsingleton => ok true
+  | schema.Constructor.eo_set_2emember => ok true
+  | schema.Constructor.eo_set_2eminus => ok true
+  | schema.Constructor.eo_set_2esingleton => ok true
+  | schema.Constructor.eo_set_2esubset => ok true
+  | schema.Constructor.eo_set_2eunion => ok true
+  | schema.Constructor.eo_sign_5fextend => ok true
+  | schema.Constructor.eo_store => ok true
+  | schema.Constructor.eo_str_2e_2b_2b => ok true
+  | schema.Constructor.eo_str_2e_3c => ok true
+  | schema.Constructor.eo_str_2e_3c_3d => ok true
+  | schema.Constructor.eo_str_2eat => ok true
+  | schema.Constructor.eo_str_2econtains => ok true
+  | schema.Constructor.eo_str_2efrom_5fcode => ok true
+  | schema.Constructor.eo_str_2efrom_5fint => ok true
+  | schema.Constructor.eo_str_2ein_5fre => ok true
+  | schema.Constructor.eo_str_2eindexof => ok true
+  | schema.Constructor.eo_str_2eindexof_5fre => ok true
+  | schema.Constructor.eo_str_2eis_5fdigit => ok true
+  | schema.Constructor.eo_str_2elen => ok true
+  | schema.Constructor.eo_str_2eprefixof => ok true
+  | schema.Constructor.eo_str_2ereplace => ok true
+  | schema.Constructor.eo_str_2ereplace_5fall => ok true
+  | schema.Constructor.eo_str_2ereplace_5fre => ok true
+  | schema.Constructor.eo_str_2ereplace_5fre_5fall => ok true
+  | schema.Constructor.eo_str_2erev => ok true
+  | schema.Constructor.eo_str_2esubstr => ok true
+  | schema.Constructor.eo_str_2esuffixof => ok true
+  | schema.Constructor.eo_str_2eto_5fcode => ok true
+  | schema.Constructor.eo_str_2eto_5fint => ok true
+  | schema.Constructor.eo_str_2eto_5flower => ok true
+  | schema.Constructor.eo_str_2eto_5fre => ok true
+  | schema.Constructor.eo_str_2eto_5fupper => ok true
+  | schema.Constructor.eo_str_2eupdate => ok true
+  | schema.Constructor.eo_to_5fint => ok true
+  | schema.Constructor.eo_to_5freal => ok true
+  | schema.Constructor.eo_tuple => ok true
+  | schema.Constructor.eo_tuple_2eselect => ok true
+  | schema.Constructor.eo_tuple_2eunit => ok true
+  | schema.Constructor.eo_tuple_2eupdate => ok true
+  | schema.Constructor.eo_ubv_5fto_5fint => ok true
+  | schema.Constructor.eo_update => ok true
+  | schema.Constructor.eo_xor => ok true
+  | schema.Constructor.eo_zero_5fextend => ok true
+
 /-- [pathos_compiled_checker::Limits]
     Source: 'src/lib.rs', lines 136:0-140:1
     Visibility: public -/
@@ -5411,8 +6631,49 @@ def Store.view
     core.slice.Slice.get (core.slice.index.SliceIndexUsizeSlice TermData) s i
   core.option.Option.ok_or o CheckError.InvalidHandle
 
+/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::stuck_or_foreign]:
+    Source: 'src/lib.rs', lines 1114:4-1120:5 -/
+def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
+  let r ← Store.view self t
+  match r with
+  | core.result.Result.Ok td =>
+    match td with
+    | TermData.Stuck => ok true
+    | TermData.Literal _ => ok false
+    | TermData.Native _ => ok false
+    | TermData.UserOp _ => ok false
+    | TermData.Apply _ _ => ok false
+    | TermData.Node _ _ => ok false
+  | core.result.Result.Err _ => ok true
+
+/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]: loop 0:
+    Source: 'src/lib.rs', lines 1105:8-1110:9 -/
+@[rust_loop]
+def Store.any_stuck_loop
+  (self : Store) (args : Slice Term) (any : Bool) (i : Std.Usize) :
+  Result Bool
+  := do
+  let i1 := Slice.len args
+  if i < i1
+  then
+    let t ← Slice.index_usize args i
+    let b ← Store.stuck_or_foreign self t
+    let any1 ← if b
+                 then ok true
+                 else ok any
+    let i2 ← i + 1#usize
+    Store.any_stuck_loop self args any1 i2
+  else ok any
+partial_fixpoint
+
+/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]:
+    Source: 'src/lib.rs', lines 1102:4-1112:5 -/
+@[reducible]
+def Store.any_stuck (self : Store) (args : Slice Term) : Result Bool := do
+  Store.any_stuck_loop self args false 0#usize
+
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]: loop 0:
-    Source: 'src/lib.rs', lines 1088:8-1093:5 -/
+    Source: 'src/lib.rs', lines 1095:8-1100:5 -/
 @[rust_loop]
 def Store.check_handles_loop
   (self : Store) (args : Slice Term) (i : Std.Usize) :
@@ -5435,7 +6696,7 @@ def Store.check_handles_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]:
-    Source: 'src/lib.rs', lines 1086:4-1093:5 -/
+    Source: 'src/lib.rs', lines 1093:4-1100:5 -/
 @[reducible]
 def Store.check_handles
   (self : Store) (args : Slice Term) :
@@ -5454,7 +6715,7 @@ axiom num.Integer.to_u32 : num.Integer → Result Std.U32
 axiom num.Integer.fits_u32 : num.Integer → Result Bool
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_int]:
-    Source: 'src/lib.rs', lines 812:4-817:5 -/
+    Source: 'src/lib.rs', lines 819:4-824:5 -/
 def Store.raw_int
   (self : Store) (t : Term) :
   Result (core.result.Result num.Integer CheckError)
@@ -7279,7 +8540,7 @@ def Store.literal
   Store.intern self (TermData.Literal literal1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_binary]:
-    Source: 'src/lib.rs', lines 576:4-583:5 -/
+    Source: 'src/lib.rs', lines 583:4-590:5 -/
 def Store.construct_binary
   (self : Store) (w : Term) (v : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7353,7 +8614,7 @@ def Embedding.Insts.CoreCmpPartialEqEmbedding.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_literal]:
-    Source: 'src/lib.rs', lines 553:4-574:5 -/
+    Source: 'src/lib.rs', lines 560:4-581:5 -/
 def Store.construct_literal
   (self : Store) (e : Embedding) (v : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7491,7 +8752,7 @@ def Term.Insts.CoreCloneClone : core.clone.Clone Term := {
 mutual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct]:
-    Source: 'src/lib.rs', lines 518:4-540:5
+    Source: 'src/lib.rs', lines 518:4-547:5
     Visibility: public -/
 def Store.construct
   (self : Store) (c : schema.Constructor) (args : Slice Term) :
@@ -7514,8 +8775,34 @@ def Store.construct
         then let t ← Store.stuck self
              ok (core.result.Result.Ok t, self)
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b1 ← schema.Constructor.is_user c
+          if b1
+          then
+            let b2 ← Store.any_stuck self args
+            if b2
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b2 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Stuck
+                Embedding.Var
+            if b2
+            then
+              let b3 ← Store.any_stuck self args
+              if b3
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Apply =>
         let i2 := Slice.len args
         if i2 = 2#usize
@@ -7524,8 +8811,34 @@ def Store.construct
           let t1 ← Slice.index_usize args 1#usize
           Store.apply self t t1
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Apply
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Boolean =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -7533,8 +8846,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Boolean t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Boolean
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Numeral =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -7542,8 +8881,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Numeral t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Numeral
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Rational =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -7551,8 +8916,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Rational t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Rational
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Str =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -7560,8 +8951,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Str t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Str
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Binary =>
         let i2 := Slice.len args
         if i2 = 2#usize
@@ -7570,15 +8987,89 @@ def Store.construct
           let t1 ← Slice.index_usize args 1#usize
           Store.construct_binary self t t1
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Binary
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.UOp => Store.construct_user self args
       | Embedding.Var =>
-        let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-        Store.intern self (TermData.Node c v)
+        let b ← schema.Constructor.is_user c
+        if b
+        then
+          let b1 ← Store.any_stuck self args
+          if b1
+          then let t ← Store.stuck self
+               ok (core.result.Result.Ok t, self)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
+        else
+          let b1 ←
+            Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Var
+              Embedding.Var
+          if b1
+          then
+            let b2 ← Store.any_stuck self args
+            if b2
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
       | Embedding.Data =>
-        let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-        Store.intern self (TermData.Node c v)
+        let b ← schema.Constructor.is_user c
+        if b
+        then
+          let b1 ← Store.any_stuck self args
+          if b1
+          then let t ← Store.stuck self
+               ok (core.result.Result.Ok t, self)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
+        else
+          let b1 ←
+            Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Data
+              Embedding.Var
+          if b1
+          then
+            let b2 ← Store.any_stuck self args
+            if b2
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
     | core.ops.control_flow.ControlFlow.Break residual =>
       let r1 ←
         core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
@@ -7587,7 +9078,7 @@ def Store.construct
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_user]:
-    Source: 'src/lib.rs', lines 542:4-551:5 -/
+    Source: 'src/lib.rs', lines 549:4-558:5 -/
 def Store.construct_user
   (self : Store) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7767,7 +9258,7 @@ def kind.EvalOp.Insts.CoreCmpPartialEqEvalOp.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::recognizes]:
-    Source: 'src/lib.rs', lines 1122:4-1137:5 -/
+    Source: 'src/lib.rs', lines 1129:4-1144:5 -/
 def Store.recognizes
   (self : Store) (op : kind.EvalOp) (x : Term) :
   Result (core.result.Result Bool CheckError)
@@ -7813,47 +9304,6 @@ def Store.recognizes
     | core.ops.control_flow.ControlFlow.Break residual =>
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
         Bool (core.convert.FromSame CheckError) residual
-
-/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::stuck_or_foreign]:
-    Source: 'src/lib.rs', lines 1107:4-1113:5 -/
-def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
-  let r ← Store.view self t
-  match r with
-  | core.result.Result.Ok td =>
-    match td with
-    | TermData.Stuck => ok true
-    | TermData.Literal _ => ok false
-    | TermData.Native _ => ok false
-    | TermData.UserOp _ => ok false
-    | TermData.Apply _ _ => ok false
-    | TermData.Node _ _ => ok false
-  | core.result.Result.Err _ => ok true
-
-/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]: loop 0:
-    Source: 'src/lib.rs', lines 1098:8-1103:9 -/
-@[rust_loop]
-def Store.any_stuck_loop
-  (self : Store) (args : Slice Term) (any : Bool) (i : Std.Usize) :
-  Result Bool
-  := do
-  let i1 := Slice.len args
-  if i < i1
-  then
-    let t ← Slice.index_usize args i
-    let b ← Store.stuck_or_foreign self t
-    let any1 ← if b
-                 then ok true
-                 else ok any
-    let i2 ← i + 1#usize
-    Store.any_stuck_loop self args any1 i2
-  else ok any
-partial_fixpoint
-
-/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]:
-    Source: 'src/lib.rs', lines 1095:4-1105:5 -/
-@[reducible]
-def Store.any_stuck (self : Store) (args : Slice Term) : Result Bool := do
-  Store.any_stuck_loop self args false 0#usize
 
 /-- [pathos_compiled_checker::native::is_less]:
     Source: 'src/native.rs', lines 413:0-418:1 -/
@@ -10861,7 +12311,7 @@ def lit.Lit.evaluate
       else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literal_of]:
-    Source: 'src/lib.rs', lines 1115:4-1120:5 -/
+    Source: 'src/lib.rs', lines 1122:4-1127:5 -/
 def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   let r ← Store.view self t
   match r with
@@ -10878,7 +12328,7 @@ def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   | core.result.Result.Err _ => ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]: loop 0:
-    Source: 'src/lib.rs', lines 1143:8-1149:9 -/
+    Source: 'src/lib.rs', lines 1150:8-1156:9 -/
 @[rust_loop]
 def Store.literals_loop
   (self : Store) (args : Slice Term) (lits : alloc.vec.Vec lit.Lit)
@@ -10903,7 +12353,7 @@ def Store.literals_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]:
-    Source: 'src/lib.rs', lines 1139:4-1151:5 -/
+    Source: 'src/lib.rs', lines 1146:4-1158:5 -/
 def Store.literals
   (self : Store) (args : Slice Term) :
   Result (Option (alloc.vec.Vec lit.Lit))
@@ -10916,7 +12366,7 @@ def Store.literals
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_literal]:
-    Source: 'src/lib.rs', lines 1075:4-1084:5 -/
+    Source: 'src/lib.rs', lines 1082:4-1091:5 -/
 def Store.builtin_literal
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10934,7 +12384,7 @@ def Store.builtin_literal
     | some literal => Store.literal self literal
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::name_of]:
-    Source: 'src/lib.rs', lines 1065:4-1073:5 -/
+    Source: 'src/lib.rs', lines 1072:4-1080:5 -/
 def Store.name_of
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11029,7 +12479,7 @@ def table.PairStack.new : Result table.PairStack := do
   ok { items := (alloc.vec.Vec.new (Term × Term)), len := 0#usize }
 
 /-- [pathos_compiled_checker::code_points_cmp]: loop 0:
-    Source: 'src/lib.rs', lines 1207:4-1217:5 -/
+    Source: 'src/lib.rs', lines 1214:4-1224:5 -/
 @[rust_loop]
 def code_points_cmp_loop
   (a : Slice Std.U32) (b : Slice Std.U32) (order : Ordering) (i : Std.Usize)
@@ -11066,20 +12516,20 @@ def code_points_cmp_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::code_points_cmp]:
-    Source: 'src/lib.rs', lines 1202:0-1219:1 -/
+    Source: 'src/lib.rs', lines 1209:0-1226:1 -/
 @[reducible]
 def code_points_cmp
   (a : Slice Std.U32) (b : Slice Std.U32) : Result Ordering := do
   code_points_cmp_loop a b Ordering.eq 0#usize true
 
 /-- [pathos_compiled_checker::integer_cmp]:
-    Source: 'src/lib.rs', lines 1197:0-1199:1 -/
+    Source: 'src/lib.rs', lines 1204:0-1206:1 -/
 def integer_cmp (a : num.Integer) (b : num.Integer) : Result Ordering := do
   let o ← num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp a b
   ok (core.option.Option.unwrap_or o Ordering.eq)
 
 /-- [pathos_compiled_checker::literal_cmp]:
-    Source: 'src/lib.rs', lines 1157:0-1194:1 -/
+    Source: 'src/lib.rs', lines 1164:0-1201:1 -/
 def literal_cmp
   (a : lit.Lit) (b : lit.Lit) :
   Result (core.result.Result Ordering CheckError)
@@ -12891,7 +14341,7 @@ def schema.Constructor.order_key
   | schema.Constructor.eo_zero_5fextend => ok (1#usize, 1#usize)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::order_key]:
-    Source: 'src/lib.rs', lines 831:4-848:5 -/
+    Source: 'src/lib.rs', lines 838:4-855:5 -/
 def Store.order_key
   (d : TermData) :
   Result (core.result.Result (Std.Usize × Std.Usize) CheckError)
@@ -12936,7 +14386,7 @@ def Store.order_key
     ok (core.result.Result.Ok p)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]: loop 0:
-    Source: 'src/lib.rs', lines 923:20-926:21 -/
+    Source: 'src/lib.rs', lines 930:20-933:21 -/
 @[rust_loop]
 def Store.compare_step_loop
   (todo : table.PairStack) (xs : alloc.vec.Vec Term) (ys : alloc.vec.Vec Term)
@@ -12956,7 +14406,7 @@ def Store.compare_step_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]:
-    Source: 'src/lib.rs', lines 874:4-933:5 -/
+    Source: 'src/lib.rs', lines 881:4-940:5 -/
 def Store.compare_step
   (self : Store) (a : Term) (b : Term) (todo : table.PairStack) :
   Result ((core.result.Result Ordering CheckError) × table.PairStack)
@@ -13125,7 +14575,7 @@ def Store.compare_step
       ok (r1, todo)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]: loop 0:
-    Source: 'src/lib.rs', lines 858:8-871:5
+    Source: 'src/lib.rs', lines 865:8-878:5
     Visibility: public -/
 @[rust_loop]
 def Store.compare_loop
@@ -13154,7 +14604,7 @@ def Store.compare_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]:
-    Source: 'src/lib.rs', lines 851:4-871:5
+    Source: 'src/lib.rs', lines 858:4-878:5
     Visibility: public -/
 def Store.compare
   (self : Store) (a : Term) (b : Term) :
@@ -13236,7 +14686,7 @@ def kind.EvalOp.is_list_op (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_strict]:
-    Source: 'src/lib.rs', lines 1044:4-1063:5 -/
+    Source: 'src/lib.rs', lines 1051:4-1070:5 -/
 def Store.builtin_strict
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13598,7 +15048,7 @@ def kind.EvalOp.is_nary (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::takes]:
-    Source: 'src/lib.rs', lines 1004:4-1042:5 -/
+    Source: 'src/lib.rs', lines 1011:4-1049:5 -/
 def Store.takes (op : kind.EvalOp) (count : Std.Usize) : Result Bool := do
   let arity ←
     match op with
@@ -13712,7 +15162,7 @@ def Store.boolean_value
       (Option Bool) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_core]:
-    Source: 'src/lib.rs', lines 958:4-1002:5 -/
+    Source: 'src/lib.rs', lines 965:4-1009:5 -/
 def Store.builtin_core
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13960,13 +15410,13 @@ def Store.builtin_core
        ok (core.result.Result.Ok t, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::leave]:
-    Source: 'src/lib.rs', lines 949:4-951:5 -/
+    Source: 'src/lib.rs', lines 956:4-958:5 -/
 def Store.leave (self : Store) : Result Store := do
   let i ← self.depth - 1#u32
   ok { self with depth := i }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::enter]:
-    Source: 'src/lib.rs', lines 934:4-941:5 -/
+    Source: 'src/lib.rs', lines 941:4-948:5 -/
 def Store.enter
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.depth >= self.limits.depth
@@ -14063,1228 +15513,8 @@ def Store.cached_program
   := do
   Store.cached_program_loop self program args 0#usize
 
-/-- [pathos_compiled_checker::schema::{pathos_compiled_checker::schema::Constructor}::is_user]:
-    Source: 'src/schema.rs', lines 2141:0-2332:14
-    Visibility: public -/
-def schema.Constructor.is_user (self : schema.Constructor) : Result Bool := do
-  match self with
-  | schema.Constructor.eo__24emb_5fApply => ok false
-  | schema.Constructor.eo__24emb_5fBinary => ok false
-  | schema.Constructor.eo__24emb_5fBool => ok false
-  | schema.Constructor.eo__24emb_5fBoolean => ok false
-  | schema.Constructor.eo__24emb_5fDatatypeType => ok false
-  | schema.Constructor.eo__24emb_5fDatatypeTypeRef => ok false
-  | schema.Constructor.eo__24emb_5fDtCons => ok false
-  | schema.Constructor.eo__24emb_5fDtSel => ok false
-  | schema.Constructor.eo__24emb_5fDtcAppType => ok false
-  | schema.Constructor.eo__24emb_5fFunType => ok false
-  | schema.Constructor.eo__24emb_5fNumeral => ok false
-  | schema.Constructor.eo__24emb_5fRational => ok false
-  | schema.Constructor.eo__24emb_5fString => ok false
-  | schema.Constructor.eo__24emb_5fStuck => ok false
-  | schema.Constructor.eo__24emb_5fType => ok false
-  | schema.Constructor.eo__24emb_5fUConst => ok false
-  | schema.Constructor.eo__24emb_5fUOp => ok false
-  | schema.Constructor.eo__24emb_5fUOp1 => ok false
-  | schema.Constructor.eo__24emb_5fUOp2 => ok false
-  | schema.Constructor.eo__24emb_5fUOp3 => ok false
-  | schema.Constructor.eo__24emb_5fUSort => ok false
-  | schema.Constructor.eo__24emb_5fVar => ok false
-  | schema.Constructor.eo__24emb_5fal_2econs => ok false
-  | schema.Constructor.eo__24emb_5fal_2enil => ok false
-  | schema.Constructor.eo__24emb_5fcmd_2eassume_5fpush => ok false
-  | schema.Constructor.eo__24emb_5fcmd_2echeck_5fproven => ok false
-  | schema.Constructor.eo__24emb_5fcmd_2estep => ok false
-  | schema.Constructor.eo__24emb_5fcmd_2estep_5fpop => ok false
-  | schema.Constructor.eo__24emb_5fcmdl_2econs => ok false
-  | schema.Constructor.eo__24emb_5fcmdl_2enil => ok false
-  | schema.Constructor.eo__24emb_5fdd_2econs => ok false
-  | schema.Constructor.eo__24emb_5fdd_2enil => ok false
-  | schema.Constructor.eo__24emb_5fdt_2enull => ok false
-  | schema.Constructor.eo__24emb_5fdt_2esum => ok false
-  | schema.Constructor.eo__24emb_5fdtc_2econs => ok false
-  | schema.Constructor.eo__24emb_5fdtc_2eunit => ok false
-  | schema.Constructor.eo__24emb_5fedd_2econs => ok false
-  | schema.Constructor.eo__24emb_5fedd_2enil => ok false
-  | schema.Constructor.eo__24emb_5fedt_2enull => ok false
-  | schema.Constructor.eo__24emb_5fedt_2esum => ok false
-  | schema.Constructor.eo__24emb_5fedtc_2econs => ok false
-  | schema.Constructor.eo__24emb_5fedtc_2eunit => ok false
-  | schema.Constructor.eo__24emb_5findl_2econs => ok false
-  | schema.Constructor.eo__24emb_5findl_2enil => ok false
-  | schema.Constructor.eo__24emb_5fmsm_2econs => ok false
-  | schema.Constructor.eo__24emb_5fmsm_2edefault => ok false
-  | schema.Constructor.eo__24emb_5fr_2eabsorb => ok false
-  | schema.Constructor.eo__24emb_5fr_2eaci_5fnorm => ok false
-  | schema.Constructor.eo__24emb_5fr_2ealpha_5fequiv => ok false
-  | schema.Constructor.eo__24emb_5fr_2eand_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2eand_5fintro => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fabs_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fabs_5fint_5fgt => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fabs_5freal_5fgt => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5fint_5fto_5freal =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5ftotal_5fint_5fto_5freal =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5fint =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fdiv_5ftotal_5fzero_5freal =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fdivisible_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fgt => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fint_5fgt => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fint_5flt => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5fleq => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5felim_5flt => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5feq_5felim_5fint => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5feq_5felim_5freal => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5fite_5flift => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5fnorm1_5fint => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5fnorm1_5freal => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fgeq_5ftighten => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fneg =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fone =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fover_5fmod
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fdiv_5ftotal_5fzero =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5feq_5fconflict => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fgeq_5ftighten => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fneg =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fone =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fint_5fmod_5ftotal_5fzero =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fis_5fint_5felim_5fto_5freal =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fleq_5fite_5flift => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fleq_5fnorm => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmax_5fgeq1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmax_5fgeq2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmin_5flt1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmin_5flt2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmod_5fover_5fmod => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmod_5fover_5fmod_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmod_5fover_5fmod_5fmult =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fabs_5fcomparison =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fneg => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fpos => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5fsign => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fmult_5ftangent => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fpoly_5fnorm => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fpoly_5fnorm_5frel => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5freduction => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fstring_5fpred_5fentail =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fstring_5fpred_5fsafe_5fapprox =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fsum_5fub => ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5fto_5fint_5felim_5fto_5freal =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earith_5ftrichotomy => ok false
-  | schema.Constructor.eo__24emb_5fr_2earray_5fread_5fover_5fwrite => ok false
-  | schema.Constructor.eo__24emb_5fr_2earray_5fread_5fover_5fwrite2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2earray_5fread_5fover_5fwrite_5fsplit =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earray_5fstore_5foverwrite => ok false
-  | schema.Constructor.eo__24emb_5fr_2earray_5fstore_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2earray_5fstore_5fswap => ok false
-  | schema.Constructor.eo__24emb_5fr_2earrays_5fext => ok false
-  | schema.Constructor.eo__24emb_5fr_2earrays_5fread_5fover_5fwrite => ok false
-  | schema.Constructor.eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2earrays_5fread_5fover_5fwrite_5fcontra =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebeta_5freduce => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fand_5fconf => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fand_5fconf2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fand_5fde_5fmorgan => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fdouble_5fnot_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fdual_5fimpl_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5feq_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5feq_5fnrefl => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5feq_5ftrue => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ffalse1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ffalse2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ftrue1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fimpl_5ftrue2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fimplies_5fde_5fmorgan => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fimplies_5for_5fdistrib =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5feq_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5feq_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5fite_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5ftrue => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fnot_5fxor_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5fand_5fdistrib => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5fde_5fmorgan => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5ftaut => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5for_5ftaut2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5fcomm => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5fnrefl => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5frefl => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebool_5fxor_5ftrue => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fconcat_5fpullup3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fsimplify_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fand_5fsimplify_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f0 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fby_5fconst_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fashr_5fzero => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fbitblast_5fstep => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fbitwise_5fslicing => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fcommutative_5fadd => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fcommutative_5fcomp => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fcommutative_5fxor => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fcomp_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fconcat_5fextract_5fmerge =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fconcat_5fmerge_5fconst => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fextract_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fextract_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fextract_5felim3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fnot_5fsolve => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5feq_5fxor_5fsolve => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fconcat_5f4 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fextract => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fmult_5fleading_5fbit =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fnot => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fsign_5fextend_5f3 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fextract_5fwhole => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fchildren_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fcond_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fconst_5fcond_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fchildren => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fequal_5fcond_5f3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5felse_5felse =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5felse_5fif => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5fthen_5felse =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fmerge_5fthen_5fif => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fwidth_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fite_5fwidth_5fone_5fnot => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f0 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fby_5fconst_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5flshr_5fzero => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5flt_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fmerge_5fsign_5fextend_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fmerge_5fsign_5fextend_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fpow2_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fpow2_5f2b => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fslt_5fmult_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fmult_5fslt_5fmult_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fnand_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fnego_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fnor_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fidemp => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fneq => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fult => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fnot_5fxor => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fconcat_5fpullup3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fsimplify_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5for_5fsimplify_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fpoly_5fnorm => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fpoly_5fnorm_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fredand_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fredor_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5frepeat_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fleft_5feliminate_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5frotate_5fright_5feliminate_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsaddo_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsdiv_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsdivo_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsge_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsgt_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f0 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fby_5fconst_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fshl_5fzero => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5feliminate_5f0 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5feq_5fconst_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5feq_5fconst_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f3 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsign_5fextend_5fult_5fconst_5f4 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsle_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsle_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsmod_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsmulo_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsrem_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fssubo_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fsub_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fuaddo_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fudiv_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fudiv_5fpow2_5fnot_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fudiv_5fzero => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fuge_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fugt_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fugt_5furem => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5fmax => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fule_5fzero => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fadd_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fones => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fzero_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fult_5fzero_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fumulo_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5furem_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5furem_5fpow2_5fnot_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5furem_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fusubo_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxnor_5feliminate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fconcat_5fpullup3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fduplicate => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fnot => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fones => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fxor_5fsimplify_5f3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feliminate =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feliminate_5f0 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feq_5fconst_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5feq_5fconst_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5fult_5fconst_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fextend_5fult_5fconst_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ebv_5fzero_5fule => ok false
-  | schema.Constructor.eo__24emb_5fr_2echain_5fm_5fresolution => ok false
-  | schema.Constructor.eo__24emb_5fr_2echain_5fresolution => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fand_5fneg => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fand_5fpos => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fneg1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fneg2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fpos1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fequiv_5fpos2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fimplies_5fneg1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fimplies_5fneg2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fimplies_5fpos => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fneg1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fneg2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fneg3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fpos1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fpos2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fite_5fpos3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5for_5fneg => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5for_5fpos => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fneg1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fneg2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fpos1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2ecnf_5fxor_5fpos2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2econcat_5fcprop => ok false
-  | schema.Constructor.eo__24emb_5fr_2econcat_5fcsplit => ok false
-  | schema.Constructor.eo__24emb_5fr_2econcat_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2econcat_5flprop => ok false
-  | schema.Constructor.eo__24emb_5fr_2econcat_5fsplit => ok false
-  | schema.Constructor.eo__24emb_5fr_2econcat_5funify => ok false
-  | schema.Constructor.eo__24emb_5fr_2econg => ok false
-  | schema.Constructor.eo__24emb_5fr_2econtra => ok false
-  | schema.Constructor.eo__24emb_5fr_2edistinct_5fbinary_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2edistinct_5fcard_5fconflict => ok false
-  | schema.Constructor.eo__24emb_5fr_2edistinct_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2edistinct_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2edistinct_5ftrue => ok false
-  | schema.Constructor.eo__24emb_5fr_2edistinct_5fvalues => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5fselector => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5ftester => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5ftester_5fsingleton =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fcollapse_5fupdater => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fcons_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fcons_5feq_5fclash => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fcycle => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5finst => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fsplit => ok false
-  | schema.Constructor.eo__24emb_5fr_2edt_5fupdater_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2eeq_5fcond_5fdeq => ok false
-  | schema.Constructor.eo__24emb_5fr_2eeq_5fite_5flift => ok false
-  | schema.Constructor.eo__24emb_5fr_2eeq_5frefl => ok false
-  | schema.Constructor.eo__24emb_5fr_2eeq_5fresolve => ok false
-  | schema.Constructor.eo__24emb_5fr_2eeq_5fsymm => ok false
-  | schema.Constructor.eo__24emb_5fr_2eequiv_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2eequiv_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2eevaluate => ok false
-  | schema.Constructor.eo__24emb_5fr_2eexists_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2eexists_5fstring_5flength => ok false
-  | schema.Constructor.eo__24emb_5fr_2efactoring => ok false
-  | schema.Constructor.eo__24emb_5fr_2efalse_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2efalse_5fintro => ok false
-  | schema.Constructor.eo__24emb_5fr_2eho_5fcong => ok false
-  | schema.Constructor.eo__24emb_5fr_2eimplies_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2einstantiate => ok false
-  | schema.Constructor.eo__24emb_5fr_2eint_5ftight_5flb => ok false
-  | schema.Constructor.eo__24emb_5fr_2eint_5ftight_5fub => ok false
-  | schema.Constructor.eo__24emb_5fr_2eint_5fto_5fbv_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5flookahead => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5flookahead_5fnot_5fself =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5flookahead_5fself =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5fneg_5flookahead => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5felse_5ftrue => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5feq_5fbranch => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fexpand => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5ffalse_5fcond => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fneg_5fbranch => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fnot_5fcond => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5flookahead => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5flookahead_5fnot_5fself =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5flookahead_5fself =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5fneg_5flookahead => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5fthen_5ftrue => ok false
-  | schema.Constructor.eo__24emb_5fr_2eite_5ftrue_5fcond => ok false
-  | schema.Constructor.eo__24emb_5fr_2emodus_5fponens => ok false
-  | schema.Constructor.eo__24emb_5fr_2enary_5fcong => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fand => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fequiv_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fequiv_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fimplies_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fimplies_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fite_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fite_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fnot_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5for_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fxor_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2enot_5fxor_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2epairwise_5fcong => ok false
-  | schema.Constructor.eo__24emb_5fr_2eprocess_5fscope => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5fdt_5fsplit => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5fmerge_5fprenex => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5fminiscope_5fand => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5fminiscope_5fite => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5fminiscope_5for => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5funused_5fvars => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5fvar_5felim_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2equant_5fvar_5freordering => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fall_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fmerge => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5fnullable1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5fnullable2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5frepeat => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fconcat_5fstar_5fswap => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fdiff_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5feq_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fcomp => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fcstring => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fempty => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fsigma => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fin_5fsigma_5fstar => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5finter => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5fall => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5fcstring => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5fcstring_5fneg => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5finter_5finclusion => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5floop_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5floop_5fneg => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5floop_5fstar => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fopt_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fplus_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5femp => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5fnon_5fsingleton_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5fnon_5fsingleton_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5frange_5frefl => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5frepeat_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5femp => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5fnone => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5fstar => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5funion_5fchar => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5fstar_5funion_5fdrop_5femp =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5funfold_5fneg => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5funfold_5fneg_5fconcat_5ffixed =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5funfold_5fpos => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5funion_5fall => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5funion_5fconst_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2ere_5funion_5finclusion => ok false
-  | schema.Constructor.eo__24emb_5fr_2erefl => ok false
-  | schema.Constructor.eo__24emb_5fr_2ereordering => ok false
-  | schema.Constructor.eo__24emb_5fr_2eresolution => ok false
-  | schema.Constructor.eo__24emb_5fr_2escope => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5feval_5fop => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5flen_5frev => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5flen_5funit => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5fnth_5fconcat_5funit => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5fnth_5fconcat_5funit_5fgen =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5fnth_5funit => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5frev_5fconcat => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5frev_5frev => ok false
-  | schema.Constructor.eo__24emb_5fr_2eseq_5frev_5funit => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fchoose_5fmember => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fchoose_5fsingleton => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5feq_5fsingleton_5femp => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5feval_5fop => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fext => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5finsert_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5fcomm => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5femp1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5femp2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5fmember => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5finter_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fis_5fempty_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fis_5fsingleton_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fmember_5femp => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fmember_5fsingleton => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5femp1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5femp2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5fmember => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fminus_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fsingleton_5finj => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5fsubset_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5fcomm => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5femp1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5femp2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5fmember => ok false
-  | schema.Constructor.eo__24emb_5fr_2esets_5funion_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2eskolem_5fintro => ok false
-  | schema.Constructor.eo__24emb_5fr_2eskolemize => ok false
-  | schema.Constructor.eo__24emb_5fr_2esplit => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fat_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash2_5frev => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5fclash_5frev => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify_5fbase => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify_5fbase_5frev =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fconcat_5funify_5frev => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fchar => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fconcat_5ffind =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fconcat_5ffind_5fcontra
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5femp => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fleq_5flen_5feq =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frefl => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5fchar => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5fself => ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5fself_5ftgt_5fchar
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5frepl_5ftgt => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fcontains_5fsplit_5fchar =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fctn_5fmultiset_5fsubset =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5fctn_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5fctn_5ffull_5ffalse1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5fctn_5ffull_5ffalse2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5flen_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5femp_5ftgt_5fnemp =>
-    ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5flen_5fone_5femp_5fprefix
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fnemp_5fsrc_5femp =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fno_5fchange =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fself_5femp => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5fself_5fsrc => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5feq_5frepl_5ftgt_5feq_5flen =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5ffrom_5fint_5fno_5fctn_5fnondigit
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fconcat_5fstar_5fchar =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fconsume => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fcontains => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5feval => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fdig_5frange
-    =>
-    ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fnemp_5fdig_5frange
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5finter_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5frange_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fsigma => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fsigma_5fstar => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5funion_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fcontains_5fconcat_5fpre
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fcontains_5fpre =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5feq_5firr => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5ffind_5femp => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5flen_5foob => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5flen_5foob2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fno_5fcontains =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5foob => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5foob2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fprefix_5fconcat =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fre_5femp_5fre =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fre_5feval => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fre_5fnone => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5findexof_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fis_5fdigit_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5fconcat_5frec => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fbase => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5feq_5fzero_5fconcat_5frec =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5freplace_5fall_5finv =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5freplace_5finv => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5fsubstr_5fin_5frange =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flen_5fupdate_5finv => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5fbase_5f1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5fbase_5f2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5ffalse => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fconcat_5ftrue => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fempty => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fleq_5fempty_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5flt_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fendpoints_5fctn =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fendpoints_5findexof =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fendpoints_5freplace =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5foverlap_5fsplit_5fctn => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fprefixof_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fprefixof_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fprefixof_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fite1 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fite2 =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fdual_5fself =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5flen_5fid => ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5flookahead_5fid_5fsimp
-    =>
-    ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn1
-    =>
-    ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn2
-    =>
-    ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5finv_5fno_5fctn3
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5fself =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5fsrc_5ftgt_5fno_5fctn
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5ftgt_5fno_5fctn =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5frepl_5frepl_5ftgt_5fself =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fempty => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5ffind => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5ffind_5fpre =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fid => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fno_5fcontains =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fall_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fdual_5fctn => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fdual_5fctn_5ffalse =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5femp_5fctn_5fsrc =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fempty => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5ffind_5fbase => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5ffind_5ffirst_5fconcat =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5ffind_5fpre => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fid => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fno_5fcontains =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fone_5fpre => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fprefix => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fprefix_5fconcat =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5fall_5feval =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5fall_5fnone =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5feval => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fre_5fnone => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fself => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5freplace_5fself_5fctn_5fsimp =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fchar_5fstart_5feq_5flen
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine3 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fcombine4 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fconcat1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fconcat2 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fctn => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fctn_5fcontra => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5frange => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstart_5fneg =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fempty_5fstr => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5feq_5fempty => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5feq_5fempty_5fleq_5flen =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5ffull => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5ffull_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5flen_5finclude => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5flen_5finclude_5fpre =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5flen_5fnorm => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5freplace => ok false
-  |
-    schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fsubstr_5fstart_5fgeq_5flen
-    =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsubstr_5fz_5feq_5fempty_5fleq =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsuffixof_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsuffixof_5feq => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fsuffixof_5fone => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fint_5fconcat_5fneg_5fone =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5fconcat => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5ffrom_5fint =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5fidem => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5flen => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5flower_5fupper => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5fconcat => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5ffrom_5fint =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5fidem => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5flen => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fto_5fupper_5flower => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5fconcat_5ffit => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5fconcat_5ffit0 => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5ffit => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5fin_5ffirst_5fconcat =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5foob => ok false
-  | schema.Constructor.eo__24emb_5fr_2estr_5fupdate_5frev => ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5fcode_5finj => ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5fdecompose => ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5feager_5freduction => ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5fext => ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5flength_5fnon_5fempty =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5flength_5fpos => ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5freduction => ok false
-  | schema.Constructor.eo__24emb_5fr_2estring_5fseq_5funit_5finj => ok false
-  | schema.Constructor.eo__24emb_5fr_2esymm => ok false
-  | schema.Constructor.eo__24emb_5fr_2etrans => ok false
-  | schema.Constructor.eo__24emb_5fr_2etrue_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2etrue_5fintro => ok false
-  | schema.Constructor.eo__24emb_5fr_2eubv_5fto_5fint_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2eubv_5fto_5fint_5frange => ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fgeq_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv => ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextend =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextract =>
-    ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbv2nat => ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbvule_5fequiv => ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbvult_5fequiv => ok false
-  | schema.Constructor.eo__24emb_5fr_2euf_5fsbv_5fto_5fint_5felim => ok false
-  | schema.Constructor.eo__24emb_5fr_2exor_5felim1 => ok false
-  | schema.Constructor.eo__24emb_5fr_2exor_5felim2 => ok false
-  | schema.Constructor.eo__24emb_5frsm_2eallchar => ok false
-  | schema.Constructor.eo__24emb_5frsm_2echar => ok false
-  | schema.Constructor.eo__24emb_5frsm_2ecomp => ok false
-  | schema.Constructor.eo__24emb_5frsm_2econcat => ok false
-  | schema.Constructor.eo__24emb_5frsm_2eempty => ok false
-  | schema.Constructor.eo__24emb_5frsm_2eepsilon => ok false
-  | schema.Constructor.eo__24emb_5frsm_2einter => ok false
-  | schema.Constructor.eo__24emb_5frsm_2erange => ok false
-  | schema.Constructor.eo__24emb_5frsm_2estar => ok false
-  | schema.Constructor.eo__24emb_5frsm_2eunion => ok false
-  | schema.Constructor.eo__24emb_5fs_2eStuck => ok false
-  | schema.Constructor.eo__24emb_5fs_2econs => ok false
-  | schema.Constructor.eo__24emb_5fs_2enil => ok false
-  | schema.Constructor.eo__24emb_5fsbd_2econs => ok false
-  | schema.Constructor.eo__24emb_5fsbd_2enil => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_2a => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_2b => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_2d => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_2f => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_2f_5ftotal => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_3c => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_3c_3d => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_3d => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_3d_3e => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_3e => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_3e_3d => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_40purify => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_40strings_5foccur_5findex => ok false
-  | schema.Constructor.eo__24emb_5fsm_2e_40strings_5foccur_5findex_5fre =>
-    ok false
-  | schema.Constructor.eo__24emb_5fsm_2eApply => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eBinary => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eBoolean => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eDtCons => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eDtSel => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eDtTester => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eNone => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eNumeral => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eRational => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eString => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eUConst => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eVar => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eabs => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eand => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebind => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvadd => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvand => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvashr => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvcomp => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvlshr => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvmul => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvnand => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvneg => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvnego => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvnor => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvnot => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvor => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsaddo => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsdiv => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsdivo => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsge => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsgt => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvshl => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsle => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvslt => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsmod => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsmulo => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsrem => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvssubo => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvsub => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvuaddo => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvudiv => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvuge => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvugt => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvule => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvult => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvumulo => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvurem => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvusubo => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvxnor => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ebvxor => ok false
-  | schema.Constructor.eo__24emb_5fsm_2echoice => ok false
-  | schema.Constructor.eo__24emb_5fsm_2econcat => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ediv => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ediv_5ftotal => ok false
-  | schema.Constructor.eo__24emb_5fsm_2edivisible => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eexists => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eextract => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eforall => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eint_2elog2 => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eint_2epow2 => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eint_5fto_5fbv => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eis_5fint => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eite => ok false
-  | schema.Constructor.eo__24emb_5fsm_2elam => ok false
-  | schema.Constructor.eo__24emb_5fsm_2emap_5fdiff => ok false
-  | schema.Constructor.eo__24emb_5fsm_2emod => ok false
-  | schema.Constructor.eo__24emb_5fsm_2emod_5ftotal => ok false
-  | schema.Constructor.eo__24emb_5fsm_2enot => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eor => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2e_2a => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2e_2b => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2e_2b_2b => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2e_5e => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2eall => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2eallchar => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2ecomp => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2ediff => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2einter => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2eloop => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2enone => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2eopt => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2erange => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ere_2eunion => ok false
-  | schema.Constructor.eo__24emb_5fsm_2erepeat => ok false
-  | schema.Constructor.eo__24emb_5fsm_2erotate_5fleft => ok false
-  | schema.Constructor.eo__24emb_5fsm_2erotate_5fright => ok false
-  | schema.Constructor.eo__24emb_5fsm_2esbv_5fto_5fint => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eselect => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eseq_2eempty => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eseq_2enth => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eseq_2eunit => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eseq_5fdiff => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eset_2eempty => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eset_2einter => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eset_2emember => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eset_2eminus => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eset_2esingleton => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eset_2esubset => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eset_2eunion => ok false
-  | schema.Constructor.eo__24emb_5fsm_2esign_5fextend => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estore => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2e_2b_2b => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2e_3c => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2e_3c_3d => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eat => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2econtains => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2efrom_5fcode => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2efrom_5fint => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2ein_5fre => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eindexof => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eindexof_5fre => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eindexof_5fre_5fsplit => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eis_5fdigit => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2elen => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eprefixof => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace_5fall => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace_5fre => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2ereplace_5fre_5fall => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2erev => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2esubstr => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2esuffixof => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fcode => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fint => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5flower => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fre => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fupper => ok false
-  | schema.Constructor.eo__24emb_5fsm_2estr_2eupdate => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eto_5fint => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eto_5freal => ok false
-  | schema.Constructor.eo__24emb_5fsm_2eubv_5fto_5fint => ok false
-  | schema.Constructor.eo__24emb_5fsm_2euneg => ok false
-  | schema.Constructor.eo__24emb_5fsm_2exor => ok false
-  | schema.Constructor.eo__24emb_5fsm_2ezero_5fextend => ok false
-  | schema.Constructor.eo__24emb_5fso_2eassume => ok false
-  | schema.Constructor.eo__24emb_5fso_2eassume_5fpush => ok false
-  | schema.Constructor.eo__24emb_5fso_2eproven => ok false
-  | schema.Constructor.eo__24emb_5fssm_2econs => ok false
-  | schema.Constructor.eo__24emb_5fssm_2eempty => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eBitVec => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eBool => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eChar => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eDatatype => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eDtcAppType => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eFunType => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eInt => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eMap => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eNone => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eReal => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eRegLan => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eSeq => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eSet => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eTypeRef => ok false
-  | schema.Constructor.eo__24emb_5ftsm_2eUSort => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eApply => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eBinary => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eBoolean => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eChar => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eDtCons => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eFun => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eMap => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eNotValue => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eNumeral => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eReal => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eRegLan => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eSeq => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eSet => ok false
-  | schema.Constructor.eo__24emb_5fvsm_2eUValue => ok false
-  | schema.Constructor.eo__24eo_5fCmd => ok false
-  | schema.Constructor.eo__24eo_5fList => ok false
-  | schema.Constructor.eo__24eo_5fList_5fcons => ok false
-  | schema.Constructor.eo__24eo_5fList_5fnil => ok false
-  | schema.Constructor.eo__24eo_5fProof => ok false
-  | schema.Constructor.eo__24eo_5fRule => ok false
-  | schema.Constructor.eo__24eo_5fTerm => ok false
-  | schema.Constructor.eo__24eo_5fpf => ok false
-  | schema.Constructor.eo__24eoo_5f_2d_2e2 => ok true
-  | schema.Constructor.eo__24smt_5fMap => ok false
-  | schema.Constructor.eo__24smt_5fSeq => ok false
-  | schema.Constructor.eo__24smt_5fTerm => ok false
-  | schema.Constructor.eo__24smt_5fType => ok false
-  | schema.Constructor.eo__24smt_5fValue => ok false
-  | schema.Constructor.eo__2a => ok true
-  | schema.Constructor.eo__2b => ok true
-  | schema.Constructor.eo__2d => ok true
-  | schema.Constructor.eo__2f => ok true
-  | schema.Constructor.eo__2f_5ftotal => ok true
-  | schema.Constructor.eo__3c => ok true
-  | schema.Constructor.eo__3c_3d => ok true
-  | schema.Constructor.eo__3d => ok true
-  | schema.Constructor.eo__3d_3e => ok true
-  | schema.Constructor.eo__3e => ok true
-  | schema.Constructor.eo__3e_3d => ok true
-  | schema.Constructor.eo__40_40Monomial => ok true
-  | schema.Constructor.eo__40_40Pair => ok true
-  | schema.Constructor.eo__40_40Polynomial => ok true
-  | schema.Constructor.eo__40_40TypedList => ok true
-  | schema.Constructor.eo__40_40TypedList_2econs => ok true
-  | schema.Constructor.eo__40_40TypedList_2enil => ok true
-  | schema.Constructor.eo__40_40aci_5fsorted => ok true
-  | schema.Constructor.eo__40_40mon => ok true
-  | schema.Constructor.eo__40_40pair => ok true
-  | schema.Constructor.eo__40_40poly => ok true
-  | schema.Constructor.eo__40_40poly_2ezero => ok true
-  | schema.Constructor.eo__40array_5fdeq_5fdiff => ok true
-  | schema.Constructor.eo__40bit => ok true
-  | schema.Constructor.eo__40bvsize => ok true
-  | schema.Constructor.eo__40const => ok true
-  | schema.Constructor.eo__40div_5fby_5fzero => ok true
-  | schema.Constructor.eo__40from_5fbools => ok true
-  | schema.Constructor.eo__40int_5fdiv_5fby_5fzero => ok true
-  | schema.Constructor.eo__40mod_5fby_5fzero => ok true
-  | schema.Constructor.eo__40purify => ok true
-  | schema.Constructor.eo__40quantifiers_5fskolemize => ok true
-  | schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent => ok true
-  | schema.Constructor.eo__40sets_5fdeq_5fdiff => ok true
-  | schema.Constructor.eo__40strings_5fdeq_5fdiff => ok true
-  | schema.Constructor.eo__40strings_5fitos_5fresult => ok true
-  | schema.Constructor.eo__40strings_5fnum_5foccur => ok true
-  | schema.Constructor.eo__40strings_5fnum_5foccur_5fre => ok true
-  | schema.Constructor.eo__40strings_5foccur_5findex => ok true
-  | schema.Constructor.eo__40strings_5foccur_5findex_5fre => ok true
-  | schema.Constructor.eo__40strings_5freplace_5fall_5fresult => ok true
-  | schema.Constructor.eo__40strings_5freplace_5fre_5fall_5fresult => ok true
-  | schema.Constructor.eo__40strings_5fstoi_5fnon_5fdigit => ok true
-  | schema.Constructor.eo__40strings_5fstoi_5fresult => ok true
-  | schema.Constructor.eo__40witness_5fstring_5flength => ok true
-  | schema.Constructor.eo_Array => ok true
-  | schema.Constructor.eo_BitVec => ok true
-  | schema.Constructor.eo_Char => ok true
-  | schema.Constructor.eo_Int => ok true
-  | schema.Constructor.eo_Real => ok true
-  | schema.Constructor.eo_RegLan => ok true
-  | schema.Constructor.eo_Seq => ok true
-  | schema.Constructor.eo_Set => ok true
-  | schema.Constructor.eo_Tuple => ok true
-  | schema.Constructor.eo_UnitTuple => ok true
-  | schema.Constructor.eo_abs => ok true
-  | schema.Constructor.eo_and => ok true
-  | schema.Constructor.eo_bvadd => ok true
-  | schema.Constructor.eo_bvand => ok true
-  | schema.Constructor.eo_bvashr => ok true
-  | schema.Constructor.eo_bvcomp => ok true
-  | schema.Constructor.eo_bvite => ok true
-  | schema.Constructor.eo_bvlshr => ok true
-  | schema.Constructor.eo_bvmul => ok true
-  | schema.Constructor.eo_bvnand => ok true
-  | schema.Constructor.eo_bvneg => ok true
-  | schema.Constructor.eo_bvnego => ok true
-  | schema.Constructor.eo_bvnor => ok true
-  | schema.Constructor.eo_bvnot => ok true
-  | schema.Constructor.eo_bvor => ok true
-  | schema.Constructor.eo_bvredand => ok true
-  | schema.Constructor.eo_bvredor => ok true
-  | schema.Constructor.eo_bvsaddo => ok true
-  | schema.Constructor.eo_bvsdiv => ok true
-  | schema.Constructor.eo_bvsdivo => ok true
-  | schema.Constructor.eo_bvsge => ok true
-  | schema.Constructor.eo_bvsgt => ok true
-  | schema.Constructor.eo_bvshl => ok true
-  | schema.Constructor.eo_bvsle => ok true
-  | schema.Constructor.eo_bvslt => ok true
-  | schema.Constructor.eo_bvsltbv => ok true
-  | schema.Constructor.eo_bvsmod => ok true
-  | schema.Constructor.eo_bvsmulo => ok true
-  | schema.Constructor.eo_bvsrem => ok true
-  | schema.Constructor.eo_bvssubo => ok true
-  | schema.Constructor.eo_bvsub => ok true
-  | schema.Constructor.eo_bvuaddo => ok true
-  | schema.Constructor.eo_bvudiv => ok true
-  | schema.Constructor.eo_bvuge => ok true
-  | schema.Constructor.eo_bvugt => ok true
-  | schema.Constructor.eo_bvule => ok true
-  | schema.Constructor.eo_bvult => ok true
-  | schema.Constructor.eo_bvultbv => ok true
-  | schema.Constructor.eo_bvumulo => ok true
-  | schema.Constructor.eo_bvurem => ok true
-  | schema.Constructor.eo_bvusubo => ok true
-  | schema.Constructor.eo_bvxnor => ok true
-  | schema.Constructor.eo_bvxor => ok true
-  | schema.Constructor.eo_concat => ok true
-  | schema.Constructor.eo_distinct => ok true
-  | schema.Constructor.eo_div => ok true
-  | schema.Constructor.eo_div_5ftotal => ok true
-  | schema.Constructor.eo_divisible => ok true
-  | schema.Constructor.eo_exists => ok true
-  | schema.Constructor.eo_extract => ok true
-  | schema.Constructor.eo_forall => ok true
-  | schema.Constructor.eo_int_2eispow2 => ok true
-  | schema.Constructor.eo_int_2elog2 => ok true
-  | schema.Constructor.eo_int_2epow2 => ok true
-  | schema.Constructor.eo_int_5fto_5fbv => ok true
-  | schema.Constructor.eo_is => ok true
-  | schema.Constructor.eo_is_5fint => ok true
-  | schema.Constructor.eo_ite => ok true
-  | schema.Constructor.eo_lambda => ok true
-  | schema.Constructor.eo_mod => ok true
-  | schema.Constructor.eo_mod_5ftotal => ok true
-  | schema.Constructor.eo_not => ok true
-  | schema.Constructor.eo_or => ok true
-  | schema.Constructor.eo_re_2e_2a => ok true
-  | schema.Constructor.eo_re_2e_2b => ok true
-  | schema.Constructor.eo_re_2e_2b_2b => ok true
-  | schema.Constructor.eo_re_2e_5e => ok true
-  | schema.Constructor.eo_re_2eall => ok true
-  | schema.Constructor.eo_re_2eallchar => ok true
-  | schema.Constructor.eo_re_2ecomp => ok true
-  | schema.Constructor.eo_re_2ediff => ok true
-  | schema.Constructor.eo_re_2einter => ok true
-  | schema.Constructor.eo_re_2eloop => ok true
-  | schema.Constructor.eo_re_2enone => ok true
-  | schema.Constructor.eo_re_2eopt => ok true
-  | schema.Constructor.eo_re_2erange => ok true
-  | schema.Constructor.eo_re_2eunion => ok true
-  | schema.Constructor.eo_repeat => ok true
-  | schema.Constructor.eo_rotate_5fleft => ok true
-  | schema.Constructor.eo_rotate_5fright => ok true
-  | schema.Constructor.eo_sbv_5fto_5fint => ok true
-  | schema.Constructor.eo_select => ok true
-  | schema.Constructor.eo_seq_2eempty => ok true
-  | schema.Constructor.eo_seq_2enth => ok true
-  | schema.Constructor.eo_seq_2eunit => ok true
-  | schema.Constructor.eo_set_2echoose => ok true
-  | schema.Constructor.eo_set_2eempty => ok true
-  | schema.Constructor.eo_set_2einsert => ok true
-  | schema.Constructor.eo_set_2einter => ok true
-  | schema.Constructor.eo_set_2eis_5fempty => ok true
-  | schema.Constructor.eo_set_2eis_5fsingleton => ok true
-  | schema.Constructor.eo_set_2emember => ok true
-  | schema.Constructor.eo_set_2eminus => ok true
-  | schema.Constructor.eo_set_2esingleton => ok true
-  | schema.Constructor.eo_set_2esubset => ok true
-  | schema.Constructor.eo_set_2eunion => ok true
-  | schema.Constructor.eo_sign_5fextend => ok true
-  | schema.Constructor.eo_store => ok true
-  | schema.Constructor.eo_str_2e_2b_2b => ok true
-  | schema.Constructor.eo_str_2e_3c => ok true
-  | schema.Constructor.eo_str_2e_3c_3d => ok true
-  | schema.Constructor.eo_str_2eat => ok true
-  | schema.Constructor.eo_str_2econtains => ok true
-  | schema.Constructor.eo_str_2efrom_5fcode => ok true
-  | schema.Constructor.eo_str_2efrom_5fint => ok true
-  | schema.Constructor.eo_str_2ein_5fre => ok true
-  | schema.Constructor.eo_str_2eindexof => ok true
-  | schema.Constructor.eo_str_2eindexof_5fre => ok true
-  | schema.Constructor.eo_str_2eis_5fdigit => ok true
-  | schema.Constructor.eo_str_2elen => ok true
-  | schema.Constructor.eo_str_2eprefixof => ok true
-  | schema.Constructor.eo_str_2ereplace => ok true
-  | schema.Constructor.eo_str_2ereplace_5fall => ok true
-  | schema.Constructor.eo_str_2ereplace_5fre => ok true
-  | schema.Constructor.eo_str_2ereplace_5fre_5fall => ok true
-  | schema.Constructor.eo_str_2erev => ok true
-  | schema.Constructor.eo_str_2esubstr => ok true
-  | schema.Constructor.eo_str_2esuffixof => ok true
-  | schema.Constructor.eo_str_2eto_5fcode => ok true
-  | schema.Constructor.eo_str_2eto_5fint => ok true
-  | schema.Constructor.eo_str_2eto_5flower => ok true
-  | schema.Constructor.eo_str_2eto_5fre => ok true
-  | schema.Constructor.eo_str_2eto_5fupper => ok true
-  | schema.Constructor.eo_str_2eupdate => ok true
-  | schema.Constructor.eo_to_5fint => ok true
-  | schema.Constructor.eo_to_5freal => ok true
-  | schema.Constructor.eo_tuple => ok true
-  | schema.Constructor.eo_tuple_2eselect => ok true
-  | schema.Constructor.eo_tuple_2eunit => ok true
-  | schema.Constructor.eo_tuple_2eupdate => ok true
-  | schema.Constructor.eo_ubv_5fto_5fint => ok true
-  | schema.Constructor.eo_update => ok true
-  | schema.Constructor.eo_xor => ok true
-  | schema.Constructor.eo_zero_5fextend => ok true
-
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct_user]:
-    Source: 'src/lib.rs', lines 639:4-651:5 -/
+    Source: 'src/lib.rs', lines 646:4-658:5 -/
 def Store.destruct_user
   (self : Store) (c : schema.Constructor) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -15347,7 +15577,7 @@ inductive Hit where
 | Binary : num.Integer → num.Integer → Hit
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct_literal]:
-    Source: 'src/lib.rs', lines 617:4-637:5 -/
+    Source: 'src/lib.rs', lines 624:4-644:5 -/
 def Store.destruct_literal
   (e : Embedding) (literal : lit.Lit) : Result Hit := do
   let which ←
@@ -15419,7 +15649,7 @@ def Store.raw
   Store.intern self (TermData.Native literal)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct]:
-    Source: 'src/lib.rs', lines 584:4-615:5
+    Source: 'src/lib.rs', lines 591:4-622:5
     Visibility: public -/
 def Store.destruct
   (self : Store) (c : schema.Constructor) (t : Term) :
@@ -16534,7 +16764,7 @@ def native.Store.native_to_real
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_rat]:
-    Source: 'src/lib.rs', lines 818:4-823:5 -/
+    Source: 'src/lib.rs', lines 825:4-830:5 -/
 def Store.raw_rat
   (self : Store) (t : Term) :
   Result (core.result.Result num.Rational CheckError)
@@ -18580,7 +18810,7 @@ def native.Store.native_pattern_succ
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::tick]:
-    Source: 'src/lib.rs', lines 942:4-948:5 -/
+    Source: 'src/lib.rs', lines 949:4-955:5 -/
 def Store.tick
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.calls >= self.limits.calls
@@ -18741,7 +18971,7 @@ def table.TermCounts.new (n : Std.Usize) : Result table.TermCounts := do
     }
 
 /-- [pathos_compiled_checker::first_occurrences]: loop 0:
-    Source: 'src/lib.rs', lines 1282:4-1288:5 -/
+    Source: 'src/lib.rs', lines 1289:4-1295:5 -/
 @[rust_loop]
 def first_occurrences_loop
   (xs : Slice Term) (seen : table.TermCounts) (out : alloc.vec.Vec Term)
@@ -18768,14 +18998,14 @@ def first_occurrences_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::first_occurrences]:
-    Source: 'src/lib.rs', lines 1278:0-1290:1 -/
+    Source: 'src/lib.rs', lines 1285:0-1297:1 -/
 def first_occurrences (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let seen ← table.TermCounts.new i
   first_occurrences_loop xs seen (alloc.vec.Vec.new Term) 0#usize
 
 /-- [pathos_compiled_checker::without]: loop 0:
-    Source: 'src/lib.rs', lines 1269:4-1274:5 -/
+    Source: 'src/lib.rs', lines 1276:4-1281:5 -/
 @[rust_loop]
 def without_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -18796,14 +19026,14 @@ def without_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without]:
-    Source: 'src/lib.rs', lines 1266:0-1276:1 -/
+    Source: 'src/lib.rs', lines 1273:0-1283:1 -/
 def without (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
   without_loop xs x out 0#usize
 
 /-- [pathos_compiled_checker::without_first]: loop 0:
-    Source: 'src/lib.rs', lines 1255:4-1262:5 -/
+    Source: 'src/lib.rs', lines 1262:4-1269:5 -/
 @[rust_loop]
 def without_first_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (erased : Bool)
@@ -18834,7 +19064,7 @@ def without_first_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without_first]:
-    Source: 'src/lib.rs', lines 1251:0-1264:1 -/
+    Source: 'src/lib.rs', lines 1258:0-1271:1 -/
 def without_first
   (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
@@ -18842,7 +19072,7 @@ def without_first
   without_first_loop xs x out false 0#usize
 
 /-- [pathos_compiled_checker::reversed]: loop 0:
-    Source: 'src/lib.rs', lines 1244:4-1247:5 -/
+    Source: 'src/lib.rs', lines 1251:4-1254:5 -/
 @[rust_loop]
 def reversed_loop
   (xs : Slice Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -18858,7 +19088,7 @@ def reversed_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::reversed]:
-    Source: 'src/lib.rs', lines 1241:0-1249:1 -/
+    Source: 'src/lib.rs', lines 1248:0-1256:1 -/
 def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
@@ -18866,7 +19096,7 @@ def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   reversed_loop xs out i1
 
 /-- [pathos_compiled_checker::position]: loop 0:
-    Source: 'src/lib.rs', lines 1232:4-1237:5 -/
+    Source: 'src/lib.rs', lines 1239:4-1244:5 -/
 @[rust_loop]
 def position_loop
   (xs : Slice Term) (x : Term) (found : Option Std.Usize) (i : Std.Usize) :
@@ -18884,13 +19114,13 @@ def position_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::position]:
-    Source: 'src/lib.rs', lines 1229:0-1239:1 -/
+    Source: 'src/lib.rs', lines 1236:0-1246:1 -/
 def position (xs : Slice Term) (x : Term) : Result (Option Std.Usize) := do
   let i := Slice.len xs
   position_loop xs x none i
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::object_index]:
-    Source: 'src/lib.rs', lines 824:4-829:5 -/
+    Source: 'src/lib.rs', lines 831:4-836:5 -/
 def Store.object_index
   (self : Store) (t : Term) :
   Result (core.result.Result (Option Std.U32) CheckError)
@@ -19002,7 +19232,7 @@ def table.TermCounts.count
     self.counts place
 
 /-- [pathos_compiled_checker::multiset]: loop 0:
-    Source: 'src/lib.rs', lines 1295:4-1298:5 -/
+    Source: 'src/lib.rs', lines 1302:4-1305:5 -/
 @[rust_loop]
 def multiset_loop
   (ys : Slice Term) (counts : table.TermCounts) (i : Std.Usize) :
@@ -19019,14 +19249,14 @@ def multiset_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset]:
-    Source: 'src/lib.rs', lines 1292:0-1300:1 -/
+    Source: 'src/lib.rs', lines 1299:0-1307:1 -/
 def multiset (ys : Slice Term) : Result table.TermCounts := do
   let i := Slice.len ys
   let counts ← table.TermCounts.new i
   multiset_loop ys counts 0#usize
 
 /-- [pathos_compiled_checker::multiset_select]: loop 0:
-    Source: 'src/lib.rs', lines 1323:4-1336:5 -/
+    Source: 'src/lib.rs', lines 1330:4-1343:5 -/
 @[rust_loop]
 def multiset_select_loop
   (xs : Slice Term) (paired : Bool) (counts : table.TermCounts)
@@ -19055,7 +19285,7 @@ def multiset_select_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_select]:
-    Source: 'src/lib.rs', lines 1319:0-1338:1 -/
+    Source: 'src/lib.rs', lines 1326:0-1345:1 -/
 def multiset_select
   (xs : Slice Term) (ys : Slice Term) (paired : Bool) :
   Result (alloc.vec.Vec Term)
@@ -20310,7 +20540,7 @@ def table.TermCounts.all_zero (self : table.TermCounts) : Result Bool := do
   table.TermCounts.all_zero_loop self true 0#usize
 
 /-- [pathos_compiled_checker::multiset_inclusion]: loop 0:
-    Source: 'src/lib.rs', lines 1308:4-1314:5 -/
+    Source: 'src/lib.rs', lines 1315:4-1321:5 -/
 @[rust_loop]
 def multiset_inclusion_loop
   (xs : Slice Term) (counts : table.TermCounts) (foreign : Bool)
@@ -20335,7 +20565,7 @@ def multiset_inclusion_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_inclusion]:
-    Source: 'src/lib.rs', lines 1304:0-1316:1 -/
+    Source: 'src/lib.rs', lines 1311:0-1323:1 -/
 def multiset_inclusion
   (xs : Slice Term) (ys : Slice Term) : Result (Bool × Bool) := do
   let counts ← multiset ys
@@ -20344,7 +20574,7 @@ def multiset_inclusion
   ok (foreign, b)
 
 /-- [pathos_compiled_checker::append_terms]: loop 0:
-    Source: 'src/lib.rs', lines 1223:4-1226:5 -/
+    Source: 'src/lib.rs', lines 1230:4-1233:5 -/
 @[rust_loop]
 def append_terms_loop
   («to» : alloc.vec.Vec Term) («from» : Slice Term) (i : Std.Usize) :
@@ -20361,7 +20591,7 @@ def append_terms_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::append_terms]:
-    Source: 'src/lib.rs', lines 1221:0-1227:1 -/
+    Source: 'src/lib.rs', lines 1228:0-1234:1 -/
 @[reducible]
 def append_terms
   («to» : alloc.vec.Vec Term) («from» : Slice Term) :
@@ -21443,7 +21673,7 @@ def Store.node_fields
       (Option (alloc.vec.Vec Term)) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump]:
-    Source: 'src/lib.rs', lines 729:4-737:5 -/
+    Source: 'src/lib.rs', lines 736:4-744:5 -/
 def Store.state_jump
   (self : Store) (t : Term) : Result (Option (Std.U32 × Term)) := do
   let i ← lift (UScalar.cast .Usize t)
@@ -21459,7 +21689,7 @@ def Store.state_jump
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump_depth]:
-    Source: 'src/lib.rs', lines 739:4-744:5 -/
+    Source: 'src/lib.rs', lines 746:4-751:5 -/
 def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
   let o ← Store.state_jump self t
   match o with
@@ -21468,7 +21698,7 @@ def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
               ok d
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_tail]:
-    Source: 'src/lib.rs', lines 720:4-727:5 -/
+    Source: 'src/lib.rs', lines 727:4-734:5 -/
 def Store.state_tail
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result (core.result.Result (Option Term) CheckError)
@@ -21502,7 +21732,7 @@ def Store.state_tail
       (Option Term) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-811:5 -/
+    Source: 'src/lib.rs', lines 1:0-818:5 -/
 @[rust_loop]
 def Store.state_ancestor_loop
   (x : Term) (self : Store) (cons : schema.Constructor) (target : Std.U32) :
@@ -21533,7 +21763,7 @@ def Store.state_ancestor_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]:
-    Source: 'src/lib.rs', lines 792:4-811:5 -/
+    Source: 'src/lib.rs', lines 799:4-818:5 -/
 @[reducible]
 def Store.state_ancestor
   (self : Store) (cons : schema.Constructor) (t : Term) (target : Std.U32) :
@@ -21542,7 +21772,7 @@ def Store.state_ancestor
   Store.state_ancestor_loop t self cons target
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::set_state_jump]:
-    Source: 'src/lib.rs', lines 745:4-751:5 -/
+    Source: 'src/lib.rs', lines 752:4-758:5 -/
 def Store.set_state_jump
   (self : Store) (t : Term) (entry : (Std.U32 × Term)) : Result Store := do
   let i ← lift (UScalar.cast .Usize t)
@@ -21562,7 +21792,7 @@ def Store.set_state_jump
   ok { self with state_jumps := v1 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 1:
-    Source: 'src/lib.rs', lines 774:8-787:9 -/
+    Source: 'src/lib.rs', lines 781:8-794:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop0
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -21598,7 +21828,7 @@ def Store.state_depth_loop0_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 2:
-    Source: 'src/lib.rs', lines 774:8-787:9 -/
+    Source: 'src/lib.rs', lines 781:8-794:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop1
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -21634,7 +21864,7 @@ def Store.state_depth_loop0_loop1
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-789:5 -/
+    Source: 'src/lib.rs', lines 1:0-796:5 -/
 @[rust_loop]
 def Store.state_depth_loop0
   (x : Term) (self : Store) (cons : schema.Constructor)
@@ -21667,7 +21897,7 @@ def Store.state_depth_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]:
-    Source: 'src/lib.rs', lines 755:4-789:5 -/
+    Source: 'src/lib.rs', lines 762:4-796:5 -/
 def Store.state_depth
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result ((core.result.Result Std.U32 CheckError) × Store)
@@ -21676,7 +21906,7 @@ def Store.state_depth
   Store.state_depth_loop0 t self cons pending
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::charge]:
-    Source: 'src/lib.rs', lines 708:4-718:5 -/
+    Source: 'src/lib.rs', lines 715:4-725:5 -/
 def Store.charge
   (self : Store) (count : Std.U64) :
   Result ((core.result.Result Unit CheckError) × Store)
@@ -21689,7 +21919,7 @@ def Store.charge
   else ok (core.result.Result.Ok (), { self with calls := sum })
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_nth]:
-    Source: 'src/lib.rs', lines 667:4-705:5 -/
+    Source: 'src/lib.rs', lines 674:4-712:5 -/
 def Store.state_nth
   (self : Store) (cons : schema.Constructor) (state : Term) (index : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)

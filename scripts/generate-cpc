@@ -78,14 +78,14 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$root/difftest.env"
 
 # The commit of Ethos the checker is generated from: a commit of
-# cvc5/ethos's main, the first whose rust-meta and lean-meta write the trace
-# of the generated code that scripts/proofgen reads (cvc5/ethos#289).
-default_rev=4c6b30e8111387febdc56d6a6b8b88646e872e6e
+# cvc5/ethos's main, with the trace of the generated code that
+# scripts/proofgen reads (cvc5/ethos#289) and strict constructors (#290).
+default_rev=842dd163d735489fb137615656a5d3a76b1317ab
 
 # The same for --mini, and the logos revision whose CpcMini the proofs are
 # about. proofs/ pins the same logos revision.
-mini_default_rev=4c6b30e8111387febdc56d6a6b8b88646e872e6e
-mini_logos_rev=f8fdd2401b24d310ae161eb675431221720790ab
+mini_default_rev=842dd163d735489fb137615656a5d3a76b1317ab
+mini_logos_rev=d4c919132867ffe4fb06ff622d91e9b6cec4734b
 
 me=generate-cpc
 fail() { echo "scripts/$me: $*" >&2; exit 2; }

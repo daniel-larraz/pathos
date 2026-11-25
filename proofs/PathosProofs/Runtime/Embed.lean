@@ -48,7 +48,7 @@ mutual
 fields of its nodes too. -/
 def TreeValid : Tree → Prop
   | Tree.apply a b => a ≠ Tree.stuck ∧ b ≠ Tree.stuck ∧ TreeValid a ∧ TreeValid b
-  | Tree.node _ ts => TreesValid ts
+  | Tree.node c ts => (c.Strict → ∀ t ∈ ts, t ≠ Tree.stuck) ∧ TreesValid ts
   | _ => True
 /-- `TreeValid` of each tree of a list. -/
 def TreesValid : List Tree → Prop
@@ -56,13 +56,14 @@ def TreesValid : List Tree → Prop
   | t :: ts => TreeValid t ∧ TreesValid ts
 end
 
-/-- No application in the term is of the stuck term or to it, in the
-indices of its operators too (`UOp1`, …, which the encoding makes the fields
-of a node). An index may be the stuck term itself: logos builds
-`set.empty`/`seq.empty` of `__eo_typeof t`, the stuck term when `t` has no
-type, and the store holds it as it is (a node's fields are not checked, as
-an application's are, `TermData.Wf`). Defined through the encoding, so
-that it is the same definition for every calculus. -/
+/-- No application in the term is of the stuck term or to it, and no
+index of an operator (`UOp1`, …, which the encoding makes the fields of a
+node) or part of a variable is the stuck term: logos builds these with
+`__eo_mk_uop<n>` and `__eo_mk_var`, as it builds applications with
+`__eo_mk_apply`, and the store's `construct` gives the stuck term for one
+with a stuck part (`TermData.Wf`, `schema.Constructor.Strict`). Defined
+through the encoding, so that it is the same definition for every
+calculus. -/
 def TermValid (x : Eo.Term) : Prop := TreeValid (Embedded.enc x)
 
 theorem enc_eq_stuck_iff (x : Eo.Term) : Embedded.enc x = Tree.stuck ↔ x = Eo.Term.Stuck := by
@@ -128,8 +129,25 @@ instance : Valid Smtm.SmtTerm := ⟨fun _ => True⟩
 
 @[simp] theorem Valid.pf (F : Eo.Term) : Valid.valid (Eo.Proof.pf F) ↔ Valid.valid F := Iff.rfl
 
+/-- Handles none of which is the stuck data unfold to trees none of which
+is the stuck tree. -/
+theorem HoldsList.not_stuck {nodes : List TermData} {hs : List Term} {xs : List Tree}
+    (h : HoldsList nodes hs xs) (hn : ∀ x ∈ hs, nodes[x.val]! ≠ TermData.Stuck) :
+    ∀ t ∈ xs, t ≠ Tree.stuck := by
+  induction hs generalizing xs with
+  | nil => cases h; intro t ht; cases ht
+  | cons x hs' ih =>
+    cases h with
+    | cons _ _ y ys hy hl =>
+      intro t ht
+      rcases List.mem_cons.mp ht with rfl | ht
+      · rintro rfl
+        cases hy with | stuck _ _ hd => exact hn x (List.mem_cons_self ..) hd
+      · exact ih hl (fun z hz => hn z (List.mem_cons_of_mem _ hz)) t ht
+
 /-- A tree that a handle unfolds to is valid: the store makes no
-application of or to the stuck term (`TermData.Wf`). -/
+application of or to the stuck term, and no strict node with a stuck field
+(`TermData.Wf`). -/
 theorem Holds.valid {s : Store} (hinv : s.Inv) {t : Nat} {tr : Tree}
     (h : Holds s.nodes.val t tr) : TreeValid tr := by
   refine Holds.rec (nodes := s.nodes.val)
@@ -149,9 +167,23 @@ theorem Holds.valid {s : Store} (hinv : s.Inv) {t : Nat} {tr : Tree}
       cases hf with | stuck _ _ hd' => exact h3 hd'
     · rintro rfl
       cases ha with | stuck _ _ hd' => exact h4 hd'
-  · intro _ _ _ _ _ _ _ ih; simpa [TreeValid] using ih
+  · intro k c v xs hlt hd hl ih
+    refine ⟨fun hc => ?_, ih⟩
+    have hwf := hinv.terms.data k hlt
+    rw [hd] at hwf
+    exact HoldsList.not_stuck hl (fun x hx => hwf.2.2 hc x hx)
   · simp [TreesValid]
   · intro _ _ _ _ _ _ ih1 ih2; exact ⟨ih1, ih2⟩
+
+/-- The parts of a valid term built by a strict constructor (a user
+operator's indices, a variable's name and type) are not the stuck tree. -/
+theorem TermValid.strict_parts {x : Eo.Term} {c : schema.Constructor} {ts : List Tree}
+    (h : TermValid x) (he : Embedded.enc x = Tree.node c ts) (hc : c.Strict) :
+    ∀ t ∈ ts, t ≠ Tree.stuck := by
+  unfold TermValid at h
+  rw [he] at h
+  simp only [TreeValid] at h
+  exact h.1 hc
 
 /-- A term that a handle stands for is one that a store can hold in the
 sense of `Valid`: no application in it is of or to the stuck term. -/

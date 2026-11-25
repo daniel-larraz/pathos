@@ -284,6 +284,11 @@ class Emitter:
         op = n["op"]
         v = n["v"]
         sub = n.get("sub", [])
+        if op == "max_code_point":
+            # eo::max_code_point, which the trace names since cvc5/ethos#294:
+            # no spec yet
+            self.unsupported("eo::max_code_point (no spec yet)")
+            return v
         if op == "param":
             return v
         if op == "literal":
@@ -815,6 +820,14 @@ class Emitter:
                     text += " ⟨" + f + ", x_" + f + ", h_" + f + "⟩"
                     l.facts.append("h_" + f)
                 self.line(text + " " + self.els())
+                if name in self.g.strict_ctors and fields:
+                    # a strict constructor's parts are not stuck
+                    # (CtorSpec.<c>.fields_ne_stuck)
+                    hn = ["hn_" + f for f in fields]
+                    self.line("obtain " + (hn[0] if len(hn) == 1 else "⟨" + ", ".join(hn) + "⟩")
+                              + " := CtorSpec." + ident(name) + ".fields_ne_stuck "
+                              + self.inv() + " h_" + value)
+                    l.pure += hn
                 if (name == self.g.cfg["state"]["cons"] and len(fields) == 2
                         and value in l.ok_state):
                     l.ok_state.add(fields[1])  # the tail of an OK state
@@ -1062,13 +1075,22 @@ class Generator:
             if k == 0:
                 continue
             vs = " ".join("i%d" % j for j in range(k))
+            # an operator with indices is built strictly, so no index of
+            # a valid one is the stuck term (TreeValid, Strict)
             o.append("@[simp] theorem Valid.uop%d (op : Eo.UserOp%d) %s :\n"
                      "    Valid.valid (Eo.Term.UOp%d op %s) ↔ %s := by\n"
                      "  show TreeValid (Embed.enc_Term _) ↔ _\n"
-                     "  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true]\n"
-                     "  rfl\n\n"
+                     "  have hs : (Embed.uop%d op).Strict := by cases op <;> exact Or.inl rfl\n"
+                     "  have he : ∀ x, Embed.enc_Term x = Tree.stuck ↔ x = Eo.Term.Stuck :=\n"
+                     "    fun x => by simpa [Embed.embedded_enc_Term] using enc_eq_stuck_iff x\n"
+                     "  have hv : ∀ x, Valid.valid x = TreeValid (Embed.enc_Term x) := fun _ => rfl\n"
+                     "  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true, hs, true_implies,\n"
+                     "    List.mem_cons, List.not_mem_nil, or_false, forall_eq_or_imp, forall_eq,\n"
+                     "    ne_eq, he, hv]\n"
+                     "  all_goals tauto\n\n"
                      % (k, k, "".join("(i%d : Eo.Term) " % j for j in range(k)).strip(),
-                        k, vs, " ∧ ".join("Valid.valid i%d" % j for j in range(k))))
+                        k, vs, " ∧ ".join("i%d ≠ Eo.Term.Stuck ∧ Valid.valid i%d" % (j, j)
+                                          for j in range(k)), k))
         o.append("/-- What is proved of the programs, for stores that can enter `n` "
                  "more calls. -/\nstructure Specs (n : Nat) : Prop where\n")
         for p in proved:
@@ -1435,6 +1457,7 @@ EMBED_HEADER = """module
 public import $CHECKER$
 public import PathosProofs.Store.Tree
 public import $EO_CALC$.Logos
+import all $EO_CALC$.Logos
 public import $EO_CALC$.SmtTranslate
 
 /-!
@@ -1477,7 +1500,10 @@ end pathos_compiled_checker.Embed
 CTORS_HEADER = """module
 
 public import $CHECKER$
+public import $CALC$.Logos
+import all $CALC$.Logos
 public import PathosProofs.Runtime.Node
+public import PathosProofs.Runtime.Embed
 public import $EMBED$
 
 /-!
@@ -1782,6 +1808,22 @@ def embedding(table, calc_lean=None):
                 o.append("  | Eo.UserOp" + sfx + "." + u.cname + " => schema.Constructor."
                          + ident(u.sname) + "\n")
             o.append("\n")
+        # logos's strict builders are the raw constructors where no part is
+        # stuck (the generated proofs' simp sets take them, with the facts
+        # that the parts are not stuck)
+        for k in sorted(user_ops):
+            if k == 0:
+                continue
+            xs = " ".join("x%d" % i for i in range(1, k + 1))
+            hyps = " ".join("(h%d : x%d ≠ Eo.Term.Stuck)" % (i, i) for i in range(1, k + 1))
+            o.append("@[simp] theorem mk_uop%d_of_ne {op : Eo.UserOp%d} {%s : Eo.Term} %s :\n"
+                     "    Eo.__eo_mk_uop%d op %s = Eo.Term.UOp%d op %s := by\n"
+                     "  unfold Eo.__eo_mk_uop%d; split <;> simp_all\n\n"
+                     % (k, k, xs, hyps, k, xs, k, xs, k))
+        o.append("@[simp] theorem mk_var_of_ne {x1 x2 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck)"
+                 " (h2 : x2 ≠ Eo.Term.Stuck) :\n"
+                 "    Eo.__eo_mk_var x1 x2 = Eo.Term.Var x1 x2 := by\n"
+                 "  unfold Eo.__eo_mk_var; split <;> simp_all\n\n")
 
     def field_enc(f, x):
         n = native_codec(f)
@@ -2092,39 +2134,98 @@ def embedding(table, calc_lean=None):
             return "Eo.CIndex"
         return qualified(f) if not native_codec(f) else "SmtEval." + f
 
-    def emit_construct(cid, ty, value, fields, unfold):
+    def emit_construct(cid, ty, value, fields, unfold, strict=None):
+        """The lemma of `construct` of one constructor. `strict` is logos's
+        strict builder of a constructor that is built strictly (a user
+        operator with indices, `__eo_mk_uop<k> op`; a variable,
+        `__eo_mk_var`): a stuck field gives the stuck term, as the runtime's
+        `construct` does (`Store.construct_holds_stuck`)."""
         k = len(fields)
         node = "(.inr rfl)" if cid == ident("$emb_Var") else "(.inl rfl)"
-        binders = as_ = hs = lst = embs = ""
+        binders = xbinders = as_ = hs = lst = embs = ""
         holds = "HoldsList.nil"
         for i, f in enumerate(fields):
             binders += " {a%d : Term} {x%d : %s}" % (i, i, field_type(f))
+            xbinders += " {x%d : %s}" % (i, field_type(f))
             as_ += ("a" if i == 0 else ", a") + str(i)
             hs += " (h%d : Represents.rep s a%d x%d)" % (i, i, i)
             lst += ("" if i == 0 else ", ") + "Embedded.enc x%d" % i
             embs += ("h" if i == 0 else ", h") + str(i) + ".2"
         for i in range(k, 0, -1):
             holds = "(HoldsList.cons _ _ _ _ h%d.1 " % (i - 1) + holds + ")"
-        cs.append("theorem CtorSpec." + cid + ".construct (s : Store) (args : Slice Term)"
-                  + binders + "\n    (hargs : args.val = [" + as_ + "])" + hs
-                  + " (hinv : s.Inv) (h64 : Platform64) :\n    Store.construct s "
-                    "schema.Constructor." + cid
-                  + " args ⦃ r s' =>\n      s'.Inv ∧ s.Grows s' ∧\n      match r with\n"
-                    "      | core.result.Result.Ok t => Represents.rep s' t (" + value
-                  + ")\n      | core.result.Result.Err _ => True ⦄div := by\n"
-                    "  apply WP.dspec_mono (Store.construct_holds s schema.Constructor."
-                  + cid + " args [" + lst + "] hinv h64 " + node
-                  + "\n    (by rw [hargs]; exact " + holds
-                  + "))\n  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩\n"
-                    "  simp only [WP.uncurry'_pair] at hr ⊢\n"
-                    "  refine ⟨hinv', hg, ?_⟩\n  cases r with\n  | Err e => trivial\n"
-                    "  | Ok t =>\n    refine ⟨?_, ?_⟩\n    · simpa [Embed.embedded_enc_"
-                  + ty + ", Embed.enc_" + ty + unfold + "] using hr\n")
+        xs = "".join(" x%d" % i for i in range(k))
+        result = (strict + xs) if strict else value
+        head = ("theorem CtorSpec." + cid + ".construct (s : Store) (args : Slice Term)"
+                + binders + "\n    (hargs : args.val = [" + as_ + "])" + hs
+                + " (hinv : s.Inv) (h64 : Platform64) :\n    Store.construct s "
+                  "schema.Constructor." + cid
+                + " args ⦃ r s' =>\n      s'.Inv ∧ s.Grows s' ∧\n      match r with\n"
+                  "      | core.result.Result.Ok t => Represents.rep s' t (" + result
+                + ")\n      | core.result.Result.Err _ => True ⦄div := by\n")
+        # the old proof, of the node, given `hns` (the constructor is not
+        # strict, or no field is the stuck tree)
+        def node_proof(ind, hns):
+            out = (ind + "apply WP.dspec_mono (Store.construct_holds s schema.Constructor."
+                   + cid + " args [" + lst + "] hinv h64 " + node
+                   + "\n" + ind + "  (by rw [hargs]; exact " + holds + ") " + hns + ")\n"
+                   + ind + "rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩\n"
+                   + ind + "simp only [WP.uncurry'_pair] at hr ⊢\n"
+                   + ind + "refine ⟨hinv', hg, ?_⟩\n" + ind + "cases r with\n"
+                   + ind + "| Err e => trivial\n"
+                   + ind + "| Ok t =>\n" + ind + "  refine ⟨?_, ?_⟩\n" + ind
+                   + "  · simpa [Embed.embedded_enc_" + ty + ", Embed.enc_" + ty + unfold
+                   + "] using hr\n")
+            if k == 0:
+                out += ind + "  · simp [Embed.embedded_emb_" + ty + ", Embed.emb_" + ty + "]\n"
+            else:
+                out += (ind + "  · simp only [Embed.embedded_emb_" + ty + ", Embed.emb_" + ty
+                        + "]\n" + ind + "    exact " + (embs if k == 1 else "⟨" + embs + "⟩")
+                        + "\n")
+            return out
         if k == 0:
-            cs.append("    · simp [Embed.embedded_emb_" + ty + ", Embed.emb_" + ty + "]\n\n")
-        else:
-            cs.append("    · simp only [Embed.embedded_emb_" + ty + ", Embed.emb_" + ty
-                      + "]\n      exact " + (embs if k == 1 else "⟨" + embs + "⟩") + "\n\n")
+            cs.append(head + node_proof("  ", "(fun _ h => by cases h)") + "\n")
+            return
+        if not strict:
+            cs.append(head + node_proof("  ", "(by rintro (h | h) <;> cases Result.ok_injective h)") + "\n")
+            return
+        # strict: by whether a field is the stuck term
+        anyst = " ∨ ".join("x%d = Eo.Term.Stuck" % i for i in range(k))
+        strictp = "(Or.inr rfl)" if cid == ident("$emb_Var") else "(Or.inl rfl)"
+        body = ("  by_cases hst : " + anyst + "\n"
+                "  · have hv : " + result + " = Eo.Term.Stuck := by\n"
+                "      rcases hst with " + " | ".join(["rfl"] * k) + " <;> (unfold "
+                + strict.split()[0] + "; split <;> simp_all)\n"
+                "    rw [hv]\n"
+                "    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor."
+                + cid + " args [" + lst + "] hinv h64 " + node
+                + "\n      (by rw [hargs]; exact " + holds + ") " + strictp
+                + "\n      (by rcases hst with " + " | ".join(["rfl"] * k)
+                + " <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))\n"
+                "    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩\n"
+                "    simp only [WP.uncurry'_pair] at hr ⊢\n"
+                "    refine ⟨hinv', hg, ?_⟩\n    cases r with\n    | Err e => trivial\n"
+                "    | Ok t =>\n      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term]"
+                " using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩\n"
+                "  · try simp only [not_or] at hst\n"
+                "    have hv : " + result + " = " + value + " := by\n"
+                "      simp [" + strict.split()[0] + ", hst]\n"
+                "    rw [hv]\n")
+        nostuck = ("(fun _ h => by\n      simp only [List.mem_cons, List.not_mem_nil, or_false]"
+                   " at h\n      rcases h with " + " | ".join(["h"] * k)
+                   + " <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all))")
+        cs.append(head + body + node_proof("    ", nostuck) + "\n")
+        # the parts of a represented term of this constructor are not stuck
+        concl = " ∧ ".join("x%d ≠ Eo.Term.Stuck" % i for i in range(k))
+        cs.append("theorem CtorSpec." + cid + ".fields_ne_stuck {s : Store} {t : Term}" + xbinders
+                  + "\n    (hinv : s.Inv) (h : Represents.rep s t (" + value + ")) :\n    "
+                  + concl + " := by\n"
+                  "  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)\n"
+                  "    (c := schema.Constructor." + cid + ") (ts := [" + lst + "])\n"
+                  "    (by simp [Embed.embedded_enc_" + ty + ", Embed.enc_" + ty + unfold + "]) "
+                  + strictp + "\n"
+                  "  refine " + ("⟨" + ", ".join(["?_"] * k) + "⟩" if k > 1 else "?_") + " <;>\n"
+                  "    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term,"
+                  " Embed.enc_Term]) rfl)\n\n")
 
     def emit_destruct(cid, ty, q, k, fields, inv, unfold=""):
         n = len(fields)
@@ -2191,7 +2292,9 @@ def embedding(table, calc_lean=None):
                     fields = c.fields[1:]
                     emit_construct(ident(u.sname), ty,
                                    k + "".join(" x%d" % i for i in range(len(fields))),
-                                   fields, unfold)
+                                   fields, unfold,
+                                   strict="Eo.__eo_mk_uop%d Eo.%s.%s" % (kk, c.fields[0],
+                                                                       u.cname))
                     emit_destruct(ident(u.sname), ty, q, k, fields,
                                   "inv_" + ty + "_" + c.cname + "_" + u.cname, unfold)
                 continue
@@ -2201,7 +2304,8 @@ def embedding(table, calc_lean=None):
             k = q + "." + c.cname
             cs.append("/-- `" + c.sname + "`. -/\n")
             emit_construct(cid, ty, k + "".join(" x%d" % i for i in range(len(c.fields))),
-                           c.fields, "")
+                           c.fields, "",
+                           strict="Eo.__eo_mk_var" if c.sname == "$emb_Var" else None)
             emit_destruct(cid, ty, q, k, c.fields, "inv_" + ty + "_" + c.cname)
     files = {"embed.lean": rtrim_lines(EMBED_HEADER + "".join(o) + EMBED_FOOTER)}
     # The constructor lemmas, one unit per constructor (each starts with its
@@ -2264,6 +2368,14 @@ def main():
         if len(body) == 2:
             gen.left_assoc = set(re.findall(r"Self::(\w+) => true", body[1].split("\n}", 1)[0]))
     gen.unique_nil = unique_nil_ops(args.calc_lean, args.embedding)
+    # the strict constructors: user operators with indices, and variables
+    gen.strict_ctors = {"$emb_Var"}
+    if args.embedding and args.calc_lean:
+        arities = user_op_arities(args.calc_lean)
+        with open(args.embedding, encoding="utf-8") as f:
+            for d in json.load(f)["constructors"]:
+                if d["user_op"] and arities.get(d["lean"], 0) > 0:
+                    gen.strict_ctors.add(d["eo"])
     gen.unproved = {}
     if args.unproved:
         with open(args.unproved, "rb") as f:

@@ -241,7 +241,9 @@ theorem Store.construct_uop_spec (s : Store) (op : Eo.UserOp) (args : Slice Term
   | Err e => trivial
   | Ok t =>
     simp only at hres ⊢
-    obtain ⟨hlt, v, hv, hd⟩ := hres
+    obtain ⟨hlt, hres⟩ := hres
+    rcases hres with ⟨-, ⟨a, ha, -⟩, -, -⟩ | ⟨-, v, hv, hd⟩
+    · rw [hargs] at ha; cases ha
     refine ⟨?_, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
     simp only [Embed.embedded_enc_Term, Embed.enc_Term]
     rw [← uopCtor_eq_uop]

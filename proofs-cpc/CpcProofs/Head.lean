@@ -7410,22 +7410,40 @@ def eo__24typed_5flist_5felement_5ftype.Spec (n : Nat) : Prop :=
       | core.result.Result.Err _ => True ⦄div
 
 @[simp] theorem Valid.uop1 (op : Eo.UserOp1) (i0 : Eo.Term) :
-    Valid.valid (Eo.Term.UOp1 op i0) ↔ Valid.valid i0 := by
+    Valid.valid (Eo.Term.UOp1 op i0) ↔ i0 ≠ Eo.Term.Stuck ∧ Valid.valid i0 := by
   show TreeValid (Embed.enc_Term _) ↔ _
-  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true]
-  rfl
+  have hs : (Embed.uop1 op).Strict := by cases op <;> exact Or.inl rfl
+  have he : ∀ x, Embed.enc_Term x = Tree.stuck ↔ x = Eo.Term.Stuck :=
+    fun x => by simpa [Embed.embedded_enc_Term] using enc_eq_stuck_iff x
+  have hv : ∀ x, Valid.valid x = TreeValid (Embed.enc_Term x) := fun _ => rfl
+  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true, hs, true_implies,
+    List.mem_cons, List.not_mem_nil, or_false, forall_eq_or_imp, forall_eq,
+    ne_eq, he, hv]
+  all_goals tauto
 
 @[simp] theorem Valid.uop2 (op : Eo.UserOp2) (i0 : Eo.Term) (i1 : Eo.Term) :
-    Valid.valid (Eo.Term.UOp2 op i0 i1) ↔ Valid.valid i0 ∧ Valid.valid i1 := by
+    Valid.valid (Eo.Term.UOp2 op i0 i1) ↔ i0 ≠ Eo.Term.Stuck ∧ Valid.valid i0 ∧ i1 ≠ Eo.Term.Stuck ∧ Valid.valid i1 := by
   show TreeValid (Embed.enc_Term _) ↔ _
-  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true]
-  rfl
+  have hs : (Embed.uop2 op).Strict := by cases op <;> exact Or.inl rfl
+  have he : ∀ x, Embed.enc_Term x = Tree.stuck ↔ x = Eo.Term.Stuck :=
+    fun x => by simpa [Embed.embedded_enc_Term] using enc_eq_stuck_iff x
+  have hv : ∀ x, Valid.valid x = TreeValid (Embed.enc_Term x) := fun _ => rfl
+  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true, hs, true_implies,
+    List.mem_cons, List.not_mem_nil, or_false, forall_eq_or_imp, forall_eq,
+    ne_eq, he, hv]
+  all_goals tauto
 
 @[simp] theorem Valid.uop3 (op : Eo.UserOp3) (i0 : Eo.Term) (i1 : Eo.Term) (i2 : Eo.Term) :
-    Valid.valid (Eo.Term.UOp3 op i0 i1 i2) ↔ Valid.valid i0 ∧ Valid.valid i1 ∧ Valid.valid i2 := by
+    Valid.valid (Eo.Term.UOp3 op i0 i1 i2) ↔ i0 ≠ Eo.Term.Stuck ∧ Valid.valid i0 ∧ i1 ≠ Eo.Term.Stuck ∧ Valid.valid i1 ∧ i2 ≠ Eo.Term.Stuck ∧ Valid.valid i2 := by
   show TreeValid (Embed.enc_Term _) ↔ _
-  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true]
-  rfl
+  have hs : (Embed.uop3 op).Strict := by cases op <;> exact Or.inl rfl
+  have he : ∀ x, Embed.enc_Term x = Tree.stuck ↔ x = Eo.Term.Stuck :=
+    fun x => by simpa [Embed.embedded_enc_Term] using enc_eq_stuck_iff x
+  have hv : ∀ x, Valid.valid x = TreeValid (Embed.enc_Term x) := fun _ => rfl
+  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true, hs, true_implies,
+    List.mem_cons, List.not_mem_nil, or_false, forall_eq_or_imp, forall_eq,
+    ne_eq, he, hv]
+  all_goals tauto
 
 /-- What is proved of the programs, for stores that can enter `n` more calls. -/
 structure Specs (n : Nat) : Prop where

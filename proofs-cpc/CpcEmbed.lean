@@ -3,6 +3,7 @@ module
 public import CpcChecker
 public import PathosProofs.Store.Tree
 public import Cpc.Logos
+import all Cpc.Logos
 public import Cpc.SmtTranslate
 
 /-!
@@ -244,6 +245,22 @@ def uop2 : Eo.UserOp2 → schema.Constructor
 def uop3 : Eo.UserOp3 → schema.Constructor
   | Eo.UserOp3._at_re_unfold_pos_component => schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent
   | Eo.UserOp3._at_witness_string_length => schema.Constructor.eo__40witness_5fstring_5flength
+
+@[simp] theorem mk_uop1_of_ne {op : Eo.UserOp1} {x1 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck) :
+    Eo.__eo_mk_uop1 op x1 = Eo.Term.UOp1 op x1 := by
+  unfold Eo.__eo_mk_uop1; split <;> simp_all
+
+@[simp] theorem mk_uop2_of_ne {op : Eo.UserOp2} {x1 x2 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck) (h2 : x2 ≠ Eo.Term.Stuck) :
+    Eo.__eo_mk_uop2 op x1 x2 = Eo.Term.UOp2 op x1 x2 := by
+  unfold Eo.__eo_mk_uop2; split <;> simp_all
+
+@[simp] theorem mk_uop3_of_ne {op : Eo.UserOp3} {x1 x2 x3 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck) (h2 : x2 ≠ Eo.Term.Stuck) (h3 : x3 ≠ Eo.Term.Stuck) :
+    Eo.__eo_mk_uop3 op x1 x2 x3 = Eo.Term.UOp3 op x1 x2 x3 := by
+  unfold Eo.__eo_mk_uop3; split <;> simp_all
+
+@[simp] theorem mk_var_of_ne {x1 x2 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck) (h2 : x2 ≠ Eo.Term.Stuck) :
+    Eo.__eo_mk_var x1 x2 = Eo.Term.Var x1 x2 := by
+  unfold Eo.__eo_mk_var; split <;> simp_all
 
 mutual
 /-- The tree of the store that a `Datatype` is stored as. -/

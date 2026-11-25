@@ -3,6 +3,7 @@ module
 public import MiniChecker
 public import PathosProofs.Store.Tree
 public import CpcMini.Logos
+import all CpcMini.Logos
 public import CpcMini.SmtTranslate
 
 /-!
@@ -54,6 +55,10 @@ def uop : Eo.UserOp → schema.Constructor
   | Eo.UserOp.and => schema.Constructor.eo_and
   | Eo.UserOp.imp => schema.Constructor.eo__3d_3e
   | Eo.UserOp.eq => schema.Constructor.eo__3d
+
+@[simp] theorem mk_var_of_ne {x1 x2 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck) (h2 : x2 ≠ Eo.Term.Stuck) :
+    Eo.__eo_mk_var x1 x2 = Eo.Term.Var x1 x2 := by
+  unfold Eo.__eo_mk_var; split <;> simp_all
 
 mutual
 /-- The tree of the store that a `Datatype` is stored as. -/

@@ -1,7 +1,10 @@
 module
 
 public import CpcChecker
+public import Cpc.Logos
+import all Cpc.Logos
 public import PathosProofs.Runtime.Node
+public import PathosProofs.Runtime.Embed
 public import CpcEmbed
 
 /-!
@@ -39,7 +42,7 @@ theorem CtorSpec.eo__24emb_5fr_2ere_5fin_5fsigma_5fstar.construct (s : Store) (a
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.re_in_sigma_star)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2ere_5fin_5fsigma_5fstar args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -74,7 +77,7 @@ theorem CtorSpec.eo__24emb_5fr_2ere_5fin_5fcstring.construct (s : Store) (args :
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.re_in_cstring)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2ere_5fin_5fcstring args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -109,7 +112,7 @@ theorem CtorSpec.eo__24emb_5fr_2ere_5fin_5fcomp.construct (s : Store) (args : Sl
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.re_in_comp)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2ere_5fin_5fcomp args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -144,7 +147,7 @@ theorem CtorSpec.eo__24emb_5fr_2estr_5fin_5fre_5funion_5felim.construct (s : Sto
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.str_in_re_union_elim)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5funion_5felim args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -179,7 +182,7 @@ theorem CtorSpec.eo__24emb_5fr_2estr_5fin_5fre_5finter_5felim.construct (s : Sto
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.str_in_re_inter_elim)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5finter_5felim args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -214,7 +217,7 @@ theorem CtorSpec.eo__24emb_5fr_2estr_5fin_5fre_5frange_5felim.construct (s : Sto
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.str_in_re_range_elim)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5frange_5felim args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -249,7 +252,7 @@ theorem CtorSpec.eo__24emb_5fr_2estr_5fin_5fre_5fcontains.construct (s : Store) 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.str_in_re_contains)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5fcontains args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -284,7 +287,7 @@ theorem CtorSpec.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fnemp_5fdig_5frange
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.str_in_re_from_int_nemp_dig_range)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fnemp_5fdig_5frange args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -319,7 +322,7 @@ theorem CtorSpec.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fdig_5frange.constr
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.str_in_re_from_int_dig_range)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2estr_5fin_5fre_5ffrom_5fint_5fdig_5frange args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -354,7 +357,7 @@ theorem CtorSpec.eo__24emb_5fr_2eeq_5frefl.construct (s : Store) (args : Slice T
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.eq_refl)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2eeq_5frefl args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -389,7 +392,7 @@ theorem CtorSpec.eo__24emb_5fr_2eeq_5fsymm.construct (s : Store) (args : Slice T
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.eq_symm)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2eeq_5fsymm args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -424,7 +427,7 @@ theorem CtorSpec.eo__24emb_5fr_2eeq_5fcond_5fdeq.construct (s : Store) (args : S
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.eq_cond_deq)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2eeq_5fcond_5fdeq args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -459,7 +462,7 @@ theorem CtorSpec.eo__24emb_5fr_2eeq_5fite_5flift.construct (s : Store) (args : S
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.eq_ite_lift)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2eeq_5fite_5flift args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -494,7 +497,7 @@ theorem CtorSpec.eo__24emb_5fr_2edistinct_5fbinary_5felim.construct (s : Store) 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.distinct_binary_elim)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2edistinct_5fbinary_5felim args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -529,7 +532,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv.construct (s : Store) (arg
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_bv2nat_int2bv)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -564,7 +567,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextend.construct (s : St
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_bv2nat_int2bv_extend)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextend args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -599,7 +602,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextract.construct (s : S
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_bv2nat_int2bv_extract)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fint2bv_5fextract args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -634,7 +637,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fint2bv_5fbv2nat.construct (s : Store) (arg
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_int2bv_bv2nat)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbv2nat args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -669,7 +672,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fbv2nat_5fgeq_5felim.construct (s : Store) 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_bv2nat_geq_elim)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fbv2nat_5fgeq_5felim args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -704,7 +707,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fint2bv_5fbvult_5fequiv.construct (s : Stor
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_int2bv_bvult_equiv)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbvult_5fequiv args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -739,7 +742,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fint2bv_5fbvule_5fequiv.construct (s : Stor
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_int2bv_bvule_equiv)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fint2bv_5fbvule_5fequiv args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -774,7 +777,7 @@ theorem CtorSpec.eo__24emb_5fr_2euf_5fsbv_5fto_5fint_5felim.construct (s : Store
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.uf_sbv_to_int_elim)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2euf_5fsbv_5fto_5fint_5felim args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -809,7 +812,7 @@ theorem CtorSpec.eo__24emb_5fr_2eevaluate.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.evaluate)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2eevaluate args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -844,7 +847,7 @@ theorem CtorSpec.eo__24emb_5fr_2edistinct_5fvalues.construct (s : Store) (args :
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.distinct_values)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2edistinct_5fvalues args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -879,7 +882,7 @@ theorem CtorSpec.eo__24emb_5fr_2eaci_5fnorm.construct (s : Store) (args : Slice 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.aci_norm)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2eaci_5fnorm args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -914,7 +917,7 @@ theorem CtorSpec.eo__24emb_5fr_2eabsorb.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.absorb)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2eabsorb args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -949,7 +952,7 @@ theorem CtorSpec.eo__24emb_5fr_2edistinct_5fcard_5fconflict.construct (s : Store
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CRule.distinct_card_conflict)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fr_2edistinct_5fcard_5fconflict args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -984,7 +987,7 @@ theorem CtorSpec.eo__24emb_5fs_2enil.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CState.nil)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fs_2enil args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1019,7 +1022,7 @@ theorem CtorSpec.eo__24emb_5fs_2eStuck.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CState.Stuck)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fs_2eStuck args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1054,7 +1057,7 @@ theorem CtorSpec.eo__24emb_5fs_2econs.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CState.cons x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fs_2econs args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1096,7 +1099,7 @@ theorem CtorSpec.eo__24emb_5fso_2eassume.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CStateObj.assume x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fso_2eassume args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1136,7 +1139,7 @@ theorem CtorSpec.eo__24emb_5fso_2eassume_5fpush.construct (s : Store) (args : Sl
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CStateObj.assume_push x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fso_2eassume_5fpush args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1176,7 +1179,7 @@ theorem CtorSpec.eo__24emb_5fso_2eproven.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Eo.CStateObj.proven x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fso_2eproven args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1216,7 +1219,7 @@ theorem CtorSpec.eo__24emb_5fedt_2enull.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Datatype.null)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fedt_2enull args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1251,7 +1254,7 @@ theorem CtorSpec.eo__24emb_5fedt_2esum.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Datatype.sum x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fedt_2esum args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1293,7 +1296,7 @@ theorem CtorSpec.eo__24emb_5fedtc_2eunit.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Eo.DatatypeCons.unit)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fedtc_2eunit args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1328,7 +1331,7 @@ theorem CtorSpec.eo__24emb_5fedtc_2econs.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Eo.DatatypeCons.cons x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fedtc_2econs args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1370,7 +1373,7 @@ theorem CtorSpec.eo__24emb_5fedd_2enil.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.DatatypeDecl.nil)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fedd_2enil args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1405,7 +1408,7 @@ theorem CtorSpec.eo__24emb_5fedd_2econs.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Eo.DatatypeDecl.cons x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fedd_2econs args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1449,7 +1452,7 @@ theorem CtorSpec.eo__24eo_5fpf.construct (s : Store) (args : Slice Term) {a0 : T
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Proof.pf x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24eo_5fpf args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1489,7 +1492,7 @@ theorem CtorSpec.eo__24emb_5fsbd_2enil.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtBindings.nil)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsbd_2enil args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1524,7 +1527,7 @@ theorem CtorSpec.eo__24emb_5fsbd_2econs.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtBindings.cons x0 x1 x2 x3)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsbd_2econs args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2, Embedded.enc x3] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 (HoldsList.cons _ _ _ _ h3.1 HoldsList.nil))))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 (HoldsList.cons _ _ _ _ h3.1 HoldsList.nil))))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1570,7 +1573,7 @@ theorem CtorSpec.eo__24emb_5fdt_2enull.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtDatatype.null)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fdt_2enull args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1605,7 +1608,7 @@ theorem CtorSpec.eo__24emb_5fdt_2esum.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtDatatype.sum x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fdt_2esum args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1647,7 +1650,7 @@ theorem CtorSpec.eo__24emb_5fdtc_2eunit.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtDatatypeCons.unit)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fdtc_2eunit args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1682,7 +1685,7 @@ theorem CtorSpec.eo__24emb_5fdtc_2econs.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtDatatypeCons.cons x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fdtc_2econs args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1724,7 +1727,7 @@ theorem CtorSpec.eo__24emb_5fdd_2enil.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtDatatypeDecl.nil)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fdd_2enil args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1759,7 +1762,7 @@ theorem CtorSpec.eo__24emb_5fdd_2econs.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtDatatypeDecl.cons x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fdd_2econs args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1803,7 +1806,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eNone.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.None)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eNone args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1838,7 +1841,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eBoolean.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.Boolean x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eBoolean args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1878,7 +1881,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eNumeral.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.Numeral x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eNumeral args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1918,7 +1921,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eRational.construct (s : Store) (args : Slice T
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.Rational x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eRational args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1958,7 +1961,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eString.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.String x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eString args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1998,7 +2001,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eBinary.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.Binary x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eBinary args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2040,7 +2043,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eApply.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.Apply x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eApply args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2082,7 +2085,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eVar.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.Var x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eVar args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2124,7 +2127,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eDtCons.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.DtCons x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eDtCons args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2168,7 +2171,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eDtSel.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.DtSel x0 x1 x2 x3)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eDtSel args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2, Embedded.enc x3] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 (HoldsList.cons _ _ _ _ h3.1 HoldsList.nil))))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 (HoldsList.cons _ _ _ _ h3.1 HoldsList.nil))))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2214,7 +2217,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eDtTester.construct (s : Store) (args : Slice T
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.DtTester x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eDtTester args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2258,7 +2261,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eUConst.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.UConst x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eUConst args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2300,7 +2303,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eite.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.ite x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eite args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2344,7 +2347,7 @@ theorem CtorSpec.eo__24emb_5fsm_2enot.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.not x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2enot args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2384,7 +2387,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eor.construct (s : Store) (args : Slice Term) {
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.or x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eor args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2426,7 +2429,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eand.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.and x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eand args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2468,7 +2471,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3d_3e.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.imp x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_3d_3e args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2510,7 +2513,7 @@ theorem CtorSpec.eo__24emb_5fsm_2exor.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.xor x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2exor args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2552,7 +2555,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3d.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.eq x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_3d args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2594,7 +2597,7 @@ theorem CtorSpec.eo__24emb_5fsm_2elam.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.lam x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2elam args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2638,7 +2641,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebind.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bind x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebind args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2680,7 +2683,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_40purify.construct (s : Store) (args : Slice 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm._at_purify x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_40purify args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2720,7 +2723,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_2b.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.plus x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_2b args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2762,7 +2765,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_2d.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.neg x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_2d args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2804,7 +2807,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_2a.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.mult x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_2a args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2846,7 +2849,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3c.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.lt x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_3c args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2888,7 +2891,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3c_3d.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.leq x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_3c_3d args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2930,7 +2933,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3e.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.gt x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_3e args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2972,7 +2975,7 @@ theorem CtorSpec.eo__24emb_5fsm_2e_3e_3d.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.geq x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2e_3e_3d args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3014,7 +3017,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eto_5freal.construct (s : Store) (args : Slice 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.to_real x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eto_5freal args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3054,7 +3057,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eto_5fint.construct (s : Store) (args : Slice T
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.to_int x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eto_5fint args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3094,7 +3097,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eis_5fint.construct (s : Store) (args : Slice T
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.is_int x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eis_5fint args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3134,7 +3137,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eabs.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.abs x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eabs args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3174,7 +3177,7 @@ theorem CtorSpec.eo__24emb_5fsm_2euneg.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.uneg x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2euneg args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3214,7 +3217,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ediv.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.div x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ediv args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3256,7 +3259,7 @@ theorem CtorSpec.eo__24emb_5fsm_2emod.construct (s : Store) (args : Slice Term) 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.mod x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2emod args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3298,7 +3301,7 @@ theorem CtorSpec.eo__24emb_5fsm_2edivisible.construct (s : Store) (args : Slice 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.divisible x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2edivisible args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3340,7 +3343,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eint_2epow2.construct (s : Store) (args : Slice
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.int_pow2 x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eint_2epow2 args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3380,7 +3383,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eint_2elog2.construct (s : Store) (args : Slice
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.int_log2 x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eint_2elog2 args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3420,7 +3423,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ediv_5ftotal.construct (s : Store) (args : Slic
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.div_total x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ediv_5ftotal args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3462,7 +3465,7 @@ theorem CtorSpec.eo__24emb_5fsm_2emod_5ftotal.construct (s : Store) (args : Slic
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.mod_total x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2emod_5ftotal args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3504,7 +3507,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eselect.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.select x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eselect args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3546,7 +3549,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estore.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.store x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estore args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3590,7 +3593,7 @@ theorem CtorSpec.eo__24emb_5fsm_2emap_5fdiff.construct (s : Store) (args : Slice
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.map_diff x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2emap_5fdiff args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3632,7 +3635,7 @@ theorem CtorSpec.eo__24emb_5fsm_2econcat.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.concat x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2econcat args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3674,7 +3677,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eextract.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.extract x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eextract args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3718,7 +3721,7 @@ theorem CtorSpec.eo__24emb_5fsm_2erepeat.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.repeat x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2erepeat args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3760,7 +3763,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvnot.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvnot x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvnot args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3800,7 +3803,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvand.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvand x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvand args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3842,7 +3845,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvor.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvor x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvor args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3884,7 +3887,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvnand.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvnand x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvnand args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3926,7 +3929,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvnor.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvnor x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvnor args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3968,7 +3971,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvxor.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvxor x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvxor args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4010,7 +4013,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvxnor.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvxnor x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvxnor args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4052,7 +4055,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvcomp.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvcomp x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvcomp args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4094,7 +4097,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvneg.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvneg x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvneg args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4134,7 +4137,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvadd.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvadd x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvadd args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4176,7 +4179,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvmul.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvmul x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvmul args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4218,7 +4221,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvudiv.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvudiv x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvudiv args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4260,7 +4263,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvurem.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvurem x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvurem args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4302,7 +4305,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsub.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsub x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsub args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4344,7 +4347,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsdiv.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsdiv x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsdiv args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4386,7 +4389,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsrem.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsrem x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsrem args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4428,7 +4431,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsmod.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsmod x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsmod args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4470,7 +4473,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvult.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvult x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvult args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4512,7 +4515,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvule.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvule x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvule args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4554,7 +4557,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvugt.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvugt x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvugt args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4596,7 +4599,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvuge.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvuge x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvuge args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4638,7 +4641,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvslt.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvslt x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvslt args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4680,7 +4683,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsle.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsle x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsle args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4722,7 +4725,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsgt.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsgt x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsgt args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4764,7 +4767,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsge.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsge x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsge args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4806,7 +4809,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvshl.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvshl x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvshl args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4848,7 +4851,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvlshr.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvlshr x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvlshr args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4890,7 +4893,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvashr.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvashr x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvashr args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4932,7 +4935,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ezero_5fextend.construct (s : Store) (args : Sl
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.zero_extend x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ezero_5fextend args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -4974,7 +4977,7 @@ theorem CtorSpec.eo__24emb_5fsm_2esign_5fextend.construct (s : Store) (args : Sl
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.sign_extend x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2esign_5fextend args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5016,7 +5019,7 @@ theorem CtorSpec.eo__24emb_5fsm_2erotate_5fleft.construct (s : Store) (args : Sl
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.rotate_left x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2erotate_5fleft args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5058,7 +5061,7 @@ theorem CtorSpec.eo__24emb_5fsm_2erotate_5fright.construct (s : Store) (args : S
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.rotate_right x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2erotate_5fright args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5100,7 +5103,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvuaddo.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvuaddo x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvuaddo args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5142,7 +5145,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvnego.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvnego x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvnego args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5182,7 +5185,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsaddo.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsaddo x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsaddo args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5224,7 +5227,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvumulo.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvumulo x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvumulo args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5266,7 +5269,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsmulo.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsmulo x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsmulo args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5308,7 +5311,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvusubo.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvusubo x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvusubo args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5350,7 +5353,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvssubo.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvssubo x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvssubo args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5392,7 +5395,7 @@ theorem CtorSpec.eo__24emb_5fsm_2ebvsdivo.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.bvsdivo x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2ebvsdivo args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5434,7 +5437,7 @@ theorem CtorSpec.eo__24emb_5fsm_2eseq_2eempty.construct (s : Store) (args : Slic
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.seq_empty x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2eseq_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5474,7 +5477,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2elen.construct (s : Store) (args : Slice 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_len x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2elen args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5514,7 +5517,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2e_2b_2b.construct (s : Store) (args : Sli
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_concat x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2e_2b_2b args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5556,7 +5559,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2esubstr.construct (s : Store) (args : Sli
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_substr x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2esubstr args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5600,7 +5603,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2econtains.construct (s : Store) (args : S
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_contains x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2econtains args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5642,7 +5645,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2ereplace.construct (s : Store) (args : Sl
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_replace x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2ereplace args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5686,7 +5689,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2eindexof.construct (s : Store) (args : Sl
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_indexof x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2eindexof args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5730,7 +5733,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2eat.construct (s : Store) (args : Slice T
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_at x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2eat args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5772,7 +5775,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2eprefixof.construct (s : Store) (args : S
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_prefixof x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2eprefixof args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5814,7 +5817,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2esuffixof.construct (s : Store) (args : S
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_suffixof x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2esuffixof args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5856,7 +5859,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2erev.construct (s : Store) (args : Slice 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_rev x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2erev args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5896,7 +5899,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2eupdate.construct (s : Store) (args : Sli
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_update x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2eupdate args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5940,7 +5943,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2eto_5flower.construct (s : Store) (args :
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_to_lower x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2eto_5flower args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -5980,7 +5983,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2eto_5fupper.construct (s : Store) (args :
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_to_upper x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fupper args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -6020,7 +6023,7 @@ theorem CtorSpec.eo__24emb_5fsm_2estr_2eto_5fcode.construct (s : Store) (args : 
       | core.result.Result.Ok t => Represents.rep s' t (Smtm.SmtTerm.str_to_code x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fsm_2estr_2eto_5fcode args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩

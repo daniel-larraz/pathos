@@ -3503,12 +3503,13 @@ theorem case_0_eo__24str_5fis_5fempty_spec (n : Nat) (ih : Specs n) (s : Store) 
   unfold case_0_eo__24str_5fis_5fempty
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo_seq_2eempty.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__str_is_empty.case_0
+  obtain hn_v1 := CtorSpec.eo_seq_2eempty.fields_ne_stuck hinv h_a0
   pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__str_is_empty.case_0
   step as ⟨e_v5, he_v5⟩
   store_step with CtorSpec.eo_Seq.construct s e_v5 (by rw [he_v5]; exact empty_args) hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4
   pat_same v3 v5 with h_v3 h_v5 using hinv1 else hinv1 hG in EoCases.__str_is_empty.case_0
   store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5
-  case_done hinv2 hG with h_v6 in EoCases.__str_is_empty.case_0 using hn_a0 hn_v3 hn_v4
+  case_done hinv2 hG with h_v6 in EoCases.__str_is_empty.case_0 using hn_a0 hn_v1 hn_v3 hn_v4
 
 theorem case_1_eo__24str_5fis_5fempty_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :

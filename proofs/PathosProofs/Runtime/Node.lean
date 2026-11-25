@@ -26,11 +26,42 @@ namespace pathos_compiled_checker
 
 open Aeneas Aeneas.Std Result
 
+/-- A handle whose data is the stuck term unfolds to the stuck tree. -/
+theorem HoldsList.stuck_mem {nodes : List TermData} {hs : List Term} {xs : List Tree}
+    (h : HoldsList nodes hs xs) {a : Term} (ha : a ∈ hs)
+    (hd : nodes[a.val]! = TermData.Stuck) : Tree.stuck ∈ xs := by
+  induction hs generalizing xs with
+  | nil => cases ha
+  | cons x hs' ih =>
+    cases h with
+    | cons _ _ y ys hy hl =>
+      rcases List.mem_cons.mp ha with rfl | ha
+      · have : y = Tree.stuck := Holds.functional hy (Holds.stuck _ hy.lt hd)
+        rw [this]; exact List.mem_cons_self ..
+      · exact List.mem_cons_of_mem _ (ih hl ha)
+
+/-- A stuck tree among those of handles is that of a handle whose data is
+the stuck term. -/
+theorem HoldsList.mem_stuck {nodes : List TermData} {hs : List Term} {xs : List Tree}
+    (h : HoldsList nodes hs xs) (hm : Tree.stuck ∈ xs) :
+    ∃ a ∈ hs, nodes[a.val]! = TermData.Stuck := by
+  induction hs generalizing xs with
+  | nil => cases h; cases hm
+  | cons x hs' ih =>
+    cases h with
+    | cons _ _ y ys hy hl =>
+      rcases List.mem_cons.mp hm with he | hm
+      · subst he
+        cases hy with | stuck _ _ hd => exact ⟨x, List.mem_cons_self .., hd⟩
+      · obtain ⟨a, ha, hd⟩ := ih hl hm
+        exact ⟨a, List.mem_cons_of_mem _ ha, hd⟩
+
 /-- `construct` of a data constructor on handles of the trees `xs` gives a
-handle of the node over them. -/
+handle of the node over them, where a strict constructor (a user operator
+or a variable) has no stuck field. -/
 theorem Store.construct_holds (s : Store) (c : schema.Constructor) (args : Slice Term)
     (xs : List Tree) (hinv : s.Inv) (h64 : Platform64) (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var)
-    (hargs : HoldsList s.nodes.val args.val xs) :
+    (hargs : HoldsList s.nodes.val args.val xs) (hns : c.Strict → Tree.stuck ∉ xs) :
     Store.construct s c args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
@@ -44,8 +75,35 @@ theorem Store.construct_holds (s : Store) (c : schema.Constructor) (args : Slice
   | Err e => trivial
   | Ok t =>
     simp only at hres ⊢
-    obtain ⟨hlt, v, hv, hd⟩ := hres
-    exact Holds.node t.val c v xs hlt hd (by rw [hv]; exact HoldsList.mono hext.grows.nodes hargs)
+    obtain ⟨hlt, hres⟩ := hres
+    rcases hres with ⟨hc, ⟨a, ha, hd⟩, -, -⟩ | ⟨-, v, hv, hd⟩
+    · exact absurd (HoldsList.stuck_mem hargs ha hd) (hns hc)
+    · exact Holds.node t.val c v xs hlt hd (by rw [hv]; exact HoldsList.mono hext.grows.nodes hargs)
+
+/-- `construct` of a strict constructor (a user operator or a variable) on
+handles of trees one of which is the stuck tree gives the stuck term, as
+`apply` does for an application. -/
+theorem Store.construct_holds_stuck (s : Store) (c : schema.Constructor) (args : Slice Term)
+    (xs : List Tree) (hinv : s.Inv) (h64 : Platform64) (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var)
+    (hargs : HoldsList s.nodes.val args.val xs) (hc : c.Strict) (hst : Tree.stuck ∈ xs) :
+    Store.construct s c args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Holds s'.nodes.val t.val Tree.stuck
+      | core.result.Result.Err _ => True ⦄div := by
+  apply WP.dspec_mono (Store.construct_data_spec s c args hinv h64 hemb)
+  rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
+  simp only [WP.uncurry'_pair] at hres ⊢
+  refine ⟨hinv', hext.grows, ?_⟩
+  cases r with
+  | Err e => trivial
+  | Ok t =>
+    simp only at hres ⊢
+    obtain ⟨hlt, hres⟩ := hres
+    rcases hres with ⟨-, -, rfl, rfl⟩ | ⟨hns, -⟩
+    · exact Holds.stuck 0 hinv.terms.nonempty hinv.terms.stuck0
+    · obtain ⟨a, ha, hd⟩ := HoldsList.mem_stuck hargs hst
+      exact absurd hd (hns hc a ha)
 
 /-- `destruct` of a data constructor on a handle of the tree `x`: the
 handles of the fields of `x` if it is a node of that constructor, nothing

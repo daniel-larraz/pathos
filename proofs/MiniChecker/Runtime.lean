@@ -2794,7 +2794,7 @@ def Term.Insts.CoreCloneClone : core.clone.Clone Term := {
 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct_user]:
-    Source: 'src/lib.rs', lines 639:4-651:5 -/
+    Source: 'src/lib.rs', lines 646:4-658:5 -/
 def Store.destruct_user
   (self : Store) (c : schema.Constructor) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -2899,7 +2899,7 @@ def Embedding.Insts.CoreCmpPartialEqEmbedding.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct_literal]:
-    Source: 'src/lib.rs', lines 617:4-637:5 -/
+    Source: 'src/lib.rs', lines 624:4-644:5 -/
 def Store.destruct_literal
   (e : Embedding) (literal : lit.Lit) : Result Hit := do
   let which ←
@@ -2971,7 +2971,7 @@ def Store.raw
   Store.intern self (TermData.Native literal)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct]:
-    Source: 'src/lib.rs', lines 584:4-615:5
+    Source: 'src/lib.rs', lines 591:4-622:5
     Visibility: public -/
 def Store.destruct
   (self : Store) (c : schema.Constructor) (t : Term) :
@@ -3679,13 +3679,13 @@ def Store.stuck (self : Store) : Result Term := do
   ok 0#u32
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::leave]:
-    Source: 'src/lib.rs', lines 949:4-951:5 -/
+    Source: 'src/lib.rs', lines 956:4-958:5 -/
 def Store.leave (self : Store) : Result Store := do
   let i ← self.depth - 1#u32
   ok { self with depth := i }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::enter]:
-    Source: 'src/lib.rs', lines 934:4-941:5 -/
+    Source: 'src/lib.rs', lines 941:4-948:5 -/
 def Store.enter
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.depth >= self.limits.depth
@@ -3698,8 +3698,49 @@ def Store.enter
       let i1 ← self.calls + 1#u64
       ok (core.result.Result.Ok (), { self with calls := i1, depth := i })
 
+/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::stuck_or_foreign]:
+    Source: 'src/lib.rs', lines 1114:4-1120:5 -/
+def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
+  let r ← Store.view self t
+  match r with
+  | core.result.Result.Ok td =>
+    match td with
+    | TermData.Stuck => ok true
+    | TermData.Literal _ => ok false
+    | TermData.Native _ => ok false
+    | TermData.UserOp _ => ok false
+    | TermData.Apply _ _ => ok false
+    | TermData.Node _ _ => ok false
+  | core.result.Result.Err _ => ok true
+
+/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]: loop 0:
+    Source: 'src/lib.rs', lines 1105:8-1110:9 -/
+@[rust_loop]
+def Store.any_stuck_loop
+  (self : Store) (args : Slice Term) (any : Bool) (i : Std.Usize) :
+  Result Bool
+  := do
+  let i1 := Slice.len args
+  if i < i1
+  then
+    let t ← Slice.index_usize args i
+    let b ← Store.stuck_or_foreign self t
+    let any1 ← if b
+                 then ok true
+                 else ok any
+    let i2 ← i + 1#usize
+    Store.any_stuck_loop self args any1 i2
+  else ok any
+partial_fixpoint
+
+/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]:
+    Source: 'src/lib.rs', lines 1102:4-1112:5 -/
+@[reducible]
+def Store.any_stuck (self : Store) (args : Slice Term) : Result Bool := do
+  Store.any_stuck_loop self args false 0#usize
+
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]: loop 0:
-    Source: 'src/lib.rs', lines 1088:8-1093:5 -/
+    Source: 'src/lib.rs', lines 1095:8-1100:5 -/
 @[rust_loop]
 def Store.check_handles_loop
   (self : Store) (args : Slice Term) (i : Std.Usize) :
@@ -3722,7 +3763,7 @@ def Store.check_handles_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]:
-    Source: 'src/lib.rs', lines 1086:4-1093:5 -/
+    Source: 'src/lib.rs', lines 1093:4-1100:5 -/
 @[reducible]
 def Store.check_handles
   (self : Store) (args : Slice Term) :
@@ -3741,7 +3782,7 @@ axiom num.Integer.to_u32 : num.Integer → Result Std.U32
 axiom num.Integer.fits_u32 : num.Integer → Result Bool
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_int]:
-    Source: 'src/lib.rs', lines 812:4-817:5 -/
+    Source: 'src/lib.rs', lines 819:4-824:5 -/
 def Store.raw_int
   (self : Store) (t : Term) :
   Result (core.result.Result num.Integer CheckError)
@@ -3796,7 +3837,7 @@ def Store.literal
   Store.intern self (TermData.Literal literal1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_binary]:
-    Source: 'src/lib.rs', lines 576:4-583:5 -/
+    Source: 'src/lib.rs', lines 583:4-590:5 -/
 def Store.construct_binary
   (self : Store) (w : Term) (v : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -3828,7 +3869,7 @@ def Store.construct_binary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_literal]:
-    Source: 'src/lib.rs', lines 553:4-574:5 -/
+    Source: 'src/lib.rs', lines 560:4-581:5 -/
 def Store.construct_literal
   (self : Store) (e : Embedding) (v : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -3947,7 +3988,7 @@ def Store.apply
 mutual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct]:
-    Source: 'src/lib.rs', lines 518:4-540:5
+    Source: 'src/lib.rs', lines 518:4-547:5
     Visibility: public -/
 def Store.construct
   (self : Store) (c : schema.Constructor) (args : Slice Term) :
@@ -3970,8 +4011,34 @@ def Store.construct
         then let t ← Store.stuck self
              ok (core.result.Result.Ok t, self)
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b1 ← schema.Constructor.is_user c
+          if b1
+          then
+            let b2 ← Store.any_stuck self args
+            if b2
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b2 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Stuck
+                Embedding.Var
+            if b2
+            then
+              let b3 ← Store.any_stuck self args
+              if b3
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Apply =>
         let i2 := Slice.len args
         if i2 = 2#usize
@@ -3980,8 +4047,34 @@ def Store.construct
           let t1 ← Slice.index_usize args 1#usize
           Store.apply self t t1
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Apply
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Boolean =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -3989,8 +4082,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Boolean t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Boolean
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Numeral =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -3998,8 +4117,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Numeral t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Numeral
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Rational =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -4007,8 +4152,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Rational t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Rational
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Str =>
         let i2 := Slice.len args
         if i2 = 1#usize
@@ -4016,8 +4187,34 @@ def Store.construct
           let t ← Slice.index_usize args 0#usize
           Store.construct_literal self Embedding.Str t
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Str
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.Binary =>
         let i2 := Slice.len args
         if i2 = 2#usize
@@ -4026,15 +4223,89 @@ def Store.construct
           let t1 ← Slice.index_usize args 1#usize
           Store.construct_binary self t t1
         else
-          let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-          Store.intern self (TermData.Node c v)
+          let b ← schema.Constructor.is_user c
+          if b
+          then
+            let b1 ← Store.any_stuck self args
+            if b1
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let b1 ←
+              Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Binary
+                Embedding.Var
+            if b1
+            then
+              let b2 ← Store.any_stuck self args
+              if b2
+              then
+                let t ← Store.stuck self
+                ok (core.result.Result.Ok t, self)
+              else
+                let v ←
+                  alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+                Store.intern self (TermData.Node c v)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
       | Embedding.UOp => Store.construct_user self args
       | Embedding.Var =>
-        let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-        Store.intern self (TermData.Node c v)
+        let b ← schema.Constructor.is_user c
+        if b
+        then
+          let b1 ← Store.any_stuck self args
+          if b1
+          then let t ← Store.stuck self
+               ok (core.result.Result.Ok t, self)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
+        else
+          let b1 ←
+            Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Var
+              Embedding.Var
+          if b1
+          then
+            let b2 ← Store.any_stuck self args
+            if b2
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
       | Embedding.Data =>
-        let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
-        Store.intern self (TermData.Node c v)
+        let b ← schema.Constructor.is_user c
+        if b
+        then
+          let b1 ← Store.any_stuck self args
+          if b1
+          then let t ← Store.stuck self
+               ok (core.result.Result.Ok t, self)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
+        else
+          let b1 ←
+            Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Data
+              Embedding.Var
+          if b1
+          then
+            let b2 ← Store.any_stuck self args
+            if b2
+            then let t ← Store.stuck self
+                 ok (core.result.Result.Ok t, self)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern self (TermData.Node c v)
+          else
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern self (TermData.Node c v)
     | core.ops.control_flow.ControlFlow.Break residual =>
       let r1 ←
         core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
@@ -4043,7 +4314,7 @@ def Store.construct
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_user]:
-    Source: 'src/lib.rs', lines 542:4-551:5 -/
+    Source: 'src/lib.rs', lines 549:4-558:5 -/
 def Store.construct_user
   (self : Store) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -4209,7 +4480,7 @@ def kind.EvalOp.Insts.CoreCmpPartialEqEvalOp.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::recognizes]:
-    Source: 'src/lib.rs', lines 1122:4-1137:5 -/
+    Source: 'src/lib.rs', lines 1129:4-1144:5 -/
 def Store.recognizes
   (self : Store) (op : kind.EvalOp) (x : Term) :
   Result (core.result.Result Bool CheckError)
@@ -4255,47 +4526,6 @@ def Store.recognizes
     | core.ops.control_flow.ControlFlow.Break residual =>
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
         Bool (core.convert.FromSame CheckError) residual
-
-/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::stuck_or_foreign]:
-    Source: 'src/lib.rs', lines 1107:4-1113:5 -/
-def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
-  let r ← Store.view self t
-  match r with
-  | core.result.Result.Ok td =>
-    match td with
-    | TermData.Stuck => ok true
-    | TermData.Literal _ => ok false
-    | TermData.Native _ => ok false
-    | TermData.UserOp _ => ok false
-    | TermData.Apply _ _ => ok false
-    | TermData.Node _ _ => ok false
-  | core.result.Result.Err _ => ok true
-
-/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]: loop 0:
-    Source: 'src/lib.rs', lines 1098:8-1103:9 -/
-@[rust_loop]
-def Store.any_stuck_loop
-  (self : Store) (args : Slice Term) (any : Bool) (i : Std.Usize) :
-  Result Bool
-  := do
-  let i1 := Slice.len args
-  if i < i1
-  then
-    let t ← Slice.index_usize args i
-    let b ← Store.stuck_or_foreign self t
-    let any1 ← if b
-                 then ok true
-                 else ok any
-    let i2 ← i + 1#usize
-    Store.any_stuck_loop self args any1 i2
-  else ok any
-partial_fixpoint
-
-/-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]:
-    Source: 'src/lib.rs', lines 1095:4-1105:5 -/
-@[reducible]
-def Store.any_stuck (self : Store) (args : Slice Term) : Result Bool := do
-  Store.any_stuck_loop self args false 0#usize
 
 /-- [pathos_compiled_checker::native::is_less]:
     Source: 'src/native.rs', lines 413:0-418:1 -/
@@ -7303,7 +7533,7 @@ def lit.Lit.evaluate
       else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literal_of]:
-    Source: 'src/lib.rs', lines 1115:4-1120:5 -/
+    Source: 'src/lib.rs', lines 1122:4-1127:5 -/
 def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   let r ← Store.view self t
   match r with
@@ -7320,7 +7550,7 @@ def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   | core.result.Result.Err _ => ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]: loop 0:
-    Source: 'src/lib.rs', lines 1143:8-1149:9 -/
+    Source: 'src/lib.rs', lines 1150:8-1156:9 -/
 @[rust_loop]
 def Store.literals_loop
   (self : Store) (args : Slice Term) (lits : alloc.vec.Vec lit.Lit)
@@ -7345,7 +7575,7 @@ def Store.literals_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]:
-    Source: 'src/lib.rs', lines 1139:4-1151:5 -/
+    Source: 'src/lib.rs', lines 1146:4-1158:5 -/
 def Store.literals
   (self : Store) (args : Slice Term) :
   Result (Option (alloc.vec.Vec lit.Lit))
@@ -7358,7 +7588,7 @@ def Store.literals
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_literal]:
-    Source: 'src/lib.rs', lines 1075:4-1084:5 -/
+    Source: 'src/lib.rs', lines 1082:4-1091:5 -/
 def Store.builtin_literal
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7376,7 +7606,7 @@ def Store.builtin_literal
     | some literal => Store.literal self literal
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::name_of]:
-    Source: 'src/lib.rs', lines 1065:4-1073:5 -/
+    Source: 'src/lib.rs', lines 1072:4-1080:5 -/
 def Store.name_of
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7471,7 +7701,7 @@ def table.PairStack.new : Result table.PairStack := do
   ok { items := (alloc.vec.Vec.new (Term × Term)), len := 0#usize }
 
 /-- [pathos_compiled_checker::code_points_cmp]: loop 0:
-    Source: 'src/lib.rs', lines 1207:4-1217:5 -/
+    Source: 'src/lib.rs', lines 1214:4-1224:5 -/
 @[rust_loop]
 def code_points_cmp_loop
   (a : Slice Std.U32) (b : Slice Std.U32) (order : Ordering) (i : Std.Usize)
@@ -7508,20 +7738,20 @@ def code_points_cmp_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::code_points_cmp]:
-    Source: 'src/lib.rs', lines 1202:0-1219:1 -/
+    Source: 'src/lib.rs', lines 1209:0-1226:1 -/
 @[reducible]
 def code_points_cmp
   (a : Slice Std.U32) (b : Slice Std.U32) : Result Ordering := do
   code_points_cmp_loop a b Ordering.eq 0#usize true
 
 /-- [pathos_compiled_checker::integer_cmp]:
-    Source: 'src/lib.rs', lines 1197:0-1199:1 -/
+    Source: 'src/lib.rs', lines 1204:0-1206:1 -/
 def integer_cmp (a : num.Integer) (b : num.Integer) : Result Ordering := do
   let o ← num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp a b
   ok (core.option.Option.unwrap_or o Ordering.eq)
 
 /-- [pathos_compiled_checker::literal_cmp]:
-    Source: 'src/lib.rs', lines 1157:0-1194:1 -/
+    Source: 'src/lib.rs', lines 1164:0-1201:1 -/
 def literal_cmp
   (a : lit.Lit) (b : lit.Lit) :
   Result (core.result.Result Ordering CheckError)
@@ -7778,7 +8008,7 @@ def schema.Constructor.order_key
   | schema.Constructor.eo_not => ok (0#usize, 5#usize)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::order_key]:
-    Source: 'src/lib.rs', lines 831:4-848:5 -/
+    Source: 'src/lib.rs', lines 838:4-855:5 -/
 def Store.order_key
   (d : TermData) :
   Result (core.result.Result (Std.Usize × Std.Usize) CheckError)
@@ -7823,7 +8053,7 @@ def Store.order_key
     ok (core.result.Result.Ok p)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]: loop 0:
-    Source: 'src/lib.rs', lines 923:20-926:21 -/
+    Source: 'src/lib.rs', lines 930:20-933:21 -/
 @[rust_loop]
 def Store.compare_step_loop
   (todo : table.PairStack) (xs : alloc.vec.Vec Term) (ys : alloc.vec.Vec Term)
@@ -7843,7 +8073,7 @@ def Store.compare_step_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]:
-    Source: 'src/lib.rs', lines 874:4-933:5 -/
+    Source: 'src/lib.rs', lines 881:4-940:5 -/
 def Store.compare_step
   (self : Store) (a : Term) (b : Term) (todo : table.PairStack) :
   Result ((core.result.Result Ordering CheckError) × table.PairStack)
@@ -8012,7 +8242,7 @@ def Store.compare_step
       ok (r1, todo)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]: loop 0:
-    Source: 'src/lib.rs', lines 858:8-871:5
+    Source: 'src/lib.rs', lines 865:8-878:5
     Visibility: public -/
 @[rust_loop]
 def Store.compare_loop
@@ -8041,7 +8271,7 @@ def Store.compare_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]:
-    Source: 'src/lib.rs', lines 851:4-871:5
+    Source: 'src/lib.rs', lines 858:4-878:5
     Visibility: public -/
 def Store.compare
   (self : Store) (a : Term) (b : Term) :
@@ -8123,7 +8353,7 @@ def kind.EvalOp.is_list_op (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_strict]:
-    Source: 'src/lib.rs', lines 1044:4-1063:5 -/
+    Source: 'src/lib.rs', lines 1051:4-1070:5 -/
 def Store.builtin_strict
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8485,7 +8715,7 @@ def kind.EvalOp.is_nary (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::takes]:
-    Source: 'src/lib.rs', lines 1004:4-1042:5 -/
+    Source: 'src/lib.rs', lines 1011:4-1049:5 -/
 def Store.takes (op : kind.EvalOp) (count : Std.Usize) : Result Bool := do
   let arity ←
     match op with
@@ -8599,7 +8829,7 @@ def Store.boolean_value
       (Option Bool) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_core]:
-    Source: 'src/lib.rs', lines 958:4-1002:5 -/
+    Source: 'src/lib.rs', lines 965:4-1009:5 -/
 def Store.builtin_core
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9260,7 +9490,7 @@ def native.Store.native_to_real
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_rat]:
-    Source: 'src/lib.rs', lines 818:4-823:5 -/
+    Source: 'src/lib.rs', lines 825:4-830:5 -/
 def Store.raw_rat
   (self : Store) (t : Term) :
   Result (core.result.Result num.Rational CheckError)
@@ -11390,7 +11620,7 @@ def native.Store.native_pattern_succ
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::tick]:
-    Source: 'src/lib.rs', lines 942:4-948:5 -/
+    Source: 'src/lib.rs', lines 949:4-955:5 -/
 def Store.tick
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.calls >= self.limits.calls
@@ -11494,7 +11724,7 @@ def Store.cached_type
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump]:
-    Source: 'src/lib.rs', lines 729:4-737:5 -/
+    Source: 'src/lib.rs', lines 736:4-744:5 -/
 def Store.state_jump
   (self : Store) (t : Term) : Result (Option (Std.U32 × Term)) := do
   let i ← lift (UScalar.cast .Usize t)
@@ -11510,7 +11740,7 @@ def Store.state_jump
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump_depth]:
-    Source: 'src/lib.rs', lines 739:4-744:5 -/
+    Source: 'src/lib.rs', lines 746:4-751:5 -/
 def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
   let o ← Store.state_jump self t
   match o with
@@ -11519,7 +11749,7 @@ def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
               ok d
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_tail]:
-    Source: 'src/lib.rs', lines 720:4-727:5 -/
+    Source: 'src/lib.rs', lines 727:4-734:5 -/
 def Store.state_tail
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result (core.result.Result (Option Term) CheckError)
@@ -11553,7 +11783,7 @@ def Store.state_tail
       (Option Term) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-811:5 -/
+    Source: 'src/lib.rs', lines 1:0-818:5 -/
 @[rust_loop]
 def Store.state_ancestor_loop
   (x : Term) (self : Store) (cons : schema.Constructor) (target : Std.U32) :
@@ -11584,7 +11814,7 @@ def Store.state_ancestor_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]:
-    Source: 'src/lib.rs', lines 792:4-811:5 -/
+    Source: 'src/lib.rs', lines 799:4-818:5 -/
 @[reducible]
 def Store.state_ancestor
   (self : Store) (cons : schema.Constructor) (t : Term) (target : Std.U32) :
@@ -11593,7 +11823,7 @@ def Store.state_ancestor
   Store.state_ancestor_loop t self cons target
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::set_state_jump]:
-    Source: 'src/lib.rs', lines 745:4-751:5 -/
+    Source: 'src/lib.rs', lines 752:4-758:5 -/
 def Store.set_state_jump
   (self : Store) (t : Term) (entry : (Std.U32 × Term)) : Result Store := do
   let i ← lift (UScalar.cast .Usize t)
@@ -11613,7 +11843,7 @@ def Store.set_state_jump
   ok { self with state_jumps := v1 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 1:
-    Source: 'src/lib.rs', lines 774:8-787:9 -/
+    Source: 'src/lib.rs', lines 781:8-794:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop0
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -11649,7 +11879,7 @@ def Store.state_depth_loop0_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 2:
-    Source: 'src/lib.rs', lines 774:8-787:9 -/
+    Source: 'src/lib.rs', lines 781:8-794:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop1
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -11685,7 +11915,7 @@ def Store.state_depth_loop0_loop1
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-789:5 -/
+    Source: 'src/lib.rs', lines 1:0-796:5 -/
 @[rust_loop]
 def Store.state_depth_loop0
   (x : Term) (self : Store) (cons : schema.Constructor)
@@ -11718,7 +11948,7 @@ def Store.state_depth_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]:
-    Source: 'src/lib.rs', lines 755:4-789:5 -/
+    Source: 'src/lib.rs', lines 762:4-796:5 -/
 def Store.state_depth
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result ((core.result.Result Std.U32 CheckError) × Store)
@@ -11727,7 +11957,7 @@ def Store.state_depth
   Store.state_depth_loop0 t self cons pending
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::charge]:
-    Source: 'src/lib.rs', lines 708:4-718:5 -/
+    Source: 'src/lib.rs', lines 715:4-725:5 -/
 def Store.charge
   (self : Store) (count : Std.U64) :
   Result ((core.result.Result Unit CheckError) × Store)
@@ -11740,7 +11970,7 @@ def Store.charge
   else ok (core.result.Result.Ok (), { self with calls := sum })
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_nth]:
-    Source: 'src/lib.rs', lines 667:4-705:5 -/
+    Source: 'src/lib.rs', lines 674:4-712:5 -/
 def Store.state_nth
   (self : Store) (cons : schema.Constructor) (state : Term) (index : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -12030,7 +12260,7 @@ def table.TermCounts.new (n : Std.Usize) : Result table.TermCounts := do
     }
 
 /-- [pathos_compiled_checker::first_occurrences]: loop 0:
-    Source: 'src/lib.rs', lines 1282:4-1288:5 -/
+    Source: 'src/lib.rs', lines 1289:4-1295:5 -/
 @[rust_loop]
 def first_occurrences_loop
   (xs : Slice Term) (seen : table.TermCounts) (out : alloc.vec.Vec Term)
@@ -12057,14 +12287,14 @@ def first_occurrences_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::first_occurrences]:
-    Source: 'src/lib.rs', lines 1278:0-1290:1 -/
+    Source: 'src/lib.rs', lines 1285:0-1297:1 -/
 def first_occurrences (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let seen ← table.TermCounts.new i
   first_occurrences_loop xs seen (alloc.vec.Vec.new Term) 0#usize
 
 /-- [pathos_compiled_checker::without]: loop 0:
-    Source: 'src/lib.rs', lines 1269:4-1274:5 -/
+    Source: 'src/lib.rs', lines 1276:4-1281:5 -/
 @[rust_loop]
 def without_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -12085,14 +12315,14 @@ def without_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without]:
-    Source: 'src/lib.rs', lines 1266:0-1276:1 -/
+    Source: 'src/lib.rs', lines 1273:0-1283:1 -/
 def without (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
   without_loop xs x out 0#usize
 
 /-- [pathos_compiled_checker::without_first]: loop 0:
-    Source: 'src/lib.rs', lines 1255:4-1262:5 -/
+    Source: 'src/lib.rs', lines 1262:4-1269:5 -/
 @[rust_loop]
 def without_first_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (erased : Bool)
@@ -12123,7 +12353,7 @@ def without_first_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without_first]:
-    Source: 'src/lib.rs', lines 1251:0-1264:1 -/
+    Source: 'src/lib.rs', lines 1258:0-1271:1 -/
 def without_first
   (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
@@ -12131,7 +12361,7 @@ def without_first
   without_first_loop xs x out false 0#usize
 
 /-- [pathos_compiled_checker::reversed]: loop 0:
-    Source: 'src/lib.rs', lines 1244:4-1247:5 -/
+    Source: 'src/lib.rs', lines 1251:4-1254:5 -/
 @[rust_loop]
 def reversed_loop
   (xs : Slice Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -12147,7 +12377,7 @@ def reversed_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::reversed]:
-    Source: 'src/lib.rs', lines 1241:0-1249:1 -/
+    Source: 'src/lib.rs', lines 1248:0-1256:1 -/
 def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
@@ -12155,7 +12385,7 @@ def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   reversed_loop xs out i1
 
 /-- [pathos_compiled_checker::position]: loop 0:
-    Source: 'src/lib.rs', lines 1232:4-1237:5 -/
+    Source: 'src/lib.rs', lines 1239:4-1244:5 -/
 @[rust_loop]
 def position_loop
   (xs : Slice Term) (x : Term) (found : Option Std.Usize) (i : Std.Usize) :
@@ -12173,7 +12403,7 @@ def position_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::position]:
-    Source: 'src/lib.rs', lines 1229:0-1239:1 -/
+    Source: 'src/lib.rs', lines 1236:0-1246:1 -/
 def position (xs : Slice Term) (x : Term) : Result (Option Std.Usize) := do
   let i := Slice.len xs
   position_loop xs x none i
@@ -12188,7 +12418,7 @@ def Store.numeral
   Store.literal self (lit.Lit.Numeral n)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::object_index]:
-    Source: 'src/lib.rs', lines 824:4-829:5 -/
+    Source: 'src/lib.rs', lines 831:4-836:5 -/
 def Store.object_index
   (self : Store) (t : Term) :
   Result (core.result.Result (Option Std.U32) CheckError)
@@ -12253,7 +12483,7 @@ def table.TermCounts.count
     self.counts place
 
 /-- [pathos_compiled_checker::multiset]: loop 0:
-    Source: 'src/lib.rs', lines 1295:4-1298:5 -/
+    Source: 'src/lib.rs', lines 1302:4-1305:5 -/
 @[rust_loop]
 def multiset_loop
   (ys : Slice Term) (counts : table.TermCounts) (i : Std.Usize) :
@@ -12270,14 +12500,14 @@ def multiset_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset]:
-    Source: 'src/lib.rs', lines 1292:0-1300:1 -/
+    Source: 'src/lib.rs', lines 1299:0-1307:1 -/
 def multiset (ys : Slice Term) : Result table.TermCounts := do
   let i := Slice.len ys
   let counts ← table.TermCounts.new i
   multiset_loop ys counts 0#usize
 
 /-- [pathos_compiled_checker::multiset_select]: loop 0:
-    Source: 'src/lib.rs', lines 1323:4-1336:5 -/
+    Source: 'src/lib.rs', lines 1330:4-1343:5 -/
 @[rust_loop]
 def multiset_select_loop
   (xs : Slice Term) (paired : Bool) (counts : table.TermCounts)
@@ -12306,7 +12536,7 @@ def multiset_select_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_select]:
-    Source: 'src/lib.rs', lines 1319:0-1338:1 -/
+    Source: 'src/lib.rs', lines 1326:0-1345:1 -/
 def multiset_select
   (xs : Slice Term) (ys : Slice Term) (paired : Bool) :
   Result (alloc.vec.Vec Term)
@@ -12340,7 +12570,7 @@ def table.TermCounts.all_zero (self : table.TermCounts) : Result Bool := do
   table.TermCounts.all_zero_loop self true 0#usize
 
 /-- [pathos_compiled_checker::multiset_inclusion]: loop 0:
-    Source: 'src/lib.rs', lines 1308:4-1314:5 -/
+    Source: 'src/lib.rs', lines 1315:4-1321:5 -/
 @[rust_loop]
 def multiset_inclusion_loop
   (xs : Slice Term) (counts : table.TermCounts) (foreign : Bool)
@@ -12365,7 +12595,7 @@ def multiset_inclusion_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_inclusion]:
-    Source: 'src/lib.rs', lines 1304:0-1316:1 -/
+    Source: 'src/lib.rs', lines 1311:0-1323:1 -/
 def multiset_inclusion
   (xs : Slice Term) (ys : Slice Term) : Result (Bool × Bool) := do
   let counts ← multiset ys
@@ -12374,7 +12604,7 @@ def multiset_inclusion
   ok (foreign, b)
 
 /-- [pathos_compiled_checker::append_terms]: loop 0:
-    Source: 'src/lib.rs', lines 1223:4-1226:5 -/
+    Source: 'src/lib.rs', lines 1230:4-1233:5 -/
 @[rust_loop]
 def append_terms_loop
   («to» : alloc.vec.Vec Term) («from» : Slice Term) (i : Std.Usize) :
@@ -12391,7 +12621,7 @@ def append_terms_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::append_terms]:
-    Source: 'src/lib.rs', lines 1221:0-1227:1 -/
+    Source: 'src/lib.rs', lines 1228:0-1234:1 -/
 @[reducible]
 def append_terms
   («to» : alloc.vec.Vec Term) («from» : Slice Term) :

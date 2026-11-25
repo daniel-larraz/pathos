@@ -1,7 +1,10 @@
 module
 
 public import CpcChecker
+public import Cpc.Logos
+import all Cpc.Logos
 public import PathosProofs.Runtime.Node
+public import PathosProofs.Runtime.Embed
 public import CpcEmbed
 
 /-!
@@ -39,7 +42,7 @@ theorem CtorSpec.eo_bvredor.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.bvredor)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_bvredor args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -59,7 +62,7 @@ theorem CtorSpec.eo__40from_5fbools.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_from_bools)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40from_5fbools args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -79,7 +82,7 @@ theorem CtorSpec.eo_RegLan.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.RegLan)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_RegLan args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -99,7 +102,7 @@ theorem CtorSpec.eo_str_2elen.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_len)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2elen args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -119,7 +122,7 @@ theorem CtorSpec.eo_str_2e_2b_2b.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_concat)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2e_2b_2b args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -139,7 +142,7 @@ theorem CtorSpec.eo_str_2esubstr.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_substr)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2esubstr args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -159,7 +162,7 @@ theorem CtorSpec.eo_str_2econtains.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_contains)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2econtains args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -179,7 +182,7 @@ theorem CtorSpec.eo_str_2ereplace.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_replace)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2ereplace args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -199,7 +202,7 @@ theorem CtorSpec.eo_str_2eindexof.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_indexof)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eindexof args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -219,7 +222,7 @@ theorem CtorSpec.eo_str_2eat.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_at)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eat args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -239,7 +242,7 @@ theorem CtorSpec.eo_str_2eprefixof.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_prefixof)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eprefixof args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -259,7 +262,7 @@ theorem CtorSpec.eo_str_2esuffixof.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_suffixof)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2esuffixof args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -279,7 +282,7 @@ theorem CtorSpec.eo_str_2erev.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_rev)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2erev args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -299,7 +302,7 @@ theorem CtorSpec.eo_str_2eupdate.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_update)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eupdate args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -319,7 +322,7 @@ theorem CtorSpec.eo_str_2eto_5flower.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_to_lower)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eto_5flower args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -339,7 +342,7 @@ theorem CtorSpec.eo_str_2eto_5fupper.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_to_upper)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eto_5fupper args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -359,7 +362,7 @@ theorem CtorSpec.eo_str_2eto_5fcode.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_to_code)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eto_5fcode args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -379,7 +382,7 @@ theorem CtorSpec.eo_str_2efrom_5fcode.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_from_code)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2efrom_5fcode args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -399,7 +402,7 @@ theorem CtorSpec.eo_str_2eis_5fdigit.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_is_digit)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eis_5fdigit args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -419,7 +422,7 @@ theorem CtorSpec.eo_str_2eto_5fint.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_to_int)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eto_5fint args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -439,7 +442,7 @@ theorem CtorSpec.eo_str_2efrom_5fint.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_from_int)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2efrom_5fint args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -459,7 +462,7 @@ theorem CtorSpec.eo_str_2e_3c.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_lt)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2e_3c args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -479,7 +482,7 @@ theorem CtorSpec.eo_str_2e_3c_3d.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_leq)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2e_3c_3d args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -499,7 +502,7 @@ theorem CtorSpec.eo_str_2ereplace_5fall.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_replace_all)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2ereplace_5fall args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -519,7 +522,7 @@ theorem CtorSpec.eo_str_2ereplace_5fre.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_replace_re)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2ereplace_5fre args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -539,7 +542,7 @@ theorem CtorSpec.eo_str_2ereplace_5fre_5fall.construct (s : Store) (args : Slice
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_replace_re_all)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2ereplace_5fre_5fall args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -559,7 +562,7 @@ theorem CtorSpec.eo_str_2eindexof_5fre.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_indexof_re)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eindexof_5fre args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -579,7 +582,7 @@ theorem CtorSpec.eo_re_2eallchar.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_allchar)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2eallchar args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -599,7 +602,7 @@ theorem CtorSpec.eo_re_2enone.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_none)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2enone args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -619,7 +622,7 @@ theorem CtorSpec.eo_re_2eall.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_all)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2eall args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -639,7 +642,7 @@ theorem CtorSpec.eo_str_2eto_5fre.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_to_re)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2eto_5fre args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -659,7 +662,7 @@ theorem CtorSpec.eo_re_2e_2a.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_mult)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2e_2a args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -679,7 +682,7 @@ theorem CtorSpec.eo_re_2e_2b.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_plus)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2e_2b args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -699,7 +702,7 @@ theorem CtorSpec.eo_re_2eopt.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_opt)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2eopt args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -719,7 +722,7 @@ theorem CtorSpec.eo_re_2ecomp.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_comp)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2ecomp args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -739,7 +742,7 @@ theorem CtorSpec.eo_re_2erange.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_range)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2erange args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -759,7 +762,7 @@ theorem CtorSpec.eo_re_2e_2b_2b.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_concat)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2e_2b_2b args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -779,7 +782,7 @@ theorem CtorSpec.eo_re_2einter.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_inter)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2einter args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -799,7 +802,7 @@ theorem CtorSpec.eo_re_2eunion.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_union)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2eunion args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -819,7 +822,7 @@ theorem CtorSpec.eo_re_2ediff.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.re_diff)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2ediff args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -839,7 +842,7 @@ theorem CtorSpec.eo_str_2ein_5fre.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.str_in_re)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_str_2ein_5fre args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -859,7 +862,7 @@ theorem CtorSpec.eo_seq_2eunit.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.seq_unit)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_seq_2eunit args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -879,7 +882,7 @@ theorem CtorSpec.eo_seq_2enth.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.seq_nth)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_seq_2enth args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -899,7 +902,7 @@ theorem CtorSpec.eo__40strings_5fdeq_5fdiff.construct (s : Store) (args : Slice 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_deq_diff)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5fdeq_5fdiff args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -919,7 +922,7 @@ theorem CtorSpec.eo__40strings_5fstoi_5fresult.construct (s : Store) (args : Sli
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_stoi_result)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5fstoi_5fresult args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -939,7 +942,7 @@ theorem CtorSpec.eo__40strings_5fstoi_5fnon_5fdigit.construct (s : Store) (args 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_stoi_non_digit)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5fstoi_5fnon_5fdigit args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -959,7 +962,7 @@ theorem CtorSpec.eo__40strings_5fitos_5fresult.construct (s : Store) (args : Sli
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_itos_result)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5fitos_5fresult args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -979,7 +982,7 @@ theorem CtorSpec.eo__40strings_5fnum_5foccur.construct (s : Store) (args : Slice
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_num_occur)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5fnum_5foccur args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -999,7 +1002,7 @@ theorem CtorSpec.eo__40strings_5fnum_5foccur_5fre.construct (s : Store) (args : 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_num_occur_re)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5fnum_5foccur_5fre args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1019,7 +1022,7 @@ theorem CtorSpec.eo__40strings_5foccur_5findex.construct (s : Store) (args : Sli
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_occur_index)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5foccur_5findex args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1039,7 +1042,7 @@ theorem CtorSpec.eo__40strings_5foccur_5findex_5fre.construct (s : Store) (args 
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_occur_index_re)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5foccur_5findex_5fre args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1059,7 +1062,7 @@ theorem CtorSpec.eo__40strings_5freplace_5fall_5fresult.construct (s : Store) (a
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_replace_all_result)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5freplace_5fall_5fresult args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1079,7 +1082,7 @@ theorem CtorSpec.eo__40strings_5freplace_5fre_5fall_5fresult.construct (s : Stor
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_strings_replace_re_all_result)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40strings_5freplace_5fre_5fall_5fresult args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1099,7 +1102,7 @@ theorem CtorSpec.eo_UnitTuple.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.UnitTuple)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_UnitTuple args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1119,7 +1122,7 @@ theorem CtorSpec.eo_Tuple.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.Tuple)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_Tuple args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1139,7 +1142,7 @@ theorem CtorSpec.eo_tuple_2eunit.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.tuple_unit)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple_2eunit args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1159,7 +1162,7 @@ theorem CtorSpec.eo_tuple.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.tuple)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1179,7 +1182,7 @@ theorem CtorSpec.eo_Set.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.Set)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_Set args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1199,7 +1202,7 @@ theorem CtorSpec.eo_set_2esingleton.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_singleton)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2esingleton args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1219,7 +1222,7 @@ theorem CtorSpec.eo_set_2eunion.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_union)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2eunion args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1239,7 +1242,7 @@ theorem CtorSpec.eo_set_2einter.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_inter)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2einter args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1259,7 +1262,7 @@ theorem CtorSpec.eo_set_2eminus.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_minus)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2eminus args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1279,7 +1282,7 @@ theorem CtorSpec.eo_set_2emember.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_member)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2emember args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1299,7 +1302,7 @@ theorem CtorSpec.eo_set_2esubset.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_subset)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2esubset args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1319,7 +1322,7 @@ theorem CtorSpec.eo_set_2echoose.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_choose)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2echoose args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1339,7 +1342,7 @@ theorem CtorSpec.eo_set_2eis_5fempty.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_is_empty)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2eis_5fempty args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1359,7 +1362,7 @@ theorem CtorSpec.eo_set_2eis_5fsingleton.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_is_singleton)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2eis_5fsingleton args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1379,7 +1382,7 @@ theorem CtorSpec.eo_set_2einsert.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.set_insert)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2einsert args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1399,7 +1402,7 @@ theorem CtorSpec.eo__40sets_5fdeq_5fdiff.construct (s : Store) (args : Slice Ter
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_sets_deq_diff)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40sets_5fdeq_5fdiff args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1419,7 +1422,7 @@ theorem CtorSpec.eo__2f.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.qdiv)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__2f args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1439,7 +1442,7 @@ theorem CtorSpec.eo__2f_5ftotal.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.qdiv_total)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__2f_5ftotal args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1459,7 +1462,7 @@ theorem CtorSpec.eo__40div_5fby_5fzero.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at_div_by_zero)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40div_5fby_5fzero args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1479,7 +1482,7 @@ theorem CtorSpec.eo__40_40Monomial.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at__at_Monomial)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40_40Monomial args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1499,7 +1502,7 @@ theorem CtorSpec.eo__40_40mon.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at__at_mon)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40_40mon args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1519,7 +1522,7 @@ theorem CtorSpec.eo__40_40Polynomial.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at__at_Polynomial)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40_40Polynomial args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1539,7 +1542,7 @@ theorem CtorSpec.eo__40_40poly_2ezero.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at__at_poly_zero)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40_40poly_2ezero args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1559,7 +1562,7 @@ theorem CtorSpec.eo__40_40poly.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at__at_poly)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40_40poly args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1579,7 +1582,7 @@ theorem CtorSpec.eo_forall.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.forall)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_forall args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1599,7 +1602,7 @@ theorem CtorSpec.eo_exists.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.exists)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_exists args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1619,7 +1622,7 @@ theorem CtorSpec.eo_ubv_5fto_5fint.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.ubv_to_int)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_ubv_5fto_5fint args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1639,7 +1642,7 @@ theorem CtorSpec.eo_sbv_5fto_5fint.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp.sbv_to_int)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_sbv_5fto_5fint args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1659,7 +1662,7 @@ theorem CtorSpec.eo__40_40aci_5fsorted.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp Eo.UserOp._at__at_aci_sorted)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40_40aci_5fsorted args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -1676,20 +1679,49 @@ theorem CtorSpec.eo_repeat.construct (s : Store) (args : Slice Term) {a0 : Term}
     Store.construct s schema.Constructor.eo_repeat args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.repeat x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.repeat x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_repeat args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.repeat x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_repeat args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.repeat x0 = Eo.Term.UOp1 Eo.UserOp1.repeat x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_repeat args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_repeat.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.repeat x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_repeat) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_repeat.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1716,20 +1748,49 @@ theorem CtorSpec.eo_zero_5fextend.construct (s : Store) (args : Slice Term) {a0 
     Store.construct s schema.Constructor.eo_zero_5fextend args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.zero_extend x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.zero_extend x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_zero_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.zero_extend x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_zero_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.zero_extend x0 = Eo.Term.UOp1 Eo.UserOp1.zero_extend x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_zero_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_zero_5fextend.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.zero_extend x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_zero_5fextend) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_zero_5fextend.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1756,20 +1817,49 @@ theorem CtorSpec.eo_sign_5fextend.construct (s : Store) (args : Slice Term) {a0 
     Store.construct s schema.Constructor.eo_sign_5fextend args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.sign_extend x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.sign_extend x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_sign_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.sign_extend x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_sign_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.sign_extend x0 = Eo.Term.UOp1 Eo.UserOp1.sign_extend x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_sign_5fextend args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_sign_5fextend.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.sign_extend x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_sign_5fextend) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_sign_5fextend.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1796,20 +1886,49 @@ theorem CtorSpec.eo_rotate_5fleft.construct (s : Store) (args : Slice Term) {a0 
     Store.construct s schema.Constructor.eo_rotate_5fleft args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.rotate_left x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.rotate_left x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_rotate_5fleft args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.rotate_left x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_rotate_5fleft args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.rotate_left x0 = Eo.Term.UOp1 Eo.UserOp1.rotate_left x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_rotate_5fleft args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_rotate_5fleft.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.rotate_left x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_rotate_5fleft) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_rotate_5fleft.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1836,20 +1955,49 @@ theorem CtorSpec.eo_rotate_5fright.construct (s : Store) (args : Slice Term) {a0
     Store.construct s schema.Constructor.eo_rotate_5fright args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.rotate_right x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.rotate_right x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_rotate_5fright args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.rotate_right x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_rotate_5fright args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.rotate_right x0 = Eo.Term.UOp1 Eo.UserOp1.rotate_right x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_rotate_5fright args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_rotate_5fright.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.rotate_right x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_rotate_5fright) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_rotate_5fright.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1876,20 +2024,49 @@ theorem CtorSpec.eo__40bit.construct (s : Store) (args : Slice Term) {a0 : Term}
     Store.construct s schema.Constructor.eo__40bit args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1._at_bit x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1._at_bit x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40bit args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1._at_bit x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo__40bit args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1._at_bit x0 = Eo.Term.UOp1 Eo.UserOp1._at_bit x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40bit args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo__40bit.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1._at_bit x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo__40bit) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo__40bit.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1916,20 +2093,49 @@ theorem CtorSpec.eo_seq_2eempty.construct (s : Store) (args : Slice Term) {a0 : 
     Store.construct s schema.Constructor.eo_seq_2eempty args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.seq_empty x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.seq_empty x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_seq_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.seq_empty x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_seq_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.seq_empty x0 = Eo.Term.UOp1 Eo.UserOp1.seq_empty x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_seq_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_seq_2eempty.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.seq_empty x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_seq_2eempty) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_seq_2eempty.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1956,20 +2162,49 @@ theorem CtorSpec.eo_re_2e_5e.construct (s : Store) (args : Slice Term) {a0 : Ter
     Store.construct s schema.Constructor.eo_re_2e_5e args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.re_exp x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.re_exp x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2e_5e args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.re_exp x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_re_2e_5e args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.re_exp x0 = Eo.Term.UOp1 Eo.UserOp1.re_exp x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2e_5e args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_re_2e_5e.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.re_exp x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_re_2e_5e) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_re_2e_5e.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -1996,20 +2231,49 @@ theorem CtorSpec.eo_is.construct (s : Store) (args : Slice Term) {a0 : Term} {x0
     Store.construct s schema.Constructor.eo_is args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.is x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.is x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_is args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.is x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_is args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.is x0 = Eo.Term.UOp1 Eo.UserOp1.is x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_is args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_is.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.is x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_is) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_is.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2036,20 +2300,49 @@ theorem CtorSpec.eo_update.construct (s : Store) (args : Slice Term) {a0 : Term}
     Store.construct s schema.Constructor.eo_update args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.update x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.update x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_update args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.update x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_update args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.update x0 = Eo.Term.UOp1 Eo.UserOp1.update x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_update args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_update.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.update x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_update) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_update.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2076,20 +2369,49 @@ theorem CtorSpec.eo_tuple_2eselect.construct (s : Store) (args : Slice Term) {a0
     Store.construct s schema.Constructor.eo_tuple_2eselect args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.tuple_select x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.tuple_select x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple_2eselect args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.tuple_select x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_tuple_2eselect args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.tuple_select x0 = Eo.Term.UOp1 Eo.UserOp1.tuple_select x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple_2eselect args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_tuple_2eselect.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.tuple_select x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_tuple_2eselect) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_tuple_2eselect.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2116,20 +2438,49 @@ theorem CtorSpec.eo_tuple_2eupdate.construct (s : Store) (args : Slice Term) {a0
     Store.construct s schema.Constructor.eo_tuple_2eupdate args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.tuple_update x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.tuple_update x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple_2eupdate args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.tuple_update x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_tuple_2eupdate args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.tuple_update x0 = Eo.Term.UOp1 Eo.UserOp1.tuple_update x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_tuple_2eupdate args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_tuple_2eupdate.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.tuple_update x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_tuple_2eupdate) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_tuple_2eupdate.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2156,20 +2507,49 @@ theorem CtorSpec.eo_set_2eempty.construct (s : Store) (args : Slice Term) {a0 : 
     Store.construct s schema.Constructor.eo_set_2eempty args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.set_empty x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.set_empty x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.set_empty x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_set_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.set_empty x0 = Eo.Term.UOp1 Eo.UserOp1.set_empty x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_set_2eempty args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_set_2eempty.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.set_empty x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_set_2eempty) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_set_2eempty.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2196,20 +2576,49 @@ theorem CtorSpec.eo_int_5fto_5fbv.construct (s : Store) (args : Slice Term) {a0 
     Store.construct s schema.Constructor.eo_int_5fto_5fbv args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp1 Eo.UserOp1.int_to_bv x0)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop1 Eo.UserOp1.int_to_bv x0)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_int_5fto_5fbv args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact h0.2
+  by_cases hst : x0 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop1 Eo.UserOp1.int_to_bv x0 = Eo.Term.Stuck := by
+      rcases hst with rfl <;> (unfold Eo.__eo_mk_uop1; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_int_5fto_5fbv args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (Or.inl rfl)
+      (by rcases hst with rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop1 Eo.UserOp1.int_to_bv x0 = Eo.Term.UOp1 Eo.UserOp1.int_to_bv x0 := by
+      simp [Eo.__eo_mk_uop1, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_int_5fto_5fbv args [Embedded.enc x0] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact h0.2
+
+theorem CtorSpec.eo_int_5fto_5fbv.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp1 Eo.UserOp1.int_to_bv x0)) :
+    x0 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_int_5fto_5fbv) (ts := [Embedded.enc x0])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop1]) (Or.inl rfl)
+  refine ?_ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_int_5fto_5fbv.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2236,20 +2645,49 @@ theorem CtorSpec.eo_extract.construct (s : Store) (args : Slice Term) {a0 : Term
     Store.construct s schema.Constructor.eo_extract args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2.extract x0 x1)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop2 Eo.UserOp2.extract x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_extract args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact ⟨h0.2, h1.2⟩
+  by_cases hst : x0 = Eo.Term.Stuck ∨ x1 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop2 Eo.UserOp2.extract x0 x1 = Eo.Term.Stuck := by
+      rcases hst with rfl | rfl <;> (unfold Eo.__eo_mk_uop2; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_extract args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (Or.inl rfl)
+      (by rcases hst with rfl | rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop2 Eo.UserOp2.extract x0 x1 = Eo.Term.UOp2 Eo.UserOp2.extract x0 x1 := by
+      simp [Eo.__eo_mk_uop2, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_extract args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h | h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo_extract.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term} {x1 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp2 Eo.UserOp2.extract x0 x1)) :
+    x0 ≠ Eo.Term.Stuck ∧ x1 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_extract) (ts := [Embedded.enc x0, Embedded.enc x1])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]) (Or.inl rfl)
+  refine ⟨?_, ?_⟩ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_extract.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2278,20 +2716,49 @@ theorem CtorSpec.eo_re_2eloop.construct (s : Store) (args : Slice Term) {a0 : Te
     Store.construct s schema.Constructor.eo_re_2eloop args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2.re_loop x0 x1)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop2 Eo.UserOp2.re_loop x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2eloop args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact ⟨h0.2, h1.2⟩
+  by_cases hst : x0 = Eo.Term.Stuck ∨ x1 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop2 Eo.UserOp2.re_loop x0 x1 = Eo.Term.Stuck := by
+      rcases hst with rfl | rfl <;> (unfold Eo.__eo_mk_uop2; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo_re_2eloop args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (Or.inl rfl)
+      (by rcases hst with rfl | rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop2 Eo.UserOp2.re_loop x0 x1 = Eo.Term.UOp2 Eo.UserOp2.re_loop x0 x1 := by
+      simp [Eo.__eo_mk_uop2, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo_re_2eloop args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h | h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo_re_2eloop.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term} {x1 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp2 Eo.UserOp2.re_loop x0 x1)) :
+    x0 ≠ Eo.Term.Stuck ∧ x1 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo_re_2eloop) (ts := [Embedded.enc x0, Embedded.enc x1])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]) (Or.inl rfl)
+  refine ⟨?_, ?_⟩ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo_re_2eloop.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2320,20 +2787,49 @@ theorem CtorSpec.eo__40quantifiers_5fskolemize.construct (s : Store) (args : Sli
     Store.construct s schema.Constructor.eo__40quantifiers_5fskolemize args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2._at_quantifiers_skolemize x0 x1)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop2 Eo.UserOp2._at_quantifiers_skolemize x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40quantifiers_5fskolemize args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact ⟨h0.2, h1.2⟩
+  by_cases hst : x0 = Eo.Term.Stuck ∨ x1 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop2 Eo.UserOp2._at_quantifiers_skolemize x0 x1 = Eo.Term.Stuck := by
+      rcases hst with rfl | rfl <;> (unfold Eo.__eo_mk_uop2; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo__40quantifiers_5fskolemize args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (Or.inl rfl)
+      (by rcases hst with rfl | rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop2 Eo.UserOp2._at_quantifiers_skolemize x0 x1 = Eo.Term.UOp2 Eo.UserOp2._at_quantifiers_skolemize x0 x1 := by
+      simp [Eo.__eo_mk_uop2, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40quantifiers_5fskolemize args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h | h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo__40quantifiers_5fskolemize.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term} {x1 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp2 Eo.UserOp2._at_quantifiers_skolemize x0 x1)) :
+    x0 ≠ Eo.Term.Stuck ∧ x1 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo__40quantifiers_5fskolemize) (ts := [Embedded.enc x0, Embedded.enc x1])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]) (Or.inl rfl)
+  refine ⟨?_, ?_⟩ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo__40quantifiers_5fskolemize.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2362,20 +2858,49 @@ theorem CtorSpec.eo__40const.construct (s : Store) (args : Slice Term) {a0 : Ter
     Store.construct s schema.Constructor.eo__40const args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp2 Eo.UserOp2._at_const x0 x1)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop2 Eo.UserOp2._at_const x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40const args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact ⟨h0.2, h1.2⟩
+  by_cases hst : x0 = Eo.Term.Stuck ∨ x1 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop2 Eo.UserOp2._at_const x0 x1 = Eo.Term.Stuck := by
+      rcases hst with rfl | rfl <;> (unfold Eo.__eo_mk_uop2; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo__40const args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (Or.inl rfl)
+      (by rcases hst with rfl | rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop2 Eo.UserOp2._at_const x0 x1 = Eo.Term.UOp2 Eo.UserOp2._at_const x0 x1 := by
+      simp [Eo.__eo_mk_uop2, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40const args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h | h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo__40const.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term} {x1 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp2 Eo.UserOp2._at_const x0 x1)) :
+    x0 ≠ Eo.Term.Stuck ∧ x1 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo__40const) (ts := [Embedded.enc x0, Embedded.enc x1])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop2]) (Or.inl rfl)
+  refine ⟨?_, ?_⟩ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo__40const.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2404,20 +2929,49 @@ theorem CtorSpec.eo__40re_5funfold_5fpos_5fcomponent.construct (s : Store) (args
     Store.construct s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact ⟨h0.2, h1.2, h2.2⟩
+  by_cases hst : x0 = Eo.Term.Stuck ∨ x1 = Eo.Term.Stuck ∨ x2 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2 = Eo.Term.Stuck := by
+      rcases hst with rfl | rfl | rfl <;> (unfold Eo.__eo_mk_uop3; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (Or.inl rfl)
+      (by rcases hst with rfl | rfl | rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2 = Eo.Term.UOp3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2 := by
+      simp [Eo.__eo_mk_uop3, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h | h | h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact ⟨h0.2, h1.2, h2.2⟩
+
+theorem CtorSpec.eo__40re_5funfold_5fpos_5fcomponent.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term} {x1 : Eo.Term} {x2 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp3 Eo.UserOp3._at_re_unfold_pos_component x0 x1 x2)) :
+    x0 ≠ Eo.Term.Stuck ∧ x1 ≠ Eo.Term.Stuck ∧ x2 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent) (ts := [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3]) (Or.inl rfl)
+  refine ⟨?_, ?_, ?_⟩ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo__40re_5funfold_5fpos_5fcomponent.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2448,20 +3002,49 @@ theorem CtorSpec.eo__40witness_5fstring_5flength.construct (s : Store) (args : S
     Store.construct s schema.Constructor.eo__40witness_5fstring_5flength args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UOp3 Eo.UserOp3._at_witness_string_length x0 x1 x2)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_uop3 Eo.UserOp3._at_witness_string_length x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40witness_5fstring_5flength args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact ⟨h0.2, h1.2, h2.2⟩
+  by_cases hst : x0 = Eo.Term.Stuck ∨ x1 = Eo.Term.Stuck ∨ x2 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_uop3 Eo.UserOp3._at_witness_string_length x0 x1 x2 = Eo.Term.Stuck := by
+      rcases hst with rfl | rfl | rfl <;> (unfold Eo.__eo_mk_uop3; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo__40witness_5fstring_5flength args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (Or.inl rfl)
+      (by rcases hst with rfl | rfl | rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_uop3 Eo.UserOp3._at_witness_string_length x0 x1 x2 = Eo.Term.UOp3 Eo.UserOp3._at_witness_string_length x0 x1 x2 := by
+      simp [Eo.__eo_mk_uop3, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__40witness_5fstring_5flength args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h | h | h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact ⟨h0.2, h1.2, h2.2⟩
+
+theorem CtorSpec.eo__40witness_5fstring_5flength.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term} {x1 : Eo.Term} {x2 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.UOp3 Eo.UserOp3._at_witness_string_length x0 x1 x2)) :
+    x0 ≠ Eo.Term.Stuck ∧ x1 ≠ Eo.Term.Stuck ∧ x2 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo__40witness_5fstring_5flength) (ts := [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term, Embed.uop3]) (Or.inl rfl)
+  refine ⟨?_, ?_, ?_⟩ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo__40witness_5fstring_5flength.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2495,7 +3078,7 @@ theorem CtorSpec.eo__24eo_5fList.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.__eo_List)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24eo_5fList args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2530,7 +3113,7 @@ theorem CtorSpec.eo__24eo_5fList_5fnil.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.__eo_List_nil)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24eo_5fList_5fnil args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2565,7 +3148,7 @@ theorem CtorSpec.eo__24eo_5fList_5fcons.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.__eo_List_cons)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24eo_5fList_5fcons args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2600,7 +3183,7 @@ theorem CtorSpec.eo__24emb_5fBool.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.Bool)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fBool args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2635,7 +3218,7 @@ theorem CtorSpec.eo__24emb_5fType.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.Type)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fType args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2670,7 +3253,7 @@ theorem CtorSpec.eo__24emb_5fFunType.construct (s : Store) (args : Slice Term)
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.FunType)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fFunType args [] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact HoldsList.nil))
+    (by rw [hargs]; exact HoldsList.nil) (fun _ h => by cases h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2702,20 +3285,49 @@ theorem CtorSpec.eo__24emb_5fVar.construct (s : Store) (args : Slice Term) {a0 :
     Store.construct s schema.Constructor.eo__24emb_5fVar args ⦃ r s' =>
       s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.Var x0 x1)
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_mk_var x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
-  apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fVar args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inr rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
-  rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
-  simp only [WP.uncurry'_pair] at hr ⊢
-  refine ⟨hinv', hg, ?_⟩
-  cases r with
-  | Err e => trivial
-  | Ok t =>
-    refine ⟨?_, ?_⟩
-    · simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr
-    · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
-      exact ⟨h0.2, h1.2⟩
+  by_cases hst : x0 = Eo.Term.Stuck ∨ x1 = Eo.Term.Stuck
+  · have hv : Eo.__eo_mk_var x0 x1 = Eo.Term.Stuck := by
+      rcases hst with rfl | rfl <;> (unfold Eo.__eo_mk_var; split <;> simp_all)
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds_stuck s schema.Constructor.eo__24emb_5fVar args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inr rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (Or.inr rfl)
+      (by rcases hst with rfl | rfl <;> simp [Embed.embedded_enc_Term, Embed.enc_Term]))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨by simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr, by simp [Embed.embedded_emb_Term, Embed.emb_Term]⟩
+  · try simp only [not_or] at hst
+    have hv : Eo.__eo_mk_var x0 x1 = Eo.Term.Var x0 x1 := by
+      simp [Eo.__eo_mk_var, hst]
+    rw [hv]
+    apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fVar args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inr rfl)
+      (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (fun _ h => by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+      rcases h with h | h <;> exact absurd ((enc_eq_stuck_iff _).mp h.symm) (by simp_all)))
+    rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
+    simp only [WP.uncurry'_pair] at hr ⊢
+    refine ⟨hinv', hg, ?_⟩
+    cases r with
+    | Err e => trivial
+    | Ok t =>
+      refine ⟨?_, ?_⟩
+      · simpa [Embed.embedded_enc_Term, Embed.enc_Term] using hr
+      · simp only [Embed.embedded_emb_Term, Embed.emb_Term]
+        exact ⟨h0.2, h1.2⟩
+
+theorem CtorSpec.eo__24emb_5fVar.fields_ne_stuck {s : Store} {t : Term} {x0 : Eo.Term} {x1 : Eo.Term}
+    (hinv : s.Inv) (h : Represents.rep s t (Eo.Term.Var x0 x1)) :
+    x0 ≠ Eo.Term.Stuck ∧ x1 ≠ Eo.Term.Stuck := by
+  have hns := TermValid.strict_parts (Store.Rep.valid' hinv h)
+    (c := schema.Constructor.eo__24emb_5fVar) (ts := [Embedded.enc x0, Embedded.enc x1])
+    (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) (Or.inr rfl)
+  refine ⟨?_, ?_⟩ <;>
+    (rintro rfl; exact hns Tree.stuck (by simp [Embed.embedded_enc_Term, Embed.enc_Term]) rfl)
 
 theorem CtorSpec.eo__24emb_5fVar.destruct {s : Store} {t : Term} {x : Eo.Term}
     (h : Represents.rep s t x) :
@@ -2747,7 +3359,7 @@ theorem CtorSpec.eo__24emb_5fDatatypeType.construct (s : Store) (args : Slice Te
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.DatatypeType x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fDatatypeType args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2789,7 +3401,7 @@ theorem CtorSpec.eo__24emb_5fDatatypeTypeRef.construct (s : Store) (args : Slice
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.DatatypeTypeRef x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fDatatypeTypeRef args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2829,7 +3441,7 @@ theorem CtorSpec.eo__24emb_5fDtcAppType.construct (s : Store) (args : Slice Term
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.DtcAppType x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fDtcAppType args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2871,7 +3483,7 @@ theorem CtorSpec.eo__24emb_5fDtCons.construct (s : Store) (args : Slice Term) {a
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.DtCons x0 x1 x2)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fDtCons args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 HoldsList.nil)))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2915,7 +3527,7 @@ theorem CtorSpec.eo__24emb_5fDtSel.construct (s : Store) (args : Slice Term) {a0
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.DtSel x0 x1 x2 x3)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fDtSel args [Embedded.enc x0, Embedded.enc x1, Embedded.enc x2, Embedded.enc x3] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 (HoldsList.cons _ _ _ _ h3.1 HoldsList.nil))))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 (HoldsList.cons _ _ _ _ h2.1 (HoldsList.cons _ _ _ _ h3.1 HoldsList.nil))))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -2961,7 +3573,7 @@ theorem CtorSpec.eo__24emb_5fUSort.construct (s : Store) (args : Slice Term) {a0
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.USort x0)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fUSort args [Embedded.enc x0] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 HoldsList.nil)) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩
@@ -3001,7 +3613,7 @@ theorem CtorSpec.eo__24emb_5fUConst.construct (s : Store) (args : Slice Term) {a
       | core.result.Result.Ok t => Represents.rep s' t (Eo.Term.UConst x0 x1)
       | core.result.Result.Err _ => True ⦄div := by
   apply WP.dspec_mono (Store.construct_holds s schema.Constructor.eo__24emb_5fUConst args [Embedded.enc x0, Embedded.enc x1] hinv h64 (.inl rfl)
-    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))))
+    (by rw [hargs]; exact (HoldsList.cons _ _ _ _ h0.1 (HoldsList.cons _ _ _ _ h1.1 HoldsList.nil))) (by rintro (h | h) <;> cases Result.ok_injective h))
   rintro ⟨r, s'⟩ ⟨hinv', hg, hr⟩
   simp only [WP.uncurry'_pair] at hr ⊢
   refine ⟨hinv', hg, ?_⟩

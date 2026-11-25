@@ -127,7 +127,10 @@ macro "ns_tac" : tactic =>
   `(tactic| first
     | assumption
     | (intro h; cases h)
-    | (simp; done))
+    | (simp; done)
+    -- a strict builder (__eo_mk_uop<k>, __eo_mk_var) of parts the context
+    -- says are not stuck: its simp lemmas make it the plain constructor
+    | (simp [*]; done))
 
 /-- An argument that the program called assumes OK (Runtime/StateInv.lean)
 is: an argument assumed OK, the tail of an OK state, the empty or the stuck

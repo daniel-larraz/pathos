@@ -71,16 +71,24 @@ theorem Store.unapply_eq (s : Store) (t : Term) :
   · simp [h, core.result.Result.Insts.CoreOpsTry.branch,
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]
 
+/-- A constructor whose terms are built strictly, as applications are: a
+user operator, whose fields are its indices, or a variable. `construct`
+gives the stuck term for one with a stuck field, so no such node holds the
+stuck term. -/
+def schema.Constructor.Strict (c : schema.Constructor) : Prop :=
+  c.is_user = ok true ∨ c.embedding = ok Embedding.Var
+
 /-- Data whose handles are handles of `nodes`, an application being of two
 terms that are not stuck, a node having as many fields as its constructor
-takes. -/
+takes, none of them stuck if the constructor is strict. -/
 def TermData.Wf (nodes : List TermData) : TermData → Prop
   | TermData.Apply f a =>
     f.val < nodes.length ∧ a.val < nodes.length ∧
     nodes[f.val]! ≠ TermData.Stuck ∧ nodes[a.val]! ≠ TermData.Stuck
   | TermData.Node c fields =>
     (∀ x ∈ fields.val, x.val < nodes.length) ∧
-    ∃ n : Std.Usize, c.arity = ok n ∧ n.val = fields.length
+    (∃ n : Std.Usize, c.arity = ok n ∧ n.val = fields.length) ∧
+    (c.Strict → ∀ x ∈ fields.val, nodes[x.val]! ≠ TermData.Stuck)
   | _ => True
 
 theorem TermData.Wf.mono {nodes nodes' : List TermData} {d : TermData}
@@ -93,7 +101,8 @@ theorem TermData.Wf.mono {nodes nodes' : List TermData} {d : TermData}
   cases d <;> simp only [TermData.Wf] at h ⊢
   · obtain ⟨h1, h2, h3, h4⟩ := h
     exact ⟨by omega, by omega, by rw [hget _ h1]; exact h3, by rw [hget _ h2]; exact h4⟩
-  · exact ⟨fun x hx => by have := h.1 x hx; omega, h.2⟩
+  · refine ⟨fun x hx => by have := h.1 x hx; omega, h.2.1, fun hc x hx => ?_⟩
+    rw [hget _ (h.1 x hx)]; exact h.2.2 hc x hx
 
 /-- The terms of a store are well formed: the first is the stuck term, and
 a term's data refers to earlier terms only. -/
@@ -329,9 +338,123 @@ theorem Store.check_handles_loop_spec (s : Store) (args : Slice Term) (i : Std.U
 theorem schema.Constructor.arity_ok (c : schema.Constructor) : ∃ n, c.arity = ok n := by
   cases c <;> exact ⟨_, rfl⟩
 
+/-- `stuck_or_foreign` on a handle of the store: whether its data is the
+stuck term. -/
+theorem Store.stuck_or_foreign_lt (s : Store) (t : Term) (h : t.val < s.nodes.length) :
+    Store.stuck_or_foreign s t = ok (s.nodes.val[t.val]!).isStuck := by
+  unfold Store.stuck_or_foreign
+  rw [Store.view_eq]
+  simp only [h, ite_true, Std.bind_ok]
+  cases s.nodes.val[t.val]! <;> rfl
+
+/-- `any_stuck` on handles of the store: whether the data of one of them is
+the stuck term. -/
+theorem Store.any_stuck_loop_lt (s : Store) (args : Slice Term)
+    (hlt : ∀ a ∈ args.val, a.val < s.nodes.length) :
+    ∀ (k : Nat) (any : Bool) (i : Std.Usize), args.length - i.val = k →
+      Store.any_stuck_loop s args any i =
+        ok (any || (args.val.drop i.val).any (fun a => (s.nodes.val[a.val]!).isStuck)) := by
+  intro k
+  induction k with
+  | zero =>
+    intro any i hk
+    unfold Store.any_stuck_loop
+    have hle : args.val.length ≤ i.val := by simp only [Slice.length] at hk; omega
+    have hge : ¬ i < Slice.len args := by
+      intro h
+      have : i.val < (Slice.len args).val := h
+      simp [Slice.len] at this; omega
+    have hd : args.val.drop i.val = [] := List.drop_eq_nil_of_le hle
+    simp [hge, hd]
+  | succ k ih =>
+    intro any i hk
+    unfold Store.any_stuck_loop
+    have hilt : i.val < args.val.length := by simp only [Slice.length] at hk; omega
+    have hlt' : i < Slice.len args := by
+      show i.val < (Slice.len args).val
+      simp [Slice.len]; exact hilt
+    have hidx : Slice.index_usize args i = ok (args.val[i.val]'hilt) := by
+      simp [Slice.index_usize, hilt]
+    have hd : args.val.drop i.val = (args.val[i.val]'hilt) :: args.val.drop (i.val + 1) :=
+      List.drop_eq_getElem_cons hilt
+    have hxmem : (args.val[i.val]'hilt) ∈ args.val := List.getElem_mem hilt
+    generalize args.val[i.val]'hilt = x at hidx hd hxmem
+    simp only [hlt', ite_true, hidx, Std.bind_ok, Store.stuck_or_foreign_lt s x (hlt x hxmem)]
+    obtain ⟨i1, hi1e, hi1v⟩ := spec_returns
+      (UScalar.add_spec (x := i) (y := 1#usize) (by scalar_tac))
+    rw [hi1e]
+    simp only [Std.bind_ok]
+    have hk1 : args.length - i1.val = k := by
+      simp only [Slice.length] at hk ⊢; simp at hi1v; omega
+    have hi1v' : i1.val = i.val + 1 := by simpa using hi1v
+    cases hst : (s.nodes.val[x.val]!).isStuck
+    · simp only [Bool.false_eq_true, ite_false, Std.bind_ok]
+      rw [ih any i1 hk1, hi1v', hd]
+      simp only [List.any_cons, hst, Bool.false_or]
+    · simp only [ite_true, Std.bind_ok]
+      rw [ih true i1 hk1, hi1v', hd]
+      simp only [List.any_cons, hst, Bool.true_or, Bool.or_true]
+
+theorem Store.any_stuck_lt (s : Store) (args : Slice Term)
+    (hlt : ∀ a ∈ args.val, a.val < s.nodes.length) :
+    Store.any_stuck s args =
+      ok (args.val.any (fun a => (s.nodes.val[a.val]!).isStuck)) := by
+  unfold Store.any_stuck
+  rw [Store.any_stuck_loop_lt s args hlt _ false 0#usize rfl]
+  simp
+
+/-- Whether the data of one of some handles is the stuck term. -/
+theorem any_isStuck_iff (nodes : List TermData) (l : List Term) :
+    l.any (fun a => (nodes[a.val]!).isStuck) = true ↔
+      ∃ a ∈ l, nodes[a.val]! = TermData.Stuck := by
+  simp [List.any_eq_true, TermData.isStuck_iff]
+
+theorem Embedding.eq_data_var :
+    Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Data Embedding.Var = ok false := by
+  simp [Embedding.Insts.CoreCmpPartialEqEmbedding.eq, Embedding.read_discriminant]
+
+theorem Embedding.eq_var_var :
+    Embedding.Insts.CoreCmpPartialEqEmbedding.eq Embedding.Var Embedding.Var = ok true := by
+  simp [Embedding.Insts.CoreCmpPartialEqEmbedding.eq, Embedding.read_discriminant]
+
+theorem schema.Constructor.is_user_ok (c : schema.Constructor) : ∃ b, c.is_user = ok b := by
+  cases c <;> exact ⟨_, rfl⟩
+
+/-- The node of `c` with the arguments as its fields, interned. -/
+theorem Store.intern_node_spec (s : Store) (c : schema.Constructor) (args : Slice Term)
+    (hinv : s.Inv) (h64 : Platform64) (n : Std.Usize) (hn : c.arity = ok n)
+    (hlen : n.val = args.val.length) (hlt : ∀ a ∈ args.val, a.val < s.nodes.length)
+    (hns : c.Strict → ∀ a ∈ args.val, s.nodes.val[a.val]! ≠ TermData.Stuck) :
+    (do
+      let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+      Store.intern s (TermData.Node c v)) ⦃ r s' =>
+      s'.Inv ∧ s.Extends s' ∧
+      match r with
+      | core.result.Result.Ok t =>
+        t.val < s'.nodes.length ∧
+        ∃ v : alloc.vec.Vec Term, v.val = args.val ∧ s'.data t = TermData.Node c v
+      | core.result.Result.Err _ => s' = s ⦄div := by
+  step with alloc.slice.Slice.to_vec_spec as ⟨v, hv⟩
+  · intro x _; rfl
+  have hvals : v.val = args.val := by rw [hv]; rfl
+  have hwf : (TermData.Node c v).Wf s.nodes.val := by
+    refine ⟨?_, ⟨n, hn, ?_⟩, ?_⟩
+    · intro x hx; rw [hvals] at hx; exact hlt x hx
+    · rw [hlen]; simp [alloc.vec.Vec.length, hvals]
+    · intro hc x hx; rw [hvals] at hx; exact hns hc x hx
+  apply WP.dspec_mono (Store.intern_inv s (TermData.Node c v) hinv hwf h64)
+  rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
+  simp only [WP.uncurry'_pair] at hres ⊢
+  refine ⟨hinv', hext, ?_⟩
+  cases r with
+  | Err e => exact hres
+  | Ok t => exact ⟨hres.1, v, hvals, hres.2⟩
+
 /-- `construct` with a constructor that is plain data, or a variable (which
 the store keeps the same way): the node of that constructor with the
-arguments as its fields. -/
+arguments as its fields; or, for a strict constructor (a user operator, or
+a variable) with a stuck argument, the stuck term, as `apply` gives for an
+application of or to the stuck term. -/
 theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : Slice Term)
     (hinv : s.Inv) (h64 : Platform64)
     (hemb : c.embedding = ok Embedding.Data ∨ c.embedding = ok Embedding.Var) :
@@ -340,7 +463,10 @@ theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : S
       match r with
       | core.result.Result.Ok t =>
         t.val < s'.nodes.length ∧
-        ∃ v : alloc.vec.Vec Term, v.val = args.val ∧ s'.data t = TermData.Node c v
+        ((c.Strict ∧ (∃ a ∈ args.val, s.nodes.val[a.val]! = TermData.Stuck) ∧
+            t = 0#u32 ∧ s' = s) ∨
+          ((c.Strict → ∀ a ∈ args.val, s.nodes.val[a.val]! ≠ TermData.Stuck) ∧
+            ∃ v : alloc.vec.Vec Term, v.val = args.val ∧ s'.data t = TermData.Node c v))
       | core.result.Result.Err _ => s' = s ⦄div := by
   unfold Store.construct
   obtain ⟨n, hn⟩ := schema.Constructor.arity_ok c
@@ -359,27 +485,89 @@ theorem Store.construct_data_spec (s : Store) (c : schema.Constructor) (args : S
       exact ⟨hinv, Store.Extends.refl s⟩
     | Ok u =>
       simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
-      rcases hemb with hemb | hemb <;> rw [hemb] <;> simp only [Std.bind_ok]
-      all_goals
-      step with alloc.slice.Slice.to_vec_spec as ⟨v, hv⟩
-      · intro x _; rfl
-      have hvals : v.val = args.val := by rw [hv]; rfl
-      have hwf : (TermData.Node c v).Wf s.nodes.val := by
-        refine ⟨?_, n, hn, ?_⟩
-        · intro x hx
-          rw [hvals] at hx
-          obtain ⟨j, hj, rfl⟩ := List.mem_iff_getElem.mp hx
-          have := hr j (Nat.zero_le _) hj
-          rwa [getElem!_eq _ _ hj] at this
-        · have : n.val = args.val.length := by simpa using harity
-          rw [this]; simp [alloc.vec.Vec.length, hvals]
-      apply WP.dspec_mono (Store.intern_inv s (TermData.Node c v) hinv hwf h64)
-      rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
-      simp only [WP.uncurry'_pair] at hres ⊢
-      refine ⟨hinv', hext, ?_⟩
-      cases r with
-      | Err e => exact hres
-      | Ok t => exact ⟨hres.1, v, hvals, hres.2⟩
+      have hlt : ∀ a ∈ args.val, a.val < s.nodes.length := by
+        intro a ha
+        obtain ⟨j, hj, rfl⟩ := List.mem_iff_getElem.mp ha
+        have := hr j (Nat.zero_le _) hj
+        rwa [getElem!_eq _ _ hj] at this
+      have hlen : n.val = args.val.length := by
+        have : n.val = args.val.length := by simpa using harity
+        exact this
+      have hpos : (0 : Nat) < s.nodes.length := hinv.terms.nonempty
+      obtain ⟨b, hb⟩ := schema.Constructor.is_user_ok c
+      -- the strict path: the stuck term if an argument is stuck, else the node
+      have hstrict : c.Strict →
+          (do
+            let b1 ← Store.any_stuck s args
+            if b1 then
+              let t ← Store.stuck s
+              ok (core.result.Result.Ok t, s)
+            else
+              let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+              Store.intern s (TermData.Node c v)) ⦃ r s' =>
+          s'.Inv ∧ s.Extends s' ∧
+          match r with
+          | core.result.Result.Ok t =>
+            t.val < s'.nodes.length ∧
+            ((c.Strict ∧ (∃ a ∈ args.val, s.nodes.val[a.val]! = TermData.Stuck) ∧
+                t = 0#u32 ∧ s' = s) ∨
+              ((c.Strict → ∀ a ∈ args.val, s.nodes.val[a.val]! ≠ TermData.Stuck) ∧
+                ∃ v : alloc.vec.Vec Term, v.val = args.val ∧ s'.data t = TermData.Node c v))
+          | core.result.Result.Err _ => s' = s ⦄div := by
+        intro hc
+        rw [Store.any_stuck_lt s args hlt]
+        simp only [Std.bind_ok]
+        cases hb1 : args.val.any (fun a => (s.nodes.val[a.val]!).isStuck)
+        · simp only [Bool.false_eq_true, ite_false]
+          have hns : ∀ a ∈ args.val, s.nodes.val[a.val]! ≠ TermData.Stuck := by
+            intro a ha h
+            have : args.val.any (fun a => (s.nodes.val[a.val]!).isStuck) = true :=
+              (any_isStuck_iff s.nodes.val args.val).mpr ⟨a, ha, h⟩
+            rw [hb1] at this; cases this
+          apply WP.dspec_mono (Store.intern_node_spec s c args hinv h64 n hn hlen hlt
+            (fun _ => hns))
+          rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
+          refine ⟨hinv', hext, ?_⟩
+          cases r with
+          | Err e => exact hres
+          | Ok t => exact ⟨hres.1, Or.inr ⟨fun _ => hns, hres.2⟩⟩
+        · simp only [ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+          exact ⟨hinv, Store.Extends.refl s, by simpa using hpos,
+            Or.inl ⟨hc, (any_isStuck_iff s.nodes.val args.val).mp hb1, by simp⟩⟩
+      -- the plain path: the node, the constructor not being strict
+      have hplain : ¬ c.Strict →
+          (do
+            let v ← alloc.slice.Slice.to_vec Term.Insts.CoreCloneClone args
+            Store.intern s (TermData.Node c v)) ⦃ r s' =>
+          s'.Inv ∧ s.Extends s' ∧
+          match r with
+          | core.result.Result.Ok t =>
+            t.val < s'.nodes.length ∧
+            ((c.Strict ∧ (∃ a ∈ args.val, s.nodes.val[a.val]! = TermData.Stuck) ∧
+                t = 0#u32 ∧ s' = s) ∨
+              ((c.Strict → ∀ a ∈ args.val, s.nodes.val[a.val]! ≠ TermData.Stuck) ∧
+                ∃ v : alloc.vec.Vec Term, v.val = args.val ∧ s'.data t = TermData.Node c v))
+          | core.result.Result.Err _ => s' = s ⦄div := by
+        intro hc
+        apply WP.dspec_mono (Store.intern_node_spec s c args hinv h64 n hn hlen hlt
+          (fun h => absurd h hc))
+        rintro ⟨r, s'⟩ ⟨hinv', hext, hres⟩
+        refine ⟨hinv', hext, ?_⟩
+        cases r with
+        | Err e => exact hres
+        | Ok t => exact ⟨hres.1, Or.inr ⟨fun h => absurd h hc, hres.2⟩⟩
+      rcases hemb with hemb | hemb <;> rw [hemb] <;> simp only [Std.bind_ok, hb]
+      · cases b
+        · simp only [Bool.false_eq_true, ite_false, Embedding.eq_data_var, Std.bind_ok]
+          apply hplain
+          rintro (h | h) <;> simp_all
+        · simp only [ite_true]
+          exact hstrict (Or.inl hb)
+      · cases b
+        · simp only [Bool.false_eq_true, ite_false, Embedding.eq_var_var, Std.bind_ok, ite_true]
+          exact hstrict (Or.inr hemb)
+        · simp only [ite_true]
+          exact hstrict (Or.inl hb)
 
 theorem Store.destruct_literal_data (l : lit.Lit) :
     Store.destruct_literal Embedding.Data l = ok (Hit.Done none) := by
