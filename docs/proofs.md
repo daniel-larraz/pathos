@@ -499,6 +499,22 @@ with this as the reason. Daniel's decision (2026-11-24): leave them so,
 and report the difference to logos. The runtime keeps Ethos's
 behaviour.
 
+### `eo::concat` and `eo::extract` of binaries: widths past 2^32
+
+A binary's width is a `u32` in Ethos and the runtime. `eo::concat` of two
+binaries adds their widths with wrapping (`BitVec::concat`,
+`size.wrapping_add`), and `eo::extract` takes its count of bits modulo
+2^32 too. logos adds them as integers: `__eo_concat` makes
+`(Term.Binary (w1 + w2) …)` with `__eo_mk_binary`, whatever the sum. A
+width of 2^32 or more is cheap to reach, since `eo::to_bin` makes a binary
+of any width below 2^32 without its digits: `(eo::concat (eo::to_bin
+4294967295 0) (eo::to_bin 1 0))` has width 0 in Ethos and the runtime,
+and width 2^32 in logos. A store has no binary of that width (`okBv`), so
+`eo::concat` and `eo::extract` of binaries have no spec stating logos's
+result, and the programs calling them stay unproved. The difference is
+logos's against Ethos's, like `eo::list_concat`'s nils, and is for
+Daniel to take to logos.
+
 ### Equation lemmas of large functions
 
 The generated `rust_eq` of a program unfolds logos's function, and Lean
