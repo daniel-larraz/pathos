@@ -230,6 +230,39 @@ invariant in which every earlier handle stands for what it did, and
 returns a handle of what logos's function of the same name gives (or an
 error).
 
+### CPC's builtins (stage 5, milestone 6)
+
+The builtins CpcMini's logos lacks, proved for CPC in
+`proofs-cpc/PathosProofsCpc/` and emitted by `scripts/proofgen` where a
+program calls them; 775 of CPC's 1,103 programs have a generated proof
+(746 at the start of milestone 6).
+
+- **Lists** (`Lists.lean`): `eo::list_len`, `list_rev`, `list_nth`,
+  `list_find`, `list_erase`, `list_setof`, `list_singleton_elim`, and, for an
+  operator with one nil (`UniqueNil`, see "`eo::list_concat` and the nils
+  of an operator"), `list_concat`, `list_diff` and `list_inter`. Each
+  says the runtime's `list_parts`/`list_pair`, its walk over the handles,
+  and `list_build` give logos's function.
+- **The multiset table** (`Counts.lean`): `table::TermCounts`, the
+  open-addressed table `list_setof`, `list_diff`, `list_inter` (and
+  `list_meq`, `list_minclude`) count terms with, specified on the store
+  table's `Path`: the invariant `TC`, `new`, `entry`, `add`, `count`,
+  `remove_one`, and as a multiset (`TCList`), with `first_occurrences`,
+  `multiset` and `multiset_select`.
+- **Numbers** (`Arith.lean`): `eo::to_bin`, `eo::pow`, `eo::div`, `eo::mod`
+  (numerals and binaries, with the conventions by zero), `eo::qdiv`; and
+  (`Or.lean`) `eo::or`.
+
+They rest only on the specs of `Trusted.lean` that `axioms-allowed.txt`
+allows; `eo::or` brought `bitwise_or_spec` into use (32 assumptions, from
+31). What still blocks the most programs: `$eo_typeof` (above, "Equation
+lemmas of large functions"; 55 programs name it first, and
+`list_singleton_intro` and `list_repeat` build their nil through it);
+`eo::cmp` (the runtime's `Store::compare` against logos's `termCmp`);
+`eo::concat` and `eo::extract` of binaries (above); the datatype operators
+(the six with no logos function, a decision of milestone 8); and the
+operators with several nils.
+
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
