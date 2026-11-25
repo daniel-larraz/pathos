@@ -472,8 +472,8 @@ $eo_prog_quant-var-elim-eq	none	it calls $mk_quant_var_elim_eq, which has no pro
 $eo_prog_quant_var_reordering	generated	
 $eo_prog_re-all-elim	none	a constant, not a program with cases
 $eo_prog_re-concat-merge	generated	
-$eo_prog_re-concat-star-nullable1	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
-$eo_prog_re-concat-star-nullable2	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
+$eo_prog_re-concat-star-nullable1	generated	
+$eo_prog_re-concat-star-nullable2	generated	
 $eo_prog_re-concat-star-repeat	generated	
 $eo_prog_re-concat-star-swap	generated	
 $eo_prog_re-diff-elim	generated	
@@ -671,8 +671,8 @@ $eo_prog_str-replace-self-ctn-simp	generated
 $eo_prog_str-substr-char-start-eq-len	generated	
 $eo_prog_str-substr-combine1	generated	
 $eo_prog_str-substr-combine2	generated	
-$eo_prog_str-substr-combine3	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
-$eo_prog_str-substr-combine4	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
+$eo_prog_str-substr-combine3	generated	
+$eo_prog_str-substr-combine4	generated	
 $eo_prog_str-substr-concat1	generated	
 $eo_prog_str-substr-concat2	generated	
 $eo_prog_str-substr-ctn	generated	

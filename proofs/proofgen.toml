@@ -77,3 +77,13 @@ lemma = "invoke_assume_list_spec"
 guard_calls = ["$eo_is_bool_type", "$eo_is_closed"]
 push = "$eo_push_input_assume_check"
 good = ["StateOK", ""]
+
+[heartbeats]
+# The programs whose proofs take more than the parts' 2,000,000 heartbeats
+# (PART_OPTIONS in scripts/proofgen): each of their theorems is elaborated
+# under the limit here. The spec of case 0 of each times out in whnf; each
+# built at 20,000,000 (2026-11-25).
+"$eo_prog_str-substr-combine3" = 20000000
+"$eo_prog_str-substr-combine4" = 20000000
+"$eo_prog_re-concat-star-nullable1" = 20000000
+"$eo_prog_re-concat-star-nullable2" = 20000000

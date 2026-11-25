@@ -1115,7 +1115,8 @@ class Generator:
         for p in proved:
             o.append("  " + p.id + " : " + p.id + ".Spec n\n")
         o.append("\n")
-        programs = [self.print_program(p, names(p), resolve, ok, err) for p in proved]
+        programs = [self.with_heartbeats(p, self.print_program(p, names(p), resolve, ok, err))
+                    for p in proved]
         last = ("/-- **Every program with a generated proof computes what logos's "
                 "function does.** -/\ntheorem specs (n : Nat) : Specs n := by\n"
                 "  induction n using Nat.strong_induction_on with\n  | _ n ih =>\n"
@@ -1144,6 +1145,16 @@ class Generator:
             root.append("public import $PROOFS$.Part%d\n" % k)
         files["proofs.lean"] = ("".join(root) + imports + "\n" + doc + pre + last)
         return files
+
+    def with_heartbeats(self, p, text):
+        """The proofs of a program that `[heartbeats]` lists, each under its
+        limit there (`set_option maxHeartbeats … in`, before a docstring)."""
+        limit = self.cfg.get("heartbeats", {}).get(p.name)
+        if not limit:
+            return text
+        return re.sub(r"^((?:/--(?:(?!-/).)*-/\n)?theorem )",
+                      "set_option maxHeartbeats %d in\n\\1" % limit, text,
+                      flags=re.M | re.S)
 
     def print_program(self, p, n, resolve, ok, err):
         o = []
