@@ -53,6 +53,15 @@ name = "CpcCacheSem"
 
 [[lean_lib]]
 name = "CpcProofs"
+# Lean makes an imported function's equation lemma (for `unfold`) when a
+# module first needs it, with Meta.realizeConst, under the options that
+# importModules recorded for the import: those of the lean command line
+# (Lean 4.36, src/lean/Lean/Environment.lean, `importRealizationCtx? := some
+# { env, opts, ... }`; Meta/Basic.lean, realizeAndReport's maxHeartbeats).
+# Neither the module's `set_option maxHeartbeats` nor the options of the
+# module defining the function reach it. logos's __eo_typeof (209 cases)
+# needs more than the default 200,000 (docs/proofs.md).
+moreLeanArgs = ["-DmaxHeartbeats=2000000"]
 
 # proofs/PathosProofs for CPC: written by scripts/proofs-instance (which
 # scripts/proofs-build --cpc runs) from proofs/PathosProofs, with the modules

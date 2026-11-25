@@ -499,21 +499,40 @@ with this as the reason. Daniel's decision (2026-11-24): leave them so,
 and report the difference to logos. The runtime keeps Ethos's
 behaviour.
 
-### `$eo_typeof` and its equation lemma
+### Equation lemmas of large functions
 
-With `eo::list_nth`'s spec, every call of `$eo_typeof` (logos's
-`__eo_typeof`, 208 cases) has a proof, and its own proof is generated.
-Only its `rust_eq` does not build. `unfold __eo_typeof` makes Lean
-generate the function's equation lemma, and that times out (`simp`,
-`isDefEq`) at 200,000 heartbeats. Raising `maxHeartbeats` in the module
-of the proof does not help, not even to 0, and nor does asking for the
-lemma alone (`#check @__eo_typeof.eq_def`): the lemma is made under the
-options of `Cpc.Logos`, which defines the function. So `$eo_typeof` is in
-`proofs-cpc/unproved.toml`. The twelve programs that would follow it
-wait for it: `$eo_push_proven`, `$eo_is_bool_type`, and the rules that
-type their arguments. A larger limit where logos defines the function, or
-a `rust_eq` that does not unfold it through its equation lemma, would
-close it.
+The generated `rust_eq` of a program unfolds logos's function, and Lean
+makes the function's equation lemma then, in the module of the proof.
+It makes it under the options of the `lean` command line (the import's
+options; Lean's `realizeConst`), not those the module sets with
+`set_option`, nor those of the module that defines the function. For
+logos's `__eo_typeof` (209 cases), that takes about 30 s and more than
+the default 200,000 heartbeats, so `proofs-cpc/lakefile.toml` passes
+`-DmaxHeartbeats=2000000` to `CpcProofs`. `__eo_cmd_step_proven` (617
+cases) will need at least as much when its proof is generated.
+
+With the lemma made, `$eo_typeof`'s `rust_eq` still does not build, and
+`$eo_typeof` is in `proofs-cpc/unproved.toml`. `logos_eq` splits the
+function's match and, in every branch, simplifies the list of the 208
+cases that `firstSome` tries. That is quadratic: it exceeds `simp`'s
+`maxSteps` (100,000), and with 2,000,000 steps, the 2,000,000 heartbeats.
+A larger budget would not reach `__eo_cmd_step_proven`. What closes both
+is a proof by the shape of `firstSome`: in the branch of the k-th case,
+the cases before it give `none` and the k-th gives the answer, so
+`firstSome` gives it, by a lemma applied once per branch. Twelve programs
+wait for `$eo_typeof`: `$eo_push_proven`, `$eo_is_bool_type`, and rules
+that type their arguments.
+
+Measured (2026-11-25, `lean -DmaxHeartbeats=…` on the theorem alone):
+`logos_eq` does not finish in 50 minutes without limits (4 GB).
+`split <;> (try rfl)` closes 207 of the 209 branches in 86 s (2.8 GB):
+there the earlier cases reduce to `none` by evaluation. The two left are
+the fall-throughs: the generic `(Term.Apply f x)` case after about 176
+more specific `Apply` patterns, and the last, which gives `Stuck`. They
+need the split's hypotheses that the earlier patterns do not match, one
+per earlier case; `simp_all` over them exceeds its steps. A tactic that
+proves each earlier `case_j x = none` from its own hypothesis, then steps
+`firstSome` past it, would close them.
 
 ### The generator
 
