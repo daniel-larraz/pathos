@@ -7,7 +7,7 @@ use pathos_check::snapshot::{CheckerImage, read_opt_term, read_term, write_opt_t
 use pathos_check::{Checker, Options};
 use pathos_syntax::{Error, Result};
 use pathos_term::codec::{Reader, Writer};
-use pathos_term::{EvalOp, Kind, Term};
+use pathos_term::{EvalOp, Integer, Kind, Term, max_code_point};
 
 use crate::path;
 use crate::plugin::Plugin;
@@ -96,6 +96,12 @@ impl State {
             ("eo::List", st.ck.mk_list_type()),
             ("eo::List::nil", st.ck.mk_list_nil()),
             ("eo::List::cons", st.ck.mk_list_cons()),
+            // the maximum code point, as a numeral (Ethos binds it so unless
+            // it is left symbolic, which only eoc does)
+            (
+                "eo::max_code_point",
+                st.ck.mk_numeral(Integer::from(max_code_point())),
+            ),
         ];
         for (name, t) in consts {
             st.bind(name, t);

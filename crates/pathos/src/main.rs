@@ -365,11 +365,13 @@ mod tests {
     /// for the front end, and the adapter asks each of them for its head.
     /// It keeps the answers, so the conversion takes time linear in n: with
     /// a walk down the whole application at each of them, as it was, these
-    /// 200,000 arguments would take minutes, and with a parametric datatype
+    /// 300,000 arguments would take minutes, and with a parametric datatype
     /// declared (when the arguments were also collected at each) longer.
+    /// (More than the default depth, 262,144, so that the checker refuses
+    /// the term.)
     #[test]
     fn an_application_with_very_many_arguments_is_converted_in_linear_time() {
-        let args = vec!["a"; 200_000].join(" ");
+        let args = vec!["a"; 300_000].join(" ");
         let step = format!(
             "(declare-const a Bool)\n(assume @p1 false)\n\
              (step @p2 (= false false) :rule refl :args (({args})))\n"

@@ -3,7 +3,7 @@
 use std::fmt;
 
 use crate::bitvec::BitVec;
-use crate::eostring::{EoString, NUM_CODES};
+use crate::eostring::{EoString, num_codes};
 use crate::kind::{EvalOp, LitKind};
 use crate::num::{Integer, Rational};
 
@@ -218,7 +218,7 @@ impl Lit {
             }
             EvalOp::ToString => match first {
                 // a code point gives the string of that one character
-                Lit::Numeral(i) if i.fits_u32() && i.to_u32() < NUM_CODES => {
+                Lit::Numeral(i) if i.fits_u32() && i.to_u32() < num_codes() => {
                     Some(Lit::String(EoString::from_code_points(vec![i.to_u32()])))
                 }
                 Lit::String(_) => Some(first.clone()),
@@ -448,7 +448,7 @@ impl Lit {
                 let mut codes = Vec::with_capacity(n);
                 for _ in 0..n {
                     let c = r.u32()?;
-                    if c >= crate::NUM_CODES {
+                    if c >= num_codes() {
                         return None;
                     }
                     codes.push(c);

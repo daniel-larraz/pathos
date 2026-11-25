@@ -1,12 +1,56 @@
 //! Strings of Unicode code points, as `util/string.cpp` in Ethos.
 
 use std::fmt::Write;
+use std::sync::atomic::{AtomicU32, Ordering};
 
-/// The number of code points a string character can take: the first three
-/// planes of Unicode, as in the SMT-LIB theory of strings.
-pub const NUM_CODES: u32 = 196_608;
+/// The default maximum code point, as SMT-LIB version 2.6 has it: the first
+/// three planes of Unicode (`String::defaultMaxCodePoint` in Ethos).
+pub const DEFAULT_MAX_CODE_POINT: u32 = 0x2FFFF;
+/// The largest value the maximum code point may be set to, the largest
+/// Unicode code point.
+pub const MAX_MAX_CODE_POINT: u32 = 0x10FFFF;
+/// The smallest value it may be set to: every 7-bit ASCII character is
+/// representable, as printable characters appear unescaped in literals.
+pub const MIN_MAX_CODE_POINT: u32 = 0x7F;
 
-/// A string literal: a sequence of code points below [`NUM_CODES`].
+/// The maximum code point of string characters (`--max-code-point`). Set once,
+/// before any string is built, as Ethos sets `String::s_maxCodePoint`.
+static MAX_CODE_POINT: AtomicU32 = AtomicU32::new(DEFAULT_MAX_CODE_POINT);
+
+/// The maximum code point of string characters.
+pub fn max_code_point() -> u32 {
+    MAX_CODE_POINT.load(Ordering::Relaxed)
+}
+
+/// The number of code points a string character can take: `0`, ...,
+/// `num_codes() - 1`.
+pub fn num_codes() -> u32 {
+    max_code_point() + 1
+}
+
+/// Sets the maximum code point; false, and nothing set, outside
+/// [`MIN_MAX_CODE_POINT`], [`MAX_MAX_CODE_POINT`].
+pub fn set_max_code_point(m: u32) -> bool {
+    if !(MIN_MAX_CODE_POINT..=MAX_MAX_CODE_POINT).contains(&m) {
+        return false;
+    }
+    MAX_CODE_POINT.store(m, Ordering::Relaxed);
+    true
+}
+
+/// The most hexadecimal digits an escape `\u{...}` may have: 5, or the number
+/// of digits of the maximum code point if that is more.
+fn max_esc_digits() -> usize {
+    let mut n = 0;
+    let mut m = max_code_point();
+    while m > 0 {
+        n += 1;
+        m >>= 4;
+    }
+    n.max(5)
+}
+
+/// A string literal: a sequence of code points below [`num_codes`].
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Default)]
 pub struct EoString(Vec<u32>);
 
@@ -84,7 +128,7 @@ impl EoString {
                     if !has_brace && hex.len() == 4 {
                         is_end = true;
                         break;
-                    } else if has_brace && hex.len() > 5 {
+                    } else if has_brace && hex.len() > max_esc_digits() {
                         is_escape = false;
                         break;
                     }
@@ -95,7 +139,7 @@ impl EoString {
             }
             if is_escape {
                 match u32::from_str_radix(&hex, 16) {
-                    Ok(val) if val < NUM_CODES => out.push(val),
+                    Ok(val) if val < num_codes() => out.push(val),
                     _ => is_escape = false,
                 }
             }

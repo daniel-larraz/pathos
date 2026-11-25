@@ -11,6 +11,7 @@ use pathos_syntax::{Error, Result, latin1, textmode};
 
 const HELP: &str = "        --include=X: includes the file specified by X.
              --help: displays this message.
+ --max-code-point=X: sets the maximum code point of string characters to X (default 196607, at most 1114111, i.e. 0x10FFFF).
     --normalize-num: treat numeral literals as syntax sugar for rational literals.
  --no-normalize-dec: do not treat decimal literals as syntax sugar for rational literals.
  --no-normalize-hex: do not treat hexadecimal literals as syntax sugar for binary literals.
@@ -70,6 +71,18 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
         {
             continue;
         }
+        if let Some(val) = arg.strip_prefix("--max-code-point=") {
+            // a decimal value, or a hexadecimal value prefixed by 0x
+            if !parse_max_code_point(val).is_some_and(pathos_term::set_max_code_point) {
+                return Err(Error::plain(format!(
+                    "invalid value for --max-code-point: \"{val}\", must be between {} and {} (0x{:x})",
+                    pathos_term::MIN_MAX_CODE_POINT,
+                    pathos_term::MAX_MAX_CODE_POINT,
+                    pathos_term::MAX_MAX_CODE_POINT
+                )));
+            }
+            continue;
+        }
         // included once the options are final
         if let Some(f) = arg.strip_prefix("--include=") {
             includes.push((f.to_string(), false));
@@ -123,6 +136,36 @@ fn parse_args(args: &[String]) -> Result<Parsed> {
         write_snapshot,
         snapshot,
     }))
+}
+
+/// The value of `--max-code-point`, as Ethos's `Options::setMaxCodePoint`
+/// reads it: decimal, or hexadecimal after `0x`/`0X`; the first digit a
+/// hexadecimal digit; the rest read as `std::stoul` does in that base (which
+/// in base 16 also takes a second `0x`), all of it. Out of range is `None`
+/// only if it does not fit; `set_max_code_point` checks the bounds.
+fn parse_max_code_point(val: &str) -> Option<u32> {
+    let (digits, radix) = match val.get(..2) {
+        Some("0x") | Some("0X") => (&val[2..], 16),
+        _ => (val, 10),
+    };
+    if !digits.chars().next().is_some_and(|c| c.is_ascii_hexdigit()) {
+        return None;
+    }
+    // stoul in base 16 skips a 0x before the digits
+    let digits = match digits.get(..2) {
+        Some("0x") | Some("0X")
+            if radix == 16
+                && digits[2..]
+                    .chars()
+                    .next()
+                    .is_some_and(|c| c.is_ascii_hexdigit()) =>
+        {
+            &digits[2..]
+        }
+        _ => digits,
+    };
+    let m = u64::from_str_radix(digits, radix).ok()?;
+    u32::try_from(m).ok()
 }
 
 /// Writes a line of text held as described in `pathos_syntax::latin1`.
