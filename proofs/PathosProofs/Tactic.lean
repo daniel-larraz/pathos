@@ -85,9 +85,55 @@ macro_rules
       rintro ⟨r, s'⟩ h
       cases r <;> simpa [WP.uncurry'_pair] using h))
 
+/-- `__eo_eq` of two terms that are not stuck, as the case functions write
+it (`a = b`; `eo_eq_of_ne` has it the other way round). -/
+theorem eo_eq_dec (a b : Eo.Term) (ha : a ≠ Eo.Term.Stuck) (hb : b ≠ Eo.Term.Stuck) :
+    Eo.__eo_eq a b = Eo.Term.Boolean (decide (a = b)) := by
+  rw [eo_eq_of_ne a b ha hb]; simp [eq_comm]
+
+theorem eo_and_bool (a b : Bool) :
+    Eo.__eo_and (Eo.Term.Boolean a) (Eo.Term.Boolean b) = Eo.Term.Boolean (a && b) := by
+  rfl
+
+open Lean Meta Elab Tactic in
+/-- Takes apart each hypothesis `Valid.valid x` with `simp`: an
+application's parts, and an operator's indices (the generated
+`Valid.uop<k>`), are not stuck. -/
+elab "valid_hyps" : tactic => withMainContext do
+  for d in ← getLCtx do
+    if d.isImplementationDetail || d.userName.hasMacroScopes then continue
+    if (← instantiateMVars d.type).isAppOf ``Valid.valid then
+      try evalTactic (← `(tactic| simp at $(mkIdent d.userName):ident))
+      catch _ => pure ()
+  -- and each conjunction among the hypotheses taken apart
+  let mut fuel := 1000
+  while fuel > 0 do
+    fuel := fuel - 1
+    let g ← getMainGoal
+    let conj ← g.withContext do
+      for d in ← getLCtx do
+        if d.isImplementationDetail then continue
+        if (← instantiateMVars d.type).isAppOfArity ``And 2 then
+          return some d.fvarId
+      return none
+    match conj with
+    | none => break
+    | some h =>
+      let gs ← g.cases h
+      replaceMainGoal (gs.map (·.mvarId)).toList
+
+/-- `logos_eq` for a case whose repeated variables logos tests with one
+`__eo_requires` of a conjunction of `__eo_eq`s, and the case function with
+a nest of `if`s: both made `if c₁ ∧ … ∧ cₖ then … else stuck`, the
+`__eo_eq`s decided from what `Valid` says is not stuck. A nest of many `if`s
+is too much for `split_ifs` and `simp_all`. The other branches (a stuck
+argument, a pattern that fails) by `simp_all`. -/
+syntax "logos_eq_req" : tactic
+
 /-- Closes the statement that logos's function is what the generated body
 does, after both sides are unfolded: by cases on the function's
-arguments; a function of one body, by its definition. -/
+arguments; a function of one body, by its definition; last, a case that
+tests many repeated variables (`logos_eq_req`). -/
 macro "logos_eq" : tactic =>
   `(tactic| first
     | (split <;> simp_all [HasStuck.stuck]; done)
@@ -95,7 +141,8 @@ macro "logos_eq" : tactic =>
         simp_all [eo_eq_of_ne, eo_eq_true]; done)
     | (split <;> simp_all [HasStuck.stuck, requires_ite, eo_logos_eq] <;> (try split_ifs) <;>
         simp_all [eo_eq_of_ne, eo_eq_true, eo_logos_eq]; done)
-    | rfl)
+    | rfl
+    | logos_eq_req)
 
 open Lean Meta Elab Tactic in
 /-- Closes a goal that a hypothesis makes absurd: one of the form
@@ -241,6 +288,31 @@ macro_rules
       unfold $cd
       first
         | (split <;> nm_close)
+        | (simp_all; done)))
+
+/-- `no_match_ne hne hinv hG in cd`: `no_match`, where the pattern failed
+because two of its terms differ (`hne : ¬x = y`, from `pat_same`). The case's
+function is the pattern made linear, its repeated variables a nest of `if`s
+over `none`; `hne` makes one of them false and `ite_self` the rest `none`.
+`nm_close`'s `simp_all` can run out of steps on such a nest with a large
+context. -/
+syntax "no_match_ne " term:max ppSpace ident ppSpace ident " in " ident : tactic
+macro_rules
+  | `(tactic| no_match_ne $hne $hinv $hG in $cd) =>
+    `(tactic| (
+      have hne := $hne
+      simp only [Std.bind_ok, uncurry_apply_pair, ite_true, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨$hinv, $hG, ?_⟩
+      unfold $cd
+      first
+        | (split <;> first
+            | rfl
+            -- `injections` stops a few constructors deep: a pattern's
+            -- equation can be deeper
+            | (iterate 40 (try injections)
+               subst_vars
+               simp only [hne, Ne.symm hne, ite_false, ite_true, ite_self]; done)
+            | nm_close)
         | (simp_all; done)))
 
 /-- `pat_unapply h as ⟨f, a, x, y, hf, ha, hnf, hna⟩ using hinv else hinv hG in cd`:
@@ -460,7 +532,7 @@ macro_rules
       rcases Decidable.em ($a = $b) with hv | hv
       case inr => (
         rw [show decide ($a ≠ $b) = true from by simpa using hv]
-        no_match $hinv $hG in $cd)
+        no_match_ne (hiff.not.mp hv) $hinv $hG in $cd)
       rw [show decide ($a ≠ $b) = false from by simp [hv]]
       simp only [Bool.false_eq_true, ite_false]
       have hx := hiff.mp hv
@@ -621,6 +693,25 @@ def firstSome {α : Type} : List (Option α) → α → α
     firstSome (some r :: rest) d = r := rfl
 @[simp] theorem firstSome_none {α : Type} (rest : List (Option α)) (d : α) :
     firstSome (none :: rest) d = firstSome rest d := rfl
+
+theorem firstSome_ite {α : Type} (c : Prop) [Decidable c] (r d : α) :
+    firstSome [if c then some r else none] d = if c then r else d := by
+  split <;> rfl
+
+-- (after `firstSome_ite`, which the rule names)
+macro_rules
+  | `(tactic| logos_eq_req) =>
+    `(tactic| (
+    split
+    all_goals first
+      | (valid_hyps
+         simp (disch := assumption) only [eo_eq_dec, eo_and_bool, requires_ite,
+           Eo.Term.Boolean.injEq, Bool.and_eq_true, decide_eq_true_eq, reduceCtorEq,
+           ite_false, ← ite_and, firstSome_ite, and_assoc]
+         split_ifs <;> first | rfl | contradiction
+         done)
+      | (simp_all [HasStuck.stuck]; done)
+      | (split <;> simp_all [HasStuck.stuck]; done)))
 
 theorem firstSome_append {α : Type} (l₁ l₂ : List (Option α)) (d : α) :
     firstSome (l₁ ++ l₂) d = firstSome l₁ (firstSome l₂ d) := by

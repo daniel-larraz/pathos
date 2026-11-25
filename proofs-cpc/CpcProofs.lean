@@ -29,6 +29,13 @@ public import CpcProofs.Part26
 public import CpcProofs.Part27
 public import CpcProofs.Part28
 public import CpcProofs.Part29
+public import CpcProofs.Part30
+public import CpcProofs.Part31
+public import CpcProofs.Part32
+public import CpcProofs.Part33
+public import CpcProofs.Part34
+public import CpcProofs.Part35
+public import CpcProofs.Part36
 public import CpcChecker
 public import Cpc.Logos
 import all Cpc.Logos
@@ -251,6 +258,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dcomp_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dconcat_2dextract_2dmerge_spec n ih,
       eo__24eo_5fprog_5fbv_2dconcat_2dmerge_2dconst_spec n ih,
+      eo__24eo_5fprog_5fbv_2deq_2dextract_2delim1_spec n ih,
       eo__24eo_5fprog_5fbv_2deq_2dextract_2delim2_spec n ih,
       eo__24eo_5fprog_5fbv_2deq_2dextract_2delim3_spec n ih,
       eo__24eo_5fprog_5fbv_2deq_2dnot_2dsolve_spec n ih,
@@ -284,6 +292,9 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dlt_2dself_spec n ih,
       eo__24eo_5fprog_5fbv_2dmerge_2dsign_2dextend_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2dmerge_2dsign_2dextend_2d2_spec n ih,
+      eo__24eo_5fprog_5fbv_2dmult_2dpow2_2d2b_spec n ih,
+      eo__24eo_5fprog_5fbv_2dmult_2dslt_2dmult_2d1_spec n ih,
+      eo__24eo_5fprog_5fbv_2dmult_2dslt_2dmult_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2dnand_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dnego_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dnor_2deliminate_spec n ih,
@@ -294,6 +305,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dredand_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dredor_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2_spec n ih,
+      eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2dsaddo_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dsdivo_2deliminate_spec n ih,
@@ -304,6 +316,10 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dshl_2dby_2dconst_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2dshl_2dzero_spec n ih,
       eo__24eo_5fprog_5fbv_2dsign_2dextend_2deliminate_2d0_spec n ih,
+      eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d1_spec n ih,
+      eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d2_spec n ih,
+      eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d3_spec n ih,
+      eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d4_spec n ih,
       eo__24eo_5fprog_5fbv_2dsle_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dsle_2dself_spec n ih,
       eo__24eo_5fprog_5fbv_2dsrem_2deliminate_spec n ih,
@@ -335,6 +351,8 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dzero_2dextend_2deliminate_2d0_spec n ih,
       eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d2_spec n ih,
+      eo__24eo_5fprog_5fbv_2dzero_2dextend_2dult_2dconst_2d1_spec n ih,
+      eo__24eo_5fprog_5fbv_2dzero_2dextend_2dult_2dconst_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2dzero_2dule_spec n ih,
       eo__24eo_5fprog_5fbv_5fpoly_5fnorm_5feq_spec n ih,
       eo__24eo_5fprog_5fchain_5fm_5fresolution_spec n ih,
@@ -572,6 +590,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fstr_2drepl_2drepl_2dtgt_2dno_2dctn_spec n ih,
       eo__24eo_5fprog_5fstr_2drepl_2drepl_2dtgt_2dself_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2dall_2dempty_spec n ih,
+      eo__24eo_5fprog_5fstr_2dreplace_2dall_2dfind_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2dall_2dfind_2dpre_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2dall_2did_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2dall_2dno_2dcontains_spec n ih,
@@ -580,6 +599,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fstr_2dreplace_2ddual_2dctn_2dfalse_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2demp_2dctn_2dsrc_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2dempty_spec n ih,
+      eo__24eo_5fprog_5fstr_2dreplace_2dfind_2dbase_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2did_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2dno_2dcontains_spec n ih,
       eo__24eo_5fprog_5fstr_2dreplace_2dprefix_spec n ih,
@@ -625,6 +645,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower_spec n ih,
       eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0_spec n ih,
       eo__24eo_5fprog_5fstr_2dupdate_2dfit_spec n ih,
+      eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat_spec n ih,
       eo__24eo_5fprog_5fstr_2dupdate_2doob_spec n ih,
       eo__24eo_5fprog_5fstr_2dupdate_2drev_spec n ih,
       eo__24eo_5fprog_5fstring_5fcode_5finj_spec n ih,

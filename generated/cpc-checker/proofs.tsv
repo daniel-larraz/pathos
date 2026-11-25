@@ -234,7 +234,7 @@ $eo_prog_bv-commutative-xor	generated
 $eo_prog_bv-comp-eliminate	generated	
 $eo_prog_bv-concat-extract-merge	generated	
 $eo_prog_bv-concat-merge-const	generated	
-$eo_prog_bv-eq-extract-elim1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)
+$eo_prog_bv-eq-extract-elim1	generated	
 $eo_prog_bv-eq-extract-elim2	generated	
 $eo_prog_bv-eq-extract-elim3	generated	
 $eo_prog_bv-eq-not-solve	generated	
@@ -244,7 +244,7 @@ $eo_prog_bv-extract-concat-2	none	its generated proof does not build: logos_eq d
 $eo_prog_bv-extract-concat-3	generated	
 $eo_prog_bv-extract-concat-4	generated	
 $eo_prog_bv-extract-extract	generated	
-$eo_prog_bv-extract-mult-leading-bit	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps and times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_bv-extract-mult-leading-bit	none	its generated proof does not build: the spec of case 0: times out (whnf) at 20,000,000 heartbeats, with no_match_ne
 $eo_prog_bv-extract-not	generated	
 $eo_prog_bv-extract-sign-extend-1	generated	
 $eo_prog_bv-extract-sign-extend-2	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
@@ -273,9 +273,9 @@ $eo_prog_bv-merge-sign-extend-1	generated
 $eo_prog_bv-merge-sign-extend-2	generated	
 $eo_prog_bv-mult-pow2-1	none	case 0 has eo::list_concat of bvmul, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-mult-pow2-2	none	case 0 has eo::list_concat of bvmul, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$eo_prog_bv-mult-pow2-2b	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
-$eo_prog_bv-mult-slt-mult-1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
-$eo_prog_bv-mult-slt-mult-2	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_bv-mult-pow2-2b	generated	
+$eo_prog_bv-mult-slt-mult-1	generated	
+$eo_prog_bv-mult-slt-mult-2	generated	
 $eo_prog_bv-nand-eliminate	generated	
 $eo_prog_bv-nego-eliminate	generated	
 $eo_prog_bv-nor-eliminate	generated	
@@ -293,7 +293,7 @@ $eo_prog_bv-redor-eliminate	generated
 $eo_prog_bv-repeat-elim	none	case 0 has a builtin operator
 $eo_prog_bv-rotate-left-eliminate-1	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats) and simp exceeds its steps; logos_eq does not prove the case form (binary literals, milestone 6)
 $eo_prog_bv-rotate-left-eliminate-2	generated	
-$eo_prog_bv-rotate-right-eliminate-1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)
+$eo_prog_bv-rotate-right-eliminate-1	generated	
 $eo_prog_bv-rotate-right-eliminate-2	generated	
 $eo_prog_bv-saddo-eliminate	generated	
 $eo_prog_bv-sdiv-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
@@ -307,10 +307,10 @@ $eo_prog_bv-shl-zero	generated
 $eo_prog_bv-sign-extend-eliminate-0	generated	
 $eo_prog_bv-sign-extend-eq-const-1	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
 $eo_prog_bv-sign-extend-eq-const-2	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
-$eo_prog_bv-sign-extend-ult-const-1	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
-$eo_prog_bv-sign-extend-ult-const-2	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
-$eo_prog_bv-sign-extend-ult-const-3	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
-$eo_prog_bv-sign-extend-ult-const-4	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
+$eo_prog_bv-sign-extend-ult-const-1	generated	
+$eo_prog_bv-sign-extend-ult-const-2	generated	
+$eo_prog_bv-sign-extend-ult-const-3	generated	
+$eo_prog_bv-sign-extend-ult-const-4	generated	
 $eo_prog_bv-sle-eliminate	generated	
 $eo_prog_bv-sle-self	generated	
 $eo_prog_bv-smod-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); at 20,000,000 it runs out of 8G of memory (13 min)
@@ -354,8 +354,8 @@ $eo_prog_bv-zero-extend-eliminate	generated
 $eo_prog_bv-zero-extend-eliminate-0	generated	
 $eo_prog_bv-zero-extend-eq-const-1	generated	
 $eo_prog_bv-zero-extend-eq-const-2	generated	
-$eo_prog_bv-zero-extend-ult-const-1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (bit-vector literals in the case)
-$eo_prog_bv-zero-extend-ult-const-2	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (bit-vector literals in the case)
+$eo_prog_bv-zero-extend-ult-const-1	generated	
+$eo_prog_bv-zero-extend-ult-const-2	generated	
 $eo_prog_bv-zero-ule	generated	
 $eo_prog_bv_bitblast_step	none	it calls $bv_mk_bitblast_step, which has no proof
 $eo_prog_bv_poly_norm	none	it calls $get_bv_poly_norm_rec, which has no proof
@@ -645,7 +645,7 @@ $eo_prog_str-repl-repl-src-tgt-no-ctn	generated
 $eo_prog_str-repl-repl-tgt-no-ctn	generated	
 $eo_prog_str-repl-repl-tgt-self	generated	
 $eo_prog_str-replace-all-empty	generated	
-$eo_prog_str-replace-all-find	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps and times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_str-replace-all-find	generated	
 $eo_prog_str-replace-all-find-pre	generated	
 $eo_prog_str-replace-all-id	generated	
 $eo_prog_str-replace-all-no-contains	generated	
@@ -654,7 +654,7 @@ $eo_prog_str-replace-dual-ctn	generated
 $eo_prog_str-replace-dual-ctn-false	generated	
 $eo_prog_str-replace-emp-ctn-src	generated	
 $eo_prog_str-replace-empty	generated	
-$eo_prog_str-replace-find-base	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps and times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_str-replace-find-base	generated	
 $eo_prog_str-replace-find-first-concat	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
 $eo_prog_str-replace-find-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-replace-id	generated	
@@ -708,7 +708,7 @@ $eo_prog_str-to-upper-lower	generated
 $eo_prog_str-update-concat-fit	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-update-concat-fit0	generated	
 $eo_prog_str-update-fit	generated	
-$eo_prog_str-update-in-first-concat	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
+$eo_prog_str-update-in-first-concat	generated	
 $eo_prog_str-update-oob	generated	
 $eo_prog_str-update-rev	generated	
 $eo_prog_string_code_inj	generated	
