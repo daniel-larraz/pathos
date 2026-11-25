@@ -2675,6 +2675,15 @@ def eo__24eo_5fprog_5fprocess_5fscope.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_process_scope x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_quant-merge-prenex`. -/
+def eo__24eo_5fprog_5fquant_2dmerge_2dprenex.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fprog_5fquant_2dmerge_2dprenex s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_quant_merge_prenex x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_quant-miniscope-and`. -/
 def eo__24eo_5fprog_5fquant_2dminiscope_2dand.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -5762,6 +5771,15 @@ def eo__24is_5farith_5ftype.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__is_arith_type x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$is_poly_norm_rel_consts`. -/
+def eo__24is_5fpoly_5fnorm_5frel_5fconsts.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24is_5fpoly_5fnorm_5frel_5fconsts s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__is_poly_norm_rel_consts x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$is_poly_norm_rel_consts_rel`. -/
 def eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -6030,6 +6048,15 @@ def eo__24re_5fis_5funbound_5fwildcard.Spec (n : Nat) : Prop :=
     eo__24re_5fis_5funbound_5fwildcard s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__re_is_unbound_wildcard x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$re_nullable`. -/
+def eo__24re_5fnullable.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24re_5fnullable s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__re_nullable x_a0)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$re_rev_comp`. -/
@@ -7129,6 +7156,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fnot_5fxor_5felim2 : eo__24eo_5fprog_5fnot_5fxor_5felim2.Spec n
   eo__24eo_5fprog_5fpairwise_5fcong : eo__24eo_5fprog_5fpairwise_5fcong.Spec n
   eo__24eo_5fprog_5fprocess_5fscope : eo__24eo_5fprog_5fprocess_5fscope.Spec n
+  eo__24eo_5fprog_5fquant_2dmerge_2dprenex : eo__24eo_5fprog_5fquant_2dmerge_2dprenex.Spec n
   eo__24eo_5fprog_5fquant_2dminiscope_2dand : eo__24eo_5fprog_5fquant_2dminiscope_2dand.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dmerge : eo__24eo_5fprog_5fre_2dconcat_2dmerge.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dstar_2drepeat : eo__24eo_5fprog_5fre_2dconcat_2dstar_2drepeat.Spec n
@@ -7472,6 +7500,7 @@ structure Specs (n : Nat) : Prop where
   eo__24greatest_5fint_5flt : eo__24greatest_5fint_5flt.Spec n
   eo__24iota_5frec : eo__24iota_5frec.Spec n
   eo__24is_5farith_5ftype : eo__24is_5farith_5ftype.Spec n
+  eo__24is_5fpoly_5fnorm_5frel_5fconsts : eo__24is_5fpoly_5fnorm_5frel_5fconsts.Spec n
   eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel : eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel.Spec n
   eo__24is_5fseq_5fconst : eo__24is_5fseq_5fconst.Spec n
   eo__24is_5fseq_5fconst_5frec : eo__24is_5fseq_5fconst_5frec.Spec n
@@ -7502,6 +7531,7 @@ structure Specs (n : Nat) : Prop where
   eo__24poly_5fneg : eo__24poly_5fneg.Spec n
   eo__24re_5fconcat_5fmerge : eo__24re_5fconcat_5fmerge.Spec n
   eo__24re_5fis_5funbound_5fwildcard : eo__24re_5fis_5funbound_5fwildcard.Spec n
+  eo__24re_5fnullable : eo__24re_5fnullable.Spec n
   eo__24re_5frev_5fcomp : eo__24re_5frev_5fcomp.Spec n
   eo__24re_5frev_5fmap_5frev : eo__24re_5frev_5fmap_5frev.Spec n
   eo__24re_5fsplit_5fstr_5fto_5fre : eo__24re_5fsplit_5fstr_5fto_5fre.Spec n

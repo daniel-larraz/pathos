@@ -4,7 +4,7 @@ $abconv_ubv_to_int_elim	generated
 $aci_norm_eq	none	case 2 has a builtin operator
 $are_distinct_terms_list	none	it calls $are_distinct_terms_list_rec, which has no proof
 $are_distinct_terms_list_rec	none	it calls $are_distinct_terms_type, which has no proof
-$are_distinct_terms_type	none	case 5 has a builtin operator
+$are_distinct_terms_type	none	it calls $dt_distinct_terms, which has no proof
 $arith_mk_one	generated	
 $arith_mk_zero	generated	
 $arith_normalize_lit	generated	
@@ -164,7 +164,7 @@ $eo_prog_arith-mod-over-mod	none	case 0 has eo::list_concat of +, whose nil test
 $eo_prog_arith-mod-over-mod-1	generated	
 $eo_prog_arith-mod-over-mod-mult	none	case 0 has eo::list_concat of *, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_arith-string-pred-entail	none	it calls $get_arith_poly_norm, which has no proof
-$eo_prog_arith-string-pred-safe-approx	none	it calls $str_arith_entail_is_approx, which has no proof
+$eo_prog_arith-string-pred-safe-approx	none	it calls $str_arith_entail_simple_pred, which has no proof
 $eo_prog_arith-to-int-elim-to-real	generated	
 $eo_prog_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison, which has no proof
 $eo_prog_arith_mult_neg	none	it calls $eo_typeof, which has no proof
@@ -463,11 +463,11 @@ $eo_prog_not_xor_elim2	generated
 $eo_prog_pairwise_cong	generated	
 $eo_prog_process_scope	generated	
 $eo_prog_quant-dt-split	none	it calls $dt_get_constructors, which has no proof
-$eo_prog_quant-merge-prenex	none	case 0 has a builtin operator
+$eo_prog_quant-merge-prenex	generated	
 $eo_prog_quant-miniscope-and	generated	
 $eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
-$eo_prog_quant-unused-vars	none	case 0 has a builtin operator
+$eo_prog_quant-unused-vars	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_quant-var-elim-eq	none	it calls $mk_quant_var_elim_eq, which has no proof
 $eo_prog_quant_var_reordering	none	case 0 has a builtin operator
 $eo_prog_re-all-elim	none	a constant, not a program with cases
@@ -878,8 +878,8 @@ $eo_typeof_tuple.select	generated
 $eo_typeof_tuple.update	generated	
 $eo_typeof_update	generated	
 $eo_typeof_zero_extend	generated	
-$eval_sets_inter	none	it calls $are_distinct_terms_list_rec, which has no proof
-$eval_sets_minus	none	it calls $are_distinct_terms_list_rec, which has no proof
+$eval_sets_inter	none	it calls $eo_typeof, which has no proof
+$eval_sets_minus	none	it calls $eo_typeof, which has no proof
 $eval_sets_op	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $extract_antec	generated	
 $extract_antec_rec	generated	
@@ -906,7 +906,7 @@ $is_closed_rec	none	case 2 has a variable term
 $is_cons_app	none	case 1 has a builtin operator
 $is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
 $is_instantiation	none	it calls $eo_typeof, which has no proof
-$is_poly_norm_rel_consts	none	case 0 has a builtin operator
+$is_poly_norm_rel_consts	generated	
 $is_poly_norm_rel_consts_rel	generated	
 $is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
 $is_quant_dt_split_conj	none	it calls $contains_atomic_term_list_free_rec, which has no proof
@@ -965,14 +965,14 @@ $re_ac_merge	none	case 3 has a builtin operator
 $re_concat_merge	generated	
 $re_flatten	none	case 1 has a builtin operator
 $re_is_unbound_wildcard	generated	
-$re_nullable	none	case 6 has a builtin operator
+$re_nullable	generated	
 $re_rev_comp	generated	
 $re_rev_map_rev	generated	
 $re_split_str_to_re	generated	
 $re_unflatten	none	case 0 has a builtin operator
 $re_unflatten_str	none	case 0 has a builtin operator
 $re_unfold_pos_concat_rec	generated	
-$run_evaluate	none	case 3 has a builtin operator
+$run_evaluate	none	case 6 has a builtin operator
 $run_process_scope	generated	
 $seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
 $seq_element_of_unit	generated	
@@ -1046,7 +1046,7 @@ $smtx_typeof_str.substr	generated
 $smtx_typeof_str.update	generated	
 $smtx_typeof_zero_extend	generated	
 $str_arith_entail_is_approx	none	it calls $str_arith_entail_is_approx_len, which has no proof
-$str_arith_entail_is_approx_len	none	case 1 has a builtin operator
+$str_arith_entail_is_approx_len	none	it calls $get_arith_poly_norm, which has no proof
 $str_arith_entail_simple_pred	none	it calls $get_arith_poly_norm, which has no proof
 $str_arith_entail_simple_rec	generated	
 $str_case_conv_rec	none	case 0 has a builtin operator
@@ -1062,10 +1062,10 @@ $str_fixed_len_re	generated
 $str_flatten	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $str_flatten_word_rec	none	case 1 has a builtin operator
 $str_from_int_eval_rec	none	case 1 has a builtin operator
-$str_is_compatible	none	case 2 has a builtin operator
+$str_is_compatible	none	it calls $are_distinct_terms_type, which has no proof
 $str_is_empty	generated	
 $str_is_multiset_subset_strict	none	case 0 has a builtin operator
-$str_is_multiset_subset_strict_done	none	it calls $are_distinct_terms_list_rec, which has no proof
+$str_is_multiset_subset_strict_done	none	it calls $eo_typeof, which has no proof
 $str_is_prefix_flat	generated	
 $str_leq_eval_rec	generated	
 $str_membership_re	generated	
