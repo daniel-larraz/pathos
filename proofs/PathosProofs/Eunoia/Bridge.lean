@@ -109,13 +109,21 @@ theorem Bridge.native_binary_and : @Eo.native_binary_and = @Eunoia.native_binary
     | (funext x0 x1 x2; simp only [Eo.native_binary_and, Eunoia.native_binary_and, Bridge.native_Int, Bridge.native_ite, Bridge.native_zeq, Bridge.native_piand]; split <;> simp_all [Bridge.native_Int, Bridge.native_ite, Bridge.native_zeq, Bridge.native_piand])
     | (funext x0 x1 x2; unfold Eo.native_binary_and Eunoia.native_binary_and; split <;> split <;> simp_all [Bridge.native_Int, Bridge.native_ite, Bridge.native_zeq, Bridge.native_piand])
 
+/-- `native_z_max_code_point` of CpcMini is Eunoia's. -/
+theorem Bridge.native_z_max_code_point : @SmtEval.native_z_max_code_point = @Eunoia.native_z_max_code_point := by
+  first
+    | rfl
+    | (simp only [SmtEval.native_z_max_code_point, Eunoia.native_z_max_code_point, Bridge.native_Int]; done)
+    | (simp only [SmtEval.native_z_max_code_point, Eunoia.native_z_max_code_point, Bridge.native_Int]; split <;> simp_all [Bridge.native_Int])
+    | (unfold SmtEval.native_z_max_code_point Eunoia.native_z_max_code_point; split <;> split <;> simp_all [Bridge.native_Int])
+
 /-- `native_char_valid` of CpcMini is Eunoia's. -/
 theorem Bridge.native_char_valid : @SmtEval.native_char_valid = @Eunoia.native_char_valid := by
   first
     | rfl
-    | (funext x0; simp only [SmtEval.native_char_valid, Eunoia.native_char_valid, Bridge.native_Bool, Bridge.native_Char]; done)
-    | (funext x0; simp only [SmtEval.native_char_valid, Eunoia.native_char_valid, Bridge.native_Bool, Bridge.native_Char]; split <;> simp_all [Bridge.native_Bool, Bridge.native_Char])
-    | (funext x0; unfold SmtEval.native_char_valid Eunoia.native_char_valid; split <;> split <;> simp_all [Bridge.native_Bool, Bridge.native_Char])
+    | (funext x0; simp only [SmtEval.native_char_valid, Eunoia.native_char_valid, Bridge.native_Bool, Bridge.native_Int, Bridge.native_Char, Bridge.native_z_max_code_point]; done)
+    | (funext x0; simp only [SmtEval.native_char_valid, Eunoia.native_char_valid, Bridge.native_Bool, Bridge.native_Int, Bridge.native_Char, Bridge.native_z_max_code_point]; split <;> simp_all [Bridge.native_Bool, Bridge.native_Int, Bridge.native_Char, Bridge.native_z_max_code_point])
+    | (funext x0; unfold SmtEval.native_char_valid Eunoia.native_char_valid; split <;> split <;> simp_all [Bridge.native_Bool, Bridge.native_Int, Bridge.native_Char, Bridge.native_z_max_code_point])
 
 /-- `native_zexp_total` of CpcMini is Eunoia's. -/
 theorem Bridge.native_zexp_total : @SmtEval.native_zexp_total = @Eunoia.native_zexp_total := by

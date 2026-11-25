@@ -227,7 +227,7 @@ def __eo_to_bin.case_1 : Term -> Term -> Option (Term)
   | _, _ => none
 
 def __eo_to_str.case_0 : Term -> Option (Term)
-  | (Term.Numeral n1) => some ((native_ite (native_and (native_zleq 0 n1) (native_zlt n1 196608)) (Term.String (native_str_from_code n1)) Term.Stuck))
+  | (Term.Numeral n1) => some ((native_ite (native_and (native_zleq 0 n1) (native_zleq n1 native_z_max_code_point)) (Term.String (native_str_from_code n1)) Term.Stuck))
   | _ => none
 
 def __eo_to_str.case_1 : Term -> Option (Term)
@@ -2820,13 +2820,13 @@ def __str_reduction_pred.case_15 : Term -> Option (Term)
 def __mk_str_eager_reduction.case_0 : Term -> Option (Term)
   | (Term.Apply (Term.UOp UserOp.str_from_code) n) => some (
     let _v0 := (Term.Apply (Term.UOp UserOp._at_purify) (Term.Apply (Term.UOp UserOp.str_from_code) n))
-    (Term.Apply (Term.Apply (Term.Apply (Term.UOp UserOp.ite) (Term.Apply (Term.Apply (Term.UOp UserOp.and) (Term.Apply (Term.Apply (Term.UOp UserOp.leq) (Term.Numeral 0)) n)) (Term.Apply (Term.Apply (Term.UOp UserOp.and) (Term.Apply (Term.Apply (Term.UOp UserOp.lt) n) (Term.Numeral 196608))) (Term.Boolean true)))) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) n) (Term.Apply (Term.UOp UserOp.str_to_code) _v0))) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) _v0) (Term.String []))))
+    (__eo_mk_apply (__eo_mk_apply (__eo_mk_apply (Term.UOp UserOp.ite) (__eo_mk_apply (Term.Apply (Term.UOp UserOp.and) (Term.Apply (Term.Apply (Term.UOp UserOp.leq) (Term.Numeral 0)) n)) (__eo_mk_apply (__eo_mk_apply (Term.UOp UserOp.and) (__eo_mk_apply (Term.Apply (Term.UOp UserOp.lt) n) (__eo_add (Term.Numeral native_z_max_code_point) (Term.Numeral 1)))) (Term.Boolean true)))) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) n) (Term.Apply (Term.UOp UserOp.str_to_code) _v0))) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) _v0) (Term.String []))))
   | _ => none
 
 def __mk_str_eager_reduction.case_1 : Term -> Option (Term)
   | (Term.Apply (Term.UOp UserOp.str_to_code) s) => some (
     let _v0 := (Term.Apply (Term.UOp UserOp.str_to_code) s)
-    (Term.Apply (Term.Apply (Term.Apply (Term.UOp UserOp.ite) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) (Term.Apply (Term.UOp UserOp.str_len) s)) (Term.Numeral 1))) (Term.Apply (Term.Apply (Term.UOp UserOp.and) (Term.Apply (Term.Apply (Term.UOp UserOp.geq) _v0) (Term.Numeral 0))) (Term.Apply (Term.Apply (Term.UOp UserOp.and) (Term.Apply (Term.Apply (Term.UOp UserOp.lt) _v0) (Term.Numeral 196608))) (Term.Boolean true)))) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) _v0) (Term.Numeral (-1 : native_Int)))))
+    (__eo_mk_apply (__eo_mk_apply (Term.Apply (Term.UOp UserOp.ite) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) (Term.Apply (Term.UOp UserOp.str_len) s)) (Term.Numeral 1))) (__eo_mk_apply (Term.Apply (Term.UOp UserOp.and) (Term.Apply (Term.Apply (Term.UOp UserOp.geq) _v0) (Term.Numeral 0))) (__eo_mk_apply (__eo_mk_apply (Term.UOp UserOp.and) (__eo_mk_apply (Term.Apply (Term.UOp UserOp.lt) _v0) (__eo_add (Term.Numeral native_z_max_code_point) (Term.Numeral 1)))) (Term.Boolean true)))) (Term.Apply (Term.Apply (Term.UOp UserOp.eq) _v0) (Term.Numeral (-1 : native_Int)))))
   | _ => none
 
 def __mk_str_eager_reduction.case_2 : Term -> Option (Term)
@@ -6645,7 +6645,7 @@ def __run_evaluate.case_39 : Term -> Option (Term)
   | (Term.Apply (Term.UOp UserOp.str_from_code) n) => some (
     let _v0 := (__run_evaluate n)
     let _v1 := (__eo_is_z _v0)
-    (__eo_ite _v1 (__eo_ite (__eo_ite _v1 (__eo_ite (__eo_ite (__eo_eq (Term.Numeral 196608) _v0) (Term.Boolean true) (__eo_gt (Term.Numeral 196608) _v0)) (__eo_not (__eo_is_neg _v0)) (Term.Boolean false)) (Term.Boolean false)) (__eo_to_str n) (Term.String [])) (Term.Apply (Term.UOp UserOp.str_from_code) n)))
+    (__eo_ite _v1 (__eo_ite (__eo_ite _v1 (__eo_ite (__eo_ite (__eo_eq (Term.Numeral native_z_max_code_point) _v0) (Term.Boolean true) (__eo_gt (Term.Numeral native_z_max_code_point) _v0)) (__eo_not (__eo_is_neg _v0)) (Term.Boolean false)) (Term.Boolean false)) (__eo_to_str n) (Term.String [])) (Term.Apply (Term.UOp UserOp.str_from_code) n)))
   | _ => none
 
 def __run_evaluate.case_40 : Term -> Option (Term)

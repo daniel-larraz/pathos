@@ -94,6 +94,8 @@ struct Instance {
 pub struct Built {
     store: Store,
     caching: bool,
+    /// How deep the checker's functions may nest (`Limits::depth`).
+    depth: u32,
     /// Symbols of the signature have identifiers below this.
     boundary: u32,
     /// The store's term for each front-end term converted so far.
@@ -151,6 +153,7 @@ impl Built {
         Built {
             store,
             caching,
+            depth: limits.depth,
             boundary,
             memo: HashMap::new(),
             datatypes: HashMap::new(),
@@ -1198,6 +1201,7 @@ impl Built {
             depth,
         });
         self.store.set_caching(caching);
+        self.depth = depth;
     }
 
     /// The checker's caches after a run, in one line.
@@ -1251,9 +1255,20 @@ impl Built {
         let assumptions = self.assumption_list()?;
         let commands = self.commands.clone();
         let commands = self.list("$emb_cmdl.nil", "$emb_cmdl.cons", &commands)?;
+        let depth = self.depth;
         self.store.check_proof(assumptions, commands).map_err(|e| {
+            // Terms and calls are not limited here (see `new`), so a limit is
+            // the depth or a number too large to compute.
+            let hint = if e == cc::CheckError::Limit {
+                format!(
+                    " (the checker's functions nested deeper than {depth}, \
+                     which --depth=N raises, or a number was too large to compute)"
+                )
+            } else {
+                String::new()
+            };
             Error::plain(format!(
-                "the compiled checker stopped without a verdict: {e}"
+                "the compiled checker stopped without a verdict: {e}{hint}"
             ))
         })
     }

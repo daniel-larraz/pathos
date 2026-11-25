@@ -43,6 +43,13 @@ pub use bitvec::BitVec;
 pub use cache::CacheStats;
 use cache::{Caches, ProgramId, TypeCacheKind};
 pub use eostring::{EoString, NUM_CODES};
+
+/// The maximum code point of a string character, which is what
+/// `eo::max_code_point` is and what bounds the characters of a string. It is
+/// the one `ethos-eoc` had when it generated this checker (its
+/// `--max-code-point`), by default the 0x2FFFF of SMT-LIB; [`NUM_CODES`] is
+/// the default as Pathos has it, which the checker does not read.
+pub const MAX_CODE_POINT: u32 = 0x2FFFF;
 pub use front::with_checker_stack;
 pub use kind::{EvalOp, LitKind};
 pub use lit::Lit;
@@ -132,9 +139,18 @@ pub struct Limits {
     pub depth: u32,
 }
 
+/// The stack the checker runs on (`with_checker_stack`): 4 GiB where the
+/// address space allows, 256 MiB otherwise. It is reserved, not committed:
+/// memory is used only as deep as a proof actually nests.
+#[cfg(target_pointer_width = "64")]
+pub(crate) const CHECKER_STACK_SIZE: usize = 4 * 1024 * 1024 * 1024;
+#[cfg(not(target_pointer_width = "64"))]
 pub(crate) const CHECKER_STACK_SIZE: usize = 256 * 1024 * 1024;
 // A conservative space budget for each generated call, including its case
 // helper and runtime calls. This is a default, not a static frame-size bound.
+// Measured on terms nested a million deep, a call takes about 300 bytes in a
+// release build and about 1.2 KiB in a debug one, so 16 KiB leaves a margin
+// of more than ten for calls with larger frames.
 const DEFAULT_DEPTH: u32 = (CHECKER_STACK_SIZE / (16 * 1024)) as u32;
 
 impl Default for Limits {
@@ -142,7 +158,8 @@ impl Default for Limits {
         Self {
             terms: 10_000_000,
             calls: 10_000_000,
-            // Allow ordinary deep terms on the 256 MiB checker stack.
+            // Allow deep terms on the checker stack (262,144 calls on a
+            // 64-bit target).
             // Covered by deep-term regressions in debug and release builds.
             depth: DEFAULT_DEPTH,
         }

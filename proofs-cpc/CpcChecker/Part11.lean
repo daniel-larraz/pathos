@@ -6938,7 +6938,7 @@ def generated.part11.if_33_eo__24run_5fevaluate
         | core.result.Result.Ok _ => ok (r1, s1)
         | core.result.Result.Err _ => ok (r1, s1)
       else
-        let i ← num.Integer.Insts.CoreConvertFromU32.from 196608#u32
+        let i ← num.Integer.Insts.CoreConvertFromU32.from MAX_CODE_POINT
         let (r1, s1) ← Store.literal s (lit.Lit.Numeral i)
         match r1 with
         | core.result.Result.Ok v1 =>
@@ -7007,7 +7007,7 @@ def generated.part11.if_35_eo__24run_5fevaluate
     | some b =>
       if b
       then
-        let i ← num.Integer.Insts.CoreConvertFromU32.from 196608#u32
+        let i ← num.Integer.Insts.CoreConvertFromU32.from MAX_CODE_POINT
         let (r1, s1) ← Store.literal s (lit.Lit.Numeral i)
         match r1 with
         | core.result.Result.Ok v1 =>

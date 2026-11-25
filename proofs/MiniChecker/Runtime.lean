@@ -580,7 +580,7 @@ def cache.CacheStats.Insts.CoreCmpEq : core.cmp.Eq cache.CacheStats := {
 }
 
 /-- [pathos_compiled_checker::Term]
-    Source: 'src/lib.rs', lines 113:0-113:21
+    Source: 'src/lib.rs', lines 120:0-120:21
     Visibility: public -/
 @[reducible]
 def Term := Std.U32
@@ -1445,7 +1445,7 @@ def eostring.EoString.substr
   ok v1
 
 /-- [pathos_compiled_checker::CheckError]
-    Source: 'src/lib.rs', lines 56:0-66:1
+    Source: 'src/lib.rs', lines 63:0-73:1
     Visibility: public -/
 @[discriminant isize]
 inductive CheckError where
@@ -1630,7 +1630,7 @@ inductive schema.Constructor where
 | eo_not : schema.Constructor
 
 /-- [pathos_compiled_checker::Embedding]
-    Source: 'src/lib.rs', lines 75:0-94:1
+    Source: 'src/lib.rs', lines 82:0-101:1
     Visibility: public -/
 @[discriminant isize]
 inductive Embedding where
@@ -1938,7 +1938,7 @@ def schema.Constructor.code (self : schema.Constructor) : Result Std.U32 := do
 axiom num.Rational : Type
 
 /-- [pathos_compiled_checker::lit::Lit]
-    Source: 'src/lit.rs', lines 20:0-28:1
+    Source: 'src/lit.rs', lines 21:0-29:1
     Visibility: public -/
 @[discriminant isize]
 inductive lit.Lit where
@@ -2238,7 +2238,7 @@ def schema.Constructor.is_user (self : schema.Constructor) : Result Bool := do
   | schema.Constructor.eo_not => ok true
 
 /-- [pathos_compiled_checker::Limits]
-    Source: 'src/lib.rs', lines 129:0-133:1
+    Source: 'src/lib.rs', lines 136:0-140:1
     Visibility: public -/
 structure Limits where
   terms : Std.U32
@@ -2246,7 +2246,7 @@ structure Limits where
   depth : Std.U32
 
 /-- [pathos_compiled_checker::TermData]
-    Source: 'src/lib.rs', lines 119:0-126:1
+    Source: 'src/lib.rs', lines 126:0-133:1
     Visibility: public -/
 @[discriminant isize]
 inductive TermData where
@@ -2258,7 +2258,7 @@ inductive TermData where
 | Node : schema.Constructor → alloc.vec.Vec Term → TermData
 
 /-- [pathos_compiled_checker::Store]
-    Source: 'src/lib.rs', lines 185:0-209:1
+    Source: 'src/lib.rs', lines 202:0-226:1
     Visibility: public -/
 structure Store where
   nodes : alloc.vec.Vec TermData
@@ -2271,7 +2271,7 @@ structure Store where
   state_jumps : alloc.vec.Vec (Std.U32 × Term)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::place]: loop 0:
-    Source: 'src/lib.rs', lines 353:8-355:9 -/
+    Source: 'src/lib.rs', lines 370:8-372:9 -/
 @[rust_loop]
 def Store.place_loop
   (v : alloc.vec.Vec Std.U32) (mask : Std.Usize) (i : Std.Usize) :
@@ -2288,7 +2288,7 @@ def Store.place_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::place]:
-    Source: 'src/lib.rs', lines 350:4-357:5 -/
+    Source: 'src/lib.rs', lines 367:4-374:5 -/
 def Store.place (self : Store) (t : Term) (hash : Std.U32) : Result Store := do
   let i := alloc.vec.Vec.len self.slots
   let mask ← i - 1#usize
@@ -2303,7 +2303,7 @@ def Store.place (self : Store) (t : Term) (hash : Std.U32) : Result Store := do
   ok { self with slots := v }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::grow]: loop 0:
-    Source: 'src/lib.rs', lines 362:8-365:9 -/
+    Source: 'src/lib.rs', lines 379:8-382:9 -/
 @[rust_loop]
 def Store.grow_loop
   (self : Store) (t : Std.Usize) :
@@ -2327,7 +2327,7 @@ def Store.grow_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::grow]:
-    Source: 'src/lib.rs', lines 359:4-366:5 -/
+    Source: 'src/lib.rs', lines 376:4-383:5 -/
 def Store.grow (self : Store) : Result Store := do
   let i := alloc.vec.Vec.len self.slots
   let i1 ← i * 2#usize
@@ -2373,7 +2373,7 @@ impl_def num.Integer.Insts.CoreCmpPartialEqInteger : core.cmp.PartialEq
 }
 
 /-- [pathos_compiled_checker::lit::{impl core::cmp::PartialEq<pathos_compiled_checker::lit::Lit> for pathos_compiled_checker::lit::Lit}::eq]:
-    Source: 'src/lit.rs', lines 19:16-19:25
+    Source: 'src/lit.rs', lines 20:16-20:25
     Visibility: public -/
 def lit.Lit.Insts.CoreCmpPartialEqLit.eq
   (self : lit.Lit) (other : lit.Lit) : Result Bool := do
@@ -2455,7 +2455,7 @@ def lit.Lit.Insts.CoreCmpPartialEqLit.eq
   else ok false
 
 /-- Trait implementation: [pathos_compiled_checker::lit::{impl core::cmp::PartialEq<pathos_compiled_checker::lit::Lit> for pathos_compiled_checker::lit::Lit}]
-    Source: 'src/lit.rs', lines 19:16-19:25 -/
+    Source: 'src/lit.rs', lines 20:16-20:25 -/
 @[reducible]
 impl_def lit.Lit.Insts.CoreCmpPartialEqLit : core.cmp.PartialEq lit.Lit lit.Lit
   := {
@@ -2464,7 +2464,7 @@ impl_def lit.Lit.Insts.CoreCmpPartialEqLit : core.cmp.PartialEq lit.Lit lit.Lit
 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::same_terms]: loop 0:
-    Source: 'src/lib.rs', lines 319:8-324:9 -/
+    Source: 'src/lib.rs', lines 336:8-341:9 -/
 @[rust_loop]
 def Store.same_terms_loop
   (a : Slice Term) (b : Slice Term) (same : Bool) (i : Std.Usize) :
@@ -2484,7 +2484,7 @@ def Store.same_terms_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::same_terms]:
-    Source: 'src/lib.rs', lines 313:4-326:5 -/
+    Source: 'src/lib.rs', lines 330:4-343:5 -/
 def Store.same_terms (a : Slice Term) (b : Slice Term) : Result Bool := do
   let i := Slice.len a
   let i1 := Slice.len b
@@ -2493,7 +2493,7 @@ def Store.same_terms (a : Slice Term) (b : Slice Term) : Result Bool := do
   else Store.same_terms_loop a b true 0#usize
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::same_data]:
-    Source: 'src/lib.rs', lines 285:4-312:5 -/
+    Source: 'src/lib.rs', lines 302:4-329:5 -/
 def Store.same_data (a : TermData) (b : TermData) : Result Bool := do
   match a with
   | TermData.Stuck =>
@@ -2559,7 +2559,7 @@ def Store.same_data (a : TermData) (b : TermData) : Result Bool := do
       else ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::find]: loop 0:
-    Source: 'src/lib.rs', lines 333:8-346:9 -/
+    Source: 'src/lib.rs', lines 350:8-363:9 -/
 @[rust_loop]
 def Store.find_loop
   (v : alloc.vec.Vec TermData) (v1 : alloc.vec.Vec Std.U32)
@@ -2599,7 +2599,7 @@ def Store.find_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::find]:
-    Source: 'src/lib.rs', lines 328:4-348:5 -/
+    Source: 'src/lib.rs', lines 345:4-365:5 -/
 def Store.find
   (self : Store) (data : TermData) (hash : Std.U32) :
   Result (Option Term)
@@ -2635,7 +2635,7 @@ axiom num.Rational.hash_code : num.Rational → Result Std.U64
 axiom num.Integer.hash_code : num.Integer → Result Std.U64
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::hash_code]: loop 0:
-    Source: 'src/lit.rs', lines 45:16-48:17 -/
+    Source: 'src/lit.rs', lines 46:16-49:17 -/
 @[rust_loop]
 def lit.Lit.hash_code_loop
   (codes : Slice Std.U32) (h : Std.U64) (i : Std.Usize) : Result Std.U64 := do
@@ -2651,7 +2651,7 @@ def lit.Lit.hash_code_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::hash_code]:
-    Source: 'src/lit.rs', lines 33:4-52:5 -/
+    Source: 'src/lit.rs', lines 34:4-53:5 -/
 def lit.Lit.hash_code (self : lit.Lit) : Result Std.U64 := do
   match self with
   | lit.Lit.Boolean b =>
@@ -2685,7 +2685,7 @@ def lit.Lit.hash_code (self : lit.Lit) : Result Std.U64 := do
     lit.Lit.hash_code_loop codes h 0#usize
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::data_hash]: loop 0:
-    Source: 'src/lib.rs', lines 275:16-278:17 -/
+    Source: 'src/lib.rs', lines 292:16-295:17 -/
 @[rust_loop]
 def Store.data_hash_loop
   (fields : alloc.vec.Vec Term) (h : Std.U64) (i : Std.Usize) :
@@ -2704,7 +2704,7 @@ def Store.data_hash_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::data_hash]:
-    Source: 'src/lib.rs', lines 265:4-283:5 -/
+    Source: 'src/lib.rs', lines 282:4-300:5 -/
 def Store.data_hash (data : TermData) : Result Std.U32 := do
   match data with
   | TermData.Stuck => table.fold 0#u64
@@ -2735,7 +2735,7 @@ def Store.data_hash (data : TermData) : Result Std.U32 := do
     table.fold h1
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::intern]:
-    Source: 'src/lib.rs', lines 240:4-263:5 -/
+    Source: 'src/lib.rs', lines 257:4-280:5 -/
 def Store.intern
   (self : Store) (data : TermData) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -2768,7 +2768,7 @@ def Store.intern
   | some t => ok (core.result.Result.Ok t, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::view]:
-    Source: 'src/lib.rs', lines 235:4-239:5
+    Source: 'src/lib.rs', lines 252:4-256:5
     Visibility: public -/
 def Store.view
   (self : Store) (t : Term) :
@@ -2781,20 +2781,20 @@ def Store.view
   core.option.Option.ok_or o CheckError.InvalidHandle
 
 /-- [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Term}::clone]:
-    Source: 'src/lib.rs', lines 112:15-112:20
+    Source: 'src/lib.rs', lines 119:15-119:20
     Visibility: public -/
 def Term.Insts.CoreCloneClone.clone (self : Term) : Result Term := do
   ok self
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:15-112:20 -/
+    Source: 'src/lib.rs', lines 119:15-119:20 -/
 @[reducible]
 def Term.Insts.CoreCloneClone : core.clone.Clone Term := {
   clone := Term.Insts.CoreCloneClone.clone
 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct_user]:
-    Source: 'src/lib.rs', lines 622:4-634:5 -/
+    Source: 'src/lib.rs', lines 639:4-651:5 -/
 def Store.destruct_user
   (self : Store) (c : schema.Constructor) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -2855,7 +2855,7 @@ axiom num.Rational.Insts.CoreCloneClone.clone
   : num.Rational → Result num.Rational
 
 /-- [pathos_compiled_checker::lit::{impl core::clone::Clone for pathos_compiled_checker::lit::Lit}::clone]:
-    Source: 'src/lit.rs', lines 19:9-19:14
+    Source: 'src/lit.rs', lines 20:9-20:14
     Visibility: public -/
 def lit.Lit.Insts.CoreCloneClone.clone (self : lit.Lit) : Result lit.Lit := do
   match self with
@@ -2882,7 +2882,7 @@ def lit.Lit.Insts.CoreCloneClone.clone (self : lit.Lit) : Result lit.Lit := do
     ok (lit.Lit.Str es)
 
 /-- [pathos_compiled_checker::Hit]
-    Source: 'src/lib.rs', lines 153:0-157:1 -/
+    Source: 'src/lib.rs', lines 170:0-174:1 -/
 @[discriminant isize]
 inductive Hit where
 | Done : Option (alloc.vec.Vec Term) → Hit
@@ -2890,7 +2890,7 @@ inductive Hit where
 | Binary : num.Integer → num.Integer → Hit
 
 /-- [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::Embedding> for pathos_compiled_checker::Embedding}::eq]:
-    Source: 'src/lib.rs', lines 74:29-74:38
+    Source: 'src/lib.rs', lines 81:29-81:38
     Visibility: public -/
 def Embedding.Insts.CoreCmpPartialEqEmbedding.eq
   (self : Embedding) (other : Embedding) : Result Bool := do
@@ -2899,7 +2899,7 @@ def Embedding.Insts.CoreCmpPartialEqEmbedding.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct_literal]:
-    Source: 'src/lib.rs', lines 600:4-620:5 -/
+    Source: 'src/lib.rs', lines 617:4-637:5 -/
 def Store.destruct_literal
   (e : Embedding) (literal : lit.Lit) : Result Hit := do
   let which ←
@@ -2962,7 +2962,7 @@ def Store.destruct_literal
   else ok (Hit.Done none)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw]:
-    Source: 'src/lib.rs', lines 433:4-435:5
+    Source: 'src/lib.rs', lines 450:4-452:5
     Visibility: public -/
 def Store.raw
   (self : Store) (literal : lit.Lit) :
@@ -2971,7 +2971,7 @@ def Store.raw
   Store.intern self (TermData.Native literal)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::destruct]:
-    Source: 'src/lib.rs', lines 567:4-598:5
+    Source: 'src/lib.rs', lines 584:4-615:5
     Visibility: public -/
 def Store.destruct
   (self : Store) (c : schema.Constructor) (t : Term) :
@@ -3673,19 +3673,19 @@ def Store.destruct
       ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::stuck]:
-    Source: 'src/lib.rs', lines 232:4-234:5
+    Source: 'src/lib.rs', lines 249:4-251:5
     Visibility: public -/
 def Store.stuck (self : Store) : Result Term := do
   ok 0#u32
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::leave]:
-    Source: 'src/lib.rs', lines 932:4-934:5 -/
+    Source: 'src/lib.rs', lines 949:4-951:5 -/
 def Store.leave (self : Store) : Result Store := do
   let i ← self.depth - 1#u32
   ok { self with depth := i }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::enter]:
-    Source: 'src/lib.rs', lines 917:4-924:5 -/
+    Source: 'src/lib.rs', lines 934:4-941:5 -/
 def Store.enter
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.depth >= self.limits.depth
@@ -3699,7 +3699,7 @@ def Store.enter
       ok (core.result.Result.Ok (), { self with calls := i1, depth := i })
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]: loop 0:
-    Source: 'src/lib.rs', lines 1071:8-1076:5 -/
+    Source: 'src/lib.rs', lines 1088:8-1093:5 -/
 @[rust_loop]
 def Store.check_handles_loop
   (self : Store) (args : Slice Term) (i : Std.Usize) :
@@ -3722,7 +3722,7 @@ def Store.check_handles_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::check_handles]:
-    Source: 'src/lib.rs', lines 1069:4-1076:5 -/
+    Source: 'src/lib.rs', lines 1086:4-1093:5 -/
 @[reducible]
 def Store.check_handles
   (self : Store) (args : Slice Term) :
@@ -3741,7 +3741,7 @@ axiom num.Integer.to_u32 : num.Integer → Result Std.U32
 axiom num.Integer.fits_u32 : num.Integer → Result Bool
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_int]:
-    Source: 'src/lib.rs', lines 795:4-800:5 -/
+    Source: 'src/lib.rs', lines 812:4-817:5 -/
 def Store.raw_int
   (self : Store) (t : Term) :
   Result (core.result.Result num.Integer CheckError)
@@ -3778,7 +3778,7 @@ def Store.raw_int
       num.Integer (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literal]:
-    Source: 'src/lib.rs', lines 424:4-432:5
+    Source: 'src/lib.rs', lines 441:4-449:5
     Visibility: public -/
 def Store.literal
   (self : Store) (literal : lit.Lit) :
@@ -3796,7 +3796,7 @@ def Store.literal
   Store.intern self (TermData.Literal literal1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_binary]:
-    Source: 'src/lib.rs', lines 559:4-566:5 -/
+    Source: 'src/lib.rs', lines 576:4-583:5 -/
 def Store.construct_binary
   (self : Store) (w : Term) (v : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -3828,7 +3828,7 @@ def Store.construct_binary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_literal]:
-    Source: 'src/lib.rs', lines 536:4-557:5 -/
+    Source: 'src/lib.rs', lines 553:4-574:5 -/
 def Store.construct_literal
   (self : Store) (e : Embedding) (v : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -3891,7 +3891,7 @@ def Store.construct_literal
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::is_stuck]:
-    Source: 'src/lib.rs', lines 442:4-444:5
+    Source: 'src/lib.rs', lines 459:4-461:5
     Visibility: public -/
 def Store.is_stuck
   (self : Store) (t : Term) : Result (core.result.Result Bool CheckError) := do
@@ -3911,7 +3911,7 @@ def Store.is_stuck
       Bool (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::apply]:
-    Source: 'src/lib.rs', lines 460:4-465:5
+    Source: 'src/lib.rs', lines 477:4-482:5
     Visibility: public -/
 def Store.apply
   (self : Store) (f : Term) (a : Term) :
@@ -3947,7 +3947,7 @@ def Store.apply
 mutual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct]:
-    Source: 'src/lib.rs', lines 501:4-523:5
+    Source: 'src/lib.rs', lines 518:4-540:5
     Visibility: public -/
 def Store.construct
   (self : Store) (c : schema.Constructor) (args : Slice Term) :
@@ -4043,7 +4043,7 @@ def Store.construct
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::construct_user]:
-    Source: 'src/lib.rs', lines 525:4-534:5 -/
+    Source: 'src/lib.rs', lines 542:4-551:5 -/
 def Store.construct_user
   (self : Store) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -4084,14 +4084,14 @@ partial_fixpoint
 end
 
 /-- [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::Term> for pathos_compiled_checker::Term}::eq]:
-    Source: 'src/lib.rs', lines 112:29-112:38
+    Source: 'src/lib.rs', lines 119:29-119:38
     Visibility: public -/
 def Term.Insts.CoreCmpPartialEqTerm.eq
   (self : Term) (other : Term) : Result Bool := do
   ok (self = other)
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::Term> for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:29-112:38 -/
+    Source: 'src/lib.rs', lines 119:29-119:38 -/
 @[reducible]
 impl_def Term.Insts.CoreCmpPartialEqTerm : core.cmp.PartialEq Term Term := {
   eq := Term.Insts.CoreCmpPartialEqTerm.eq
@@ -4099,7 +4099,7 @@ impl_def Term.Insts.CoreCmpPartialEqTerm : core.cmp.PartialEq Term Term := {
 }
 
 /-- [pathos_compiled_checker::FoldStep]
-    Source: 'src/lib.rs', lines 106:0-109:1
+    Source: 'src/lib.rs', lines 113:0-116:1
     Visibility: public -/
 @[discriminant isize]
 inductive FoldStep where
@@ -4169,7 +4169,7 @@ inductive kind.EvalOp where
 | DtSelectors : kind.EvalOp
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::is_variable]:
-    Source: 'src/lib.rs', lines 492:4-500:5 -/
+    Source: 'src/lib.rs', lines 509:4-517:5 -/
 def Store.is_variable
   (self : Store) (t : Term) : Result (core.result.Result Bool CheckError) := do
   let r ← Store.view self t
@@ -4209,7 +4209,7 @@ def kind.EvalOp.Insts.CoreCmpPartialEqEvalOp.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::recognizes]:
-    Source: 'src/lib.rs', lines 1105:4-1120:5 -/
+    Source: 'src/lib.rs', lines 1122:4-1137:5 -/
 def Store.recognizes
   (self : Store) (op : kind.EvalOp) (x : Term) :
   Result (core.result.Result Bool CheckError)
@@ -4257,7 +4257,7 @@ def Store.recognizes
         Bool (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::stuck_or_foreign]:
-    Source: 'src/lib.rs', lines 1090:4-1096:5 -/
+    Source: 'src/lib.rs', lines 1107:4-1113:5 -/
 def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
   let r ← Store.view self t
   match r with
@@ -4272,7 +4272,7 @@ def Store.stuck_or_foreign (self : Store) (t : Term) : Result Bool := do
   | core.result.Result.Err _ => ok true
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]: loop 0:
-    Source: 'src/lib.rs', lines 1081:8-1086:9 -/
+    Source: 'src/lib.rs', lines 1098:8-1103:9 -/
 @[rust_loop]
 def Store.any_stuck_loop
   (self : Store) (args : Slice Term) (any : Bool) (i : Std.Usize) :
@@ -4292,13 +4292,13 @@ def Store.any_stuck_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::any_stuck]:
-    Source: 'src/lib.rs', lines 1078:4-1088:5 -/
+    Source: 'src/lib.rs', lines 1095:4-1105:5 -/
 @[reducible]
 def Store.any_stuck (self : Store) (args : Slice Term) : Result Bool := do
   Store.any_stuck_loop self args false 0#usize
 
 /-- [pathos_compiled_checker::native::is_less]:
-    Source: 'src/native.rs', lines 408:0-413:1 -/
+    Source: 'src/native.rs', lines 413:0-418:1 -/
 def native.is_less (order : Ordering) : Result Bool := do
   match order with
   | Ordering.lt => ok true
@@ -4317,7 +4317,7 @@ axiom num.Integer.Insts.CoreConvertFromUsize.from
 axiom num.Rational.numerator : num.Rational → Result num.Integer
 
 /-- [pathos_compiled_checker::lit::rat_sgn]:
-    Source: 'src/lit.rs', lines 659:0-661:1 -/
+    Source: 'src/lit.rs', lines 660:0-662:1 -/
 def lit.rat_sgn (a : num.Rational) : Result Std.I32 := do
   let i ← num.Rational.numerator a
   num.Integer.sgn i
@@ -4334,7 +4334,7 @@ axiom num.Rational.from_integers
   : num.Integer → num.Integer → Result (Option num.Rational)
 
 /-- [pathos_compiled_checker::lit::rat]:
-    Source: 'src/lit.rs', lines 624:0-629:1 -/
+    Source: 'src/lit.rs', lines 625:0-630:1 -/
 def lit.rat (n : num.Integer) (d : num.Integer) : Result num.Rational := do
   let o ← num.Rational.from_integers n d
   match o with
@@ -4343,7 +4343,7 @@ def lit.rat (n : num.Integer) (d : num.Integer) : Result num.Rational := do
   | some q => ok q
 
 /-- [pathos_compiled_checker::lit::rat_from_integer]:
-    Source: 'src/lit.rs', lines 631:0-633:1 -/
+    Source: 'src/lit.rs', lines 632:0-634:1 -/
 def lit.rat_from_integer (n : num.Integer) : Result num.Rational := do
   let i ← num.Integer.one
   lit.rat n i
@@ -4394,7 +4394,7 @@ def kind.LitKind.Insts.CoreCmpPartialEqLitKind.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::bitvec]:
-    Source: 'src/lit.rs', lines 73:4-79:5 -/
+    Source: 'src/lit.rs', lines 74:4-80:5 -/
 def lit.Lit.bitvec
   (which : kind.LitKind) (b : bitvec.BitVec) : Result lit.Lit := do
   let b1 ←
@@ -4405,7 +4405,7 @@ def lit.Lit.bitvec
   else ok (lit.Lit.Binary b)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::kind]:
-    Source: 'src/lit.rs', lines 53:4-63:5
+    Source: 'src/lit.rs', lines 54:4-64:5
     Visibility: public -/
 def lit.Lit.kind (self : lit.Lit) : Result kind.LitKind := do
   match self with
@@ -4418,7 +4418,7 @@ def lit.Lit.kind (self : lit.Lit) : Result kind.LitKind := do
   | lit.Lit.Str _ => ok kind.LitKind.Str
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_extract]:
-    Source: 'src/lit.rs', lines 576:4-612:5 -/
+    Source: 'src/lit.rs', lines 577:4-613:5 -/
 def lit.Lit.evaluate_extract
   (s : lit.Lit) (i1 : num.Integer) (i2 : num.Integer) :
   Result (Option lit.Lit)
@@ -4586,7 +4586,7 @@ def lit.Lit.evaluate_extract
             ok (some (lit.Lit.Str es))
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::as_str]:
-    Source: 'src/lit.rs', lines 111:4-117:5 -/
+    Source: 'src/lit.rs', lines 112:4-118:5 -/
 def lit.Lit.as_str (self : lit.Lit) : Result (Option eostring.EoString) := do
   match self with
   | lit.Lit.Boolean _ => ok none
@@ -4598,7 +4598,7 @@ def lit.Lit.as_str (self : lit.Lit) : Result (Option eostring.EoString) := do
   | lit.Lit.Str s => ok (some s)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_str]: loop 0:
-    Source: 'src/lit.rs', lines 559:8-568:9 -/
+    Source: 'src/lit.rs', lines 560:8-569:9 -/
 @[rust_loop]
 def lit.Lit.fold_str_loop
   (args : Slice lit.Lit) (res : Option eostring.EoString) (i : Std.Usize) :
@@ -4624,7 +4624,7 @@ def lit.Lit.fold_str_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_str]:
-    Source: 'src/lit.rs', lines 552:4-573:5 -/
+    Source: 'src/lit.rs', lines 553:4-574:5 -/
 def lit.Lit.fold_str
   (op : kind.EvalOp) (first : eostring.EoString) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -4693,7 +4693,7 @@ def lit.Lit.fold_str
   | kind.EvalOp.DtSelectors => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::as_bv]:
-    Source: 'src/lit.rs', lines 104:4-109:5 -/
+    Source: 'src/lit.rs', lines 105:4-110:5 -/
 def lit.Lit.as_bv (self : lit.Lit) : Result (Option bitvec.BitVec) := do
   match self with
   | lit.Lit.Boolean _ => ok none
@@ -4705,7 +4705,7 @@ def lit.Lit.as_bv (self : lit.Lit) : Result (Option bitvec.BitVec) := do
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::is_bv_of_size]:
-    Source: 'src/lit.rs', lines 498:4-503:5 -/
+    Source: 'src/lit.rs', lines 499:4-504:5 -/
 def lit.Lit.is_bv_of_size (self : lit.Lit) (size : Std.U32) : Result Bool := do
   let o ← lit.Lit.as_bv self
   match o with
@@ -4714,7 +4714,7 @@ def lit.Lit.is_bv_of_size (self : lit.Lit) (size : Std.U32) : Result Bool := do
               ok (i = size)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::all_of_size]: loop 0:
-    Source: 'src/lit.rs', lines 509:8-514:9 -/
+    Source: 'src/lit.rs', lines 510:8-515:9 -/
 @[rust_loop]
 def lit.Lit.all_of_size_loop
   (args : Slice lit.Lit) (size : Std.U32) (all : Bool) (i : Std.Usize) :
@@ -4734,14 +4734,14 @@ def lit.Lit.all_of_size_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::all_of_size]:
-    Source: 'src/lit.rs', lines 506:4-516:5 -/
+    Source: 'src/lit.rs', lines 507:4-517:5 -/
 @[reducible]
 def lit.Lit.all_of_size
   (args : Slice lit.Lit) (size : Std.U32) : Result Bool := do
   lit.Lit.all_of_size_loop args size true 1#usize
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bv]: loop 0:
-    Source: 'src/lit.rs', lines 528:8-545:9 -/
+    Source: 'src/lit.rs', lines 529:8-546:9 -/
 @[rust_loop]
 def lit.Lit.fold_bv_loop0
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option bitvec.BitVec)
@@ -4843,7 +4843,7 @@ def lit.Lit.fold_bv_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bv]: loop 1:
-    Source: 'src/lit.rs', lines 528:8-545:9 -/
+    Source: 'src/lit.rs', lines 529:8-546:9 -/
 @[rust_loop]
 def lit.Lit.fold_bv_loop1
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option bitvec.BitVec)
@@ -4945,7 +4945,7 @@ def lit.Lit.fold_bv_loop1
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bv]:
-    Source: 'src/lit.rs', lines 518:4-550:5 -/
+    Source: 'src/lit.rs', lines 519:4-551:5 -/
 def lit.Lit.fold_bv
   (op : kind.EvalOp) (ka : kind.LitKind) (first : bitvec.BitVec)
   (args : Slice lit.Lit) :
@@ -5036,7 +5036,7 @@ def lit.Lit.fold_bv
 axiom num.Rational.denominator : num.Rational → Result num.Integer
 
 /-- [pathos_compiled_checker::lit::rat_mul]:
-    Source: 'src/lit.rs', lines 642:0-644:1 -/
+    Source: 'src/lit.rs', lines 643:0-645:1 -/
 def lit.rat_mul
   (a : num.Rational) (b : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
@@ -5048,7 +5048,7 @@ def lit.rat_mul
   lit.rat i2 i5
 
 /-- [pathos_compiled_checker::lit::rat_add]:
-    Source: 'src/lit.rs', lines 635:0-640:1 -/
+    Source: 'src/lit.rs', lines 636:0-641:1 -/
 def lit.rat_add
   (a : num.Rational) (b : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
@@ -5062,7 +5062,7 @@ def lit.rat_add
   lit.rat i6 i7
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::as_rat]:
-    Source: 'src/lit.rs', lines 97:4-102:5 -/
+    Source: 'src/lit.rs', lines 98:4-103:5 -/
 def lit.Lit.as_rat (self : lit.Lit) : Result (Option num.Rational) := do
   match self with
   | lit.Lit.Boolean _ => ok none
@@ -5074,7 +5074,7 @@ def lit.Lit.as_rat (self : lit.Lit) : Result (Option num.Rational) := do
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::rational]:
-    Source: 'src/lit.rs', lines 65:4-71:5 -/
+    Source: 'src/lit.rs', lines 66:4-72:5 -/
 def lit.Lit.rational
   (which : kind.LitKind) (r : num.Rational) : Result lit.Lit := do
   let b ←
@@ -5084,7 +5084,7 @@ def lit.Lit.rational
   else ok (lit.Lit.Rational r)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_rat]: loop 0:
-    Source: 'src/lit.rs', lines 478:8-491:9 -/
+    Source: 'src/lit.rs', lines 479:8-492:9 -/
 @[rust_loop]
 def lit.Lit.fold_rat_loop
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option num.Rational)
@@ -5173,7 +5173,7 @@ def lit.Lit.fold_rat_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_rat]:
-    Source: 'src/lit.rs', lines 475:4-496:5 -/
+    Source: 'src/lit.rs', lines 476:4-497:5 -/
 def lit.Lit.fold_rat
   (op : kind.EvalOp) (ka : kind.LitKind) (first : num.Rational)
   (args : Slice lit.Lit) :
@@ -5187,7 +5187,7 @@ def lit.Lit.fold_rat
                ok (some l)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::as_int]:
-    Source: 'src/lit.rs', lines 89:4-95:5 -/
+    Source: 'src/lit.rs', lines 90:4-96:5 -/
 def lit.Lit.as_int (self : lit.Lit) : Result (Option num.Integer) := do
   match self with
   | lit.Lit.Boolean _ => ok none
@@ -5199,7 +5199,7 @@ def lit.Lit.as_int (self : lit.Lit) : Result (Option num.Integer) := do
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_int]: loop 0:
-    Source: 'src/lit.rs', lines 455:8-468:9 -/
+    Source: 'src/lit.rs', lines 456:8-469:9 -/
 @[rust_loop]
 def lit.Lit.fold_int_loop
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option num.Integer)
@@ -5288,7 +5288,7 @@ def lit.Lit.fold_int_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_int]:
-    Source: 'src/lit.rs', lines 452:4-473:5 -/
+    Source: 'src/lit.rs', lines 453:4-474:5 -/
 def lit.Lit.fold_int
   (op : kind.EvalOp) (first : num.Integer) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -5300,7 +5300,7 @@ def lit.Lit.fold_int
   | some r => ok (some (lit.Lit.Numeral r))
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::as_bool]:
-    Source: 'src/lit.rs', lines 81:4-87:5 -/
+    Source: 'src/lit.rs', lines 82:4-88:5 -/
 def lit.Lit.as_bool (self : lit.Lit) : Result (Option Bool) := do
   match self with
   | lit.Lit.Boolean b => ok (some b)
@@ -5312,7 +5312,7 @@ def lit.Lit.as_bool (self : lit.Lit) : Result (Option Bool) := do
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bool]: loop 0:
-    Source: 'src/lit.rs', lines 431:8-445:9 -/
+    Source: 'src/lit.rs', lines 432:8-446:9 -/
 @[rust_loop]
 def lit.Lit.fold_bool_loop
   (op : kind.EvalOp) (args : Slice lit.Lit) (res : Option Bool) (i : Std.Usize)
@@ -5419,7 +5419,7 @@ def lit.Lit.fold_bool_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::fold_bool]:
-    Source: 'src/lit.rs', lines 428:4-450:5 -/
+    Source: 'src/lit.rs', lines 429:4-451:5 -/
 def lit.Lit.fold_bool
   (op : kind.EvalOp) (first : Bool) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -5430,7 +5430,7 @@ def lit.Lit.fold_bool
   | some r => ok (some (lit.Lit.Boolean r))
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_nary]:
-    Source: 'src/lit.rs', lines 418:4-426:5 -/
+    Source: 'src/lit.rs', lines 419:4-427:5 -/
 def lit.Lit.evaluate_nary
   (op : kind.EvalOp) (ka : kind.LitKind) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -5446,7 +5446,7 @@ def lit.Lit.evaluate_nary
   | lit.Lit.Str s => lit.Lit.fold_str op s args
 
 /-- [pathos_compiled_checker::lit::rat_cmp]:
-    Source: 'src/lit.rs', lines 669:0-684:1 -/
+    Source: 'src/lit.rs', lines 670:0-685:1 -/
 def lit.rat_cmp (a : num.Rational) (b : num.Rational) : Result Ordering := do
   let sa ← lit.rat_sgn a
   let sb ← lit.rat_sgn b
@@ -5469,7 +5469,7 @@ def lit.rat_cmp (a : num.Rational) (b : num.Rational) : Result Ordering := do
         ok (core.option.Option.unwrap_or o Ordering.eq)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::arg]:
-    Source: 'src/lit.rs', lines 120:4-122:5 -/
+    Source: 'src/lit.rs', lines 121:4-123:5 -/
 def lit.Lit.arg
   (args : Slice lit.Lit) (i : Std.Usize) : Result (Option lit.Lit) := do
   let i1 := Slice.len args
@@ -5479,7 +5479,7 @@ def lit.Lit.arg
   else ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_gt]:
-    Source: 'src/lit.rs', lines 389:4-414:5 -/
+    Source: 'src/lit.rs', lines 390:4-415:5 -/
 def lit.Lit.evaluate_gt
   (first : lit.Lit) (args : Slice lit.Lit) : Result (Option lit.Lit) := do
   let o ← lit.Lit.arg args 1#usize
@@ -6119,8 +6119,13 @@ def lit.Lit.evaluate_gt
           | Ordering.eq => ok (some (lit.Lit.Boolean false))
           | Ordering.gt => ok (some (lit.Lit.Boolean true))
 
+/-- [pathos_compiled_checker::MAX_CODE_POINT]
+    Source: 'src/lib.rs', lines 52:0-52:40
+    Visibility: public -/
+@[global_simps, irreducible] def MAX_CODE_POINT : Std.U32 := 196607#u32
+
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_string]:
-    Source: 'src/lit.rs', lines 374:4-387:5 -/
+    Source: 'src/lit.rs', lines 375:4-388:5 -/
 def lit.Lit.evaluate_to_string
   (first : lit.Lit) : Result (Option lit.Lit) := do
   match first with
@@ -6130,7 +6135,7 @@ def lit.Lit.evaluate_to_string
     if b
     then
       let i1 ← num.Integer.to_u32 i
-      if i1 < eostring.NUM_CODES
+      if i1 <= MAX_CODE_POINT
       then
         let y ←
           lift (Std.Array.to_slice (Array.make 1#usize [ i1 ] : Array Std.U32
@@ -6149,7 +6154,7 @@ def lit.Lit.evaluate_to_string
     ok (some l)
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_bin]:
-    Source: 'src/lit.rs', lines 356:4-372:5 -/
+    Source: 'src/lit.rs', lines 357:4-373:5 -/
 def lit.Lit.evaluate_to_bin
   (first : lit.Lit) (args : Slice lit.Lit) : Result (Option lit.Lit) := do
   let o ← lit.Lit.as_int first
@@ -6183,7 +6188,7 @@ def lit.Lit.evaluate_to_bin
     else ok none
 
 /-- [pathos_compiled_checker::lit::rat_floor]:
-    Source: 'src/lit.rs', lines 663:0-665:1 -/
+    Source: 'src/lit.rs', lines 664:0-666:1 -/
 def lit.rat_floor (a : num.Rational) : Result num.Integer := do
   let i ← num.Rational.numerator a
   let i1 ← num.Rational.denominator a
@@ -6191,7 +6196,7 @@ def lit.rat_floor (a : num.Rational) : Result num.Integer := do
   ok i2
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_to_int]:
-    Source: 'src/lit.rs', lines 332:4-354:5 -/
+    Source: 'src/lit.rs', lines 333:4-355:5 -/
 def lit.Lit.evaluate_to_int (first : lit.Lit) : Result (Option lit.Lit) := do
   match first with
   | lit.Lit.Boolean _ => ok none
@@ -6215,7 +6220,7 @@ def lit.Lit.evaluate_to_int (first : lit.Lit) : Result (Option lit.Lit) := do
     then
       let s1 ← eostring.EoString.code_points s
       let c ← Slice.index_usize s1 0#usize
-      if c < eostring.NUM_CODES
+      if c <= MAX_CODE_POINT
       then
         let i1 ← num.Integer.Insts.CoreConvertFromU32.from c
         ok (some (lit.Lit.Numeral i1))
@@ -6226,7 +6231,7 @@ def lit.Lit.evaluate_to_int (first : lit.Lit) : Result (Option lit.Lit) := do
     else ok none
 
 /-- [pathos_compiled_checker::lit::rat_div]:
-    Source: 'src/lit.rs', lines 647:0-649:1 -/
+    Source: 'src/lit.rs', lines 648:0-650:1 -/
 def lit.rat_div
   (a : num.Rational) (b : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
@@ -6238,7 +6243,7 @@ def lit.rat_div
   lit.rat i2 i5
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_rat_div]:
-    Source: 'src/lit.rs', lines 308:4-330:5 -/
+    Source: 'src/lit.rs', lines 309:4-331:5 -/
 def lit.Lit.evaluate_rat_div
   (first : lit.Lit) (args : Slice lit.Lit) : Result (Option lit.Lit) := do
   let o ← lit.Lit.arg args 1#usize
@@ -6423,7 +6428,7 @@ def lit.Lit.evaluate_rat_div
                ok (some (lit.Lit.Rational r))
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_int_div]:
-    Source: 'src/lit.rs', lines 272:4-306:5 -/
+    Source: 'src/lit.rs', lines 273:4-307:5 -/
 def lit.Lit.evaluate_int_div
   (op : kind.EvalOp) (first : lit.Lit) (ka : kind.LitKind)
   (args : Slice lit.Lit) :
@@ -6745,7 +6750,7 @@ def lit.Lit.evaluate_int_div
             ok (some l)
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]: loop 0:
-    Source: 'src/lit.rs', lines 695:4-699:5 -/
+    Source: 'src/lit.rs', lines 696:4-700:5 -/
 @[rust_loop]
 def lit.integer_floor_log_loop
   (base : num.Integer) (one : num.Integer) (result : num.Integer)
@@ -6764,7 +6769,7 @@ def lit.integer_floor_log_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::integer_floor_log]:
-    Source: 'src/lit.rs', lines 688:0-701:1 -/
+    Source: 'src/lit.rs', lines 689:0-702:1 -/
 def lit.integer_floor_log
   (base : num.Integer) (value : num.Integer) : Result num.Integer := do
   let one ← num.Integer.one
@@ -6783,7 +6788,7 @@ def lit.integer_floor_log
       lit.integer_floor_log_loop base one result remaining
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_log]:
-    Source: 'src/lit.rs', lines 257:4-270:5 -/
+    Source: 'src/lit.rs', lines 258:4-271:5 -/
 def lit.Lit.evaluate_log
   (first : lit.Lit) (args : Slice lit.Lit) : Result (Option lit.Lit) := do
   let o ← lit.Lit.as_int first
@@ -6813,7 +6818,7 @@ def lit.Lit.evaluate_log
       | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::rat_pow]:
-    Source: 'src/lit.rs', lines 655:0-657:1 -/
+    Source: 'src/lit.rs', lines 656:0-658:1 -/
 def lit.rat_pow (a : num.Rational) (exp : Std.U32) : Result num.Rational := do
   let i ← num.Rational.numerator a
   let i1 ← num.Integer.pow i exp
@@ -6822,7 +6827,7 @@ def lit.rat_pow (a : num.Rational) (exp : Std.U32) : Result num.Rational := do
   lit.rat i1 i3
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::int_arg]:
-    Source: 'src/lit.rs', lines 125:4-130:5 -/
+    Source: 'src/lit.rs', lines 126:4-131:5 -/
 def lit.Lit.int_arg
   (args : Slice lit.Lit) (i : Std.Usize) : Result (Option num.Integer) := do
   let o ← lit.Lit.arg args i
@@ -6831,7 +6836,7 @@ def lit.Lit.int_arg
   | some a => lit.Lit.as_int a
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_pow]:
-    Source: 'src/lit.rs', lines 242:4-255:5 -/
+    Source: 'src/lit.rs', lines 243:4-256:5 -/
 def lit.Lit.evaluate_pow
   (first : lit.Lit) (ka : kind.LitKind) (args : Slice lit.Lit) :
   Result (Option lit.Lit)
@@ -6863,7 +6868,7 @@ def lit.Lit.evaluate_pow
     else ok none
 
 /-- [pathos_compiled_checker::lit::rat_neg]:
-    Source: 'src/lit.rs', lines 651:0-653:1 -/
+    Source: 'src/lit.rs', lines 652:0-654:1 -/
 def lit.rat_neg (a : num.Rational) : Result num.Rational := do
   let i ← num.Rational.numerator a
   let i1 ← num.Integer.neg i
@@ -6871,7 +6876,7 @@ def lit.rat_neg (a : num.Rational) : Result num.Rational := do
   lit.rat i1 i2
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_neg]:
-    Source: 'src/lit.rs', lines 233:4-240:5 -/
+    Source: 'src/lit.rs', lines 234:4-241:5 -/
 def lit.Lit.evaluate_neg
   (first : lit.Lit) (ka : kind.LitKind) : Result (Option lit.Lit) := do
   match first with
@@ -6898,7 +6903,7 @@ def lit.Lit.evaluate_neg
   | lit.Lit.Str _ => ok none
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate_not]:
-    Source: 'src/lit.rs', lines 225:4-231:5 -/
+    Source: 'src/lit.rs', lines 226:4-232:5 -/
 def lit.Lit.evaluate_not
   (first : lit.Lit) (ka : kind.LitKind) : Result (Option lit.Lit) := do
   match first with
@@ -6927,7 +6932,7 @@ impl_def kind.LitKind.Insts.CoreCmpPartialEqLitKind : core.cmp.PartialEq
 }
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::all_of_kind]: loop 0:
-    Source: 'src/lit.rs', lines 144:8-149:9 -/
+    Source: 'src/lit.rs', lines 145:8-150:9 -/
 @[rust_loop]
 def lit.Lit.all_of_kind_loop
   (args : Slice lit.Lit) (ka : kind.LitKind) (all : Bool) (i : Std.Usize) :
@@ -6950,14 +6955,14 @@ def lit.Lit.all_of_kind_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::all_of_kind]:
-    Source: 'src/lit.rs', lines 141:4-151:5 -/
+    Source: 'src/lit.rs', lines 142:4-152:5 -/
 @[reducible]
 def lit.Lit.all_of_kind
   (args : Slice lit.Lit) (ka : kind.LitKind) : Result Bool := do
   lit.Lit.all_of_kind_loop args ka true 0#usize
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::str_arg]:
-    Source: 'src/lit.rs', lines 133:4-138:5 -/
+    Source: 'src/lit.rs', lines 134:4-139:5 -/
 def lit.Lit.str_arg
   (args : Slice lit.Lit) (i : Std.Usize) :
   Result (Option eostring.EoString)
@@ -6968,7 +6973,7 @@ def lit.Lit.str_arg
   | some a => lit.Lit.as_str a
 
 /-- [pathos_compiled_checker::lit::{pathos_compiled_checker::lit::Lit}::evaluate]:
-    Source: 'src/lit.rs', lines 156:4-223:5
+    Source: 'src/lit.rs', lines 157:4-224:5
     Visibility: public -/
 def lit.Lit.evaluate
   (op : kind.EvalOp) (args : Slice lit.Lit) : Result (Option lit.Lit) := do
@@ -7298,7 +7303,7 @@ def lit.Lit.evaluate
       else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literal_of]:
-    Source: 'src/lib.rs', lines 1098:4-1103:5 -/
+    Source: 'src/lib.rs', lines 1115:4-1120:5 -/
 def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   let r ← Store.view self t
   match r with
@@ -7315,7 +7320,7 @@ def Store.literal_of (self : Store) (t : Term) : Result (Option lit.Lit) := do
   | core.result.Result.Err _ => ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]: loop 0:
-    Source: 'src/lib.rs', lines 1126:8-1132:9 -/
+    Source: 'src/lib.rs', lines 1143:8-1149:9 -/
 @[rust_loop]
 def Store.literals_loop
   (self : Store) (args : Slice Term) (lits : alloc.vec.Vec lit.Lit)
@@ -7340,7 +7345,7 @@ def Store.literals_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::literals]:
-    Source: 'src/lib.rs', lines 1122:4-1134:5 -/
+    Source: 'src/lib.rs', lines 1139:4-1151:5 -/
 def Store.literals
   (self : Store) (args : Slice Term) :
   Result (Option (alloc.vec.Vec lit.Lit))
@@ -7353,7 +7358,7 @@ def Store.literals
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_literal]:
-    Source: 'src/lib.rs', lines 1058:4-1067:5 -/
+    Source: 'src/lib.rs', lines 1075:4-1084:5 -/
 def Store.builtin_literal
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7371,7 +7376,7 @@ def Store.builtin_literal
     | some literal => Store.literal self literal
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::name_of]:
-    Source: 'src/lib.rs', lines 1048:4-1056:5 -/
+    Source: 'src/lib.rs', lines 1065:4-1073:5 -/
 def Store.name_of
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -7466,7 +7471,7 @@ def table.PairStack.new : Result table.PairStack := do
   ok { items := (alloc.vec.Vec.new (Term × Term)), len := 0#usize }
 
 /-- [pathos_compiled_checker::code_points_cmp]: loop 0:
-    Source: 'src/lib.rs', lines 1190:4-1200:5 -/
+    Source: 'src/lib.rs', lines 1207:4-1217:5 -/
 @[rust_loop]
 def code_points_cmp_loop
   (a : Slice Std.U32) (b : Slice Std.U32) (order : Ordering) (i : Std.Usize)
@@ -7503,20 +7508,20 @@ def code_points_cmp_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::code_points_cmp]:
-    Source: 'src/lib.rs', lines 1185:0-1202:1 -/
+    Source: 'src/lib.rs', lines 1202:0-1219:1 -/
 @[reducible]
 def code_points_cmp
   (a : Slice Std.U32) (b : Slice Std.U32) : Result Ordering := do
   code_points_cmp_loop a b Ordering.eq 0#usize true
 
 /-- [pathos_compiled_checker::integer_cmp]:
-    Source: 'src/lib.rs', lines 1180:0-1182:1 -/
+    Source: 'src/lib.rs', lines 1197:0-1199:1 -/
 def integer_cmp (a : num.Integer) (b : num.Integer) : Result Ordering := do
   let o ← num.Integer.Insts.CoreCmpPartialOrdInteger.partial_cmp a b
   ok (core.option.Option.unwrap_or o Ordering.eq)
 
 /-- [pathos_compiled_checker::literal_cmp]:
-    Source: 'src/lib.rs', lines 1140:0-1177:1 -/
+    Source: 'src/lib.rs', lines 1157:0-1194:1 -/
 def literal_cmp
   (a : lit.Lit) (b : lit.Lit) :
   Result (core.result.Result Ordering CheckError)
@@ -7773,7 +7778,7 @@ def schema.Constructor.order_key
   | schema.Constructor.eo_not => ok (0#usize, 5#usize)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::order_key]:
-    Source: 'src/lib.rs', lines 814:4-831:5 -/
+    Source: 'src/lib.rs', lines 831:4-848:5 -/
 def Store.order_key
   (d : TermData) :
   Result (core.result.Result (Std.Usize × Std.Usize) CheckError)
@@ -7818,7 +7823,7 @@ def Store.order_key
     ok (core.result.Result.Ok p)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]: loop 0:
-    Source: 'src/lib.rs', lines 906:20-909:21 -/
+    Source: 'src/lib.rs', lines 923:20-926:21 -/
 @[rust_loop]
 def Store.compare_step_loop
   (todo : table.PairStack) (xs : alloc.vec.Vec Term) (ys : alloc.vec.Vec Term)
@@ -7838,7 +7843,7 @@ def Store.compare_step_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare_step]:
-    Source: 'src/lib.rs', lines 857:4-916:5 -/
+    Source: 'src/lib.rs', lines 874:4-933:5 -/
 def Store.compare_step
   (self : Store) (a : Term) (b : Term) (todo : table.PairStack) :
   Result ((core.result.Result Ordering CheckError) × table.PairStack)
@@ -8007,7 +8012,7 @@ def Store.compare_step
       ok (r1, todo)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]: loop 0:
-    Source: 'src/lib.rs', lines 841:8-854:5
+    Source: 'src/lib.rs', lines 858:8-871:5
     Visibility: public -/
 @[rust_loop]
 def Store.compare_loop
@@ -8036,7 +8041,7 @@ def Store.compare_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::compare]:
-    Source: 'src/lib.rs', lines 834:4-854:5
+    Source: 'src/lib.rs', lines 851:4-871:5
     Visibility: public -/
 def Store.compare
   (self : Store) (a : Term) (b : Term) :
@@ -8047,7 +8052,7 @@ def Store.compare
   Store.compare_loop self todo1 Ordering.eq true
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::boolean]:
-    Source: 'src/lib.rs', lines 436:4-438:5
+    Source: 'src/lib.rs', lines 453:4-455:5
     Visibility: public -/
 def Store.boolean
   (self : Store) (b : Bool) :
@@ -8118,7 +8123,7 @@ def kind.EvalOp.is_list_op (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_strict]:
-    Source: 'src/lib.rs', lines 1027:4-1046:5 -/
+    Source: 'src/lib.rs', lines 1044:4-1063:5 -/
 def Store.builtin_strict
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8480,7 +8485,7 @@ def kind.EvalOp.is_nary (self : kind.EvalOp) : Result Bool := do
   | kind.EvalOp.DtSelectors => ok false
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::takes]:
-    Source: 'src/lib.rs', lines 987:4-1025:5 -/
+    Source: 'src/lib.rs', lines 1004:4-1042:5 -/
 def Store.takes (op : kind.EvalOp) (count : Std.Usize) : Result Bool := do
   let arity ←
     match op with
@@ -8546,7 +8551,7 @@ def Store.takes (op : kind.EvalOp) (count : Std.Usize) : Result Bool := do
   else ok (count = arity)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::boolean_value]:
-    Source: 'src/lib.rs', lines 445:4-452:5
+    Source: 'src/lib.rs', lines 462:4-469:5
     Visibility: public -/
 def Store.boolean_value
   (self : Store) (t : Term) (native : Bool) :
@@ -8594,7 +8599,7 @@ def Store.boolean_value
       (Option Bool) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::builtin_core]:
-    Source: 'src/lib.rs', lines 941:4-985:5 -/
+    Source: 'src/lib.rs', lines 958:4-1002:5 -/
 def Store.builtin_core
   (self : Store) (op : kind.EvalOp) (args : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8842,7 +8847,7 @@ def Store.builtin_core
        ok (core.result.Result.Ok t, self)
 
 /-- [pathos_compiled_checker::native::is_prefix]: loop 0:
-    Source: 'src/native.rs', lines 422:4-427:5 -/
+    Source: 'src/native.rs', lines 427:4-432:5 -/
 @[rust_loop]
 def native.is_prefix_loop
   (x : Slice Std.U32) (y : Slice Std.U32) («prefix» : Bool) (i : Std.Usize) :
@@ -8862,7 +8867,7 @@ def native.is_prefix_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::is_prefix]:
-    Source: 'src/native.rs', lines 416:0-429:1 -/
+    Source: 'src/native.rs', lines 421:0-434:1 -/
 def native.is_prefix
   (x : Slice Std.U32) (y : Slice Std.U32) : Result Bool := do
   let i := Slice.len x
@@ -8872,7 +8877,7 @@ def native.is_prefix
   else native.is_prefix_loop x y true 0#usize
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string]:
-    Source: 'src/native.rs', lines 378:4-383:5 -/
+    Source: 'src/native.rs', lines 383:4-388:5 -/
 def native.Store.native_string
   (self : Store) (x : Term) :
   Result (core.result.Result eostring.EoString CheckError)
@@ -8908,7 +8913,7 @@ def native.Store.native_string
       eostring.EoString (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_bool]:
-    Source: 'src/native.rs', lines 104:4-106:5 -/
+    Source: 'src/native.rs', lines 105:4-107:5 -/
 def native.Store.native_bool
   (self : Store) (b : Bool) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8916,7 +8921,7 @@ def native.Store.native_bool
   Store.raw self (lit.Lit.Boolean b)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string_prefix_eq]:
-    Source: 'src/native.rs', lines 396:4-404:5 -/
+    Source: 'src/native.rs', lines 401:4-409:5 -/
 def native.Store.native_string_prefix_eq
   (self : Store) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8963,7 +8968,7 @@ def native.Store.native_string_prefix_eq
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string_valid]: loop 0:
-    Source: 'src/native.rs', lines 388:8-393:9 -/
+    Source: 'src/native.rs', lines 393:8-398:9 -/
 @[rust_loop]
 def native.Store.native_string_valid_loop
   (codes : Slice Std.U32) (valid : Bool) (i : Std.Usize) : Result Bool := do
@@ -8971,7 +8976,7 @@ def native.Store.native_string_valid_loop
   if i < i1
   then
     let i2 ← Slice.index_usize codes i
-    let valid1 ← if i2 >= eostring.NUM_CODES
+    let valid1 ← if i2 > MAX_CODE_POINT
                    then ok false
                    else ok valid
     let i3 ← i + 1#usize
@@ -8980,7 +8985,7 @@ def native.Store.native_string_valid_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_string_valid]:
-    Source: 'src/native.rs', lines 384:4-395:5 -/
+    Source: 'src/native.rs', lines 389:4-400:5 -/
 def native.Store.native_string_valid
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -8999,12 +9004,12 @@ def native.Store.native_string_valid
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::MAX_NAME_DIGITS]
-    Source: 'src/native.rs', lines 434:0-434:46 -/
+    Source: 'src/native.rs', lines 439:0-439:46 -/
 @[global_simps, irreducible]
 def native.MAX_NAME_DIGITS : Result Std.Usize := core.num.Usize.MAX - 8#usize
 
 /-- [pathos_compiled_checker::native::decimal_digits]: loop 0:
-    Source: 'src/native.rs', lines 466:4-476:5 -/
+    Source: 'src/native.rs', lines 471:4-481:5 -/
 @[rust_loop]
 def native.decimal_digits_loop
   (ten : num.Integer) (digits : alloc.vec.Vec Std.U32) (m : num.Integer) :
@@ -9026,7 +9031,7 @@ def native.decimal_digits_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::decimal_digits]:
-    Source: 'src/native.rs', lines 462:0-477:1 -/
+    Source: 'src/native.rs', lines 467:0-482:1 -/
 def native.decimal_digits
   (m : num.Integer) :
   Result (core.result.Result (alloc.vec.Vec Std.U32) CheckError)
@@ -9036,7 +9041,7 @@ def native.decimal_digits
   native.decimal_digits_loop ten (alloc.vec.Vec.new Std.U32) m1
 
 /-- [pathos_compiled_checker::native::constant_name]: loop 0:
-    Source: 'src/native.rs', lines 454:4-457:5 -/
+    Source: 'src/native.rs', lines 459:4-462:5 -/
 @[rust_loop]
 def native.constant_name_loop
   (digits : alloc.vec.Vec Std.U32) (codes : alloc.vec.Vec Std.U32)
@@ -9055,7 +9060,7 @@ def native.constant_name_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::native::constant_name]:
-    Source: 'src/native.rs', lines 441:0-459:1 -/
+    Source: 'src/native.rs', lines 446:0-464:1 -/
 def native.constant_name
   (uninterpreted : Bool) (n : num.Integer) :
   Result (core.result.Result eostring.EoString CheckError)
@@ -9088,7 +9093,7 @@ def native.constant_name
       eostring.EoString (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::NativeOp]
-    Source: 'src/native.rs', lines 18:0-64:1
+    Source: 'src/native.rs', lines 19:0-65:1
     Visibility: public -/
 @[discriminant isize]
 inductive native.NativeOp where
@@ -9139,7 +9144,7 @@ inductive native.NativeOp where
 | StringPrefixEq : native.NativeOp
 
 /-- [pathos_compiled_checker::native::{impl core::cmp::PartialEq<pathos_compiled_checker::native::NativeOp> for pathos_compiled_checker::native::NativeOp}::eq]:
-    Source: 'src/native.rs', lines 17:29-17:38
+    Source: 'src/native.rs', lines 18:29-18:38
     Visibility: public -/
 def native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq
   (self : native.NativeOp) (other : native.NativeOp) : Result Bool := do
@@ -9148,7 +9153,7 @@ def native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq
   ok (self1 = other1)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_const_id]:
-    Source: 'src/native.rs', lines 370:4-377:5 -/
+    Source: 'src/native.rs', lines 375:4-382:5 -/
 def native.Store.native_const_id
   (self : Store) (op : native.NativeOp) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9181,7 +9186,7 @@ def native.Store.native_const_id
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pow2]:
-    Source: 'src/native.rs', lines 360:4-369:5 -/
+    Source: 'src/native.rs', lines 365:4-374:5 -/
 def native.Store.native_pow2
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9210,7 +9215,7 @@ def native.Store.native_pow2
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_streq]:
-    Source: 'src/native.rs', lines 355:4-359:5 -/
+    Source: 'src/native.rs', lines 360:4-364:5 -/
 def native.Store.native_streq
   (self : Store) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9237,7 +9242,7 @@ def native.Store.native_streq
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_to_real]:
-    Source: 'src/native.rs', lines 348:4-351:5 -/
+    Source: 'src/native.rs', lines 353:4-356:5 -/
 def native.Store.native_to_real
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9255,7 +9260,7 @@ def native.Store.native_to_real
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::raw_rat]:
-    Source: 'src/lib.rs', lines 801:4-806:5 -/
+    Source: 'src/lib.rs', lines 818:4-823:5 -/
 def Store.raw_rat
   (self : Store) (t : Term) :
   Result (core.result.Result num.Rational CheckError)
@@ -9292,7 +9297,7 @@ def Store.raw_rat
       num.Rational (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_to_int]:
-    Source: 'src/native.rs', lines 344:4-347:5 -/
+    Source: 'src/native.rs', lines 349:4-352:5 -/
 def native.Store.native_to_int
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9310,7 +9315,7 @@ def native.Store.native_to_int
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_mk_rational]:
-    Source: 'src/native.rs', lines 336:4-343:5 -/
+    Source: 'src/native.rs', lines 341:4-348:5 -/
 def native.Store.native_mk_rational
   (self : Store) (n : Term) (d : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9339,7 +9344,7 @@ def native.Store.native_mk_rational
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_rat_unary]:
-    Source: 'src/native.rs', lines 328:4-335:5 -/
+    Source: 'src/native.rs', lines 333:4-340:5 -/
 def native.Store.native_rat_unary
   (self : Store) (op : native.NativeOp) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9366,7 +9371,7 @@ def native.Store.native_rat_unary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_rat_binary]:
-    Source: 'src/native.rs', lines 312:4-327:5 -/
+    Source: 'src/native.rs', lines 317:4-332:5 -/
 def native.Store.native_rat_binary
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -9828,7 +9833,7 @@ def native.Store.native_rat_binary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_rat_compare]:
-    Source: 'src/native.rs', lines 303:4-311:5 -/
+    Source: 'src/native.rs', lines 308:4-316:5 -/
 def native.Store.native_rat_compare
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10121,7 +10126,7 @@ def native.Store.native_rat_compare
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_unary]:
-    Source: 'src/native.rs', lines 295:4-302:5 -/
+    Source: 'src/native.rs', lines 300:4-307:5 -/
 def native.Store.native_int_unary
   (self : Store) (op : native.NativeOp) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10149,7 +10154,7 @@ def native.Store.native_int_unary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_binary]:
-    Source: 'src/native.rs', lines 259:4-294:5 -/
+    Source: 'src/native.rs', lines 264:4-299:5 -/
 def native.Store.native_int_binary
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10554,7 +10559,7 @@ def native.Store.native_int_binary
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_compare]:
-    Source: 'src/native.rs', lines 250:4-258:5 -/
+    Source: 'src/native.rs', lines 255:4-263:5 -/
 def native.Store.native_int_compare
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10801,7 +10806,7 @@ def native.Store.native_int_compare
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_int_to_nat]:
-    Source: 'src/native.rs', lines 246:4-249:5 -/
+    Source: 'src/native.rs', lines 251:4-254:5 -/
 def native.Store.native_int_to_nat
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10822,7 +10827,7 @@ def native.Store.native_int_to_nat
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_nat_to_int]:
-    Source: 'src/native.rs', lines 242:4-245:5 -/
+    Source: 'src/native.rs', lines 247:4-250:5 -/
 def native.Store.native_nat_to_int
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10839,7 +10844,7 @@ def native.Store.native_nat_to_int
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pred]:
-    Source: 'src/native.rs', lines 234:4-241:5 -/
+    Source: 'src/native.rs', lines 239:4-246:5 -/
 def native.Store.native_pred
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10864,7 +10869,7 @@ def native.Store.native_pred
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_succ]:
-    Source: 'src/native.rs', lines 230:4-233:5 -/
+    Source: 'src/native.rs', lines 235:4-238:5 -/
 def native.Store.native_succ
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10883,7 +10888,7 @@ def native.Store.native_succ
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_connective]:
-    Source: 'src/native.rs', lines 217:4-229:5 -/
+    Source: 'src/native.rs', lines 222:4-234:5 -/
 def native.Store.native_connective
   (self : Store) (op : native.NativeOp) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -10975,7 +10980,7 @@ def native.Store.native_connective
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_bool_value]:
-    Source: 'src/native.rs', lines 207:4-212:5 -/
+    Source: 'src/native.rs', lines 212:4-217:5 -/
 def native.Store.native_bool_value
   (self : Store) (x : Term) : Result (core.result.Result Bool CheckError) := do
   let r ← Store.boolean_value self x true
@@ -10990,7 +10995,7 @@ def native.Store.native_bool_value
       Bool (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_not]:
-    Source: 'src/native.rs', lines 213:4-216:5 -/
+    Source: 'src/native.rs', lines 218:4-221:5 -/
 def native.Store.native_not
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11007,7 +11012,7 @@ def native.Store.native_not
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_is_ok]:
-    Source: 'src/native.rs', lines 203:4-206:5 -/
+    Source: 'src/native.rs', lines 208:4-211:5 -/
 def native.Store.native_is_ok
   (self : Store) (x : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11024,7 +11029,7 @@ def native.Store.native_is_ok
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_tcmp]:
-    Source: 'src/native.rs', lines 199:4-202:5 -/
+    Source: 'src/native.rs', lines 204:4-207:5 -/
 def native.Store.native_tcmp
   (self : Store) (x : Term) (y : Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11042,7 +11047,7 @@ def native.Store.native_tcmp
     ok (r1, self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::native::NativeOp}::arity]:
-    Source: 'src/native.rs', lines 68:4-88:5
+    Source: 'src/native.rs', lines 69:4-89:5
     Visibility: public -/
 def native.NativeOp.arity (self : native.NativeOp) : Result Std.Usize := do
   match self with
@@ -11093,7 +11098,7 @@ def native.NativeOp.arity (self : native.NativeOp) : Result Std.Usize := do
   | native.NativeOp.StringPrefixEq => ok 2#usize
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_op]:
-    Source: 'src/native.rs', lines 154:4-197:5 -/
+    Source: 'src/native.rs', lines 159:4-202:5 -/
 def native.Store.native_op
   (self : Store) (op : native.NativeOp) (a : Slice Term) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -11217,7 +11222,7 @@ def native.Store.native_op
       native.Store.native_string_prefix_eq self x t
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::cache_program]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-423:5 -/
+    Source: 'src/lib.rs', lines 1:0-440:5 -/
 @[rust_loop]
 def Store.cache_program_loop
   (self : Store) (program : cache.ProgramId) (args : Slice Term)
@@ -11254,7 +11259,7 @@ def Store.cache_program_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::cache_program]:
-    Source: 'src/lib.rs', lines 409:4-423:5 -/
+    Source: 'src/lib.rs', lines 426:4-440:5 -/
 @[reducible]
 def Store.cache_program
   (self : Store) (program : cache.ProgramId) (args : Slice Term)
@@ -11264,7 +11269,7 @@ def Store.cache_program
   Store.cache_program_loop self program args result 0#usize
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::cached_program]: loop 0:
-    Source: 'src/lib.rs', lines 403:8-408:5 -/
+    Source: 'src/lib.rs', lines 420:8-425:5 -/
 @[rust_loop]
 def Store.cached_program_loop
   (self : Store) (program : cache.ProgramId) (args : Slice Term)
@@ -11292,7 +11297,7 @@ def Store.cached_program_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::cached_program]:
-    Source: 'src/lib.rs', lines 397:4-408:5 -/
+    Source: 'src/lib.rs', lines 414:4-425:5 -/
 @[reducible]
 def Store.cached_program
   (self : Store) (program : cache.ProgramId) (args : Slice Term) :
@@ -11301,7 +11306,7 @@ def Store.cached_program
   Store.cached_program_loop self program args 0#usize
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::pattern_constant]:
-    Source: 'src/native.rs', lines 149:4-151:5 -/
+    Source: 'src/native.rs', lines 154:4-156:5 -/
 def native.Store.pattern_constant
   (expected : Term) (t : Term) : Result (Option (alloc.vec.Vec Term)) := do
   let b ← Term.Insts.CoreCmpPartialEqTerm.eq expected t
@@ -11310,14 +11315,14 @@ def native.Store.pattern_constant
   else ok none
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_nat_zero]:
-    Source: 'src/native.rs', lines 108:4-110:5 -/
+    Source: 'src/native.rs', lines 109:4-111:5 -/
 def native.Store.native_nat_zero
   (self : Store) : Result ((core.result.Result Term CheckError) × Store) := do
   let i ← num.Integer.zero
   Store.raw self (lit.Lit.Numeral i)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_nat_zero]:
-    Source: 'src/native.rs', lines 137:4-140:5 -/
+    Source: 'src/native.rs', lines 142:4-145:5 -/
 def native.Store.native_pattern_nat_zero
   (self : Store) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -11337,7 +11342,7 @@ def native.Store.native_pattern_nat_zero
     ok (r1, self1)
 
 /-- [pathos_compiled_checker::Next]
-    Source: 'src/lib.rs', lines 98:0-101:1
+    Source: 'src/lib.rs', lines 105:0-108:1
     Visibility: public -/
 @[discriminant isize]
 inductive Next (T : Type _) where
@@ -11345,7 +11350,7 @@ inductive Next (T : Type _) where
 | Again : T → Next T
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_succ]:
-    Source: 'src/native.rs', lines 120:4-128:5 -/
+    Source: 'src/native.rs', lines 125:4-133:5 -/
 def native.Store.native_pattern_succ
   (self : Store) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -11385,7 +11390,7 @@ def native.Store.native_pattern_succ
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::tick]:
-    Source: 'src/lib.rs', lines 925:4-931:5 -/
+    Source: 'src/lib.rs', lines 942:4-948:5 -/
 def Store.tick
   (self : Store) : Result ((core.result.Result Unit CheckError) × Store) := do
   if self.calls >= self.limits.calls
@@ -11395,7 +11400,7 @@ def Store.tick
     ok (core.result.Result.Ok (), { self with calls := i })
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::unapply]:
-    Source: 'src/lib.rs', lines 466:4-471:5
+    Source: 'src/lib.rs', lines 483:4-488:5
     Visibility: public -/
 def Store.unapply
   (self : Store) (t : Term) :
@@ -11417,7 +11422,7 @@ def Store.unapply
       (Option (Term × Term)) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::is_node]:
-    Source: 'src/lib.rs', lines 474:4-479:5 -/
+    Source: 'src/lib.rs', lines 491:4-496:5 -/
 def Store.is_node
   (self : Store) (t : Term) (c : Option schema.Constructor) :
   Result (core.result.Result Bool CheckError)
@@ -11444,7 +11449,7 @@ def Store.is_node
       Bool (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::cache_type]:
-    Source: 'src/lib.rs', lines 386:4-396:5 -/
+    Source: 'src/lib.rs', lines 403:4-413:5 -/
 def Store.cache_type
   (self : Store) (which : cache.TypeCacheKind) (term : Term) (result : Term) :
   Result ((core.result.Result Unit CheckError) × Store)
@@ -11471,7 +11476,7 @@ def Store.cache_type
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::cached_type]:
-    Source: 'src/lib.rs', lines 378:4-385:5 -/
+    Source: 'src/lib.rs', lines 395:4-402:5 -/
 def Store.cached_type
   (self : Store) (which : cache.TypeCacheKind) (term : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -11489,7 +11494,7 @@ def Store.cached_type
     ok (r1, self)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump]:
-    Source: 'src/lib.rs', lines 712:4-720:5 -/
+    Source: 'src/lib.rs', lines 729:4-737:5 -/
 def Store.state_jump
   (self : Store) (t : Term) : Result (Option (Std.U32 × Term)) := do
   let i ← lift (UScalar.cast .Usize t)
@@ -11505,7 +11510,7 @@ def Store.state_jump
   else ok none
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_jump_depth]:
-    Source: 'src/lib.rs', lines 722:4-727:5 -/
+    Source: 'src/lib.rs', lines 739:4-744:5 -/
 def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
   let o ← Store.state_jump self t
   match o with
@@ -11514,7 +11519,7 @@ def Store.state_jump_depth (self : Store) (t : Term) : Result Std.U32 := do
               ok d
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_tail]:
-    Source: 'src/lib.rs', lines 703:4-710:5 -/
+    Source: 'src/lib.rs', lines 720:4-727:5 -/
 def Store.state_tail
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result (core.result.Result (Option Term) CheckError)
@@ -11548,7 +11553,7 @@ def Store.state_tail
       (Option Term) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-794:5 -/
+    Source: 'src/lib.rs', lines 1:0-811:5 -/
 @[rust_loop]
 def Store.state_ancestor_loop
   (x : Term) (self : Store) (cons : schema.Constructor) (target : Std.U32) :
@@ -11579,7 +11584,7 @@ def Store.state_ancestor_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_ancestor]:
-    Source: 'src/lib.rs', lines 775:4-794:5 -/
+    Source: 'src/lib.rs', lines 792:4-811:5 -/
 @[reducible]
 def Store.state_ancestor
   (self : Store) (cons : schema.Constructor) (t : Term) (target : Std.U32) :
@@ -11588,7 +11593,7 @@ def Store.state_ancestor
   Store.state_ancestor_loop t self cons target
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::set_state_jump]:
-    Source: 'src/lib.rs', lines 728:4-734:5 -/
+    Source: 'src/lib.rs', lines 745:4-751:5 -/
 def Store.set_state_jump
   (self : Store) (t : Term) (entry : (Std.U32 × Term)) : Result Store := do
   let i ← lift (UScalar.cast .Usize t)
@@ -11608,7 +11613,7 @@ def Store.set_state_jump
   ok { self with state_jumps := v1 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 1:
-    Source: 'src/lib.rs', lines 757:8-770:9 -/
+    Source: 'src/lib.rs', lines 774:8-787:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop0
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -11644,7 +11649,7 @@ def Store.state_depth_loop0_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 2:
-    Source: 'src/lib.rs', lines 757:8-770:9 -/
+    Source: 'src/lib.rs', lines 774:8-787:9 -/
 @[rust_loop]
 def Store.state_depth_loop0_loop1
   (pending : table.PairStack) (self : Store) (base : Std.U32) :
@@ -11680,7 +11685,7 @@ def Store.state_depth_loop0_loop1
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]: loop 0:
-    Source: 'src/lib.rs', lines 1:0-772:5 -/
+    Source: 'src/lib.rs', lines 1:0-789:5 -/
 @[rust_loop]
 def Store.state_depth_loop0
   (x : Term) (self : Store) (cons : schema.Constructor)
@@ -11713,7 +11718,7 @@ def Store.state_depth_loop0
 partial_fixpoint
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_depth]:
-    Source: 'src/lib.rs', lines 738:4-772:5 -/
+    Source: 'src/lib.rs', lines 755:4-789:5 -/
 def Store.state_depth
   (self : Store) (cons : schema.Constructor) (t : Term) :
   Result ((core.result.Result Std.U32 CheckError) × Store)
@@ -11722,7 +11727,7 @@ def Store.state_depth
   Store.state_depth_loop0 t self cons pending
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::charge]:
-    Source: 'src/lib.rs', lines 691:4-701:5 -/
+    Source: 'src/lib.rs', lines 708:4-718:5 -/
 def Store.charge
   (self : Store) (count : Std.U64) :
   Result ((core.result.Result Unit CheckError) × Store)
@@ -11735,7 +11740,7 @@ def Store.charge
   else ok (core.result.Result.Ok (), { self with calls := sum })
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::state_nth]:
-    Source: 'src/lib.rs', lines 650:4-688:5 -/
+    Source: 'src/lib.rs', lines 667:4-705:5 -/
 def Store.state_nth
   (self : Store) (cons : schema.Constructor) (state : Term) (index : Term) :
   Result ((core.result.Result (Option Term) CheckError) × Store)
@@ -12025,7 +12030,7 @@ def table.TermCounts.new (n : Std.Usize) : Result table.TermCounts := do
     }
 
 /-- [pathos_compiled_checker::first_occurrences]: loop 0:
-    Source: 'src/lib.rs', lines 1265:4-1271:5 -/
+    Source: 'src/lib.rs', lines 1282:4-1288:5 -/
 @[rust_loop]
 def first_occurrences_loop
   (xs : Slice Term) (seen : table.TermCounts) (out : alloc.vec.Vec Term)
@@ -12052,14 +12057,14 @@ def first_occurrences_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::first_occurrences]:
-    Source: 'src/lib.rs', lines 1261:0-1273:1 -/
+    Source: 'src/lib.rs', lines 1278:0-1290:1 -/
 def first_occurrences (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let seen ← table.TermCounts.new i
   first_occurrences_loop xs seen (alloc.vec.Vec.new Term) 0#usize
 
 /-- [pathos_compiled_checker::without]: loop 0:
-    Source: 'src/lib.rs', lines 1252:4-1257:5 -/
+    Source: 'src/lib.rs', lines 1269:4-1274:5 -/
 @[rust_loop]
 def without_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -12080,14 +12085,14 @@ def without_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without]:
-    Source: 'src/lib.rs', lines 1249:0-1259:1 -/
+    Source: 'src/lib.rs', lines 1266:0-1276:1 -/
 def without (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
   without_loop xs x out 0#usize
 
 /-- [pathos_compiled_checker::without_first]: loop 0:
-    Source: 'src/lib.rs', lines 1238:4-1245:5 -/
+    Source: 'src/lib.rs', lines 1255:4-1262:5 -/
 @[rust_loop]
 def without_first_loop
   (xs : Slice Term) (x : Term) (out : alloc.vec.Vec Term) (erased : Bool)
@@ -12118,7 +12123,7 @@ def without_first_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::without_first]:
-    Source: 'src/lib.rs', lines 1234:0-1247:1 -/
+    Source: 'src/lib.rs', lines 1251:0-1264:1 -/
 def without_first
   (xs : Slice Term) (x : Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
@@ -12126,7 +12131,7 @@ def without_first
   without_first_loop xs x out false 0#usize
 
 /-- [pathos_compiled_checker::reversed]: loop 0:
-    Source: 'src/lib.rs', lines 1227:4-1230:5 -/
+    Source: 'src/lib.rs', lines 1244:4-1247:5 -/
 @[rust_loop]
 def reversed_loop
   (xs : Slice Term) (out : alloc.vec.Vec Term) (i : Std.Usize) :
@@ -12142,7 +12147,7 @@ def reversed_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::reversed]:
-    Source: 'src/lib.rs', lines 1224:0-1232:1 -/
+    Source: 'src/lib.rs', lines 1241:0-1249:1 -/
 def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   let i := Slice.len xs
   let out := alloc.vec.Vec.with_capacity Term i
@@ -12150,7 +12155,7 @@ def reversed (xs : Slice Term) : Result (alloc.vec.Vec Term) := do
   reversed_loop xs out i1
 
 /-- [pathos_compiled_checker::position]: loop 0:
-    Source: 'src/lib.rs', lines 1215:4-1220:5 -/
+    Source: 'src/lib.rs', lines 1232:4-1237:5 -/
 @[rust_loop]
 def position_loop
   (xs : Slice Term) (x : Term) (found : Option Std.Usize) (i : Std.Usize) :
@@ -12168,13 +12173,13 @@ def position_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::position]:
-    Source: 'src/lib.rs', lines 1212:0-1222:1 -/
+    Source: 'src/lib.rs', lines 1229:0-1239:1 -/
 def position (xs : Slice Term) (x : Term) : Result (Option Std.Usize) := do
   let i := Slice.len xs
   position_loop xs x none i
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::numeral]:
-    Source: 'src/lib.rs', lines 439:4-441:5
+    Source: 'src/lib.rs', lines 456:4-458:5
     Visibility: public -/
 def Store.numeral
   (self : Store) (n : num.Integer) :
@@ -12183,7 +12188,7 @@ def Store.numeral
   Store.literal self (lit.Lit.Numeral n)
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::object_index]:
-    Source: 'src/lib.rs', lines 807:4-812:5 -/
+    Source: 'src/lib.rs', lines 824:4-829:5 -/
 def Store.object_index
   (self : Store) (t : Term) :
   Result (core.result.Result (Option Std.U32) CheckError)
@@ -12248,7 +12253,7 @@ def table.TermCounts.count
     self.counts place
 
 /-- [pathos_compiled_checker::multiset]: loop 0:
-    Source: 'src/lib.rs', lines 1278:4-1281:5 -/
+    Source: 'src/lib.rs', lines 1295:4-1298:5 -/
 @[rust_loop]
 def multiset_loop
   (ys : Slice Term) (counts : table.TermCounts) (i : Std.Usize) :
@@ -12265,14 +12270,14 @@ def multiset_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset]:
-    Source: 'src/lib.rs', lines 1275:0-1283:1 -/
+    Source: 'src/lib.rs', lines 1292:0-1300:1 -/
 def multiset (ys : Slice Term) : Result table.TermCounts := do
   let i := Slice.len ys
   let counts ← table.TermCounts.new i
   multiset_loop ys counts 0#usize
 
 /-- [pathos_compiled_checker::multiset_select]: loop 0:
-    Source: 'src/lib.rs', lines 1306:4-1319:5 -/
+    Source: 'src/lib.rs', lines 1323:4-1336:5 -/
 @[rust_loop]
 def multiset_select_loop
   (xs : Slice Term) (paired : Bool) (counts : table.TermCounts)
@@ -12301,7 +12306,7 @@ def multiset_select_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_select]:
-    Source: 'src/lib.rs', lines 1302:0-1321:1 -/
+    Source: 'src/lib.rs', lines 1319:0-1338:1 -/
 def multiset_select
   (xs : Slice Term) (ys : Slice Term) (paired : Bool) :
   Result (alloc.vec.Vec Term)
@@ -12335,7 +12340,7 @@ def table.TermCounts.all_zero (self : table.TermCounts) : Result Bool := do
   table.TermCounts.all_zero_loop self true 0#usize
 
 /-- [pathos_compiled_checker::multiset_inclusion]: loop 0:
-    Source: 'src/lib.rs', lines 1291:4-1297:5 -/
+    Source: 'src/lib.rs', lines 1308:4-1314:5 -/
 @[rust_loop]
 def multiset_inclusion_loop
   (xs : Slice Term) (counts : table.TermCounts) (foreign : Bool)
@@ -12360,7 +12365,7 @@ def multiset_inclusion_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::multiset_inclusion]:
-    Source: 'src/lib.rs', lines 1287:0-1299:1 -/
+    Source: 'src/lib.rs', lines 1304:0-1316:1 -/
 def multiset_inclusion
   (xs : Slice Term) (ys : Slice Term) : Result (Bool × Bool) := do
   let counts ← multiset ys
@@ -12369,7 +12374,7 @@ def multiset_inclusion
   ok (foreign, b)
 
 /-- [pathos_compiled_checker::append_terms]: loop 0:
-    Source: 'src/lib.rs', lines 1206:4-1209:5 -/
+    Source: 'src/lib.rs', lines 1223:4-1226:5 -/
 @[rust_loop]
 def append_terms_loop
   («to» : alloc.vec.Vec Term) («from» : Slice Term) (i : Std.Usize) :
@@ -12386,7 +12391,7 @@ def append_terms_loop
 partial_fixpoint
 
 /-- [pathos_compiled_checker::append_terms]:
-    Source: 'src/lib.rs', lines 1204:0-1210:1 -/
+    Source: 'src/lib.rs', lines 1221:0-1227:1 -/
 @[reducible]
 def append_terms
   («to» : alloc.vec.Vec Term) («from» : Slice Term) :
@@ -12395,7 +12400,7 @@ def append_terms
   append_terms_loop «to» «from» 0#usize
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::is_native_true]:
-    Source: 'src/lib.rs', lines 454:4-459:5 -/
+    Source: 'src/lib.rs', lines 471:4-476:5 -/
 def Store.is_native_true
   (self : Store) (t : Term) : Result (core.result.Result Bool CheckError) := do
   let r ← Store.boolean_value self t true
@@ -12413,7 +12418,7 @@ def Store.is_native_true
       Bool (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::node_fields]:
-    Source: 'src/lib.rs', lines 481:4-490:5 -/
+    Source: 'src/lib.rs', lines 498:4-507:5 -/
 def Store.node_fields
   (self : Store) (t : Term) (c : Option schema.Constructor) :
   Result (core.result.Result (Option (alloc.vec.Vec Term)) CheckError)
@@ -12444,7 +12449,7 @@ def Store.node_fields
       (Option (alloc.vec.Vec Term)) (core.convert.FromSame CheckError) residual
 
 /-- [pathos_compiled_checker::Verdict]
-    Source: 'src/lib.rs', lines 162:0-166:1
+    Source: 'src/lib.rs', lines 179:0-183:1
     Visibility: public -/
 @[discriminant isize]
 inductive Verdict where
@@ -12453,7 +12458,7 @@ inductive Verdict where
 | Incomplete : Verdict
 
 /-- [pathos_compiled_checker::ArgKind]
-    Source: 'src/lib.rs', lines 173:0-180:1 -/
+    Source: 'src/lib.rs', lines 190:0-197:1 -/
 @[discriminant isize]
 inductive ArgKind where
 | Term : ArgKind
@@ -12654,7 +12659,7 @@ def kind.EvalOp.Insts.CoreFmtDebug : core.fmt.Debug kind.EvalOp := {
 }
 
 /-- [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::CheckError}::clone]:
-    Source: 'src/lib.rs', lines 55:9-55:14
+    Source: 'src/lib.rs', lines 62:9-62:14
     Visibility: public -/
 def CheckError.Insts.CoreCloneClone.clone
   (self : CheckError) : Result CheckError := do
@@ -12669,21 +12674,21 @@ def CheckError.Insts.CoreCloneClone.clone
   | CheckError.Worker => ok CheckError.Worker
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::CheckError}]
-    Source: 'src/lib.rs', lines 55:9-55:14 -/
+    Source: 'src/lib.rs', lines 62:9-62:14 -/
 @[reducible]
 def CheckError.Insts.CoreCloneClone : core.clone.Clone CheckError := {
   clone := CheckError.Insts.CoreCloneClone.clone
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::CheckError}]
-    Source: 'src/lib.rs', lines 55:16-55:25 -/
+    Source: 'src/lib.rs', lines 62:16-62:25 -/
 @[reducible]
 def CheckError.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq CheckError := {
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::CheckError> for pathos_compiled_checker::CheckError}::eq]:
-    Source: 'src/lib.rs', lines 55:16-55:25
+    Source: 'src/lib.rs', lines 62:16-62:25
     Visibility: public -/
 def CheckError.Insts.CoreCmpPartialEqCheckError.eq
   (self : CheckError) (other : CheckError) : Result Bool := do
@@ -12709,7 +12714,7 @@ def CheckError.Insts.CoreCmpPartialEqCheckError.eq
   else ok false
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::CheckError> for pathos_compiled_checker::CheckError}]
-    Source: 'src/lib.rs', lines 55:16-55:25 -/
+    Source: 'src/lib.rs', lines 62:16-62:25 -/
 @[reducible]
 impl_def CheckError.Insts.CoreCmpPartialEqCheckError : core.cmp.PartialEq
   CheckError CheckError := {
@@ -12719,14 +12724,14 @@ impl_def CheckError.Insts.CoreCmpPartialEqCheckError : core.cmp.PartialEq
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::CheckError}::assert_fields_are_eq]:
-    Source: 'src/lib.rs', lines 55:27-55:29
+    Source: 'src/lib.rs', lines 62:27-62:29
     Visibility: public -/
 def CheckError.Insts.CoreCmpEq.assert_fields_are_eq
   (self : CheckError) : Result Unit := do
   ok ()
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::CheckError}]
-    Source: 'src/lib.rs', lines 55:27-55:29 -/
+    Source: 'src/lib.rs', lines 62:27-62:29 -/
 @[reducible]
 def CheckError.Insts.CoreCmpEq : core.cmp.Eq CheckError := {
   partialEqInst := CheckError.Insts.CoreCmpPartialEqCheckError
@@ -12734,7 +12739,7 @@ def CheckError.Insts.CoreCmpEq : core.cmp.Eq CheckError := {
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::error::Error for pathos_compiled_checker::CheckError}]
-    Source: 'src/lib.rs', lines 67:0-67:40 -/
+    Source: 'src/lib.rs', lines 74:0-74:40 -/
 @[reducible]
 def CheckError.Insts.CoreErrorError : core.error.Error CheckError := {
   fmtDebugInst := CheckError.Insts.CoreFmtDebug
@@ -12742,28 +12747,28 @@ def CheckError.Insts.CoreErrorError : core.error.Error CheckError := {
 }
 
 /-- [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Embedding}::clone]:
-    Source: 'src/lib.rs', lines 74:15-74:20
+    Source: 'src/lib.rs', lines 81:15-81:20
     Visibility: public -/
 def Embedding.Insts.CoreCloneClone.clone
   (self : Embedding) : Result Embedding := do
   ok self
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Embedding}]
-    Source: 'src/lib.rs', lines 74:15-74:20 -/
+    Source: 'src/lib.rs', lines 81:15-81:20 -/
 @[reducible]
 def Embedding.Insts.CoreCloneClone : core.clone.Clone Embedding := {
   clone := Embedding.Insts.CoreCloneClone.clone
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::Copy for pathos_compiled_checker::Embedding}]
-    Source: 'src/lib.rs', lines 74:9-74:13 -/
+    Source: 'src/lib.rs', lines 81:9-81:13 -/
 @[reducible]
 def Embedding.Insts.CoreMarkerCopy : core.marker.Copy Embedding := {
   cloneInst := Embedding.Insts.CoreCloneClone
 }
 
 /-- [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Embedding}::fmt]:
-    Source: 'src/lib.rs', lines 74:22-74:27
+    Source: 'src/lib.rs', lines 81:22-81:27
     Visibility: public -/
 def Embedding.Insts.CoreFmtDebug.fmt
   (self : Embedding) (f : core.fmt.Formatter) :
@@ -12782,21 +12787,21 @@ def Embedding.Insts.CoreFmtDebug.fmt
   | Embedding.Data => core.fmt.Formatter.write_str f (toStr "Data")
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Embedding}]
-    Source: 'src/lib.rs', lines 74:22-74:27 -/
+    Source: 'src/lib.rs', lines 81:22-81:27 -/
 @[reducible]
 def Embedding.Insts.CoreFmtDebug : core.fmt.Debug Embedding := {
   fmt := Embedding.Insts.CoreFmtDebug.fmt
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::Embedding}]
-    Source: 'src/lib.rs', lines 74:29-74:38 -/
+    Source: 'src/lib.rs', lines 81:29-81:38 -/
 @[reducible]
 def Embedding.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq Embedding := {
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::Embedding> for pathos_compiled_checker::Embedding}]
-    Source: 'src/lib.rs', lines 74:29-74:38 -/
+    Source: 'src/lib.rs', lines 81:29-81:38 -/
 @[reducible]
 impl_def Embedding.Insts.CoreCmpPartialEqEmbedding : core.cmp.PartialEq
   Embedding Embedding := {
@@ -12806,7 +12811,7 @@ impl_def Embedding.Insts.CoreCmpPartialEqEmbedding : core.cmp.PartialEq
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::Embedding}]
-    Source: 'src/lib.rs', lines 74:40-74:42 -/
+    Source: 'src/lib.rs', lines 81:40-81:42 -/
 @[reducible]
 impl_def Embedding.Insts.CoreCmpEq : core.cmp.Eq Embedding := {
   partialEqInst := Embedding.Insts.CoreCmpPartialEqEmbedding
@@ -12815,14 +12820,14 @@ impl_def Embedding.Insts.CoreCmpEq : core.cmp.Eq Embedding := {
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::Copy for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:9-112:13 -/
+    Source: 'src/lib.rs', lines 119:9-119:13 -/
 @[reducible]
 def Term.Insts.CoreMarkerCopy : core.marker.Copy Term := {
   cloneInst := Term.Insts.CoreCloneClone
 }
 
 /-- [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Term}::fmt]:
-    Source: 'src/lib.rs', lines 112:22-112:27
+    Source: 'src/lib.rs', lines 119:22-119:27
     Visibility: public -/
 def Term.Insts.CoreFmtDebug.fmt
   (self : Term) (f : core.fmt.Formatter) :
@@ -12832,27 +12837,27 @@ def Term.Insts.CoreFmtDebug.fmt
   core.fmt.Formatter.debug_tuple_field1_finish f (toStr "Term") dyn
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:22-112:27 -/
+    Source: 'src/lib.rs', lines 119:22-119:27 -/
 @[reducible]
 def Term.Insts.CoreFmtDebug : core.fmt.Debug Term := {
   fmt := Term.Insts.CoreFmtDebug.fmt
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:29-112:38 -/
+    Source: 'src/lib.rs', lines 119:29-119:38 -/
 @[reducible]
 def Term.Insts.CoreMarkerStructuralPartialEq : core.marker.StructuralPartialEq
   Term := {
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::Term}::assert_fields_are_eq]:
-    Source: 'src/lib.rs', lines 112:40-112:42
+    Source: 'src/lib.rs', lines 119:40-119:42
     Visibility: public -/
 def Term.Insts.CoreCmpEq.assert_fields_are_eq (self : Term) : Result Unit := do
   ok ()
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:40-112:42 -/
+    Source: 'src/lib.rs', lines 119:40-119:42 -/
 @[reducible]
 def Term.Insts.CoreCmpEq : core.cmp.Eq Term := {
   partialEqInst := Term.Insts.CoreCmpPartialEqTerm
@@ -12860,14 +12865,14 @@ def Term.Insts.CoreCmpEq : core.cmp.Eq Term := {
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::Ord for pathos_compiled_checker::Term}::cmp]:
-    Source: 'src/lib.rs', lines 112:56-112:59
+    Source: 'src/lib.rs', lines 119:56-119:59
     Visibility: public -/
 def Term.Insts.CoreCmpOrd.cmp
   (self : Term) (other : Term) : Result Ordering := do
   ok (core.cmp.impls.OrdU32.cmp self other)
 
 /-- [pathos_compiled_checker::{impl core::cmp::PartialOrd<pathos_compiled_checker::Term> for pathos_compiled_checker::Term}::partial_cmp]:
-    Source: 'src/lib.rs', lines 112:44-112:54
+    Source: 'src/lib.rs', lines 119:44-119:54
     Visibility: public -/
 def Term.Insts.CoreCmpPartialOrdTerm.partial_cmp
   (self : Term) (other : Term) : Result (Option Ordering) := do
@@ -12875,7 +12880,7 @@ def Term.Insts.CoreCmpPartialOrdTerm.partial_cmp
   ok (some o)
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::PartialOrd<pathos_compiled_checker::Term> for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:44-112:54 -/
+    Source: 'src/lib.rs', lines 119:44-119:54 -/
 @[reducible]
 impl_def Term.Insts.CoreCmpPartialOrdTerm : core.cmp.PartialOrd Term Term := {
   partialEqInst := Term.Insts.CoreCmpPartialEqTerm
@@ -12887,7 +12892,7 @@ impl_def Term.Insts.CoreCmpPartialOrdTerm : core.cmp.PartialOrd Term Term := {
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::Ord for pathos_compiled_checker::Term}]
-    Source: 'src/lib.rs', lines 112:56-112:59 -/
+    Source: 'src/lib.rs', lines 119:56-119:59 -/
 @[reducible]
 impl_def Term.Insts.CoreCmpOrd : core.cmp.Ord Term := {
   eqInst := Term.Insts.CoreCmpEq
@@ -12904,7 +12909,7 @@ def schema.Constructor.Insts.CoreCloneClone.clone
   ok self
 
 /-- [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::TermData}::clone]:
-    Source: 'src/lib.rs', lines 118:9-118:14
+    Source: 'src/lib.rs', lines 125:9-125:14
     Visibility: public -/
 def TermData.Insts.CoreCloneClone.clone
   (self : TermData) : Result TermData := do
@@ -12929,7 +12934,7 @@ def TermData.Insts.CoreCloneClone.clone
     ok (TermData.Node c v)
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::TermData}]
-    Source: 'src/lib.rs', lines 118:9-118:14 -/
+    Source: 'src/lib.rs', lines 125:9-125:14 -/
 @[reducible]
 def TermData.Insts.CoreCloneClone : core.clone.Clone TermData := {
   clone := TermData.Insts.CoreCloneClone.clone
@@ -12967,7 +12972,7 @@ def num.Rational.Insts.CoreFmtDebug : core.fmt.Debug num.Rational := {
 }
 
 /-- [pathos_compiled_checker::lit::{impl core::fmt::Debug for pathos_compiled_checker::lit::Lit}::fmt]:
-    Source: 'src/lit.rs', lines 19:31-19:36
+    Source: 'src/lit.rs', lines 20:31-20:36
     Visibility: public -/
 def lit.Lit.Insts.CoreFmtDebug.fmt
   (self : lit.Lit) (f : core.fmt.Formatter) :
@@ -13005,14 +13010,14 @@ def lit.Lit.Insts.CoreFmtDebug.fmt
     core.fmt.Formatter.debug_tuple_field1_finish f (toStr "Str") __self_01
 
 /-- Trait implementation: [pathos_compiled_checker::lit::{impl core::fmt::Debug for pathos_compiled_checker::lit::Lit}]
-    Source: 'src/lit.rs', lines 19:31-19:36 -/
+    Source: 'src/lit.rs', lines 20:31-20:36 -/
 @[reducible]
 def lit.Lit.Insts.CoreFmtDebug : core.fmt.Debug lit.Lit := {
   fmt := lit.Lit.Insts.CoreFmtDebug.fmt
 }
 
 /-- [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::TermData}::fmt]:
-    Source: 'src/lib.rs', lines 118:16-118:21
+    Source: 'src/lib.rs', lines 125:16-125:21
     Visibility: public -/
 def TermData.Insts.CoreFmtDebug.fmt
   (self : TermData) (f : core.fmt.Formatter) :
@@ -13048,14 +13053,14 @@ def TermData.Insts.CoreFmtDebug.fmt
       __self_11
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::TermData}]
-    Source: 'src/lib.rs', lines 118:16-118:21 -/
+    Source: 'src/lib.rs', lines 125:16-125:21 -/
 @[reducible]
 def TermData.Insts.CoreFmtDebug : core.fmt.Debug TermData := {
   fmt := TermData.Insts.CoreFmtDebug.fmt
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::TermData}]
-    Source: 'src/lib.rs', lines 118:23-118:32 -/
+    Source: 'src/lib.rs', lines 125:23-125:32 -/
 @[reducible]
 def TermData.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq TermData := {
@@ -13081,7 +13086,7 @@ impl_def schema.Constructor.Insts.CoreCmpPartialEqConstructor :
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::TermData> for pathos_compiled_checker::TermData}::eq]:
-    Source: 'src/lib.rs', lines 118:23-118:32
+    Source: 'src/lib.rs', lines 125:23-125:32
     Visibility: public -/
 def TermData.Insts.CoreCmpPartialEqTermData.eq
   (self : TermData) (other : TermData) : Result Bool := do
@@ -13150,7 +13155,7 @@ def TermData.Insts.CoreCmpPartialEqTermData.eq
   else ok false
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::TermData> for pathos_compiled_checker::TermData}]
-    Source: 'src/lib.rs', lines 118:23-118:32 -/
+    Source: 'src/lib.rs', lines 125:23-125:32 -/
 @[reducible]
 impl_def TermData.Insts.CoreCmpPartialEqTermData : core.cmp.PartialEq TermData
   TermData := {
@@ -13160,14 +13165,14 @@ impl_def TermData.Insts.CoreCmpPartialEqTermData : core.cmp.PartialEq TermData
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::TermData}::assert_fields_are_eq]:
-    Source: 'src/lib.rs', lines 118:34-118:36
+    Source: 'src/lib.rs', lines 125:34-125:36
     Visibility: public -/
 def TermData.Insts.CoreCmpEq.assert_fields_are_eq
   (self : TermData) : Result Unit := do
   ok ()
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::TermData}]
-    Source: 'src/lib.rs', lines 118:34-118:36 -/
+    Source: 'src/lib.rs', lines 125:34-125:36 -/
 @[reducible]
 def TermData.Insts.CoreCmpEq : core.cmp.Eq TermData := {
   partialEqInst := TermData.Insts.CoreCmpPartialEqTermData
@@ -13175,27 +13180,27 @@ def TermData.Insts.CoreCmpEq : core.cmp.Eq TermData := {
 }
 
 /-- [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Limits}::clone]:
-    Source: 'src/lib.rs', lines 128:15-128:20
+    Source: 'src/lib.rs', lines 135:15-135:20
     Visibility: public -/
 def Limits.Insts.CoreCloneClone.clone (self : Limits) : Result Limits := do
   ok self
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Limits}]
-    Source: 'src/lib.rs', lines 128:15-128:20 -/
+    Source: 'src/lib.rs', lines 135:15-135:20 -/
 @[reducible]
 def Limits.Insts.CoreCloneClone : core.clone.Clone Limits := {
   clone := Limits.Insts.CoreCloneClone.clone
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::Copy for pathos_compiled_checker::Limits}]
-    Source: 'src/lib.rs', lines 128:9-128:13 -/
+    Source: 'src/lib.rs', lines 135:9-135:13 -/
 @[reducible]
 def Limits.Insts.CoreMarkerCopy : core.marker.Copy Limits := {
   cloneInst := Limits.Insts.CoreCloneClone
 }
 
 /-- [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Limits}::fmt]:
-    Source: 'src/lib.rs', lines 128:22-128:27
+    Source: 'src/lib.rs', lines 135:22-135:27
     Visibility: public -/
 def Limits.Insts.CoreFmtDebug.fmt
   (self : Limits) (f : core.fmt.Formatter) :
@@ -13208,21 +13213,22 @@ def Limits.Insts.CoreFmtDebug.fmt
     "terms") dyn (toStr "calls") dyn1 (toStr "depth") dyn2
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Limits}]
-    Source: 'src/lib.rs', lines 128:22-128:27 -/
+    Source: 'src/lib.rs', lines 135:22-135:27 -/
 @[reducible]
 def Limits.Insts.CoreFmtDebug : core.fmt.Debug Limits := {
   fmt := Limits.Insts.CoreFmtDebug.fmt
 }
 
 /-- [pathos_compiled_checker::CHECKER_STACK_SIZE]
-    Source: 'src/lib.rs', lines 135:0-135:63 -/
+    Source: 'src/lib.rs', lines 146:0-146:68 -/
 @[global_simps, irreducible]
 def CHECKER_STACK_SIZE : Result Std.Usize := do
-  let i ← 256#usize * 1024#usize
-  i * 1024#usize
+  let i ← 4#usize * 1024#usize
+  let i1 ← i * 1024#usize
+  i1 * 1024#usize
 
 /-- [pathos_compiled_checker::DEFAULT_DEPTH]
-    Source: 'src/lib.rs', lines 138:0-138:69 -/
+    Source: 'src/lib.rs', lines 154:0-154:69 -/
 @[global_simps, irreducible]
 def DEFAULT_DEPTH : Result Std.U32 := do
   let i ← 16#usize * 1024#usize
@@ -13231,41 +13237,41 @@ def DEFAULT_DEPTH : Result Std.U32 := do
   ok (UScalar.cast .U32 i2)
 
 /-- [pathos_compiled_checker::{impl core::default::Default for pathos_compiled_checker::Limits}::default]:
-    Source: 'src/lib.rs', lines 141:4-149:5
+    Source: 'src/lib.rs', lines 157:4-166:5
     Visibility: public -/
 def Limits.Insts.CoreDefaultDefault.default : Result Limits := do
   let i ← DEFAULT_DEPTH
   ok { terms := 10000000#u32, calls := 10000000#u64, depth := i }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::default::Default for pathos_compiled_checker::Limits}]
-    Source: 'src/lib.rs', lines 140:0-150:1 -/
+    Source: 'src/lib.rs', lines 156:0-167:1 -/
 @[reducible]
 def Limits.Insts.CoreDefaultDefault : core.default.Default Limits := {
   default := Limits.Insts.CoreDefaultDefault.default
 }
 
 /-- [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Verdict}::clone]:
-    Source: 'src/lib.rs', lines 161:15-161:20
+    Source: 'src/lib.rs', lines 178:15-178:20
     Visibility: public -/
 def Verdict.Insts.CoreCloneClone.clone (self : Verdict) : Result Verdict := do
   ok self
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::Verdict}]
-    Source: 'src/lib.rs', lines 161:15-161:20 -/
+    Source: 'src/lib.rs', lines 178:15-178:20 -/
 @[reducible]
 def Verdict.Insts.CoreCloneClone : core.clone.Clone Verdict := {
   clone := Verdict.Insts.CoreCloneClone.clone
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::Copy for pathos_compiled_checker::Verdict}]
-    Source: 'src/lib.rs', lines 161:9-161:13 -/
+    Source: 'src/lib.rs', lines 178:9-178:13 -/
 @[reducible]
 def Verdict.Insts.CoreMarkerCopy : core.marker.Copy Verdict := {
   cloneInst := Verdict.Insts.CoreCloneClone
 }
 
 /-- [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Verdict}::fmt]:
-    Source: 'src/lib.rs', lines 161:22-161:27
+    Source: 'src/lib.rs', lines 178:22-178:27
     Visibility: public -/
 def Verdict.Insts.CoreFmtDebug.fmt
   (self : Verdict) (f : core.fmt.Formatter) :
@@ -13277,21 +13283,21 @@ def Verdict.Insts.CoreFmtDebug.fmt
   | Verdict.Incomplete => core.fmt.Formatter.write_str f (toStr "Incomplete")
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::Verdict}]
-    Source: 'src/lib.rs', lines 161:22-161:27 -/
+    Source: 'src/lib.rs', lines 178:22-178:27 -/
 @[reducible]
 def Verdict.Insts.CoreFmtDebug : core.fmt.Debug Verdict := {
   fmt := Verdict.Insts.CoreFmtDebug.fmt
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::Verdict}]
-    Source: 'src/lib.rs', lines 161:29-161:38 -/
+    Source: 'src/lib.rs', lines 178:29-178:38 -/
 @[reducible]
 def Verdict.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq Verdict := {
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::Verdict> for pathos_compiled_checker::Verdict}::eq]:
-    Source: 'src/lib.rs', lines 161:29-161:38
+    Source: 'src/lib.rs', lines 178:29-178:38
     Visibility: public -/
 def Verdict.Insts.CoreCmpPartialEqVerdict.eq
   (self : Verdict) (other : Verdict) : Result Bool := do
@@ -13300,7 +13306,7 @@ def Verdict.Insts.CoreCmpPartialEqVerdict.eq
   ok (self1 = other1)
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::Verdict> for pathos_compiled_checker::Verdict}]
-    Source: 'src/lib.rs', lines 161:29-161:38 -/
+    Source: 'src/lib.rs', lines 178:29-178:38 -/
 @[reducible]
 impl_def Verdict.Insts.CoreCmpPartialEqVerdict : core.cmp.PartialEq Verdict
   Verdict := {
@@ -13310,7 +13316,7 @@ impl_def Verdict.Insts.CoreCmpPartialEqVerdict : core.cmp.PartialEq Verdict
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::Verdict}]
-    Source: 'src/lib.rs', lines 161:40-161:42 -/
+    Source: 'src/lib.rs', lines 178:40-178:42 -/
 @[reducible]
 impl_def Verdict.Insts.CoreCmpEq : core.cmp.Eq Verdict := {
   partialEqInst := Verdict.Insts.CoreCmpPartialEqVerdict
@@ -13319,27 +13325,27 @@ impl_def Verdict.Insts.CoreCmpEq : core.cmp.Eq Verdict := {
 }
 
 /-- [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::ArgKind}::clone]:
-    Source: 'src/lib.rs', lines 171:15-171:20
+    Source: 'src/lib.rs', lines 188:15-188:20
     Visibility: public -/
 def ArgKind.Insts.CoreCloneClone.clone (self : ArgKind) : Result ArgKind := do
   ok self
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::clone::Clone for pathos_compiled_checker::ArgKind}]
-    Source: 'src/lib.rs', lines 171:15-171:20 -/
+    Source: 'src/lib.rs', lines 188:15-188:20 -/
 @[reducible]
 def ArgKind.Insts.CoreCloneClone : core.clone.Clone ArgKind := {
   clone := ArgKind.Insts.CoreCloneClone.clone
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::Copy for pathos_compiled_checker::ArgKind}]
-    Source: 'src/lib.rs', lines 171:9-171:13 -/
+    Source: 'src/lib.rs', lines 188:9-188:13 -/
 @[reducible]
 def ArgKind.Insts.CoreMarkerCopy : core.marker.Copy ArgKind := {
   cloneInst := ArgKind.Insts.CoreCloneClone
 }
 
 /-- [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::ArgKind}::fmt]:
-    Source: 'src/lib.rs', lines 171:22-171:27
+    Source: 'src/lib.rs', lines 188:22-188:27
     Visibility: public -/
 def ArgKind.Insts.CoreFmtDebug.fmt
   (self : ArgKind) (f : core.fmt.Formatter) :
@@ -13354,21 +13360,21 @@ def ArgKind.Insts.CoreFmtDebug.fmt
   | ArgKind.Unknown => core.fmt.Formatter.write_str f (toStr "Unknown")
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::fmt::Debug for pathos_compiled_checker::ArgKind}]
-    Source: 'src/lib.rs', lines 171:22-171:27 -/
+    Source: 'src/lib.rs', lines 188:22-188:27 -/
 @[reducible]
 def ArgKind.Insts.CoreFmtDebug : core.fmt.Debug ArgKind := {
   fmt := ArgKind.Insts.CoreFmtDebug.fmt
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::ArgKind}]
-    Source: 'src/lib.rs', lines 171:29-171:38 -/
+    Source: 'src/lib.rs', lines 188:29-188:38 -/
 @[reducible]
 def ArgKind.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq ArgKind := {
 }
 
 /-- [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::ArgKind> for pathos_compiled_checker::ArgKind}::eq]:
-    Source: 'src/lib.rs', lines 171:29-171:38
+    Source: 'src/lib.rs', lines 188:29-188:38
     Visibility: public -/
 def ArgKind.Insts.CoreCmpPartialEqArgKind.eq
   (self : ArgKind) (other : ArgKind) : Result Bool := do
@@ -13377,7 +13383,7 @@ def ArgKind.Insts.CoreCmpPartialEqArgKind.eq
   ok (self1 = other1)
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::PartialEq<pathos_compiled_checker::ArgKind> for pathos_compiled_checker::ArgKind}]
-    Source: 'src/lib.rs', lines 171:29-171:38 -/
+    Source: 'src/lib.rs', lines 188:29-188:38 -/
 @[reducible]
 impl_def ArgKind.Insts.CoreCmpPartialEqArgKind : core.cmp.PartialEq ArgKind
   ArgKind := {
@@ -13387,7 +13393,7 @@ impl_def ArgKind.Insts.CoreCmpPartialEqArgKind : core.cmp.PartialEq ArgKind
 }
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::cmp::Eq for pathos_compiled_checker::ArgKind}]
-    Source: 'src/lib.rs', lines 171:40-171:42 -/
+    Source: 'src/lib.rs', lines 188:40-188:42 -/
 @[reducible]
 impl_def ArgKind.Insts.CoreCmpEq : core.cmp.Eq ArgKind := {
   partialEqInst := ArgKind.Insts.CoreCmpPartialEqArgKind
@@ -13396,7 +13402,7 @@ impl_def ArgKind.Insts.CoreCmpEq : core.cmp.Eq ArgKind := {
 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::new]:
-    Source: 'src/lib.rs', lines 216:4-231:5
+    Source: 'src/lib.rs', lines 233:4-248:5
     Visibility: public -/
 def Store.new (limits : Limits) : Result Store := do
   let hash ← Store.data_hash TermData.Stuck
@@ -13425,62 +13431,62 @@ def Store.new (limits : Limits) : Result Store := do
     } 0#u32 hash
 
 /-- [pathos_compiled_checker::{impl core::default::Default for pathos_compiled_checker::Store}::default]:
-    Source: 'src/lib.rs', lines 211:4-213:5
+    Source: 'src/lib.rs', lines 228:4-230:5
     Visibility: public -/
 def Store.Insts.CoreDefaultDefault.default : Result Store := do
   let l ← Limits.Insts.CoreDefaultDefault.default
   Store.new l
 
 /-- Trait implementation: [pathos_compiled_checker::{impl core::default::Default for pathos_compiled_checker::Store}]
-    Source: 'src/lib.rs', lines 210:0-214:1 -/
+    Source: 'src/lib.rs', lines 227:0-231:1 -/
 @[reducible]
 def Store.Insts.CoreDefaultDefault : core.default.Default Store := {
   default := Store.Insts.CoreDefaultDefault.default
 }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::set_caching]:
-    Source: 'src/lib.rs', lines 369:4-371:5
+    Source: 'src/lib.rs', lines 386:4-388:5
     Visibility: public -/
 def Store.set_caching (self : Store) (enabled : Bool) : Result Store := do
   let c ← cache.Caches.set_enabled self.caches enabled
   ok { self with caches := c }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::clear_caches]:
-    Source: 'src/lib.rs', lines 372:4-374:5
+    Source: 'src/lib.rs', lines 389:4-391:5
     Visibility: public -/
 def Store.clear_caches (self : Store) : Result Store := do
   let c ← cache.Caches.clear self.caches
   ok { self with caches := c }
 
 /-- [pathos_compiled_checker::{pathos_compiled_checker::Store}::cache_stats]:
-    Source: 'src/lib.rs', lines 375:4-377:5
+    Source: 'src/lib.rs', lines 392:4-394:5
     Visibility: public -/
 def Store.cache_stats (self : Store) : Result cache.CacheStats := do
   cache.Caches.impl.stats self.caches
 
 /-- Trait implementation: [pathos_compiled_checker::lit::{impl core::clone::Clone for pathos_compiled_checker::lit::Lit}]
-    Source: 'src/lit.rs', lines 19:9-19:14 -/
+    Source: 'src/lit.rs', lines 20:9-20:14 -/
 @[reducible]
 def lit.Lit.Insts.CoreCloneClone : core.clone.Clone lit.Lit := {
   clone := lit.Lit.Insts.CoreCloneClone.clone
 }
 
 /-- Trait implementation: [pathos_compiled_checker::lit::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::lit::Lit}]
-    Source: 'src/lit.rs', lines 19:16-19:25 -/
+    Source: 'src/lit.rs', lines 20:16-20:25 -/
 @[reducible]
 def lit.Lit.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq lit.Lit := {
 }
 
 /-- [pathos_compiled_checker::lit::{impl core::cmp::Eq for pathos_compiled_checker::lit::Lit}::assert_fields_are_eq]:
-    Source: 'src/lit.rs', lines 19:27-19:29
+    Source: 'src/lit.rs', lines 20:27-20:29
     Visibility: public -/
 def lit.Lit.Insts.CoreCmpEq.assert_fields_are_eq
   (self : lit.Lit) : Result Unit := do
   ok ()
 
 /-- Trait implementation: [pathos_compiled_checker::lit::{impl core::cmp::Eq for pathos_compiled_checker::lit::Lit}]
-    Source: 'src/lit.rs', lines 19:27-19:29 -/
+    Source: 'src/lit.rs', lines 20:27-20:29 -/
 @[reducible]
 def lit.Lit.Insts.CoreCmpEq : core.cmp.Eq lit.Lit := {
   partialEqInst := lit.Lit.Insts.CoreCmpPartialEqLit
@@ -13488,14 +13494,14 @@ def lit.Lit.Insts.CoreCmpEq : core.cmp.Eq lit.Lit := {
 }
 
 /-- [pathos_compiled_checker::native::{impl core::clone::Clone for pathos_compiled_checker::native::NativeOp}::clone]:
-    Source: 'src/native.rs', lines 17:15-17:20
+    Source: 'src/native.rs', lines 18:15-18:20
     Visibility: public -/
 def native.NativeOp.Insts.CoreCloneClone.clone
   (self : native.NativeOp) : Result native.NativeOp := do
   ok self
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::clone::Clone for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 17:15-17:20 -/
+    Source: 'src/native.rs', lines 18:15-18:20 -/
 @[reducible]
 def native.NativeOp.Insts.CoreCloneClone : core.clone.Clone native.NativeOp
   := {
@@ -13503,7 +13509,7 @@ def native.NativeOp.Insts.CoreCloneClone : core.clone.Clone native.NativeOp
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::marker::Copy for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 17:9-17:13 -/
+    Source: 'src/native.rs', lines 18:9-18:13 -/
 @[reducible]
 def native.NativeOp.Insts.CoreMarkerCopy : core.marker.Copy native.NativeOp
   := {
@@ -13511,7 +13517,7 @@ def native.NativeOp.Insts.CoreMarkerCopy : core.marker.Copy native.NativeOp
 }
 
 /-- [pathos_compiled_checker::native::{impl core::fmt::Debug for pathos_compiled_checker::native::NativeOp}::fmt]:
-    Source: 'src/native.rs', lines 17:22-17:27
+    Source: 'src/native.rs', lines 18:22-18:27
     Visibility: public -/
 def native.NativeOp.Insts.CoreFmtDebug.fmt
   (self : native.NativeOp) (f : core.fmt.Formatter) :
@@ -13580,21 +13586,21 @@ def native.NativeOp.Insts.CoreFmtDebug.fmt
     core.fmt.Formatter.write_str f (toStr "StringPrefixEq")
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::fmt::Debug for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 17:22-17:27 -/
+    Source: 'src/native.rs', lines 18:22-18:27 -/
 @[reducible]
 def native.NativeOp.Insts.CoreFmtDebug : core.fmt.Debug native.NativeOp := {
   fmt := native.NativeOp.Insts.CoreFmtDebug.fmt
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::marker::StructuralPartialEq for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 17:29-17:38 -/
+    Source: 'src/native.rs', lines 18:29-18:38 -/
 @[reducible]
 def native.NativeOp.Insts.CoreMarkerStructuralPartialEq :
   core.marker.StructuralPartialEq native.NativeOp := {
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::cmp::PartialEq<pathos_compiled_checker::native::NativeOp> for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 17:29-17:38 -/
+    Source: 'src/native.rs', lines 18:29-18:38 -/
 @[reducible]
 impl_def native.NativeOp.Insts.CoreCmpPartialEqNativeOp : core.cmp.PartialEq
   native.NativeOp native.NativeOp := {
@@ -13604,7 +13610,7 @@ impl_def native.NativeOp.Insts.CoreCmpPartialEqNativeOp : core.cmp.PartialEq
 }
 
 /-- Trait implementation: [pathos_compiled_checker::native::{impl core::cmp::Eq for pathos_compiled_checker::native::NativeOp}]
-    Source: 'src/native.rs', lines 17:40-17:42 -/
+    Source: 'src/native.rs', lines 18:40-18:42 -/
 @[reducible]
 impl_def native.NativeOp.Insts.CoreCmpEq : core.cmp.Eq native.NativeOp := {
   partialEqInst := native.NativeOp.Insts.CoreCmpPartialEqNativeOp
@@ -13613,7 +13619,7 @@ impl_def native.NativeOp.Insts.CoreCmpEq : core.cmp.Eq native.NativeOp := {
 }
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::unsupported_native]:
-    Source: 'src/native.rs', lines 95:4-97:5 -/
+    Source: 'src/native.rs', lines 96:4-98:5 -/
 def native.Store.unsupported_native
   (self : Store) («name» : Std.U32) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13621,13 +13627,20 @@ def native.Store.unsupported_native
   ok (core.result.Result.Err (CheckError.UnsupportedNative «name»), self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::missing_constructor]:
-    Source: 'src/native.rs', lines 100:4-102:5 -/
+    Source: 'src/native.rs', lines 101:4-103:5 -/
 def native.Store.missing_constructor
   (self : Store) : Result ((core.result.Result Term CheckError) × Store) := do
   ok (core.result.Result.Err CheckError.InvalidConstructor, self)
 
+/-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_max_code_point]:
+    Source: 'src/native.rs', lines 113:4-115:5 -/
+def native.Store.native_max_code_point
+  (self : Store) : Result ((core.result.Result Term CheckError) × Store) := do
+  let i ← num.Integer.Insts.CoreConvertFromU32.from MAX_CODE_POINT
+  Store.raw self (lit.Lit.Numeral i)
+
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_constant]:
-    Source: 'src/native.rs', lines 114:4-116:5 -/
+    Source: 'src/native.rs', lines 119:4-121:5 -/
 def native.Store.native_constant
   (self : Store) (text : Std.U32) :
   Result ((core.result.Result Term CheckError) × Store)
@@ -13635,7 +13648,7 @@ def native.Store.native_constant
   ok (core.result.Result.Err (CheckError.UnsupportedNative text), self)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_bool]:
-    Source: 'src/native.rs', lines 129:4-136:5 -/
+    Source: 'src/native.rs', lines 134:4-141:5 -/
 def native.Store.native_pattern_bool
   (self : Store) (b : Bool) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×
@@ -13655,7 +13668,7 @@ def native.Store.native_pattern_bool
     ok (r1, self1)
 
 /-- [pathos_compiled_checker::native::{pathos_compiled_checker::Store}::native_pattern_constant]:
-    Source: 'src/native.rs', lines 141:4-148:5 -/
+    Source: 'src/native.rs', lines 146:4-153:5 -/
 def native.Store.native_pattern_constant
   (self : Store) (text : Std.U32) (t : Term) :
   Result ((core.result.Result (Option (alloc.vec.Vec Term)) CheckError) ×

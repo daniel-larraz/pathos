@@ -756,7 +756,10 @@ builds:
   the debug build too. (That default was 4096, on a stack of 64 MiB. Since
   the checker is generated from Ethos `d83d2ab6`, the stack is 256 MiB and
   the default depth 16,384, and both proofs are `correct` without the
-  option.)
+  option. Since Ethos `60e3e86c`, the stack is 4 GiB on 64-bit targets and
+  the default depth 262,144, still budgeting 16 KiB a call: measured on
+  terms nested a million deep, a call takes about 300 bytes in release and
+  about 1.2 KiB in debug.)
 - **Includes, snapshots, options**: `pathos` skips `include` commands and
   reads no snapshot file (the signature is built in, `main.rs:25-28`), so
   there is no file of either kind to malform. An `include` without a
@@ -886,7 +889,7 @@ What remains is not a panic:
 | 1077 | `args[0]`, `args[1..]` | Safe | The branch is taken only if `args.len() >= 2` (1076). |
 | 1099 | `self.instances[&key]` | Safe | `instance_of_type` returned `Ok` at 1098, after `ensure_instance` (1000); see 1025. |
 | 1101-1102 | `inst.constructors[k]`, `inst.selectors[k][j]` | Fixed | Reached at the audited commit; now through `member`, as 1040. What reached it: a tester or an updater names a constructor or selector of one datatype and is applied to a term of any type: in CPC `is` and `update` do not relate the two (`(declare-parameterized-const is ((C Type :implicit) (D Type :implicit) (c C :opaque)) (-> D Bool))`), so the term is well typed, in an assumption too. With the datatypes and `b` of 1063: `(assume @p1 ((_ is cons) b))` panics at 1101, and `(assume @p1 (= b ((_ update tail) b b)))` at 1102, both with the len is 1 but the index is 1 (release and debug, status 101). |
-| 1119, 1155, 1186 | `cc::with_checker_stack(`, `self.store.check_proof(assumptions, commands)` | Stack | The generated functions recurse over the terms, on a thread of 64 MiB (generated/cpc-checker/src/lib.rs:121, 1150-1158; 256 MiB since the checker is generated from Ethos `d83d2ab6`, with a default depth of 16,384 where it was 4096), and stop with `CheckError::Limit` at `Limits::depth`. The default depth (144) is sized for that stack and gives the error; `--depth=N` (main.rs:74, 105, and 1125-1131 here) raises the limit without the stack. An assumption of 300,000 nested `not` gives `Limit` by default and, with `--depth=4000000000`, a stack overflow (status 134; release and debug; also with `--profile`). A panic on that thread would come back as `CheckError::Worker` (generated/cpc-checker/src/lib.rs:1156-1157), an error and not status 101. |
+| 1119, 1155, 1186 | `cc::with_checker_stack(`, `self.store.check_proof(assumptions, commands)` | Stack | The generated functions recurse over the terms, on a thread of 64 MiB (generated/cpc-checker/src/lib.rs:121, 1150-1158; 256 MiB since the checker is generated from Ethos `d83d2ab6`, with a default depth of 16,384 where it was 4096; 4 GiB and 262,144 since Ethos `60e3e86c`), and stop with `CheckError::Limit` at `Limits::depth`. The default depth (144) is sized for that stack and gives the error; `--depth=N` (main.rs:74, 105, and 1125-1131 here) raises the limit without the stack. An assumption of 300,000 nested `not` gives `Limit` by default and, with `--depth=4000000000`, a stack overflow (status 134; release and debug; also with `--profile`). A panic on that thread would come back as `CheckError::Worker` (generated/cpc-checker/src/lib.rs:1156-1157), an error and not status 101. |
 | 1162 | `label[i + 1..]` | Safe | `i` is where `find` saw `"(rule "`, so the byte at `i` is the ASCII `(` and `i + 1` is inside the string and on a character boundary. |
 | 1168-1169 | `e.0 += t`, `e.1 += 1` | Safe | A sum of `f64` and a count of labels, which are in memory. |
 | 1211 | `while st.ck.store.kind(t) == Kind::APPLY` | Resource | `spine` walks and copies the whole spine for each node `parametric` (1027) and `instance_key` (796) are asked about; quadratic in the number of arguments of one application, as `head` at 234. |

@@ -91,18 +91,18 @@ theorem Tree.u32Wrap_val_of (x : List Nat) (h : Tree.okStr x) :
   conv => rhs; rw [← List.map_id x]
   exact List.map_congr_left (fun c hc => Tree.u32Wrap_val c (h.2 c hc))
 
-theorem num_codes_eq : eostring.NUM_CODES = 196608#u32 := by
-  unfold eostring.NUM_CODES; rfl
+theorem max_code_point_eq : MAX_CODE_POINT = 196607#u32 := by
+  unfold MAX_CODE_POINT; rfl
 
-/-- The loop of `string_valid`: whether the code points from `i` on are
-below `NUM_CODES`, and `valid`. -/
+/-- The loop of `string_valid`: whether the code points from `i` on are at
+most `MAX_CODE_POINT`, and `valid`. -/
 theorem string_valid_loop_spec (codes : Slice Std.U32) (valid : Bool) (i : Std.Usize) :
     native.Store.native_string_valid_loop codes valid i ⦃ r =>
-      r = (valid && (codes.val.drop i.val).all (fun c => decide (c.val < 196608))) ⦄div := by
+      r = (valid && (codes.val.drop i.val).all (fun c => decide (c.val ≤ 196607))) ⦄div := by
   revert valid i
   apply native.Store.native_string_valid_loop.fixpoint_induct codes
     (motive := fun f => ∀ (valid : Bool) (i : Std.Usize), f valid i ⦃ r =>
-      r = (valid && (codes.val.drop i.val).all (fun c => decide (c.val < 196608))) ⦄div)
+      r = (valid && (codes.val.drop i.val).all (fun c => decide (c.val ≤ 196607))) ⦄div)
   · prove_adm
   · intro loop ih valid i
     simp only
@@ -112,19 +112,19 @@ theorem string_valid_loop_spec (codes : Slice Std.U32) (valid : Bool) (i : Std.U
       step as ⟨c, hc⟩
       have hdrop : codes.val.drop i.val = c :: codes.val.drop (i.val + 1) := by
         rw [hc]; exact List.drop_eq_getElem_cons hlt'
-      rw [hdrop, num_codes_eq]
+      rw [hdrop, max_code_point_eq]
       split
       · rename_i hge
         step as ⟨i3, hi3⟩
         apply WP.dspec_mono (ih false i3)
         intro r hr
-        have hc' : ¬ c.val < 196608 := by scalar_tac
+        have hc' : ¬ c.val ≤ 196607 := by scalar_tac
         simp [hr, hc']
       · rename_i hge
         step as ⟨i3, hi3⟩
         apply WP.dspec_mono (ih valid i3)
         intro r hr
-        have hc' : c.val < 196608 := by scalar_tac
+        have hc' : c.val ≤ 196607 := by scalar_tac
         rw [hr, show i3.val = i.val + 1 by scalar_tac]
         simp [hc']
     · rename_i hge
@@ -150,15 +150,15 @@ theorem Store.native_spec_string_valid (s : Store) (args : Slice Term) {a : Term
   have hok : Tree.okStr x := ha.2
   have hvx : v = Eunoia.native_string_valid x := by
     rw [hv]
-    simp only [Bool.true_and, Nat.cast_ofNat, List.drop_zero]
+    simp only [Bool.true_and, List.drop_zero]
     have hval : (alloc.vec.Vec.deref (Tree.strOf x)).val = x.map Tree.u32Wrap := by
       simp [alloc.vec.Vec.deref, Tree.strOf_val x hok]
     rw [hval, List.all_map]
-    unfold Eunoia.native_string_valid Eunoia.native_char_valid
+    unfold Eunoia.native_string_valid Eunoia.native_char_valid Eunoia.native_z_max_code_point
     apply Bool.eq_iff_iff.mpr
     simp only [List.all_eq_true, Function.comp, decide_eq_true_eq]
     constructor <;> intro h c hc <;> have := h c hc <;> rw [Tree.u32Wrap_val c (hok.2 c hc)] at * <;>
-      exact this
+      exact_mod_cast this
   rw [hvx]
   exact Store.native_bool_spec s _ hinv h64
 

@@ -32,8 +32,10 @@ abbrev native_Char := Nat
 
 abbrev native_String := List native_Char
 
+def native_z_max_code_point : native_Int := 196607
+
 def native_char_valid (c : native_Char) : native_Bool :=
-  c < 196608
+  decide ((c : native_Int) <= native_z_max_code_point)
 
 def native_string_valid (s : native_String) : native_Bool :=
   s.all native_char_valid

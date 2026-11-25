@@ -27,7 +27,9 @@ pathos [--explain] [--profile] [--no-cache] [--cache-stats] [--depth=N] <proof.c
 accept, `--profile` which rules its time goes to; `--no-cache` and
 `--cache-stats` are for measuring the checker's caches; `--depth` sets
 how deep the checker's functions may nest (the checker's own default,
-16,384, unless given).
+262,144 on its 4 GiB stack, unless given; 16,384 before Ethos `60e3e86c`,
+when the stack was 256 MiB). A proof that nests deeper stops with `Limit`, and
+the message names the depth and `--depth`.
 
 ## The parts
 

@@ -909,12 +909,12 @@ theorem Store.builtin_spec_is_neg (s : Store) (args : Slice Term) {a : Term} {x 
 /-! ## `eo::to_z` -/
 
 /-- What `eo::to_z` gives of a string: of one character its code point, or
--1 for one that is no character (196608 or more), as logos's
+-1 for one that is no character (above 196607, MAX_CODE_POINT), as logos's
 `native_str_to_code` (the runtime's check, option (c)). -/
 noncomputable def toZStr (e : eostring.EoString) : Option lit.Lit :=
   if e.val.length = 1 then
     some (lit.Lit.Numeral (num.Integer.ofInt
-      (if (e.val[0]!).val < 196608 then ((e.val[0]!).val : Int) else -1)))
+      (if (e.val[0]!).val ≤ 196607 then ((e.val[0]!).val : Int) else -1)))
   else none
 
 /-- `Lit::evaluate` of `eo::to_z` on one literal. -/
@@ -941,13 +941,13 @@ theorem lit_evaluate_to_z (args : Slice lit.Lit) {l : lit.Lit} (hargs : args.val
     by_cases h1 : e.val.length = 1
     · have hl : (alloc.vec.Vec.len e) = 1#usize := by
         apply UScalar.eq_of_val_eq; simpa [alloc.vec.Vec.len] using h1
-      simp [h1, eostring.EoString.code_points, Slice.index_usize, num_codes_eq,
+      simp [h1, eostring.EoString.code_points, Slice.index_usize, max_code_point_eq,
         num.Integer.from_u32_spec, num.Integer.one_spec, num.Integer.neg_spec,
         num.Integer.toInt_ofInt, alloc.vec.Vec.deref]
       have h0' : (e.val[0]! : Std.U32) = e.val[0] := by
         simp [List.getElem!_eq_getElem?_getD, h1]
       have hu : ∀ h, Usize.ofNatCore 1 h = 1#usize := fun _ => rfl
-      by_cases hc : (e.val[0]).val < 196608 <;> simp [hc, h0', hu]
+      by_cases hc : (e.val[0]).val ≤ 196607 <;> simp [hc, h0', hu]
     · have hl : ¬ (alloc.vec.Vec.len e) = 1#usize := by
         intro h; apply h1; have := congrArg UScalar.val h; simpa [alloc.vec.Vec.len] using this
       simp [h1, hl]
@@ -1047,9 +1047,10 @@ theorem Store.builtin_spec_to_z (s : Store) (args : Slice Term) {a : Term} {x : 
             simp only [toZStr, hval, List.map_cons, List.map_nil, List.length_singleton, ite_true,
               List.getElem!_cons_zero, hw]
             have hv : Eo.__eo_to_z (Eo.Term.String [c]) =
-                Eo.Term.Numeral (if c < 196608 then (c : Int) else -1) := by
+                Eo.Term.Numeral (if c ≤ 196607 then (c : Int) else -1) := by
               simp [Eo.__eo_to_z, SmtEval.native_ite, SmtEval.native_zeq, Eo.native_str_len,
-                SmtEval.native_str_to_code, SmtEval.native_char_valid]
+                SmtEval.native_str_to_code, SmtEval.native_char_valid,
+                SmtEval.native_z_max_code_point]
             rw [hv]
             exact Store.literal_numeral_spec s _ hinv h64
           · simp only [toZStr, hval, List.map_cons, List.length_cons, List.length_map]

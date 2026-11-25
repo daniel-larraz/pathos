@@ -949,7 +949,7 @@ $mk_re_unfold_neg_concat_fixed	generated
 $mk_re_unfold_pos	generated	
 $mk_re_unfold_pos_star	generated	
 $mk_skolems	generated	
-$mk_str_eager_reduction	none	it calls $eo_nil, which has no proof
+$mk_str_eager_reduction	none	case 0 has a value the trace does not describe (no op; eo::max_code_point)
 $mk_symm	generated	
 $mk_trans	generated	
 $mon_mul_mon	none	it calls $mvar_mul_mvar, which has no proof

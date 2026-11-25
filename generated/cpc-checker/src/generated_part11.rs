@@ -1806,7 +1806,7 @@ let v11 = match s.literal(Lit::Boolean(true)) { Ok(v) => v, Err(e) => return Err
 Ok(v11)
 }
 Some(false) => {
-let v12 = match s.literal(Lit::Numeral(Integer::from(196608u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v12 = match s.literal(Lit::Numeral(Integer::from(MAX_CODE_POINT))) { Ok(v) => v, Err(e) => return Err(e) };
 let v13 = match eo__24run_5fevaluate(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v14 = match s.builtin_core(EvalOp::Gt, &[v12, v13]) { Ok(v) => v, Err(e) => return Err(e) };
 Ok(v14)
@@ -1834,7 +1834,7 @@ pub(super) fn if_35_eo__24run_5fevaluate(s: &mut Store, condition: Term, v2: Ter
 let branch = match s.boolean_value(condition, false) { Ok(v) => v, Err(e) => return Err(e) };
 match branch {
 Some(true) => {
-let v8 = match s.literal(Lit::Numeral(Integer::from(196608u32))) { Ok(v) => v, Err(e) => return Err(e) };
+let v8 = match s.literal(Lit::Numeral(Integer::from(MAX_CODE_POINT))) { Ok(v) => v, Err(e) => return Err(e) };
 let v9 = match eo__24run_5fevaluate(s, v2) { Ok(v) => v, Err(e) => return Err(e) };
 let v10 = match s.builtin_core(EvalOp::Eq, &[v8, v9]) { Ok(v) => v, Err(e) => return Err(e) };
 let v15 = match if_33_eo__24run_5fevaluate(s, v10, v2) { Ok(v) => v, Err(e) => return Err(e) };

@@ -80,12 +80,12 @@ source "$root/difftest.env"
 # The commit of Ethos the checker is generated from: a commit of
 # cvc5/ethos's main, the first whose rust-meta and lean-meta write the trace
 # of the generated code that scripts/proofgen reads (cvc5/ethos#289).
-default_rev=bde41a79a3fb99d41012efa1f0d2c6c7635448a3
+default_rev=4c6b30e8111387febdc56d6a6b8b88646e872e6e
 
 # The same for --mini, and the logos revision whose CpcMini the proofs are
 # about. proofs/ pins the same logos revision.
-mini_default_rev=bde41a79a3fb99d41012efa1f0d2c6c7635448a3
-mini_logos_rev=bdcbd95f615627b26b6ebabc0f584e5230b0bf1f
+mini_default_rev=4c6b30e8111387febdc56d6a6b8b88646e872e6e
+mini_logos_rev=84586b25ccb37922b9058b767abd9a5a4114fa6c
 
 me=generate-cpc
 fail() { echo "scripts/$me: $*" >&2; exit 2; }

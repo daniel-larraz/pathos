@@ -266,6 +266,11 @@ class Emitter:
     # -- expressions --------------------------------------------------------
 
     def expr(self, n):
+        if "op" not in n:
+            # a value the trace does not describe (rust-meta writes no op
+            # for eo::max_code_point, cvc5/ethos#284): no proof
+            self.unsupported("a value the trace does not describe (no op; eo::max_code_point)")
+            return n["v"]
         op = n["op"]
         v = n["v"]
         sub = n.get("sub", [])
