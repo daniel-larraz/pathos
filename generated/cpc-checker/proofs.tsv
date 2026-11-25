@@ -58,7 +58,7 @@ $chain_m_resolve_final	none	case 0 has a builtin operator
 $chain_m_resolve_rec	none	it calls $chain_m_resolve_rec_step, which has no proof
 $chain_m_resolve_rec_step	none	case 0 has a builtin operator
 $compute_card	none	case 1 has a builtin operator
-$contains_atomic_term_list_free_rec	none	case 2 has a builtin operator
+$contains_atomic_term_list_free_rec	none	case 2 has a variable term
 $derivative	none	case 6 has a builtin operator
 $dt_arg_list	generated	
 $dt_collapse_updater_rhs	generated	
@@ -397,7 +397,7 @@ $eo_prog_distinct-elim	generated
 $eo_prog_distinct-false	none	case 0 has a builtin operator
 $eo_prog_distinct-true	none	it calls $eo_typeof, which has no proof
 $eo_prog_distinct_values	none	it calls $are_distinct_terms_type, which has no proof
-$eo_prog_dt-collapse-selector	none	case 0 has a builtin operator
+$eo_prog_dt-collapse-selector	none	it calls $dt_get_selectors_of_app, which has no proof
 $eo_prog_dt-collapse-tester	none	it calls $dt_eq_cons, which has no proof
 $eo_prog_dt-collapse-tester-singleton	none	it calls $dt_get_constructors, which has no proof
 $eo_prog_dt-collapse-updater	none	it calls $mk_dt_collapse_updater_rhs, which has no proof
@@ -878,8 +878,8 @@ $eo_typeof_tuple.select	generated
 $eo_typeof_tuple.update	generated	
 $eo_typeof_update	generated	
 $eo_typeof_zero_extend	generated	
-$eval_sets_inter	none	case 0 has a builtin operator
-$eval_sets_minus	none	case 0 has a builtin operator
+$eval_sets_inter	none	it calls $are_distinct_terms_list_rec, which has no proof
+$eval_sets_minus	none	it calls $are_distinct_terms_list_rec, which has no proof
 $eval_sets_op	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos concatenates lists that end in different nils; Ethos and the runtime do not)
 $extract_antec	generated	
 $extract_antec_rec	generated	
@@ -902,14 +902,14 @@ $iota_rec	generated
 $is_absorb	none	it calls $is_absorb_rec, which has no proof
 $is_absorb_rec	none	its generated proof does not build: falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved
 $is_arith_type	generated	
-$is_closed_rec	none	case 2 has a builtin operator
+$is_closed_rec	none	case 2 has a variable term
 $is_cons_app	none	case 1 has a builtin operator
 $is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
 $is_instantiation	none	it calls $eo_typeof, which has no proof
 $is_poly_norm_rel_consts	none	case 0 has a builtin operator
 $is_poly_norm_rel_consts_rel	generated	
 $is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
-$is_quant_dt_split_conj	none	case 0 has a builtin operator
+$is_quant_dt_split_conj	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $is_quant_miniscope_or	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $is_renaming_rec	none	its generated proof does not build: a repeated variable; logos_eq_deep leaves goals unsolved
 $is_seq_const	generated	
@@ -928,7 +928,7 @@ $mk_arith_trichotomy	generated
 $mk_cong_rhs	generated	
 $mk_distinct_elim	generated	
 $mk_distinct_elim_rec	generated	
-$mk_dt_collapse_updater_rhs	none	case 0 has a builtin operator
+$mk_dt_collapse_updater_rhs	none	it calls $dt_get_selectors_of_app, which has no proof
 $mk_dt_cons_eq	none	case 2 has a builtin operator
 $mk_dt_inst	none	case 2 has a builtin operator
 $mk_dt_inst_prem	none	it calls $eo_typeof, which has no proof
@@ -1094,7 +1094,7 @@ $str_to_int_eval_rec	generated
 $str_unify_split	generated	
 $str_value_len	generated	
 $strip_even_exponent	generated	
-$substitute_simul_rec	none	case 2 has a builtin operator
+$substitute_simul_rec	none	case 2 has a variable term
 $to_clause	generated	
 $to_cube	generated	
 $tuple_arg_list	generated	
