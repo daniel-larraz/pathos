@@ -100,9 +100,13 @@ BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv"
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
-                 "TypeOf", "ListSingletonElim", "ListConcat", "ListLength",
+                 "TypeOf", "DtConstructors", "DtSelectors", "ListSingletonElim", "ListConcat", "ListLength",
                  "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof",
                  "ListDiff", "ListInter", "ListMinclude", "ListMeq"} | set(ARGS_SPECS)
+# The operators that rust-meta compiles as a call of a program of the
+# signature (rust_meta_reduce.cpp, `op`), rather than of the runtime.
+BUILTIN_PROGRAMS = {"TypeOf": "$eo_typeof", "DtConstructors": "$eo_dt_constructors",
+                    "DtSelectors": "$eo_dt_selectors"}
 # The literal destructors and constructors (Runtime/Literals.lean,
 # Numbers.lean, StringLits.lean).
 DESTRUCT_LIT = {"$emb_Boolean": "Store.destruct_boolean_spec",
@@ -559,11 +563,13 @@ class Emitter:
                             + words("h_" + x for x in vs), v)
             self.l.calls.add(lists["nil"])
             return v
-        if k == "TypeOf":
-            # eo::typeof: a call of the signature's `$eo_typeof`, by its spec
+        if k in BUILTIN_PROGRAMS:
+            # eo::typeof, eo::dt_constructors, eo::dt_selectors: rust-meta
+            # compiles each as a call of the signature's program, so it is
+            # proved by that program's spec
             vs = [self.expr(s) for s in sub]
             st, inv, rem = self.st(), self.inv(), self.rem()
-            prog = "$eo_typeof"
+            prog = BUILTIN_PROGRAMS[k]
             self.store_step("ih." + ident(prog) + " " + st + words(vs) + " _" * len(vs)
                             + " " + inv + " h64 " + rem + words("h_" + x for x in vs), v)
             self.l.calls.add(prog)
@@ -852,6 +858,7 @@ class Generator:
         self.trace = trace
         self.cfg = cfg
         self.proofs = []
+        self.logos_defs = set()
 
     def hand(self, p, entry, callees):
         """A program proved by hand in pathos (Runtime/), from what is
@@ -951,7 +958,12 @@ class Generator:
         reached = {}
         for p in self.trace["programs"]:
             self.proofs.append(self.program(p))
-            reached[p["name"]] = not p["datatype_operators_only"]
+            # rust-meta marks the programs that only eo::dt_constructors and
+            # eo::dt_selectors reach; logos has functions for them where
+            # the signature uses those operators (the CPC), and none where
+            # it does not (CpcMini)
+            reached[p["name"]] = (not p["datatype_operators_only"]
+                                  or p["lean"] in self.logos_defs)
         self.reached = reached
         return self.print_proofs()
 
@@ -961,7 +973,7 @@ class Generator:
         for p in proofs:
             why[p.name] = (p.why if self.reached[p.name] else
                            "no logos function: only the runtime's datatype "
-                           "operators reach it")
+                           "operators reach it, and the signature uses neither")
         # The programs whose generated proof does not build (--unproved):
         # no proof, with the reason recorded there.
         for name, reason in self.unproved.items():
@@ -1255,7 +1267,10 @@ class Generator:
             # nothing is unfolded: `logos_eq_large` evaluates both sides
             o.append("  logos_eq_large\n\n")
         else:
-            o.append("  conv => lhs; unfold " + n.lean + "\n  unfold" + defs + "\n"
+            # a program of no cases (`$eo_dt_constructors_main`) has no case
+            # functions to unfold
+            o.append("  conv => lhs; unfold " + n.lean + "\n"
+                     + ("  unfold" + defs + "\n" if defs else "")
                      + "".join("  try unfold Eo." + h + "\n" for h in helpers)
                      + ("  logos_eq_deep\n\n" if helpers else "  logos_eq\n\n"))
         rnd = ("step_" if p.loop else "body_") + n.id
@@ -2360,11 +2375,15 @@ def main():
     gen = Generator(trace, cfg)
     # logos's fall-through helpers, by the function they belong to
     gen.helpers = {}
+    # the names of logos's functions
+    gen.logos_defs = set()
     if args.calc_lean:
         for path in sorted(glob.glob(os.path.join(args.calc_lean, "*.lean"))):
             with open(path, encoding="utf-8") as f:
-                for m in re.finditer(r"^def (__eo_l_\d+___(\w+))", f.read(), re.M):
-                    gen.helpers.setdefault("__" + m.group(2), []).append(m.group(1))
+                text = f.read()
+            for m in re.finditer(r"^def (__eo_l_\d+___(\w+))", text, re.M):
+                gen.helpers.setdefault("__" + m.group(2), []).append(m.group(1))
+            gen.logos_defs.update(re.findall(r"^def (\w+)", text, re.M))
     gen.uop_arities = set(user_op_arities(args.calc_lean).values()) if args.calc_lean else set()
     gen.literals = rust_literals(args.rust_src) if args.rust_src else {}
     gen.left_assoc = set()

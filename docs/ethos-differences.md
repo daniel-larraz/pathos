@@ -273,6 +273,13 @@ reported to Ethos as [#285](https://github.com/cvc5/ethos/issues/285)
 (2026-11-20; suggested fix: reject a block that repeats a name).
 The compiled checker rejects; it accepts nothing that Ethos rejects.
 
+`eo::dt_constructors` and `eo::dt_selectors` are a case of the same split:
+Ethos evaluates them natively, from its own record of the datatype, while
+the compiled checker (and logos) calls the desugared programs
+`$eo_dt_constructors` and `$eo_dt_selectors`, which look the datatype up in
+its block with `$eo_dd_lookup` / `$eo_dd_resolve`. They can differ where
+that lookup does (as in the row above); no other difference is known.
+
 ### pathos-eoc (the compiler stages)
 
 `pathos-eoc` is `ethos-eoc` (`plugins/main_eoc.cpp`) with all its stages:

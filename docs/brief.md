@@ -799,8 +799,10 @@ intended; everything between gates is not.
       needed a person, and why. (The other six of the 82,
       `$eo_dt_constructors`, `$eo_dt_selectors` and the four they call,
       are compiled for the runtime's `eo::dt_constructors` and
-      `eo::dt_selectors`, which no CpcMini program uses; logos has no
-      function for them, and they are not counted. Daniel, 2026-11-19.)
+      `eo::dt_selectors`, which no CpcMini program uses; CpcMini's logos
+      has no function for them, and they are not counted. Daniel,
+      2026-11-19. This is CpcMini's alone: the CPC's logos defines all
+      six, and they are proved there like any other program.)
       The runtime lemmas these proofs need are written by hand in stage 2,
       when they are first needed, in their own files under
       `proofs/PathosProofs/Runtime/`; the gate lists them with their

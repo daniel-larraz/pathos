@@ -2,9 +2,9 @@ source	proof	why
 $abconv_int_to_bv_elim	generated	
 $abconv_ubv_to_int_elim	generated	
 $aci_norm_eq	none	case 2 has eo::list_meq of an operator that is not a constant
-$are_distinct_terms_list	none	it calls $are_distinct_terms_list_rec, which has no proof
-$are_distinct_terms_list_rec	none	it calls $are_distinct_terms_type, which has no proof
-$are_distinct_terms_type	none	it calls $dt_distinct_terms, which has no proof
+$are_distinct_terms_list	generated	
+$are_distinct_terms_list_rec	generated	
+$are_distinct_terms_type	generated	
 $arith_mk_one	generated	
 $arith_mk_zero	generated	
 $arith_normalize_lit	generated	
@@ -62,28 +62,28 @@ $contains_atomic_term_list_free_rec	none	case 2 has a variable term
 $derivative	none	case 6 has a builtin operator
 $dt_arg_list	generated	
 $dt_collapse_updater_rhs	generated	
-$dt_distinct_terms	none	case 3 has a builtin operator
-$dt_eq_cons	none	case 2 has a builtin operator
-$dt_find_cycle	none	it calls $is_cons_app, which has no proof
-$dt_get_constructors	none	case 3 has a builtin operator
-$dt_get_selectors	none	case 2 has a builtin operator
-$dt_get_selectors_of_app	none	it calls $dt_get_selectors, which has no proof
+$dt_distinct_terms	generated	
+$dt_eq_cons	generated	
+$dt_find_cycle	generated	
+$dt_get_constructors	generated	
+$dt_get_selectors	generated	
+$dt_get_selectors_of_app	generated	
 $dt_updater_elim_rhs	generated	
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
 $eo_cmd_step_pop_proven	generated	
 $eo_cmd_step_proven	none	it calls $eo_mk_premise_list, which has no proof
-$eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
-$eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
+$eo_datatype_cons_selectors_rec	generated	
+$eo_datatype_constructors_rec	generated	
 $eo_dd_lookup	generated	
 $eo_dd_resolve	generated	
 $eo_disamb_type_seq.empty	generated	
 $eo_disamb_type_set.empty	generated	
-$eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it
-$eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_constructors	generated	
+$eo_dt_constructors_main	generated	
 $eo_dt_resolve	generated	
-$eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
-$eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_selectors	generated	
+$eo_dt_selectors_main	generated	
 $eo_dtc_resolve	generated	
 $eo_invoke_assume_list	none	it calls $eo_is_closed, which has no proof
 $eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
@@ -395,18 +395,18 @@ $eo_prog_distinct-binary-elim	generated
 $eo_prog_distinct-card-conflict	generated	
 $eo_prog_distinct-elim	generated	
 $eo_prog_distinct-false	generated	
-$eo_prog_distinct-true	none	it calls $are_distinct_terms_list, which has no proof
-$eo_prog_distinct_values	none	it calls $are_distinct_terms_type, which has no proof
-$eo_prog_dt-collapse-selector	none	it calls $dt_get_selectors_of_app, which has no proof
-$eo_prog_dt-collapse-tester	none	it calls $dt_eq_cons, which has no proof
-$eo_prog_dt-collapse-tester-singleton	none	it calls $dt_get_constructors, which has no proof
-$eo_prog_dt-collapse-updater	none	it calls $mk_dt_collapse_updater_rhs, which has no proof
-$eo_prog_dt-cons-eq	none	it calls $mk_dt_cons_eq, which has no proof
-$eo_prog_dt-cons-eq-clash	none	it calls $are_distinct_terms_type, which has no proof
-$eo_prog_dt-cycle	none	it calls $dt_find_cycle, which has no proof
-$eo_prog_dt-inst	none	it calls $mk_dt_inst_prem, which has no proof
-$eo_prog_dt-updater-elim	none	it calls $mk_dt_updater_elim_conc, which has no proof
-$eo_prog_dt_split	none	it calls $dt_get_constructors, which has no proof
+$eo_prog_distinct-true	generated	
+$eo_prog_distinct_values	generated	
+$eo_prog_dt-collapse-selector	generated	
+$eo_prog_dt-collapse-tester	generated	
+$eo_prog_dt-collapse-tester-singleton	generated	
+$eo_prog_dt-collapse-updater	generated	
+$eo_prog_dt-cons-eq	generated	
+$eo_prog_dt-cons-eq-clash	generated	
+$eo_prog_dt-cycle	generated	
+$eo_prog_dt-inst	generated	
+$eo_prog_dt-updater-elim	generated	
+$eo_prog_dt_split	generated	
 $eo_prog_eq-cond-deq	generated	
 $eo_prog_eq-ite-lift	generated	
 $eo_prog_eq-refl	generated	
@@ -462,7 +462,7 @@ $eo_prog_not_xor_elim1	generated
 $eo_prog_not_xor_elim2	generated	
 $eo_prog_pairwise_cong	generated	
 $eo_prog_process_scope	generated	
-$eo_prog_quant-dt-split	none	it calls $dt_get_constructors, which has no proof
+$eo_prog_quant-dt-split	none	it calls $is_quant_dt_split, which has no proof
 $eo_prog_quant-merge-prenex	generated	
 $eo_prog_quant-miniscope-and	generated	
 $eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
@@ -878,8 +878,8 @@ $eo_typeof_tuple.select	generated
 $eo_typeof_tuple.update	generated	
 $eo_typeof_update	generated	
 $eo_typeof_zero_extend	generated	
-$eval_sets_inter	none	it calls $are_distinct_terms_list_rec, which has no proof
-$eval_sets_minus	none	it calls $are_distinct_terms_list_rec, which has no proof
+$eval_sets_inter	generated	
+$eval_sets_minus	generated	
 $eval_sets_op	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $extract_antec	generated	
 $extract_antec_rec	generated	
@@ -903,7 +903,7 @@ $is_absorb	none	it calls $is_absorb_rec, which has no proof
 $is_absorb_rec	none	its generated proof does not build: falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved
 $is_arith_type	generated	
 $is_closed_rec	none	case 2 has a variable term
-$is_cons_app	none	case 1 has a builtin operator
+$is_cons_app	generated	
 $is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
 $is_instantiation	generated	
 $is_poly_norm_rel_consts	generated	
@@ -928,16 +928,16 @@ $mk_arith_trichotomy	generated
 $mk_cong_rhs	generated	
 $mk_distinct_elim	generated	
 $mk_distinct_elim_rec	generated	
-$mk_dt_collapse_updater_rhs	none	it calls $dt_get_selectors_of_app, which has no proof
-$mk_dt_cons_eq	none	case 2 has a builtin operator
-$mk_dt_inst	none	case 2 has a builtin operator
-$mk_dt_inst_prem	none	it calls $mk_dt_inst, which has no proof
+$mk_dt_collapse_updater_rhs	generated	
+$mk_dt_cons_eq	generated	
+$mk_dt_inst	generated	
+$mk_dt_inst_prem	generated	
 $mk_dt_inst_rec	generated	
 $mk_dt_inst_tuple	generated	
 $mk_dt_inst_tuple_rec	generated	
 $mk_dt_split	generated	
-$mk_dt_updater_elim_conc	none	it calls $dt_get_selectors, which has no proof
-$mk_dt_updater_elim_rhs	none	case 0 has a builtin operator
+$mk_dt_updater_elim_conc	generated	
+$mk_dt_updater_elim_rhs	generated	
 $mk_ho_cong	generated	
 $mk_nary_cong_rhs	generated	
 $mk_quant_merge_prenex	generated	
@@ -974,16 +974,16 @@ $re_unflatten_str	none	case 0 has a builtin operator
 $re_unfold_pos_concat_rec	generated	
 $run_evaluate	none	case 6 has a builtin operator
 $run_process_scope	generated	
-$seq_distinct_terms	none	it calls $are_distinct_terms_type, which has no proof
+$seq_distinct_terms	generated	
 $seq_element_of_unit	generated	
 $seq_empty	generated	
 $seq_eval	none	case 0 has a builtin operator
 $seq_eval_replace_all_rec	none	case 1 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $seq_find	none	it calls $seq_is_prefix, which has no proof
 $seq_is_non_empty	generated	
-$seq_is_prefix	none	it calls $are_distinct_terms_type, which has no proof
+$seq_is_prefix	none	its generated proof does not build: logos_eq_deep leaves goals unsolved: a branch where `__eo_eq et es` is not false while et and es differ (reached once the datatype operators had specs)
 $seq_subsequence_rec	generated	
-$set_is_not_subset	none	it calls $are_distinct_terms_type, which has no proof
+$set_is_not_subset	generated	
 $set_union_to_list	generated	
 $smtx_dd_has_dt	generated	
 $smtx_dd_lookup	generated	
@@ -1062,10 +1062,10 @@ $str_fixed_len_re	generated
 $str_flatten	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $str_flatten_word_rec	none	case 1 has a builtin operator
 $str_from_int_eval_rec	none	case 1 has a builtin operator
-$str_is_compatible	none	it calls $are_distinct_terms_type, which has no proof
+$str_is_compatible	generated	
 $str_is_empty	generated	
-$str_is_multiset_subset_strict	none	it calls $str_is_multiset_subset_strict_done, which has no proof
-$str_is_multiset_subset_strict_done	none	it calls $are_distinct_terms_list_rec, which has no proof
+$str_is_multiset_subset_strict	generated	
+$str_is_multiset_subset_strict_done	generated	
 $str_is_prefix_flat	generated	
 $str_leq_eval_rec	generated	
 $str_membership_re	generated	
@@ -1077,7 +1077,7 @@ $str_mk_str_in_re_sigma_rec	generated
 $str_mk_str_in_re_sigma_star_rec	generated	
 $str_multiset_overapprox	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $str_multiset_overapprox_word	generated	
-$str_overlap_rec	none	it calls $str_is_compatible, which has no proof
+$str_overlap_rec	generated	
 $str_re_consume	none	case 0 has a builtin operator
 $str_re_consume_inter	none	it calls $str_re_consume_rec, which has no proof
 $str_re_consume_rec	none	case 2 has a builtin operator

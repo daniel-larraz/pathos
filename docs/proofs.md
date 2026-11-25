@@ -1064,13 +1064,20 @@ native `ite` go through. No case of CpcMini can exercise `eo::ite` (its
 one use, in `$eo_is_closed_rec`, is in a case with a variable in its
 pattern).
 
-**Six programs have no function in logos's Lean**: the datatype operators
-(`$eo_dt_constructors`, `$eo_dt_selectors` and the four they call). The
-runtime calls them for `eo::dt_constructors` and `eo::dt_selectors`, so
-rust-meta always compiles them; no program of CpcMini uses either
-operator, and lean-meta leaves them out. There is nothing to prove them
-against. For the gate they need a decision: count 76 programs, or show
-that the checker never reaches them.
+**Six programs have no function in CpcMini's logos**: the datatype
+operators (`$eo_dt_constructors`, `$eo_dt_selectors` and the four they
+call). The runtime calls them for `eo::dt_constructors` and
+`eo::dt_selectors`, so rust-meta always compiles them; no program of
+CpcMini uses either operator, and lean-meta leaves them out. There is
+nothing to prove them against there, and CpcMini counts 76 programs. This
+is CpcMini's alone: the CPC's signature uses both operators, so logos
+defines the six (`__eo_dt_constructors`, ...) and lean-meta writes their
+cases. rust-meta marks them `datatype_operators_only` in either crate;
+proofgen excludes such a program only where logos has no function of its
+name, and proves the CPC's like any other. A call of either operator
+(`builtin` `DtConstructors` / `DtSelectors` in the trace) is, in the Rust,
+a call of the program, and proofgen proves it by that program's spec, as
+it does `eo::typeof`.
 
 **The alternative not taken: have rust-meta compile the linearized
 program.** lean-meta makes a pattern linear before it prints (a variable

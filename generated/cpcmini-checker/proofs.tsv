@@ -3,15 +3,15 @@ $eo_StateObj_proven	generated
 $eo_checker_is_refutation	generated	
 $eo_cmd_step_pop_proven	generated	
 $eo_cmd_step_proven	generated	
-$eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it
-$eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it
+$eo_datatype_cons_selectors_rec	none	no logos function: only the runtime's datatype operators reach it, and the signature uses neither
+$eo_datatype_constructors_rec	none	no logos function: only the runtime's datatype operators reach it, and the signature uses neither
 $eo_dd_lookup	generated	
 $eo_dd_resolve	generated	
-$eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it
-$eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_constructors	none	no logos function: only the runtime's datatype operators reach it, and the signature uses neither
+$eo_dt_constructors_main	none	no logos function: only the runtime's datatype operators reach it, and the signature uses neither
 $eo_dt_resolve	generated	
-$eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
-$eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
+$eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it, and the signature uses neither
+$eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it, and the signature uses neither
 $eo_dtc_resolve	generated	
 $eo_invoke_assume_list	generated	
 $eo_invoke_cmd	generated	

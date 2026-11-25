@@ -54,3 +54,4 @@
 "$eo_prog_bv-mult-slt-mult-1" = "logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof"
 "$eo_prog_bv-mult-slt-mult-2" = "logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof"
 "$eo_prog_bv-smod-eliminate" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once $eo_typeof had a proof"
+"$seq_is_prefix" = "logos_eq_deep leaves goals unsolved: a branch where `__eo_eq et es` is not false while et and es differ (reached once the datatype operators had specs)"
