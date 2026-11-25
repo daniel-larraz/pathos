@@ -602,6 +602,162 @@ theorem firstSome_append {α : Type} (l₁ l₂ : List (Option α)) (d : α) :
   | nil => rfl
   | cons o l ih => cases o <;> simp [firstSome, ih]
 
+/-! ## Large functions
+
+`logos_eq` splits logos's match and, in every branch, simplifies the whole
+list of cases: quadratic in simp's steps, and too much for a function of
+hundreds of cases (`__eo_typeof`, 209). `logos_eq_large` proves the same
+statement by evaluation, with no `simp`, no `split` and no equation lemma
+of logos's function or of its match (Lean takes a minute to make
+`__eo_typeof`'s, and does not finish making those of the match of
+`__eo_cmd_step_proven`, 617 cases).
+
+It goes down the list that `firstSome` tries. A case that evaluates to
+`none` on the arguments is dropped; one that evaluates to `some v` ends the
+list with `v`; one that does not evaluate, since it matches on a variable,
+is kept. With cases kept, it takes cases of the variable the first of them
+waits for, and goes on in each branch with the cases kept, which are few
+after the first step. With none kept, logos's function evaluates to the
+same value, or waits for a variable in turn. Every step is a lemma about
+`firstSome` whose hypothesis holds by `rfl`. -/
+
+theorem firstSome_drop {α : Type} {o : Option α} {rest : List (Option α)} {d x : α}
+    (h : o = none) (h' : firstSome rest d = x) : firstSome (o :: rest) d = x := by
+  subst h; exact h'
+
+theorem firstSome_hit {α : Type} {o : Option α} {rest : List (Option α)} {d v : α}
+    (h : o = some v) : firstSome (o :: rest) d = firstSome [] v := by
+  subst h; rfl
+
+theorem firstSome_keep {α : Type} {o : Option α} {rest rest' : List (Option α)} {d d' : α}
+    (h : firstSome rest d = firstSome rest' d') :
+    firstSome (o :: rest) d = firstSome (o :: rest') d' := by
+  cases o
+  · exact h
+  · rfl
+
+namespace LogosEqLarge
+open Lean Elab Tactic Meta
+
+/-- The variable that the evaluation of `e` waits for: the one that a
+recursor or a match in it is applied to. -/
+meta partial def stuckFVar? (e : Expr) (fuel : Nat := 24) : MetaM (Option FVarId) := do
+  if fuel == 0 then return none
+  let e ← whnf e
+  if e.isFVar then return some e.fvarId!
+  if let .proj _ _ s := e then return ← stuckFVar? s (fuel - 1)
+  let .const n _ := e.getAppFn | return none
+  let args := e.getAppArgs
+  let env ← getEnv
+  if let some (.recInfo r) := env.find? n then
+    if h : r.getMajorIdx < args.size then return ← stuckFVar? args[r.getMajorIdx] (fuel - 1)
+    return none
+  if isCasesOnRecursor env n then
+    if let some (.inductInfo i) := env.find? n.getPrefix then
+      let idx := i.numParams + 1 + i.numIndices
+      if h : idx < args.size then return ← stuckFVar? args[idx] (fuel - 1)
+    return none
+  if (← getMatcherInfo? n).isSome then
+    if let .stuck e' ← reduceMatcher? e then
+      if e' != e then return ← stuckFVar? e' (fuel - 1)
+    return none
+  if (env.find? n).any (·.isCtor) then return none
+  -- another function that does not reduce (a recursive function, a
+  -- decision, a comparison): one of its arguments is what it waits for
+  for a in args.reverse do
+    let ty ← whnf (← inferType a)
+    if ty.isSort || ty.isForall then continue
+    if let some x ← stuckFVar? a (fuel - 1) then return some x
+  return none
+
+/-- `(l', d', pf)` with `pf : firstSome l d = firstSome l' d'`, where `l'`
+has the cases of `l` that do not evaluate, up to the first that answers
+(`d'` is its answer, then). -/
+meta partial def filter (α l d : Expr) : MetaM (Expr × Expr × Expr) := do
+  let optα := mkApp (mkConst ``Option [Level.zero]) α
+  let fs (l d : Expr) := mkApp3 (mkConst ``firstSome) α l d
+  let refl (o : Expr) := mkApp2 (mkConst ``Eq.refl [Level.one]) optα o
+  -- a long list is written with `let`s
+  let l ← whnfCore l
+  match_expr l with
+  | List.cons _ o rest =>
+    let o' ← whnf o
+    if o'.isAppOfArity ``Option.none 1 then
+      let (l', d', pf) ← filter α rest d
+      return (l', d', mkApp7 (mkConst ``firstSome_drop) α o rest d (fs l' d') (refl o') pf)
+    else if o'.isAppOfArity ``Option.some 2 then
+      let v := o'.appArg!
+      return (mkApp (mkConst ``List.nil [Level.zero]) optα, v,
+        mkApp6 (mkConst ``firstSome_hit) α o rest d v (refl o'))
+    else
+      let (l', d', pf) ← filter α rest d
+      return (mkApp3 (mkConst ``List.cons [Level.zero]) optα o l', d',
+        mkApp7 (mkConst ``firstSome_keep) α o rest l' d d' pf)
+  | _ => return (l, d, mkApp2 (mkConst ``Eq.refl [Level.one]) α (fs l d))
+
+/-- The goals of the cases of `x`, a variable of an inductive type that is
+no number or string (a case that matches on one of those is not for this
+tactic). `depth` bounds the nesting of the cases taken. -/
+meta def casesOf (g : MVarId) (x : FVarId) (depth : Nat) : MetaM (Array MVarId) :=
+  g.withContext do
+    if depth == 0 then
+      throwError "logos_eq_large: too many nested cases; the goal is{indentD g}"
+    let ty ← whnf (← x.getType)
+    let env ← getEnv
+    let ok : Bool := match ty.getAppFn with
+      | .const n _ => n != ``Nat && n != ``Int && n != ``String &&
+          (env.find? n).any (· matches .inductInfo _)
+      | _ => false
+    unless ok do
+      throwError "logos_eq_large: the evaluation waits for {mkFVar x} : {ty}, which has no cases to take"
+    return (← g.cases x).map (·.mvarId)
+
+meta partial def go (g : MVarId) (depth : Nat) : MetaM Unit := g.withContext do
+  let ty ← instantiateMVars (← g.getType)
+  let some (α, lhs, rhs) := ty.eq?
+    | throwError "logos_eq_large: not an equation:{indentExpr ty}"
+  if rhs.isAppOfArity ``ite 5 then
+    -- a test for the stuck term: decided, or it waits for the argument
+    let b ← whnf (mkApp2 (mkConst ``Decidable.decide) (rhs.getArg! 1) (rhs.getArg! 2))
+    if b.isConstOf ``Bool.false then
+      go (← g.replaceTargetDefEq (← mkEq lhs (rhs.getArg! 4))) depth
+    else if b.isConstOf ``Bool.true then
+      leaf g lhs (rhs.getArg! 3)
+    else
+      let some x ← stuckFVar? b
+        | throwError "logos_eq_large: the condition does not evaluate:{indentExpr (rhs.getArg! 1)}"
+      for s in ← casesOf g x depth do go s (depth - 1)
+  else if rhs.isAppOfArity ``firstSome 3 then
+    let (l', d', pf) ← filter α (rhs.getArg! 1) (rhs.getArg! 2)
+    let g' ← mkFreshExprSyntheticOpaqueMVar
+      (← mkEq lhs (mkApp3 (mkConst ``firstSome) α l' d')) (← g.getTag)
+    g.assign (← mkEqTrans g' (← mkEqSymm pf))
+    match_expr l' with
+    | List.cons _ o _ =>
+      let some x ← stuckFVar? o
+        | throwError "logos_eq_large: the case does not evaluate:{indentExpr o}"
+      for s in ← casesOf g'.mvarId! x depth do go s (depth - 1)
+    | _ => leaf g'.mvarId! lhs d'
+  else leaf g lhs rhs
+where
+  -- No case is left and the right side is `v` (the goal is `lhs = v` up to
+  -- evaluation): logos's function evaluates to it, or waits for a variable.
+  leaf (g : MVarId) (lhs v : Expr) : MetaM Unit := g.withContext do
+    if ← isDefEq lhs v then
+      g.assign (← mkEqRefl lhs)
+    else
+      let some x ← stuckFVar? lhs
+        | throwError "logos_eq_large: the sides differ:{indentExpr lhs}\nand{indentExpr v}"
+      for s in ← casesOf g x depth do go s (depth - 1)
+
+end LogosEqLarge
+
+/-- `logos_eq` for a function of very many cases, with nothing unfolded:
+by evaluation, taking cases of the variables that the cases match on (see
+above). -/
+elab "logos_eq_large" : tactic =>
+  Lean.Elab.Tactic.liftMetaTactic fun g => do LogosEqLarge.go g 16; return []
+
 /-! ## Groups of cases
 
 A program with more than four cases tries them in groups of four, and the

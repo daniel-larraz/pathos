@@ -8,13 +8,13 @@ $are_distinct_terms_type	none	it calls $dt_distinct_terms, which has no proof
 $arith_mk_one	generated	
 $arith_mk_zero	generated	
 $arith_normalize_lit	generated	
-$arith_reduction_pred	none	it calls $eo_typeof, which has no proof
+$arith_reduction_pred	none	its generated proof does not build: the spec of case 7: times out (whnf, 2,000,000 heartbeats); reached once $eo_typeof had a proof
 $arith_rel_inv	generated	
 $arith_rel_neg	generated	
 $arith_rel_sum	generated	
 $arith_rel_trichotomy	generated	
 $assoc_nil_nth	generated	
-$assoc_nil_nth_type	none	it calls $eo_typeof, which has no proof
+$assoc_nil_nth_type	generated	
 $beta_reduce	none	it calls $substitute_simul_rec, which has no proof
 $bv_bitblast_apply_binary	generated	
 $bv_bitblast_apply_ite	generated	
@@ -35,7 +35,7 @@ $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	case 14 has a builtin operator
 $bv_mk_bitblast_step_add	generated	
-$bv_mk_bitblast_step_bitwise	none	it calls $eo_typeof, which has no proof
+$bv_mk_bitblast_step_bitwise	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once $eo_typeof had a proof
 $bv_mk_bitblast_step_concat	generated	
 $bv_mk_bitblast_step_eq_rec	generated	
 $bv_mk_bitblast_step_ite	generated	
@@ -46,13 +46,13 @@ $bv_mk_bitblast_step_shr_rec	none	it calls $bv_mk_bitblast_step_shr_rec_step, wh
 $bv_mk_bitblast_step_shr_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
 $bv_mk_bitblast_step_var_rec	generated	
 $bv_mk_bitwise_slicing	none	case 0 has eo::list_erase of an operator that is not a constant
-$bv_mk_bitwise_slicing_rec	none	it calls $eo_typeof, which has no proof
+$bv_mk_bitwise_slicing_rec	generated	
 $bv_ripple_carry_adder_2	generated	
 $bv_shift_add_multiplier	none	case 0 has a builtin operator
 $bv_shift_add_multiplier_rec	none	it calls $bv_shift_add_multiplier_rec_step, which has no proof
 $bv_shift_add_multiplier_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
-$bv_smulo_elim_rec	none	it calls $eo_typeof, which has no proof
-$bv_umulo_elim_rec	none	it calls $eo_typeof, which has no proof
+$bv_smulo_elim_rec	generated	
+$bv_umulo_elim_rec	generated	
 $chain_m_resolve	generated	
 $chain_m_resolve_final	generated	
 $chain_m_resolve_rec	generated	
@@ -85,12 +85,12 @@ $eo_dt_resolve	generated
 $eo_dt_selectors	none	no logos function: only the runtime's datatype operators reach it
 $eo_dt_selectors_main	none	no logos function: only the runtime's datatype operators reach it
 $eo_dtc_resolve	generated	
-$eo_invoke_assume_list	none	it calls $eo_is_bool_type, which has no proof
+$eo_invoke_assume_list	none	it calls $eo_is_closed, which has no proof
 $eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
-$eo_invoke_cmd_step_pop	none	it calls $eo_push_proven, which has no proof
-$eo_is_bool_type	none	it calls $eo_typeof, which has no proof
+$eo_invoke_cmd_step_pop	generated	
+$eo_is_bool_type	generated	
 $eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
 $eo_is_closed_rec	none	case 6 has the constructor $emb_UOp1 in a pattern, which is not stored as a node
 $eo_is_list_nil	generated	
@@ -118,7 +118,7 @@ $eo_nil_bvmul	generated
 $eo_nil_bvor	generated	
 $eo_nil_bvxor	generated	
 $eo_nil_str.++	generated	
-$eo_prog_absorb	none	it calls $get_zero, which has no proof
+$eo_prog_absorb	none	it calls $is_absorb, which has no proof
 $eo_prog_aci_norm	none	it calls $aci_norm_eq, which has no proof
 $eo_prog_alpha_equiv	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $eo_prog_and_elim	generated	
@@ -167,14 +167,14 @@ $eo_prog_arith-string-pred-entail	none	it calls $get_arith_poly_norm, which has 
 $eo_prog_arith-string-pred-safe-approx	none	it calls $str_arith_entail_simple_pred, which has no proof
 $eo_prog_arith-to-int-elim-to-real	generated	
 $eo_prog_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison, which has no proof
-$eo_prog_arith_mult_neg	none	it calls $eo_typeof, which has no proof
-$eo_prog_arith_mult_pos	none	it calls $eo_typeof, which has no proof
-$eo_prog_arith_mult_sign	none	it calls $eo_typeof, which has no proof
-$eo_prog_arith_mult_tangent	none	it calls $eo_typeof, which has no proof
+$eo_prog_arith_mult_neg	generated	
+$eo_prog_arith_mult_pos	generated	
+$eo_prog_arith_mult_sign	none	it calls $mk_arith_mult_sign_sgn, which has no proof
+$eo_prog_arith_mult_tangent	generated	
 $eo_prog_arith_poly_norm	none	it calls $get_arith_poly_norm, which has no proof
 $eo_prog_arith_poly_norm_rel	none	it calls $is_eq_maybe_to_real, which has no proof
 $eo_prog_arith_reduction	none	it calls $arith_reduction_pred, which has no proof
-$eo_prog_arith_sum_ub	none	it calls $mk_arith_sum_ub, which has no proof
+$eo_prog_arith_sum_ub	generated	
 $eo_prog_arith_trichotomy	generated	
 $eo_prog_array-read-over-write	generated	
 $eo_prog_array-read-over-write-split	generated	
@@ -228,9 +228,9 @@ $eo_prog_bv-ashr-by-const-1	generated
 $eo_prog_bv-ashr-by-const-2	generated	
 $eo_prog_bv-ashr-zero	generated	
 $eo_prog_bv-bitwise-slicing	none	it calls $bv_mk_bitwise_slicing, which has no proof
-$eo_prog_bv-commutative-add	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-commutative-add	generated	
 $eo_prog_bv-commutative-comp	generated	
-$eo_prog_bv-commutative-xor	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-commutative-xor	generated	
 $eo_prog_bv-comp-eliminate	generated	
 $eo_prog_bv-concat-extract-merge	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
 $eo_prog_bv-concat-merge-const	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
@@ -238,13 +238,13 @@ $eo_prog_bv-eq-extract-elim1	none	its generated proof does not build: logos_eq d
 $eo_prog_bv-eq-extract-elim2	generated	
 $eo_prog_bv-eq-extract-elim3	generated	
 $eo_prog_bv-eq-not-solve	generated	
-$eo_prog_bv-eq-xor-solve	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-eq-xor-solve	generated	
 $eo_prog_bv-extract-concat-1	generated	
 $eo_prog_bv-extract-concat-2	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once eo::list_concat had a spec
 $eo_prog_bv-extract-concat-3	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
 $eo_prog_bv-extract-concat-4	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
 $eo_prog_bv-extract-extract	generated	
-$eo_prog_bv-extract-mult-leading-bit	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-extract-mult-leading-bit	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps and times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
 $eo_prog_bv-extract-not	generated	
 $eo_prog_bv-extract-sign-extend-1	generated	
 $eo_prog_bv-extract-sign-extend-2	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
@@ -273,12 +273,12 @@ $eo_prog_bv-merge-sign-extend-1	generated
 $eo_prog_bv-merge-sign-extend-2	generated	
 $eo_prog_bv-mult-pow2-1	none	case 0 has eo::list_concat of bvmul, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-mult-pow2-2	none	case 0 has eo::list_concat of bvmul, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$eo_prog_bv-mult-pow2-2b	none	it calls $eo_typeof, which has no proof
-$eo_prog_bv-mult-slt-mult-1	none	it calls $eo_typeof, which has no proof
-$eo_prog_bv-mult-slt-mult-2	none	it calls $eo_typeof, which has no proof
-$eo_prog_bv-nand-eliminate	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-mult-pow2-2b	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_bv-mult-slt-mult-1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_bv-mult-slt-mult-2	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_bv-nand-eliminate	generated	
 $eo_prog_bv-nego-eliminate	generated	
-$eo_prog_bv-nor-eliminate	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-nor-eliminate	generated	
 $eo_prog_bv-not-idemp	generated	
 $eo_prog_bv-not-neq	generated	
 $eo_prog_bv-not-ult	generated	
@@ -295,7 +295,7 @@ $eo_prog_bv-rotate-left-eliminate-1	none	its generated proof does not build: the
 $eo_prog_bv-rotate-left-eliminate-2	generated	
 $eo_prog_bv-rotate-right-eliminate-1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)
 $eo_prog_bv-rotate-right-eliminate-2	generated	
-$eo_prog_bv-saddo-eliminate	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-saddo-eliminate	generated	
 $eo_prog_bv-sdiv-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
 $eo_prog_bv-sdivo-eliminate	generated	
 $eo_prog_bv-sge-eliminate	generated	
@@ -313,12 +313,12 @@ $eo_prog_bv-sign-extend-ult-const-3	none	its generated proof does not build: the
 $eo_prog_bv-sign-extend-ult-const-4	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
 $eo_prog_bv-sle-eliminate	generated	
 $eo_prog_bv-sle-self	generated	
-$eo_prog_bv-smod-eliminate	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-smod-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once $eo_typeof had a proof
 $eo_prog_bv-smulo-elim	none	case 0 has a builtin operator
 $eo_prog_bv-srem-eliminate	generated	
 $eo_prog_bv-ssubo-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
-$eo_prog_bv-sub-eliminate	none	it calls $eo_typeof, which has no proof
-$eo_prog_bv-uaddo-eliminate	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-sub-eliminate	generated	
+$eo_prog_bv-uaddo-eliminate	generated	
 $eo_prog_bv-udiv-one	generated	
 $eo_prog_bv-udiv-pow2-not-one	generated	
 $eo_prog_bv-udiv-zero	generated	
@@ -331,7 +331,7 @@ $eo_prog_bv-ule-self	generated
 $eo_prog_bv-ule-zero	generated	
 $eo_prog_bv-ult-add-one	none	case 0 has eo::list_concat of bvadd, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-ult-one	generated	
-$eo_prog_bv-ult-ones	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-ult-ones	generated	
 $eo_prog_bv-ult-self	generated	
 $eo_prog_bv-ult-zero-1	generated	
 $eo_prog_bv-ult-zero-2	generated	
@@ -340,12 +340,12 @@ $eo_prog_bv-urem-one	generated
 $eo_prog_bv-urem-pow2-not-one	generated	
 $eo_prog_bv-urem-self	generated	
 $eo_prog_bv-usubo-eliminate	generated	
-$eo_prog_bv-xnor-eliminate	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-xnor-eliminate	generated	
 $eo_prog_bv-xor-concat-pullup	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-xor-concat-pullup2	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-xor-concat-pullup3	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$eo_prog_bv-xor-duplicate	none	it calls $eo_typeof, which has no proof
-$eo_prog_bv-xor-not	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv-xor-duplicate	generated	
+$eo_prog_bv-xor-not	generated	
 $eo_prog_bv-xor-ones	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-xor-simplify-1	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-xor-simplify-2	none	case 0 has eo::list_concat of bvxor, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
@@ -358,7 +358,7 @@ $eo_prog_bv-zero-extend-ult-const-1	none	its generated proof does not build: log
 $eo_prog_bv-zero-extend-ult-const-2	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (bit-vector literals in the case)
 $eo_prog_bv-zero-ule	generated	
 $eo_prog_bv_bitblast_step	none	it calls $bv_mk_bitblast_step, which has no proof
-$eo_prog_bv_poly_norm	none	it calls $eo_typeof, which has no proof
+$eo_prog_bv_poly_norm	none	it calls $get_bv_poly_norm_rec, which has no proof
 $eo_prog_bv_poly_norm_eq	generated	
 $eo_prog_chain_m_resolution	generated	
 $eo_prog_chain_resolution	generated	
@@ -391,11 +391,11 @@ $eo_prog_concat_split	none	case 0 has a builtin operator
 $eo_prog_concat_unify	none	case 0 has a builtin operator
 $eo_prog_cong	generated	
 $eo_prog_contra	generated	
-$eo_prog_distinct-binary-elim	none	it calls $eo_typeof, which has no proof
-$eo_prog_distinct-card-conflict	none	it calls $assoc_nil_nth_type, which has no proof
+$eo_prog_distinct-binary-elim	generated	
+$eo_prog_distinct-card-conflict	generated	
 $eo_prog_distinct-elim	generated	
 $eo_prog_distinct-false	generated	
-$eo_prog_distinct-true	none	it calls $eo_typeof, which has no proof
+$eo_prog_distinct-true	none	it calls $are_distinct_terms_list, which has no proof
 $eo_prog_distinct_values	none	it calls $are_distinct_terms_type, which has no proof
 $eo_prog_dt-collapse-selector	none	it calls $dt_get_selectors_of_app, which has no proof
 $eo_prog_dt-collapse-tester	none	it calls $dt_eq_cons, which has no proof
@@ -546,7 +546,7 @@ $eo_prog_sets-union-emp1	generated
 $eo_prog_sets-union-emp2	generated	
 $eo_prog_sets-union-member	generated	
 $eo_prog_sets-union-self	generated	
-$eo_prog_sets_choose_member	none	it calls $eo_typeof, which has no proof
+$eo_prog_sets_choose_member	generated	
 $eo_prog_sets_ext	generated	
 $eo_prog_sets_singleton_inj	generated	
 $eo_prog_skolem_intro	generated	
@@ -645,16 +645,16 @@ $eo_prog_str-repl-repl-src-tgt-no-ctn	generated
 $eo_prog_str-repl-repl-tgt-no-ctn	generated	
 $eo_prog_str-repl-repl-tgt-self	generated	
 $eo_prog_str-replace-all-empty	generated	
-$eo_prog_str-replace-all-find	none	it calls $eo_typeof, which has no proof
-$eo_prog_str-replace-all-find-pre	none	it calls $eo_typeof, which has no proof
+$eo_prog_str-replace-all-find	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps and times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
+$eo_prog_str-replace-all-find-pre	generated	
 $eo_prog_str-replace-all-id	generated	
 $eo_prog_str-replace-all-no-contains	generated	
 $eo_prog_str-replace-all-self	generated	
 $eo_prog_str-replace-dual-ctn	generated	
 $eo_prog_str-replace-dual-ctn-false	generated	
 $eo_prog_str-replace-emp-ctn-src	generated	
-$eo_prog_str-replace-empty	none	it calls $eo_typeof, which has no proof
-$eo_prog_str-replace-find-base	none	it calls $eo_typeof, which has no proof
+$eo_prog_str-replace-empty	generated	
+$eo_prog_str-replace-find-base	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps and times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
 $eo_prog_str-replace-find-first-concat	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
 $eo_prog_str-replace-find-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-replace-id	generated	
@@ -686,7 +686,7 @@ $eo_prog_str-substr-eq-empty-leq-len	generated
 $eo_prog_str-substr-full	generated	
 $eo_prog_str-substr-full-eq	generated	
 $eo_prog_str-substr-len-include	generated	
-$eo_prog_str-substr-len-include-pre	none	it calls $eo_typeof, which has no proof
+$eo_prog_str-substr-len-include-pre	generated	
 $eo_prog_str-substr-len-norm	generated	
 $eo_prog_str-substr-replace	generated	
 $eo_prog_str-substr-substr-start-geq-len	generated	
@@ -712,11 +712,11 @@ $eo_prog_str-update-in-first-concat	none	its generated proof does not build: the
 $eo_prog_str-update-oob	generated	
 $eo_prog_str-update-rev	generated	
 $eo_prog_string_code_inj	generated	
-$eo_prog_string_decompose	none	it calls $eo_typeof, which has no proof
+$eo_prog_string_decompose	generated	
 $eo_prog_string_eager_reduction	none	it calls $mk_str_eager_reduction, which has no proof
-$eo_prog_string_ext	none	it calls $eo_typeof, which has no proof
+$eo_prog_string_ext	generated	
 $eo_prog_string_length_non_empty	generated	
-$eo_prog_string_length_pos	none	it calls $eo_typeof, which has no proof
+$eo_prog_string_length_pos	generated	
 $eo_prog_string_reduction	none	it calls $is_closed_rec, which has no proof
 $eo_prog_string_seq_unit_inj	generated	
 $eo_prog_symm	generated	
@@ -725,7 +725,7 @@ $eo_prog_true_elim	generated
 $eo_prog_true_intro	generated	
 $eo_prog_trust	generated	
 $eo_prog_ubv-to-int-elim	none	case 0 has a builtin operator
-$eo_prog_ubv_to_int_range	none	it calls $eo_typeof, which has no proof
+$eo_prog_ubv_to_int_range	generated	
 $eo_prog_uf-bv2nat-geq-elim	generated	
 $eo_prog_uf-bv2nat-int2bv	generated	
 $eo_prog_uf-bv2nat-int2bv-extend	generated	
@@ -738,7 +738,7 @@ $eo_prog_xor_elim1	generated
 $eo_prog_xor_elim2	generated	
 $eo_push_assume_check	generated	
 $eo_push_input_assume_check	generated	
-$eo_push_proven	none	it calls $eo_is_bool_type, which has no proof
+$eo_push_proven	generated	
 $eo_push_proven_check	generated	
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
@@ -776,7 +776,7 @@ $eo_to_smt_type_tuple	generated
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
 $eo_to_smt_updater	none	it calls $smtx_dt_num_sels, which has no proof
 $eo_to_smt_updater_rec	generated	
-$eo_typeof	none	its generated proof does not build: rust_eq: logos_eq over 209 cases exceeds simp's maxSteps, and with more steps 2,000,000 heartbeats: simplifying the 208-entry firstSome in every branch is quadratic; needs a structured proof (firstSome picks the k-th entry), docs/proofs.md; reached once eo::list_nth had a spec
+$eo_typeof	generated	
 $eo_typeof_+	generated	
 $eo_typeof_/	generated	
 $eo_typeof_<	generated	
@@ -878,8 +878,8 @@ $eo_typeof_tuple.select	generated
 $eo_typeof_tuple.update	generated	
 $eo_typeof_update	generated	
 $eo_typeof_zero_extend	generated	
-$eval_sets_inter	none	it calls $eo_typeof, which has no proof
-$eval_sets_minus	none	it calls $eo_typeof, which has no proof
+$eval_sets_inter	none	it calls $are_distinct_terms_list_rec, which has no proof
+$eval_sets_minus	none	it calls $are_distinct_terms_list_rec, which has no proof
 $eval_sets_op	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $extract_antec	generated	
 $extract_antec_rec	generated	
@@ -896,7 +896,7 @@ $get_lambda_type	generated
 $get_nth_var_type	generated	
 $get_unused_vars	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once eo::list_minclude had a spec
 $get_var_type	generated	
-$get_zero	none	it calls $eo_typeof, which has no proof
+$get_zero	generated	
 $greatest_int_lt	generated	
 $iota_rec	generated	
 $is_absorb	none	it calls $is_absorb_rec, which has no proof
@@ -905,7 +905,7 @@ $is_arith_type	generated
 $is_closed_rec	none	case 2 has a variable term
 $is_cons_app	none	case 1 has a builtin operator
 $is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
-$is_instantiation	none	it calls $eo_typeof, which has no proof
+$is_instantiation	generated	
 $is_poly_norm_rel_consts	generated	
 $is_poly_norm_rel_consts_rel	generated	
 $is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
@@ -917,12 +917,12 @@ $is_seq_const_rec	generated
 $is_var_list	none	case 0 has a builtin operator
 $least_int_gt	generated	
 $lower_not_and	generated	
-$mk_arith_mult_abs_comparison	none	it calls $eo_typeof, which has no proof
+$mk_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison_rec, which has no proof
 $mk_arith_mult_abs_comparison_rec	none	case 0 has eo::list_concat of *, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$mk_arith_mult_neg	none	it calls $eo_typeof, which has no proof
-$mk_arith_mult_pos	none	it calls $eo_typeof, which has no proof
+$mk_arith_mult_neg	generated	
+$mk_arith_mult_pos	generated	
 $mk_arith_mult_sign_sgn	none	its generated proof does not build: logos_eq_deep times out (whnf, 2,000,000 heartbeats): three cases with deep patterns and repeated variables
-$mk_arith_sum_ub	none	it calls $eo_typeof, which has no proof
+$mk_arith_sum_ub	generated	
 $mk_arith_sum_ub_rec	generated	
 $mk_arith_trichotomy	generated	
 $mk_cong_rhs	generated	
@@ -931,7 +931,7 @@ $mk_distinct_elim_rec	generated
 $mk_dt_collapse_updater_rhs	none	it calls $dt_get_selectors_of_app, which has no proof
 $mk_dt_cons_eq	none	case 2 has a builtin operator
 $mk_dt_inst	none	case 2 has a builtin operator
-$mk_dt_inst_prem	none	it calls $eo_typeof, which has no proof
+$mk_dt_inst_prem	none	it calls $mk_dt_inst, which has no proof
 $mk_dt_inst_rec	generated	
 $mk_dt_inst_tuple	generated	
 $mk_dt_inst_tuple_rec	generated	
@@ -982,9 +982,9 @@ $seq_eval_replace_all_rec	none	case 1 has eo::list_concat of str.++, whose nil t
 $seq_find	none	it calls $seq_is_prefix, which has no proof
 $seq_is_non_empty	generated	
 $seq_is_prefix	none	it calls $are_distinct_terms_type, which has no proof
-$seq_subsequence_rec	none	it calls $eo_typeof, which has no proof
+$seq_subsequence_rec	generated	
 $set_is_not_subset	none	it calls $are_distinct_terms_type, which has no proof
-$set_union_to_list	none	it calls $eo_typeof, which has no proof
+$set_union_to_list	generated	
 $smtx_dd_has_dt	generated	
 $smtx_dd_lookup	generated	
 $smtx_decl_inhabited	generated	
@@ -1050,7 +1050,7 @@ $str_arith_entail_is_approx_len	none	it calls $get_arith_poly_norm, which has no
 $str_arith_entail_simple_pred	none	it calls $get_arith_poly_norm, which has no proof
 $str_arith_entail_simple_rec	generated	
 $str_case_conv_rec	none	case 0 has a builtin operator
-$str_collect	none	it calls $eo_typeof, which has no proof
+$str_collect	none	it calls $str_collect_merge, which has no proof
 $str_collect_merge	none	case 0 has a builtin operator
 $str_eval_replace_all_rec	none	case 1 has a builtin operator
 $str_eval_replace_re	none	case 1 has a builtin operator
@@ -1065,7 +1065,7 @@ $str_from_int_eval_rec	none	case 1 has a builtin operator
 $str_is_compatible	none	it calls $are_distinct_terms_type, which has no proof
 $str_is_empty	generated	
 $str_is_multiset_subset_strict	none	it calls $str_is_multiset_subset_strict_done, which has no proof
-$str_is_multiset_subset_strict_done	none	it calls $eo_typeof, which has no proof
+$str_is_multiset_subset_strict_done	none	it calls $are_distinct_terms_list_rec, which has no proof
 $str_is_prefix_flat	generated	
 $str_leq_eval_rec	generated	
 $str_membership_re	generated	
@@ -1076,7 +1076,7 @@ $str_mk_str_in_re_concat_star_char	generated
 $str_mk_str_in_re_sigma_rec	generated	
 $str_mk_str_in_re_sigma_star_rec	generated	
 $str_multiset_overapprox	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$str_multiset_overapprox_word	none	it calls $eo_typeof, which has no proof
+$str_multiset_overapprox_word	generated	
 $str_overlap_rec	none	it calls $str_is_compatible, which has no proof
 $str_re_consume	none	case 0 has a builtin operator
 $str_re_consume_inter	none	it calls $str_re_consume_rec, which has no proof

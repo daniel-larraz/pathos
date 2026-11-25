@@ -234,8 +234,10 @@ error).
 
 The builtins CpcMini's logos lacks, proved for CPC in
 `proofs-cpc/PathosProofsCpc/` and emitted by `scripts/proofgen` where a
-program calls them; 778 of CPC's 1,103 programs have a generated proof
-(746 at the start of milestone 6).
+program calls them; 820 of CPC's 1,103 programs have a generated proof
+(746 at the start of milestone 6; 778 before `$eo_typeof`'s, which
+brought 42: itself, `$eo_push_proven`, `$eo_is_bool_type` and the rules
+and helpers that type their arguments).
 
 - **Lists** (`Lists.lean`): `eo::list_len`, `list_rev`, `list_nth`,
   `list_find`, `list_erase`, `list_setof`, `list_singleton_elim`, and, for an
@@ -256,9 +258,10 @@ program calls them; 778 of CPC's 1,103 programs have a generated proof
 
 They rest only on the specs of `Trusted.lean` that `axioms-allowed.txt`
 allows; `eo::or` brought `bitwise_or_spec` into use (32 assumptions, from
-31). What still blocks the most programs: `$eo_typeof` (above, "Equation
-lemmas of large functions"; 55 programs name it first, and
-`list_singleton_intro` and `list_repeat` build their nil through it);
+31). `$eo_typeof` is proved (above, "Large functions: `logos_eq_large`");
+nine of the programs it had kept from being tried do not build, for the
+reasons of the others (`proofs-cpc/unproved.toml`: a case's spec that
+times out, a `logos_eq` that fails). What still blocks the most programs:
 `eo::cmp` (the runtime's `Store::compare` against logos's `termCmp`);
 `eo::concat` and `eo::extract` of binaries (above); the datatype operators
 (the six with no logos function, a decision of milestone 8); and the
@@ -558,31 +561,78 @@ options; Lean's `realizeConst`), not those the module sets with
 `set_option`, nor those of the module that defines the function. For
 logos's `__eo_typeof` (209 cases), that takes about 30 s and more than
 the default 200,000 heartbeats, so `proofs-cpc/lakefile.toml` passes
-`-DmaxHeartbeats=2000000` to `CpcProofs`. `__eo_cmd_step_proven` (617
-cases) will need at least as much when its proof is generated.
+`-DmaxHeartbeats=2000000` to `CpcProofs`. The generated proofs no longer
+unfold `__eo_typeof` (below), nor will they `__eo_cmd_step_proven`, which
+is not recursive: its definition unfolds without a lemma.
 
-With the lemma made, `$eo_typeof`'s `rust_eq` still does not build, and
-`$eo_typeof` is in `proofs-cpc/unproved.toml`. `logos_eq` splits the
-function's match and, in every branch, simplifies the list of the 208
-cases that `firstSome` tries. That is quadratic: it exceeds `simp`'s
-`maxSteps` (100,000), and with 2,000,000 steps, the 2,000,000 heartbeats.
-A larger budget would not reach `__eo_cmd_step_proven`. What closes both
-is a proof by the shape of `firstSome`: in the branch of the k-th case,
-the cases before it give `none` and the k-th gives the answer, so
-`firstSome` gives it, by a lemma applied once per branch. Twelve programs
-wait for `$eo_typeof`: `$eo_push_proven`, `$eo_is_bool_type`, and rules
-that type their arguments.
+### Large functions: `logos_eq_large`
 
-Measured (2026-11-25, `lean -DmaxHeartbeats=…` on the theorem alone):
-`logos_eq` does not finish in 50 minutes without limits (4 GB).
-`split <;> (try rfl)` closes 207 of the 209 branches in 86 s (2.8 GB):
-there the earlier cases reduce to `none` by evaluation. The two left are
-the fall-throughs: the generic `(Term.Apply f x)` case after about 176
-more specific `Apply` patterns, and the last, which gives `Stuck`. They
-need the split's hypotheses that the earlier patterns do not match, one
-per earlier case; `simp_all` over them exceeds its steps. A tactic that
-proves each earlier `case_j x = none` from its own hypothesis, then steps
-`firstSome` past it, would close them.
+`$eo_typeof`'s `rust_eq` (logos's function is the first of 208 cases that
+answers, else stuck) did not build with `logos_eq`, which splits the
+function's match and, in every branch, simplifies the whole list that
+`firstSome` tries: quadratic, past `simp`'s `maxSteps` (100,000), and with
+2,000,000 steps past the 2,000,000 heartbeats (it does not finish in 50
+minutes without limits). `scripts/proofgen` now proves the `rust_eq` of a
+program of 100 cases or more (`LARGE_CASES`; in CPC `$eo_typeof`, and
+`$eo_cmd_step_proven` when what it calls is proved) with `logos_eq_large`
+(`Tactic.lean`), and nothing unfolded first. The others keep `logos_eq`.
+
+`logos_eq_large` is a proof by evaluation, with no `simp`, no `split` and
+no equation lemma:
+
+- It goes down the list of cases. A case that evaluates to `none` on the
+  arguments is dropped (`firstSome_drop`), one that evaluates to `some v`
+  ends the list with `v` (`firstSome_hit`), and one that does not evaluate,
+  because its pattern matches on a variable, is kept (`firstSome_keep`).
+  Each lemma's hypothesis is `rfl`.
+- With cases kept, it takes cases of the variable that the first of them
+  waits for (found by reducing the case's match to the recursor it is
+  stuck on), and goes on in each branch, with the kept cases only.
+- With none kept, the right side is a value: logos's function evaluates
+  to it (`rfl`), or waits for a variable in turn, whose cases it takes.
+- A test for the stuck term (`if x = Stuck then … else …`) is decided by
+  evaluation, after cases of `x`.
+
+For `$eo_typeof` that is 1,036 leaves, since the patterns are nested
+(`Apply (Apply (UOp op) x) y`, with 170 operators). It fails, with the
+term it waits for, on a case that matches on a number or a string (no
+cases to take), and on a function with fall-through helpers (those keep
+`logos_eq_deep`).
+
+Measured (2026-11-25, the theorem alone, `-DmaxHeartbeats=2000000`):
+
+| | `$eo_typeof` (209 cases) | `$eo_cmd_step_proven` (617 cases) |
+|---|---|---|
+| `logos_eq` | no end in 50 min (4 GB) | not tried |
+| `unfold`, `split`, then `rfl` per branch, and the fall-throughs by the split's hypotheses | 110 s, 2.9 GB: 56 s for the equation lemma, 2 s `split`, 25 s `rfl`, 12 s the two fall-throughs | `split` times out (`isDefEq`, 2,000,000 heartbeats, 68 s); Lean had not made the match's equations after 13 min and 8.7 GB with no limit |
+| `logos_eq_large` | 21 s, 2.1 GB: 8 s the tactic, 9.5 s the kernel | 484 s, 4.0 GB: 237 s the tactic, 223 s the kernel; 3,779 leaves |
+
+In the build, the part of `CpcProofs` with `$eo_typeof` (490 theorems)
+takes 86 s and 3.4 GB alone. With the 42 programs that `$eo_typeof`'s
+proof brought, `scripts/proofs-build --cpc` has 43,833 theorems (38,624
+before) and reaches its 8 GB cap with two Lean processes (5.7 GB before;
+it passed, in 24 minutes on a machine busy with another build). The
+largest part alone takes 4.8 GB.
+
+The second row was the first tactic written here: in a fall-through
+branch (a variable pattern after more specific ones, or the last one) an
+earlier case answers `none` by the hypothesis that `split` leaves for its
+pattern, one per case and in the cases' order, so linear. It closes
+`$eo_typeof` but rests on Lean's splitter of logos's match, which Lean
+does not make for 617 cases over three arguments; it is not kept.
+
+**Does it scale to `$eo_cmd_step_proven`?** Yes, within the build's
+limits, as measured on its statement written by hand (its proof is not
+generated yet: it waits for `$eo_mk_premise_list`): 8 minutes and 4 GB
+for the one theorem, under 2,000,000 heartbeats. The cost there is
+probably cubic in the rules, not quadratic: in the branch of each of the
+617 rules, each of the 617 cases is evaluated, and a case's match on an
+enumeration is a recursor applied to one minor premise per constructor
+(seen on `UserOp`, 170), which Lean instantiates each time. Should that
+have to come down, the next step is one lemma per case (`r ≠ CRule.k →
+case_k … = none`), so that a branch drops a case without evaluating it.
+At 4 GB the theorem will not fit under the cap beside another part of
+`CpcProofs` at its largest (4.8 GB): its part will have to build alone.
 
 ### The generator
 

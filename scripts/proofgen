@@ -36,6 +36,12 @@ import sys
 import tomllib
 
 TRACE_VERSION = 1
+# A program of at least this many cases has its `rust_eq` proved by
+# `logos_eq_large` (proofs/PathosProofs/Tactic.lean), by evaluation, where
+# `logos_eq`'s simplification is quadratic in the cases (docs/proofs.md,
+# "Large functions"). CPC's largest below it has 79 cases (`$run_evaluate`),
+# its smallest above it 209 (`$eo_typeof`).
+LARGE_CASES = 100
 
 
 def ident(name):
@@ -1215,10 +1221,14 @@ class Generator:
         # which it calls when a case's repeated variables differ): unfolded,
         # and split by `logos_eq_deep`
         helpers = self.helpers.get(n.lean.split(".")[-1], [])
-        o.append("firstSome [" + cds + "] " + p.no_case + ") := by\n  conv => lhs; unfold "
-                 + n.lean + "\n  unfold" + defs + "\n"
-                 + "".join("  try unfold Eo." + h + "\n" for h in helpers)
-                 + ("  logos_eq_deep\n\n" if helpers else "  logos_eq\n\n"))
+        o.append("firstSome [" + cds + "] " + p.no_case + ") := by\n")
+        if len(p.cases) >= LARGE_CASES and not helpers:
+            # nothing is unfolded: `logos_eq_large` evaluates both sides
+            o.append("  logos_eq_large\n\n")
+        else:
+            o.append("  conv => lhs; unfold " + n.lean + "\n  unfold" + defs + "\n"
+                     + "".join("  try unfold Eo." + h + "\n" for h in helpers)
+                     + ("  logos_eq_deep\n\n" if helpers else "  logos_eq\n\n"))
         rnd = ("step_" if p.loop else "body_") + n.id
         o.append("theorem " + rnd + "_spec" + head + " :\n    " + rnd + " s" + n.as_ + post)
         if p.loop:
