@@ -24,9 +24,10 @@ pub struct Options {
     pub normalize_decimal: bool,
     pub normalize_hexadecimal: bool,
     pub normalize_numeral: bool,
-    /// In reference files, read `define-fun` and `define-const` as
-    /// definitions, not as reference assertions.
-    pub reference_define_fun: bool,
+    /// In reference files, read a `define-fun` with arguments as the
+    /// higher-order equality `(= f (lambda (x) t))` instead of
+    /// `(forall (x) (= (f x) t))`.
+    pub reference_define_fun_ho: bool,
 }
 
 impl Default for Options {
@@ -42,7 +43,7 @@ impl Default for Options {
             normalize_decimal: true,
             normalize_hexadecimal: true,
             normalize_numeral: false,
-            reference_define_fun: false,
+            reference_define_fun_ho: false,
         }
     }
 }
@@ -67,7 +68,7 @@ impl Options {
             "normalize-dec" => self.normalize_decimal = val,
             "normalize-num" => self.normalize_numeral = val,
             "normalize-hex" => self.normalize_hexadecimal = val,
-            "reference-define-fun" => self.reference_define_fun = val,
+            "reference-define-fun-ho" => self.reference_define_fun_ho = val,
             _ => return false,
         }
         true

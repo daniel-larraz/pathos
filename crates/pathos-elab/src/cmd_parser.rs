@@ -710,10 +710,10 @@ impl Parser<'_> {
         self.st.push_scope();
         let name = self.parse_symbol()?;
         let mut pattr_map: Vec<(Term, AttrMap)> = Vec::new();
-        // In a reference file, a definition is an assertion that the symbol
-        // equals its body, unless the option says to read it as a macro.
-        let define_as_reference_assert =
-            tok != Token::Define && self.is_reference && !self.st.ck.opts.reference_define_fun;
+        // In a reference file, define-fun and define-const are always
+        // assertions about the symbol, never macros: expanding a macro would
+        // substitute its arguments into a body that may bind variables.
+        let define_as_reference_assert = tok != Token::Define && self.is_reference;
         let mut vars = Vec::new();
         if tok != Token::DefineConst {
             // Assertions range over variables of the object language;
@@ -764,26 +764,52 @@ impl Parser<'_> {
                     "Expected symbol '=' to be defined when parsing {cmd}"
                 )));
             };
-            let mut rhs = expr;
-            let mut t = ret.unwrap_or(self.st.ck.mk_any());
-            if !vars.is_empty() {
-                let Some(lambda) = self.st.get_var("lambda") else {
-                    return Err(self.lex.parse_error(
-                        "Expected symbol 'lambda' to be defined when parsing define-fun.",
-                    ));
-                };
-                let mut largs = vec![lambda];
-                largs.extend(self.st.ck.mk_binder_list(lambda, &vars));
-                largs.push(rhs);
-                rhs = self.st.ck.mk_expr(Kind::APPLY, &largs);
+            let body = expr;
+            let ret = ret.unwrap_or(self.st.ck.mk_any());
+            let a = if vars.is_empty() {
+                // (define-fun c () T t) and (define-const c T t) are (= c t)
+                expr = self.st.ck.mk_symbol(SymbolKind::Const, &name, ret);
+                self.st.ck.mk_expr(Kind::APPLY, &[eq, expr, body])
+            } else {
                 let mut types = Vec::with_capacity(vars.len());
                 for &e in &vars {
                     types.push(self.type_check(e)?);
                 }
-                t = self.st.ck.mk_function_type(&types, t);
-            }
-            expr = self.st.ck.mk_symbol(SymbolKind::Const, &name, t);
-            let a = self.st.ck.mk_expr(Kind::APPLY, &[eq, expr, rhs]);
+                let ft = self.st.ck.mk_function_type(&types, ret);
+                expr = self.st.ck.mk_symbol(SymbolKind::Const, &name, ft);
+                // The binder, like `=`, is not builtin: the signature must
+                // define it, as a binder.
+                let is_forall = !self.st.ck.opts.reference_define_fun_ho;
+                let bname = if is_forall { "forall" } else { "lambda" };
+                let binder = self
+                    .st
+                    .get_var(bname)
+                    .filter(|&b| self.st.ck.attribute_kind(b) == Attr::Binder);
+                let Some(binder) = binder else {
+                    return Err(self.lex.parse_error(format!(
+                        "Expected symbol '{bname}' to be defined as a binder when parsing define-fun."
+                    )));
+                };
+                // The variables are object-level variables that the binder
+                // binds, so the body is not substituted into.
+                let bvl = self.st.ck.mk_binder_list(binder, &vars);
+                let mut bargs = vec![binder];
+                bargs.extend(bvl);
+                if is_forall {
+                    // (forall (x1 ... xn) (= (f x1 ... xn) t))
+                    let mut app = vec![expr];
+                    app.extend_from_slice(&vars);
+                    let fx = self.st.ck.mk_expr(Kind::APPLY, &app);
+                    let feq = self.st.ck.mk_expr(Kind::APPLY, &[eq, fx, body]);
+                    bargs.push(feq);
+                    self.st.ck.mk_expr(Kind::APPLY, &bargs)
+                } else {
+                    // (= f (lambda (x1 ... xn) t))
+                    bargs.push(body);
+                    let lam = self.st.ck.mk_expr(Kind::APPLY, &bargs);
+                    self.st.ck.mk_expr(Kind::APPLY, &[eq, expr, lam])
+                }
+            };
             self.st.add_reference_assert(a);
         } else {
             // a macro: a lambda if it has parameters

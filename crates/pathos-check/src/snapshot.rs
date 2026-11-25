@@ -12,22 +12,26 @@ use crate::attr::{AppInfo, Attr};
 use crate::checker::{Checker, Options};
 
 impl Options {
-    /// The options that decide what a signature loads as, one byte each. A
-    /// snapshot is only used under the options it was written with. The
-    /// statistics options and `require-proof-of-false` are not here: they
-    /// only change what is printed at the end.
+    /// The options that decide what a signature loads as, one byte each, and
+    /// the maximum code point. A snapshot is only used under the options it
+    /// was written with. The statistics options and `require-proof-of-false`
+    /// are not here: they only change what is printed at the end.
     pub fn snapshot_key(&self) -> Vec<u8> {
-        [
+        let mut key = [
             self.print_dag,
             self.parse_let,
             self.rule_sym_table,
             self.normalize_decimal,
             self.normalize_hexadecimal,
             self.normalize_numeral,
-            self.reference_define_fun,
+            self.reference_define_fun_ho,
         ]
         .map(u8::from)
-        .to_vec()
+        .to_vec();
+        // The maximum code point decides which string literals the signature
+        // has, and what eo::max_code_point is.
+        key.extend_from_slice(&pathos_term::max_code_point().to_le_bytes());
+        key
     }
 }
 

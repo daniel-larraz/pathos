@@ -19,7 +19,7 @@ const HELP: &str = "        --include=X: includes the file specified by X.
      --no-print-dag: do not dagify the output of terms in error messages and trace messages.
 --no-rule-sym-table: do not use a separate symbol table for proof rules and declared terms.
       --reference=X: includes the file specified by X as a reference file.
---reference-define-fun: in reference files, treat define-fun and define-const as definitions instead of reference assertions.
+--reference-define-fun-ho: in reference files, assume a define-fun with arguments as the higher-order equality (= f (lambda (x) t)) instead of (forall (x) (= (f x) t)).
 --require-proof-of-false: require the last proof step at level zero to prove false.
       --show-config: displays the build information for this binary.
             --stats: enables detailed statistics.
