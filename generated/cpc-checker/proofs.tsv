@@ -40,9 +40,9 @@ $bv_mk_bitblast_step_concat	generated
 $bv_mk_bitblast_step_eq_rec	generated	
 $bv_mk_bitblast_step_ite	generated	
 $bv_mk_bitblast_step_mul	none	it calls $bv_shift_add_multiplier, which has no proof
-$bv_mk_bitblast_step_shl_rec	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_shl_rec	none	it calls $bv_mk_bitblast_step_shl_rec_step, which has no proof
 $bv_mk_bitblast_step_shl_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
-$bv_mk_bitblast_step_shr_rec	none	case 1 has a builtin operator
+$bv_mk_bitblast_step_shr_rec	none	it calls $bv_mk_bitblast_step_shr_rec_step, which has no proof
 $bv_mk_bitblast_step_shr_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
 $bv_mk_bitblast_step_var_rec	generated	
 $bv_mk_bitwise_slicing	none	case 0 has eo::list_erase of an operator that is not a constant
@@ -57,7 +57,7 @@ $chain_m_resolve	none	it calls $chain_m_resolve_final, which has no proof
 $chain_m_resolve_final	none	case 0 has a builtin operator
 $chain_m_resolve_rec	none	it calls $chain_m_resolve_rec_step, which has no proof
 $chain_m_resolve_rec_step	none	case 0 has a builtin operator
-$compute_card	none	case 1 has a builtin operator
+$compute_card	generated	
 $contains_atomic_term_list_free_rec	none	case 2 has a variable term
 $derivative	none	case 6 has a builtin operator
 $dt_arg_list	generated	
@@ -358,7 +358,7 @@ $eo_prog_bv-zero-extend-ult-const-1	none	its generated proof does not build: log
 $eo_prog_bv-zero-extend-ult-const-2	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (bit-vector literals in the case)
 $eo_prog_bv-zero-ule	generated	
 $eo_prog_bv_bitblast_step	none	it calls $bv_mk_bitblast_step, which has no proof
-$eo_prog_bv_poly_norm	none	case 0 has a builtin operator
+$eo_prog_bv_poly_norm	none	it calls $eo_typeof, which has no proof
 $eo_prog_bv_poly_norm_eq	none	case 0 has a builtin operator
 $eo_prog_chain_m_resolution	none	case 0 has a builtin operator
 $eo_prog_chain_resolution	none	it calls $chain_m_resolve, which has no proof
@@ -725,7 +725,7 @@ $eo_prog_true_elim	generated
 $eo_prog_true_intro	generated	
 $eo_prog_trust	generated	
 $eo_prog_ubv-to-int-elim	none	case 0 has a builtin operator
-$eo_prog_ubv_to_int_range	none	case 0 has a builtin operator
+$eo_prog_ubv_to_int_range	none	it calls $eo_typeof, which has no proof
 $eo_prog_uf-bv2nat-geq-elim	generated	
 $eo_prog_uf-bv2nat-int2bv	generated	
 $eo_prog_uf-bv2nat-int2bv-extend	generated	
@@ -896,7 +896,7 @@ $get_lambda_type	generated
 $get_nth_var_type	generated	
 $get_unused_vars	none	case 0 has a builtin operator
 $get_var_type	generated	
-$get_zero	none	case 5 has a builtin operator
+$get_zero	none	it calls $eo_typeof, which has no proof
 $greatest_int_lt	generated	
 $iota_rec	generated	
 $is_absorb	none	it calls $is_absorb_rec, which has no proof

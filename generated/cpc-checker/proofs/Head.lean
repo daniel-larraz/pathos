@@ -290,6 +290,15 @@ def eo__24bv_5fripple_5fcarry_5fadder_5f2.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__bv_ripple_carry_adder_2 x_a0 x_a1 x_a2 x_a3)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$compute_card`. -/
+def eo__24compute_5fcard.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24compute_5fcard s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__compute_card x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$dt_arg_list`. -/
 def eo__24dt_5farg_5flist.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -6954,6 +6963,7 @@ structure Specs (n : Nat) : Prop where
   eo__24bv_5fmk_5fbitblast_5fstep_5fite : eo__24bv_5fmk_5fbitblast_5fstep_5fite.Spec n
   eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec : eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec.Spec n
   eo__24bv_5fripple_5fcarry_5fadder_5f2 : eo__24bv_5fripple_5fcarry_5fadder_5f2.Spec n
+  eo__24compute_5fcard : eo__24compute_5fcard.Spec n
   eo__24dt_5farg_5flist : eo__24dt_5farg_5flist.Spec n
   eo__24dt_5fcollapse_5fupdater_5frhs : eo__24dt_5fcollapse_5fupdater_5frhs.Spec n
   eo__24eo_5fStateObj_5fproven : eo__24eo_5fStateObj_5fproven.Spec n

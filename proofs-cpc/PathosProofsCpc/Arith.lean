@@ -1713,4 +1713,219 @@ theorem Store.builtin_spec_to_bin (s : Store) (args : Slice Term) {a b : Term} {
                 refine ⟨hinv, Store.Grows.refl s, ?_⟩
                 rw [eo_to_bin_bad_bin hw]; exact hinv.rep_stuck))
 
+
+/-! ## `eo::pow` -/
+
+/-- `rat_pow` raises the numerator and the denominator. -/
+theorem rat_pow_spec (a : num.Rational) (e : Std.U32) :
+    lit.rat_pow a e = ok (num.Rational.ofRat (a.toRat ^ e.val)) := by
+  unfold lit.rat_pow
+  simp only [num.Rational.numerator_spec, num.Rational.denominator_spec, num.Integer.pow_spec,
+    num.Integer.toInt_ofInt, Std.bind_ok]
+  have hd : ((a.toRat.den : Int) ^ e.val) ≠ 0 := pow_ne_zero _ (by exact_mod_cast a.toRat.den_nz)
+  rw [lit_rat_spec _ _ (by rw [num.Integer.toInt_ofInt]; exact hd)]
+  congr 1
+  simp only [num.Integer.toInt_ofInt]
+  push_cast
+  rw [← div_pow, Rat.num_div_den]
+
+/-- What `Lit::evaluate` gives for `eo::pow` on two literals that stand for
+terms: a numeral or a rational to an exponent that fits in 32 bits. -/
+noncomputable def powLit : lit.Lit → lit.Lit → Option lit.Lit
+  | lit.Lit.Numeral i, lit.Lit.Numeral e =>
+    if 0 ≤ e.toInt ∧ e.toInt < 2 ^ 32 then
+      some (lit.Lit.Numeral (num.Integer.ofInt (i.toInt ^ e.toInt.toNat)))
+    else none
+  | lit.Lit.Rational q, lit.Lit.Numeral e =>
+    if 0 ≤ e.toInt ∧ e.toInt < 2 ^ 32 then
+      some (lit.Lit.Rational (num.Rational.ofRat (q.toRat ^ e.toInt.toNat)))
+    else none
+  | _, _ => none
+
+theorem lit_evaluate_pow (args : Slice lit.Lit) {l1 l2 : lit.Lit} (hargs : args.val = [l1, l2])
+    (ht1 : TermLit l1) (ht2 : TermLit l2) :
+    lit.Lit.evaluate kind.EvalOp.Pow args ⦃ o => o = powLit l1 l2 ⦄ := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok l1 := by simp [Slice.index_usize, hargs]
+  have h1 : Slice.index_usize args 1#usize = ok l2 := by simp [Slice.index_usize, hargs]
+  have hne : core.slice.Slice.is_empty args = ok false := by
+    simp [core.slice.Slice.is_empty, Slice.len, hargs]
+  have h32 : (2 : Int) ^ 32 = 4294967296 := by norm_num
+  unfold lit.Lit.evaluate
+  simp only [hne, h0, Std.bind_ok, Bool.false_eq_true, ite_false, ite_true]
+  unfold lit.Lit.evaluate_pow lit.Lit.int_arg
+  simp only [lit.Lit.arg, hlen, h1, Std.bind_ok]
+  cases l1 <;> cases l2 <;> simp only [TermLit] at ht1 ht2 <;>
+    simp [lit.Lit.kind, lit.Lit.as_int, powLit]
+  all_goals
+    rename_i x e
+    simp only [num.Integer.fits_u32_spec]
+    by_cases hw : 0 ≤ e.toInt ∧ e.toInt < 2 ^ 32
+    · obtain ⟨r, hr, hrv⟩ := num.Integer.to_u32_spec e
+      rw [if_pos hw] at hrv
+      have hpow : r.val = e.toInt.toNat := by omega
+      rw [h32] at hw
+      simp [hw, hr, num.Integer.pow_spec, rat_pow_spec, lit.Lit.rational, hpow,
+        kind.LitKind.Insts.CoreCmpPartialEqLitKind.eq, kind.LitKind.read_discriminant]
+    · rw [h32] at hw
+      simp [hw]
+
+
+/-- logos's `eo::pow` of a numeral to an exponent in range. -/
+theorem eo_pow_num {i e : Int} (he : 0 ≤ e ∧ e < 2 ^ 32) :
+    Eo.__eo_pow (Eo.Term.Numeral i) (Eo.Term.Numeral e) = Eo.Term.Numeral (i ^ e.toNat) := by
+  have hc : SmtEval.native_and (SmtEval.native_zleq 0 e) (SmtEval.native_zlt e 4294967296) =
+      true := by
+    rw [show (2 : Int) ^ 32 = 4294967296 by norm_num] at he
+    simp only [SmtEval.native_and, SmtEval.native_zleq, SmtEval.native_zlt, Bool.and_eq_true,
+      decide_eq_true_eq]
+    omega
+  unfold Eo.__eo_pow
+  dsimp only
+  rw [hc]
+  simp [SmtEval.native_ite, SmtEval.native_zexp_total, show ¬ e < 0 by omega]
+
+/-- logos's `eo::pow` of a rational to an exponent in range. -/
+theorem eo_pow_rat {q : ℚ} {e : Int} (he : 0 ≤ e ∧ e < 2 ^ 32) :
+    Eo.__eo_pow (Eo.Term.Rational q) (Eo.Term.Numeral e) = Eo.Term.Rational (q ^ e.toNat) := by
+  have hc : SmtEval.native_and (SmtEval.native_zleq 0 e) (SmtEval.native_zlt e 4294967296) =
+      true := by
+    rw [show (2 : Int) ^ 32 = 4294967296 by norm_num] at he
+    simp only [SmtEval.native_and, SmtEval.native_zleq, SmtEval.native_zlt, Bool.and_eq_true,
+      decide_eq_true_eq]
+    omega
+  unfold Eo.__eo_pow
+  dsimp only
+  rw [hc]
+  simp [SmtEval.native_ite, Eo.native_qexp_total, show ¬ e < 0 by omega]
+
+/-- logos's `eo::pow` to an exponent out of range is stuck. -/
+theorem eo_pow_bad {i e : Int} (he : ¬ (0 ≤ e ∧ e < 2 ^ 32)) :
+    Eo.__eo_pow (Eo.Term.Numeral i) (Eo.Term.Numeral e) = Eo.Term.Stuck := by
+  have : ¬ (0 ≤ e ∧ e < 4294967296) := by norm_num at he ⊢; omega
+  have hc : SmtEval.native_and (SmtEval.native_zleq 0 e) (SmtEval.native_zlt e 4294967296) =
+      false := by
+    unfold SmtEval.native_and SmtEval.native_zleq SmtEval.native_zlt
+    by_cases h0 : 0 ≤ e
+    · have h1 : ¬ e < 4294967296 := fun h => this ⟨h0, h⟩
+      simp [h1]
+    · simp [h0]
+  unfold Eo.__eo_pow
+  dsimp only
+  rw [hc]
+  rfl
+
+theorem eo_pow_bad_rat {q : ℚ} {e : Int} (he : ¬ (0 ≤ e ∧ e < 2 ^ 32)) :
+    Eo.__eo_pow (Eo.Term.Rational q) (Eo.Term.Numeral e) = Eo.Term.Stuck := by
+  have : ¬ (0 ≤ e ∧ e < 4294967296) := by norm_num at he ⊢; omega
+  have hc : SmtEval.native_and (SmtEval.native_zleq 0 e) (SmtEval.native_zlt e 4294967296) =
+      false := by
+    unfold SmtEval.native_and SmtEval.native_zleq SmtEval.native_zlt
+    by_cases h0 : 0 ≤ e
+    · have h1 : ¬ e < 4294967296 := fun h => this ⟨h0, h⟩
+      simp [h1]
+    · simp [h0]
+  unfold Eo.__eo_pow
+  dsimp only
+  rw [hc]
+  rfl
+
+/-- `eo::pow` on handles of a numeral or a rational and an exponent: logos's
+`__eo_pow`. -/
+theorem Store.builtin_spec_pow (s : Store) (args : Slice Term) {a b : Term} {x y : Eo.Term}
+    (hargs : args.val = [a, b]) (ha : s.Rep a x) (hb : s.Rep b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    Store.builtin_core s kind.EvalOp.Pow args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_pow x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  have htakes : Store.takes kind.EvalOp.Pow 2#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  unfold Store.builtin_core
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, h0]
+    unfold Store.builtin_strict
+    step with Store.any_stuck_two hargs ha hb as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hx : x = Eo.Term.Stuck
+    · subst hx
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_pow Eo.Term.Stuck y = Eo.Term.Stuck := by
+        unfold Eo.__eo_pow; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    by_cases hy : y = Eo.Term.Stuck
+    · subst hy
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_pow x Eo.Term.Stuck = Eo.Term.Stuck := by
+        unfold Eo.__eo_pow; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    simp only [hx, hy, decide_false, Bool.or_false, Bool.false_eq_true, ite_false,
+      kind.EvalOp.is_list_op, Std.bind_ok]
+    unfold Store.builtin_literal
+    step with Store.literals_two s args hargs ha.lt hb.lt as ⟨o, ho⟩
+    cases o with
+    | none =>
+      simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_pow x y = Eo.Term.Stuck := by
+        unfold Eo.__eo_pow
+        split
+        · exact absurd ⟨⟨_, Store.rep_numeral_data ha⟩, ⟨_, Store.rep_numeral_data hb⟩⟩ ho
+        · exact absurd ⟨⟨_, Store.rep_rational_data ha⟩, ⟨_, Store.rep_numeral_data hb⟩⟩ ho
+        · rfl
+      rw [this]; exact hinv.rep_stuck
+    | some v =>
+      obtain ⟨l1, l2, hv, hd1, hd2⟩ := ho
+      simp only
+      have hx' := Store.rep_lit ha hd1
+      have hy' := Store.rep_lit hb hd2
+      have ht1 : TermLit l1 := by
+        rcases hx' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      have ht2 : TermLit l2 := by
+        rcases hy' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      step with lit_evaluate_pow (alloc.vec.Vec.deref v) (l1 := l1) (l2 := l2)
+        (by simp [alloc.vec.Vec.deref, hv]) ht1 ht2 as ⟨o1, ho1⟩
+      subst ho1
+      rcases hx' with ⟨b1, rfl, rfl⟩ | ⟨i1, rfl, rfl⟩ | ⟨q1, rfl, rfl⟩ | ⟨s1, rfl, rfl⟩ |
+          ⟨w1, n1, rfl, rfl, hok1⟩ <;>
+        rcases hy' with ⟨b2, rfl, rfl⟩ | ⟨i2, rfl, rfl⟩ | ⟨q2, rfl, rfl⟩ | ⟨s2, rfl, rfl⟩ |
+          ⟨w2, n2, rfl, rfl, hok2⟩ <;>
+        first
+        | (simp only [powLit, Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+           exact ⟨hinv, Store.Grows.refl s, by simpa [Eo.__eo_pow] using hinv.rep_stuck⟩)
+        | (by_cases he : 0 ≤ i2 ∧ i2 < 2 ^ 32
+           · first
+             | (rw [eo_pow_num he]
+                simp only [powLit, num.Integer.toInt_ofInt, he, and_self, ite_true]
+                exact Store.literal_numeral_spec s _ hinv h64)
+             | (rw [eo_pow_rat he]
+                simp only [powLit, num.Integer.toInt_ofInt, num.Rational.toRat_ofRat, he, and_self,
+                  ite_true]
+                exact Store.literal_rational_spec s _ hinv h64)
+           · simp only [powLit, num.Integer.toInt_ofInt, he, ite_false, Store.stuck_eq,
+               Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+             refine ⟨hinv, Store.Grows.refl s, ?_⟩
+             first
+             | (rw [eo_pow_bad he]; exact hinv.rep_stuck)
+             | (rw [eo_pow_bad_rat he]; exact hinv.rep_stuck))
+
 end pathos_compiled_checker
