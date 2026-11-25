@@ -53,7 +53,8 @@ open generated generated.part0 generated.part1 generated.part2 generated.part3 g
 theorem specs (n : Nat) : Specs n := by
   induction n using Nat.strong_induction_on with
   | _ n ih =>
-    exact ⟨eo__24abconv_5fubv_5fto_5fint_5felim_spec n ih,
+    exact ⟨eo__24abconv_5fint_5fto_5fbv_5felim_spec n ih,
+      eo__24abconv_5fubv_5fto_5fint_5felim_spec n ih,
       eo__24arith_5fmk_5fone_spec n ih,
       eo__24arith_5fmk_5fzero_spec n ih,
       eo__24arith_5fnormalize_5flit_spec n ih,
@@ -279,6 +280,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2dzero_2dextend_2deq_2dconst_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2dzero_2dule_spec n ih,
+      eo__24eo_5fprog_5fbv_5fpoly_5fnorm_5feq_spec n ih,
       eo__24eo_5fprog_5fcnf_5fand_5fneg_spec n ih,
       eo__24eo_5fprog_5fcnf_5fand_5fpos_spec n ih,
       eo__24eo_5fprog_5fcnf_5fequiv_5fneg1_spec n ih,
@@ -727,6 +729,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24mk_5ftrans_spec n ih,
       eo__24pair_5ffirst_spec n ih,
       eo__24pair_5fsecond_spec n ih,
+      eo__24poly_5fmod_5fcoeffs_spec n ih,
       eo__24poly_5fneg_spec n ih,
       eo__24re_5fconcat_5fmerge_spec n ih,
       eo__24re_5fis_5funbound_5fwildcard_spec n ih,

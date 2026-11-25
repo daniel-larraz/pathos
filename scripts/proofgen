@@ -86,9 +86,10 @@ ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               "ToRat": "Store.builtin_spec_to_q", "IsNeg": "Store.builtin_spec_is_neg",
               "ToInt": "Store.builtin_spec_to_z", "Not": "Store.builtin_spec_not",
               "Neg": "Store.builtin_spec_neg", "Gt": "Store.builtin_spec_gt",
-              "ToBin": "Store.builtin_spec_to_bin", "Pow": "Store.builtin_spec_pow"}
+              "ToBin": "Store.builtin_spec_to_bin", "Pow": "Store.builtin_spec_pow",
+              "IntDiv": "Store.builtin_spec_int_div", "IntMod": "Store.builtin_spec_int_mod"}
 # The builtins whose specs take exactly two arguments.
-BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow"}
+BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",

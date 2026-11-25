@@ -1,5 +1,5 @@
 source	proof	why
-$abconv_int_to_bv_elim	none	case 1 has a builtin operator
+$abconv_int_to_bv_elim	generated	
 $abconv_ubv_to_int_elim	generated	
 $aci_norm_eq	none	case 2 has a builtin operator
 $are_distinct_terms_list	none	it calls $are_distinct_terms_list_rec, which has no proof
@@ -359,7 +359,7 @@ $eo_prog_bv-zero-extend-ult-const-2	none	its generated proof does not build: log
 $eo_prog_bv-zero-ule	generated	
 $eo_prog_bv_bitblast_step	none	it calls $bv_mk_bitblast_step, which has no proof
 $eo_prog_bv_poly_norm	none	it calls $eo_typeof, which has no proof
-$eo_prog_bv_poly_norm_eq	none	case 0 has a builtin operator
+$eo_prog_bv_poly_norm_eq	generated	
 $eo_prog_chain_m_resolution	none	case 0 has a builtin operator
 $eo_prog_chain_resolution	none	it calls $chain_m_resolve, which has no proof
 $eo_prog_cnf_and_neg	generated	
@@ -957,7 +957,7 @@ $mvar_mul_mvar	none	case 0 has a builtin operator
 $pair_first	generated	
 $pair_second	generated	
 $poly_add	none	case 0 has a builtin operator
-$poly_mod_coeffs	none	case 1 has a builtin operator
+$poly_mod_coeffs	generated	
 $poly_mul	none	it calls $poly_add, which has no proof
 $poly_mul_mon	none	it calls $mon_mul_mon, which has no proof
 $poly_neg	generated	

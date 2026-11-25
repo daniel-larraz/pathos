@@ -1928,4 +1928,425 @@ theorem Store.builtin_spec_pow (s : Store) (args : Slice Term) {a b : Term} {x y
              | (rw [eo_pow_bad he]; exact hinv.rep_stuck)
              | (rw [eo_pow_bad_rat he]; exact hinv.rep_stuck))
 
+
+/-! ## `eo::div` and `eo::mod` -/
+
+/-- `pow2` is the power of two. -/
+theorem bitvec_pow2_spec (k : Std.U32) :
+    bitvec.pow2 k = ok (num.Integer.ofInt (2 ^ k.val)) := by
+  unfold bitvec.pow2
+  simp [num.Integer.from_u32_spec, num.Integer.pow_spec, num.Integer.toInt_ofInt]
+
+/-- The sign of an integer is zero exactly when it is. -/
+theorem integer_sgn_zero (a : num.Integer) :
+    ∃ r : Std.I32, num.Integer.sgn a = ok r ∧ (r = 0#i32 ↔ a.toInt = 0) := by
+  obtain ⟨r, hr, hv⟩ := num.Integer.sgn_spec a
+  refine ⟨r, hr, ?_⟩
+  constructor
+  · intro h; subst h; simp at hv; exact Int.sign_eq_zero_iff_zero.mp hv.symm
+  · intro h; apply IScalar.eq_of_val_eq; rw [hv, h]; rfl
+
+/-- Unsigned division, total: all ones by zero. -/
+theorem udiv_total_spec (a b : bitvec.BitVec) :
+    bitvec.BitVec.unsigned_div_total a b = ok ⟨a.size, num.Integer.ofInt
+      (if b.value.toInt = 0 then (2 ^ a.size.val - 1) % 2 ^ a.size.val
+       else Int.ediv a.value.toInt b.value.toInt % 2 ^ a.size.val)⟩ := by
+  unfold bitvec.BitVec.unsigned_div_total
+  obtain ⟨r, hr, hz⟩ := integer_sgn_zero b.value
+  simp only [hr, Std.bind_ok]
+  by_cases h0 : b.value.toInt = 0
+  · simp [hz.mpr h0, h0, bitvec_pow2_spec, num.Integer.one_spec, num.Integer.neg_spec,
+      num.Integer.add_spec, num.Integer.toInt_ofInt, bitvec.BitVec.new,
+      num.Integer.mod_by_pow2_spec, Int.sub_eq_add_neg]
+    congr 1
+    exact Int.add_emod_left _ _
+  · have hr0 : ¬ r = 0#i32 := fun h => h0 (hz.mp h)
+    simp [hr0, h0, num.Integer.euclidean_qr_spec _ _ h0, bitvec.BitVec.new,
+      num.Integer.mod_by_pow2_spec, num.Integer.toInt_ofInt]
+    rfl
+
+/-- Unsigned remainder, total: the dividend by zero. -/
+theorem urem_total_spec (a b : bitvec.BitVec) :
+    bitvec.BitVec.unsigned_rem_total a b = ok ⟨a.size, num.Integer.ofInt
+      (if b.value.toInt = 0 then a.value.toInt % 2 ^ a.size.val
+       else Int.emod a.value.toInt b.value.toInt % 2 ^ a.size.val)⟩ := by
+  unfold bitvec.BitVec.unsigned_rem_total
+  obtain ⟨r, hr, hz⟩ := integer_sgn_zero b.value
+  simp only [hr, Std.bind_ok]
+  by_cases h0 : b.value.toInt = 0
+  · simp [hz.mpr h0, h0, bitvec.BitVec.new, num.Integer.mod_by_pow2_spec]
+    rfl
+  · have hr0 : ¬ r = 0#i32 := fun h => h0 (hz.mp h)
+    simp [hr0, h0, num.Integer.euclidean_qr_spec _ _ h0, bitvec.BitVec.new,
+      num.Integer.mod_by_pow2_spec, num.Integer.toInt_ofInt]
+    rfl
+
+
+/-- What `Lit::evaluate` gives for `eo::div` (`isDiv`) or `eo::mod` on two
+literals that stand for terms. -/
+noncomputable def divLit (isDiv : Bool) : lit.Lit → lit.Lit → Option lit.Lit
+  | lit.Lit.Numeral n, lit.Lit.Numeral m =>
+    if m.toInt = 0 then none
+    else some (lit.Lit.Numeral (num.Integer.ofInt
+      (if isDiv then Int.ediv n.toInt m.toInt else Int.emod n.toInt m.toInt)))
+  | lit.Lit.Binary a, lit.Lit.Binary b =>
+    if a.size = b.size then
+      some (lit.Lit.Binary ⟨a.size, num.Integer.ofInt
+        (if isDiv then
+          (if b.value.toInt = 0 then (2 ^ a.size.val - 1) % 2 ^ a.size.val
+           else Int.ediv a.value.toInt b.value.toInt % 2 ^ a.size.val)
+         else
+          (if b.value.toInt = 0 then a.value.toInt % 2 ^ a.size.val
+           else Int.emod a.value.toInt b.value.toInt % 2 ^ a.size.val))⟩)
+    else none
+  | _, _ => none
+
+theorem lit_evaluate_int_div (isDiv : Bool)
+    (args : Slice lit.Lit) {l1 l2 : lit.Lit} (hargs : args.val = [l1, l2])
+    (ht1 : TermLit l1) (ht2 : TermLit l2) :
+    lit.Lit.evaluate (if isDiv then kind.EvalOp.IntDiv else kind.EvalOp.IntMod) args ⦃ o =>
+      o = divLit isDiv l1 l2 ⦄ := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok l1 := by simp [Slice.index_usize, hargs]
+  have hl2 : Slice.length args = 2 := by simp [Slice.length, hargs]
+  have h1 : ∀ i : Std.Usize, i.val = 1 → Slice.index_usize args i = ok l2 := by
+    intro i hi; simp [Slice.index_usize, hargs, hi]
+  cases isDiv <;> simp only [Bool.false_eq_true, ite_false, ite_true] <;>
+  unfold lit.Lit.evaluate lit.Lit.all_of_kind lit.Lit.all_of_kind_loop <;>
+  cases l1 <;> cases l2 <;> simp only [TermLit] at ht1 ht2 <;>
+  first
+  | (simp [hl2, h0, hlen, lit.Lit.kind, litkind_ne_self']
+     step as ⟨i1, hi1⟩
+     unfold lit.Lit.all_of_kind_loop
+     have hlt : i1 < 2#usize := by scalar_tac
+     simp [hlen, hlt, h1 i1 (by scalar_tac), lit.Lit.kind, litkind_ne]
+     step as ⟨i2, hi2⟩
+     rw [all_of_kind_loop_exit args _ _ i2 (by scalar_tac)]
+     simp [divLit]
+     done)
+  | (simp [hl2, h0, hlen, lit.Lit.kind, litkind_ne_self']
+     step as ⟨i1, hi1⟩
+     unfold lit.Lit.all_of_kind_loop
+     have hlt : i1 < 2#usize := by scalar_tac
+     simp [hlen, hlt, h1 i1 (by scalar_tac), lit.Lit.kind, litkind_ne_self']
+     step as ⟨i2, hi2⟩
+     rw [all_of_kind_loop_exit args _ _ i2 (by scalar_tac)]
+     simp [lit.Lit.evaluate_int_div, lit.Lit.arg, hlen, h1 1#usize (by simp), lit.Lit.as_bv,
+       divLit, udiv_total_spec, urem_total_spec, lit.Lit.bitvec,
+       kind.LitKind.Insts.CoreCmpPartialEqLitKind.eq, kind.LitKind.read_discriminant,
+       bitvec.BitVec.impl.size]
+     all_goals
+       rename_i x y
+       first
+       | (obtain ⟨r, hr, hz⟩ := integer_sgn_zero y
+          by_cases h0 : y.toInt = 0
+          · simp [hr, hz.mpr h0, h0]
+          · have hr0 : ¬ r = 0#i32 := fun h => h0 (hz.mp h)
+            simp [hr, hr0, h0, num.Integer.euclidean_qr_spec _ _ h0])
+       | (by_cases hs : x.size = y.size
+          · simp [hs]
+          · have hs' : ¬ (x.size.val = y.size.val) := fun h => hs (UScalar.eq_of_val_eq h)
+            simp [hs, hs']))
+
+
+/-- logos's `eo::div` and `eo::mod` of numerals: stuck by zero, else
+Euclidean. -/
+theorem eo_zdiv_num (n m : Int) :
+    Eo.__eo_zdiv (Eo.Term.Numeral n) (Eo.Term.Numeral m) =
+      if m = 0 then Eo.Term.Stuck else Eo.Term.Numeral (Int.ediv n m) := by
+  by_cases h : m = 0
+  · subst h; simp [Eo.__eo_zdiv, SmtEval.native_ite, SmtEval.native_zeq]
+  · simp [Eo.__eo_zdiv, SmtEval.native_ite, SmtEval.native_zeq, SmtEval.native_div_total, h,
+      Ne.symm h]
+    rfl
+
+theorem eo_zmod_num (n m : Int) :
+    Eo.__eo_zmod (Eo.Term.Numeral n) (Eo.Term.Numeral m) =
+      if m = 0 then Eo.Term.Stuck else Eo.Term.Numeral (Int.emod n m) := by
+  by_cases h : m = 0
+  · subst h; simp [Eo.__eo_zmod, SmtEval.native_ite, SmtEval.native_zeq]
+  · simp [Eo.__eo_zmod, SmtEval.native_ite, SmtEval.native_zeq, SmtEval.native_mod_total, h,
+      Ne.symm h]
+    rfl
+
+/-- logos's `eo::div` of two binaries of one width, as the runtime reduces
+it. -/
+theorem eo_zdiv_bin {w n1 n2 : Int} (h1 : Tree.okBv w n1) :
+    Eo.__eo_zdiv (Eo.Term.Binary w n1) (Eo.Term.Binary w n2) =
+      Eo.Term.Binary w (if n2 = 0 then (2 ^ w.toNat - 1) % 2 ^ w.toNat
+        else Int.ediv n1 n2 % 2 ^ w.toNat) := by
+  obtain ⟨hw0, -, -, -⟩ := h1
+  have hp : SmtEval.native_int_pow2 w = 2 ^ w.toNat := by
+    simp [SmtEval.native_int_pow2, SmtEval.native_zexp_total, show ¬ w < 0 by omega]
+  have hpos : (0 : Int) < 2 ^ w.toNat := by positivity
+  by_cases h : n2 = 0
+  · subst h
+    have hm : (2 ^ w.toNat - 1 : Int) % 2 ^ w.toNat = 2 ^ w.toNat - 1 :=
+      Int.emod_eq_of_lt (by omega) (by omega)
+    have hm' : (-1 : Int) % 2 ^ w.toNat = 2 ^ w.toNat + -1 := by
+      rw [← Int.add_emod_left (2 ^ w.toNat) (-1), ← Int.sub_eq_add_neg]; exact hm
+    simp [Eo.__eo_zdiv, Eo.__eo_requires, SmtEval.native_ite, SmtEval.native_zeq,
+      SmtEval.native_binary_max, SmtEval.native_zplus, SmtEval.native_zneg, Eo.native_teq,
+      SmtEval.native_not, hp, Int.sub_eq_add_neg]
+    exact hm'.symm
+  · simp [Eo.__eo_zdiv, Eo.__eo_requires, SmtEval.native_ite, SmtEval.native_zeq, Eo.native_teq,
+      SmtEval.native_not, SmtEval.native_mod_total, SmtEval.native_div_total, hp, h, Ne.symm h]
+    rfl
+
+theorem eo_zmod_bin {w n1 n2 : Int} (h1 : Tree.okBv w n1) :
+    Eo.__eo_zmod (Eo.Term.Binary w n1) (Eo.Term.Binary w n2) =
+      Eo.Term.Binary w (if n2 = 0 then n1 % 2 ^ w.toNat
+        else Int.emod n1 n2 % 2 ^ w.toNat) := by
+  obtain ⟨hw0, -, hn0, hn1⟩ := h1
+  have hp : SmtEval.native_int_pow2 w = 2 ^ w.toNat := by
+    simp [SmtEval.native_int_pow2, SmtEval.native_zexp_total, show ¬ w < 0 by omega]
+  by_cases h : n2 = 0
+  · subst h
+    have hm : n1 % 2 ^ w.toNat = n1 := Int.emod_eq_of_lt hn0 hn1
+    simp [Eo.__eo_zmod, Eo.__eo_requires, SmtEval.native_ite, SmtEval.native_zeq, Eo.native_teq,
+      SmtEval.native_not, hm]
+  · simp [Eo.__eo_zmod, Eo.__eo_requires, SmtEval.native_ite, SmtEval.native_zeq, Eo.native_teq,
+      SmtEval.native_not, SmtEval.native_mod_total, hp, h, Ne.symm h]
+    rfl
+
+
+/-- `eo::div` on handles of two numerals or two binaries: logos's `__eo_zdiv`. -/
+theorem Store.builtin_spec_int_div (s : Store) (args : Slice Term) {a b : Term} {x y : Eo.Term}
+    (hargs : args.val = [a, b]) (ha : s.Rep a x) (hb : s.Rep b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    Store.builtin_core s kind.EvalOp.IntDiv args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_zdiv x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  have htakes : Store.takes kind.EvalOp.IntDiv 2#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  unfold Store.builtin_core
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, h0]
+    unfold Store.builtin_strict
+    step with Store.any_stuck_two hargs ha hb as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hx : x = Eo.Term.Stuck
+    · subst hx
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_zdiv Eo.Term.Stuck y = Eo.Term.Stuck := by
+        unfold Eo.__eo_zdiv; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    by_cases hy : y = Eo.Term.Stuck
+    · subst hy
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_zdiv x Eo.Term.Stuck = Eo.Term.Stuck := by
+        unfold Eo.__eo_zdiv; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    simp only [hx, hy, decide_false, Bool.or_false, Bool.false_eq_true, ite_false,
+      kind.EvalOp.is_list_op, Std.bind_ok]
+    unfold Store.builtin_literal
+    step with Store.literals_two s args hargs ha.lt hb.lt as ⟨o, ho⟩
+    cases o with
+    | none =>
+      simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_zdiv x y = Eo.Term.Stuck := by
+        unfold Eo.__eo_zdiv
+        split
+        · exact absurd ⟨⟨_, Store.rep_numeral_data ha⟩, ⟨_, Store.rep_numeral_data hb⟩⟩ ho
+        · exact absurd ⟨⟨_, Store.rep_binary_data ha⟩, ⟨_, Store.rep_binary_data hb⟩⟩ ho
+        · rfl
+      rw [this]; exact hinv.rep_stuck
+    | some v =>
+      obtain ⟨l1, l2, hv, hd1, hd2⟩ := ho
+      simp only
+      have hx' := Store.rep_lit ha hd1
+      have hy' := Store.rep_lit hb hd2
+      have ht1 : TermLit l1 := by
+        rcases hx' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      have ht2 : TermLit l2 := by
+        rcases hy' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      have hev := lit_evaluate_int_div true (alloc.vec.Vec.deref v) (l1 := l1) (l2 := l2)
+        (by simp [alloc.vec.Vec.deref, hv]) ht1 ht2
+      simp only [ite_true] at hev
+      step with hev as ⟨o1, ho1⟩
+      subst ho1
+      rcases hx' with ⟨b1, rfl, rfl⟩ | ⟨i1, rfl, rfl⟩ | ⟨q1, rfl, rfl⟩ | ⟨s1, rfl, rfl⟩ |
+          ⟨w1, n1, rfl, rfl, hok1⟩ <;>
+        rcases hy' with ⟨b2, rfl, rfl⟩ | ⟨i2, rfl, rfl⟩ | ⟨q2, rfl, rfl⟩ | ⟨s2, rfl, rfl⟩ |
+          ⟨w2, n2, rfl, rfl, hok2⟩ <;>
+        first
+        | (simp only [divLit, Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+           exact ⟨hinv, Store.Grows.refl s, by simpa [Eo.__eo_zdiv] using hinv.rep_stuck⟩)
+        | (rw [eo_zdiv_num]
+           by_cases h0 : i2 = 0
+           · simp only [divLit, num.Integer.toInt_ofInt, h0, ite_true, Store.stuck_eq, Std.bind_ok,
+               WP.dspec_ok, WP.uncurry'_pair]
+             exact ⟨hinv, Store.Grows.refl s, hinv.rep_stuck⟩
+           · simp only [divLit, num.Integer.toInt_ofInt, h0, ite_false, Bool.false_eq_true,
+               ite_true]
+             exact Store.literal_numeral_spec s _ hinv h64)
+        | (by_cases hw : w1 = w2
+           · subst hw
+             rw [eo_zdiv_bin hok1]
+             obtain ⟨hw0, hw1, -, -⟩ := hok1
+             have hsz := Tree.u32Wrap_val w1.toNat (by omega)
+             have hpos : (0 : Int) < 2 ^ w1.toNat := by positivity
+             generalize hV : (if n2 = 0 then _ else _ : Int) = V
+             have hokV : Tree.okBv w1 V := by
+               refine ⟨hw0, hw1, ?_, ?_⟩ <;> rw [← hV] <;> split_ifs <;>
+                 first | exact Int.emod_nonneg _ hpos.ne' | exact Int.emod_lt_of_pos _ hpos
+             have hl : divLit true (lit.Lit.Binary (Tree.bvOf w1 n1)) (lit.Lit.Binary (Tree.bvOf w1 n2)) =
+                 some (lit.Lit.Binary (Tree.bvOf w1 V)) := by
+               rw [← hV]
+               simp [divLit, Tree.bvOf, num.Integer.toInt_ofInt, hsz]
+             rw [hl]
+             exact Store.literal_binary_spec s _ _ hokV hinv h64
+           · have hl : divLit true (lit.Lit.Binary (Tree.bvOf w1 n1)) (lit.Lit.Binary (Tree.bvOf w2 n2)) =
+                 none := by
+               have e1 := Tree.bvW_bvOf w1 n1 hok1
+               have e2 := Tree.bvW_bvOf w2 n2 hok2
+               simp only [divLit]
+               rw [if_neg]
+               intro hs; apply hw; unfold Tree.bvW at e1 e2; rw [← e1, ← e2, hs]
+             have he : Eo.__eo_zdiv (Eo.Term.Binary w1 n1) (Eo.Term.Binary w2 n2) = Eo.Term.Stuck := by
+               simp [Eo.__eo_zdiv, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, hw]
+             rw [hl, he]
+             simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+             exact ⟨hinv, Store.Grows.refl s, hinv.rep_stuck⟩)
+
+/-- `eo::mod` on handles of two numerals or two binaries: logos's `__eo_zmod`. -/
+theorem Store.builtin_spec_int_mod (s : Store) (args : Slice Term) {a b : Term} {x y : Eo.Term}
+    (hargs : args.val = [a, b]) (ha : s.Rep a x) (hb : s.Rep b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    Store.builtin_core s kind.EvalOp.IntMod args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_zmod x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  have htakes : Store.takes kind.EvalOp.IntMod 2#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  unfold Store.builtin_core
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, h0]
+    unfold Store.builtin_strict
+    step with Store.any_stuck_two hargs ha hb as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hx : x = Eo.Term.Stuck
+    · subst hx
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_zmod Eo.Term.Stuck y = Eo.Term.Stuck := by
+        unfold Eo.__eo_zmod; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    by_cases hy : y = Eo.Term.Stuck
+    · subst hy
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_zmod x Eo.Term.Stuck = Eo.Term.Stuck := by
+        unfold Eo.__eo_zmod; split <;> simp_all
+      rw [this]; exact hinv.rep_stuck
+    simp only [hx, hy, decide_false, Bool.or_false, Bool.false_eq_true, ite_false,
+      kind.EvalOp.is_list_op, Std.bind_ok]
+    unfold Store.builtin_literal
+    step with Store.literals_two s args hargs ha.lt hb.lt as ⟨o, ho⟩
+    cases o with
+    | none =>
+      simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_zmod x y = Eo.Term.Stuck := by
+        unfold Eo.__eo_zmod
+        split
+        · exact absurd ⟨⟨_, Store.rep_numeral_data ha⟩, ⟨_, Store.rep_numeral_data hb⟩⟩ ho
+        · exact absurd ⟨⟨_, Store.rep_binary_data ha⟩, ⟨_, Store.rep_binary_data hb⟩⟩ ho
+        · rfl
+      rw [this]; exact hinv.rep_stuck
+    | some v =>
+      obtain ⟨l1, l2, hv, hd1, hd2⟩ := ho
+      simp only
+      have hx' := Store.rep_lit ha hd1
+      have hy' := Store.rep_lit hb hd2
+      have ht1 : TermLit l1 := by
+        rcases hx' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      have ht2 : TermLit l2 := by
+        rcases hy' with ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, rfl⟩ | ⟨_, _, _, rfl, _⟩ <;>
+          trivial
+      have hev := lit_evaluate_int_div false (alloc.vec.Vec.deref v) (l1 := l1) (l2 := l2)
+        (by simp [alloc.vec.Vec.deref, hv]) ht1 ht2
+      simp only [Bool.false_eq_true, ite_false] at hev
+      step with hev as ⟨o1, ho1⟩
+      subst ho1
+      rcases hx' with ⟨b1, rfl, rfl⟩ | ⟨i1, rfl, rfl⟩ | ⟨q1, rfl, rfl⟩ | ⟨s1, rfl, rfl⟩ |
+          ⟨w1, n1, rfl, rfl, hok1⟩ <;>
+        rcases hy' with ⟨b2, rfl, rfl⟩ | ⟨i2, rfl, rfl⟩ | ⟨q2, rfl, rfl⟩ | ⟨s2, rfl, rfl⟩ |
+          ⟨w2, n2, rfl, rfl, hok2⟩ <;>
+        first
+        | (simp only [divLit, Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+           exact ⟨hinv, Store.Grows.refl s, by simpa [Eo.__eo_zmod] using hinv.rep_stuck⟩)
+        | (rw [eo_zmod_num]
+           by_cases h0 : i2 = 0
+           · simp only [divLit, num.Integer.toInt_ofInt, h0, ite_true, Store.stuck_eq, Std.bind_ok,
+               WP.dspec_ok, WP.uncurry'_pair]
+             exact ⟨hinv, Store.Grows.refl s, hinv.rep_stuck⟩
+           · simp only [divLit, num.Integer.toInt_ofInt, h0, ite_false, Bool.false_eq_true,
+               ite_true]
+             exact Store.literal_numeral_spec s _ hinv h64)
+        | (by_cases hw : w1 = w2
+           · subst hw
+             rw [eo_zmod_bin hok1]
+             obtain ⟨hw0, hw1, -, -⟩ := hok1
+             have hsz := Tree.u32Wrap_val w1.toNat (by omega)
+             have hpos : (0 : Int) < 2 ^ w1.toNat := by positivity
+             generalize hV : (if n2 = 0 then _ else _ : Int) = V
+             have hokV : Tree.okBv w1 V := by
+               refine ⟨hw0, hw1, ?_, ?_⟩ <;> rw [← hV] <;> split_ifs <;>
+                 first | exact Int.emod_nonneg _ hpos.ne' | exact Int.emod_lt_of_pos _ hpos
+             have hl : divLit false (lit.Lit.Binary (Tree.bvOf w1 n1)) (lit.Lit.Binary (Tree.bvOf w1 n2)) =
+                 some (lit.Lit.Binary (Tree.bvOf w1 V)) := by
+               rw [← hV]
+               simp [divLit, Tree.bvOf, num.Integer.toInt_ofInt, hsz]
+             rw [hl]
+             exact Store.literal_binary_spec s _ _ hokV hinv h64
+           · have hl : divLit false (lit.Lit.Binary (Tree.bvOf w1 n1)) (lit.Lit.Binary (Tree.bvOf w2 n2)) =
+                 none := by
+               have e1 := Tree.bvW_bvOf w1 n1 hok1
+               have e2 := Tree.bvW_bvOf w2 n2 hok2
+               simp only [divLit]
+               rw [if_neg]
+               intro hs; apply hw; unfold Tree.bvW at e1 e2; rw [← e1, ← e2, hs]
+             have he : Eo.__eo_zmod (Eo.Term.Binary w1 n1) (Eo.Term.Binary w2 n2) = Eo.Term.Stuck := by
+               simp [Eo.__eo_zmod, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, hw]
+             rw [hl, he]
+             simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
+             exact ⟨hinv, Store.Grows.refl s, hinv.rep_stuck⟩)
+
 end pathos_compiled_checker
