@@ -21,6 +21,14 @@ public import $PROOFS$.Part18
 public import $PROOFS$.Part19
 public import $PROOFS$.Part20
 public import $PROOFS$.Part21
+public import $PROOFS$.Part22
+public import $PROOFS$.Part23
+public import $PROOFS$.Part24
+public import $PROOFS$.Part25
+public import $PROOFS$.Part26
+public import $PROOFS$.Part27
+public import $PROOFS$.Part28
+public import $PROOFS$.Part29
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos

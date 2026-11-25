@@ -1136,8 +1136,15 @@ class Generator:
         end = "end pathos_compiled_checker\n"
         files["proofs/Head.lean"] = "".join(o) + end
         root = ["module\n"]
-        parts = [programs[i:i + PROOFS_PER_PART]
-                 for i in range(0, len(programs), PROOFS_PER_PART)]
+        # A program with a heartbeat limit of its own (`[heartbeats]`) is in
+        # a part of its own, after the others: it is the most of a part's
+        # memory, and two of them in one part (or in two parts that Lake
+        # builds at once) can pass the cap.
+        heavy = self.cfg.get("heartbeats", {})
+        light = [t for p, t in zip(proved, programs) if p.name not in heavy]
+        parts = [light[i:i + PROOFS_PER_PART]
+                 for i in range(0, len(light), PROOFS_PER_PART)]
+        parts += [[t] for p, t in zip(proved, programs) if p.name in heavy]
         for k, part in enumerate(parts):
             files["proofs/Part%d.lean" % k] = (
                 "module\npublic import $PROOFS$.Head\n" + imports + "\n"

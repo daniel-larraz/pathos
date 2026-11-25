@@ -21,6 +21,14 @@ public import CpcProofs.Part18
 public import CpcProofs.Part19
 public import CpcProofs.Part20
 public import CpcProofs.Part21
+public import CpcProofs.Part22
+public import CpcProofs.Part23
+public import CpcProofs.Part24
+public import CpcProofs.Part25
+public import CpcProofs.Part26
+public import CpcProofs.Part27
+public import CpcProofs.Part28
+public import CpcProofs.Part29
 public import CpcChecker
 public import Cpc.Logos
 import all Cpc.Logos
