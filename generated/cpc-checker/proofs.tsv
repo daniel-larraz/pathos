@@ -8,7 +8,7 @@ $are_distinct_terms_type	generated
 $arith_mk_one	generated	
 $arith_mk_zero	generated	
 $arith_normalize_lit	generated	
-$arith_reduction_pred	none	its generated proof does not build: the spec of case 7: times out (whnf, 2,000,000 heartbeats); reached once $eo_typeof had a proof
+$arith_reduction_pred	none	its generated proof does not build: the spec of case 7: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $bv_div_mod_impl, 11 min)
 $arith_rel_inv	generated	
 $arith_rel_neg	generated	
 $arith_rel_sum	generated	
@@ -30,7 +30,7 @@ $bv_bitblast_ult	generated
 $bv_bitblast_ult_rec	generated	
 $bv_bitwidth	generated	
 $bv_const_to_bitlist_rec	none	case 1 has a builtin operator
-$bv_div_mod_impl	none	its generated proof does not build: the spec of case 2: times out (whnf, 2,000,000 heartbeats); reached once eo::list_len and eo::list_rev had specs
+$bv_div_mod_impl	none	its generated proof does not build: the spec of case 2: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $arith_reduction_pred, 11 min)
 $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	case 14 has a builtin operator
@@ -232,17 +232,17 @@ $eo_prog_bv-commutative-add	generated
 $eo_prog_bv-commutative-comp	generated	
 $eo_prog_bv-commutative-xor	generated	
 $eo_prog_bv-comp-eliminate	generated	
-$eo_prog_bv-concat-extract-merge	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
-$eo_prog_bv-concat-merge-const	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
+$eo_prog_bv-concat-extract-merge	generated	
+$eo_prog_bv-concat-merge-const	generated	
 $eo_prog_bv-eq-extract-elim1	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (with binary literals, milestone 6)
 $eo_prog_bv-eq-extract-elim2	generated	
 $eo_prog_bv-eq-extract-elim3	generated	
 $eo_prog_bv-eq-not-solve	generated	
 $eo_prog_bv-eq-xor-solve	generated	
 $eo_prog_bv-extract-concat-1	generated	
-$eo_prog_bv-extract-concat-2	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once eo::list_concat had a spec
-$eo_prog_bv-extract-concat-3	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
-$eo_prog_bv-extract-concat-4	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once eo::list_concat had a spec
+$eo_prog_bv-extract-concat-2	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl, on literal arithmetic, step B); its spec builds at 20,000,000 heartbeats
+$eo_prog_bv-extract-concat-3	generated	
+$eo_prog_bv-extract-concat-4	generated	
 $eo_prog_bv-extract-extract	generated	
 $eo_prog_bv-extract-mult-leading-bit	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps and times out (whnf, 2,000,000 heartbeats), and logos_eq does not prove the case form equal to logos's function (rfl); reached once $eo_typeof had a proof
 $eo_prog_bv-extract-not	generated	
@@ -313,7 +313,7 @@ $eo_prog_bv-sign-extend-ult-const-3	none	its generated proof does not build: the
 $eo_prog_bv-sign-extend-ult-const-4	none	its generated proof does not build: the spec of case 0: simp exceeds its maximum number of steps (with its numeral or string literals, step C)
 $eo_prog_bv-sle-eliminate	generated	
 $eo_prog_bv-sle-self	generated	
-$eo_prog_bv-smod-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); reached once $eo_typeof had a proof
+$eo_prog_bv-smod-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); at 20,000,000 it runs out of 8G of memory (13 min)
 $eo_prog_bv-smulo-elim	none	case 0 has a builtin operator
 $eo_prog_bv-srem-eliminate	generated	
 $eo_prog_bv-ssubo-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)

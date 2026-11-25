@@ -1703,6 +1703,24 @@ def eo__24eo_5fprog_5fbv_2dcomp_2deliminate.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_bv_comp_eliminate x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_bv-concat-extract-merge`. -/
+def eo__24eo_5fprog_5fbv_2dconcat_2dextract_2dmerge.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 a5 a6 a7 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (x_a7 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 → Represents.rep s a5 x_a5 → Represents.rep s a6 x_a6 → Represents.rep s a7 x_a7 →
+    eo__24eo_5fprog_5fbv_2dconcat_2dextract_2dmerge s a0 a1 a2 a3 a4 a5 a6 a7 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_bv_concat_extract_merge x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_bv-concat-merge-const`. -/
+def eo__24eo_5fprog_5fbv_2dconcat_2dmerge_2dconst.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 a5 a6 a7 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (x_a7 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 → Represents.rep s a5 x_a5 → Represents.rep s a6 x_a6 → Represents.rep s a7 x_a7 →
+    eo__24eo_5fprog_5fbv_2dconcat_2dmerge_2dconst s a0 a1 a2 a3 a4 a5 a6 a7 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_bv_concat_merge_const x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_bv-eq-extract-elim2`. -/
 def eo__24eo_5fprog_5fbv_2deq_2dextract_2delim2.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 a2 a3 a4 a5 a6 a7 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (x_a7 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -1746,6 +1764,24 @@ def eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d1.Spec (n : Nat) : Prop :=
     eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d1 s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_bv_extract_concat_1 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_bv-extract-concat-3`. -/
+def eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d3.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (x_a7 : _) (x_a8 : _) (x_a9 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 → Represents.rep s a5 x_a5 → Represents.rep s a6 x_a6 → Represents.rep s a7 x_a7 → Represents.rep s a8 x_a8 → Represents.rep s a9 x_a9 →
+    eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d3 s a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_bv_extract_concat_3 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_bv-extract-concat-4`. -/
+def eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d4.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 a5 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 → Represents.rep s a5 x_a5 →
+    eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d4 s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_bv_extract_concat_4 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_bv-extract-extract`. -/
@@ -8083,11 +8119,15 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fbv_2dcommutative_2dcomp : eo__24eo_5fprog_5fbv_2dcommutative_2dcomp.Spec n
   eo__24eo_5fprog_5fbv_2dcommutative_2dxor : eo__24eo_5fprog_5fbv_2dcommutative_2dxor.Spec n
   eo__24eo_5fprog_5fbv_2dcomp_2deliminate : eo__24eo_5fprog_5fbv_2dcomp_2deliminate.Spec n
+  eo__24eo_5fprog_5fbv_2dconcat_2dextract_2dmerge : eo__24eo_5fprog_5fbv_2dconcat_2dextract_2dmerge.Spec n
+  eo__24eo_5fprog_5fbv_2dconcat_2dmerge_2dconst : eo__24eo_5fprog_5fbv_2dconcat_2dmerge_2dconst.Spec n
   eo__24eo_5fprog_5fbv_2deq_2dextract_2delim2 : eo__24eo_5fprog_5fbv_2deq_2dextract_2delim2.Spec n
   eo__24eo_5fprog_5fbv_2deq_2dextract_2delim3 : eo__24eo_5fprog_5fbv_2deq_2dextract_2delim3.Spec n
   eo__24eo_5fprog_5fbv_2deq_2dnot_2dsolve : eo__24eo_5fprog_5fbv_2deq_2dnot_2dsolve.Spec n
   eo__24eo_5fprog_5fbv_2deq_2dxor_2dsolve : eo__24eo_5fprog_5fbv_2deq_2dxor_2dsolve.Spec n
   eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d1 : eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d1.Spec n
+  eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d3 : eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d3.Spec n
+  eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d4 : eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d4.Spec n
   eo__24eo_5fprog_5fbv_2dextract_2dextract : eo__24eo_5fprog_5fbv_2dextract_2dextract.Spec n
   eo__24eo_5fprog_5fbv_2dextract_2dnot : eo__24eo_5fprog_5fbv_2dextract_2dnot.Spec n
   eo__24eo_5fprog_5fbv_2dextract_2dsign_2dextend_2d1 : eo__24eo_5fprog_5fbv_2dextract_2dsign_2dextend_2d1.Spec n
