@@ -1110,6 +1110,20 @@ class Generator:
                      % (k, k, "".join("(i%d : Eo.Term) " % j for j in range(k)).strip(),
                         k, vs, " ∧ ".join("i%d ≠ Eo.Term.Stuck ∧ Valid.valid i%d" % (j, j)
                                           for j in range(k)), k))
+        # The same of a variable, whose parts (its name and its type) are
+        # built strictly too (`$emb_Var`, `__eo_mk_var`)
+        o.append("@[simp] theorem Valid.var (x0 x1 : Eo.Term) :\n"
+                 "    Valid.valid (Eo.Term.Var x0 x1) ↔\n"
+                 "      x0 ≠ Eo.Term.Stuck ∧ Valid.valid x0 ∧ x1 ≠ Eo.Term.Stuck ∧ Valid.valid x1 := by\n"
+                 "  show TreeValid (Embed.enc_Term _) ↔ _\n"
+                 "  have hs : schema.Constructor." + ident("$emb_Var") + ".Strict := Or.inr rfl\n"
+                 "  have he : ∀ x, Embed.enc_Term x = Tree.stuck ↔ x = Eo.Term.Stuck :=\n"
+                 "    fun x => by simpa [Embed.embedded_enc_Term] using enc_eq_stuck_iff x\n"
+                 "  have hv : ∀ x, Valid.valid x = TreeValid (Embed.enc_Term x) := fun _ => rfl\n"
+                 "  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true, hs, true_implies,\n"
+                 "    List.mem_cons, List.not_mem_nil, or_false, forall_eq_or_imp, forall_eq,\n"
+                 "    ne_eq, he, hv]\n"
+                 "  all_goals tauto\n\n")
         o.append("/-- What is proved of the programs, for stores that can enter `n` "
                  "more calls. -/\nstructure Specs (n : Nat) : Prop where\n")
         for p in proved:

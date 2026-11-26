@@ -713,6 +713,19 @@ def eo__24smtx_5ftypeof_5fite.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__smtx_typeof_ite x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+@[simp] theorem Valid.var (x0 x1 : Eo.Term) :
+    Valid.valid (Eo.Term.Var x0 x1) ↔
+      x0 ≠ Eo.Term.Stuck ∧ Valid.valid x0 ∧ x1 ≠ Eo.Term.Stuck ∧ Valid.valid x1 := by
+  show TreeValid (Embed.enc_Term _) ↔ _
+  have hs : schema.Constructor.eo__24emb_5fVar.Strict := Or.inr rfl
+  have he : ∀ x, Embed.enc_Term x = Tree.stuck ↔ x = Eo.Term.Stuck :=
+    fun x => by simpa [Embed.embedded_enc_Term] using enc_eq_stuck_iff x
+  have hv : ∀ x, Valid.valid x = TreeValid (Embed.enc_Term x) := fun _ => rfl
+  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true, hs, true_implies,
+    List.mem_cons, List.not_mem_nil, or_false, forall_eq_or_imp, forall_eq,
+    ne_eq, he, hv]
+  all_goals tauto
+
 /-- What is proved of the programs, for stores that can enter `n` more calls. -/
 structure Specs (n : Nat) : Prop where
   eo__24eo_5fStateObj_5fproven : eo__24eo_5fStateObj_5fproven.Spec n

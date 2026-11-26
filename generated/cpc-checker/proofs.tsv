@@ -911,7 +911,7 @@ $is_poly_norm_rel_consts_rel	generated
 $is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
 $is_quant_dt_split_conj	none	it calls $contains_atomic_term_list_free_rec, which has no proof
 $is_quant_miniscope_or	none	it calls $contains_atomic_term_list_free_rec, which has no proof
-$is_renaming_rec	none	its generated proof does not build: a repeated variable; logos_eq_deep leaves goals unsolved
+$is_renaming_rec	generated	
 $is_seq_const	generated	
 $is_seq_const_rec	generated	
 $is_var_list	none	case 0 has a builtin operator

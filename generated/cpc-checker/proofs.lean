@@ -42,6 +42,8 @@ public import $PROOFS$.Part39
 public import $PROOFS$.Part40
 public import $PROOFS$.Part41
 public import $PROOFS$.Part42
+public import $PROOFS$.Part43
+public import $PROOFS$.Part44
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos
@@ -846,6 +848,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24is_5finstantiation_spec n ih,
       eo__24is_5fpoly_5fnorm_5frel_5fconsts_spec n ih,
       eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel_spec n ih,
+      eo__24is_5frenaming_5frec_spec n ih,
       eo__24is_5fseq_5fconst_spec n ih,
       eo__24is_5fseq_5fconst_5frec_spec n ih,
       eo__24least_5fint_5fgt_spec n ih,

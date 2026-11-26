@@ -6959,6 +6959,15 @@ def eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__is_poly_norm_rel_consts_rel x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$is_renaming_rec`. -/
+def eo__24is_5frenaming_5frec.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24is_5frenaming_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__is_renaming_rec x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$is_seq_const`. -/
 def eo__24is_5fseq_5fconst.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -8246,6 +8255,19 @@ def eo__24typed_5flist_5felement_5ftype.Spec (n : Nat) : Prop :=
     ne_eq, he, hv]
   all_goals tauto
 
+@[simp] theorem Valid.var (x0 x1 : Eo.Term) :
+    Valid.valid (Eo.Term.Var x0 x1) ↔
+      x0 ≠ Eo.Term.Stuck ∧ Valid.valid x0 ∧ x1 ≠ Eo.Term.Stuck ∧ Valid.valid x1 := by
+  show TreeValid (Embed.enc_Term _) ↔ _
+  have hs : schema.Constructor.eo__24emb_5fVar.Strict := Or.inr rfl
+  have he : ∀ x, Embed.enc_Term x = Tree.stuck ↔ x = Eo.Term.Stuck :=
+    fun x => by simpa [Embed.embedded_enc_Term] using enc_eq_stuck_iff x
+  have hv : ∀ x, Valid.valid x = TreeValid (Embed.enc_Term x) := fun _ => rfl
+  simp only [Embed.enc_Term, TreeValid, TreesValid, and_true, hs, true_implies,
+    List.mem_cons, List.not_mem_nil, or_false, forall_eq_or_imp, forall_eq,
+    ne_eq, he, hv]
+  all_goals tauto
+
 /-- What is proved of the programs, for stores that can enter `n` more calls. -/
 structure Specs (n : Nat) : Prop where
   eo__24abconv_5fint_5fto_5fbv_5felim : eo__24abconv_5fint_5fto_5fbv_5felim.Spec n
@@ -9018,6 +9040,7 @@ structure Specs (n : Nat) : Prop where
   eo__24is_5finstantiation : eo__24is_5finstantiation.Spec n
   eo__24is_5fpoly_5fnorm_5frel_5fconsts : eo__24is_5fpoly_5fnorm_5frel_5fconsts.Spec n
   eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel : eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel.Spec n
+  eo__24is_5frenaming_5frec : eo__24is_5frenaming_5frec.Spec n
   eo__24is_5fseq_5fconst : eo__24is_5fseq_5fconst.Spec n
   eo__24is_5fseq_5fconst_5frec : eo__24is_5fseq_5fconst_5frec.Spec n
   eo__24least_5fint_5fgt : eo__24least_5fint_5fgt.Spec n

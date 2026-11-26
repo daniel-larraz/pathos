@@ -42,6 +42,8 @@ public import CpcProofs.Part39
 public import CpcProofs.Part40
 public import CpcProofs.Part41
 public import CpcProofs.Part42
+public import CpcProofs.Part43
+public import CpcProofs.Part44
 public import CpcChecker
 public import Cpc.Logos
 import all Cpc.Logos
@@ -846,6 +848,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24is_5finstantiation_spec n ih,
       eo__24is_5fpoly_5fnorm_5frel_5fconsts_spec n ih,
       eo__24is_5fpoly_5fnorm_5frel_5fconsts_5frel_spec n ih,
+      eo__24is_5frenaming_5frec_spec n ih,
       eo__24is_5fseq_5fconst_spec n ih,
       eo__24is_5fseq_5fconst_5frec_spec n ih,
       eo__24least_5fint_5fgt_spec n ih,

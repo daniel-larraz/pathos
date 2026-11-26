@@ -83,9 +83,10 @@ good = ["StateOK", ""]
 # most `programs` programs and `bytes` of their proofs' text, in program
 # order. A part's memory grows with its size: Part5 held 40 programs in
 # 631 KB and peaked at 7.9 GB, against the 8G cap of a local build and
-# CI's 16 GB for two parts at once (2026-11-25).
+# CI's 16 GB for two parts at once (2026-11-25). At 450,000 bytes Part6
+# still reached 7.2 GB: some bit-vector rules weigh more per byte.
 programs = 40
-bytes = 450000
+bytes = 350000
 
 [heartbeats]
 # The programs whose proofs take more than the parts' 2,000,000 heartbeats
