@@ -17,8 +17,8 @@ subDir = "backends/lean"
 
 [[require]]
 name = "LogosVerification"
-git = "/home/daniel/Projects/cvc5/logos"
-rev = "d4c919132867ffe4fb06ff622d91e9b6cec4734b"
+git = "https://github.com/cvc5/logos"
+rev = "241160d8f66201f08b79a62a557778c9d111a4b6"
 subDir = "verification"
 
 # Mathlib comes last, as in proofs/lakefile.toml (which says why).
