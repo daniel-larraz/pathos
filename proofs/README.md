@@ -8,7 +8,7 @@ is missing for a theorem about `pathos` are in
 
 | | |
 | --- | --- |
-| `MiniChecker/`, `MiniChecker.lean` | Generated: the Lean of `generated/cpcmini-checker`. Never edited (`scripts/proofs-build --translate DIR` writes it again and compares). |
+| `MiniChecker/`, `MiniChecker.lean` | Generated: the Lean of `generated/cpcmini-checker`. Never edited (`scripts/proofs-build --translate DIR` writes it again and compares, and if it matches writes `MiniChecker.stamp`, the hash of what it was made from, which every build checks). |
 | `PathosProofs/Trusted.lean` | The axioms about the Rust that is not translated. |
 | `PathosProofs/Store/` | The store: its table of terms, its invariant, its operations, the cache of program results, and the relation between handles and logos's terms. |
 | `PathosProofs/Runtime/` | Written by hand: what the runtime's operations and the signature's constructors do, in the form generated proofs use, and the relations between handles and logos's values. |

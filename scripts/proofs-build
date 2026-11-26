@@ -13,7 +13,9 @@
 #                      generated/cpcmini-checker (scripts/aeneas-translate
 #                      with the Charon and Aeneas that scripts/aeneas-setup
 #                      installed in TOOLS, then scripts/aeneas-stitch), and
-#                      fail if it is not what the repository holds
+#                      fail if it is not what the repository holds; if it
+#                      is, write the stamp of its inputs (MiniChecker.stamp,
+#                      or with --cpc CpcChecker.stamp)
 #   --no-build         only the checks
 #   TARGET...          what to build (default: the project's default targets)
 #
@@ -21,7 +23,9 @@
 # Lean, Mathlib, Aeneas and logos of proofs/pins.env; scripts/aeneas-setup
 # installs that Aeneas and Charon; generated/cpcmini-checker was generated
 # from that logos; Cargo.toml builds the checker crate with overflow checks
-# in release, which the proofs assume. Then, in the built project, that no proof uses `sorry`
+# in release, which the proofs assume; without --translate, that the
+# translation's stamp is that of the crate and the tools as they are. Then,
+# in the built project, that no proof uses `sorry`
 # or an axiom beyond Lean's own and those of the trusted file
 # (scripts/proofs-axioms, when the project has theorems to check).
 #
@@ -123,6 +127,36 @@ EOF
 [[ "$problems" -eq 0 ]] || fail "$problems places disagree with proofs/pins.env or with what the proofs assume"
 echo "proofs-build: Lean $LEAN_VERSION, Mathlib ${MATHLIB_REV:0:12}, Aeneas ${AENEAS_REV:0:12}, logos ${LOGOS_PROOFS_REV:0:12}: as pinned"
 
+# What the translation is made from: the crate (its sources, manifest and
+# lock file), the pinned Charon and Aeneas, and the scripts that run them
+# (`<checker>.stamp`, a hash of all of it). --translate writes it when the
+# translation is what the tools write; every other run checks it, so a
+# crate regenerated (or a tool moved) without translating again fails here
+# rather than as a proof that no longer unifies.
+stamp_file="$project/$checker.stamp"
+stamp="$(python3 - "$root" "$crate" "$AENEAS_REV" "$CHARON_REV" <<'EOF'
+import hashlib, sys
+from pathlib import Path
+root, crate, aeneas, charon = sys.argv[1:]
+root = Path(root)
+c = root / "generated" / crate
+files = sorted(p for p in (c / "src").rglob("*") if p.is_file())
+files += [c / "Cargo.toml", c / "Cargo.lock",
+          root / "scripts" / "aeneas-translate", root / "scripts" / "aeneas-stitch"]
+h = hashlib.sha256(f"aeneas {aeneas}\ncharon {charon}\n".encode())
+for p in files:
+    h.update(f"{p.relative_to(root)}\n".encode())
+    h.update(hashlib.sha256(p.read_bytes()).hexdigest().encode() + b"\n")
+print(h.hexdigest())
+EOF
+)"
+write_stamp() {
+  printf '%s\n' \
+    "# The inputs ${checker} was translated from (scripts/proofs-build --translate" \
+    "# wrote this when the translation matched; every build checks it)." \
+    "$stamp" > "$stamp_file"
+}
+
 # The Lean of the checker, from the crate.
 if [[ -n "$tools" ]]; then
   work="$root/target/proofs-build-$crate"
@@ -137,10 +171,15 @@ if [[ -n "$tools" ]]; then
   if diff -r "$work/stitched/$checker" "$project/$checker" > "$work/check.diff" &&
     diff "$work/stitched/$checker.lean" "$project/$checker.lean" >> "$work/check.diff"; then
     echo "proofs-build: $rel/$checker is what Charon and Aeneas write for generated/$crate"
+    write_stamp
   else
     head -n 20 "$work/check.diff"
     fail "$rel/$checker differs (the whole difference: $work/check.diff)"
   fi
+elif [[ "$(tail -n 1 "$stamp_file" 2>/dev/null)" != "$stamp" ]]; then
+  fail "${project#"$root"/}/$checker was not translated from generated/$crate as it is (or with the pinned Charon and Aeneas): translate it again (aeneas-translate, aeneas-stitch) and run scripts/proofs-build$($cpc && echo " --cpc") --translate TOOLS, which checks it and writes ${stamp_file#"$root"/}"
+else
+  echo "proofs-build: ${project#"$root"/}/$checker was translated from generated/$crate as it is"
 fi
 
 $build || exit 0

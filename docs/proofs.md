@@ -27,11 +27,21 @@ To build and check, from a clean checkout:
 
 ```
 scripts/aeneas-setup DIR                 # Charon and Aeneas, once
-scripts/proofs-build --translate DIR     # the Lean of the crate again, compared;
-                                         # then the build, and the axioms
+scripts/proofs-build --translate DIR     # the Lean of the crate again, compared
+                                         # (and, if it matches, MiniChecker.stamp
+                                         # written); then the build, and the axioms
 scripts/proofs-build                     # the build and the axioms only
-scripts/proofs-build --no-build          # the pins and the overflow setting (CI)
+scripts/proofs-build --no-build          # the pins, the overflow setting, and the
+                                         # stamp (CI; also with --cpc)
 ```
+
+The stamp (`proofs/MiniChecker.stamp`, `proofs-cpc/CpcChecker.stamp`) is a
+hash of what the translation is made from: the crate's sources, manifest
+and lock file, the pinned Charon and Aeneas, and `scripts/aeneas-translate`
+and `scripts/aeneas-stitch`. A crate regenerated without translating it
+again (as 03e058d was) fails at the checks, not as a proof that no longer
+unifies. After translating again, copy the stitched Lean in and run
+`--translate` once more: it compares, and writes the stamp.
 
 `scripts/proofs-build` checks that the lakefile, the manifest,
 `scripts/aeneas-setup` and the crate's note agree with `pins.env`, and that
