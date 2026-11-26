@@ -148,7 +148,7 @@ $eo_prog_arith-int-div-total-one	generated
 $eo_prog_arith-int-div-total-over-mod	generated	
 $eo_prog_arith-int-div-total-zero	generated	
 $eo_prog_arith-int-eq-conflict	generated	
-$eo_prog_arith-int-geq-tighten	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (with its numeral or string literals, step C)
+$eo_prog_arith-int-geq-tighten	generated	
 $eo_prog_arith-int-mod-total	generated	
 $eo_prog_arith-int-mod-total-neg	generated	
 $eo_prog_arith-int-mod-total-one	generated	
@@ -247,7 +247,7 @@ $eo_prog_bv-extract-extract	generated
 $eo_prog_bv-extract-mult-leading-bit	none	its generated proof does not build: the spec of case 0: times out (whnf) at 20,000,000 heartbeats, with no_match_ne
 $eo_prog_bv-extract-not	generated	
 $eo_prog_bv-extract-sign-extend-1	generated	
-$eo_prog_bv-extract-sign-extend-2	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
+$eo_prog_bv-extract-sign-extend-2	generated	
 $eo_prog_bv-extract-sign-extend-3	generated	
 $eo_prog_bv-extract-whole	generated	
 $eo_prog_bv-ite-const-children-1	generated	
@@ -296,7 +296,7 @@ $eo_prog_bv-rotate-left-eliminate-2	generated
 $eo_prog_bv-rotate-right-eliminate-1	generated	
 $eo_prog_bv-rotate-right-eliminate-2	generated	
 $eo_prog_bv-saddo-eliminate	generated	
-$eo_prog_bv-sdiv-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
+$eo_prog_bv-sdiv-eliminate	generated	
 $eo_prog_bv-sdivo-eliminate	generated	
 $eo_prog_bv-sge-eliminate	generated	
 $eo_prog_bv-sgt-eliminate	generated	
@@ -305,8 +305,8 @@ $eo_prog_bv-shl-by-const-1	generated
 $eo_prog_bv-shl-by-const-2	generated	
 $eo_prog_bv-shl-zero	generated	
 $eo_prog_bv-sign-extend-eliminate-0	generated	
-$eo_prog_bv-sign-extend-eq-const-1	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
-$eo_prog_bv-sign-extend-eq-const-2	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
+$eo_prog_bv-sign-extend-eq-const-1	generated	
+$eo_prog_bv-sign-extend-eq-const-2	generated	
 $eo_prog_bv-sign-extend-ult-const-1	generated	
 $eo_prog_bv-sign-extend-ult-const-2	generated	
 $eo_prog_bv-sign-extend-ult-const-3	generated	
@@ -316,7 +316,7 @@ $eo_prog_bv-sle-self	generated
 $eo_prog_bv-smod-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); at 20,000,000 it runs out of 8G of memory (13 min)
 $eo_prog_bv-smulo-elim	none	case 0 has a builtin operator
 $eo_prog_bv-srem-eliminate	generated	
-$eo_prog_bv-ssubo-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)
+$eo_prog_bv-ssubo-eliminate	generated	
 $eo_prog_bv-sub-eliminate	generated	
 $eo_prog_bv-uaddo-eliminate	generated	
 $eo_prog_bv-udiv-one	generated	
@@ -585,7 +585,7 @@ $eo_prog_str-eq-repl-self-emp	generated
 $eo_prog_str-eq-repl-self-src	generated	
 $eo_prog_str-eq-repl-tgt-eq-len	generated	
 $eo_prog_str-from-int-no-ctn-nondigit	generated	
-$eo_prog_str-in-re-concat-star-char	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)
+$eo_prog_str-in-re-concat-star-char	generated	
 $eo_prog_str-in-re-consume	none	it calls $str_re_consume, which has no proof
 $eo_prog_str-in-re-contains	generated	
 $eo_prog_str-in-re-eval	none	case 0 has a builtin operator
@@ -593,12 +593,12 @@ $eo_prog_str-in-re-from-int-dig-range	generated
 $eo_prog_str-in-re-from-int-nemp-dig-range	generated	
 $eo_prog_str-in-re-inter-elim	generated	
 $eo_prog_str-in-re-range-elim	generated	
-$eo_prog_str-in-re-sigma	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)
-$eo_prog_str-in-re-sigma-star	none	its generated proof does not build: the spec of case 0: leaves goals unsolved (milestone 7's arithmetic)
+$eo_prog_str-in-re-sigma	generated	
+$eo_prog_str-in-re-sigma-star	generated	
 $eo_prog_str-in-re-union-elim	generated	
 $eo_prog_str-indexof-contains-concat-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-indexof-contains-pre	generated	
-$eo_prog_str-indexof-eq-irr	none	its generated proof does not build: the spec of case 0: simp times out (isDefEq, 1,000,000 heartbeats)
+$eo_prog_str-indexof-eq-irr	generated	
 $eo_prog_str-indexof-find-emp	generated	
 $eo_prog_str-indexof-len-oob	generated	
 $eo_prog_str-indexof-len-oob2	generated	
@@ -655,7 +655,7 @@ $eo_prog_str-replace-dual-ctn-false	generated
 $eo_prog_str-replace-emp-ctn-src	generated	
 $eo_prog_str-replace-empty	generated	
 $eo_prog_str-replace-find-base	generated	
-$eo_prog_str-replace-find-first-concat	none	its generated proof does not build: the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)
+$eo_prog_str-replace-find-first-concat	generated	
 $eo_prog_str-replace-find-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-replace-id	generated	
 $eo_prog_str-replace-no-contains	generated	
