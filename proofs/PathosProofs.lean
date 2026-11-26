@@ -34,6 +34,7 @@ public import PathosProofs.Runtime.AssumeFold
 public import PathosProofs.Runtime.StateInv
 public import PathosProofs.Runtime.StateNth
 public import PathosProofs.Runtime.ConstNames
+public import PathosProofs.Runtime.Compare
 public import PathosProofs.Tactic
 public import PathosProofs.Generated
 public import MiniProofs

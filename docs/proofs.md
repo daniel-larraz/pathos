@@ -267,6 +267,21 @@ times out, a `logos_eq` that fails). What still blocks the most programs:
 (the six with no logos function, a decision of milestone 8); and the
 operators with several nils.
 
+### `eo::cmp`
+
+In three steps. First, generic (`Runtime/Compare.lean`, done): `compare`
+computes `treeCmp` on the trees its two handles stand for, given the
+constructors' arities (at most `A`, with `A ≤ 100`) and that their
+`order_key` and `of_embedding` are total. Second, generated per
+constructor: those facts for the checker's constructors, and
+`treeCmp (enc x) (enc y) = termCmp x y` by induction on logos's terms.
+Third, the builtin's spec, and the generator's support for it.
+
+Decimal and hexadecimal literals never reach `compare`: `Store::literal`
+normalizes them to rationals and binaries when it builds them, and `raw`
+is only called with Boolean, numeral, rational and string values, so
+`litCmp` does not order them (it gives `eq`, which no store reaches).
+
 ## What is trusted
 
 `proofs/axioms-allowed.txt` is the list; `scripts/proofs-axioms` enforces
@@ -988,6 +1003,7 @@ gives `true`, or an error.
 | `Runtime/StateInv.lean` | 160 | The checker-state invariant, on logos's side only: `StateOK` (no object of a state holds `Stuck`) and `ProofOK`; a premise looked up in an OK state is not `Stuck` (`state_proven_nth_ne_stuck`, and `_of` a handle's fact, for the generated lines); and every state builder keeps it (the three push checks, `push_proven`, `invoke_cmd_check_proven`, `invoke_cmd_step_pop`, `invoke_cmd`, `invoke_cmd_list`, `invoke_assume_list`; `StateOK.nil`, `.stuck`, `.tail`). The generated specs take it as a precondition (see "The state invariant"). |
 | `Runtime/StateNth.lean` | 1178 | `Store::state_nth`, the jump-pointer lookup that `$eo_state_proven_nth` is compiled to, against logos's recursive `__eo_state_proven_nth` (`Store.state_nth_spec`): the walk down a state list and back up, which fills the entries (`state_down_spec`, `state_up_…_spec`; the two copies of the way up that Aeneas makes are proved alike), the search for the node at a depth (`state_ancestor_spec`), the read of the index, `charge`, and the program (`state_proven_nth_spec`), which the generated proofs use. See "The state lookup". |
 | `Runtime/ConstNames.lean` | 293 | The names of constants (`native::constant_name`, `uconst_id`): the runtime's digit loop and copy loop against `"@u." ++ toString i` (`digitsRev`, `toString_codes`, `native_uconst_id_codes`), and `Store.native_spec_uconst_id`, which the emitter writes the line of `uconst_id` from. See "The names of constants". |
+| `Runtime/Compare.lean` | 872 | `eo::cmp`'s `Store::compare`, generically: the order it computes on the trees of two handles (`treeCmp`: constructors by `order_key`, then literals by `litCmp`, applications and the fields of nodes left to right) and `compare_spec`, that `compare` returns it. The stack is bounded (`Blocks`: at most `A * (M + 1)` pairs for `M` terms and largest arity `A ≤ 100`), so its pushes never overflow. The constructors' arities and that `order_key` and `of_embedding` are total are hypotheses, for generated lemmas to discharge; relating `treeCmp` to logos's `termCmp` is the next step. See "`eo::cmp`". |
 | `Top.lean` | 506 | CpcMini's top-level theorem (`check_proof_correct`): `check_proof_inner`'s refutation (`check_refutation_inner`, with `calls = 0`), its side-condition checks (`has_translation`, `arguments_translate` and its loop, the loop over the commands) against logos's `TranslatableAssumptionList` and `CmdListTranslationOk`, and the composition with logos's `correct___eo_is_refutation`. See "The top-level theorem". |
 | `Runtime/AssumeFold.lean` | 451 | `$eo_invoke_assume_list`, which the generator compiles to an iterative fold (`scan`, then `unwind`): proved by hand against logos's recursive definition (`invoke_assume_list_spec`), from what is proved of `$eo_is_bool_type`, `$eo_is_closed` and `$eo_push_input_assume_check` (hypotheses in the shape of the generated specs, the state assumed OK); the emitter writes the program's theorem as that application (`handProof`). |
 | `Runtime/Lists.lean` | 624 | Lists of an operator: the runtime's walk down a list (`list_step_spec`, `list_elements_loop_spec`), its parts (`list_parts_spec`, which takes what is proved of the generated `$eo_is_list_nil` as a hypothesis, `IsListNilSpec n`, from the generated `Specs n`), building one again (`list_build_loop_spec`), and `eo::cons` (`Store.builtin_spec_cons`) against logos's `__eo_cons`, for operators that nest to the right. Meant for every list builtin. |
