@@ -40,17 +40,17 @@ $bv_mk_bitblast_step_concat	generated
 $bv_mk_bitblast_step_eq_rec	generated	
 $bv_mk_bitblast_step_ite	generated	
 $bv_mk_bitblast_step_mul	none	it calls $bv_shift_add_multiplier, which has no proof
-$bv_mk_bitblast_step_shl_rec	none	it calls $bv_mk_bitblast_step_shl_rec_step, which has no proof
-$bv_mk_bitblast_step_shl_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
-$bv_mk_bitblast_step_shr_rec	none	it calls $bv_mk_bitblast_step_shr_rec_step, which has no proof
-$bv_mk_bitblast_step_shr_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
+$bv_mk_bitblast_step_shl_rec	generated	
+$bv_mk_bitblast_step_shl_rec_step	generated	
+$bv_mk_bitblast_step_shr_rec	generated	
+$bv_mk_bitblast_step_shr_rec_step	generated	
 $bv_mk_bitblast_step_var_rec	generated	
 $bv_mk_bitwise_slicing	none	case 0 has eo::list_erase of an operator that is not a constant
 $bv_mk_bitwise_slicing_rec	generated	
 $bv_ripple_carry_adder_2	generated	
 $bv_shift_add_multiplier	none	case 0 has a builtin operator
-$bv_shift_add_multiplier_rec	none	it calls $bv_shift_add_multiplier_rec_step, which has no proof
-$bv_shift_add_multiplier_rec_step	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)
+$bv_shift_add_multiplier_rec	generated	
+$bv_shift_add_multiplier_rec_step	generated	
 $bv_smulo_elim_rec	generated	
 $bv_umulo_elim_rec	generated	
 $chain_m_resolve	generated	

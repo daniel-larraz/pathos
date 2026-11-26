@@ -5,19 +5,16 @@
 # (stage 5, milestone 4; docs/proofs.md). Written by hand, from the build's
 # errors.
 
-"$is_absorb_rec" = "falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved"
-"$is_eq_maybe_to_real" = "falls through to a helper; logos_eq_deep fails (simp, a nested error)"
-"$is_renaming_rec" = "a repeated variable; logos_eq_deep leaves goals unsolved"
 "$eo_prog_bv-rotate-left-eliminate-1" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats) and simp exceeds its steps; logos_eq does not prove the case form (binary literals, milestone 6)"
-"$bv_mk_bitblast_step_shl_rec_step" = "logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)"
-"$bv_mk_bitblast_step_shr_rec_step" = "logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)"
-"$bv_shift_add_multiplier_rec_step" = "logos_eq does not prove the case form equal to logos's function (milestone 7's arithmetic)"
 "$mk_arith_mult_sign_sgn" = "logos_eq_deep times out (whnf, 2,000,000 heartbeats): three cases with deep patterns and repeated variables"
 "$get_unused_vars" = "rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once eo::list_minclude had a spec"
-"$bv_mk_bitblast_step_bitwise" = "rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once $eo_typeof had a proof"
 "$seq_is_prefix" = "logos_eq_deep leaves goals unsolved: a branch where `__eo_eq et es` is not false while et and es differ (reached once the datatype operators had specs)"
 "$eo_prog_bv-extract-concat-2" = "logos_eq does not prove the case form equal to logos's function (rfl, on literal arithmetic, step B); its spec builds at 20,000,000 heartbeats"
 "$bv_div_mod_impl" = "the spec of case 2: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $arith_reduction_pred, 11 min)"
 "$arith_reduction_pred" = "the spec of case 7: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $bv_div_mod_impl, 11 min)"
 "$eo_prog_bv-smod-eliminate" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats); at 20,000,000 it runs out of 8G of memory (13 min)"
 "$eo_prog_bv-extract-mult-leading-bit" = "the spec of case 0: times out (whnf) at 20,000,000 heartbeats, with no_match_ne"
+"$bv_mk_bitblast_step_bitwise" = "rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once $eo_typeof had a proof"
+"$is_absorb_rec" = "falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved"
+"$is_eq_maybe_to_real" = "falls through to a helper; logos_eq_deep fails (simp, a nested error)"
+"$is_renaming_rec" = "a repeated variable; logos_eq_deep leaves goals unsolved"

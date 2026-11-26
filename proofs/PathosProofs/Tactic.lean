@@ -130,6 +130,13 @@ is too much for `split_ifs` and `simp_all`. The other branches (a stuck
 argument, a pattern that fails) by `simp_all`. -/
 syntax "logos_eq_req" : tactic
 
+/-- `logos_eq` where both sides have a match left after one split (a case
+of the case form whose pattern another of logos's cases excludes, by a
+hypothesis of the split: the bitblast steps): every match split, then
+`simp_all`, then a hypothesis that makes the rest absurd
+(`absurd_match`). -/
+syntax "logos_eq_split" : tactic
+
 /-- Closes the statement that logos's function is what the generated body
 does, after both sides are unfolded: by cases on the function's
 arguments; a function of one body, by its definition; last, a case that
@@ -142,7 +149,8 @@ macro "logos_eq" : tactic =>
     | (split <;> simp_all [HasStuck.stuck, requires_ite, eo_logos_eq] <;> (try split_ifs) <;>
         simp_all [eo_eq_of_ne, eo_eq_true, eo_logos_eq]; done)
     | rfl
-    | logos_eq_req)
+    | logos_eq_req
+    | logos_eq_split)
 
 open Lean Meta Elab Tactic in
 /-- Closes a goal that a hypothesis makes absurd: one of the form
@@ -162,6 +170,13 @@ elab "absurd_match" : tactic => withMainContext do
       return
     catch _ => st.restore
   throwError "absurd_match: no hypothesis makes the goal absurd"
+
+-- (after `absurd_match`, which the rule names)
+macro_rules
+  | `(tactic| logos_eq_split) =>
+    `(tactic| (((repeat' split) <;>
+        (try simp_all [HasStuck.stuck, requires_ite, eo_eq_of_ne, eo_logos_eq]) <;>
+        (try (intros; absurd_match))) <;> done))
 
 /-- `logos_eq` for a function of logos that falls through to helpers
 (`__eo_l_<k>___f`) when the repeated variables of a case differ, with the

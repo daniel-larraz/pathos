@@ -41,6 +41,7 @@ public import CpcProofs.Part38
 public import CpcProofs.Part39
 public import CpcProofs.Part40
 public import CpcProofs.Part41
+public import CpcProofs.Part42
 public import CpcChecker
 public import Cpc.Logos
 import all Cpc.Logos
@@ -107,9 +108,15 @@ theorem specs (n : Nat) : Specs n := by
       eo__24bv_5fmk_5fbitblast_5fstep_5fconcat_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fite_spec n ih,
+      eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_spec n ih,
+      eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep_spec n ih,
+      eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_spec n ih,
+      eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec_spec n ih,
       eo__24bv_5fmk_5fbitwise_5fslicing_5frec_spec n ih,
       eo__24bv_5fripple_5fcarry_5fadder_5f2_spec n ih,
+      eo__24bv_5fshift_5fadd_5fmultiplier_5frec_spec n ih,
+      eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep_spec n ih,
       eo__24bv_5fsmulo_5felim_5frec_spec n ih,
       eo__24bv_5fumulo_5felim_5frec_spec n ih,
       eo__24chain_5fm_5fresolve_spec n ih,

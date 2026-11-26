@@ -317,6 +317,42 @@ def eo__24bv_5fmk_5fbitblast_5fstep_5fite.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__bv_mk_bitblast_step_ite x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$bv_mk_bitblast_step_shl_rec`. -/
+def eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+    eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_mk_bitblast_step_shl_rec x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$bv_mk_bitblast_step_shl_rec_step`. -/
+def eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+    eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_mk_bitblast_step_shl_rec_step x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$bv_mk_bitblast_step_shr_rec`. -/
+def eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 →
+    eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_mk_bitblast_step_shr_rec x_a0 x_a1 x_a2 x_a3 x_a4)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$bv_mk_bitblast_step_shr_rec_step`. -/
+def eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 →
+    eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_mk_bitblast_step_shr_rec_step x_a0 x_a1 x_a2 x_a3 x_a4)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$bv_mk_bitblast_step_var_rec`. -/
 def eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -342,6 +378,24 @@ def eo__24bv_5fripple_5fcarry_5fadder_5f2.Spec (n : Nat) : Prop :=
     eo__24bv_5fripple_5fcarry_5fadder_5f2 s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__bv_ripple_carry_adder_2 x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$bv_shift_add_multiplier_rec`. -/
+def eo__24bv_5fshift_5fadd_5fmultiplier_5frec.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+    eo__24bv_5fshift_5fadd_5fmultiplier_5frec s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_shift_add_multiplier_rec x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$bv_shift_add_multiplier_rec_step`. -/
+def eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 → Represents.rep s a4 x_a4 →
+    eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_shift_add_multiplier_rec_step x_a0 x_a1 x_a2 x_a3 x_a4)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$bv_smulo_elim_rec`. -/
@@ -8226,9 +8280,15 @@ structure Specs (n : Nat) : Prop where
   eo__24bv_5fmk_5fbitblast_5fstep_5fconcat : eo__24bv_5fmk_5fbitblast_5fstep_5fconcat.Spec n
   eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec : eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec.Spec n
   eo__24bv_5fmk_5fbitblast_5fstep_5fite : eo__24bv_5fmk_5fbitblast_5fstep_5fite.Spec n
+  eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec : eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec.Spec n
+  eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep : eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep.Spec n
+  eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec : eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec.Spec n
+  eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep : eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_5fstep.Spec n
   eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec : eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec.Spec n
   eo__24bv_5fmk_5fbitwise_5fslicing_5frec : eo__24bv_5fmk_5fbitwise_5fslicing_5frec.Spec n
   eo__24bv_5fripple_5fcarry_5fadder_5f2 : eo__24bv_5fripple_5fcarry_5fadder_5f2.Spec n
+  eo__24bv_5fshift_5fadd_5fmultiplier_5frec : eo__24bv_5fshift_5fadd_5fmultiplier_5frec.Spec n
+  eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep : eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep.Spec n
   eo__24bv_5fsmulo_5felim_5frec : eo__24bv_5fsmulo_5felim_5frec.Spec n
   eo__24bv_5fumulo_5felim_5frec : eo__24bv_5fumulo_5felim_5frec.Spec n
   eo__24chain_5fm_5fresolve : eo__24chain_5fm_5fresolve.Spec n
