@@ -1127,8 +1127,8 @@ class Generator:
             files["proofs.lean"] = "".join(o) + "".join(programs) + last
             return files
         # A calculus with many programs (more than PROOFS_SPLIT_ABOVE: not
-        # CpcMini) has their proofs in parts of
-        # PROOFS_PER_PART programs, each a module of its own
+        # CpcMini) has their proofs in parts (`[parts]` in proofgen.toml:
+        # programs and bytes per part), each a module of its own
         # (`proofs/Part<k>.lean`) that imports what they all state
         # (`proofs/Head.lean`, the specs); `proofs.lean` imports the parts
         # and proves the specs from them. Lean's memory grows with a
@@ -1142,8 +1142,22 @@ class Generator:
         # builds at once) can pass the cap.
         heavy = self.cfg.get("heartbeats", {})
         light = [t for p, t in zip(proved, programs) if p.name not in heavy]
-        parts = [light[i:i + PROOFS_PER_PART]
-                 for i in range(0, len(light), PROOFS_PER_PART)]
+        # The others in order, a part holding at most `[parts] programs` of
+        # them and `[parts] bytes` of their text: Lean's memory grows with
+        # a module's size (proofs/proofgen.toml). A program larger than the
+        # budget has a part to itself.
+        limits = self.cfg.get("parts", {})
+        most = limits.get("programs", PROOFS_PER_PART)
+        budget = limits.get("bytes", 0)
+        parts, size = [], 0
+        for t in light:
+            n = len(t.encode("utf-8"))
+            if (not parts or len(parts[-1]) >= most
+                    or (budget and parts[-1] and size + n > budget)):
+                parts.append([])
+                size = 0
+            parts[-1].append(t)
+            size += n
         parts += [[t] for p, t in zip(proved, programs) if p.name in heavy]
         for k, part in enumerate(parts):
             files["proofs/Part%d.lean" % k] = (
@@ -1580,7 +1594,8 @@ LITS = {"$emb_Boolean", "$emb_Numeral", "$emb_Rational", "$emb_String",
         "$emb_Binary"}
 # The constructors whose lemmas go in one module (see `embedding`).
 CTORS_PER_PART = 150
-# Programs per module of the proofs (see Generator.print_proofs).
+# Programs per module of the proofs where proofgen.toml sets none
+# (`[parts] programs`; see Generator.print_proofs).
 PROOFS_PER_PART = 40
 PROOFS_SPLIT_ABOVE = 100
 # The options of each part of a large calculus's proofs: its longest cases

@@ -78,6 +78,15 @@ guard_calls = ["$eo_is_bool_type", "$eo_is_closed"]
 push = "$eo_push_input_assume_check"
 good = ["StateOK", ""]
 
+[parts]
+# The parts of a large calculus's proofs (CpcProofs.Part<k>): each holds at
+# most `programs` programs and `bytes` of their proofs' text, in program
+# order. A part's memory grows with its size: Part5 held 40 programs in
+# 631 KB and peaked at 7.9 GB, against the 8G cap of a local build and
+# CI's 16 GB for two parts at once (2026-11-25).
+programs = 40
+bytes = 450000
+
 [heartbeats]
 # The programs whose proofs take more than the parts' 2,000,000 heartbeats
 # (PART_OPTIONS in scripts/proofgen): each of their theorems is elaborated

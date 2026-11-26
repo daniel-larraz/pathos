@@ -1026,15 +1026,18 @@ macro_rules
 
 /-- `split_none xs in cds`: no case answered, which cannot be: closes the
 goal (after `exfalso`) from the facts that the case functions `cds` gave
-`none`, plain or after splitting one of the arguments `xs` into its
-constructors (for a program whose cases are one per constructor). -/
+`none`, plain or after splitting arguments `xs` into their constructors,
+one or several together (for a program whose cases are one per
+constructor, or per pair of constructors). -/
 syntax "split_none" (ppSpace colGt ident)* " in" (ppSpace colGt ident)* : tactic
 macro_rules
   | `(tactic| split_none in $cds*) => `(tactic| (simp_all [$[$cds:ident],*]; done))
   | `(tactic| split_none $x $xs* in $cds*) =>
     `(tactic| first
       | (simp_all [$[$cds:ident],*]; done)
-      | (cases $x:ident <;> simp_all [$[$cds:ident],*]; done)
+      -- each case of `x` by the rest: the cases may need two variables
+      -- split together (`$smtx_dt_num_sels`: the datatype and the index)
+      | (cases $x:ident <;> split_none $xs* in $cds*)
       | split_none $xs* in $cds*)
 
 /-- `body_stuck … splitting xs`: for a program whose lemma C gives `default`

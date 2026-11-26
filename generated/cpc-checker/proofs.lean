@@ -36,6 +36,10 @@ public import $PROOFS$.Part33
 public import $PROOFS$.Part34
 public import $PROOFS$.Part35
 public import $PROOFS$.Part36
+public import $PROOFS$.Part37
+public import $PROOFS$.Part38
+public import $PROOFS$.Part39
+public import $PROOFS$.Part40
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos
@@ -696,10 +700,13 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec n ih,
       eo__24eo_5fto_5fsmt_5ftester_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fdecl_spec n ih,
+      eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec n ih,
+      eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec n ih,
       eo__24eo_5fto_5fsmt_5ftype_spec n ih,
       eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec n ih,
+      eo__24eo_5fto_5fsmt_5fupdater_spec n ih,
       eo__24eo_5fto_5fsmt_5fupdater_5frec_spec n ih,
       eo__24eo_5ftypeof_spec n ih,
       eo__24eo_5ftypeof_5f_2b_spec n ih,
@@ -880,6 +887,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24smtx_5fdt_5fcons_5finhabited_spec n ih,
       eo__24smtx_5fdt_5fcons_5fwf_5frec_spec n ih,
       eo__24smtx_5fdt_5finhabited_spec n ih,
+      eo__24smtx_5fdt_5fnum_5fsels_spec n ih,
       eo__24smtx_5fdt_5fresolve_spec n ih,
       eo__24smtx_5fdt_5fwf_5frec_spec n ih,
       eo__24smtx_5fdtc_5fnum_5fsels_spec n ih,

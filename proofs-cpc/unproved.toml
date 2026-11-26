@@ -9,7 +9,6 @@
 "$is_eq_maybe_to_real" = "falls through to a helper; logos_eq_deep fails (simp, a nested error)"
 "$is_renaming_rec" = "a repeated variable; logos_eq_deep leaves goals unsolved"
 "$eo_prog_str-indexof-eq-irr" = "the spec of case 0: simp times out (isDefEq, 1,000,000 heartbeats)"
-"$smtx_dt_num_sels" = "the spec of its loop's step: the branch where no case answers (Ok none) is left as False"
 "$eo_prog_arith-int-geq-tighten" = "the spec of case 0: leaves goals unsolved (with its numeral or string literals, step C)"
 "$eo_prog_bv-extract-sign-extend-2" = "the spec of case 0: simp fails (a nested error) (with its numeral or string literals, step C)"
 "$eo_prog_bv-sdiv-eliminate" = "the spec of case 0: times out (whnf, 1,000,000 heartbeats) (with its numeral or string literals, step C)"

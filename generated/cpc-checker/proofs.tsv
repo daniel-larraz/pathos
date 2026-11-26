@@ -766,15 +766,15 @@ $eo_to_smt_set_elem_type	generated
 $eo_to_smt_sets_deq_diff	generated	
 $eo_to_smt_tester	generated	
 $eo_to_smt_tuple_decl	generated	
-$eo_to_smt_tuple_prepend	none	it calls $eo_to_smt_tuple_prepend_of_type, which has no proof
-$eo_to_smt_tuple_prepend_of_type	none	it calls $smtx_dt_num_sels, which has no proof
+$eo_to_smt_tuple_prepend	none	it calls $smtx_typeof, which has no proof
+$eo_to_smt_tuple_prepend_of_type	generated	
 $eo_to_smt_tuple_prepend_rec	generated	
 $eo_to_smt_tuple_select	generated	
-$eo_to_smt_tuple_update	none	it calls $eo_to_smt_updater, which has no proof
+$eo_to_smt_tuple_update	generated	
 $eo_to_smt_type	generated	
 $eo_to_smt_type_tuple	generated	
 $eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
-$eo_to_smt_updater	none	it calls $smtx_dt_num_sels, which has no proof
+$eo_to_smt_updater	generated	
 $eo_to_smt_updater_rec	generated	
 $eo_typeof	generated	
 $eo_typeof_+	generated	
@@ -992,7 +992,7 @@ $smtx_decl_wf_rec	generated
 $smtx_dt_cons_inhabited	generated	
 $smtx_dt_cons_wf_rec	generated	
 $smtx_dt_inhabited	generated	
-$smtx_dt_num_sels	none	its generated proof does not build: the spec of its loop's step: the branch where no case answers (Ok none) is left as False
+$smtx_dt_num_sels	generated	
 $smtx_dt_resolve	generated	
 $smtx_dt_wf_rec	generated	
 $smtx_dtc_num_sels	generated	
