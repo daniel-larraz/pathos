@@ -172,6 +172,272 @@ theorem Store.builtin_spec_list_singleton_elim (n : Nat) (hnil : IsListNilSpec n
               SmtEval.native_ite, Eo.native_teq]
           rw [this]; exact Represents.grows hb hg1
 
+/-! ## `eo::list_singleton_intro`
+
+The runtime gives the term when it is a list of `f`, and otherwise builds
+`(f a) nil` from `f`'s nil at the term's type (`list_nil_for`:
+`$eo_typeof`, then `$eo_nil`). logos also requires that the nil be a list
+of `f`, which the runtime does not test: `NilSelf xf` says it is, where it
+is not stuck (bvmul's nil at width 0 failed its own test until logos
+a6b896b5). -/
+
+/-- The nil of `xf` at any type, where it is not stuck, passes `xf`'s nil
+test. -/
+def NilSelf (xf : Eo.Term) : Prop :=
+  ∀ T, Eo.__eo_nil xf T ≠ Eo.Term.Stuck →
+    Eo.__eo_is_list_nil xf (Eo.__eo_nil xf T) = Eo.Term.Boolean true
+
+/-- What `$eo_typeof` is proved to compute. -/
+def TypeofSpec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : Eo.Term), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    generated.part0.eo__24eo_5ftypeof s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_typeof x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What `$eo_nil` is proved to compute. -/
+def NilSpec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 x_a1 : Eo.Term), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    generated.part0.eo__24eo_5fnil s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_nil x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
+theorem list_singleton_intro_list {xf xa : Eo.Term}
+    (hl : Eo.__eo_is_list xf xa = Eo.Term.Boolean true) :
+    Eo.__eo_list_singleton_intro xf xa = xa := by
+  simp [Eo.__eo_list_singleton_intro, hl, Eo.__eo_ite, SmtEval.native_ite, Eo.native_teq]
+
+theorem list_singleton_intro_build {xf xa : Eo.Term} (hself : NilSelf xf)
+    (hl : Eo.__eo_is_list xf xa = Eo.Term.Boolean false) :
+    Eo.__eo_list_singleton_intro xf xa =
+      Eo.__eo_mk_apply (Eo.Term.Apply xf xa) (Eo.__eo_nil xf (Eo.__eo_typeof xa)) := by
+  have hxf : xf ≠ Eo.Term.Stuck := by
+    intro h; subst h; simp [Eo.__eo_is_list] at hl
+  simp only [Eo.__eo_list_singleton_intro, hl, Eo.__eo_ite, SmtEval.native_ite, Eo.native_teq]
+  by_cases hz : Eo.__eo_nil xf (Eo.__eo_typeof xa) = Eo.Term.Stuck
+  · rw [hz]
+    simp [Eo.__eo_is_list, Eo.__eo_requires, Eo.__eo_mk_apply, SmtEval.native_ite,
+      Eo.native_teq]
+  · have hn := hself _ hz
+    have hil : Eo.__eo_is_list xf (Eo.__eo_nil xf (Eo.__eo_typeof xa)) = Eo.Term.Boolean true := by
+      have := is_list_eoList (xr := Eo.__eo_nil xf (Eo.__eo_typeof xa)) [] hxf
+        (by simpa [eoList] using hz) (fun a b => is_list_nil_not_apply hn xf a b)
+      simpa [eoList, hn] using this
+    simp [hil, Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
+
+open Lean Meta Elab Tactic in
+/-- Runs a tactic on the main goal in an empty local context, where the goal
+mentions no local: a generated proof's context holds many hypotheses, which
+`simp_all` would work on (and run out of heartbeats) for a goal that needs
+none of them. -/
+elab "without_context " t:tactic : tactic => do
+  let g ← getMainGoal
+  let ty ← instantiateMVars (← g.getType)
+  if ty.hasFVar || ty.hasMVar then
+    throwError "without_context: the goal mentions a local or a metavariable"
+  let m ← mkFreshExprMVarAt {} {} ty
+  let gs ← Tactic.run m.mvarId! (evalTactic t)
+  unless gs.isEmpty do throwError "without_context: goals remain"
+  g.assign m
+  replaceMainGoal []
+
+/-- `NilSelf` of an operator constant, by evaluation, away from the
+context. -/
+macro "nil_self_tac" : tactic =>
+  `(tactic| without_context (intro T hT; revert hT; unfold Eo.__eo_nil; (repeat' split) <;>
+      (try simp only [Eo.__eo_is_list_nil, eo_list_nil, Eo.__eo_nil_str_concat,
+        Eo.__seq_empty]) <;>
+      (repeat' split) <;> simp_all))
+
+/-- `nil_self_tac` in a context of hypotheses it does not need. -/
+example (h : ∀ x : Eo.Term, x = x) : NilSelf (Eo.Term.UOp Eo.UserOp.str_concat) := by
+  nil_self_tac
+
+theorem list_nil_for_spec (n : Nat) (htyp : TypeofSpec n) (hnl : NilSpec n) (s : Store)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) {fh xh : Term} {xf xa : Eo.Term}
+    (hf : s.Rep fh xf) (hx : s.Rep xh xa) :
+    generated.part0.Store.list_nil_for s fh xh ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_nil xf (Eo.__eo_typeof xa))
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold TypeofSpec at htyp
+  unfold NilSpec at hnl
+  unfold generated.part0.Store.list_nil_for
+  step with htyp s xh xa hinv h64 hrem hx as ⟨r1, s1, hinv1, hg1, hr1⟩
+  cases r1 with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv1, hg1⟩
+  | Ok ty =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    step with hnl s1 fh ty xf _ hinv1 h64 (hg1.rem hrem) (Represents.grows hf hg1) hr1
+      as ⟨r2, s2, hinv2, hg2, hr2⟩
+    exact ⟨hinv2, hg1.trans hg2, hr2⟩
+
+/-- One node of a list of `f` onto a tail that may be stuck: logos's guarded
+application `(f e) tail`. -/
+theorem list_cons_mk_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) {fh eh th : Term}
+    {xf xe xt : Eo.Term} (hf : s.Rep fh xf) (he : s.Rep eh xe) (ht : s.Rep th xt)
+    (hnf : xf ≠ Eo.Term.Stuck) (hne : xe ≠ Eo.Term.Stuck) :
+    generated.part0.Store.list_cons s fh false eh th ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_mk_apply (Eo.Term.Apply xf xe) xt)
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold generated.part0.Store.list_cons
+  simp only [Bool.false_eq_true, ite_false]
+  step with Store.apply_rep s fh eh xf xe hinv h64 hf he hnf hne as ⟨r, s1, hinv1, hg1, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv1, hg1⟩
+  | Ok g =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    apply WP.dspec_mono (Store.apply_mk_rep s1 g th _ xt hinv1 h64 hr (Represents.grows ht hg1))
+    rintro ⟨r2, s2⟩ ⟨hinv2, hg2, hr2⟩
+    exact ⟨hinv2, hg1.trans hg2, hr2⟩
+
+/-- `list_build` of one element onto a nil that may be stuck: logos's guarded
+application `(f e) nil`. -/
+theorem list_build_one_spec (s : Store) (hinv : s.Inv) (h64 : Platform64) {fh eh nh : Term}
+    {xf xe xn : Eo.Term} (elems : Slice Term) (hel : elems.val = [eh])
+    (hf : s.Rep fh xf) (he : s.Rep eh xe) (hn : s.Rep nh xn)
+    (hnf : xf ≠ Eo.Term.Stuck) (hne : xe ≠ Eo.Term.Stuck) (hleft : NotLeftNested xf) :
+    generated.part0.Store.list_build s fh elems nh ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_mk_apply (Eo.Term.Apply xf xe) xn)
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold generated.part0.Store.list_build
+  rw [is_left_assoc_false s hf hleft]
+  simp only [Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
+  have hl1 : Slice.len elems = 1#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hel]
+  rw [hl1]
+  unfold generated.part0.Store.list_build_loop
+  have hpos : (1#usize : Std.Usize) > 0#usize := by decide
+  simp only [hpos, ite_true]
+  have h0 : Slice.index_usize elems 0#usize = ok eh := by simp [Slice.index_usize, hel]
+  step as ⟨i1, hi1⟩
+  have hi0 : i1 = 0#usize := by apply UScalar.eq_of_val_eq; simp at hi1 ⊢; omega
+  subst hi0
+  simp only [h0, Std.bind_ok]
+  step with list_cons_mk_spec s hinv h64 hf he hn hnf hne as ⟨r2, s2, hinv2, hg2, hr2⟩
+  cases r2 with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv2, hg2⟩
+  | Ok t =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    unfold generated.part0.Store.list_build_loop
+    have hz : ¬ ((0#usize : Std.Usize) > 0#usize) := by decide
+    simp only [hz, ite_false, WP.dspec_ok, WP.uncurry'_pair]
+    exact ⟨hinv2, hg2, hr2⟩
+
+theorem Store.builtin_spec_list_singleton_intro (n : Nat) (hnil : IsListNilSpec n)
+    (htyp : TypeofSpec n) (hnl : NilSpec n) (s : Store)
+    (args : Slice Term) {a b : Term} {xf xa : Eo.Term} (hargs : args.val = [a, b])
+    (ha : s.Rep a xf) (hb : s.Rep b xa) (hinv : s.Inv) (h64 : Platform64)
+    (hrem : s.remaining ≤ n) (hleft : NotLeftNested xf) (hself : NilSelf xf) :
+    generated.part0.Store.builtin_list s kind.EvalOp.ListSingletonIntro args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => s'.Rep t (Eo.__eo_list_singleton_intro xf xa)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 2#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have htakes : Store.takes kind.EvalOp.ListSingletonIntro 2#usize = ok true := by
+    simp [Store.takes, kind.EvalOp.is_nary]
+  unfold generated.part0.Store.builtin_list
+  simp only [hlen, htakes, Std.bind_ok, ite_true]
+  unfold Store.check_handles
+  step with Store.check_handles_loop_spec s args 0#usize as ⟨r, hr⟩
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+      core.convert.FromSame.from]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok u =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    step with Store.any_stuck_two hargs ha hb as ⟨b1, hb1⟩
+    subst hb1
+    by_cases hxf : xf = Eo.Term.Stuck
+    · subst hxf
+      simp only [decide_true, Bool.true_or, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_singleton_intro Eo.Term.Stuck xa = Eo.Term.Stuck := by
+        simp [Eo.__eo_list_singleton_intro, Eo.__eo_is_list, Eo.__eo_ite,
+          SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    by_cases hxa : xa = Eo.Term.Stuck
+    · subst hxa
+      simp only [decide_true, Bool.or_true, ite_true, Store.stuck_eq, Std.bind_ok, WP.dspec_ok,
+        WP.uncurry'_pair]
+      refine ⟨hinv, Store.Grows.refl s, ?_⟩
+      have : Eo.__eo_list_singleton_intro xf Eo.Term.Stuck = Eo.Term.Stuck := by
+        simp [Eo.__eo_list_singleton_intro, Eo.__eo_is_list, Eo.__eo_ite,
+          SmtEval.native_ite, Eo.native_teq]
+      rw [this]; exact hinv.rep_stuck
+    simp only [hxf, hxa, decide_false, Bool.or_false, Bool.false_eq_true, ite_false]
+    unfold generated.part0.Store.list_builtin
+    have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+    have h1 : Slice.index_usize args 1#usize = ok b := by simp [Slice.index_usize, hargs]
+    simp only [h0, Std.bind_ok]
+    unfold generated.part0.Store.list_of_one
+    simp only [h1, Std.bind_ok]
+    step with list_parts_spec n hnil s hinv h64 hrem ha hb hleft as ⟨r, s1, hinv1, hg1, hr⟩
+    cases r with
+    | Err e =>
+      simp [core.result.Result.Insts.CoreOpsTry.branch,
+        core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+        core.convert.FromSame.from]
+      exact ⟨hinv1, hg1⟩
+    | Ok o =>
+      cases o with
+      | some p =>
+        obtain ⟨tail, rest⟩ := p
+        obtain ⟨ys, xr, hys, hrest, hxl, hend, hn, hsz⟩ := hr
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+        show (ok (core.result.Result.Ok b, s1) : Result _) ⦃ r s' => _ ⦄div
+        simp only [WP.dspec_ok, WP.uncurry'_pair]
+        refine ⟨hinv1, hg1, ?_⟩
+        have hl : Eo.__eo_is_list xf xa = Eo.Term.Boolean true := by
+          rw [hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend]; simp [hn]
+        rw [list_singleton_intro_list hl]; exact Represents.grows hb hg1
+      | none =>
+        obtain ⟨ys, xr, hxl, hend, hn⟩ := hr
+        have hl : Eo.__eo_is_list xf xa = Eo.Term.Boolean false := by
+          rw [hxl, is_list_eoList ys hxf (by rw [← hxl]; exact hxa) hend]; simp [hn]
+        rw [list_singleton_intro_build hself hl]
+        simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+        step with list_nil_for_spec n htyp hnl s1 hinv1 h64 (hg1.rem hrem)
+          (Represents.grows ha hg1) (Represents.grows hb hg1) as ⟨r2, s2, hinv2, hg2, hr2⟩
+        cases r2 with
+        | Err e =>
+          simp [core.result.Result.Insts.CoreOpsTry.branch,
+            core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual,
+            core.convert.FromSame.from]
+          exact ⟨hinv2, hg1.trans hg2⟩
+        | Ok z =>
+          simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok, lift]
+          apply WP.dspec_mono (list_build_one_spec s2 hinv2 h64 _ (by simp)
+            (Represents.grows ha (hg1.trans hg2)) (Represents.grows hb (hg1.trans hg2)) hr2
+            hxf hxa hleft)
+          rintro ⟨r3, s3⟩ ⟨hinv3, hg3, hr3⟩
+          exact ⟨hinv3, (hg1.trans hg2).trans hg3, hr3⟩
+
 /-! ## `eo::list_concat` -/
 
 /-- The operator has one nil: two terms that logos's test takes for nils of

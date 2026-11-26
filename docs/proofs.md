@@ -250,7 +250,9 @@ brought 42: itself, `$eo_push_proven`, `$eo_is_bool_type` and the rules
 and helpers that type their arguments).
 
 - **Lists** (`Lists.lean`): `eo::list_len`, `list_rev`, `list_nth`,
-  `list_find`, `list_erase`, `list_setof`, `list_singleton_elim`, and, for an
+  `list_find`, `list_erase`, `list_setof`, `list_singleton_elim`,
+  `list_singleton_intro` (for an operator whose nil passes its own nil test,
+  `NilSelf`, which logos requires and the runtime does not test), and, for an
   operator with one nil (`UniqueNil`, see "`eo::list_concat` and the nils
   of an operator"), `list_concat`, `list_diff`, `list_inter` and
   `list_minclude` and `list_meq`. Each
@@ -296,6 +298,14 @@ logos's `termCmp` of the terms (`compare_rep_spec`). Third, CPC only
 bit-vector polynomial normalization over them. One more it reached,
 `$str_arith_entail_is_approx`, does not build (`logos_eq_deep`, as
 `$is_absorb_rec`; `proofs-cpc/unproved.toml`).
+
+`eo::list_singleton_intro` (after logos a6b896b5, where bvmul's nil passes
+its own test at width 0) brought 3 more (940): the string concatenation
+rules `concat_eq`, `concat_unify` and `concat_csplit`. Two more it reached,
+`concat_split` and `concat_lprop`, have specs of case 0 that do not finish
+in 50 minutes (`proofs-cpc/unproved.toml`). Its other users, through `$str_flatten`, `$re_unflatten_str`
+and `$seq_eval`, also take `eo::list_concat` of `str.++`, whose nil test
+takes more than one term (above).
 
 The second step was planned as lemmas generated per constructor. It is
 hand-written instead, and holds for both calculi: every proof goes by

@@ -2963,6 +2963,33 @@ def eo__24eo_5fprog_5fcnf_5fxor_5fpos2.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_cnf_xor_pos2 x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_concat_csplit`. -/
+def eo__24eo_5fprog_5fconcat_5fcsplit.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24eo_5fprog_5fconcat_5fcsplit s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_concat_csplit x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_concat_eq`. -/
+def eo__24eo_5fprog_5fconcat_5feq.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24eo_5fprog_5fconcat_5feq s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_concat_eq x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_concat_unify`. -/
+def eo__24eo_5fprog_5fconcat_5funify.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 →
+    eo__24eo_5fprog_5fconcat_5funify s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_concat_unify x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_cong`. -/
 def eo__24eo_5fprog_5fcong.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -8839,6 +8866,9 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fcnf_5fxor_5fneg2 : eo__24eo_5fprog_5fcnf_5fxor_5fneg2.Spec n
   eo__24eo_5fprog_5fcnf_5fxor_5fpos1 : eo__24eo_5fprog_5fcnf_5fxor_5fpos1.Spec n
   eo__24eo_5fprog_5fcnf_5fxor_5fpos2 : eo__24eo_5fprog_5fcnf_5fxor_5fpos2.Spec n
+  eo__24eo_5fprog_5fconcat_5fcsplit : eo__24eo_5fprog_5fconcat_5fcsplit.Spec n
+  eo__24eo_5fprog_5fconcat_5feq : eo__24eo_5fprog_5fconcat_5feq.Spec n
+  eo__24eo_5fprog_5fconcat_5funify : eo__24eo_5fprog_5fconcat_5funify.Spec n
   eo__24eo_5fprog_5fcong : eo__24eo_5fprog_5fcong.Spec n
   eo__24eo_5fprog_5fcontra : eo__24eo_5fprog_5fcontra.Spec n
   eo__24eo_5fprog_5fdistinct_2dbinary_2delim : eo__24eo_5fprog_5fdistinct_2dbinary_2delim.Spec n

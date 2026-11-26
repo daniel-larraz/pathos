@@ -131,3 +131,7 @@ bytes = 350000
 "$eo_prog_bv-sign-extend-eq-const-2" = 4000000  # (1,175,637)
 "$mk_str_eager_reduction" = 4000000  # (1,078,191)
 "$eo_prog_bv-extract-concat-1" = 4000000  # (1,049,166)
+# Reached by eo::list_singleton_intro's spec (2026-11-26), measured alone
+# with `#count_heartbeats in`: the spec of case 0 of each.
+"$eo_prog_concat_csplit" = 6000000  # (2,870,383)
+"$eo_prog_concat_eq" = 5000000  # (2,094,709)

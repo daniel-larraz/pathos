@@ -384,11 +384,11 @@ $eo_prog_cnf_xor_neg2	generated
 $eo_prog_cnf_xor_pos1	generated	
 $eo_prog_cnf_xor_pos2	generated	
 $eo_prog_concat_cprop	none	case 0 has a builtin operator
-$eo_prog_concat_csplit	none	case 0 has a builtin operator
-$eo_prog_concat_eq	none	case 0 has a builtin operator
-$eo_prog_concat_lprop	none	case 0 has a builtin operator
-$eo_prog_concat_split	none	case 0 has a builtin operator
-$eo_prog_concat_unify	none	case 0 has a builtin operator
+$eo_prog_concat_csplit	generated	
+$eo_prog_concat_eq	generated	
+$eo_prog_concat_lprop	none	its generated proof does not build: the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (155 KB of proof; reached once eo::list_singleton_intro had a spec)
+$eo_prog_concat_split	none	its generated proof does not build: the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (264 KB of proof; reached once eo::list_singleton_intro had a spec)
+$eo_prog_concat_unify	generated	
 $eo_prog_cong	generated	
 $eo_prog_contra	generated	
 $eo_prog_distinct-binary-elim	generated	
@@ -572,7 +572,7 @@ $eo_prog_str-contains-repl-self	generated
 $eo_prog_str-contains-repl-self-tgt-char	generated	
 $eo_prog_str-contains-repl-tgt	generated	
 $eo_prog_str-contains-split-char	generated	
-$eo_prog_str-ctn-multiset-subset	none	case 0 has a builtin operator
+$eo_prog_str-ctn-multiset-subset	none	it calls $str_flatten, which has no proof
 $eo_prog_str-eq-ctn-false	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-eq-ctn-full-false1	generated	
 $eo_prog_str-eq-ctn-full-false2	generated	
@@ -588,7 +588,7 @@ $eo_prog_str-from-int-no-ctn-nondigit	generated
 $eo_prog_str-in-re-concat-star-char	generated	
 $eo_prog_str-in-re-consume	none	it calls $str_re_consume, which has no proof
 $eo_prog_str-in-re-contains	generated	
-$eo_prog_str-in-re-eval	none	case 0 has a builtin operator
+$eo_prog_str-in-re-eval	none	it calls $str_flatten, which has no proof
 $eo_prog_str-in-re-from-int-dig-range	generated	
 $eo_prog_str-in-re-from-int-nemp-dig-range	generated	
 $eo_prog_str-in-re-inter-elim	generated	
@@ -625,10 +625,10 @@ $eo_prog_str-leq-concat-true	none	case 0 has eo::list_concat of str.++, whose ni
 $eo_prog_str-leq-empty	generated	
 $eo_prog_str-leq-empty-eq	generated	
 $eo_prog_str-lt-elim	generated	
-$eo_prog_str-overlap-endpoints-ctn	none	case 0 has a builtin operator
-$eo_prog_str-overlap-endpoints-indexof	none	case 0 has a builtin operator
-$eo_prog_str-overlap-endpoints-replace	none	case 0 has a builtin operator
-$eo_prog_str-overlap-split-ctn	none	case 0 has a builtin operator
+$eo_prog_str-overlap-endpoints-ctn	none	it calls $str_flatten, which has no proof
+$eo_prog_str-overlap-endpoints-indexof	none	it calls $str_flatten, which has no proof
+$eo_prog_str-overlap-endpoints-replace	none	it calls $str_flatten, which has no proof
+$eo_prog_str-overlap-split-ctn	none	it calls $str_flatten, which has no proof
 $eo_prog_str-prefixof-elim	generated	
 $eo_prog_str-prefixof-eq	generated	
 $eo_prog_str-prefixof-one	generated	
@@ -662,9 +662,9 @@ $eo_prog_str-replace-no-contains	generated
 $eo_prog_str-replace-one-pre	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-replace-prefix	generated	
 $eo_prog_str-replace-prefix-concat	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$eo_prog_str-replace-re-all-eval	none	case 0 has a builtin operator
+$eo_prog_str-replace-re-all-eval	none	it calls $str_eval_replace_re_all_rec, which has no proof
 $eo_prog_str-replace-re-all-none	generated	
-$eo_prog_str-replace-re-eval	none	case 0 has a builtin operator
+$eo_prog_str-replace-re-eval	none	it calls $str_eval_replace_re, which has no proof
 $eo_prog_str-replace-re-none	generated	
 $eo_prog_str-replace-self	generated	
 $eo_prog_str-replace-self-ctn-simp	generated	
@@ -963,21 +963,21 @@ $poly_mul_mon	generated
 $poly_neg	generated	
 $re_ac_merge	none	case 3 has eo::list_diff of an operator that is not a constant
 $re_concat_merge	generated	
-$re_flatten	none	case 1 has a builtin operator
+$re_flatten	none	it calls $str_flatten, which has no proof
 $re_is_unbound_wildcard	generated	
 $re_nullable	generated	
 $re_rev_comp	generated	
 $re_rev_map_rev	generated	
 $re_split_str_to_re	generated	
-$re_unflatten	none	case 0 has a builtin operator
-$re_unflatten_str	none	case 0 has a builtin operator
+$re_unflatten	none	it calls $re_unflatten_str, which has no proof
+$re_unflatten_str	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $re_unfold_pos_concat_rec	generated	
 $run_evaluate	none	case 6 has a builtin operator
 $run_process_scope	generated	
 $seq_distinct_terms	generated	
 $seq_element_of_unit	generated	
 $seq_empty	generated	
-$seq_eval	none	case 0 has a builtin operator
+$seq_eval	none	case 2 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $seq_eval_replace_all_rec	none	case 1 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $seq_find	none	it calls $seq_is_prefix, which has no proof
 $seq_is_non_empty	generated	
@@ -1078,11 +1078,11 @@ $str_mk_str_in_re_sigma_star_rec	generated
 $str_multiset_overapprox	none	case 0 has eo::list_concat of @@TypedList.cons, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $str_multiset_overapprox_word	generated	
 $str_overlap_rec	generated	
-$str_re_consume	none	case 0 has a builtin operator
+$str_re_consume	none	it calls $re_flatten, which has no proof
 $str_re_consume_inter	none	it calls $str_re_consume_rec, which has no proof
-$str_re_consume_rec	none	case 2 has a builtin operator
+$str_re_consume_rec	none	it calls $str_eval_str_in_re_rec, which has no proof
 $str_re_consume_union	none	it calls $str_re_consume_rec, which has no proof
-$str_re_includes_base_rec	none	case 0 has a builtin operator
+$str_re_includes_base_rec	none	it calls $str_eval_str_in_re_rec, which has no proof
 $str_re_includes_concat	none	it calls $str_re_includes_base_rec, which has no proof
 $str_re_includes_lhs_star	none	it calls $str_re_includes_rec, which has no proof
 $str_re_includes_lhs_union	none	it calls $str_re_includes_rec, which has no proof

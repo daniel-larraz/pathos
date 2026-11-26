@@ -102,7 +102,8 @@ BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv"
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
-                 "TypeOf", "DtConstructors", "DtSelectors", "ListSingletonElim", "ListConcat", "ListLength",
+                 "TypeOf", "DtConstructors", "DtSelectors", "ListSingletonElim",
+                 "ListSingletonIntro", "ListConcat", "ListLength",
                  "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof",
                  "ListDiff", "ListInter", "ListMinclude", "ListMeq"} | set(ARGS_SPECS)
 # The operators that rust-meta compiles as a call of a program of the
@@ -589,6 +590,24 @@ class Emitter:
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
                             + " (by not_left_tac) (by nil_apply_tac)", v)
             self.l.calls.add(lists["is_nil"])
+            return v
+        if k == "ListSingletonIntro":
+            # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
+            # constant, which does not nest to the left and whose nil passes
+            # its own nil test (NilSelf); the runtime finds the nil with
+            # $eo_typeof and $eo_nil
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            if len(vs) != 2 or not self.not_left(vs[0]):
+                self.unsupported("eo::list_singleton_intro of an operator that is not a constant")
+            typeof = BUILTIN_PROGRAMS["TypeOf"]
+            self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+            self.store_step("Store.builtin_spec_list_singleton_intro n ih." + ident(lists["is_nil"])
+                            + " ih." + ident(typeof) + " ih." + ident(lists["nil"])
+                            + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
+                            + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
+                            + " (by not_left_tac) (by nil_self_tac)", v)
+            self.l.calls.update([lists["is_nil"], typeof, lists["nil"]])
             return v
         if k in ("ListLength", "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof"):
             # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator

@@ -62,6 +62,8 @@ public import CpcProofs.Part59
 public import CpcProofs.Part60
 public import CpcProofs.Part61
 public import CpcProofs.Part62
+public import CpcProofs.Part63
+public import CpcProofs.Part64
 public import CpcChecker
 public import Cpc.Logos
 import all Cpc.Logos
@@ -422,6 +424,9 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fcnf_5fxor_5fneg2_spec n ih,
       eo__24eo_5fprog_5fcnf_5fxor_5fpos1_spec n ih,
       eo__24eo_5fprog_5fcnf_5fxor_5fpos2_spec n ih,
+      eo__24eo_5fprog_5fconcat_5fcsplit_spec n ih,
+      eo__24eo_5fprog_5fconcat_5feq_spec n ih,
+      eo__24eo_5fprog_5fconcat_5funify_spec n ih,
       eo__24eo_5fprog_5fcong_spec n ih,
       eo__24eo_5fprog_5fcontra_spec n ih,
       eo__24eo_5fprog_5fdistinct_2dbinary_2delim_spec n ih,
