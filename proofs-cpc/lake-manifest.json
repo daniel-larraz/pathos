@@ -19,10 +19,10 @@
    "type": "git",
    "subDir": "verification",
    "scope": "",
-   "rev": "241160d8f66201f08b79a62a557778c9d111a4b6",
+   "rev": "a6b896b544242f5addc81505addb0d2d78504ee8",
    "name": "LogosVerification",
    "manifestFile": "lake-manifest.json",
-   "inputRev": "241160d8f66201f08b79a62a557778c9d111a4b6",
+   "inputRev": "a6b896b544242f5addc81505addb0d2d78504ee8",
    "inherited": false,
    "configFile": "lakefile.toml"
   },

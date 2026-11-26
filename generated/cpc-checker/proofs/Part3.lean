@@ -214,12 +214,14 @@ theorem case_0_eo__24eo_5fis_5flist_5fnil_5fbvmul_spec (n : Nat) (ih : Specs n) 
   unfold case_0_eo__24eo_5fis_5flist_5fnil_5fbvmul
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with Store.builtin_spec_to_z s e_v0 (by rw [he_v0]; rfl) h_a0 hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with Store.builtin_spec_len s e_v0 (by rw [he_v0]; rfl) h_a0 hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
   try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
   store_step with Store.literal_int_u32_spec s1 1#u32 (1) (by scalar_tac) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
   step as ⟨e_v2, he_v2⟩
-  store_step with Store.builtin_spec_is_eq s2 e_v2 (by rw [he_v2]; rfl) h_v0 h_v1 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  case_done hinv3 hG with h_v2 in EoCases.__eo_is_list_nil_bvmul.case_0 using hn_a0
+  store_step with Store.builtin_spec_to_bin s2 e_v2 (by rw [he_v2]; rfl) h_v0 h_v1 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  step as ⟨e_v3, he_v3⟩
+  store_step with Store.builtin_spec_is_eq s3 e_v3 (by rw [he_v3]; rfl) h_a0 h_v2 hinv3 h64 as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
+  case_done hinv4 hG with h_v3 in EoCases.__eo_is_list_nil_bvmul.case_0 using hn_a0
 
 /-- logos's `__eo_is_list_nil_bvmul` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/

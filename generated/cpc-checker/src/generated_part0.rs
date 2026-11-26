@@ -387,10 +387,11 @@ let v1 = match eo__24eo_5fis_5flist_5fnil_5fbvadd(s, a1) { Ok(v) => v, Err(e) =>
 Ok(Some(v1))
 }
 pub(super) fn case_0_eo__24eo_5fis_5flist_5fnil_5fbvmul(s: &mut Store, a0: Term) -> CheckResult<Option<Term>> {
-let v0 = match s.builtin_core(EvalOp::ToInt, &[a0]) { Ok(v) => v, Err(e) => return Err(e) };
+let v0 = match s.builtin_core(EvalOp::Length, &[a0]) { Ok(v) => v, Err(e) => return Err(e) };
 let v1 = match s.literal(Lit::Numeral(Integer::from(1u32))) { Ok(v) => v, Err(e) => return Err(e) };
-let v2 = match s.builtin_core(EvalOp::IsEq, &[v0, v1]) { Ok(v) => v, Err(e) => return Err(e) };
-Ok(Some(v2))
+let v2 = match s.builtin_core(EvalOp::ToBin, &[v0, v1]) { Ok(v) => v, Err(e) => return Err(e) };
+let v3 = match s.builtin_core(EvalOp::IsEq, &[a0, v2]) { Ok(v) => v, Err(e) => return Err(e) };
+Ok(Some(v3))
 }
 pub(super) fn body_eo__24eo_5fis_5flist_5fnil_5fbvmul(s: &mut Store, a0: Term) -> CheckResult<Term> {
 let stuck0 = match s.is_stuck(a0) { Ok(v) => v, Err(e) => return Err(e) };

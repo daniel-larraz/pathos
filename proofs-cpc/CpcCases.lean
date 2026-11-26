@@ -7164,7 +7164,7 @@ def __eo_is_list_nil_bvadd.case_0 : Term -> Option (Term)
   | x1 => some ((__eo_is_eq (__eo_to_z x1) (Term.Numeral 0)))
 
 def __eo_is_list_nil_bvmul.case_0 : Term -> Option (Term)
-  | x1 => some ((__eo_is_eq (__eo_to_z x1) (Term.Numeral 1)))
+  | x1 => some ((__eo_is_eq x1 (__eo_to_bin (__eo_len x1) (Term.Numeral 1))))
 
 def __eo_is_list_nil_str_concat.case_0 : Term -> Option (Term)
   | (Term.UOp1 UserOp1.seq_empty T) => some ((Term.Boolean true))

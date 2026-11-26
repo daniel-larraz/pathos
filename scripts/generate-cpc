@@ -85,7 +85,7 @@ default_rev=842dd163d735489fb137615656a5d3a76b1317ab
 # The same for --mini, and the logos revision whose CpcMini the proofs are
 # about. proofs/ pins the same logos revision.
 mini_default_rev=842dd163d735489fb137615656a5d3a76b1317ab
-mini_logos_rev=241160d8f66201f08b79a62a557778c9d111a4b6
+mini_logos_rev=a6b896b544242f5addc81505addb0d2d78504ee8
 
 me=generate-cpc
 fail() { echo "scripts/$me: $*" >&2; exit 2; }
