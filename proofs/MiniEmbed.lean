@@ -56,6 +56,13 @@ def uop : Eo.UserOp → schema.Constructor
   | Eo.UserOp.imp => schema.Constructor.eo__3d_3e
   | Eo.UserOp.eq => schema.Constructor.eo__3d
 
+@[tree_key] theorem ctorKey_uop (op : Eo.UserOp) :
+    ctorKey (uop op) = some (0, op.ctorIdx) := by
+  cases op <;> rfl
+
+@[tree_key] theorem userOpCmp_eq (a b : Eo.UserOp) :
+    Eo.userOpCmp a b = Eo.natCmp a.ctorIdx b.ctorIdx := rfl
+
 @[simp] theorem mk_var_of_ne {x1 x2 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck) (h2 : x2 ≠ Eo.Term.Stuck) :
     Eo.__eo_mk_var x1 x2 = Eo.Term.Var x1 x2 := by
   unfold Eo.__eo_mk_var; split <;> simp_all

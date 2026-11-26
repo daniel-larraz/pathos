@@ -20,6 +20,12 @@ repeat a variable: the Boolean connectives and the term equality of the
 calculus at hand (`Runtime/CalcSimp.lean`, written per calculus). -/
 register_simp_attr eo_logos_eq
 
+/-- What the order of `eo::cmp` needs of the calculus at hand beyond its
+constructors: the keys of the user operators' constructors and logos's
+order on user operators (`ctorKey_uop`, `userOpCmp_eq`, generated with
+the embedding, one of each per number of indices). -/
+register_simp_attr tree_key
+
 @[expose] public section
 
 namespace pathos_compiled_checker

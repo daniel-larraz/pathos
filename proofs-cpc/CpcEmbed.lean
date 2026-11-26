@@ -217,6 +217,13 @@ def uop : Eo.UserOp → schema.Constructor
   | Eo.UserOp.sbv_to_int => schema.Constructor.eo_sbv_5fto_5fint
   | Eo.UserOp._at__at_aci_sorted => schema.Constructor.eo__40_40aci_5fsorted
 
+@[tree_key] theorem ctorKey_uop (op : Eo.UserOp) :
+    ctorKey (uop op) = some (0, op.ctorIdx) := by
+  cases op <;> rfl
+
+@[tree_key] theorem userOpCmp_eq (a b : Eo.UserOp) :
+    Eo.userOpCmp a b = Eo.natCmp a.ctorIdx b.ctorIdx := rfl
+
 /-- The constructor of the store for a user operator with 1 index. -/
 def uop1 : Eo.UserOp1 → schema.Constructor
   | Eo.UserOp1.repeat => schema.Constructor.eo_repeat
@@ -234,6 +241,13 @@ def uop1 : Eo.UserOp1 → schema.Constructor
   | Eo.UserOp1.set_empty => schema.Constructor.eo_set_2eempty
   | Eo.UserOp1.int_to_bv => schema.Constructor.eo_int_5fto_5fbv
 
+@[tree_key] theorem ctorKey_uop1 (op : Eo.UserOp1) :
+    ctorKey (uop1 op) = some (1, op.ctorIdx) := by
+  cases op <;> rfl
+
+@[tree_key] theorem userOp1Cmp_eq (a b : Eo.UserOp1) :
+    Eo.userOp1Cmp a b = Eo.natCmp a.ctorIdx b.ctorIdx := rfl
+
 /-- The constructor of the store for a user operator with 2 indices. -/
 def uop2 : Eo.UserOp2 → schema.Constructor
   | Eo.UserOp2.extract => schema.Constructor.eo_extract
@@ -241,10 +255,24 @@ def uop2 : Eo.UserOp2 → schema.Constructor
   | Eo.UserOp2._at_quantifiers_skolemize => schema.Constructor.eo__40quantifiers_5fskolemize
   | Eo.UserOp2._at_const => schema.Constructor.eo__40const
 
+@[tree_key] theorem ctorKey_uop2 (op : Eo.UserOp2) :
+    ctorKey (uop2 op) = some (2, op.ctorIdx) := by
+  cases op <;> rfl
+
+@[tree_key] theorem userOp2Cmp_eq (a b : Eo.UserOp2) :
+    Eo.userOp2Cmp a b = Eo.natCmp a.ctorIdx b.ctorIdx := rfl
+
 /-- The constructor of the store for a user operator with 3 indices. -/
 def uop3 : Eo.UserOp3 → schema.Constructor
   | Eo.UserOp3._at_re_unfold_pos_component => schema.Constructor.eo__40re_5funfold_5fpos_5fcomponent
   | Eo.UserOp3._at_witness_string_length => schema.Constructor.eo__40witness_5fstring_5flength
+
+@[tree_key] theorem ctorKey_uop3 (op : Eo.UserOp3) :
+    ctorKey (uop3 op) = some (3, op.ctorIdx) := by
+  cases op <;> rfl
+
+@[tree_key] theorem userOp3Cmp_eq (a b : Eo.UserOp3) :
+    Eo.userOp3Cmp a b = Eo.natCmp a.ctorIdx b.ctorIdx := rfl
 
 @[simp] theorem mk_uop1_of_ne {op : Eo.UserOp1} {x1 : Eo.Term} (h1 : x1 ≠ Eo.Term.Stuck) :
     Eo.__eo_mk_uop1 op x1 = Eo.Term.UOp1 op x1 := by

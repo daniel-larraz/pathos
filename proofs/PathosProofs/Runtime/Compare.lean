@@ -179,27 +179,49 @@ def Tree.shape : Tree → TermData
   | .apply _ _ => .Apply 0#u32 0#u32
   | .node c _ => .Node c (alloc.vec.Vec.new Term)
 
-/-- The key the runtime orders a tree's root by, where `Store.order_key`
-gives one. -/
-noncomputable def treeKey (t : Tree) : Option (Nat × Nat) :=
-  open Classical in
-  if h : ∃ p : Std.Usize × Std.Usize, Store.order_key t.shape = ok (core.result.Result.Ok p)
-  then some ((Classical.choose h).1.val, (Classical.choose h).2.val) else none
-
-theorem treeKey_of {t : Tree} {p : Std.Usize × Std.Usize}
+/-- The key `Store.order_key` gives a tree's root is `treeKey`'s, given that
+the calculus's tables give keys (`hok`, `hemb`). -/
+theorem treeKey_of (hok : ∀ c, ∃ p, schema.Constructor.order_key c = ok p)
+    (hemb : ∀ e, ∃ o, schema.Constructor.of_embedding e = ok o)
+    {t : Tree} {p : Std.Usize × Std.Usize}
     (h : Store.order_key t.shape = ok (core.result.Result.Ok p)) :
     treeKey t = some (p.1.val, p.2.val) := by
-  have he : ∃ p : Std.Usize × Std.Usize, Store.order_key t.shape = ok (core.result.Result.Ok p) :=
-    ⟨p, h⟩
-  unfold treeKey
-  rw [dif_pos he]
-  have hs := Classical.choose_spec he
-  have hp : Classical.choose he = p := by
-    have h2 : (ok (core.result.Result.Ok (Classical.choose he)) : Result _) =
-        ok (core.result.Result.Ok p) := hs.symm.trans h
-    have := Result.ok_injective h2
-    cases this; rfl
-  rw [hp]
+  have hE : ∀ e, (do
+      let o ← schema.Constructor.of_embedding e
+      match o with
+      | none => ok (core.result.Result.Err CheckError.InvalidConstructor)
+      | some c => do
+        let p ← schema.Constructor.order_key c
+        ok (core.result.Result.Ok p) : Result _) = ok (core.result.Result.Ok p) →
+      embKey e = some (p.1.val, p.2.val) := by
+    intro e he
+    obtain ⟨o, ho⟩ := hemb e
+    rw [ho, Std.bind_ok] at he
+    cases o with
+    | none => have := Result.ok_injective he; cases this
+    | some c =>
+      obtain ⟨q, hq⟩ := hok c
+      simp only [hq, Std.bind_ok] at he
+      have := Result.ok_injective he; cases this
+      exact embKey_of ho hq
+  cases t with
+  | stuck => exact hE _ h
+  | lit l =>
+    cases l <;> (simp only [Tree.shape, Store.order_key, Std.bind_ok] at h; exact hE _ h)
+  | native l =>
+    simp only [Tree.shape, Store.order_key] at h
+    have := Result.ok_injective h; cases this; rfl
+  | userop c =>
+    obtain ⟨q, hq⟩ := hok c
+    simp only [Tree.shape, Store.order_key, hq, Std.bind_ok] at h
+    have := Result.ok_injective h; cases this
+    exact ctorKey_of hq
+  | apply a b => exact hE _ h
+  | node c xs =>
+    obtain ⟨q, hq⟩ := hok c
+    simp only [Tree.shape, Store.order_key, hq, Std.bind_ok] at h
+    have := Result.ok_injective h; cases this
+    exact ctorKey_of hq
 
 mutual
 /-- The order `Store.compare` computes on the trees two handles unfold to:
@@ -493,8 +515,8 @@ theorem compare_step_spec (s : Store) (hwf : s.Wf) (A : Nat) (hA2 : 2 ≤ A)
         core.convert.FromSame.from, hle]
     | Ok kb =>
       simp only [Std.bind_ok, lift]
-      have hka : treeKey ta = some (ka.1.val, ka.2.val) := treeKey_of (by rw [← order_key_holds ha]; exact hra)
-      have hkb : treeKey tb = some (kb.1.val, kb.2.val) := treeKey_of (by rw [← order_key_holds hb]; exact hrb)
+      have hka : treeKey ta = some (ka.1.val, ka.2.val) := treeKey_of hok hemb (by rw [← order_key_holds ha]; exact hra)
+      have hkb : treeKey tb = some (kb.1.val, kb.2.val) := treeKey_of hok hemb (by rw [← order_key_holds hb]; exact hrb)
       obtain ⟨i, i1⟩ := ka
       obtain ⟨i2, i3⟩ := kb
       have htags : treeCmp ta tb =

@@ -1876,6 +1876,15 @@ def embedding(table, calc_lean=None):
                 o.append("  | Eo.UserOp" + sfx + "." + u.cname + " => schema.Constructor."
                          + ident(u.sname) + "\n")
             o.append("\n")
+            # what the order of eo::cmp needs of these constructors
+            # (Runtime/CompareTerm.lean): their keys, the user-operator
+            # constructor's index in logos's Term (`UOp`, `UOp1`, … come
+            # first) then the operator's, and logos's order on operators
+            o.append("@[tree_key] theorem ctorKey_uop" + sfx + " (op : Eo.UserOp" + sfx
+                     + ") :\n    ctorKey (uop" + sfx + " op) = some (" + str(k)
+                     + ", op.ctorIdx) := by\n  cases op <;> rfl\n\n")
+            o.append("@[tree_key] theorem userOp" + sfx + "Cmp_eq (a b : Eo.UserOp" + sfx
+                     + ") :\n    Eo.userOp" + sfx + "Cmp a b = Eo.natCmp a.ctorIdx b.ctorIdx := rfl\n\n")
         # logos's strict builders are the raw constructors where no part is
         # stuck (the generated proofs' simp sets take them, with the facts
         # that the parts are not stuck)

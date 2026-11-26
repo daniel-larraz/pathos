@@ -310,6 +310,53 @@ instance : Embedded (List Nat) := ⟨encStr, decStr, okStr, dec_encStr⟩
 
 end Tree
 
+/-! ## The key `Store.order_key` gives a tree's root
+
+What `Store::compare` orders trees by first (`Runtime/Compare.lean`).
+`order_key` and `of_embedding` are read with `Result.match`, which only
+looks at the result, so the keys of a concrete tree compute (by `rfl`). -/
+
+/-- The key of a constructor. -/
+def ctorKey (c : schema.Constructor) : Option (Nat × Nat) :=
+  match (schema.Constructor.order_key c).match with
+  | .ok p => some (p.1.val, p.2.val)
+  | _ => none
+
+/-- The key of the constructor of an embedding, if it has one. -/
+def embKey (e : Embedding) : Option (Nat × Nat) :=
+  match (schema.Constructor.of_embedding e).match with
+  | .ok (some c) => ctorKey c
+  | _ => none
+
+/-- The embedding `Store.order_key` orders a literal by. -/
+def litEmbedding : lit.Lit → Embedding
+  | .Boolean _ => .Boolean
+  | .Numeral _ => .Numeral
+  | .Decimal _ => .Rational
+  | .Rational _ => .Rational
+  | .Hex _ => .Binary
+  | .Binary _ => .Binary
+  | .Str _ => .Str
+
+/-- The key of a tree's root: what `Store.order_key` gives its data
+(`treeKey_of`). -/
+def treeKey : Tree → Option (Nat × Nat)
+  | .stuck => embKey .Stuck
+  | .lit l => embKey (litEmbedding l)
+  | .native _ => some (0, 0)
+  | .userop c => ctorKey c
+  | .apply _ _ => embKey .Apply
+  | .node c _ => ctorKey c
+
+theorem ctorKey_of {c : schema.Constructor} {p : Std.Usize × Std.Usize}
+    (h : schema.Constructor.order_key c = ok p) : ctorKey c = some (p.1.val, p.2.val) := by
+  simp [ctorKey, h]
+
+theorem embKey_of {e : Embedding} {c : schema.Constructor} {p : Std.Usize × Std.Usize}
+    (he : schema.Constructor.of_embedding e = ok (some c))
+    (h : schema.Constructor.order_key c = ok p) : embKey e = some (p.1.val, p.2.val) := by
+  simp [embKey, he, ctorKey_of h]
+
 end
 
 end pathos_compiled_checker
