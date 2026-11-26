@@ -110,3 +110,24 @@ bytes = 350000
 "$eo_prog_str-replace-find-base" = 20000000
 "$eo_prog_str-replace-find-first-concat" = 20000000
 "$substitute_simul_rec" = 20000000
+
+# Measured with `#count_heartbeats in` on every generated theorem (2026-11-26,
+# logos a6b896b5): each has a theorem above 1,000,000 of the parts' 2,000,000,
+# too close to the limit; the most of each in parentheses.
+"$eo_prog_bv-eq-extract-elim1" = 4000000  # (1,843,942)
+"$chain_m_resolve_final" = 4000000  # (1,813,485)
+"$chain_m_resolve_rec_step" = 4000000  # (1,663,726)
+"$eo_prog_bv-saddo-eliminate" = 4000000  # (1,515,936)
+"$eo_prog_bv-rotate-right-eliminate-1" = 4000000  # (1,509,652)
+"$eo_prog_bv-mult-slt-mult-1" = 4000000  # (1,499,463)
+"$eo_prog_bv-mult-slt-mult-2" = 4000000  # (1,499,397)
+"$eo_prog_bv-extract-sign-extend-2" = 4000000  # (1,488,930)
+"$is_quant_dt_split_conj" = 4000000  # (1,450,848)
+"$eo_prog_re-concat-merge" = 4000000  # (1,408,402)
+"$eo_prog_bv-mult-pow2-2b" = 4000000  # (1,376,138)
+"$eo_prog_bv-ssubo-eliminate" = 4000000  # (1,274,122)
+"$eo_prog_bv-sdiv-eliminate" = 4000000  # (1,227,711)
+"$eo_prog_bv-sign-extend-eq-const-1" = 4000000  # (1,175,830)
+"$eo_prog_bv-sign-extend-eq-const-2" = 4000000  # (1,175,637)
+"$mk_str_eager_reduction" = 4000000  # (1,078,191)
+"$eo_prog_bv-extract-concat-1" = 4000000  # (1,049,166)

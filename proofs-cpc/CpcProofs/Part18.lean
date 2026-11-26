@@ -31,2501 +31,1595 @@ open Eo hiding Term
 open Smtm
 open generated generated.part0 generated.part1 generated.part2 generated.part3 generated.part4 generated.part5 generated.part6 generated.part7 generated.part8 generated.part9 generated.part10 generated.part11 generated.part12
 
-theorem case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_substr_full_eq.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_substr_full_eq.case_0 x_a0 x_a1 x_a2 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq more_0_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a2 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo_str_2elen.construct s1 e_v12 (by rw [he_v12]; exact empty_args) hinv1 h64 as ⟨v12, s2, hinv2, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11
-  pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  pat_same v11 a0 with h_v11 h_a0 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  pat_same v4 a1 with h_v4 h_a1 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_full_eq.case_0
-  step as ⟨e_v13, he_v13⟩
-  store_step with CtorSpec.eo__3d.construct s2 e_v13 (by rw [he_v13]; exact empty_args) hinv2 h64 as ⟨v13, s3, hinv3, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12
-  step as ⟨e_v14, he_v14⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s3 e_v14 (by rw [he_v14]; exact empty_args) hinv3 h64 as ⟨v14, s4, hinv4, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13
-  store_step with Store.apply_rep s4 v14 a0 _ _ hinv4 h64 h_v14 h_a0 (by ns_tac) (by ns_tac) as ⟨v15, s5, hinv5, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s5 0#u32 (0) (by scalar_tac) hinv5 h64 as ⟨v16, s6, hinv6, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-  store_step with Store.apply_rep s6 v15 v16 _ _ hinv6 h64 h_v15 h_v16 (by ns_tac) (by ns_tac) as ⟨v17, s7, hinv7, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-  store_step with Store.apply_rep s7 v17 a1 _ _ hinv7 h64 h_v17 h_a1 (by ns_tac) (by ns_tac) as ⟨v18, s8, hinv8, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-  store_step with Store.apply_rep s8 v13 v18 _ _ hinv8 h64 h_v13 h_v18 (by ns_tac) (by ns_tac) as ⟨v19, s9, hinv9, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-  store_step with Store.apply_rep s9 v19 a0 _ _ hinv9 h64 h_v19 h_a0 (by ns_tac) (by ns_tac) as ⟨v20, s10, hinv10, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-  case_done hinv10 hG with h_v20 in EoCases.__eo_prog_str_substr_full_eq.case_0 using hn_a0 hn_a1 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11
-
-/-- logos's `__eo_prog_str_substr_full_eq` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    __eo_prog_str_substr_full_eq x_a0 x_a1 x_a2 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_substr_full_eq.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_substr_full_eq
-  unfold EoCases.__eo_prog_str_substr_full_eq.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
-    body_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_substr_full_eq x_a0 x_a1 x_a2)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1
-  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_str_substr_full_eq.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq.Spec n := by
-  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
-  unfold eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_prog_str_substr_full_eq x_a0 x_a1 x_a2))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsubstr_2dfull_2deq_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_substr_len_include.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_substr_len_include.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude more_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude more_1_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude more_2_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a4 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3e_3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
-  pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v14 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2elen.construct s2 e_v19 (by rw [he_v19]; exact empty_args) hinv2 h64 as ⟨v19, s3, hinv3, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18
-  pat_same v17 v19 with h_v17 h_v19 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_same v18 a0 with h_v18 h_a0 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v11 as ⟨v21, v22, x_v21, x_v22, h_v21, h_v22, hn_v21, hn_v22⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v21 as ⟨v24, v25, x_v24, x_v25, h_v24, h_v25, hn_v24, hn_v25⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  step as ⟨e_v26, he_v26⟩
-  store_step with CtorSpec.eo__2b.construct s3 e_v26 (by rw [he_v26]; exact empty_args) hinv3 h64 as ⟨v26, s4, hinv4, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25
-  pat_same v24 v26 with h_v24 h_v26 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_same v25 a2 with h_v25 h_a2 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v22 as ⟨v28, v29, x_v28, x_v29, h_v28, h_v29, hn_v28, hn_v29⟩ using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_unapply h_v28 as ⟨v31, v32, x_v31, x_v32, h_v31, h_v32, hn_v31, hn_v32⟩ using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  step as ⟨e_v33, he_v33⟩
-  store_step with CtorSpec.eo__2b.construct s4 e_v33 (by rw [he_v33]; exact empty_args) hinv4 h64 as ⟨v33, s5, hinv5, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32
-  pat_same v31 v33 with h_v31 h_v33 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  pat_same v32 a3 with h_v32 h_a3 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s5 0#u32 (0) (by scalar_tac) hinv5 h64 as ⟨v34, s6, hinv6, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33
-  pat_same v29 v34 with h_v29 h_v34 using hinv6 else hinv6 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  store_step with Store.literal_boolean_spec s6 true hinv6 h64 as ⟨v35, s7, hinv7, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34
-  pat_same v4 v35 with h_v4 h_v35 using hinv7 else hinv7 hG in EoCases.__eo_prog_str_substr_len_include.case_0
-  step as ⟨e_v36, he_v36⟩
-  store_step with CtorSpec.eo__3d.construct s7 e_v36 (by rw [he_v36]; exact empty_args) hinv7 h64 as ⟨v36, s8, hinv8, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35
-  step as ⟨e_v37, he_v37⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s8 e_v37 (by rw [he_v37]; exact empty_args) hinv8 h64 as ⟨v37, s9, hinv9, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
-  step as ⟨e_v38, he_v38⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s9 e_v38 (by rw [he_v38]; exact empty_args) hinv9 h64 as ⟨v38, s10, hinv10, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-  store_step with Store.apply_rep s10 v38 a0 _ _ hinv10 h64 h_v38 h_a0 (by ns_tac) (by ns_tac) as ⟨v39, s11, hinv11, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
-  store_step with Store.apply_rep s11 v39 a1 _ _ hinv11 h64 h_v39 h_a1 (by ns_tac) (by ns_tac) as ⟨v40, s12, hinv12, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
-  store_step with Store.apply_rep s12 v37 v40 _ _ hinv12 h64 h_v37 h_v40 (by ns_tac) (by ns_tac) as ⟨v41, s13, hinv13, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-  store_step with Store.apply_rep s13 v41 a2 _ _ hinv13 h64 h_v41 h_a2 (by ns_tac) (by ns_tac) as ⟨v42, s14, hinv14, h_v42⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
-  store_step with Store.apply_rep s14 v42 a3 _ _ hinv14 h64 h_v42 h_a3 (by ns_tac) (by ns_tac) as ⟨v43, s15, hinv15, h_v43⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42
-  store_step with Store.apply_rep s15 v36 v43 _ _ hinv15 h64 h_v36 h_v43 (by ns_tac) (by ns_tac) as ⟨v44, s16, hinv16, h_v44⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43
-  step as ⟨e_v45, he_v45⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s16 e_v45 (by rw [he_v45]; exact empty_args) hinv16 h64 as ⟨v45, s17, hinv17, h_v45⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44
-  store_step with Store.apply_rep s17 v45 a0 _ _ hinv17 h64 h_v45 h_a0 (by ns_tac) (by ns_tac) as ⟨v46, s18, hinv18, h_v46⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45
-  store_step with Store.apply_rep s18 v46 a2 _ _ hinv18 h64 h_v46 h_a2 (by ns_tac) (by ns_tac) as ⟨v47, s19, hinv19, h_v47⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46
-  store_step with Store.apply_rep s19 v47 a3 _ _ hinv19 h64 h_v47 h_a3 (by ns_tac) (by ns_tac) as ⟨v48, s20, hinv20, h_v48⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47
-  store_step with Store.apply_rep s20 v44 v48 _ _ hinv20 h64 h_v44 h_v48 (by ns_tac) (by ns_tac) as ⟨v49, s21, hinv21, h_v49⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48
-  case_done hinv21 hG with h_v49 in EoCases.__eo_prog_str_substr_len_include.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14 hn_v17 hn_v18 hn_v21 hn_v22 hn_v24 hn_v25 hn_v28 hn_v29 hn_v31 hn_v32
-
-/-- logos's `__eo_prog_str_substr_len_include` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
-    __eo_prog_str_substr_len_include x_a0 x_a1 x_a2 x_a3 x_a4 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_substr_len_include.case_0 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_substr_len_include
-  unfold EoCases.__eo_prog_str_substr_len_include.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
-    body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_substr_len_include x_a0 x_a1 x_a2 x_a3 x_a4)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  stuck_check h_a3 : x_a3 as hn_a3 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_spec n ih s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2 hn_a3
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2 hn_a3
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hn_a3 hc0 in EoCases.__eo_prog_str_substr_len_include.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude.Spec n := by
-  intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
-  unfold eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__eo_prog_str_substr_len_include x_a0 x_a1 x_a2 x_a3 x_a4))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_substr_len_include_pre.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_substr_len_include_pre.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre more_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre more_1_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre more_2_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre more_3_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a4 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3e_3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
-  pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  pat_same v14 a3 with h_v14 h_a3 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  pat_unapply h_v11 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2elen.construct s2 e_v19 (by rw [he_v19]; exact empty_args) hinv2 h64 as ⟨v19, s3, hinv3, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18
-  pat_same v17 v19 with h_v17 h_v19 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  pat_same v18 a0 with h_v18 h_a0 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  store_step with Store.literal_boolean_spec s3 true hinv3 h64 as ⟨v20, s4, hinv4, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19
-  pat_same v4 v20 with h_v4 h_v20 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  step as ⟨e_v21, he_v21⟩
-  store_step with CtorSpec.eo__3d.construct s4 e_v21 (by rw [he_v21]; exact empty_args) hinv4 h64 as ⟨v21, s5, hinv5, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20
-  step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s5 e_v22 (by rw [he_v22]; exact empty_args) hinv5 h64 as ⟨v22, s6, hinv6, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21
-  step as ⟨e_v23, he_v23⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s6 e_v23 (by rw [he_v23]; exact empty_args) hinv6 h64 as ⟨v23, s7, hinv7, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
-  store_step with Store.apply_rep s7 v23 a0 _ _ hinv7 h64 h_v23 h_a0 (by ns_tac) (by ns_tac) as ⟨v24, s8, hinv8, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  step as ⟨e_v25, he_v25⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s8 e_v25 (by rw [he_v25]; exact empty_args) hinv8 h64 as ⟨v25, s9, hinv9, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  store_step with Store.apply_rep s9 v25 a1 _ _ hinv9 h64 h_v25 h_a1 (by ns_tac) (by ns_tac) as ⟨v26, s10, hinv10, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  store_step with Store.apply_rep s10 v26 a2 _ _ hinv10 h64 h_v26 h_a2 (by ns_tac) (by ns_tac) as ⟨v27, s11, hinv11, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  store_step with Store.apply_rep s11 v24 v27 _ _ hinv11 h64 h_v24 h_v27 (by ns_tac) (by ns_tac) as ⟨v28, s12, hinv12, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-  store_step with Store.apply_rep s12 v22 v28 _ _ hinv12 h64 h_v22 h_v28 (by ns_tac) (by ns_tac) as ⟨v29, s13, hinv13, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s13 0#u32 (0) (by scalar_tac) hinv13 h64 as ⟨v30, s14, hinv14, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  store_step with Store.apply_rep s14 v29 v30 _ _ hinv14 h64 h_v29 h_v30 (by ns_tac) (by ns_tac) as ⟨v31, s15, hinv15, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  store_step with Store.apply_rep s15 v31 a3 _ _ hinv15 h64 h_v31 h_a3 (by ns_tac) (by ns_tac) as ⟨v32, s16, hinv16, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  store_step with Store.apply_rep s16 v21 v32 _ _ hinv16 h64 h_v21 h_v32 (by ns_tac) (by ns_tac) as ⟨v33, s17, hinv17, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  step as ⟨e_v34, he_v34⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s17 e_v34 (by rw [he_v34]; exact empty_args) hinv17 h64 as ⟨v34, s18, hinv18, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
-  store_step with Store.apply_rep s18 v34 a0 _ _ hinv18 h64 h_v34 h_a0 (by ns_tac) (by ns_tac) as ⟨v35, s19, hinv19, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
-  step as ⟨e_v36, he_v36⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s19 e_v36 (by rw [he_v36]; exact empty_args) hinv19 h64 as ⟨v36, s20, hinv20, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
-  step as ⟨e_v37, he_v37⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s20 e_v37 (by rw [he_v37]; exact empty_args) hinv20 h64 as ⟨v37, s21, hinv21, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
-  step as ⟨e_v38, he_v38⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s21 e_v38 (by rw [he_v38]; exact empty_args) hinv21 h64 as ⟨v38, s22, hinv22, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-  step as ⟨e_v39, he_v39⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s22 e_v39 (by rw [he_v39]; exact empty_args) hinv22 h64 as ⟨v39, s23, hinv23, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
-  store_step with Store.apply_rep s23 v39 a1 _ _ hinv23 h64 h_v39 h_a1 (by ns_tac) (by ns_tac) as ⟨v40, s24, hinv24, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
-  store_step with Store.apply_rep s24 v40 a2 _ _ hinv24 h64 h_v40 h_a2 (by ns_tac) (by ns_tac) as ⟨v41, s25, hinv25, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-  step as ⟨e_v42, he_v42⟩
-  store_step with Store.builtin_spec_list_singleton_elim n ih.eo__24eo_5fis_5flist_5fnil s25 e_v42 (by rw [he_v42]; rfl) h_v38 h_v41 hinv25 h64 (hG.rem hrem) (by not_left_tac) (by nil_apply_tac) as ⟨v42, s26, hinv26, h_v42⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
-  store_step with Store.apply_mk_rep s26 v37 v42 _ _ hinv26 h64 h_v37 h_v42 as ⟨v43, s27, hinv27, h_v43⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s27 0#u32 (0) (by scalar_tac) hinv27 h64 as ⟨v44, s28, hinv28, h_v44⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43
-  store_step with Store.apply_mk_rep s28 v43 v44 _ _ hinv28 h64 h_v43 h_v44 as ⟨v45, s29, hinv29, h_v45⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44
-  step as ⟨e_v46, he_v46⟩
-  store_step with CtorSpec.eo__2d.construct s29 e_v46 (by rw [he_v46]; exact empty_args) hinv29 h64 as ⟨v46, s30, hinv30, h_v46⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45
-  store_step with Store.apply_rep s30 v46 a3 _ _ hinv30 h64 h_v46 h_a3 (by ns_tac) (by ns_tac) as ⟨v47, s31, hinv31, h_v47⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46
-  step as ⟨e_v48, he_v48⟩
-  store_step with CtorSpec.eo_str_2elen.construct s31 e_v48 (by rw [he_v48]; exact empty_args) hinv31 h64 as ⟨v48, s32, hinv32, h_v48⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47
-  store_step with Store.apply_rep s32 v48 a0 _ _ hinv32 h64 h_v48 h_a0 (by ns_tac) (by ns_tac) as ⟨v49, s33, hinv33, h_v49⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48
-  store_step with Store.apply_rep s33 v47 v49 _ _ hinv33 h64 h_v47 h_v49 (by ns_tac) (by ns_tac) as ⟨v50, s34, hinv34, h_v50⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49
-  store_step with Store.apply_mk_rep s34 v45 v50 _ _ hinv34 h64 h_v45 h_v50 as ⟨v51, s35, hinv35, h_v51⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50
-  store_step with Store.apply_mk_rep s35 v36 v51 _ _ hinv35 h64 h_v36 h_v51 as ⟨v52, s36, hinv36, h_v52⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51
-  step as ⟨e_v53, he_v53⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s36 e_v53 (by rw [he_v53]; exact empty_args) hinv36 h64 as ⟨v53, s37, hinv37, h_v53⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52
-  store_step with ih.eo__24eo_5ftypeof s37 a0 _ hinv37 h64 (hG.rem hrem) h_a0 as ⟨v54, s38, hinv38, h_v54⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53
-  store_step with ih.eo__24eo_5fnil s38 v53 v54 _ _ hinv38 h64 (hG.rem hrem) h_v53 h_v54 as ⟨v55, s39, hinv39, h_v55⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54
-  store_step with Store.apply_mk_rep s39 v52 v55 _ _ hinv39 h64 h_v52 h_v55 as ⟨v56, s40, hinv40, h_v56⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55
-  store_step with Store.apply_mk_rep s40 v35 v56 _ _ hinv40 h64 h_v35 h_v56 as ⟨v57, s41, hinv41, h_v57⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56
-  store_step with Store.apply_mk_rep s41 v33 v57 _ _ hinv41 h64 h_v33 h_v57 as ⟨v58, s42, hinv42, h_v58⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57
-  case_done hinv42 hG with h_v58 in EoCases.__eo_prog_str_substr_len_include_pre.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14 hn_v17 hn_v18
-
-/-- logos's `__eo_prog_str_substr_len_include_pre` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
-    __eo_prog_str_substr_len_include_pre x_a0 x_a1 x_a2 x_a3 x_a4 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_substr_len_include_pre.case_0 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_substr_len_include_pre
-  unfold EoCases.__eo_prog_str_substr_len_include_pre.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
-    body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_substr_len_include_pre x_a0 x_a1 x_a2 x_a3 x_a4)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  stuck_check h_a3 : x_a3 as hn_a3 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre_spec n ih s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2 hn_a3
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2 hn_a3
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hn_a3 hc0 in EoCases.__eo_prog_str_substr_len_include_pre.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre.Spec n := by
-  intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
-  unfold eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__eo_prog_str_substr_len_include_pre x_a0 x_a1 x_a2 x_a3 x_a4))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dinclude_2dpre_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_substr_len_norm.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_substr_len_norm.case_0 x_a0 x_a1 x_a2 x_a3 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm more_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm more_1_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a3 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3e_3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
-  pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  pat_same v14 a2 with h_v14 h_a2 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  pat_unapply h_v11 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2elen.construct s2 e_v19 (by rw [he_v19]; exact empty_args) hinv2 h64 as ⟨v19, s3, hinv3, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18
-  pat_same v17 v19 with h_v17 h_v19 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  pat_same v18 a0 with h_v18 h_a0 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  store_step with Store.literal_boolean_spec s3 true hinv3 h64 as ⟨v20, s4, hinv4, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19
-  pat_same v4 v20 with h_v4 h_v20 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_len_norm.case_0
-  step as ⟨e_v21, he_v21⟩
-  store_step with CtorSpec.eo__3d.construct s4 e_v21 (by rw [he_v21]; exact empty_args) hinv4 h64 as ⟨v21, s5, hinv5, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20
-  step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s5 e_v22 (by rw [he_v22]; exact empty_args) hinv5 h64 as ⟨v22, s6, hinv6, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21
-  store_step with Store.apply_rep s6 v22 a0 _ _ hinv6 h64 h_v22 h_a0 (by ns_tac) (by ns_tac) as ⟨v23, s7, hinv7, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
-  store_step with Store.apply_rep s7 v23 a1 _ _ hinv7 h64 h_v23 h_a1 (by ns_tac) (by ns_tac) as ⟨v24, s8, hinv8, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  store_step with Store.apply_rep s8 v24 a2 _ _ hinv8 h64 h_v24 h_a2 (by ns_tac) (by ns_tac) as ⟨v25, s9, hinv9, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  store_step with Store.apply_rep s9 v21 v25 _ _ hinv9 h64 h_v21 h_v25 (by ns_tac) (by ns_tac) as ⟨v26, s10, hinv10, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  step as ⟨e_v27, he_v27⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s10 e_v27 (by rw [he_v27]; exact empty_args) hinv10 h64 as ⟨v27, s11, hinv11, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  store_step with Store.apply_rep s11 v27 a0 _ _ hinv11 h64 h_v27 h_a0 (by ns_tac) (by ns_tac) as ⟨v28, s12, hinv12, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-  store_step with Store.apply_rep s12 v28 a1 _ _ hinv12 h64 h_v28 h_a1 (by ns_tac) (by ns_tac) as ⟨v29, s13, hinv13, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-  step as ⟨e_v30, he_v30⟩
-  store_step with CtorSpec.eo_str_2elen.construct s13 e_v30 (by rw [he_v30]; exact empty_args) hinv13 h64 as ⟨v30, s14, hinv14, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  store_step with Store.apply_rep s14 v30 a0 _ _ hinv14 h64 h_v30 h_a0 (by ns_tac) (by ns_tac) as ⟨v31, s15, hinv15, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  store_step with Store.apply_rep s15 v29 v31 _ _ hinv15 h64 h_v29 h_v31 (by ns_tac) (by ns_tac) as ⟨v32, s16, hinv16, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  store_step with Store.apply_rep s16 v26 v32 _ _ hinv16 h64 h_v26 h_v32 (by ns_tac) (by ns_tac) as ⟨v33, s17, hinv17, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  case_done hinv17 hG with h_v33 in EoCases.__eo_prog_str_substr_len_norm.case_0 using hn_a0 hn_a1 hn_a2 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14 hn_v17 hn_v18
-
-/-- logos's `__eo_prog_str_substr_len_norm` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
-    __eo_prog_str_substr_len_norm x_a0 x_a1 x_a2 x_a3 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_substr_len_norm.case_0 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_substr_len_norm
-  unfold EoCases.__eo_prog_str_substr_len_norm.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+theorem case_0_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
-    body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_substr_len_norm x_a0 x_a1 x_a2 x_a3)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm.rust_eq x_a0 x_a1 x_a2 x_a3 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm_spec n ih s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_prog_str_substr_len_norm.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm.Spec n := by
-  intro s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
-  unfold eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm s1 a0 a1 a2 a3) (fun s' t => Represents.rep s' t (__eo_prog_str_substr_len_norm x_a0 x_a1 x_a2 x_a3))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsubstr_2dlen_2dnorm_spec m (ih m hm) s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+    case_0_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_substr_replace.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_substr_replace.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 = none
+        ∃ res, EoCases.__eo_to_smt_sets_deq_diff.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_sets_deq_diff.case_0 x_a0 x_a1 x_a2 x_a3 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace more_0_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace more_1_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace more_2_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace
+  unfold case_0_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff
   have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a4 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_replace.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo_str_2elen.construct s1 e_v12 (by rw [he_v12]; exact empty_args) hinv1 h64 as ⟨v12, s2, hinv2, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11
-  pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_same v11 a1 with h_v11 h_a1 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_unapply h_v4 as ⟨v14, v15, x_v14, x_v15, h_v14, h_v15, hn_v14, hn_v15⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  step as ⟨e_v16, he_v16⟩
-  store_step with CtorSpec.eo_str_2elen.construct s2 e_v16 (by rw [he_v16]; exact empty_args) hinv2 h64 as ⟨v16, s3, hinv3, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15
-  pat_same v14 v16 with h_v14 h_v16 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_same v15 a2 with h_v15 h_a2 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a5 as ⟨v18, x_v18, h_v18⟩ else hinv3 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_unapply h_v18 as ⟨v20, v21, x_v20, x_v21, h_v20, h_v21, hn_v20, hn_v21⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_unapply h_v20 as ⟨v23, v24, x_v23, x_v24, h_v23, h_v24, hn_v23, hn_v24⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  step as ⟨e_v25, he_v25⟩
-  store_step with CtorSpec.eo__3d.construct s3 e_v25 (by rw [he_v25]; exact empty_args) hinv3 h64 as ⟨v25, s4, hinv4, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24
-  pat_same v23 v25 with h_v23 h_v25 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_unapply h_v24 as ⟨v27, v28, x_v27, x_v28, h_v27, h_v28, hn_v27, hn_v28⟩ using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  step as ⟨e_v29, he_v29⟩
-  store_step with CtorSpec.eo_str_2elen.construct s4 e_v29 (by rw [he_v29]; exact empty_args) hinv4 h64 as ⟨v29, s5, hinv5, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28
-  pat_same v27 v29 with h_v27 h_v29 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  pat_same v28 a1 with h_v28 h_a1 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s5 1#u32 (1) (by scalar_tac) hinv5 h64 as ⟨v30, s6, hinv6, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29
-  pat_same v21 v30 with h_v21 h_v30 using hinv6 else hinv6 hG in EoCases.__eo_prog_str_substr_replace.case_0
-  step as ⟨e_v31, he_v31⟩
-  store_step with CtorSpec.eo__3d.construct s6 e_v31 (by rw [he_v31]; exact empty_args) hinv6 h64 as ⟨v31, s7, hinv7, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30
-  step as ⟨e_v32, he_v32⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s7 e_v32 (by rw [he_v32]; exact empty_args) hinv7 h64 as ⟨v32, s8, hinv8, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31
-  step as ⟨e_v33, he_v33⟩
-  store_step with CtorSpec.eo_str_2ereplace.construct s8 e_v33 (by rw [he_v33]; exact empty_args) hinv8 h64 as ⟨v33, s9, hinv9, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  store_step with Store.apply_rep s9 v33 a0 _ _ hinv9 h64 h_v33 h_a0 (by ns_tac) (by ns_tac) as ⟨v34, s10, hinv10, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
-  store_step with Store.apply_rep s10 v34 a1 _ _ hinv10 h64 h_v34 h_a1 (by ns_tac) (by ns_tac) as ⟨v35, s11, hinv11, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
-  store_step with Store.apply_rep s11 v35 a2 _ _ hinv11 h64 h_v35 h_a2 (by ns_tac) (by ns_tac) as ⟨v36, s12, hinv12, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
-  store_step with Store.apply_rep s12 v32 v36 _ _ hinv12 h64 h_v32 h_v36 (by ns_tac) (by ns_tac) as ⟨v37, s13, hinv13, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s13 0#u32 (0) (by scalar_tac) hinv13 h64 as ⟨v38, s14, hinv14, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-  store_step with Store.apply_rep s14 v37 v38 _ _ hinv14 h64 h_v37 h_v38 (by ns_tac) (by ns_tac) as ⟨v39, s15, hinv15, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
-  store_step with Store.apply_rep s15 v39 a3 _ _ hinv15 h64 h_v39 h_a3 (by ns_tac) (by ns_tac) as ⟨v40, s16, hinv16, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
-  store_step with Store.apply_rep s16 v31 v40 _ _ hinv16 h64 h_v31 h_v40 (by ns_tac) (by ns_tac) as ⟨v41, s17, hinv17, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-  step as ⟨e_v42, he_v42⟩
-  store_step with CtorSpec.eo_str_2ereplace.construct s17 e_v42 (by rw [he_v42]; exact empty_args) hinv17 h64 as ⟨v42, s18, hinv18, h_v42⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
-  step as ⟨e_v43, he_v43⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s18 e_v43 (by rw [he_v43]; exact empty_args) hinv18 h64 as ⟨v43, s19, hinv19, h_v43⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42
-  store_step with Store.apply_rep s19 v43 a0 _ _ hinv19 h64 h_v43 h_a0 (by ns_tac) (by ns_tac) as ⟨v44, s20, hinv20, h_v44⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s20 0#u32 (0) (by scalar_tac) hinv20 h64 as ⟨v45, s21, hinv21, h_v45⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44
-  store_step with Store.apply_rep s21 v44 v45 _ _ hinv21 h64 h_v44 h_v45 (by ns_tac) (by ns_tac) as ⟨v46, s22, hinv22, h_v46⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45
-  store_step with Store.apply_rep s22 v46 a3 _ _ hinv22 h64 h_v46 h_a3 (by ns_tac) (by ns_tac) as ⟨v47, s23, hinv23, h_v47⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46
-  store_step with Store.apply_rep s23 v42 v47 _ _ hinv23 h64 h_v42 h_v47 (by ns_tac) (by ns_tac) as ⟨v48, s24, hinv24, h_v48⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47
-  store_step with Store.apply_rep s24 v48 a1 _ _ hinv24 h64 h_v48 h_a1 (by ns_tac) (by ns_tac) as ⟨v49, s25, hinv25, h_v49⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48
-  store_step with Store.apply_rep s25 v49 a2 _ _ hinv25 h64 h_v49 h_a2 (by ns_tac) (by ns_tac) as ⟨v50, s26, hinv26, h_v50⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49
-  store_step with Store.apply_rep s26 v41 v50 _ _ hinv26 h64 h_v41 h_v50 (by ns_tac) (by ns_tac) as ⟨v51, s27, hinv27, h_v51⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v16 h_v18 h_v20 h_v21 h_v23 h_v24 h_v25 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50
-  case_done hinv27 hG with h_v51 in EoCases.__eo_prog_str_substr_replace.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v14 hn_v15 hn_v20 hn_v21 hn_v23 hn_v24 hn_v27 hn_v28
-
-/-- logos's `__eo_prog_str_substr_replace` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dreplace.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) (hw_a5 : Valid.valid x_a5) :
-    __eo_prog_str_substr_replace x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_substr_replace.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_substr_replace
-  unfold EoCases.__eo_prog_str_substr_replace.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) :
-    body_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_substr_replace x_a0 x_a1 x_a2 x_a3 x_a4 x_a5)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsubstr_2dreplace.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4) (by valid_tac hinv h_a5)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  stuck_check h_a3 : x_a3 as hn_a3 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace_spec n ih s a0 a1 a2 a3 a4 a5 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 hn_a0 hn_a1 hn_a2 hn_a3
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 using hn_a0 hn_a1 hn_a2 hn_a3
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hn_a3 hc0 in EoCases.__eo_prog_str_substr_replace.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dreplace_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsubstr_2dreplace.Spec n := by
-  intro s a0 a1 a2 a3 a4 a5 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5
-  unfold eo__24eo_5fprog_5fstr_2dsubstr_2dreplace
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace s1 a0 a1 a2 a3 a4 a5) (fun s' t => Represents.rep s' t (__eo_prog_str_substr_replace x_a0 x_a1 x_a2 x_a3 x_a4 x_a5))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsubstr_2dreplace_spec m (ih m hm) s1 a0 a1 a2 a3 a4 a5 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn) (by congr_one h_a5 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 a6 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) (h_a6 : Represents.rep s a6 x_a6) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) (hn_a5 : x_a5 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen s a0 a1 a2 a3 a4 a5 a6 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen more_0_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen more_1_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen
-  have hG := Store.Grows.refl s
-  pat_unapply h_a5 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_Seq.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2
-  pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a6 as ⟨v5, x_v5, h_v5⟩ else hinv1 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  pat_unapply h_v5 as ⟨v7, v8, x_v7, x_v8, h_v7, h_v8, hn_v7, hn_v8⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v12 (by rw [he_v12]; exact empty_args) hinv1 h64 as ⟨v12, s2, hinv2, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11
-  pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  pat_unapply h_v11 as ⟨v14, v15, x_v14, x_v15, h_v14, h_v15, hn_v14, hn_v15⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  pat_unapply h_v14 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo__3e_3d.construct s2 e_v19 (by rw [he_v19]; exact empty_args) hinv2 h64 as ⟨v19, s3, hinv3, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18
-  pat_same v17 v19 with h_v17 h_v19 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  pat_same v18 a3 with h_v18 h_a3 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  pat_same v15 a2 with h_v15 h_a2 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  store_step with Store.literal_boolean_spec s3 true hinv3 h64 as ⟨v20, s4, hinv4, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19
-  pat_same v8 v20 with h_v8 h_v20 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  step as ⟨e_v21, he_v21⟩
-  store_step with CtorSpec.eo__3d.construct s4 e_v21 (by rw [he_v21]; exact empty_args) hinv4 h64 as ⟨v21, s5, hinv5, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20
-  step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s5 e_v22 (by rw [he_v22]; exact empty_args) hinv5 h64 as ⟨v22, s6, hinv6, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21
-  step as ⟨e_v23, he_v23⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s6 e_v23 (by rw [he_v23]; exact empty_args) hinv6 h64 as ⟨v23, s7, hinv7, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
-  store_step with Store.apply_rep s7 v23 a0 _ _ hinv7 h64 h_v23 h_a0 (by ns_tac) (by ns_tac) as ⟨v24, s8, hinv8, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  store_step with Store.apply_rep s8 v24 a1 _ _ hinv8 h64 h_v24 h_a1 (by ns_tac) (by ns_tac) as ⟨v25, s9, hinv9, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  store_step with Store.apply_rep s9 v25 a2 _ _ hinv9 h64 h_v25 h_a2 (by ns_tac) (by ns_tac) as ⟨v26, s10, hinv10, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  store_step with Store.apply_rep s10 v22 v26 _ _ hinv10 h64 h_v22 h_v26 (by ns_tac) (by ns_tac) as ⟨v27, s11, hinv11, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  store_step with Store.apply_rep s11 v27 a3 _ _ hinv11 h64 h_v27 h_a3 (by ns_tac) (by ns_tac) as ⟨v28, s12, hinv12, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-  store_step with Store.apply_rep s12 v28 a4 _ _ hinv12 h64 h_v28 h_a4 (by ns_tac) (by ns_tac) as ⟨v29, s13, hinv13, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-  store_step with Store.apply_rep s13 v21 v29 _ _ hinv13 h64 h_v21 h_v29 (by ns_tac) (by ns_tac) as ⟨v30, s14, hinv14, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  step as ⟨e_v31, he_v31⟩
-  store_step with CtorSpec.eo_Seq.construct s14 e_v31 (by rw [he_v31]; exact empty_args) hinv14 h64 as ⟨v31, s15, hinv15, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  store_step with Store.apply_rep s15 v31 v2 _ _ hinv15 h64 h_v31 h_v2 (by ns_tac) (by ns_tac) as ⟨v32, s16, hinv16, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  store_step with ih.eo__24seq_5fempty s16 v32 _ hinv16 h64 (hG.rem hrem) h_v32 as ⟨v33, s17, hinv17, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  store_step with Store.apply_mk_rep s17 v30 v33 _ _ hinv17 h64 h_v30 h_v33 as ⟨v34, s18, hinv18, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_v1 h_v2 h_v3 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
-  case_done hinv18 hG with h_v34 in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5 hn_v1 hn_v2 hn_v7 hn_v8 hn_v10 hn_v11 hn_v14 hn_v15 hn_v17 hn_v18
-
-/-- logos's `__eo_prog_str_substr_substr_start_geq_len` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) (hw_a5 : Valid.valid x_a5) (hw_a6 : Valid.valid x_a6) :
-    __eo_prog_str_substr_substr_start_geq_len x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else if x_a4 = Eo.Term.Stuck then HasStuck.stuck else if x_a5 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_substr_substr_start_geq_len
-  unfold EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 a6 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) (h_a6 : Represents.rep s a6 x_a6) :
-    body_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen s a0 a1 a2 a3 a4 a5 a6 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_substr_substr_start_geq_len x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4) (by valid_tac hinv h_a5) (by valid_tac hinv h_a6)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  stuck_check h_a3 : x_a3 as hn_a3 else hinv hG
-  stuck_check h_a4 : x_a4 as hn_a4 else hinv hG
-  stuck_check h_a5 : x_a5 as hn_a5 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen_spec n ih s a0 a1 a2 a3 a4 a5 a6 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5 hc0 in EoCases.__eo_prog_str_substr_substr_start_geq_len.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen.Spec n := by
-  intro s a0 a1 a2 a3 a4 a5 a6 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6
-  unfold eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen s1 a0 a1 a2 a3 a4 a5 a6) (fun s' t => Represents.rep s' t (__eo_prog_str_substr_substr_start_geq_len x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsubstr_2dsubstr_2dstart_2dgeq_2dlen_spec m (ih m hm) s1 a0 a1 a2 a3 a4 a5 a6 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn) (by congr_one h_a5 hn) (by congr_one h_a6 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq more_0_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq more_1_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq more_2_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a3 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
-  pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v14 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2elen.construct s2 e_v19 (by rw [he_v19]; exact empty_args) hinv2 h64 as ⟨v19, s3, hinv3, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18
-  pat_same v17 v19 with h_v17 h_v19 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_same v18 a0 with h_v18 h_a0 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s3 0#u32 (0) (by scalar_tac) hinv3 h64 as ⟨v20, s4, hinv4, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19
-  pat_same v11 v20 with h_v11 h_v20 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  store_step with Store.literal_boolean_spec s4 false hinv4 h64 as ⟨v21, s5, hinv5, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20
-  pat_same v4 v21 with h_v4 h_v21 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a4 as ⟨v23, x_v23, h_v23⟩ else hinv5 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v23 as ⟨v25, v26, x_v25, x_v26, h_v25, h_v26, hn_v25, hn_v26⟩ using hinv5 else hinv5 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v25 as ⟨v28, v29, x_v28, x_v29, h_v28, h_v29, hn_v28, hn_v29⟩ using hinv5 else hinv5 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  step as ⟨e_v30, he_v30⟩
-  store_step with CtorSpec.eo__3d.construct s5 e_v30 (by rw [he_v30]; exact empty_args) hinv5 h64 as ⟨v30, s6, hinv6, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29
-  pat_same v28 v30 with h_v28 h_v30 using hinv6 else hinv6 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_unapply h_v29 as ⟨v32, v33, x_v32, x_v33, h_v32, h_v33, hn_v32, hn_v33⟩ using hinv6 else hinv6 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  step as ⟨e_v34, he_v34⟩
-  store_step with CtorSpec.eo_str_2elen.construct s6 e_v34 (by rw [he_v34]; exact empty_args) hinv6 h64 as ⟨v34, s7, hinv7, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33
-  pat_same v32 v34 with h_v32 h_v34 using hinv7 else hinv7 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  pat_same v33 a1 with h_v33 h_a1 using hinv7 else hinv7 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s7 0#u32 (0) (by scalar_tac) hinv7 h64 as ⟨v35, s8, hinv8, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34
-  pat_same v26 v35 with h_v26 h_v35 using hinv8 else hinv8 hG in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  step as ⟨e_v36, he_v36⟩
-  store_step with CtorSpec.eo__3d.construct s8 e_v36 (by rw [he_v36]; exact empty_args) hinv8 h64 as ⟨v36, s9, hinv9, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35
-  step as ⟨e_v37, he_v37⟩
-  store_step with CtorSpec.eo__3d.construct s9 e_v37 (by rw [he_v37]; exact empty_args) hinv9 h64 as ⟨v37, s10, hinv10, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36
-  step as ⟨e_v38, he_v38⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s10 e_v38 (by rw [he_v38]; exact empty_args) hinv10 h64 as ⟨v38, s11, hinv11, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-  store_step with Store.apply_rep s11 v38 a0 _ _ hinv11 h64 h_v38 h_a0 (by ns_tac) (by ns_tac) as ⟨v39, s12, hinv12, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s12 0#u32 (0) (by scalar_tac) hinv12 h64 as ⟨v40, s13, hinv13, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
-  store_step with Store.apply_rep s13 v39 v40 _ _ hinv13 h64 h_v39 h_v40 (by ns_tac) (by ns_tac) as ⟨v41, s14, hinv14, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-  store_step with Store.apply_rep s14 v41 a2 _ _ hinv14 h64 h_v41 h_a2 (by ns_tac) (by ns_tac) as ⟨v42, s15, hinv15, h_v42⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
-  store_step with Store.apply_rep s15 v37 v42 _ _ hinv15 h64 h_v37 h_v42 (by ns_tac) (by ns_tac) as ⟨v43, s16, hinv16, h_v43⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42
-  store_step with Store.apply_rep s16 v43 a1 _ _ hinv16 h64 h_v43 h_a1 (by ns_tac) (by ns_tac) as ⟨v44, s17, hinv17, h_v44⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43
-  store_step with Store.apply_rep s17 v36 v44 _ _ hinv17 h64 h_v36 h_v44 (by ns_tac) (by ns_tac) as ⟨v45, s18, hinv18, h_v45⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44
-  step as ⟨e_v46, he_v46⟩
-  store_step with CtorSpec.eo__3c_3d.construct s18 e_v46 (by rw [he_v46]; exact empty_args) hinv18 h64 as ⟨v46, s19, hinv19, h_v46⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45
-  store_step with Store.apply_rep s19 v46 a2 _ _ hinv19 h64 h_v46 h_a2 (by ns_tac) (by ns_tac) as ⟨v47, s20, hinv20, h_v47⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s20 0#u32 (0) (by scalar_tac) hinv20 h64 as ⟨v48, s21, hinv21, h_v48⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47
-  store_step with Store.apply_rep s21 v47 v48 _ _ hinv21 h64 h_v47 h_v48 (by ns_tac) (by ns_tac) as ⟨v49, s22, hinv22, h_v49⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48
-  store_step with Store.apply_rep s22 v45 v49 _ _ hinv22 h64 h_v45 h_v49 (by ns_tac) (by ns_tac) as ⟨v50, s23, hinv23, h_v50⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v23 h_v25 h_v26 h_v28 h_v29 h_v30 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49
-  case_done hinv23 hG with h_v50 in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0 using hn_a0 hn_a1 hn_a2 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14 hn_v17 hn_v18 hn_v25 hn_v26 hn_v28 hn_v29 hn_v32 hn_v33
-
-/-- logos's `__eo_prog_str_substr_z_eq_empty_leq` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
-    __eo_prog_str_substr_z_eq_empty_leq x_a0 x_a1 x_a2 x_a3 x_a4 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_substr_z_eq_empty_leq
-  unfold EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
-    body_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_substr_z_eq_empty_leq x_a0 x_a1 x_a2 x_a3 x_a4)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq_spec n ih s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_prog_str_substr_z_eq_empty_leq.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq.Spec n := by
-  intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
-  unfold eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__eo_prog_str_substr_z_eq_empty_leq x_a0 x_a1 x_a2 x_a3 x_a4))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsubstr_2dz_2deq_2dempty_2dleq_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2delim_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2delim s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_suffixof_elim.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_suffixof_elim.case_0 x_a0 x_a1 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2delim more_0_eo__24eo_5fprog_5fstr_2dsuffixof_2delim
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2esuffixof.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
-  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a1 _ _ hinv3 h64 h_v2 h_a1 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v0 v3 _ _ hinv4 h64 h_v0 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3
-  step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__3d.construct s5 e_v5 (by rw [he_v5]; exact empty_args) hinv5 h64 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4
-  store_step with Store.apply_rep s6 v5 a0 _ _ hinv6 h64 h_v5 h_a0 (by ns_tac) (by ns_tac) as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s7 e_v7 (by rw [he_v7]; exact empty_args) hinv7 h64 as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v7 a1 _ _ hinv8 h64 h_v7 h_a1 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__2d.construct s9 e_v9 (by rw [he_v9]; exact empty_args) hinv9 h64 as ⟨v9, s10, hinv10, h_v9⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
-  step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo_str_2elen.construct s10 e_v10 (by rw [he_v10]; exact empty_args) hinv10 h64 as ⟨v10, s11, hinv11, h_v10⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
-  store_step with Store.apply_rep s11 v10 a1 _ _ hinv11 h64 h_v10 h_a1 (by ns_tac) (by ns_tac) as ⟨v11, s12, hinv12, h_v11⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
-  store_step with Store.apply_rep s12 v9 v11 _ _ hinv12 h64 h_v9 h_v11 (by ns_tac) (by ns_tac) as ⟨v12, s13, hinv13, h_v12⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
-  step as ⟨e_v13, he_v13⟩
-  store_step with CtorSpec.eo_str_2elen.construct s13 e_v13 (by rw [he_v13]; exact empty_args) hinv13 h64 as ⟨v13, s14, hinv14, h_v13⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
-  store_step with Store.apply_rep s14 v13 a0 _ _ hinv14 h64 h_v13 h_a0 (by ns_tac) (by ns_tac) as ⟨v14, s15, hinv15, h_v14⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
-  store_step with Store.apply_rep s15 v12 v14 _ _ hinv15 h64 h_v12 h_v14 (by ns_tac) (by ns_tac) as ⟨v15, s16, hinv16, h_v15⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
-  store_step with Store.apply_rep s16 v8 v15 _ _ hinv16 h64 h_v8 h_v15 (by ns_tac) (by ns_tac) as ⟨v16, s17, hinv17, h_v16⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-  step as ⟨e_v17, he_v17⟩
-  store_step with CtorSpec.eo_str_2elen.construct s17 e_v17 (by rw [he_v17]; exact empty_args) hinv17 h64 as ⟨v17, s18, hinv18, h_v17⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-  store_step with Store.apply_rep s18 v17 a0 _ _ hinv18 h64 h_v17 h_a0 (by ns_tac) (by ns_tac) as ⟨v18, s19, hinv19, h_v18⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-  store_step with Store.apply_rep s19 v16 v18 _ _ hinv19 h64 h_v16 h_v18 (by ns_tac) (by ns_tac) as ⟨v19, s20, hinv20, h_v19⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-  store_step with Store.apply_rep s20 v6 v19 _ _ hinv20 h64 h_v6 h_v19 (by ns_tac) (by ns_tac) as ⟨v20, s21, hinv21, h_v20⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-  store_step with Store.apply_rep s21 v4 v20 _ _ hinv21 h64 h_v4 h_v20 (by ns_tac) (by ns_tac) as ⟨v21, s22, hinv22, h_v21⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
-  case_done hinv22 hG with h_v21 in EoCases.__eo_prog_str_suffixof_elim.case_0 using hn_a0 hn_a1
-
-/-- logos's `__eo_prog_str_suffixof_elim` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsuffixof_2delim.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    __eo_prog_str_suffixof_elim x_a0 x_a1 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_suffixof_elim.case_0 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_suffixof_elim
-  unfold EoCases.__eo_prog_str_suffixof_elim.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsuffixof_2delim_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
-    body_eo__24eo_5fprog_5fstr_2dsuffixof_2delim s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_suffixof_elim x_a0 x_a1)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsuffixof_2delim.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsuffixof_2delim
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2delim_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
-  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_str_suffixof_elim.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsuffixof_2delim_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsuffixof_2delim.Spec n := by
-  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
-  unfold eo__24eo_5fprog_5fstr_2dsuffixof_2delim
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsuffixof_2delim s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_prog_str_suffixof_elim x_a0 x_a1))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsuffixof_2delim_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2deq_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2deq s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_suffixof_eq.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_suffixof_eq.case_0 x_a0 x_a1 x_a2 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2deq more_0_eo__24eo_5fprog_5fstr_2dsuffixof_2deq more_1_eo__24eo_5fprog_5fstr_2dsuffixof_2deq
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a2 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3e_3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
-  pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_unapply h_v14 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2elen.construct s2 e_v19 (by rw [he_v19]; exact empty_args) hinv2 h64 as ⟨v19, s3, hinv3, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18
-  pat_same v17 v19 with h_v17 h_v19 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_same v18 a0 with h_v18 h_a0 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_unapply h_v11 as ⟨v21, v22, x_v21, x_v22, h_v21, h_v22, hn_v21, hn_v22⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  step as ⟨e_v23, he_v23⟩
-  store_step with CtorSpec.eo_str_2elen.construct s3 e_v23 (by rw [he_v23]; exact empty_args) hinv3 h64 as ⟨v23, s4, hinv4, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22
-  pat_same v21 v23 with h_v21 h_v23 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  pat_same v22 a1 with h_v22 h_a1 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  store_step with Store.literal_boolean_spec s4 true hinv4 h64 as ⟨v24, s5, hinv5, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23
-  pat_same v4 v24 with h_v4 h_v24 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_suffixof_eq.case_0
-  step as ⟨e_v25, he_v25⟩
-  store_step with CtorSpec.eo__3d.construct s5 e_v25 (by rw [he_v25]; exact empty_args) hinv5 h64 as ⟨v25, s6, hinv6, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24
-  step as ⟨e_v26, he_v26⟩
-  store_step with CtorSpec.eo_str_2esuffixof.construct s6 e_v26 (by rw [he_v26]; exact empty_args) hinv6 h64 as ⟨v26, s7, hinv7, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25
-  store_step with Store.apply_rep s7 v26 a0 _ _ hinv7 h64 h_v26 h_a0 (by ns_tac) (by ns_tac) as ⟨v27, s8, hinv8, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  store_step with Store.apply_rep s8 v27 a1 _ _ hinv8 h64 h_v27 h_a1 (by ns_tac) (by ns_tac) as ⟨v28, s9, hinv9, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-  store_step with Store.apply_rep s9 v25 v28 _ _ hinv9 h64 h_v25 h_v28 (by ns_tac) (by ns_tac) as ⟨v29, s10, hinv10, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-  step as ⟨e_v30, he_v30⟩
-  store_step with CtorSpec.eo__3d.construct s10 e_v30 (by rw [he_v30]; exact empty_args) hinv10 h64 as ⟨v30, s11, hinv11, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  store_step with Store.apply_rep s11 v30 a0 _ _ hinv11 h64 h_v30 h_a0 (by ns_tac) (by ns_tac) as ⟨v31, s12, hinv12, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  store_step with Store.apply_rep s12 v31 a1 _ _ hinv12 h64 h_v31 h_a1 (by ns_tac) (by ns_tac) as ⟨v32, s13, hinv13, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  store_step with Store.apply_rep s13 v29 v32 _ _ hinv13 h64 h_v29 h_v32 (by ns_tac) (by ns_tac) as ⟨v33, s14, hinv14, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  case_done hinv14 hG with h_v33 in EoCases.__eo_prog_str_suffixof_eq.case_0 using hn_a0 hn_a1 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14 hn_v17 hn_v18 hn_v21 hn_v22
-
-/-- logos's `__eo_prog_str_suffixof_eq` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsuffixof_2deq.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    __eo_prog_str_suffixof_eq x_a0 x_a1 x_a2 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_suffixof_eq.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_suffixof_eq
-  unfold EoCases.__eo_prog_str_suffixof_eq.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsuffixof_2deq_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
-    body_eo__24eo_5fprog_5fstr_2dsuffixof_2deq s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_suffixof_eq x_a0 x_a1 x_a2)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsuffixof_2deq.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsuffixof_2deq
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2deq_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1
-  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_str_suffixof_eq.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsuffixof_2deq_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsuffixof_2deq.Spec n := by
-  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
-  unfold eo__24eo_5fprog_5fstr_2dsuffixof_2deq
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsuffixof_2deq s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_prog_str_suffixof_eq x_a0 x_a1 x_a2))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsuffixof_2deq_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2done_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2done s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_suffixof_one.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_suffixof_one.case_0 x_a0 x_a1 x_a2 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2done more_0_eo__24eo_5fprog_5fstr_2dsuffixof_2done
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a2 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo_str_2elen.construct s1 e_v12 (by rw [he_v12]; exact empty_args) hinv1 h64 as ⟨v12, s2, hinv2, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11
-  pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  pat_same v11 a1 with h_v11 h_a1 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s2 1#u32 (1) (by scalar_tac) hinv2 h64 as ⟨v13, s3, hinv3, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12
-  pat_same v4 v13 with h_v4 h_v13 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_suffixof_one.case_0
-  step as ⟨e_v14, he_v14⟩
-  store_step with CtorSpec.eo__3d.construct s3 e_v14 (by rw [he_v14]; exact empty_args) hinv3 h64 as ⟨v14, s4, hinv4, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo_str_2esuffixof.construct s4 e_v15 (by rw [he_v15]; exact empty_args) hinv4 h64 as ⟨v15, s5, hinv5, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14
-  store_step with Store.apply_rep s5 v15 a0 _ _ hinv5 h64 h_v15 h_a0 (by ns_tac) (by ns_tac) as ⟨v16, s6, hinv6, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-  store_step with Store.apply_rep s6 v16 a1 _ _ hinv6 h64 h_v16 h_a1 (by ns_tac) (by ns_tac) as ⟨v17, s7, hinv7, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-  store_step with Store.apply_rep s7 v14 v17 _ _ hinv7 h64 h_v14 h_v17 (by ns_tac) (by ns_tac) as ⟨v18, s8, hinv8, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2econtains.construct s8 e_v19 (by rw [he_v19]; exact empty_args) hinv8 h64 as ⟨v19, s9, hinv9, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-  store_step with Store.apply_rep s9 v19 a1 _ _ hinv9 h64 h_v19 h_a1 (by ns_tac) (by ns_tac) as ⟨v20, s10, hinv10, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-  store_step with Store.apply_rep s10 v20 a0 _ _ hinv10 h64 h_v20 h_a0 (by ns_tac) (by ns_tac) as ⟨v21, s11, hinv11, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
-  store_step with Store.apply_rep s11 v18 v21 _ _ hinv11 h64 h_v18 h_v21 (by ns_tac) (by ns_tac) as ⟨v22, s12, hinv12, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
-  case_done hinv12 hG with h_v22 in EoCases.__eo_prog_str_suffixof_one.case_0 using hn_a0 hn_a1 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11
-
-/-- logos's `__eo_prog_str_suffixof_one` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dsuffixof_2done.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    __eo_prog_str_suffixof_one x_a0 x_a1 x_a2 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_suffixof_one.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_suffixof_one
-  unfold EoCases.__eo_prog_str_suffixof_one.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dsuffixof_2done_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
-    body_eo__24eo_5fprog_5fstr_2dsuffixof_2done s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_suffixof_one x_a0 x_a1 x_a2)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dsuffixof_2done.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
-  unfold body_eo__24eo_5fprog_5fstr_2dsuffixof_2done
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dsuffixof_2done_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1
-  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_str_suffixof_one.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dsuffixof_2done_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dsuffixof_2done.Spec n := by
-  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
-  unfold eo__24eo_5fprog_5fstr_2dsuffixof_2done
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dsuffixof_2done s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_prog_str_suffixof_one x_a0 x_a1 x_a2))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dsuffixof_2done_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_lower_concat.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_lower_concat.case_0 x_a0 x_a1 x_a2 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat more_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat more_1_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2
+  pat_destruct CtorSpec.eo__24emb_5ftsm_2eSet.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_to_smt_sets_deq_diff.case_0
+  pat_destruct CtorSpec.eo__24emb_5ftsm_2eSet.destruct h_a3 as ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_to_smt_sets_deq_diff.case_0
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s4 e_v4 (by rw [he_v4]; exact empty_args) hinv4 h64 as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v4 a1 _ _ hinv5 h64 h_v4 h_a1 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4
-  store_step with Store.apply_rep s6 v5 a2 _ _ hinv6 h64 h_v5 h_a2 (by ns_tac) (by ns_tac) as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v3 v6 _ _ hinv7 h64 h_v3 h_v6 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v1 v7 _ _ hinv8 h64 h_v1 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  store_step with Store.apply_rep s9 v0 v8 _ _ hinv9 h64 h_v0 h_v8 (by ns_tac) (by ns_tac) as ⟨v9, s10, hinv10, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
-  step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s10 e_v10 (by rw [he_v10]; exact empty_args) hinv10 h64 as ⟨v10, s11, hinv11, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
-  step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s11 e_v11 (by rw [he_v11]; exact empty_args) hinv11 h64 as ⟨v11, s12, hinv12, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
-  store_step with Store.apply_rep s12 v11 a0 _ _ hinv12 h64 h_v11 h_a0 (by ns_tac) (by ns_tac) as ⟨v12, s13, hinv13, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
-  store_step with Store.apply_rep s13 v10 v12 _ _ hinv13 h64 h_v10 h_v12 (by ns_tac) (by ns_tac) as ⟨v13, s14, hinv14, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
-  step as ⟨e_v14, he_v14⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s14 e_v14 (by rw [he_v14]; exact empty_args) hinv14 h64 as ⟨v14, s15, hinv15, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s15 e_v15 (by rw [he_v15]; exact empty_args) hinv15 h64 as ⟨v15, s16, hinv16, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
-  step as ⟨e_v16, he_v16⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s16 e_v16 (by rw [he_v16]; exact empty_args) hinv16 h64 as ⟨v16, s17, hinv17, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-  step as ⟨e_v17, he_v17⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s17 e_v17 (by rw [he_v17]; exact empty_args) hinv17 h64 as ⟨v17, s18, hinv18, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-  store_step with Store.apply_rep s18 v17 a1 _ _ hinv18 h64 h_v17 h_a1 (by ns_tac) (by ns_tac) as ⟨v18, s19, hinv19, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-  store_step with Store.apply_rep s19 v18 a2 _ _ hinv19 h64 h_v18 h_a2 (by ns_tac) (by ns_tac) as ⟨v19, s20, hinv20, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-  step as ⟨e_v20, he_v20⟩
-  store_step with Store.builtin_spec_list_singleton_elim n ih.eo__24eo_5fis_5flist_5fnil s20 e_v20 (by rw [he_v20]; rfl) h_v16 h_v19 hinv20 h64 (hG.rem hrem) (by not_left_tac) (by nil_apply_tac) as ⟨v20, s21, hinv21, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-  store_step with Store.apply_mk_rep s21 v15 v20 _ _ hinv21 h64 h_v15 h_v20 as ⟨v21, s22, hinv22, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
-  store_step with Store.apply_mk_rep s22 v14 v21 _ _ hinv22 h64 h_v14 h_v21 as ⟨v22, s23, hinv23, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
-  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
-  store_step with Store.literal_str_vec_spec s23 _ _ rfl hinv23 h64 as ⟨v23, s24, hinv24, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
-  store_step with Store.apply_mk_rep s24 v22 v23 _ _ hinv24 h64 h_v22 h_v23 as ⟨v24, s25, hinv25, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  store_step with Store.apply_mk_rep s25 v13 v24 _ _ hinv25 h64 h_v13 h_v24 as ⟨v25, s26, hinv26, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  store_step with Store.apply_mk_rep s26 v9 v25 _ _ hinv26 h64 h_v9 h_v25 as ⟨v26, s27, hinv27, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  case_done hinv27 hG with h_v26 in EoCases.__eo_prog_str_to_lower_concat.case_0 using hn_a0 hn_a1 hn_a2
+  store_step with CtorSpec.eo__24emb_5fsm_2emap_5fdiff.construct s e_v4 (by rw [he_v4]; rfl) h_a0 h_a2 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3
+  case_done hinv1 hG with h_v4 in EoCases.__eo_to_smt_sets_deq_diff.case_0 using
 
-/-- logos's `__eo_prog_str_to_lower_concat` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    __eo_prog_str_to_lower_concat x_a0 x_a1 x_a2 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_lower_concat.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_lower_concat
-  unfold EoCases.__eo_prog_str_to_lower_concat.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_lower_concat x_a0 x_a1 x_a2)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_prog_str_to_lower_concat.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat.Spec n := by
-  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
-  unfold eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_prog_str_to_lower_concat x_a0 x_a1 x_a2))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dconcat_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_lower_from_int.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_lower_from_int.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2efrom_5fint.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2efrom_5fint.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_lower_from_int.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_lower_from_int` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_lower_from_int x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_lower_from_int.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_lower_from_int
-  unfold EoCases.__eo_prog_str_to_lower_from_int.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_lower_from_int x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_lower_from_int.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_lower_from_int x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dfrom_2dint_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_lower_idem.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_lower_idem.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_lower_idem.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_lower_idem` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2didem.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_lower_idem x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_lower_idem.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_lower_idem
-  unfold EoCases.__eo_prog_str_to_lower_idem.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_lower_idem x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dlower_2didem.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_lower_idem.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2didem_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dlower_2didem.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dlower_2didem
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_lower_idem x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dlower_2didem_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_lower_len.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_lower_len.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2elen.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2elen.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_lower_len.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_lower_len` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_lower_len x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_lower_len.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_lower_len
-  unfold EoCases.__eo_prog_str_to_lower_len.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_lower_len x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_lower_len.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_lower_len x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dlen_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_lower_upper.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_lower_upper.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_lower_upper.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_lower_upper` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_lower_upper x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_lower_upper.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_lower_upper
-  unfold EoCases.__eo_prog_str_to_lower_upper.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_lower_upper x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_lower_upper.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_lower_upper x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dlower_2dupper_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_upper_concat.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_upper_concat.case_0 x_a0 x_a1 x_a2 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat more_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat more_1_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2
-  step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s4 e_v4 (by rw [he_v4]; exact empty_args) hinv4 h64 as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v4 a1 _ _ hinv5 h64 h_v4 h_a1 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4
-  store_step with Store.apply_rep s6 v5 a2 _ _ hinv6 h64 h_v5 h_a2 (by ns_tac) (by ns_tac) as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v3 v6 _ _ hinv7 h64 h_v3 h_v6 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v1 v7 _ _ hinv8 h64 h_v1 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  store_step with Store.apply_rep s9 v0 v8 _ _ hinv9 h64 h_v0 h_v8 (by ns_tac) (by ns_tac) as ⟨v9, s10, hinv10, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
-  step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s10 e_v10 (by rw [he_v10]; exact empty_args) hinv10 h64 as ⟨v10, s11, hinv11, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
-  step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s11 e_v11 (by rw [he_v11]; exact empty_args) hinv11 h64 as ⟨v11, s12, hinv12, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
-  store_step with Store.apply_rep s12 v11 a0 _ _ hinv12 h64 h_v11 h_a0 (by ns_tac) (by ns_tac) as ⟨v12, s13, hinv13, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
-  store_step with Store.apply_rep s13 v10 v12 _ _ hinv13 h64 h_v10 h_v12 (by ns_tac) (by ns_tac) as ⟨v13, s14, hinv14, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
-  step as ⟨e_v14, he_v14⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s14 e_v14 (by rw [he_v14]; exact empty_args) hinv14 h64 as ⟨v14, s15, hinv15, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s15 e_v15 (by rw [he_v15]; exact empty_args) hinv15 h64 as ⟨v15, s16, hinv16, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
-  step as ⟨e_v16, he_v16⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s16 e_v16 (by rw [he_v16]; exact empty_args) hinv16 h64 as ⟨v16, s17, hinv17, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-  step as ⟨e_v17, he_v17⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s17 e_v17 (by rw [he_v17]; exact empty_args) hinv17 h64 as ⟨v17, s18, hinv18, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-  store_step with Store.apply_rep s18 v17 a1 _ _ hinv18 h64 h_v17 h_a1 (by ns_tac) (by ns_tac) as ⟨v18, s19, hinv19, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-  store_step with Store.apply_rep s19 v18 a2 _ _ hinv19 h64 h_v18 h_a2 (by ns_tac) (by ns_tac) as ⟨v19, s20, hinv20, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-  step as ⟨e_v20, he_v20⟩
-  store_step with Store.builtin_spec_list_singleton_elim n ih.eo__24eo_5fis_5flist_5fnil s20 e_v20 (by rw [he_v20]; rfl) h_v16 h_v19 hinv20 h64 (hG.rem hrem) (by not_left_tac) (by nil_apply_tac) as ⟨v20, s21, hinv21, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-  store_step with Store.apply_mk_rep s21 v15 v20 _ _ hinv21 h64 h_v15 h_v20 as ⟨v21, s22, hinv22, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
-  store_step with Store.apply_mk_rep s22 v14 v21 _ _ hinv22 h64 h_v14 h_v21 as ⟨v22, s23, hinv23, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
-  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
-  store_step with Store.literal_str_vec_spec s23 _ _ rfl hinv23 h64 as ⟨v23, s24, hinv24, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
-  store_step with Store.apply_mk_rep s24 v22 v23 _ _ hinv24 h64 h_v22 h_v23 as ⟨v24, s25, hinv25, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  store_step with Store.apply_mk_rep s25 v13 v24 _ _ hinv25 h64 h_v13 h_v24 as ⟨v25, s26, hinv26, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  store_step with Store.apply_mk_rep s26 v9 v25 _ _ hinv26 h64 h_v9 h_v25 as ⟨v26, s27, hinv27, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  case_done hinv27 hG with h_v26 in EoCases.__eo_prog_str_to_upper_concat.case_0 using hn_a0 hn_a1 hn_a2
-
-/-- logos's `__eo_prog_str_to_upper_concat` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    __eo_prog_str_to_upper_concat x_a0 x_a1 x_a2 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_upper_concat.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_upper_concat
-  unfold EoCases.__eo_prog_str_to_upper_concat.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_upper_concat x_a0 x_a1 x_a2)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_prog_str_to_upper_concat.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat.Spec n := by
-  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
-  unfold eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_prog_str_to_upper_concat x_a0 x_a1 x_a2))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dconcat_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_upper_from_int.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_upper_from_int.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2efrom_5fint.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2efrom_5fint.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_upper_from_int.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_upper_from_int` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_upper_from_int x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_upper_from_int.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_upper_from_int
-  unfold EoCases.__eo_prog_str_to_upper_from_int.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_upper_from_int x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_upper_from_int.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_upper_from_int x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dfrom_2dint_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_upper_idem.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_upper_idem.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_upper_idem.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_upper_idem` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2didem.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_upper_idem x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_upper_idem.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_upper_idem
-  unfold EoCases.__eo_prog_str_to_upper_idem.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_upper_idem x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dupper_2didem.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_upper_idem.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2didem_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dupper_2didem.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dupper_2didem
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_upper_idem x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dupper_2didem_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_upper_len.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_upper_len.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2elen.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2elen.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_upper_len.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_upper_len` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_upper_len x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_upper_len.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_upper_len
-  unfold EoCases.__eo_prog_str_to_upper_len.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_upper_len x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_upper_len.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_upper_len x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlen_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_to_upper_lower.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_to_upper_lower.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2eto_5flower.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
-  store_step with Store.apply_rep s5 v0 v4 _ _ hinv5 h64 h_v0 h_v4 (by ns_tac) (by ns_tac) as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
-  step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_str_2eto_5fupper.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v6 a0 _ _ hinv7 h64 h_v6 h_a0 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s8 v5 v7 _ _ hinv8 h64 h_v5 h_v7 (by ns_tac) (by ns_tac) as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  case_done hinv9 hG with h_v8 in EoCases.__eo_prog_str_to_upper_lower.case_0 using hn_a0
-
-/-- logos's `__eo_prog_str_to_upper_lower` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_str_to_upper_lower x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_to_upper_lower.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_to_upper_lower
-  unfold EoCases.__eo_prog_str_to_upper_lower.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_to_upper_lower x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_str_to_upper_lower.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_str_to_upper_lower x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dto_2dupper_2dlower_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0 s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_update_concat_fit0.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_update_concat_fit0.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0 more_0_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0 more_1_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a4 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_same v7 a2 with h_v7 h_a2 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s1 0#u32 (0) (by scalar_tac) hinv1 h64 as ⟨v9, s2, hinv2, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8
-  pat_same v4 v9 with h_v4 h_v9 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a5 as ⟨v11, x_v11, h_v11⟩ else hinv2 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_unapply h_v11 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_unapply h_v13 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  step as ⟨e_v18, he_v18⟩
-  store_step with CtorSpec.eo__3d.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17
-  pat_same v16 v18 with h_v16 h_v18 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_unapply h_v17 as ⟨v20, v21, x_v20, x_v21, h_v20, h_v21, hn_v20, hn_v21⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo_str_2elen.construct s3 e_v22 (by rw [he_v22]; exact empty_args) hinv3 h64 as ⟨v22, s4, hinv4, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21
-  pat_same v20 v22 with h_v20 h_v22 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_same v21 a0 with h_v21 h_a0 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_unapply h_v14 as ⟨v24, v25, x_v24, x_v25, h_v24, h_v25, hn_v24, hn_v25⟩ using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  step as ⟨e_v26, he_v26⟩
-  store_step with CtorSpec.eo_str_2elen.construct s4 e_v26 (by rw [he_v26]; exact empty_args) hinv4 h64 as ⟨v26, s5, hinv5, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25
-  pat_same v24 v26 with h_v24 h_v26 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  pat_same v25 a3 with h_v25 h_a3 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_concat_fit0.case_0
-  step as ⟨e_v27, he_v27⟩
-  store_step with CtorSpec.eo__3d.construct s5 e_v27 (by rw [he_v27]; exact empty_args) hinv5 h64 as ⟨v27, s6, hinv6, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26
-  step as ⟨e_v28, he_v28⟩
-  store_step with CtorSpec.eo_str_2eupdate.construct s6 e_v28 (by rw [he_v28]; exact empty_args) hinv6 h64 as ⟨v28, s7, hinv7, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27
-  step as ⟨e_v29, he_v29⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s7 e_v29 (by rw [he_v29]; exact empty_args) hinv7 h64 as ⟨v29, s8, hinv8, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28
-  store_step with Store.apply_rep s8 v29 a0 _ _ hinv8 h64 h_v29 h_a0 (by ns_tac) (by ns_tac) as ⟨v30, s9, hinv9, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  store_step with Store.apply_rep s9 v30 a1 _ _ hinv9 h64 h_v30 h_a1 (by ns_tac) (by ns_tac) as ⟨v31, s10, hinv10, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  store_step with Store.apply_rep s10 v28 v31 _ _ hinv10 h64 h_v28 h_v31 (by ns_tac) (by ns_tac) as ⟨v32, s11, hinv11, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  store_step with Store.apply_rep s11 v32 a2 _ _ hinv11 h64 h_v32 h_a2 (by ns_tac) (by ns_tac) as ⟨v33, s12, hinv12, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  store_step with Store.apply_rep s12 v33 a3 _ _ hinv12 h64 h_v33 h_a3 (by ns_tac) (by ns_tac) as ⟨v34, s13, hinv13, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
-  store_step with Store.apply_rep s13 v27 v34 _ _ hinv13 h64 h_v27 h_v34 (by ns_tac) (by ns_tac) as ⟨v35, s14, hinv14, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
-  step as ⟨e_v36, he_v36⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s14 e_v36 (by rw [he_v36]; exact empty_args) hinv14 h64 as ⟨v36, s15, hinv15, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
-  step as ⟨e_v37, he_v37⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s15 e_v37 (by rw [he_v37]; exact empty_args) hinv15 h64 as ⟨v37, s16, hinv16, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
-  store_step with Store.apply_rep s16 v37 a3 _ _ hinv16 h64 h_v37 h_a3 (by ns_tac) (by ns_tac) as ⟨v38, s17, hinv17, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-  store_step with Store.apply_rep s17 v38 a1 _ _ hinv17 h64 h_v38 h_a1 (by ns_tac) (by ns_tac) as ⟨v39, s18, hinv18, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
-  step as ⟨e_v40, he_v40⟩
-  store_step with Store.builtin_spec_list_singleton_elim n ih.eo__24eo_5fis_5flist_5fnil s18 e_v40 (by rw [he_v40]; rfl) h_v36 h_v39 hinv18 h64 (hG.rem hrem) (by not_left_tac) (by nil_apply_tac) as ⟨v40, s19, hinv19, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
-  store_step with Store.apply_mk_rep s19 v35 v40 _ _ hinv19 h64 h_v35 h_v40 as ⟨v41, s20, hinv20, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-  case_done hinv20 hG with h_v41 in EoCases.__eo_prog_str_update_concat_fit0.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_v3 hn_v4 hn_v6 hn_v7 hn_v13 hn_v14 hn_v16 hn_v17 hn_v20 hn_v21 hn_v24 hn_v25
-
-/-- logos's `__eo_prog_str_update_concat_fit0` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) (hw_a5 : Valid.valid x_a5) :
-    __eo_prog_str_update_concat_fit0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_update_concat_fit0.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_update_concat_fit0
-  unfold EoCases.__eo_prog_str_update_concat_fit0.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) :
-    body_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0 s a0 a1 a2 a3 a4 a5 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_update_concat_fit0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4) (by valid_tac hinv h_a5)]
-  unfold body_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  stuck_check h_a3 : x_a3 as hn_a3 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0_spec n ih s a0 a1 a2 a3 a4 a5 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 hn_a0 hn_a1 hn_a2 hn_a3
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 using hn_a0 hn_a1 hn_a2 hn_a3
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hn_a3 hc0 in EoCases.__eo_prog_str_update_concat_fit0.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0.Spec n := by
-  intro s a0 a1 a2 a3 a4 a5 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5
-  unfold eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0 s1 a0 a1 a2 a3 a4 a5) (fun s' t => Represents.rep s' t (__eo_prog_str_update_concat_fit0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dupdate_2dconcat_2dfit0_spec m (ih m hm) s1 a0 a1 a2 a3 a4 a5 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn) (by congr_one h_a5 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dupdate_2dfit_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dupdate_2dfit s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_update_fit.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_update_fit.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dupdate_2dfit more_0_eo__24eo_5fprog_5fstr_2dupdate_2dfit more_1_eo__24eo_5fprog_5fstr_2dupdate_2dfit
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a3 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_fit.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_same v7 a1 with h_v7 h_a1 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_fit.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s1 0#u32 (0) (by scalar_tac) hinv1 h64 as ⟨v9, s2, hinv2, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8
-  pat_same v4 v9 with h_v4 h_v9 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a4 as ⟨v11, x_v11, h_v11⟩ else hinv2 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_unapply h_v11 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_unapply h_v13 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_fit.case_0
-  step as ⟨e_v18, he_v18⟩
-  store_step with CtorSpec.eo__3d.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17
-  pat_same v16 v18 with h_v16 h_v18 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_unapply h_v17 as ⟨v20, v21, x_v20, x_v21, h_v20, h_v21, hn_v20, hn_v21⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_fit.case_0
-  step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo_str_2elen.construct s3 e_v22 (by rw [he_v22]; exact empty_args) hinv3 h64 as ⟨v22, s4, hinv4, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21
-  pat_same v20 v22 with h_v20 h_v22 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_same v21 a0 with h_v21 h_a0 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_unapply h_v14 as ⟨v24, v25, x_v24, x_v25, h_v24, h_v25, hn_v24, hn_v25⟩ using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_fit.case_0
-  step as ⟨e_v26, he_v26⟩
-  store_step with CtorSpec.eo_str_2elen.construct s4 e_v26 (by rw [he_v26]; exact empty_args) hinv4 h64 as ⟨v26, s5, hinv5, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25
-  pat_same v24 v26 with h_v24 h_v26 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_fit.case_0
-  pat_same v25 a2 with h_v25 h_a2 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_fit.case_0
-  step as ⟨e_v27, he_v27⟩
-  store_step with CtorSpec.eo__3d.construct s5 e_v27 (by rw [he_v27]; exact empty_args) hinv5 h64 as ⟨v27, s6, hinv6, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26
-  step as ⟨e_v28, he_v28⟩
-  store_step with CtorSpec.eo_str_2eupdate.construct s6 e_v28 (by rw [he_v28]; exact empty_args) hinv6 h64 as ⟨v28, s7, hinv7, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27
-  store_step with Store.apply_rep s7 v28 a0 _ _ hinv7 h64 h_v28 h_a0 (by ns_tac) (by ns_tac) as ⟨v29, s8, hinv8, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28
-  store_step with Store.apply_rep s8 v29 a1 _ _ hinv8 h64 h_v29 h_a1 (by ns_tac) (by ns_tac) as ⟨v30, s9, hinv9, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  store_step with Store.apply_rep s9 v30 a2 _ _ hinv9 h64 h_v30 h_a2 (by ns_tac) (by ns_tac) as ⟨v31, s10, hinv10, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  store_step with Store.apply_rep s10 v27 v31 _ _ hinv10 h64 h_v27 h_v31 (by ns_tac) (by ns_tac) as ⟨v32, s11, hinv11, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  store_step with Store.apply_rep s11 v32 a2 _ _ hinv11 h64 h_v32 h_a2 (by ns_tac) (by ns_tac) as ⟨v33, s12, hinv12, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  case_done hinv12 hG with h_v33 in EoCases.__eo_prog_str_update_fit.case_0 using hn_a0 hn_a1 hn_a2 hn_v3 hn_v4 hn_v6 hn_v7 hn_v13 hn_v14 hn_v16 hn_v17 hn_v20 hn_v21 hn_v24 hn_v25
-
-/-- logos's `__eo_prog_str_update_fit` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dupdate_2dfit.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
-    __eo_prog_str_update_fit x_a0 x_a1 x_a2 x_a3 x_a4 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_update_fit.case_0 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_update_fit
-  unfold EoCases.__eo_prog_str_update_fit.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dupdate_2dfit_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
-    body_eo__24eo_5fprog_5fstr_2dupdate_2dfit s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_update_fit x_a0 x_a1 x_a2 x_a3 x_a4)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dupdate_2dfit.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4)]
-  unfold body_eo__24eo_5fprog_5fstr_2dupdate_2dfit
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dupdate_2dfit_spec n ih s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_prog_str_update_fit.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dupdate_2dfit_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dupdate_2dfit.Spec n := by
-  intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
-  unfold eo__24eo_5fprog_5fstr_2dupdate_2dfit
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dupdate_2dfit s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__eo_prog_str_update_fit x_a0 x_a1 x_a2 x_a3 x_a4))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dupdate_2dfit_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstr_2dupdate_2doob_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dupdate_2doob s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_update_oob.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_update_oob.case_0 x_a0 x_a1 x_a2 x_a3 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dupdate_2doob more_0_eo__24eo_5fprog_5fstr_2dupdate_2doob more_1_eo__24eo_5fprog_5fstr_2dupdate_2doob
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a3 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_oob.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_oob.case_0
-  step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo_str_2elen.construct s1 e_v12 (by rw [he_v12]; exact empty_args) hinv1 h64 as ⟨v12, s2, hinv2, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11
-  pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_unapply h_v11 as ⟨v14, v15, x_v14, x_v15, h_v14, h_v15, hn_v14, hn_v15⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_unapply h_v14 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_unapply h_v17 as ⟨v20, v21, x_v20, x_v21, h_v20, h_v21, hn_v20, hn_v21⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_oob.case_0
-  step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s2 e_v22 (by rw [he_v22]; exact empty_args) hinv2 h64 as ⟨v22, s3, hinv3, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21
-  pat_same v20 v22 with h_v20 h_v22 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_same v21 a0 with h_v21 h_a0 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_oob.case_0
-  pat_same v18 a1 with h_v18 h_a1 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_oob.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s3 1#u32 (1) (by scalar_tac) hinv3 h64 as ⟨v23, s4, hinv4, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22
-  pat_same v15 v23 with h_v15 h_v23 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_oob.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s4 0#u32 (0) (by scalar_tac) hinv4 h64 as ⟨v24, s5, hinv5, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23
-  pat_same v4 v24 with h_v4 h_v24 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_oob.case_0
-  step as ⟨e_v25, he_v25⟩
-  store_step with CtorSpec.eo__3d.construct s5 e_v25 (by rw [he_v25]; exact empty_args) hinv5 h64 as ⟨v25, s6, hinv6, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24
-  step as ⟨e_v26, he_v26⟩
-  store_step with CtorSpec.eo_str_2eupdate.construct s6 e_v26 (by rw [he_v26]; exact empty_args) hinv6 h64 as ⟨v26, s7, hinv7, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  store_step with Store.apply_rep s7 v26 a0 _ _ hinv7 h64 h_v26 h_a0 (by ns_tac) (by ns_tac) as ⟨v27, s8, hinv8, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  store_step with Store.apply_rep s8 v27 a1 _ _ hinv8 h64 h_v27 h_a1 (by ns_tac) (by ns_tac) as ⟨v28, s9, hinv9, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-  store_step with Store.apply_rep s9 v28 a2 _ _ hinv9 h64 h_v28 h_a2 (by ns_tac) (by ns_tac) as ⟨v29, s10, hinv10, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-  store_step with Store.apply_rep s10 v25 v29 _ _ hinv10 h64 h_v25 h_v29 (by ns_tac) (by ns_tac) as ⟨v30, s11, hinv11, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  store_step with Store.apply_rep s11 v30 a0 _ _ hinv11 h64 h_v30 h_a0 (by ns_tac) (by ns_tac) as ⟨v31, s12, hinv12, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v12 h_v14 h_v15 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  case_done hinv12 hG with h_v31 in EoCases.__eo_prog_str_update_oob.case_0 using hn_a0 hn_a1 hn_a2 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v14 hn_v15 hn_v17 hn_v18 hn_v20 hn_v21
-
-/-- logos's `__eo_prog_str_update_oob` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dupdate_2doob.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
-    __eo_prog_str_update_oob x_a0 x_a1 x_a2 x_a3 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_update_oob.case_0 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_update_oob
-  unfold EoCases.__eo_prog_str_update_oob.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dupdate_2doob_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+theorem case_1_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
-    body_eo__24eo_5fprog_5fstr_2dupdate_2doob s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+    case_1_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_update_oob x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_sets_deq_diff.case_1 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_sets_deq_diff.case_1 x_a0 x_a1 x_a2 x_a3 = none
       | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dupdate_2doob.rust_eq x_a0 x_a1 x_a2 x_a3 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3)]
-  unfold body_eo__24eo_5fprog_5fstr_2dupdate_2doob
+  unfold case_1_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff
   have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dupdate_2doob_spec n ih s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_prog_str_update_oob.case_0
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_sets_deq_diff.case_1 using
 
-theorem eo__24eo_5fprog_5fstr_2dupdate_2doob_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dupdate_2doob.Spec n := by
+/-- logos's `__eo_to_smt_sets_deq_diff` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
+    __eo_to_smt_sets_deq_diff x_a0 x_a1 x_a2 x_a3 =
+      (firstSome [EoCases.__eo_to_smt_sets_deq_diff.case_0 x_a0 x_a1 x_a2 x_a3, EoCases.__eo_to_smt_sets_deq_diff.case_1 x_a0 x_a1 x_a2 x_a3] default) := by
+  conv => lhs; unfold __eo_to_smt_sets_deq_diff
+  unfold EoCases.__eo_to_smt_sets_deq_diff.case_0 EoCases.__eo_to_smt_sets_deq_diff.case_1
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    body_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_sets_deq_diff x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff.rust_eq x_a0 x_a1 x_a2 x_a3 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3)]
+  unfold body_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec n ih s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec n ih s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_sets_deq_diff.case_0 EoCases.__eo_to_smt_sets_deq_diff.case_1 splitting x_a0 x_a1 x_a2 x_a3
+
+theorem eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff.Spec n := by
   intro s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
-  unfold eo__24eo_5fprog_5fstr_2dupdate_2doob
+  unfold eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dupdate_2doob s1 a0 a1 a2 a3) (fun s' t => Represents.rep s' t (__eo_prog_str_update_oob x_a0 x_a1 x_a2 x_a3))
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff s1 a0 a1 a2 a3) (fun s' t => Represents.rep s' t (__eo_to_smt_sets_deq_diff x_a0 x_a1 x_a2 x_a3))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dupdate_2doob_spec m (ih m hm) s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn)))
+      spec_exact body_eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec m (ih m hm) s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
-theorem case_0_eo__24eo_5fprog_5fstr_2dupdate_2drev_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dupdate_2drev s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+theorem case_0_eo__24eo_5fto_5fsmt_5ftester_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_0_eo__24eo_5fto_5fsmt_5ftester s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_update_rev.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_update_rev.case_0 x_a0 x_a1 x_a2 x_a3 = none
+        ∃ res, EoCases.__eo_to_smt_tester.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tester.case_0 x_a0 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dupdate_2drev more_0_eo__24eo_5fprog_5fstr_2dupdate_2drev more_1_eo__24eo_5fprog_5fstr_2dupdate_2drev more_2_eo__24eo_5fprog_5fstr_2dupdate_2drev
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftester
   have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a3 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_update_rev.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_rev.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_rev.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_rev.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_rev.case_0
-  pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_rev.case_0
+  pat_destruct CtorSpec.eo__24emb_5fsm_2eDtCons.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_to_smt_tester.case_0
+  step as ⟨e_v4, he_v4⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eDtTester.construct s e_v4 (by rw [he_v4]; rfl) h_v1 h_v2 h_v3 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  case_done hinv1 hG with h_v4 in EoCases.__eo_to_smt_tester.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5ftester_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_1_eo__24eo_5fto_5fsmt_5ftester s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tester.case_1 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tester.case_1 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5ftester
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_tester.case_1 using
+
+/-- logos's `__eo_to_smt_tester` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5ftester.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_to_smt_tester x_a0 =
+      (firstSome [EoCases.__eo_to_smt_tester.case_0 x_a0, EoCases.__eo_to_smt_tester.case_1 x_a0] default) := by
+  conv => lhs; unfold __eo_to_smt_tester
+  unfold EoCases.__eo_to_smt_tester.case_0 EoCases.__eo_to_smt_tester.case_1
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5ftester_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24eo_5fto_5fsmt_5ftester s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_tester x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5ftester.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftester
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5ftester_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5ftester_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_tester.case_0 EoCases.__eo_to_smt_tester.case_1 splitting x_a0
+
+theorem eo__24eo_5fto_5fsmt_5ftester_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftester.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24eo_5fto_5fsmt_5ftester
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftester s1 a0) (fun s' t => Represents.rep s' t (__eo_to_smt_tester x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftester_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5ftuple_5fdecl_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_0_eo__24eo_5fto_5fsmt_5ftuple_5fdecl s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tuple_decl.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_decl.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftuple_5fdecl
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s _ _ rfl hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  replace h_v0 := Represents.rep_of_eq h_v0 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v0]; decide)
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  step as ⟨e_v2, he_v2⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2econs.construct s2 e_v2 (by rw [he_v2]; rfl) h_v0 h_a0 h_v1 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  case_done hinv3 hG with h_v2 in EoCases.__eo_to_smt_tuple_decl.case_0 using
+
+/-- logos's `__eo_to_smt_tuple_decl` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fdecl.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_to_smt_tuple_decl x_a0 =
+      (firstSome [EoCases.__eo_to_smt_tuple_decl.case_0 x_a0] default) := by
+  conv => lhs; unfold __eo_to_smt_tuple_decl
+  unfold EoCases.__eo_to_smt_tuple_decl.case_0
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5ftuple_5fdecl_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    body_eo__24eo_5fto_5fsmt_5ftuple_5fdecl s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_tuple_decl x_a0)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5ftuple_5fdecl.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftuple_5fdecl
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5ftuple_5fdecl_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using
+  body_stuck hinv1 hG using hc0 in EoCases.__eo_to_smt_tuple_decl.case_0 splitting x_a0
+
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fdecl_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftuple_5fdecl.Spec n := by
+  intro s a0 x_a0 hinv h64 hrem h_a0
+  unfold eo__24eo_5fto_5fsmt_5ftuple_5fdecl
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftuple_5fdecl s1 a0) (fun s' t => Represents.rep s' t (__eo_to_smt_tuple_decl x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftuple_5fdecl_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tuple_prepend_of_type.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_prepend_of_type.case_0 x_a0 x_a1 x_a2 x_a3 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype more_2_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5ftsm_2eDatatype.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_tuple_prepend_of_type.case_0
+  pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_v2 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ ⟨v6, x_v6, h_v6⟩ else hinv hG in EoCases.__eo_to_smt_tuple_prepend_of_type.case_0
+  pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_v5 as ⟨v8, x_v8, h_v8⟩ ⟨v9, x_v9, h_v9⟩ else hinv hG in EoCases.__eo_to_smt_tuple_prepend_of_type.case_0
+  step as ⟨e_v10, he_v10⟩
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v10 (by rw [he_v10]; exact empty_args) hinv h64 as ⟨v10, s1, hinv1, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9
+  pat_same v9 v10 with h_v9 h_v10 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_tuple_prepend_of_type.case_0
+  step as ⟨e_v11, he_v11⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s1 e_v11 (by rw [he_v11]; exact empty_args) hinv1 h64 as ⟨v11, s2, hinv2, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10
+  pat_same v6 v11 with h_v6 h_v11 using hinv2 else hinv2 hG in EoCases.__eo_to_smt_tuple_prepend_of_type.case_0
+  step as ⟨e_v12, he_v12⟩
+  simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s2 _ _ rfl hinv2 h64 as ⟨v12, s3, hinv3, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11
+  replace h_v12 := Represents.rep_of_eq h_v12 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v12]; decide)
+  step as ⟨e_v13, he_v13⟩
+  store_step with Store.native_spec_streq s3 e_v13 (by rw [he_v13]; rfl) h_v1 h_v12 hinv3 h64 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12
+  rw [← Bridge.native_streq] at h_v13
+  step as ⟨e_v14, he_v14⟩
+  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s4 _ _ rfl hinv4 h64 as ⟨v14, s5, hinv5, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
+  replace h_v14 := Represents.rep_of_eq h_v14 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v14]; decide)
   step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3c_3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
-  pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_rev.case_0
-  pat_unapply h_v14 as ⟨v17, v18, x_v17, x_v18, h_v17, h_v18, hn_v17, hn_v18⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_rev.case_0
+  store_step with Store.native_spec_streq s5 e_v15 (by rw [he_v15]; rfl) h_v4 h_v14 hinv5 h64 as ⟨v15, s6, hinv6, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
+  rw [← Bridge.native_streq] at h_v15
+  step as ⟨e_v16, he_v16⟩
+  store_step with Store.native_spec_and s6 e_v16 (by rw [he_v16]; rfl) h_v13 h_v15 hinv6 h64 as ⟨v16, s7, hinv7, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
+  rw [← Bridge.native_and] at h_v16
+  step as ⟨e_v17, he_v17⟩
+  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s7 _ _ rfl hinv7 h64 as ⟨v17, s8, hinv8, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
+  replace h_v17 := Represents.rep_of_eq h_v17 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v17]; decide)
+  step as ⟨e_v18, he_v18⟩
+  store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s8 e_v18 (by rw [he_v18]; rfl) h_a2 h_v8 hinv8 h64 as ⟨v18, s9, hinv9, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
   step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2elen.construct s2 e_v19 (by rw [he_v19]; exact empty_args) hinv2 h64 as ⟨v19, s3, hinv3, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18
-  pat_same v17 v19 with h_v17 h_v19 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_rev.case_0
-  pat_same v18 a2 with h_v18 h_a2 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_rev.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s3 1#u32 (1) (by scalar_tac) hinv3 h64 as ⟨v20, s4, hinv4, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19
-  pat_same v11 v20 with h_v11 h_v20 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_rev.case_0
-  store_step with Store.literal_boolean_spec s4 true hinv4 h64 as ⟨v21, s5, hinv5, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20
-  pat_same v4 v21 with h_v4 h_v21 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_rev.case_0
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s9 e_v19 (by rw [he_v19]; exact empty_args) hinv9 h64 as ⟨v19, s10, hinv10, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+  step as ⟨e_v20, he_v20⟩
+  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s10 e_v20 (by rw [he_v20]; rfl) h_v18 h_v19 hinv10 h64 as ⟨v20, s11, hinv11, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fdecl s11 v20 _ hinv11 h64 (hG.rem hrem) h_v20 as ⟨v21, s12, hinv12, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
   step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo__3d.construct s5 e_v22 (by rw [he_v22]; exact empty_args) hinv5 h64 as ⟨v22, s6, hinv6, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21
-  step as ⟨e_v23, he_v23⟩
-  store_step with CtorSpec.eo_str_2eupdate.construct s6 e_v23 (by rw [he_v23]; exact empty_args) hinv6 h64 as ⟨v23, s7, hinv7, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s12 e_v22 (by rw [he_v22]; rfl) h_v17 h_v21 hinv12 h64 as ⟨v22, s13, hinv13, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
+  store_step with ih.eo__24smtx_5ftype_5fwf s13 v22 _ hinv13 h64 (hG.rem hrem) h_v22 as ⟨v23, s14, hinv14, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
   step as ⟨e_v24, he_v24⟩
-  store_step with CtorSpec.eo_str_2erev.construct s7 e_v24 (by rw [he_v24]; exact empty_args) hinv7 h64 as ⟨v24, s8, hinv8, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  store_step with Store.apply_rep s8 v24 a0 _ _ hinv8 h64 h_v24 h_a0 (by ns_tac) (by ns_tac) as ⟨v25, s9, hinv9, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  store_step with Store.apply_rep s9 v23 v25 _ _ hinv9 h64 h_v23 h_v25 (by ns_tac) (by ns_tac) as ⟨v26, s10, hinv10, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  store_step with Store.apply_rep s10 v26 a1 _ _ hinv10 h64 h_v26 h_a1 (by ns_tac) (by ns_tac) as ⟨v27, s11, hinv11, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  store_step with Store.apply_rep s11 v27 a2 _ _ hinv11 h64 h_v27 h_a2 (by ns_tac) (by ns_tac) as ⟨v28, s12, hinv12, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-  store_step with Store.apply_rep s12 v22 v28 _ _ hinv12 h64 h_v22 h_v28 (by ns_tac) (by ns_tac) as ⟨v29, s13, hinv13, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-  step as ⟨e_v30, he_v30⟩
-  store_step with CtorSpec.eo_str_2erev.construct s13 e_v30 (by rw [he_v30]; exact empty_args) hinv13 h64 as ⟨v30, s14, hinv14, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  step as ⟨e_v31, he_v31⟩
-  store_step with CtorSpec.eo_str_2eupdate.construct s14 e_v31 (by rw [he_v31]; exact empty_args) hinv14 h64 as ⟨v31, s15, hinv15, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  store_step with Store.apply_rep s15 v31 a0 _ _ hinv15 h64 h_v31 h_a0 (by ns_tac) (by ns_tac) as ⟨v32, s16, hinv16, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  step as ⟨e_v33, he_v33⟩
-  store_step with CtorSpec.eo__2d.construct s16 e_v33 (by rw [he_v33]; exact empty_args) hinv16 h64 as ⟨v33, s17, hinv17, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  step as ⟨e_v34, he_v34⟩
-  store_step with CtorSpec.eo_str_2elen.construct s17 e_v34 (by rw [he_v34]; exact empty_args) hinv17 h64 as ⟨v34, s18, hinv18, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
-  store_step with Store.apply_rep s18 v34 a0 _ _ hinv18 h64 h_v34 h_a0 (by ns_tac) (by ns_tac) as ⟨v35, s19, hinv19, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
-  store_step with Store.apply_rep s19 v33 v35 _ _ hinv19 h64 h_v33 h_v35 (by ns_tac) (by ns_tac) as ⟨v36, s20, hinv20, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
-  step as ⟨e_v37, he_v37⟩
-  store_step with CtorSpec.eo__2b.construct s20 e_v37 (by rw [he_v37]; exact empty_args) hinv20 h64 as ⟨v37, s21, hinv21, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
-  store_step with Store.apply_rep s21 v37 a1 _ _ hinv21 h64 h_v37 h_a1 (by ns_tac) (by ns_tac) as ⟨v38, s22, hinv22, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-  step as ⟨e_v39, he_v39⟩
-  store_step with CtorSpec.eo__2b.construct s22 e_v39 (by rw [he_v39]; exact empty_args) hinv22 h64 as ⟨v39, s23, hinv23, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s23 1#u32 (1) (by scalar_tac) hinv23 h64 as ⟨v40, s24, hinv24, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
-  store_step with Store.apply_rep s24 v39 v40 _ _ hinv24 h64 h_v39 h_v40 (by ns_tac) (by ns_tac) as ⟨v41, s25, hinv25, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s25 0#u32 (0) (by scalar_tac) hinv25 h64 as ⟨v42, s26, hinv26, h_v42⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
-  store_step with Store.apply_rep s26 v41 v42 _ _ hinv26 h64 h_v41 h_v42 (by ns_tac) (by ns_tac) as ⟨v43, s27, hinv27, h_v43⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42
-  store_step with Store.apply_rep s27 v38 v43 _ _ hinv27 h64 h_v38 h_v43 (by ns_tac) (by ns_tac) as ⟨v44, s28, hinv28, h_v44⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43
-  store_step with Store.apply_rep s28 v36 v44 _ _ hinv28 h64 h_v36 h_v44 (by ns_tac) (by ns_tac) as ⟨v45, s29, hinv29, h_v45⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44
-  store_step with Store.apply_rep s29 v32 v45 _ _ hinv29 h64 h_v32 h_v45 (by ns_tac) (by ns_tac) as ⟨v46, s30, hinv30, h_v46⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45
-  store_step with Store.apply_rep s30 v46 a2 _ _ hinv30 h64 h_v46 h_a2 (by ns_tac) (by ns_tac) as ⟨v47, s31, hinv31, h_v47⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46
-  store_step with Store.apply_rep s31 v30 v47 _ _ hinv31 h64 h_v30 h_v47 (by ns_tac) (by ns_tac) as ⟨v48, s32, hinv32, h_v48⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47
-  store_step with Store.apply_rep s32 v29 v48 _ _ hinv32 h64 h_v29 h_v48 (by ns_tac) (by ns_tac) as ⟨v49, s33, hinv33, h_v49⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48
-  case_done hinv33 hG with h_v49 in EoCases.__eo_prog_str_update_rev.case_0 using hn_a0 hn_a1 hn_a2 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14 hn_v17 hn_v18
-
-/-- logos's `__eo_prog_str_update_rev` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dupdate_2drev.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
-    __eo_prog_str_update_rev x_a0 x_a1 x_a2 x_a3 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_update_rev.case_0 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_update_rev
-  unfold EoCases.__eo_prog_str_update_rev.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstr_2dupdate_2drev_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
-    body_eo__24eo_5fprog_5fstr_2dupdate_2drev s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_update_rev x_a0 x_a1 x_a2 x_a3)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dupdate_2drev.rust_eq x_a0 x_a1 x_a2 x_a3 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3)]
-  unfold body_eo__24eo_5fprog_5fstr_2dupdate_2drev
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dupdate_2drev_spec n ih s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 hn_a0 hn_a1 hn_a2
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using hn_a0 hn_a1 hn_a2
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hc0 in EoCases.__eo_prog_str_update_rev.case_0
-
-theorem eo__24eo_5fprog_5fstr_2dupdate_2drev_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dupdate_2drev.Spec n := by
-  intro s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
-  unfold eo__24eo_5fprog_5fstr_2dupdate_2drev
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dupdate_2drev s1 a0 a1 a2 a3) (fun s' t => Represents.rep s' t (__eo_prog_str_update_rev x_a0 x_a1 x_a2 x_a3))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dupdate_2drev_spec m (ih m hm) s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstring_5fcode_5finj_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstring_5fcode_5finj s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_string_code_inj.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_string_code_inj.case_0 x_a0 x_a1 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstring_5fcode_5finj more_0_eo__24eo_5fprog_5fstring_5fcode_5finj more_1_eo__24eo_5fprog_5fstring_5fcode_5finj
-  have hG := Store.Grows.refl s
-  step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_or.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
-  step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
-  step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_str_2eto_5fcode.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a0 _ _ hinv3 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2
-  store_step with Store.apply_rep s4 v1 v3 _ _ hinv4 h64 h_v1 h_v3 (by ns_tac) (by ns_tac) as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_neg_u32_spec s5 1#u32 (-1) (by scalar_tac) hinv5 h64 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4
-  store_step with Store.apply_rep s6 v4 v5 _ _ hinv6 h64 h_v4 h_v5 (by ns_tac) (by ns_tac) as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s7 v0 v6 _ _ hinv7 h64 h_v0 h_v6 (by ns_tac) (by ns_tac) as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo_or.construct s8 e_v8 (by rw [he_v8]; exact empty_args) hinv8 h64 as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo_not.construct s9 e_v9 (by rw [he_v9]; exact empty_args) hinv9 h64 as ⟨v9, s10, hinv10, h_v9⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
-  step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo__3d.construct s10 e_v10 (by rw [he_v10]; exact empty_args) hinv10 h64 as ⟨v10, s11, hinv11, h_v10⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
-  step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo_str_2eto_5fcode.construct s11 e_v11 (by rw [he_v11]; exact empty_args) hinv11 h64 as ⟨v11, s12, hinv12, h_v11⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
-  store_step with Store.apply_rep s12 v11 a0 _ _ hinv12 h64 h_v11 h_a0 (by ns_tac) (by ns_tac) as ⟨v12, s13, hinv13, h_v12⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
-  store_step with Store.apply_rep s13 v10 v12 _ _ hinv13 h64 h_v10 h_v12 (by ns_tac) (by ns_tac) as ⟨v13, s14, hinv14, h_v13⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
-  step as ⟨e_v14, he_v14⟩
-  store_step with CtorSpec.eo_str_2eto_5fcode.construct s14 e_v14 (by rw [he_v14]; exact empty_args) hinv14 h64 as ⟨v14, s15, hinv15, h_v14⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
-  store_step with Store.apply_rep s15 v14 a1 _ _ hinv15 h64 h_v14 h_a1 (by ns_tac) (by ns_tac) as ⟨v15, s16, hinv16, h_v15⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
-  store_step with Store.apply_rep s16 v13 v15 _ _ hinv16 h64 h_v13 h_v15 (by ns_tac) (by ns_tac) as ⟨v16, s17, hinv17, h_v16⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-  store_step with Store.apply_rep s17 v9 v16 _ _ hinv17 h64 h_v9 h_v16 (by ns_tac) (by ns_tac) as ⟨v17, s18, hinv18, h_v17⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-  store_step with Store.apply_rep s18 v8 v17 _ _ hinv18 h64 h_v8 h_v17 (by ns_tac) (by ns_tac) as ⟨v18, s19, hinv19, h_v18⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_or.construct s19 e_v19 (by rw [he_v19]; exact empty_args) hinv19 h64 as ⟨v19, s20, hinv20, h_v19⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-  step as ⟨e_v20, he_v20⟩
-  store_step with CtorSpec.eo__3d.construct s20 e_v20 (by rw [he_v20]; exact empty_args) hinv20 h64 as ⟨v20, s21, hinv21, h_v20⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-  store_step with Store.apply_rep s21 v20 a0 _ _ hinv21 h64 h_v20 h_a0 (by ns_tac) (by ns_tac) as ⟨v21, s22, hinv22, h_v21⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
-  store_step with Store.apply_rep s22 v21 a1 _ _ hinv22 h64 h_v21 h_a1 (by ns_tac) (by ns_tac) as ⟨v22, s23, hinv23, h_v22⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
-  store_step with Store.apply_rep s23 v19 v22 _ _ hinv23 h64 h_v19 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s24, hinv24, h_v23⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
-  store_step with Store.literal_boolean_spec s24 false hinv24 h64 as ⟨v24, s25, hinv25, h_v24⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  store_step with Store.apply_rep s25 v23 v24 _ _ hinv25 h64 h_v23 h_v24 (by ns_tac) (by ns_tac) as ⟨v25, s26, hinv26, h_v25⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  store_step with Store.apply_rep s26 v18 v25 _ _ hinv26 h64 h_v18 h_v25 (by ns_tac) (by ns_tac) as ⟨v26, s27, hinv27, h_v26⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  store_step with Store.apply_rep s27 v7 v26 _ _ hinv27 h64 h_v7 h_v26 (by ns_tac) (by ns_tac) as ⟨v27, s28, hinv28, h_v27⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  case_done hinv28 hG with h_v27 in EoCases.__eo_prog_string_code_inj.case_0 using hn_a0 hn_a1
-
-/-- logos's `__eo_prog_string_code_inj` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstring_5fcode_5finj.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
-    __eo_prog_string_code_inj x_a0 x_a1 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_string_code_inj.case_0 x_a0 x_a1] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_string_code_inj
-  unfold EoCases.__eo_prog_string_code_inj.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstring_5fcode_5finj_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
-    body_eo__24eo_5fprog_5fstring_5fcode_5finj s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_string_code_inj x_a0 x_a1)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstring_5fcode_5finj.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
-  unfold body_eo__24eo_5fprog_5fstring_5fcode_5finj
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstring_5fcode_5finj_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1 hn_a0 hn_a1
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using hn_a0 hn_a1
-  body_stuck hinv1 hG using hn_a0 hn_a1 hc0 in EoCases.__eo_prog_string_code_inj.case_0
-
-theorem eo__24eo_5fprog_5fstring_5fcode_5finj_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstring_5fcode_5finj.Spec n := by
-  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
-  unfold eo__24eo_5fprog_5fstring_5fcode_5finj
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstring_5fcode_5finj s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_prog_string_code_inj x_a0 x_a1))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstring_5fcode_5finj_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstring_5fdecompose_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstring_5fdecompose s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_string_decompose.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_string_decompose.case_0 x_a0 x_a1 x_a2 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstring_5fdecompose more_10_eo__24eo_5fprog_5fstring_5fdecompose
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_string_decompose.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_string_decompose.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_string_decompose.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3e_3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_string_decompose.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s1 0#u32 (0) (by scalar_tac) hinv1 h64 as ⟨v9, s2, hinv2, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8
-  pat_same v4 v9 with h_v4 h_v9 using hinv2 else hinv2 hG in EoCases.__eo_prog_string_decompose.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a2 as ⟨v11, x_v11, h_v11⟩ else hinv2 hG in EoCases.__eo_prog_string_decompose.case_0
-  pat_unapply h_v11 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_string_decompose.case_0
-  pat_unapply h_v13 as ⟨v16, v17, x_v16, x_v17, h_v16, h_v17, hn_v16, hn_v17⟩ using hinv2 else hinv2 hG in EoCases.__eo_prog_string_decompose.case_0
-  step as ⟨e_v18, he_v18⟩
-  store_step with CtorSpec.eo__3e_3d.construct s2 e_v18 (by rw [he_v18]; exact empty_args) hinv2 h64 as ⟨v18, s3, hinv3, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17
-  pat_same v16 v18 with h_v16 h_v18 using hinv3 else hinv3 hG in EoCases.__eo_prog_string_decompose.case_0
-  pat_unapply h_v17 as ⟨v20, v21, x_v20, x_v21, h_v20, h_v21, hn_v20, hn_v21⟩ using hinv3 else hinv3 hG in EoCases.__eo_prog_string_decompose.case_0
-  step as ⟨e_v22, he_v22⟩
-  store_step with CtorSpec.eo_str_2elen.construct s3 e_v22 (by rw [he_v22]; exact empty_args) hinv3 h64 as ⟨v22, s4, hinv4, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21
-  pat_same v20 v22 with h_v20 h_v22 using hinv4 else hinv4 hG in EoCases.__eo_prog_string_decompose.case_0
-  pat_same v14 v7 with h_v14 h_v7 using hinv4 else hinv4 hG in EoCases.__eo_prog_string_decompose.case_0
-  have h_ite_v149 := (show if_9_eo__24eo_5fprog_5fstring_5fdecompose s4 a0 v21 v7 ⦃ r s' => s'.Inv ∧ s4.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
-    unfold if_9_eo__24eo_5fprog_5fstring_5fdecompose more_0_eo__24eo_5fprog_5fstring_5fdecompose more_1_eo__24eo_5fprog_5fstring_5fdecompose more_2_eo__24eo_5fprog_5fstring_5fdecompose more_3_eo__24eo_5fprog_5fstring_5fdecompose more_4_eo__24eo_5fprog_5fstring_5fdecompose more_5_eo__24eo_5fprog_5fstring_5fdecompose more_6_eo__24eo_5fprog_5fstring_5fdecompose more_7_eo__24eo_5fprog_5fstring_5fdecompose more_8_eo__24eo_5fprog_5fstring_5fdecompose
+  store_step with Store.native_spec_and s14 e_v24 (by rw [he_v24]; rfl) h_v16 h_v23 hinv14 h64 as ⟨v24, s15, hinv15, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
+  rw [← Bridge.native_and] at h_v24
+  have h_ite_v44 := (show if_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype s15 v24 v8 a2 a1 a3 ⦃ r s' => s'.Inv ∧ s15.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype more_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype
     have hrem := (hG.rem hrem)
-    have hG := Store.Grows.refl s4
-    rcases Store.boolean_value_term h_a0 with ⟨hx_23, hbv_23⟩ | ⟨hx_23, hbv_23⟩ | ⟨hx_23, hbv_23⟩
-    · ite_branch hbv_23
-      step as ⟨e_v23, he_v23⟩
-      store_step with CtorSpec.eo_and.construct s4 e_v23 (by rw [he_v23]; exact empty_args) hinv4 h64 as ⟨v23, s5, hinv5, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22
-      step as ⟨e_v24, he_v24⟩
-      store_step with CtorSpec.eo__3d.construct s5 e_v24 (by rw [he_v24]; exact empty_args) hinv5 h64 as ⟨v24, s6, hinv6, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23
-      store_step with Store.apply_rep s6 v24 v21 _ _ hinv6 h64 h_v24 h_v21 (by ns_tac) (by ns_tac) as ⟨v25, s7, hinv7, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24
+    have hG := Store.Grows.refl s15
+    rcases Store.boolean_value_native h_v24 with ⟨hx_25, hbv_25⟩ | ⟨hx_25, hbv_25⟩
+    · ite_branch hbv_25
+      step as ⟨e_v25, he_v25⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s15 e_v25 (by rw [he_v25]; exact empty_args) hinv15 h64 as ⟨v25, s16, hinv16, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
       step as ⟨e_v26, he_v26⟩
-      store_step with CtorSpec.eo_str_2e_2b_2b.construct s7 e_v26 (by rw [he_v26]; exact empty_args) hinv7 h64 as ⟨v26, s8, hinv8, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-      step as ⟨e_v27, he_v27⟩
-      store_step with CtorSpec.eo__40purify.construct s8 e_v27 (by rw [he_v27]; exact empty_args) hinv8 h64 as ⟨v27, s9, hinv9, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
+      store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s16 e_v26 (by rw [he_v26]; rfl) h_v8 h_v25 hinv16 h64 as ⟨v26, s17, hinv17, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fdecl s17 v26 _ hinv17 h64 (hG.rem hrem) h_v26 as ⟨v27, s18, hinv18, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
       step as ⟨e_v28, he_v28⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s9 e_v28 (by rw [he_v28]; exact empty_args) hinv9 h64 as ⟨v28, s10, hinv10, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-      store_step with Store.apply_rep s10 v28 v21 _ _ hinv10 h64 h_v28 h_v21 (by ns_tac) (by ns_tac) as ⟨v29, s11, hinv11, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-      try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-      store_step with Store.literal_int_u32_spec s11 0#u32 (0) (by scalar_tac) hinv11 h64 as ⟨v30, s12, hinv12, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-      store_step with Store.apply_rep s12 v29 v30 _ _ hinv12 h64 h_v29 h_v30 (by ns_tac) (by ns_tac) as ⟨v31, s13, hinv13, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-      step as ⟨e_v32, he_v32⟩
-      store_step with CtorSpec.eo__2d.construct s13 e_v32 (by rw [he_v32]; exact empty_args) hinv13 h64 as ⟨v32, s14, hinv14, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-      step as ⟨e_v33, he_v33⟩
-      store_step with CtorSpec.eo_str_2elen.construct s14 e_v33 (by rw [he_v33]; exact empty_args) hinv14 h64 as ⟨v33, s15, hinv15, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-      store_step with Store.apply_rep s15 v33 v21 _ _ hinv15 h64 h_v33 h_v21 (by ns_tac) (by ns_tac) as ⟨v34, s16, hinv16, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
-      store_step with Store.apply_rep s16 v32 v34 _ _ hinv16 h64 h_v32 h_v34 (by ns_tac) (by ns_tac) as ⟨v35, s17, hinv17, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
-      store_step with Store.apply_rep s17 v35 v7 _ _ hinv17 h64 h_v35 h_v7 (by ns_tac) (by ns_tac) as ⟨v36, s18, hinv18, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
-      store_step with Store.apply_rep s18 v31 v36 _ _ hinv18 h64 h_v31 h_v36 (by ns_tac) (by ns_tac) as ⟨v37, s19, hinv19, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
-      store_step with Store.apply_rep s19 v27 v37 _ _ hinv19 h64 h_v27 h_v37 (by ns_tac) (by ns_tac) as ⟨v38, s20, hinv20, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-      store_step with Store.apply_rep s20 v26 v38 _ _ hinv20 h64 h_v26 h_v38 (by ns_tac) (by ns_tac) as ⟨v39, s21, hinv21, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
+      store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s18 e_v28 (by rw [he_v28]; exact empty_args) hinv18 h64 as ⟨v28, s19, hinv19, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
+      step as ⟨e_v29, he_v29⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s19 e_v29 (by rw [he_v29]; rfl) h_v8 h_v28 hinv19 h64 as ⟨v29, s20, hinv20, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
+      step as ⟨e_v30, he_v30⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s20 e_v30 (by rw [he_v30]; exact empty_args) hinv20 h64 as ⟨v30, s21, hinv21, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
+      step as ⟨e_v31, he_v31⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s21 e_v31 (by rw [he_v31]; rfl) h_v8 h_v30 hinv21 h64 as ⟨v31, s22, hinv22, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
+      store_step with Store.native_nat_zero_spec s22 hinv22 h64 as ⟨v32, s23, hinv23, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
+      store_step with ih.eo__24smtx_5fdt_5fnum_5fsels s23 v31 v32 _ _ hinv23 h64 (hG.rem hrem) h_v31 h_v32 as ⟨v33, s24, hinv24, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
+      step as ⟨e_v34, he_v34⟩
+      try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+      store_step with Store.raw_str_vec_spec s24 _ _ rfl hinv24 h64 as ⟨v34, s25, hinv25, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
+      replace h_v34 := Represents.rep_of_eq h_v34 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v34]; decide)
+      step as ⟨e_v35, he_v35⟩
+      store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s25 e_v35 (by rw [he_v35]; rfl) h_a2 h_v8 hinv25 h64 as ⟨v35, s26, hinv26, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
+      step as ⟨e_v36, he_v36⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s26 e_v36 (by rw [he_v36]; exact empty_args) hinv26 h64 as ⟨v36, s27, hinv27, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
+      step as ⟨e_v37, he_v37⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s27 e_v37 (by rw [he_v37]; rfl) h_v35 h_v36 hinv27 h64 as ⟨v37, s28, hinv28, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fdecl s28 v37 _ hinv28 h64 (hG.rem hrem) h_v37 as ⟨v38, s29, hinv29, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
+      store_step with Store.native_nat_zero_spec s29 hinv29 h64 as ⟨v39, s30, hinv30, h_v39⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
       step as ⟨e_v40, he_v40⟩
-      store_step with CtorSpec.eo_str_2e_2b_2b.construct s21 e_v40 (by rw [he_v40]; exact empty_args) hinv21 h64 as ⟨v40, s22, hinv22, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtCons.construct s30 e_v40 (by rw [he_v40]; rfl) h_v34 h_v38 h_v39 hinv30 h64 as ⟨v40, s31, hinv31, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
       step as ⟨e_v41, he_v41⟩
-      store_step with CtorSpec.eo__40purify.construct s22 e_v41 (by rw [he_v41]; exact empty_args) hinv22 h64 as ⟨v41, s23, hinv23, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-      step as ⟨e_v42, he_v42⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s23 e_v42 (by rw [he_v42]; exact empty_args) hinv23 h64 as ⟨v42, s24, hinv24, h_v42⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
-      store_step with Store.apply_rep s24 v42 v21 _ _ hinv24 h64 h_v42 h_v21 (by ns_tac) (by ns_tac) as ⟨v43, s25, hinv25, h_v43⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42
-      step as ⟨e_v44, he_v44⟩
-      store_step with CtorSpec.eo__2d.construct s25 e_v44 (by rw [he_v44]; exact empty_args) hinv25 h64 as ⟨v44, s26, hinv26, h_v44⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43
-      step as ⟨e_v45, he_v45⟩
-      store_step with CtorSpec.eo_str_2elen.construct s26 e_v45 (by rw [he_v45]; exact empty_args) hinv26 h64 as ⟨v45, s27, hinv27, h_v45⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44
-      store_step with Store.apply_rep s27 v45 v21 _ _ hinv27 h64 h_v45 h_v21 (by ns_tac) (by ns_tac) as ⟨v46, s28, hinv28, h_v46⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45
-      store_step with Store.apply_rep s28 v44 v46 _ _ hinv28 h64 h_v44 h_v46 (by ns_tac) (by ns_tac) as ⟨v47, s29, hinv29, h_v47⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46
-      store_step with Store.apply_rep s29 v47 v7 _ _ hinv29 h64 h_v47 h_v7 (by ns_tac) (by ns_tac) as ⟨v48, s30, hinv30, h_v48⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47
-      store_step with Store.apply_rep s30 v43 v48 _ _ hinv30 h64 h_v43 h_v48 (by ns_tac) (by ns_tac) as ⟨v49, s31, hinv31, h_v49⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48
-      store_step with Store.apply_rep s31 v49 v7 _ _ hinv31 h64 h_v49 h_v7 (by ns_tac) (by ns_tac) as ⟨v50, s32, hinv32, h_v50⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49
-      store_step with Store.apply_rep s32 v41 v50 _ _ hinv32 h64 h_v41 h_v50 (by ns_tac) (by ns_tac) as ⟨v51, s33, hinv33, h_v51⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50
-      store_step with Store.apply_rep s33 v40 v51 _ _ hinv33 h64 h_v40 h_v51 (by ns_tac) (by ns_tac) as ⟨v52, s34, hinv34, h_v52⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51
-      step as ⟨e_v53, he_v53⟩
-      store_step with CtorSpec.eo_str_2e_2b_2b.construct s34 e_v53 (by rw [he_v53]; exact empty_args) hinv34 h64 as ⟨v53, s35, hinv35, h_v53⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52
-      step as ⟨e_v54, he_v54⟩
-      store_step with CtorSpec.eo__40purify.construct s35 e_v54 (by rw [he_v54]; exact empty_args) hinv35 h64 as ⟨v54, s36, hinv36, h_v54⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53
-      step as ⟨e_v55, he_v55⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s36 e_v55 (by rw [he_v55]; exact empty_args) hinv36 h64 as ⟨v55, s37, hinv37, h_v55⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54
-      store_step with Store.apply_rep s37 v55 v21 _ _ hinv37 h64 h_v55 h_v21 (by ns_tac) (by ns_tac) as ⟨v56, s38, hinv38, h_v56⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55
-      try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-      store_step with Store.literal_int_u32_spec s38 0#u32 (0) (by scalar_tac) hinv38 h64 as ⟨v57, s39, hinv39, h_v57⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56
-      store_step with Store.apply_rep s39 v56 v57 _ _ hinv39 h64 h_v56 h_v57 (by ns_tac) (by ns_tac) as ⟨v58, s40, hinv40, h_v58⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57
-      step as ⟨e_v59, he_v59⟩
-      store_step with CtorSpec.eo__2d.construct s40 e_v59 (by rw [he_v59]; exact empty_args) hinv40 h64 as ⟨v59, s41, hinv41, h_v59⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58
-      step as ⟨e_v60, he_v60⟩
-      store_step with CtorSpec.eo_str_2elen.construct s41 e_v60 (by rw [he_v60]; exact empty_args) hinv41 h64 as ⟨v60, s42, hinv42, h_v60⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59
-      store_step with Store.apply_rep s42 v60 v21 _ _ hinv42 h64 h_v60 h_v21 (by ns_tac) (by ns_tac) as ⟨v61, s43, hinv43, h_v61⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60
-      store_step with Store.apply_rep s43 v59 v61 _ _ hinv43 h64 h_v59 h_v61 (by ns_tac) (by ns_tac) as ⟨v62, s44, hinv44, h_v62⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61
-      store_step with Store.apply_rep s44 v62 v7 _ _ hinv44 h64 h_v62 h_v7 (by ns_tac) (by ns_tac) as ⟨v63, s45, hinv45, h_v63⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62
-      store_step with Store.apply_rep s45 v58 v63 _ _ hinv45 h64 h_v58 h_v63 (by ns_tac) (by ns_tac) as ⟨v64, s46, hinv46, h_v64⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63
-      store_step with Store.apply_rep s46 v54 v64 _ _ hinv46 h64 h_v54 h_v64 (by ns_tac) (by ns_tac) as ⟨v65, s47, hinv47, h_v65⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64
-      store_step with ih.eo__24eo_5ftypeof s47 v65 _ hinv47 h64 (hG.rem hrem) h_v65 as ⟨v66, s48, hinv48, h_v66⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65
-      store_step with ih.eo__24eo_5fnil s48 v53 v66 _ _ hinv48 h64 (hG.rem hrem) h_v53 h_v66 as ⟨v67, s49, hinv49, h_v67⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66
-      store_step with Store.apply_mk_rep s49 v52 v67 _ _ hinv49 h64 h_v52 h_v67 as ⟨v68, s50, hinv50, h_v68⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67
-      store_step with Store.apply_mk_rep s50 v39 v68 _ _ hinv50 h64 h_v39 h_v68 as ⟨v69, s51, hinv51, h_v69⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68
-      store_step with Store.apply_mk_rep s51 v25 v69 _ _ hinv51 h64 h_v25 h_v69 as ⟨v70, s52, hinv52, h_v70⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69
-      store_step with Store.apply_mk_rep s52 v23 v70 _ _ hinv52 h64 h_v23 h_v70 as ⟨v71, s53, hinv53, h_v71⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70
-      step as ⟨e_v72, he_v72⟩
-      store_step with CtorSpec.eo_and.construct s53 e_v72 (by rw [he_v72]; exact empty_args) hinv53 h64 as ⟨v72, s54, hinv54, h_v72⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71
-      step as ⟨e_v73, he_v73⟩
-      store_step with CtorSpec.eo__3d.construct s54 e_v73 (by rw [he_v73]; exact empty_args) hinv54 h64 as ⟨v73, s55, hinv55, h_v73⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72
-      step as ⟨e_v74, he_v74⟩
-      store_step with CtorSpec.eo_str_2elen.construct s55 e_v74 (by rw [he_v74]; exact empty_args) hinv55 h64 as ⟨v74, s56, hinv56, h_v74⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73
-      step as ⟨e_v75, he_v75⟩
-      store_step with CtorSpec.eo__40purify.construct s56 e_v75 (by rw [he_v75]; exact empty_args) hinv56 h64 as ⟨v75, s57, hinv57, h_v75⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74
-      step as ⟨e_v76, he_v76⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s57 e_v76 (by rw [he_v76]; exact empty_args) hinv57 h64 as ⟨v76, s58, hinv58, h_v76⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75
-      store_step with Store.apply_rep s58 v76 v21 _ _ hinv58 h64 h_v76 h_v21 (by ns_tac) (by ns_tac) as ⟨v77, s59, hinv59, h_v77⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76
-      step as ⟨e_v78, he_v78⟩
-      store_step with CtorSpec.eo__2d.construct s59 e_v78 (by rw [he_v78]; exact empty_args) hinv59 h64 as ⟨v78, s60, hinv60, h_v78⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77
-      step as ⟨e_v79, he_v79⟩
-      store_step with CtorSpec.eo_str_2elen.construct s60 e_v79 (by rw [he_v79]; exact empty_args) hinv60 h64 as ⟨v79, s61, hinv61, h_v79⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78
-      store_step with Store.apply_rep s61 v79 v21 _ _ hinv61 h64 h_v79 h_v21 (by ns_tac) (by ns_tac) as ⟨v80, s62, hinv62, h_v80⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79
-      store_step with Store.apply_rep s62 v78 v80 _ _ hinv62 h64 h_v78 h_v80 (by ns_tac) (by ns_tac) as ⟨v81, s63, hinv63, h_v81⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80
-      store_step with Store.apply_rep s63 v81 v7 _ _ hinv63 h64 h_v81 h_v7 (by ns_tac) (by ns_tac) as ⟨v82, s64, hinv64, h_v82⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81
-      store_step with Store.apply_rep s64 v77 v82 _ _ hinv64 h64 h_v77 h_v82 (by ns_tac) (by ns_tac) as ⟨v83, s65, hinv65, h_v83⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82
-      store_step with Store.apply_rep s65 v83 v7 _ _ hinv65 h64 h_v83 h_v7 (by ns_tac) (by ns_tac) as ⟨v84, s66, hinv66, h_v84⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83
-      store_step with Store.apply_rep s66 v75 v84 _ _ hinv66 h64 h_v75 h_v84 (by ns_tac) (by ns_tac) as ⟨v85, s67, hinv67, h_v85⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84
-      store_step with Store.apply_rep s67 v74 v85 _ _ hinv67 h64 h_v74 h_v85 (by ns_tac) (by ns_tac) as ⟨v86, s68, hinv68, h_v86⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84 h_v85
-      store_step with Store.apply_rep s68 v73 v86 _ _ hinv68 h64 h_v73 h_v86 (by ns_tac) (by ns_tac) as ⟨v87, s69, hinv69, h_v87⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84 h_v85 h_v86
-      store_step with Store.apply_rep s69 v87 v7 _ _ hinv69 h64 h_v87 h_v7 (by ns_tac) (by ns_tac) as ⟨v88, s70, hinv70, h_v88⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84 h_v85 h_v86 h_v87
-      store_step with Store.apply_rep s70 v72 v88 _ _ hinv70 h64 h_v72 h_v88 (by ns_tac) (by ns_tac) as ⟨v89, s71, hinv71, h_v89⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84 h_v85 h_v86 h_v87 h_v88
-      store_step with Store.literal_boolean_spec s71 true hinv71 h64 as ⟨v90, s72, hinv72, h_v90⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84 h_v85 h_v86 h_v87 h_v88 h_v89
-      store_step with Store.apply_rep s72 v89 v90 _ _ hinv72 h64 h_v89 h_v90 (by ns_tac) (by ns_tac) as ⟨v91, s73, hinv73, h_v91⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84 h_v85 h_v86 h_v87 h_v88 h_v89 h_v90
-      store_step with Store.apply_mk_rep s73 v71 v91 _ _ hinv73 h64 h_v71 h_v91 as ⟨v92, s74, hinv74, h_v92⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57 h_v58 h_v59 h_v60 h_v61 h_v62 h_v63 h_v64 h_v65 h_v66 h_v67 h_v68 h_v69 h_v70 h_v71 h_v72 h_v73 h_v74 h_v75 h_v76 h_v77 h_v78 h_v79 h_v80 h_v81 h_v82 h_v83 h_v84 h_v85 h_v86 h_v87 h_v88 h_v89 h_v90 h_v91
-      ite_done hinv74 hG with (eo_ite_true_rep _ hx_23 h_v92)
-    · ite_branch hbv_23
-      step as ⟨e_v93, he_v93⟩
-      store_step with CtorSpec.eo_and.construct s4 e_v93 (by rw [he_v93]; exact empty_args) hinv4 h64 as ⟨v93, s5, hinv5, h_v93⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22
-      step as ⟨e_v94, he_v94⟩
-      store_step with CtorSpec.eo__3d.construct s5 e_v94 (by rw [he_v94]; exact empty_args) hinv5 h64 as ⟨v94, s6, hinv6, h_v94⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93
-      store_step with Store.apply_rep s6 v94 v21 _ _ hinv6 h64 h_v94 h_v21 (by ns_tac) (by ns_tac) as ⟨v95, s7, hinv7, h_v95⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94
-      step as ⟨e_v96, he_v96⟩
-      store_step with CtorSpec.eo_str_2e_2b_2b.construct s7 e_v96 (by rw [he_v96]; exact empty_args) hinv7 h64 as ⟨v96, s8, hinv8, h_v96⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95
-      step as ⟨e_v97, he_v97⟩
-      store_step with CtorSpec.eo__40purify.construct s8 e_v97 (by rw [he_v97]; exact empty_args) hinv8 h64 as ⟨v97, s9, hinv9, h_v97⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96
-      step as ⟨e_v98, he_v98⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s9 e_v98 (by rw [he_v98]; exact empty_args) hinv9 h64 as ⟨v98, s10, hinv10, h_v98⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97
-      store_step with Store.apply_rep s10 v98 v21 _ _ hinv10 h64 h_v98 h_v21 (by ns_tac) (by ns_tac) as ⟨v99, s11, hinv11, h_v99⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98
-      try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-      store_step with Store.literal_int_u32_spec s11 0#u32 (0) (by scalar_tac) hinv11 h64 as ⟨v100, s12, hinv12, h_v100⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99
-      store_step with Store.apply_rep s12 v99 v100 _ _ hinv12 h64 h_v99 h_v100 (by ns_tac) (by ns_tac) as ⟨v101, s13, hinv13, h_v101⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100
-      store_step with Store.apply_rep s13 v101 v7 _ _ hinv13 h64 h_v101 h_v7 (by ns_tac) (by ns_tac) as ⟨v102, s14, hinv14, h_v102⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101
-      store_step with Store.apply_rep s14 v97 v102 _ _ hinv14 h64 h_v97 h_v102 (by ns_tac) (by ns_tac) as ⟨v103, s15, hinv15, h_v103⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102
-      store_step with Store.apply_rep s15 v96 v103 _ _ hinv15 h64 h_v96 h_v103 (by ns_tac) (by ns_tac) as ⟨v104, s16, hinv16, h_v104⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103
-      step as ⟨e_v105, he_v105⟩
-      store_step with CtorSpec.eo_str_2e_2b_2b.construct s16 e_v105 (by rw [he_v105]; exact empty_args) hinv16 h64 as ⟨v105, s17, hinv17, h_v105⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104
-      step as ⟨e_v106, he_v106⟩
-      store_step with CtorSpec.eo__40purify.construct s17 e_v106 (by rw [he_v106]; exact empty_args) hinv17 h64 as ⟨v106, s18, hinv18, h_v106⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105
-      step as ⟨e_v107, he_v107⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s18 e_v107 (by rw [he_v107]; exact empty_args) hinv18 h64 as ⟨v107, s19, hinv19, h_v107⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106
-      store_step with Store.apply_rep s19 v107 v21 _ _ hinv19 h64 h_v107 h_v21 (by ns_tac) (by ns_tac) as ⟨v108, s20, hinv20, h_v108⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107
-      store_step with Store.apply_rep s20 v108 v7 _ _ hinv20 h64 h_v108 h_v7 (by ns_tac) (by ns_tac) as ⟨v109, s21, hinv21, h_v109⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108
-      step as ⟨e_v110, he_v110⟩
-      store_step with CtorSpec.eo__2d.construct s21 e_v110 (by rw [he_v110]; exact empty_args) hinv21 h64 as ⟨v110, s22, hinv22, h_v110⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109
-      step as ⟨e_v111, he_v111⟩
-      store_step with CtorSpec.eo_str_2elen.construct s22 e_v111 (by rw [he_v111]; exact empty_args) hinv22 h64 as ⟨v111, s23, hinv23, h_v111⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110
-      store_step with Store.apply_rep s23 v111 v21 _ _ hinv23 h64 h_v111 h_v21 (by ns_tac) (by ns_tac) as ⟨v112, s24, hinv24, h_v112⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111
-      store_step with Store.apply_rep s24 v110 v112 _ _ hinv24 h64 h_v110 h_v112 (by ns_tac) (by ns_tac) as ⟨v113, s25, hinv25, h_v113⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112
-      store_step with Store.apply_rep s25 v113 v7 _ _ hinv25 h64 h_v113 h_v7 (by ns_tac) (by ns_tac) as ⟨v114, s26, hinv26, h_v114⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113
-      store_step with Store.apply_rep s26 v109 v114 _ _ hinv26 h64 h_v109 h_v114 (by ns_tac) (by ns_tac) as ⟨v115, s27, hinv27, h_v115⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114
-      store_step with Store.apply_rep s27 v106 v115 _ _ hinv27 h64 h_v106 h_v115 (by ns_tac) (by ns_tac) as ⟨v116, s28, hinv28, h_v116⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115
-      store_step with Store.apply_rep s28 v105 v116 _ _ hinv28 h64 h_v105 h_v116 (by ns_tac) (by ns_tac) as ⟨v117, s29, hinv29, h_v117⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116
-      step as ⟨e_v118, he_v118⟩
-      store_step with CtorSpec.eo_str_2e_2b_2b.construct s29 e_v118 (by rw [he_v118]; exact empty_args) hinv29 h64 as ⟨v118, s30, hinv30, h_v118⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117
-      step as ⟨e_v119, he_v119⟩
-      store_step with CtorSpec.eo__40purify.construct s30 e_v119 (by rw [he_v119]; exact empty_args) hinv30 h64 as ⟨v119, s31, hinv31, h_v119⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118
-      step as ⟨e_v120, he_v120⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s31 e_v120 (by rw [he_v120]; exact empty_args) hinv31 h64 as ⟨v120, s32, hinv32, h_v120⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119
-      store_step with Store.apply_rep s32 v120 v21 _ _ hinv32 h64 h_v120 h_v21 (by ns_tac) (by ns_tac) as ⟨v121, s33, hinv33, h_v121⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120
-      try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-      store_step with Store.literal_int_u32_spec s33 0#u32 (0) (by scalar_tac) hinv33 h64 as ⟨v122, s34, hinv34, h_v122⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121
-      store_step with Store.apply_rep s34 v121 v122 _ _ hinv34 h64 h_v121 h_v122 (by ns_tac) (by ns_tac) as ⟨v123, s35, hinv35, h_v123⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122
-      store_step with Store.apply_rep s35 v123 v7 _ _ hinv35 h64 h_v123 h_v7 (by ns_tac) (by ns_tac) as ⟨v124, s36, hinv36, h_v124⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123
-      store_step with Store.apply_rep s36 v119 v124 _ _ hinv36 h64 h_v119 h_v124 (by ns_tac) (by ns_tac) as ⟨v125, s37, hinv37, h_v125⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124
-      store_step with ih.eo__24eo_5ftypeof s37 v125 _ hinv37 h64 (hG.rem hrem) h_v125 as ⟨v126, s38, hinv38, h_v126⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125
-      store_step with ih.eo__24eo_5fnil s38 v118 v126 _ _ hinv38 h64 (hG.rem hrem) h_v118 h_v126 as ⟨v127, s39, hinv39, h_v127⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126
-      store_step with Store.apply_mk_rep s39 v117 v127 _ _ hinv39 h64 h_v117 h_v127 as ⟨v128, s40, hinv40, h_v128⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127
-      store_step with Store.apply_mk_rep s40 v104 v128 _ _ hinv40 h64 h_v104 h_v128 as ⟨v129, s41, hinv41, h_v129⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128
-      store_step with Store.apply_mk_rep s41 v95 v129 _ _ hinv41 h64 h_v95 h_v129 as ⟨v130, s42, hinv42, h_v130⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129
-      store_step with Store.apply_mk_rep s42 v93 v130 _ _ hinv42 h64 h_v93 h_v130 as ⟨v131, s43, hinv43, h_v131⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130
-      step as ⟨e_v132, he_v132⟩
-      store_step with CtorSpec.eo_and.construct s43 e_v132 (by rw [he_v132]; exact empty_args) hinv43 h64 as ⟨v132, s44, hinv44, h_v132⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131
-      step as ⟨e_v133, he_v133⟩
-      store_step with CtorSpec.eo__3d.construct s44 e_v133 (by rw [he_v133]; exact empty_args) hinv44 h64 as ⟨v133, s45, hinv45, h_v133⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132
-      step as ⟨e_v134, he_v134⟩
-      store_step with CtorSpec.eo_str_2elen.construct s45 e_v134 (by rw [he_v134]; exact empty_args) hinv45 h64 as ⟨v134, s46, hinv46, h_v134⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133
-      step as ⟨e_v135, he_v135⟩
-      store_step with CtorSpec.eo__40purify.construct s46 e_v135 (by rw [he_v135]; exact empty_args) hinv46 h64 as ⟨v135, s47, hinv47, h_v135⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134
-      step as ⟨e_v136, he_v136⟩
-      store_step with CtorSpec.eo_str_2esubstr.construct s47 e_v136 (by rw [he_v136]; exact empty_args) hinv47 h64 as ⟨v136, s48, hinv48, h_v136⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135
-      store_step with Store.apply_rep s48 v136 v21 _ _ hinv48 h64 h_v136 h_v21 (by ns_tac) (by ns_tac) as ⟨v137, s49, hinv49, h_v137⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136
-      try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-      store_step with Store.literal_int_u32_spec s49 0#u32 (0) (by scalar_tac) hinv49 h64 as ⟨v138, s50, hinv50, h_v138⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137
-      store_step with Store.apply_rep s50 v137 v138 _ _ hinv50 h64 h_v137 h_v138 (by ns_tac) (by ns_tac) as ⟨v139, s51, hinv51, h_v139⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138
-      store_step with Store.apply_rep s51 v139 v7 _ _ hinv51 h64 h_v139 h_v7 (by ns_tac) (by ns_tac) as ⟨v140, s52, hinv52, h_v140⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139
-      store_step with Store.apply_rep s52 v135 v140 _ _ hinv52 h64 h_v135 h_v140 (by ns_tac) (by ns_tac) as ⟨v141, s53, hinv53, h_v141⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140
-      store_step with Store.apply_rep s53 v134 v141 _ _ hinv53 h64 h_v134 h_v141 (by ns_tac) (by ns_tac) as ⟨v142, s54, hinv54, h_v142⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140 h_v141
-      store_step with Store.apply_rep s54 v133 v142 _ _ hinv54 h64 h_v133 h_v142 (by ns_tac) (by ns_tac) as ⟨v143, s55, hinv55, h_v143⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140 h_v141 h_v142
-      store_step with Store.apply_rep s55 v143 v7 _ _ hinv55 h64 h_v143 h_v7 (by ns_tac) (by ns_tac) as ⟨v144, s56, hinv56, h_v144⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140 h_v141 h_v142 h_v143
-      store_step with Store.apply_rep s56 v132 v144 _ _ hinv56 h64 h_v132 h_v144 (by ns_tac) (by ns_tac) as ⟨v145, s57, hinv57, h_v145⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140 h_v141 h_v142 h_v143 h_v144
-      store_step with Store.literal_boolean_spec s57 true hinv57 h64 as ⟨v146, s58, hinv58, h_v146⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140 h_v141 h_v142 h_v143 h_v144 h_v145
-      store_step with Store.apply_rep s58 v145 v146 _ _ hinv58 h64 h_v145 h_v146 (by ns_tac) (by ns_tac) as ⟨v147, s59, hinv59, h_v147⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140 h_v141 h_v142 h_v143 h_v144 h_v145 h_v146
-      store_step with Store.apply_mk_rep s59 v131 v147 _ _ hinv59 h64 h_v131 h_v147 as ⟨v148, s60, hinv60, h_v148⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22 h_v93 h_v94 h_v95 h_v96 h_v97 h_v98 h_v99 h_v100 h_v101 h_v102 h_v103 h_v104 h_v105 h_v106 h_v107 h_v108 h_v109 h_v110 h_v111 h_v112 h_v113 h_v114 h_v115 h_v116 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137 h_v138 h_v139 h_v140 h_v141 h_v142 h_v143 h_v144 h_v145 h_v146 h_v147
-      ite_done hinv60 hG with (eo_ite_false_rep _ hx_23 h_v148)
-    · ite_branch hbv_23
-      ite_stuck hinv4 hG with hx_23)
-  store_step with h_ite_v149 as ⟨v149, s5, hinv5, h_v149⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v11 h_v13 h_v14 h_v16 h_v17 h_v18 h_v20 h_v21 h_v22
-  case_done hinv5 hG with h_v149 in EoCases.__eo_prog_string_decompose.case_0 using hn_a0 hn_v3 hn_v4 hn_v6 hn_v7 hn_v13 hn_v14 hn_v16 hn_v17 hn_v20 hn_v21
+      store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s31 e_v41 (by rw [he_v41]; rfl) h_v40 h_a1 hinv31 h64 as ⟨v41, s32, hinv32, h_v41⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec s32 v27 v29 a3 v33 v41 _ _ _ _ _ hinv32 h64 (hG.rem hrem) h_v27 h_v29 h_a3 h_v33 h_v41 as ⟨v42, s33, hinv33, h_v42⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
+      ite_done hinv33 hG with (native_ite_true_rep _ hx_25 h_v42)
+    · ite_branch hbv_25
+      step as ⟨e_v43, he_v43⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s15 e_v43 (by rw [he_v43]; exact empty_args) hinv15 h64 as ⟨v43, s16, hinv16, h_v43⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
+      ite_done hinv16 hG with (native_ite_false_rep _ hx_25 h_v43))
+  store_step with h_ite_v44 as ⟨v44, s16, hinv16, h_v44⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
+  case_done hinv16 hG with h_v44 in EoCases.__eo_to_smt_tuple_prepend_of_type.case_0 using
 
-/-- logos's `__eo_prog_string_decompose` is what the generated body does: the tests for the stuck term,
+theorem case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tuple_prepend_of_type.case_1 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_prepend_of_type.case_1 x_a0 x_a1 x_a2 x_a3 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_tuple_prepend_of_type.case_1 using
+
+/-- logos's `__eo_to_smt_tuple_prepend_of_type` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstring_5fdecompose.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
-    __eo_prog_string_decompose x_a0 x_a1 x_a2 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_string_decompose.case_0 x_a0 x_a1 x_a2] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_string_decompose
-  unfold EoCases.__eo_prog_string_decompose.case_0
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
+    __eo_to_smt_tuple_prepend_of_type x_a0 x_a1 x_a2 x_a3 =
+      (firstSome [EoCases.__eo_to_smt_tuple_prepend_of_type.case_0 x_a0 x_a1 x_a2 x_a3, EoCases.__eo_to_smt_tuple_prepend_of_type.case_1 x_a0 x_a1 x_a2 x_a3] default) := by
+  conv => lhs; unfold __eo_to_smt_tuple_prepend_of_type
+  unfold EoCases.__eo_to_smt_tuple_prepend_of_type.case_0 EoCases.__eo_to_smt_tuple_prepend_of_type.case_1
   logos_eq
 
-theorem body_eo__24eo_5fprog_5fstring_5fdecompose_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+theorem body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_tuple_prepend_of_type x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype.rust_eq x_a0 x_a1 x_a2 x_a3 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec n ih s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec n ih s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_tuple_prepend_of_type.case_0 EoCases.__eo_to_smt_tuple_prepend_of_type.case_1 splitting x_a0 x_a1 x_a2 x_a3
+
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype.Spec n := by
+  intro s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
+  unfold eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype s1 a0 a1 a2 a3) (fun s' t => Represents.rep s' t (__eo_to_smt_tuple_prepend_of_type x_a0 x_a1 x_a2 x_a3))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec m (ih m hm) s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tuple_prepend_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_prepend_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec
+  have hG := Store.Grows.refl s
+  pat_native_zero Store.native_pattern_nat_zero_spec s a3 h_a3 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 in EoCases.__eo_to_smt_tuple_prepend_rec.case_0
+  case_done hinv1 hG with h_a4 in EoCases.__eo_to_smt_tuple_prepend_rec.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tuple_prepend_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_prepend_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec
+  have hG := Store.Grows.refl s
+  pat_destruct_lit Store.native_pattern_succ_spec s a3 h_a3 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 in EoCases.__eo_to_smt_tuple_prepend_rec.case_1
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec s1 a0 a1 a2 v1 a4 _ _ _ _ _ hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_v1 h_a4 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1
+  step as ⟨e_v3, he_v3⟩
+  simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s2 _ _ rfl hinv2 h64 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2
+  replace h_v3 := Represents.rep_of_eq h_v3 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v3]; decide)
+  store_step with Store.native_nat_zero_spec s3 hinv3 h64 as ⟨v4, s4, hinv4, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3
+  step as ⟨e_v5, he_v5⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s4 e_v5 (by rw [he_v5]; rfl) h_v3 h_a0 h_v4 h_v1 hinv4 h64 as ⟨v5, s5, hinv5, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s5 e_v6 (by rw [he_v6]; rfl) h_v5 h_a2 hinv5 h64 as ⟨v6, s6, hinv6, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5
+  step as ⟨e_v7, he_v7⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s6 e_v7 (by rw [he_v7]; rfl) h_v2 h_v6 hinv6 h64 as ⟨v7, s7, hinv7, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  case_done hinv7 hG with h_v7 in EoCases.__eo_to_smt_tuple_prepend_rec.case_1 using
+
+/-- logos's `__eo_to_smt_tuple_prepend_rec` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
+    __eo_to_smt_tuple_prepend_rec x_a0 x_a1 x_a2 x_a3 x_a4 =
+      (firstSome [EoCases.__eo_to_smt_tuple_prepend_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__eo_to_smt_tuple_prepend_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4] default) := by
+  conv => lhs; unfold __eo_to_smt_tuple_prepend_rec
+  unfold EoCases.__eo_to_smt_tuple_prepend_rec.case_0 EoCases.__eo_to_smt_tuple_prepend_rec.case_1
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_tuple_prepend_rec x_a0 x_a1 x_a2 x_a3 x_a4)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec n ih s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec n ih s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 h_a4
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_tuple_prepend_rec.case_0 EoCases.__eo_to_smt_tuple_prepend_rec.case_1 splitting x_a0 x_a1 x_a2 x_a3 x_a4
+
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec.Spec n := by
+  intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
+  unfold eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 769#u32 _ [a0, a1, a2, a3, a4] rfl
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__eo_to_smt_tuple_prepend_rec x_a0 x_a1 x_a2 x_a3 x_a4))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (by
+      intro s1 res hn hsem
+      obtain ⟨b0, b1, b2, b3, b4, y0, y1, y2, y3, y4, hargs, hb0, hb1, hb2, hb3, hb4, hr⟩ := ProgramSem.of_769 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl, rfl, rfl, rfl, rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
+      obtain rfl := Rep.functional hb2 (Represents.congr h_a2 hn)
+      obtain rfl := Rep.functional hb3 (Represents.congr h_a3 hn)
+      obtain rfl := Rep.functional hb4 (Represents.congr h_a4 hn)
+      exact hr)
+    (by
+      intro s1 res hpre h
+      exact ProgramSem.to_769 ⟨a0, a1, a2, a3, a4, x_a0, x_a1, x_a2, x_a3, x_a4, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, Rep.mono hpre h_a3, Rep.mono hpre h_a4, h⟩)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
-    body_eo__24eo_5fprog_5fstring_5fdecompose s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_string_decompose x_a0 x_a1 x_a2)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstring_5fdecompose.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
-  unfold body_eo__24eo_5fprog_5fstring_5fdecompose
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstring_5fdecompose_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_string_decompose.case_0
-
-theorem eo__24eo_5fprog_5fstring_5fdecompose_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstring_5fdecompose.Spec n := by
-  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
-  unfold eo__24eo_5fprog_5fstring_5fdecompose
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstring_5fdecompose s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_prog_string_decompose x_a0 x_a1 x_a2))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstring_5fdecompose_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstring_5feager_5freduction_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstring_5feager_5freduction s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+    case_0_eo__24eo_5fto_5fsmt_5ftuple_5fselect s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_string_eager_reduction.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_string_eager_reduction.case_0 x_a0 = none
+        ∃ res, EoCases.__eo_to_smt_tuple_select.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_select.case_0 x_a0 x_a1 x_a2 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstring_5feager_5freduction
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftuple_5fselect more_1_eo__24eo_5fto_5fsmt_5ftuple_5fselect
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24mk_5fstr_5feager_5freduction s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  case_done hinv1 hG with h_v0 in EoCases.__eo_prog_string_eager_reduction.case_0 using hn_a0
-
-/-- logos's `__eo_prog_string_eager_reduction` is what the generated body does: the tests for the stuck term,
-then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstring_5feager_5freduction.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_string_eager_reduction x_a0 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_string_eager_reduction.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_string_eager_reduction
-  unfold EoCases.__eo_prog_string_eager_reduction.case_0
-  logos_eq
-
-theorem body_eo__24eo_5fprog_5fstring_5feager_5freduction_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstring_5feager_5freduction s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_string_eager_reduction x_a0)
-      | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstring_5feager_5freduction.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstring_5feager_5freduction
-  have hG := Store.Grows.refl s
-  stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstring_5feager_5freduction_spec n ih s a0 x_a0 hinv h64 hrem h_a0 hn_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using hn_a0
-  body_stuck hinv1 hG using hn_a0 hc0 in EoCases.__eo_prog_string_eager_reduction.case_0
-
-theorem eo__24eo_5fprog_5fstring_5feager_5freduction_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstring_5feager_5freduction.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstring_5feager_5freduction
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstring_5feager_5freduction s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_string_eager_reduction x_a0))
-    (by intro _ _ _ hn h; congr_one h hn)
-    (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstring_5feager_5freduction_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
-  rintro ⟨r, s'⟩ h
-  cases r <;> simpa [WP.uncurry'_pair] using h
-
-theorem case_0_eo__24eo_5fprog_5fstring_5fext_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    case_0_eo__24eo_5fprog_5fstring_5fext s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
-      match r with
-      | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_string_ext.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_string_ext.case_0 x_a0 = none
-      | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstring_5fext more_0_eo__24eo_5fprog_5fstring_5fext more_1_eo__24eo_5fprog_5fstring_5fext more_2_eo__24eo_5fprog_5fstring_5fext more_3_eo__24eo_5fprog_5fstring_5fext
-  have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_string_ext.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_string_ext.case_0
-  step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo_not.construct s e_v5 (by rw [he_v5]; exact empty_args) hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4
-  pat_same v3 v5 with h_v3 h_v5 using hinv1 else hinv1 hG in EoCases.__eo_prog_string_ext.case_0
-  pat_unapply h_v4 as ⟨v7, v8, x_v7, x_v8, h_v7, h_v8, hn_v7, hn_v8⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_string_ext.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_string_ext.case_0
+  pat_destruct CtorSpec.eo__24emb_5ftsm_2eDatatype.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_tuple_select.case_0
+  pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_v2 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ ⟨v6, x_v6, h_v6⟩ else hinv hG in EoCases.__eo_to_smt_tuple_select.case_0
+  step as ⟨e_v7, he_v7⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v7 (by rw [he_v7]; exact empty_args) hinv h64 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6
+  pat_same v6 v7 with h_v6 h_v7 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_tuple_select.case_0
+  pat_destruct CtorSpec.eo__24emb_5fsm_2eNumeral.destruct h_a1 as ⟨v9, x_v9, h_v9⟩ else hinv1 hG in EoCases.__eo_to_smt_tuple_select.case_0
+  step as ⟨e_v10, he_v10⟩
+  simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s1 _ _ rfl hinv1 h64 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9
+  replace h_v10 := Represents.rep_of_eq h_v10 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v10]; decide)
+  step as ⟨e_v11, he_v11⟩
+  store_step with Store.native_spec_streq s2 e_v11 (by rw [he_v11]; rfl) h_v1 h_v10 hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10
+  rw [← Bridge.native_streq] at h_v11
   step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v12 (by rw [he_v12]; exact empty_args) hinv1 h64 as ⟨v12, s2, hinv2, h_v12⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11
-  pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_string_ext.case_0
+  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s3 _ _ rfl hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11
+  replace h_v12 := Represents.rep_of_eq h_v12 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v12]; decide)
   step as ⟨e_v13, he_v13⟩
-  store_step with CtorSpec.eo_or.construct s2 e_v13 (by rw [he_v13]; exact empty_args) hinv2 h64 as ⟨v13, s3, hinv3, h_v13⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12
+  store_step with Store.native_spec_streq s4 e_v13 (by rw [he_v13]; rfl) h_v4 h_v12 hinv4 h64 as ⟨v13, s5, hinv5, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12
+  rw [← Bridge.native_streq] at h_v13
   step as ⟨e_v14, he_v14⟩
-  store_step with CtorSpec.eo_not.construct s3 e_v14 (by rw [he_v14]; exact empty_args) hinv3 h64 as ⟨v14, s4, hinv4, h_v14⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3d.construct s4 e_v15 (by rw [he_v15]; exact empty_args) hinv4 h64 as ⟨v15, s5, hinv5, h_v15⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14
+  store_step with Store.native_spec_and s5 e_v14 (by rw [he_v14]; rfl) h_v11 h_v13 hinv5 h64 as ⟨v14, s6, hinv6, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13
+  rw [← Bridge.native_and] at h_v14
+  simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
+  store_step with Store.raw_int_u32_spec s6 0#u32 (0) (by scalar_tac) hinv6 h64 as ⟨v15, s7, hinv7, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
   step as ⟨e_v16, he_v16⟩
-  store_step with CtorSpec.eo_str_2elen.construct s5 e_v16 (by rw [he_v16]; exact empty_args) hinv5 h64 as ⟨v16, s6, hinv6, h_v16⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-  store_step with Store.apply_rep s6 v16 v11 _ _ hinv6 h64 h_v16 h_v11 (by ns_tac) (by ns_tac) as ⟨v17, s7, hinv7, h_v17⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-  store_step with Store.apply_rep s7 v15 v17 _ _ hinv7 h64 h_v15 h_v17 (by ns_tac) (by ns_tac) as ⟨v18, s8, hinv8, h_v18⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-  step as ⟨e_v19, he_v19⟩
-  store_step with CtorSpec.eo_str_2elen.construct s8 e_v19 (by rw [he_v19]; exact empty_args) hinv8 h64 as ⟨v19, s9, hinv9, h_v19⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-  store_step with Store.apply_rep s9 v19 v8 _ _ hinv9 h64 h_v19 h_v8 (by ns_tac) (by ns_tac) as ⟨v20, s10, hinv10, h_v20⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-  store_step with Store.apply_rep s10 v18 v20 _ _ hinv10 h64 h_v18 h_v20 (by ns_tac) (by ns_tac) as ⟨v21, s11, hinv11, h_v21⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
-  store_step with Store.apply_rep s11 v14 v21 _ _ hinv11 h64 h_v14 h_v21 (by ns_tac) (by ns_tac) as ⟨v22, s12, hinv12, h_v22⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
-  store_step with Store.apply_rep s12 v13 v22 _ _ hinv12 h64 h_v13 h_v22 (by ns_tac) (by ns_tac) as ⟨v23, s13, hinv13, h_v23⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
-  step as ⟨e_v24, he_v24⟩
-  store_step with CtorSpec.eo_or.construct s13 e_v24 (by rw [he_v24]; exact empty_args) hinv13 h64 as ⟨v24, s14, hinv14, h_v24⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
-  step as ⟨e_v25, he_v25⟩
-  store_step with CtorSpec.eo_and.construct s14 e_v25 (by rw [he_v25]; exact empty_args) hinv14 h64 as ⟨v25, s15, hinv15, h_v25⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
-  step as ⟨e_v26, he_v26⟩
-  store_step with CtorSpec.eo__40strings_5fdeq_5fdiff.construct s15 e_v26 (by rw [he_v26]; exact empty_args) hinv15 h64 as ⟨v26, s16, hinv16, h_v26⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25
-  store_step with Store.apply_rep s16 v26 v11 _ _ hinv16 h64 h_v26 h_v11 (by ns_tac) (by ns_tac) as ⟨v27, s17, hinv17, h_v27⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26
-  store_step with Store.apply_rep s17 v27 v8 _ _ hinv17 h64 h_v27 h_v8 (by ns_tac) (by ns_tac) as ⟨v28, s18, hinv18, h_v28⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27
-  store_step with ih.eo__24eo_5ftypeof s18 v11 _ hinv18 h64 (hG.rem hrem) h_v11 as ⟨v29, s19, hinv19, h_v29⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28
-  store_step with ih.eo__24str_5fmk_5fext_5fdeq s19 v11 v8 v28 v29 _ _ _ _ hinv19 h64 (hG.rem hrem) h_v11 h_v8 h_v28 h_v29 as ⟨v30, s20, hinv20, h_v30⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29
-  store_step with Store.apply_mk_rep s20 v25 v30 _ _ hinv20 h64 h_v25 h_v30 as ⟨v31, s21, hinv21, h_v31⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30
-  step as ⟨e_v32, he_v32⟩
-  store_step with CtorSpec.eo_and.construct s21 e_v32 (by rw [he_v32]; exact empty_args) hinv21 h64 as ⟨v32, s22, hinv22, h_v32⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
-  step as ⟨e_v33, he_v33⟩
-  store_step with CtorSpec.eo__3c_3d.construct s22 e_v33 (by rw [he_v33]; exact empty_args) hinv22 h64 as ⟨v33, s23, hinv23, h_v33⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s23 0#u32 (0) (by scalar_tac) hinv23 h64 as ⟨v34, s24, hinv24, h_v34⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
-  store_step with Store.apply_rep s24 v33 v34 _ _ hinv24 h64 h_v33 h_v34 (by ns_tac) (by ns_tac) as ⟨v35, s25, hinv25, h_v35⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
-  step as ⟨e_v36, he_v36⟩
-  store_step with CtorSpec.eo__40strings_5fdeq_5fdiff.construct s25 e_v36 (by rw [he_v36]; exact empty_args) hinv25 h64 as ⟨v36, s26, hinv26, h_v36⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
-  store_step with Store.apply_rep s26 v36 v11 _ _ hinv26 h64 h_v36 h_v11 (by ns_tac) (by ns_tac) as ⟨v37, s27, hinv27, h_v37⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36
-  store_step with Store.apply_rep s27 v37 v8 _ _ hinv27 h64 h_v37 h_v8 (by ns_tac) (by ns_tac) as ⟨v38, s28, hinv28, h_v38⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37
-  store_step with Store.apply_rep s28 v35 v38 _ _ hinv28 h64 h_v35 h_v38 (by ns_tac) (by ns_tac) as ⟨v39, s29, hinv29, h_v39⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38
-  store_step with Store.apply_rep s29 v32 v39 _ _ hinv29 h64 h_v32 h_v39 (by ns_tac) (by ns_tac) as ⟨v40, s30, hinv30, h_v40⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39
-  step as ⟨e_v41, he_v41⟩
-  store_step with CtorSpec.eo_and.construct s30 e_v41 (by rw [he_v41]; exact empty_args) hinv30 h64 as ⟨v41, s31, hinv31, h_v41⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40
-  step as ⟨e_v42, he_v42⟩
-  store_step with CtorSpec.eo__3c.construct s31 e_v42 (by rw [he_v42]; exact empty_args) hinv31 h64 as ⟨v42, s32, hinv32, h_v42⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41
-  step as ⟨e_v43, he_v43⟩
-  store_step with CtorSpec.eo__40strings_5fdeq_5fdiff.construct s32 e_v43 (by rw [he_v43]; exact empty_args) hinv32 h64 as ⟨v43, s33, hinv33, h_v43⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42
-  store_step with Store.apply_rep s33 v43 v11 _ _ hinv33 h64 h_v43 h_v11 (by ns_tac) (by ns_tac) as ⟨v44, s34, hinv34, h_v44⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43
-  store_step with Store.apply_rep s34 v44 v8 _ _ hinv34 h64 h_v44 h_v8 (by ns_tac) (by ns_tac) as ⟨v45, s35, hinv35, h_v45⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44
-  store_step with Store.apply_rep s35 v42 v45 _ _ hinv35 h64 h_v42 h_v45 (by ns_tac) (by ns_tac) as ⟨v46, s36, hinv36, h_v46⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45
-  step as ⟨e_v47, he_v47⟩
-  store_step with CtorSpec.eo_str_2elen.construct s36 e_v47 (by rw [he_v47]; exact empty_args) hinv36 h64 as ⟨v47, s37, hinv37, h_v47⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46
-  store_step with Store.apply_rep s37 v47 v11 _ _ hinv37 h64 h_v47 h_v11 (by ns_tac) (by ns_tac) as ⟨v48, s38, hinv38, h_v48⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47
-  store_step with Store.apply_rep s38 v46 v48 _ _ hinv38 h64 h_v46 h_v48 (by ns_tac) (by ns_tac) as ⟨v49, s39, hinv39, h_v49⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48
-  store_step with Store.apply_rep s39 v41 v49 _ _ hinv39 h64 h_v41 h_v49 (by ns_tac) (by ns_tac) as ⟨v50, s40, hinv40, h_v50⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49
-  store_step with Store.literal_boolean_spec s40 true hinv40 h64 as ⟨v51, s41, hinv41, h_v51⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50
-  store_step with Store.apply_rep s41 v50 v51 _ _ hinv41 h64 h_v50 h_v51 (by ns_tac) (by ns_tac) as ⟨v52, s42, hinv42, h_v52⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51
-  store_step with Store.apply_rep s42 v40 v52 _ _ hinv42 h64 h_v40 h_v52 (by ns_tac) (by ns_tac) as ⟨v53, s43, hinv43, h_v53⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52
-  store_step with Store.apply_mk_rep s43 v31 v53 _ _ hinv43 h64 h_v31 h_v53 as ⟨v54, s44, hinv44, h_v54⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53
-  store_step with Store.apply_mk_rep s44 v24 v54 _ _ hinv44 h64 h_v24 h_v54 as ⟨v55, s45, hinv45, h_v55⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54
-  store_step with Store.literal_boolean_spec s45 false hinv45 h64 as ⟨v56, s46, hinv46, h_v56⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55
-  store_step with Store.apply_mk_rep s46 v55 v56 _ _ hinv46 h64 h_v55 h_v56 as ⟨v57, s47, hinv47, h_v57⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56
-  store_step with Store.apply_mk_rep s47 v23 v57 _ _ hinv47 h64 h_v23 h_v57 as ⟨v58, s48, hinv48, h_v58⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24 h_v25 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35 h_v36 h_v37 h_v38 h_v39 h_v40 h_v41 h_v42 h_v43 h_v44 h_v45 h_v46 h_v47 h_v48 h_v49 h_v50 h_v51 h_v52 h_v53 h_v54 h_v55 h_v56 h_v57
-  case_done hinv48 hG with h_v58 in EoCases.__eo_prog_string_ext.case_0 using hn_v3 hn_v4 hn_v7 hn_v8 hn_v10 hn_v11
+  store_step with Store.native_spec_zleq s7 e_v16 (by rw [he_v16]; rfl) h_v15 h_v9 hinv7 h64 as ⟨v16, s8, hinv8, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
+  rw [← Bridge.native_zleq] at h_v16
+  step as ⟨e_v17, he_v17⟩
+  store_step with Store.native_spec_and s8 e_v17 (by rw [he_v17]; rfl) h_v14 h_v16 hinv8 h64 as ⟨v17, s9, hinv9, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
+  rw [← Bridge.native_and] at h_v17
+  have h_ite_v25 := (show if_0_eo__24eo_5fto_5fsmt_5ftuple_5fselect s9 v17 v5 v9 a2 ⦃ r s' => s'.Inv ∧ s9.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_0_eo__24eo_5fto_5fsmt_5ftuple_5fselect
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s9
+    rcases Store.boolean_value_native h_v17 with ⟨hx_18, hbv_18⟩ | ⟨hx_18, hbv_18⟩
+    · ite_branch hbv_18
+      step as ⟨e_v18, he_v18⟩
+      try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+      store_step with Store.raw_str_vec_spec s9 _ _ rfl hinv9 h64 as ⟨v18, s10, hinv10, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+      replace h_v18 := Represents.rep_of_eq h_v18 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v18]; decide)
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fdecl s10 v5 _ hinv10 h64 (hG.rem hrem) h_v5 as ⟨v19, s11, hinv11, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+      store_step with Store.native_nat_zero_spec s11 hinv11 h64 as ⟨v20, s12, hinv12, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
+      step as ⟨e_v21, he_v21⟩
+      store_step with Store.native_spec_int_to_nat s12 e_v21 (by rw [he_v21]; rfl) h_v9 hinv12 h64 as ⟨v21, s13, hinv13, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
+      rw [← Bridge.native_int_to_nat] at h_v21
+      step as ⟨e_v22, he_v22⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s13 e_v22 (by rw [he_v22]; rfl) h_v18 h_v19 h_v20 h_v21 hinv13 h64 as ⟨v22, s14, hinv14, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
+      step as ⟨e_v23, he_v23⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s14 e_v23 (by rw [he_v23]; rfl) h_v22 h_a2 hinv14 h64 as ⟨v23, s15, hinv15, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
+      ite_done hinv15 hG with (native_ite_true_rep _ hx_18 h_v23)
+    · ite_branch hbv_18
+      step as ⟨e_v24, he_v24⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s9 e_v24 (by rw [he_v24]; exact empty_args) hinv9 h64 as ⟨v24, s10, hinv10, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+      ite_done hinv10 hG with (native_ite_false_rep _ hx_18 h_v24))
+  store_step with h_ite_v25 as ⟨v25, s10, hinv10, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+  case_done hinv10 hG with h_v25 in EoCases.__eo_to_smt_tuple_select.case_0 using
 
-/-- logos's `__eo_prog_string_ext` is what the generated body does: the tests for the stuck term,
+theorem case_1_eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    case_1_eo__24eo_5fto_5fsmt_5ftuple_5fselect s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tuple_select.case_1 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_select.case_1 x_a0 x_a1 x_a2 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5ftuple_5fselect
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_tuple_select.case_1 using
+
+/-- logos's `__eo_to_smt_tuple_select` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstring_5fext.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_string_ext x_a0 =
-      (firstSome [EoCases.__eo_prog_string_ext.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_string_ext
-  unfold EoCases.__eo_prog_string_ext.case_0
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fselect.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
+    __eo_to_smt_tuple_select x_a0 x_a1 x_a2 =
+      (firstSome [EoCases.__eo_to_smt_tuple_select.case_0 x_a0 x_a1 x_a2, EoCases.__eo_to_smt_tuple_select.case_1 x_a0 x_a1 x_a2] default) := by
+  conv => lhs; unfold __eo_to_smt_tuple_select
+  unfold EoCases.__eo_to_smt_tuple_select.case_0 EoCases.__eo_to_smt_tuple_select.case_1
   logos_eq
 
-theorem body_eo__24eo_5fprog_5fstring_5fext_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstring_5fext s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+theorem body_eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    body_eo__24eo_5fto_5fsmt_5ftuple_5fselect s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_string_ext x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_tuple_select x_a0 x_a1 x_a2)
       | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstring_5fext.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstring_5fext
+  rw [eo__24eo_5fto_5fsmt_5ftuple_5fselect.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftuple_5fselect
   have hG := Store.Grows.refl s
-  case_step with case_0_eo__24eo_5fprog_5fstring_5fext_spec n ih s a0 x_a0 hinv h64 hrem h_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using
-  body_stuck hinv1 hG using hc0 in EoCases.__eo_prog_string_ext.case_0
+  case_step with case_0_eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec n ih s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_tuple_select.case_0 EoCases.__eo_to_smt_tuple_select.case_1 splitting x_a0 x_a1 x_a2
 
-theorem eo__24eo_5fprog_5fstring_5fext_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstring_5fext.Spec n := by
-  intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstring_5fext
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftuple_5fselect.Spec n := by
+  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
+  unfold eo__24eo_5fto_5fsmt_5ftuple_5fselect
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstring_5fext s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_string_ext x_a0))
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftuple_5fselect s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_to_smt_tuple_select x_a0 x_a1 x_a2))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstring_5fext_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
-theorem case_0_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    case_0_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+theorem case_0_eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    case_0_eo__24eo_5fto_5fsmt_5ftuple_5fupdate s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_string_length_non_empty.case_0 x_a0 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_string_length_non_empty.case_0 x_a0 = none
+        ∃ res, EoCases.__eo_to_smt_tuple_update.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_update.case_0 x_a0 x_a1 x_a2 x_a3 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftuple_5fupdate more_1_eo__24eo_5fto_5fsmt_5ftuple_5fupdate
   have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_string_length_non_empty.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_string_length_non_empty.case_0
-  step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo_not.construct s e_v5 (by rw [he_v5]; exact empty_args) hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4
-  pat_same v3 v5 with h_v3 h_v5 using hinv1 else hinv1 hG in EoCases.__eo_prog_string_length_non_empty.case_0
-  pat_unapply h_v4 as ⟨v7, v8, x_v7, x_v8, h_v7, h_v8, hn_v7, hn_v8⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_string_length_non_empty.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_string_length_non_empty.case_0
+  pat_destruct CtorSpec.eo__24emb_5ftsm_2eDatatype.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_tuple_update.case_0
+  pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_v2 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ ⟨v6, x_v6, h_v6⟩ else hinv hG in EoCases.__eo_to_smt_tuple_update.case_0
+  step as ⟨e_v7, he_v7⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v7 (by rw [he_v7]; exact empty_args) hinv h64 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6
+  pat_same v6 v7 with h_v6 h_v7 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_tuple_update.case_0
+  pat_destruct CtorSpec.eo__24emb_5fsm_2eNumeral.destruct h_a1 as ⟨v9, x_v9, h_v9⟩ else hinv1 hG in EoCases.__eo_to_smt_tuple_update.case_0
+  step as ⟨e_v10, he_v10⟩
+  simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s1 _ _ rfl hinv1 h64 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9
+  replace h_v10 := Represents.rep_of_eq h_v10 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v10]; decide)
+  step as ⟨e_v11, he_v11⟩
+  store_step with Store.native_spec_streq s2 e_v11 (by rw [he_v11]; rfl) h_v1 h_v10 hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10
+  rw [← Bridge.native_streq] at h_v11
   step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v12 (by rw [he_v12]; exact empty_args) hinv1 h64 as ⟨v12, s2, hinv2, h_v12⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11
-  pat_same v10 v12 with h_v10 h_v12 using hinv2 else hinv2 hG in EoCases.__eo_prog_string_length_non_empty.case_0
-  store_step with ih.eo__24str_5fis_5fempty s2 v8 _ hinv2 h64 (hG.rem hrem) h_v8 as ⟨v13, s3, hinv3, h_v13⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12
-  store_step with Store.literal_boolean_spec s3 true hinv3 h64 as ⟨v14, s4, hinv4, h_v14⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13
-  have h_req_v23 := (show requires_0_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty s4 v13 v14 v11 ⦃ r s' => s'.Inv ∧ s4.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_requires _ _ _) | core.result.Result.Err _ => True ⦄div from by
-    unfold requires_0_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty
+  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s3 _ _ rfl hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11
+  replace h_v12 := Represents.rep_of_eq h_v12 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v12]; decide)
+  step as ⟨e_v13, he_v13⟩
+  store_step with Store.native_spec_streq s4 e_v13 (by rw [he_v13]; rfl) h_v4 h_v12 hinv4 h64 as ⟨v13, s5, hinv5, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12
+  rw [← Bridge.native_streq] at h_v13
+  step as ⟨e_v14, he_v14⟩
+  store_step with Store.native_spec_and s5 e_v14 (by rw [he_v14]; rfl) h_v11 h_v13 hinv5 h64 as ⟨v14, s6, hinv6, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13
+  rw [← Bridge.native_and] at h_v14
+  simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
+  store_step with Store.raw_int_u32_spec s6 0#u32 (0) (by scalar_tac) hinv6 h64 as ⟨v15, s7, hinv7, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
+  step as ⟨e_v16, he_v16⟩
+  store_step with Store.native_spec_zleq s7 e_v16 (by rw [he_v16]; rfl) h_v15 h_v9 hinv7 h64 as ⟨v16, s8, hinv8, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
+  rw [← Bridge.native_zleq] at h_v16
+  step as ⟨e_v17, he_v17⟩
+  store_step with Store.native_spec_and s8 e_v17 (by rw [he_v17]; rfl) h_v14 h_v16 hinv8 h64 as ⟨v17, s9, hinv9, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
+  rw [← Bridge.native_and] at h_v17
+  have h_ite_v25 := (show if_0_eo__24eo_5fto_5fsmt_5ftuple_5fupdate s9 v17 v5 v9 a2 a3 ⦃ r s' => s'.Inv ∧ s9.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_0_eo__24eo_5fto_5fsmt_5ftuple_5fupdate
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s9
+    rcases Store.boolean_value_native h_v17 with ⟨hx_18, hbv_18⟩ | ⟨hx_18, hbv_18⟩
+    · ite_branch hbv_18
+      step as ⟨e_v18, he_v18⟩
+      try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+      store_step with Store.raw_str_vec_spec s9 _ _ rfl hinv9 h64 as ⟨v18, s10, hinv10, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+      replace h_v18 := Represents.rep_of_eq h_v18 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v18]; decide)
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fdecl s10 v5 _ hinv10 h64 (hG.rem hrem) h_v5 as ⟨v19, s11, hinv11, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+      store_step with Store.native_nat_zero_spec s11 hinv11 h64 as ⟨v20, s12, hinv12, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
+      step as ⟨e_v21, he_v21⟩
+      store_step with Store.native_spec_int_to_nat s12 e_v21 (by rw [he_v21]; rfl) h_v9 hinv12 h64 as ⟨v21, s13, hinv13, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
+      rw [← Bridge.native_int_to_nat] at h_v21
+      step as ⟨e_v22, he_v22⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s13 e_v22 (by rw [he_v22]; rfl) h_v18 h_v19 h_v20 h_v21 hinv13 h64 as ⟨v22, s14, hinv14, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
+      store_step with ih.eo__24eo_5fto_5fsmt_5fupdater s14 v22 a2 a3 _ _ _ hinv14 h64 (hG.rem hrem) h_v22 h_a2 h_a3 as ⟨v23, s15, hinv15, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
+      ite_done hinv15 hG with (native_ite_true_rep _ hx_18 h_v23)
+    · ite_branch hbv_18
+      step as ⟨e_v24, he_v24⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s9 e_v24 (by rw [he_v24]; exact empty_args) hinv9 h64 as ⟨v24, s10, hinv10, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+      ite_done hinv10 hG with (native_ite_false_rep _ hx_18 h_v24))
+  store_step with h_ite_v25 as ⟨v25, s10, hinv10, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+  case_done hinv10 hG with h_v25 in EoCases.__eo_to_smt_tuple_update.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    case_1_eo__24eo_5fto_5fsmt_5ftuple_5fupdate s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_tuple_update.case_1 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_tuple_update.case_1 x_a0 x_a1 x_a2 x_a3 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5ftuple_5fupdate
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_tuple_update.case_1 using
+
+/-- logos's `__eo_to_smt_tuple_update` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fupdate.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
+    __eo_to_smt_tuple_update x_a0 x_a1 x_a2 x_a3 =
+      (firstSome [EoCases.__eo_to_smt_tuple_update.case_0 x_a0 x_a1 x_a2 x_a3, EoCases.__eo_to_smt_tuple_update.case_1 x_a0 x_a1 x_a2 x_a3] default) := by
+  conv => lhs; unfold __eo_to_smt_tuple_update
+  unfold EoCases.__eo_to_smt_tuple_update.case_0 EoCases.__eo_to_smt_tuple_update.case_1
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    body_eo__24eo_5fto_5fsmt_5ftuple_5fupdate s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_tuple_update x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5ftuple_5fupdate.rust_eq x_a0 x_a1 x_a2 x_a3 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftuple_5fupdate
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec n ih s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec n ih s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_tuple_update.case_0 EoCases.__eo_to_smt_tuple_update.case_1 splitting x_a0 x_a1 x_a2 x_a3
+
+theorem eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftuple_5fupdate.Spec n := by
+  intro s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
+  unfold eo__24eo_5fto_5fsmt_5ftuple_5fupdate
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftuple_5fupdate s1 a0 a1 a2 a3) (fun s' t => Represents.rep s' t (__eo_to_smt_tuple_update x_a0 x_a1 x_a2 x_a3))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec m (ih m hm) s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_0_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_0 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_0 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_0
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_1_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_1 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_1 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fDatatypeType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_type.case_1
+  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  have h_ite_v7 := (show if_0_eo__24eo_5fto_5fsmt_5ftype s1 v3 v2 v1 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_0_eo__24eo_5fto_5fsmt_5ftype
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s1
+    rcases Store.boolean_value_native h_v3 with ⟨hx_4, hbv_4⟩ | ⟨hx_4, hbv_4⟩
+    · ite_branch hbv_4
+      step as ⟨e_v4, he_v4⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+      ite_done hinv2 hG with (native_ite_true_rep _ hx_4 h_v4)
+    · ite_branch hbv_4
+      store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+      step as ⟨e_v6, he_v6⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s2 e_v6 (by rw [he_v6]; rfl) h_v1 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5
+      ite_done hinv3 hG with (native_ite_false_rep _ hx_4 h_v6))
+  store_step with h_ite_v7 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  case_done hinv2 hG with h_v7 in EoCases.__eo_to_smt_type.case_1 using
+
+theorem case_2_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_2_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_2 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_2 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_2_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fDatatypeTypeRef.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_to_smt_type.case_2
+  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  have h_ite_v5 := (show if_1_eo__24eo_5fto_5fsmt_5ftype s1 v2 v1 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_1_eo__24eo_5fto_5fsmt_5ftype
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s1
+    rcases Store.boolean_value_native h_v2 with ⟨hx_3, hbv_3⟩ | ⟨hx_3, hbv_3⟩
+    · ite_branch hbv_3
+      step as ⟨e_v3, he_v3⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v3 (by rw [he_v3]; exact empty_args) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+      ite_done hinv2 hG with (native_ite_true_rep _ hx_3 h_v3)
+    · ite_branch hbv_3
+      step as ⟨e_v4, he_v4⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eTypeRef.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2
+      ite_done hinv2 hG with (native_ite_false_rep _ hx_3 h_v4))
+  store_step with h_ite_v5 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2
+  case_done hinv2 hG with h_v5 in EoCases.__eo_to_smt_type.case_2 using
+
+theorem case_3_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_3_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_3 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_3 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_3_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fDtcAppType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_type.case_3
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v1 _ hinv2 h64 (hG.rem hrem) h_v1 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  step as ⟨e_v7, he_v7⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDtcAppType.construct s4 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s5 v4 v7 _ _ hinv5 h64 (hG.rem hrem) h_v4 h_v7 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s6 v3 v8 _ _ hinv6 h64 (hG.rem hrem) h_v3 h_v8 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  case_done hinv7 hG with h_v9 in EoCases.__eo_to_smt_type.case_3 using
+
+theorem case_4_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_4_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_4 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_4 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_4_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fUSort.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_to_smt_type.case_4
+  step as ⟨e_v2, he_v2⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eUSort.construct s e_v2 (by rw [he_v2]; rfl) h_v1 hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  case_done hinv1 hG with h_v2 in EoCases.__eo_to_smt_type.case_4 using
+
+theorem case_5_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_5_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_5 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_5 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_5_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_5
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_5
+  pat_is_node h_v4 : x_v4 is Eo.Term.FunType by Embed.inv_Term_FunType else hinv hG in EoCases.__eo_to_smt_type.case_5
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v5 _ hinv h64 hrem h_v5 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v5 _ hinv2 h64 (hG.rem hrem) h_v5 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9
+  step as ⟨e_v11, he_v11⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eFunType.construct s4 e_v11 (by rw [he_v11]; rfl) h_v9 h_v10 hinv4 h64 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s5 v8 v11 _ _ hinv5 h64 (hG.rem hrem) h_v8 h_v11 as ⟨v12, s6, hinv6, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s6 v7 v12 _ _ hinv6 h64 (hG.rem hrem) h_v7 h_v12 as ⟨v13, s7, hinv7, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
+  case_done hinv7 hG with h_v13 in EoCases.__eo_to_smt_type.case_5 using hn_v1 hn_v2 hn_v4 hn_v5
+
+theorem case_6_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_6_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_6 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_6 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_6_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_6
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eInt.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_6 using
+
+theorem case_7_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_7_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_7 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_7 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_7_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_7
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eReal.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_7 using
+
+theorem case_8_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_8_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_8 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_8 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_8_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_8
+  step as ⟨e_v3, he_v3⟩
+  store_step with CtorSpec.eo_BitVec.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_8
+  pat_destruct_lit Store.destruct_numeral_spec s1 v2 h_v2 hinv1 h64 as ⟨v5, x_v5, h_v5⟩ storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 in EoCases.__eo_to_smt_type.case_8
+  simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
+  store_step with Store.raw_int_u32_spec s2 0#u32 (0) (by scalar_tac) hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5
+  step as ⟨e_v7, he_v7⟩
+  store_step with Store.native_spec_zleq s3 e_v7 (by rw [he_v7]; rfl) h_v6 h_v5 hinv3 h64 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6
+  rw [← Bridge.native_zleq] at h_v7
+  have h_ite_v11 := (show if_2_eo__24eo_5fto_5fsmt_5ftype s4 v7 v5 ⦃ r s' => s'.Inv ∧ s4.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_2_eo__24eo_5fto_5fsmt_5ftype
     have hrem := (hG.rem hrem)
     have hG := Store.Grows.refl s4
-    req_same v13 v14 with h_v13 h_v14 using hinv4 hG
-    req_stuck h_v13 as hq_v13 using hinv4 hG
-    step as ⟨e_v15, he_v15⟩
-    store_step with CtorSpec.eo_not.construct s4 e_v15 (by rw [he_v15]; exact empty_args) hinv4 h64 as ⟨v15, s5, hinv5, h_v15⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14
-    step as ⟨e_v16, he_v16⟩
-    store_step with CtorSpec.eo__3d.construct s5 e_v16 (by rw [he_v16]; exact empty_args) hinv5 h64 as ⟨v16, s6, hinv6, h_v16⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
-    step as ⟨e_v17, he_v17⟩
-    store_step with CtorSpec.eo_str_2elen.construct s6 e_v17 (by rw [he_v17]; exact empty_args) hinv6 h64 as ⟨v17, s7, hinv7, h_v17⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
-    store_step with Store.apply_rep s7 v17 v11 _ _ hinv7 h64 h_v17 h_v11 (by ns_tac) (by ns_tac) as ⟨v18, s8, hinv8, h_v18⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
-    store_step with Store.apply_rep s8 v16 v18 _ _ hinv8 h64 h_v16 h_v18 (by ns_tac) (by ns_tac) as ⟨v19, s9, hinv9, h_v19⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
-    try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-    store_step with Store.literal_int_u32_spec s9 0#u32 (0) (by scalar_tac) hinv9 h64 as ⟨v20, s10, hinv10, h_v20⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
-    store_step with Store.apply_rep s10 v19 v20 _ _ hinv10 h64 h_v19 h_v20 (by ns_tac) (by ns_tac) as ⟨v21, s11, hinv11, h_v21⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
-    store_step with Store.apply_rep s11 v15 v21 _ _ hinv11 h64 h_v15 h_v21 (by ns_tac) (by ns_tac) as ⟨v22, s12, hinv12, h_v22⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
-    req_done hinv12 hG with h_v22 using hq_v13)
-  store_step with h_req_v23 as ⟨v23, s13, hinv13, h_v23⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14
-  case_done hinv13 hG with h_v23 in EoCases.__eo_prog_string_length_non_empty.case_0 using hn_v3 hn_v4 hn_v7 hn_v8 hn_v10 hn_v11
+    rcases Store.boolean_value_native h_v7 with ⟨hx_8, hbv_8⟩ | ⟨hx_8, hbv_8⟩
+    · ite_branch hbv_8
+      step as ⟨e_v8, he_v8⟩
+      store_step with Store.native_spec_int_to_nat s4 e_v8 (by rw [he_v8]; rfl) h_v5 hinv4 h64 as ⟨v8, s5, hinv5, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7
+      rw [← Bridge.native_int_to_nat] at h_v8
+      step as ⟨e_v9, he_v9⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBitVec.construct s5 e_v9 (by rw [he_v9]; rfl) h_v8 hinv5 h64 as ⟨v9, s6, hinv6, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7 h_v8
+      ite_done hinv6 hG with (native_ite_true_rep _ hx_8 h_v9)
+    · ite_branch hbv_8
+      step as ⟨e_v10, he_v10⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s4 e_v10 (by rw [he_v10]; exact empty_args) hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7
+      ite_done hinv5 hG with (native_ite_false_rep _ hx_8 h_v10))
+  store_step with h_ite_v11 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7
+  case_done hinv5 hG with h_v11 in EoCases.__eo_to_smt_type.case_8 using hn_v1 hn_v2
 
-/-- logos's `__eo_prog_string_length_non_empty` is what the generated body does: the tests for the stuck term,
+theorem case_9_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_9_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_9 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_9 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_9_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_Char.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_9
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eChar.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_9 using
+
+theorem case_10_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_10_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_10 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_10 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_10_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_10
+  step as ⟨e_v3, he_v3⟩
+  store_step with CtorSpec.eo_Seq.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_10
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eSeq.construct s3 e_v6 (by rw [he_v6]; rfl) h_v5 hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s4 v4 v6 _ _ hinv4 h64 (hG.rem hrem) h_v4 h_v6 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  case_done hinv5 hG with h_v7 in EoCases.__eo_to_smt_type.case_10 using hn_v1 hn_v2
+
+theorem case_11_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_11_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_11 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_11 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_11_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_11
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_11
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo_Array.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_11
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s3 v5 _ hinv3 h64 (hG.rem hrem) h_v5 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s4 v2 _ hinv4 h64 (hG.rem hrem) h_v2 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  step as ⟨e_v11, he_v11⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eMap.construct s5 e_v11 (by rw [he_v11]; rfl) h_v9 h_v10 hinv5 h64 as ⟨v11, s6, hinv6, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s6 v8 v11 _ _ hinv6 h64 (hG.rem hrem) h_v8 h_v11 as ⟨v12, s7, hinv7, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s7 v7 v12 _ _ hinv7 h64 (hG.rem hrem) h_v7 h_v12 as ⟨v13, s8, hinv8, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
+  case_done hinv8 hG with h_v13 in EoCases.__eo_to_smt_type.case_11 using hn_v1 hn_v2 hn_v4 hn_v5
+
+theorem case_12_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_12_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_12 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_12 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_12_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_RegLan.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_12
+  step as ⟨e_v1, he_v1⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eRegLan.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_12 using
+
+theorem case_13_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_13_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_13 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_13 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_13_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo_UnitTuple.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_13
+  step as ⟨e_v1, he_v1⟩
+  simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s1 _ _ rfl hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  replace h_v1 := Represents.rep_of_eq h_v1 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v1]; decide)
+  step as ⟨e_v2, he_v2⟩
+  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s2 _ _ rfl hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  replace h_v2 := Represents.rep_of_eq h_v2 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v2]; decide)
+  step as ⟨e_v3, he_v3⟩
+  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s3 e_v3 (by rw [he_v3]; exact empty_args) hinv3 h64 as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2
+  step as ⟨e_v4, he_v4⟩
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s4 e_v4 (by rw [he_v4]; exact empty_args) hinv4 h64 as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3
+  step as ⟨e_v5, he_v5⟩
+  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s5 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv5 h64 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s6 e_v6 (by rw [he_v6]; exact empty_args) hinv6 h64 as ⟨v6, s7, hinv7, h_v6⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5
+  step as ⟨e_v7, he_v7⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2econs.construct s7 e_v7 (by rw [he_v7]; rfl) h_v2 h_v5 h_v6 hinv7 h64 as ⟨v7, s8, hinv8, h_v7⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  step as ⟨e_v8, he_v8⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s8 e_v8 (by rw [he_v8]; rfl) h_v1 h_v7 hinv8 h64 as ⟨v8, s9, hinv9, h_v8⟩ growing hG carrying h_a0 h_v0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  case_done hinv9 hG with h_v8 in EoCases.__eo_to_smt_type.case_13 using
+
+theorem case_14_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_14_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_14 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_14 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_14_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_14
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_14
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo_Tuple.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_14
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype_5ftuple s3 v7 v8 _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with ih.eo__24smtx_5ftype_5fwf s4 v9 _ hinv4 h64 (hG.rem hrem) h_v9 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  have h_ite_v15 := (show if_3_eo__24eo_5fto_5fsmt_5ftype s5 v10 v5 v2 ⦃ r s' => s'.Inv ∧ s5.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_3_eo__24eo_5fto_5fsmt_5ftype
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s5
+    rcases Store.boolean_value_native h_v10 with ⟨hx_11, hbv_11⟩ | ⟨hx_11, hbv_11⟩
+    · ite_branch hbv_11
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftype s5 v5 _ hinv5 h64 (hG.rem hrem) h_v5 as ⟨v11, s6, hinv6, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftype s6 v2 _ hinv6 h64 (hG.rem hrem) h_v2 as ⟨v12, s7, hinv7, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftype_5ftuple s7 v11 v12 _ _ hinv7 h64 (hG.rem hrem) h_v11 h_v12 as ⟨v13, s8, hinv8, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
+      ite_done hinv8 hG with (native_ite_true_rep _ hx_11 h_v13)
+    · ite_branch hbv_11
+      step as ⟨e_v14, he_v14⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s5 e_v14 (by rw [he_v14]; exact empty_args) hinv5 h64 as ⟨v14, s6, hinv6, h_v14⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+      ite_done hinv6 hG with (native_ite_false_rep _ hx_11 h_v14))
+  store_step with h_ite_v15 as ⟨v15, s6, hinv6, h_v15⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+  case_done hinv6 hG with h_v15 in EoCases.__eo_to_smt_type.case_14 using hn_v1 hn_v2 hn_v4 hn_v5
+
+theorem case_15_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_15_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_15 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_15 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_15_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_15
+  step as ⟨e_v3, he_v3⟩
+  store_step with CtorSpec.eo_Set.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_15
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  step as ⟨e_v6, he_v6⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eSet.construct s3 e_v6 (by rw [he_v6]; rfl) h_v5 hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s4 v4 v6 _ _ hinv4 h64 (hG.rem hrem) h_v4 h_v6 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  case_done hinv5 hG with h_v7 in EoCases.__eo_to_smt_type.case_15 using hn_v1 hn_v2
+
+theorem case_16_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    case_16_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type.case_16 x_a0 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_16 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_16_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_type.case_16 using
+
+theorem cases_0_0_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    cases_0_0_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, (∀ d, firstSome [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] d = res) ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_0 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_1 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_2 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_3 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold cases_0_0_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  group_step with case_0_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_0 x_a0] ++ [EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] from rfl)
+    otherwise ⟨hl_0⟩ using
+  group_step with case_1_eo__24eo_5fto_5fsmt_5ftype_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] = [EoCases.__eo_to_smt_type.case_0 x_a0] ++ [EoCases.__eo_to_smt_type.case_1 x_a0] ++ [EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] from rfl)
+    otherwise ⟨hl_1⟩ using hl_0
+  group_step with case_2_eo__24eo_5fto_5fsmt_5ftype_spec n ih s2 a0 x_a0 hinv2 h64 (hG.rem hrem) h_a0
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] = [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0] ++ [EoCases.__eo_to_smt_type.case_2 x_a0] ++ [EoCases.__eo_to_smt_type.case_3 x_a0] from rfl)
+    otherwise ⟨hl_2⟩ using hl_0 hl_1
+  group_step with case_3_eo__24eo_5fto_5fsmt_5ftype_spec n ih s3 a0 x_a0 hinv3 h64 (hG.rem hrem) h_a0
+    as ⟨s4, hinv4, hc3⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] = [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0] ++ [EoCases.__eo_to_smt_type.case_3 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_3⟩ using hl_0 hl_1 hl_2
+  group_none hinv4 hG with ⟨hl_0, hl_1, hl_2, hl_3⟩
+
+theorem cases_0_1_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    cases_0_1_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, (∀ d, firstSome [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] d = res) ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_4 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_5 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_6 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_7 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold cases_0_1_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  group_step with case_4_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_4 x_a0] ++ [EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] from rfl)
+    otherwise ⟨hl_4⟩ using
+  group_step with case_5_eo__24eo_5fto_5fsmt_5ftype_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] = [EoCases.__eo_to_smt_type.case_4 x_a0] ++ [EoCases.__eo_to_smt_type.case_5 x_a0] ++ [EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] from rfl)
+    otherwise ⟨hl_5⟩ using hl_4
+  group_step with case_6_eo__24eo_5fto_5fsmt_5ftype_spec n ih s2 a0 x_a0 hinv2 h64 (hG.rem hrem) h_a0
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] = [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0] ++ [EoCases.__eo_to_smt_type.case_6 x_a0] ++ [EoCases.__eo_to_smt_type.case_7 x_a0] from rfl)
+    otherwise ⟨hl_6⟩ using hl_4 hl_5
+  group_step with case_7_eo__24eo_5fto_5fsmt_5ftype_spec n ih s3 a0 x_a0 hinv3 h64 (hG.rem hrem) h_a0
+    as ⟨s4, hinv4, hc3⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] = [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0] ++ [EoCases.__eo_to_smt_type.case_7 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_7⟩ using hl_4 hl_5 hl_6
+  group_none hinv4 hG with ⟨hl_4, hl_5, hl_6, hl_7⟩
+
+theorem cases_0_2_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    cases_0_2_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, (∀ d, firstSome [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] d = res) ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_8 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_9 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_10 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_11 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold cases_0_2_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  group_step with case_8_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_8 x_a0] ++ [EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] from rfl)
+    otherwise ⟨hl_8⟩ using
+  group_step with case_9_eo__24eo_5fto_5fsmt_5ftype_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] = [EoCases.__eo_to_smt_type.case_8 x_a0] ++ [EoCases.__eo_to_smt_type.case_9 x_a0] ++ [EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] from rfl)
+    otherwise ⟨hl_9⟩ using hl_8
+  group_step with case_10_eo__24eo_5fto_5fsmt_5ftype_spec n ih s2 a0 x_a0 hinv2 h64 (hG.rem hrem) h_a0
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] = [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0] ++ [EoCases.__eo_to_smt_type.case_10 x_a0] ++ [EoCases.__eo_to_smt_type.case_11 x_a0] from rfl)
+    otherwise ⟨hl_10⟩ using hl_8 hl_9
+  group_step with case_11_eo__24eo_5fto_5fsmt_5ftype_spec n ih s3 a0 x_a0 hinv3 h64 (hG.rem hrem) h_a0
+    as ⟨s4, hinv4, hc3⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] = [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0] ++ [EoCases.__eo_to_smt_type.case_11 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_11⟩ using hl_8 hl_9 hl_10
+  group_none hinv4 hG with ⟨hl_8, hl_9, hl_10, hl_11⟩
+
+theorem cases_0_3_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    cases_0_3_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, (∀ d, firstSome [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] d = res) ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_12 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_13 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_14 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_15 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold cases_0_3_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  group_step with case_12_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_12 x_a0] ++ [EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] from rfl)
+    otherwise ⟨hl_12⟩ using
+  group_step with case_13_eo__24eo_5fto_5fsmt_5ftype_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [EoCases.__eo_to_smt_type.case_12 x_a0] ++ [EoCases.__eo_to_smt_type.case_13 x_a0] ++ [EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] from rfl)
+    otherwise ⟨hl_13⟩ using hl_12
+  group_step with case_14_eo__24eo_5fto_5fsmt_5ftype_spec n ih s2 a0 x_a0 hinv2 h64 (hG.rem hrem) h_a0
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0] ++ [EoCases.__eo_to_smt_type.case_14 x_a0] ++ [EoCases.__eo_to_smt_type.case_15 x_a0] from rfl)
+    otherwise ⟨hl_14⟩ using hl_12 hl_13
+  group_step with case_15_eo__24eo_5fto_5fsmt_5ftype_spec n ih s3 a0 x_a0 hinv3 h64 (hG.rem hrem) h_a0
+    as ⟨s4, hinv4, hc3⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0] ++ [EoCases.__eo_to_smt_type.case_15 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_15⟩ using hl_12 hl_13 hl_14
+  group_none hinv4 hG with ⟨hl_12, hl_13, hl_14, hl_15⟩
+
+theorem cases_0_4_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    cases_0_4_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, (∀ d, firstSome [EoCases.__eo_to_smt_type.case_16 x_a0] d = res) ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_16 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold cases_0_4_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  group_step with case_16_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_16 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_16 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_16⟩ using
+  group_none hinv1 hG with hl_16
+
+theorem cases_1_0_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    cases_1_0_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, (∀ d, firstSome [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] d = res) ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_0 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_1 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_2 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_3 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_4 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_5 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_6 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_7 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_8 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_9 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_10 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_11 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_12 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_13 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_14 x_a0 = none ∧ EoCases.__eo_to_smt_type.case_15 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold cases_1_0_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  group_step with cases_0_0_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] ++ [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] from rfl)
+    otherwise ⟨hl_0, hl_1, hl_2, hl_3⟩ using
+  group_step with cases_0_1_eo__24eo_5fto_5fsmt_5ftype_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0] ++ [EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] ++ [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] from rfl)
+    otherwise ⟨hl_4, hl_5, hl_6, hl_7⟩ using hl_0 hl_1 hl_2 hl_3
+  group_step with cases_0_2_eo__24eo_5fto_5fsmt_5ftype_spec n ih s2 a0 x_a0 hinv2 h64 (hG.rem hrem) h_a0
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0] ++ [EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] ++ [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] from rfl)
+    otherwise ⟨hl_8, hl_9, hl_10, hl_11⟩ using hl_0 hl_1 hl_2 hl_3 hl_4 hl_5 hl_6 hl_7
+  group_step with cases_0_3_eo__24eo_5fto_5fsmt_5ftype_spec n ih s3 a0 x_a0 hinv3 h64 (hG.rem hrem) h_a0
+    as ⟨s4, hinv4, hc3⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] = [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0] ++ [EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_12, hl_13, hl_14, hl_15⟩ using hl_0 hl_1 hl_2 hl_3 hl_4 hl_5 hl_6 hl_7 hl_8 hl_9 hl_10 hl_11
+  group_none hinv4 hG with ⟨hl_0, hl_1, hl_2, hl_3, hl_4, hl_5, hl_6, hl_7, hl_8, hl_9, hl_10, hl_11, hl_12, hl_13, hl_14, hl_15⟩
+
+theorem cases_1_1_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
+    cases_1_1_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, (∀ d, firstSome [EoCases.__eo_to_smt_type.case_16 x_a0] d = res) ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type.case_16 x_a0 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold cases_1_1_eo__24eo_5fto_5fsmt_5ftype
+  have hG := Store.Grows.refl s
+  group_step with cases_0_4_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_16 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_16 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_16⟩ using
+  group_none hinv1 hG with hl_16
+
+/-- logos's `__eo_to_smt_type` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
-    __eo_prog_string_length_non_empty x_a0 =
-      (firstSome [EoCases.__eo_prog_string_length_non_empty.case_0 x_a0] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_string_length_non_empty
-  unfold EoCases.__eo_prog_string_length_non_empty.case_0
+theorem eo__24eo_5fto_5fsmt_5ftype.rust_eq (x_a0 : _) (hw_a0 : Valid.valid x_a0) :
+    __eo_to_smt_type x_a0 =
+      (firstSome [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0, EoCases.__eo_to_smt_type.case_16 x_a0] default) := by
+  conv => lhs; unfold __eo_to_smt_type
+  unfold EoCases.__eo_to_smt_type.case_0 EoCases.__eo_to_smt_type.case_1 EoCases.__eo_to_smt_type.case_2 EoCases.__eo_to_smt_type.case_3 EoCases.__eo_to_smt_type.case_4 EoCases.__eo_to_smt_type.case_5 EoCases.__eo_to_smt_type.case_6 EoCases.__eo_to_smt_type.case_7 EoCases.__eo_to_smt_type.case_8 EoCases.__eo_to_smt_type.case_9 EoCases.__eo_to_smt_type.case_10 EoCases.__eo_to_smt_type.case_11 EoCases.__eo_to_smt_type.case_12 EoCases.__eo_to_smt_type.case_13 EoCases.__eo_to_smt_type.case_14 EoCases.__eo_to_smt_type.case_15 EoCases.__eo_to_smt_type.case_16
   logos_eq
 
-theorem body_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
+theorem body_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) :
-    body_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+    body_eo__24eo_5fto_5fsmt_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_string_length_non_empty x_a0)
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_type x_a0)
       | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty.rust_eq x_a0 (by valid_tac hinv h_a0)]
-  unfold body_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty
+  rw [eo__24eo_5fto_5fsmt_5ftype.rust_eq x_a0 (by valid_tac hinv h_a0)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
-  case_step with case_0_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty_spec n ih s a0 x_a0 hinv h64 hrem h_a0
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 using
-  body_stuck hinv1 hG using hc0 in EoCases.__eo_prog_string_length_non_empty.case_0
+  body_group_step with cases_1_0_eo__24eo_5fto_5fsmt_5ftype_spec n ih s a0 x_a0 hinv h64 hrem h_a0
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0, EoCases.__eo_to_smt_type.case_16 x_a0] = [] ++ [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] ++ [EoCases.__eo_to_smt_type.case_16 x_a0] from rfl)
+    otherwise ⟨hl_0, hl_1, hl_2, hl_3, hl_4, hl_5, hl_6, hl_7, hl_8, hl_9, hl_10, hl_11, hl_12, hl_13, hl_14, hl_15⟩ using
+  body_group_step with cases_1_1_eo__24eo_5fto_5fsmt_5ftype_spec n ih s1 a0 x_a0 hinv1 h64 (hG.rem hrem) h_a0
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0
+    split (show [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0, EoCases.__eo_to_smt_type.case_16 x_a0] = [EoCases.__eo_to_smt_type.case_0 x_a0, EoCases.__eo_to_smt_type.case_1 x_a0, EoCases.__eo_to_smt_type.case_2 x_a0, EoCases.__eo_to_smt_type.case_3 x_a0, EoCases.__eo_to_smt_type.case_4 x_a0, EoCases.__eo_to_smt_type.case_5 x_a0, EoCases.__eo_to_smt_type.case_6 x_a0, EoCases.__eo_to_smt_type.case_7 x_a0, EoCases.__eo_to_smt_type.case_8 x_a0, EoCases.__eo_to_smt_type.case_9 x_a0, EoCases.__eo_to_smt_type.case_10 x_a0, EoCases.__eo_to_smt_type.case_11 x_a0, EoCases.__eo_to_smt_type.case_12 x_a0, EoCases.__eo_to_smt_type.case_13 x_a0, EoCases.__eo_to_smt_type.case_14 x_a0, EoCases.__eo_to_smt_type.case_15 x_a0] ++ [EoCases.__eo_to_smt_type.case_16 x_a0] ++ [] from rfl)
+    otherwise ⟨hl_16⟩ using hl_0 hl_1 hl_2 hl_3 hl_4 hl_5 hl_6 hl_7 hl_8 hl_9 hl_10 hl_11 hl_12 hl_13 hl_14 hl_15
+  body_stuck hinv2 hG using hl_0 hl_1 hl_2 hl_3 hl_4 hl_5 hl_6 hl_7 hl_8 hl_9 hl_10 hl_11 hl_12 hl_13 hl_14 hl_15 hl_16 in EoCases.__eo_to_smt_type.case_0 EoCases.__eo_to_smt_type.case_1 EoCases.__eo_to_smt_type.case_2 EoCases.__eo_to_smt_type.case_3 EoCases.__eo_to_smt_type.case_4 EoCases.__eo_to_smt_type.case_5 EoCases.__eo_to_smt_type.case_6 EoCases.__eo_to_smt_type.case_7 EoCases.__eo_to_smt_type.case_8 EoCases.__eo_to_smt_type.case_9 EoCases.__eo_to_smt_type.case_10 EoCases.__eo_to_smt_type.case_11 EoCases.__eo_to_smt_type.case_12 EoCases.__eo_to_smt_type.case_13 EoCases.__eo_to_smt_type.case_14 EoCases.__eo_to_smt_type.case_15 EoCases.__eo_to_smt_type.case_16 splitting x_a0
 
-theorem eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty.Spec n := by
+theorem eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftype.Spec n := by
   intro s a0 x_a0 hinv h64 hrem h_a0
-  unfold eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty
+  unfold eo__24eo_5fto_5fsmt_5ftype
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 772#u32 _ [a0] rfl
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftype s1 a0) (fun s' t => Represents.rep s' t (__eo_to_smt_type x_a0))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (by
+      intro s1 res hn hsem
+      obtain ⟨b0, y0, hargs, hb0, hr⟩ := ProgramSem.of_772 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      exact hr)
+    (by
+      intro s1 res hpre h
+      exact ProgramSem.to_772 ⟨a0, x_a0, rfl, Rep.mono hpre h_a0, h⟩)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftype_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    case_0_eo__24eo_5fto_5fsmt_5ftype_5ftuple s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type_tuple.case_0 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type_tuple.case_0 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5ftype_5ftuple more_1_eo__24eo_5fto_5fsmt_5ftype_5ftuple
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5ftsm_2eDatatype.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_type_tuple.case_0
+  pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_v2 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ ⟨v6, x_v6, h_v6⟩ else hinv hG in EoCases.__eo_to_smt_type_tuple.case_0
+  pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_v5 as ⟨v8, x_v8, h_v8⟩ ⟨v9, x_v9, h_v9⟩ else hinv hG in EoCases.__eo_to_smt_type_tuple.case_0
+  step as ⟨e_v10, he_v10⟩
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v10 (by rw [he_v10]; exact empty_args) hinv h64 as ⟨v10, s1, hinv1, h_v10⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9
+  pat_same v9 v10 with h_v9 h_v10 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type_tuple.case_0
+  step as ⟨e_v11, he_v11⟩
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s1 e_v11 (by rw [he_v11]; exact empty_args) hinv1 h64 as ⟨v11, s2, hinv2, h_v11⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10
+  pat_same v6 v11 with h_v6 h_v11 using hinv2 else hinv2 hG in EoCases.__eo_to_smt_type_tuple.case_0
+  step as ⟨e_v12, he_v12⟩
+  simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s2 _ _ rfl hinv2 h64 as ⟨v12, s3, hinv3, h_v12⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11
+  replace h_v12 := Represents.rep_of_eq h_v12 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v12]; decide)
+  step as ⟨e_v13, he_v13⟩
+  store_step with Store.native_spec_streq s3 e_v13 (by rw [he_v13]; rfl) h_v1 h_v12 hinv3 h64 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12
+  rw [← Bridge.native_streq] at h_v13
+  step as ⟨e_v14, he_v14⟩
+  try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+  store_step with Store.raw_str_vec_spec s4 _ _ rfl hinv4 h64 as ⟨v14, s5, hinv5, h_v14⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
+  replace h_v14 := Represents.rep_of_eq h_v14 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v14]; decide)
+  step as ⟨e_v15, he_v15⟩
+  store_step with Store.native_spec_streq s5 e_v15 (by rw [he_v15]; rfl) h_v4 h_v14 hinv5 h64 as ⟨v15, s6, hinv6, h_v15⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
+  rw [← Bridge.native_streq] at h_v15
+  step as ⟨e_v16, he_v16⟩
+  store_step with Store.native_spec_and s6 e_v16 (by rw [he_v16]; rfl) h_v13 h_v15 hinv6 h64 as ⟨v16, s7, hinv7, h_v16⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
+  rw [← Bridge.native_and] at h_v16
+  store_step with ih.eo__24smtx_5ftype_5fwf_5fcomponent s7 a0 _ hinv7 h64 (hG.rem hrem) h_a0 as ⟨v17, s8, hinv8, h_v17⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
+  step as ⟨e_v18, he_v18⟩
+  store_step with Store.native_spec_and s8 e_v18 (by rw [he_v18]; rfl) h_v16 h_v17 hinv8 h64 as ⟨v18, s9, hinv9, h_v18⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+  rw [← Bridge.native_and] at h_v18
+  have h_ite_v26 := (show if_0_eo__24eo_5fto_5fsmt_5ftype_5ftuple s9 v18 a0 v8 ⦃ r s' => s'.Inv ∧ s9.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_0_eo__24eo_5fto_5fsmt_5ftype_5ftuple
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s9
+    rcases Store.boolean_value_native h_v18 with ⟨hx_19, hbv_19⟩ | ⟨hx_19, hbv_19⟩
+    · ite_branch hbv_19
+      step as ⟨e_v19, he_v19⟩
+      try simp only [eostring.EoString.from_code_points, Std.bind_ok]
+      store_step with Store.raw_str_vec_spec s9 _ _ rfl hinv9 h64 as ⟨v19, s10, hinv10, h_v19⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+      replace h_v19 := Represents.rep_of_eq h_v19 (y := SmtEval.native_string_lit "@Tuple") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v19]; decide)
+      step as ⟨e_v20, he_v20⟩
+      store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s10 e_v20 (by rw [he_v20]; rfl) h_a0 h_v8 hinv10 h64 as ⟨v20, s11, hinv11, h_v20⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
+      step as ⟨e_v21, he_v21⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s11 e_v21 (by rw [he_v21]; exact empty_args) hinv11 h64 as ⟨v21, s12, hinv12, h_v21⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
+      step as ⟨e_v22, he_v22⟩
+      store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s12 e_v22 (by rw [he_v22]; rfl) h_v20 h_v21 hinv12 h64 as ⟨v22, s13, hinv13, h_v22⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
+      store_step with ih.eo__24eo_5fto_5fsmt_5ftuple_5fdecl s13 v22 _ hinv13 h64 (hG.rem hrem) h_v22 as ⟨v23, s14, hinv14, h_v23⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
+      step as ⟨e_v24, he_v24⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s14 e_v24 (by rw [he_v24]; rfl) h_v19 h_v23 hinv14 h64 as ⟨v24, s15, hinv15, h_v24⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
+      ite_done hinv15 hG with (native_ite_true_rep _ hx_19 h_v24)
+    · ite_branch hbv_19
+      step as ⟨e_v25, he_v25⟩
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s9 e_v25 (by rw [he_v25]; exact empty_args) hinv9 h64 as ⟨v25, s10, hinv10, h_v25⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+      ite_done hinv10 hG with (native_ite_false_rep _ hx_19 h_v25))
+  store_step with h_ite_v26 as ⟨v26, s10, hinv10, h_v26⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+  case_done hinv10 hG with h_v26 in EoCases.__eo_to_smt_type_tuple.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    case_1_eo__24eo_5fto_5fsmt_5ftype_5ftuple s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_type_tuple.case_1 x_a0 x_a1 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_type_tuple.case_1 x_a0 x_a1 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5ftype_5ftuple
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_type_tuple.case_1 using
+
+/-- logos's `__eo_to_smt_type_tuple` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5ftype_5ftuple.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
+    __eo_to_smt_type_tuple x_a0 x_a1 =
+      (firstSome [EoCases.__eo_to_smt_type_tuple.case_0 x_a0 x_a1, EoCases.__eo_to_smt_type_tuple.case_1 x_a0 x_a1] default) := by
+  conv => lhs; unfold __eo_to_smt_type_tuple
+  unfold EoCases.__eo_to_smt_type_tuple.case_0 EoCases.__eo_to_smt_type_tuple.case_1
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) :
+    body_eo__24eo_5fto_5fsmt_5ftype_5ftuple s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_type_tuple x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5ftype_5ftuple.rust_eq x_a0 x_a1 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1)]
+  unfold body_eo__24eo_5fto_5fsmt_5ftype_5ftuple
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec n ih s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec n ih s1 a0 a1 x_a0 x_a1 hinv1 h64 (hG.rem hrem) h_a0 h_a1
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_type_tuple.case_0 EoCases.__eo_to_smt_type_tuple.case_1 splitting x_a0 x_a1
+
+theorem eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5ftype_5ftuple.Spec n := by
+  intro s a0 a1 x_a0 x_a1 hinv h64 hrem h_a0 h_a1
+  unfold eo__24eo_5fto_5fsmt_5ftype_5ftuple
   apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty s1 a0) (fun s' t => Represents.rep s' t (__eo_prog_string_length_non_empty x_a0))
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5ftype_5ftuple s1 a0 a1) (fun s' t => Represents.rep s' t (__eo_to_smt_type_tuple x_a0 x_a1))
     (by intro _ _ _ hn h; congr_one h hn)
     (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty_spec m (ih m hm) s1 a0 x_a0 hinv1 h64 hrem1 (by congr_one h_a0 hn)))
+      spec_exact body_eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec m (ih m hm) s1 a0 a1 x_a0 x_a1 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5fupdater_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    case_0_eo__24eo_5fto_5fsmt_5fupdater s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_updater.case_0 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_updater.case_0 x_a0 x_a1 x_a2 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5fupdater
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fsm_2eDtSel.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_to_smt_updater.case_0
+  step as ⟨e_v5, he_v5⟩
+  store_step with Store.native_spec_nat_to_int s e_v5 (by rw [he_v5]; rfl) h_v4 hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4
+  rw [← Bridge.native_nat_to_int] at h_v5
+  store_step with ih.eo__24smtx_5fdd_5flookup s1 v1 v2 _ _ hinv1 h64 (hG.rem hrem) h_v1 h_v2 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with ih.eo__24smtx_5fdt_5fnum_5fsels s2 v6 v3 _ _ hinv2 h64 (hG.rem hrem) h_v6 h_v3 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  step as ⟨e_v8, he_v8⟩
+  store_step with Store.native_spec_nat_to_int s3 e_v8 (by rw [he_v8]; rfl) h_v7 hinv3 h64 as ⟨v8, s4, hinv4, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  rw [← Bridge.native_nat_to_int] at h_v8
+  step as ⟨e_v9, he_v9⟩
+  store_step with Store.native_spec_zlt s4 e_v9 (by rw [he_v9]; rfl) h_v5 h_v8 hinv4 h64 as ⟨v9, s5, hinv5, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  rw [← Bridge.native_zlt] at h_v9
+  have h_ite_v19 := (show if_0_eo__24eo_5fto_5fsmt_5fupdater s5 v9 v1 v2 v3 a1 v4 a2 ⦃ r s' => s'.Inv ∧ s5.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_0_eo__24eo_5fto_5fsmt_5fupdater
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s5
+    rcases Store.boolean_value_native h_v9 with ⟨hx_10, hbv_10⟩ | ⟨hx_10, hbv_10⟩
+    · ite_branch hbv_10
+      step as ⟨e_v10, he_v10⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtTester.construct s5 e_v10 (by rw [he_v10]; rfl) h_v1 h_v2 h_v3 hinv5 h64 as ⟨v10, s6, hinv6, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+      step as ⟨e_v11, he_v11⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s6 e_v11 (by rw [he_v11]; rfl) h_v10 h_a1 hinv6 h64 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+      step as ⟨e_v12, he_v12⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s7 e_v12 (by rw [he_v12]; rfl) h_v1 h_v2 h_v3 h_v4 hinv7 h64 as ⟨v12, s8, hinv8, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
+      store_step with ih.eo__24smtx_5fdd_5flookup s8 v1 v2 _ _ hinv8 h64 (hG.rem hrem) h_v1 h_v2 as ⟨v13, s9, hinv9, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
+      store_step with ih.eo__24smtx_5fdt_5fnum_5fsels s9 v13 v3 _ _ hinv9 h64 (hG.rem hrem) h_v13 h_v3 as ⟨v14, s10, hinv10, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
+      step as ⟨e_v15, he_v15⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtCons.construct s10 e_v15 (by rw [he_v15]; rfl) h_v1 h_v2 h_v3 hinv10 h64 as ⟨v15, s11, hinv11, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
+      store_step with ih.eo__24eo_5fto_5fsmt_5fupdater_5frec s11 v12 v14 a1 a2 v15 _ _ _ _ _ hinv11 h64 (hG.rem hrem) h_v12 h_v14 h_a1 h_a2 h_v15 as ⟨v16, s12, hinv12, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
+      step as ⟨e_v17, he_v17⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eite.construct s12 e_v17 (by rw [he_v17]; rfl) h_v11 h_v16 h_a1 hinv12 h64 as ⟨v17, s13, hinv13, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
+      ite_done hinv13 hG with (native_ite_true_rep _ hx_10 h_v17)
+    · ite_branch hbv_10
+      step as ⟨e_v18, he_v18⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s5 e_v18 (by rw [he_v18]; exact empty_args) hinv5 h64 as ⟨v18, s6, hinv6, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+      ite_done hinv6 hG with (native_ite_false_rep _ hx_10 h_v18))
+  store_step with h_ite_v19 as ⟨v19, s6, hinv6, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  case_done hinv6 hG with h_v19 in EoCases.__eo_to_smt_updater.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5fupdater_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    case_1_eo__24eo_5fto_5fsmt_5fupdater s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_updater.case_1 x_a0 x_a1 x_a2 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_updater.case_1 x_a0 x_a1 x_a2 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5fupdater
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_updater.case_1 using
+
+/-- logos's `__eo_to_smt_updater` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5fupdater.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
+    __eo_to_smt_updater x_a0 x_a1 x_a2 =
+      (firstSome [EoCases.__eo_to_smt_updater.case_0 x_a0 x_a1 x_a2, EoCases.__eo_to_smt_updater.case_1 x_a0 x_a1 x_a2] default) := by
+  conv => lhs; unfold __eo_to_smt_updater
+  unfold EoCases.__eo_to_smt_updater.case_0 EoCases.__eo_to_smt_updater.case_1
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5fupdater_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) :
+    body_eo__24eo_5fto_5fsmt_5fupdater s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_updater x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5fupdater.rust_eq x_a0 x_a1 x_a2 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2)]
+  unfold body_eo__24eo_5fto_5fsmt_5fupdater
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5fupdater_spec n ih s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5fupdater_spec n ih s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 using hc0
+  body_stuck hinv2 hG using hc0 hc1 in EoCases.__eo_to_smt_updater.case_0 EoCases.__eo_to_smt_updater.case_1 splitting x_a0 x_a1 x_a2
+
+theorem eo__24eo_5fto_5fsmt_5fupdater_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fupdater.Spec n := by
+  intro s a0 a1 a2 x_a0 x_a1 x_a2 hinv h64 hrem h_a0 h_a1 h_a2
+  unfold eo__24eo_5fto_5fsmt_5fupdater
+  apply WP.dspec_mono (Store.framed s hinv hrem
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5fupdater s1 a0 a1 a2) (fun s' t => Represents.rep s' t (__eo_to_smt_updater x_a0 x_a1 x_a2))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5fupdater_spec m (ih m hm) s1 a0 a1 a2 x_a0 x_a1 x_a2 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
+theorem case_0_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    case_0_eo__24eo_5fto_5fsmt_5fupdater_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_updater_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_updater_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24eo_5fto_5fsmt_5fupdater_5frec
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fsm_2eDtSel.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_to_smt_updater_rec.case_0
+  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 in EoCases.__eo_to_smt_updater_rec.case_0
+  case_done hinv1 hG with h_a4 in EoCases.__eo_to_smt_updater_rec.case_0 using
+
+theorem case_1_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    case_1_eo__24eo_5fto_5fsmt_5fupdater_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_updater_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_updater_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24eo_5fto_5fsmt_5fupdater_5frec
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fsm_2eDtSel.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_to_smt_updater_rec.case_1
+  pat_destruct_lit Store.native_pattern_succ_spec s a1 h_a1 hinv h64 as ⟨v6, x_v6, h_v6⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 in EoCases.__eo_to_smt_updater_rec.case_1
+  step as ⟨e_v7, he_v7⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s1 e_v7 (by rw [he_v7]; rfl) h_v1 h_v2 h_v3 h_v4 hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v6
+  store_step with ih.eo__24eo_5fto_5fsmt_5fupdater_5frec s2 v7 v6 a2 a3 a4 _ _ _ _ _ hinv2 h64 (hG.rem hrem) h_v7 h_v6 h_a2 h_a3 h_a4 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v6 h_v7
+  step as ⟨e_v9, he_v9⟩
+  store_step with Store.native_spec_nateq s3 e_v9 (by rw [he_v9]; rfl) h_v4 h_v6 hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v6 h_v7 h_v8
+  rw [← Bridge.native_nateq] at h_v9
+  have h_ite_v12 := (show if_0_eo__24eo_5fto_5fsmt_5fupdater_5frec s4 v9 a3 v1 v2 v3 v6 a2 ⦃ r s' => s'.Inv ∧ s4.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_0_eo__24eo_5fto_5fsmt_5fupdater_5frec
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s4
+    rcases Store.boolean_value_native h_v9 with ⟨hx_10, hbv_10⟩ | ⟨hx_10, hbv_10⟩
+    · ite_branch hbv_10
+      ite_done hinv4 hG with (native_ite_true_rep _ hx_10 h_a3)
+    · ite_branch hbv_10
+      step as ⟨e_v10, he_v10⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s4 e_v10 (by rw [he_v10]; rfl) h_v1 h_v2 h_v3 h_v6 hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9
+      step as ⟨e_v11, he_v11⟩
+      store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s5 e_v11 (by rw [he_v11]; rfl) h_v10 h_a2 hinv5 h64 as ⟨v11, s6, hinv6, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v10
+      ite_done hinv6 hG with (native_ite_false_rep _ hx_10 h_v11))
+  store_step with h_ite_v12 as ⟨v12, s5, hinv5, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9
+  step as ⟨e_v13, he_v13⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s5 e_v13 (by rw [he_v13]; rfl) h_v8 h_v12 hinv5 h64 as ⟨v13, s6, hinv6, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v12
+  case_done hinv6 hG with h_v13 in EoCases.__eo_to_smt_updater_rec.case_1 using
+
+theorem case_2_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    case_2_eo__24eo_5fto_5fsmt_5fupdater_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__eo_to_smt_updater_rec.case_2 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__eo_to_smt_updater_rec.case_2 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_2_eo__24eo_5fto_5fsmt_5fupdater_5frec
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4
+  case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_updater_rec.case_2 using
+
+/-- logos's `__eo_to_smt_updater_rec` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24eo_5fto_5fsmt_5fupdater_5frec.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
+    __eo_to_smt_updater_rec x_a0 x_a1 x_a2 x_a3 x_a4 =
+      (firstSome [EoCases.__eo_to_smt_updater_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__eo_to_smt_updater_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__eo_to_smt_updater_rec.case_2 x_a0 x_a1 x_a2 x_a3 x_a4] default) := by
+  conv => lhs; unfold __eo_to_smt_updater_rec
+  unfold EoCases.__eo_to_smt_updater_rec.case_0 EoCases.__eo_to_smt_updater_rec.case_1 EoCases.__eo_to_smt_updater_rec.case_2
+  logos_eq
+
+theorem body_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    body_eo__24eo_5fto_5fsmt_5fupdater_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_to_smt_updater_rec x_a0 x_a1 x_a2 x_a3 x_a4)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24eo_5fto_5fsmt_5fupdater_5frec.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4)]
+  unfold body_eo__24eo_5fto_5fsmt_5fupdater_5frec
+  have hG := Store.Grows.refl s
+  case_step with case_0_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec n ih s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using
+  case_step with case_1_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec n ih s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 h_a4
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hc0
+  case_step with case_2_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec n ih s2 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv2 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 h_a4
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hc0 hc1
+  body_stuck hinv3 hG using hc0 hc1 hc2 in EoCases.__eo_to_smt_updater_rec.case_0 EoCases.__eo_to_smt_updater_rec.case_1 EoCases.__eo_to_smt_updater_rec.case_2 splitting x_a0 x_a1 x_a2 x_a3 x_a4
+
+theorem eo__24eo_5fto_5fsmt_5fupdater_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fto_5fsmt_5fupdater_5frec.Spec n := by
+  intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
+  unfold eo__24eo_5fto_5fsmt_5fupdater_5frec
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 776#u32 _ [a0, a1, a2, a3, a4] rfl
+    (fun s1 => body_eo__24eo_5fto_5fsmt_5fupdater_5frec s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__eo_to_smt_updater_rec x_a0 x_a1 x_a2 x_a3 x_a4))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (by
+      intro s1 res hn hsem
+      obtain ⟨b0, b1, b2, b3, b4, y0, y1, y2, y3, y4, hargs, hb0, hb1, hb2, hb3, hb4, hr⟩ := ProgramSem.of_776 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl, rfl, rfl, rfl, rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
+      obtain rfl := Rep.functional hb2 (Represents.congr h_a2 hn)
+      obtain rfl := Rep.functional hb3 (Represents.congr h_a3 hn)
+      obtain rfl := Rep.functional hb4 (Represents.congr h_a4 hn)
+      exact hr)
+    (by
+      intro s1 res hpre h
+      exact ProgramSem.to_776 ⟨a0, a1, a2, a3, a4, x_a0, x_a1, x_a2, x_a3, x_a4, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, Rep.mono hpre h_a3, Rep.mono hpre h_a4, h⟩)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24eo_5fto_5fsmt_5fupdater_5frec_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
