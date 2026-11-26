@@ -147,6 +147,11 @@ $build || exit 0
 command -v lake >/dev/null 2>&1 || export PATH="$HOME/.elan/bin:$PATH"
 command -v lake >/dev/null 2>&1 || fail "lake is needed (install elan)"
 if $cpc; then
+  # The packages at the manifest's revisions first: proofs-instance reads
+  # the calculus's Lean from proofs/'s logos package, which Lake moves to
+  # a new pin only when it loads the workspace. Without this, the first
+  # build after a re-pin writes the instance from the old logos.
+  (cd "$proofs" && lake env true) || fail "lake could not set up proofs/'s packages"
   "$root/scripts/proofs-instance" || fail "scripts/proofs-instance failed"
   # proofs-cpc/ uses proofs/'s packages (the same pins), through a link.
   mkdir -p "$project/.lake" "$proofs/.lake/packages"
