@@ -94,9 +94,11 @@ ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               "Neg": "Store.builtin_spec_neg", "Gt": "Store.builtin_spec_gt",
               "ToBin": "Store.builtin_spec_to_bin", "Pow": "Store.builtin_spec_pow",
               "IntDiv": "Store.builtin_spec_int_div", "IntMod": "Store.builtin_spec_int_mod",
-              "RatDiv": "Store.builtin_spec_rat_div"}
+              "RatDiv": "Store.builtin_spec_rat_div",
+              # eo::cmp (proofs-cpc/PathosProofsCpc/Compare.lean)
+              "Compare": "Store.builtin_spec_cmp"}
 # The builtins whose specs take exactly two arguments.
-BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv"}
+BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv", "Compare"}
 # The builtin operators the proofs have: eo::ite as a conditional,
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",

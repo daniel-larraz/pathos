@@ -255,6 +255,8 @@ and helpers that type their arguments).
 - **Numbers** (`Arith.lean`): `eo::to_bin`, `eo::pow`, `eo::div`, `eo::mod`
   (numerals and binaries, with the conventions by zero), `eo::qdiv`; and
   (`Or.lean`) `eo::or`.
+- **The order** (`Compare.lean`): `eo::cmp` (`builtin_spec_cmp`), from
+  `compare_rep_spec` (see "`eo::cmp`").
 
 They rest only on the specs of `Trusted.lean` that `axioms-allowed.txt`
 allows; `eo::or` brought `bitwise_or_spec` into use (32 assumptions, from
@@ -262,7 +264,6 @@ allows; `eo::or` brought `bitwise_or_spec` into use (32 assumptions, from
 nine of the programs it had kept from being tried do not build, for the
 reasons of the others (`proofs-cpc/unproved.toml`: a case's spec that
 times out, a `logos_eq` that fails). What still blocks the most programs:
-`eo::cmp` (the runtime's `Store::compare` against logos's `termCmp`);
 `eo::concat` and `eo::extract` of binaries (above); the datatype operators
 (the six with no logos function, a decision of milestone 8); and the
 operators with several nils.
@@ -276,8 +277,15 @@ constructors' arities (at most `A`, with `A ≤ 100`) and that their
 (`Runtime/CompareTerm.lean`, done): those facts for the checker's
 constructors, and `treeCmp (enc x) (enc y) = termCmp x y`
 (`treeCmp_enc_Term`), so that `compare` on handles of two terms gives
-logos's `termCmp` of the terms (`compare_rep_spec`). Third, the builtin's
-spec, and the generator's support for it.
+logos's `termCmp` of the terms (`compare_rep_spec`). Third, CPC only
+(`proofs-cpc/PathosProofsCpc/Compare.lean`, done): the builtin's spec
+`builtin_spec_cmp`, stuck when an argument is, else the Boolean
+`native_tcmp` of logos's `__eo_cmp`, which the generator uses for
+`eo::cmp` as for the other two-argument builtins. It brought 12 programs
+(925 to 937): `$poly_add`, `$mvar_mul_mvar` and the arithmetic and
+bit-vector polynomial normalization over them. One more it reached,
+`$str_arith_entail_is_approx`, does not build (`logos_eq_deep`, as
+`$is_absorb_rec`; `proofs-cpc/unproved.toml`).
 
 The second step was planned as lemmas generated per constructor. It is
 hand-written instead, and holds for both calculi: every proof goes by

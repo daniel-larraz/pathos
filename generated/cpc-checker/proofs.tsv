@@ -163,15 +163,15 @@ $eo_prog_arith-min-lt2	generated
 $eo_prog_arith-mod-over-mod	none	case 0 has eo::list_concat of +, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_arith-mod-over-mod-1	generated	
 $eo_prog_arith-mod-over-mod-mult	none	case 0 has eo::list_concat of *, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$eo_prog_arith-string-pred-entail	none	it calls $get_arith_poly_norm, which has no proof
-$eo_prog_arith-string-pred-safe-approx	none	it calls $str_arith_entail_simple_pred, which has no proof
+$eo_prog_arith-string-pred-entail	generated	
+$eo_prog_arith-string-pred-safe-approx	none	it calls $str_arith_entail_is_approx, which has no proof
 $eo_prog_arith-to-int-elim-to-real	generated	
 $eo_prog_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison, which has no proof
 $eo_prog_arith_mult_neg	generated	
 $eo_prog_arith_mult_pos	generated	
 $eo_prog_arith_mult_sign	none	it calls $mk_arith_mult_sign_sgn, which has no proof
 $eo_prog_arith_mult_tangent	generated	
-$eo_prog_arith_poly_norm	none	it calls $get_arith_poly_norm, which has no proof
+$eo_prog_arith_poly_norm	generated	
 $eo_prog_arith_poly_norm_rel	none	it calls $is_eq_maybe_to_real, which has no proof
 $eo_prog_arith_reduction	none	it calls $arith_reduction_pred, which has no proof
 $eo_prog_arith_sum_ub	generated	
@@ -358,7 +358,7 @@ $eo_prog_bv-zero-extend-ult-const-1	generated
 $eo_prog_bv-zero-extend-ult-const-2	generated	
 $eo_prog_bv-zero-ule	generated	
 $eo_prog_bv_bitblast_step	none	it calls $bv_mk_bitblast_step, which has no proof
-$eo_prog_bv_poly_norm	none	it calls $get_bv_poly_norm_rec, which has no proof
+$eo_prog_bv_poly_norm	generated	
 $eo_prog_bv_poly_norm_eq	generated	
 $eo_prog_chain_m_resolution	generated	
 $eo_prog_chain_resolution	generated	
@@ -890,8 +890,8 @@ $get_aci_normal_form	none	it calls $get_a_norm, which has no proof
 $get_ai_norm	none	case 0 has eo::list_singleton_elim of an operator that is not a constant
 $get_ai_norm_rec	none	case 0 has eo::list_concat of an operator that is not a constant
 $get_arg_list_rec	generated	
-$get_arith_poly_norm	none	it calls $poly_add, which has no proof
-$get_bv_poly_norm_rec	none	it calls $poly_add, which has no proof
+$get_arith_poly_norm	generated	
+$get_bv_poly_norm_rec	generated	
 $get_lambda_type	generated	
 $get_nth_var_type	generated	
 $get_unused_vars	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once eo::list_minclude had a spec
@@ -952,14 +952,14 @@ $mk_skolems	generated
 $mk_str_eager_reduction	generated	
 $mk_symm	generated	
 $mk_trans	generated	
-$mon_mul_mon	none	it calls $mvar_mul_mvar, which has no proof
-$mvar_mul_mvar	none	case 0 has a builtin operator
+$mon_mul_mon	generated	
+$mvar_mul_mvar	generated	
 $pair_first	generated	
 $pair_second	generated	
-$poly_add	none	case 0 has a builtin operator
+$poly_add	generated	
 $poly_mod_coeffs	generated	
-$poly_mul	none	it calls $poly_add, which has no proof
-$poly_mul_mon	none	it calls $mon_mul_mon, which has no proof
+$poly_mul	generated	
+$poly_mul_mon	generated	
 $poly_neg	generated	
 $re_ac_merge	none	case 3 has eo::list_diff of an operator that is not a constant
 $re_concat_merge	generated	
@@ -1045,9 +1045,9 @@ $smtx_typeof_str.indexof	generated
 $smtx_typeof_str.substr	generated	
 $smtx_typeof_str.update	generated	
 $smtx_typeof_zero_extend	generated	
-$str_arith_entail_is_approx	none	it calls $str_arith_entail_is_approx_len, which has no proof
-$str_arith_entail_is_approx_len	none	it calls $get_arith_poly_norm, which has no proof
-$str_arith_entail_simple_pred	none	it calls $get_arith_poly_norm, which has no proof
+$str_arith_entail_is_approx	none	its generated proof does not build: falls through to helpers (__eo_l_<k>); logos_eq_deep leaves goals unsolved, at 4,700,000 heartbeats: a test `__eo_eq t x` that a hypothesis `¬x = t` decides, and a stuck result against a recursive call (reached once eo::cmp had a spec)
+$str_arith_entail_is_approx_len	generated	
+$str_arith_entail_simple_pred	generated	
 $str_arith_entail_simple_rec	generated	
 $str_case_conv_rec	none	case 0 has a builtin operator
 $str_collect	none	it calls $str_collect_merge, which has no proof
