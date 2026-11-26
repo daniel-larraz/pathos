@@ -109,3 +109,4 @@ bytes = 350000
 "$eo_prog_str-replace-all-find" = 20000000
 "$eo_prog_str-replace-find-base" = 20000000
 "$eo_prog_str-replace-find-first-concat" = 20000000
+"$substitute_simul_rec" = 20000000

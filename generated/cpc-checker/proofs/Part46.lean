@@ -32,192 +32,244 @@ open Smtm
 open generated generated.part0 generated.part1 generated.part2 generated.part3 generated.part4 generated.part5 generated.part6 generated.part7 generated.part8 generated.part9 generated.part10 generated.part11 generated.part12
 
 set_option maxHeartbeats 20000000 in
-theorem case_0_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (x_a7 : _) (x_a8 : _) (x_a9 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) (h_a6 : Represents.rep s a6 x_a6) (h_a7 : Represents.rep s a7 x_a7) (h_a8 : Represents.rep s a8 x_a8) (h_a9 : Represents.rep s a9 x_a9) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) (hn_a5 : x_a5 ≠ Eo.Term.Stuck) :
-    case_0_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat s a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+theorem case_0_eo__24substitute_5fsimul_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) :
+    case_0_eo__24substitute_5fsimul_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok (some t) =>
-        ∃ res, EoCases.__eo_prog_str_update_in_first_concat.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9 = some res ∧ Represents.rep s' t res
-      | core.result.Result.Ok none => EoCases.__eo_prog_str_update_in_first_concat.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9 = none
+        ∃ res, EoCases.__substitute_simul_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__substitute_simul_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_0_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_1_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_2_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_3_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_4_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_5_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_6_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_7_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat more_8_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat
+  unfold case_0_eo__24substitute_5fsimul_5frec more_2_eo__24substitute_5fsimul_5frec
   have hG := Store.Grows.refl s
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a6 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__3d.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7
-  pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3e_3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
-  pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v14 a3 with h_v14 h_a3 using hinv2 else hinv2 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s2 0#u32 (0) (by scalar_tac) hinv2 h64 as ⟨v16, s3, hinv3, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15
-  pat_same v11 v16 with h_v11 h_v16 using hinv3 else hinv3 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  store_step with Store.literal_boolean_spec s3 true hinv3 h64 as ⟨v17, s4, hinv4, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16
-  pat_same v4 v17 with h_v4 h_v17 using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a7 as ⟨v19, x_v19, h_v19⟩ else hinv4 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v19 as ⟨v21, v22, x_v21, x_v22, h_v21, h_v22, hn_v21, hn_v22⟩ using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v21 as ⟨v24, v25, x_v24, x_v25, h_v24, h_v25, hn_v24, hn_v25⟩ using hinv4 else hinv4 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v26, he_v26⟩
-  store_step with CtorSpec.eo__3d.construct s4 e_v26 (by rw [he_v26]; exact empty_args) hinv4 h64 as ⟨v26, s5, hinv5, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25
-  pat_same v24 v26 with h_v24 h_v26 using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v25 as ⟨v28, v29, x_v28, x_v29, h_v28, h_v29, hn_v28, hn_v29⟩ using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v28 as ⟨v31, v32, x_v31, x_v32, h_v31, h_v32, hn_v31, hn_v32⟩ using hinv5 else hinv5 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v33, he_v33⟩
-  store_step with CtorSpec.eo__3c_3d.construct s5 e_v33 (by rw [he_v33]; exact empty_args) hinv5 h64 as ⟨v33, s6, hinv6, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32
-  pat_same v31 v33 with h_v31 h_v33 using hinv6 else hinv6 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v32 as ⟨v35, v36, x_v35, x_v36, h_v35, h_v36, hn_v35, hn_v36⟩ using hinv6 else hinv6 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v35 as ⟨v38, v39, x_v38, x_v39, h_v38, h_v39, hn_v38, hn_v39⟩ using hinv6 else hinv6 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v40, he_v40⟩
-  store_step with CtorSpec.eo__2b.construct s6 e_v40 (by rw [he_v40]; exact empty_args) hinv6 h64 as ⟨v40, s7, hinv7, h_v40⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39
-  pat_same v38 v40 with h_v38 h_v40 using hinv7 else hinv7 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v39 a3 with h_v39 h_a3 using hinv7 else hinv7 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v36 as ⟨v42, v43, x_v42, x_v43, h_v42, h_v43, hn_v42, hn_v43⟩ using hinv7 else hinv7 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v42 as ⟨v45, v46, x_v45, x_v46, h_v45, h_v46, hn_v45, hn_v46⟩ using hinv7 else hinv7 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v47, he_v47⟩
-  store_step with CtorSpec.eo__2b.construct s7 e_v47 (by rw [he_v47]; exact empty_args) hinv7 h64 as ⟨v47, s8, hinv8, h_v47⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46
-  pat_same v45 v47 with h_v45 h_v47 using hinv8 else hinv8 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v46 as ⟨v49, v50, x_v49, x_v50, h_v49, h_v50, hn_v49, hn_v50⟩ using hinv8 else hinv8 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v51, he_v51⟩
-  store_step with CtorSpec.eo_str_2elen.construct s8 e_v51 (by rw [he_v51]; exact empty_args) hinv8 h64 as ⟨v51, s9, hinv9, h_v51⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50
-  pat_same v49 v51 with h_v49 h_v51 using hinv9 else hinv9 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v50 a2 with h_v50 h_a2 using hinv9 else hinv9 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s9 0#u32 (0) (by scalar_tac) hinv9 h64 as ⟨v52, s10, hinv10, h_v52⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51
-  pat_same v43 v52 with h_v43 h_v52 using hinv10 else hinv10 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v29 as ⟨v54, v55, x_v54, x_v55, h_v54, h_v55, hn_v54, hn_v55⟩ using hinv10 else hinv10 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v56, he_v56⟩
-  store_step with CtorSpec.eo_str_2elen.construct s10 e_v56 (by rw [he_v56]; exact empty_args) hinv10 h64 as ⟨v56, s11, hinv11, h_v56⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55
-  pat_same v54 v56 with h_v54 h_v56 using hinv11 else hinv11 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v55 a0 with h_v55 h_a0 using hinv11 else hinv11 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  store_step with Store.literal_boolean_spec s11 true hinv11 h64 as ⟨v57, s12, hinv12, h_v57⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56
-  pat_same v22 v57 with h_v22 h_v57 using hinv12 else hinv12 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a8 as ⟨v59, x_v59, h_v59⟩ else hinv12 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v59 as ⟨v61, v62, x_v61, x_v62, h_v61, h_v62, hn_v61, hn_v62⟩ using hinv12 else hinv12 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v61 as ⟨v64, v65, x_v64, x_v65, h_v64, h_v65, hn_v64, hn_v65⟩ using hinv12 else hinv12 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v66, he_v66⟩
-  store_step with CtorSpec.eo__3d.construct s12 e_v66 (by rw [he_v66]; exact empty_args) hinv12 h64 as ⟨v66, s13, hinv13, h_v66⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65
-  pat_same v64 v66 with h_v64 h_v66 using hinv13 else hinv13 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v65 a4 with h_v65 h_a4 using hinv13 else hinv13 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v62 as ⟨v68, v69, x_v68, x_v69, h_v68, h_v69, hn_v68, hn_v69⟩ using hinv13 else hinv13 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v68 as ⟨v71, v72, x_v71, x_v72, h_v71, h_v72, hn_v71, hn_v72⟩ using hinv13 else hinv13 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v71 as ⟨v74, v75, x_v74, x_v75, h_v74, h_v75, hn_v74, hn_v75⟩ using hinv13 else hinv13 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v76, he_v76⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s13 e_v76 (by rw [he_v76]; exact empty_args) hinv13 h64 as ⟨v76, s14, hinv14, h_v76⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75
-  pat_same v74 v76 with h_v74 h_v76 using hinv14 else hinv14 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v75 a0 with h_v75 h_a0 using hinv14 else hinv14 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s14 0#u32 (0) (by scalar_tac) hinv14 h64 as ⟨v77, s15, hinv15, h_v77⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76
-  pat_same v72 v77 with h_v72 h_v77 using hinv15 else hinv15 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v69 a3 with h_v69 h_a3 using hinv15 else hinv15 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a9 as ⟨v79, x_v79, h_v79⟩ else hinv15 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v79 as ⟨v81, v82, x_v81, x_v82, h_v81, h_v82, hn_v81, hn_v82⟩ using hinv15 else hinv15 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v81 as ⟨v84, v85, x_v84, x_v85, h_v84, h_v85, hn_v84, hn_v85⟩ using hinv15 else hinv15 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v86, he_v86⟩
-  store_step with CtorSpec.eo__3d.construct s15 e_v86 (by rw [he_v86]; exact empty_args) hinv15 h64 as ⟨v86, s16, hinv16, h_v86⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85
-  pat_same v84 v86 with h_v84 h_v86 using hinv16 else hinv16 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v85 a5 with h_v85 h_a5 using hinv16 else hinv16 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v82 as ⟨v88, v89, x_v88, x_v89, h_v88, h_v89, hn_v88, hn_v89⟩ using hinv16 else hinv16 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v88 as ⟨v91, v92, x_v91, x_v92, h_v91, h_v92, hn_v91, hn_v92⟩ using hinv16 else hinv16 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v91 as ⟨v94, v95, x_v94, x_v95, h_v94, h_v95, hn_v94, hn_v95⟩ using hinv16 else hinv16 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v96, he_v96⟩
-  store_step with CtorSpec.eo_str_2esubstr.construct s16 e_v96 (by rw [he_v96]; exact empty_args) hinv16 h64 as ⟨v96, s17, hinv17, h_v96⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95
-  pat_same v94 v96 with h_v94 h_v96 using hinv17 else hinv17 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v95 a0 with h_v95 h_a0 using hinv17 else hinv17 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v92 as ⟨v98, v99, x_v98, x_v99, h_v98, h_v99, hn_v98, hn_v99⟩ using hinv17 else hinv17 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v98 as ⟨v101, v102, x_v101, x_v102, h_v101, h_v102, hn_v101, hn_v102⟩ using hinv17 else hinv17 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v103, he_v103⟩
-  store_step with CtorSpec.eo__2b.construct s17 e_v103 (by rw [he_v103]; exact empty_args) hinv17 h64 as ⟨v103, s18, hinv18, h_v103⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102
-  pat_same v101 v103 with h_v101 h_v103 using hinv18 else hinv18 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v102 a3 with h_v102 h_a3 using hinv18 else hinv18 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v99 as ⟨v105, v106, x_v105, x_v106, h_v105, h_v106, hn_v105, hn_v106⟩ using hinv18 else hinv18 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v105 as ⟨v108, v109, x_v108, x_v109, h_v108, h_v109, hn_v108, hn_v109⟩ using hinv18 else hinv18 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v110, he_v110⟩
-  store_step with CtorSpec.eo__2b.construct s18 e_v110 (by rw [he_v110]; exact empty_args) hinv18 h64 as ⟨v110, s19, hinv19, h_v110⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109
-  pat_same v108 v110 with h_v108 h_v110 using hinv19 else hinv19 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v109 as ⟨v112, v113, x_v112, x_v113, h_v112, h_v113, hn_v112, hn_v113⟩ using hinv19 else hinv19 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v114, he_v114⟩
-  store_step with CtorSpec.eo_str_2elen.construct s19 e_v114 (by rw [he_v114]; exact empty_args) hinv19 h64 as ⟨v114, s20, hinv20, h_v114⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113
-  pat_same v112 v114 with h_v112 h_v114 using hinv20 else hinv20 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v113 a2 with h_v113 h_a2 using hinv20 else hinv20 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  try simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.literal_int_u32_spec s20 0#u32 (0) (by scalar_tac) hinv20 h64 as ⟨v115, s21, hinv21, h_v115⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114
-  pat_same v106 v115 with h_v106 h_v115 using hinv21 else hinv21 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_unapply h_v89 as ⟨v117, v118, x_v117, x_v118, h_v117, h_v118, hn_v117, hn_v118⟩ using hinv21 else hinv21 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v119, he_v119⟩
-  store_step with CtorSpec.eo_str_2elen.construct s21 e_v119 (by rw [he_v119]; exact empty_args) hinv21 h64 as ⟨v119, s22, hinv22, h_v119⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118
-  pat_same v117 v119 with h_v117 h_v119 using hinv22 else hinv22 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  pat_same v118 a0 with h_v118 h_a0 using hinv22 else hinv22 hG in EoCases.__eo_prog_str_update_in_first_concat.case_0
-  step as ⟨e_v120, he_v120⟩
-  store_step with CtorSpec.eo__3d.construct s22 e_v120 (by rw [he_v120]; exact empty_args) hinv22 h64 as ⟨v120, s23, hinv23, h_v120⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119
-  step as ⟨e_v121, he_v121⟩
-  store_step with CtorSpec.eo_str_2eupdate.construct s23 e_v121 (by rw [he_v121]; exact empty_args) hinv23 h64 as ⟨v121, s24, hinv24, h_v121⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120
-  step as ⟨e_v122, he_v122⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s24 e_v122 (by rw [he_v122]; exact empty_args) hinv24 h64 as ⟨v122, s25, hinv25, h_v122⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121
-  store_step with Store.apply_rep s25 v122 a0 _ _ hinv25 h64 h_v122 h_a0 (by ns_tac) (by ns_tac) as ⟨v123, s26, hinv26, h_v123⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122
-  store_step with Store.apply_rep s26 v123 a1 _ _ hinv26 h64 h_v123 h_a1 (by ns_tac) (by ns_tac) as ⟨v124, s27, hinv27, h_v124⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123
-  store_step with Store.apply_rep s27 v121 v124 _ _ hinv27 h64 h_v121 h_v124 (by ns_tac) (by ns_tac) as ⟨v125, s28, hinv28, h_v125⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124
-  store_step with Store.apply_rep s28 v125 a3 _ _ hinv28 h64 h_v125 h_a3 (by ns_tac) (by ns_tac) as ⟨v126, s29, hinv29, h_v126⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125
-  store_step with Store.apply_rep s29 v126 a2 _ _ hinv29 h64 h_v126 h_a2 (by ns_tac) (by ns_tac) as ⟨v127, s30, hinv30, h_v127⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126
-  store_step with Store.apply_rep s30 v120 v127 _ _ hinv30 h64 h_v120 h_v127 (by ns_tac) (by ns_tac) as ⟨v128, s31, hinv31, h_v128⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127
-  step as ⟨e_v129, he_v129⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s31 e_v129 (by rw [he_v129]; exact empty_args) hinv31 h64 as ⟨v129, s32, hinv32, h_v129⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128
-  store_step with Store.apply_rep s32 v129 a4 _ _ hinv32 h64 h_v129 h_a4 (by ns_tac) (by ns_tac) as ⟨v130, s33, hinv33, h_v130⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129
-  step as ⟨e_v131, he_v131⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s33 e_v131 (by rw [he_v131]; exact empty_args) hinv33 h64 as ⟨v131, s34, hinv34, h_v131⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130
-  store_step with Store.apply_rep s34 v131 a2 _ _ hinv34 h64 h_v131 h_a2 (by ns_tac) (by ns_tac) as ⟨v132, s35, hinv35, h_v132⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131
-  step as ⟨e_v133, he_v133⟩
-  store_step with CtorSpec.eo_str_2e_2b_2b.construct s35 e_v133 (by rw [he_v133]; exact empty_args) hinv35 h64 as ⟨v133, s36, hinv36, h_v133⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132
-  store_step with Store.apply_rep s36 v133 a5 _ _ hinv36 h64 h_v133 h_a5 (by ns_tac) (by ns_tac) as ⟨v134, s37, hinv37, h_v134⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133
-  store_step with Store.apply_rep s37 v134 a1 _ _ hinv37 h64 h_v134 h_a1 (by ns_tac) (by ns_tac) as ⟨v135, s38, hinv38, h_v135⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134
-  store_step with Store.apply_rep s38 v132 v135 _ _ hinv38 h64 h_v132 h_v135 (by ns_tac) (by ns_tac) as ⟨v136, s39, hinv39, h_v136⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135
-  store_step with Store.apply_rep s39 v130 v136 _ _ hinv39 h64 h_v130 h_v136 (by ns_tac) (by ns_tac) as ⟨v137, s40, hinv40, h_v137⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136
-  store_step with Store.apply_rep s40 v128 v137 _ _ hinv40 h64 h_v128 h_v137 (by ns_tac) (by ns_tac) as ⟨v138, s41, hinv41, h_v138⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15 h_v16 h_v17 h_v19 h_v21 h_v22 h_v24 h_v25 h_v26 h_v28 h_v29 h_v31 h_v32 h_v33 h_v35 h_v36 h_v38 h_v39 h_v40 h_v42 h_v43 h_v45 h_v46 h_v47 h_v49 h_v50 h_v51 h_v52 h_v54 h_v55 h_v56 h_v57 h_v59 h_v61 h_v62 h_v64 h_v65 h_v66 h_v68 h_v69 h_v71 h_v72 h_v74 h_v75 h_v76 h_v77 h_v79 h_v81 h_v82 h_v84 h_v85 h_v86 h_v88 h_v89 h_v91 h_v92 h_v94 h_v95 h_v96 h_v98 h_v99 h_v101 h_v102 h_v103 h_v105 h_v106 h_v108 h_v109 h_v110 h_v112 h_v113 h_v114 h_v115 h_v117 h_v118 h_v119 h_v120 h_v121 h_v122 h_v123 h_v124 h_v125 h_v126 h_v127 h_v128 h_v129 h_v130 h_v131 h_v132 h_v133 h_v134 h_v135 h_v136 h_v137
-  case_done hinv41 hG with h_v138 in EoCases.__eo_prog_str_update_in_first_concat.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5 hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14 hn_v21 hn_v22 hn_v24 hn_v25 hn_v28 hn_v29 hn_v31 hn_v32 hn_v35 hn_v36 hn_v38 hn_v39 hn_v42 hn_v43 hn_v45 hn_v46 hn_v49 hn_v50 hn_v54 hn_v55 hn_v61 hn_v62 hn_v64 hn_v65 hn_v68 hn_v69 hn_v71 hn_v72 hn_v74 hn_v75 hn_v81 hn_v82 hn_v84 hn_v85 hn_v88 hn_v89 hn_v91 hn_v92 hn_v94 hn_v95 hn_v98 hn_v99 hn_v101 hn_v102 hn_v105 hn_v106 hn_v108 hn_v109 hn_v112 hn_v113 hn_v117 hn_v118
+  pat_unapply h_a1 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__substitute_simul_rec.case_0
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__substitute_simul_rec.case_0
+  pat_unapply h_v5 as ⟨v7, v8, x_v7, x_v8, h_v7, h_v8, hn_v7, hn_v8⟩ using hinv else hinv hG in EoCases.__substitute_simul_rec.case_0
+  pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv else hinv hG in EoCases.__substitute_simul_rec.case_0
+  step as ⟨e_v12, he_v12⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v12 (by rw [he_v12]; exact empty_args) hinv h64 as ⟨v12, s1, hinv1, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11
+  pat_same v10 v12 with h_v10 h_v12 using hinv1 else hinv1 hG in EoCases.__substitute_simul_rec.case_0
+  step as ⟨e_v13, he_v13⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s1 e_v13 (by rw [he_v13]; exact empty_args) hinv1 h64 as ⟨v13, s2, hinv2, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12
+  store_step with Store.apply_rep s2 v13 v11 _ _ hinv2 h64 h_v13 h_v11 (by ns_tac) (by ns_tac) as ⟨v14, s3, hinv3, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13
+  store_step with Store.apply_rep s3 v14 v8 _ _ hinv3 h64 h_v14 h_v8 (by ns_tac) (by ns_tac) as ⟨v15, s4, hinv4, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14
+  step as ⟨e_v16, he_v16⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s4 e_v16 (by rw [he_v16]; exact empty_args) hinv4 h64 as ⟨v16, s5, hinv5, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
+  store_step with ih.eo__24contains_5fatomic_5fterm_5flist_5ffree_5frec s5 a3 v15 v16 _ _ _ hinv5 h64 (hG.rem hrem) h_a3 h_v15 h_v16 as ⟨v17, s6, hinv6, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16
+  store_step with Store.literal_boolean_spec s6 false hinv6 h64 as ⟨v18, s7, hinv7, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17
+  have h_req_v38 := (show requires_1_eo__24substitute_5fsimul_5frec s7 v17 v18 a0 v11 v8 a2 a3 a4 v4 v2 ⦃ r s' => s'.Inv ∧ s7.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_requires _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold requires_1_eo__24substitute_5fsimul_5frec
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s7
+    req_same v17 v18 with h_v17 h_v18 using hinv7 hG
+    req_stuck h_v17 as hq_v17 using hinv7 hG
+    have h_ite_v37 := (show if_0_eo__24substitute_5fsimul_5frec s7 a0 v11 v8 a0 a2 a3 a4 v4 v2 ⦃ r s' => s'.Inv ∧ s7.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+      unfold if_0_eo__24substitute_5fsimul_5frec
+      have hrem := (hG.rem hrem)
+      have hG := Store.Grows.refl s7
+      rcases Store.boolean_value_term h_a0 with ⟨hx_19, hbv_19⟩ | ⟨hx_19, hbv_19⟩ | ⟨hx_19, hbv_19⟩
+      · ite_branch hbv_19
+        step as ⟨e_v19, he_v19⟩
+        store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s7 e_v19 (by rw [he_v19]; exact empty_args) hinv7 h64 as ⟨v19, s8, hinv8, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+        store_step with Store.apply_rep s8 v19 v11 _ _ hinv8 h64 h_v19 h_v11 (by ns_tac) (by ns_tac) as ⟨v20, s9, hinv9, h_v20⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19
+        store_step with Store.apply_rep s9 v20 v8 _ _ hinv9 h64 h_v20 h_v8 (by ns_tac) (by ns_tac) as ⟨v21, s10, hinv10, h_v21⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20
+        store_step with ih.eo__24substitute_5fsimul_5frec s10 a0 v21 a2 a3 a4 _ _ _ _ _ hinv10 h64 (hG.rem hrem) h_a0 h_v21 h_a2 h_a3 h_a4 as ⟨v22, s11, hinv11, h_v22⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21
+        store_step with Store.apply_mk_rep s11 v4 v22 _ _ hinv11 h64 h_v4 h_v22 as ⟨v23, s12, hinv12, h_v23⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22
+        store_step with ih.eo__24substitute_5fsimul_5frec s12 a0 v2 a2 a3 a4 _ _ _ _ _ hinv12 h64 (hG.rem hrem) h_a0 h_v2 h_a2 h_a3 h_a4 as ⟨v24, s13, hinv13, h_v24⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23
+        store_step with Store.apply_mk_rep s13 v23 v24 _ _ hinv13 h64 h_v23 h_v24 as ⟨v25, s14, hinv14, h_v25⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v19 h_v20 h_v21 h_v22 h_v23 h_v24
+        ite_done hinv14 hG with (eo_ite_true_rep _ hx_19 h_v25)
+      · ite_branch hbv_19
+        step as ⟨e_v26, he_v26⟩
+        store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s7 e_v26 (by rw [he_v26]; exact empty_args) hinv7 h64 as ⟨v26, s8, hinv8, h_v26⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+        store_step with Store.apply_rep s8 v26 v11 _ _ hinv8 h64 h_v26 h_v11 (by ns_tac) (by ns_tac) as ⟨v27, s9, hinv9, h_v27⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26
+        store_step with Store.apply_rep s9 v27 v8 _ _ hinv9 h64 h_v27 h_v8 (by ns_tac) (by ns_tac) as ⟨v28, s10, hinv10, h_v28⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27
+        store_step with Store.apply_rep s10 v4 v28 _ _ hinv10 h64 h_v4 h_v28 (by ns_tac) (by ns_tac) as ⟨v29, s11, hinv11, h_v29⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28
+        step as ⟨e_v30, he_v30⟩
+        store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s11 e_v30 (by rw [he_v30]; exact empty_args) hinv11 h64 as ⟨v30, s12, hinv12, h_v30⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28 h_v29
+        step as ⟨e_v31, he_v31⟩
+        store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s12 e_v31 (by rw [he_v31]; exact empty_args) hinv12 h64 as ⟨v31, s13, hinv13, h_v31⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28 h_v29 h_v30
+        store_step with Store.apply_rep s13 v31 v11 _ _ hinv13 h64 h_v31 h_v11 (by ns_tac) (by ns_tac) as ⟨v32, s14, hinv14, h_v32⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31
+        store_step with Store.apply_rep s14 v32 v8 _ _ hinv14 h64 h_v32 h_v8 (by ns_tac) (by ns_tac) as ⟨v33, s15, hinv15, h_v33⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32
+        step as ⟨e_v34, he_v34⟩
+        store_step with Store.builtin_spec_list_concat n ih.eo__24eo_5fis_5flist_5fnil s15 e_v34 (by rw [he_v34]; rfl) h_v30 h_v33 h_a4 hinv15 h64 (hG.rem hrem) (by not_left_tac) (by unique_nil_tac) as ⟨v34, s16, hinv16, h_v34⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33
+        store_step with ih.eo__24substitute_5fsimul_5frec s16 a0 v2 a2 a3 v34 _ _ _ _ _ hinv16 h64 (hG.rem hrem) h_a0 h_v2 h_a2 h_a3 h_v34 as ⟨v35, s17, hinv17, h_v35⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34
+        store_step with Store.apply_mk_rep s17 v29 v35 _ _ hinv17 h64 h_v29 h_v35 as ⟨v36, s18, hinv18, h_v36⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18 h_v26 h_v27 h_v28 h_v29 h_v30 h_v31 h_v32 h_v33 h_v34 h_v35
+        ite_done hinv18 hG with (eo_ite_false_rep _ hx_19 h_v36)
+      · ite_branch hbv_19
+        ite_stuck hinv7 hG with hx_19)
+    store_step with h_ite_v37 as ⟨v37, s8, hinv8, h_v37⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+    req_done hinv8 hG with h_v37 using hq_v17)
+  store_step with h_req_v38 as ⟨v38, s9, hinv9, h_v38⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15 h_v16 h_v17 h_v18
+  case_done hinv9 hG with h_v38 in EoCases.__substitute_simul_rec.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_v1 hn_v2 hn_v4 hn_v5 hn_v7 hn_v8 hn_v10 hn_v11
 
 set_option maxHeartbeats 20000000 in
-/-- logos's `__eo_prog_str_update_in_first_concat` is what the generated body does: the tests for the stuck term,
+theorem case_1_eo__24substitute_5fsimul_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) :
+    case_1_eo__24substitute_5fsimul_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__substitute_simul_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__substitute_simul_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24substitute_5fsimul_5frec
+  have hG := Store.Grows.refl s
+  pat_unapply h_a1 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__substitute_simul_rec.case_1
+  store_step with ih.eo__24substitute_5fsimul_5frec s a0 v1 a2 a3 a4 _ _ _ _ _ hinv h64 hrem h_a0 h_v1 h_a2 h_a3 h_a4 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2
+  store_step with ih.eo__24substitute_5fsimul_5frec s1 a0 v2 a2 a3 a4 _ _ _ _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 h_a2 h_a3 h_a4 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3
+  store_step with Store.apply_mk_rep s2 v3 v4 _ _ hinv2 h64 h_v3 h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4
+  case_done hinv3 hG with h_v5 in EoCases.__substitute_simul_rec.case_1 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_v1 hn_v2
+
+set_option maxHeartbeats 20000000 in
+theorem case_2_eo__24substitute_5fsimul_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) :
+    case_2_eo__24substitute_5fsimul_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__substitute_simul_rec.case_2 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__substitute_simul_rec.case_2 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_2_eo__24substitute_5fsimul_5frec
+  have hG := Store.Grows.refl s
+  pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__substitute_simul_rec.case_2
+  obtain ⟨hn_v1, hn_v2⟩ := CtorSpec.eo__24emb_5fVar.fields_ne_stuck hinv h_a1
+  step as ⟨e_v3, he_v3⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2
+  step as ⟨e_v4, he_v4⟩
+  store_step with CtorSpec.eo__24emb_5fVar.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 h_v2 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3
+  step as ⟨e_v5, he_v5⟩
+  store_step with Store.builtin_spec_list_find n ih.eo__24eo_5fis_5flist_5fnil s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_a4 h_v4 hinv2 h64 (hG.rem hrem) (by not_left_tac) as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4
+  step as ⟨e_v6, he_v6⟩
+  store_step with Store.builtin_spec_is_neg s3 e_v6 (by rw [he_v6]; rfl) h_v5 hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5
+  have h_ite_v19 := (show if_4_eo__24substitute_5fsimul_5frec s4 v6 v1 v2 a2 a3 ⦃ r s' => s'.Inv ∧ s4.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold if_4_eo__24substitute_5fsimul_5frec
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s4
+    rcases Store.boolean_value_term h_v6 with ⟨hx_7, hbv_7⟩ | ⟨hx_7, hbv_7⟩ | ⟨hx_7, hbv_7⟩
+    · ite_branch hbv_7
+      step as ⟨e_v7, he_v7⟩
+      store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s4 e_v7 (by rw [he_v7]; exact empty_args) hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+      step as ⟨e_v8, he_v8⟩
+      store_step with CtorSpec.eo__24emb_5fVar.construct s5 e_v8 (by rw [he_v8]; rfl) h_v1 h_v2 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+      step as ⟨e_v9, he_v9⟩
+      store_step with Store.builtin_spec_list_find n ih.eo__24eo_5fis_5flist_5fnil s6 e_v9 (by rw [he_v9]; rfl) h_v7 h_a2 h_v8 hinv6 h64 (hG.rem hrem) (by not_left_tac) as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+      step as ⟨e_v10, he_v10⟩
+      store_step with Store.builtin_spec_is_neg s7 e_v10 (by rw [he_v10]; rfl) h_v9 hinv7 h64 as ⟨v10, s8, hinv8, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+      have h_ite_v17 := (show if_3_eo__24substitute_5fsimul_5frec s8 v10 v1 v2 a2 a3 ⦃ r s' => s'.Inv ∧ s8.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
+        unfold if_3_eo__24substitute_5fsimul_5frec
+        have hrem := (hG.rem hrem)
+        have hG := Store.Grows.refl s8
+        rcases Store.boolean_value_term h_v10 with ⟨hx_11, hbv_11⟩ | ⟨hx_11, hbv_11⟩ | ⟨hx_11, hbv_11⟩
+        · ite_branch hbv_11
+          step as ⟨e_v11, he_v11⟩
+          store_step with CtorSpec.eo__24emb_5fVar.construct s8 e_v11 (by rw [he_v11]; rfl) h_v1 h_v2 hinv8 h64 as ⟨v11, s9, hinv9, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+          ite_done hinv9 hG with (eo_ite_true_rep _ hx_11 h_v11)
+        · ite_branch hbv_11
+          step as ⟨e_v12, he_v12⟩
+          store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s8 e_v12 (by rw [he_v12]; exact empty_args) hinv8 h64 as ⟨v12, s9, hinv9, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+          step as ⟨e_v13, he_v13⟩
+          store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s9 e_v13 (by rw [he_v13]; exact empty_args) hinv9 h64 as ⟨v13, s10, hinv10, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v12
+          step as ⟨e_v14, he_v14⟩
+          store_step with CtorSpec.eo__24emb_5fVar.construct s10 e_v14 (by rw [he_v14]; rfl) h_v1 h_v2 hinv10 h64 as ⟨v14, s11, hinv11, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v12 h_v13
+          step as ⟨e_v15, he_v15⟩
+          store_step with Store.builtin_spec_list_find n ih.eo__24eo_5fis_5flist_5fnil s11 e_v15 (by rw [he_v15]; rfl) h_v13 h_a2 h_v14 hinv11 h64 (hG.rem hrem) (by not_left_tac) as ⟨v15, s12, hinv12, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v12 h_v13 h_v14
+          store_step with ih.eo__24assoc_5fnil_5fnth s12 v12 a3 v15 _ _ _ hinv12 h64 (hG.rem hrem) h_v12 h_a3 h_v15 as ⟨v16, s13, hinv13, h_v16⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v12 h_v13 h_v14 h_v15
+          ite_done hinv13 hG with (eo_ite_false_rep _ hx_11 h_v16)
+        · ite_branch hbv_11
+          ite_stuck hinv8 hG with hx_11)
+      store_step with h_ite_v17 as ⟨v17, s9, hinv9, h_v17⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+      ite_done hinv9 hG with (eo_ite_true_rep _ hx_7 h_v17)
+    · ite_branch hbv_7
+      step as ⟨e_v18, he_v18⟩
+      store_step with CtorSpec.eo__24emb_5fVar.construct s4 e_v18 (by rw [he_v18]; rfl) h_v1 h_v2 hinv4 h64 as ⟨v18, s5, hinv5, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+      ite_done hinv5 hG with (eo_ite_false_rep _ hx_7 h_v18)
+    · ite_branch hbv_7
+      ite_stuck hinv4 hG with hx_7)
+  store_step with h_ite_v19 as ⟨v19, s5, hinv5, h_v19⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  case_done hinv5 hG with h_v19 in EoCases.__substitute_simul_rec.case_2 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_v1 hn_v2
+
+set_option maxHeartbeats 20000000 in
+theorem case_3_eo__24substitute_5fsimul_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) :
+    case_3_eo__24substitute_5fsimul_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some t) =>
+        ∃ res, EoCases.__substitute_simul_rec.case_3 x_a0 x_a1 x_a2 x_a3 x_a4 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok none => EoCases.__substitute_simul_rec.case_3 x_a0 x_a1 x_a2 x_a3 x_a4 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_3_eo__24substitute_5fsimul_5frec
+  have hG := Store.Grows.refl s
+  step as ⟨e_v0, he_v0⟩
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4
+  store_step with ih.eo__24is_5fclosed_5frec s1 a1 v0 _ _ hinv1 h64 (hG.rem hrem) h_a1 h_v0 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0
+  store_step with Store.literal_boolean_spec s2 true hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0 h_v1
+  have h_req_v3 := (show requires_5_eo__24substitute_5fsimul_5frec s3 v1 v2 a1 ⦃ r s' => s'.Inv ∧ s3.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_requires _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold requires_5_eo__24substitute_5fsimul_5frec
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s3
+    req_same v1 v2 with h_v1 h_v2 using hinv3 hG
+    req_stuck h_v1 as hq_v1 using hinv3 hG
+    req_done hinv3 hG with h_a1 using hq_v1)
+  store_step with h_req_v3 as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0 h_v1 h_v2
+  case_done hinv4 hG with h_v3 in EoCases.__substitute_simul_rec.case_3 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4
+
+set_option maxHeartbeats 20000000 in
+/-- logos's `__substitute_simul_rec` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
-theorem eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (x_a7 : _) (x_a8 : _) (x_a9 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) (hw_a5 : Valid.valid x_a5) (hw_a6 : Valid.valid x_a6) (hw_a7 : Valid.valid x_a7) (hw_a8 : Valid.valid x_a8) (hw_a9 : Valid.valid x_a9) :
-    __eo_prog_str_update_in_first_concat x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9 =
-      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else if x_a4 = Eo.Term.Stuck then HasStuck.stuck else if x_a5 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__eo_prog_str_update_in_first_concat.case_0 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9] HasStuck.stuck) := by
-  conv => lhs; unfold __eo_prog_str_update_in_first_concat
-  unfold EoCases.__eo_prog_str_update_in_first_concat.case_0
+theorem eo__24substitute_5fsimul_5frec.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
+    __substitute_simul_rec x_a0 x_a1 x_a2 x_a3 x_a4 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else if x_a4 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__substitute_simul_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__substitute_simul_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__substitute_simul_rec.case_2 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__substitute_simul_rec.case_3 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck) := by
+  conv => lhs; unfold __substitute_simul_rec
+  unfold EoCases.__substitute_simul_rec.case_0 EoCases.__substitute_simul_rec.case_1 EoCases.__substitute_simul_rec.case_2 EoCases.__substitute_simul_rec.case_3
   logos_eq
 
 set_option maxHeartbeats 20000000 in
-theorem body_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (x_a5 : _) (x_a6 : _) (x_a7 : _) (x_a8 : _) (x_a9 : _)
-    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) (h_a5 : Represents.rep s a5 x_a5) (h_a6 : Represents.rep s a6 x_a6) (h_a7 : Represents.rep s a7 x_a7) (h_a8 : Represents.rep s a8 x_a8) (h_a9 : Represents.rep s a9 x_a9) :
-    body_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat s a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+theorem body_eo__24substitute_5fsimul_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (h_a4 : Represents.rep s a4 x_a4) :
+    body_eo__24substitute_5fsimul_5frec s a0 a1 a2 a3 a4 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
-      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_str_update_in_first_concat x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9)
+      | core.result.Result.Ok t => Represents.rep s' t (__substitute_simul_rec x_a0 x_a1 x_a2 x_a3 x_a4)
       | core.result.Result.Err _ => True ⦄div := by
-  rw [eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4) (by valid_tac hinv h_a5) (by valid_tac hinv h_a6) (by valid_tac hinv h_a7) (by valid_tac hinv h_a8) (by valid_tac hinv h_a9)]
-  unfold body_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat
+  rw [eo__24substitute_5fsimul_5frec.rust_eq x_a0 x_a1 x_a2 x_a3 x_a4 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3) (by valid_tac hinv h_a4)]
+  unfold body_eo__24substitute_5fsimul_5frec
   have hG := Store.Grows.refl s
   stuck_check h_a0 : x_a0 as hn_a0 else hinv hG
   stuck_check h_a1 : x_a1 as hn_a1 else hinv hG
   stuck_check h_a2 : x_a2 as hn_a2 else hinv hG
   stuck_check h_a3 : x_a3 as hn_a3 else hinv hG
   stuck_check h_a4 : x_a4 as hn_a4 else hinv hG
-  stuck_check h_a5 : x_a5 as hn_a5 else hinv hG
-  case_step with case_0_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat_spec n ih s a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5
-    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5
-  body_stuck hinv1 hG using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_a5 hc0 in EoCases.__eo_prog_str_update_in_first_concat.case_0
+  case_step with case_0_eo__24substitute_5fsimul_5frec_spec n ih s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2 hn_a3 hn_a4
+    as ⟨s1, hinv1, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4
+  case_step with case_1_eo__24substitute_5fsimul_5frec_spec n ih s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2 hn_a3 hn_a4
+    as ⟨s2, hinv2, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hc0
+  case_step with case_2_eo__24substitute_5fsimul_5frec_spec n ih s2 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv2 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2 hn_a3 hn_a4
+    as ⟨s3, hinv3, hc2⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hc0 hc1
+  case_step with case_3_eo__24substitute_5fsimul_5frec_spec n ih s3 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv3 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 h_a4 hn_a0 hn_a1 hn_a2 hn_a3 hn_a4
+    as ⟨s4, hinv4, hc3⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hc0 hc1 hc2
+  body_stuck hinv4 hG using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hc0 hc1 hc2 hc3 in EoCases.__substitute_simul_rec.case_0 EoCases.__substitute_simul_rec.case_1 EoCases.__substitute_simul_rec.case_2 EoCases.__substitute_simul_rec.case_3
 
 set_option maxHeartbeats 20000000 in
-theorem eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat.Spec n := by
-  intro s a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4 h_a5 h_a6 h_a7 h_a8 h_a9
-  unfold eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat
-  apply WP.dspec_mono (Store.framed s hinv hrem
-    (fun s1 => body_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat s1 a0 a1 a2 a3 a4 a5 a6 a7 a8 a9) (fun s' t => Represents.rep s' t (__eo_prog_str_update_in_first_concat x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9))
+theorem eo__24substitute_5fsimul_5frec_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24substitute_5fsimul_5frec.Spec n := by
+  intro s a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 h_a4
+  unfold eo__24substitute_5fsimul_5frec
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 1095#u32 _ [a0, a1, a2, a3, a4] rfl
+    (fun s1 => body_eo__24substitute_5fsimul_5frec s1 a0 a1 a2 a3 a4) (fun s' t => Represents.rep s' t (__substitute_simul_rec x_a0 x_a1 x_a2 x_a3 x_a4))
     (by intro _ _ _ hn h; congr_one h hn)
+    (by
+      intro s1 res hn hsem
+      obtain ⟨b0, b1, b2, b3, b4, y0, y1, y2, y3, y4, hargs, hb0, hb1, hb2, hb3, hb4, hr⟩ := ProgramSem.of_1095 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl, rfl, rfl, rfl, rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
+      obtain rfl := Rep.functional hb2 (Represents.congr h_a2 hn)
+      obtain rfl := Rep.functional hb3 (Represents.congr h_a3 hn)
+      obtain rfl := Rep.functional hb4 (Represents.congr h_a4 hn)
+      exact hr)
+    (by
+      intro s1 res hpre h
+      exact ProgramSem.to_1095 ⟨a0, a1, a2, a3, a4, x_a0, x_a1, x_a2, x_a3, x_a4, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, Rep.mono hpre h_a3, Rep.mono hpre h_a4, h⟩)
     (fun s1 m hinv1 hn hm hrem1 => by
-      spec_exact body_eo__24eo_5fprog_5fstr_2dupdate_2din_2dfirst_2dconcat_spec m (ih m hm) s1 a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 x_a0 x_a1 x_a2 x_a3 x_a4 x_a5 x_a6 x_a7 x_a8 x_a9 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn) (by congr_one h_a5 hn) (by congr_one h_a6 hn) (by congr_one h_a7 hn) (by congr_one h_a8 hn) (by congr_one h_a9 hn)))
+      spec_exact body_eo__24substitute_5fsimul_5frec_spec m (ih m hm) s1 a0 a1 a2 a3 a4 x_a0 x_a1 x_a2 x_a3 x_a4 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn) (by congr_one h_a4 hn)))
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
