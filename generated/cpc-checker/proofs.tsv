@@ -15,7 +15,7 @@ $arith_rel_sum	generated
 $arith_rel_trichotomy	generated	
 $assoc_nil_nth	generated	
 $assoc_nil_nth_type	generated	
-$beta_reduce	none	it calls $substitute_simul_rec, which has no proof
+$beta_reduce	generated	
 $bv_bitblast_apply_binary	generated	
 $bv_bitblast_apply_ite	generated	
 $bv_bitblast_apply_unary	generated	
@@ -58,7 +58,7 @@ $chain_m_resolve_final	generated
 $chain_m_resolve_rec	generated	
 $chain_m_resolve_rec_step	generated	
 $compute_card	generated	
-$contains_atomic_term_list_free_rec	none	case 2 has a variable term
+$contains_atomic_term_list_free_rec	generated	
 $derivative	none	case 6 has a builtin operator
 $dt_arg_list	generated	
 $dt_collapse_updater_rhs	generated	
@@ -120,7 +120,7 @@ $eo_nil_bvxor	generated
 $eo_nil_str.++	generated	
 $eo_prog_absorb	none	it calls $is_absorb, which has no proof
 $eo_prog_aci_norm	none	it calls $aci_norm_eq, which has no proof
-$eo_prog_alpha_equiv	none	it calls $contains_atomic_term_list_free_rec, which has no proof
+$eo_prog_alpha_equiv	none	it calls $is_var_list, which has no proof
 $eo_prog_and_elim	generated	
 $eo_prog_and_intro	generated	
 $eo_prog_arith-abs-eq	generated	
@@ -186,7 +186,7 @@ $eo_prog_arrays_ext	generated
 $eo_prog_arrays_read_over_write	generated	
 $eo_prog_arrays_read_over_write_1	generated	
 $eo_prog_arrays_read_over_write_contra	generated	
-$eo_prog_beta-reduce	none	it calls $beta_reduce, which has no proof
+$eo_prog_beta-reduce	generated	
 $eo_prog_bool-and-conf	generated	
 $eo_prog_bool-and-conf2	generated	
 $eo_prog_bool-and-de-morgan	generated	
@@ -422,7 +422,7 @@ $eo_prog_false_elim	generated
 $eo_prog_false_intro	generated	
 $eo_prog_ho_cong	generated	
 $eo_prog_implies_elim	generated	
-$eo_prog_instantiate	none	it calls $substitute_simul_rec, which has no proof
+$eo_prog_instantiate	generated	
 $eo_prog_int-to-bv-elim	none	case 0 has a builtin operator
 $eo_prog_int_tight_lb	generated	
 $eo_prog_int_tight_ub	generated	
@@ -462,13 +462,13 @@ $eo_prog_not_xor_elim1	generated
 $eo_prog_not_xor_elim2	generated	
 $eo_prog_pairwise_cong	generated	
 $eo_prog_process_scope	generated	
-$eo_prog_quant-dt-split	none	it calls $is_quant_dt_split, which has no proof
+$eo_prog_quant-dt-split	generated	
 $eo_prog_quant-merge-prenex	generated	
 $eo_prog_quant-miniscope-and	generated	
-$eo_prog_quant-miniscope-ite	none	it calls $contains_atomic_term_list_free_rec, which has no proof
+$eo_prog_quant-miniscope-ite	generated	
 $eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
-$eo_prog_quant-unused-vars	none	it calls $contains_atomic_term_list_free_rec, which has no proof
-$eo_prog_quant-var-elim-eq	none	it calls $mk_quant_var_elim_eq, which has no proof
+$eo_prog_quant-unused-vars	none	it calls $get_unused_vars, which has no proof
+$eo_prog_quant-var-elim-eq	generated	
 $eo_prog_quant_var_reordering	generated	
 $eo_prog_re-all-elim	none	a constant, not a program with cases
 $eo_prog_re-concat-merge	generated	
@@ -477,7 +477,7 @@ $eo_prog_re-concat-star-nullable2	generated
 $eo_prog_re-concat-star-repeat	generated	
 $eo_prog_re-concat-star-swap	generated	
 $eo_prog_re-diff-elim	generated	
-$eo_prog_re-eq-elim	none	case 0 has a variable term
+$eo_prog_re-eq-elim	none	its generated proof does not build: the spec of case 0: req_done's `assumption` fails (Type mismatch) in a requirement over built variable terms
 $eo_prog_re-in-comp	generated	
 $eo_prog_re-in-cstring	generated	
 $eo_prog_re-in-empty	generated	
@@ -507,7 +507,7 @@ $eo_prog_re-union-const-elim	generated
 $eo_prog_re-union-inclusion	none	it calls $re_flatten, which has no proof
 $eo_prog_re_concat	generated	
 $eo_prog_re_inter	generated	
-$eo_prog_re_unfold_neg	none	it calls $mk_re_unfold_neg, which has no proof
+$eo_prog_re_unfold_neg	generated	
 $eo_prog_re_unfold_neg_concat_fixed	generated	
 $eo_prog_re_unfold_pos	generated	
 $eo_prog_refl	generated	
@@ -550,7 +550,7 @@ $eo_prog_sets_choose_member	generated
 $eo_prog_sets_ext	generated	
 $eo_prog_sets_singleton_inj	generated	
 $eo_prog_skolem_intro	generated	
-$eo_prog_skolemize	none	it calls $is_closed_rec, which has no proof
+$eo_prog_skolemize	generated	
 $eo_prog_split	generated	
 $eo_prog_str-at-elim	generated	
 $eo_prog_str-concat-clash	generated	
@@ -717,7 +717,7 @@ $eo_prog_string_eager_reduction	generated
 $eo_prog_string_ext	generated	
 $eo_prog_string_length_non_empty	generated	
 $eo_prog_string_length_pos	generated	
-$eo_prog_string_reduction	none	it calls $is_closed_rec, which has no proof
+$eo_prog_string_reduction	none	it calls $str_reduction_pred, which has no proof
 $eo_prog_string_seq_unit_inj	generated	
 $eo_prog_symm	generated	
 $eo_prog_trans	generated	
@@ -902,15 +902,15 @@ $iota_rec	generated
 $is_absorb	none	it calls $is_absorb_rec, which has no proof
 $is_absorb_rec	none	its generated proof does not build: falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved
 $is_arith_type	generated	
-$is_closed_rec	none	case 2 has a variable term
+$is_closed_rec	generated	
 $is_cons_app	generated	
 $is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
 $is_instantiation	generated	
 $is_poly_norm_rel_consts	generated	
 $is_poly_norm_rel_consts_rel	generated	
-$is_quant_dt_split	none	it calls $is_quant_dt_split_conj, which has no proof
-$is_quant_dt_split_conj	none	it calls $contains_atomic_term_list_free_rec, which has no proof
-$is_quant_miniscope_or	none	it calls $contains_atomic_term_list_free_rec, which has no proof
+$is_quant_dt_split	generated	
+$is_quant_dt_split_conj	generated	
+$is_quant_miniscope_or	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth
 $is_renaming_rec	generated	
 $is_seq_const	generated	
 $is_seq_const_rec	generated	
@@ -942,9 +942,9 @@ $mk_ho_cong	generated
 $mk_nary_cong_rhs	generated	
 $mk_quant_merge_prenex	generated	
 $mk_quant_miniscope_and	generated	
-$mk_quant_var_elim_eq	none	it calls $contains_atomic_term_list_free_rec, which has no proof
+$mk_quant_var_elim_eq	generated	
 $mk_re_concat	generated	
-$mk_re_unfold_neg	none	case 0 has a variable term
+$mk_re_unfold_neg	generated	
 $mk_re_unfold_neg_concat_fixed	generated	
 $mk_re_unfold_pos	generated	
 $mk_re_unfold_pos_star	generated	
@@ -1088,13 +1088,13 @@ $str_re_includes_lhs_star	none	it calls $str_re_includes_rec, which has no proof
 $str_re_includes_lhs_union	none	it calls $str_re_includes_rec, which has no proof
 $str_re_includes_rec	none	it calls $str_re_includes_base_rec, which has no proof
 $str_re_includes_rhs_inter	none	it calls $str_re_includes_rec, which has no proof
-$str_reduction_pred	none	case 0 has a variable term
+$str_reduction_pred	none	its generated proof does not build: its proofs are 4.5 MB, a part of their own: the specs of its cases time out (whnf, 2,000,000 heartbeats) and the part peaks above 9 GB
 $str_strip_prefix	generated	
 $str_to_int_eval_rec	generated	
 $str_unify_split	generated	
 $str_value_len	generated	
 $strip_even_exponent	generated	
-$substitute_simul_rec	none	case 2 has a variable term
+$substitute_simul_rec	generated	
 $to_clause	generated	
 $to_cube	generated	
 $tuple_arg_list	generated	

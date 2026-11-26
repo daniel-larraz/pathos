@@ -408,10 +408,9 @@ class Emitter:
             a = self.expr(sub[1])
             return self.apply(f, a, n["guarded"], v)
         if op == "variable":
-            self.unsupported("a variable term")
-            for s in sub:
-                self.expr(s)
-            return v
+            # a variable from its name and type: the store's constructor
+            # `$emb_Var`, built strictly (`__eo_mk_var`)
+            return self.construct("$emb_Var", sub, v)
         raise SystemExit("proofgen: unknown node %r" % op)
 
     def constant(self, name, v):
