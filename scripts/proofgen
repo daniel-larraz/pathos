@@ -443,7 +443,7 @@ class Emitter:
                 if n["eval"] not in ("Requires", "Eq"):
                     self.unsupported("the builtin " + n["program"])
             elif n["eval"] not in SUPPORTED_OPS:
-                self.unsupported("a builtin operator")
+                self.unsupported("a builtin operator (" + n["eval"] + ")")
             return self.builtin(n, sub, v)
         if op == "funtype":
             if not self.has_ctor_lemma(FUNTYPE):

@@ -29,9 +29,9 @@ $bv_bitblast_tail	generated
 $bv_bitblast_ult	generated	
 $bv_bitblast_ult_rec	generated	
 $bv_bitwidth	generated	
-$bv_const_to_bitlist_rec	none	case 1 has a builtin operator
+$bv_const_to_bitlist_rec	none	case 1 has a builtin operator (Extract)
 $bv_div_mod_impl	none	its generated proof does not build: the spec of case 2: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $arith_reduction_pred, 11 min)
-$bv_eval_concat	none	case 0 has a builtin operator
+$bv_eval_concat	none	case 0 has a builtin operator (Concat)
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	it calls $bv_const_to_bitlist_rec, which has no proof
 $bv_mk_bitblast_step_add	generated	
@@ -45,7 +45,7 @@ $bv_mk_bitblast_step_shl_rec_step	generated
 $bv_mk_bitblast_step_shr_rec	generated	
 $bv_mk_bitblast_step_shr_rec_step	generated	
 $bv_mk_bitblast_step_var_rec	generated	
-$bv_mk_bitwise_slicing	none	case 0 has a builtin operator
+$bv_mk_bitwise_slicing	none	case 0 has a builtin operator (Extract)
 $bv_mk_bitwise_slicing_rec	generated	
 $bv_ripple_carry_adder_2	generated	
 $bv_shift_add_multiplier	generated	
@@ -59,7 +59,7 @@ $chain_m_resolve_rec	generated
 $chain_m_resolve_rec_step	generated	
 $compute_card	generated	
 $contains_atomic_term_list_free_rec	generated	
-$derivative	none	case 6 has a builtin operator
+$derivative	none	case 6 has a builtin operator (Extract)
 $dt_arg_list	generated	
 $dt_collapse_updater_rhs	generated	
 $dt_distinct_terms	generated	
@@ -383,7 +383,7 @@ $eo_prog_cnf_xor_neg1	generated
 $eo_prog_cnf_xor_neg2	generated	
 $eo_prog_cnf_xor_pos1	generated	
 $eo_prog_cnf_xor_pos2	generated	
-$eo_prog_concat_cprop	none	case 0 has a builtin operator
+$eo_prog_concat_cprop	none	case 0 has a builtin operator (Extract)
 $eo_prog_concat_csplit	generated	
 $eo_prog_concat_eq	generated	
 $eo_prog_concat_lprop	none	its generated proof does not build: the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (155 KB of proof; reached once eo::list_singleton_intro had a spec)
@@ -607,7 +607,7 @@ $eo_prog_str-indexof-oob	generated
 $eo_prog_str-indexof-oob2	generated	
 $eo_prog_str-indexof-prefix-concat	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_str-indexof-re-emp-re	generated	
-$eo_prog_str-indexof-re-eval	none	case 0 has a builtin operator
+$eo_prog_str-indexof-re-eval	none	case 0 has a builtin operator (Extract)
 $eo_prog_str-indexof-re-none	generated	
 $eo_prog_str-indexof-self	generated	
 $eo_prog_str-is-digit-elim	generated	
@@ -914,7 +914,7 @@ $is_quant_miniscope_or	generated
 $is_renaming_rec	generated	
 $is_seq_const	generated	
 $is_seq_const_rec	generated	
-$is_var_list	none	case 0 has a builtin operator
+$is_var_list	none	case 0 has a builtin operator (IsVar)
 $least_int_gt	generated	
 $lower_not_and	generated	
 $mk_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison_rec, which has no proof
@@ -972,7 +972,7 @@ $re_split_str_to_re	generated
 $re_unflatten	none	it calls $re_unflatten_str, which has no proof
 $re_unflatten_str	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $re_unfold_pos_concat_rec	generated	
-$run_evaluate	none	case 6 has a builtin operator
+$run_evaluate	none	case 6 has a builtin operator (Xor)
 $run_process_scope	generated	
 $seq_distinct_terms	generated	
 $seq_element_of_unit	generated	
@@ -1049,19 +1049,19 @@ $str_arith_entail_is_approx	generated
 $str_arith_entail_is_approx_len	generated	
 $str_arith_entail_simple_pred	generated	
 $str_arith_entail_simple_rec	generated	
-$str_case_conv_rec	none	case 0 has a builtin operator
+$str_case_conv_rec	none	case 0 has a builtin operator (Concat)
 $str_collect	none	it calls $str_collect_merge, which has no proof
-$str_collect_merge	none	case 0 has a builtin operator
-$str_eval_replace_all_rec	none	case 1 has a builtin operator
-$str_eval_replace_re	none	case 1 has a builtin operator
-$str_eval_replace_re_all_rec	none	case 1 has a builtin operator
+$str_collect_merge	none	case 0 has a builtin operator (Concat)
+$str_eval_replace_all_rec	none	case 1 has a builtin operator (Concat)
+$str_eval_replace_re	none	case 1 has a builtin operator (Extract)
+$str_eval_replace_re_all_rec	none	case 1 has a builtin operator (Concat)
 $str_eval_str_in_re_rec	none	it calls $derivative, which has no proof
 $str_first_match_rec	none	it calls $str_eval_str_in_re_rec, which has no proof
 $str_first_match_rec_smallest	none	it calls $derivative, which has no proof
 $str_fixed_len_re	generated	
 $str_flatten	none	case 0 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$str_flatten_word_rec	none	case 1 has a builtin operator
-$str_from_int_eval_rec	none	case 1 has a builtin operator
+$str_flatten_word_rec	none	case 1 has a builtin operator (Extract)
+$str_from_int_eval_rec	none	case 1 has a builtin operator (Concat)
 $str_is_compatible	generated	
 $str_is_empty	generated	
 $str_is_multiset_subset_strict	generated	
