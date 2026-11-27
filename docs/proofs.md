@@ -270,6 +270,11 @@ and helpers that type their arguments).
   (`Or.lean`) `eo::or`.
 - **The order** (`Compare.lean`): `eo::cmp` (`builtin_spec_cmp`), from
   `compare_rep_spec` (see "`eo::cmp`").
+- **Strings** (`StrOps.lean`): `eo::to_str` (a numeral that is a code
+  point, or a string), `eo::log` (a numeral base, and a numeral or a
+  rational rounded down) and `eo::find` (`EoString::find`'s two loops
+  against logos's `native_str_indexof`, by induction on the positions
+  left).
 
 They rest only on the specs of `Trusted.lean` that `axioms-allowed.txt`
 allows; `eo::or` brought `bitwise_or_spec` into use (32 assumptions, from
@@ -321,6 +326,17 @@ points or more, the runtime (as Ethos, which asserts it does not happen)
 takes an index past `2^32` as 0, where logos takes it as it is. Binaries
 agree (the count of bits never wraps, as the upper index is below the
 width).
+
+`eo::to_str`, `eo::log` and `eo::find` have specs (2026-11-26) but bring
+no program yet: each program that uses one also uses `eo::extract` or
+`eo::concat` (`$bv_mk_bitblast_step` calls `$bv_const_to_bitlist_rec`;
+`$str_from_int_eval_rec` and `$str_case_conv_rec` take `eo::concat`;
+`$run_evaluate` takes all of them and `eo::xor`). `eo::concat` waits as
+`eo::extract` does: the runtime adds the widths of two binaries modulo
+`2^32` (`BitVec::concat`), logos exactly, and no call site rules out
+binaries that wide, so a spec of strings only would prove none of them.
+Both wait on a fix in Ethos (`cvc5/ethos#296` and `#297`, an error past
+`u32::MAX`) and a re-pin.
 
 The second step was planned as lemmas generated per constructor. It is
 hand-written instead, and holds for both calculi: every proof goes by

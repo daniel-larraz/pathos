@@ -33,7 +33,7 @@ $bv_const_to_bitlist_rec	none	case 1 has a builtin operator
 $bv_div_mod_impl	none	its generated proof does not build: the spec of case 2: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $arith_reduction_pred, 11 min)
 $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
-$bv_mk_bitblast_step	none	case 19 has a builtin operator
+$bv_mk_bitblast_step	none	it calls $bv_const_to_bitlist_rec, which has no proof
 $bv_mk_bitblast_step_add	generated	
 $bv_mk_bitblast_step_bitwise	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once $eo_typeof had a proof
 $bv_mk_bitblast_step_concat	generated	
