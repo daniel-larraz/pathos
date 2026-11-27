@@ -470,7 +470,7 @@ $eo_prog_quant-miniscope-or	generated
 $eo_prog_quant-unused-vars	generated	
 $eo_prog_quant-var-elim-eq	generated	
 $eo_prog_quant_var_reordering	generated	
-$eo_prog_re-all-elim	none	a constant, not a program with cases
+$eo_prog_re-all-elim	generated	
 $eo_prog_re-concat-merge	generated	
 $eo_prog_re-concat-star-nullable1	generated	
 $eo_prog_re-concat-star-nullable2	generated	
@@ -497,8 +497,8 @@ $eo_prog_re-range-non-singleton-1	generated
 $eo_prog_re-range-non-singleton-2	generated	
 $eo_prog_re-range-refl	generated	
 $eo_prog_re-repeat-elim	generated	
-$eo_prog_re-star-emp	none	a constant, not a program with cases
-$eo_prog_re-star-none	none	a constant, not a program with cases
+$eo_prog_re-star-emp	generated	
+$eo_prog_re-star-none	generated	
 $eo_prog_re-star-star	generated	
 $eo_prog_re-star-union-char	generated	
 $eo_prog_re-star-union-drop-emp	generated	

@@ -299,6 +299,9 @@ class Proof:
         self.top = []
         self.loop = False
         self.hand = ""
+        # a constant (`define`): the lines of its body and the variable of
+        # its value
+        self.define = None
         self.cache = ""
         self.type_kind = ""
         self.calls = set()
@@ -1179,8 +1182,7 @@ class Generator:
         proof.lean = p["lean"]
         proof.trace_id = p["id"]
         if kind == "define":
-            proof.why = "a constant, not a program with cases"
-            return proof
+            return self.define(proof)
         args = p["args"]
         proof.nargs = len(args)
         state_type = self.cfg["state"]["type"]
@@ -1225,6 +1227,25 @@ class Generator:
             if not proof.why and l.why:
                 proof.why = "case %d has %s" % (c, l.why)
         self.finish(p, proof, args)
+        return proof
+
+    def define(self, proof):
+        """A constant (`define`): its body, read from the generated Rust
+        (`rust_defines`), as the lines that build it, with no patterns."""
+        d = getattr(self, "defines", {}).get(proof.trace_id)
+        if d is None:
+            proof.why = "a constant, and the generated Rust of its body was not read"
+            return proof
+        node, lits = d
+        l = Lean()
+        l.case_def = proof.lean
+        l.lits = lits
+        e = Emitter(self, l)
+        v = e.expr(node)
+        if l.why:
+            proof.why = "its body has " + l.why
+        proof.calls |= l.calls
+        proof.define = (l.lines, v, e.inv())
         return proof
 
     def case_lines(self, proof, c, case, pj, pc):
@@ -1562,6 +1583,21 @@ class Generator:
 
     def print_program(self, p, n, resolve, ok, err):
         o = []
+        if p.define is not None:
+            lines, v, inv = p.define
+            o.append("/-- The body of the constant `" + p.name + "` builds logos's `"
+                     + p.lean + "`. -/\ntheorem body_" + n.id + "_spec (n : Nat) (ih : Specs n)"
+                     " (s : Store)\n    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) :"
+                     "\n    body_" + n.id + " s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧\n      match r with"
+                     "\n      | " + ok + " t => Represents.rep s' t " + p.lean + "\n      | " + err
+                     + " _ => True ⦄div := by\n  unfold body_" + n.id
+                     + "\n  have hG := Store.Grows.refl s\n")
+            for x in lines:
+                o.append("  " + resolve(x, None) + "\n")
+            o.append("  simp only [WP.dspec_ok, WP.uncurry'_pair]\n  exact ⟨" + inv
+                     + ", hG, Represents.rep_of_eq h_" + v + " (by unfold " + p.lean
+                     + "; rfl)⟩\n\n")
+            return "".join(o) + self.top_spec(p, n)
         if p.hand:
             o.append("/-- `" + p.name + "`, by the proof written by hand. -/\ntheorem "
                      + n.id + "_spec (n : Nat) (ih : ∀ m < n, Specs m) : " + n.id
@@ -1805,8 +1841,12 @@ class Generator:
             o.append("      have hrec := ihl s1.budget (by omega)" + bs + " s1" + ys2
                      + " le_rfl hinv1 (hg1.rem hrem)" + hs2 + "\n      unfold body_" + n.id
                      + " at hrec\n      apply WP.dspec_mono hrec\n      loop_close hg1 heq\n\n")
+        return "".join(o) + self.top_spec(p, n)
+
+    def top_spec(self, p, n):
+        """The theorem of a program's `Spec`: its body, framed (and cached)."""
+        o = []
         congr = xlist = ""
-        replist = "List.Forall₂.nil"
         for i in range(p.nargs):
             congr += " (by congr_one h_a%d hn)" % i
             xlist += ("x_a" if i == 0 else ", x_a") + str(i)
@@ -2068,6 +2108,24 @@ def layer_natives():
 LAYER = layer_natives()
 
 
+def literal_value(kind, text):
+    """The value of `Lit::<kind>(<text>)` in the generated Rust, as
+    `rust_literals` gives it, or None for a form it does not read."""
+    if kind == "Numeral":
+        n = re.fullmatch(r"Integer::from\((\d+)u32\)(\.neg\(\))?", text)
+        if n:
+            return ("NUMERAL", -int(n.group(1)) if n.group(2) else int(n.group(1)))
+    elif kind == "Binary":
+        n = re.fullmatch(r"BitVec::new\((\d+), &Integer::from\((\d+)u32\)\)", text)
+        if n:
+            return ("BINARY", (int(n.group(1)), int(n.group(2))))
+    else:
+        n = re.fullmatch(r"EoString::from_code_points\(vec!\[([0-9, ]*)\]\)", text)
+        if n:
+            return ("STRING", [int(x) for x in n.group(1).split(",") if x.strip()])
+    return None
+
+
 def rust_literals(rust_src):
     """The values of the literals the generated Rust builds, which the trace
     does not give: (program id, case, variable) -> ("NUMERAL", n) or
@@ -2101,20 +2159,9 @@ def rust_literals(rust_src):
                 m = re.match(r"let (v\d+) = match s\.literal\(Lit::(Numeral|Str|Binary)\((.*?)\)\) \{", line)
                 if not m:
                     continue
-                if m.group(2) == "Numeral":
-                    n = re.fullmatch(r"Integer::from\((\d+)u32\)(\.neg\(\))?", m.group(3))
-                    if n:
-                        cur["lits"][m.group(1)] = ("NUMERAL", -int(n.group(1)) if n.group(2)
-                                                   else int(n.group(1)))
-                elif m.group(2) == "Binary":
-                    n = re.fullmatch(r"BitVec::new\((\d+), &Integer::from\((\d+)u32\)\)", m.group(3))
-                    if n:
-                        cur["lits"][m.group(1)] = ("BINARY", (int(n.group(1)), int(n.group(2))))
-                else:
-                    n = re.fullmatch(r"EoString::from_code_points\(vec!\[([0-9, ]*)\]\)", m.group(3))
-                    if n:
-                        cur["lits"][m.group(1)] = ("STRING", [int(x) for x in n.group(1).split(",")
-                                                              if x.strip()])
+                val = literal_value(m.group(2), m.group(3))
+                if val is not None:
+                    cur["lits"][m.group(1)] = val
     out = {}
     for name, fn in fns.items():
         m = re.fullmatch(r"case_(\d+)_(eo__\w+)", name)
@@ -2135,6 +2182,100 @@ def rust_literals(rust_src):
         for v in bad:
             del lits[v]
         out[(m.group(2), int(m.group(1)))] = lits
+    return out
+
+
+def eo_name(rust):
+    """The EO name of a Rust identifier rust-meta gave (`ident`, inverted)."""
+    m = re.fullmatch(r"eo_((?:[A-Za-z0-9]|_[0-9a-f]{2})*)", rust)
+    if not m:
+        raise SystemExit("proofgen: %s is not an identifier rust-meta gives" % rust)
+    out = bytearray()
+    body = m.group(1)
+    i = 0
+    while i < len(body):
+        if body[i] == "_":
+            out.append(int(body[i + 1:i + 3], 16))
+            i += 3
+        else:
+            out.append(ord(body[i]))
+            i += 1
+    return out.decode("utf-8")
+
+
+DEFINE_LINE = {
+    "construct": re.compile(r"let (v\d+) = match s\.construct\(Constructor::(\w+), &\[\]\) "
+                            r"\{ Ok\(v\) => v, Err\(e\) => return Err\(e\) \};"),
+    "apply": re.compile(r"let (v\d+) = match s\.apply\((v\d+), (v\d+)\) "
+                        r"\{ Ok\(v\) => v, Err\(e\) => return Err\(e\) \};"),
+    "literal": re.compile(r"let (v\d+) = match s\.literal\(Lit::(Numeral|Str|Binary)\((.*)\)\) "
+                          r"\{ Ok\(v\) => v, Err\(e\) => return Err\(e\) \};"),
+    "result": re.compile(r"Ok\((v\d+)\)"),
+}
+
+
+def rust_defines(rust_src, ids):
+    """The bodies of the constants (`define`s) `ids`, which the trace does
+    not give, read from the generated Rust: id -> (node, literals), the
+    node as the trace writes a case's body and the literals as
+    `rust_literals` gives them. A body is a straight line of `construct`s
+    of constants, `apply`s and `literal`s that ends in `Ok(v)`; any other
+    line stops proofgen, as does a variable used twice (the trace would
+    have it once)."""
+    out = {}
+    for path in sorted(glob.glob(os.path.join(rust_src, "*.rs"))):
+        with open(path, encoding="utf-8") as f:
+            lines = f.read().split("\n")
+        for k, line in enumerate(lines):
+            m = re.match(r"pub\(super\) fn body_(eo__\w+)\(s: &mut Store\) -> CheckResult<Term> \{$",
+                         line)
+            if not m or m.group(1) not in ids:
+                continue
+            pid = m.group(1)
+            nodes, lits, used, result = {}, {}, set(), None
+
+            def take(v):
+                if v not in nodes or v in used:
+                    raise SystemExit("proofgen: the body of %s uses %s other than once" % (pid, v))
+                used.add(v)
+                return nodes[v]
+            for body in lines[k + 1:]:
+                if body == "}":
+                    break
+                if result is not None:
+                    raise SystemExit("proofgen: a line after the result of %s: %s" % (pid, body))
+                m = DEFINE_LINE["construct"].fullmatch(body)
+                if m:
+                    nodes[m.group(1)] = {"op": "constant", "ctor": eo_name(m.group(2)),
+                                         "v": m.group(1)}
+                    continue
+                m = DEFINE_LINE["apply"].fullmatch(body)
+                if m:
+                    nodes[m.group(1)] = {"op": "apply", "guarded": False, "v": m.group(1),
+                                         "sub": [take(m.group(2)), take(m.group(3))]}
+                    continue
+                m = DEFINE_LINE["literal"].fullmatch(body)
+                if m:
+                    v, kind, text = m.groups()
+                    val = literal_value(kind, text)
+                    if val is None:
+                        raise SystemExit("proofgen: a literal of %s it does not read: %s"
+                                         % (pid, body))
+                    lits[v] = val
+                    nodes[v] = {"op": "literal", "kind": val[0], "v": v}
+                    continue
+                m = DEFINE_LINE["result"].fullmatch(body)
+                if m:
+                    result = take(m.group(1))
+                    continue
+                raise SystemExit("proofgen: a line of the body of %s it does not read: %s"
+                                 % (pid, body))
+            if result is None or used != set(nodes):
+                raise SystemExit("proofgen: the body of %s is not one term built once" % pid)
+            out[pid] = (result, lits)
+    missing = set(ids) - set(out)
+    if missing:
+        raise SystemExit("proofgen: no body in the generated Rust for " + ", ".join(sorted(missing)))
     return out
 
 
@@ -2830,7 +2971,8 @@ def main():
                     help="a TOML table of the calculus's programs whose generated proof "
                          "does not build, each with why: they get none")
     ap.add_argument("--rust-src",
-                    help="the generated crate's src/, for the values of its literals")
+                    help="the generated crate's src/, for the values of its literals and "
+                         "the bodies of its constants")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     with open(args.trace, encoding="utf-8") as f:
@@ -2857,6 +2999,9 @@ def main():
             gen.logos_defs.update(re.findall(r"^def (\w+)", text, re.M))
     gen.uop_arities = set(user_op_arities(args.calc_lean).values()) if args.calc_lean else set()
     gen.literals = rust_literals(args.rust_src) if args.rust_src else {}
+    # the bodies of the constants, which the trace does not give
+    define_ids = [p["id"] for p in trace["programs"] if p["kind"] == "define"]
+    gen.defines = rust_defines(args.rust_src, define_ids) if args.rust_src and define_ids else {}
     gen.left_assoc = set()
     if args.rust_src and os.path.exists(os.path.join(args.rust_src, "schema.rs")):
         with open(os.path.join(args.rust_src, "schema.rs"), encoding="utf-8") as f:

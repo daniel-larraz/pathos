@@ -3881,6 +3881,15 @@ def eo__24eo_5fprog_5fquant_5fvar_5freordering.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_quant_var_reordering x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_prog_re-all-elim`. -/
+def eo__24eo_5fprog_5fre_2dall_2delim.Spec (n : Nat) : Prop :=
+  ∀ (s : Store), s.Inv → Platform64 → s.remaining ≤ n →
+   
+    eo__24eo_5fprog_5fre_2dall_2delim s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_re_all_elim)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_prog_re-concat-merge`. -/
 def eo__24eo_5fprog_5fre_2dconcat_2dmerge.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -4104,6 +4113,24 @@ def eo__24eo_5fprog_5fre_2drepeat_2delim.Spec (n : Nat) : Prop :=
     eo__24eo_5fprog_5fre_2drepeat_2delim s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_re_repeat_elim x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_re-star-emp`. -/
+def eo__24eo_5fprog_5fre_2dstar_2demp.Spec (n : Nat) : Prop :=
+  ∀ (s : Store), s.Inv → Platform64 → s.remaining ≤ n →
+   
+    eo__24eo_5fprog_5fre_2dstar_2demp s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_re_star_emp)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_prog_re-star-none`. -/
+def eo__24eo_5fprog_5fre_2dstar_2dnone.Spec (n : Nat) : Prop :=
+  ∀ (s : Store), s.Inv → Platform64 → s.remaining ≤ n →
+   
+    eo__24eo_5fprog_5fre_2dstar_2dnone s ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_prog_re_star_none)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_prog_re-star-star`. -/
@@ -9391,6 +9418,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fquant_2dunused_2dvars : eo__24eo_5fprog_5fquant_2dunused_2dvars.Spec n
   eo__24eo_5fprog_5fquant_2dvar_2delim_2deq : eo__24eo_5fprog_5fquant_2dvar_2delim_2deq.Spec n
   eo__24eo_5fprog_5fquant_5fvar_5freordering : eo__24eo_5fprog_5fquant_5fvar_5freordering.Spec n
+  eo__24eo_5fprog_5fre_2dall_2delim : eo__24eo_5fprog_5fre_2dall_2delim.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dmerge : eo__24eo_5fprog_5fre_2dconcat_2dmerge.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dstar_2dnullable1 : eo__24eo_5fprog_5fre_2dconcat_2dstar_2dnullable1.Spec n
   eo__24eo_5fprog_5fre_2dconcat_2dstar_2dnullable2 : eo__24eo_5fprog_5fre_2dconcat_2dstar_2dnullable2.Spec n
@@ -9416,6 +9444,8 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fprog_5fre_2drange_2dnon_2dsingleton_2d2 : eo__24eo_5fprog_5fre_2drange_2dnon_2dsingleton_2d2.Spec n
   eo__24eo_5fprog_5fre_2drange_2drefl : eo__24eo_5fprog_5fre_2drange_2drefl.Spec n
   eo__24eo_5fprog_5fre_2drepeat_2delim : eo__24eo_5fprog_5fre_2drepeat_2delim.Spec n
+  eo__24eo_5fprog_5fre_2dstar_2demp : eo__24eo_5fprog_5fre_2dstar_2demp.Spec n
+  eo__24eo_5fprog_5fre_2dstar_2dnone : eo__24eo_5fprog_5fre_2dstar_2dnone.Spec n
   eo__24eo_5fprog_5fre_2dstar_2dstar : eo__24eo_5fprog_5fre_2dstar_2dstar.Spec n
   eo__24eo_5fprog_5fre_2dstar_2dunion_2dchar : eo__24eo_5fprog_5fre_2dstar_2dunion_2dchar.Spec n
   eo__24eo_5fprog_5fre_2dstar_2dunion_2ddrop_2demp : eo__24eo_5fprog_5fre_2dstar_2dunion_2ddrop_2demp.Spec n

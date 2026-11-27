@@ -1260,6 +1260,22 @@ reach it. `$eo_prog_bv-extract-concat-2`'s `rust_eq` builds as generated
 now; the spec of its case 0 takes 11,161,561 heartbeats, so it has a
 `[heartbeats]` entry of 24,000,000.
 
+**Constants** (2026-11-27, 990 of 1,103 with the long cases). A `define` with no
+parameters (`$eo_prog_re-all-elim`, `$eo_prog_re-star-emp`,
+`$eo_prog_re-star-none`) compiles to a Rust function `body_<id>` that
+builds one term, but the trace has only its name and its logos
+function, not its body. For defines, the generated Rust is the source of
+the body: proofgen reads `body_<id>` (`rust_defines`), which may only
+construct a constant, apply one built term to another, build a literal
+(as `rust_literals` reads them) and return the last term, each term used
+once. It builds the trace nodes of that term and emits the body's proof
+from them as it does for a case's result, then the top theorem through
+`Store.framed`, and closes with `unfold` of logos's function and `rfl`.
+Any other line in such a function stops proofgen with an error rather
+than a guess. A possible later cleanup is (a): rust-meta writes the
+body into the trace, as it does for a case, and proofgen reads it from
+there.
+
 The CPC crate and its proofs are now generated from logos `bdcbd95f`,
 which has #521, so the selector's type is guarded in both, as in CpcMini.
 They are still not built (stage 5).
