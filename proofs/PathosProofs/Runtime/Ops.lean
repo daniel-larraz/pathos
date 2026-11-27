@@ -107,6 +107,13 @@ theorem requires_ite (a b c : Eo.Term) :
     · subst h; simp [requires_eq _ _ hs, hs]
   · simp [requires_ne _ _ _ h, h]
 
+/-- `__eo_mk_var` of parts that are not stuck: the variable. A case
+builds a variable with it where logos writes `Term.Var`. -/
+theorem mk_var_of_ne (s T : Eo.Term) (hs : s ≠ Eo.Term.Stuck) (hT : T ≠ Eo.Term.Stuck) :
+    Eo.__eo_mk_var s T = Eo.Term.Var s T := by
+  unfold Eo.__eo_mk_var
+  split <;> simp_all
+
 /-- `__eo_eq` on terms that are not stuck. -/
 theorem eo_eq_of_ne (a b : Eo.Term) (ha : a ≠ Eo.Term.Stuck) (hb : b ≠ Eo.Term.Stuck) :
     Eo.__eo_eq a b = Eo.Term.Boolean (decide (b = a)) := by

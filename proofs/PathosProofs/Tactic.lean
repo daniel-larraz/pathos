@@ -569,7 +569,13 @@ macro_rules
         -- a result that has the term `eo::requires` compared, where logos
         -- has the one it was compared with
         | (unfold $cd; split <;> (try simp only [requires_ite]) <;> (try split_ifs) <;>
-            simp_all; done)))
+            simp_all; done)
+        -- the same where the case builds a variable with `__eo_mk_var` and
+        -- logos writes `Term.Var`, and where `simp_all` leaves the
+        -- equations of a matched term as a conjunction
+        | (unfold $cd; split <;> (try simp only [requires_ite]) <;> (try split_ifs) <;>
+            (try simp only [mk_var_of_ne, ne_eq, reduceCtorEq, not_false_eq_true] at *) <;>
+            (try simp_all) <;> (try casesm* _ ∧ _) <;> (try subst_vars) <;> simp_all; done)))
 
 /-- Ends a case of a loop that goes round again: the handles `hs` speak of
 are the arguments of the next round. -/

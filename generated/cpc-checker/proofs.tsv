@@ -240,7 +240,7 @@ $eo_prog_bv-eq-extract-elim3	generated
 $eo_prog_bv-eq-not-solve	generated	
 $eo_prog_bv-eq-xor-solve	generated	
 $eo_prog_bv-extract-concat-1	generated	
-$eo_prog_bv-extract-concat-2	none	its generated proof does not build: logos_eq does not prove the case form equal to logos's function (rfl, on literal arithmetic, step B); its spec builds at 20,000,000 heartbeats
+$eo_prog_bv-extract-concat-2	generated	
 $eo_prog_bv-extract-concat-3	generated	
 $eo_prog_bv-extract-concat-4	generated	
 $eo_prog_bv-extract-extract	generated	
@@ -477,7 +477,7 @@ $eo_prog_re-concat-star-nullable2	generated
 $eo_prog_re-concat-star-repeat	generated	
 $eo_prog_re-concat-star-swap	generated	
 $eo_prog_re-diff-elim	generated	
-$eo_prog_re-eq-elim	none	its generated proof does not build: the spec of case 0: req_done's `assumption` fails (Type mismatch) in a requirement over built variable terms
+$eo_prog_re-eq-elim	generated	
 $eo_prog_re-in-comp	generated	
 $eo_prog_re-in-cstring	generated	
 $eo_prog_re-in-empty	generated	

@@ -69,6 +69,7 @@ public import $PROOFS$.Part66
 public import $PROOFS$.Part67
 public import $PROOFS$.Part68
 public import $PROOFS$.Part69
+public import $PROOFS$.Part70
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos
@@ -317,6 +318,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2deq_2dnot_2dsolve_spec n ih,
       eo__24eo_5fprog_5fbv_2deq_2dxor_2dsolve_spec n ih,
       eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d1_spec n ih,
+      eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d3_spec n ih,
       eo__24eo_5fprog_5fbv_2dextract_2dconcat_2d4_spec n ih,
       eo__24eo_5fprog_5fbv_2dextract_2dextract_spec n ih,
@@ -528,6 +530,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fre_2dconcat_2dstar_2drepeat_spec n ih,
       eo__24eo_5fprog_5fre_2dconcat_2dstar_2dswap_spec n ih,
       eo__24eo_5fprog_5fre_2ddiff_2delim_spec n ih,
+      eo__24eo_5fprog_5fre_2deq_2delim_spec n ih,
       eo__24eo_5fprog_5fre_2din_2dcomp_spec n ih,
       eo__24eo_5fprog_5fre_2din_2dcstring_spec n ih,
       eo__24eo_5fprog_5fre_2din_2dempty_spec n ih,

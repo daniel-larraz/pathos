@@ -6,13 +6,11 @@
 # errors.
 
 "$eo_prog_bv-rotate-left-eliminate-1" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats) and simp exceeds its steps; logos_eq does not prove the case form (binary literals, milestone 6)"
-"$eo_prog_bv-extract-concat-2" = "logos_eq does not prove the case form equal to logos's function (rfl, on literal arithmetic, step B); its spec builds at 20,000,000 heartbeats"
 "$bv_div_mod_impl" = "the spec of case 2: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $arith_reduction_pred, 11 min)"
 "$arith_reduction_pred" = "the spec of case 7: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $bv_div_mod_impl, 11 min)"
 "$eo_prog_bv-smod-eliminate" = "the spec of case 0: times out (whnf, 2,000,000 heartbeats); at 20,000,000 it runs out of 8G of memory (13 min)"
 "$eo_prog_bv-extract-mult-leading-bit" = "the spec of case 0: times out (whnf) at 20,000,000 heartbeats, with no_match_ne"
 "$str_reduction_pred" = "its proofs are 4.5 MB, a part of their own: the specs of its cases time out (whnf, 2,000,000 heartbeats) and the part peaks above 9 GB"
-"$eo_prog_re-eq-elim" = "the spec of case 0: req_done's `assumption` fails (Type mismatch) in a requirement over built variable terms"
 "$eo_prog_concat_lprop" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (155 KB of proof; reached once eo::list_singleton_intro had a spec)"
 "$eo_prog_concat_split" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (264 KB of proof; reached once eo::list_singleton_intro had a spec)"
 "$eo_prog_bv-smulo-elim" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (1.2 MB of proof; reached once eo::list_repeat had a spec)"

@@ -159,3 +159,6 @@ ctors = { "and" = "Eo.Term.UOp Eo.UserOp.and" }
 # Reached by eo::list_repeat's spec (2026-11-26), measured with
 # `#count_heartbeats in`: the spec of case 0.
 "$eo_prog_bv-umulo-elim" = 5000000  # (2,463,875)
+# Measured with `#count_heartbeats in` (2026-11-27, logos a6b896b5): the
+# spec of case 0, once rust_eq built.
+"$eo_prog_bv-extract-concat-2" = 24000000  # (11,161,561)

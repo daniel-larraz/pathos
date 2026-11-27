@@ -1164,6 +1164,18 @@ them were unproved (`$mk_arith_mult_sign_sgn`, `$get_unused_vars`,
 `$str_arith_entail_is_approx`, `$re_ac_merge`), and eight programs that
 call them are proved with them.
 
+**Two one-off failures** (2026-11-27, 977 of 1,103).
+`$eo_prog_re-eq-elim`'s case builds its bound variable with
+`__eo_mk_var` where logos writes `Term.Var`, and `case_done`'s `simp_all`
+neither unfolds the one nor substitutes the equations of the matched term,
+which it leaves as a conjunction. `case_done` has a last alternative for
+that: it rewrites with `mk_var_of_ne` (`Runtime/Ops.lean`: `__eo_mk_var`
+of parts that are not stuck is the variable), splits the conjunction,
+substitutes and calls `simp_all` again. Proofs that build without it never
+reach it. `$eo_prog_bv-extract-concat-2`'s `rust_eq` builds as generated
+now; the spec of its case 0 takes 11,161,561 heartbeats, so it has a
+`[heartbeats]` entry of 24,000,000.
+
 The CPC crate and its proofs are now generated from logos `bdcbd95f`,
 which has #521, so the selector's type is guarded in both, as in CpcMini.
 They are still not built (stage 5).
