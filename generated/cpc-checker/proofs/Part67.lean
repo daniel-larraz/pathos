@@ -242,14 +242,23 @@ theorem case_3_eo__24is_5fquant_5fdt_5fsplit_5fconj_spec (n : Nat) (ih : Specs n
   case_done hinv16 hG with h_v15 in EoCases.__is_quant_dt_split_conj.case_3 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4
 
 set_option maxHeartbeats 4000000 in
+/-- logos's fall-through helpers of `__is_quant_dt_split_conj`, each the program's cases from its first on. -/
+theorem eo__24is_5fquant_5fdt_5fsplit_5fconj.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___is_quant_dt_split_conj x_a0 x_a1 x_a2 x_a3 x_a4 =
+      firstSome [EoCases.__is_quant_dt_split_conj.case_1 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__is_quant_dt_split_conj.case_2 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__is_quant_dt_split_conj.case_3 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___is_quant_dt_split_conj
+  unfold EoCases.__is_quant_dt_split_conj.case_1 EoCases.__is_quant_dt_split_conj.case_2 EoCases.__is_quant_dt_split_conj.case_3
+  logos_eq_deep
+
+set_option maxHeartbeats 4000000 in
 /-- logos's `__is_quant_dt_split_conj` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24is_5fquant_5fdt_5fsplit_5fconj.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
     __is_quant_dt_split_conj x_a0 x_a1 x_a2 x_a3 x_a4 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else if x_a4 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__is_quant_dt_split_conj.case_0 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__is_quant_dt_split_conj.case_1 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__is_quant_dt_split_conj.case_2 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__is_quant_dt_split_conj.case_3 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck) := by
   conv => lhs; unfold __is_quant_dt_split_conj
-  unfold EoCases.__is_quant_dt_split_conj.case_0 EoCases.__is_quant_dt_split_conj.case_1 EoCases.__is_quant_dt_split_conj.case_2 EoCases.__is_quant_dt_split_conj.case_3
-  try unfold Eo.__eo_l_1___is_quant_dt_split_conj
+  unfold EoCases.__is_quant_dt_split_conj.case_0
+  have hn := eo__24is_5fquant_5fdt_5fsplit_5fconj.helper_1
   logos_eq_deep
 
 set_option maxHeartbeats 4000000 in

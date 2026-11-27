@@ -44,6 +44,38 @@ TRACE_VERSION = 1
 LARGE_CASES = 100
 
 
+def split_top(s):
+    """A logos row's patterns: split at the commas outside parentheses."""
+    out, depth, cur = [], 0, ""
+    for ch in s:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        if ch == "," and depth == 0:
+            out.append(cur.strip())
+            cur = ""
+        else:
+            cur += ch
+    out.append(cur.strip())
+    return out
+
+
+def case_rows(block):
+    """How many rows of a function of logos are its cases: not a test for
+    the stuck term, nor the default row that passes its arguments on to the
+    next fall-through helper (`__eo_dv_<k>`)."""
+    n = 0
+    for r in re.findall(r"^  \| (.*?) =>", block, re.M):
+        cols = split_top(r)
+        if all(c == "_" for c in cols if c != "Term.Stuck") and "Term.Stuck" in cols:
+            continue
+        if all(re.fullmatch(r"__eo_dv_\d+", c) for c in cols):
+            continue
+        n += 1
+    return n
+
+
 def ident(name):
     """The Rust identifier rust-meta gives an EO name."""
     out = "eo_"
@@ -993,6 +1025,23 @@ class Generator:
         self.proofs = []
         self.logos_defs = set()
 
+    def helper_chain(self, f, ncases):
+        """logos's fall-through helpers of `f`, in order, each with the index
+        of the program's case its rows start at; None where the rows do not
+        add up to the program's cases (the last helper may end in a row for
+        no case)."""
+        hs = sorted(self.helpers.get(f, []), key=lambda h: int(h.split("_")[4]))
+        lo = self.case_rows.get(f)
+        if lo is None:
+            return None
+        chain = []
+        for h in hs:
+            chain.append((h, lo))
+            lo += self.case_rows.get(h, 0)
+        if lo not in (ncases, ncases + 1) or any(c > ncases for _, c in chain):
+            return None
+        return chain
+
     def pin_of(self, name):
         """The `[pinned]` entry of a program, if it applies to this calculus:
         one with `left_nested = true` only where some list operator nests to
@@ -1479,6 +1528,7 @@ class Generator:
             o.append("  group_none hinv%d hG with " % k
                      + (hl(g["lo"], g["hi"]) if g["hi"] - g["lo"] == 1
                         else "⟨" + hl(g["lo"], g["hi"]) + "⟩") + "\n\n")
+        rust_eq_at = len(o)
         o.append("/-- logos's `" + p.lean
                  + "` is what the generated body does: the tests for the stuck term,\n"
                    "then the first case that answers. -/\ntheorem "
@@ -1491,7 +1541,34 @@ class Generator:
         # and split by `logos_eq_deep`
         helpers = self.helpers.get(n.lean.split(".")[-1], [])
         o.append("firstSome [" + cds + "] " + p.no_case + ") := by\n")
-        if len(p.cases) >= LARGE_CASES and not helpers:
+        chain = self.helper_chain(n.lean.split(".")[-1], len(p.cases)) if helpers else None
+        if chain:
+            # one lemma for each helper, from the last: it is the program's
+            # cases from its first on, by its own cases unfolded and the
+            # next helper's lemma, so that no proof unfolds them all
+            lemmas = []
+            for k in reversed(range(len(chain))):
+                h, lo = chain[k]
+                hi = chain[k + 1][1] if k + 1 < len(chain) else len(p.cases)
+                lem = ["theorem " + n.id + ".helper_%d" % (k + 1) + n.terms + n.valid
+                       + stuck + " :\n    Eo." + h + n.xs + " =\n      firstSome "
+                       + leaves(lo, len(p.cases)) + " " + p.no_case + " := by\n"]
+                if k + 1 < len(chain):
+                    lem.append("  have hn := " + n.id + ".helper_%d\n" % (k + 2))
+                lem.append("  conv => lhs; unfold Eo." + h + "\n")
+                if hi > lo:
+                    lem.append("  unfold" + "".join(" " + cd_of(c) for c in range(lo, hi))
+                               + "\n")
+                lem.append("  logos_eq_deep\n\n")
+                lemmas.append("".join(lem))
+            o.insert(rust_eq_at, "/-- logos's fall-through helpers of `" + p.lean
+                     + "`, each the program's cases from its first on. -/\n"
+                     + "".join(lemmas))
+            o.append("  conv => lhs; unfold " + n.lean + "\n"
+                     + ("  unfold" + "".join(" " + cd_of(c) for c in range(chain[0][1]))
+                        + "\n" if chain[0][1] > 0 else "")
+                     + "  have hn := " + n.id + ".helper_1\n  logos_eq_deep\n\n")
+        elif len(p.cases) >= LARGE_CASES and not helpers:
             # nothing is unfolded: `logos_eq_large` evaluates both sides
             o.append("  logos_eq_large\n\n")
         else:
@@ -2613,6 +2690,8 @@ def main():
     gen = Generator(trace, cfg)
     # logos's fall-through helpers, by the function they belong to
     gen.helpers = {}
+    # the number of rows of each of logos's functions that are cases
+    gen.case_rows = {}
     # the names of logos's functions
     gen.logos_defs = set()
     if args.calc_lean:
@@ -2621,6 +2700,10 @@ def main():
                 text = f.read()
             for m in re.finditer(r"^def (__eo_l_\d+___(\w+))", text, re.M):
                 gen.helpers.setdefault("__" + m.group(2), []).append(m.group(1))
+            for block in re.split(r"\n(?=def )", text):
+                m = re.match(r"def (\w+)", block)
+                if m:
+                    gen.case_rows[m.group(1)] = case_rows(block)
             gen.logos_defs.update(re.findall(r"^def (\w+)", text, re.M))
     gen.uop_arities = set(user_op_arities(args.calc_lean).values()) if args.calc_lean else set()
     gen.literals = rust_literals(args.rust_src) if args.rust_src else {}

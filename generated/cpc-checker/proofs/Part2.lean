@@ -1435,14 +1435,22 @@ theorem case_2_eo__24dt_5ffind_5fcycle_spec (n : Nat) (ih : Specs n) (s : Store)
   store_step with Store.literal_boolean_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
   case_done hinv1 hG with h_v0 in EoCases.__dt_find_cycle.case_2 using hn_a0 hn_a1 hn_a2 hn_a3
 
+/-- logos's fall-through helpers of `__dt_find_cycle`, each the program's cases from its first on. -/
+theorem eo__24dt_5ffind_5fcycle.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___dt_find_cycle x_a0 x_a1 x_a2 x_a3 =
+      firstSome [EoCases.__dt_find_cycle.case_1 x_a0 x_a1 x_a2 x_a3, EoCases.__dt_find_cycle.case_2 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___dt_find_cycle
+  unfold EoCases.__dt_find_cycle.case_1 EoCases.__dt_find_cycle.case_2
+  logos_eq_deep
+
 /-- logos's `__dt_find_cycle` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24dt_5ffind_5fcycle.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
     __dt_find_cycle x_a0 x_a1 x_a2 x_a3 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__dt_find_cycle.case_0 x_a0 x_a1 x_a2 x_a3, EoCases.__dt_find_cycle.case_1 x_a0 x_a1 x_a2 x_a3, EoCases.__dt_find_cycle.case_2 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck) := by
   conv => lhs; unfold __dt_find_cycle
-  unfold EoCases.__dt_find_cycle.case_0 EoCases.__dt_find_cycle.case_1 EoCases.__dt_find_cycle.case_2
-  try unfold Eo.__eo_l_1___dt_find_cycle
+  unfold EoCases.__dt_find_cycle.case_0
+  have hn := eo__24dt_5ffind_5fcycle.helper_1
   logos_eq_deep
 
 theorem body_eo__24dt_5ffind_5fcycle_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
@@ -1967,14 +1975,22 @@ theorem case_2_eo__24dt_5fupdater_5felim_5frhs_spec (n : Nat) (ih : Specs n) (s 
   pat_same a1 v8 with h_a1 h_v8 using hinv1 else hinv1 hG in EoCases.__dt_updater_elim_rhs.case_2
   case_done hinv1 hG with h_a2 in EoCases.__dt_updater_elim_rhs.case_2 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v4 hn_v5 hn_v7
 
+/-- logos's fall-through helpers of `__dt_updater_elim_rhs`, each the program's cases from its first on. -/
+theorem eo__24dt_5fupdater_5felim_5frhs.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___dt_updater_elim_rhs x_a0 x_a1 x_a2 =
+      firstSome [EoCases.__dt_updater_elim_rhs.case_1 x_a0 x_a1 x_a2, EoCases.__dt_updater_elim_rhs.case_2 x_a0 x_a1 x_a2] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___dt_updater_elim_rhs
+  unfold EoCases.__dt_updater_elim_rhs.case_1 EoCases.__dt_updater_elim_rhs.case_2
+  logos_eq_deep
+
 /-- logos's `__dt_updater_elim_rhs` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24dt_5fupdater_5felim_5frhs.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
     __dt_updater_elim_rhs x_a0 x_a1 x_a2 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__dt_updater_elim_rhs.case_0 x_a0 x_a1 x_a2, EoCases.__dt_updater_elim_rhs.case_1 x_a0 x_a1 x_a2, EoCases.__dt_updater_elim_rhs.case_2 x_a0 x_a1 x_a2] HasStuck.stuck) := by
   conv => lhs; unfold __dt_updater_elim_rhs
-  unfold EoCases.__dt_updater_elim_rhs.case_0 EoCases.__dt_updater_elim_rhs.case_1 EoCases.__dt_updater_elim_rhs.case_2
-  try unfold Eo.__eo_l_1___dt_updater_elim_rhs
+  unfold EoCases.__dt_updater_elim_rhs.case_0
+  have hn := eo__24dt_5fupdater_5felim_5frhs.helper_1
   logos_eq_deep
 
 theorem step_eo__24dt_5fupdater_5felim_5frhs_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)

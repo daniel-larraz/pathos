@@ -576,6 +576,156 @@ theorem eo__24bv_5fmk_5fbitblast_5fstep_5fadd_spec (n : Nat) (ih : ∀ m < n, Sp
   rintro ⟨r, s'⟩ h
   cases r <;> simpa [WP.uncurry'_pair] using h
 
+theorem case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
+    case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some (Next.Done t)) =>
+        ∃ res, EoCases.__bv_mk_bitblast_step_bitwise.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok (some (Next.Again arr)) =>
+        ∃ (u0 : Term) (y0 : _) (u1 : Term) (y1 : _) (u2 : Term) (y2 : _) (u3 : Term) (y3 : _), arr.val = [u0, u1, u2, u3] ∧ Represents.rep s' u0 y0 ∧ Represents.rep s' u1 y1 ∧ Represents.rep s' u2 y2 ∧ Represents.rep s' u3 y3 ∧
+          EoCases.__bv_mk_bitblast_step_bitwise.case_0 x_a0 x_a1 x_a2 x_a3 = some (__bv_mk_bitblast_step_bitwise y0 y1 y2 y3)
+      | core.result.Result.Ok none => EoCases.__bv_mk_bitblast_step_bitwise.case_0 x_a0 x_a1 x_a2 x_a3 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
+  have hG := Store.Grows.refl s
+  pat_unapply h_a2 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__bv_mk_bitblast_step_bitwise.case_0
+  pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__bv_mk_bitblast_step_bitwise.case_0
+  pat_same v4 a0 with h_v4 h_a0 using hinv else hinv hG in EoCases.__bv_mk_bitblast_step_bitwise.case_0
+  store_step with ih.eo__24bv_5fbitblast_5fapply_5fbinary s a1 a3 v5 _ _ _ hinv h64 hrem h_a1 h_a3 h_v5 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5
+  case_again hinv1 hG with h_a0 h_a1 h_v2 h_v6 in EoCases.__bv_mk_bitblast_step_bitwise.case_0 using hn_a0 hn_a1 hn_a2 hn_a3 hn_v1 hn_v2 hn_v4 hn_v5
+
+theorem case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
+    case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (some (Next.Done t)) =>
+        ∃ res, EoCases.__bv_mk_bitblast_step_bitwise.case_1 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
+      | core.result.Result.Ok (some (Next.Again arr)) =>
+        ∃ (u0 : Term) (y0 : _) (u1 : Term) (y1 : _) (u2 : Term) (y2 : _) (u3 : Term) (y3 : _), arr.val = [u0, u1, u2, u3] ∧ Represents.rep s' u0 y0 ∧ Represents.rep s' u1 y1 ∧ Represents.rep s' u2 y2 ∧ Represents.rep s' u3 y3 ∧
+          EoCases.__bv_mk_bitblast_step_bitwise.case_1 x_a0 x_a1 x_a2 x_a3 = some (__bv_mk_bitblast_step_bitwise y0 y1 y2 y3)
+      | core.result.Result.Ok none => EoCases.__bv_mk_bitblast_step_bitwise.case_1 x_a0 x_a1 x_a2 x_a3 = none
+      | core.result.Result.Err _ => True ⦄div := by
+  unfold case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
+  have hG := Store.Grows.refl s
+  store_step with ih.eo__24eo_5ftypeof s a2 _ hinv h64 hrem h_a2 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  store_step with ih.eo__24eo_5fnil s1 a0 v0 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v0 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0
+  have h_req_v2 := (show requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise s2 a2 v1 a3 ⦃ r s' => s'.Inv ∧ s2.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_requires _ _ _) | core.result.Result.Err _ => True ⦄div from by
+    unfold requires_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
+    have hrem := (hG.rem hrem)
+    have hG := Store.Grows.refl s2
+    req_same a2 v1 with h_a2 h_v1 using hinv2 hG
+    req_stuck h_a2 as hq_a2 using hinv2 hG
+    req_done hinv2 hG with h_a3 using hq_a2)
+  store_step with h_req_v2 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1
+  case_done hinv3 hG with h_v2 in EoCases.__bv_mk_bitblast_step_bitwise.case_1 using hn_a0 hn_a1 hn_a2 hn_a3
+
+/-- logos's fall-through helpers of `__bv_mk_bitblast_step_bitwise`, each the program's cases from its first on. -/
+theorem eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___bv_mk_bitblast_step_bitwise x_a0 x_a1 x_a2 x_a3 =
+      firstSome [EoCases.__bv_mk_bitblast_step_bitwise.case_1 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___bv_mk_bitblast_step_bitwise
+  unfold EoCases.__bv_mk_bitblast_step_bitwise.case_1
+  logos_eq_deep
+
+/-- logos's `__bv_mk_bitblast_step_bitwise` is what the generated body does: the tests for the stuck term,
+then the first case that answers. -/
+theorem eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
+    __bv_mk_bitblast_step_bitwise x_a0 x_a1 x_a2 x_a3 =
+      (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__bv_mk_bitblast_step_bitwise.case_0 x_a0 x_a1 x_a2 x_a3, EoCases.__bv_mk_bitblast_step_bitwise.case_1 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck) := by
+  conv => lhs; unfold __bv_mk_bitblast_step_bitwise
+  unfold EoCases.__bv_mk_bitblast_step_bitwise.case_0
+  have hn := eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise.helper_1
+  logos_eq_deep
+
+theorem step_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    step_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok (Next.Done t) => Represents.rep s' t (__bv_mk_bitblast_step_bitwise x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Ok (Next.Again arr) =>
+        s'.budget < s.budget ∧ ∃ (u0 : Term) (y0 : _) (u1 : Term) (y1 : _) (u2 : Term) (y2 : _) (u3 : Term) (y3 : _), arr.val = [u0, u1, u2, u3] ∧ Represents.rep s' u0 y0 ∧ Represents.rep s' u1 y1 ∧ Represents.rep s' u2 y2 ∧ Represents.rep s' u3 y3 ∧
+          __bv_mk_bitblast_step_bitwise x_a0 x_a1 x_a2 x_a3 = __bv_mk_bitblast_step_bitwise y0 y1 y2 y3
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise.rust_eq x_a0 x_a1 x_a2 x_a3 (by valid_tac hinv h_a0) (by valid_tac hinv h_a1) (by valid_tac hinv h_a2) (by valid_tac hinv h_a3)]
+  unfold step_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
+  have hG := Store.Grows.refl s
+  tick_step as ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  stuck_check h_a0 : x_a0 as hn_a0 else hinv1 hG
+  stuck_check h_a1 : x_a1 as hn_a1 else hinv1 hG
+  stuck_check h_a2 : x_a2 as hn_a2 else hinv1 hG
+  stuck_check h_a3 : x_a3 as hn_a3 else hinv1 hG
+  round_step with case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec n ih s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 hn_a0 hn_a1 hn_a2 hn_a3
+    as ⟨s2, hinv2, hc0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 hbud using hn_a0 hn_a1 hn_a2 hn_a3
+  round_step with case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec n ih s2 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv2 h64 (hG.rem hrem) h_a0 h_a1 h_a2 h_a3 hn_a0 hn_a1 hn_a2 hn_a3
+    as ⟨s3, hinv3, hc1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 hbud using hn_a0 hn_a1 hn_a2 hn_a3 hc0
+  round_stuck hinv3 hG using hn_a0 hn_a1 hn_a2 hn_a3 hc0 hc1 in EoCases.__bv_mk_bitblast_step_bitwise.case_0 EoCases.__bv_mk_bitblast_step_bitwise.case_1
+
+theorem body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
+    (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (h_a1 : Represents.rep s a1 x_a1) (h_a2 : Represents.rep s a2 x_a2) (h_a3 : Represents.rep s a3 x_a3) :
+    body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_mk_bitblast_step_bitwise x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div := by
+  refine (?_ : ∀ (k : Nat) (a0 a1 a2 a3 : Term) (s : Store) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _), s.budget ≤ k → s.Inv → s.remaining ≤ n →
+      Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Represents.rep s a3 x_a3 →
+      body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise s a0 a1 a2 a3 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__bv_mk_bitblast_step_bitwise x_a0 x_a1 x_a2 x_a3)
+      | core.result.Result.Err _ => True ⦄div) s.budget a0 a1 a2 a3 s x_a0 x_a1 x_a2 x_a3 le_rfl hinv hrem h_a0 h_a1 h_a2 h_a3
+  intro k
+  refine Nat.strong_induction_on k ?_
+  intro k ihl a0 a1 a2 a3 s x_a0 x_a1 x_a2 x_a3 hk hinv hrem h_a0 h_a1 h_a2 h_a3
+  unfold body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_loop
+  step with step_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec n ih s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3 as ⟨r, s1, hinv1, hg1, hr⟩
+  cases r with
+  | Err e => simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨hinv1, hg1, trivial⟩
+  | Ok nx =>
+    cases nx with
+    | Done value =>
+      simp only [WP.dspec_ok, WP.uncurry'_pair]
+      exact ⟨hinv1, hg1, hr⟩
+    | Again next =>
+      obtain ⟨hlt, u0, y0, u1, y1, u2, y2, u3, y3, hnext, hrep0, hrep1, hrep2, hrep3, heq⟩ := hr
+      simp only
+      have hlen : next.length = 4 := by simp [Array.length, hnext]
+      step as ⟨b0, hb0⟩
+      obtain rfl : b0 = u0 := by simp [hb0, hnext]
+      step as ⟨b1, hb1⟩
+      obtain rfl : b1 = u1 := by simp [hb1, hnext]
+      step as ⟨b2, hb2⟩
+      obtain rfl : b2 = u2 := by simp [hb2, hnext]
+      step as ⟨b3, hb3⟩
+      obtain rfl : b3 = u3 := by simp [hb3, hnext]
+      have hrec := ihl s1.budget (by omega) b0 b1 b2 b3 s1 y0 y1 y2 y3 le_rfl hinv1 (hg1.rem hrem)  hrep0  hrep1  hrep2  hrep3
+      unfold body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise at hrec
+      apply WP.dspec_mono hrec
+      loop_close hg1 heq
+
+theorem eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec (n : Nat) (ih : ∀ m < n, Specs m) : eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise.Spec n := by
+  intro s a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv h64 hrem h_a0 h_a1 h_a2 h_a3
+  unfold eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise
+  apply WP.dspec_mono (Store.framed_cached s hinv hrem 36#u32 _ [a0, a1, a2, a3] rfl
+    (fun s1 => body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise s1 a0 a1 a2 a3) (fun s' t => Represents.rep s' t (__bv_mk_bitblast_step_bitwise x_a0 x_a1 x_a2 x_a3))
+    (by intro _ _ _ hn h; congr_one h hn)
+    (by
+      intro s1 res hn hsem
+      obtain ⟨b0, b1, b2, b3, y0, y1, y2, y3, hargs, hb0, hb1, hb2, hb3, hr⟩ := ProgramSem.of_36 hsem
+      simp only [List.cons.injEq, and_true] at hargs
+      obtain ⟨rfl, rfl, rfl, rfl⟩ := hargs
+      obtain rfl := Rep.functional hb0 (Represents.congr h_a0 hn)
+      obtain rfl := Rep.functional hb1 (Represents.congr h_a1 hn)
+      obtain rfl := Rep.functional hb2 (Represents.congr h_a2 hn)
+      obtain rfl := Rep.functional hb3 (Represents.congr h_a3 hn)
+      exact hr)
+    (by
+      intro s1 res hpre h
+      exact ProgramSem.to_36 ⟨a0, a1, a2, a3, x_a0, x_a1, x_a2, x_a3, rfl, Rep.mono hpre h_a0, Rep.mono hpre h_a1, Rep.mono hpre h_a2, Rep.mono hpre h_a3, h⟩)
+    (fun s1 m hinv1 hn hm hrem1 => by
+      spec_exact body_eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec m (ih m hm) s1 a0 a1 a2 a3 x_a0 x_a1 x_a2 x_a3 hinv1 h64 hrem1 (by congr_one h_a0 hn) (by congr_one h_a1 hn) (by congr_one h_a2 hn) (by congr_one h_a3 hn)))
+  rintro ⟨r, s'⟩ h
+  cases r <;> simpa [WP.uncurry'_pair] using h
+
 theorem case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
     (hinv : s.Inv) (h64 : Platform64) (hrem : s.remaining ≤ n) (h_a0 : Represents.rep s a0 x_a0) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) :
     case_0_eo__24bv_5fmk_5fbitblast_5fstep_5fconcat s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
@@ -1120,14 +1270,22 @@ theorem case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_spec (n : Nat) (ih : 
   store_step with Store.builtin_spec_add s5 e_v18 (by rw [he_v18]; rfl) h_a2 h_v17 hinv5 h64 as ⟨v18, s6, hinv6, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v15 h_v16 h_v17
   case_again hinv6 hG with h_v16 h_v2 h_v18 h_a3 in EoCases.__bv_mk_bitblast_step_shl_rec.case_1 using hn_a0 hn_a1 hn_a2 hn_a3 hn_v1 hn_v2 hn_v4 hn_v5
 
+/-- logos's fall-through helpers of `__bv_mk_bitblast_step_shl_rec`, each the program's cases from its first on. -/
+theorem eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___bv_mk_bitblast_step_shl_rec x_a0 x_a1 x_a2 x_a3 =
+      firstSome [EoCases.__bv_mk_bitblast_step_shl_rec.case_1 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___bv_mk_bitblast_step_shl_rec
+  unfold EoCases.__bv_mk_bitblast_step_shl_rec.case_1
+  logos_eq_deep
+
 /-- logos's `__bv_mk_bitblast_step_shl_rec` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) :
     __bv_mk_bitblast_step_shl_rec x_a0 x_a1 x_a2 x_a3 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__bv_mk_bitblast_step_shl_rec.case_0 x_a0 x_a1 x_a2 x_a3, EoCases.__bv_mk_bitblast_step_shl_rec.case_1 x_a0 x_a1 x_a2 x_a3] HasStuck.stuck) := by
   conv => lhs; unfold __bv_mk_bitblast_step_shl_rec
-  unfold EoCases.__bv_mk_bitblast_step_shl_rec.case_0 EoCases.__bv_mk_bitblast_step_shl_rec.case_1
-  try unfold Eo.__eo_l_1___bv_mk_bitblast_step_shl_rec
+  unfold EoCases.__bv_mk_bitblast_step_shl_rec.case_0
+  have hn := eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec.helper_1
   logos_eq_deep
 
 theorem step_eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
@@ -1436,14 +1594,22 @@ theorem case_1_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_spec (n : Nat) (ih : 
   store_step with Store.builtin_spec_add s5 e_v18 (by rw [he_v18]; rfl) h_a2 h_v17 hinv5 h64 as ⟨v18, s6, hinv6, h_v18⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v15 h_v16 h_v17
   case_again hinv6 hG with h_v16 h_v2 h_v18 h_a3 h_a4 in EoCases.__bv_mk_bitblast_step_shr_rec.case_1 using hn_a0 hn_a1 hn_a2 hn_a3 hn_a4 hn_v1 hn_v2 hn_v4 hn_v5
 
+/-- logos's fall-through helpers of `__bv_mk_bitblast_step_shr_rec`, each the program's cases from its first on. -/
+theorem eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) (hn_a3 : x_a3 ≠ Eo.Term.Stuck) (hn_a4 : x_a4 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___bv_mk_bitblast_step_shr_rec x_a0 x_a1 x_a2 x_a3 x_a4 =
+      firstSome [EoCases.__bv_mk_bitblast_step_shr_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___bv_mk_bitblast_step_shr_rec
+  unfold EoCases.__bv_mk_bitblast_step_shr_rec.case_1
+  logos_eq_deep
+
 /-- logos's `__bv_mk_bitblast_step_shr_rec` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hw_a3 : Valid.valid x_a3) (hw_a4 : Valid.valid x_a4) :
     __bv_mk_bitblast_step_shr_rec x_a0 x_a1 x_a2 x_a3 x_a4 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else if x_a3 = Eo.Term.Stuck then HasStuck.stuck else if x_a4 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__bv_mk_bitblast_step_shr_rec.case_0 x_a0 x_a1 x_a2 x_a3 x_a4, EoCases.__bv_mk_bitblast_step_shr_rec.case_1 x_a0 x_a1 x_a2 x_a3 x_a4] HasStuck.stuck) := by
   conv => lhs; unfold __bv_mk_bitblast_step_shr_rec
-  unfold EoCases.__bv_mk_bitblast_step_shr_rec.case_0 EoCases.__bv_mk_bitblast_step_shr_rec.case_1
-  try unfold Eo.__eo_l_1___bv_mk_bitblast_step_shr_rec
+  unfold EoCases.__bv_mk_bitblast_step_shr_rec.case_0
+  have hn := eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec.helper_1
   logos_eq_deep
 
 theorem step_eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)

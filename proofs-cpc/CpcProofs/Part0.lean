@@ -315,14 +315,22 @@ theorem case_1_eo__24are_5fdistinct_5fterms_5flist_spec (n : Nat) (ih : Specs n)
   store_step with h_ite_v10 as ⟨v10, s3, hinv3, h_v10⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
   case_done hinv3 hG with h_v10 in EoCases.__are_distinct_terms_list.case_1 using hn_a0 hn_a1 hn_v1 hn_v2 hn_v4 hn_v5
 
+/-- logos's fall-through helpers of `__are_distinct_terms_list`, each the program's cases from its first on. -/
+theorem eo__24are_5fdistinct_5fterms_5flist.helper_1 (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___are_distinct_terms_list x_a0 x_a1 =
+      firstSome [EoCases.__are_distinct_terms_list.case_1 x_a0 x_a1] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___are_distinct_terms_list
+  unfold EoCases.__are_distinct_terms_list.case_1
+  logos_eq_deep
+
 /-- logos's `__are_distinct_terms_list` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24are_5fdistinct_5fterms_5flist.rust_eq (x_a0 : _) (x_a1 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) :
     __are_distinct_terms_list x_a0 x_a1 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__are_distinct_terms_list.case_0 x_a0 x_a1, EoCases.__are_distinct_terms_list.case_1 x_a0 x_a1] HasStuck.stuck) := by
   conv => lhs; unfold __are_distinct_terms_list
-  unfold EoCases.__are_distinct_terms_list.case_0 EoCases.__are_distinct_terms_list.case_1
-  try unfold Eo.__eo_l_1___are_distinct_terms_list
+  unfold EoCases.__are_distinct_terms_list.case_0
+  have hn := eo__24are_5fdistinct_5fterms_5flist.helper_1
   logos_eq_deep
 
 theorem body_eo__24are_5fdistinct_5fterms_5flist_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1888,14 +1896,22 @@ theorem case_1_eo__24assoc_5fnil_5fnth_spec (n : Nat) (ih : Specs n) (s : Store)
   store_step with Store.builtin_spec_add s1 e_v7 (by rw [he_v7]; rfl) h_a2 h_v6 hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6
   case_again hinv2 hG with h_a0 h_v2 h_v7 in EoCases.__assoc_nil_nth.case_1 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v4 hn_v5
 
+/-- logos's fall-through helpers of `__assoc_nil_nth`, each the program's cases from its first on. -/
+theorem eo__24assoc_5fnil_5fnth.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___assoc_nil_nth x_a0 x_a1 x_a2 =
+      firstSome [EoCases.__assoc_nil_nth.case_1 x_a0 x_a1 x_a2] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___assoc_nil_nth
+  unfold EoCases.__assoc_nil_nth.case_1
+  logos_eq_deep
+
 /-- logos's `__assoc_nil_nth` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24assoc_5fnil_5fnth.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
     __assoc_nil_nth x_a0 x_a1 x_a2 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__assoc_nil_nth.case_0 x_a0 x_a1 x_a2, EoCases.__assoc_nil_nth.case_1 x_a0 x_a1 x_a2] HasStuck.stuck) := by
   conv => lhs; unfold __assoc_nil_nth
-  unfold EoCases.__assoc_nil_nth.case_0 EoCases.__assoc_nil_nth.case_1
-  try unfold Eo.__eo_l_1___assoc_nil_nth
+  unfold EoCases.__assoc_nil_nth.case_0
+  have hn := eo__24assoc_5fnil_5fnth.helper_1
   logos_eq_deep
 
 theorem step_eo__24assoc_5fnil_5fnth_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -2026,14 +2042,22 @@ theorem case_1_eo__24assoc_5fnil_5fnth_5ftype_spec (n : Nat) (ih : Specs n) (s :
   store_step with Store.builtin_spec_add s1 e_v7 (by rw [he_v7]; rfl) h_a2 h_v6 hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6
   case_again hinv2 hG with h_a0 h_v2 h_v7 in EoCases.__assoc_nil_nth_type.case_1 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v4 hn_v5
 
+/-- logos's fall-through helpers of `__assoc_nil_nth_type`, each the program's cases from its first on. -/
+theorem eo__24assoc_5fnil_5fnth_5ftype.helper_1 (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) (hn_a0 : x_a0 ≠ Eo.Term.Stuck) (hn_a1 : x_a1 ≠ Eo.Term.Stuck) (hn_a2 : x_a2 ≠ Eo.Term.Stuck) :
+    Eo.__eo_l_1___assoc_nil_nth_type x_a0 x_a1 x_a2 =
+      firstSome [EoCases.__assoc_nil_nth_type.case_1 x_a0 x_a1 x_a2] HasStuck.stuck := by
+  conv => lhs; unfold Eo.__eo_l_1___assoc_nil_nth_type
+  unfold EoCases.__assoc_nil_nth_type.case_1
+  logos_eq_deep
+
 /-- logos's `__assoc_nil_nth_type` is what the generated body does: the tests for the stuck term,
 then the first case that answers. -/
 theorem eo__24assoc_5fnil_5fnth_5ftype.rust_eq (x_a0 : _) (x_a1 : _) (x_a2 : _) (hw_a0 : Valid.valid x_a0) (hw_a1 : Valid.valid x_a1) (hw_a2 : Valid.valid x_a2) :
     __assoc_nil_nth_type x_a0 x_a1 x_a2 =
       (if x_a0 = Eo.Term.Stuck then HasStuck.stuck else if x_a1 = Eo.Term.Stuck then HasStuck.stuck else if x_a2 = Eo.Term.Stuck then HasStuck.stuck else firstSome [EoCases.__assoc_nil_nth_type.case_0 x_a0 x_a1 x_a2, EoCases.__assoc_nil_nth_type.case_1 x_a0 x_a1 x_a2] HasStuck.stuck) := by
   conv => lhs; unfold __assoc_nil_nth_type
-  unfold EoCases.__assoc_nil_nth_type.case_0 EoCases.__assoc_nil_nth_type.case_1
-  try unfold Eo.__eo_l_1___assoc_nil_nth_type
+  unfold EoCases.__assoc_nil_nth_type.case_0
+  have hn := eo__24assoc_5fnil_5fnth_5ftype.helper_1
   logos_eq_deep
 
 theorem step_eo__24assoc_5fnil_5fnth_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)

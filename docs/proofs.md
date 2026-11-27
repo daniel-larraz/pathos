@@ -354,10 +354,9 @@ some list operator nests to the left (the CPC, not CpcMini).
 `$eo_mk_premise_list` is listed so: `$eo_cmd_step_proven` always passes
 `and`, and `eo::cons` needs a constant that does not nest to the left.
 `$re_ac_merge` is listed too (`$derivative` passes `re.union` or
-`re.inter`). Its case specs built in a trial run,
-but its `rust_eq` does not: logos falls through four helpers, and
-splitting them gives 4,010 goals (`unproved.toml`). Proving it needs a
-`rust_eq` that goes helper by helper, which is still to do.
+`re.inter`). logos falls through four helpers there, and splitting
+them all at once gave 4,010 goals; it is proved with a `rust_eq` that
+goes helper by helper (see "Fall-through helpers").
 
 The second step was planned as lemmas generated per constructor. It is
 hand-written instead, and holds for both calculi: every proof goes by
@@ -1145,6 +1144,25 @@ bindings and repeat. That took specs of the natives `mk_rational` (an
 error for a zero denominator, where logos divides by zero as 0),
 `const_id` (as `uconst_id`, with `@c.`) and `zmult`. It also took `Valid`
 of SMT bindings (`PathosProofsCpc/Valid.lean`).
+
+**Fall-through helpers** (2026-11-27, 975 of 1,103). Where a program's
+cases do not fit one Lean `match`, logos falls through to helpers
+`__eo_l_1___f`, `__eo_l_2___f`, ..., each holding the next run of cases.
+proofgen counts each function's rows (the stuck tests and the default
+row of `__eo_dv_N` patterns do not count) to find where each helper's
+run starts. It then proves, from the last helper back, a lemma
+`<f>.helper_k`: the helper is `firstSome` of the cases from its first
+on. Each unfolds only its own cases and has the next lemma for the
+fall-through, and `rust_eq` unfolds only the cases before the first
+helper. Before, `rust_eq` unfolded every helper at once, which ran out of
+heartbeats, recursion depth or goals on programs with several helpers.
+Where the counts do not add up to the program's cases, the old proof is
+kept. The 28 programs with helpers all take the new form now; nine of
+them were unproved (`$mk_arith_mult_sign_sgn`, `$get_unused_vars`,
+`$seq_is_prefix`, `$bv_mk_bitblast_step_bitwise`, `$is_absorb_rec`,
+`$is_eq_maybe_to_real`, `$is_quant_miniscope_or`,
+`$str_arith_entail_is_approx`, `$re_ac_merge`), and eight programs that
+call them are proved with them.
 
 The CPC crate and its proofs are now generated from logos `bdcbd95f`,
 which has #521, so the selector's type is guarded in both, as in CpcMini.

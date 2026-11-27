@@ -35,7 +35,7 @@ $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	it calls $bv_const_to_bitlist_rec, which has no proof
 $bv_mk_bitblast_step_add	generated	
-$bv_mk_bitblast_step_bitwise	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once $eo_typeof had a proof
+$bv_mk_bitblast_step_bitwise	generated	
 $bv_mk_bitblast_step_concat	generated	
 $bv_mk_bitblast_step_eq_rec	generated	
 $bv_mk_bitblast_step_ite	generated	
@@ -118,7 +118,7 @@ $eo_nil_bvmul	generated
 $eo_nil_bvor	generated	
 $eo_nil_bvxor	generated	
 $eo_nil_str.++	generated	
-$eo_prog_absorb	none	it calls $is_absorb, which has no proof
+$eo_prog_absorb	generated	
 $eo_prog_aci_norm	none	it calls $aci_norm_eq, which has no proof
 $eo_prog_alpha_equiv	none	it calls $is_var_list, which has no proof
 $eo_prog_and_elim	generated	
@@ -164,15 +164,15 @@ $eo_prog_arith-mod-over-mod	none	case 0 has eo::list_concat of +, whose nil test
 $eo_prog_arith-mod-over-mod-1	generated	
 $eo_prog_arith-mod-over-mod-mult	none	case 0 has eo::list_concat of *, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_arith-string-pred-entail	generated	
-$eo_prog_arith-string-pred-safe-approx	none	it calls $str_arith_entail_is_approx, which has no proof
+$eo_prog_arith-string-pred-safe-approx	generated	
 $eo_prog_arith-to-int-elim-to-real	generated	
 $eo_prog_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison, which has no proof
 $eo_prog_arith_mult_neg	generated	
 $eo_prog_arith_mult_pos	generated	
-$eo_prog_arith_mult_sign	none	it calls $mk_arith_mult_sign_sgn, which has no proof
+$eo_prog_arith_mult_sign	generated	
 $eo_prog_arith_mult_tangent	generated	
 $eo_prog_arith_poly_norm	generated	
-$eo_prog_arith_poly_norm_rel	none	it calls $is_eq_maybe_to_real, which has no proof
+$eo_prog_arith_poly_norm_rel	generated	
 $eo_prog_arith_reduction	none	it calls $arith_reduction_pred, which has no proof
 $eo_prog_arith_sum_ub	generated	
 $eo_prog_arith_trichotomy	generated	
@@ -466,8 +466,8 @@ $eo_prog_quant-dt-split	generated
 $eo_prog_quant-merge-prenex	generated	
 $eo_prog_quant-miniscope-and	generated	
 $eo_prog_quant-miniscope-ite	generated	
-$eo_prog_quant-miniscope-or	none	it calls $is_quant_miniscope_or, which has no proof
-$eo_prog_quant-unused-vars	none	it calls $get_unused_vars, which has no proof
+$eo_prog_quant-miniscope-or	generated	
+$eo_prog_quant-unused-vars	generated	
 $eo_prog_quant-var-elim-eq	generated	
 $eo_prog_quant_var_reordering	generated	
 $eo_prog_re-all-elim	none	a constant, not a program with cases
@@ -894,23 +894,23 @@ $get_arith_poly_norm	generated
 $get_bv_poly_norm_rec	generated	
 $get_lambda_type	generated	
 $get_nth_var_type	generated	
-$get_unused_vars	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once eo::list_minclude had a spec
+$get_unused_vars	generated	
 $get_var_type	generated	
 $get_zero	generated	
 $greatest_int_lt	generated	
 $iota_rec	generated	
-$is_absorb	none	it calls $is_absorb_rec, which has no proof
-$is_absorb_rec	none	its generated proof does not build: falls through to two helpers (__eo_l_1, __eo_l_2); logos_eq_deep leaves goals unsolved
+$is_absorb	generated	
+$is_absorb_rec	generated	
 $is_arith_type	generated	
 $is_closed_rec	generated	
 $is_cons_app	generated	
-$is_eq_maybe_to_real	none	its generated proof does not build: falls through to a helper; logos_eq_deep fails (simp, a nested error)
+$is_eq_maybe_to_real	generated	
 $is_instantiation	generated	
 $is_poly_norm_rel_consts	generated	
 $is_poly_norm_rel_consts_rel	generated	
 $is_quant_dt_split	generated	
 $is_quant_dt_split_conj	generated	
-$is_quant_miniscope_or	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth
+$is_quant_miniscope_or	generated	
 $is_renaming_rec	generated	
 $is_seq_const	generated	
 $is_seq_const_rec	generated	
@@ -921,7 +921,7 @@ $mk_arith_mult_abs_comparison	none	it calls $mk_arith_mult_abs_comparison_rec, w
 $mk_arith_mult_abs_comparison_rec	none	case 0 has eo::list_concat of *, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $mk_arith_mult_neg	generated	
 $mk_arith_mult_pos	generated	
-$mk_arith_mult_sign_sgn	none	its generated proof does not build: logos_eq_deep times out (whnf, 2,000,000 heartbeats): three cases with deep patterns and repeated variables
+$mk_arith_mult_sign_sgn	generated	
 $mk_arith_sum_ub	generated	
 $mk_arith_sum_ub_rec	generated	
 $mk_arith_trichotomy	generated	
@@ -961,7 +961,7 @@ $poly_mod_coeffs	generated
 $poly_mul	generated	
 $poly_mul_mon	generated	
 $poly_neg	generated	
-$re_ac_merge	none	its generated proof does not build: rust_eq: falls through to four helpers (__eo_l_1 to __eo_l_4); repeat' split leaves 4,010 goals (10 min) and logos_eq_deep's simp reaches the maximum recursion depth; reached once [pinned] gave its spec
+$re_ac_merge	generated	
 $re_concat_merge	generated	
 $re_flatten	none	it calls $str_flatten, which has no proof
 $re_is_unbound_wildcard	generated	
@@ -979,9 +979,9 @@ $seq_element_of_unit	generated
 $seq_empty	generated	
 $seq_eval	none	case 2 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $seq_eval_replace_all_rec	none	case 1 has eo::list_concat of str.++, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
-$seq_find	none	it calls $seq_is_prefix, which has no proof
+$seq_find	generated	
 $seq_is_non_empty	generated	
-$seq_is_prefix	none	its generated proof does not build: logos_eq_deep leaves goals unsolved: a branch where `__eo_eq et es` is not false while et and es differ (reached once the datatype operators had specs)
+$seq_is_prefix	generated	
 $seq_subsequence_rec	generated	
 $set_is_not_subset	generated	
 $set_union_to_list	generated	
@@ -1045,7 +1045,7 @@ $smtx_typeof_str.indexof	generated
 $smtx_typeof_str.substr	generated	
 $smtx_typeof_str.update	generated	
 $smtx_typeof_zero_extend	generated	
-$str_arith_entail_is_approx	none	its generated proof does not build: falls through to helpers (__eo_l_<k>); logos_eq_deep leaves goals unsolved, at 4,700,000 heartbeats: a test `__eo_eq t x` that a hypothesis `¬x = t` decides, and a stuck result against a recursive call (reached once eo::cmp had a spec)
+$str_arith_entail_is_approx	generated	
 $str_arith_entail_is_approx_len	generated	
 $str_arith_entail_simple_pred	generated	
 $str_arith_entail_simple_rec	generated	
