@@ -892,10 +892,10 @@ theorem case_0_eo__24eo_5fchecker_5fis_5frefutation_spec (n : Nat) (ih : Specs n
   unfold case_0_eo__24eo_5fchecker_5fis_5frefutation
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
-  store_step with ih.eo__24eo_5finvoke_5fassume_5flist s1 v0 a0 _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a0 (by good_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
-  store_step with ih.eo__24eo_5finvoke_5fcmd_5flist s2 v1 a1 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_a1 (by good_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
-  store_step with ih.eo__24eo_5fstate_5fis_5frefutation s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 (by good_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1 h_v2
+  store_step with CtorSpec.eo__24emb_5fs_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
+  store_step with ih.eo__24eo_5finvoke_5fassume_5flist s1 v0 a0 _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a0 (by good_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_v0 hinv1 s1 v0
+  store_step with ih.eo__24eo_5finvoke_5fcmd_5flist s2 v1 a1 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_a1 (by good_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a1 h_v1 hinv2 s2 v1
+  store_step with ih.eo__24eo_5fstate_5fis_5frefutation s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 (by good_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying dropping h_v2 hinv3 s3 v2
   case_done hinv4 hG with h_v3 in EoCases.__eo_checker_is_refutation.case_0 using
 
 /-- logos's `__eo_checker_is_refutation` is what the generated body does: the tests for the stuck term,
@@ -942,20 +942,20 @@ theorem case_0_eo__24eo_5fcmd_5fstep_5fpop_5fproven_spec (n : Nat) (ih : Specs n
   unfold case_0_eo__24eo_5fcmd_5fstep_5fpop_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fr_2escope.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4
+  store_step with CtorSpec.eo__24emb_5fr_2escope.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_cmd_step_pop_proven.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0
+  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a2 h_a3 h_a4 dropping h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a2 v1 with h_a2 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_cmd_step_pop_proven.case_0
   pat_destruct CtorSpec.eo__24emb_5findl_2econs.destruct h_a4 as ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv2 hG in EoCases.__eo_cmd_step_pop_proven.case_0
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0 h_v1 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a3 h_v3 h_v4 dropping h_a2 h_a4 h_v1 he_v5 hinv2 e_v5 s2 v1
   pat_same v4 v5 with h_v4 h_v5 using hinv3 else hinv3 hG in EoCases.__eo_cmd_step_pop_proven.case_0
-  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 (by good_tac) as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0 h_v1 h_v3 h_v4 h_v5
+  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 (by good_tac) as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a3 dropping h_a0 h_v3 h_v4 h_v5 hinv3 s3 v3 v4 v5
   have hn_v6 := state_proven_nth_ne_stuck_of h_v6 (by good_tac)
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v7 (by rw [he_v7]; rfl) h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0 h_v1 h_v3 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5fprog_5fscope s5 a3 v7 _ _ hinv5 h64 (hG.rem hrem) h_a3 h_v7 (by good_tac) as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v0 h_v1 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v7 (by rw [he_v7]; rfl) h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a3 dropping h_v6 he_v7 hinv4 e_v7 s4 v6
+  store_step with ih.eo__24eo_5fprog_5fscope s5 a3 v7 _ _ hinv5 h64 (hG.rem hrem) h_a3 h_v7 (by good_tac) as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying dropping h_a3 h_v7 hinv5 s5 v7
   case_done hinv6 hG with h_v8 in EoCases.__eo_cmd_step_pop_proven.case_0 using hn_v6
 
 theorem case_1_eo__24eo_5fcmd_5fstep_5fpop_5fproven_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
@@ -969,7 +969,7 @@ theorem case_1_eo__24eo_5fcmd_5fstep_5fpop_5fproven_spec (n : Nat) (ih : Specs n
   unfold case_1_eo__24eo_5fcmd_5fstep_5fpop_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with Store.construct_stuck_spec s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4
+  store_step with Store.construct_stuck_spec s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_cmd_step_pop_proven.case_1 using
 
 /-- logos's `__eo_cmd_step_pop_proven` is what the generated body does: the tests for the stuck term,
@@ -1015,28 +1015,28 @@ theorem case_0_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s :
         ∃ res, EoCases.__eo_cmd_step_proven.case_0 x_a0 x_a1 x_a2 x_a3 = some res ∧ Represents.rep s' t res
       | core.result.Result.Ok none => EoCases.__eo_cmd_step_proven.case_0 x_a0 x_a1 x_a2 x_a3 = none
       | core.result.Result.Err _ => True ⦄div := by
-  unfold case_0_eo__24eo_5fcmd_5fstep_5fproven more_0_eo__24eo_5fcmd_5fstep_5fproven
+  unfold case_0_eo__24eo_5fcmd_5fstep_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fr_2econtra.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  store_step with CtorSpec.eo__24emb_5fr_2econtra.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_cmd_step_proven.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0
+  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a2 h_a3 dropping h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a2 v1 with h_a2 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_cmd_step_proven.case_0
   pat_destruct CtorSpec.eo__24emb_5findl_2econs.destruct h_a3 as ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv2 hG in EoCases.__eo_cmd_step_proven.case_0
   pat_destruct CtorSpec.eo__24emb_5findl_2econs.destruct h_v4 as ⟨v6, x_v6, h_v6⟩ ⟨v7, x_v7, h_v7⟩ else hinv2 hG in EoCases.__eo_cmd_step_proven.case_0
   step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v8 (by rw [he_v8]; exact empty_args) hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v6 h_v7
+  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v8 (by rw [he_v8]; exact empty_args) hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v3 h_v6 h_v7 dropping h_a2 h_a3 h_v1 h_v4 he_v8 hinv2 e_v8 s2 v1 v4
   pat_same v7 v8 with h_v7 h_v8 using hinv3 else hinv3 hG in EoCases.__eo_cmd_step_proven.case_0
-  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 (by good_tac) as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8
+  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 (by good_tac) as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v6 dropping h_v3 h_v7 h_v8 hinv3 s3 v3 v7 v8
   have hn_v9 := state_proven_nth_ne_stuck_of h_v9 (by good_tac)
   step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v10 (by rw [he_v10]; rfl) h_v9 hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9
-  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s5 a0 v6 _ _ hinv5 h64 (hG.rem hrem) h_a0 h_v6 (by good_tac) as ⟨v11, s6, hinv6, h_v11⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v10
+  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v10 (by rw [he_v10]; rfl) h_v9 hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_v6 dropping h_v9 he_v10 hinv4 e_v10 s4 v9
+  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s5 a0 v6 _ _ hinv5 h64 (hG.rem hrem) h_a0 h_v6 (by good_tac) as ⟨v11, s6, hinv6, h_v11⟩ growing hG carrying h_v10 dropping h_a0 h_v6 hinv5 s5 v6
   have hn_v11 := state_proven_nth_ne_stuck_of h_v11 (by good_tac)
   step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo__24eo_5fpf.construct s6 e_v12 (by rw [he_v12]; rfl) h_v11 hinv6 h64 as ⟨v12, s7, hinv7, h_v12⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
-  store_step with ih.eo__24eo_5fprog_5fcontra s7 v10 v12 _ _ hinv7 h64 (hG.rem hrem) h_v10 h_v12 as ⟨v13, s8, hinv8, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
+  store_step with CtorSpec.eo__24eo_5fpf.construct s6 e_v12 (by rw [he_v12]; rfl) h_v11 hinv6 h64 as ⟨v12, s7, hinv7, h_v12⟩ growing hG carrying h_v10 dropping h_v11 he_v12 hinv6 e_v12 s6 v11
+  store_step with ih.eo__24eo_5fprog_5fcontra s7 v10 v12 _ _ hinv7 h64 (hG.rem hrem) h_v10 h_v12 as ⟨v13, s8, hinv8, h_v13⟩ growing hG carrying dropping h_v10 h_v12 hinv7 s7 v10 v12
   case_done hinv8 hG with h_v13 in EoCases.__eo_cmd_step_proven.case_0 using hn_v9 hn_v11
 
 theorem case_1_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
@@ -1050,16 +1050,16 @@ theorem case_1_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s :
   unfold case_1_eo__24eo_5fcmd_5fstep_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fr_2erefl.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  store_step with CtorSpec.eo__24emb_5fr_2erefl.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 h_a2 h_a3 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_cmd_step_proven.case_1
   pat_destruct CtorSpec.eo__24emb_5fal_2econs.destruct h_a2 as ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv1 hG in EoCases.__eo_cmd_step_proven.case_1
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v2 h_v3
+  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a3 h_v2 h_v3 dropping h_a1 h_a2 h_v0 he_v4 hinv1 e_v4 s1 v0
   pat_same v3 v4 with h_v3 h_v4 using hinv2 else hinv2 hG in EoCases.__eo_cmd_step_proven.case_1
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a3 h_v2 dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   pat_same a3 v5 with h_a3 h_v5 using hinv3 else hinv3 hG in EoCases.__eo_cmd_step_proven.case_1
-  store_step with ih.eo__24eo_5fprog_5frefl s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v2 h_v3 h_v4 h_v5
+  store_step with ih.eo__24eo_5fprog_5frefl s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying dropping h_a3 h_v2 h_v5 hinv3 s3 v2 v5
   case_done hinv4 hG with h_v6 in EoCases.__eo_cmd_step_proven.case_1 using
 
 theorem case_2_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
@@ -1073,20 +1073,20 @@ theorem case_2_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s :
   unfold case_2_eo__24eo_5fcmd_5fstep_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fr_2esymm.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  store_step with CtorSpec.eo__24emb_5fr_2esymm.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_cmd_step_proven.case_2
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0
+  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a2 h_a3 dropping h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a2 v1 with h_a2 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_cmd_step_proven.case_2
   pat_destruct CtorSpec.eo__24emb_5findl_2econs.destruct h_a3 as ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv2 hG in EoCases.__eo_cmd_step_proven.case_2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v3 h_v4 dropping h_a2 h_a3 h_v1 he_v5 hinv2 e_v5 s2 v1
   pat_same v4 v5 with h_v4 h_v5 using hinv3 else hinv3 hG in EoCases.__eo_cmd_step_proven.case_2
-  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 (by good_tac) as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v5
+  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 (by good_tac) as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying dropping h_a0 h_v3 h_v4 h_v5 hinv3 s3 v3 v4 v5
   have hn_v6 := state_proven_nth_ne_stuck_of h_v6 (by good_tac)
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v7 (by rw [he_v7]; rfl) h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5fprog_5fsymm s5 v7 _ hinv5 h64 (hG.rem hrem) h_v7 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v7 (by rw [he_v7]; rfl) h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying dropping h_v6 he_v7 hinv4 e_v7 s4 v6
+  store_step with ih.eo__24eo_5fprog_5fsymm s5 v7 _ hinv5 h64 (hG.rem hrem) h_v7 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying dropping h_v7 hinv5 s5 v7
   case_done hinv6 hG with h_v8 in EoCases.__eo_cmd_step_proven.case_2 using hn_v6
 
 theorem case_3_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
@@ -1100,17 +1100,17 @@ theorem case_3_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s :
   unfold case_3_eo__24eo_5fcmd_5fstep_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fr_2etrans.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  store_step with CtorSpec.eo__24emb_5fr_2etrans.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_cmd_step_proven.case_3
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0
+  store_step with CtorSpec.eo__24emb_5fal_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a2 h_a3 dropping h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a2 v1 with h_a2 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_cmd_step_proven.case_3
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo_and.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1
-  store_step with ih.eo__24eo_5fmk_5fpremise_5flist s3 v2 a3 a0 _ _ _ hinv3 h64 (hG.rem hrem) h_v2 h_a3 h_a0 (by good_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v2
+  store_step with CtorSpec.eo_and.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a3 dropping h_a2 h_v1 he_v2 hinv2 e_v2 s2 v1
+  store_step with ih.eo__24eo_5fmk_5fpremise_5flist s3 v2 a3 a0 _ _ _ hinv3 h64 (hG.rem hrem) h_v2 h_a3 h_a0 (by good_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying dropping h_a0 h_a3 h_v2 hinv3 s3 v2
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v4 (by rw [he_v4]; rfl) h_v3 hinv4 h64 as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5fprog_5ftrans s5 v4 _ hinv5 h64 (hG.rem hrem) h_v4 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24eo_5fpf.construct s4 e_v4 (by rw [he_v4]; rfl) h_v3 hinv4 h64 as ⟨v4, s5, hinv5, h_v4⟩ growing hG carrying dropping h_v3 he_v4 hinv4 e_v4 s4 v3
+  store_step with ih.eo__24eo_5fprog_5ftrans s5 v4 _ hinv5 h64 (hG.rem hrem) h_v4 as ⟨v5, s6, hinv6, h_v5⟩ growing hG carrying dropping h_v4 hinv5 s5 v4
   case_done hinv6 hG with h_v5 in EoCases.__eo_cmd_step_proven.case_3 using
 
 theorem case_4_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
@@ -1124,7 +1124,7 @@ theorem case_4_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s :
   unfold case_4_eo__24eo_5fcmd_5fstep_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with Store.construct_stuck_spec s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
+  store_step with Store.construct_stuck_spec s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_cmd_step_proven.case_4 using
 
 theorem cases_0_0_eo__24eo_5fcmd_5fstep_5fproven_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _)
@@ -1222,7 +1222,7 @@ theorem case_0_eo__24eo_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store) 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedd_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_dd_lookup.case_0
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v2 h_v3 dropping h_a1 h_v1 he_v4 e_v4 v1
   rw [← Bridge.native_streq] at h_v4
   have h_ite_v6 := (show if_0_eo__24eo_5fdd_5flookup s1 v4 v2 a0 v3 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24eo_5fdd_5flookup
@@ -1232,9 +1232,9 @@ theorem case_0_eo__24eo_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store) 
     · ite_branch hbv_5
       ite_done hinv1 hG with (native_ite_true_rep _ hx_5 h_v2)
     · ite_branch hbv_5
-      store_step with ih.eo__24eo_5fdd_5flookup s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+      store_step with ih.eo__24eo_5fdd_5flookup s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying dropping h_a0 h_v2 h_v3 h_v4 hinv1 s1 v2 v3 v4
       ite_done hinv2 hG with (native_ite_false_rep _ hx_5 h_v5))
-  store_step with h_ite_v6 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with h_ite_v6 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying dropping h_a0 h_ite_v6 h_v2 h_v3 h_v4 hinv1 s1 v2 v3 v4
   case_done hinv2 hG with h_v6 in EoCases.__eo_dd_lookup.case_0 using
 
 theorem case_1_eo__24eo_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1248,10 +1248,10 @@ theorem case_1_eo__24eo_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store) 
   unfold case_1_eo__24eo_5fdd_5flookup
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fedd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fedd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_dd_lookup.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_dd_lookup.case_1 using
 
 /-- logos's `__eo_dd_lookup` is what the generated body does: the tests for the stuck term,
@@ -1310,8 +1310,8 @@ theorem case_0_eo__24eo_5fdd_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store)
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fdd_5fresolve
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24eo_5fdd_5flookup s a0 a1 _ _ hinv h64 hrem h_a0 h_a1 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
-  store_step with ih.eo__24eo_5fdt_5fresolve s1 v0 a1 _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a1 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with ih.eo__24eo_5fdd_5flookup s a0 a1 _ _ hinv h64 hrem h_a0 h_a1 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping h_a0
+  store_step with ih.eo__24eo_5fdt_5fresolve s1 v0 a1 _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a1 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_dd_resolve.case_0 using
 
 /-- logos's `__eo_dd_resolve` is what the generated body does: the tests for the stuck term,
@@ -1358,10 +1358,10 @@ theorem case_0_eo__24eo_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_0_eo__24eo_5fdt_5fresolve
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_dt_resolve.case_0
-  store_step with ih.eo__24eo_5fdtc_5fresolve s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with ih.eo__24eo_5fdt_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fdtc_5fresolve s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24eo_5fdt_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fedt_2esum.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5fedt_2esum.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_dt_resolve.case_0 using
 
 theorem case_1_eo__24eo_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1375,10 +1375,10 @@ theorem case_1_eo__24eo_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_1_eo__24eo_5fdt_5fresolve
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_dt_resolve.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_dt_resolve.case_1 using
 
 /-- logos's `__eo_dt_resolve` is what the generated body does: the tests for the stuck term,
@@ -1440,10 +1440,10 @@ theorem case_0_eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store
   pat_destruct CtorSpec.eo__24emb_5fedtc_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_dtc_resolve.case_0
   pat_destruct CtorSpec.eo__24emb_5fDatatypeTypeRef.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_dtc_resolve.case_0
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fDatatypeType.construct s e_v5 (by rw [he_v5]; rfl) h_v4 h_a1 hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4
-  store_step with ih.eo__24eo_5fdtc_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__24emb_5fDatatypeType.construct s e_v5 (by rw [he_v5]; rfl) h_v4 h_a1 hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 h_v4 he_v5 e_v5 v1 v4
+  store_step with ih.eo__24eo_5fdtc_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_v5 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24emb_5fedtc_2econs.construct s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6
+  store_step with CtorSpec.eo__24emb_5fedtc_2econs.construct s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying dropping h_v5 h_v6 he_v7 hinv2 e_v7 s2 v5 v6
   case_done hinv3 hG with h_v7 in EoCases.__eo_dtc_resolve.case_0 using
 
 theorem case_1_eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1457,9 +1457,9 @@ theorem case_1_eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store
   unfold case_1_eo__24eo_5fdtc_5fresolve
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedtc_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_dtc_resolve.case_1
-  store_step with ih.eo__24eo_5fdtc_5fresolve s v2 a1 _ _ hinv h64 hrem h_v2 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with ih.eo__24eo_5fdtc_5fresolve s v2 a1 _ _ hinv h64 hrem h_v2 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 dropping h_a0 h_a1 h_v2 v2
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5fedtc_2econs.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 h_v3 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with CtorSpec.eo__24emb_5fedtc_2econs.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 h_v3 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v3 he_v4 hinv1 e_v4 s1 v1 v3
   case_done hinv2 hG with h_v4 in EoCases.__eo_dtc_resolve.case_1 using
 
 theorem case_2_eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1473,10 +1473,10 @@ theorem case_2_eo__24eo_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store
   unfold case_2_eo__24eo_5fdtc_5fresolve
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_dtc_resolve.case_2
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_dtc_resolve.case_2 using
 
 /-- logos's `__eo_dtc_resolve` is what the generated body does: the tests for the stuck term,
@@ -1542,10 +1542,10 @@ theorem case_0_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_0_eo__24eo_5finvoke_5fcmd
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_invoke_cmd.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_invoke_cmd.case_0 using
 
 theorem case_1_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1559,11 +1559,11 @@ theorem case_1_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_1_eo__24eo_5finvoke_5fcmd
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fcmd_2eassume_5fpush.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_invoke_cmd.case_1
-  store_step with ih.eo__24eo_5fis_5fbool_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_a1 h_v1
-  store_step with ih.eo__24eo_5fis_5fclosed s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with ih.eo__24eo_5fis_5fbool_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1 dropping h_a1
+  store_step with ih.eo__24eo_5fis_5fclosed s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2 dropping hinv1 s1
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.builtin_spec_and s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5fpush_5fassume_5fcheck s3 v4 v1 a0 _ _ _ hinv3 h64 (hG.rem hrem) h_v4 h_v1 h_a0 (by good_tac) as ⟨v5, s4, hinv4, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.builtin_spec_and s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_v1 dropping h_v2 h_v3 he_v4 hinv2 e_v4 s2 v2 v3
+  store_step with ih.eo__24eo_5fpush_5fassume_5fcheck s3 v4 v1 a0 _ _ _ hinv3 h64 (hG.rem hrem) h_v4 h_v1 h_a0 (by good_tac) as ⟨v5, s4, hinv4, h_v5⟩ growing hG carrying dropping h_a0 h_v1 h_v4 hinv3 s3 v1 v4
   case_done hinv4 hG with h_v5 in EoCases.__eo_invoke_cmd.case_1 using
 
 theorem case_2_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1577,7 +1577,7 @@ theorem case_2_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_2_eo__24eo_5finvoke_5fcmd
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fcmd_2echeck_5fproven.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_invoke_cmd.case_2
-  store_step with ih.eo__24eo_5finvoke_5fcmd_5fcheck_5fproven s a0 v1 _ _ hinv h64 hrem h_a0 h_v1 (by good_tac) as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_a1 h_v1
+  store_step with ih.eo__24eo_5finvoke_5fcmd_5fcheck_5fproven s a0 v1 _ _ hinv h64 hrem h_a0 h_v1 (by good_tac) as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_a1 h_v1 v1
   case_done hinv1 hG with h_v2 in EoCases.__eo_invoke_cmd.case_2 using
 
 theorem case_3_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1591,8 +1591,8 @@ theorem case_3_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_3_eo__24eo_5finvoke_5fcmd
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fcmd_2estep.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_invoke_cmd.case_3
-  store_step with ih.eo__24eo_5fcmd_5fstep_5fproven s a0 v1 v2 v3 _ _ _ _ hinv h64 hrem h_a0 h_v1 h_v2 h_v3 (by good_tac) as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5fpush_5fproven s1 v4 a0 _ _ hinv1 h64 (hG.rem hrem) h_v4 h_a0 (by good_tac) as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5fcmd_5fstep_5fproven s a0 v1 v2 v3 _ _ _ _ hinv h64 hrem h_a0 h_v1 h_v2 h_v3 (by good_tac) as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 dropping h_a1 h_v1 h_v2 h_v3 v1 v2 v3
+  store_step with ih.eo__24eo_5fpush_5fproven s1 v4 a0 _ _ hinv1 h64 (hG.rem hrem) h_v4 h_a0 (by good_tac) as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying dropping h_a0 h_v4 hinv1 s1 v4
   case_done hinv2 hG with h_v5 in EoCases.__eo_invoke_cmd.case_3 using
 
 theorem case_4_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1606,7 +1606,7 @@ theorem case_4_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_4_eo__24eo_5finvoke_5fcmd
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fcmd_2estep_5fpop.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_invoke_cmd.case_4
-  store_step with ih.eo__24eo_5finvoke_5fcmd_5fstep_5fpop s a0 a0 v1 v2 v3 _ _ _ _ _ hinv h64 hrem h_a0 h_a0 h_v1 h_v2 h_v3 (by good_tac) (by good_tac) as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5finvoke_5fcmd_5fstep_5fpop s a0 a0 v1 v2 v3 _ _ _ _ _ hinv h64 hrem h_a0 h_a0 h_v1 h_v2 h_v3 (by good_tac) (by good_tac) as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying dropping h_a0 h_a1 h_v1 h_v2 h_v3 v1 v2 v3
   case_done hinv1 hG with h_v4 in EoCases.__eo_invoke_cmd.case_4 using
 
 theorem cases_0_0_eo__24eo_5finvoke_5fcmd_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1705,8 +1705,8 @@ theorem case_0_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven_spec (n : Nat) (ih : Spe
   pat_destruct CtorSpec.eo__24emb_5fs_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_invoke_cmd_check_proven.case_0
   pat_destruct CtorSpec.eo__24emb_5fso_2eproven.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_invoke_cmd_check_proven.case_0
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.builtin_spec_eq s e_v5 (by rw [he_v5]; rfl) h_v4 h_a1 hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4
-  store_step with ih.eo__24eo_5fpush_5fproven_5fcheck s1 v5 v4 v2 _ _ _ hinv1 h64 (hG.rem hrem) h_v5 h_v4 h_v2 (by good_tac) as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  store_step with Store.builtin_spec_eq s e_v5 (by rw [he_v5]; rfl) h_v4 h_a1 hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_v2 h_v4 dropping h_a0 h_a1 h_v1 he_v5 e_v5 v1
+  store_step with ih.eo__24eo_5fpush_5fproven_5fcheck s1 v5 v4 v2 _ _ _ hinv1 h64 (hG.rem hrem) h_v5 h_v4 h_v2 (by good_tac) as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying dropping h_v2 h_v4 h_v5 hinv1 s1 v2 v4 v5
   case_done hinv2 hG with h_v6 in EoCases.__eo_invoke_cmd_check_proven.case_0 using
 
 theorem case_1_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -1720,7 +1720,7 @@ theorem case_1_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven_spec (n : Nat) (ih : Spe
   unfold case_1_eo__24eo_5finvoke_5fcmd_5fcheck_5fproven
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_invoke_cmd_check_proven.case_1 using
 
 /-- logos's `__eo_invoke_cmd_check_proven` is what the generated body does: the tests for the stuck term,
@@ -1772,7 +1772,7 @@ theorem case_0_eo__24eo_5finvoke_5fcmd_5flist_spec (n : Nat) (ih : Specs n) (s :
   unfold case_0_eo__24eo_5finvoke_5fcmd_5flist
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fcmdl_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fcmdl_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_invoke_cmd_list.case_0
   case_done hinv1 hG with h_a0 in EoCases.__eo_invoke_cmd_list.case_0 using
 
@@ -1790,7 +1790,7 @@ theorem case_1_eo__24eo_5finvoke_5fcmd_5flist_spec (n : Nat) (ih : Specs n) (s :
   unfold case_1_eo__24eo_5finvoke_5fcmd_5flist
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fcmdl_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_invoke_cmd_list.case_1
-  store_step with ih.eo__24eo_5finvoke_5fcmd s a0 v1 _ _ hinv h64 hrem h_a0 h_v1 (by good_tac) as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with ih.eo__24eo_5finvoke_5fcmd s a0 v1 _ _ hinv h64 hrem h_a0 h_v1 (by good_tac) as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_a1 h_v1 v1
   case_again hinv1 hG with h_v3 h_v2 goods 1 in EoCases.__eo_invoke_cmd_list.case_1 using
 
 /-- logos's `__eo_invoke_cmd_list` is what the generated body does: the tests for the stuck term,
@@ -1884,8 +1884,8 @@ theorem case_0_eo__24eo_5finvoke_5fcmd_5fstep_5fpop_spec (n : Nat) (ih : Specs n
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fs_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_invoke_cmd_step_pop.case_0
   pat_destruct CtorSpec.eo__24emb_5fso_2eassume_5fpush.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_invoke_cmd_step_pop.case_0
-  store_step with ih.eo__24eo_5fcmd_5fstep_5fpop_5fproven s a0 a2 a3 v4 a4 _ _ _ _ _ hinv h64 hrem h_a0 h_a2 h_a3 h_v4 h_a4 (by good_tac) as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4
-  store_step with ih.eo__24eo_5fpush_5fproven s1 v5 v2 _ _ hinv1 h64 (hG.rem hrem) h_v5 h_v2 (by good_tac) as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v2 h_v4 h_v5
+  store_step with ih.eo__24eo_5fcmd_5fstep_5fpop_5fproven s a0 a2 a3 v4 a4 _ _ _ _ _ hinv h64 hrem h_a0 h_a2 h_a3 h_v4 h_a4 (by good_tac) as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_v2 dropping h_a0 h_a1 h_a2 h_a3 h_a4 h_v1 h_v4 v1 v4
+  store_step with ih.eo__24eo_5fpush_5fproven s1 v5 v2 _ _ hinv1 h64 (hG.rem hrem) h_v5 h_v2 (by good_tac) as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying dropping h_v2 h_v5 hinv1 s1 v2 v5
   case_done hinv2 hG with h_v6 in EoCases.__eo_invoke_cmd_step_pop.case_0 using
 
 theorem case_1_eo__24eo_5finvoke_5fcmd_5fstep_5fpop_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 a3 a4 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _) (x_a3 : _) (x_a4 : _)
@@ -1918,7 +1918,7 @@ theorem case_2_eo__24eo_5finvoke_5fcmd_5fstep_5fpop_spec (n : Nat) (ih : Specs n
   unfold case_2_eo__24eo_5finvoke_5fcmd_5fstep_5fpop
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_a4
+  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_invoke_cmd_step_pop.case_2 using
 
 /-- logos's `__eo_invoke_cmd_step_pop` is what the generated body does: the tests for the stuck term,
@@ -2015,11 +2015,11 @@ theorem case_0_eo__24eo_5fis_5fbool_5ftype_spec (n : Nat) (ih : Specs n) (s : St
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fis_5fbool_5ftype
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24eo_5ftypeof s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with ih.eo__24eo_5ftypeof s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping h_a0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_v0 dropping he_v1 hinv1 e_v1 s1
   step as ⟨e_v2, he_v2⟩
-  store_step with Store.builtin_spec_eq s2 e_v2 (by rw [he_v2]; rfl) h_v0 h_v1 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with Store.builtin_spec_eq s2 e_v2 (by rw [he_v2]; rfl) h_v0 h_v1 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_v0 h_v1 he_v2 hinv2 e_v2 s2 v0 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_is_bool_type.case_0 using hn_a0
 
 /-- logos's `__eo_is_bool_type` is what the generated body does: the tests for the stuck term,
@@ -2067,8 +2067,8 @@ theorem case_0_eo__24eo_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : Store) 
   unfold case_0_eo__24eo_5fis_5fclosed
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  store_step with ih.eo__24eo_5fis_5fclosed_5frec s1 a0 v0 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v0 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
+  store_step with ih.eo__24eo_5fis_5fclosed_5frec s1 a0 v0 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v0 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_is_closed.case_0 using hn_a0
 
 /-- logos's `__eo_is_closed` is what the generated body does: the tests for the stuck term,
@@ -2118,9 +2118,9 @@ theorem case_0_eo__24eo_5fis_5fclosed_5frec_spec (n : Nat) (ih : Specs n) (s : S
   pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_is_closed_rec.case_0
   obtain ⟨hn_v1, hn_v2⟩ := CtorSpec.eo__24emb_5fVar.fields_ne_stuck hinv h_a0
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a1 dropping h_a0 h_v1 h_v2 he_v3 e_v3 v1 v2
   pat_same a1 v3 with h_a1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_is_closed_rec.case_0
-  store_step with Store.literal_boolean_spec s1 false hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with Store.literal_boolean_spec s1 false hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_a1 h_v3 hinv1 s1 v3
   case_done hinv2 hG with h_v4 in EoCases.__eo_is_closed_rec.case_0 using hn_a0 hn_a1 hn_v1 hn_v2
 
 theorem case_1_eo__24eo_5fis_5fclosed_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -2138,28 +2138,28 @@ theorem case_1_eo__24eo_5fis_5fclosed_5frec_spec (n : Nat) (ih : Specs n) (s : S
   pat_unapply h_a1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_is_closed_rec.case_1
   pat_unapply h_v4 as ⟨v7, v8, x_v7, x_v8, h_v7, h_v8, hn_v7, hn_v8⟩ using hinv else hinv hG in EoCases.__eo_is_closed_rec.case_1
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v9 (by rw [he_v9]; exact empty_args) hinv h64 as ⟨v9, s1, hinv1, h_v9⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v9 (by rw [he_v9]; exact empty_args) hinv h64 as ⟨v9, s1, hinv1, h_v9⟩ growing hG carrying h_v1 h_v2 h_v5 h_v7 h_v8 dropping h_a0 h_a1 h_v4 he_v9 e_v9 v4
   pat_same v7 v9 with h_v7 h_v9 using hinv1 else hinv1 hG in EoCases.__eo_is_closed_rec.case_1
   step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo__24emb_5fVar.construct s1 e_v10 (by rw [he_v10]; rfl) h_v1 h_v2 hinv1 h64 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5fVar.construct s1 e_v10 (by rw [he_v10]; rfl) h_v1 h_v2 hinv1 h64 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_v1 h_v2 h_v5 h_v8 dropping h_v7 h_v9 he_v10 hinv1 e_v10 s1 v7 v9
   step as ⟨e_v11, he_v11⟩
-  store_step with Store.builtin_spec_eq s2 e_v11 (by rw [he_v11]; rfl) h_v10 h_v8 hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10
+  store_step with Store.builtin_spec_eq s2 e_v11 (by rw [he_v11]; rfl) h_v10 h_v8 hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_v1 h_v2 h_v5 dropping h_v10 h_v8 he_v11 hinv2 e_v11 s2 v10 v8
   have h_ite_v15 := (show if_0_eo__24eo_5fis_5fclosed_5frec s3 v11 v1 v2 v5 ⦃ r s' => s'.Inv ∧ s3.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24eo_5fis_5fclosed_5frec
     have hrem := (hG.rem hrem)
     have hG := Store.Grows.refl s3
     rcases Store.boolean_value_term h_v11 with ⟨hx_12, hbv_12⟩ | ⟨hx_12, hbv_12⟩ | ⟨hx_12, hbv_12⟩
     · ite_branch hbv_12
-      store_step with Store.literal_boolean_spec s3 true hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11
+      store_step with Store.literal_boolean_spec s3 true hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_v1 h_v2 h_v5 dropping h_v11 v11
       ite_done hinv4 hG with (eo_ite_true_rep _ hx_12 h_v12)
     · ite_branch hbv_12
       step as ⟨e_v13, he_v13⟩
-      store_step with CtorSpec.eo__24emb_5fVar.construct s3 e_v13 (by rw [he_v13]; rfl) h_v1 h_v2 hinv3 h64 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11
-      store_step with ih.eo__24eo_5fis_5fclosed_5frec s4 v13 v5 _ _ hinv4 h64 (hG.rem hrem) h_v13 h_v5 as ⟨v14, s5, hinv5, h_v14⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11 h_v13
+      store_step with CtorSpec.eo__24emb_5fVar.construct s3 e_v13 (by rw [he_v13]; rfl) h_v1 h_v2 hinv3 h64 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_v5 dropping h_v1 h_v11 h_v2 he_v13 e_v13 v1 v11 v2
+      store_step with ih.eo__24eo_5fis_5fclosed_5frec s4 v13 v5 _ _ hinv4 h64 (hG.rem hrem) h_v13 h_v5 as ⟨v14, s5, hinv5, h_v14⟩ growing hG carrying dropping h_v13 h_v5 v13 v5
       ite_done hinv5 hG with (eo_ite_false_rep _ hx_12 h_v14)
     · ite_branch hbv_12
       ite_stuck hinv3 hG with hx_12)
-  store_step with h_ite_v15 as ⟨v15, s4, hinv4, h_v15⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11
+  store_step with h_ite_v15 as ⟨v15, s4, hinv4, h_v15⟩ growing hG carrying dropping h_ite_v15 h_v1 h_v11 h_v2 h_v5 hinv3 s3 v1 v11 v2 v5
   case_done hinv4 hG with h_v15 in EoCases.__eo_is_closed_rec.case_1 using hn_a0 hn_a1 hn_v1 hn_v2 hn_v4 hn_v5 hn_v7 hn_v8
 
 theorem case_2_eo__24eo_5fis_5fclosed_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -2173,10 +2173,10 @@ theorem case_2_eo__24eo_5fis_5fclosed_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_2_eo__24eo_5fis_5fclosed_5frec
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_is_closed_rec.case_2
-  store_step with ih.eo__24eo_5fis_5fclosed_5frec s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with ih.eo__24eo_5fis_5fclosed_5frec s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fis_5fclosed_5frec s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24eo_5fis_5fclosed_5frec s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.builtin_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.builtin_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_is_closed_rec.case_2 using hn_a0 hn_a1 hn_v1 hn_v2
 
 theorem case_3_eo__24eo_5fis_5fclosed_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -2189,7 +2189,7 @@ theorem case_3_eo__24eo_5fis_5fclosed_5frec_spec (n : Nat) (ih : Specs n) (s : S
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_3_eo__24eo_5fis_5fclosed_5frec
   have hG := Store.Grows.refl s
-  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping
   case_done hinv1 hG with h_v0 in EoCases.__eo_is_closed_rec.case_3 using hn_a0 hn_a1
 
 /-- logos's `__eo_is_closed_rec` is what the generated body does: the tests for the stuck term,
@@ -2255,11 +2255,11 @@ theorem case_0_eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_0_eo__24eo_5fis_5flist_5fnil
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_and.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo_and.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_is_list_nil.case_0
-  store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_v0 hinv1 s1 v0
   pat_same a1 v1 with h_a1 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_is_list_nil.case_0
-  store_step with Store.literal_boolean_spec s2 true hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with Store.literal_boolean_spec s2 true hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a1 h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_is_list_nil.case_0 using hn_a0 hn_a1
 
 theorem case_1_eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -2273,12 +2273,12 @@ theorem case_1_eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_1_eo__24eo_5fis_5flist_5fnil
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_is_list_nil.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a1 v1 with h_a1 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_is_list_nil.case_1
-  store_step with Store.literal_boolean_spec s2 true hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with Store.literal_boolean_spec s2 true hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a1 h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_is_list_nil.case_1 using hn_a0 hn_a1
 
 theorem case_2_eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -2291,7 +2291,7 @@ theorem case_2_eo__24eo_5fis_5flist_5fnil_spec (n : Nat) (ih : Specs n) (s : Sto
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_2_eo__24eo_5fis_5flist_5fnil
   have hG := Store.Grows.refl s
-  store_step with Store.literal_boolean_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with Store.literal_boolean_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping
   case_done hinv1 hG with h_v0 in EoCases.__eo_is_list_nil.case_2 using hn_a0 hn_a1
 
 /-- logos's `__eo_is_list_nil` is what the generated body does: the tests for the stuck term,
@@ -2344,10 +2344,10 @@ theorem case_0_eo__24eo_5flit_5ftype_5fBinary_spec (n : Nat) (ih : Specs n) (s :
   unfold case_0_eo__24eo_5flit_5ftype_5fBinary
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_BitVec.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_BitVec.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   step as ⟨e_v1, he_v1⟩
-  store_step with Store.builtin_spec_len s1 e_v1 (by rw [he_v1]; rfl) h_a0 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  store_step with Store.apply_mk_rep s2 v0 v1 _ _ hinv2 h64 h_v0 h_v1 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with Store.builtin_spec_len s1 e_v1 (by rw [he_v1]; rfl) h_a0 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_v0 dropping h_a0 he_v1 hinv1 e_v1 s1
+  store_step with Store.apply_mk_rep s2 v0 v1 _ _ hinv2 h64 h_v0 h_v1 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_v0 h_v1 hinv2 s2 v0 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_lit_type_Binary.case_0 using hn_a0
 
 /-- logos's `__eo_lit_type_Binary` is what the generated body does: the tests for the stuck term,
@@ -2395,7 +2395,7 @@ theorem case_0_eo__24eo_5flit_5ftype_5fNumeral_spec (n : Nat) (ih : Specs n) (s 
   unfold case_0_eo__24eo_5flit_5ftype_5fNumeral
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_lit_type_Numeral.case_0 using hn_a0
 
 /-- logos's `__eo_lit_type_Numeral` is what the generated body does: the tests for the stuck term,
@@ -2443,7 +2443,7 @@ theorem case_0_eo__24eo_5flit_5ftype_5fRational_spec (n : Nat) (ih : Specs n) (s
   unfold case_0_eo__24eo_5flit_5ftype_5fRational
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_lit_type_Rational.case_0 using hn_a0
 
 /-- logos's `__eo_lit_type_Rational` is what the generated body does: the tests for the stuck term,
@@ -2491,10 +2491,10 @@ theorem case_0_eo__24eo_5flit_5ftype_5fString_spec (n : Nat) (ih : Specs n) (s :
   unfold case_0_eo__24eo_5flit_5ftype_5fString
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Seq.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Seq.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo_Char.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  store_step with Store.apply_rep s2 v0 v1 _ _ hinv2 h64 h_v0 h_v1 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with CtorSpec.eo_Char.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_v0 dropping he_v1 hinv1 e_v1 s1
+  store_step with Store.apply_rep s2 v0 v1 _ _ hinv2 h64 h_v0 h_v1 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_v0 h_v1 hinv2 s2 v0 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_lit_type_String.case_0 using hn_a0
 
 /-- logos's `__eo_lit_type_String` is what the generated body does: the tests for the stuck term,
@@ -2542,11 +2542,11 @@ theorem case_0_eo__24eo_5fmk_5fpremise_5flist_spec (n : Nat) (ih : Specs n) (s :
   unfold case_0_eo__24eo_5fmk_5fpremise_5flist
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5findl_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_mk_premise_list.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
-  store_step with ih.eo__24eo_5fnil s2 a0 v1 _ _ hinv2 h64 (hG.rem hrem) h_a0 h_v1 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 dropping h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
+  store_step with ih.eo__24eo_5fnil s2 a0 v1 _ _ hinv2 h64 (hG.rem hrem) h_a0 h_v1 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a0 h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_mk_premise_list.case_0 using
 
 theorem case_1_eo__24eo_5fmk_5fpremise_5flist_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -2560,11 +2560,11 @@ theorem case_1_eo__24eo_5fmk_5fpremise_5flist_spec (n : Nat) (ih : Specs n) (s :
   unfold case_1_eo__24eo_5fmk_5fpremise_5flist
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5findl_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_mk_premise_list.case_1
-  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s a2 v1 _ _ hinv h64 hrem h_a2 h_v1 (by good_tac) as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2
+  store_step with ih.eo__24eo_5fstate_5fproven_5fnth s a2 v1 _ _ hinv h64 hrem h_a2 h_v1 (by good_tac) as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a2 h_v2 dropping h_a1 h_v1 v1
   have hn_v3 := state_proven_nth_ne_stuck_of h_v3 (by good_tac)
-  store_step with ih.eo__24eo_5fmk_5fpremise_5flist s1 a0 v2 a2 _ _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 h_a2 (by good_tac) as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fmk_5fpremise_5flist s1 a0 v2 a2 _ _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 h_a2 (by good_tac) as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v3 dropping h_a2 h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.builtin_spec_cons n ih.eo__24eo_5fis_5flist_5fnil s2 e_v5 (by rw [he_v5]; rfl) h_a0 h_v3 h_v4 (by ns_tac) hinv2 h64 (hG.rem hrem) (by not_left_tac) as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.builtin_spec_cons n ih.eo__24eo_5fis_5flist_5fnil s2 e_v5 (by rw [he_v5]; rfl) h_a0 h_v3 h_v4 (by ns_tac) hinv2 h64 (hG.rem hrem) (by not_left_tac) as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_a0 h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_mk_premise_list.case_1 using hn_v3
 
 /-- logos's `__eo_mk_premise_list` is what the generated body does: the tests for the stuck term,
@@ -2613,9 +2613,9 @@ theorem case_0_eo__24eo_5fnil_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 :
   unfold case_0_eo__24eo_5fnil
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_and.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo_and.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_nil.case_0
-  store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.literal_boolean_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_nil.case_0 using hn_a0 hn_a1
 
 theorem case_1_eo__24eo_5fnil_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -2629,13 +2629,13 @@ theorem case_1_eo__24eo_5fnil_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 :
   unfold case_1_eo__24eo_5fnil
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_nil.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24eo_5fList.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24eo_5fList.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a1 v1 with h_a1 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_nil.case_1
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a1 h_v1 he_v2 hinv2 e_v2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_nil.case_1 using hn_a0 hn_a1
 
 /-- logos's `__eo_nil` is what the generated body does: the tests for the stuck term,
@@ -2689,10 +2689,10 @@ theorem case_0_eo__24eo_5fprog_5fcontra_spec (n : Nat) (ih : Specs n) (s : Store
   pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a1 as ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_prog_contra.case_0
   pat_unapply h_v3 as ⟨v5, v6, x_v5, x_v6, h_v5, h_v6, hn_v5, hn_v6⟩ using hinv else hinv hG in EoCases.__eo_prog_contra.case_0
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo_not.construct s e_v7 (by rw [he_v7]; exact empty_args) hinv h64 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v3 h_v5 h_v6
+  store_step with CtorSpec.eo_not.construct s e_v7 (by rw [he_v7]; exact empty_args) hinv h64 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_v1 h_v5 h_v6 dropping h_a0 h_a1 h_v3 he_v7 e_v7 v3
   pat_same v5 v7 with h_v5 h_v7 using hinv1 else hinv1 hG in EoCases.__eo_prog_contra.case_0
   pat_same v6 v1 with h_v6 h_v1 using hinv1 else hinv1 hG in EoCases.__eo_prog_contra.case_0
-  store_step with Store.literal_boolean_spec s1 false hinv1 h64 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_a0 h_a1 h_v1 h_v3 h_v5 h_v6 h_v7
+  store_step with Store.literal_boolean_spec s1 false hinv1 h64 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying dropping h_v1 h_v5 h_v6 h_v7 hinv1 s1 v1 v5 v6 v7
   case_done hinv2 hG with h_v8 in EoCases.__eo_prog_contra.case_0 using hn_v5 hn_v6
 
 /-- logos's `__eo_prog_contra` is what the generated body does: the tests for the stuck term,
@@ -2739,9 +2739,9 @@ theorem case_0_eo__24eo_5fprog_5frefl_spec (n : Nat) (ih : Specs n) (s : Store) 
   unfold case_0_eo__24eo_5fprog_5frefl
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  store_step with Store.apply_rep s1 v0 a0 _ _ hinv1 h64 h_v0 h_a0 (by ns_tac) (by ns_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with CtorSpec.eo__3d.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
+  store_step with Store.apply_rep s1 v0 a0 _ _ hinv1 h64 h_v0 h_a0 (by ns_tac) (by ns_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 dropping h_v0 hinv1 s1 v0
+  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a0 h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_prog_refl.case_0 using hn_a0
 
 /-- logos's `__eo_prog_refl` is what the generated body does: the tests for the stuck term,
@@ -2790,10 +2790,10 @@ theorem case_0_eo__24eo_5fprog_5fscope_spec (n : Nat) (ih : Specs n) (s : Store)
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_scope.case_0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__3d_3e.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_a1 h_v1
-  store_step with Store.apply_rep s1 v2 a0 _ _ hinv1 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with CtorSpec.eo__3d_3e.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1 dropping h_a1 he_v2 e_v2
+  store_step with Store.apply_rep s1 v2 a0 _ _ hinv1 h64 h_v2 h_a0 (by ns_tac) (by ns_tac) as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_v1 dropping h_a0 h_v2 hinv1 s1 v2
   have hn_v1 := hg_a1 _ rfl
-  store_step with Store.apply_rep s2 v3 v1 _ _ hinv2 h64 h_v3 h_v1 (by ns_tac) (by ns_tac) as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with Store.apply_rep s2 v3 v1 _ _ hinv2 h64 h_v3 h_v1 (by ns_tac) (by ns_tac) as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying dropping h_v1 h_v3 hinv2 s2 v1 v3
   case_done hinv3 hG with h_v4 in EoCases.__eo_prog_scope.case_0 using hn_a0 hn_v1
 
 /-- logos's `__eo_prog_scope` is what the generated body does: the tests for the stuck term,
@@ -2841,7 +2841,7 @@ theorem case_0_eo__24eo_5fprog_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) 
   unfold case_0_eo__24eo_5fprog_5fsymm
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24eo_5fpf.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_prog_symm.case_0
-  store_step with ih.eo__24mk_5fsymm s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with ih.eo__24mk_5fsymm s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 v1
   case_done hinv1 hG with h_v2 in EoCases.__eo_prog_symm.case_0 using
 
 /-- logos's `__eo_prog_symm` is what the generated body does: the tests for the stuck term,
@@ -2891,14 +2891,14 @@ theorem case_0_eo__24eo_5fprog_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store)
   pat_unapply h_v1 as ⟨v3, v4, x_v3, x_v4, h_v3, h_v4, hn_v3, hn_v4⟩ using hinv else hinv hG in EoCases.__eo_prog_trans.case_0
   pat_unapply h_v3 as ⟨v6, v7, x_v6, x_v7, h_v6, h_v7, hn_v6, hn_v7⟩ using hinv else hinv hG in EoCases.__eo_prog_trans.case_0
   step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo_and.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v6 h_v7
+  store_step with CtorSpec.eo_and.construct s e_v8 (by rw [he_v8]; exact empty_args) hinv h64 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_v4 h_v6 h_v7 dropping h_a0 h_v1 h_v3 he_v8 e_v8 v1 v3
   pat_same v6 v8 with h_v6 h_v8 using hinv1 else hinv1 hG in EoCases.__eo_prog_trans.case_0
   pat_unapply h_v7 as ⟨v10, v11, x_v10, x_v11, h_v10, h_v11, hn_v10, hn_v11⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_trans.case_0
   pat_unapply h_v10 as ⟨v13, v14, x_v13, x_v14, h_v13, h_v14, hn_v13, hn_v14⟩ using hinv1 else hinv1 hG in EoCases.__eo_prog_trans.case_0
   step as ⟨e_v15, he_v15⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14
+  store_step with CtorSpec.eo__3d.construct s1 e_v15 (by rw [he_v15]; exact empty_args) hinv1 h64 as ⟨v15, s2, hinv2, h_v15⟩ growing hG carrying h_v4 h_v11 h_v13 h_v14 dropping h_v10 h_v6 h_v7 h_v8 he_v15 hinv1 e_v15 s1 v10 v6 v7 v8
   pat_same v13 v15 with h_v13 h_v15 using hinv2 else hinv2 hG in EoCases.__eo_prog_trans.case_0
-  store_step with ih.eo__24mk_5ftrans s2 v14 v11 v4 _ _ _ hinv2 h64 (hG.rem hrem) h_v14 h_v11 h_v4 as ⟨v16, s3, hinv3, h_v16⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 h_v6 h_v7 h_v8 h_v10 h_v11 h_v13 h_v14 h_v15
+  store_step with ih.eo__24mk_5ftrans s2 v14 v11 v4 _ _ _ hinv2 h64 (hG.rem hrem) h_v14 h_v11 h_v4 as ⟨v16, s3, hinv3, h_v16⟩ growing hG carrying dropping h_v11 h_v13 h_v14 h_v15 h_v4 hinv2 s2 v11 v13 v14 v15 v4
   case_done hinv3 hG with h_v16 in EoCases.__eo_prog_trans.case_0 using hn_v3 hn_v4 hn_v6 hn_v7 hn_v10 hn_v11 hn_v13 hn_v14
 
 /-- logos's `__eo_prog_trans` is what the generated body does: the tests for the stuck term,
@@ -2944,12 +2944,12 @@ theorem case_0_eo__24eo_5fpush_5fassume_5fcheck_spec (n : Nat) (ih : Specs n) (s
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fpush_5fassume_5fcheck
   have hG := Store.Grows.refl s
-  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 dropping
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_push_assume_check.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fso_2eassume_5fpush.construct s1 e_v1 (by rw [he_v1]; rfl) h_a1 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
+  store_step with CtorSpec.eo__24emb_5fso_2eassume_5fpush.construct s1 e_v1 (by rw [he_v1]; rfl) h_a1 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a2 dropping h_a0 h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fs_2econs.construct s2 e_v2 (by rw [he_v2]; rfl) h_v1 h_a2 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
+  store_step with CtorSpec.eo__24emb_5fs_2econs.construct s2 e_v2 (by rw [he_v2]; rfl) h_v1 h_a2 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a2 h_v1 he_v2 hinv2 e_v2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_push_assume_check.case_0 using
 
 theorem case_1_eo__24eo_5fpush_5fassume_5fcheck_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -2963,7 +2963,7 @@ theorem case_1_eo__24eo_5fpush_5fassume_5fcheck_spec (n : Nat) (ih : Specs n) (s
   unfold case_1_eo__24eo_5fpush_5fassume_5fcheck
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_push_assume_check.case_1 using
 
 /-- logos's `__eo_push_assume_check` is what the generated body does: the tests for the stuck term,
@@ -3011,12 +3011,12 @@ theorem case_0_eo__24eo_5fpush_5finput_5fassume_5fcheck_spec (n : Nat) (ih : Spe
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fpush_5finput_5fassume_5fcheck
   have hG := Store.Grows.refl s
-  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 dropping
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_push_input_assume_check.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fso_2eassume.construct s1 e_v1 (by rw [he_v1]; rfl) h_a1 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
+  store_step with CtorSpec.eo__24emb_5fso_2eassume.construct s1 e_v1 (by rw [he_v1]; rfl) h_a1 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a2 dropping h_a0 h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fs_2econs.construct s2 e_v2 (by rw [he_v2]; rfl) h_v1 h_a2 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
+  store_step with CtorSpec.eo__24emb_5fs_2econs.construct s2 e_v2 (by rw [he_v2]; rfl) h_v1 h_a2 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a2 h_v1 he_v2 hinv2 e_v2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_push_input_assume_check.case_0 using
 
 theorem case_1_eo__24eo_5fpush_5finput_5fassume_5fcheck_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -3030,7 +3030,7 @@ theorem case_1_eo__24eo_5fpush_5finput_5fassume_5fcheck_spec (n : Nat) (ih : Spe
   unfold case_1_eo__24eo_5fpush_5finput_5fassume_5fcheck
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_push_input_assume_check.case_1 using
 
 /-- logos's `__eo_push_input_assume_check` is what the generated body does: the tests for the stuck term,
@@ -3078,8 +3078,8 @@ theorem case_0_eo__24eo_5fpush_5fproven_spec (n : Nat) (ih : Specs n) (s : Store
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fpush_5fproven
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24eo_5fis_5fbool_5ftype s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
-  store_step with ih.eo__24eo_5fpush_5fproven_5fcheck s1 v0 a0 a1 _ _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a0 h_a1 (by good_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with ih.eo__24eo_5fis_5fbool_5ftype s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping
+  store_step with ih.eo__24eo_5fpush_5fproven_5fcheck s1 v0 a0 a1 _ _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a0 h_a1 (by good_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_a1 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_push_proven.case_0 using
 
 /-- logos's `__eo_push_proven` is what the generated body does: the tests for the stuck term,
@@ -3125,12 +3125,12 @@ theorem case_0_eo__24eo_5fpush_5fproven_5fcheck_spec (n : Nat) (ih : Specs n) (s
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fpush_5fproven_5fcheck
   have hG := Store.Grows.refl s
-  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 dropping
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_push_proven_check.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fso_2eproven.construct s1 e_v1 (by rw [he_v1]; rfl) h_a1 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
+  store_step with CtorSpec.eo__24emb_5fso_2eproven.construct s1 e_v1 (by rw [he_v1]; rfl) h_a1 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a2 dropping h_a0 h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fs_2econs.construct s2 e_v2 (by rw [he_v2]; rfl) h_v1 h_a2 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
+  store_step with CtorSpec.eo__24emb_5fs_2econs.construct s2 e_v2 (by rw [he_v2]; rfl) h_v1 h_a2 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a2 h_v1 he_v2 hinv2 e_v2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_push_proven_check.case_0 using
 
 theorem case_1_eo__24eo_5fpush_5fproven_5fcheck_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -3144,7 +3144,7 @@ theorem case_1_eo__24eo_5fpush_5fproven_5fcheck_spec (n : Nat) (ih : Specs n) (s
   unfold case_1_eo__24eo_5fpush_5fproven_5fcheck
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5fs_2eStuck.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_push_proven_check.case_1 using
 
 /-- logos's `__eo_push_proven_check` is what the generated body does: the tests for the stuck term,
@@ -3197,7 +3197,7 @@ theorem case_0_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fs_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_state_is_closed.case_0
   pat_destruct CtorSpec.eo__24emb_5fso_2eassume_5fpush.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_state_is_closed.case_0
-  store_step with Store.native_bool_spec s false hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4
+  store_step with Store.native_bool_spec s false hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying dropping h_a0 h_v1 h_v2 h_v4 v1 v2 v4
   case_done hinv1 hG with h_v5 in EoCases.__eo_state_is_closed.case_0 using
 
 theorem case_1_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3230,9 +3230,9 @@ theorem case_2_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
   unfold case_2_eo__24eo_5fstate_5fis_5fclosed
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fs_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fs_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_state_is_closed.case_2
-  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_state_is_closed.case_2 using
 
 theorem case_3_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3248,7 +3248,7 @@ theorem case_3_eo__24eo_5fstate_5fis_5fclosed_spec (n : Nat) (ih : Specs n) (s :
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_3_eo__24eo_5fstate_5fis_5fclosed
   have hG := Store.Grows.refl s
-  store_step with Store.native_bool_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with Store.native_bool_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping
   case_done hinv1 hG with h_v0 in EoCases.__eo_state_is_closed.case_3 using
 
 /-- logos's `__eo_state_is_closed` is what the generated body does: the tests for the stuck term,
@@ -3339,9 +3339,9 @@ theorem case_0_eo__24eo_5fstate_5fis_5frefutation_spec (n : Nat) (ih : Specs n) 
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fstate_5fis_5frefutation
   have hG := Store.Grows.refl s
-  store_step with Store.literal_boolean_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  store_step with ih.eo__24eo_5finvoke_5fcmd_5fcheck_5fproven s1 a0 v0 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v0 (by good_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
-  store_step with ih.eo__24eo_5fstate_5fis_5fclosed s2 v1 _ hinv2 h64 (hG.rem hrem) h_v1 (by good_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with Store.literal_boolean_spec s false hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping
+  store_step with ih.eo__24eo_5finvoke_5fcmd_5fcheck_5fproven s1 a0 v0 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v0 (by good_tac) as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
+  store_step with ih.eo__24eo_5fstate_5fis_5fclosed s2 v1 _ hinv2 h64 (hG.rem hrem) h_v1 (by good_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_state_is_refutation.case_0 using
 
 /-- logos's `__eo_state_is_refutation` is what the generated body does: the tests for the stuck term,
@@ -3391,9 +3391,9 @@ theorem case_0_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_boolean_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_to_smt.case_0
+  pat_destruct_lit Store.destruct_boolean_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_to_smt.case_0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eBoolean.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5fsm_2eBoolean.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
   case_done hinv2 hG with h_v2 in EoCases.__eo_to_smt.case_0 using
 
 theorem case_1_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3406,9 +3406,9 @@ theorem case_1_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_1_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_numeral_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_to_smt.case_1
+  pat_destruct_lit Store.destruct_numeral_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_to_smt.case_1
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eNumeral.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5fsm_2eNumeral.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
   case_done hinv2 hG with h_v2 in EoCases.__eo_to_smt.case_1 using
 
 theorem case_2_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3421,9 +3421,9 @@ theorem case_2_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_2_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_rational_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_to_smt.case_2
+  pat_destruct_lit Store.destruct_rational_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_to_smt.case_2
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eRational.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5fsm_2eRational.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
   case_done hinv2 hG with h_v2 in EoCases.__eo_to_smt.case_2 using
 
 theorem case_3_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3436,9 +3436,9 @@ theorem case_3_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_3_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_string_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_to_smt.case_3
+  pat_destruct_lit Store.destruct_string_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_to_smt.case_3
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eString.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5fsm_2eString.construct s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
   case_done hinv2 hG with h_v2 in EoCases.__eo_to_smt.case_3 using
 
 theorem case_4_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3451,9 +3451,9 @@ theorem case_4_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_4_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
-  pat_destruct_lit2 Store.destruct_binary_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_to_smt.case_4
+  pat_destruct_lit2 Store.destruct_binary_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_to_smt.case_4
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eBinary.construct s1 e_v3 (by rw [he_v3]; rfl) h_v1 h_v2 hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo__24emb_5fsm_2eBinary.construct s1 e_v3 (by rw [he_v3]; rfl) h_v1 h_v2 hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 he_v3 hinv1 e_v3 s1 v1 v2
   case_done hinv2 hG with h_v3 in EoCases.__eo_to_smt.case_4 using
 
 theorem case_5_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3468,10 +3468,10 @@ theorem case_5_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt.case_5
   obtain ⟨hn_v1, hn_v2⟩ := CtorSpec.eo__24emb_5fVar.fields_ne_stuck hinv h_a0
-  pat_destruct_lit Store.destruct_string_spec s v1 h_v1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_v1 h_v2 in EoCases.__eo_to_smt.case_5
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4
+  pat_destruct_lit Store.destruct_string_spec s v1 h_v1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_v2 in EoCases.__eo_to_smt.case_5
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v4 dropping h_a0 h_v1 h_v2 hinv1 s1 v1 v2
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eVar.construct s2 e_v6 (by rw [he_v6]; rfl) h_v4 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__24emb_5fsm_2eVar.construct s2 e_v6 (by rw [he_v6]; rfl) h_v4 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying dropping h_v4 h_v5 he_v6 hinv2 e_v6 s2 v4 v5
   case_done hinv3 hG with h_v6 in EoCases.__eo_to_smt.case_5 using hn_v1 hn_v2
 
 theorem case_6_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3485,7 +3485,7 @@ theorem case_6_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   unfold case_6_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDtCons.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_to_smt.case_6
-  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_v1 h_v2 h_v3 dropping h_a0
   have h_ite_v8 := (show if_0_eo__24eo_5fto_5fsmt s1 v4 v2 v1 v3 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24eo_5fto_5fsmt
     have hrem := (hG.rem hrem)
@@ -3493,14 +3493,14 @@ theorem case_6_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
     rcases Store.boolean_value_native h_v4 with ⟨hx_5, hbv_5⟩ | ⟨hx_5, hbv_5⟩
     · ite_branch hbv_5
       step as ⟨e_v5, he_v5⟩
-      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s1 e_v5 (by rw [he_v5]; exact empty_args) hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s1 e_v5 (by rw [he_v5]; exact empty_args) hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v1 h_v2 h_v3 dropping h_v4 he_v5 e_v5 v4
       ite_done hinv2 hG with (native_ite_true_rep _ hx_5 h_v5)
     · ite_branch hbv_5
-      store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+      store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_v1 h_v3 dropping h_v2 h_v4 hinv1 s1 v2 v4
       step as ⟨e_v7, he_v7⟩
-      store_step with CtorSpec.eo__24emb_5fsm_2eDtCons.construct s2 e_v7 (by rw [he_v7]; rfl) h_v1 h_v6 h_v3 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v6
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtCons.construct s2 e_v7 (by rw [he_v7]; rfl) h_v1 h_v6 h_v3 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying dropping h_v1 h_v3 h_v6 he_v7 e_v7 v1 v3 v6
       ite_done hinv3 hG with (native_ite_false_rep _ hx_5 h_v7))
-  store_step with h_ite_v8 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with h_ite_v8 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying dropping h_ite_v8 h_v1 h_v2 h_v3 h_v4 hinv1 s1 v1 v2 v3 v4
   case_done hinv2 hG with h_v8 in EoCases.__eo_to_smt.case_6 using
 
 theorem case_7_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3514,7 +3514,7 @@ theorem case_7_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   unfold case_7_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDtSel.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_to_smt.case_7
-  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_v1 h_v2 h_v3 h_v4 dropping h_a0
   have h_ite_v9 := (show if_1_eo__24eo_5fto_5fsmt s1 v5 v2 v1 v3 v4 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_1_eo__24eo_5fto_5fsmt
     have hrem := (hG.rem hrem)
@@ -3522,14 +3522,14 @@ theorem case_7_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
     rcases Store.boolean_value_native h_v5 with ⟨hx_6, hbv_6⟩ | ⟨hx_6, hbv_6⟩
     · ite_branch hbv_6
       step as ⟨e_v6, he_v6⟩
-      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s1 e_v6 (by rw [he_v6]; exact empty_args) hinv1 h64 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s1 e_v6 (by rw [he_v6]; exact empty_args) hinv1 h64 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_v1 h_v2 h_v3 h_v4 dropping h_v5 he_v6 e_v6 v5
       ite_done hinv2 hG with (native_ite_true_rep _ hx_6 h_v6)
     · ite_branch hbv_6
-      store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v1 h_v3 h_v4 dropping h_v2 h_v5 hinv1 s1 v2 v5
       step as ⟨e_v8, he_v8⟩
-      store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s2 e_v8 (by rw [he_v8]; rfl) h_v1 h_v7 h_v3 h_v4 hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v7
+      store_step with CtorSpec.eo__24emb_5fsm_2eDtSel.construct s2 e_v8 (by rw [he_v8]; rfl) h_v1 h_v7 h_v3 h_v4 hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying dropping h_v1 h_v3 h_v4 h_v7 he_v8 e_v8 v1 v3 v4 v7
       ite_done hinv3 hG with (native_ite_false_rep _ hx_6 h_v8))
-  store_step with h_ite_v9 as ⟨v9, s2, hinv2, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with h_ite_v9 as ⟨v9, s2, hinv2, h_v9⟩ growing hG carrying dropping h_ite_v9 h_v1 h_v2 h_v3 h_v4 h_v5 hinv1 s1 v1 v2 v3 v4 v5
   case_done hinv2 hG with h_v9 in EoCases.__eo_to_smt.case_7 using
 
 theorem case_8_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3544,11 +3544,11 @@ theorem case_8_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fUConst.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt.case_8
   step as ⟨e_v3, he_v3⟩
-  store_step with Store.native_spec_uconst_id s e_v3 (by rw [he_v3]; rfl) h_v1 hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.native_spec_uconst_id s e_v3 (by rw [he_v3]; rfl) h_v1 hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 he_v3 e_v3 v1
   rw [← Bridge.native_uconst_id] at h_v3
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eUConst.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5fsm_2eUConst.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_to_smt.case_8 using
 
 theorem case_9_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3563,11 +3563,11 @@ theorem case_9_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_9
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_not.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo_not.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 he_v3 e_v3
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_to_smt.case_9
-  store_step with ih.eo__24eo_5fto_5fsmt s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v2 h_v3 hinv1 s1 v1 v2 v3
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2enot.construct s2 e_v5 (by rw [he_v5]; rfl) h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5fsm_2enot.construct s2 e_v5 (by rw [he_v5]; rfl) h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v4 he_v5 hinv2 e_v5 s2 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_to_smt.case_9 using hn_v1 hn_v2
 
 theorem case_10_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3583,12 +3583,12 @@ theorem case_10_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_10
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_10
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_and.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo_and.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_a0 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_to_smt.case_10
-  store_step with ih.eo__24eo_5fto_5fsmt s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5fto_5fsmt s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
+  store_step with ih.eo__24eo_5fto_5fsmt s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v2 dropping h_v4 h_v5 h_v6 hinv1 s1 v4 v5 v6
+  store_step with ih.eo__24eo_5fto_5fsmt s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_v7 dropping h_v2 hinv2 s2 v2
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eand.construct s3 e_v9 (by rw [he_v9]; rfl) h_v7 h_v8 hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with CtorSpec.eo__24emb_5fsm_2eand.construct s3 e_v9 (by rw [he_v9]; rfl) h_v7 h_v8 hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying dropping h_v7 h_v8 he_v9 hinv3 e_v9 s3 v7 v8
   case_done hinv4 hG with h_v9 in EoCases.__eo_to_smt.case_10 using hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_11_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3604,12 +3604,12 @@ theorem case_11_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_11
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_11
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__3d_3e.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__3d_3e.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_a0 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_to_smt.case_11
-  store_step with ih.eo__24eo_5fto_5fsmt s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5fto_5fsmt s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
+  store_step with ih.eo__24eo_5fto_5fsmt s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v2 dropping h_v4 h_v5 h_v6 hinv1 s1 v4 v5 v6
+  store_step with ih.eo__24eo_5fto_5fsmt s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_v7 dropping h_v2 hinv2 s2 v2
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2e_3d_3e.construct s3 e_v9 (by rw [he_v9]; rfl) h_v7 h_v8 hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with CtorSpec.eo__24emb_5fsm_2e_3d_3e.construct s3 e_v9 (by rw [he_v9]; rfl) h_v7 h_v8 hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying dropping h_v7 h_v8 he_v9 hinv3 e_v9 s3 v7 v8
   case_done hinv4 hG with h_v9 in EoCases.__eo_to_smt.case_11 using hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_12_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3625,12 +3625,12 @@ theorem case_12_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_12
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_12
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__3d.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__3d.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_a0 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_to_smt.case_12
-  store_step with ih.eo__24eo_5fto_5fsmt s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5fto_5fsmt s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
+  store_step with ih.eo__24eo_5fto_5fsmt s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v2 dropping h_v4 h_v5 h_v6 hinv1 s1 v4 v5 v6
+  store_step with ih.eo__24eo_5fto_5fsmt s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_v7 dropping h_v2 hinv2 s2 v2
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2e_3d.construct s3 e_v9 (by rw [he_v9]; rfl) h_v7 h_v8 hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with CtorSpec.eo__24emb_5fsm_2e_3d.construct s3 e_v9 (by rw [he_v9]; rfl) h_v7 h_v8 hinv3 h64 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying dropping h_v7 h_v8 he_v9 hinv3 e_v9 s3 v7 v8
   case_done hinv4 hG with h_v9 in EoCases.__eo_to_smt.case_12 using hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_13_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3644,10 +3644,10 @@ theorem case_13_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a
   unfold case_13_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt.case_13
-  store_step with ih.eo__24eo_5fto_5fsmt s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24eo_5fto_5fsmt s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24eo_5fto_5fsmt s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5fsm_2eApply.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_to_smt.case_13 using hn_v1 hn_v2
 
 theorem case_14_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3661,7 +3661,7 @@ theorem case_14_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a
   unfold case_14_eo__24eo_5fto_5fsmt
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt.case_14 using
 
 theorem cases_0_0_eo__24eo_5fto_5fsmt_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3840,10 +3840,10 @@ theorem case_0_eo__24eo_5fto_5fsmt_5fdatatype_spec (n : Nat) (ih : Specs n) (s :
   unfold case_0_eo__24eo_5fto_5fsmt_5fdatatype
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_datatype.case_0
-  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fcons s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fcons s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_to_smt_datatype.case_0 using
 
 theorem case_1_eo__24eo_5fto_5fsmt_5fdatatype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3857,10 +3857,10 @@ theorem case_1_eo__24eo_5fto_5fsmt_5fdatatype_spec (n : Nat) (ih : Specs n) (s :
   unfold case_1_eo__24eo_5fto_5fsmt_5fdatatype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fedt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_datatype.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_datatype.case_1 using
 
 /-- logos's `__eo_to_smt_datatype` is what the generated body does: the tests for the stuck term,
@@ -3919,10 +3919,10 @@ theorem case_0_eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec (n : Nat) (ih : Specs 
   unfold case_0_eo__24eo_5fto_5fsmt_5fdatatype_5fcons
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_datatype_cons.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_datatype_cons.case_0 using
 
 theorem case_1_eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -3936,10 +3936,10 @@ theorem case_1_eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec (n : Nat) (ih : Specs 
   unfold case_1_eo__24eo_5fto_5fsmt_5fdatatype_5fcons
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedtc_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_datatype_cons.case_1
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fcons s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fcons s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_to_smt_datatype_cons.case_1 using
 
 /-- logos's `__eo_to_smt_datatype_cons` is what the generated body does: the tests for the stuck term,
@@ -3998,10 +3998,10 @@ theorem case_0_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec (n : Nat) (ih : Specs 
   unfold case_0_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedd_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_to_smt_datatype_decl.case_0
-  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype s v2 _ hinv h64 hrem h_v2 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v3 _ hinv1 h64 (hG.rem hrem) h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype s v2 _ hinv h64 hrem h_v2 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_v1 h_v3 dropping h_a0 h_v2 v2
+  store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v3 _ hinv1 h64 (hG.rem hrem) h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v1 h_v4 dropping h_v3 hinv1 s1 v3
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__24emb_5fdd_2econs.construct s2 e_v6 (by rw [he_v6]; rfl) h_v1 h_v4 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with CtorSpec.eo__24emb_5fdd_2econs.construct s2 e_v6 (by rw [he_v6]; rfl) h_v1 h_v4 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying dropping h_v1 h_v4 h_v5 he_v6 hinv2 e_v6 s2 v1 v4 v5
   case_done hinv3 hG with h_v6 in EoCases.__eo_to_smt_datatype_decl.case_0 using
 
 theorem case_1_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4015,10 +4015,10 @@ theorem case_1_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec (n : Nat) (ih : Specs 
   unfold case_1_eo__24eo_5fto_5fsmt_5fdatatype_5fdecl
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fedd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fedd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_datatype_decl.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_datatype_decl.case_1 using
 
 /-- logos's `__eo_to_smt_datatype_decl` is what the generated body does: the tests for the stuck term,
@@ -4078,10 +4078,10 @@ theorem case_0_eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname_spec (n : Nat) (
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
   simp only [eostring.EoString.from_code_points, Std.bind_ok]
-  store_step with Store.raw_str_vec_spec s _ _ rfl hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with Store.raw_str_vec_spec s _ _ rfl hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping
   replace h_v0 := Represents.rep_of_eq h_v0 (y := SmtEval.native_string_lit "@") (by simp [alloc.slice.Slice.into_vec, alloc.vec.Vec.val, he_v0]; decide)
   step as ⟨e_v1, he_v1⟩
-  store_step with Store.native_spec_string_prefix_eq s1 e_v1 (by rw [he_v1]; rfl) h_v0 h_a0 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.native_spec_string_prefix_eq s1 e_v1 (by rw [he_v1]; rfl) h_v0 h_a0 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v0 he_v1 hinv1 e_v0 e_v1 s1 v0
   rw [← Bridge.native_string_prefix_eq] at h_v1
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_reserved_datatype_name.case_0 using
 
@@ -4129,10 +4129,10 @@ theorem case_0_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_0_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_0 using
 
 theorem case_1_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4146,7 +4146,7 @@ theorem case_1_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_1_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDatatypeType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_type.case_1
-  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0
   have h_ite_v7 := (show if_0_eo__24eo_5fto_5fsmt_5ftype s1 v3 v2 v1 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24eo_5fto_5fsmt_5ftype
     have hrem := (hG.rem hrem)
@@ -4154,14 +4154,14 @@ theorem case_1_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
     rcases Store.boolean_value_native h_v3 with ⟨hx_4, hbv_4⟩ | ⟨hx_4, hbv_4⟩
     · ite_branch hbv_4
       step as ⟨e_v4, he_v4⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v1 h_v2 dropping h_v3 he_v4 e_v4 v3
       ite_done hinv2 hG with (native_ite_true_rep _ hx_4 h_v4)
     · ite_branch hbv_4
-      store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+      store_step with ih.eo__24eo_5fto_5fsmt_5fdatatype_5fdecl s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v1 dropping h_v2 h_v3 hinv1 s1 v2 v3
       step as ⟨e_v6, he_v6⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s2 e_v6 (by rw [he_v6]; rfl) h_v1 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5
+      store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s2 e_v6 (by rw [he_v6]; rfl) h_v1 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying dropping h_v1 h_v5 he_v6 e_v6 v1 v5
       ite_done hinv3 hG with (native_ite_false_rep _ hx_4 h_v6))
-  store_step with h_ite_v7 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with h_ite_v7 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying dropping h_ite_v7 h_v1 h_v2 h_v3 hinv1 s1 v1 v2 v3
   case_done hinv2 hG with h_v7 in EoCases.__eo_to_smt_type.case_1 using
 
 theorem case_2_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4175,7 +4175,7 @@ theorem case_2_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_2_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDatatypeTypeRef.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_to_smt_type.case_2
-  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with ih.eo__24eo_5fto_5fsmt_5freserved_5fdatatype_5fname s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_v1 dropping h_a0
   have h_ite_v5 := (show if_1_eo__24eo_5fto_5fsmt_5ftype s1 v2 v1 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_1_eo__24eo_5fto_5fsmt_5ftype
     have hrem := (hG.rem hrem)
@@ -4183,13 +4183,13 @@ theorem case_2_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
     rcases Store.boolean_value_native h_v2 with ⟨hx_3, hbv_3⟩ | ⟨hx_3, hbv_3⟩
     · ite_branch hbv_3
       step as ⟨e_v3, he_v3⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v3 (by rw [he_v3]; exact empty_args) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v3 (by rw [he_v3]; exact empty_args) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_v1 dropping h_v2 he_v3 e_v3 v2
       ite_done hinv2 hG with (native_ite_true_rep _ hx_3 h_v3)
     · ite_branch hbv_3
       step as ⟨e_v4, he_v4⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eTypeRef.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2
+      store_step with CtorSpec.eo__24emb_5ftsm_2eTypeRef.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v2 he_v4 hinv1 e_v4 s1 v1 v2
       ite_done hinv2 hG with (native_ite_false_rep _ hx_3 h_v4))
-  store_step with h_ite_v5 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with h_ite_v5 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying dropping h_ite_v5 h_v1 h_v2 hinv1 s1 v1 v2
   case_done hinv2 hG with h_v5 in EoCases.__eo_to_smt_type.case_2 using
 
 theorem case_3_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4203,14 +4203,14 @@ theorem case_3_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_3_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDtcAppType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_to_smt_type.case_3
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v1 _ hinv2 h64 (hG.rem hrem) h_v1 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v1 h_v2 h_v3 dropping hinv1 s1
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v1 _ hinv2 h64 (hG.rem hrem) h_v1 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v2 h_v3 h_v4 dropping h_v1 hinv2 s2 v1
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_v3 h_v4 h_v5 dropping h_v2 hinv3 s3 v2
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDtcAppType.construct s4 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s5 v4 v7 _ _ hinv5 h64 (hG.rem hrem) h_v4 h_v7 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s6 v3 v8 _ _ hinv6 h64 (hG.rem hrem) h_v3 h_v8 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDtcAppType.construct s4 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_v3 h_v4 dropping h_v5 h_v6 he_v7 hinv4 e_v7 s4 v5 v6
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s5 v4 v7 _ _ hinv5 h64 (hG.rem hrem) h_v4 h_v7 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_v3 dropping h_v4 h_v7 hinv5 s5 v4 v7
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s6 v3 v8 _ _ hinv6 h64 (hG.rem hrem) h_v3 h_v8 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying dropping h_v3 h_v8 hinv6 s6 v3 v8
   case_done hinv7 hG with h_v9 in EoCases.__eo_to_smt_type.case_3 using
 
 theorem case_4_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4225,7 +4225,7 @@ theorem case_4_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fUSort.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_to_smt_type.case_4
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eUSort.construct s e_v2 (by rw [he_v2]; rfl) h_v1 hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5ftsm_2eUSort.construct s e_v2 (by rw [he_v2]; rfl) h_v1 hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 e_v2 v1
   case_done hinv1 hG with h_v2 in EoCases.__eo_to_smt_type.case_4 using
 
 theorem case_5_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4241,14 +4241,14 @@ theorem case_5_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_5
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_5
   pat_is_node h_v4 : x_v4 is Eo.Term.FunType by Embed.inv_Term_FunType else hinv hG in EoCases.__eo_to_smt_type.case_5
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v5 _ hinv h64 hrem h_v5 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v5 _ hinv2 h64 (hG.rem hrem) h_v5 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s v5 _ hinv h64 hrem h_v5 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_v2 h_v5 dropping h_a0 h_v1 h_v4 v1 v4
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_v2 h_v5 h_v7 dropping hinv1 s1
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v5 _ hinv2 h64 (hG.rem hrem) h_v5 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_v2 h_v7 h_v8 dropping h_v5 hinv2 s2 v5
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_v7 h_v8 h_v9 dropping h_v2 hinv3 s3 v2
   step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eFunType.construct s4 e_v11 (by rw [he_v11]; rfl) h_v9 h_v10 hinv4 h64 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s5 v8 v11 _ _ hinv5 h64 (hG.rem hrem) h_v8 h_v11 as ⟨v12, s6, hinv6, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s6 v7 v12 _ _ hinv6 h64 (hG.rem hrem) h_v7 h_v12 as ⟨v13, s7, hinv7, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
+  store_step with CtorSpec.eo__24emb_5ftsm_2eFunType.construct s4 e_v11 (by rw [he_v11]; rfl) h_v9 h_v10 hinv4 h64 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying h_v7 h_v8 dropping h_v10 h_v9 he_v11 hinv4 e_v11 s4 v10 v9
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s5 v8 v11 _ _ hinv5 h64 (hG.rem hrem) h_v8 h_v11 as ⟨v12, s6, hinv6, h_v12⟩ growing hG carrying h_v7 dropping h_v11 h_v8 hinv5 s5 v11 v8
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s6 v7 v12 _ _ hinv6 h64 (hG.rem hrem) h_v7 h_v12 as ⟨v13, s7, hinv7, h_v13⟩ growing hG carrying dropping h_v12 h_v7 hinv6 s6 v12 v7
   case_done hinv7 hG with h_v13 in EoCases.__eo_to_smt_type.case_5 using hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_6_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4262,10 +4262,10 @@ theorem case_6_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_6_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_6
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eInt.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eInt.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_6 using
 
 theorem case_7_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4279,10 +4279,10 @@ theorem case_7_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_7_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_7
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eReal.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eReal.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_7 using
 
 theorem case_8_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4297,13 +4297,13 @@ theorem case_8_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_8
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_BitVec.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo_BitVec.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 he_v3 e_v3
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_8
-  pat_destruct_lit Store.destruct_numeral_spec s1 v2 h_v2 hinv1 h64 as ⟨v5, x_v5, h_v5⟩ storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 in EoCases.__eo_to_smt_type.case_8
+  pat_destruct_lit Store.destruct_numeral_spec s1 v2 h_v2 hinv1 h64 as ⟨v5, x_v5, h_v5⟩ storing ⟨s2, hinv2⟩ growing hG carrying in EoCases.__eo_to_smt_type.case_8
   simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.raw_int_u32_spec s2 0#u32 (0) (by scalar_tac) hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5
+  store_step with Store.raw_int_u32_spec s2 0#u32 (0) (by scalar_tac) hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_v5 dropping h_v1 h_v2 h_v3 hinv1 hinv2 s1 s2 v1 v2 v3
   step as ⟨e_v7, he_v7⟩
-  store_step with Store.native_spec_zleq s3 e_v7 (by rw [he_v7]; rfl) h_v6 h_v5 hinv3 h64 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6
+  store_step with Store.native_spec_zleq s3 e_v7 (by rw [he_v7]; rfl) h_v6 h_v5 hinv3 h64 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_v5 dropping h_v6 he_v7 hinv3 e_v7 s3 v6
   rw [← Bridge.native_zleq] at h_v7
   have h_ite_v11 := (show if_2_eo__24eo_5fto_5fsmt_5ftype s4 v7 v5 ⦃ r s' => s'.Inv ∧ s4.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_2_eo__24eo_5fto_5fsmt_5ftype
@@ -4312,16 +4312,16 @@ theorem case_8_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
     rcases Store.boolean_value_native h_v7 with ⟨hx_8, hbv_8⟩ | ⟨hx_8, hbv_8⟩
     · ite_branch hbv_8
       step as ⟨e_v8, he_v8⟩
-      store_step with Store.native_spec_int_to_nat s4 e_v8 (by rw [he_v8]; rfl) h_v5 hinv4 h64 as ⟨v8, s5, hinv5, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7
+      store_step with Store.native_spec_int_to_nat s4 e_v8 (by rw [he_v8]; rfl) h_v5 hinv4 h64 as ⟨v8, s5, hinv5, h_v8⟩ growing hG carrying dropping h_v5 h_v7 he_v8 e_v8 v5 v7
       rw [← Bridge.native_int_to_nat] at h_v8
       step as ⟨e_v9, he_v9⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eBitVec.construct s5 e_v9 (by rw [he_v9]; rfl) h_v8 hinv5 h64 as ⟨v9, s6, hinv6, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7 h_v8
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBitVec.construct s5 e_v9 (by rw [he_v9]; rfl) h_v8 hinv5 h64 as ⟨v9, s6, hinv6, h_v9⟩ growing hG carrying dropping h_v8 he_v9 e_v9 v8
       ite_done hinv6 hG with (native_ite_true_rep _ hx_8 h_v9)
     · ite_branch hbv_8
       step as ⟨e_v10, he_v10⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s4 e_v10 (by rw [he_v10]; exact empty_args) hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s4 e_v10 (by rw [he_v10]; exact empty_args) hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying dropping h_v5 h_v7 he_v10 hinv4 e_v10 s4 v5 v7
       ite_done hinv5 hG with (native_ite_false_rep _ hx_8 h_v10))
-  store_step with h_ite_v11 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v7
+  store_step with h_ite_v11 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying dropping h_ite_v11 h_v5 h_v7 hinv4 s4 v5 v7
   case_done hinv5 hG with h_v11 in EoCases.__eo_to_smt_type.case_8 using hn_v1 hn_v2
 
 theorem case_9_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4335,10 +4335,10 @@ theorem case_9_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_9_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Char.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Char.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_9
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eChar.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eChar.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_to_smt_type.case_9 using
 
 theorem case_10_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4353,13 +4353,13 @@ theorem case_10_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : St
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_to_smt_type.case_10
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_Seq.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo_Seq.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 he_v3 e_v3
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_to_smt_type.case_10
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v2 dropping h_v1 h_v3 hinv1 s1 v1 v3
+  store_step with ih.eo__24eo_5fto_5fsmt_5ftype s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v4 dropping h_v2 hinv2 s2 v2
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eSeq.construct s3 e_v6 (by rw [he_v6]; rfl) h_v5 hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s4 v4 v6 _ _ hinv4 h64 (hG.rem hrem) h_v4 h_v6 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with CtorSpec.eo__24emb_5ftsm_2eSeq.construct s3 e_v6 (by rw [he_v6]; rfl) h_v5 hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_v4 dropping h_v5 he_v6 hinv3 e_v6 s3 v5
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s4 v4 v6 _ _ hinv4 h64 (hG.rem hrem) h_v4 h_v6 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying dropping h_v4 h_v6 hinv4 s4 v4 v6
   case_done hinv5 hG with h_v7 in EoCases.__eo_to_smt_type.case_10 using hn_v1 hn_v2
 
 theorem case_11_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4373,7 +4373,7 @@ theorem case_11_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : St
   unfold case_11_eo__24eo_5fto_5fsmt_5ftype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_to_smt_type.case_11 using
 
 theorem cases_0_0_eo__24eo_5fto_5fsmt_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4523,9 +4523,9 @@ theorem case_0_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_boolean_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_typeof.case_0
+  pat_destruct_lit Store.destruct_boolean_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_typeof.case_0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v2 (by rw [he_v2]; exact empty_args) hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v2 (by rw [he_v2]; exact empty_args) hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
   case_done hinv2 hG with h_v2 in EoCases.__eo_typeof.case_0 using hn_a0
 
 theorem case_1_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4538,10 +4538,10 @@ theorem case_1_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_1_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_numeral_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_typeof.case_1
+  pat_destruct_lit Store.destruct_numeral_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_typeof.case_1
   step as ⟨e_v2, he_v2⟩
-  store_step with Store.construct_numeral_spec s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
-  store_step with ih.eo__24eo_5flit_5ftype_5fNumeral s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.construct_numeral_spec s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
+  store_step with ih.eo__24eo_5flit_5ftype_5fNumeral s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying dropping h_v2 hinv2 s2 v2
   case_done hinv3 hG with h_v3 in EoCases.__eo_typeof.case_1 using hn_a0
 
 theorem case_2_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4554,10 +4554,10 @@ theorem case_2_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_2_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_rational_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_typeof.case_2
+  pat_destruct_lit Store.destruct_rational_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_typeof.case_2
   step as ⟨e_v2, he_v2⟩
-  store_step with Store.construct_rational_spec s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
-  store_step with ih.eo__24eo_5flit_5ftype_5fRational s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.construct_rational_spec s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
+  store_step with ih.eo__24eo_5flit_5ftype_5fRational s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying dropping h_v2 hinv2 s2 v2
   case_done hinv3 hG with h_v3 in EoCases.__eo_typeof.case_2 using hn_a0
 
 theorem case_3_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4570,10 +4570,10 @@ theorem case_3_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_3_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
-  pat_destruct_lit Store.destruct_string_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_typeof.case_3
+  pat_destruct_lit Store.destruct_string_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ storing ⟨s1, hinv1⟩ growing hG carrying in EoCases.__eo_typeof.case_3
   step as ⟨e_v2, he_v2⟩
-  store_step with Store.construct_string_spec s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_v1
-  store_step with ih.eo__24eo_5flit_5ftype_5fString s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.construct_string_spec s1 e_v2 (by rw [he_v2]; rfl) h_v1 hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 hinv1 e_v2 s1 v1
+  store_step with ih.eo__24eo_5flit_5ftype_5fString s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying dropping h_v2 hinv2 s2 v2
   case_done hinv3 hG with h_v3 in EoCases.__eo_typeof.case_3 using hn_a0
 
 theorem case_4_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4588,8 +4588,8 @@ theorem case_4_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
   have hG := Store.Grows.refl s
   pat_destruct_lit2 Store.destruct_binary_spec s a0 h_a0 hinv h64 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 in EoCases.__eo_typeof.case_4
   step as ⟨e_v3, he_v3⟩
-  store_step with Store.construct_binary_spec s1 e_v3 (by rw [he_v3]; rfl) h_v1 h_v2 (Store.rep_binary_okBv h_a0) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24eo_5flit_5ftype_5fBinary s2 v3 _ hinv2 h64 (hG.rem hrem) h_v3 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with Store.construct_binary_spec s1 e_v3 (by rw [he_v3]; rfl) h_v1 h_v2 (Store.rep_binary_okBv h_a0) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 he_v3 hinv1 e_v3 s1 v1 v2
+  store_step with ih.eo__24eo_5flit_5ftype_5fBinary s2 v3 _ hinv2 h64 (hG.rem hrem) h_v3 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying dropping h_v3 hinv2 s2 v3
   case_done hinv3 hG with h_v4 in EoCases.__eo_typeof.case_4 using hn_a0
 
 theorem case_5_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4604,7 +4604,7 @@ theorem case_5_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fVar.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof.case_5
   obtain ⟨hn_v1, hn_v2⟩ := CtorSpec.eo__24emb_5fVar.fields_ne_stuck hinv h_a0
-  pat_destruct_lit Store.destruct_string_spec s v1 h_v1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_v1 h_v2 in EoCases.__eo_typeof.case_5
+  pat_destruct_lit Store.destruct_string_spec s v1 h_v1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_v2 in EoCases.__eo_typeof.case_5
   case_done hinv1 hG with h_v2 in EoCases.__eo_typeof.case_5 using hn_a0 hn_v1 hn_v2
 
 theorem case_6_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4619,7 +4619,7 @@ theorem case_6_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDatatypeType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof.case_6
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo__24emb_5fType.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 he_v3 e_v3 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__eo_typeof.case_6 using hn_a0
 
 theorem case_7_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4634,9 +4634,9 @@ theorem case_7_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDtCons.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__eo_typeof.case_7
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5fDatatypeType.construct s e_v4 (by rw [he_v4]; rfl) h_v1 h_v2 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5fdd_5fresolve s1 v1 v2 _ _ hinv1 h64 (hG.rem hrem) h_v1 h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
-  store_step with ih.eo__24eo_5ftypeof_5fdt_5fcons_5frec s2 v4 v5 v3 _ _ _ hinv2 h64 (hG.rem hrem) h_v4 h_v5 h_v3 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with CtorSpec.eo__24emb_5fDatatypeType.construct s e_v4 (by rw [he_v4]; rfl) h_v1 h_v2 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_v1 h_v2 h_v3 dropping h_a0 he_v4 e_v4
+  store_step with ih.eo__24eo_5fdd_5fresolve s1 v1 v2 _ _ hinv1 h64 (hG.rem hrem) h_v1 h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v3 h_v4 dropping h_v1 h_v2 hinv1 s1 v1 v2
+  store_step with ih.eo__24eo_5ftypeof_5fdt_5fcons_5frec s2 v4 v5 v3 _ _ _ hinv2 h64 (hG.rem hrem) h_v4 h_v5 h_v3 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying dropping h_v3 h_v4 h_v5 hinv2 s2 v3 v4 v5
   case_done hinv3 hG with h_v6 in EoCases.__eo_typeof.case_7 using hn_a0
 
 theorem case_8_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4650,14 +4650,14 @@ theorem case_8_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
   unfold case_8_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fDtSel.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__eo_typeof.case_8
-  store_step with ih.eo__24eo_5fdd_5fresolve s v1 v2 _ _ hinv h64 hrem h_v1 h_v2 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
-  store_step with ih.eo__24eo_5ftypeof_5fdt_5fsel_5freturn s1 v5 v3 v4 _ _ _ hinv1 h64 (hG.rem hrem) h_v5 h_v3 h_v4 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with ih.eo__24eo_5fdd_5fresolve s v1 v2 _ _ hinv h64 hrem h_v1 h_v2 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_v1 h_v2 h_v3 h_v4 dropping h_a0
+  store_step with ih.eo__24eo_5ftypeof_5fdt_5fsel_5freturn s1 v5 v3 v4 _ _ _ hinv1 h64 (hG.rem hrem) h_v5 h_v3 h_v4 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_v1 h_v2 dropping h_v3 h_v4 h_v5 hinv1 s1 v3 v4 v5
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24emb_5fDatatypeType.construct s2 e_v7 (by rw [he_v7]; rfl) h_v1 h_v2 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with CtorSpec.eo__24emb_5fDatatypeType.construct s2 e_v7 (by rw [he_v7]; rfl) h_v1 h_v2 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_v6 dropping h_v1 h_v2 he_v7 hinv2 e_v7 s2 v1 v2
   step as ⟨e_v8, he_v8⟩
-  store_step with CtorSpec.eo__24emb_5fFunType.construct s3 e_v8 (by rw [he_v8]; exact empty_args) hinv3 h64 as ⟨v8, s4, hinv4, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  store_step with Store.apply_mk_rep s4 v8 v7 _ _ hinv4 h64 h_v8 h_v7 as ⟨v9, s5, hinv5, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
-  store_step with Store.apply_mk_rep s5 v9 v6 _ _ hinv5 h64 h_v9 h_v6 as ⟨v10, s6, hinv6, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5fFunType.construct s3 e_v8 (by rw [he_v8]; exact empty_args) hinv3 h64 as ⟨v8, s4, hinv4, h_v8⟩ growing hG carrying h_v6 h_v7 dropping he_v8 hinv3 e_v8 s3
+  store_step with Store.apply_mk_rep s4 v8 v7 _ _ hinv4 h64 h_v8 h_v7 as ⟨v9, s5, hinv5, h_v9⟩ growing hG carrying h_v6 dropping h_v7 h_v8 hinv4 s4 v7 v8
+  store_step with Store.apply_mk_rep s5 v9 v6 _ _ hinv5 h64 h_v9 h_v6 as ⟨v10, s6, hinv6, h_v10⟩ growing hG carrying dropping h_v6 h_v9 hinv5 s5 v6 v9
   case_done hinv6 hG with h_v10 in EoCases.__eo_typeof.case_8 using hn_a0
 
 theorem case_9_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4672,7 +4672,7 @@ theorem case_9_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 :
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fUSort.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__eo_typeof.case_9
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5fType.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 e_v2 v1
   case_done hinv1 hG with h_v2 in EoCases.__eo_typeof.case_9 using hn_a0
 
 theorem case_10_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4699,10 +4699,10 @@ theorem case_11_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_11_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fType.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_11
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof.case_11 using hn_a0
 
 theorem case_12_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4718,9 +4718,9 @@ theorem case_12_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_12
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_12
   pat_is_node h_v4 : x_v4 is Eo.Term.FunType by Embed.inv_Term_FunType else hinv hG in EoCases.__eo_typeof.case_12
-  store_step with ih.eo__24eo_5ftypeof s v5 _ hinv h64 hrem h_v5 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
-  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7
-  store_step with ih.eo__24eo_5ftypeof_5ffun_5ftype s2 v7 v8 _ _ hinv2 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8
+  store_step with ih.eo__24eo_5ftypeof s v5 _ hinv h64 hrem h_v5 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_v2 dropping h_a0 h_v1 h_v4 h_v5 v1 v4 v5
+  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_v7 dropping h_v2 hinv1 s1 v2
+  store_step with ih.eo__24eo_5ftypeof_5ffun_5ftype s2 v7 v8 _ _ hinv2 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying dropping h_v7 h_v8 hinv2 s2 v7 v8
   case_done hinv3 hG with h_v9 in EoCases.__eo_typeof.case_12 using hn_a0 hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_13_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4734,10 +4734,10 @@ theorem case_13_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_13_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_13
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof.case_13 using hn_a0
 
 theorem case_14_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4751,10 +4751,10 @@ theorem case_14_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_14_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24eo_5fList.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24eo_5fList.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_14
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof.case_14 using hn_a0
 
 theorem case_15_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4768,10 +4768,10 @@ theorem case_15_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_15_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24eo_5fList_5fnil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_15
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24eo_5fList.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24eo_5fList.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof.case_15 using hn_a0
 
 theorem case_16_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4786,16 +4786,16 @@ theorem case_16_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_16
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo__24eo_5fList_5fcons.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 dropping h_a0 h_v2 he_v3 e_v3 v2
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_16
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24eo_5fList.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with CtorSpec.eo__24eo_5fList.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v3 he_v4 hinv1 e_v4 s1 v1 v3
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24eo_5fList.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24eo_5fList.construct s2 e_v5 (by rw [he_v5]; exact empty_args) hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v4 dropping he_v5 hinv2 e_v5 s2
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__24emb_5fFunType.construct s3 e_v6 (by rw [he_v6]; exact empty_args) hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with Store.apply_rep s4 v6 v5 _ _ hinv4 h64 h_v6 h_v5 (by ns_tac) (by ns_tac) as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s5 v7 v4 _ _ hinv5 h64 h_v7 h_v4 (by ns_tac) (by ns_tac) as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with CtorSpec.eo__24emb_5fFunType.construct s3 e_v6 (by rw [he_v6]; exact empty_args) hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_v4 h_v5 dropping he_v6 hinv3 e_v6 s3
+  store_step with Store.apply_rep s4 v6 v5 _ _ hinv4 h64 h_v6 h_v5 (by ns_tac) (by ns_tac) as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_v4 dropping h_v5 h_v6 hinv4 s4 v5 v6
+  store_step with Store.apply_rep s5 v7 v4 _ _ hinv5 h64 h_v7 h_v4 (by ns_tac) (by ns_tac) as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying dropping h_v4 h_v7 hinv5 s5 v4 v7
   case_done hinv6 hG with h_v8 in EoCases.__eo_typeof.case_16 using hn_a0 hn_v1 hn_v2
 
 theorem case_17_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4809,10 +4809,10 @@ theorem case_17_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_17_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_17
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof.case_17 using hn_a0
 
 theorem case_18_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4826,10 +4826,10 @@ theorem case_18_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_18_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Real.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_18
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof.case_18 using hn_a0
 
 theorem case_19_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4844,10 +4844,10 @@ theorem case_19_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_19
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_BitVec.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo_BitVec.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 he_v3 e_v3
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_19
-  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5ftypeof_5fBitVec s2 v4 _ hinv2 h64 (hG.rem hrem) h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v2 h_v3 hinv1 s1 v1 v2 v3
+  store_step with ih.eo__24eo_5ftypeof_5fBitVec s2 v4 _ hinv2 h64 (hG.rem hrem) h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v4 hinv2 s2 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_typeof.case_19 using hn_a0 hn_v1 hn_v2
 
 theorem case_20_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4861,10 +4861,10 @@ theorem case_20_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_20_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Char.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Char.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_20
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof.case_20 using hn_a0
 
 theorem case_21_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4879,10 +4879,10 @@ theorem case_21_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_21
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_Seq.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo_Seq.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 he_v3 e_v3
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_21
-  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5ftypeof_5fSeq s2 v4 _ hinv2 h64 (hG.rem hrem) h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v2 h_v3 hinv1 s1 v1 v2 v3
+  store_step with ih.eo__24eo_5ftypeof_5fSeq s2 v4 _ hinv2 h64 (hG.rem hrem) h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v4 hinv2 s2 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_typeof.case_21 using hn_a0 hn_v1 hn_v2
 
 theorem case_22_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4897,10 +4897,10 @@ theorem case_22_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_22
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_not.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo_not.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 he_v3 e_v3
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_22
-  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5ftypeof_5fnot s2 v4 _ hinv2 h64 (hG.rem hrem) h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v2 h_v3 hinv1 s1 v1 v2 v3
+  store_step with ih.eo__24eo_5ftypeof_5fnot s2 v4 _ hinv2 h64 (hG.rem hrem) h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v4 hinv2 s2 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_typeof.case_22 using hn_a0 hn_v1 hn_v2
 
 theorem case_23_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4916,11 +4916,11 @@ theorem case_23_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_23
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_23
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_and.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo_and.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_a0 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_23
-  store_step with ih.eo__24eo_5ftypeof s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5ftypeof s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
-  store_step with ih.eo__24eo_5ftypeof_5fand s3 v7 v8 _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with ih.eo__24eo_5ftypeof s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v2 dropping h_v4 h_v5 h_v6 hinv1 s1 v4 v5 v6
+  store_step with ih.eo__24eo_5ftypeof s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_v7 dropping h_v2 hinv2 s2 v2
+  store_step with ih.eo__24eo_5ftypeof_5fand s3 v7 v8 _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying dropping h_v7 h_v8 hinv3 s3 v7 v8
   case_done hinv4 hG with h_v9 in EoCases.__eo_typeof.case_23 using hn_a0 hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_24_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4936,11 +4936,11 @@ theorem case_24_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_24
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_24
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__3d_3e.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__3d_3e.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_a0 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_24
-  store_step with ih.eo__24eo_5ftypeof s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5ftypeof s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
-  store_step with ih.eo__24eo_5ftypeof_5fand s3 v7 v8 _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with ih.eo__24eo_5ftypeof s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v2 dropping h_v4 h_v5 h_v6 hinv1 s1 v4 v5 v6
+  store_step with ih.eo__24eo_5ftypeof s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_v7 dropping h_v2 hinv2 s2 v2
+  store_step with ih.eo__24eo_5ftypeof_5fand s3 v7 v8 _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying dropping h_v7 h_v8 hinv3 s3 v7 v8
   case_done hinv4 hG with h_v9 in EoCases.__eo_typeof.case_24 using hn_a0 hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_25_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4956,11 +4956,11 @@ theorem case_25_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_25
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_25
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__3d.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__3d.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_a0 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__eo_typeof.case_25
-  store_step with ih.eo__24eo_5ftypeof s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with ih.eo__24eo_5ftypeof s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
-  store_step with ih.eo__24eo_5ftypeof_5f_3d s3 v7 v8 _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with ih.eo__24eo_5ftypeof s1 v5 _ hinv1 h64 (hG.rem hrem) h_v5 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v2 dropping h_v4 h_v5 h_v6 hinv1 s1 v4 v5 v6
+  store_step with ih.eo__24eo_5ftypeof s2 v2 _ hinv2 h64 (hG.rem hrem) h_v2 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_v7 dropping h_v2 hinv2 s2 v2
+  store_step with ih.eo__24eo_5ftypeof_5f_3d s3 v7 v8 _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying dropping h_v7 h_v8 hinv3 s3 v7 v8
   case_done hinv4 hG with h_v9 in EoCases.__eo_typeof.case_25 using hn_a0 hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_26_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -4974,9 +4974,9 @@ theorem case_26_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 
   unfold case_26_eo__24eo_5ftypeof
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__eo_typeof.case_26
-  store_step with ih.eo__24eo_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24eo_5ftypeof_5fapply s2 v3 v4 _ _ hinv2 h64 (hG.rem hrem) h_v3 h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24eo_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24eo_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
+  store_step with ih.eo__24eo_5ftypeof_5fapply s2 v3 v4 _ _ hinv2 h64 (hG.rem hrem) h_v3 h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 hinv2 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__eo_typeof.case_26 using hn_a0 hn_v1 hn_v2
 
 theorem cases_0_0_eo__24eo_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -5285,7 +5285,7 @@ theorem case_0_eo__24eo_5ftypeof_5f_3d_spec (n : Nat) (ih : Specs n) (s : Store)
   have hG := Store.Grows.refl s
   pat_same a1 a0 with h_a1 h_a0 using hinv else hinv hG in EoCases.__eo_typeof_eq.case_0
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping h_a0 h_a1 he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__eo_typeof_eq.case_0 using hn_a0 hn_a1
 
 /-- logos's `__eo_typeof_eq` is what the generated body does: the tests for the stuck term,
@@ -5334,10 +5334,10 @@ theorem case_0_eo__24eo_5ftypeof_5fBitVec_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_0_eo__24eo_5ftypeof_5fBitVec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo_Int.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_BitVec.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_BitVec.case_0 using hn_a0
 
 /-- logos's `__eo_typeof_BitVec` is what the generated body does: the tests for the stuck term,
@@ -5385,10 +5385,10 @@ theorem case_0_eo__24eo_5ftypeof_5fSeq_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_0_eo__24eo_5ftypeof_5fSeq
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fType.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_Seq.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_Seq.case_0 using hn_a0
 
 /-- logos's `__eo_typeof_Seq` is what the generated body does: the tests for the stuck term,
@@ -5436,13 +5436,13 @@ theorem case_0_eo__24eo_5ftypeof_5fand_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_0_eo__24eo_5ftypeof_5fand
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_and.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a1 v1 with h_a1 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_typeof_and.case_0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with CtorSpec.eo__24emb_5fBool.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a1 h_v1 he_v2 hinv2 e_v2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_typeof_and.case_0 using hn_a0 hn_a1
 
 /-- logos's `__eo_typeof_and` is what the generated body does: the tests for the stuck term,
@@ -5499,7 +5499,7 @@ theorem case_0_eo__24eo_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : Stor
     req_same v5 a1 with h_v5 h_a1 using hinv hG
     req_stuck h_v5 as hq_v5 using hinv hG
     req_done hinv hG with h_v2 using hq_v5)
-  store_step with h_req_v7 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  store_step with h_req_v7 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying dropping h_a0 h_req_v7 h_v1 h_v2 h_v4 h_v5 v1 v2 v4 v5
   case_done hinv1 hG with h_v7 in EoCases.__eo_typeof_apply.case_0 using hn_a0 hn_a1 hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_1_eo__24eo_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -5519,7 +5519,7 @@ theorem case_1_eo__24eo_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : Stor
     req_same v1 a1 with h_v1 h_a1 using hinv hG
     req_stuck h_v1 as hq_v1 using hinv hG
     req_done hinv hG with h_v2 using hq_v1)
-  store_step with h_req_v3 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with h_req_v3 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_req_v3 h_v1 h_v2 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__eo_typeof_apply.case_1 using hn_a0 hn_a1
 
 /-- logos's `__eo_typeof_apply` is what the generated body does: the tests for the stuck term,
@@ -5574,9 +5574,9 @@ theorem case_0_eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n)
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof_dt_cons_rec.case_0
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2
+  store_step with CtorSpec.eo__24emb_5fedtc_2eunit.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a2 h_v1 dropping h_a1 h_v2 he_v3 e_v3 v2
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__eo_typeof_dt_cons_rec.case_0
-  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 in EoCases.__eo_typeof_dt_cons_rec.case_0
+  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_a0 in EoCases.__eo_typeof_dt_cons_rec.case_0
   case_done hinv2 hG with h_a0 in EoCases.__eo_typeof_dt_cons_rec.case_0 using hn_a0
 
 theorem case_1_eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -5594,13 +5594,13 @@ theorem case_1_eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n)
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof_dt_cons_rec.case_1
   pat_destruct CtorSpec.eo__24emb_5fedtc_2econs.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ else hinv hG in EoCases.__eo_typeof_dt_cons_rec.case_1
-  pat_native_zero Store.native_pattern_nat_zero_spec s a2 h_a2 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__eo_typeof_dt_cons_rec.case_1
+  pat_native_zero Store.native_pattern_nat_zero_spec s a2 h_a2 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_v2 h_v4 h_v5 in EoCases.__eo_typeof_dt_cons_rec.case_1
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24emb_5fedt_2esum.construct s1 e_v7 (by rw [he_v7]; rfl) h_v5 h_v2 hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5
-  store_step with Store.native_nat_zero_spec s2 hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v7
-  store_step with ih.eo__24eo_5ftypeof_5fdt_5fcons_5frec s3 a0 v7 v8 _ _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8
+  store_step with CtorSpec.eo__24emb_5fedt_2esum.construct s1 e_v7 (by rw [he_v7]; rfl) h_v5 h_v2 hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v4 dropping h_a1 h_a2 h_v1 h_v2 h_v5 he_v7 hinv1 e_v7 s1 v1 v2 v5
+  store_step with Store.native_nat_zero_spec s2 hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v4 h_v7 dropping hinv2 s2
+  store_step with ih.eo__24eo_5ftypeof_5fdt_5fcons_5frec s3 a0 v7 v8 _ _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_v4 dropping h_a0 h_v7 h_v8 hinv3 s3 v7 v8
   step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo__24emb_5fDtcAppType.construct s4 e_v10 (by rw [he_v10]; rfl) h_v4 h_v9 hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5fDtcAppType.construct s4 e_v10 (by rw [he_v10]; rfl) h_v4 h_v9 hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying dropping h_v4 h_v9 he_v10 hinv4 e_v10 s4 v4 v9
   case_done hinv5 hG with h_v10 in EoCases.__eo_typeof_dt_cons_rec.case_1 using hn_a0
 
 theorem case_2_eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -5617,7 +5617,7 @@ theorem case_2_eo__24eo_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n)
   unfold case_2_eo__24eo_5ftypeof_5fdt_5fcons_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof_dt_cons_rec.case_2
-  pat_destruct_lit Store.native_pattern_succ_spec s a2 h_a2 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 in EoCases.__eo_typeof_dt_cons_rec.case_2
+  pat_destruct_lit Store.native_pattern_succ_spec s a2 h_a2 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_v2 in EoCases.__eo_typeof_dt_cons_rec.case_2
   case_again hinv1 hG with h_a0 h_v2 h_v4 in EoCases.__eo_typeof_dt_cons_rec.case_2 using hn_a0
 
 /-- logos's `__eo_typeof_dt_cons_rec` is what the generated body does: the tests for the stuck term,
@@ -5728,8 +5728,8 @@ theorem case_0_eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : Specs 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof_dt_sel_return.case_0
   pat_destruct CtorSpec.eo__24emb_5fedtc_2econs.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ else hinv hG in EoCases.__eo_typeof_dt_sel_return.case_0
-  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__eo_typeof_dt_sel_return.case_0
-  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__eo_typeof_dt_sel_return.case_0
+  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a2 h_v4 in EoCases.__eo_typeof_dt_sel_return.case_0
+  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_v4 in EoCases.__eo_typeof_dt_sel_return.case_0
   case_done hinv2 hG with h_v4 in EoCases.__eo_typeof_dt_sel_return.case_0 using
 
 theorem case_1_eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -5747,11 +5747,11 @@ theorem case_1_eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : Specs 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof_dt_sel_return.case_1
   pat_destruct CtorSpec.eo__24emb_5fedtc_2econs.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ else hinv hG in EoCases.__eo_typeof_dt_sel_return.case_1
-  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__eo_typeof_dt_sel_return.case_1
-  pat_destruct_lit Store.native_pattern_succ_spec s1 a2 h_a2 hinv1 h64 as ⟨v8, x_v8, h_v8⟩ storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__eo_typeof_dt_sel_return.case_1
+  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a2 h_v2 h_v5 in EoCases.__eo_typeof_dt_sel_return.case_1
+  pat_destruct_lit Store.native_pattern_succ_spec s1 a2 h_a2 hinv1 h64 as ⟨v8, x_v8, h_v8⟩ storing ⟨s2, hinv2⟩ growing hG carrying h_v2 h_v5 in EoCases.__eo_typeof_dt_sel_return.case_1
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__24emb_5fedt_2esum.construct s2 e_v9 (by rw [he_v9]; rfl) h_v5 h_v2 hinv2 h64 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v8
-  store_step with Store.native_nat_zero_spec s3 hinv3 h64 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5fedt_2esum.construct s2 e_v9 (by rw [he_v9]; rfl) h_v5 h_v2 hinv2 h64 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_v8 dropping h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 he_v9 hinv1 hinv2 e_v9 s1 s2 v1 v2 v4 v5
+  store_step with Store.native_nat_zero_spec s3 hinv3 h64 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_v8 h_v9 dropping hinv3 s3
   case_again hinv4 hG with h_v9 h_v10 h_v8 in EoCases.__eo_typeof_dt_sel_return.case_1 using
 
 theorem case_2_eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -5768,7 +5768,7 @@ theorem case_2_eo__24eo_5ftypeof_5fdt_5fsel_5freturn_spec (n : Nat) (ih : Specs 
   unfold case_2_eo__24eo_5ftypeof_5fdt_5fsel_5freturn
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fedt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__eo_typeof_dt_sel_return.case_2
-  pat_destruct_lit Store.native_pattern_succ_spec s a1 h_a1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 in EoCases.__eo_typeof_dt_sel_return.case_2
+  pat_destruct_lit Store.native_pattern_succ_spec s a1 h_a1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a2 h_v2 in EoCases.__eo_typeof_dt_sel_return.case_2
   case_again hinv1 hG with h_v2 h_v4 h_a2 in EoCases.__eo_typeof_dt_sel_return.case_2 using
 
 /-- logos's `__eo_typeof_dt_sel_return` is what the generated body does: the tests for the stuck term,
@@ -5874,13 +5874,13 @@ theorem case_0_eo__24eo_5ftypeof_5ffun_5ftype_spec (n : Nat) (ih : Specs n) (s :
   unfold case_0_eo__24eo_5ftypeof_5ffun_5ftype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fType.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_fun_type.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fType.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   pat_same a1 v1 with h_a1 h_v1 using hinv2 else hinv2 hG in EoCases.__eo_typeof_fun_type.case_0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5fType.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with CtorSpec.eo__24emb_5fType.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a1 h_v1 he_v2 hinv2 e_v2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__eo_typeof_fun_type.case_0 using hn_a0 hn_a1
 
 /-- logos's `__eo_typeof_fun_type` is what the generated body does: the tests for the stuck term,
@@ -5929,10 +5929,10 @@ theorem case_0_eo__24eo_5ftypeof_5fnot_spec (n : Nat) (ih : Specs n) (s : Store)
   unfold case_0_eo__24eo_5ftypeof_5fnot
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5fBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__eo_typeof_not.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with CtorSpec.eo__24emb_5fBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__eo_typeof_not.case_0 using hn_a0
 
 /-- logos's `__eo_typeof_not` is what the generated body does: the tests for the stuck term,
@@ -5982,12 +5982,12 @@ theorem case_0_eo__24mk_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : T
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__mk_symm.case_0
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__mk_symm.case_0
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo__3d.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__3d.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_a0 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__mk_symm.case_0
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v7 (by rw [he_v7]; exact empty_args) hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with Store.apply_rep s2 v7 v2 _ _ hinv2 h64 h_v7 h_v2 (by ns_tac) (by ns_tac) as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
-  store_step with Store.apply_rep s3 v8 v5 _ _ hinv3 h64 h_v8 h_v5 (by ns_tac) (by ns_tac) as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with CtorSpec.eo__3d.construct s1 e_v7 (by rw [he_v7]; exact empty_args) hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_v2 h_v5 dropping h_v4 h_v6 he_v7 hinv1 e_v7 s1 v4 v6
+  store_step with Store.apply_rep s2 v7 v2 _ _ hinv2 h64 h_v7 h_v2 (by ns_tac) (by ns_tac) as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_v5 dropping h_v2 h_v7 hinv2 s2 v2 v7
+  store_step with Store.apply_rep s3 v8 v5 _ _ hinv3 h64 h_v8 h_v5 (by ns_tac) (by ns_tac) as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying dropping h_v5 h_v8 hinv3 s3 v5 v8
   case_done hinv4 hG with h_v9 in EoCases.__mk_symm.case_0 using hn_a0 hn_v1 hn_v2 hn_v4 hn_v5
 
 theorem case_1_eo__24mk_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -6002,20 +6002,20 @@ theorem case_1_eo__24mk_5fsymm_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : T
   have hG := Store.Grows.refl s
   pat_unapply h_a0 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__mk_symm.case_1
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo_not.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo_not.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 he_v3 e_v3
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__mk_symm.case_1
   pat_unapply h_v2 as ⟨v5, v6, x_v5, x_v6, h_v5, h_v6, hn_v5, hn_v6⟩ using hinv1 else hinv1 hG in EoCases.__mk_symm.case_1
   pat_unapply h_v5 as ⟨v8, v9, x_v8, x_v9, h_v8, h_v9, hn_v8, hn_v9⟩ using hinv1 else hinv1 hG in EoCases.__mk_symm.case_1
   step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v10 (by rw [he_v10]; exact empty_args) hinv1 h64 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v8 h_v9
+  store_step with CtorSpec.eo__3d.construct s1 e_v10 (by rw [he_v10]; exact empty_args) hinv1 h64 as ⟨v10, s2, hinv2, h_v10⟩ growing hG carrying h_v6 h_v8 h_v9 dropping h_v1 h_v2 h_v3 h_v5 he_v10 hinv1 e_v10 s1 v1 v2 v3 v5
   pat_same v8 v10 with h_v8 h_v10 using hinv2 else hinv2 hG in EoCases.__mk_symm.case_1
   step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo_not.construct s2 e_v11 (by rw [he_v11]; exact empty_args) hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v8 h_v9 h_v10
+  store_step with CtorSpec.eo_not.construct s2 e_v11 (by rw [he_v11]; exact empty_args) hinv2 h64 as ⟨v11, s3, hinv3, h_v11⟩ growing hG carrying h_v6 h_v9 dropping h_v10 h_v8 he_v11 hinv2 e_v11 s2 v10 v8
   step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo__3d.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11
-  store_step with Store.apply_rep s4 v12 v6 _ _ hinv4 h64 h_v12 h_v6 (by ns_tac) (by ns_tac) as ⟨v13, s5, hinv5, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12
-  store_step with Store.apply_rep s5 v13 v9 _ _ hinv5 h64 h_v13 h_v9 (by ns_tac) (by ns_tac) as ⟨v14, s6, hinv6, h_v14⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
-  store_step with Store.apply_rep s6 v11 v14 _ _ hinv6 h64 h_v11 h_v14 (by ns_tac) (by ns_tac) as ⟨v15, s7, hinv7, h_v15⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v5 h_v6 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
+  store_step with CtorSpec.eo__3d.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_v6 h_v9 h_v11 dropping he_v12 hinv3 e_v12 s3
+  store_step with Store.apply_rep s4 v12 v6 _ _ hinv4 h64 h_v12 h_v6 (by ns_tac) (by ns_tac) as ⟨v13, s5, hinv5, h_v13⟩ growing hG carrying h_v9 h_v11 dropping h_v12 h_v6 hinv4 s4 v12 v6
+  store_step with Store.apply_rep s5 v13 v9 _ _ hinv5 h64 h_v13 h_v9 (by ns_tac) (by ns_tac) as ⟨v14, s6, hinv6, h_v14⟩ growing hG carrying h_v11 dropping h_v13 h_v9 hinv5 s5 v13 v9
+  store_step with Store.apply_rep s6 v11 v14 _ _ hinv6 h64 h_v11 h_v14 (by ns_tac) (by ns_tac) as ⟨v15, s7, hinv7, h_v15⟩ growing hG carrying dropping h_v11 h_v14 hinv6 s6 v11 v14
   case_done hinv7 hG with h_v15 in EoCases.__mk_symm.case_1 using hn_a0 hn_v1 hn_v2 hn_v5 hn_v6 hn_v8 hn_v9
 
 /-- logos's `__mk_symm` is what the generated body does: the tests for the stuck term,
@@ -6067,12 +6067,12 @@ theorem case_0_eo__24mk_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1
   pat_unapply h_a2 as ⟨v1, v2, x_v1, x_v2, h_v1, h_v2, hn_v1, hn_v2⟩ using hinv else hinv hG in EoCases.__mk_trans.case_0
   pat_unapply h_v1 as ⟨v4, v5, x_v4, x_v5, h_v4, h_v5, hn_v4, hn_v5⟩ using hinv else hinv hG in EoCases.__mk_trans.case_0
   step as ⟨e_v6, he_v6⟩
-  store_step with CtorSpec.eo_and.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo_and.construct s e_v6 (by rw [he_v6]; exact empty_args) hinv h64 as ⟨v6, s1, hinv1, h_v6⟩ growing hG carrying h_a0 h_a1 h_v2 h_v4 h_v5 dropping h_a2 h_v1 he_v6 e_v6 v1
   pat_same v4 v6 with h_v4 h_v6 using hinv1 else hinv1 hG in EoCases.__mk_trans.case_0
   pat_unapply h_v5 as ⟨v8, v9, x_v8, x_v9, h_v8, h_v9, hn_v8, hn_v9⟩ using hinv1 else hinv1 hG in EoCases.__mk_trans.case_0
   pat_unapply h_v8 as ⟨v11, v12, x_v11, x_v12, h_v11, h_v12, hn_v11, hn_v12⟩ using hinv1 else hinv1 hG in EoCases.__mk_trans.case_0
   step as ⟨e_v13, he_v13⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v13 (by rw [he_v13]; exact empty_args) hinv1 h64 as ⟨v13, s2, hinv2, h_v13⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12
+  store_step with CtorSpec.eo__3d.construct s1 e_v13 (by rw [he_v13]; exact empty_args) hinv1 h64 as ⟨v13, s2, hinv2, h_v13⟩ growing hG carrying h_a0 h_a1 h_v2 h_v9 h_v11 h_v12 dropping h_v4 h_v5 h_v6 h_v8 he_v13 hinv1 e_v13 s1 v4 v5 v6 v8
   pat_same v11 v13 with h_v11 h_v13 using hinv2 else hinv2 hG in EoCases.__mk_trans.case_0
   have h_req_v15 := (show requires_0_eo__24mk_5ftrans s2 a1 v12 a0 v9 v2 ⦃ r s' => s'.Inv ∧ s2.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (Eo.__eo_requires _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold requires_0_eo__24mk_5ftrans
@@ -6080,9 +6080,9 @@ theorem case_0_eo__24mk_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1
     have hG := Store.Grows.refl s2
     req_same a1 v12 with h_a1 h_v12 using hinv2 hG
     req_stuck h_a1 as hq_a1 using hinv2 hG
-    store_step with ih.eo__24mk_5ftrans s2 a0 v9 v2 _ _ _ hinv2 h64 (hG.rem hrem) h_a0 h_v9 h_v2 as ⟨v14, s3, hinv3, h_v14⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12 h_v13
+    store_step with ih.eo__24mk_5ftrans s2 a0 v9 v2 _ _ _ hinv2 h64 (hG.rem hrem) h_a0 h_v9 h_v2 as ⟨v14, s3, hinv3, h_v14⟩ growing hG carrying dropping h_a0 h_a1 h_v11 h_v12 h_v13 h_v2 h_v9 hinv2 s2 v11 v12 v13 v2 v9
     req_done hinv3 hG with h_v14 using hq_a1)
-  store_step with h_req_v15 as ⟨v15, s4, hinv4, h_v15⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v6 h_v8 h_v9 h_v11 h_v12 h_v13
+  store_step with h_req_v15 as ⟨v15, s4, hinv4, h_v15⟩ growing hG carrying dropping h_req_v15 h_v11 h_v12 h_v13 h_v2 h_v9 hinv2 s2 v11 v12 v13 v2 v9
   case_done hinv4 hG with h_v15 in EoCases.__mk_trans.case_0 using hn_a0 hn_a1 hn_a2 hn_v1 hn_v2 hn_v4 hn_v5 hn_v8 hn_v9 hn_v11 hn_v12
 
 theorem case_1_eo__24mk_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -6095,12 +6095,12 @@ theorem case_1_eo__24mk_5ftrans_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_1_eo__24mk_5ftrans
   have hG := Store.Grows.refl s
-  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with Store.literal_boolean_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 dropping
   pat_same a2 v0 with h_a2 h_v0 using hinv1 else hinv1 hG in EoCases.__mk_trans.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__3d.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
-  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
-  store_step with Store.apply_rep s3 v2 a1 _ _ hinv3 h64 h_v2 h_a1 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1 h_v2
+  store_step with CtorSpec.eo__3d.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 dropping h_a2 h_v0 he_v1 hinv1 e_v1 s1 v0
+  store_step with Store.apply_rep s2 v1 a0 _ _ hinv2 h64 h_v1 h_a0 (by ns_tac) (by ns_tac) as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a1 dropping h_a0 h_v1 hinv2 s2 v1
+  store_step with Store.apply_rep s3 v2 a1 _ _ hinv3 h64 h_v2 h_a1 (by ns_tac) (by ns_tac) as ⟨v3, s4, hinv4, h_v3⟩ growing hG carrying dropping h_a1 h_v2 hinv3 s3 v2
   case_done hinv4 hG with h_v3 in EoCases.__mk_trans.case_1 using hn_a0 hn_a1 hn_a2
 
 /-- logos's `__mk_trans` is what the generated body does: the tests for the stuck term,
@@ -6165,11 +6165,11 @@ theorem case_0_eo__24smtx_5fdd_5fhas_5fdt_spec (n : Nat) (ih : Specs n) (s : Sto
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__smtx_dd_has_dt.case_0
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v3 dropping h_a1 h_v1 h_v2 he_v4 e_v4 v1 v2
   rw [← Bridge.native_streq] at h_v4
-  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v4 dropping h_a0 h_v3 hinv1 s1 v3
   step as ⟨e_v6, he_v6⟩
-  store_step with Store.native_spec_or s2 e_v6 (by rw [he_v6]; rfl) h_v4 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with Store.native_spec_or s2 e_v6 (by rw [he_v6]; rfl) h_v4 h_v5 hinv2 h64 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying dropping h_v4 h_v5 he_v6 hinv2 e_v6 s2 v4 v5
   rw [← Bridge.native_or] at h_v6
   case_done hinv3 hG with h_v6 in EoCases.__smtx_dd_has_dt.case_0 using
 
@@ -6184,9 +6184,9 @@ theorem case_1_eo__24smtx_5fdd_5fhas_5fdt_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_1_eo__24smtx_5fdd_5fhas_5fdt
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dd_has_dt.case_1
-  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dd_has_dt.case_1 using
 
 /-- logos's `__smtx_dd_has_dt` is what the generated body does: the tests for the stuck term,
@@ -6247,7 +6247,7 @@ theorem case_0_eo__24smtx_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__smtx_dd_lookup.case_0
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v2 h_v3 dropping h_a1 h_v1 he_v4 e_v4 v1
   rw [← Bridge.native_streq] at h_v4
   have h_ite_v6 := (show if_0_eo__24smtx_5fdd_5flookup s1 v4 v2 a0 v3 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5fdd_5flookup
@@ -6257,9 +6257,9 @@ theorem case_0_eo__24smtx_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store
     · ite_branch hbv_5
       ite_done hinv1 hG with (native_ite_true_rep _ hx_5 h_v2)
     · ite_branch hbv_5
-      store_step with ih.eo__24smtx_5fdd_5flookup s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+      store_step with ih.eo__24smtx_5fdd_5flookup s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying dropping h_a0 h_v2 h_v3 h_v4 hinv1 s1 v2 v3 v4
       ite_done hinv2 hG with (native_ite_false_rep _ hx_5 h_v5))
-  store_step with h_ite_v6 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with h_ite_v6 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying dropping h_a0 h_ite_v6 h_v2 h_v3 h_v4 hinv1 s1 v2 v3 v4
   case_done hinv2 hG with h_v6 in EoCases.__smtx_dd_lookup.case_0 using
 
 theorem case_1_eo__24smtx_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -6273,10 +6273,10 @@ theorem case_1_eo__24smtx_5fdd_5flookup_spec (n : Nat) (ih : Specs n) (s : Store
   unfold case_1_eo__24smtx_5fdd_5flookup
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dd_lookup.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dd_lookup.case_1 using
 
 /-- logos's `__smtx_dd_lookup` is what the generated body does: the tests for the stuck term,
@@ -6337,7 +6337,7 @@ theorem case_0_eo__24smtx_5fdecl_5finhabited_spec (n : Nat) (ih : Specs n) (s : 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__smtx_decl_inhabited.case_0
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_streq s e_v4 (by rw [he_v4]; rfl) h_a0 h_v1 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v2 h_v3 dropping h_a1 h_v1 he_v4 e_v4 v1
   rw [← Bridge.native_streq] at h_v4
   have h_ite_v7 := (show if_0_eo__24smtx_5fdecl_5finhabited s1 v4 v2 v3 a0 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5fdecl_5finhabited
@@ -6345,12 +6345,12 @@ theorem case_0_eo__24smtx_5fdecl_5finhabited_spec (n : Nat) (ih : Specs n) (s : 
     have hG := Store.Grows.refl s1
     rcases Store.boolean_value_native h_v4 with ⟨hx_5, hbv_5⟩ | ⟨hx_5, hbv_5⟩
     · ite_branch hbv_5
-      store_step with ih.eo__24smtx_5fdt_5finhabited s1 v2 v3 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+      store_step with ih.eo__24smtx_5fdt_5finhabited s1 v2 v3 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_v3 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v3 dropping h_v2 h_v4 v2 v4
       ite_done hinv2 hG with (native_ite_true_rep _ hx_5 h_v5)
     · ite_branch hbv_5
-      store_step with ih.eo__24smtx_5fdecl_5finhabited s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+      store_step with ih.eo__24smtx_5fdecl_5finhabited s1 a0 v3 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying dropping h_a0 h_v2 h_v3 h_v4 hinv1 s1 v2 v3 v4
       ite_done hinv2 hG with (native_ite_false_rep _ hx_5 h_v6))
-  store_step with h_ite_v7 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with h_ite_v7 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying dropping h_a0 h_ite_v7 h_v2 h_v3 h_v4 hinv1 s1 v2 v3 v4
   case_done hinv2 hG with h_v7 in EoCases.__smtx_decl_inhabited.case_0 using
 
 theorem case_1_eo__24smtx_5fdecl_5finhabited_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -6364,9 +6364,9 @@ theorem case_1_eo__24smtx_5fdecl_5finhabited_spec (n : Nat) (ih : Specs n) (s : 
   unfold case_1_eo__24smtx_5fdecl_5finhabited
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_decl_inhabited.case_1
-  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_decl_inhabited.case_1 using
 
 /-- logos's `__smtx_decl_inhabited` is what the generated body does: the tests for the stuck term,
@@ -6426,23 +6426,23 @@ theorem case_0_eo__24smtx_5fdecl_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_0_eo__24smtx_5fdecl_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdd_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__smtx_decl_wf_rec.case_0
-  store_step with ih.eo__24smtx_5fdt_5fwf_5frec s a0 v2 _ _ hinv h64 hrem h_a0 h_v2 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5fdt_5fwf_5frec s a0 v2 _ _ hinv h64 hrem h_a0 h_v2 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v1 h_v3 dropping h_a1 h_v2 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s1 e_v5 (by rw [he_v5]; rfl) h_v1 h_a0 hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
-  store_step with ih.eo__24smtx_5finhabited_5ftype s2 v5 _ hinv2 h64 (hG.rem hrem) h_v5 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with ih.eo__24smtx_5fdecl_5fwf_5frec s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s4 v1 v3 _ _ hinv4 h64 (hG.rem hrem) h_v1 h_v3 as ⟨v8, s5, hinv5, h_v8⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s1 e_v5 (by rw [he_v5]; rfl) h_v1 h_a0 hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 dropping he_v5 hinv1 e_v5 s1
+  store_step with ih.eo__24smtx_5finhabited_5ftype s2 v5 _ hinv2 h64 (hG.rem hrem) h_v5 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v3 h_v4 dropping h_v5 hinv2 s2 v5
+  store_step with ih.eo__24smtx_5fdecl_5fwf_5frec s3 a0 v3 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_v1 h_v3 h_v4 h_v6 dropping h_a0 hinv3 s3
+  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s4 v1 v3 _ _ hinv4 h64 (hG.rem hrem) h_v1 h_v3 as ⟨v8, s5, hinv5, h_v8⟩ growing hG carrying h_v4 h_v6 h_v7 dropping h_v1 h_v3 hinv4 s4 v1 v3
   step as ⟨e_v9, he_v9⟩
-  store_step with Store.native_spec_not s5 e_v9 (by rw [he_v9]; rfl) h_v8 hinv5 h64 as ⟨v9, s6, hinv6, h_v9⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with Store.native_spec_not s5 e_v9 (by rw [he_v9]; rfl) h_v8 hinv5 h64 as ⟨v9, s6, hinv6, h_v9⟩ growing hG carrying h_v4 h_v6 h_v7 dropping h_v8 he_v9 hinv5 e_v9 s5 v8
   rw [← Bridge.native_not] at h_v9
   step as ⟨e_v10, he_v10⟩
-  store_step with Store.native_spec_and s6 e_v10 (by rw [he_v10]; rfl) h_v7 h_v9 hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  store_step with Store.native_spec_and s6 e_v10 (by rw [he_v10]; rfl) h_v7 h_v9 hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying h_v4 h_v6 dropping h_v7 h_v9 he_v10 hinv6 e_v10 s6 v7 v9
   rw [← Bridge.native_and] at h_v10
   step as ⟨e_v11, he_v11⟩
-  store_step with Store.native_spec_and s7 e_v11 (by rw [he_v11]; rfl) h_v6 h_v10 hinv7 h64 as ⟨v11, s8, hinv8, h_v11⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+  store_step with Store.native_spec_and s7 e_v11 (by rw [he_v11]; rfl) h_v6 h_v10 hinv7 h64 as ⟨v11, s8, hinv8, h_v11⟩ growing hG carrying h_v4 dropping h_v10 h_v6 he_v11 hinv7 e_v11 s7 v10 v6
   rw [← Bridge.native_and] at h_v11
   step as ⟨e_v12, he_v12⟩
-  store_step with Store.native_spec_and s8 e_v12 (by rw [he_v12]; rfl) h_v4 h_v11 hinv8 h64 as ⟨v12, s9, hinv9, h_v12⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
+  store_step with Store.native_spec_and s8 e_v12 (by rw [he_v12]; rfl) h_v4 h_v11 hinv8 h64 as ⟨v12, s9, hinv9, h_v12⟩ growing hG carrying dropping h_v11 h_v4 he_v12 hinv8 e_v12 s8 v11 v4
   rw [← Bridge.native_and] at h_v12
   case_done hinv9 hG with h_v12 in EoCases.__smtx_decl_wf_rec.case_0 using
 
@@ -6457,9 +6457,9 @@ theorem case_1_eo__24smtx_5fdecl_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_1_eo__24smtx_5fdecl_5fwf_5frec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdd_2enil.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_decl_wf_rec.case_1
-  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_decl_wf_rec.case_1 using
 
 /-- logos's `__smtx_decl_wf_rec` is what the generated body does: the tests for the stuck term,
@@ -6520,10 +6520,10 @@ theorem case_0_eo__24smtx_5fdt_5fcons_5finhabited_spec (n : Nat) (ih : Specs n) 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dt_cons_inhabited.case_0
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eTypeRef.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__smtx_dt_cons_inhabited.case_0
-  store_step with ih.eo__24smtx_5fdecl_5finhabited s v4 a1 _ _ hinv h64 hrem h_v4 h_a1 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4
-  store_step with ih.eo__24smtx_5fdt_5fcons_5finhabited s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  store_step with ih.eo__24smtx_5fdecl_5finhabited s v4 a1 _ _ hinv h64 hrem h_v4 h_a1 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 h_v4 v1 v4
+  store_step with ih.eo__24smtx_5fdt_5fcons_5finhabited s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_v5 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v7, he_v7⟩
-  store_step with Store.native_spec_and s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6
+  store_step with Store.native_spec_and s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying dropping h_v5 h_v6 he_v7 hinv2 e_v7 s2 v5 v6
   rw [← Bridge.native_and] at h_v7
   case_done hinv3 hG with h_v7 in EoCases.__smtx_dt_cons_inhabited.case_0 using
 
@@ -6538,10 +6538,10 @@ theorem case_1_eo__24smtx_5fdt_5fcons_5finhabited_spec (n : Nat) (ih : Specs n) 
   unfold case_1_eo__24smtx_5fdt_5fcons_5finhabited
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dt_cons_inhabited.case_1
-  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with ih.eo__24smtx_5fdt_5fcons_5finhabited s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5fdt_5fcons_5finhabited s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   rw [← Bridge.native_and] at h_v5
   case_done hinv3 hG with h_v5 in EoCases.__smtx_dt_cons_inhabited.case_1 using
 
@@ -6556,9 +6556,9 @@ theorem case_2_eo__24smtx_5fdt_5fcons_5finhabited_spec (n : Nat) (ih : Specs n) 
   unfold case_2_eo__24smtx_5fdt_5fcons_5finhabited
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dt_cons_inhabited.case_2
-  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dt_cons_inhabited.case_2 using
 
 /-- logos's `__smtx_dt_cons_inhabited` is what the generated body does: the tests for the stuck term,
@@ -6621,10 +6621,10 @@ theorem case_0_eo__24smtx_5fdt_5fcons_5fwf_5frec_spec (n : Nat) (ih : Specs n) (
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dt_cons_wf_rec.case_0
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eTypeRef.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__smtx_dt_cons_wf_rec.case_0
-  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s v4 a0 _ _ hinv h64 hrem h_v4 h_a0 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4
-  store_step with ih.eo__24smtx_5fdt_5fcons_5fwf_5frec s1 a0 v2 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s v4 a0 _ _ hinv h64 hrem h_v4 h_a0 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_v2 dropping h_a1 h_v1 h_v4 v1 v4
+  store_step with ih.eo__24smtx_5fdt_5fcons_5fwf_5frec s1 a0 v2 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_v5 dropping h_a0 h_v2 hinv1 s1 v2
   step as ⟨e_v7, he_v7⟩
-  store_step with Store.native_spec_and s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6
+  store_step with Store.native_spec_and s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying dropping h_v5 h_v6 he_v7 hinv2 e_v7 s2 v5 v6
   rw [← Bridge.native_and] at h_v7
   case_done hinv3 hG with h_v7 in EoCases.__smtx_dt_cons_wf_rec.case_0 using
 
@@ -6639,14 +6639,14 @@ theorem case_1_eo__24smtx_5fdt_5fcons_5fwf_5frec_spec (n : Nat) (ih : Specs n) (
   unfold case_1_eo__24smtx_5fdt_5fcons_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dt_cons_wf_rec.case_1
-  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2 dropping h_a1
+  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v2 h_v3 dropping h_v1 hinv1 s1 v1
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v2 dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   rw [← Bridge.native_and] at h_v5
-  store_step with ih.eo__24smtx_5fdt_5fcons_5fwf_5frec s3 a0 v2 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with ih.eo__24smtx_5fdt_5fcons_5fwf_5frec s3 a0 v2 _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_v5 dropping h_a0 h_v2 hinv3 s3 v2
   step as ⟨e_v7, he_v7⟩
-  store_step with Store.native_spec_and s4 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with Store.native_spec_and s4 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying dropping h_v5 h_v6 he_v7 hinv4 e_v7 s4 v5 v6
   rw [← Bridge.native_and] at h_v7
   case_done hinv5 hG with h_v7 in EoCases.__smtx_dt_cons_wf_rec.case_1 using
 
@@ -6661,9 +6661,9 @@ theorem case_2_eo__24smtx_5fdt_5fcons_5fwf_5frec_spec (n : Nat) (ih : Specs n) (
   unfold case_2_eo__24smtx_5fdt_5fcons_5fwf_5frec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dt_cons_wf_rec.case_2
-  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dt_cons_wf_rec.case_2 using
 
 /-- logos's `__smtx_dt_cons_wf_rec` is what the generated body does: the tests for the stuck term,
@@ -6725,10 +6725,10 @@ theorem case_0_eo__24smtx_5fdt_5finhabited_spec (n : Nat) (ih : Specs n) (s : St
   unfold case_0_eo__24smtx_5fdt_5finhabited
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dt_inhabited.case_0
-  store_step with ih.eo__24smtx_5fdt_5fcons_5finhabited s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with ih.eo__24smtx_5fdt_5finhabited s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5fdt_5fcons_5finhabited s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5fdt_5finhabited s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_or s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_or s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   rw [← Bridge.native_or] at h_v5
   case_done hinv3 hG with h_v5 in EoCases.__smtx_dt_inhabited.case_0 using
 
@@ -6743,9 +6743,9 @@ theorem case_1_eo__24smtx_5fdt_5finhabited_spec (n : Nat) (ih : Specs n) (s : St
   unfold case_1_eo__24smtx_5fdt_5finhabited
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dt_inhabited.case_1
-  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dt_inhabited.case_1 using
 
 /-- logos's `__smtx_dt_inhabited` is what the generated body does: the tests for the stuck term,
@@ -6805,10 +6805,10 @@ theorem case_0_eo__24smtx_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Stor
   unfold case_0_eo__24smtx_5fdt_5fresolve
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dt_resolve.case_0
-  store_step with ih.eo__24smtx_5fdtc_5fresolve s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with ih.eo__24smtx_5fdt_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5fdtc_5fresolve s v1 a1 _ _ hinv h64 hrem h_v1 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5fdt_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__smtx_dt_resolve.case_0 using
 
 theorem case_1_eo__24smtx_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -6822,10 +6822,10 @@ theorem case_1_eo__24smtx_5fdt_5fresolve_spec (n : Nat) (ih : Specs n) (s : Stor
   unfold case_1_eo__24smtx_5fdt_5fresolve
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dt_resolve.case_1
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dt_resolve.case_1 using
 
 /-- logos's `__smtx_dt_resolve` is what the generated body does: the tests for the stuck term,
@@ -6885,10 +6885,10 @@ theorem case_0_eo__24smtx_5fdt_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_0_eo__24smtx_5fdt_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dt_wf_rec.case_0
-  store_step with ih.eo__24smtx_5fdt_5fcons_5fwf_5frec s a0 v1 _ _ hinv h64 hrem h_a0 h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
-  store_step with ih.eo__24smtx_5fdt_5fwf_5frec s1 a0 v2 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5fdt_5fcons_5fwf_5frec s a0 v1 _ _ hinv h64 hrem h_a0 h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v2 dropping h_a1 h_v1 v1
+  store_step with ih.eo__24smtx_5fdt_5fwf_5frec s1 a0 v2 _ _ hinv1 h64 (hG.rem hrem) h_a0 h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_a0 h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   rw [← Bridge.native_and] at h_v5
   case_done hinv3 hG with h_v5 in EoCases.__smtx_dt_wf_rec.case_0 using
 
@@ -6903,9 +6903,9 @@ theorem case_1_eo__24smtx_5fdt_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_1_eo__24smtx_5fdt_5fwf_5frec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdt_2enull.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping he_v0 e_v0
   pat_same a1 v0 with h_a1 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dt_wf_rec.case_1
-  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a1 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dt_wf_rec.case_1 using
 
 /-- logos's `__smtx_dt_wf_rec` is what the generated body does: the tests for the stuck term,
@@ -6967,10 +6967,10 @@ theorem case_0_eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Sto
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dtc_resolve.case_0
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eTypeRef.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ else hinv hG in EoCases.__smtx_dtc_resolve.case_0
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s e_v5 (by rw [he_v5]; rfl) h_v4 h_a1 hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4
-  store_step with ih.eo__24smtx_5fdtc_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s e_v5 (by rw [he_v5]; rfl) h_v4 h_a1 hinv h64 as ⟨v5, s1, hinv1, h_v5⟩ growing hG carrying h_a1 h_v2 dropping h_a0 h_v1 h_v4 he_v5 e_v5 v1 v4
+  store_step with ih.eo__24smtx_5fdtc_5fresolve s1 v2 a1 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_a1 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_v5 dropping h_a1 h_v2 hinv1 s1 v2
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v4 h_v5 h_v6
+  store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s2 e_v7 (by rw [he_v7]; rfl) h_v5 h_v6 hinv2 h64 as ⟨v7, s3, hinv3, h_v7⟩ growing hG carrying dropping h_v5 h_v6 he_v7 hinv2 e_v7 s2 v5 v6
   case_done hinv3 hG with h_v7 in EoCases.__smtx_dtc_resolve.case_0 using
 
 theorem case_1_eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -6984,9 +6984,9 @@ theorem case_1_eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_1_eo__24smtx_5fdtc_5fresolve
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_dtc_resolve.case_1
-  store_step with ih.eo__24smtx_5fdtc_5fresolve s v2 a1 _ _ hinv h64 hrem h_v2 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with ih.eo__24smtx_5fdtc_5fresolve s v2 a1 _ _ hinv h64 hrem h_v2 h_a1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 dropping h_a0 h_a1 h_v2 v2
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 h_v3 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+  store_step with CtorSpec.eo__24emb_5fdtc_2econs.construct s1 e_v4 (by rw [he_v4]; rfl) h_v1 h_v3 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying dropping h_v1 h_v3 he_v4 hinv1 e_v4 s1 v1 v3
   case_done hinv2 hG with h_v4 in EoCases.__smtx_dtc_resolve.case_1 using
 
 theorem case_2_eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -7000,10 +7000,10 @@ theorem case_2_eo__24smtx_5fdtc_5fresolve_spec (n : Nat) (ih : Specs n) (s : Sto
   unfold case_2_eo__24smtx_5fdtc_5fresolve
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_dtc_resolve.case_2
   step as ⟨e_v1, he_v1⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_dtc_resolve.case_2 using
 
 /-- logos's `__smtx_dtc_resolve` is what the generated body does: the tests for the stuck term,
@@ -7068,9 +7068,9 @@ theorem case_0_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : 
   unfold case_0_eo__24smtx_5finhabited_5ftype
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_inhabited_type.case_0
-  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_inhabited_type.case_0 using
 
 theorem case_1_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7103,7 +7103,7 @@ theorem case_2_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : 
   unfold case_2_eo__24smtx_5finhabited_5ftype
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eDatatype.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_inhabited_type.case_2
-  store_step with ih.eo__24smtx_5fdecl_5finhabited s v1 v2 _ _ hinv h64 hrem h_v1 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5fdecl_5finhabited s v1 v2 _ _ hinv h64 hrem h_v1 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__smtx_inhabited_type.case_2 using
 
 theorem case_3_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7120,7 +7120,7 @@ theorem case_3_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : 
   unfold case_3_eo__24smtx_5finhabited_5ftype
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eTypeRef.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_inhabited_type.case_3
-  store_step with Store.native_bool_spec s false hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with Store.native_bool_spec s false hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 v1
   case_done hinv1 hG with h_v2 in EoCases.__smtx_inhabited_type.case_3 using
 
 theorem case_4_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7137,7 +7137,7 @@ theorem case_4_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : 
   unfold case_4_eo__24smtx_5finhabited_5ftype
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eDtcAppType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_inhabited_type.case_4
-  store_step with Store.native_bool_spec s false hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.native_bool_spec s false hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__smtx_inhabited_type.case_4 using
 
 theorem case_5_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7153,7 +7153,7 @@ theorem case_5_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : 
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_5_eo__24smtx_5finhabited_5ftype
   have hG := Store.Grows.refl s
-  store_step with Store.native_bool_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with Store.native_bool_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping
   case_done hinv1 hG with h_v0 in EoCases.__smtx_inhabited_type.case_5 using
 
 theorem cases_0_0_eo__24smtx_5finhabited_5ftype_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7308,9 +7308,9 @@ theorem case_0_eo__24smtx_5fret_5ftypeof_5fsel_spec (n : Nat) (ih : Specs n) (s 
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24smtx_5fret_5ftypeof_5fsel
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24smtx_5fdd_5flookup s a0 a1 _ _ hinv h64 hrem h_a0 h_a1 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3
-  store_step with ih.eo__24smtx_5fdt_5fresolve s1 v0 a1 _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a1 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0
-  store_step with ih.eo__24smtx_5fret_5ftypeof_5fsel_5frec s2 v1 a2 a3 _ _ _ hinv2 h64 (hG.rem hrem) h_v1 h_a2 h_a3 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_a3 h_v0 h_v1
+  store_step with ih.eo__24smtx_5fdd_5flookup s a0 a1 _ _ hinv h64 hrem h_a0 h_a1 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 h_a2 h_a3 dropping h_a0
+  store_step with ih.eo__24smtx_5fdt_5fresolve s1 v0 a1 _ _ hinv1 h64 (hG.rem hrem) h_v0 h_a1 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a2 h_a3 dropping h_a1 h_v0 hinv1 s1 v0
+  store_step with ih.eo__24smtx_5fret_5ftypeof_5fsel_5frec s2 v1 a2 a3 _ _ _ hinv2 h64 (hG.rem hrem) h_v1 h_a2 h_a3 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a2 h_a3 h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v2 in EoCases.__smtx_ret_typeof_sel.case_0 using
 
 /-- logos's `__smtx_ret_typeof_sel` is what the generated body does: the tests for the stuck term,
@@ -7361,8 +7361,8 @@ theorem case_0_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_ret_typeof_sel_rec.case_0
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ else hinv hG in EoCases.__smtx_ret_typeof_sel_rec.case_0
-  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__smtx_ret_typeof_sel_rec.case_0
-  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__smtx_ret_typeof_sel_rec.case_0
+  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a2 h_v4 in EoCases.__smtx_ret_typeof_sel_rec.case_0
+  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_v4 in EoCases.__smtx_ret_typeof_sel_rec.case_0
   case_done hinv2 hG with h_v4 in EoCases.__smtx_ret_typeof_sel_rec.case_0 using
 
 theorem case_1_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -7380,11 +7380,11 @@ theorem case_1_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_ret_typeof_sel_rec.case_1
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ else hinv hG in EoCases.__smtx_ret_typeof_sel_rec.case_1
-  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__smtx_ret_typeof_sel_rec.case_1
-  pat_destruct_lit Store.native_pattern_succ_spec s1 a2 h_a2 hinv1 h64 as ⟨v8, x_v8, h_v8⟩ storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__smtx_ret_typeof_sel_rec.case_1
+  pat_native_zero Store.native_pattern_nat_zero_spec s a1 h_a1 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a2 h_v2 h_v5 in EoCases.__smtx_ret_typeof_sel_rec.case_1
+  pat_destruct_lit Store.native_pattern_succ_spec s1 a2 h_a2 hinv1 h64 as ⟨v8, x_v8, h_v8⟩ storing ⟨s2, hinv2⟩ growing hG carrying h_v2 h_v5 in EoCases.__smtx_ret_typeof_sel_rec.case_1
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s2 e_v9 (by rw [he_v9]; rfl) h_v5 h_v2 hinv2 h64 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v8
-  store_step with Store.native_nat_zero_spec s3 hinv3 h64 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s2 e_v9 (by rw [he_v9]; rfl) h_v5 h_v2 hinv2 h64 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_v8 dropping h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 he_v9 hinv1 hinv2 e_v9 s1 s2 v1 v2 v4 v5
+  store_step with Store.native_nat_zero_spec s3 hinv3 h64 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_v8 h_v9 dropping hinv3 s3
   case_again hinv4 hG with h_v9 h_v10 h_v8 in EoCases.__smtx_ret_typeof_sel_rec.case_1 using
 
 theorem case_2_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -7401,7 +7401,7 @@ theorem case_2_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs 
   unfold case_2_eo__24smtx_5fret_5ftypeof_5fsel_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_ret_typeof_sel_rec.case_2
-  pat_destruct_lit Store.native_pattern_succ_spec s a1 h_a1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 in EoCases.__smtx_ret_typeof_sel_rec.case_2
+  pat_destruct_lit Store.native_pattern_succ_spec s a1 h_a1 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a2 h_v2 in EoCases.__smtx_ret_typeof_sel_rec.case_2
   case_again hinv1 hG with h_v2 h_v4 h_a2 in EoCases.__smtx_ret_typeof_sel_rec.case_2 using
 
 theorem case_3_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -7418,7 +7418,7 @@ theorem case_3_eo__24smtx_5fret_5ftypeof_5fsel_5frec_spec (n : Nat) (ih : Specs 
   unfold case_3_eo__24smtx_5fret_5ftypeof_5fsel_5frec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__smtx_ret_typeof_sel_rec.case_3 using
 
 /-- logos's `__smtx_ret_typeof_sel_rec` is what the generated body does: the tests for the stuck term,
@@ -7526,9 +7526,9 @@ theorem case_0_eo__24smtx_5ftype_5fwf_spec (n : Nat) (ih : Specs n) (s : Store) 
   unfold case_0_eo__24smtx_5ftype_5fwf
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eRegLan.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eRegLan.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_type_wf.case_0
-  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.native_bool_spec s1 true hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_type_wf.case_0 using
 
 theorem case_1_eo__24smtx_5ftype_5fwf_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7542,10 +7542,10 @@ theorem case_1_eo__24smtx_5ftype_5fwf_spec (n : Nat) (ih : Specs n) (s : Store) 
   unfold case_1_eo__24smtx_5ftype_5fwf
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eFunType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_type_wf.case_1
-  store_step with ih.eo__24smtx_5ftype_5fwf_5fcomponent s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24smtx_5ftype_5fwf s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5ftype_5fwf_5fcomponent s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5ftype_5fwf s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   rw [← Bridge.native_and] at h_v5
   case_done hinv3 hG with h_v5 in EoCases.__smtx_type_wf.case_1 using
 
@@ -7559,7 +7559,7 @@ theorem case_2_eo__24smtx_5ftype_5fwf_spec (n : Nat) (ih : Specs n) (s : Store) 
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_2_eo__24smtx_5ftype_5fwf
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24smtx_5ftype_5fwf_5fcomponent s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with ih.eo__24smtx_5ftype_5fwf_5fcomponent s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping h_a0
   case_done hinv1 hG with h_v0 in EoCases.__smtx_type_wf.case_2 using
 
 /-- logos's `__smtx_type_wf` is what the generated body does: the tests for the stuck term,
@@ -7619,10 +7619,10 @@ theorem case_0_eo__24smtx_5ftype_5fwf_5fcomponent_spec (n : Nat) (ih : Specs n) 
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24smtx_5ftype_5fwf_5fcomponent
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24smtx_5finhabited_5ftype s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
-  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 a0 _ hinv1 h64 (hG.rem hrem) h_a0 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with ih.eo__24smtx_5finhabited_5ftype s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping
+  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 a0 _ hinv1 h64 (hG.rem hrem) h_a0 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_v0 dropping h_a0 hinv1 s1
   step as ⟨e_v2, he_v2⟩
-  store_step with Store.native_spec_and s2 e_v2 (by rw [he_v2]; rfl) h_v0 h_v1 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_v0 h_v1
+  store_step with Store.native_spec_and s2 e_v2 (by rw [he_v2]; rfl) h_v0 h_v1 hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_v0 h_v1 he_v2 hinv2 e_v2 s2 v0 v1
   rw [← Bridge.native_and] at h_v2
   case_done hinv3 hG with h_v2 in EoCases.__smtx_type_wf_component.case_0 using
 
@@ -7670,9 +7670,9 @@ theorem case_0_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_0_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_type_wf_rec.case_0
-  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_type_wf_rec.case_0 using
 
 theorem case_1_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7686,9 +7686,9 @@ theorem case_1_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_1_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eRegLan.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eRegLan.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_type_wf_rec.case_1
-  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_v0
+  store_step with Store.native_bool_spec s1 false hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_a0 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v1 in EoCases.__smtx_type_wf_rec.case_1 using
 
 theorem case_2_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7702,18 +7702,18 @@ theorem case_2_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_2_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eMap.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_type_wf_rec.case_2
-  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0
+  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v2 h_v3 dropping h_v1 hinv1 s1 v1
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v2 dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   rw [← Bridge.native_and] at h_v5
-  store_step with ih.eo__24smtx_5finhabited_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s4 v2 _ hinv4 h64 (hG.rem hrem) h_v2 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with ih.eo__24smtx_5finhabited_5ftype s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_v2 h_v5 dropping hinv3 s3
+  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s4 v2 _ hinv4 h64 (hG.rem hrem) h_v2 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_v5 h_v6 dropping h_v2 hinv4 s4 v2
   step as ⟨e_v8, he_v8⟩
-  store_step with Store.native_spec_and s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with Store.native_spec_and s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_v5 dropping h_v6 h_v7 he_v8 hinv5 e_v8 s5 v6 v7
   rw [← Bridge.native_and] at h_v8
   step as ⟨e_v9, he_v9⟩
-  store_step with Store.native_spec_and s6 e_v9 (by rw [he_v9]; rfl) h_v5 h_v8 hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with Store.native_spec_and s6 e_v9 (by rw [he_v9]; rfl) h_v5 h_v8 hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying dropping h_v5 h_v8 he_v9 hinv6 e_v9 s6 v5 v8
   rw [← Bridge.native_and] at h_v9
   case_done hinv7 hG with h_v9 in EoCases.__smtx_type_wf_rec.case_2 using
 
@@ -7728,10 +7728,10 @@ theorem case_3_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_3_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eSet.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_type_wf_rec.case_3
-  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
-  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_v1 dropping h_a0
+  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_v2 dropping h_v1 hinv1 s1 v1
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_and s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_and s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying dropping h_v2 h_v3 he_v4 hinv2 e_v4 s2 v2 v3
   rw [← Bridge.native_and] at h_v4
   case_done hinv3 hG with h_v4 in EoCases.__smtx_type_wf_rec.case_3 using
 
@@ -7746,10 +7746,10 @@ theorem case_4_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_4_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eSeq.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_type_wf_rec.case_4
-  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
-  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5finhabited_5ftype s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_v1 dropping h_a0
+  store_step with ih.eo__24smtx_5ftype_5fwf_5frec s1 v1 _ hinv1 h64 (hG.rem hrem) h_v1 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_v2 dropping h_v1 hinv1 s1 v1
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_and s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_and s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying dropping h_v2 h_v3 he_v4 hinv2 e_v4 s2 v2 v3
   rw [← Bridge.native_and] at h_v4
   case_done hinv3 hG with h_v4 in EoCases.__smtx_type_wf_rec.case_4 using
 
@@ -7764,10 +7764,10 @@ theorem case_5_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_5_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eDatatype.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_type_wf_rec.case_5
-  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s v1 v2 _ _ hinv h64 hrem h_v1 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24smtx_5fdecl_5fwf_5frec s1 v2 v2 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with ih.eo__24smtx_5fdd_5fhas_5fdt s v1 v2 _ _ hinv h64 hrem h_v1 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5fdecl_5fwf_5frec s1 v2 v2 _ _ hinv1 h64 (hG.rem hrem) h_v2 h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_and s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   rw [← Bridge.native_and] at h_v5
   case_done hinv3 hG with h_v5 in EoCases.__smtx_type_wf_rec.case_5 using
 
@@ -7782,7 +7782,7 @@ theorem case_6_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_6_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eTypeRef.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_type_wf_rec.case_6
-  store_step with Store.native_bool_spec s false hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with Store.native_bool_spec s false hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 v1
   case_done hinv1 hG with h_v2 in EoCases.__smtx_type_wf_rec.case_6 using
 
 theorem case_7_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7796,7 +7796,7 @@ theorem case_7_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_7_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eFunType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_type_wf_rec.case_7
-  store_step with Store.native_bool_spec s false hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.native_bool_spec s false hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__smtx_type_wf_rec.case_7 using
 
 theorem case_8_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7810,7 +7810,7 @@ theorem case_8_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
   unfold case_8_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eDtcAppType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_type_wf_rec.case_8
-  store_step with Store.native_bool_spec s false hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.native_bool_spec s false hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__smtx_type_wf_rec.case_8 using
 
 theorem case_9_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7823,7 +7823,7 @@ theorem case_9_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : S
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_9_eo__24smtx_5ftype_5fwf_5frec
   have hG := Store.Grows.refl s
-  store_step with Store.native_bool_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with Store.native_bool_spec s true hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping
   case_done hinv1 hG with h_v0 in EoCases.__smtx_type_wf_rec.case_9 using
 
 theorem cases_0_0_eo__24smtx_5ftype_5fwf_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7967,7 +7967,7 @@ theorem case_0_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eBoolean.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_typeof.case_0
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 e_v2 v1
   case_done hinv1 hG with h_v2 in EoCases.__smtx_typeof.case_0 using
 
 theorem case_1_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7982,7 +7982,7 @@ theorem case_1_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eNumeral.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_typeof.case_1
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eInt.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5ftsm_2eInt.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 e_v2 v1
   case_done hinv1 hG with h_v2 in EoCases.__smtx_typeof.case_1 using
 
 theorem case_2_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -7997,7 +7997,7 @@ theorem case_2_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eRational.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_typeof.case_2
   step as ⟨e_v2, he_v2⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eReal.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with CtorSpec.eo__24emb_5ftsm_2eReal.construct s e_v2 (by rw [he_v2]; exact empty_args) hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 e_v2 v1
   case_done hinv1 hG with h_v2 in EoCases.__smtx_typeof.case_2 using
 
 theorem case_3_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8012,7 +8012,7 @@ theorem case_3_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eString.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_typeof.case_3
   step as ⟨e_v2, he_v2⟩
-  store_step with Store.native_spec_string_valid s e_v2 (by rw [he_v2]; rfl) h_v1 hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with Store.native_spec_string_valid s e_v2 (by rw [he_v2]; rfl) h_v1 hinv h64 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 he_v2 e_v2 v1
   rw [← Bridge.native_string_valid] at h_v2
   have h_ite_v6 := (show if_0_eo__24smtx_5ftypeof s1 v2 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5ftypeof
@@ -8021,15 +8021,15 @@ theorem case_3_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
     rcases Store.boolean_value_native h_v2 with ⟨hx_3, hbv_3⟩ | ⟨hx_3, hbv_3⟩
     · ite_branch hbv_3
       step as ⟨e_v3, he_v3⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eChar.construct s1 e_v3 (by rw [he_v3]; exact empty_args) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+      store_step with CtorSpec.eo__24emb_5ftsm_2eChar.construct s1 e_v3 (by rw [he_v3]; exact empty_args) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying dropping h_v2 he_v3 e_v3 v2
       step as ⟨e_v4, he_v4⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eSeq.construct s2 e_v4 (by rw [he_v4]; rfl) h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+      store_step with CtorSpec.eo__24emb_5ftsm_2eSeq.construct s2 e_v4 (by rw [he_v4]; rfl) h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying dropping h_v3 he_v4 e_v4 v3
       ite_done hinv3 hG with (native_ite_true_rep _ hx_3 h_v4)
     · ite_branch hbv_3
       step as ⟨e_v5, he_v5⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v5 (by rw [he_v5]; exact empty_args) hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v5 (by rw [he_v5]; exact empty_args) hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying dropping h_v2 he_v5 hinv1 e_v5 s1 v2
       ite_done hinv2 hG with (native_ite_false_rep _ hx_3 h_v5))
-  store_step with h_ite_v6 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with h_ite_v6 as ⟨v6, s2, hinv2, h_v6⟩ growing hG carrying dropping h_ite_v6 h_v2 hinv1 s1 v2
   case_done hinv2 hG with h_v6 in EoCases.__smtx_typeof.case_3 using
 
 theorem case_4_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8044,21 +8044,21 @@ theorem case_4_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eBinary.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_4
   simp only [num.Integer.from_u32_spec, num.Integer.neg_spec, num.Integer.toInt_ofInt, Std.bind_ok]
-  store_step with Store.raw_int_u32_spec s 0#u32 (0) (by scalar_tac) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with Store.raw_int_u32_spec s 0#u32 (0) (by scalar_tac) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_zleq s1 e_v4 (by rw [he_v4]; rfl) h_v3 h_v1 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_zleq s1 e_v4 (by rw [he_v4]; rfl) h_v3 h_v1 hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v1 h_v2 dropping h_v3 he_v4 hinv1 e_v4 s1 v3
   rw [← Bridge.native_zleq] at h_v4
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_int_pow2 s2 e_v5 (by rw [he_v5]; rfl) h_v1 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_int_pow2 s2 e_v5 (by rw [he_v5]; rfl) h_v1 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v1 h_v2 h_v4 dropping he_v5 hinv2 e_v5 s2
   rw [← Bridge.native_int_pow2] at h_v5
   step as ⟨e_v6, he_v6⟩
-  store_step with Store.native_spec_mod_total s3 e_v6 (by rw [he_v6]; rfl) h_v2 h_v5 hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with Store.native_spec_mod_total s3 e_v6 (by rw [he_v6]; rfl) h_v2 h_v5 hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_v1 h_v2 h_v4 dropping h_v5 he_v6 hinv3 e_v6 s3 v5
   rw [← Bridge.native_mod_total] at h_v6
   step as ⟨e_v7, he_v7⟩
-  store_step with Store.native_spec_zeq s4 e_v7 (by rw [he_v7]; rfl) h_v2 h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with Store.native_spec_zeq s4 e_v7 (by rw [he_v7]; rfl) h_v2 h_v6 hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_v1 h_v4 dropping h_v2 h_v6 he_v7 hinv4 e_v7 s4 v2 v6
   rw [← Bridge.native_zeq] at h_v7
   step as ⟨e_v8, he_v8⟩
-  store_step with Store.native_spec_and s5 e_v8 (by rw [he_v8]; rfl) h_v4 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+  store_step with Store.native_spec_and s5 e_v8 (by rw [he_v8]; rfl) h_v4 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_v1 dropping h_v4 h_v7 he_v8 hinv5 e_v8 s5 v4 v7
   rw [← Bridge.native_and] at h_v8
   have h_ite_v12 := (show if_1_eo__24smtx_5ftypeof s6 v8 v1 ⦃ r s' => s'.Inv ∧ s6.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_1_eo__24smtx_5ftypeof
@@ -8067,16 +8067,16 @@ theorem case_4_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
     rcases Store.boolean_value_native h_v8 with ⟨hx_9, hbv_9⟩ | ⟨hx_9, hbv_9⟩
     · ite_branch hbv_9
       step as ⟨e_v9, he_v9⟩
-      store_step with Store.native_spec_int_to_nat s6 e_v9 (by rw [he_v9]; rfl) h_v1 hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+      store_step with Store.native_spec_int_to_nat s6 e_v9 (by rw [he_v9]; rfl) h_v1 hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying dropping h_v1 h_v8 he_v9 e_v9 v1 v8
       rw [← Bridge.native_int_to_nat] at h_v9
       step as ⟨e_v10, he_v10⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eBitVec.construct s7 e_v10 (by rw [he_v10]; rfl) h_v9 hinv7 h64 as ⟨v10, s8, hinv8, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBitVec.construct s7 e_v10 (by rw [he_v10]; rfl) h_v9 hinv7 h64 as ⟨v10, s8, hinv8, h_v10⟩ growing hG carrying dropping h_v9 he_v10 e_v10 v9
       ite_done hinv8 hG with (native_ite_true_rep _ hx_9 h_v10)
     · ite_branch hbv_9
       step as ⟨e_v11, he_v11⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v11 (by rw [he_v11]; exact empty_args) hinv6 h64 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v11 (by rw [he_v11]; exact empty_args) hinv6 h64 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying dropping h_v1 h_v8 he_v11 hinv6 e_v11 s6 v1 v8
       ite_done hinv7 hG with (native_ite_false_rep _ hx_9 h_v11))
-  store_step with h_ite_v12 as ⟨v12, s7, hinv7, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with h_ite_v12 as ⟨v12, s7, hinv7, h_v12⟩ growing hG carrying dropping h_ite_v12 h_v1 h_v8 hinv6 s6 v1 v8
   case_done hinv7 hG with h_v12 in EoCases.__smtx_typeof.case_4 using
 
 theorem case_5_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8090,11 +8090,11 @@ theorem case_5_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   unfold case_5_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2enot.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ else hinv hG in EoCases.__smtx_typeof.case_5
-  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying h_a0 h_v1
+  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v2, s1, hinv1, h_v2⟩ growing hG carrying dropping h_a0 h_v1 v1
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v3 (by rw [he_v3]; exact empty_args) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v3 (by rw [he_v3]; exact empty_args) hinv1 h64 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_v2 dropping he_v3 hinv1 e_v3 s1
   step as ⟨e_v4, he_v4⟩
-  store_step with Store.native_spec_Teq s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with Store.native_spec_Teq s2 e_v4 (by rw [he_v4]; rfl) h_v2 h_v3 hinv2 h64 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying dropping h_v2 h_v3 he_v4 hinv2 e_v4 s2 v2 v3
   have h_ite_v7 := (show if_2_eo__24smtx_5ftypeof s3 v4 ⦃ r s' => s'.Inv ∧ s3.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_2_eo__24smtx_5ftypeof
     have hrem := (hG.rem hrem)
@@ -8102,13 +8102,13 @@ theorem case_5_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
     rcases Store.boolean_value_native h_v4 with ⟨hx_5, hbv_5⟩ | ⟨hx_5, hbv_5⟩
     · ite_branch hbv_5
       step as ⟨e_v5, he_v5⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s3 e_v5 (by rw [he_v5]; exact empty_args) hinv3 h64 as ⟨v5, s4, hinv4, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s3 e_v5 (by rw [he_v5]; exact empty_args) hinv3 h64 as ⟨v5, s4, hinv4, h_v5⟩ growing hG carrying dropping h_v4 he_v5 e_v5 v4
       ite_done hinv4 hG with (native_ite_true_rep _ hx_5 h_v5)
     · ite_branch hbv_5
       step as ⟨e_v6, he_v6⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v6 (by rw [he_v6]; exact empty_args) hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v6 (by rw [he_v6]; exact empty_args) hinv3 h64 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying dropping h_v4 he_v6 hinv3 e_v6 s3 v4
       ite_done hinv4 hG with (native_ite_false_rep _ hx_5 h_v6))
-  store_step with h_ite_v7 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with h_ite_v7 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying dropping h_ite_v7 h_v4 hinv3 s3 v4
   case_done hinv4 hG with h_v7 in EoCases.__smtx_typeof.case_5 using
 
 theorem case_6_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8122,22 +8122,22 @@ theorem case_6_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   unfold case_6_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eand.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_6
-  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v2 h_v3 dropping he_v4 hinv1 e_v4 s1
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_Teq s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_Teq s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v2 dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   have h_ite_v13 := (show if_4_eo__24smtx_5ftypeof s3 v5 v2 ⦃ r s' => s'.Inv ∧ s3.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_4_eo__24smtx_5ftypeof
     have hrem := (hG.rem hrem)
     have hG := Store.Grows.refl s3
     rcases Store.boolean_value_native h_v5 with ⟨hx_6, hbv_6⟩ | ⟨hx_6, hbv_6⟩
     · ite_branch hbv_6
-      store_step with ih.eo__24smtx_5ftypeof s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with ih.eo__24smtx_5ftypeof s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying dropping h_v2 h_v5 v2 v5
       step as ⟨e_v7, he_v7⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s4 e_v7 (by rw [he_v7]; exact empty_args) hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s4 e_v7 (by rw [he_v7]; exact empty_args) hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_v6 dropping he_v7 e_v7
       step as ⟨e_v8, he_v8⟩
-      store_step with Store.native_spec_Teq s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+      store_step with Store.native_spec_Teq s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying dropping h_v6 h_v7 he_v8 hinv5 e_v8 s5 v6 v7
       have h_ite_v11 := (show if_3_eo__24smtx_5ftypeof s6 v8 ⦃ r s' => s'.Inv ∧ s6.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
         unfold if_3_eo__24smtx_5ftypeof
         have hrem := (hG.rem hrem)
@@ -8145,19 +8145,19 @@ theorem case_6_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
         rcases Store.boolean_value_native h_v8 with ⟨hx_9, hbv_9⟩ | ⟨hx_9, hbv_9⟩
         · ite_branch hbv_9
           step as ⟨e_v9, he_v9⟩
-          store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s6 e_v9 (by rw [he_v9]; exact empty_args) hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+          store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s6 e_v9 (by rw [he_v9]; exact empty_args) hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying dropping h_v8 he_v9 e_v9 v8
           ite_done hinv7 hG with (native_ite_true_rep _ hx_9 h_v9)
         · ite_branch hbv_9
           step as ⟨e_v10, he_v10⟩
-          store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v10 (by rw [he_v10]; exact empty_args) hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+          store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v10 (by rw [he_v10]; exact empty_args) hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying dropping h_v8 he_v10 hinv6 e_v10 s6 v8
           ite_done hinv7 hG with (native_ite_false_rep _ hx_9 h_v10))
-      store_step with h_ite_v11 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+      store_step with h_ite_v11 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying dropping h_ite_v11 h_v8 hinv6 s6 v8
       ite_done hinv7 hG with (native_ite_true_rep _ hx_6 h_v11)
     · ite_branch hbv_6
       step as ⟨e_v12, he_v12⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying dropping h_v2 h_v5 he_v12 hinv3 e_v12 s3 v2 v5
       ite_done hinv4 hG with (native_ite_false_rep _ hx_6 h_v12))
-  store_step with h_ite_v13 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with h_ite_v13 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying dropping h_ite_v13 h_v2 h_v5 hinv3 s3 v2 v5
   case_done hinv4 hG with h_v13 in EoCases.__smtx_typeof.case_6 using
 
 theorem case_7_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8171,22 +8171,22 @@ theorem case_7_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   unfold case_7_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eor.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_7
-  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v2 h_v3 dropping he_v4 hinv1 e_v4 s1
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_Teq s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_Teq s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v2 dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   have h_ite_v13 := (show if_6_eo__24smtx_5ftypeof s3 v5 v2 ⦃ r s' => s'.Inv ∧ s3.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_6_eo__24smtx_5ftypeof
     have hrem := (hG.rem hrem)
     have hG := Store.Grows.refl s3
     rcases Store.boolean_value_native h_v5 with ⟨hx_6, hbv_6⟩ | ⟨hx_6, hbv_6⟩
     · ite_branch hbv_6
-      store_step with ih.eo__24smtx_5ftypeof s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with ih.eo__24smtx_5ftypeof s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying dropping h_v2 h_v5 v2 v5
       step as ⟨e_v7, he_v7⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s4 e_v7 (by rw [he_v7]; exact empty_args) hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s4 e_v7 (by rw [he_v7]; exact empty_args) hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_v6 dropping he_v7 e_v7
       step as ⟨e_v8, he_v8⟩
-      store_step with Store.native_spec_Teq s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+      store_step with Store.native_spec_Teq s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying dropping h_v6 h_v7 he_v8 hinv5 e_v8 s5 v6 v7
       have h_ite_v11 := (show if_5_eo__24smtx_5ftypeof s6 v8 ⦃ r s' => s'.Inv ∧ s6.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
         unfold if_5_eo__24smtx_5ftypeof
         have hrem := (hG.rem hrem)
@@ -8194,19 +8194,19 @@ theorem case_7_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
         rcases Store.boolean_value_native h_v8 with ⟨hx_9, hbv_9⟩ | ⟨hx_9, hbv_9⟩
         · ite_branch hbv_9
           step as ⟨e_v9, he_v9⟩
-          store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s6 e_v9 (by rw [he_v9]; exact empty_args) hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+          store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s6 e_v9 (by rw [he_v9]; exact empty_args) hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying dropping h_v8 he_v9 e_v9 v8
           ite_done hinv7 hG with (native_ite_true_rep _ hx_9 h_v9)
         · ite_branch hbv_9
           step as ⟨e_v10, he_v10⟩
-          store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v10 (by rw [he_v10]; exact empty_args) hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+          store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v10 (by rw [he_v10]; exact empty_args) hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying dropping h_v8 he_v10 hinv6 e_v10 s6 v8
           ite_done hinv7 hG with (native_ite_false_rep _ hx_9 h_v10))
-      store_step with h_ite_v11 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+      store_step with h_ite_v11 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying dropping h_ite_v11 h_v8 hinv6 s6 v8
       ite_done hinv7 hG with (native_ite_true_rep _ hx_6 h_v11)
     · ite_branch hbv_6
       step as ⟨e_v12, he_v12⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying dropping h_v2 h_v5 he_v12 hinv3 e_v12 s3 v2 v5
       ite_done hinv4 hG with (native_ite_false_rep _ hx_6 h_v12))
-  store_step with h_ite_v13 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with h_ite_v13 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying dropping h_ite_v13 h_v2 h_v5 hinv3 s3 v2 v5
   case_done hinv4 hG with h_v13 in EoCases.__smtx_typeof.case_7 using
 
 theorem case_8_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8220,22 +8220,22 @@ theorem case_8_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   unfold case_8_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2e_3d_3e.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_8
-  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v2 h_v3 dropping he_v4 hinv1 e_v4 s1
   step as ⟨e_v5, he_v5⟩
-  store_step with Store.native_spec_Teq s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with Store.native_spec_Teq s2 e_v5 (by rw [he_v5]; rfl) h_v3 h_v4 hinv2 h64 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_v2 dropping h_v3 h_v4 he_v5 hinv2 e_v5 s2 v3 v4
   have h_ite_v13 := (show if_8_eo__24smtx_5ftypeof s3 v5 v2 ⦃ r s' => s'.Inv ∧ s3.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_8_eo__24smtx_5ftypeof
     have hrem := (hG.rem hrem)
     have hG := Store.Grows.refl s3
     rcases Store.boolean_value_native h_v5 with ⟨hx_6, hbv_6⟩ | ⟨hx_6, hbv_6⟩
     · ite_branch hbv_6
-      store_step with ih.eo__24smtx_5ftypeof s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with ih.eo__24smtx_5ftypeof s3 v2 _ hinv3 h64 (hG.rem hrem) h_v2 as ⟨v6, s4, hinv4, h_v6⟩ growing hG carrying dropping h_v2 h_v5 v2 v5
       step as ⟨e_v7, he_v7⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s4 e_v7 (by rw [he_v7]; exact empty_args) hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s4 e_v7 (by rw [he_v7]; exact empty_args) hinv4 h64 as ⟨v7, s5, hinv5, h_v7⟩ growing hG carrying h_v6 dropping he_v7 e_v7
       step as ⟨e_v8, he_v8⟩
-      store_step with Store.native_spec_Teq s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
+      store_step with Store.native_spec_Teq s5 e_v8 (by rw [he_v8]; rfl) h_v6 h_v7 hinv5 h64 as ⟨v8, s6, hinv6, h_v8⟩ growing hG carrying dropping h_v6 h_v7 he_v8 hinv5 e_v8 s5 v6 v7
       have h_ite_v11 := (show if_7_eo__24smtx_5ftypeof s6 v8 ⦃ r s' => s'.Inv ∧ s6.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
         unfold if_7_eo__24smtx_5ftypeof
         have hrem := (hG.rem hrem)
@@ -8243,19 +8243,19 @@ theorem case_8_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
         rcases Store.boolean_value_native h_v8 with ⟨hx_9, hbv_9⟩ | ⟨hx_9, hbv_9⟩
         · ite_branch hbv_9
           step as ⟨e_v9, he_v9⟩
-          store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s6 e_v9 (by rw [he_v9]; exact empty_args) hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+          store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s6 e_v9 (by rw [he_v9]; exact empty_args) hinv6 h64 as ⟨v9, s7, hinv7, h_v9⟩ growing hG carrying dropping h_v8 he_v9 e_v9 v8
           ite_done hinv7 hG with (native_ite_true_rep _ hx_9 h_v9)
         · ite_branch hbv_9
           step as ⟨e_v10, he_v10⟩
-          store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v10 (by rw [he_v10]; exact empty_args) hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+          store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s6 e_v10 (by rw [he_v10]; exact empty_args) hinv6 h64 as ⟨v10, s7, hinv7, h_v10⟩ growing hG carrying dropping h_v8 he_v10 hinv6 e_v10 s6 v8
           ite_done hinv7 hG with (native_ite_false_rep _ hx_9 h_v10))
-      store_step with h_ite_v11 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+      store_step with h_ite_v11 as ⟨v11, s7, hinv7, h_v11⟩ growing hG carrying dropping h_ite_v11 h_v8 hinv6 s6 v8
       ite_done hinv7 hG with (native_ite_true_rep _ hx_6 h_v11)
     · ite_branch hbv_6
       step as ⟨e_v12, he_v12⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s3 e_v12 (by rw [he_v12]; exact empty_args) hinv3 h64 as ⟨v12, s4, hinv4, h_v12⟩ growing hG carrying dropping h_v2 h_v5 he_v12 hinv3 e_v12 s3 v2 v5
       ite_done hinv4 hG with (native_ite_false_rep _ hx_6 h_v12))
-  store_step with h_ite_v13 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
+  store_step with h_ite_v13 as ⟨v13, s4, hinv4, h_v13⟩ growing hG carrying dropping h_ite_v13 h_v2 h_v5 hinv3 s3 v2 v5
   case_done hinv4 hG with h_v13 in EoCases.__smtx_typeof.case_8 using
 
 theorem case_9_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8269,9 +8269,9 @@ theorem case_9_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0
   unfold case_9_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2e_3d.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_9
-  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24smtx_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24smtx_5ftypeof_5f_3d s2 v3 v4 _ _ hinv2 h64 (hG.rem hrem) h_v3 h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
+  store_step with ih.eo__24smtx_5ftypeof_5f_3d s2 v3 v4 _ _ hinv2 h64 (hG.rem hrem) h_v3 h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 hinv2 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__smtx_typeof.case_9 using
 
 theorem case_10_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8285,10 +8285,10 @@ theorem case_10_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   unfold case_10_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eite.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__smtx_typeof.case_10
-  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24smtx_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
-  store_step with ih.eo__24smtx_5ftypeof s2 v3 _ hinv2 h64 (hG.rem hrem) h_v3 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with ih.eo__24smtx_5ftypeof_5fite s3 v4 v5 v6 _ _ _ hinv3 h64 (hG.rem hrem) h_v4 h_v5 h_v6 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
+  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_v2 h_v3 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v3 h_v4 dropping h_v2 hinv1 s1 v2
+  store_step with ih.eo__24smtx_5ftypeof s2 v3 _ hinv2 h64 (hG.rem hrem) h_v3 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_v4 h_v5 dropping h_v3 hinv2 s2 v3
+  store_step with ih.eo__24smtx_5ftypeof_5fite s3 v4 v5 v6 _ _ _ hinv3 h64 (hG.rem hrem) h_v4 h_v5 h_v6 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying dropping h_v4 h_v5 h_v6 hinv3 s3 v4 v5 v6
   case_done hinv4 hG with h_v7 in EoCases.__smtx_typeof.case_10 using
 
 theorem case_11_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8303,13 +8303,13 @@ theorem case_11_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eDtCons.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ ⟨v3, x_v3, h_v3⟩ else hinv hG in EoCases.__smtx_typeof.case_11
   step as ⟨e_v4, he_v4⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s e_v4 (by rw [he_v4]; rfl) h_v1 h_v2 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s e_v4 (by rw [he_v4]; rfl) h_v1 h_v2 hinv h64 as ⟨v4, s1, hinv1, h_v4⟩ growing hG carrying h_v1 h_v2 h_v3 dropping h_a0 he_v4 e_v4
   step as ⟨e_v5, he_v5⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s1 e_v5 (by rw [he_v5]; rfl) h_v1 h_v2 hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
-  store_step with ih.eo__24smtx_5fdd_5flookup s2 v1 v2 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_v2 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5
-  store_step with ih.eo__24smtx_5fdt_5fresolve s3 v6 v2 _ _ hinv3 h64 (hG.rem hrem) h_v6 h_v2 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6
-  store_step with ih.eo__24smtx_5ftypeof_5fdt_5fcons_5frec s4 v5 v7 v3 _ _ _ hinv4 h64 (hG.rem hrem) h_v5 h_v7 h_v3 as ⟨v8, s5, hinv5, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7
-  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s5 v4 v8 _ _ hinv5 h64 (hG.rem hrem) h_v4 h_v8 as ⟨v9, s6, hinv6, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4 h_v5 h_v6 h_v7 h_v8
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s1 e_v5 (by rw [he_v5]; rfl) h_v1 h_v2 hinv1 h64 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v1 h_v2 h_v3 h_v4 dropping he_v5 hinv1 e_v5 s1
+  store_step with ih.eo__24smtx_5fdd_5flookup s2 v1 v2 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_v2 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_v2 h_v3 h_v4 h_v5 dropping h_v1 hinv2 s2 v1
+  store_step with ih.eo__24smtx_5fdt_5fresolve s3 v6 v2 _ _ hinv3 h64 (hG.rem hrem) h_v6 h_v2 as ⟨v7, s4, hinv4, h_v7⟩ growing hG carrying h_v3 h_v4 h_v5 dropping h_v2 h_v6 hinv3 s3 v2 v6
+  store_step with ih.eo__24smtx_5ftypeof_5fdt_5fcons_5frec s4 v5 v7 v3 _ _ _ hinv4 h64 (hG.rem hrem) h_v5 h_v7 h_v3 as ⟨v8, s5, hinv5, h_v8⟩ growing hG carrying h_v4 dropping h_v3 h_v5 h_v7 hinv4 s4 v3 v5 v7
+  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s5 v4 v8 _ _ hinv5 h64 (hG.rem hrem) h_v4 h_v8 as ⟨v9, s6, hinv6, h_v9⟩ growing hG carrying dropping h_v4 h_v8 hinv5 s5 v4 v8
   case_done hinv6 hG with h_v9 in EoCases.__smtx_typeof.case_11 using
 
 theorem case_12_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8324,15 +8324,15 @@ theorem case_12_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eApply.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_12
   pat_destruct CtorSpec.eo__24emb_5fsm_2eDtSel.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ ⟨v6, x_v6, h_v6⟩ ⟨v7, x_v7, h_v7⟩ else hinv hG in EoCases.__smtx_typeof.case_12
-  store_step with ih.eo__24smtx_5fret_5ftypeof_5fsel s v4 v5 v6 v7 _ _ _ _ hinv h64 hrem h_v4 h_v5 h_v6 h_v7 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
+  store_step with ih.eo__24smtx_5fret_5ftypeof_5fsel s v4 v5 v6 v7 _ _ _ _ hinv h64 hrem h_v4 h_v5 h_v6 h_v7 as ⟨v8, s1, hinv1, h_v8⟩ growing hG carrying h_v2 h_v4 h_v5 h_v6 h_v7 dropping h_a0 h_v1 v1
   step as ⟨e_v9, he_v9⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s1 e_v9 (by rw [he_v9]; rfl) h_v4 h_v5 hinv1 h64 as ⟨v9, s2, hinv2, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
-  store_step with ih.eo__24smtx_5fret_5ftypeof_5fsel s2 v4 v5 v6 v7 _ _ _ _ hinv2 h64 (hG.rem hrem) h_v4 h_v5 h_v6 h_v7 as ⟨v10, s3, hinv3, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s1 e_v9 (by rw [he_v9]; rfl) h_v4 h_v5 hinv1 h64 as ⟨v9, s2, hinv2, h_v9⟩ growing hG carrying h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 dropping he_v9 hinv1 e_v9 s1
+  store_step with ih.eo__24smtx_5fret_5ftypeof_5fsel s2 v4 v5 v6 v7 _ _ _ _ hinv2 h64 (hG.rem hrem) h_v4 h_v5 h_v6 h_v7 as ⟨v10, s3, hinv3, h_v10⟩ growing hG carrying h_v2 h_v8 h_v9 dropping h_v4 h_v5 h_v6 h_v7 hinv2 s2 v4 v5 v6 v7
   step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eFunType.construct s3 e_v11 (by rw [he_v11]; rfl) h_v9 h_v10 hinv3 h64 as ⟨v11, s4, hinv4, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
-  store_step with ih.eo__24smtx_5ftypeof s4 v2 _ hinv4 h64 (hG.rem hrem) h_v2 as ⟨v12, s5, hinv5, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
-  store_step with ih.eo__24smtx_5ftypeof_5fapply s5 v11 v12 _ _ hinv5 h64 (hG.rem hrem) h_v11 h_v12 as ⟨v13, s6, hinv6, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
-  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s6 v8 v13 _ _ hinv6 h64 (hG.rem hrem) h_v8 h_v13 as ⟨v14, s7, hinv7, h_v14⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
+  store_step with CtorSpec.eo__24emb_5ftsm_2eFunType.construct s3 e_v11 (by rw [he_v11]; rfl) h_v9 h_v10 hinv3 h64 as ⟨v11, s4, hinv4, h_v11⟩ growing hG carrying h_v2 h_v8 dropping h_v10 h_v9 he_v11 hinv3 e_v11 s3 v10 v9
+  store_step with ih.eo__24smtx_5ftypeof s4 v2 _ hinv4 h64 (hG.rem hrem) h_v2 as ⟨v12, s5, hinv5, h_v12⟩ growing hG carrying h_v8 h_v11 dropping h_v2 hinv4 s4 v2
+  store_step with ih.eo__24smtx_5ftypeof_5fapply s5 v11 v12 _ _ hinv5 h64 (hG.rem hrem) h_v11 h_v12 as ⟨v13, s6, hinv6, h_v13⟩ growing hG carrying h_v8 dropping h_v11 h_v12 hinv5 s5 v11 v12
+  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s6 v8 v13 _ _ hinv6 h64 (hG.rem hrem) h_v8 h_v13 as ⟨v14, s7, hinv7, h_v14⟩ growing hG carrying dropping h_v13 h_v8 hinv6 s6 v13 v8
   case_done hinv7 hG with h_v14 in EoCases.__smtx_typeof.case_12 using
 
 theorem case_13_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8348,19 +8348,19 @@ theorem case_13_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   pat_destruct CtorSpec.eo__24emb_5fsm_2eApply.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_13
   pat_destruct CtorSpec.eo__24emb_5fsm_2eDtTester.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ ⟨v6, x_v6, h_v6⟩ else hinv hG in EoCases.__smtx_typeof.case_13
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s e_v7 (by rw [he_v7]; rfl) h_v4 h_v5 hinv h64 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6
-  store_step with ih.eo__24smtx_5fdd_5flookup s1 v4 v5 _ _ hinv1 h64 (hG.rem hrem) h_v4 h_v5 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7
-  store_step with ih.eo__24smtx_5fdt_5fresolve s2 v8 v5 _ _ hinv2 h64 (hG.rem hrem) h_v8 h_v5 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8
-  store_step with ih.eo__24smtx_5ftypeof_5fdt_5fcons_5frec s3 v7 v9 v6 _ _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v9 h_v6 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s e_v7 (by rw [he_v7]; rfl) h_v4 h_v5 hinv h64 as ⟨v7, s1, hinv1, h_v7⟩ growing hG carrying h_v2 h_v4 h_v5 h_v6 dropping h_a0 h_v1 he_v7 e_v7 v1
+  store_step with ih.eo__24smtx_5fdd_5flookup s1 v4 v5 _ _ hinv1 h64 (hG.rem hrem) h_v4 h_v5 as ⟨v8, s2, hinv2, h_v8⟩ growing hG carrying h_v2 h_v4 h_v5 h_v6 h_v7 dropping hinv1 s1
+  store_step with ih.eo__24smtx_5fdt_5fresolve s2 v8 v5 _ _ hinv2 h64 (hG.rem hrem) h_v8 h_v5 as ⟨v9, s3, hinv3, h_v9⟩ growing hG carrying h_v2 h_v4 h_v5 h_v6 h_v7 dropping h_v8 hinv2 s2 v8
+  store_step with ih.eo__24smtx_5ftypeof_5fdt_5fcons_5frec s3 v7 v9 v6 _ _ _ hinv3 h64 (hG.rem hrem) h_v7 h_v9 h_v6 as ⟨v10, s4, hinv4, h_v10⟩ growing hG carrying h_v2 h_v4 h_v5 dropping h_v6 h_v7 h_v9 hinv3 s3 v6 v7 v9
   step as ⟨e_v11, he_v11⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s4 e_v11 (by rw [he_v11]; rfl) h_v4 h_v5 hinv4 h64 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDatatype.construct s4 e_v11 (by rw [he_v11]; rfl) h_v4 h_v5 hinv4 h64 as ⟨v11, s5, hinv5, h_v11⟩ growing hG carrying h_v2 h_v10 dropping h_v4 h_v5 he_v11 hinv4 e_v11 s4 v4 v5
   step as ⟨e_v12, he_v12⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s5 e_v12 (by rw [he_v12]; exact empty_args) hinv5 h64 as ⟨v12, s6, hinv6, h_v12⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s5 e_v12 (by rw [he_v12]; exact empty_args) hinv5 h64 as ⟨v12, s6, hinv6, h_v12⟩ growing hG carrying h_v2 h_v10 h_v11 dropping he_v12 hinv5 e_v12 s5
   step as ⟨e_v13, he_v13⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eFunType.construct s6 e_v13 (by rw [he_v13]; rfl) h_v11 h_v12 hinv6 h64 as ⟨v13, s7, hinv7, h_v13⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12
-  store_step with ih.eo__24smtx_5ftypeof s7 v2 _ hinv7 h64 (hG.rem hrem) h_v2 as ⟨v14, s8, hinv8, h_v14⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13
-  store_step with ih.eo__24smtx_5ftypeof_5fapply s8 v13 v14 _ _ hinv8 h64 (hG.rem hrem) h_v13 h_v14 as ⟨v15, s9, hinv9, h_v15⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s9 v10 v15 _ _ hinv9 h64 (hG.rem hrem) h_v10 h_v15 as ⟨v16, s10, hinv10, h_v16⟩ growing hG carrying h_a0 h_v1 h_v2 h_v4 h_v5 h_v6 h_v7 h_v8 h_v9 h_v10 h_v11 h_v12 h_v13 h_v14 h_v15
+  store_step with CtorSpec.eo__24emb_5ftsm_2eFunType.construct s6 e_v13 (by rw [he_v13]; rfl) h_v11 h_v12 hinv6 h64 as ⟨v13, s7, hinv7, h_v13⟩ growing hG carrying h_v2 h_v10 dropping h_v11 h_v12 he_v13 hinv6 e_v13 s6 v11 v12
+  store_step with ih.eo__24smtx_5ftypeof s7 v2 _ hinv7 h64 (hG.rem hrem) h_v2 as ⟨v14, s8, hinv8, h_v14⟩ growing hG carrying h_v10 h_v13 dropping h_v2 hinv7 s7 v2
+  store_step with ih.eo__24smtx_5ftypeof_5fapply s8 v13 v14 _ _ hinv8 h64 (hG.rem hrem) h_v13 h_v14 as ⟨v15, s9, hinv9, h_v15⟩ growing hG carrying h_v10 dropping h_v13 h_v14 hinv8 s8 v13 v14
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s9 v10 v15 _ _ hinv9 h64 (hG.rem hrem) h_v10 h_v15 as ⟨v16, s10, hinv10, h_v16⟩ growing hG carrying dropping h_v10 h_v15 hinv9 s9 v10 v15
   case_done hinv10 hG with h_v16 in EoCases.__smtx_typeof.case_13 using
 
 theorem case_14_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8374,9 +8374,9 @@ theorem case_14_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   unfold case_14_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eApply.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_14
-  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
-  store_step with ih.eo__24smtx_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3
-  store_step with ih.eo__24smtx_5ftypeof_5fapply s2 v3 v4 _ _ hinv2 h64 (hG.rem hrem) h_v3 h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying h_a0 h_v1 h_v2 h_v3 h_v4
+  store_step with ih.eo__24smtx_5ftypeof s v1 _ hinv h64 hrem h_v1 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v2 dropping h_a0 h_v1 v1
+  store_step with ih.eo__24smtx_5ftypeof s1 v2 _ hinv1 h64 (hG.rem hrem) h_v2 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v3 dropping h_v2 hinv1 s1 v2
+  store_step with ih.eo__24smtx_5ftypeof_5fapply s2 v3 v4 _ _ hinv2 h64 (hG.rem hrem) h_v3 h_v4 as ⟨v5, s3, hinv3, h_v5⟩ growing hG carrying dropping h_v3 h_v4 hinv2 s2 v3 v4
   case_done hinv3 hG with h_v5 in EoCases.__smtx_typeof.case_14 using
 
 theorem case_15_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8390,7 +8390,7 @@ theorem case_15_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   unfold case_15_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eVar.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_15
-  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s v2 v2 _ _ hinv h64 hrem h_v2 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s v2 v2 _ _ hinv h64 hrem h_v2 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__smtx_typeof.case_15 using
 
 theorem case_16_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8404,7 +8404,7 @@ theorem case_16_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   unfold case_16_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fsm_2eUConst.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof.case_16
-  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s v2 v2 _ _ hinv h64 hrem h_v2 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_v1 h_v2
+  store_step with ih.eo__24smtx_5ftypeof_5fguard_5fwf s v2 v2 _ _ hinv h64 hrem h_v2 h_v2 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying dropping h_a0 h_v1 h_v2 v1 v2
   case_done hinv1 hG with h_v3 in EoCases.__smtx_typeof.case_16 using
 
 theorem case_17_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8418,7 +8418,7 @@ theorem case_17_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a
   unfold case_17_eo__24smtx_5ftypeof
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__smtx_typeof.case_17 using
 
 theorem cases_0_0_eo__24smtx_5ftypeof_spec (n : Nat) (ih : Specs n) (s : Store) (a0 : Term) (x_a0 : _)
@@ -8657,7 +8657,7 @@ theorem case_0_eo__24smtx_5ftypeof_5f_3d_spec (n : Nat) (ih : Specs n) (s : Stor
   unfold case_0_eo__24smtx_5ftypeof_5f_3d
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with Store.native_spec_Teq s e_v0 (by rw [he_v0]; rfl) h_a0 h_a1 hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with Store.native_spec_Teq s e_v0 (by rw [he_v0]; rfl) h_a0 h_a1 hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 dropping h_a1 he_v0 e_v0
   have h_ite_v3 := (show if_0_eo__24smtx_5ftypeof_5f_3d s1 v0 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5ftypeof_5f_3d
     have hrem := (hG.rem hrem)
@@ -8665,14 +8665,14 @@ theorem case_0_eo__24smtx_5ftypeof_5f_3d_spec (n : Nat) (ih : Specs n) (s : Stor
     rcases Store.boolean_value_native h_v0 with ⟨hx_1, hbv_1⟩ | ⟨hx_1, hbv_1⟩
     · ite_branch hbv_1
       step as ⟨e_v1, he_v1⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+      store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 dropping h_v0 he_v1 e_v1 v0
       ite_done hinv2 hG with (native_ite_true_rep _ hx_1 h_v1)
     · ite_branch hbv_1
       step as ⟨e_v2, he_v2⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v2 (by rw [he_v2]; exact empty_args) hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v2 (by rw [he_v2]; exact empty_args) hinv1 h64 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 dropping h_v0 he_v2 hinv1 e_v2 s1 v0
       ite_done hinv2 hG with (native_ite_false_rep _ hx_1 h_v2))
-  store_step with h_ite_v3 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s2 a0 v3 _ _ hinv2 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying h_a0 h_a1 h_v0 h_v3
+  store_step with h_ite_v3 as ⟨v3, s2, hinv2, h_v3⟩ growing hG carrying h_a0 dropping h_ite_v3 h_v0 hinv1 s1 v0
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s2 a0 v3 _ _ hinv2 h64 (hG.rem hrem) h_a0 h_v3 as ⟨v4, s3, hinv3, h_v4⟩ growing hG carrying dropping h_a0 h_v3 hinv2 s2 v3
   case_done hinv3 hG with h_v4 in EoCases.__smtx_typeof_eq.case_0 using
 
 /-- logos's `__smtx_typeof_eq` is what the generated body does: the tests for the stuck term,
@@ -8720,7 +8720,7 @@ theorem case_0_eo__24smtx_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : St
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eFunType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof_apply.case_0
   step as ⟨e_v3, he_v3⟩
-  store_step with Store.native_spec_Teq s e_v3 (by rw [he_v3]; rfl) h_v1 h_a1 hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with Store.native_spec_Teq s e_v3 (by rw [he_v3]; rfl) h_v1 h_a1 hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 h_a1 he_v3 e_v3
   have h_ite_v5 := (show if_0_eo__24smtx_5ftypeof_5fapply s1 v3 v2 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5ftypeof_5fapply
     have hrem := (hG.rem hrem)
@@ -8730,10 +8730,10 @@ theorem case_0_eo__24smtx_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : St
       ite_done hinv1 hG with (native_ite_true_rep _ hx_4 h_v2)
     · ite_branch hbv_4
       step as ⟨e_v4, he_v4⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v1 dropping h_v2 h_v3 he_v4 hinv1 e_v4 s1 v2 v3
       ite_done hinv2 hG with (native_ite_false_rep _ hx_4 h_v4))
-  store_step with h_ite_v5 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s2 v1 v5 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_v5 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v5
+  store_step with h_ite_v5 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v1 dropping h_ite_v5 h_v2 h_v3 hinv1 s1 v2 v3
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s2 v1 v5 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_v5 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying dropping h_v1 h_v5 hinv2 s2 v1 v5
   case_done hinv3 hG with h_v6 in EoCases.__smtx_typeof_apply.case_0 using
 
 theorem case_1_eo__24smtx_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -8748,7 +8748,7 @@ theorem case_1_eo__24smtx_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : St
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5ftsm_2eDtcAppType.destruct h_a0 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof_apply.case_1
   step as ⟨e_v3, he_v3⟩
-  store_step with Store.native_spec_Teq s e_v3 (by rw [he_v3]; rfl) h_v1 h_a1 hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2
+  store_step with Store.native_spec_Teq s e_v3 (by rw [he_v3]; rfl) h_v1 h_a1 hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_v1 h_v2 dropping h_a0 h_a1 he_v3 e_v3
   have h_ite_v5 := (show if_1_eo__24smtx_5ftypeof_5fapply s1 v3 v2 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_1_eo__24smtx_5ftypeof_5fapply
     have hrem := (hG.rem hrem)
@@ -8758,10 +8758,10 @@ theorem case_1_eo__24smtx_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : St
       ite_done hinv1 hG with (native_ite_true_rep _ hx_4 h_v2)
     · ite_branch hbv_4
       step as ⟨e_v4, he_v4⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v4 (by rw [he_v4]; exact empty_args) hinv1 h64 as ⟨v4, s2, hinv2, h_v4⟩ growing hG carrying h_v1 dropping h_v2 h_v3 he_v4 hinv1 e_v4 s1 v2 v3
       ite_done hinv2 hG with (native_ite_false_rep _ hx_4 h_v4))
-  store_step with h_ite_v5 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3
-  store_step with ih.eo__24smtx_5ftypeof_5fguard s2 v1 v5 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_v5 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying h_a0 h_a1 h_v1 h_v2 h_v3 h_v5
+  store_step with h_ite_v5 as ⟨v5, s2, hinv2, h_v5⟩ growing hG carrying h_v1 dropping h_ite_v5 h_v2 h_v3 hinv1 s1 v2 v3
+  store_step with ih.eo__24smtx_5ftypeof_5fguard s2 v1 v5 _ _ hinv2 h64 (hG.rem hrem) h_v1 h_v5 as ⟨v6, s3, hinv3, h_v6⟩ growing hG carrying dropping h_v1 h_v5 hinv2 s2 v1 v5
   case_done hinv3 hG with h_v6 in EoCases.__smtx_typeof_apply.case_1 using
 
 theorem case_2_eo__24smtx_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _)
@@ -8775,7 +8775,7 @@ theorem case_2_eo__24smtx_5ftypeof_5fapply_spec (n : Nat) (ih : Specs n) (s : St
   unfold case_2_eo__24smtx_5ftypeof_5fapply
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__smtx_typeof_apply.case_2 using
 
 /-- logos's `__smtx_typeof_apply` is what the generated body does: the tests for the stuck term,
@@ -8830,9 +8830,9 @@ theorem case_0_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof_dt_cons_rec.case_0
   step as ⟨e_v3, he_v3⟩
-  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2
+  store_step with CtorSpec.eo__24emb_5fdtc_2eunit.construct s e_v3 (by rw [he_v3]; exact empty_args) hinv h64 as ⟨v3, s1, hinv1, h_v3⟩ growing hG carrying h_a0 h_a2 h_v1 dropping h_a1 h_v2 he_v3 e_v3 v2
   pat_same v1 v3 with h_v1 h_v3 using hinv1 else hinv1 hG in EoCases.__smtx_typeof_dt_cons_rec.case_0
-  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v3 in EoCases.__smtx_typeof_dt_cons_rec.case_0
+  pat_native_zero Store.native_pattern_nat_zero_spec s1 a2 h_a2 hinv1 h64 storing ⟨s2, hinv2⟩ growing hG carrying h_a0 in EoCases.__smtx_typeof_dt_cons_rec.case_0
   case_done hinv2 hG with h_a0 in EoCases.__smtx_typeof_dt_cons_rec.case_0 using
 
 theorem case_1_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -8850,13 +8850,13 @@ theorem case_1_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs 
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof_dt_cons_rec.case_1
   pat_destruct CtorSpec.eo__24emb_5fdtc_2econs.destruct h_v1 as ⟨v4, x_v4, h_v4⟩ ⟨v5, x_v5, h_v5⟩ else hinv hG in EoCases.__smtx_typeof_dt_cons_rec.case_1
-  pat_native_zero Store.native_pattern_nat_zero_spec s a2 h_a2 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 in EoCases.__smtx_typeof_dt_cons_rec.case_1
+  pat_native_zero Store.native_pattern_nat_zero_spec s a2 h_a2 hinv h64 storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_v2 h_v4 h_v5 in EoCases.__smtx_typeof_dt_cons_rec.case_1
   step as ⟨e_v7, he_v7⟩
-  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s1 e_v7 (by rw [he_v7]; rfl) h_v5 h_v2 hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5
-  store_step with Store.native_nat_zero_spec s2 hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v7
-  store_step with ih.eo__24smtx_5ftypeof_5fdt_5fcons_5frec s3 a0 v7 v8 _ _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8
+  store_step with CtorSpec.eo__24emb_5fdt_2esum.construct s1 e_v7 (by rw [he_v7]; rfl) h_v5 h_v2 hinv1 h64 as ⟨v7, s2, hinv2, h_v7⟩ growing hG carrying h_a0 h_v4 dropping h_a1 h_a2 h_v1 h_v2 h_v5 he_v7 hinv1 e_v7 s1 v1 v2 v5
+  store_step with Store.native_nat_zero_spec s2 hinv2 h64 as ⟨v8, s3, hinv3, h_v8⟩ growing hG carrying h_a0 h_v4 h_v7 dropping hinv2 s2
+  store_step with ih.eo__24smtx_5ftypeof_5fdt_5fcons_5frec s3 a0 v7 v8 _ _ _ hinv3 h64 (hG.rem hrem) h_a0 h_v7 h_v8 as ⟨v9, s4, hinv4, h_v9⟩ growing hG carrying h_v4 dropping h_a0 h_v7 h_v8 hinv3 s3 v7 v8
   step as ⟨e_v10, he_v10⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eDtcAppType.construct s4 e_v10 (by rw [he_v10]; rfl) h_v4 h_v9 hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 h_v4 h_v5 h_v7 h_v8 h_v9
+  store_step with CtorSpec.eo__24emb_5ftsm_2eDtcAppType.construct s4 e_v10 (by rw [he_v10]; rfl) h_v4 h_v9 hinv4 h64 as ⟨v10, s5, hinv5, h_v10⟩ growing hG carrying dropping h_v4 h_v9 he_v10 hinv4 e_v10 s4 v4 v9
   case_done hinv5 hG with h_v10 in EoCases.__smtx_typeof_dt_cons_rec.case_1 using
 
 theorem case_2_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -8873,7 +8873,7 @@ theorem case_2_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs 
   unfold case_2_eo__24smtx_5ftypeof_5fdt_5fcons_5frec
   have hG := Store.Grows.refl s
   pat_destruct CtorSpec.eo__24emb_5fdt_2esum.destruct h_a1 as ⟨v1, x_v1, h_v1⟩ ⟨v2, x_v2, h_v2⟩ else hinv hG in EoCases.__smtx_typeof_dt_cons_rec.case_2
-  pat_destruct_lit Store.native_pattern_succ_spec s a2 h_a2 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v1 h_v2 in EoCases.__smtx_typeof_dt_cons_rec.case_2
+  pat_destruct_lit Store.native_pattern_succ_spec s a2 h_a2 hinv h64 as ⟨v4, x_v4, h_v4⟩ storing ⟨s1, hinv1⟩ growing hG carrying h_a0 h_v2 in EoCases.__smtx_typeof_dt_cons_rec.case_2
   case_again hinv1 hG with h_a0 h_v2 h_v4 in EoCases.__smtx_typeof_dt_cons_rec.case_2 using
 
 theorem case_3_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -8890,7 +8890,7 @@ theorem case_3_eo__24smtx_5ftypeof_5fdt_5fcons_5frec_spec (n : Nat) (ih : Specs 
   unfold case_3_eo__24smtx_5ftypeof_5fdt_5fcons_5frec
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__smtx_typeof_dt_cons_rec.case_3 using
 
 /-- logos's `__smtx_typeof_dt_cons_rec` is what the generated body does: the tests for the stuck term,
@@ -8998,9 +8998,9 @@ theorem case_0_eo__24smtx_5ftypeof_5fguard_spec (n : Nat) (ih : Specs n) (s : St
   unfold case_0_eo__24smtx_5ftypeof_5fguard
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 dropping he_v0 e_v0
   step as ⟨e_v1, he_v1⟩
-  store_step with Store.native_spec_Teq s1 e_v1 (by rw [he_v1]; rfl) h_a0 h_v0 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with Store.native_spec_Teq s1 e_v1 (by rw [he_v1]; rfl) h_a0 h_v0 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_v0 he_v1 hinv1 e_v1 s1 v0
   have h_ite_v3 := (show if_0_eo__24smtx_5ftypeof_5fguard s2 v1 a1 ⦃ r s' => s'.Inv ∧ s2.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5ftypeof_5fguard
     have hrem := (hG.rem hrem)
@@ -9008,11 +9008,11 @@ theorem case_0_eo__24smtx_5ftypeof_5fguard_spec (n : Nat) (ih : Specs n) (s : St
     rcases Store.boolean_value_native h_v1 with ⟨hx_2, hbv_2⟩ | ⟨hx_2, hbv_2⟩
     · ite_branch hbv_2
       step as ⟨e_v2, he_v2⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a1 dropping h_v1 he_v2 e_v2 v1
       ite_done hinv3 hG with (native_ite_true_rep _ hx_2 h_v2)
     · ite_branch hbv_2
       ite_done hinv2 hG with (native_ite_false_rep _ hx_2 h_a1))
-  store_step with h_ite_v3 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying h_a0 h_a1 h_v0 h_v1
+  store_step with h_ite_v3 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying dropping h_ite_v3 h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v3 in EoCases.__smtx_typeof_guard.case_0 using
 
 /-- logos's `__smtx_typeof_guard` is what the generated body does: the tests for the stuck term,
@@ -9058,7 +9058,7 @@ theorem case_0_eo__24smtx_5ftypeof_5fguard_5fwf_spec (n : Nat) (ih : Specs n) (s
       | core.result.Result.Err _ => True ⦄div := by
   unfold case_0_eo__24smtx_5ftypeof_5fguard_5fwf
   have hG := Store.Grows.refl s
-  store_step with ih.eo__24smtx_5ftype_5fwf s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1
+  store_step with ih.eo__24smtx_5ftype_5fwf s a0 _ hinv h64 hrem h_a0 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a1 dropping h_a0
   have h_ite_v2 := (show if_0_eo__24smtx_5ftypeof_5fguard_5fwf s1 v0 a1 ⦃ r s' => s'.Inv ∧ s1.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5ftypeof_5fguard_5fwf
     have hrem := (hG.rem hrem)
@@ -9068,9 +9068,9 @@ theorem case_0_eo__24smtx_5ftypeof_5fguard_5fwf_spec (n : Nat) (ih : Specs n) (s
       ite_done hinv1 hG with (native_ite_true_rep _ hx_1 h_a1)
     · ite_branch hbv_1
       step as ⟨e_v1, he_v1⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_v0
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s1 e_v1 (by rw [he_v1]; exact empty_args) hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying dropping h_v0 he_v1 hinv1 e_v1 s1 v0
       ite_done hinv2 hG with (native_ite_false_rep _ hx_1 h_v1))
-  store_step with h_ite_v2 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying h_a0 h_a1 h_v0
+  store_step with h_ite_v2 as ⟨v2, s2, hinv2, h_v2⟩ growing hG carrying dropping h_ite_v2 h_v0 hinv1 s1 v0
   case_done hinv2 hG with h_v2 in EoCases.__smtx_typeof_guard_wf.case_0 using
 
 /-- logos's `__smtx_typeof_guard_wf` is what the generated body does: the tests for the stuck term,
@@ -9117,10 +9117,10 @@ theorem case_0_eo__24smtx_5ftypeof_5fite_spec (n : Nat) (ih : Specs n) (s : Stor
   unfold case_0_eo__24smtx_5ftypeof_5fite
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5ftsm_2eBool.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2 dropping he_v0 e_v0
   pat_same a0 v0 with h_a0 h_v0 using hinv1 else hinv1 hG in EoCases.__smtx_typeof_ite.case_0
   step as ⟨e_v1, he_v1⟩
-  store_step with Store.native_spec_Teq s1 e_v1 (by rw [he_v1]; rfl) h_a1 h_a2 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0
+  store_step with Store.native_spec_Teq s1 e_v1 (by rw [he_v1]; rfl) h_a1 h_a2 hinv1 h64 as ⟨v1, s2, hinv2, h_v1⟩ growing hG carrying h_a1 dropping h_a0 h_a2 h_v0 he_v1 hinv1 e_v1 s1 v0
   have h_ite_v3 := (show if_0_eo__24smtx_5ftypeof_5fite s2 v1 a1 ⦃ r s' => s'.Inv ∧ s2.Grows s' ∧ match r with | core.result.Result.Ok t => Represents.rep s' t (SmtEval.native_ite _ _ _) | core.result.Result.Err _ => True ⦄div from by
     unfold if_0_eo__24smtx_5ftypeof_5fite
     have hrem := (hG.rem hrem)
@@ -9130,9 +9130,9 @@ theorem case_0_eo__24smtx_5ftypeof_5fite_spec (n : Nat) (ih : Specs n) (s : Stor
       ite_done hinv2 hG with (native_ite_true_rep _ hx_2 h_a1)
     · ite_branch hbv_2
       step as ⟨e_v2, he_v2⟩
-      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
+      store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s2 e_v2 (by rw [he_v2]; exact empty_args) hinv2 h64 as ⟨v2, s3, hinv3, h_v2⟩ growing hG carrying dropping h_a1 h_v1 he_v2 hinv2 e_v2 s2 v1
       ite_done hinv3 hG with (native_ite_false_rep _ hx_2 h_v2))
-  store_step with h_ite_v3 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying h_a0 h_a1 h_a2 h_v0 h_v1
+  store_step with h_ite_v3 as ⟨v3, s3, hinv3, h_v3⟩ growing hG carrying dropping h_a1 h_ite_v3 h_v1 hinv2 s2 v1
   case_done hinv3 hG with h_v3 in EoCases.__smtx_typeof_ite.case_0 using
 
 theorem case_1_eo__24smtx_5ftypeof_5fite_spec (n : Nat) (ih : Specs n) (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _)
@@ -9146,7 +9146,7 @@ theorem case_1_eo__24smtx_5ftypeof_5fite_spec (n : Nat) (ih : Specs n) (s : Stor
   unfold case_1_eo__24smtx_5ftypeof_5fite
   have hG := Store.Grows.refl s
   step as ⟨e_v0, he_v0⟩
-  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying h_a0 h_a1 h_a2
+  store_step with CtorSpec.eo__24emb_5ftsm_2eNone.construct s e_v0 (by rw [he_v0]; exact empty_args) hinv h64 as ⟨v0, s1, hinv1, h_v0⟩ growing hG carrying dropping he_v0 e_v0
   case_done hinv1 hG with h_v0 in EoCases.__smtx_typeof_ite.case_1 using
 
 /-- logos's `__smtx_typeof_ite` is what the generated body does: the tests for the stuck term,

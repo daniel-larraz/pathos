@@ -167,6 +167,89 @@ PF = "$eo_pf"
 FUNTYPE = "$emb_FunType"
 
 
+# What a list builtin's spec takes of its operator, a constant: the property
+# and the tactic that proves it of one (Runtime/Lists.lean,
+# proofs-cpc/PathosProofsCpc/Lists.lean). Each is proved once for each
+# operator that a proof names (`op_<kind>_<operator>`, with the specs), not
+# where it is used: `nil_self_tac` splits logos's `__eo_nil`, a match on
+# every operator, and a case that uses it fifty times does not build.
+OP_FACTS = {"not_left": ("NotLeftNested", "not_left_tac"),
+            "nil_self": ("NilSelf", "nil_self_tac"),
+            "nil_apply": ("NilApply", "nil_apply_tac"),
+            "unique_nil": ("UniqueNil", "unique_nil_tac")}
+
+# The names of a case's proof that stand for something in a store: the fact
+# about a handle (`h_v<i>`, `h_a<i>`), a statement proved in place
+# (`h_ite_v<i>`, `h_req_v<i>`), the arguments of an operation and what they
+# are (`e_v<i>`, `he_v<i>`), a store and its invariant (`s<k>`, `hinv<k>`),
+# a handle (`v<i>`).
+LIVE_NAME = re.compile(r"(?<![\w.])(h_(?:ite_|req_)?[av]\d+|he_v\d+|e_v\d+|hinv\d*|s\d+|v\d+)(?!\w)")
+CARRYING = re.compile(r"^(.*? growing hG carrying)((?: \w+)*)( dropping| in \S+)(\)*)$")
+
+
+def live_pass(lines):
+    """The lines of a case's proof with, at each step that changes the
+    store, only the facts that a later line names carried over
+    (`carrying`), and at each `store_step` the names that no later line
+    names cleared (`dropping`). A proof's cost at each step grows with its
+    context (the facts carried, and what Lean does with every hypothesis
+    when it runs a tactic block or a step), so with every fact kept a
+    proof is quadratic in the length of its case, in time and in memory.
+
+    A name counts as used by a line that has it anywhere but in a
+    `carrying` list. A handle, the arguments of an operation and a store
+    stay as long as the fact about them does. A statement proved in place
+    (`have … := (show … from by`, its lines indented) and each branch (`·`)
+    has a goal of its own, which begins with what the enclosing one has:
+    what is dropped there is still to drop after it."""
+    used = []
+    for line in lines:
+        m = CARRYING.match(line)
+        used.append(set(LIVE_NAME.findall(m.group(1) + m.group(3) if m else line)))
+    last = {}
+    for i, names in enumerate(used):
+        for n in names:
+            last[n] = i
+    for n in list(last):
+        owner = (("h_" + n) if re.fullmatch(r"v\d+", n)
+                 else ("h" + n) if re.fullmatch(r"e_v\d+", n)
+                 else ("hinv" + n[1:]) if re.fullmatch(r"s\d+", n) else None)
+        if owner in last:
+            last[n] = max(last[n], last[owner])
+    out = []
+    scopes = [(-1, set())]
+    for i, line in enumerate(lines):
+        body = line.lstrip(" ")
+        if not body:
+            out.append(line)
+            continue
+        depth = len(line) - len(body)
+        if body.startswith("· "):
+            depth += 2
+            while scopes[-1][0] >= depth:
+                scopes.pop()
+        while scopes[-1][0] > depth:
+            scopes.pop()
+        if scopes[-1][0] < depth:
+            scopes.append((depth, set(scopes[-1][1])))
+        present = scopes[-1][1]
+        present |= used[i]
+        m = CARRYING.match(line)
+        if m:
+            head, carried, tail, close = m.groups()
+            line = head + words(f for f in carried.split() if last.get(f, -1) > i) + tail
+            if tail == " dropping":
+                # the facts first: a handle or a store goes once nothing
+                # speaks of it
+                dead = sorted((n for n in present if last[n] <= i and n != "hinv"),
+                              key=lambda n: (not n.startswith("h"), n))
+                present -= set(dead)
+                line += words(dead)
+            line += close
+        out.append(line)
+    return out
+
+
 class Lean:
     """What the proof of a case has so far (rust-meta #288's `Lean`)."""
 
@@ -272,7 +355,7 @@ class Emitter:
         self.l.store += 1
         self.line("store_step with " + spec + " as ⟨" + v + ", " + self.st()
                   + ", " + self.inv() + ", h_" + v + "⟩ growing hG carrying"
-                  + before)
+                  + before + " dropping")
         self.l.facts.append("h_" + v)
 
     def args_step(self, spec, st, inv, vs, v):
@@ -294,6 +377,18 @@ class Emitter:
         `Constructor::is_left_assoc`)."""
         c = self.l.ctor_of.get(f)
         return c is not None and ident(c) not in self.g.left_assoc
+
+    def op_fact(self, kind, f):
+        """The proof that the operator `f` has the property `kind`
+        (OP_FACTS): of a constant, the lemma about it, which is proved
+        once; of anything else, the tactic in place."""
+        c = self.l.ctor_of.get(f)
+        lean = self.g.uop_lean.get(c)
+        if lean is None:
+            return "(by " + OP_FACTS[kind][1] + ")"
+        name = "op_" + kind + "_" + ident(c)
+        self.g.op_facts[name] = (kind, c, lean)
+        return name
 
     def same(self, a, b):
         self.line("pat_same " + a + " " + b + " with h_" + a + " h_" + b
@@ -643,7 +738,8 @@ class Emitter:
             self.store_step("Store.builtin_spec_list_singleton_elim n ih." + ident(lists["is_nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
-                            + " (by not_left_tac) (by nil_apply_tac)", v)
+                            + " " + self.op_fact("not_left", vs[0])
+                            + " " + self.op_fact("nil_apply", vs[0]), v)
             self.l.calls.add(lists["is_nil"])
             return v
         if k == "ListSingletonIntro":
@@ -661,7 +757,8 @@ class Emitter:
                             + " ih." + ident(typeof) + " ih." + ident(lists["nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
-                            + " (by not_left_tac) (by nil_self_tac)", v)
+                            + " " + self.op_fact("not_left", vs[0])
+                            + " " + self.op_fact("nil_self", vs[0]), v)
             self.l.calls.update([lists["is_nil"], typeof, lists["nil"]])
             return v
         if k == "ListRepeat":
@@ -678,7 +775,7 @@ class Emitter:
                             + " ih." + ident(lists["nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
-                            + " (by not_left_tac)", v)
+                            + " " + self.op_fact("not_left", vs[0]), v)
             self.l.calls.update([typeof, lists["nil"]])
             return v
         if k in ("ListLength", "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof"):
@@ -699,7 +796,7 @@ class Emitter:
             self.store_step(spec + " n ih." + ident(lists["is_nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
-                            + " (by not_left_tac)", v)
+                            + " " + self.op_fact("not_left", vs[0]), v)
             self.l.calls.add(lists["is_nil"])
             return v
         if k in ("ListConcat", "ListDiff", "ListInter", "ListMinclude", "ListMeq"):
@@ -724,7 +821,8 @@ class Emitter:
             self.store_step("Store.builtin_spec_" + name + " n ih." + ident(lists["is_nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
-                            + " (by not_left_tac) (by unique_nil_tac)", v)
+                            + " " + self.op_fact("not_left", vs[0])
+                            + " " + self.op_fact("unique_nil", vs[0]), v)
             self.l.calls.add(lists["is_nil"])
             return v
         if k == "Cons":
@@ -743,7 +841,7 @@ class Emitter:
             self.store_step("Store.builtin_spec_cons n ih." + ident(lists["is_nil"])
                             + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
                             + words("h_" + x for x in vs) + " (by ns_tac) " + inv
-                            + " h64 " + rem + " (by not_left_tac)", v)
+                            + " h64 " + rem + " " + self.op_fact("not_left", vs[0]), v)
             self.l.calls.add(lists["is_nil"])
             return v
         for s in sub:
@@ -802,8 +900,9 @@ class Emitter:
               "Represents.rep s' t ("
             + ("SmtEval.native_ite" if native else "Eo.__eo_ite")
             + " _ _ _) | core.result.Result.Err _ => True ⦄div from by")
-        l.lines[o["open"] + 1] = (o["indent"] + "  unfold " + n["fn"]
-                                  + words(n.get("helpers", [])))
+        # (its `more_<k>` helpers are opened where the proof reaches them:
+        # `open_more`, Tactic.lean)
+        l.lines[o["open"] + 1] = o["indent"] + "  unfold " + n["fn"]
         self.store_step("h_ite_" + v, v)
         return v
 
@@ -865,8 +964,9 @@ class Emitter:
             + ".Grows s' ∧ match r with | core.result.Result.Ok t => "
               "Represents.rep s' t (Eo.__eo_requires _ _ _) | "
               "core.result.Result.Err _ => True ⦄div from by")
-        l.lines[o["open"] + 1] = (o["indent"] + "  unfold " + n["fn"]
-                                  + words(n.get("helpers", [])))
+        # (its `more_<k>` helpers are opened where the proof reaches them:
+        # `open_more`, Tactic.lean)
+        l.lines[o["open"] + 1] = o["indent"] + "  unfold " + n["fn"]
         self.store_step("h_req_" + v, v)
         return v
 
@@ -1120,7 +1220,7 @@ class Generator:
                 proof.good[j] = "ProofOK"
                 if proof.loop and not l.why:
                     e.unsupported("a loop whose proof argument is assumed OK")
-            proof.cases.append(Case(words(l.unfolds), lines, l.why))
+            proof.cases.append(Case(words(l.unfolds), live_pass(lines), l.why))
             proof.calls |= l.calls
             if not proof.why and l.why:
                 proof.why = "case %d has %s" % (c, l.why)
@@ -1159,7 +1259,6 @@ class Generator:
             else:
                 v = e.expr(case["body"])
                 last = "case_done " + e.inv() + " hG with h_" + v
-            l.unfolds += case["helpers"]
             return l, l.lines + [last + " in " + l.case_def + " using" + words(l.pure)]
 
     def finish(self, p, proof, args):
@@ -1362,6 +1461,18 @@ class Generator:
         o.append("\n")
         programs = [self.with_heartbeats(p, self.print_program(p, names(p), resolve, ok, err))
                     for p in proved]
+        # What the proofs take of an operator constant (OP_FACTS), once for
+        # each that a proof names.
+        named = set(re.findall(r"\bop_(?:%s)_\w+" % "|".join(OP_FACTS), "".join(programs)))
+        for name in sorted(named & set(self.op_facts)):
+            kind, c, lean = self.op_facts[name]
+            prop, tac = OP_FACTS[kind]
+            # (a constructor that logos names with an underscore first is
+            # internal to Mathlib's linter)
+            internal = lean.rsplit(".", 1)[-1].startswith("_")
+            o.append(("set_option linter.internalConstructors false in\n" if internal else "")
+                     + "/-- `" + c + "`: `" + prop + "`. -/\ntheorem " + name + " : " + prop
+                     + " (" + lean + ") := by\n  " + tac + "\n\n")
         last = ("/-- **Every program with a generated proof computes what logos's "
                 "function does.** -/\ntheorem specs (n : Nat) : Specs n := by\n"
                 "  induction n using Nat.strong_induction_on with\n  | _ n ih =>\n"
@@ -1394,9 +1505,26 @@ class Generator:
         limits = self.cfg.get("parts", {})
         most = limits.get("programs", PROOFS_PER_PART)
         budget = limits.get("bytes", 0)
+        # A program larger than the budget goes over several parts, each
+        # importing the one before (its last theorems use the first): what
+        # Lean keeps of a module's theorems is most of a part's memory.
         parts, size = [], 0
+        after = set()
         for t in light:
             n = len(t.encode("utf-8"))
+            if budget and n > budget:
+                chunk, held = [], 0
+                for u in theorem_units(t):
+                    m = len(u.encode("utf-8"))
+                    if chunk and held + m > budget:
+                        parts.append(["".join(chunk)])
+                        chunk, held = [], 0
+                        after.add(len(parts))
+                    chunk.append(u)
+                    held += m
+                parts.append(["".join(chunk)])
+                size = budget
+                continue
             if (not parts or len(parts[-1]) >= most
                     or (budget and parts[-1] and size + n > budget)):
                 parts.append([])
@@ -1406,7 +1534,9 @@ class Generator:
         parts += [[t] for p, t in zip(proved, programs) if p.name in heavy]
         for k, part in enumerate(parts):
             files["proofs/Part%d.lean" % k] = (
-                "module\npublic import $PROOFS$.Head\n" + imports + "\n"
+                "module\npublic import $PROOFS$.Head\n"
+                + ("public import $PROOFS$.Part%d\n" % (k - 1) if k in after else "")
+                + imports + "\n"
                 + doc + PART_OPTIONS + pre + "".join(part) + end)
             root.append("public import $PROOFS$.Part%d\n" % k)
         files["proofs.lean"] = ("".join(root) + imports + "\n" + doc + pre + last)
@@ -1417,7 +1547,15 @@ class Generator:
         limit there (`set_option maxHeartbeats … in`, before a docstring)."""
         limit = self.cfg.get("heartbeats", {}).get(p.name)
         if not limit:
-            return text
+            # A long case's theorem under a limit that grows with its
+            # length: what a step costs does not (`live_pass`), and the
+            # parts' limit is what about 70 steps take at most.
+            def longer(unit):
+                most = unit.count("store_step with ") * HEARTBEATS_PER_STEP
+                if most <= PART_HEARTBEATS:
+                    return unit
+                return "set_option maxHeartbeats %d in\n" % most + unit
+            return "".join(longer(u) for u in theorem_units(text))
         return re.sub(r"^((?:/--(?:(?!-/).)*-/\n)?theorem )",
                       "set_option maxHeartbeats %d in\n\\1" % limit, text,
                       flags=re.M | re.S)
@@ -1877,7 +2015,19 @@ PROOFS_SPLIT_ABOVE = 100
 # count varies a little between builds (it built locally, and timed out
 # in the Proofs workflow, at 1,000,000 for $eo_prog_bv-srem-eliminate,
 # which needs between 900,000 and 1,000,000 locally), so with a margin.
-PART_OPTIONS = "set_option maxHeartbeats 2000000\n"
+PART_HEARTBEATS = 2000000
+PART_OPTIONS = "set_option maxHeartbeats %d\n" % PART_HEARTBEATS
+# The heartbeats allowed for each operation on the store in a case's proof
+# (`with_heartbeats`). A guard against a proof that does not end, not a
+# measure: `bv-smulo-elim`'s case of 659 steps passes 2,000,000 in all.
+HEARTBEATS_PER_STEP = 30000
+
+
+def theorem_units(text):
+    """The theorems of a program's proofs, each with its docstring and what
+    follows it up to the next."""
+    return re.split(r"(?<=\n\n)(?=(?:set_option [^\n]* in\n)?(?:/--|theorem ))", text)
+
 
 
 def uop_k(sname):
@@ -2723,6 +2873,14 @@ def main():
             for d in json.load(f)["constructors"]:
                 if d["user_op"] and arities.get(d["lean"], 0) > 0:
                     gen.strict_ctors.add(d["eo"])
+    # the Lean term of each user operator without indices, a constant
+    gen.uop_lean = {}
+    if args.embedding:
+        with open(args.embedding, encoding="utf-8") as f:
+            for d in json.load(f)["constructors"]:
+                if d["user_op"] and d["type"] == "UserOp" and not d["fields"]:
+                    gen.uop_lean[d["eo"]] = "Eo.Term.UOp Eo.UserOp." + d["lean"]
+    gen.op_facts = {}
     gen.unproved = {}
     if args.unproved:
         with open(args.unproved, "rb") as f:

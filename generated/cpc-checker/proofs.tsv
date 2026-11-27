@@ -8,7 +8,7 @@ $are_distinct_terms_type	generated
 $arith_mk_one	generated	
 $arith_mk_zero	generated	
 $arith_normalize_lit	generated	
-$arith_reduction_pred	none	its generated proof does not build: the spec of case 7: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $bv_div_mod_impl, 11 min)
+$arith_reduction_pred	generated	
 $arith_rel_inv	generated	
 $arith_rel_neg	generated	
 $arith_rel_sum	generated	
@@ -30,7 +30,7 @@ $bv_bitblast_ult	generated
 $bv_bitblast_ult_rec	generated	
 $bv_bitwidth	generated	
 $bv_const_to_bitlist_rec	none	case 1 has a builtin operator (Extract)
-$bv_div_mod_impl	none	its generated proof does not build: the spec of case 2: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $arith_reduction_pred, 11 min)
+$bv_div_mod_impl	generated	
 $bv_eval_concat	none	case 0 has a builtin operator (Concat)
 $bv_get_first_const_child	generated	
 $bv_mk_bitblast_step	none	it calls $bv_const_to_bitlist_rec, which has no proof
@@ -173,7 +173,7 @@ $eo_prog_arith_mult_sign	generated
 $eo_prog_arith_mult_tangent	generated	
 $eo_prog_arith_poly_norm	generated	
 $eo_prog_arith_poly_norm_rel	generated	
-$eo_prog_arith_reduction	none	it calls $arith_reduction_pred, which has no proof
+$eo_prog_arith_reduction	generated	
 $eo_prog_arith_sum_ub	generated	
 $eo_prog_arith_trichotomy	generated	
 $eo_prog_array-read-over-write	generated	
@@ -244,7 +244,7 @@ $eo_prog_bv-extract-concat-2	generated
 $eo_prog_bv-extract-concat-3	generated	
 $eo_prog_bv-extract-concat-4	generated	
 $eo_prog_bv-extract-extract	generated	
-$eo_prog_bv-extract-mult-leading-bit	none	its generated proof does not build: the spec of case 0: times out (whnf) at 20,000,000 heartbeats, with no_match_ne
+$eo_prog_bv-extract-mult-leading-bit	none	its generated proof does not build: the spec of case 0: times out (whnf, 3,210,000 heartbeats, 107 operations) at a pat_same of a program of 16 arguments (no_match_ne), and its rust_eq at 2,000,000 (logos_eq); not the length of the case
 $eo_prog_bv-extract-not	generated	
 $eo_prog_bv-extract-sign-extend-1	generated	
 $eo_prog_bv-extract-sign-extend-2	generated	
@@ -291,7 +291,7 @@ $eo_prog_bv-or-simplify-2	none	case 0 has eo::list_concat of bvor, whose nil tes
 $eo_prog_bv-redand-eliminate	generated	
 $eo_prog_bv-redor-eliminate	generated	
 $eo_prog_bv-repeat-elim	generated	
-$eo_prog_bv-rotate-left-eliminate-1	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats) and simp exceeds its steps; logos_eq does not prove the case form (binary literals, milestone 6)
+$eo_prog_bv-rotate-left-eliminate-1	generated	
 $eo_prog_bv-rotate-left-eliminate-2	generated	
 $eo_prog_bv-rotate-right-eliminate-1	generated	
 $eo_prog_bv-rotate-right-eliminate-2	generated	
@@ -313,8 +313,8 @@ $eo_prog_bv-sign-extend-ult-const-3	generated
 $eo_prog_bv-sign-extend-ult-const-4	generated	
 $eo_prog_bv-sle-eliminate	generated	
 $eo_prog_bv-sle-self	generated	
-$eo_prog_bv-smod-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); at 20,000,000 it runs out of 8G of memory (13 min)
-$eo_prog_bv-smulo-elim	none	its generated proof does not build: the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (1.2 MB of proof; reached once eo::list_repeat had a spec)
+$eo_prog_bv-smod-eliminate	generated	
+$eo_prog_bv-smulo-elim	generated	
 $eo_prog_bv-srem-eliminate	generated	
 $eo_prog_bv-ssubo-eliminate	generated	
 $eo_prog_bv-sub-eliminate	generated	
@@ -386,8 +386,8 @@ $eo_prog_cnf_xor_pos2	generated
 $eo_prog_concat_cprop	none	case 0 has a builtin operator (Extract)
 $eo_prog_concat_csplit	generated	
 $eo_prog_concat_eq	generated	
-$eo_prog_concat_lprop	none	its generated proof does not build: the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (155 KB of proof; reached once eo::list_singleton_intro had a spec)
-$eo_prog_concat_split	none	its generated proof does not build: the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (264 KB of proof; reached once eo::list_singleton_intro had a spec)
+$eo_prog_concat_lprop	generated	
+$eo_prog_concat_split	generated	
 $eo_prog_concat_unify	generated	
 $eo_prog_cong	generated	
 $eo_prog_contra	generated	
@@ -717,7 +717,7 @@ $eo_prog_string_eager_reduction	generated
 $eo_prog_string_ext	generated	
 $eo_prog_string_length_non_empty	generated	
 $eo_prog_string_length_pos	generated	
-$eo_prog_string_reduction	none	it calls $str_reduction_pred, which has no proof
+$eo_prog_string_reduction	generated	
 $eo_prog_string_seq_unit_inj	generated	
 $eo_prog_symm	generated	
 $eo_prog_trans	generated	
@@ -1088,7 +1088,7 @@ $str_re_includes_lhs_star	none	it calls $str_re_includes_rec, which has no proof
 $str_re_includes_lhs_union	none	it calls $str_re_includes_rec, which has no proof
 $str_re_includes_rec	none	it calls $str_re_includes_base_rec, which has no proof
 $str_re_includes_rhs_inter	none	it calls $str_re_includes_rec, which has no proof
-$str_reduction_pred	none	its generated proof does not build: its proofs are 4.5 MB, a part of their own: the specs of its cases time out (whnf, 2,000,000 heartbeats) and the part peaks above 9 GB
+$str_reduction_pred	generated	
 $str_strip_prefix	generated	
 $str_to_int_eval_rec	generated	
 $str_unify_split	generated	

@@ -86,7 +86,9 @@ good = ["StateOK", ""]
 # order. A part's memory grows with its size: Part5 held 40 programs in
 # 631 KB and peaked at 7.9 GB, against the 8G cap of a local build and
 # CI's 16 GB for two parts at once (2026-11-25). At 450,000 bytes Part6
-# still reached 7.2 GB: some bit-vector rules weigh more per byte.
+# still reached 7.2 GB: some bit-vector rules weigh more per byte. A
+# program larger than `bytes` goes over several parts, each importing the
+# one before (2026-11-27; docs/proofs.md, "Long cases").
 programs = 40
 bytes = 350000
 
@@ -113,7 +115,12 @@ ctors = { "and" = "Eo.Term.UOp Eo.UserOp.and" }
 # The programs whose proofs take more than the parts' 2,000,000 heartbeats
 # (PART_OPTIONS in scripts/proofgen): each of their theorems is elaborated
 # under the limit here. The spec of case 0 of each times out in whnf at
-# 2,000,000; each built at 20,000,000 (2026-11-25).
+# 2,000,000; each built at 20,000,000 (2026-11-25). Since 2026-11-27 a
+# case of more than 66 operations has a limit by its length without an
+# entry here (HEARTBEATS_PER_STEP in scripts/proofgen), and a proof's
+# steps cost less (docs/proofs.md, "Long cases"): the entries below were
+# not measured again, and some may no longer be needed. A program listed
+# has a part of its own.
 "$eo_prog_str-substr-combine3" = 20000000
 "$eo_prog_str-substr-combine4" = 20000000
 "$eo_prog_re-concat-star-nullable1" = 20000000

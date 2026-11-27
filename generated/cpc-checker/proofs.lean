@@ -70,6 +70,16 @@ public import $PROOFS$.Part67
 public import $PROOFS$.Part68
 public import $PROOFS$.Part69
 public import $PROOFS$.Part70
+public import $PROOFS$.Part71
+public import $PROOFS$.Part72
+public import $PROOFS$.Part73
+public import $PROOFS$.Part74
+public import $PROOFS$.Part75
+public import $PROOFS$.Part76
+public import $PROOFS$.Part77
+public import $PROOFS$.Part78
+public import $PROOFS$.Part79
+public import $PROOFS$.Part80
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos
@@ -112,6 +122,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24arith_5fmk_5fone_spec n ih,
       eo__24arith_5fmk_5fzero_spec n ih,
       eo__24arith_5fnormalize_5flit_spec n ih,
+      eo__24arith_5freduction_5fpred_spec n ih,
       eo__24arith_5frel_5finv_spec n ih,
       eo__24arith_5frel_5fneg_spec n ih,
       eo__24arith_5frel_5fsum_spec n ih,
@@ -132,6 +143,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24bv_5fbitblast_5fult_spec n ih,
       eo__24bv_5fbitblast_5fult_5frec_spec n ih,
       eo__24bv_5fbitwidth_spec n ih,
+      eo__24bv_5fdiv_5fmod_5fimpl_spec n ih,
       eo__24bv_5fget_5ffirst_5fconst_5fchild_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fadd_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fbitwise_spec n ih,
@@ -258,6 +270,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5farith_5fmult_5ftangent_spec n ih,
       eo__24eo_5fprog_5farith_5fpoly_5fnorm_spec n ih,
       eo__24eo_5fprog_5farith_5fpoly_5fnorm_5frel_spec n ih,
+      eo__24eo_5fprog_5farith_5freduction_spec n ih,
       eo__24eo_5fprog_5farith_5fsum_5fub_spec n ih,
       eo__24eo_5fprog_5farith_5ftrichotomy_spec n ih,
       eo__24eo_5fprog_5farray_2dread_2dover_2dwrite_spec n ih,
@@ -361,6 +374,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dredand_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dredor_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2drepeat_2delim_spec n ih,
+      eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2_spec n ih,
@@ -382,6 +396,8 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dsign_2dextend_2dult_2dconst_2d4_spec n ih,
       eo__24eo_5fprog_5fbv_2dsle_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dsle_2dself_spec n ih,
+      eo__24eo_5fprog_5fbv_2dsmod_2deliminate_spec n ih,
+      eo__24eo_5fprog_5fbv_2dsmulo_2delim_spec n ih,
       eo__24eo_5fprog_5fbv_2dsrem_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dssubo_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dsub_2deliminate_spec n ih,
@@ -443,6 +459,8 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fcnf_5fxor_5fpos2_spec n ih,
       eo__24eo_5fprog_5fconcat_5fcsplit_spec n ih,
       eo__24eo_5fprog_5fconcat_5feq_spec n ih,
+      eo__24eo_5fprog_5fconcat_5flprop_spec n ih,
+      eo__24eo_5fprog_5fconcat_5fsplit_spec n ih,
       eo__24eo_5fprog_5fconcat_5funify_spec n ih,
       eo__24eo_5fprog_5fcong_spec n ih,
       eo__24eo_5fprog_5fcontra_spec n ih,
@@ -736,6 +754,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fstring_5fext_spec n ih,
       eo__24eo_5fprog_5fstring_5flength_5fnon_5fempty_spec n ih,
       eo__24eo_5fprog_5fstring_5flength_5fpos_spec n ih,
+      eo__24eo_5fprog_5fstring_5freduction_spec n ih,
       eo__24eo_5fprog_5fstring_5fseq_5funit_5finj_spec n ih,
       eo__24eo_5fprog_5fsymm_spec n ih,
       eo__24eo_5fprog_5ftrans_spec n ih,
@@ -1068,6 +1087,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24str_5fmk_5fstr_5fin_5fre_5fsigma_5fstar_5frec_spec n ih,
       eo__24str_5fmultiset_5foverapprox_5fword_spec n ih,
       eo__24str_5foverlap_5frec_spec n ih,
+      eo__24str_5freduction_5fpred_spec n ih,
       eo__24str_5fstrip_5fprefix_spec n ih,
       eo__24str_5fto_5fint_5feval_5frec_spec n ih,
       eo__24str_5funify_5fsplit_spec n ih,

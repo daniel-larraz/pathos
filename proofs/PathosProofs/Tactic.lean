@@ -238,22 +238,60 @@ macro_rules
     let ts ← hs.mapM fun h => `(tactic| carry_one $h $hg)
     `(tactic| ($[$ts];*))
 
-/-- `store_step with spec as ⟨v, s', hinv, h⟩ growing hG carrying h1 h2 …`:
-one operation on the store whose specification `spec` says that the new
-store has the invariant, has grown, and what the result is on `Ok`. Leaves
-the `Ok` case with the result `v`, the store `s'`, its invariant `hinv`
-and the fact `h` about `v`; `hG` is extended, and the facts after
-`carrying` are carried over. An `Err` ends the function, with nothing to
-prove about its result. -/
+open Lean Meta Elab Tactic in
+/-- `drop_names n₁ n₂ …`: clears, in the order given, each of the names
+that the goal has and nothing else needs. The generator names what no
+later line of a proof uses (a fact about a handle in a store that has
+grown since, the handle, the store): what stays in the context is paid for
+at every later step. A name that cannot be cleared stays. -/
+elab "drop_names" hs:(ppSpace colGt ident)* : tactic => do
+  for h in hs do
+    let g ← getMainGoal
+    let some d := (← g.getDecl).lctx.findFromUserName? h.getId | continue
+    replaceMainGoal [← g.tryClear d.fvarId]
+
+open Lean Meta Elab Tactic in
+/-- Where the program of the goal is a call of a `more_<k>` function, the
+rest of a long generated function (rust-meta ends a function after twelve
+fallible calls with a call of the next), unfolds it. The tactics that take
+a statement off the program end with this, so the goal holds the function
+at hand and not the whole case. -/
+elab "open_more" : tactic => do
+  let g :: _ ← getUnsolvedGoals | return
+  let t := (← instantiateMVars (← g.getType)).consumeMData
+  for a in t.getAppArgs do
+    let .const n@(.str _ last) _ := a.getAppFn | continue
+    unless last.startsWith "more_" do continue
+    -- (`unfold`, not `delta`: a function of a recursive group unfolds by
+    -- its equation, to calls of the group's functions by name)
+    evalTactic (← `(tactic| unfold $(mkCIdent n):ident))
+    return
+
+/-- `store_step with spec as ⟨v, s', hinv, h⟩ growing hG carrying h1 h2 …
+dropping n1 n2 …`: one operation on the store whose specification `spec`
+says that the new store has the invariant, has grown, and what the result
+is on `Ok`. Leaves the `Ok` case with the result `v`, the store `s'`, its
+invariant `hinv` and the fact `h` about `v`; `hG` is extended, and the
+facts after `carrying` are carried over. An `Err` ends the function, with
+nothing to prove about its result. The names after `dropping` are those
+that no later line uses: they are cleared (`drop_names`), before the step
+but for those that `spec` names, which go after it. -/
 syntax "store_step " "with " term " as " "⟨" ident ", " ident ", " ident ", " ident "⟩"
-  " growing " ident " carrying" (ppSpace colGt ident)* : tactic
+  " growing " ident " carrying" (ppSpace colGt ident)* " dropping" (ppSpace colGt ident)* : tactic
 macro_rules
-  | `(tactic| store_step with $e as ⟨$v, $s', $hinv, $h⟩ growing $hG carrying $hs*) => do
+  | `(tactic| store_step with $e as ⟨$v, $s', $hinv, $h⟩ growing $hG carrying $hs*
+      dropping $ds*) => do
     let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
       ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
     let r := Lean.mkIdent `r
     let hg := Lean.mkIdent `hg
+    -- what the specification names is cleared after the step, the rest before
+    let mut used : Array Lean.Name := #[]
+    for stx in e.raw.topDown do
+      if stx.isIdent then used := used.push stx.getId
+    let pre := ds.filter fun d => !used.contains d.getId
     `(tactic| (
+      drop_names $pre*
       step with $e as ⟨$(b r), $(b s'), $(b hinv), $(b hg), $(b h)⟩
       transport $hg at $hs*
       replace $hG:ident := Store.Grows.trans $hG $hg
@@ -261,7 +299,9 @@ macro_rules
       case Err => (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv, $hG, trivial⟩)
       rename_i $v:ident
       simp only at $h:ident ⊢
-      clear $hg))
+      clear $hg
+      drop_names $ds*
+      open_more))
 
 /-- Closes what is left where a pattern does not match. -/
 macro "nm_close" : tactic =>
@@ -347,7 +387,8 @@ macro_rules
       rw [hu]
       simp only [Std.bind_ok, uncurry_apply_pair]
       clear hu
-      obtain ⟨$hnf, $hna⟩ := Store.Rep.apply_ne_stuck $hi $h))
+      obtain ⟨$hnf, $hna⟩ := Store.Rep.apply_ne_stuck $hi $h
+      open_more))
 
 /-- `pat_is_node h : x is v by inv else hinv hG in cd`: the pattern asks
 whether the term `x` that `h` speaks of is the constant `v`, a constructor
@@ -375,7 +416,8 @@ macro_rules
       have hv : $x = $v := hiff.mp rfl
       clear hiff
       (try simp only [Bool.not_true, Bool.false_eq_true, ite_true, ite_false])
-      subst hv))
+      subst hv
+      open_more))
 
 /-- `pat_destruct lemma h as ⟨v, x, hv⟩ … else hinv hG in cd`: the pattern
 takes the value that `h` speaks of apart as a constructor with fields, by
@@ -414,7 +456,8 @@ macro_rules
       have hfldlen : ($vec).length = $(Lean.quote k) := by
         simp [alloc.vec.Vec.length, $hvec:ident]
       $[$steps];*
-      clear hfldlen))
+      clear hfldlen
+      open_more))
 
 /-- `pat_destruct_lit spec as ⟨v, x, hv⟩ storing ⟨s', hinv'⟩ growing hG carrying … else in
 cd`: the pattern takes apart an object literal, by `destruct` with its
@@ -455,7 +498,8 @@ macro_rules
       step as ⟨$(b v), $(b hvi)⟩
       have hfldv : $v = $f0 := by simp [$hvi:ident, $hvec:ident]
       subst hfldv
-      clear $hvi hfldlen))
+      clear $hvi hfldlen
+      open_more))
 
 /-- `pat_destruct_lit2 spec as ⟨v, x, hv⟩ ⟨w, y, hw⟩ storing ⟨s', hinv'⟩ growing hG
 carrying … in cd`: as `pat_destruct_lit`, for a literal whose `destruct`
@@ -499,7 +543,8 @@ macro_rules
       step as ⟨$(b w), $(b hvi)⟩
       have hfldw : $w = $f1 := by simp [$hvi:ident, $hvec:ident]
       subst hfldw
-      clear $hvi hfldlen))
+      clear $hvi hfldlen
+      open_more))
 
 /-- `pat_native_zero spec storing ⟨s', hinv'⟩ growing hG carrying … in cd`:
 the pattern `nat.zero` on a natural number, which stores the numeral 0
@@ -530,7 +575,8 @@ macro_rules
            obtain ⟨$heq, $hvec⟩ := $hres
            subst $heq
            clear $hvec $vec:ident)
-        | (simp only at $hres:ident; nat_no_match $hres $hinv' $hG in $cd; done)))
+        | (simp only at $hres:ident; nat_no_match $hres $hinv' $hG in $cd; done)
+      open_more))
 
 /-- `pat_same a b with ha hb using hi else hinv hG in cd`: the generated
 `if a != b { return Ok(None) }` on two handles. Goes on where they are
@@ -552,7 +598,8 @@ macro_rules
       simp only [Bool.false_eq_true, ite_false]
       have hx := hiff.mp hv
       clear hiff
-      first | subst hx | skip))
+      first | subst hx | skip
+      open_more))
 
 /-- Ends a case that matched: the result `h` speaks of is what the case's
 function `cd` answers. -/

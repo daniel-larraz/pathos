@@ -308,16 +308,18 @@ bit-vector polynomial normalization over them. One more it reached,
 `eo::list_singleton_intro` (after logos a6b896b5, where bvmul's nil passes
 its own test at width 0) brought 3 more (940): the string concatenation
 rules `concat_eq`, `concat_unify` and `concat_csplit`. Two more it reached,
-`concat_split` and `concat_lprop`, have specs of case 0 that do not finish
-in 50 minutes (`proofs-cpc/unproved.toml`). Its other users, through `$str_flatten`, `$re_unflatten_str`
+`concat_split` and `concat_lprop`, had specs of case 0 that did not finish
+in 50 minutes; they build since the proofs of long cases changed shape
+(below, "Long cases: what a step costs"). Its other users, through `$str_flatten`, `$re_unflatten_str`
 and `$seq_eval`, also take `eo::list_concat` of `str.++`, whose nil test
 takes more than one term (above).
 
 `eo::list_repeat` brought 7 (947): `bv-repeat-elim`, `bv-umulo-elim`,
 `int-to-bv-elim`, `ubv-to-int-elim`, `re-loop-elim`, and
 `$bv_shift_add_multiplier` and `$bv_mk_bitblast_step_mul`. The spec of
-case 0 of `bv-smulo-elim` (1.2 MB of proof) does not finish in 50 minutes
-alone at 20M heartbeats (`unproved.toml`). `ubv-to-int-elim` needed
+case 0 of `bv-smulo-elim` (1.2 MB of proof) did not finish in 50 minutes
+alone at 20M heartbeats; it builds now (below, "Long cases: what a step
+costs"). `ubv-to-int-elim` needed
 `req_stuck` to rewrite a stuck requirement whole (`requires_stuck_of`):
 its third argument depends on proofs that the first is not stuck.
 
@@ -745,6 +747,88 @@ case_k … = none`), so that a branch drops a case without evaluating it.
 At 4 GB the theorem will not fit under the cap beside another part of
 `CpcProofs` at its largest (4.8 GB): its part will have to build alone.
 
+### Long cases: what a step costs
+
+A case's proof has one line for each line of Rust, and the Rust of a case
+is the case's right-hand side written out as a tree: a term that logos
+binds once and uses five times is built five times. The cases of
+`concat_split`, `concat_lprop` and `bv-smulo-elim` have 388, 249 and 659
+operations on the store. Their proofs did not finish: `concat_lprop`'s at
+20,000,000 heartbeats ran out of the 8 GiB cap after about six minutes
+(the "50 minutes" of `unproved.toml` was Lean at the cap), and at
+2,000,000 it stopped a third of the way down. Three things made a proof
+quadratic or worse in the length of its case, each with its own fix
+(2026-11-27):
+
+- **A fact about an operator, proved where it is used.** A list builtin's
+  spec takes what its operator is: that it does not nest to the left, that
+  its nil passes its own nil test (`NilSelf`), and so on. The generator
+  wrote the tactic at every use. `nil_self_tac` splits logos's `__eo_nil`,
+  a match on every operator, and takes about 1.5 s and a large proof term
+  each time; `concat_lprop` uses it 36 times and `concat_split` 56. This
+  was most of their time and memory, and it is what the first two had in
+  common (`eo::list_singleton_intro`). Each such fact is now a lemma about
+  the operator, `op_<kind>_<operator>`, stated once with the specs
+  (`CpcProofs/Head.lean`) for each operator that a proof names.
+- **A context that only grew.** Every operation left its handle, its
+  store, the store's invariant and its facts in the context, and
+  `store_step` carried every fact about every handle over to the new
+  store, whether or not a later line named it: 6 names a step and, in
+  `bv-smulo-elim`, up to 250 facts carried at each of 659 steps (which is
+  why its proof was 1.2 MB). What Lean does at a step grows with the
+  context: Aeneas's `step` went from 0.2 s to 0.8 s over `concat_csplit`'s
+  122 steps; `scalar_tac` saturates over every hypothesis; and each tactic
+  block inside a term (`(by …)`, of which a step has one to three)
+  instantiates and shares the whole local context first
+  (`instantiateMVarDeclMVars`, in `Term.runTactic`) and keeps a copy of
+  it, which is where the memory went. The generator now ends a case's
+  proof with a pass over its lines (`live_pass`): a step carries the facts
+  that a later line names, and names what no later line does, which
+  `store_step` clears (`dropping …`, `drop_names`). `concat_csplit`'s case
+  went from 142 s and 4.5 GB to 62 s and 3.0 GB by this alone.
+- **A goal that held the whole case.** rust-meta ends a function after
+  twelve fallible calls with a call of the next (`more_<k>`), and the proof
+  unfolded them all at its first line, so every step ran on a goal with
+  the rest of the case in it. The tactics that take a statement off the
+  program now open the next function when they reach its call
+  (`open_more`), and nothing but the function at hand is unfolded.
+  `bv-smulo-elim`'s case takes 76 s and 3.8 GB with this, and had not
+  finished after 13 minutes with the first two fixes only.
+
+Two things follow from a step costing the same wherever it is:
+
+- **A case's limit grows with its length.** A case's theorem of more than
+  66 operations is elaborated under 30,000 heartbeats for each
+  (`HEARTBEATS_PER_STEP` in `scripts/proofgen`), in place of an entry for
+  its program under `[heartbeats]`; the entries there still count, and
+  were not measured again.
+- **A program larger than a part's budget goes over several parts**, each
+  importing the one before. What Lean keeps of a module's theorems is most
+  of a part's memory: `$str_reduction_pred`'s proofs (1.2 MB now, 4.5 MB
+  before) build as one module in 98 s but at 9 GB, and at 7 GB with its
+  theorems elaborated one at a time (`Elab.async false`, 369 s), so it is
+  not that they are elaborated together.
+
+Measured on the spec of case 0 alone, a module of its own, with about 20 s
+of imports in each time:
+
+| | before | after |
+| --- | --- | --- |
+| `concat_csplit` (122 steps, built before) | 142 s, 4.5 GB | not measured again alone |
+| `concat_lprop` (249 steps) | out of 8 GiB at 20M heartbeats | 32 s, 2.6 GB |
+| `bv-smulo-elim` (659 steps) | no end in 50 min | 76 s, 3.8 GB |
+
+With the three, eight of the nine programs that `unproved.toml` listed
+for a time-out build, and the two rules that call them: `concat_split`,
+`concat_lprop`, `bv-smulo-elim`, `bv-smod-eliminate`,
+`bv-rotate-left-eliminate-1`, `$arith_reduction_pred`, `$bv_div_mod_impl`
+and `$str_reduction_pred` (**987 of 1,103**). The ninth,
+`bv-extract-mult-leading-bit`, still times out, at a `pat_same` of its 16
+arguments and in its `rust_eq`: not for its length (107 operations).
+`CpcProofs`'s generated text is 14.1 MB with the ten more programs in it
+(13.3 MB before, without them; `$str_reduction_pred`'s alone were 4.5 MB
+and are 1.2 MB).
+
 ### The generator
 
 - Clippy with warnings as errors fails on the CpcMini crate in one place:
@@ -1086,7 +1170,7 @@ gives `true`, or an error.
 
 | File | Lines | |
 | --- | --- | --- |
-| `Tactic.lean` | 941 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again` (with `goods k` for a loop over states), the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), `split_none` (no case answered, which cannot be), and `good_tac` (an argument the callee assumes OK, see "The state invariant"). |
+| `Tactic.lean` | 1,319 | The tactics that generated lines are written in: one per kind of line of Rust (`store_step`, which carries the facts named, clears the names that no later line uses (`drop_names`) and opens the next `more_<k>` function (`open_more`); see "Long cases: what a step costs"; `pat_unapply`, `pat_destruct`, `pat_same`, `case_done`, `case_again` (with `goods k` for a loop over states), the three of a requirement, `stuck_check`, `case_step`, `body_stuck`, the four of a loop), of groups (in a body and in a loop's round) and conditionals, `pat_is_node`, `pat_native_zero` and `nat_no_match`, `pat_destruct_lit2` (a literal with two fields), `split_none` (no case answered, which cannot be), and `good_tac` (an argument the callee assumes OK, see "The state invariant"). |
 | `Runtime/Frame.lean` | 140 | `enter`, `leave` (with what they do to the budget of calls), the measure of the induction over calls, a program around its body. |
 | `Runtime/Embed.lean` | 152 | The stuck value of a type, `Valid` (`True` for every argument type but terms and proofs, and why), and that a handle stands only for valid terms and proofs. |
 | `Runtime/Ops.lean` | 514 | `literal` and `native_bool` for Booleans, guarded applications (`apply_mk_rep`: `apply` is logos's `__eo_mk_apply`), `tick`, `__eo_requires` and `__eo_eq`, a cached program around its body (`framed_cached`, and `framed_type_cached` for the type cache). |
