@@ -45,7 +45,7 @@ $bv_mk_bitblast_step_shl_rec_step	generated
 $bv_mk_bitblast_step_shr_rec	generated	
 $bv_mk_bitblast_step_shr_rec_step	generated	
 $bv_mk_bitblast_step_var_rec	generated	
-$bv_mk_bitwise_slicing	none	case 0 has eo::list_erase of an operator that is not a constant
+$bv_mk_bitwise_slicing	none	case 0 has a builtin operator
 $bv_mk_bitwise_slicing_rec	generated	
 $bv_ripple_carry_adder_2	generated	
 $bv_shift_add_multiplier	generated	
@@ -961,7 +961,7 @@ $poly_mod_coeffs	generated
 $poly_mul	generated	
 $poly_mul_mon	generated	
 $poly_neg	generated	
-$re_ac_merge	none	case 3 has eo::list_diff of an operator that is not a constant
+$re_ac_merge	none	its generated proof does not build: rust_eq: falls through to four helpers (__eo_l_1 to __eo_l_4); repeat' split leaves 4,010 goals (10 min) and logos_eq_deep's simp reaches the maximum recursion depth; reached once [pinned] gave its spec
 $re_concat_merge	generated	
 $re_flatten	none	it calls $str_flatten, which has no proof
 $re_is_unbound_wildcard	generated	

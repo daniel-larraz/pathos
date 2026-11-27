@@ -88,6 +88,17 @@ good = ["StateOK", ""]
 programs = 40
 bytes = 350000
 
+# Programs whose argument `arg` every call passes one of a few constants
+# (each with its Lean term): their specs take `Pinned [...] x`
+# (proofs-cpc/PathosProofsCpc/Pin.lean), each case is proved once for each
+# constant, and the callers discharge it. A call that passes anything else
+# makes scripts/proofgen fail. $re_ac_merge's operator is re.union or
+# re.inter at each of $derivative's calls, and its list operators need a
+# constant (CPC only).
+[pinned."$re_ac_merge"]
+arg = 0
+ctors = { "re.union" = "Eo.Term.UOp Eo.UserOp.re_union", "re.inter" = "Eo.Term.UOp Eo.UserOp.re_inter" }
+
 [heartbeats]
 # The programs whose proofs take more than the parts' 2,000,000 heartbeats
 # (PART_OPTIONS in scripts/proofgen): each of their theorems is elaborated

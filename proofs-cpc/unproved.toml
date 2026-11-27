@@ -24,3 +24,4 @@
 "$eo_prog_concat_lprop" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (155 KB of proof; reached once eo::list_singleton_intro had a spec)"
 "$eo_prog_concat_split" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (264 KB of proof; reached once eo::list_singleton_intro had a spec)"
 "$eo_prog_bv-smulo-elim" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (1.2 MB of proof; reached once eo::list_repeat had a spec)"
+"$re_ac_merge" = "rust_eq: falls through to four helpers (__eo_l_1 to __eo_l_4); repeat' split leaves 4,010 goals (10 min) and logos_eq_deep's simp reaches the maximum recursion depth; reached once [pinned] gave its spec"

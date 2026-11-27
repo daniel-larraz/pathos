@@ -101,6 +101,12 @@ ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               "ToString": "Store.builtin_spec_to_str", "Log": "Store.builtin_spec_log",
               "Find": "Store.builtin_spec_find"}
 # The builtins whose specs take exactly two arguments.
+# The list builtins whose operator must be a constant (`not_left`): a
+# requirement that pins a parameter used so is split (`needs_pin`)
+PIN_LIST_OPS = {"ListSingletonElim", "ListSingletonIntro", "ListRepeat", "ListLength",
+                "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof", "ListConcat",
+                "ListDiff", "ListInter", "ListMinclude", "ListMeq", "Cons"}
+
 BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv", "Compare",
                 "Log", "Find"}
 # The builtin operators the proofs have: eo::ite as a conditional,
@@ -214,6 +220,17 @@ class Emitter:
 
     def good(self, callee, j, v):
         ok = v in self.l.ok_state or v in self.l.ok_proof
+        pin = self.g.cfg.get("pinned", {}).get(callee)
+        if pin is not None and j == pin["arg"]:
+            # `[pinned]` is a promise about every call: one that passes
+            # anything but one of the constants is an error, not a program
+            # left unproved
+            c = self.l.ctor_of.get(v)
+            if c not in pin["ctors"]:
+                raise SystemExit("proofgen: [pinned] %s: a call passes %s as argument %d,"
+                                 " not one of %s" % (callee, c or "a term that is not a"
+                                                     " constant", j, ", ".join(pin["ctors"])))
+            ok = True
         return "\x01%s\x02%d\x02%s\x03" % (callee, j, "1" if ok else "0")
 
     def store_step(self, spec, v):
@@ -770,8 +787,41 @@ class Emitter:
         self.line("req_same " + a + " " + b + " with h_" + a + " h_" + b
                   + " using " + o["inv"] + " hG")
         self.line("req_stuck h_" + a + " as hq_" + a + " using " + o["inv"] + " hG")
-        r = self.expr(sub[2])
-        self.line("req_done " + self.inv() + " hG with h_" + r + " using hq_" + a + ")")
+        pin = self.pinned(sub[0], sub[1])
+        if pin is not None and not self.needs_pin(sub[2], pin[0]):
+            pin = None
+        if pin is None:
+            r = self.expr(sub[2])
+            self.line("req_done " + self.inv() + " hG with h_" + r + " using hq_" + a + ")")
+        else:
+            # (eo::requires (eo::or (eo::eq f c1) ...) true r): f is one of
+            # the constants where it holds, so r is proved once for each,
+            # with f that constant (pin_split, PathosProofsCpc/Pin.lean)
+            var, consts = pin
+            self.line("have h_pin := (Represents.eq_iff " + o["inv"] + " h_" + a + " h_" + b
+                      + ").mp ‹" + a + " = " + b + "›")
+            self.line("pin_split h_pin")
+            inner = l.indent
+            keep = dict(store=l.store, facts=list(l.facts), pure=list(l.pure),
+                        built=set(l.built), ctor_of=dict(l.ctor_of),
+                        ok_state=set(l.ok_state), ok_proof=set(l.ok_proof),
+                        binary_of=dict(l.binary_of))
+            for c in consts:
+                l.indent = inner
+                self.line("· skip")
+                l.indent = inner + "  "
+                l.ctor_of[var] = c
+                r = self.expr(sub[2])
+                self.line("req_done " + self.inv() + " hG with h_" + r + " using hq_" + a)
+                l.store = keep["store"]
+                l.facts = list(keep["facts"])
+                l.pure = list(keep["pure"])
+                l.built = set(keep["built"])
+                l.ctor_of = dict(keep["ctor_of"])
+                l.ok_state = set(keep["ok_state"])
+                l.ok_proof = set(keep["ok_proof"])
+                l.binary_of = dict(keep["binary_of"])
+            l.lines[-1] += ")"
         l.indent = o["indent"]
         l.facts = list(o["facts"])
         l.pure = list(o["pure"])
@@ -785,6 +835,46 @@ class Emitter:
                                   + words(n.get("helpers", [])))
         self.store_step("h_req_" + v, v)
         return v
+
+    def pinned(self, cond, other):
+        """The variable and the constants of a requirement
+        `(eo::or (eo::eq f c1) ... (eo::eq f ck))` against `true`, which
+        pins the parameter `f` to the constants; None for any other."""
+        if not (other.get("op") == "literal" and other.get("kind") == "BOOLEAN"
+                and other.get("bool") is True):
+            return None
+        leaves = []
+
+        def walk(n):
+            if n.get("op") != "builtin" or len(n.get("sub", [])) != 2:
+                return False
+            if n["eval"] == "Or":
+                return walk(n["sub"][0]) and walk(n["sub"][1])
+            if n["eval"] == "Eq":
+                x, c = n["sub"]
+                if x.get("op") == "param" and c.get("op") == "constant":
+                    leaves.append((x["v"], c["ctor"]))
+                    return True
+            return False
+
+        if not walk(cond) or len({x for x, _ in leaves}) != 1:
+            return None
+        return leaves[0][0], [c for _, c in leaves]
+
+    def needs_pin(self, n, var):
+        """Whether `n` needs the parameter `var` to be a constant: it is the
+        operator of a list builtin, or an argument of a `[pinned]` program.
+        Elsewhere the split would only cost time."""
+        def is_var(x):
+            return x.get("op") == "param" and x.get("v") == var
+        sub = n.get("sub", [])
+        if n.get("op") == "builtin" and n.get("eval") in PIN_LIST_OPS and sub and is_var(sub[0]):
+            return True
+        if n.get("op") == "call":
+            pin = self.g.cfg.get("pinned", {}).get(n["program"])
+            if pin is not None and pin["arg"] < len(sub) and is_var(sub[pin["arg"]]):
+                return True
+        return any(self.needs_pin(x, var) for x in sub if isinstance(x, dict))
 
     # -- patterns -----------------------------------------------------------
 
@@ -927,6 +1017,7 @@ class Generator:
             return proof
         proof = Proof(p["name"])
         proof.lean = p["lean"]
+        proof.trace_id = p["id"]
         if kind == "define":
             proof.why = "a constant, not a program with cases"
             return proof
@@ -938,14 +1029,58 @@ class Generator:
         proof.groups = p["groups"]
         proof.top = p["top"]
         proof.loop = p["loop"]
+        # `[pinned]`: an argument that every call passes one of a few
+        # constants, as the hypothesis `Pinned [c1, ...] x` (Pin.lean) that
+        # the callers discharge; each case is proved once for each constant
+        pin = self.cfg.get("pinned", {}).get(p["name"])
+        pj = pctors = None
+        if pin is not None:
+            pj = pin["arg"]
+            pctors = list(pin["ctors"])
+            proof.good[pj] = "Pinned [" + ", ".join(pin["ctors"][c] for c in pctors) + "]"
+            if proof.loop:
+                proof.why = "a loop with a pinned argument"
         for c, case in enumerate(p["cases"]):
+            if pin is None:
+                l, lines = self.case_lines(proof, c, case, None, None)
+            else:
+                branches = [self.case_lines(proof, c, case, pj, pc) for pc in pctors]
+                l = branches[0][0]
+                lines = ["simp only [Pinned, List.mem_cons, List.not_mem_nil, or_false] at hg_a%d"
+                         % pj, "rcases hg_a%d with " % pj + " | ".join("rfl" for _ in pctors)]
+                for bl, blines in branches:
+                    lines.append("· skip")
+                    lines += ["  " + x for x in blines]
+                    if bl.why and not l.why:
+                        l.why = bl.why
+                    l.calls |= bl.calls
+                    l.proof_ok |= bl.proof_ok
+            e = Emitter(self, l)
+            for j in sorted(l.proof_ok):
+                proof.good[j] = "ProofOK"
+                if proof.loop and not l.why:
+                    e.unsupported("a loop whose proof argument is assumed OK")
+            proof.cases.append(Case(words(l.unfolds), lines, l.why))
+            proof.calls |= l.calls
+            if not proof.why and l.why:
+                proof.why = "case %d has %s" % (c, l.why)
+        self.finish(p, proof, args)
+        return proof
+
+    def case_lines(self, proof, c, case, pj, pc):
+        """The proof of case `c` (its state, its lines), with the pinned
+        argument `pj` (if any) the constant `pc`."""
+        p_lean = proof.lean
+        if True:
             l = Lean()
-            l.case_def = "EoCases." + p["lean"] + ".case_%d" % c
-            l.lits = getattr(self, "literals", {}).get((p["id"], c), {})
+            l.case_def = "EoCases." + p_lean + ".case_%d" % c
+            l.lits = getattr(self, "literals", {}).get((proof.trace_id, c), {})
             l.facts = ["h_a%d" % j for j in range(proof.nargs)]
             l.pure = ["hn_a%d" % j for j in proof.stuck]
             l.ok_state = {"a%d" % j for j in range(proof.nargs)
                           if proof.good[j] == "StateOK"}
+            if pc is not None:
+                l.ctor_of["a%d" % pj] = pc
             e = Emitter(self, l)
             for n in case["patterns"]:
                 e.pattern(n)
@@ -965,15 +1100,9 @@ class Generator:
                 v = e.expr(case["body"])
                 last = "case_done " + e.inv() + " hG with h_" + v
             l.unfolds += case["helpers"]
-            lines = l.lines + [last + " in " + l.case_def + " using" + words(l.pure)]
-            for j in sorted(l.proof_ok):
-                proof.good[j] = "ProofOK"
-                if proof.loop and not l.why:
-                    e.unsupported("a loop whose proof argument is assumed OK")
-            proof.cases.append(Case(words(l.unfolds), lines, l.why))
-            proof.calls |= l.calls
-            if not proof.why and l.why:
-                proof.why = "case %d has %s" % (c, l.why)
+            return l, l.lines + [last + " in " + l.case_def + " using" + words(l.pure)]
+
+    def finish(self, p, proof, args):
         if not proof.why:
             # where no case applies, lemma C gives the stuck value for
             # terms, proofs and native Booleans, otherwise `default`
@@ -993,7 +1122,6 @@ class Generator:
         proof.cache = {"none": "", "program": str(cache.get("id")),
                        "eo_type": "4294967296", "smt_type": "4294967297"}[cache["kind"]]
         proof.type_kind = {"eo_type": "Eunoia", "smt_type": "Smt"}.get(cache["kind"], "")
-        return proof
 
     def run(self):
         reached = {}
@@ -1038,7 +1166,9 @@ class Generator:
                 ok = line[m2 + 1] == "1"
                 gl = good_of.get(callee)
                 g = gl[j] if gl is not None and j < len(gl) else ""
-                if g:
+                if g.startswith("Pinned "):
+                    out += " (by simp [Pinned])"
+                elif g:
                     out += " (by good_tac)"
                     if not ok and reason is not None and not reason[0]:
                         reason[0] = ("a state that may not be OK" if g == "StateOK"

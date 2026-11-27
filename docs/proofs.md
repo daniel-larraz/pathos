@@ -338,6 +338,23 @@ binaries that wide, so a spec of strings only would prove none of them.
 Both wait on a fix in Ethos (`cvc5/ethos#296` and `#297`, an error past
 `u32::MAX`) and a re-pin.
 
+**A requirement that pins an operator** (`Pin.lean`, 2026-11-27). A
+list builtin needs its operator to be a constant (`not_left`). Some
+programs instead take the operator as a parameter `f` and require
+`(eo::or (eo::eq f c1) ... (eo::eq f ck))` to be true. Where the body
+uses `f` as an operator (`needs_pin`), proofgen splits on which constant
+it is (`pin_split`) and proves the rest once per constant. A program
+whose operator is an argument that every caller passes as one of
+finitely many constants is listed under `[pinned]` in `proofgen.toml`.
+Its spec then takes `Pinned [c1, ..., ck] x` as a hypothesis, and each
+caller discharges it with `by simp [Pinned]`. A call that passes
+anything else stops proofgen with an error; the program is never
+dropped silently. `$re_ac_merge` is the one so listed (`$derivative`
+passes `re.union` or `re.inter`). Its case specs built in a trial run,
+but its `rust_eq` does not: logos falls through four helpers, and
+splitting them gives 4,010 goals (`unproved.toml`). Proving it needs a
+`rust_eq` that goes helper by helper, which is still to do.
+
 The second step was planned as lemmas generated per constructor. It is
 hand-written instead, and holds for both calculi: every proof goes by
 cases on the constructors with one tactic for all of them. What makes that
