@@ -1138,6 +1138,14 @@ In the full CPC (484 of 1,103), `$eo_state_proven_nth` and
 - `$eo_typeof` is past its selector case and stops at a call of
   `$eo_typeof_@from_bools`.
 
+Since then (2026-11-27, 958 of 1,103): `$eo_mk_premise_list` is proved,
+pinned to `and` (see "A requirement that pins an operator"). `$eo_to_smt`
+and its three waiting programs are proved, with `$smtx_typeof` and its
+bindings and repeat. That took specs of the natives `mk_rational` (an
+error for a zero denominator, where logos divides by zero as 0),
+`const_id` (as `uconst_id`, with `@c.`) and `zmult`. It also took `Valid`
+of SMT bindings (`PathosProofsCpc/Valid.lean`).
+
 The CPC crate and its proofs are now generated from logos `bdcbd95f`,
 which has #521, so the selector's type is guarded in both, as in CpcMini.
 They are still not built (stage 5).

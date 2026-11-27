@@ -743,7 +743,7 @@ $eo_push_proven_check	generated
 $eo_state_is_closed	generated	
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	generated	
-$eo_to_smt	none	case 170 has the native operation mk_rational
+$eo_to_smt	generated	
 $eo_to_smt_apply	generated	
 $eo_to_smt_array_deq_diff	generated	
 $eo_to_smt_bindings_snoc	generated	
@@ -751,8 +751,8 @@ $eo_to_smt_bv_size	generated
 $eo_to_smt_datatype	generated	
 $eo_to_smt_datatype_cons	generated	
 $eo_to_smt_datatype_decl	generated	
-$eo_to_smt_distinct	none	it calls $eo_to_smt, which has no proof
-$eo_to_smt_distinct_pairs	none	it calls $eo_to_smt, which has no proof
+$eo_to_smt_distinct	generated	
+$eo_to_smt_distinct_pairs	generated	
 $eo_to_smt_exists	generated	
 $eo_to_smt_lambda_curry	generated	
 $eo_to_smt_nat	generated	
@@ -766,14 +766,14 @@ $eo_to_smt_set_elem_type	generated
 $eo_to_smt_sets_deq_diff	generated	
 $eo_to_smt_tester	generated	
 $eo_to_smt_tuple_decl	generated	
-$eo_to_smt_tuple_prepend	none	it calls $smtx_typeof, which has no proof
+$eo_to_smt_tuple_prepend	generated	
 $eo_to_smt_tuple_prepend_of_type	generated	
 $eo_to_smt_tuple_prepend_rec	generated	
 $eo_to_smt_tuple_select	generated	
 $eo_to_smt_tuple_update	generated	
 $eo_to_smt_type	generated	
 $eo_to_smt_type_tuple	generated	
-$eo_to_smt_typed_list_elem_type	none	it calls $eo_to_smt, which has no proof
+$eo_to_smt_typed_list_elem_type	generated	
 $eo_to_smt_updater	generated	
 $eo_to_smt_updater_rec	generated	
 $eo_typeof	generated	
@@ -1003,13 +1003,13 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	it calls $smtx_typeof_repeat, which has no proof
+$smtx_typeof	generated	
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_arith_overload_op_1	generated	
 $smtx_typeof_arith_overload_op_2	generated	
 $smtx_typeof_arith_overload_op_2_ret	generated	
-$smtx_typeof_bindings	none	it calls $smtx_typeof, which has no proof
+$smtx_typeof_bindings	generated	
 $smtx_typeof_bv_op_1	generated	
 $smtx_typeof_bv_op_1_ret	generated	
 $smtx_typeof_bv_op_2	generated	
@@ -1024,7 +1024,7 @@ $smtx_typeof_ite	generated
 $smtx_typeof_map_diff	generated	
 $smtx_typeof_re.^	generated	
 $smtx_typeof_re.loop	generated	
-$smtx_typeof_repeat	none	case 0 has the native operation zmult
+$smtx_typeof_repeat	generated	
 $smtx_typeof_rotate_left	generated	
 $smtx_typeof_rotate_right	generated	
 $smtx_typeof_select	generated	

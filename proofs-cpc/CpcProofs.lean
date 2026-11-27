@@ -65,6 +65,10 @@ public import CpcProofs.Part62
 public import CpcProofs.Part63
 public import CpcProofs.Part64
 public import CpcProofs.Part65
+public import CpcProofs.Part66
+public import CpcProofs.Part67
+public import CpcProofs.Part68
+public import CpcProofs.Part69
 public import CpcChecker
 public import Cpc.Logos
 import all Cpc.Logos
@@ -747,6 +751,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fstate_5fis_5fclosed_spec n ih,
       eo__24eo_5fstate_5fis_5frefutation_spec n ih,
       eo__24eo_5fstate_5fproven_5fnth_spec n ih,
+      eo__24eo_5fto_5fsmt_spec n ih,
       eo__24eo_5fto_5fsmt_5fapply_spec n ih,
       eo__24eo_5fto_5fsmt_5farray_5fdeq_5fdiff_spec n ih,
       eo__24eo_5fto_5fsmt_5fbindings_5fsnoc_spec n ih,
@@ -754,6 +759,8 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fto_5fsmt_5fdatatype_spec n ih,
       eo__24eo_5fto_5fsmt_5fdatatype_5fcons_spec n ih,
       eo__24eo_5fto_5fsmt_5fdatatype_5fdecl_spec n ih,
+      eo__24eo_5fto_5fsmt_5fdistinct_spec n ih,
+      eo__24eo_5fto_5fsmt_5fdistinct_5fpairs_spec n ih,
       eo__24eo_5fto_5fsmt_5fexists_spec n ih,
       eo__24eo_5fto_5fsmt_5flambda_5fcurry_spec n ih,
       eo__24eo_5fto_5fsmt_5fnat_spec n ih,
@@ -767,12 +774,14 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fto_5fsmt_5fsets_5fdeq_5fdiff_spec n ih,
       eo__24eo_5fto_5fsmt_5ftester_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fdecl_spec n ih,
+      eo__24eo_5fto_5fsmt_5ftuple_5fprepend_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5fof_5ftype_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fprepend_5frec_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fselect_spec n ih,
       eo__24eo_5fto_5fsmt_5ftuple_5fupdate_spec n ih,
       eo__24eo_5fto_5fsmt_5ftype_spec n ih,
       eo__24eo_5fto_5fsmt_5ftype_5ftuple_spec n ih,
+      eo__24eo_5fto_5fsmt_5ftyped_5flist_5felem_5ftype_spec n ih,
       eo__24eo_5fto_5fsmt_5fupdater_spec n ih,
       eo__24eo_5fto_5fsmt_5fupdater_5frec_spec n ih,
       eo__24eo_5ftypeof_spec n ih,
@@ -978,11 +987,13 @@ theorem specs (n : Nat) : Specs n := by
       eo__24smtx_5ftype_5fwf_spec n ih,
       eo__24smtx_5ftype_5fwf_5fcomponent_spec n ih,
       eo__24smtx_5ftype_5fwf_5frec_spec n ih,
+      eo__24smtx_5ftypeof_spec n ih,
       eo__24smtx_5ftypeof_5f_3d_spec n ih,
       eo__24smtx_5ftypeof_5fapply_spec n ih,
       eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f1_spec n ih,
       eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_spec n ih,
       eo__24smtx_5ftypeof_5farith_5foverload_5fop_5f2_5fret_spec n ih,
+      eo__24smtx_5ftypeof_5fbindings_spec n ih,
       eo__24smtx_5ftypeof_5fbv_5fop_5f1_spec n ih,
       eo__24smtx_5ftypeof_5fbv_5fop_5f1_5fret_spec n ih,
       eo__24smtx_5ftypeof_5fbv_5fop_5f2_spec n ih,
@@ -997,6 +1008,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24smtx_5ftypeof_5fmap_5fdiff_spec n ih,
       eo__24smtx_5ftypeof_5fre_2e_5e_spec n ih,
       eo__24smtx_5ftypeof_5fre_2eloop_spec n ih,
+      eo__24smtx_5ftypeof_5frepeat_spec n ih,
       eo__24smtx_5ftypeof_5frotate_5fleft_spec n ih,
       eo__24smtx_5ftypeof_5frotate_5fright_spec n ih,
       eo__24smtx_5ftypeof_5fselect_spec n ih,

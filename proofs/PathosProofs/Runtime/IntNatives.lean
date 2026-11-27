@@ -298,6 +298,21 @@ theorem Store.native_spec_zplus (s : Store) (args : Slice Term) {a b : Term} {x 
     core.result.Result.Insts.CoreOpsTry.branch, num.Integer.add_spec, num.Integer.toInt_ofInt]
   exact Store.raw_int_spec s (x + y) hinv h64
 
+theorem Store.native_spec_zmult (s : Store) (args : Slice Term) {a b : Term} {x y : Int}
+    (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.Zmult args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_zmult x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
+  simp only [slice_index_one hargs, Std.bind_ok]
+  unfold native.Store.native_int_binary
+  simp only [Store.raw_int_rep ha, Store.raw_int_rep hb, Std.bind_ok,
+    core.result.Result.Insts.CoreOpsTry.branch, num.Integer.mul_spec, num.Integer.toInt_ofInt]
+  exact Store.raw_int_spec s (x * y) hinv h64
+
 theorem Store.native_spec_nateq (s : Store) (args : Slice Term) {a b : Term} {x y : Nat}
     (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
     (hinv : s.Inv) (h64 : Platform64) :
@@ -375,5 +390,28 @@ logos's `native_z_max_code_point`; the generated code builds its numeral
 from `MAX_CODE_POINT`. -/
 theorem max_code_point_int : ((MAX_CODE_POINT.val : Nat) : Int) = 196607 := by
   rw [max_code_point_eq]; rfl
+
+/-- `mk_rational` of two integers: their quotient, and an error for a zero
+denominator (`Rational::from_integers` gives none), where logos's division
+gives 0. -/
+theorem Store.native_spec_mk_rational (s : Store) (args : Slice Term) {a b : Term} {x y : Int}
+    (hargs : args.val = [a, b]) (ha : Represents.rep s a x) (hb : Represents.rep s b y)
+    (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.MkRational args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_mk_rational x y)
+      | core.result.Result.Err _ => True ⦄div := by
+  rw [native_op_two s _ args hargs rfl _ (by rw [native.Store.native_op])]
+  simp only [slice_index_one hargs, Std.bind_ok]
+  unfold native.Store.native_mk_rational
+  simp only [Store.raw_int_rep ha, Store.raw_int_rep hb, Std.bind_ok,
+    core.result.Result.Insts.CoreOpsTry.branch, num.Rational.from_integers_spec,
+    num.Integer.toInt_ofInt]
+  by_cases hy : y = 0
+  · simp [hy, WP.dspec_ok, Store.Grows.refl, hinv]
+  · simp only [hy, if_false]
+    simp only [Eunoia.native_mk_rational]
+    convert Store.raw_rat_spec s ((x : ℚ) / y) hinv h64 using 0
 
 end pathos_compiled_checker

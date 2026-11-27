@@ -76,7 +76,9 @@ SPECIFIED = {"teq": "teq", "Teq": "Teq", "streq": "streq", "and": "and",
              "int.pow2": "int_pow2", "int.to_nat": "int_to_nat",
              "Int.toNat": "int_to_nat", "nat.succ": "nat_succ",
              "uconst_id": "uconst_id", "zplus": "zplus", "nateq": "nateq",
-             "nat.to_int": "nat_to_int", "zlt": "zlt", "zneg": "zneg"}
+             "nat.to_int": "nat_to_int", "zlt": "zlt", "zneg": "zneg",
+             "mk_rational": "mk_rational", "const_id": "const_id",
+             "zmult": "zmult"}
 # eo::eq, eo::len, eo::and and eo::or, by their specs (Runtime/Builtins.lean).
 ARGS_SPECS = {"Eq": "Store.builtin_spec_eq", "Length": "Store.builtin_spec_len",
               "And": "Store.builtin_spec_and", "Or": "Store.builtin_spec_or",

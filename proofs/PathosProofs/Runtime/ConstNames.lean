@@ -85,6 +85,14 @@ theorem native_uconst_id_codes (i : Nat) :
   rw [toString_codes]
   rfl
 
+/-- logos's name of the `i`-th constant. -/
+theorem native_const_id_codes (i : Nat) :
+    Eunoia.native_const_id i = [64, 99, 46] ++ (digitsRev i).reverse := by
+  unfold Eunoia.native_const_id Eunoia.native_string_lit
+  dsimp only
+  rw [toString_codes]
+  rfl
+
 /-! ## The runtime's loops -/
 
 /-- The digit loop: on `m ≥ 0`, the digits so far and then `m`'s, the last
@@ -289,6 +297,50 @@ theorem Store.native_spec_uconst_id (s : Store) (args : Slice Term) {a : Term} {
     simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
     apply Store.raw_str_vec_spec s es (Eunoia.native_uconst_id x) _ hinv h64
     rw [hr, native_uconst_id_codes]
+    rfl
+
+/-- `const_id` gives a handle of logos's name of the constant. -/
+theorem Store.native_spec_const_id (s : Store) (args : Slice Term) {a : Term} {x : Nat}
+    (hargs : args.val = [a]) (ha : Represents.rep s a x) (hinv : s.Inv) (h64 : Platform64) :
+    native.Store.native_op s native.NativeOp.ConstId args ⦃ r s' =>
+      s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (Eunoia.native_const_id x)
+      | core.result.Result.Err _ => True ⦄div := by
+  have hlen : Slice.len args = 1#usize := by
+    apply UScalar.eq_of_val_eq; simp [Slice.len, hargs]
+  have h0 : Slice.index_usize args 0#usize = ok a := by simp [Slice.index_usize, hargs]
+  rw [native_op_n s _ args 1#usize hlen rfl h0 _ (by rw [native.Store.native_op])]
+  unfold native.Store.native_const_id
+  simp only [Store.raw_int_rep_nat ha, Std.bind_ok, core.result.Result.Insts.CoreOpsTry.branch]
+  obtain ⟨sg, hsg, hsv⟩ := num.Integer.sgn_spec (num.Integer.ofInt x)
+  rw [num.Integer.toInt_ofInt] at hsv
+  rw [hsg]
+  have hnn : ¬ sg < 0#i32 := by
+    intro hlt
+    have : sg.val < 0 := by scalar_tac
+    rw [hsv] at this
+    rcases int_sign_cases (x : Int) with ⟨h1, _⟩ | ⟨_, h⟩ | ⟨_, h⟩
+    · omega
+    · rw [h] at this; omega
+    · rw [h] at this; omega
+  simp only [hnn, ite_false, Std.bind_ok]
+  have heq : native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq native.NativeOp.ConstId
+      native.NativeOp.UconstId = ok false := by
+    simp [native.NativeOp.Insts.CoreCmpPartialEqNativeOp.eq, native.NativeOp.read_discriminant]
+  rw [heq]
+  simp only [Std.bind_ok]
+  apply WP.dspec_bind (constant_name_spec false (num.Integer.ofInt x) x (num.Integer.toInt_ofInt _))
+  intro r hr
+  cases r with
+  | Err e =>
+    simp [core.result.Result.Insts.CoreOpsTry.branch,
+      core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual]
+    exact ⟨hinv, Store.Grows.refl s⟩
+  | Ok es =>
+    simp only [core.result.Result.Insts.CoreOpsTry.branch, Std.bind_ok]
+    apply Store.raw_str_vec_spec s es (Eunoia.native_const_id x) _ hinv h64
+    rw [hr, native_const_id_codes]
     rfl
 
 end pathos_compiled_checker
