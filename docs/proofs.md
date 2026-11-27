@@ -252,7 +252,8 @@ and helpers that type their arguments).
 - **Lists** (`Lists.lean`): `eo::list_len`, `list_rev`, `list_nth`,
   `list_find`, `list_erase`, `list_setof`, `list_singleton_elim`,
   `list_singleton_intro` (for an operator whose nil passes its own nil test,
-  `NilSelf`, which logos requires and the runtime does not test), and, for an
+  `NilSelf`, which logos requires and the runtime does not test),
+  `list_repeat` (copies onto the nil, stuck where the nil is), and, for an
   operator with one nil (`UniqueNil`, see "`eo::list_concat` and the nils
   of an operator"), `list_concat`, `list_diff`, `list_inter` and
   `list_minclude` and `list_meq`. Each
@@ -306,6 +307,20 @@ rules `concat_eq`, `concat_unify` and `concat_csplit`. Two more it reached,
 in 50 minutes (`proofs-cpc/unproved.toml`). Its other users, through `$str_flatten`, `$re_unflatten_str`
 and `$seq_eval`, also take `eo::list_concat` of `str.++`, whose nil test
 takes more than one term (above).
+
+`eo::list_repeat` brought 7 (947): `bv-repeat-elim`, `bv-umulo-elim`,
+`int-to-bv-elim`, `ubv-to-int-elim`, `re-loop-elim`, and
+`$bv_shift_add_multiplier` and `$bv_mk_bitblast_step_mul`. The spec of
+case 0 of `bv-smulo-elim` (1.2 MB of proof) does not finish in 50 minutes
+alone at 20M heartbeats (`unproved.toml`). `ubv-to-int-elim` needed
+`req_stuck` to rewrite a stuck requirement whole (`requires_stuck_of`):
+its third argument depends on proofs that the first is not stuck.
+
+`eo::extract` waits on a decision (2026-11-26): on a string of `2^32` code
+points or more, the runtime (as Ethos, which asserts it does not happen)
+takes an index past `2^32` as 0, where logos takes it as it is. Binaries
+agree (the count of bits never wraps, as the upper index is below the
+width).
 
 The second step was planned as lemmas generated per constructor. It is
 hand-written instead, and holds for both calculi: every proof goes by

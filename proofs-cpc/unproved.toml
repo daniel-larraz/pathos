@@ -23,3 +23,4 @@
 "$str_arith_entail_is_approx" = "falls through to helpers (__eo_l_<k>); logos_eq_deep leaves goals unsolved, at 4,700,000 heartbeats: a test `__eo_eq t x` that a hypothesis `¬x = t` decides, and a stuck result against a recursive call (reached once eo::cmp had a spec)"
 "$eo_prog_concat_lprop" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (155 KB of proof; reached once eo::list_singleton_intro had a spec)"
 "$eo_prog_concat_split" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (264 KB of proof; reached once eo::list_singleton_intro had a spec)"
+"$eo_prog_bv-smulo-elim" = "the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (1.2 MB of proof; reached once eo::list_repeat had a spec)"

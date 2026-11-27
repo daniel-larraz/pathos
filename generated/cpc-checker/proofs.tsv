@@ -33,13 +33,13 @@ $bv_const_to_bitlist_rec	none	case 1 has a builtin operator
 $bv_div_mod_impl	none	its generated proof does not build: the spec of case 2: times out (whnf, 2,000,000 heartbeats); at 20,000,000 its part runs out of 8G of memory (with $arith_reduction_pred, 11 min)
 $bv_eval_concat	none	case 0 has a builtin operator
 $bv_get_first_const_child	generated	
-$bv_mk_bitblast_step	none	case 14 has a builtin operator
+$bv_mk_bitblast_step	none	case 19 has a builtin operator
 $bv_mk_bitblast_step_add	generated	
 $bv_mk_bitblast_step_bitwise	none	its generated proof does not build: rust_eq: logos_eq's simp reaches the maximum recursion depth; reached once $eo_typeof had a proof
 $bv_mk_bitblast_step_concat	generated	
 $bv_mk_bitblast_step_eq_rec	generated	
 $bv_mk_bitblast_step_ite	generated	
-$bv_mk_bitblast_step_mul	none	it calls $bv_shift_add_multiplier, which has no proof
+$bv_mk_bitblast_step_mul	generated	
 $bv_mk_bitblast_step_shl_rec	generated	
 $bv_mk_bitblast_step_shl_rec_step	generated	
 $bv_mk_bitblast_step_shr_rec	generated	
@@ -48,7 +48,7 @@ $bv_mk_bitblast_step_var_rec	generated
 $bv_mk_bitwise_slicing	none	case 0 has eo::list_erase of an operator that is not a constant
 $bv_mk_bitwise_slicing_rec	generated	
 $bv_ripple_carry_adder_2	generated	
-$bv_shift_add_multiplier	none	case 0 has a builtin operator
+$bv_shift_add_multiplier	generated	
 $bv_shift_add_multiplier_rec	generated	
 $bv_shift_add_multiplier_rec_step	generated	
 $bv_smulo_elim_rec	generated	
@@ -290,7 +290,7 @@ $eo_prog_bv-or-simplify-1	none	case 0 has eo::list_concat of bvor, whose nil tes
 $eo_prog_bv-or-simplify-2	none	case 0 has eo::list_concat of bvor, whose nil test takes more than one term (logos takes lists that end in different nils; Ethos and the runtime do not)
 $eo_prog_bv-redand-eliminate	generated	
 $eo_prog_bv-redor-eliminate	generated	
-$eo_prog_bv-repeat-elim	none	case 0 has a builtin operator
+$eo_prog_bv-repeat-elim	generated	
 $eo_prog_bv-rotate-left-eliminate-1	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats) and simp exceeds its steps; logos_eq does not prove the case form (binary literals, milestone 6)
 $eo_prog_bv-rotate-left-eliminate-2	generated	
 $eo_prog_bv-rotate-right-eliminate-1	generated	
@@ -314,7 +314,7 @@ $eo_prog_bv-sign-extend-ult-const-4	generated
 $eo_prog_bv-sle-eliminate	generated	
 $eo_prog_bv-sle-self	generated	
 $eo_prog_bv-smod-eliminate	none	its generated proof does not build: the spec of case 0: times out (whnf, 2,000,000 heartbeats); at 20,000,000 it runs out of 8G of memory (13 min)
-$eo_prog_bv-smulo-elim	none	case 0 has a builtin operator
+$eo_prog_bv-smulo-elim	none	its generated proof does not build: the spec of case 0 does not finish in 50 minutes, alone at 20,000,000 heartbeats (1.2 MB of proof; reached once eo::list_repeat had a spec)
 $eo_prog_bv-srem-eliminate	generated	
 $eo_prog_bv-ssubo-eliminate	generated	
 $eo_prog_bv-sub-eliminate	generated	
@@ -335,7 +335,7 @@ $eo_prog_bv-ult-ones	generated
 $eo_prog_bv-ult-self	generated	
 $eo_prog_bv-ult-zero-1	generated	
 $eo_prog_bv-ult-zero-2	generated	
-$eo_prog_bv-umulo-elim	none	case 0 has a builtin operator
+$eo_prog_bv-umulo-elim	generated	
 $eo_prog_bv-urem-one	generated	
 $eo_prog_bv-urem-pow2-not-one	generated	
 $eo_prog_bv-urem-self	generated	
@@ -423,7 +423,7 @@ $eo_prog_false_intro	generated
 $eo_prog_ho_cong	generated	
 $eo_prog_implies_elim	generated	
 $eo_prog_instantiate	generated	
-$eo_prog_int-to-bv-elim	none	case 0 has a builtin operator
+$eo_prog_int-to-bv-elim	generated	
 $eo_prog_int_tight_lb	generated	
 $eo_prog_int_tight_ub	generated	
 $eo_prog_ite-else-false	generated	
@@ -487,7 +487,7 @@ $eo_prog_re-inter-all	generated
 $eo_prog_re-inter-cstring	generated	
 $eo_prog_re-inter-cstring-neg	generated	
 $eo_prog_re-inter-inclusion	none	it calls $re_flatten, which has no proof
-$eo_prog_re-loop-elim	none	case 0 has a builtin operator
+$eo_prog_re-loop-elim	generated	
 $eo_prog_re-loop-neg	generated	
 $eo_prog_re-loop-star	generated	
 $eo_prog_re-opt-elim	generated	
@@ -724,7 +724,7 @@ $eo_prog_trans	generated
 $eo_prog_true_elim	generated	
 $eo_prog_true_intro	generated	
 $eo_prog_trust	generated	
-$eo_prog_ubv-to-int-elim	none	case 0 has a builtin operator
+$eo_prog_ubv-to-int-elim	generated	
 $eo_prog_ubv_to_int_range	generated	
 $eo_prog_uf-bv2nat-geq-elim	generated	
 $eo_prog_uf-bv2nat-int2bv	generated	

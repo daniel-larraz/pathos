@@ -642,7 +642,12 @@ macro_rules
         simp only [decide_eq_true_eq] at hq0
         simp only [Store.stuck_eq, Std.bind_ok, WP.dspec_ok, WP.uncurry'_pair]
         refine ⟨$hinv, $hG, ?_⟩
-        simpa [requires_ite, hq0] using Store.Inv.rep_stuck $hinv)
+        first
+          -- the whole requirement at once: rewriting with `hq0` alone
+          -- fails when the third argument depends on proofs that the
+          -- stuck test's term is not stuck
+          | (rw [requires_stuck_of hq0]; exact Store.Inv.rep_stuck $hinv)
+          | simpa [requires_ite, hq0] using Store.Inv.rep_stuck $hinv)
       rename_i hq0
       simp only [decide_eq_true_eq] at hq0
       have $hq:ident := hq0

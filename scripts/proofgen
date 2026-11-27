@@ -103,7 +103,7 @@ BINARY_SPECS = {"Add", "Mul", "Gt", "ToBin", "Pow", "IntDiv", "IntMod", "RatDiv"
 # eo::requires as a function of its own, and those with specs.
 SUPPORTED_OPS = {"Requires", "Eq", "IfThenElse", "Length", "And", "Nil", "Cons",
                  "TypeOf", "DtConstructors", "DtSelectors", "ListSingletonElim",
-                 "ListSingletonIntro", "ListConcat", "ListLength",
+                 "ListSingletonIntro", "ListRepeat", "ListConcat", "ListLength",
                  "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof",
                  "ListDiff", "ListInter", "ListMinclude", "ListMeq"} | set(ARGS_SPECS)
 # The operators that rust-meta compiles as a call of a program of the
@@ -608,6 +608,23 @@ class Emitter:
                             + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
                             + " (by not_left_tac) (by nil_self_tac)", v)
             self.l.calls.update([lists["is_nil"], typeof, lists["nil"]])
+            return v
+        if k == "ListRepeat":
+            # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator
+            # constant that does not nest to the left, an element and a
+            # count; the runtime finds the nil with $eo_typeof and $eo_nil
+            vs = [self.expr(s) for s in sub]
+            st, inv, rem = self.st(), self.inv(), self.rem()
+            if len(vs) != 3 or not self.not_left(vs[0]):
+                self.unsupported("eo::list_repeat of an operator that is not a constant")
+            typeof = BUILTIN_PROGRAMS["TypeOf"]
+            self.line("step as ⟨e_" + v + ", he_" + v + "⟩")
+            self.store_step("Store.builtin_spec_list_repeat n ih." + ident(typeof)
+                            + " ih." + ident(lists["nil"])
+                            + " " + st + " e_" + v + " (by rw [he_" + v + "]; rfl)"
+                            + words("h_" + x for x in vs) + " " + inv + " h64 " + rem
+                            + " (by not_left_tac)", v)
+            self.l.calls.update([typeof, lists["nil"]])
             return v
         if k in ("ListLength", "ListRev", "ListNth", "ListFind", "ListErase", "ListSetof"):
             # proofs-cpc/PathosProofsCpc/Lists.lean (CPC only): an operator

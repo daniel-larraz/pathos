@@ -89,6 +89,11 @@ theorem requires_stuck (t3 r : Eo.Term) :
     Eo.__eo_requires Eo.Term.Stuck t3 r = Eo.Term.Stuck := by
   simp [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not]
 
+/-- A requirement whose first argument is stuck, without rewriting that
+argument elsewhere (the third may depend on proofs that it is not). -/
+theorem requires_stuck_of {a b c : Eo.Term} (h : a = Eo.Term.Stuck) :
+    Eo.__eo_requires a b c = Eo.Term.Stuck := h ▸ requires_stuck b c
+
 theorem requires_eq (y r : Eo.Term) (h : y ≠ Eo.Term.Stuck) : Eo.__eo_requires y y r = r := by
   simp [Eo.__eo_requires, SmtEval.native_ite, Eo.native_teq, SmtEval.native_not, h]
 

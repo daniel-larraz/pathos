@@ -64,6 +64,7 @@ public import $PROOFS$.Part61
 public import $PROOFS$.Part62
 public import $PROOFS$.Part63
 public import $PROOFS$.Part64
+public import $PROOFS$.Part65
 public import $CHECKER$
 public import $CALC$.Logos
 import all $CALC$.Logos
@@ -131,6 +132,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24bv_5fmk_5fbitblast_5fstep_5fconcat_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5feq_5frec_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fite_spec n ih,
+      eo__24bv_5fmk_5fbitblast_5fstep_5fmul_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fshl_5frec_5fstep_spec n ih,
       eo__24bv_5fmk_5fbitblast_5fstep_5fshr_5frec_spec n ih,
@@ -138,6 +140,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24bv_5fmk_5fbitblast_5fstep_5fvar_5frec_spec n ih,
       eo__24bv_5fmk_5fbitwise_5fslicing_5frec_spec n ih,
       eo__24bv_5fripple_5fcarry_5fadder_5f2_spec n ih,
+      eo__24bv_5fshift_5fadd_5fmultiplier_spec n ih,
       eo__24bv_5fshift_5fadd_5fmultiplier_5frec_spec n ih,
       eo__24bv_5fshift_5fadd_5fmultiplier_5frec_5fstep_spec n ih,
       eo__24bv_5fsmulo_5felim_5frec_spec n ih,
@@ -345,6 +348,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dnot_2dxor_spec n ih,
       eo__24eo_5fprog_5fbv_2dredand_2deliminate_spec n ih,
       eo__24eo_5fprog_5fbv_2dredor_2deliminate_spec n ih,
+      eo__24eo_5fprog_5fbv_2drepeat_2delim_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dleft_2deliminate_2d2_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2drotate_2dright_2deliminate_2d2_spec n ih,
@@ -385,6 +389,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fbv_2dult_2dself_spec n ih,
       eo__24eo_5fprog_5fbv_2dult_2dzero_2d1_spec n ih,
       eo__24eo_5fprog_5fbv_2dult_2dzero_2d2_spec n ih,
+      eo__24eo_5fprog_5fbv_2dumulo_2delim_spec n ih,
       eo__24eo_5fprog_5fbv_2durem_2done_spec n ih,
       eo__24eo_5fprog_5fbv_2durem_2dpow2_2dnot_2done_spec n ih,
       eo__24eo_5fprog_5fbv_2durem_2dself_spec n ih,
@@ -460,6 +465,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fho_5fcong_spec n ih,
       eo__24eo_5fprog_5fimplies_5felim_spec n ih,
       eo__24eo_5fprog_5finstantiate_spec n ih,
+      eo__24eo_5fprog_5fint_2dto_2dbv_2delim_spec n ih,
       eo__24eo_5fprog_5fint_5ftight_5flb_spec n ih,
       eo__24eo_5fprog_5fint_5ftight_5fub_spec n ih,
       eo__24eo_5fprog_5fite_2delse_2dfalse_spec n ih,
@@ -518,6 +524,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5fre_2dinter_2dall_spec n ih,
       eo__24eo_5fprog_5fre_2dinter_2dcstring_spec n ih,
       eo__24eo_5fprog_5fre_2dinter_2dcstring_2dneg_spec n ih,
+      eo__24eo_5fprog_5fre_2dloop_2delim_spec n ih,
       eo__24eo_5fprog_5fre_2dloop_2dneg_spec n ih,
       eo__24eo_5fprog_5fre_2dloop_2dstar_spec n ih,
       eo__24eo_5fprog_5fre_2dopt_2delim_spec n ih,
@@ -720,6 +727,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5fprog_5ftrue_5felim_spec n ih,
       eo__24eo_5fprog_5ftrue_5fintro_spec n ih,
       eo__24eo_5fprog_5ftrust_spec n ih,
+      eo__24eo_5fprog_5fubv_2dto_2dint_2delim_spec n ih,
       eo__24eo_5fprog_5fubv_5fto_5fint_5frange_spec n ih,
       eo__24eo_5fprog_5fuf_2dbv2nat_2dgeq_2delim_spec n ih,
       eo__24eo_5fprog_5fuf_2dbv2nat_2dint2bv_spec n ih,
