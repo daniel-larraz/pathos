@@ -59,6 +59,8 @@ types = [
   '($native_embed_smt "SmtDatatypeDecl")',
   '$eo_Cmd',
   '$smt_Term',
+  # CPC only (proofs-cpc/PathosProofsCpc/Valid.lean)
+  '($native_embed_smt "SmtBindings")',
 ]
 
 # The programs that rust-meta compiles to functions of the runtime, whose

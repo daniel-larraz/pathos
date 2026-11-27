@@ -744,9 +744,9 @@ $eo_state_is_closed	generated
 $eo_state_is_refutation	generated	
 $eo_state_proven_nth	generated	
 $eo_to_smt	none	case 170 has the native operation mk_rational
-$eo_to_smt_apply	none	it calls $eo_to_smt_bindings_snoc, which has no proof
+$eo_to_smt_apply	generated	
 $eo_to_smt_array_deq_diff	generated	
-$eo_to_smt_bindings_snoc	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$eo_to_smt_bindings_snoc	generated	
 $eo_to_smt_bv_size	generated	
 $eo_to_smt_datatype	generated	
 $eo_to_smt_datatype_cons	generated	
@@ -1003,13 +1003,13 @@ $smtx_ret_typeof_sel_rec	generated
 $smtx_type_wf	generated	
 $smtx_type_wf_component	generated	
 $smtx_type_wf_rec	generated	
-$smtx_typeof	none	it calls $smtx_typeof_bindings, which has no proof
+$smtx_typeof	none	it calls $smtx_typeof_repeat, which has no proof
 $smtx_typeof_=	generated	
 $smtx_typeof_apply	generated	
 $smtx_typeof_arith_overload_op_1	generated	
 $smtx_typeof_arith_overload_op_2	generated	
 $smtx_typeof_arith_overload_op_2_ret	generated	
-$smtx_typeof_bindings	none	an argument of a type that has no Valid in the proofs yet (lemma C)
+$smtx_typeof_bindings	none	it calls $smtx_typeof, which has no proof
 $smtx_typeof_bv_op_1	generated	
 $smtx_typeof_bv_op_1_ret	generated	
 $smtx_typeof_bv_op_2	generated	
