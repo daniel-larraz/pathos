@@ -99,6 +99,14 @@ bytes = 350000
 arg = 0
 ctors = { "re.union" = "Eo.Term.UOp Eo.UserOp.re_union", "re.inter" = "Eo.Term.UOp Eo.UserOp.re_inter" }
 
+# $eo_mk_premise_list's operator is `and` at each of $eo_cmd_step_proven's
+# calls, and eo::cons needs one that does not nest to the left; where none
+# does (CpcMini), its spec needs no pin (left_nested).
+[pinned."$eo_mk_premise_list"]
+arg = 0
+left_nested = true
+ctors = { "and" = "Eo.Term.UOp Eo.UserOp.and" }
+
 [heartbeats]
 # The programs whose proofs take more than the parts' 2,000,000 heartbeats
 # (PART_OPTIONS in scripts/proofgen): each of their theorems is elaborated

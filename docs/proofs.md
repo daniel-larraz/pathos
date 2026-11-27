@@ -349,8 +349,12 @@ finitely many constants is listed under `[pinned]` in `proofgen.toml`.
 Its spec then takes `Pinned [c1, ..., ck] x` as a hypothesis, and each
 caller discharges it with `by simp [Pinned]`. A call that passes
 anything else stops proofgen with an error; the program is never
-dropped silently. `$re_ac_merge` is the one so listed (`$derivative`
-passes `re.union` or `re.inter`). Its case specs built in a trial run,
+dropped silently. An entry with `left_nested = true` applies only where
+some list operator nests to the left (the CPC, not CpcMini).
+`$eo_mk_premise_list` is listed so: `$eo_cmd_step_proven` always passes
+`and`, and `eo::cons` needs a constant that does not nest to the left.
+`$re_ac_merge` is listed too (`$derivative` passes `re.union` or
+`re.inter`). Its case specs built in a trial run,
 but its `rust_eq` does not: logos falls through four helpers, and
 splitting them gives 4,010 goals (`unproved.toml`). Proving it needs a
 `rust_eq` that goes helper by helper, which is still to do.

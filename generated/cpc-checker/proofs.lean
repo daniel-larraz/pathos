@@ -191,6 +191,7 @@ theorem specs (n : Nat) : Specs n := by
       eo__24eo_5flit_5ftype_5fNumeral_spec n ih,
       eo__24eo_5flit_5ftype_5fRational_spec n ih,
       eo__24eo_5flit_5ftype_5fString_spec n ih,
+      eo__24eo_5fmk_5fpremise_5flist_spec n ih,
       eo__24eo_5fnil_spec n ih,
       eo__24eo_5fnil_5f_2a_spec n ih,
       eo__24eo_5fnil_5f_2b_spec n ih,

@@ -72,7 +72,7 @@ $dt_updater_elim_rhs	generated
 $eo_StateObj_proven	generated	
 $eo_checker_is_refutation	none	it calls $eo_invoke_cmd_list, which has no proof
 $eo_cmd_step_pop_proven	generated	
-$eo_cmd_step_proven	none	it calls $eo_mk_premise_list, which has no proof
+$eo_cmd_step_proven	none	it calls $eo_prog_arith-mod-over-mod, which has no proof
 $eo_datatype_cons_selectors_rec	generated	
 $eo_datatype_constructors_rec	generated	
 $eo_dd_lookup	generated	
@@ -107,7 +107,7 @@ $eo_lit_type_Binary	generated
 $eo_lit_type_Numeral	generated	
 $eo_lit_type_Rational	generated	
 $eo_lit_type_String	generated	
-$eo_mk_premise_list	none	case 1 has eo::cons with an operator that may nest to the left
+$eo_mk_premise_list	generated	
 $eo_nil	generated	
 $eo_nil_*	generated	
 $eo_nil_+	generated	

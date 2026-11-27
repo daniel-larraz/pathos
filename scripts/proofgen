@@ -220,7 +220,7 @@ class Emitter:
 
     def good(self, callee, j, v):
         ok = v in self.l.ok_state or v in self.l.ok_proof
-        pin = self.g.cfg.get("pinned", {}).get(callee)
+        pin = self.g.pin_of(callee)
         if pin is not None and j == pin["arg"]:
             # `[pinned]` is a promise about every call: one that passes
             # anything but one of the constants is an error, not a program
@@ -871,7 +871,7 @@ class Emitter:
         if n.get("op") == "builtin" and n.get("eval") in PIN_LIST_OPS and sub and is_var(sub[0]):
             return True
         if n.get("op") == "call":
-            pin = self.g.cfg.get("pinned", {}).get(n["program"])
+            pin = self.g.pin_of(n["program"])
             if pin is not None and pin["arg"] < len(sub) and is_var(sub[pin["arg"]]):
                 return True
         return any(self.needs_pin(x, var) for x in sub if isinstance(x, dict))
@@ -991,6 +991,15 @@ class Generator:
         self.proofs = []
         self.logos_defs = set()
 
+    def pin_of(self, name):
+        """The `[pinned]` entry of a program, if it applies to this calculus:
+        one with `left_nested = true` only where some list operator nests to
+        the left (the CPC), the reason its spec needs the constant."""
+        pin = self.cfg.get("pinned", {}).get(name)
+        if pin is not None and pin.get("left_nested") and not self.trace["left_nested_lists"]:
+            return None
+        return pin
+
     def hand(self, p, entry, callees):
         """A program proved by hand in pathos (Runtime/), from what is
         proved of the programs it calls."""
@@ -1032,7 +1041,7 @@ class Generator:
         # `[pinned]`: an argument that every call passes one of a few
         # constants, as the hypothesis `Pinned [c1, ...] x` (Pin.lean) that
         # the callers discharge; each case is proved once for each constant
-        pin = self.cfg.get("pinned", {}).get(p["name"])
+        pin = self.pin_of(p["name"])
         pj = pctors = None
         if pin is not None:
             pj = pin["arg"]

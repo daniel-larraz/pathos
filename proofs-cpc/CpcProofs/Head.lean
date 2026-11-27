@@ -857,6 +857,15 @@ def eo__24eo_5flit_5ftype_5fString.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_lit_type_String x_a0)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_mk_premise_list`. -/
+def eo__24eo_5fmk_5fpremise_5flist.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 a2 : Term) (x_a0 : _) (x_a1 : _) (x_a2 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → Represents.rep s a2 x_a2 → Pinned [Eo.Term.UOp Eo.UserOp.and] x_a0 → StateOK x_a2 →
+    eo__24eo_5fmk_5fpremise_5flist s a0 a1 a2 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_mk_premise_list x_a0 x_a1 x_a2)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_nil`. -/
 def eo__24eo_5fnil.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -8695,6 +8704,7 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5flit_5ftype_5fNumeral : eo__24eo_5flit_5ftype_5fNumeral.Spec n
   eo__24eo_5flit_5ftype_5fRational : eo__24eo_5flit_5ftype_5fRational.Spec n
   eo__24eo_5flit_5ftype_5fString : eo__24eo_5flit_5ftype_5fString.Spec n
+  eo__24eo_5fmk_5fpremise_5flist : eo__24eo_5fmk_5fpremise_5flist.Spec n
   eo__24eo_5fnil : eo__24eo_5fnil.Spec n
   eo__24eo_5fnil_5f_2a : eo__24eo_5fnil_5f_2a.Spec n
   eo__24eo_5fnil_5f_2b : eo__24eo_5fnil_5f_2b.Spec n
