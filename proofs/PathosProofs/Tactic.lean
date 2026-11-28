@@ -546,6 +546,64 @@ macro_rules
       clear $hvi hfldlen
       open_more))
 
+/-- `pat_destruct_uop spec as ⟨o⟩ ⟨v, x, hv⟩ … storing ⟨s', hinv'⟩ growing hG
+carrying … in cd`: the pattern takes apart the term of a user operator with
+indices (`$emb_UOp<k>`), by `destruct`, which stores a handle of the
+operator itself (`spec` says what it gives: `Store.destruct_uop<k>_spec`).
+Goes on with the handle `o` of the operator, which stands for no term (the
+pattern's variable for the operator is not used), and with a handle `v`, the
+term `x` it stands for and the fact `hv` for each index, in the new store;
+where the term is no such term the case ends. -/
+syntax "pat_destruct_uop " term " as " "⟨" ident "⟩" (" ⟨" ident ", " ident ", " ident "⟩")*
+  " storing " "⟨" ident ", " ident "⟩" " growing " ident " carrying" (ppSpace colGt ident)*
+  " in " ident : tactic
+macro_rules
+  | `(tactic| pat_destruct_uop $e as ⟨$o⟩ $[⟨$vs, $xs, $hvs⟩]* storing ⟨$s', $hinv'⟩
+      growing $hG carrying $hs* in $cd) => do
+    let b (i : Lean.Ident) : Lean.TSyntax ``Lean.binderIdent :=
+      ⟨Lean.mkNode ``Lean.binderIdent #[i]⟩
+    let k := vs.size
+    let r := Lean.mkIdent `r
+    let hg := Lean.mkIdent `hg
+    let hres := Lean.mkIdent `hres
+    let vec := Lean.mkIdent `fldvec
+    let hvec := Lean.mkIdent `hfldvec
+    let heq := Lean.mkIdent `hfldeq
+    let hvi := Lean.mkIdent `hfld
+    let fo := Lean.mkIdent `fldop
+    let u := Lean.mkIdent `uop_op
+    let fs := (List.range k).toArray.map fun i => Lean.mkIdent (Lean.Name.mkSimple s!"fld{i}")
+    let pats : Array (Lean.TSyntax `rcasesPat) ←
+      (#[fo] ++ fs ++ #[u] ++ xs ++ #[heq, hvec] ++ hvs).mapM fun i => `(rcasesPat| $i:ident)
+    let steps ← (vs.zip fs).mapM fun (v, f) =>
+      `(tactic| (
+        step as ⟨$(b v), $(b hvi)⟩
+        have hfldv : $v = $f := by simp [$hvi:ident, $hvec:ident]
+        subst hfldv
+        clear $hvi))
+    `(tactic| (
+      step with $e as ⟨$(b r), $(b s'), $(b hinv'), $(b hg), $(b hres)⟩
+      transport $hg at $hs*
+      replace $hG:ident := Store.Grows.trans $hG $hg
+      clear $hg
+      rcases $r:ident with (_ | $vec:ident) | _
+      all_goals first
+        | (simp only [WP.dspec_ok, WP.uncurry'_pair]; exact ⟨$hinv', $hG, trivial⟩; done)
+        | (simp only at $hres:ident; no_match $hinv' $hG in $cd; done)
+        | skip
+      simp only at $hres:ident ⊢
+      obtain ⟨$pats,*⟩ := $hres
+      subst $heq
+      have hfldlen : ($vec).length = $(Lean.quote (k + 1)) := by
+        simp [alloc.vec.Vec.length, $hvec:ident]
+      step as ⟨$(b o), $(b hvi)⟩
+      have hfldo : $o = $fo := by simp [$hvi:ident, $hvec:ident]
+      subst hfldo
+      clear $hvi
+      $[$steps];*
+      clear hfldlen
+      open_more))
+
 /-- `pat_native_zero spec storing ⟨s', hinv'⟩ growing hG carrying … in cd`:
 the pattern `nat.zero` on a natural number, which stores the numeral 0
 (`spec` says what it gives; see `Runtime/Nats.lean`). Goes on with the

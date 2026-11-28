@@ -36,6 +36,7 @@ public import PathosProofs.Runtime.StateNth
 public import PathosProofs.Runtime.ConstNames
 public import PathosProofs.Runtime.Compare
 public import PathosProofs.Runtime.CompareTerm
+public import PathosProofs.Runtime.UserOps
 public import PathosProofs.Tactic
 public import PathosProofs.Generated
 public import MiniProofs

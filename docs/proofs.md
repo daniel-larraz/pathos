@@ -1297,6 +1297,22 @@ than a guess. A possible later cleanup is (a): rust-meta writes the
 body into the trace, as it does for a case, and proofgen reads it from
 there.
 
+**User operators with indices** (2026-11-27, 993 of 1,103). A pattern
+`($emb_UOp<k> op i1 … ik)` (in CPC, `$eo_is_closed_rec`'s cases for
+`Term.UOp1`, `UOp2` and `UOp3`) compiles to `destruct` with that
+constructor, which answers for a node of any user operator with `k`
+fields: a handle of the operator itself (`TermData.UserOp`, interned, so
+the store may grow), then the fields' handles (`destruct_user`).
+`Store.destruct_user_holds` (`Runtime/UserOps.lean`) says so for the
+handle of any tree. For CPC, `enc_Term_user_node` (`PathosProofsCpc/
+UserOps.lean`) says that the nodes of user operators that `enc` makes are
+the terms `UOp<k> u x0 …`, and `Store.destruct_uop<k>_spec` gives the
+indices' terms, or that the term is no such term. The operator's handle
+stands for no term of logos's, so proofgen emits the pattern
+(`pat_destruct_uop`) only where the case does not use the operator's
+variable. This proves `$eo_is_closed_rec`, `$eo_is_closed` and
+`$eo_invoke_assume_list`; CpcMini has no user operators with indices.
+
 The CPC crate and its proofs are now generated from logos `bdcbd95f`,
 which has #521, so the selector's type is guarded in both, as in CpcMini.
 They are still not built (stage 5).
@@ -1439,8 +1455,8 @@ and the proof `pf`, then `F` is unsatisfiable as logos defines it.
    `view`/`is_stuck`/`unapply`/`apply`, `construct`/`destruct` for data
    constructors, `literal` and `native_bool` for Booleans, `enter`/
    `leave`/`tick`. Not proved: the other embeddings of `construct` and
-   `destruct` (literals from native fields, binaries, user operators with
-   indices), the builtin operators (`lit.rs`: arithmetic, strings,
+   `destruct` (literals from native fields, binaries; user operators with
+   indices are proved for `destruct`, `Runtime/UserOps.lean`), the builtin operators (`lit.rs`: arithmetic, strings,
    bit-vectors, on the trusted numbers), the list operators, `state_nth`
    with its jump pointers, term comparison and its order, and for CPC the
    translation checks. (The type cache is now proved, with `$smtx_typeof`.)

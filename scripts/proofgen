@@ -1092,6 +1092,26 @@ class Emitter:
                           + "⟩ growing hG carrying" + before + " in " + l.case_def)
                 l.facts += ["h_" + f, "h_" + g]
                 l.binary_of[f + " " + g] = value
+            elif (uop_k(name) or 0) > 0 and len(fields) == uop_k(name) + 1:
+                # a user operator with indices: `destruct` stores a handle of
+                # the operator, which stands for no term of logos's, then
+                # the indices' handles (Store.destruct_uop<k>_spec)
+                k = uop_k(name)
+                op, rest = fields[0], fields[1:]
+                ref = json.dumps(op)
+                if (sub[0].get("pat") != "param"
+                        or getattr(l, "case_text", "").count(ref) != json.dumps(n).count(ref)):
+                    self.unsupported("the operator of " + name + " used in its case")
+                else:
+                    st, inv = self.st(), self.inv()
+                    before = words(l.facts)
+                    l.store += 1
+                    self.line("pat_destruct_uop Store.destruct_uop%d_spec " % k + st + " "
+                              + value + " h_" + value + " " + inv + " h64 as ⟨" + op + "⟩"
+                              + "".join(" ⟨" + f + ", x_" + f + ", h_" + f + "⟩" for f in rest)
+                              + " storing ⟨" + self.st() + ", " + self.inv()
+                              + "⟩ growing hG carrying" + before + " in " + l.case_def)
+                    l.facts += ["h_" + f for f in rest]
             elif not self.has_ctor_lemma(name):
                 self.unsupported("the constructor " + name
                                  + " in a pattern, which is not stored as a node")
@@ -1256,6 +1276,8 @@ class Generator:
             l = Lean()
             l.case_def = "EoCases." + p_lean + ".case_%d" % c
             l.lits = getattr(self, "literals", {}).get((proof.trace_id, c), {})
+            # the case, to find where a variable is used
+            l.case_text = json.dumps(case)
             l.facts = ["h_a%d" % j for j in range(proof.nargs)]
             l.pure = ["hn_a%d" % j for j in proof.stuck]
             l.ok_state = {"a%d" % j for j in range(proof.nargs)

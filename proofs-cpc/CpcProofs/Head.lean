@@ -731,6 +731,15 @@ def eo__24eo_5fdtc_5fresolve.Spec (n : Nat) : Prop :=
       | core.result.Result.Ok t => Represents.rep s' t (__eo_dtc_resolve x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
+/-- What is proved of `$eo_invoke_assume_list`. -/
+def eo__24eo_5finvoke_5fassume_5flist.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 → StateOK x_a0 →
+    eo__24eo_5finvoke_5fassume_5flist s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_invoke_assume_list x_a0 x_a1)
+      | core.result.Result.Err _ => True ⦄div
+
 /-- What is proved of `$eo_invoke_cmd_check_proven`. -/
 def eo__24eo_5finvoke_5fcmd_5fcheck_5fproven.Spec (n : Nat) : Prop :=
   ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
@@ -756,6 +765,24 @@ def eo__24eo_5fis_5fbool_5ftype.Spec (n : Nat) : Prop :=
     eo__24eo_5fis_5fbool_5ftype s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
       match r with
       | core.result.Result.Ok t => Represents.rep s' t (__eo_is_bool_type x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_is_closed`. -/
+def eo__24eo_5fis_5fclosed.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 : Term) (x_a0 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 →
+    eo__24eo_5fis_5fclosed s a0 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_is_closed x_a0)
+      | core.result.Result.Err _ => True ⦄div
+
+/-- What is proved of `$eo_is_closed_rec`. -/
+def eo__24eo_5fis_5fclosed_5frec.Spec (n : Nat) : Prop :=
+  ∀ (s : Store) (a0 a1 : Term) (x_a0 : _) (x_a1 : _), s.Inv → Platform64 → s.remaining ≤ n →
+    Represents.rep s a0 x_a0 → Represents.rep s a1 x_a1 →
+    eo__24eo_5fis_5fclosed_5frec s a0 a1 ⦃ r s' => s'.Inv ∧ s.Grows s' ∧
+      match r with
+      | core.result.Result.Ok t => Represents.rep s' t (__eo_is_closed_rec x_a0 x_a1)
       | core.result.Result.Err _ => True ⦄div
 
 /-- What is proved of `$eo_is_list_nil`. -/
@@ -9068,9 +9095,12 @@ structure Specs (n : Nat) : Prop where
   eo__24eo_5fdt_5fselectors : eo__24eo_5fdt_5fselectors.Spec n
   eo__24eo_5fdt_5fselectors_5fmain : eo__24eo_5fdt_5fselectors_5fmain.Spec n
   eo__24eo_5fdtc_5fresolve : eo__24eo_5fdtc_5fresolve.Spec n
+  eo__24eo_5finvoke_5fassume_5flist : eo__24eo_5finvoke_5fassume_5flist.Spec n
   eo__24eo_5finvoke_5fcmd_5fcheck_5fproven : eo__24eo_5finvoke_5fcmd_5fcheck_5fproven.Spec n
   eo__24eo_5finvoke_5fcmd_5fstep_5fpop : eo__24eo_5finvoke_5fcmd_5fstep_5fpop.Spec n
   eo__24eo_5fis_5fbool_5ftype : eo__24eo_5fis_5fbool_5ftype.Spec n
+  eo__24eo_5fis_5fclosed : eo__24eo_5fis_5fclosed.Spec n
+  eo__24eo_5fis_5fclosed_5frec : eo__24eo_5fis_5fclosed_5frec.Spec n
   eo__24eo_5fis_5flist_5fnil : eo__24eo_5fis_5flist_5fnil.Spec n
   eo__24eo_5fis_5flist_5fnil_5f_2a : eo__24eo_5fis_5flist_5fnil_5f_2a.Spec n
   eo__24eo_5fis_5flist_5fnil_5f_2b : eo__24eo_5fis_5flist_5fnil_5f_2b.Spec n

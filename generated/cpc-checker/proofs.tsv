@@ -85,14 +85,14 @@ $eo_dt_resolve	generated
 $eo_dt_selectors	generated	
 $eo_dt_selectors_main	generated	
 $eo_dtc_resolve	generated	
-$eo_invoke_assume_list	none	it calls $eo_is_closed, which has no proof
+$eo_invoke_assume_list	generated	
 $eo_invoke_cmd	none	it calls $eo_cmd_step_proven, which has no proof
 $eo_invoke_cmd_check_proven	generated	
 $eo_invoke_cmd_list	none	it calls $eo_invoke_cmd, which has no proof
 $eo_invoke_cmd_step_pop	generated	
 $eo_is_bool_type	generated	
-$eo_is_closed	none	it calls $eo_is_closed_rec, which has no proof
-$eo_is_closed_rec	none	case 6 has the constructor $emb_UOp1 in a pattern, which is not stored as a node
+$eo_is_closed	generated	
+$eo_is_closed_rec	generated	
 $eo_is_list_nil	generated	
 $eo_is_list_nil_*	generated	
 $eo_is_list_nil_+	generated	
