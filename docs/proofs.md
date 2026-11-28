@@ -800,8 +800,9 @@ Two things follow from a step costing the same wherever it is:
 - **A case's limit grows with its length.** A case's theorem of more than
   66 operations is elaborated under 30,000 heartbeats for each
   (`HEARTBEATS_PER_STEP` in `scripts/proofgen`), in place of an entry for
-  its program under `[heartbeats]`; the entries there still count, and
-  were not measured again.
+  its program under `[heartbeats]`; the entries there still count. They
+  were measured again with the three fixes (below, "The heartbeat
+  entries measured again").
 - **A program larger than a part's budget goes over several parts**, each
   importing the one before. What Lean keeps of a module's theorems is most
   of a part's memory: `$str_reduction_pred`'s proofs (1.2 MB now, 4.5 MB
@@ -828,6 +829,25 @@ arguments and in its `rust_eq`: not for its length (107 operations).
 `CpcProofs`'s generated text is 14.1 MB with the ten more programs in it
 (13.3 MB before, without them; `$str_reduction_pred`'s alone were 4.5 MB
 and are 1.2 MB).
+
+### The heartbeat entries measured again
+
+The 38 programs of `[heartbeats]` had their limits (most 20,000,000)
+from before the three fixes above. Measured again (2026-11-27), every
+theorem of each with `#count_heartbeats in` on its part alone (`lake
+lean`, with `CpcProofs`'s `-DmaxHeartbeats=2000000`), none takes more
+than 1,842,991 (`bv-eq-extract-elim1`'s `rust_eq`); the spec of
+`bv-extract-concat-2`'s case 0, 11,161,561 before, takes 571,073. A
+count was checked against a limit below it, which fails. The 27 whose
+most is at most 1,000,000 (half the parts' limit) have no entry now; the
+11 others have 4,000,000, at least twice their most, for CI. With fewer
+programs in a part of their own, `CpcProofs` has 56 parts, not 81. The
+full build (`scripts/proofs-build --cpc`, from an empty `.lake/build`)
+took 33 minutes, against 65 before, but the modules outside `CpcProofs`
+took half as long too (1,013 s against 2,061 s, summed), so most of that
+is the machine's load; `CpcProofs`'s modules took 2,096 s against 4,162
+s. Both builds reached the 8 GiB cap's `memory.peak` (page cache
+included) and passed.
 
 ### The generator
 
@@ -1257,8 +1277,9 @@ that: it rewrites with `mk_var_of_ne` (`Runtime/Ops.lean`: `__eo_mk_var`
 of parts that are not stuck is the variable), splits the conjunction,
 substitutes and calls `simp_all` again. Proofs that build without it never
 reach it. `$eo_prog_bv-extract-concat-2`'s `rust_eq` builds as generated
-now; the spec of its case 0 takes 11,161,561 heartbeats, so it has a
-`[heartbeats]` entry of 24,000,000.
+now; the spec of its case 0 took 11,161,561 heartbeats, so it had a
+`[heartbeats]` entry of 24,000,000 (4,000,000 since the long cases got
+cheaper: its `rust_eq` takes 1,806,286 and that spec 571,073).
 
 **Constants** (2026-11-27, 990 of 1,103 with the long cases). A `define` with no
 parameters (`$eo_prog_re-all-elim`, `$eo_prog_re-star-emp`,

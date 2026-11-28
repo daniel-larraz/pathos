@@ -112,60 +112,27 @@ left_nested = true
 ctors = { "and" = "Eo.Term.UOp Eo.UserOp.and" }
 
 [heartbeats]
-# The programs whose proofs take more than the parts' 2,000,000 heartbeats
-# (PART_OPTIONS in scripts/proofgen): each of their theorems is elaborated
-# under the limit here. The spec of case 0 of each times out in whnf at
-# 2,000,000; each built at 20,000,000 (2026-11-25). Since 2026-11-27 a
-# case of more than 66 operations has a limit by its length without an
-# entry here (HEARTBEATS_PER_STEP in scripts/proofgen), and a proof's
-# steps cost less (docs/proofs.md, "Long cases"): the entries below were
-# not measured again, and some may no longer be needed. A program listed
-# has a part of its own.
-"$eo_prog_str-substr-combine3" = 20000000
-"$eo_prog_str-substr-combine4" = 20000000
-"$eo_prog_re-concat-star-nullable1" = 20000000
-"$eo_prog_re-concat-star-nullable2" = 20000000
-"$eo_prog_bv-concat-extract-merge" = 20000000
-"$eo_prog_bv-concat-merge-const" = 20000000
-"$eo_prog_bv-extract-concat-3" = 20000000
-"$eo_prog_bv-extract-concat-4" = 20000000
-"$eo_prog_bv-sign-extend-ult-const-1" = 20000000
-"$eo_prog_bv-sign-extend-ult-const-2" = 20000000
-"$eo_prog_bv-sign-extend-ult-const-3" = 20000000
-"$eo_prog_bv-sign-extend-ult-const-4" = 20000000
-"$eo_prog_str-update-in-first-concat" = 20000000
-"$eo_prog_str-replace-all-find" = 20000000
-"$eo_prog_str-replace-find-base" = 20000000
-"$eo_prog_str-replace-find-first-concat" = 20000000
-"$substitute_simul_rec" = 20000000
-
-# Measured with `#count_heartbeats in` on every generated theorem (2026-11-26,
-# logos a6b896b5): each has a theorem above 1,000,000 of the parts' 2,000,000,
-# too close to the limit; the most of each in parentheses.
-"$eo_prog_bv-eq-extract-elim1" = 4000000  # (1,843,942)
-"$chain_m_resolve_final" = 4000000  # (1,813,485)
-"$chain_m_resolve_rec_step" = 4000000  # (1,663,726)
-"$eo_prog_bv-saddo-eliminate" = 4000000  # (1,515,936)
-"$eo_prog_bv-rotate-right-eliminate-1" = 4000000  # (1,509,652)
-"$eo_prog_bv-mult-slt-mult-1" = 4000000  # (1,499,463)
-"$eo_prog_bv-mult-slt-mult-2" = 4000000  # (1,499,397)
-"$eo_prog_bv-extract-sign-extend-2" = 4000000  # (1,488,930)
-"$is_quant_dt_split_conj" = 4000000  # (1,450,848)
-"$eo_prog_re-concat-merge" = 4000000  # (1,408,402)
-"$eo_prog_bv-mult-pow2-2b" = 4000000  # (1,376,138)
-"$eo_prog_bv-ssubo-eliminate" = 4000000  # (1,274,122)
-"$eo_prog_bv-sdiv-eliminate" = 4000000  # (1,227,711)
-"$eo_prog_bv-sign-extend-eq-const-1" = 4000000  # (1,175,830)
-"$eo_prog_bv-sign-extend-eq-const-2" = 4000000  # (1,175,637)
-"$mk_str_eager_reduction" = 4000000  # (1,078,191)
-"$eo_prog_bv-extract-concat-1" = 4000000  # (1,049,166)
-# Reached by eo::list_singleton_intro's spec (2026-11-26), measured alone
-# with `#count_heartbeats in`: the spec of case 0 of each.
-"$eo_prog_concat_csplit" = 6000000  # (2,870,383)
-"$eo_prog_concat_eq" = 5000000  # (2,094,709)
-# Reached by eo::list_repeat's spec (2026-11-26), measured with
-# `#count_heartbeats in`: the spec of case 0.
-"$eo_prog_bv-umulo-elim" = 5000000  # (2,463,875)
-# Measured with `#count_heartbeats in` (2026-11-27, logos a6b896b5): the
-# spec of case 0, once rust_eq built.
-"$eo_prog_bv-extract-concat-2" = 24000000  # (11,161,561)
+# The programs whose proofs take more than half the parts' 2,000,000
+# heartbeats (PART_OPTIONS in scripts/proofgen): each of their theorems is
+# elaborated under the limit here, and each such program has a part of its
+# own. Measured again on 2026-11-27 (66e7c08, logos a6b896b5; 292f196
+# generates the same text for these programs), after the long cases got
+# cheaper (docs/proofs.md, "Long cases"): every theorem of each of the 38
+# programs listed before, with `#count_heartbeats in` on its part alone
+# (`lake lean`, with CpcProofs's -DmaxHeartbeats=2000000). The 27
+# whose most was at most 1,000,000 have no entry now (the most of them
+# 842,838, $eo_prog_str-replace-find-base); the others have about twice
+# their most, rounded up to a million and at least 4,000,000, since CI
+# takes more than a local build. The most of each in parentheses, its
+# `rust_eq` or the spec of case 0.
+"$eo_prog_bv-eq-extract-elim1" = 4000000  # (1,842,991)
+"$eo_prog_bv-extract-concat-2" = 4000000  # (1,806,286)
+"$eo_prog_str-update-in-first-concat" = 4000000  # (1,196,026)
+"$eo_prog_bv-rotate-right-eliminate-1" = 4000000  # (1,190,609)
+"$eo_prog_str-replace-all-find" = 4000000  # (1,176,605)
+"$eo_prog_bv-extract-sign-extend-2" = 4000000  # (1,168,429)
+"$eo_prog_str-replace-find-first-concat" = 4000000  # (1,163,404)
+"$eo_prog_bv-sign-extend-ult-const-4" = 4000000  # (1,161,398)
+"$eo_prog_bv-sign-extend-ult-const-1" = 4000000  # (1,121,733)
+"$eo_prog_bv-sign-extend-ult-const-3" = 4000000  # (1,118,302)
+"$eo_prog_bv-sign-extend-ult-const-2" = 4000000  # (1,060,157)
